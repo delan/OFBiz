@@ -82,6 +82,7 @@ public class ModelService {
 
     /** Context Information, a list of parameters used by the service, contains ModelParam objects */
     protected Map contextInfo = new HashMap();
+
     /** Context Information, a list of parameters used by the service, contains ModelParam objects */
     protected List contextParamList = new LinkedList();
 
@@ -95,7 +96,8 @@ public class ModelService {
         return null;
     }
     
-    /** Adds a parameter definition to this service; puts on list in order added
+    /**
+     * Adds a parameter definition to this service; puts on list in order added
      * then sorts by order if specified.
      */
     public void addParam(ModelParam param) {
@@ -125,7 +127,8 @@ public class ModelService {
         return nameList;
     }
     
-    /** Validates a Map against the IN or OUT parameter information
+    /**
+     * Validates a Map against the IN or OUT parameter information
      * @param test The Map object to test
      * @param mode Test either mode IN or mode OUT
      * @return true if the validation is successful
@@ -191,7 +194,8 @@ public class ModelService {
         }
     }
 
-    /** Validates a map of name, object types to a map of name, objects
+    /**
+     * Validates a map of name, object types to a map of name, objects
      * @param info The map of name, object types
      * @param test The map to test its value types.
      * @param reverse Test the maps in reverse.
@@ -306,7 +310,7 @@ public class ModelService {
             ModelParam param = (ModelParam) i.next();
             if (param.mode.equals("INOUT") || param.mode.equals(mode)) {
                 if (optional || (!optional && !param.optional)) {
-                    names.add(name);
+                    names.add(param.name);
                 }
             }
         }
