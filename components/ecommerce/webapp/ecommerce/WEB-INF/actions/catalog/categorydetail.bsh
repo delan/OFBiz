@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
  */
 
@@ -71,19 +71,16 @@ if (catResult != null) {
 
 // set this as a last viewed
 categoryId = request.getAttribute("productCategoryId");
+int LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
 lastViewedCategories = session.getAttribute("lastViewedCategories");
 if (lastViewedCategories == null) {
-    lastViewedCategories = new ArrayList();
+    lastViewedCategories = new LinkedList();
+    session.setAttribute("lastViewedCategories", lastViewedCategories);
 }
-if (lastViewedCategories.contains(categoryId)) {
-    lastViewedCategories.remove(categoryId);
-}
+lastViewedCategories.remove(categoryId);
 lastViewedCategories.add(0, categoryId);
-session.setAttribute("lastViewedCategories", lastViewedCategories);
-if (lastViewedCategories.size() > 10) {
-    while (lastViewedCategories.size() > 10) {
-        lastViewedCategories.remove(lastViewedCategories.size() - 1);
-    }
+while (lastViewedCategories.size() > LAST_VIEWED_TO_KEEP) {
+    lastViewedCategories.remove(lastViewedCategories.size() - 1);
 }
 
 // set the content path prefix

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.32 $
+ *@version    $Revision: 1.33 $
  *@since      2.1
  */
 
@@ -113,19 +113,16 @@ if (product != null) {
     featureOrder = new LinkedList();
 
     // set this as a last viewed
+    int LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
     lastViewedProducts = session.getAttribute("lastViewedProducts");
     if (lastViewedProducts == null) {
-        lastViewedProducts = new ArrayList();
+        lastViewedProducts = new LinkedList();
+        session.setAttribute("lastViewedProducts", lastViewedProducts);
     }
-    if (lastViewedProducts.contains(productId)) {
-        lastViewedProducts.remove(productId);
-    }
+    lastViewedProducts.remove(productId);
     lastViewedProducts.add(0, productId);
-    session.setAttribute("lastViewedProducts", lastViewedProducts);
-    if (lastViewedProducts.size() > 10) {
-        while (lastViewedProducts.size() > 10) {
-            lastViewedProducts.remove(lastViewedProducts.size() - 1);
-        }
+    while (lastViewedProducts.size() > LAST_VIEWED_TO_KEEP) { 
+        lastViewedProducts.remove(lastViewedProducts.size() - 1);
     }
 
     // make the productContentWrapper
