@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.11 2004/05/14 23:37:45 jonesde Exp $
+ * $Id: ServiceUtil.java,v 1.12 2004/06/02 16:34:34 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -166,6 +166,10 @@ public class ServiceUtil {
         if (UtilValidate.isEmpty(errorMessage) && UtilValidate.isEmpty(eventMessage) && UtilValidate.isNotEmpty(defaultMessage))
             request.setAttribute("_EVENT_MESSAGE_", defaultMessage);
 
+    }
+
+    public static void getMessages(HttpServletRequest request, Map result, String defaultMessage) {
+        getMessages(request, result, defaultMessage, null, null, null, null, null, null);   
     }
 
     public static void getMessages(HttpServletRequest request, Map result, String defaultMessage,
