@@ -2,10 +2,6 @@
  * $Id$ 
  */
 
-/*
- * $Id$
- */
-
 package org.ofbiz.core.util;
 
 /**
@@ -43,6 +39,7 @@ public class GeneralException extends Exception {
      * Creates new <code>GeneralException</code> without detail message.
      */
     public GeneralException() {
+        super();
     }
     
     /**
