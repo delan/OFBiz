@@ -84,16 +84,17 @@ function removeSelected() {
 
 <#if !requestParameters.orderId?exists>
 <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-  <tr><td colspan="5"><div class="head3">Item(s) In Return #${requestParameters.returnId}</div></td></tr>
-  <tr><td colspan="5"><hr class="sepbar"></td></tr>
+  <tr><td colspan="6"><div class="head3">Item(s) In Return #${requestParameters.returnId}</div></td></tr>
+  <tr><td colspan="6"><hr class="sepbar"></td></tr>
   <tr>
     <td><div class="tableheadtext">Order #</div></td>
     <td><div class="tableheadtext">Order Item #</div></td>
     <td><div class="tableheadtext">Return Qty</div></td>
     <td><div class="tableheadtext">Return Price</div></td>
     <td><div class="tableheadtext">Reason</div></td> 
+    <td>&nbsp;</td>
   </tr>
-  <tr><td colspan="5"><hr class="sepbar"></td></tr> 
+  <tr><td colspan="6"><hr class="sepbar"></td></tr> 
   <#if returnItems?has_content>
     <#list returnItems as item>
       <#assign returnReason = item.getRelatedOne("ReturnReason")>
@@ -103,11 +104,12 @@ function removeSelected() {
         <td><div class="tabletext">${item.returnQuantity?string.number}</div></td>
         <td><div class="tabletext">${item.returnPrice?string.currency}</div></td>
         <td><div class="tabletext">${returnReason.description}</div></td>
+        <td><a href="<@ofbizUrl>/removeReturnItem?returnId=${item.returnId}&returnItemSeqId=${item.returnItemSeqId}</@ofbizUrl>" class="buttontext">Remove</a>
       </tr>
     </#list>
   <#else>
     <tr>
-      <td colspan="5"><div class="tabletext">No item(s) in return.</div>
+      <td colspan="6"><div class="tabletext">No item(s) in return.</div>
     </tr>
   </#if>
 </table>
@@ -137,7 +139,7 @@ function removeSelected() {
   <input type="hidden" name="returnId" value="${requestParameters.returnId}">
   <table border='0' width='100%' cellpadding='2' cellspacing='0'>
     <tr>
-      <td colspan="4"><div class="head3">Return Item(s) From Order #${requestParameters.orderId}</div></td>
+      <td colspan="6"><div class="head3">Return Item(s) From Order #${requestParameters.orderId}</div></td>
       <td align="right">
         <span class="tableheadtext">Select All</span>&nbsp;
         <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
@@ -145,18 +147,29 @@ function removeSelected() {
     </tr>
     <tr>
       <td><div class="tableheadtext">Description</div></td>
-      <td><div class="tableheadtext">Return Quantity</div></td>
-      <td><div class="tableheadtext">Return Price</div></td>
+      <td><div class="tableheadtext">Order Qty</div></td>
+      <td><div class="tableheadtext">Return Qty</div></td>
+      <td><div class="tableheadtext">Order Price</div></td>
+      <td><div class="tableheadtext">Return Price*</div></td>
       <td><div class="tableheadtext">Return Reason</div></td>
       <td>&nbsp;</td>  
     </tr>
-    <tr><td colspan="5"><hr class="sepbar"></td></tr>
+    <tr><td colspan="7"><hr class="sepbar"></td></tr>
     <#if orderItems?has_content>
       <#assign rowCount = 0>
       <#list orderItems as orderItem>
       <input type="hidden" name="returnId_o_${rowCount}" value="${requestParameters.returnId}">
       <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}">
       <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}">
+      <#-- need some order item information -->
+      <#assign orderHeader = orderItem.getRelatedOne("OrderHeader")>
+      <#assign itemCount = orderItem.quantity>
+      <#assign itemPrice = orderItem.unitPrice>
+      <#assign orh = Static["org.ofbiz.commonapp.order.order.OrderReadHelper"].getHelper(orderHeader)>
+      <#assign totalItemTax = orh.getOrderItemTax(orderItem)>
+      <#assign itemUnitTax = totalItemTax / itemCount>
+      <#assign itemPriceWithTax = itemPrice + itemUnitTax>
+      <#-- end of order item information -->
       <tr>       
         <td>
           <div class="tabletext">
@@ -166,11 +179,17 @@ function removeSelected() {
             ${orderItem.itemDescription}
           </div>
         </td>
+        <td align='center'>
+          <div class="tabletext">${orderItem.quantity?string.number}</div>
+        </td>        
         <td>
           <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${orderItem.quantity}">
         </td>
+        <td align='left'>
+          <div class="tabletext">${orderItem.unitPrice?string.currency}</div>
+        </td>
         <td>
-          <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${orderItem.unitPrice}">
+          <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${itemPriceWithTax?string("##0.00")}">
         </td>  
         <td>
           <select name="returnReasonId_o_${rowCount}" class="selectBox">
@@ -183,18 +202,20 @@ function removeSelected() {
           <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
         </td>        
       </tr>     
-      <tr><td colspan="5"><hr class="sepbar"></td></tr>  
+      <tr><td colspan="7"><hr class="sepbar"></td></tr>  
       <#assign rowCount = rowCount + 1>        
       </#list>
       <input type="hidden" name="_rowCount" value="${rowCount}">
       <tr>
-        <td colspan="5" align="right">
+        <td colspan="7" align="right">
           <a href="javascript:document.returnItems.submit();" class="buttontext">Return Selected Item(s)</a>
         </td>
       </tr>      
     <#else>
-      <tr><td colspan="5"><div class="tabletext">No items found for order #${requestParameters.orderId}</div></td></tr>
+      <tr><td colspan="7"><div class="tabletext">No items found for order #${requestParameters.orderId}</div></td></tr>
     </#if>
+    <tr>
+      <td colspan="7"><div class="tabletext">*Price includes tax</div></td>
   </table>
 </form>
 </#if>
