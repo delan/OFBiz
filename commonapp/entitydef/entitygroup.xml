@@ -446,6 +446,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="ContactMechTypePurpose" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyContactMech" />
     <entity-group group="org.ofbiz.commonapp" entity="PartyContactMechPurpose" />
+    <entity-group group="org.ofbiz.commonapp" entity="PartyContactWithPurpose" />
     <entity-group group="org.ofbiz.commonapp" entity="PostalAddress" />
     <entity-group group="org.ofbiz.commonapp" entity="PostalAddressBoundary" />
     <entity-group group="org.ofbiz.commonapp" entity="TelecomNumber" />
