@@ -169,4 +169,4 @@
 <%}else{%>
   <h3>You do not have permission to view this page. ("SECURITY_VIEW" or "SECURITY_ADMIN" needed)</h3>
 <%}%>
-<%} catch (Exception e) { Debug.logError(e); throw e; } %>
+<%} catch (Exception e) { Debug.log(e); throw e; } %>

@@ -115,12 +115,12 @@
                 try {
                     file1.delete();
                 } catch (Exception e) {
-                    Debug.logError("Error deleting file");
+                    Debug.log(e, "Error deleting file");
                 }
                 file.renameTo(file1);
             }
         } catch (Exception e) {
-            Debug.logError("Error moving file");
+            Debug.log(e, "Error moving file");
         }
 
         if (imageUrl != null && imageUrl.length() > 0) {

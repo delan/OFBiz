@@ -169,15 +169,15 @@
                                         "productFeatureTypeId", productFeatureAndAppl.get("productFeatureTypeId"),
                                         "description", productFeatureAndAppl.get("description"),
                                         "productFeatureApplTypeId", "STANDARD_FEATURE");
-                                //Debug.logInfo("Using findByMap: " + findByMap);
+                                //Debug.log("Using findByMap: " + findByMap);
 
                                 Collection standardProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", findByMap), true);
                                 if (standardProductFeatureAndAppls == null || standardProductFeatureAndAppls.size() == 0) {
-                                    //Debug.logInfo("Does NOT have this standard feature");
+                                    //Debug.log("Does NOT have this standard feature");
                                     hasAllFeatures = false;
                                     break;
                                 } else {
-                                    //Debug.logInfo("DOES have this standard feature");
+                                    //Debug.log("DOES have this standard feature");
                                 }
                             }
 

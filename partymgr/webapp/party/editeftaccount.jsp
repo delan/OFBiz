@@ -49,9 +49,7 @@
     "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity");%>
 
 <%
-    GenericValue efta = (GenericValue) pageContext.getAttribute("eftAccount");
-    Debug.logVerbose("EFT Account: " + efta);
-    Debug.logVerbose("Try Entity: " + pageContext.getAttribute("tryEntity"));
+    GenericValue efta = (GenericValue) pageContext.getAttribute("eftAccount"); 
 %>
 
 <%ContactMechWorker.getCurrentPostalAddress(pageContext, partyId, 

@@ -82,10 +82,7 @@
     highIndex = (viewIndex + 1) * viewSize;
     if (listSize < highIndex) {
         highIndex = listSize;
-    }
-
-    Debug.logInfo("Low Index: " + lowIndex);
-    Debug.logInfo("View Size: " + viewSize);
+    }    
 %>
 
 <%if(productCategoryId != null && productCategoryId.length() > 0) {%>
