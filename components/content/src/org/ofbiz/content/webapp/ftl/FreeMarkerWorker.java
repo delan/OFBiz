@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.27 2004/06/11 00:32:51 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.28 2004/06/16 18:54:45 byersa Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -349,7 +349,6 @@ public class FreeMarkerWorker {
                 //freemarker.ext.beans.StringModel varObj = (freemarker.ext.beans.StringModel ) varNameIter.next();
                 //Object varObj =  varNameIter.next();
                 //String varName = varObj.toString();
-//Debug.logInfo("cEM: varObj:" + varObj + " varName:" + varName,"");
                 templateRoot.put(varName, FreeMarkerWorker.getWrappedObject(varName, env));
             }
         }
@@ -741,9 +740,9 @@ public class FreeMarkerWorker {
         }
 
         //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, currentContent(3):" + currentContent , module);
-        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
-        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
-        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
         if (UtilValidate.isNotEmpty(subContentId)) {
             ctx.put("subContentId", subContentId);
             ctx.put("contentId", null);
