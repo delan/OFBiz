@@ -24,21 +24,21 @@
 -->
 
 <forms>
-	<form name="EditProductStore" type="single" 
+	<form name="EditProductStore" type="single"
 		target="updateProductStore" title="" default-map-name="productStore"
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		
+
 		<alt-target use-when="productStore==null" target="createProductStore"/>
-		
+
 		<auto-fields-service service-name="updateProductStore" map-name=""/>
-		
+
 		<field use-when="productStore!=null" name="productStoreId" tooltip="This cannot be changed without re-creating the Product Store"><display/></field>
-		<field name="productStoreId"><ignored/></field>		
+		<field name="productStoreId"><ignored/></field>
 
 		<field name="storeName"><text size="30" maxlength="60"/></field>
 		<field name="title"><text size="30" maxlength="60"/></field>
 		<field name="subtitle" title="Sub-title"><text size="60" maxlength="250"/></field>
-		
+
 		<field name="inventoryFacilityId" title="Inventory Facility" widget-style="selectBox">
 			<drop-down allow-empty="true">
 				<entity-options entity-name="Facility" key-field-name="facilityId" description="${facilityName} [${facilityId}]">
@@ -84,13 +84,13 @@
 		<field name="templatePathPrefix" tooltip="If specified will be prepended to template paths. Should start with a slash but not end with one."><text size="60" maxlength="250"/></field>
 		-->
 		<field name="explodeOrderItems" widget-style="selectBox">
-		    <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>		        
+		    <drop-down allow-empty="false" no-current-selected-key="N"><option key="Y"/><option key="N"/></drop-down>
 		</field>
 
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-	</form>	
+	</form>
 
-	<form name="CreateProductStoreCatalog" type="single" 
+	<form name="CreateProductStoreCatalog" type="single"
 		target="createProductStoreCatalog" title=""
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="createProductStoreCatalog"/>
@@ -121,8 +121,8 @@
 				description="[Delete]" also-hidden="false"/>
 		</field>
 	</form>
-	
-	<form name="createProductStoreEmail" type="single" 
+
+	<form name="createProductStoreEmail" type="single"
 		target="createProductStoreEmail" title=""
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="createProductStoreEmailSetting"/>
@@ -142,7 +142,7 @@
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="updateProductStoreEmailSetting"/>
 		<field name="productStoreId"><hidden/></field>
-		<field name="emailType"><display description="${emailType}"/></field>		
+		<field name="emailType"><display description="${emailType}"/></field>
 		<field name="templatePath"></field>
 		<field name="subject"></field>
 		<field name="fromAddress"></field>
@@ -150,10 +150,10 @@
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
 			<hyperlink target="removeProductStoreEmail?productStoreId=${productStoreId}&amp;emailType=${emailType}"
 				description="[Delete]" also-hidden="false"/>
-		</field>			
-	</form>		
-	
-	<form name="CreateproductStorekeywordOvrdForm" type="single" 
+		</field>
+	</form>
+
+	<form name="CreateproductStorekeywordOvrdForm" type="single"
 		target="createProductStoreKeywordOvrd" title=""
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="createProductStoreKeywordOvrd"/>
@@ -173,7 +173,7 @@
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="updateProductStoreKeywordOvrd"/>
 		<field name="productStoreId"><hidden/></field>
-		<field name="keyword"><display description="${keyword}"/></field>		
+		<field name="keyword"><display description="${keyword}"/></field>
 		<field name="fromDate"><display description="${fromDate}"/></field>
 		<field name="targetTypeEnumId" title="Target Type" widget-style="selectBox">
 			<drop-down>
@@ -187,7 +187,6 @@
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
 			<hyperlink target="deleteProductStoreKeywordOvrd?productStoreId=${productStoreId}&amp;keyword=${keyword}&amp;fromDate=${fromDate}"
 				description="[Delete]" also-hidden="false"/>
-		</field>		
-	</form>		
-	
+		</field>
+	</form>
 </forms>

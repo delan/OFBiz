@@ -1422,22 +1422,22 @@
 
     <!-- Product Store Keyword Override services -->
     <service name="createProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
-                location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreKeywordOvrd" auth="true">
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="createProductStoreKeywordOvrd" auth="true">
         <description>Create a Product Store Keyword Override</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="target" optional="false" />
         <override name="targetTypeEnumId" optional="false" />
     </service>
-    <service name="deleteProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
-                location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="deleteProductStoreKeywordOvrd" auth="true">
-        <description>Delete a Product Store Keyword Override</description>
+    <service name="updateProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="updateProductStoreKeywordOvrd" auth="true">
+        <description>Update a Product Store Keyword Override</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="updateProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
-                location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="deleteProductStoreKeywordOvrd" auth="true">
-        <description>Update a Product Store Keyword Override</description>
+    <service name="deleteProductStoreKeywordOvrd" default-entity-name="ProductStoreKeywordOvrd" engine="simple"
+            location="org/ofbiz/product/store/ProductStoreServices.xml" invoke="deleteProductStoreKeywordOvrd" auth="true">
+        <description>Delete a Product Store Keyword Override</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
