@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -63,6 +63,7 @@
           <td align="left"><div class="tableheadtext">Description</div></td>
           <td align="left"><div class="tableheadtext">Anonymous</div></td>
           <td align="left"><div class="tableheadtext">Multiple</div></td>
+          <td align="left"><div class="tableheadtext">Update</div></td>
           <td><div class="tableheadtext">&nbsp;</div></td>
         </tr>
         <tr>
@@ -76,6 +77,7 @@
               <td><div class="tabletext">${survey.description?default("No Description")}</div></td>
               <td><div class="tabletext">${survey.isAnonymous?default("&nbsp;")}</div></td>
               <td><div class="tabletext">${survey.allowMultiple?default("&nbsp;")}</div></td>
+              <td><div class="tabletext">${survey.allowUpdate?default("&nbsp;")}</div></td>
               <td align="right">
                 <a href="<@ofbizUrl>/EditSurvey?surveyId=${survey.surveyId}</@ofbizUrl>" class="buttontext">Edit</a>
               </td>
