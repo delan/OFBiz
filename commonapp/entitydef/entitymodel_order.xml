@@ -778,6 +778,7 @@
             title="Order Item Inventory Reservation Entity">
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="promisedDays" type="numeric"></field>
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="reserveOrderEnumId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
@@ -895,6 +896,25 @@
       </relation>
       <relation type="many" rel-entity-name="OrderItem">
         <key-map field-name="orderItemTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="OrderNotification"
+            package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
+            title="Order Notification Entity">
+      <field name="orderNotificationId" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="emailType" type="id-ne"></field>      
+      <field name="notificationDate" type="date-time"></field>
+      <prim-key field="orderNotificationId"/>
+      <relation type="one" fk-name="ORD_NOTIFY_ORDHDR" rel-entity-name="OrderHeader">
+      	<key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItem">
+      	<key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="ORD_NOTIFY_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="emailType" rel-field-name="enumId"/>
       </relation>
     </entity>
     <entity entity-name="OrderPaymentPreference"

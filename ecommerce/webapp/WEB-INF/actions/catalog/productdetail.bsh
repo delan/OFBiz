@@ -112,9 +112,17 @@ if (product != null) {
     priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
     request.setAttribute("priceMap", priceMap);
     
-    // get the product review(s)
+    // get the product review(s)   
     reviews = product.getRelated("ProductReview", null, UtilMisc.toList("-postedDateTime"));
     request.setAttribute("productReviews", reviews);
+    
+    // get the days to ship
+    prodCatalog = CatalogWorker.getProdCatalog(request);
+    facilityId = prodCatalog.getString("inventoryFacilityId");
+    productFacility = delegator.findByPrimaryKeyCache("ProductFacility", UtilMisc.toMap("productId", productId, "facilityId", facilityId));
+    if (productFacility != null && productFacility.get("daysToShip") != null) {
+        context.put("daysToShip", productFacility.get("daysToShip"));
+    }    
     
     // Special Variant Code 
     if ("Y".equals(product.getString("isVirtual"))) {

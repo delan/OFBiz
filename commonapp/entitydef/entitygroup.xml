@@ -404,6 +404,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemRole" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemType" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemTypeAttr" />
+    <entity-group group="org.ofbiz.commonapp" entity="OrderNotification" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderPaymentPreference" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderRole" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderShipment" />

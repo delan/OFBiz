@@ -890,32 +890,22 @@
     	<attribute name="inventoryTransferId" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="interfaceProductFacility" engine="interface" location="" invoke="">
-        <description>ProductFacility Interface</description>
-        <attribute name="minimumStock" type="Double" mode="IN" optional="true"/>
-        <attribute name="reorderQuantity" type="Double" mode="IN" optional="true"/>
-    </service>
-    <service name="interfaceProductFacilityPK" engine="interface" location="" invoke="">
-        <description>ProductFacility Interface</description>
-        <attribute name="productId" type="String" mode="IN" optional="false"/>
-        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
-    </service>
     <service name="createProductFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="createProductFacility" auth="true">
         <description>Create an ProductFacility</description>
-        <implements service="interfaceProductFacilityPK"/>
-        <implements service="interfaceProductFacility"/>
+        <auto-attributes entity-name="ProductFacility" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductFacility" include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateProductFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="updateProductFacility" auth="true">
         <description>Update an ProductFacility</description>
-        <implements service="interfaceProductFacilityPK"/>
-        <implements service="interfaceProductFacility"/>
+        <auto-attributes entity-name="ProductFacility" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ProductFacility" include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="deleteProductFacility" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="deleteProductFacility" auth="true">
         <description>Delete an ProductFacility</description>
-        <implements service="interfaceProductFacilityPK"/>
+        <auto-attributes entity-name="ProductFacility" include="pk" mode="IN" optional="false"/>
     </service>
 
     <!-- Product Feature Services -->

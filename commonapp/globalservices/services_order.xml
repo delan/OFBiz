@@ -50,7 +50,8 @@
     <service name="prepareOrderConfirmation" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderConfirmation">
         <description>Service to prepare (template, addresses, etc) the order confirmation</description>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>        
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="emailType" type="String" mode="OUT" optional="false"/>      
         <attribute name="templateName" type="String" mode="OUT" optional="false"/>
         <attribute name="subject" type="String" mode="OUT" optional="false"/>
         <attribute name="sendTo" type="String" mode="OUT" optional="false"/>
@@ -62,7 +63,8 @@
     <service name="prepareOrderNotification" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="prepareOrderNotification">
         <description>Service to prepare (template, addresses, etc) the order notification</description>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>        
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="emailType" type="String" mode="OUT" optional="false"/>
         <attribute name="templateName" type="String" mode="OUT" optional="false"/>
         <attribute name="subject" type="String" mode="OUT" optional="false"/>
         <attribute name="sendTo" type="String" mode="OUT" optional="false"/>
@@ -75,7 +77,8 @@
             location="org.ofbiz.commonapp.common.NotificationServices" invoke="sendNotification">
         <description>Send a order confirmation</description>
         <implements service="sendNotificationInterface"/>
-        <attribute name="orderId" type="String" mode="IN" optional="false"/>      
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="emailType" type="String" mode="IN" optional="false"/>    
     </service>
                 	
     <service name="sendOrderNotification" engine="java"
@@ -84,6 +87,7 @@
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+        <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="sendProcessNotification" engine="java"
@@ -93,6 +97,13 @@
     	<attribute name="adminEmailList" type="String" mode="IN"/>
     	<attribute name="assignedPartyId" type="String" mode="IN" optional="true"/>
     	<attribute name="assignedRoleTypeId" type="String" mode="IN" optional="true"/>    	
+    </service>
+    
+    <service name="createOrderNotificationLog" engine="simple"
+            location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="createNotificationLog">
+        <description>Logs when a notification was sent</description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="storeOrder" engine="java" validate="true" auth="true"

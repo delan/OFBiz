@@ -108,6 +108,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
           ${product.piecesIncluded}
         </div>
       </#if>
+      <#if daysToShip?exists>
+        <div class="tabletext"><b>Usually ships in <font color='red'>${daysToShip}</font> days!<b></div>
+      </#if>
                 
       <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
         <#assign inStock = true>     
