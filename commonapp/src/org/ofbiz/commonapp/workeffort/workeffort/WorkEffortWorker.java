@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/12/10 16:45:52  jonesde
+ * Fixed wrong status ids
+ *
  * Revision 1.10  2001/12/09 12:44:20  jonesde
  * Added status filtering for all non wanted status
  *
@@ -313,6 +316,7 @@ public class WorkEffortWorker {
                 constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
                 constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
                 constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"));
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
@@ -339,7 +343,8 @@ public class WorkEffortWorker {
                         new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "TASK"),
                         new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"),
                         new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"),
-                        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED")),
+                        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"),
+                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED")),
                         UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
