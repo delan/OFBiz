@@ -301,7 +301,7 @@
        <attribute name="orderId" type="String" mode="IN" optional="false"/>
        <attribute name="orderItems" type="java.util.List" mode="IN" optional="false"/>
    </service>
-   <service name="orderFulfillmentInterface" engine="interface" invoke="" location="" auth="false" >
+   <service name="itemFulfillmentInterface" engine="interface" invoke="" location="" auth="false" >
        <auto-attributes entity-name="ProductContent" include="pk" mode="IN" optional="false"/>
        <attribute name="orderItem" type="GenericValue" mode="IN" optional="false"/>
    </service>

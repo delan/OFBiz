@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -45,12 +45,12 @@
     </#if>
 
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">Physical Number</div></td>
+      <td width="26%" align=right valign='top'><div class="tabletext">Card Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <#if giftCardData?has_content && giftCardData.physicalNumber?has_content>
+        <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
           <#assign pcardNumberDisplay = "">
-          <#assign pcardNumber = giftCardData.physicalNumber?if_exists>
+          <#assign pcardNumber = giftCardData.cardNumber?if_exists>
           <#if pcardNumber?has_content>
             <#assign psize = pcardNumber?length - 4>
             <#if 0 < psize>
@@ -63,43 +63,14 @@
             </#if>
           </#if>
         </#if>
-        <input type="text" class="inputBox" size="20" maxlength="60" name="physicalNumber" value="${pcardNumberDisplay?if_exists}">
+        <input type="text" class="inputBox" size="20" maxlength="60" name="cardNumber" value="${pcardNumberDisplay?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">Physical PIN</div></td>
+      <td width="26%" align=right valign='top'><div class="tabletext">PIN Number</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
-        <input type="password" class="inputBox" size="10" maxlength="60" name="physicalPin" value="${giftCardData.physicalPin?if_exists}">
-      </td>
-    </tr>
-    <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">Virtual Number</div></td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">
-        <#if giftCardData?has_content && giftCardData.virtualNumber?has_content>
-          <#assign vcardNumberDisplay = "">
-          <#assign vcardNumber = giftCardData.virtualNumber?if_exists>
-          <#if vcardNumber?has_content>
-            <#assign vsize = vcardNumber?length - 4>
-            <#if 0 < vsize>
-              <#list 0 .. vsize-1 as foo>
-                <#assign vcardNumberDisplay = vcardNumberDisplay + "*">
-              </#list>
-              <#assign vcardNumberDisplay = vcardNumberDisplay + vcardNumber[vsize .. vsize + 3]>
-            <#else>
-              <#assign vcardNumberDisplay = vcardNumber>
-            </#if>
-          </#if>
-        </#if>
-        <input type="text" class="inputBox" size="20" maxlength="60" name="virtualNumber" value="${vcardNumberDisplay?if_exists}">
-      </td>
-    </tr>
-    <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">Virtual PIN</div></td>
-      <td width="5">&nbsp;</td>
-      <td width="74%">
-        <input type="password" class="inputBox" size="10" maxlength="60" name="virtualPin" value="${giftCardData.virtualPin?if_exists}">
+        <input type="password" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber?if_exists}">
       </td>
     </tr>
     <tr>

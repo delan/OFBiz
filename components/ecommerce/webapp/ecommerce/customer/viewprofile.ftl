@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -289,42 +289,20 @@
                                     [${uiLabelMap.CommonUpdate}]</a></div>
                                   </td>
                               <#elseif paymentMethod.paymentMethodTypeId?if_exists == "GIFT_CARD">
-                                  <#if giftCard?has_content && giftCard.physicalNumber?has_content>
-                                    <#assign pcardNumberDisplay = "">
-                                    <#assign pcardNumber = giftCard.physicalNumber>
+                                  <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                                    <#assign giftCardNumber = "">
+                                    <#assign pcardNumber = giftCard.cardNumber>
                                     <#if pcardNumber?has_content>
                                       <#assign psize = pcardNumber?length - 4>
                                       <#if 0 < psize>
                                         <#list 0 .. psize-1 as foo>
-                                          <#assign pcardNumberDisplay = pcardNumberDisplay + "*">
+                                          <#assign giftCardNumber = giftCardNumber + "*">
                                         </#list>
-                                        <#assign pcardNumberDisplay = pcardNumberDisplay + pcardNumber[psize .. psize + 3]>
+                                        <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
                                       <#else>
-                                        <#assign pcardNumberDisplay = pcardNumber>
+                                        <#assign giftCardNumber = pcardNumber>
                                       </#if>
                                     </#if>
-                                  </#if>
-                                  <#if giftCard?has_content && giftCard.virtualNumber?has_content>
-                                    <#assign vcardNumberDisplay = "">
-                                    <#assign vcardNumber = giftCard.virtualNumber>
-                                    <#if vcardNumber?has_content>
-                                      <#assign vsize = vcardNumber?length - 4>
-                                      <#if 0 < vsize>
-                                        <#list 0 .. vsize-1 as foo>
-                                          <#assign vcardNumberDisplay = vcardNumberDisplay + "*">
-                                        </#list>
-                                        <#assign vcardNumberDisplay = vcardNumberDisplay + vcardNumber[vsize .. vsize + 3]>
-                                      <#else>
-                                        <#assign vcardNumberDisplay = vcardNumber>
-                                      </#if>
-                                    </#if>
-                                  </#if>
-
-                                  <#assign giftCardNumber = pcardNumberDisplay?if_exists>
-                                  <if (!giftCardNumber?has_content)>
-                                    <#assign giftCardNumber = vcardNumberDisplay?if_exists>
-                                  <#elseif vcardNumberDisplay?has_content>
-                                    <#assign giftCardNumber = giftCardNumber + " / " + vcardNumberDisplay>
                                   </#if>
 
                                   <td width="90%" valign="top">

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  */
 -->
 
@@ -1849,10 +1849,8 @@
             package-name="org.ofbiz.accounting.payment"
             title="Gift Card Information Entity">
       <field name="paymentMethodId" type="id-ne"></field>
-      <field name="physicalNumber" type="short-varchar"></field>
-      <field name="physicalPin" type="very-short"></field>
-      <field name="virtualNumber" type="short-varchar"></field>
-      <field name="virtualPin" type="very-short"></field>
+      <field name="cardNumber" type="short-varchar"></field>
+      <field name="pinNumber" type="short-varchar"></field>
       <field name="expireDate" type="credit-card-date"></field>
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="paymentMethodId"/>
@@ -2165,6 +2163,40 @@
       </relation>
       <relation type="one" fk-name="PAYGATR_PMETH" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ValueLinkFulfillment"
+            package-name="org.ofbiz.accounting.payment"
+            title="Value Link Fulfillment History">
+      <field name="fulfillmentId" type="id-ne"></field>
+      <field name="typeEnumId" type="id-ne"></field>
+      <field name="merchantId" type="id-vlong-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="orderId" type="id-ne"></field>
+      <field name="orderItemSeqId" type="id-ne"></field>
+      <field name="surveyResponseId" type="id-ne"></field>
+      <field name="cardNumber" type="short-varchar"></field>
+      <field name="pinNumber" type="short-varchar"></field>
+      <field name="amount" type="currency-amount"></field>
+      <field name="responseCode" type="short-varchar"></field>
+      <field name="referenceNum" type="short-varchar"></field>
+      <field name="authCode" type="short-varchar"></field>
+      <field name="fulfillmentDate" type="date-time"></field>
+      <prim-key field="fulfillmentId"/>
+      <relation type="one" fk-name="VL_FILL_ENUM" rel-entity-name="Enumeration">
+          <key-map field-name="typeEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="VL_FILL_PARTY" rel-entity-name="Party">
+          <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="VL_FILL_ODRH" rel-entity-name="OrderHeader">
+          <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one" fk-name="VL_FILL_ODRI" rel-entity-name="OrderItem">
+          <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="VL_FILL_SURVY" rel-entity-name="SurveyResponse">
+          <key-map field-name="surveyResponseId"/>
       </relation>
     </entity>
     <entity entity-name="ValueLinkKey"
