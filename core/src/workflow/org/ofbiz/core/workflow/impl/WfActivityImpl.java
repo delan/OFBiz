@@ -43,6 +43,9 @@ import org.ofbiz.core.workflow.*;
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
 
     public static final String module = WfActivityImpl.class.getName();
+    
+    private static final int CHECK_ASSIGN = 1;
+    private static final int CHECK_COMPLETE = 2;
 
     protected String process = null;
 
@@ -206,16 +209,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
     private List getAssignments() throws WfException {
         List assignments = new ArrayList();
-        List assignList = null;
-
-        try {
-            assignList = getDelegator().findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", runtimeKey()));
-        } catch (GenericEntityException e) {
-            throw new WfException(e.getMessage(), e);
-        }
-        
-        if (assignList != null)
-            assignList = EntityUtil.filterByDate(assignList);
+        List assignList = this.getAllAssignments();
             
         if (assignList == null)
             return assignments;
@@ -233,6 +227,21 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         if (Debug.verboseOn()) Debug.logVerbose("Found [" + assignments.size() + "] assignment(s)", module);
         return assignments;
+    }
+    
+    private List getAllAssignments() throws WfException {
+        List assignList = null;
+        try {
+            assignList = getDelegator().findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", runtimeKey()));
+        } catch (GenericEntityException e) {
+            throw new WfException(e.getMessage(), e);
+        }
+        
+        if (assignList != null)
+            assignList = EntityUtil.filterByDate(assignList);
+        else 
+            return new ArrayList();
+        return assignList;            
     }
 
     // create a new assignment
@@ -483,31 +492,37 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if (valueObject.get("completeAllAssignments") != null)
             completeAll = valueObject.getBoolean("completeAllAssignments").booleanValue();
 
-        String statusString = null;
+        List validStatus = null;        
 
-        if (type == 1)
-            statusString = "CAL_ACCEPTED";
-        else if (type == 2)
-            statusString = "CAL_COMPLETED";
+        if (type == CHECK_ASSIGN)
+            validStatus = UtilMisc.toList("CAL_ACCEPTED", "CAL_COMPLETED", "CAL_DELEGATED");            
+        else if (type == CHECK_COMPLETE)
+            validStatus = UtilMisc.toList("CAL_COMPLETED", "CAL_DELEGATED");            
         else
             throw new WfException("Invalid status type");
 
         boolean foundOne = false;
 
-        Iterator i = getIteratorAssignment();
+        List assignList = this.getAllAssignments();
+        Iterator i = assignList.iterator();        
 
-        while (i.hasNext()) {
-            WfAssignment a = (WfAssignment) i.next();
+        while (i.hasNext()) {            
+            GenericValue value = (GenericValue) i.next();
+            String party = value.getString("partyId");
+            String role = value.getString("roleTypeId");
+            String status = value.getString("statusId");
+            java.sql.Timestamp from = value.getTimestamp("fromDate");            
+            WfAssignment a = WfFactory.getWfAssignment(getDelegator(), runtimeKey(), party, role, from);                                   
 
-            if (a.status().equals(statusString)) {
+            if (validStatus.contains(a.status())) {
                 foundOne = true;
             } else {
-                if ((type == 2 && completeAll) || (type == 1 && acceptAll))
+                if ((type == CHECK_COMPLETE && completeAll) || (type == CHECK_ASSIGN && acceptAll))
                     return false;
             }
         }
 
-        if ((type == 2 && completeAll) || (type == 1 && acceptAll)) {
+        if ((type == CHECK_COMPLETE && completeAll) || (type == CHECK_ASSIGN && acceptAll)) {
             return true;
         } else {
             Debug.logVerbose("[checkAssignStatus] : need only one assignment to pass", module);
