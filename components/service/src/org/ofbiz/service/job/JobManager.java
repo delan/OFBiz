@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.9 2003/12/14 02:16:47 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.10 2003/12/18 02:13:03 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.sql.Timestamp;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
@@ -59,7 +60,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class JobManager {
@@ -203,12 +204,17 @@ public class JobManager {
                 if (ri != null) {
                     long next = ri.next();
                     if (next <= runtime) {
+                        Timestamp now = UtilDateTime.nowTimestamp();
                         // only re-schedule if there is no new recurrences since last run
                         Debug.log("Scheduling Job : " + job, module);
                         GenericValue newJob = new GenericValue(job);
-                        newJob.set("runTime", UtilDateTime.nowTimestamp());
+                        newJob.set("runTime", now);
                         newJob.set("startDateTime", null);
                         toStore.add(newJob);
+
+                        // set the cancel time on the old job to the same as the re-schedule time
+                        job.set("cancelDateTime", now);
+                        toStore.add(job);
                     }
                 }
             }
