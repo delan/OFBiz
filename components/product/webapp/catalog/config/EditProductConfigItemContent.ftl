@@ -27,12 +27,10 @@
 <SCRIPT language="JavaScript">
 function insertNowTimestamp(field) {
   eval('document.productForm.' + field + '.value="${nowTimestampString}";');
-};
+}
 function insertImageName(size,nameValue) {
   eval('document.productForm.' + size + 'ImageUrl.value=nameValue;');
-};
-</HTML>
-
+}
 </SCRIPT>
 
 <#if hasPermission>
