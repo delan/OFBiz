@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,7 +24,6 @@
  *@version    $Rev$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <script language="JavaScript">
 <!--
 function toggle(e) {
@@ -237,7 +236,7 @@ function setAlternateGwp(field) {
                   <#if cartLine.getProductId()?exists>
                     <#-- product item -->
                     <#-- start code to display a small image of the product -->
-                    <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", requestAttributes.locale)?if_exists>
+                    <#assign smallImageUrl = Static["org.ofbiz.product.product.ProductContentWrapper"].getProductContentAsText(cartLine.getProduct(), "SMALL_IMAGE_URL", locale)?if_exists>
                     <#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
                     <#if smallImageUrl?has_content>
                       <a href="<@ofbizUrl>/product?product_id=${cartLine.getProductId()}</@ofbizUrl>">
@@ -551,7 +550,7 @@ function setAlternateGwp(field) {
                       <td>
                         ${setRequestAttribute("optProduct", assocProduct)}
                         ${setRequestAttribute("listIndex", assocProduct_index)}
-                        ${pages.get("/catalog/productsummary.ftl")}
+                        ${screens.render("component://ecommerce/widget/CatalogScreens.xml#productsummary")}
                       </td>
                     </tr>
                     <#if assocProduct_has_next>
@@ -569,5 +568,5 @@ function setAlternateGwp(field) {
 
 <#if (shoppingCartSize?default(0) > 0)>
   <br/>
-  <#include "/cart/promoUseDetailsInline.ftl"/>
+  ${screens.render("component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline")}
 </#if>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main_right</template> 
-    <property name="title">Shopping List</property>
-      <property name="title-property">PageTitleShoppingList</property>
-    <property name="headerItem">Shopping List</property>
-    <content-action name="/shoppinglist/editShoppingList.bsh"/>
-</page>

@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,17 +20,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if (shoppingCartSize > 0)>
-  <#include "/cart/promoUseDetailsInline.ftl"/>
+  ${screens.render("component://ecommerce/widget/CartScreens.xml#promoUseDetailsInline")}
   <br/>
 </#if>
 
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -67,4 +66,3 @@
       </td>
     </tr>
   </table>
-
