@@ -53,7 +53,7 @@
         </init-param>
         <init-param>
             <param-name>allowedPaths</param-name>
-            <param-value>/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/includes/maincss.css</param-value>
+            <param-value>/control:/select:/index.html:/index.jsp:/default.html:/default.jsp:/images:/includes/maincss.css:/ShippingAPI.dll</param-value>
         </init-param>
         <init-param>
             <param-name>errorCode</param-name>
@@ -81,9 +81,20 @@
         <servlet-class>org.ofbiz.content.webapp.control.ControlServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>ShippingAPI</servlet-name>
+        <display-name>ShippingAPI</display-name>
+        <description>Mock USPS Webtools API Servlet</description>
+        <servlet-class>org.ofbiz.shipment.thirdparty.usps.UspsMockApiServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ControlServlet</servlet-name>
         <url-pattern>/control/*</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ShippingAPI</servlet-name>
+        <url-pattern>/ShippingAPI.dll</url-pattern>
     </servlet-mapping>
 
     <session-config>
