@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.9 2004/07/17 07:05:03 doogie Exp $
+ * $Id: EntityFunction.java,v 1.10 2004/07/21 03:03:33 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ package org.ofbiz.entity.condition;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.config.DatasourceInfo;
 import org.ofbiz.entity.model.ModelEntity;
@@ -39,7 +40,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  */
 public abstract class EntityFunction extends EntityConditionValue {
 
@@ -175,8 +176,8 @@ public abstract class EntityFunction extends EntityConditionValue {
         }
     }
 
-    public Object getValue(Map map) {
-        Object value = nested != null ? nested.getValue(map) : this.value;
+    public Object getValue(GenericDelegator delegator, Map map) {
+        Object value = nested != null ? nested.getValue(delegator, map) : this.value;
         return value != null ? fetcher.getValue(value) : null;
     }
 }
