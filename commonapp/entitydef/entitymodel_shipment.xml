@@ -294,7 +294,19 @@
       <relation type="one" fk-name="SHPMNT_PRTYTO" title="To" rel-entity-name="Party">
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
       </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="Person">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="To" rel-entity-name="PartyGroup">
+        <key-map field-name="partyIdTo" rel-field-name="partyId"/>
+      </relation>
       <relation type="one" fk-name="SHPMNT_PRTYFM" title="From" rel-entity-name="Party">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="From" rel-entity-name="Person">
+        <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="From" rel-entity-name="PartyGroup">
         <key-map field-name="partyIdFrom" rel-field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentPackageContent">
@@ -610,6 +622,12 @@
         <key-map field-name="shipmentId"/>
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_CPTY" title="Carrier" rel-entity-name="Party">
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="Carrier" rel-entity-name="Person">
+        <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" title="Carrier" rel-entity-name="PartyGroup">
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_FXAS" rel-entity-name="FixedAsset">
