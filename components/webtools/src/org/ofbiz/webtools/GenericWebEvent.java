@@ -1,5 +1,5 @@
 /*
- * $Id: GenericWebEvent.java,v 1.3 2004/02/07 09:40:54 jonesde Exp $
+ * $Id: GenericWebEvent.java,v 1.4 2004/07/09 16:45:23 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,11 +25,16 @@ package org.ofbiz.webtools;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -43,12 +48,21 @@ import org.ofbiz.security.Security;
  * Web Event for doing updates on Generic Entities
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class GenericWebEvent {
     
     public static final String module = GenericWebEvent.class.getName();
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "WebtoolsErrorUiLabel";
+    /**
+     * Language setting.
+     */
+    private static Locale locale;
 
     /** An HTTP WebEvent handler that updates a Generic entity
      *
@@ -63,9 +77,15 @@ public class GenericWebEvent {
         String errMsg = "";
 
         String entityName = request.getParameter("entityName");
+        GenericWebEvent.locale = UtilHttp.getLocale(request); 
 
         if (entityName == null || entityName.length() <= 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "The entityName was not specified, but is required.");
+            errMsg = UtilProperties.getMessage(
+            GenericWebEvent.RESOURCE,
+                    "genericWebEvent.entity_name_not_specified", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);            
             Debug.logWarning("[GenericWebEvent.updateGeneric] The entityName was not specified, but is required.", module);
             return "error";
         }
@@ -74,12 +94,22 @@ public class GenericWebEvent {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         if (security == null) {
-            request.setAttribute("_ERROR_MESSAGE_", "The security object was not found in the request, please check the control servlet init.");
+            errMsg = UtilProperties.getMessage(
+            GenericWebEvent.RESOURCE,
+                    "genericWebEvent.security_object_not_found", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[updateGeneric] The security object was not found in the request, please check the control servlet init.", module);
             return "error";
         }
         if (delegator == null) {
-            request.setAttribute("_ERROR_MESSAGE_", "The delegator object was not found in the request, please check the control servlet init.");
+            errMsg = UtilProperties.getMessage(
+            GenericWebEvent.RESOURCE,
+                    "genericWebEvent.delegator_object_not_found", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[updateGeneric] The delegator object was not found in the request, please check the control servlet init.", module);
             return "error";
         }
@@ -96,7 +126,12 @@ public class GenericWebEvent {
         String updateMode = request.getParameter("UPDATE_MODE");
 
         if (updateMode == null || updateMode.length() <= 0) {
-            request.setAttribute("_ERROR_MESSAGE_", "Update Mode was not specified, but is required.");
+            errMsg = UtilProperties.getMessage(
+            GenericWebEvent.RESOURCE,
+                    "genericWebEvent.update_mode_not_specified", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("[updateGeneric] Update Mode was not specified, but is required; entityName: " + entityName, module);
             return "error";
         }
@@ -104,7 +139,18 @@ public class GenericWebEvent {
         // check permissions before moving on...
         if (!security.hasEntityPermission("ENTITY_DATA", "_" + updateMode, request.getSession()) &&
             !security.hasEntityPermission(entity.getPlainTableName(), "_" + updateMode, request.getSession())) {
-            request.setAttribute("_ERROR_MESSAGE_", "You do not have sufficient permissions to " + updateMode + " " + entity.getEntityName() + " (" + entity.getPlainTableName() + "_" + updateMode + " or " + entity.getPlainTableName() + "_ADMIN needed).");
+                Map messageMap = UtilMisc.toMap("updateMode", updateMode, "entityName", entity.getEntityName(), "entityPlainTableName", entity.getPlainTableName());
+                errMsg = UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.not_sufficient_permissions_01", (locale != null
+                                ? locale
+                                    : Locale.getDefault()));
+                errMsg += UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.not_sufficient_permissions_02", messageMap, (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";                                                
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
             // not really successful, but error return through ERROR_MESSAGE, so quietly fail
             return "error";
         }
@@ -120,7 +166,12 @@ public class GenericWebEvent {
                 type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
-                errMsg += "<li> Fatal error: field type \"" + field.getType() + "\" not found";
+                Map messageMap = UtilMisc.toMap("fieldType", field.getType());
+                errMsg += "<li>" + UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.fatal_error_param", messageMap, (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";
             }
             String fval = request.getParameter(field.getName());
 
@@ -128,7 +179,12 @@ public class GenericWebEvent {
                 try {
                     findByEntity.setString(field.getName(), fval);
                 } catch (Exception e) {
-                    errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
+                    Map messageMap = UtilMisc.toMap("fval", fval);
+                    errMsg = errMsg + "<li>" + field.getColName() + UtilProperties.getMessage(
+                    GenericWebEvent.RESOURCE,
+                            "genericWebEvent.conversion_failed", messageMap, (locale != null
+                                    ? locale
+                                        : Locale.getDefault())) + type.getJavaType() + ".";
                     Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
                 }
             }
@@ -142,7 +198,12 @@ public class GenericWebEvent {
                 delegator.removeByPrimaryKey(findByEntity.getPrimaryKey());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
-                request.setAttribute("_ERROR_MESSAGE_", "Delete failed (write error)");
+                errMsg = UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.delete_failed", (locale != null
+                                ? locale
+                                    : Locale.getDefault()));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
 
@@ -158,7 +219,12 @@ public class GenericWebEvent {
                 type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
-                errMsg += "<li> Fatal error: field type \"" + field.getType() + "\" not found";
+                Map messageMap = UtilMisc.toMap("fieldType", field.getType());
+                errMsg += "<li>" + UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.fatal_error_param", messageMap, (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";
             }
             String fval = request.getParameter(field.getName());
 
@@ -166,7 +232,12 @@ public class GenericWebEvent {
                 try {
                     findByEntity.setString(field.getName(), fval);
                 } catch (Exception e) {
-                    errMsg = errMsg + "<li>" + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType();
+                    Map messageMap = UtilMisc.toMap("fval", fval);
+                    errMsg = errMsg + "<li>" + field.getColName() + UtilProperties.getMessage(
+                    GenericWebEvent.RESOURCE,
+                            "genericWebEvent.conversion_failed", messageMap, (locale != null
+                                    ? locale
+                                        : Locale.getDefault())) + type.getJavaType() + ".";
                     Debug.logWarning("[updateGeneric] " + field.getColName() + " conversion failed: \"" + fval + "\" is not a valid " + type.getJavaType() + "; entityName: " + entityName, module);
                 }
             }
@@ -180,11 +251,21 @@ public class GenericWebEvent {
                 tempEntity = delegator.findByPrimaryKey(findByEntity.getPrimaryKey());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
-                request.setAttribute("_ERROR_MESSAGE_", "Create failed while checking if exists (read error)");
+                errMsg = UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.create_failed_by_check", (locale != null
+                                ? locale
+                                    : Locale.getDefault()));
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
             if (tempEntity != null) {
-                errMsg = errMsg + "<li>" + entity.getEntityName() + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.";
+                Map messageMap = UtilMisc.toMap("primaryKey", findByEntity.getPrimaryKey().toString());
+                errMsg = errMsg + "<li>" + entity.getEntityName() + UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.already_exists_pk", messageMap, (locale != null
+                                ? locale
+                                    : Locale.getDefault()))+ ".";
                 Debug.logWarning("[updateGeneric] " + entity.getEntityName() + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.", module);
             }
         }
@@ -241,16 +322,28 @@ public class GenericWebEvent {
                         message = (String) msgField.get(null);
                     } catch (Exception e) {
                         Debug.logError("[updateGeneric] Could not find validation message field: " + curValidate + "Msg of class " + className + "; returning generic validation failure message.", module);
-                        message = "validation failed.";
+                        message = UtilProperties.getMessage(
+                        GenericWebEvent.RESOURCE,
+                                "genericWebEvent.validation_failed", (locale != null
+                                        ? locale
+                                            : Locale.getDefault())) + ".";
                     }
-                    errMsg = errMsg + "<li>" + field.getColName() + " " + curValidate + " failed: " + message;
+                    errMsg = errMsg + "<li>" + field.getColName() + " " + curValidate + " " + UtilProperties.getMessage(
+                    GenericWebEvent.RESOURCE,
+                            "genericWebEvent.failed", (locale != null
+                                    ? locale
+                                        : Locale.getDefault()))+ ": " + message;
                     Debug.logWarning("[updateGeneric] " + field.getColName() + " " + curValidate + " failed: " + message, module);
                 }
             }
         }
 
         if (errMsg.length() > 0) {
-            errMsg = "<br><b>The following error(s) occurred:</b><ul>" + errMsg + "</ul>";
+            errMsg = "<br><b>" + UtilProperties.getMessage(
+            GenericWebEvent.RESOURCE,
+                    "genericWebEvent.following_error_occurred", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ":</b><ul>" + errMsg + "</ul>";
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -265,7 +358,13 @@ public class GenericWebEvent {
                 value = null;
             }
             if (value == null) {
-                request.setAttribute("_ERROR_MESSAGE_", "Creation of " + entity.getEntityName() + " failed for entity: " + findByEntity.toString());
+                Map messageMap = UtilMisc.toMap("entityName", entity.getEntityName());
+                errMsg = UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.creation_param_failed", messageMap, (locale != null
+                                ? locale
+                                    : Locale.getDefault()))+ ": " + findByEntity.toString();                
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         } else if (updateMode.equals("UPDATE")) {
@@ -275,11 +374,23 @@ public class GenericWebEvent {
                 value.store();
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
-                request.setAttribute("_ERROR_MESSAGE_", "Update of " + entity.getEntityName() + " failed for value: " + value.toString());
+                Map messageMap = UtilMisc.toMap("entityName", entity.getEntityName());
+                errMsg = UtilProperties.getMessage(
+                GenericWebEvent.RESOURCE,
+                        "genericWebEvent.update_of_param_failed", messageMap, (locale != null
+                                ? locale
+                                    : Locale.getDefault()))+ ": " + value.toString();                
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 return "error";
             }
         } else {
-            request.setAttribute("_ERROR_MESSAGE_", "Update Mode specified (" + updateMode + ") was not valid.");
+            Map messageMap = UtilMisc.toMap("updateMode", updateMode);
+            errMsg = UtilProperties.getMessage(
+            GenericWebEvent.RESOURCE,
+                    "genericWebEvent.update_of_param_failed", messageMap, (locale != null
+                            ? locale
+                                : Locale.getDefault()))+ ".";                
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);
             Debug.logWarning("updateGeneric: Update Mode specified (" + updateMode + ") was not valid for entity: " + findByEntity.toString(), module);
             return "error";
         }
