@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.3 2003/11/07 00:33:56 jonesde Exp $
+ * $Id: EntityExpr.java,v 1.4 2004/04/23 01:42:16 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -243,4 +243,22 @@ public class EntityExpr extends EntityCondition {
 		}
 		super.addValue(buffer, field, value, params);
 	}
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof EntityExpr)) return false;
+        EntityExpr other = (EntityExpr) obj;
+        return equals(lhs, other.lhs) &&
+               equals(operator, other.operator) &&
+               equals(rhs, other.rhs) &&
+               leftUpper == other.leftUpper &&
+               rightUpper == other.rightUpper;
+    }
+
+    public int hashCode() {
+        return hashCode(lhs) ^
+               hashCode(operator) ^
+               hashCode(rhs) ^
+               (leftUpper ? 1 : 2) ^
+               (rightUpper ? 4 : 8);
+    }
 }

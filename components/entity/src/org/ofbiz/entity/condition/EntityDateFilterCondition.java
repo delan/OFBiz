@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDateFilterCondition.java,v 1.1 2003/11/05 12:08:00 jonesde Exp $
+ * $Id: EntityDateFilterCondition.java,v 1.2 2004/04/23 01:42:16 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,6 +55,16 @@ public class EntityDateFilterCondition extends EntityCondition {
     public boolean entityMatches(GenericEntity entity) {    
         EntityCondition condition = makeCondition();
         return condition.entityMatches(entity);
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof EntityDateFilterCondition)) return false;
+        EntityDateFilterCondition other = (EntityDateFilterCondition) obj;
+        return equals(fromDateName, other.fromDateName) && equals(thruDateName, other.thruDateName);
+    }
+
+    public int hashCode() {
+        return hashCode(fromDateName) ^ hashCode(thruDateName);
     }
 
     protected EntityCondition makeCondition() {

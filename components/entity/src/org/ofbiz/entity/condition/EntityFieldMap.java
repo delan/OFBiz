@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldMap.java,v 1.3 2003/11/07 00:33:56 jonesde Exp $
+ * $Id: EntityFieldMap.java,v 1.4 2004/04/23 01:42:16 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class EntityFieldMap extends EntityCondition {
@@ -123,5 +123,15 @@ public class EntityFieldMap extends EntityCondition {
         if (fieldMap != null && !modelEntity.areFields(fieldMap.keySet())) {
             throw new GenericModelException("At least one of the passed fields is not valid: " + fieldMap.keySet().toString());
         }
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof EntityFieldMap)) return false;
+        EntityFieldMap other = (EntityFieldMap) obj;
+        return fieldMap.equals(other.fieldMap) && operator.equals(other.operator);
+    }
+
+    public int hashCode() {
+        return fieldMap.hashCode() & operator.hashCode();
     }
 }
