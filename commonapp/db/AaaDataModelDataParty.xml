@@ -75,7 +75,6 @@
   <!-- top level role types -->
   <RoleType description="Administrator" hasTable="N" parentTypeId="" roleTypeId="ADMIN"/>
   <RoleType description="Automated Agent" hasTable="N" parentTypeId="" roleTypeId="AUTOMATED_AGENT_ROLE"/>
-  <RoleType description="Bill-From Vendor" hasTable="N" parentTypeId="" roleTypeId="BILL_FROM_VENDOR"/>
   <RoleType description="Calendar" hasTable="N" parentTypeId="" roleTypeId="CALENDAR_ROLE"/>
   <RoleType description="Client" hasTable="N" parentTypeId="" roleTypeId="CLIENT"/>
   <RoleType description="Consumer" hasTable="N" parentTypeId="" roleTypeId="CONSUMER"/>
@@ -103,6 +102,7 @@
   <!-- second level role types -->  
   <RoleType description="Agent" hasTable="N" parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="AGENT"/>
   <RoleType description="Association" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ASSOCIATION"/>
+  <RoleType description="Bill-From Vendor" hasTable="N" parentTypeId="VENDOR" roleTypeId="BILL_FROM_VENDOR"/>
   <RoleType description="Bill-To Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="BILL_TO_CUSTOMER"/>
   <RoleType description="Calendar Attendee" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_ATTENDEE"/>
   <RoleType description="Calendar Delegate" hasTable="N" parentTypeId="CALENDAR_ROLE" roleTypeId="CAL_DELEGATE"/>
