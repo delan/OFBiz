@@ -61,7 +61,9 @@
 <%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
+  <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Product]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
+  <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Associations]</a>
 <%}%>
 
 <form action="<ofbiz:url>/UpdateProduct</ofbiz:url>" method=POST style='margin: 0;'>
@@ -260,7 +262,9 @@
 <%-- <%if(product != null){%><a href="<ofbiz:url>UpdateProduct?UPDATE_MODE=DELETE&PRODUCT_ID=<%=product.getSku()%></ofbiz:url>" class="buttontext">[Delete this Product]</a><%}%> --%>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[View Product Page]</a>
+  <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Product]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Keywords]</a>
+  <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Associations]</a>
 <%}%>
 <br>
 
@@ -277,7 +281,7 @@
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <%Iterator pcIterator = UtilMisc.toIterator(product.getRelated("ProductCategoryMember"));%>
-<%while(pcIterator.hasNext()) {%>
+<%while(pcIterator != null && pcIterator.hasNext()) {%>
   <%GenericValue productCategoryMember = (GenericValue)pcIterator.next();%>
   <%GenericValue category = productCategoryMember.getRelatedOne("ProductCategory");%>
   <tr valign="middle">

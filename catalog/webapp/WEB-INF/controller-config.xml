@@ -131,6 +131,17 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="UploadImage"/>
     </request-map>
+
+    <request-map uri="EditProductAssoc"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductAssoc"/>
+    </request-map>
+    
+    <request-map uri="UpdateProductAssoc"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductAssoc"/>
+        <response name="error" type="view" value="EditProductAssoc"/>
+        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductAssoc"/>
+    </request-map>
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -142,6 +153,7 @@
     <view-map name="EditCategory" page="/EditCategory.jsp"/>
     <view-map name="EditProduct" page="/EditProduct.jsp"/>
     <view-map name="EditProductKeyword" page="/EditProductKeyword.jsp"/>
+    <view-map name="EditProductAssoc" page="/EditProductAssoc.jsp"/>
     <view-map name="UploadImage" page="/UploadImage.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
