@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.36 2004/06/27 05:03:22 jonesde Exp $
+ * $Id: PaymentGatewayServices.java,v 1.37 2004/06/28 16:54:53 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.36 $
+ * @version    $Revision: 1.37 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -132,6 +132,7 @@ public class PaymentGatewayServices {
         // loop through and auth each payment
         List finished = new ArrayList();
         List hadError = new ArrayList();
+        List messages = new ArrayList();
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
@@ -160,6 +161,11 @@ public class PaymentGatewayServices {
             if (maxAmount == null || maxAmount.doubleValue() > 0) {
                 // call the authPayment method
                 Map processorResult = authPayment(dispatcher, userLogin, orh, paymentPref, totalRemaining, reAuth);
+
+                // get the customer messages
+                if (processorResult.get("customerRespMsgs") != null) {
+                    messages.addAll((List) processorResult.get("customerRespMsgs"));
+                }
 
                 // handle the response
                 if (processorResult != null) {
@@ -199,6 +205,9 @@ public class PaymentGatewayServices {
         }
 
         Debug.logInfo("Finished with auth(s) checking results", module);
+
+        // add the messages to the result
+        result.put("authResultMsgs", messages);
 
         if (hadError.size() > 0) {
             Debug.logError("Error(s) (" + hadError.size() + ") during auth; returning ERROR", module);
@@ -535,6 +544,26 @@ public class PaymentGatewayServices {
                 pgResponse.create();
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem storing PaymentGatewayResponse entity; authorization was released! : " + pgResponse, module);
+            }
+
+            // create the internal messages
+            List messages = (List) releaseResult.get("internalRespMsgs");
+            if (messages != null && messages.size() > 0) {
+                Iterator i = messages.iterator();
+                while (i.hasNext()) {
+                    GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
+                    String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg").toString();
+                    String message = (String) i.next();
+                    respMsg.set("paymentGatewayRespMsgId", respMsgId);
+                    respMsg.set("paymentGatewayResponseId", responseId);
+                    respMsg.set("pgrMessage", message);
+                    try {
+                        delegator.create(respMsg);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError("Unable to create PaymentGatewayRespMsg record");
+                    }
+                }
             }
 
             if (releaseResponse != null && releaseResponse.booleanValue()) {
@@ -986,6 +1015,21 @@ public class PaymentGatewayServices {
         response.set("transactionDate", UtilDateTime.nowTimestamp());
         delegator.create(response);
 
+        // create the internal messages
+        List messages = (List) result.get("internalRespMsgs");
+        if (messages != null && messages.size() > 0) {
+            Iterator i = messages.iterator();
+            while (i.hasNext()) {
+                GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
+                String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg").toString();
+                String message = (String) i.next();
+                respMsg.set("paymentGatewayRespMsgId", respMsgId);
+                respMsg.set("paymentGatewayResponseId", responseId);
+                respMsg.set("pgrMessage", message);
+                delegator.create(respMsg);
+            }
+        }
+
         if (response.getDouble("amount").doubleValue() != ((Double) result.get("processAmount")).doubleValue()) {
             Debug.logWarning("The authorized amount does not match the max amount : Response - " + response + " : result - " + result, module);
         }
@@ -1054,6 +1098,21 @@ public class PaymentGatewayServices {
             response.set("gatewayMessage", result.get("captureMessage"));
             response.set("transactionDate", UtilDateTime.nowTimestamp());
             delegator.create(response);
+
+            // create the internal messages
+            List messages = (List) result.get("internalRespMsgs");
+            if (messages != null && messages.size() > 0) {
+                Iterator i = messages.iterator();
+                while (i.hasNext()) {
+                    GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
+                    String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg").toString();
+                    String message = (String) i.next();
+                    respMsg.set("paymentGatewayRespMsgId", respMsgId);
+                    respMsg.set("paymentGatewayResponseId", responseId);
+                    respMsg.set("pgrMessage", message);
+                    delegator.create(respMsg);
+                }
+            }
 
             String orderId = paymentPreference.getString("orderId");
             GenericValue orderRole = EntityUtil.getFirst(delegator.findByAnd("OrderRole",
@@ -1234,6 +1293,26 @@ public class PaymentGatewayServices {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError("Unable to create PaymentGatewayResponse record");
+                }
+
+                // create the internal messages
+                List messages = (List) refundResponse.get("internalRespMsgs");
+                if (messages != null && messages.size() > 0) {
+                    Iterator i = messages.iterator();
+                    while (i.hasNext()) {
+                        GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
+                        String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg").toString();
+                        String message = (String) i.next();
+                        respMsg.set("paymentGatewayRespMsgId", respMsgId);
+                        respMsg.set("paymentGatewayResponseId", responseId);
+                        respMsg.set("pgrMessage", message);
+                        try {
+                            delegator.create(respMsg);
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, module);
+                            return ServiceUtil.returnError("Unable to create PaymentGatewayRespMsg record");
+                        }
+                    }
                 }
 
                 // handle the (reverse) payment
@@ -1543,6 +1622,7 @@ public class PaymentGatewayServices {
         result.put("authRefNum", new Long(nowTime).toString());
         result.put("authFlag", "X");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
+        result.put("internalRespMsgs", UtilMisc.toList("This is a test processor; no payments were captured or authorized."));
         return result;
     }
 

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  */
 -->
 
@@ -1825,6 +1825,17 @@
       </relation>
       <relation type="many" rel-entity-name="Payment">
         <key-map field-name="paymentTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="PaymentGatewayRespMsg"
+            package-name="org.ofbiz.accounting.payment"
+            title="Payment Gateway Response Message">
+        <field name="paymentGatewayRespMsgId" type="id-ne"></field>
+        <field name="paymentGatewayResponseId" type="id-ne"></field>
+        <field name="pgrMessage" type="very-long"></field>
+        <prim-key field="paymentGatewayRespMsgId"/>
+        <relation type="one" fk-name="PAYGATRM_PAYGR" rel-entity-name="PaymentGatewayResponse">
+            <key-map field-name="paymentGatewayResponseId"/>
       </relation>
     </entity>
     <entity entity-name="PaymentGatewayResponse"
