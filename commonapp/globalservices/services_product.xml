@@ -87,7 +87,7 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="newProductId" type="String" mode="IN" optional="false"/>
     </service>
-    
+
     <!-- Product Catalog Services -->
     <service name="createProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="createProdCatalog" auth="true">
@@ -300,6 +300,73 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <!-- Product Price Services -->
+    <service name="createProductPriceRule" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="createProductPriceRule" auth="true">
+        <description>Create an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="ruleName" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="updateProductPriceRule" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="updateProductPriceRule" auth="true">
+        <description>Update an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="ruleName" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteProductPriceRule" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="deleteProductPriceRule" auth="true">
+        <description>Delete an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPriceCond" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="createProductPriceCond" auth="true">
+        <description>Create an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceCondSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="inputParamEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="operatorEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="condValue" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProductPriceCond" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="updateProductPriceCond" auth="true">
+        <description>Update an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceCondSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="inputParamEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="operatorEnumId" type="String" mode="IN" optional="true"/>
+        <attribute name="condValue" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProductPriceCond" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="deleteProductPriceCond" auth="true">
+        <description>Delete an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceCondSeqId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="createProductPriceAction" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="createProductPriceAction" auth="true">
+        <description>Create an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceActionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceActionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="IN" optional="false"/>
+    </service>
+    <service name="updateProductPriceAction" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="updateProductPriceAction" auth="true">
+        <description>Update an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceActionSeqId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceActionTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="amount" type="Double" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteProductPriceAction" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="deleteProductPriceAction" auth="true">
+        <description>Delete an ProductPrice</description>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceActionSeqId" type="String" mode="IN" optional="false"/>
+    </service>
+
     <!-- Product Promotion Services -->
     <service name="createProductPromo" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="createProductPromo" auth="true">
@@ -403,7 +470,7 @@
         <attribute name="productPromoRuleId" type="String" mode="IN" optional="false"/>
         <attribute name="productPromoActionSeqId" type="String" mode="IN" optional="false"/>
     </service>
-                  
+
     <service name="addProductPromoToProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/promo/PromoServices.xml" invoke="addProductPromoToProdCatalog" auth="true">
         <description>Add ProductPromo To ProdCatalog</description>
@@ -522,7 +589,7 @@
         <attribute name="quantity" type="Double" mode="IN" optional="false"/>
         <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
     </service>
-        
+
     <!-- Product Feature Services -->
     <service name="createProductFeatureCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCategory" auth="true">
