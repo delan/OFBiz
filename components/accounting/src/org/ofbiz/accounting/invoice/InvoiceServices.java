@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.10 2004/05/28 06:33:11 jonesde Exp $
+ * $Id: InvoiceServices.java,v 1.11 2004/05/28 06:47:40 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,21 +35,22 @@ import org.ofbiz.accounting.payment.PaymentWorker;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.product.product.ProductWorker;
 
 /**
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -218,10 +219,12 @@ public class InvoiceServices {
             } 
             
             // set the bill-to contact mech as the contact mech of the billing account
-            GenericValue billToContactMech = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
-            billToContactMech.set("contactMechId", billingAccount.getString("contactMechId"));
-            billToContactMech.set("contactMechPurposeTypeId", "BILLING_LOCATION");
-            toStore.add(billToContactMech);                             
+            if (UtilValidate.isNotEmpty(billingAccount.getString("contactMechId"))) {
+                GenericValue billToContactMech = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
+                billToContactMech.set("contactMechId", billingAccount.getString("contactMechId"));
+                billToContactMech.set("contactMechPurposeTypeId", "BILLING_LOCATION");
+                toStore.add(billToContactMech);
+            }
         } else {
             // no billing account use the info off the order header
             GenericValue billToPerson = orh.getBillToPerson();
