@@ -26,7 +26,6 @@ package org.ofbiz.content.widget.tree;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
-import java.util.List;
 
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 

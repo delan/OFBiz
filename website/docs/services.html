@@ -1,36 +1,36 @@
 <html>
 <head>
-<meta http-equiv="Content-Type"
-content="text/html; charset=iso-8859-1">
-<title>The Open For Business Project: Service Engine Guide</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"/>
+  <title>The Open For Business Project: Service Engine Guide</title>
 </head>
 <body>
 <table width="100%">
 <tbody>
 <tr>
-<td align="left" valign="center" width="50%"> <a
-href="http://www.ofbiz.org"><img
+<td align="left" valign="center" width="50%">
+<a href="http://www.ofbiz.org"><img
 src="http://www.ofbiz.org/images/ofbiz_logo.jpg"
-alt="The Open For Business Project" border="0"></a> </td>
+alt="The Open For Business Project" border="0"/></a> </td>
 <td align="right" valign="center" width="50%"> <a
 href="http://sf.net/projects/ofbiz"><img
 src="http://sourceforge.net/sflogo.php?group_id=27173"
-alt="SourceForge Logo" border="0" height="31" width="88"></a> <a
+alt="SourceForge Logo" border="0" height="31" width="88"/></a> <a
 href="http://www.ofbiz.org"><img
 src="http://www.ofbiz.org/images/ofbiz_powered.gif" border="0"
-width="88"></a> </td>
+width="88"/></a>
+</td>
 </tr>
 </tbody>
 </table>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h2 align="center">The Open For Business Project: Service Engine Guide</h2>
 <div class="contenttext">Written by: Andy Zeneski, <a
 href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
-<div class="contenttext">Edited by: Les Austin<br>
-Last Updated: August 06, 2004<br>
+<div class="contenttext">Edited by: Les Austin<br/>
+Last Updated: August 06, 2004<br/>
 </div>
 <!-- $Id$ -->
-<hr class="sepbar"><br>
+<hr class="sepbar"/><br/>
 <h3>Table of Contents</h3>
 <ul>
 <li><a href="#Related_Documents">Related Documents</a></li>
@@ -51,18 +51,18 @@ Last Updated: August 06, 2004<br>
 <li><a href="#JMS">JMS Services</a></li>
 </ul>
 </ul>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Related_Documents">Related Documents:</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <ul>
 <li><a href="serviceconfig.html">Service Engine Configuration Guild</a></li>
 <li><a href="../documents.html#JavaDocs">JavaDoc List (Documents Page)</a></li>
 <li><a href="../documents.html#XMLDefs">XML File Definitions (Documents Page)</a></li>
 </ul>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Introduction">Introduction</a>
 </h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">The Services Framework is new to OFBiz in
 Version 2. Services are defined as independent pieces of logic which
 when placed together can be used to process many different types of
@@ -72,7 +72,7 @@ Java is much like an event where it is a static method, however with
 the Services Framework we do not limit to web based applications.
 Services require input parameters to be in a Map and the results are
 returned in a Map as well. This is nice since a Map can be serialized
-and stored or passed via HTTP (SOAP). <br>
+and stored or passed via HTTP (SOAP). <br/>
 </p>
 <p class="contenttext">Services are defined through the <a
 href="#ServiceDefinition">Service Definition</a> and are assigned to a
@@ -96,9 +96,9 @@ as 'exportable' which means they are allowed to be accessed by outside
 parties. Currently there is a SOAP EventHandler which allows services
 to be made available via SOAP. Other forms of remote invocation may be
 added to the framework in the future. </p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="ServiceDispatcher">Service Dispatcher</a> </h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">The Service Dispatcher handles dispatching
 services to the appropriate <a href="#ServiceEngine">Service Engine</a>
 where it is then invoked. There is exactly one ServiceDispatcher for
@@ -118,10 +118,10 @@ running in different threads than the actual ServiceDispatcher, so it
 is left to the LocalDispatcher to keep a <a href="#DispatchContext">DispatchContext</a>
 which among other things keeps a reference to the applications
 classloader.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="DispatchContext">Dispatch Context</a>
 </h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">The DispatchContext is created by the
 LocalDispatcher upon instantiation. This is the runtime dispatcher
 context. It contains necessary information to process services for each
@@ -129,12 +129,12 @@ dispatcher. This context contains the reference to each of the service
 definition files, the classloader which should be used for invocation,
 a reference to the delegator and its dispatcher along with a 'bag' of
 user defined attributes. This context is passed on to each service when
-invoked and is used by the dispatcher to determine the service's model.<br>
+invoked and is used by the dispatcher to determine the service's model.<br/>
 </p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="ServiceEngine">ServiceEngine</a>
 </h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">This is where the service is actually invoked.
 Each service has an engine name assigned in its definition. This engine
 name is mapped via the servicesengine.xml file and is instantiated by
@@ -145,13 +145,13 @@ engines.</p>
 <p class="contenttext">It is the job of the engine to handle invocation
 of both synchronous and asynchronous services. Engines which use the <a
 href="#JobScheduler">Job Scheduler</a> for asynchronous services can
-extend the GenericAsyncEngine.<br>
-<br>
+extend the GenericAsyncEngine.<br/>
+<br/>
 </p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="JobScheduler">Job Scheduler</a>
 </h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">The overhauled job scheduler is now integrated
 with the services framework. This is the most appropriate place for a
 scheduler. Since it cannot be guarantee that an HttpServletRequest and
@@ -183,9 +183,9 @@ then adds the job to the top of the list of scheduled jobs
 has been moved to the JobSandbox entity. There is a web based client in
 planning for adding predefined jobs to the queue, but currently the
 entities will have to be created by hand.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="ServiceDefinition">Service Definition</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">Services are defined in <i>Service Definition
 Files.</i> There are global definition files used for all service
 dispatchers as well as individual files associated only with a single
@@ -198,7 +198,7 @@ file can be found <a href="/dtds/services.dtd">here</a>.</p>
 associated to a specific service engine and the input and output
 parameters are defined explicitly. Below is an example of a service
 definition:</p>
-<pre>&lt;service name="userLogin" engine="java"<br> location="org.ofbiz.commonapp.security.login.LoginServices" invoke="userLogin"&gt;<br> &lt;description&gt;Authenticate a username/password; create a UserLogin object&lt;/description&gt;<br> &lt;attribute name="login.username" type="String" mode="IN"/&gt;<br> &lt;attribute name="login.password" type="String" mode="IN"/&gt;<br> &lt;attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/&gt;<br>&lt;/service&gt;<br></pre>
+<pre>&lt;service name="userLogin" engine="java"<br/> location="org.ofbiz.commonapp.security.login.LoginServices" invoke="userLogin"&gt;<br/> &lt;description&gt;Authenticate a username/password; create a UserLogin object&lt;/description&gt;<br/> &lt;attribute name="login.username" type="String" mode="IN"/&gt;<br/> &lt;attribute name="login.password" type="String" mode="IN"/&gt;<br/> &lt;attribute name="userLogin" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/&gt;<br/>&lt;/service&gt;<br/></pre>
 <p class="contenttext"><b>SERVICE ELEMENT:</b></p>
 <ul>
 <li><b>name</b> - The unique name of the service </li>
@@ -239,20 +239,20 @@ parameters are tested. Only required parameters are tested, however if
 a parameter is passed which is not defined as optional or required it
 will cause the service to fail. This service has not required OUT
 parameters, so the result is simply returned.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Usage">Usage</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">Internal Usage of the Services Framework is
 quite simple. In a Web Application the LocalDispatcher is stored in the
 ServletContext which can be accessed via the Session object in an
 Event. For non-web based applications you simply create a
 GenericDispatcher: </p>
-<pre>GenericDelegator delegator = GenericDelegator.getGenericDelegator("default");<br>LocalDispatcher dispatcher = new GenericDispatcher("UniqueName",delegator);<br></pre>
+<pre>GenericDelegator delegator = GenericDelegator.getGenericDelegator("default");<br/>LocalDispatcher dispatcher = new GenericDispatcher("UniqueName",delegator);<br/></pre>
 <p class="contenttext"><b>Now we have a dispatcher which we can use to
 invoke services. To invoke the test service create a Map for the
 context which contains the IN parameter <i>message</i> then invoke the
 service:</b></p>
-<pre>Map context = UtilMisc.toMap("message","This is a test.");<br>Map result = null;<br>try {<br> result = dispatcher.runSync("testScv",context);<br>}<br>catch (GenericServiceException e) {<br> e.printStackTrace();<br>}<br>if (result != null)<br> System.out.println("Result from service: " + (String) result.get("resp"));<br></pre>
+<pre>Map context = UtilMisc.toMap("message","This is a test.");<br/>Map result = null;<br/>try {<br/> result = dispatcher.runSync("testScv",context);<br/>}<br/>catch (GenericServiceException e) {<br/> e.printStackTrace();<br/>}<br/>if (result != null)<br/> System.out.println("Result from service: " + (String) result.get("resp"));<br/></pre>
 <p class="contenttext">Now look at the console and see what the test
 service has echoed.</p>
 <p class="contenttext">*** The test service is located in
@@ -260,29 +260,29 @@ core/docs/examples/ServiceTest.java You must compile this and place it
 in the classpath.</p>
 <p class="contenttext"><b>To schedule a service to run at a later time
 or to repeat use this:</b></p>
-<pre>// This example will schedule a job to run now.<br>Map context = UtilMisc.toMap("message","This is a test.");<br>try {<br> long startTime = (new Date()).getTime();<br> dispatcher.schedule("testScv", context, startTime);<br>}<br>catch (GenericServiceException e) {<br> e.printStackTrace();<br>}<br><br>// This example will schedule a service to run now and repeat once every 5 seconds a total of 10 times.<br>Map context = UtilMisc.toMap("message","This is a test.");<br>try {<br> long startTime = (new Date()).getTime();<br> int frequency = RecurrenceRule.SECONDLY;<br> int interval = 5;<br> int count = 10;<br> dispatcher.schedule("testScv", context, startTime, frequency, interval, count);<br>}<br>catch (GenericServiceException e) {<br> e.printStackTrace();<br>}<br></pre>
-<hr class="sepbar">
+<pre>// This example will schedule a job to run now.<br/>Map context = UtilMisc.toMap("message","This is a test.");<br/>try {<br/> long startTime = (new Date()).getTime();<br/> dispatcher.schedule("testScv", context, startTime);<br/>}<br/>catch (GenericServiceException e) {<br/> e.printStackTrace();<br/>}<br/><br/>// This example will schedule a service to run now and repeat once every 5 seconds a total of 10 times.<br/>Map context = UtilMisc.toMap("message","This is a test.");<br/>try {<br/> long startTime = (new Date()).getTime();<br/> int frequency = RecurrenceRule.SECONDLY;<br/> int interval = 5;<br/> int count = 10;<br/> dispatcher.schedule("testScv", context, startTime, frequency, interval, count);<br/>}<br/>catch (GenericServiceException e) {<br/> e.printStackTrace();<br/>}<br/></pre>
+<hr class="sepbar"/>
 <h3><a name="Advanced">Advanced</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">There have been a number of 'Advanced' features
 added to the service engine. You will find examples,
 definitions and information on each below.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Interfaces">Interfaces</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">The <code>interface</code> service engine has
 been implemented to help with defining services which share
 a number of the same parameters. An <code>interface</code> service
 cannot be invoked, but rather is a defined service which other services
 inherit from. Each <code>interface</code> service will be defined
 using the <code>interface</code> engine, for example:</p>
-<pre>&lt;service name="testInterface" engine="interface" location="" invoke=""&gt;<br> &lt;description&gt;A test interface service&lt;/description&gt;<br> &lt;attribute name="partyId" type="String" mode="IN"/&gt;<br> &lt;attribute name="partyTypeId" type="String" mode="IN"/&gt;<br> &lt;attribute name="userLoginId" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/&gt;<br>&lt;/service&gt;<br></pre>
+<pre>&lt;service name="testInterface" engine="interface" location="" invoke=""&gt;<br/> &lt;description&gt;A test interface service&lt;/description&gt;<br/> &lt;attribute name="partyId" type="String" mode="IN"/&gt;<br/> &lt;attribute name="partyTypeId" type="String" mode="IN"/&gt;<br/> &lt;attribute name="userLoginId" type="org.ofbiz.entity.GenericValue" mode="OUT" optional="true"/&gt;<br/>&lt;/service&gt;<br/></pre>
 <p class="contenttext"> **Note that the <code>location</code> and the <code>invoke</code>
 fields are required in the DTD, so we
 simply leave these as empty strings when used as an <code>interface</code>.</p>
 <p class="contenttext">Now that we have an <code>interface</code> we
 need to define a service which <code>implements</code> this <code>interface</code></p>
-<pre>&lt;service name="testExample1" engine="simple" <br> location="org/ofbiz/commonapp/common/SomeTestFile.xml" invoke="testExample1"&gt;<br> &lt;description&gt;A test service which implements testInterface&lt;/description&gt;<br> &lt;implements service="testInterface"/&gt; <br>&lt;/service&gt;<br></pre>
+<pre>&lt;service name="testExample1" engine="simple" <br/> location="org/ofbiz/commonapp/common/SomeTestFile.xml" invoke="testExample1"&gt;<br/> &lt;description&gt;A test service which implements testInterface&lt;/description&gt;<br/> &lt;implements service="testInterface"/&gt; <br/>&lt;/service&gt;<br/></pre>
 <p class="contenttext">The <code>testExample1</code> service will have
 the exact same required and optional attributes as the
 <code>testInterface</code> service. Any service which implements <code>testInterface</code>
@@ -292,9 +292,9 @@ added to a specific service by including
 the <code>attribute</code> tag along with the <code>implements</code>
 tag. You may also override an attribute
 by re-defining it after the <code>implements</code> tag.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="ECAs">ECAs</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">ECA (Event Condition Action) is much like a
 trigger. When a service is called, a lookup is performed to see
 if any ECAs are defined for this <code>event</code>. Events include
@@ -306,7 +306,7 @@ is performed. An <code>action</code> is just a service which must be
 defined to work with the parameters already in the service's context.
 There are no limit to the number
 of conditions or actions each ECA may define.</p>
-<pre>&lt;service-eca&gt;<br> &lt;eca service="testScv" event="commit"&gt;<br> &lt;condition field-name="message" operator="equals" value="12345"/&gt;<br> &lt;action service="testBsh" mode="sync"/&gt;<br> &lt;/eca&gt;<br>&lt;/service-eca&gt;<br></pre>
+<pre>&lt;service-eca&gt;<br/> &lt;eca service="testScv" event="commit"&gt;<br/> &lt;condition field-name="message" operator="equals" value="12345"/&gt;<br/> &lt;action service="testBsh" mode="sync"/&gt;<br/> &lt;/eca&gt;<br/>&lt;/service-eca&gt;<br/></pre>
 <p class="contenttext"><code><b><u>eca</u></b></code> tag:</p>
 <table border="1" cellpadding="2" cellspacing="0">
 <tbody>
@@ -483,9 +483,9 @@ effective when mode is async. Default <code><u>false</u></code>.</td>
 </tr>
 </tbody>
 </table>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Groups">Service Groups</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">Service groups are a set of services which
 should run when calling the initial service. You define
 a service using the <code>group</code> service engine, and include all
@@ -502,7 +502,7 @@ attribute used to define how
 the group will function. The service element is much like the <code>action</code>
 element in an ECA,
 the difference being the default value for result-to-context.</p>
-<pre>&lt;service-group&gt;<br> &lt;group name="testGroup" send-mode="all"&gt;<br> &lt;service name="testScv" mode="sync"/&gt;<br> &lt;service name="testBsh" mode="sync"/&gt;<br> &lt;/group&gt;<br>&lt;/service-group&gt;<br></pre>
+<pre>&lt;service-group&gt;<br/> &lt;group name="testGroup" send-mode="all"&gt;<br/> &lt;service name="testScv" mode="sync"/&gt;<br/> &lt;service name="testBsh" mode="sync"/&gt;<br/> &lt;/group&gt;<br/>&lt;/service-group&gt;<br/></pre>
 <p class="contenttext"><code><b><u>group</u></b></code> tag</p>
 <table border="1" cellpadding="2" cellspacing="0">
 <tbody>
@@ -553,18 +553,18 @@ the main service's context. Default <code><u>false</u></code>.</td>
 </tr>
 </tbody>
 </table>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="Route">Route Services</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">Route services are defined using the <code>route</code>
 service engine. When a <code>route</code> service is called, there is
 no invoke performed, but all ECAs defined will run during the proper
 events.
 This type of service is not used very often, but can be used to 'route'
 to other services by utilizing the ECA options available to services.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="HTTP">HTTP Services</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">Using HTTP services is a way of invoking remote
 services defined on other systems. The local definition should match
 that of the remote definition, but the <code>engine</code> used should
@@ -578,9 +578,9 @@ mounted to receive requests for services. Services on the remote system
 must have <code>export</code> set to <code>true</code> in order to
 allow the service to be run remotely. HTTP services by nature are
 synchronous.</p>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <h3><a name="JMS">JMS Services</a></h3>
-<hr class="sepbar">
+<hr class="sepbar"/>
 <p class="contenttext">JMS services are much like HTTP services, except
 the service request is sent to a JMS topic/queue. The <code>engine</code>
 should be set to <code>jms</code>, the <code>location</code> should
@@ -589,8 +589,8 @@ be the name of the jms-service defined in the serviceengine.xml file
 Config</a> document), and the <code>invoke</code> should be the name
 of the service on the remote system
 you are requesting to run. JMS services by nature are asynchronous.</p>
-<hr class="sepbar">
-<p class="contenttext"><br>
+<hr class="sepbar"/>
+<p class="contenttext"><br/>
 </p>
 <h3>&nbsp;</h3>
 </body>
