@@ -1,4 +1,4 @@
-<!-- Version 0.3 -->
+<!-- Version 0.4 -->
 <!-- NOTE: THIS DTD IS ONLY A GUIDE. IT MAY NOT BE CORRECT. -->
 <!-- DON'T TRUST IT. -->
 <!-- All sizes are in points (72 points == 1 inch) -->
@@ -16,8 +16,11 @@
 <!-- With description, PCDATA is text of report description -->
 <!ELEMENT description	(#PCDATA)>
 
+<!-- Default paper orientation is portrait, but I've forgotten how to -->
+<!-- specify that in a DTD. -->
 <!ELEMENT paper>
 <!ATTLIST paper		name		CDATA	#REQUIRED>
+<!ATTLIST paper		orientation	(portrait|landscape)>
 
 <!ELEMENT database>
 <!ATTLIST database	driverClassName	CDATA	#REQUIRED
@@ -92,6 +95,8 @@
 						#REQUIRED
 			value		CDATA	#REQUIRED
 >
+<!ATTLIST field		visible		(true|false)
+>
 
 <!ELEMENT bounds	EMPTY>
 <!ATTLIST bounds	x		CDATA	#REQUIRED
@@ -114,6 +119,8 @@
 
 <!-- A border has from one to four edges -->
 <!ELEMENT border	(edge (edge (edge (edge)?)?)?) >
+<!ATTLIST border	color		CDATA
+>
 
 <!ELEMENT edge		EMPTY>
 <!ATTLIST edge		location	(top|left|bottom|right)	#REQUIRED
@@ -123,7 +130,11 @@
 >
 
 <!ELEMENT line		point point>
-<!ATTLIST line		thickness	CDATA>
+<!-- Color is stored as "red;green;blue;alpha" -->
+<!ATTLIST line		thickness	CDATA
+			color		CDATA
+			visible		(true|false)
+>
 
 <!ELEMENT point		EMPTY>
 <!ATTLIST point		x		CDATA	#REQUIRED

@@ -80,3 +80,29 @@ Miguel Angel Rojas Aquino <mrojas_aquino@mail.flashmail.com>
 William Colls <bcolls@cbnlottery.com>
 
     Found special field formatting bug.
+
+Marius Hillenbrand <marius.hillenbrand@integration.riess.de>
+
+    Found dialog layout bugs.
+
+Aditya Gilra, <aditya_gilra@yahoo.com>
+
+    Suggested adding portrait/landscape paper sizes. Found solution to
+    printer exception bug.
+
+David Jones, <jonesde@ofbiz.org>
+
+    Added DataVision to the OFBiz project (http://www.ofbiz.org/). Many
+    suggestions including re-using external database connections and
+    passing URLs or InputStreams to the report instead of an XML file name
+    (neither implemented yet).
+
+Jennifer Taylor, <jennifer.taylor@caris.com>
+
+    Found and suggested a fix for reading beyond the end of the database
+    cursor, which caused a problem with the DB2 JDBC driver.
+
+Gabriel Tlalpachicatl, <gab571@netscape.net>
+
+    Found the bug where fields' and lines' "visible" flags weren't being
+    saved to the report XML.

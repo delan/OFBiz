@@ -8,15 +8,6 @@
   leftmost fields are excluded in the print. It seems as though they are
   positioned outside of the margined print area.
 
-* Java help HTML pages don't understand XHTML, for examples the XML Decl
-  and the <a id="foo" /> elements. Even worse, links don't work because the
-  targets use the XHTML "id" attribute instead of the HTML "name"
-  attribute. (I could use both in the <a> element, of course.) It seems to
-  look OK if I change the latter to <a...><h2>...</h2></a>, but is that
-  legal XHTML?
-
-* "Page" should not be a part of report.page.
-
 * Typing Control-A in the FieldPicker window goes to first item instead of
   executing the menu item associated with that key. NOTE: This happends
   under Linux but not under Mac OS X. Therefore, it is a Java
@@ -75,19 +66,33 @@
     To Do 
 ================================================================
 
+* Support line and border color in layout engines.
+
+* Different color (e.g., red) if number is negative.
+
+* Comments in PaperFormat.java.
+
+* Comments in SortedListModel.java.
+
+* Page breaks. Conditionally? By group? Miguel Angel Rojas Aquino
+  <mrojas_aquino@flashmail.com>.
+
+* Pass database connection to report? David Jones <jonesde@ofbiz.org>
+
+* Pass InputStream or URL to report instead of a filename. David Jones
+  <jonesde@ofbiz.org>
+
 * Docs: Add reference to field formatting in edit.html.
+
+* Turn "http:", "ftp:" etc. into hyperlinks in HTML and DocBook layout
+  engines. How about XML and LaTeX (use htlink command)? David Jones
+  <jonesde@ofbiz.org>
 
 * Test for non-null format when field created by being dragged. (really
   default format not containing null color).
 
 * On OS X, Command-Q quits app with no chance of saving report. Is there
   any way of trapping that?
-
-* Ask for number of pages to print (all, current page, or page range)
-  before printing. This is only necessary on systems that don't ask in
-  their print dialog, and I don't think I can find out programatically if
-  the system asks this of the user. Should this be an application
-  preference?
 
 * Allow column names (not table.column) in editor windows, but only if the
   name is (a) unique across all tables and (b) not an otherwise reserved

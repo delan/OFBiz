@@ -1,3 +1,131 @@
+2002-07-22  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/ReportReader.java (border): bug fix: add border
+	to field.
+
+	* jimm/datavision/gui/FormatWin.java: border color support.
+
+	* jimm/datavision/ReportReader.java (line): read line color.
+
+	* jimm/datavision/Line.java: added color.
+
+2002-07-19  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/FormatWin.java: added field color selection.
+
+	* jimm/datavision/gui/FieldWidget.java (getColor): created.
+	(ctor): call getColor to set initial color.
+
+	* jimm/datavision/gui/FWBorder.java (paintBorder): use new
+	FieldWidget.getColor() method.
+
+	* jimm/datavision/Element.java (ctor): accept visible flag.
+
+	* jimm/datavision/*Field.java: accept visible flag for all
+	constructors.
+
+	* jimm/datavision/Line.java (writeXML): output visible flag.
+
+	* jimm/datavision/Field.java (writeXML): output visible flag.
+	(create): accept visible flag.
+
+	* jimm/datavision/gui/SortWin.java: refactored code; moved most of
+	it up to TwoListWin.
+	
+	* jimm/datavision/gui/GroupWin.java: refactored code; moved most
+	of it up to TwoListWin.
+
+	* jimm/datavision/gui/TwoListWin.java: created.
+
+2002-07-18  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/SortWin.java: added Move Up and Move Down
+	buttons. Use SortedListModel for left-hand unsorted list.
+
+	* jimm/datavision/gui/GroupWin.java: Use SortedListModel for
+	left-hand ungrouped list.
+
+	* jimm/datavision/gui/SortedListModel.java: created.
+
+2002-07-17  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/sql/ResultSetRow.java: added noMoreData instance
+	variable.
+	(readRowData): avoid calling ResultSet.next() after it first
+	returns false.
+
+	* jimm/datavision/gui/FormatWin.java (buildFormatTab): improved
+	format tab layout.
+
+	* jimm/datavision/gui/SQLQueryWin.java (buildWindow): added scroll
+	bar and wrapping at word boundaries.
+
+	* jimm/datavision/gui/ExportWin.java (buildWindow): fixed
+	layout.
+
+2002-07-16  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/gui/GroupWin.java (buildWindow): use prototype
+	cell value instead of min/preferred sizes. Improved layout.
+	preferred list sizes. Improved layout.
+
+	* jimm/datavision/gui/SortWin.java (buildWindow): use prototype
+	cell value instead of min/preferred sizes. Improved layout.
+
+	* jimm/datavision/Report.java: DEFAULT_DTD_VERSION upped to 0.4
+	and renamed to OUTPUT_DTD_VERSION. Removed dtdVersion instance
+	variable and accessor methods (the DTD version should not be
+	changed to the DTD version number read from the report XML file).
+	(writeXML): added comment containing DataVision version number and
+	URL.
+
+	* jimm/datavision/ReportReader.java (report): don't give DTD
+	version number to report.
+
+2002-07-15  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/ReportReader.java (paper): read paper
+	orientation.
+
+	* jimm/datavision/gui/DesignWin.java (changePaperOrientation):
+	created.
+	(changePaperSize): update both orientation and name in menu.
+	(actionPerformed): handle landscape and portrait choices.
+
+	* jimm/datavision/Report.java (writeXML): call paper.writeXML
+	instead of writing the XML.
+
+	* jimm/datavision/PaperFormat.java: made a subclass of Paper. Made
+	PaperFormat implement Writeable. Added orientation.
+
+2002-06-28  Jim Menard  <jimm@io.com>
+
+	* jimm/datavision/test/ReportRunTest.java: due to addition of
+	report.date format in test.xml, fixed tests that look for headers.
+	Refactored code.
+
+	* jimm/datavision/test/test.xml: added format="Page 0" to
+	page.number special field to reproduce old string at bottom of
+	pages. This fixes two tests that were broken when special field
+	formatting was implemented in the previous release. Added format
+	string to report.date field.
+
+	* jimm/datavision/layout/DocBookLE.java (doStart): added
+	DataVision comment.
+
+	* jimm/datavision/layout/HTMLLE.java (doStart): added head start
+	and end element tags and DataVision comment.
+
+	* jimm/datavision/layout/LaTeXLE.java (doStart): added DataVision
+	comment.
+
+	* jimm/datavision/layout/XMLLE.java (doStart): added DataVision
+	comment.
+
+2002-06-24  Jim Menard  <jimm@io.com>
+
+	* Version 0.3.7 released.
+
 2002-06-20  Jim Menard  <jimm@io.com>
 
 	* jimm/datavision/Format.java (writeXML): don't output color to
