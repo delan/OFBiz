@@ -733,6 +733,7 @@
         <xs:attribute type="xs:string" name="content-id" use="required"/>
         <xs:attribute type="xs:string" name="edit-request"/>
         <xs:attribute type="xs:string" name="edit-container-style" default="editWrapper"/>
+        <xs:attribute type="xs:string" name="enable-edit-name" default="enableEdit"/>
         <xs:attribute name="xml-escape" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -851,6 +852,7 @@
         <xs:attribute type="xs:string" name="assoc-name" use="required"/>
         <xs:attribute type="xs:string" name="edit-request"/>
         <xs:attribute type="xs:string" name="edit-container-style" default="editWrapper"/>
+        <xs:attribute type="xs:string" name="enable-edit-name" default="enableEdit"/>
         <xs:attribute name="xml-escape" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
