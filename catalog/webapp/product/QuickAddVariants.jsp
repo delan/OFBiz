@@ -77,6 +77,7 @@
 
 <%if (productId != null && productId.length() > 0){%>
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontext">[Back to Product]</a>
+  <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Back to Product Associations]</a>
   <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontext">[Back to Product Features]</a>
 <%}%>
 
@@ -93,7 +94,7 @@
     <ofbiz:iterator name="featureType" property="featureTypes" type="java.lang.String">
         <td><div class="tabletext"><b><%=featureType%></b></div></td>
     </ofbiz:iterator>
-    <td><div class="tabletext">New Product ID and Create!</div></td>
+    <td><div class="tabletext"><b>New Product ID and Create!</b></div></td>
   </tr>
 
 <%boolean carryIncrement = false;%>
@@ -133,7 +134,7 @@
                 %>
             <%}%>
             <td>
-                <input type=text size='20' name='variantProductId'>
+                <input type=text size='20' maxlength='20' name='variantProductId'>
                 <INPUT type=submit value='Create!'>
             </td>
         </FORM>
