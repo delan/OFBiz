@@ -387,6 +387,13 @@ Error messages go on the error list and are handled with the check-errors tag.
     list-name CDATA #REQUIRED
 >
 
+<!ELEMENT iterate-map ( (%SimpleMethodOperations;)* )>
+<!ATTLIST iterate-map
+    key-name CDATA #REQUIRED
+    value-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+>
+
 <!ELEMENT first-from-list EMPTY>
 <!ATTLIST first-from-list
     entry-name CDATA #REQUIRED
