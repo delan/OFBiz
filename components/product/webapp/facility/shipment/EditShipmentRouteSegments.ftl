@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -234,6 +234,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         </tr>
         </form>
     </#list>
+    <#--
     <tr>
         <form action="<@ofbizUrl>/createRouteSegmentShipmentPackage</@ofbizUrl>" name="createShipmentPackageRouteSegForm${shipmentRouteSegmentData_index}">
         <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -254,6 +255,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td><div class="tabletext">&nbsp;</div></td>
         </form>
     </tr>
+    -->
 </#list>
 <form action="<@ofbizUrl>/createShipmentRouteSegment</@ofbizUrl>" name="createShipmentRouteSegmentForm">
     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
@@ -294,7 +296,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <td>
             <select name="carrierServiceStatusId" class="selectBox">
                 <option value="">&nbsp;</option>
-                <#list carrierServiceStatusValidChangeToDetails as carrierServiceStatusValidChangeToDetail>
+                <#list carrierServiceStatusValidChangeToDetails?if_exists as carrierServiceStatusValidChangeToDetail>
                     <option value="${carrierServiceStatusValidChangeToDetail.statusIdTo}">${carrierServiceStatusValidChangeToDetail.transitionName} [${carrierServiceStatusValidChangeToDetail.description}]</option>
                 </#list>
             </select>
@@ -308,7 +310,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             <input type="text" size="25" name="actualArrivalDate" value="" class="inputBox"/><a href="javascript:call_cal(document.createShipmentRouteSegmentForm.actualArrivalDate, '${nowTimestampString}');"><img src='<@ofbizContentUrl>/images/cal.gif</@ofbizContentUrl>' width='16' height='16' border='0' alt='Calendar'></a>
         </td>
         <td>
-        	<input type="text" size="5" name="billingWeight" value="${shipmentRouteSegment.billingWeight?if_exists}" class="inputBox"/>
+        	<input type="text" size="5" name="billingWeight" value="${(shipmentRouteSegment.billingWeight)?if_exists}" class="inputBox"/>
             <select name="billingWeightUomId" class="selectBox">
                 <option value="">&nbsp;</option>
                 <#list weightUoms as weightUom>
