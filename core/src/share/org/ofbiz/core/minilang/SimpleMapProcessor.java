@@ -215,7 +215,16 @@ public class SimpleMapProcessor {
         }
         
         public void exec(Map inMap, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) inMap.get(fieldName);
+            Object obj = inMap.get(fieldName);
+            
+            if (!(obj instanceof java.lang.String)) {
+                String msg = "Cannot validate non-String for field: " + fieldName;
+                messages.add(msg);
+                Debug.logError("[ValidateMethod.exec] " + msg);
+                return;
+            }
+            
+            String fieldValue = (java.lang.String) obj;
             
             Class[] paramTypes = new Class[] {String.class};
             Object[] params = new Object[] {fieldValue};
@@ -425,7 +434,16 @@ public class SimpleMapProcessor {
         }
         
         public void exec(Map inMap, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) inMap.get(fieldName);
+            Object obj = inMap.get(fieldName);
+            
+            if (!(obj instanceof java.lang.String)) {
+                String msg = "Cannot validate non-String with regular expression for field: " + fieldName;
+                messages.add(msg);
+                Debug.logError("[ValidateMethod.exec] " + msg);
+                return;
+            }
+            
+            String fieldValue = (java.lang.String) obj;
             
             if (pattern == null) {
                 messages.add("Could not compile regular expression \"" + expr + "\" for validation");
@@ -444,10 +462,16 @@ public class SimpleMapProcessor {
         }
         
         public void exec(Map inMap, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) inMap.get(fieldName);
+            Object obj = inMap.get(fieldName);
             
-            if (!UtilValidate.isNotEmpty(fieldValue)) {
-                addMessage(messages, contextClass);
+            if (obj instanceof java.lang.String) {
+                String fieldValue = (java.lang.String) obj;
+                if (!UtilValidate.isNotEmpty(fieldValue)) {
+                    addMessage(messages, contextClass);
+                }
+            } else {
+                if (obj == null)
+                    addMessage(messages, contextClass);
             }
         }
     }

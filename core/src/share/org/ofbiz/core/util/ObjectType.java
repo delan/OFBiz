@@ -181,9 +181,12 @@ public class ObjectType {
         if (obj instanceof java.lang.String) {
             fromType = "String";
             String str = (String) obj;
-            if ("String".equals(type)) {
+            if ("String".equals(type))
                 return obj;
-            } else if ("Double".equals(type)) {
+            
+            if (str.length() == 0)
+                return null;
+            if ("Double".equals(type)) {
                 try {
                     NumberFormat nf = NumberFormat.getNumberInstance();
                     Number tempNum = nf.parse(str);
