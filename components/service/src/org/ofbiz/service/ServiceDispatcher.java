@@ -326,13 +326,16 @@ public class ServiceDispatcher {
             if (!isError && !isFailure) {
                 Map invokeResult = engine.runSync(localName, modelService, context);
                 if (invokeResult != null) {
+                    Debug.log("Service result - " + invokeResult, module);
                     result.putAll(invokeResult);
+                } else {
+                    Debug.logWarning("Service (in runSync : " + modelService.name + ") returns null result", module);
                 }
-            } else {
-                // re-check the errors/failures
-                isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
-                isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
             }
+
+            // re-check the errors/failures
+            isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
+            isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));            
 
             // create a new context with the results to pass to ECA services; necessary because caller may reuse this context
             Map ecaContext = new HashMap(context);
