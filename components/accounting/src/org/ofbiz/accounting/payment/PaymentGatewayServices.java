@@ -279,6 +279,8 @@ public class PaymentGatewayServices {
             String resultResponseCode = (String) processorResult.get(ModelService.RESPONSE_MESSAGE);
             if (resultResponseCode != null && resultResponseCode.equals(ModelService.RESPOND_ERROR)) {
                 Debug.logError("Processor failed; will retry later : " + processorResult.get(ModelService.ERROR_MESSAGE), module);
+                // log the error message as a gateway response when it fails
+                saveError(dispatcher, userLogin, paymentPref, processorResult, "PRDS_PAY_AUTH", "PGT_AUTHORIZE");
                 return null;
             }
 
@@ -539,83 +541,87 @@ public class PaymentGatewayServices {
             }
 
             // get the release result code
-            Boolean releaseResponse = (Boolean) releaseResult.get("releaseResult");
+            if (releaseResult != null && !ServiceUtil.isError(releaseResult)) {
+                Boolean releaseResponse = (Boolean) releaseResult.get("releaseResult");
 
-            // create the PaymentGatewayResponse
-            String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
-            GenericValue pgResponse = delegator.makeValue("PaymentGatewayResponse", null);
-            pgResponse.set("paymentGatewayResponseId", responseId);
-            pgResponse.set("paymentServiceTypeEnumId", RELEASE_SERVICE_TYPE);
-            pgResponse.set("orderPaymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
-            pgResponse.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
-            pgResponse.set("paymentMethodId", paymentPref.get("paymentMethodId"));
-            pgResponse.set("transCodeEnumId", "PGT_RELEASE");
+                // create the PaymentGatewayResponse
+                String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
+                GenericValue pgResponse = delegator.makeValue("PaymentGatewayResponse", null);
+                pgResponse.set("paymentGatewayResponseId", responseId);
+                pgResponse.set("paymentServiceTypeEnumId", RELEASE_SERVICE_TYPE);
+                pgResponse.set("orderPaymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
+                pgResponse.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
+                pgResponse.set("paymentMethodId", paymentPref.get("paymentMethodId"));
+                pgResponse.set("transCodeEnumId", "PGT_RELEASE");
 
-            // set the auth info
-            pgResponse.set("referenceNum", releaseResult.get("releaseRefNum"));
-            pgResponse.set("gatewayCode", releaseResult.get("releaseCode"));
-            pgResponse.set("gatewayFlag", releaseResult.get("releaseFlag"));
-            pgResponse.set("gatewayMessage", releaseResult.get("releaseMessage"));
-            pgResponse.set("transactionDate", UtilDateTime.nowTimestamp());
+                // set the release info
+                pgResponse.set("referenceNum", releaseResult.get("releaseRefNum"));
+                pgResponse.set("gatewayCode", releaseResult.get("releaseCode"));
+                pgResponse.set("gatewayFlag", releaseResult.get("releaseFlag"));
+                pgResponse.set("gatewayMessage", releaseResult.get("releaseMessage"));
+                pgResponse.set("transactionDate", UtilDateTime.nowTimestamp());
 
-            // store the gateway response
-            try {
-                pgResponse.create();
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem storing PaymentGatewayResponse entity; authorization was released! : " + pgResponse, module);
-            }
-
-            // create the internal messages
-            List messages = (List) releaseResult.get("internalRespMsgs");
-            if (messages != null && messages.size() > 0) {
-                Iterator i = messages.iterator();
-                while (i.hasNext()) {
-                    GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
-                    String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg");
-                    String message = (String) i.next();
-                    respMsg.set("paymentGatewayRespMsgId", respMsgId);
-                    respMsg.set("paymentGatewayResponseId", responseId);
-                    respMsg.set("pgrMessage", message);
-                    try {
-                        delegator.create(respMsg);
-                    } catch (GenericEntityException e) {
-                        Debug.logError(e, module);
-                        return ServiceUtil.returnError("Unable to create PaymentGatewayRespMsg record");
-                    }
-                }
-            }
-
-            if (releaseResponse != null && releaseResponse.booleanValue()) {
-                paymentPref.set("statusId", "PAYMENT_CANCELLED");
+                // store the gateway response
                 try {
-                    paymentPref.store();
+                    pgResponse.create();
                 } catch (GenericEntityException e) {
-                    Debug.logError(e, "Problem storing updated payment preference; authorization was released!", module);
-                }
-                finished.add(paymentPref);
-
-                // cancel any payment records
-                List paymentList = null;
-                try {
-                    paymentList = paymentPref.getRelated("Payment");
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Unable to get Payment records from OrderPaymentPreference : " + paymentPref, module);
+                    Debug.logError(e, "Problem storing PaymentGatewayResponse entity; authorization was released! : " + pgResponse, module);
                 }
 
-                if (paymentList != null) {
-                    Iterator pi = paymentList.iterator();
-                    while (pi.hasNext()) {
-                        GenericValue pay = (GenericValue) pi.next();
-                        pay.set("statusId", "PMNT_CANCELLED");
+                // create the internal messages
+                List messages = (List) releaseResult.get("internalRespMsgs");
+                if (messages != null && messages.size() > 0) {
+                    Iterator i = messages.iterator();
+                    while (i.hasNext()) {
+                        GenericValue respMsg = delegator.makeValue("PaymentGatewayRespMsg", null);
+                        String respMsgId = delegator.getNextSeqId("PaymentGatewayRespMsg");
+                        String message = (String) i.next();
+                        respMsg.set("paymentGatewayRespMsgId", respMsgId);
+                        respMsg.set("paymentGatewayResponseId", responseId);
+                        respMsg.set("pgrMessage", message);
                         try {
-                            pay.store();
+                            delegator.create(respMsg);
                         } catch (GenericEntityException e) {
-                            Debug.logError(e, "Unable to store Payment : " + pay, module);
+                            Debug.logError(e, module);
+                            return ServiceUtil.returnError("Unable to create PaymentGatewayRespMsg record");
                         }
                     }
                 }
-            } else {
-                Debug.logError("Release failed for pref : " + paymentPref, module);
+
+                if (releaseResponse != null && releaseResponse.booleanValue()) {
+                    paymentPref.set("statusId", "PAYMENT_CANCELLED");
+                    try {
+                        paymentPref.store();
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Problem storing updated payment preference; authorization was released!", module);
+                    }
+                    finished.add(paymentPref);
+
+                    // cancel any payment records
+                    List paymentList = null;
+                    try {
+                        paymentList = paymentPref.getRelated("Payment");
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to get Payment records from OrderPaymentPreference : " + paymentPref, module);
+                    }
+
+                    if (paymentList != null) {
+                        Iterator pi = paymentList.iterator();
+                        while (pi.hasNext()) {
+                            GenericValue pay = (GenericValue) pi.next();
+                            pay.set("statusId", "PMNT_CANCELLED");
+                            try {
+                                pay.store();
+                            } catch (GenericEntityException e) {
+                                Debug.logError(e, "Unable to store Payment : " + pay, module);
+                            }
+                        }
+                    }
+                } else {
+                    Debug.logError("Release failed for pref : " + paymentPref, module);
+                }
+            } else if (ServiceUtil.isError(releaseResult)) {
+                saveError(dispatcher, userLogin, paymentPref, releaseResult, "PRDS_PAY_RELEASE", "PGT_RELEASE");
             }
         }
 
@@ -1012,7 +1018,58 @@ public class PaymentGatewayServices {
         // add paymentSettings to result; for use by later processors
         captureResult.put("paymentSettings", paymentSettings);
 
+        // log the error message as a gateway response when it fails
+        if (ServiceUtil.isError(captureResult)) {
+            saveError(dispatcher, userLogin, paymentPref, captureResult, "PRDS_PAY_CAPTURE", "PGT_CAPTURE");
+        }
+
         return captureResult;
+    }
+
+    private static void saveError(LocalDispatcher dispatcher, GenericValue userLogin, GenericValue paymentPref, Map result, String serviceType, String transactionCode) {
+        Map serviceContext = new HashMap();
+        serviceContext.put("paymentServiceTypeEnumId", serviceType);
+        serviceContext.put("orderPaymentPreference", paymentPref);
+        serviceContext.put("transCodeEnumId", transactionCode);
+        serviceContext.put("serviceResultMap", result);
+        serviceContext.put("userLogin", userLogin);
+
+        Map serviceResult = null;
+        try {
+            dispatcher.runAsync("processPaymentServiceError", serviceContext);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+        }        
+    }
+
+    public static Map storePaymentErrorMessage(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        GenericValue paymentPref = (GenericValue) context.get("orderPaymentPreference");
+        String serviceType = (String) context.get("paymentServiceTypeEnumId");
+        String transactionCode = (String) context.get("transCodeEnumId");
+        Map result = (Map) context.get("serviceResultMap");
+
+        String responseId = delegator.getNextSeqId("PaymentGatewayResponse");
+        GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
+        response.set("paymentGatewayResponseId", responseId);
+        response.set("paymentServiceTypeEnumId", serviceType);
+        response.set("orderPaymentPreferenceId", paymentPref.get("orderPaymentPreferenceId"));
+        response.set("paymentMethodTypeId", paymentPref.get("paymentMethodTypeId"));
+        response.set("paymentMethodId", paymentPref.get("paymentMethodId"));
+        response.set("transCodeEnumId", transactionCode);
+        response.set("referenceNum", "ERROR");
+        response.set("gatewayMessage", ServiceUtil.getErrorMessage(result));
+        response.set("transactionDate", UtilDateTime.nowTimestamp());
+
+        try {
+            delegator.create(response);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to create PaymentGatewayResponse for failed service call!");
+        }
+
+        Debug.logInfo("Created PaymentGatewayResponse record for returned error", module);
+        return ServiceUtil.returnSuccess();
     }
 
     private static boolean processResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference) throws GeneralException {
@@ -1434,6 +1491,7 @@ public class PaymentGatewayServices {
                     return ServiceUtil.returnError("Refund processor problems; see logs");
                 }
                 if (ServiceUtil.isError(refundResponse)) {
+                    saveError(dispatcher, userLogin, paymentPref, refundResponse, "PRDS_PAY_REFUND", "PGT_REFUND");
                     return ServiceUtil.returnError(ServiceUtil.getErrorMessage(refundResponse));
                 }
 

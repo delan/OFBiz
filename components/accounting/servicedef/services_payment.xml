@@ -321,6 +321,15 @@
         <attribute name="internalRespMsgs" type="List" mode="IN" optional="true"/>
     </service>
 
+    <service name="processPaymentServiceError" engine="java" require-new-transaction="true"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="storePaymentErrorMessage" auth="true">
+        <description>Process (store) error messages from payment service failures</description>
+        <attribute name="paymentServiceTypeEnumId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="transCodeEnumId" type="String" mode="IN" optional="false"/>
+        <attribute name="serviceResultMap" type="Map" mode="IN" optional="false"/>
+    </service>
+
     <!-- Payment Gateway Interfaces -->
     <service name="paymentProcessInterface" engine="interface" location="" invoke="">
         <description>Generic Payment Processing Interface</description>
