@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.40 2004/01/21 04:04:13 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.41 2004/01/21 14:02:27 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.entity.GenericDelegator;
@@ -46,6 +47,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -54,7 +56,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.40 $
+ * @version    $Revision: 1.41 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -459,7 +461,7 @@ public class ProductPromoWorker {
         }
     }
 
-    public static String createShortDescription(GenericValue productPromo, GenericDelegator delegator) throws GenericEntityException {
+    public static String makeAutoDescription(GenericValue productPromo, GenericDelegator delegator, Locale locale) throws GenericEntityException {
         StringBuffer promoDescBuf = new StringBuffer();
         List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
         Iterator promoRulesIter = productPromoRules.iterator();
@@ -473,79 +475,21 @@ public class ProductPromoWorker {
             while (productPromoCondIter != null && productPromoCondIter.hasNext()) {
                 GenericValue productPromoCond = (GenericValue) productPromoCondIter.next();
 
-                String compStr = "invalid";
-                String quantCompStr = "invalid";
-                if (productPromoCond.getString("operatorEnumId") != null) {
-                    if ("PPC_EQ".equals(productPromoCond.getString("operatorEnumId"))) {
-                        compStr = "is";
-                    } else if ("PPC_NEQ".equals(productPromoCond.getString("operatorEnumId"))) {
-                        compStr = "is not";
-                    } else if ("PPC_LT".equals(productPromoCond.getString("operatorEnumId"))) {
-                        quantCompStr = "less than";
-                    } else if ("PPC_LTE".equals(productPromoCond.getString("operatorEnumId"))) {
-                        quantCompStr = "exactly or less than";
-                    } else if ("PPC_GT".equals(productPromoCond.getString("operatorEnumId"))) {
-                        quantCompStr = "more than";
-                    } else if ("PPC_GTE".equals(productPromoCond.getString("operatorEnumId"))) {
-                        quantCompStr = "exactly or more than";
-                    }
-                }
-                
-                String valueStr = "invalid";
+                String equalityOperator = UtilProperties.getMessage("promotext", "operator.equality." + productPromoCond.getString("operatorEnumId"), locale);
+                String quantityOperator = UtilProperties.getMessage("promotext", "operator.quantity." + productPromoCond.getString("operatorEnumId"), locale);
+
+                String condValue = "invalid";
                 if (UtilValidate.isNotEmpty(productPromoCond.getString("condValue"))) {
-                    valueStr = productPromoCond.getString("condValue");
+                    condValue = productPromoCond.getString("condValue");
                 }
                 
-                if ("PPIP_ORDER_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    promoDescBuf.append("spend ");
-                    promoDescBuf.append(quantCompStr);
-                    promoDescBuf.append(" ");
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" ");
-                } else if ("PPIP_PRODUCT_TOTAL".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    promoDescBuf.append("buy ");
-                    promoDescBuf.append(quantCompStr);
-                    promoDescBuf.append(" ");
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" of qualifying products ");
-                } else if ("PPIP_PRODUCT_AMOUNT".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    promoDescBuf.append("for each $");
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" or more of qualifying products ");
-                } else if ("PPIP_PRODUCT_QUANT".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    promoDescBuf.append("buy ");
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" of qualifying products ");
-                } else if ("PPIP_NEW_ACCT".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    promoDescBuf.append("if your account is ");
-                    promoDescBuf.append(quantCompStr);
-                    promoDescBuf.append(" ");
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" days old ");
-                } else if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    // should we really show this?
-                    promoDescBuf.append("if your account ID ");
-                    promoDescBuf.append(compStr);
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" ");
-                } else if ("PPIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    promoDescBuf.append("if your account ");
-                    promoDescBuf.append(compStr);
-                    promoDescBuf.append(" part of the ");
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" group ");
-                } else if ("PPIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    promoDescBuf.append("if your account ");
-                    promoDescBuf.append(compStr);
-                    promoDescBuf.append(" in the ");
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" classification ");
-                } else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId"))) {
-                    promoDescBuf.append("if your account ");
-                    promoDescBuf.append(compStr);
-                    promoDescBuf.append(" in the ");
-                    promoDescBuf.append(valueStr);
-                    promoDescBuf.append(" role ");
+                Map messageContext = UtilMisc.toMap("condValue", condValue, "equalityOperator", equalityOperator, "quantityOperator", quantityOperator);
+                String msgProp = UtilProperties.getMessage("promotext", "condition." + productPromoCond.getString("inputParamEnumId"), messageContext, locale);
+                promoDescBuf.append(msgProp);
+                promoDescBuf.append(" ");
+                
+                if (promoRulesIter.hasNext()) {
+                    promoDescBuf.append(" and ");
                 }
             }
 
@@ -554,32 +498,38 @@ public class ProductPromoWorker {
             while (productPromoActionIter != null && productPromoActionIter.hasNext()) {
                 GenericValue productPromoAction = (GenericValue) productPromoActionIter.next();
 
-                if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionEnumId"))) {
-                } else if ("PROMO_PROD_DISC".equals(productPromoAction.getString("productPromoActionEnumId"))) {
-                } else if ("PROMO_PROD_AMDISC".equals(productPromoAction.getString("productPromoActionEnumId"))) {
-                } else if ("PROMO_PROD_PRICE".equals(productPromoAction.getString("productPromoActionEnumId"))) {
-                } else if ("PROMO_ORDER_PERCENT".equals(productPromoAction.getString("productPromoActionEnumId"))) {
-                } else if ("PROMO_ORDER_AMOUNT".equals(productPromoAction.getString("productPromoActionEnumId"))) {
+                String productId = productPromoAction.getString("productId");
+                
+                Map messageContext = UtilMisc.toMap("quantity", productPromoAction.get("quantity"), "amount", productPromoAction.get("amount"), "productId", productId, "partyId", productPromoAction.get("partyId"));
+
+                if (UtilValidate.isEmpty((String) messageContext.get("productId"))) messageContext.put("productId", "any");
+                if (UtilValidate.isEmpty((String) messageContext.get("partyId"))) messageContext.put("partyId", "any");
+                GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+                if (product != null) {
+                    messageContext.put("productName", ProductContentWrapper.getProductContentAsText(product, "PRODUCT_NAME", locale));
+                }
+                
+                String msgProp = UtilProperties.getMessage("promotext", "action." + productPromoAction.getString("productPromoActionEnumId"), messageContext, locale);
+                promoDescBuf.append(msgProp);
+                promoDescBuf.append(" ");
+                
+                if (promoRulesIter.hasNext()) {
+                    promoDescBuf.append(" and ");
                 }
             }
-            /*
-      <field name="productPromoActionEnumId" type="id-ne"></field>
-      <field name="orderAdjustmentTypeId" type="id"></field>
-      <field name="quantity" type="floating-point"></field>
-      <field name="amount" type="floating-point"></field>
-      <field name="productId" type="id"></field>
-      <field name="partyId" type="id"></field>
+            
+            if (promoRulesIter.hasNext()) {
+                promoDescBuf.append(" or ");
+            }
+        }
 
-  
-  <Enumeration description="Gift With Purchase" enumCode="GWP" enumId="PROMO_GWP" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="Free Shipping" enumCode="FREE_SHIPPING" enumId="PROMO_FREE_SHIPPING" sequenceId="02" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="X Product for Y% Discount" enumCode="PROD_DISC" enumId="PROMO_PROD_DISC" sequenceId="03" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="X Product for Y Discount" enumCode="PROD_AMDISC" enumId="PROMO_PROD_AMDISC" sequenceId="04" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="05" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="Order Percent Discount" enumCode="ORDER_PERCENT" enumId="PROMO_ORDER_PERCENT" sequenceId="06" enumTypeId="PROD_PROMO_ACTION"/>
-  <Enumeration description="Order Amount Flat" enumCode="ORDER_AMOUNT" enumId="PROMO_ORDER_AMOUNT" sequenceId="07" enumTypeId="PROD_PROMO_ACTION"/>
-             * 
-             */
+        if (promoDescBuf.length() > 0) {
+            // remove any trailing space
+            if (promoDescBuf.charAt(promoDescBuf.length() - 1) == ' ') promoDescBuf.deleteCharAt(promoDescBuf.length() - 1);
+            // add a period
+            promoDescBuf.append(". ");
+            // capitalize the first letter
+            promoDescBuf.setCharAt(0, Character.toUpperCase(promoDescBuf.charAt(0)));
         }
         
         if ("Y".equals(productPromo.getString("requireCode"))) {

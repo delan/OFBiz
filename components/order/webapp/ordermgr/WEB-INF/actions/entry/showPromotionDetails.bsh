@@ -29,9 +29,12 @@ import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
 userLogin = session.getAttribute("userLogin");
+locale = UtilHttp.getLocale(request);
 
 productPromoId = request.getParameter("productPromoId");
 productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
+
+promoAutoDescription = ProductPromoWorker.makeAutoDescription(productPromo, delegator, locale);
 
 List productPromoCategoryList = delegator.findByAndCache("ProductPromoCategory", UtilMisc.toMap("productPromoId", productPromoId));
 productPromoCategoryIncludeList = EntityUtil.filterByAnd(productPromoCategoryList, UtilMisc.toMap("productPromoApplEnumId", "PPPA_INCLUDE"));
@@ -50,6 +53,7 @@ List productIds = new ArrayList(productIdSet);
 
 context.put("productPromoId", productPromoId);
 context.put("productPromo", productPromo);
+context.put("promoAutoDescription", promoAutoDescription);
 
 context.put("productPromoCategoryIncludeList", productPromoCategoryIncludeList);
 context.put("productPromoCategoryExcludeList", productPromoCategoryExcludeList);
