@@ -135,7 +135,7 @@
     </simple-method>
 
     <!-- ProductPromo to ProdCatalog methods -->
-    <simple-method method-name="addProductPromoToProdCatalog" short-description="Add Category To ProdCatalog">
+    <simple-method method-name="addProductPromoToProdCatalog" short-description="Add ProductPromo To ProdCatalog">
         <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProductPromoToProdCatalog you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
@@ -150,7 +150,7 @@
         
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updateProductPromoToProdCatalog" short-description="Remove ContactMech From ProdCatalog">
+    <simple-method method-name="updateProductPromoToProdCatalog" short-description="Update ProductPromo to ProdCatalog">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductPromoToProdCatalog you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
@@ -160,7 +160,7 @@
         <set-nonpk-fields map-name="parameters" value-name="prodCatalogPromoAppl"/>
         <store-value value-name="prodCatalogPromoAppl"/>
     </simple-method>
-    <simple-method method-name="removeProductPromoFromProdCatalog" short-description="Remove ContactMech From ProdCatalog">
+    <simple-method method-name="removeProductPromoFromProdCatalog" short-description="Remove ProductPromo From ProdCatalog">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductPromoFromProdCatalog you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
