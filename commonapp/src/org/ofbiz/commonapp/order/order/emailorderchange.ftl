@@ -409,13 +409,13 @@
               <#list orderItems as orderItem>
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>     
-                  <#if orderItem.productId == "_?_">           
+                  <#if orderItem.productId?if_exists == "_?_">           
                     <td colspan="1" valign="top">    
                       <b><div class="tabletext"> &gt;&gt; ${orderItem.itemDescription}</div></b>
                     </td>
                   <#else>                  
                     <td valign="top">
-                      <div class="tableheadtext">${orderItem.productId} - ${orderItem.itemDescription}</div>
+                      <div class="tableheadtext">${orderItem.productId?default("N/A")} - ${orderItem.itemDescription}</div>
                     </td>
                     <td valign="top">
                       <div class="tabletext"><#if orderItemSeqId?exists && orderItemSeqId == orderItem.orderItemSeqId><font color='red'></#if>${localOrderReadHelper.getCurrentItemStatusString(orderItem)}</div>
