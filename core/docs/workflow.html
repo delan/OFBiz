@@ -18,7 +18,7 @@
 </a>
 <br>
   Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-  Last Updated: February 11, 2002<br>
+  Last Updated: March 2, 2002<br>
   $Id$<br>
 <hr><br>
 <h3>Table of Contents</h3>
@@ -74,31 +74,51 @@ about XPDL, that is explained in a document created by the <a href="http://www.w
 <p>There are a number of attributes the WfMC says is left to the vendor. Here we will document our extensions:
  (These are implemented as 'ExtendedAttributes')</p>
 
-<p><b>ACTIVITY EXTENDED ATTRIBUTES</b></p>
+<p>&nbsp;</p>
+<b>ACTIVITY EXTENDED ATTRIBUTES</b>
 <ul>
-<li><b>acceptAllAssignments</b> - This ExtendedAttribute tells the workflow engine that ALL assignments must be accepted
+<p><li><b>acceptAllAssignments</b> - This ExtendedAttribute tells the workflow engine that ALL assignments must be accepted
 before an activity will begin. This is useful when there are multiple participants to an activity and everyone must
 accept their assignment prior to the activity beginning. (Default is NO)</li>
-<li><b>completeAllAssignments</b> - Simular to the acceptAll, this tells the workflow engine that all assignments must be
+<p><li><b>completeAllAssignments</b> - Simular to the acceptAll, this tells the workflow engine that all assignments must be
 completed before the activity completes. This is helpful when implementing activities like payroll, when all employees
 must submit their time-sheets prior to moving to the next step. (Default is NO)</li>
-<p><b>limitService</b> - When defining an activity, a limit can be set. This is the amount of time which is allowed before this
+<p><li><b>limitService</b> - When defining an activity, a limit can be set. This is the amount of time which is allowed before this
 activity is expected to be complete. A service can be set to run if the activity has not completed in the allocated
 amount of time. (No default)</li>
-<li><b>limitAfterStart</b> - This tells the workflow engine that the limit checking should take place after the activity has
+<p><li><b>limitAfterStart</b> - This tells the workflow engine that the limit checking should take place after the activity has
 begun. By setting this to NO, the limit is calculated from the time the assignment is created, rather then the time the
 activity started. (Default is YES)</li>
-<li><b>canStart</b> - This attribute tells the workflow engine that the activity attached to this ExtendedAttribute is allowed
+<p><li><b>canStart</b> - This attribute tells the workflow engine that the activity attached to this ExtendedAttribute is allowed
 to initiate the workflow. So rather then the workflow starting with the first activity, the workflow can begin with any
 activity which has this set to yes.</li>
 </ul>
-<p><b>DEFAULT STARTING ACTIVITY</b></p>
-<p>By default when a workflow is started, the first activity in the list is set as the default starting activity. This
+<p>&nbsp;</p>
+<b>IMPLEMENTATION/TOOL EXTENDED ATTRIBUTES & ACTUAL PARAMETERS</b>
+<ul>
+<p><li><b>runAsUser</b> - This ExtendedAttribute will tell the TOOL (if it is a PROCEDURE) to run the defined service as
+<i>this</i> user. Specify the user's userLoginId as the value of the attribute. By default NO userLogin object will be passed.</li>
+<p><li><b>Actual Parameters:</b></li>
+  <ul>
+    <li><u>Expressions:</u> You can use expressions inside ActualParameters to map context attributes to service parameters.
+    You must specifiy <i>expr:</i> to note an expression. Example:
+    <pre>&lt;ActualParameter&gt;expr:orderNumber=orderId&lt;/ActualParameter&gt;</pre>
+    will map the context attribute <i>orderId</i> to a buffered variable named <i>orderNumber</i> then if you did:
+    <pre>&lt;ActualParameter&gt;orderNumber&lt;/ActualParameter&gt;</pre>
+    the parameter <i>orderNumber</i> would be passed to the service with the value of <i>orderId</i>.</li>
+    <br>
+    <li><u>WorkEffort ID:</u> You can use <i>workEffortId</i> as an ActualParameter, this will be mapped to the primary key
+    of the current activity.</li>
+  </ul>
+</ul>
+<p>&nbsp;</p>
+<b>DEFAULT STARTING ACTIVITY</b>
+<ul><p>By default when a workflow is started, the first activity in the list is set as the default starting activity. This
 means that when a workflow is started normally, we will run the first activity first, then follow the transitions. This
 is the most common way to invoke a workflow. However, there may be times when the workflow should be invoked from a
 number of different starting points. In this case, the client API would be used to call the appropriate activity to begin.
 The transitions would follow from that point. Only activities with the 'canStart' ExtendedAttribute are allowed to
-initiate a workflow.</p>
+initiate a workflow.</p></ul>
 
 <hr>
 <h3><a NAME="ClientAPI"></a>Client API</h3>
@@ -123,14 +143,15 @@ assignments which are currently assigned to your group/role and edit the state. 
 currently implements NO, ROUTE, TOOL:Procedure, and SUB-FLOW type activities. TOOL:Application type activities are not yet
 implemented but will be in a future release.</p>
 <ul>
-  <li><b>NO</b> - Just as is says, no activity. This describes a 'manual' activity.</li>
-  <li><b>ROUTE</b> - A route activity is used for simply routing to other activities via the transitions.</li>
-  <li><b>TOOL</b> - </li>
+  <p><li><b>NO</b> - Just as is says, no activity. This describes a 'manual' activity.</li>
+  <p><li><b>ROUTE</b> - A route activity is used for simply routing to other activities via the transitions.</li>
+  <p><li><b>TOOL</b> - </li>
   <ul>
     <li><u>Application:</u> An external application is invoked. - <i>Not currently implemented</i>.</li>
+    <br>
     <li><u>Procedure:</u> OFBiz Workflow Engine implements procedures as internal service calls.</li>
   </ul>
-  <li><b>SUB-FLOW</b> - A sub-workflow is created and ran. These can be defined as synchronous or asynchronous.
+  <p><li><b>SUB-FLOW</b> - A sub-workflow is created and ran. These can be defined as synchronous or asynchronous.
 </ul>
 <p>The current version of the OFBiz Workflow Engine does not implement LOOPS. These too will be added in a future
 release.</p>
