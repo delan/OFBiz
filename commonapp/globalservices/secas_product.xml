@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
+
+<service-eca>    
+    <eca service="createInventoryTransfer" event="invoke">    	
+        <action service="prepareInventoryTransfer" mode="sync"/>
+    </eca>
+    <eca service="updateInventoryTransfer" event="commit">
+    	<condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
+        <action service="completeInventoryTransfer" mode="sync"/>
+    </eca>
+</service-eca>
