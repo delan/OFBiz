@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Edit Category Product Catalogs</property>
-    <property name="titleProperty">PageTitleEditCategoryProductCatalogs</property>
-    <property name="leftbar">/templates/leftbar.ftl</property>
-    <property name="tabButtonItem">EditCategoryProdCatalogs</property>
-    <content-action name="/category/EditCategoryProdCatalogs.bsh"/>
-</page>

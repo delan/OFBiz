@@ -1,1 +1,0 @@
-<@renderSubContent subContentId=contentId/>

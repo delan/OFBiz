@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Project List</property>
-    <property name="headerItem">project</property>
-    <content-action name="/project/projectlist.bsh"/>
-</page>

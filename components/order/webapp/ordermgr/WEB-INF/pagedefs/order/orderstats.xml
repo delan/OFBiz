@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Order Statistics</property>
-    <property name="headerItem">stats</property>
-    <content-action name="/order/orderstats.bsh"/> 
-</page>

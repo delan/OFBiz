@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Edit Product Catalog Stores</property>
-    <property name="titleProperty">PageTitleEditProductCatalogStores</property>
-    <property name="leftbar">/templates/leftbar.ftl</property>
-    <content-action name="/catalog/EditProdCatalogStores.bsh"/>
-</page>

@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Find Facility</property>
-    <property name="titleProperty">PageTitleFindFacility</property>
-    <property name="headerItem">facility</property>
-    <content-action name="/facility/FindFacility.bsh"/> 
-</page>

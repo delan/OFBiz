@@ -1,5 +1,0 @@
-<jxuConfig>
-    <webRequest host="localhost" port="8080" context="ecommerce" path="control/login">
-    	<webResponse>Welcome</webResponse>
-	</webRequest>
-</jxuConfig>

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Edit Payment</property> 
-    <property name="headerItem">payments</property>   
-    <content-action name="/payment/editPayment.bsh"/> 
-</page>
