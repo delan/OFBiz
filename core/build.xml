@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+
+<project name="Open For Business Core Component" default="jar" basedir=".">
+
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <target name="init">
+        <property name="name"           value="ofbiz-core"          />
+        <property name="src.dir"        value="src"                 />
+        <property name="etc.dir"        value="etc"                 />
+        <property name="lib.dir"        value="lib"                 />
+        <property name="build.dir"      value="build"               />
+        <property name="build.compiler" value="classic"             /> 
+        <property name="pkg-dist.name"  value="${name}-pkg"         />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Removes all created files and directories                          -->
+    <!-- ================================================================== -->
+
+    <target name="clean" depends="init">
+        <delete dir="${lib.dir}" />
+        <delete dir="${build.dir}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Makes sure the needed directory structure is in place              -->
+    <!-- ================================================================== -->
+
+    <target name="prepare" depends="clean">
+        <mkdir dir="${lib.dir}" />
+        <mkdir dir="${build.dir}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Compilation of the core component                                  -->
+    <!-- ================================================================== -->
+
+
+    <target name="core-classes" depends="prepare">
+        <javac srcdir="${src.dir}"
+               destdir="${lib.dir}" />               
+    </target>
+
+
+    <target name="jar" depends="core-classes">
+        <jar jarfile="${build.dir}/${name}.jar"
+             basedir="${lib.dir}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Generates a GZip'ed tar source distribution                        -->
+    <!-- ================================================================== -->
+
+    <target name="pkg-dist" depends="prepare">
+
+        <mkdir dir="${build.dir}/${name}" />
+
+        <copy todir="${build.dir}/${name}">
+            <fileset dir="." includes="${src.dir}/**" />            
+            <fileset dir="." includes="build.xml" />
+        </copy>
+
+        <tar tarfile="${build.dir}/${pkg-dist.name}.tar"
+             basedir="${build.dir}"
+             includes="${name}/**" />
+
+        <gzip src="${build.dir}/${pkg-dist.name}.tar"
+              zipfile="${build.dir}/${pkg-dist.name}.tar.gz" />
+
+        <delete file="${build.dir}/${pkg-dist.name}.tar" />
+
+        <zip zipfile="${build.dir}/${pkg-dist.name}.zip"
+             basedir="${build.dir}"
+             includes="${name}/**" />
+
+        <delete dir="${build.dir}/${name}" />
+
+    </target>
+
+    <target name="all" depends="jar,pkg-dist" />
+
+</project>
