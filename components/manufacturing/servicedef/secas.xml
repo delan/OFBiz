@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
+
+<service-eca>
+    <!-- InventoryEventPlanned creation -->
+    <eca service="createRequirement" event="commit">
+        <condition field-name="requirementTypeId" operator="equals" value="MRP_PRO_PROD_ORDER"/>
+    	<action service="prepInventoryEventPlannedFromRequirement" mode="sync" result-to-context="true"/>
+        <action service="createInventoryEventPlanned" mode="sync"/>
+    </eca>
+    <eca service="createRequirement" event="commit">
+        <condition field-name="requirementTypeId" operator="equals" value="MRP_PRO_PURCH_ORDER"/>
+    	<action service="prepInventoryEventPlannedFromRequirement" mode="sync" result-to-context="true"/>
+        <action service="createInventoryEventPlanned" mode="sync"/>
+    </eca>
+</service-eca>

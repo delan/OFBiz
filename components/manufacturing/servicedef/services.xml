@@ -213,13 +213,25 @@
         <attribute name="quantityOnHand" type="Double" mode="OUT" optional="false"/>
     </service>
     
-    <service name="processBomComponent" engine="java"
-            location="org.ofbiz.manufacturing.mrp.MrpServices" invoke="processBomComponent" auth="true">
-        <description>Process the bill of materials to insert the components in the InventoryEventPlanned table</description>
-		<attribute name="listComponentDateAssoc" type="List" mode="IN" optional="false"/>
+    <service name="createInventoryEventPlanned" engine="java"
+            location="org.ofbiz.manufacturing.mrp.InventoryEventPlannedServices" invoke="createInventoryEventPlanned" auth="false">
+        <description>create an createInventoryEventPlanned record in the database</description>
+		<attribute name="productId" type="String" mode="IN" optional="false"/>
+		<attribute name="eventDate" type="Timestamp" mode="IN" optional="false"/>
+		<attribute name="inventoryEventPlanTypeId" type="String" mode="IN" optional="false"/>
 		<attribute name="eventQuantity" type="Double" mode="IN" optional="false"/>
-		<attribute name="itemInventoryEventPlanned" type="Map" mode="IN" optional="false"/>
-    </service>
+	</service>
+    <service name="prepInventoryEventPlannedFromRequirement" engine="java"
+            location="org.ofbiz.manufacturing.mrp.InventoryEventPlannedServices" invoke="prepParamFromRequirement" auth="false">
+        <description>Transform parameters used to created a requirement to parameters needed to created an InventoryEventPlanned.</description>
+		<attribute name="productId" type="String" mode="INOUT" optional="false"/>
+		<attribute name="requiredByDate" type="Timestamp" mode="IN" optional="false"/>
+		<attribute name="eventDate" type="Timestamp" mode="OUT" optional="false"/>
+		<attribute name="requirementTypeId" type="String" mode="IN" optional="false"/>
+		<attribute name="inventoryEventPlanTypeId" type="String" mode="OUT" optional="false"/>
+		<attribute name="quantity" type="Double" mode="IN" optional="false"/>
+		<attribute name="eventQuantity" type="Double" mode="OUT" optional="false"/>
+	</service>
 
     <!-- Bill of Materials services -->
     <service name="updateProductManufacturingRule" engine="simple"
