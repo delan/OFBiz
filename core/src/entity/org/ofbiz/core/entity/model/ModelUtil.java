@@ -47,7 +47,9 @@ public class ModelUtil {
     public static String upperFirstChar(String string) {
         if (string == null) return null;
         if (string.length() <= 1) return string.toLowerCase();
-        return string.substring(0, 1).toUpperCase() + string.substring(1);
+        StringBuffer sb = new StringBuffer(string);
+        sb.setCharAt(1, Character.toUpperCase(sb.charAt(1)));
+        return sb.toString();
     }
 
     /** Changes the first letter of the passed String to lower case.
@@ -58,7 +60,9 @@ public class ModelUtil {
     public static String lowerFirstChar(String string) {
         if (string == null) return null;
         if (string.length() <= 1) return string.toLowerCase();
-        return string.substring(0, 1).toLowerCase() + string.substring(1);
+        StringBuffer sb = new StringBuffer(string);
+        sb.setCharAt(1, Character.toLowerCase(sb.charAt(1)));
+        return sb.toString();
     }
 
     /** Converts a database name to a Java class name.

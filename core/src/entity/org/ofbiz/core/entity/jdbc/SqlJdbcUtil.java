@@ -207,7 +207,7 @@ public class SqlJdbcUtil {
         StringBuffer sql = new StringBuffer("");
         
         if (orderBy != null && orderBy.size() > 0) {
-            Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.");
+            Debug.logVerbose("Order by list contains: " + orderBy.size() + " entries.", module);
             List orderByStrings = new LinkedList();
             
             for (int oi = 0; oi < orderBy.size(); oi++) {
