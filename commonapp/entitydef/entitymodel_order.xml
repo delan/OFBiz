@@ -339,6 +339,7 @@
       <field name="comments" type="comment"></field>
       <field name="correspondingPoId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="syncStatusId" type="id"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <relation type="one" fk-name="ORDER_ITEM_TYPE" rel-entity-name="OrderItemType">
@@ -407,6 +408,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITEM_SYST" title="Sync" rel-entity-name="StatusItem">
+        <key-map field-name="syncStatusId" rel-field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemAssociation"
