@@ -799,9 +799,10 @@
             title="Work Effort Association Entity">
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
-      <field name="workEffortAssocTypeId" type="id"></field>
+      <field name="workEffortAssocTypeId" type="id-ne"></field>
       <prim-key field="workEffortIdFrom"/>
       <prim-key field="workEffortIdTo"/>
+      <prim-key field="workEffortAssocTypeId"/>
       <relation type="one" fk-name="WK_EFFRTASSC_TYP" rel-entity-name="WorkEffortAssocType">
         <key-map field-name="workEffortAssocTypeId"/>
       </relation>
@@ -811,6 +812,7 @@
       <relation type="many" rel-entity-name="WorkEffortAssocAttribute">
         <key-map field-name="workEffortIdFrom"/>
         <key-map field-name="workEffortIdTo"/>
+        <key-map field-name="workEffortAssocTypeId"/>
       </relation>
       <relation type="one" fk-name="WK_EFFRTASSC_FWE" title="From" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortIdFrom" rel-field-name="workEffortId"/>
@@ -824,14 +826,17 @@
             title="Work Effort Association Attribute Entity">
       <field name="workEffortIdFrom" type="id-ne"></field>
       <field name="workEffortIdTo" type="id-ne"></field>
+      <field name="workEffortAssocTypeId" type="id-ne"></field>
       <field name="attrName" type="id-long-ne"></field>
       <field name="attrValue" type="value"></field>
       <prim-key field="workEffortIdFrom"/>
       <prim-key field="workEffortIdTo"/>
+      <prim-key field="workEffortAssocTypeId"/>
       <prim-key field="attrName"/>
       <relation type="one" fk-name="WK_EFFRTASSC_ATTR" rel-entity-name="WorkEffortAssoc">
         <key-map field-name="workEffortIdFrom"/>
         <key-map field-name="workEffortIdTo"/>
+        <key-map field-name="workEffortAssocTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortAssocTypeAttr">
         <key-map field-name="attrName"/>
