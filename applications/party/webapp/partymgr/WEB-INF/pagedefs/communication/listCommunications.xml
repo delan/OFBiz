@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">List Communications</property>
+    <property name="title-property">PageTitleListCommunications</property>
+    <property name="headerItem">view</property>
+    <page-action name="/communication/listCommunications.bsh"/>
+</page>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Edit Facility Roles</property>
+    <property name="titleProperty">PageTitleEditFacilityRoles</property>
+    <property name="headerItem">facility</property>
+    <property name="tabButtonItem">EditFacilityRoles</property>
+    <content-action name="/facility/EditFacilityRoles.bsh"/>
+</page>

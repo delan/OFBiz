@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <form name="EditSurvey" type="single" 
+        target="updateSurvey" title="" default-map-name="survey"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <alt-target use-when="survey==null" target="createSurvey"/>
+        
+        <auto-fields-service service-name="updateSurvey"/>
+        
+        <field use-when="survey!=null" name="surveyId" tooltip="This cannot be changed without re-creating the Survey"><display/></field>
+        <field use-when="survey==null&amp;&amp;surveyId!=null" name="surveyId" tooltip="Could not find Survey with ID [${surveyId}]"><display description="" also-hidden="false"/></field>
+        <field use-when="survey==null&amp;&amp;surveyId==null" name="surveyId"><ignored/></field>
+
+        <field name="isAnonymous"><drop-down no-current-selected-key="N" allow-empty="false"><option key="Y"/><option key="N"/></drop-down></field>
+        
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="EditSurveyQuestions" type="list" 
+        target="updateSurveyQuestion" title="" list-name="surveyQuestionList" list-entry-name="surveyQuestion"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <auto-fields-service service-name="updateSurveyQuestion" map-name="surveyQuestion"/>
+
+        <field name="surveyId"><hidden/></field>
+        <field name="surveyQuestionSeqId" title="Question #"><display/></field>
+
+        <!-- <field name="surveyQuestionTypeId" title="Question Type"><display description="${surveyQuestionType.description}"/></field> -->
+        <field name="surveyQuestionTypeId" title="Question Type">
+            <drop-down allow-empty="false">
+               <entity-options entity-name="SurveyQuestionType" description="${description}"/>
+            </drop-down>
+        </field>
+                
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="CreateSurveyQuestion" type="single" 
+        target="createSurveyQuestion" title="" default-map-name="surveyQuestion"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="surveyQuestion!=null" target="updateSurveyQuestion"/>
+        <auto-fields-service service-name="createSurveyQuestion"/>
+
+        <field use-when="surveyQuestion!=null" name="surveyQuestionId"><hidden/></field>
+        <field name="surveyId"><hidden value="${surveyId}"/></field>
+        <field name="surveyQuestionSeqId"><ignored/></field>
+        <field name="surveyQuestionCategoryId">
+            <drop-down allow-empty="false">
+               <entity-options entity-name="SurveyQuestionCategory" description="${description}"/>
+            </drop-down>
+        </field>
+        <field name="surveyQuestionTypeId">
+            <drop-down allow-empty="false">
+               <entity-options entity-name="SurveyQuestionType" description="${description}"/>
+            </drop-down>
+        </field>
+
+        <field use-when="surveyQuestion!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="CreateSurveyQuestionCategory" type="single"
+        target="createSurveyQuestionCategory" title=""
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <auto-fields-service service-name="createSurveyQuestionCategory"/>
+        <field name="surveyId"><hidden value="${surveyId}"/></field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="CreateSurveyQuestionOption" type="single"
+        target="createSurveyQuestionOption" title="" default-map-name="surveyQuestionOption"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="surveyQuestionOption!=null" target="updateSurveyQuestionOption"/>
+        <auto-fields-service service-name="createSurveyQuestionOption"/>
+
+        <field name="surveyId"><hidden value="${surveyId}"/></field>
+        <field name="surveyQuestionId"><hidden value="${surveyQuestionId}"/></field>
+        <field use-when="surveyQuestionOption!=null" name="surveyOptionSeqId"><hidden/></field>
+
+        <field use-when="surveyQuestionOption!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
+    </form>
+</forms>

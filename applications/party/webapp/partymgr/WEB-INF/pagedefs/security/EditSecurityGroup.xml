@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Edit Security Group</property>
+    <property name="title-property">PageTitleEditSecurityGroup</property>
+    <property name="headerItem">security</property>
+    <property name="tabButtonItem">EditSecurityGroup</property>
+    <content-action name="/security/EditSecurityGroup.bsh"/>
+</page>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Find Facility Location</property>
+    <property name="titleProperty">PageTitleFindFacilityLocation</property>
+    <property name="headerItem">facility</property>
+    <property name="tabButtonItem">FindFacilityLocation</property>
+    <content-action name="/facility/FindFacilityLocation.bsh"/>
+</page>

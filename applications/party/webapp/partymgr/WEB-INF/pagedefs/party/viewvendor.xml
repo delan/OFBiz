@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">View Vendor Party Info</property>
+    <property name="title-property">PageTitleViewVendorParty</property>
+    <property name="headerItem">view</property>
+    <content-action name="/party/viewvendor.bsh"/>
+</page>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <SecurityGroup description="POS Clerk" groupId="POSCLERK"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="ORDERMGR_NOTE"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="PARTYMGR_CREATE"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="PARTYMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="PARTYMGR_NOTE"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="PAY_INFO_VIEW"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="PAY_INFO_UPDATE"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="PAY_INFO_CREATE"/>
+    <SecurityGroupPermission groupId="POSCLERK" permissionId="CATALOG_VIEW"/>    
+</entity-engine-xml>

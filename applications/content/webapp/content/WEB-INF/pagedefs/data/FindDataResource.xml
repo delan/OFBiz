@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Find DataResource</property>
+    <property name="formDefFile">/data/DataResourceForms.xml</property>    
+    <property name="singleFormName">findDataResource</property>    
+    <property name="listFormName">listFindDataResource</property>    
+    <property name="subMenu">/data/data_menu.ftl</property>    
+    <property name="headerItem">Data</property>    
+    <property name="entityName">DataResource</property>    
+    <property name="listName">entityList</property>    
+    <property name="permission">CONTENTMGR</property>    
+    <property name="permissionType">none</property>    
+    <content-action name="/includes/formprep.bsh"/>
+    <content-action name="/includes/findprep.bsh"/>
+    <content-action name="/includes/pagelistprep.bsh"/>
+</page>

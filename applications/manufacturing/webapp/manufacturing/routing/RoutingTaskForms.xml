@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Olivier.Heintz@nereide.biz
+ *@version    $Rev$
+ *@since      3.0
+-->
+
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <!-- Routing forms -->
+    <form name="FindRoutings" type="single" 
+            target="FindRouting" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingId}">
+            <text-find default-value="equals"/>
+        </field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}">
+            <text-find default-value="equals"/>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListRoutings" type="list" 
+            title="" list-iterator-name="listIt" paginate-target="FindRouting"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+            <set field="entityName" value="WorkEffort"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <field name="workEffortId" widget-style="buttontext">
+            <hyperlink description="${workEffortId}" target="EditRouting?workEffortId=${workEffortId}"/>
+        </field>
+        <field name="workEffortName"><display/></field>
+        <field name="description"><display/></field>
+        <field name="quantityToProduce"><display/></field>
+        <field name="editRoutingProduct" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="EditRoutingProductLink?workEffortId=${workEffortId}" description="[${uiLabelMap.ManufacturingEditRoutingProductLink}]" also-hidden="false"/>
+        </field>
+        <field name="editRoutingTask" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="EditRoutingTaskAssoc?workEffortId=${workEffortId}" description="[${uiLabelMap.ManufacturingEditRoutingTaskAssoc}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="EditRouting" type="single"
+            target="UpdateRouting" title="" default-map-name="routing"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="routing==null" target="CreateRouting"/>
+        <field name="workEffortTypeId" use-when="routing==null"><hidden value="ROUTING"/></field>
+        <field name="currentStatusId" use-when="routing==null"><hidden value="ROU_ACTIVE"/></field>
+        <field name="workEffortId" use-when="routing!=null"><hidden/></field>
+        <field name="workEffortName"><text/></field>
+        <field name="description"><text/></field>
+        <field name="quantityToProduce"><text/></field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
+    <!-- Routing Task Forms -->
+    <form name="FindRoutingTasks" type="single" 
+            target="FindRoutingTask" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <field name="hideSearch"><hidden value="Y"/></field>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingTaskId}">
+            <text-find default-value="equals"/>
+        </field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}">
+            <text-find default-value="equals"/>
+        </field>
+        <field name="fixedAssetId">
+            <drop-down allow-empty="true">
+                <entity-options description="${fixedAssetName} [${fixedAssetId}]" entity-name="FixedAsset">
+                    <entity-constraint name="fixedAssetTypeId" operator="equals" value="GROUP_EQUIPMENT"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonLookup}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListRoutingTasks" type="list"
+            title="" list-iterator-name="listIt" paginate-target="FindRoutingTask"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+            <set field="entityName" value="WorkEffort"/>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingTaskId}" widget-style="buttontext">
+            <hyperlink description="${workEffortId}" target="EditRoutingTask?workEffortId=${workEffortId}"/>
+        </field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}"><display/></field>
+        <field name="description"><display/></field>
+        <field name="workEffortPurposeTypeId" title="${uiLabelMap.ManufacturingTaskPurpose}">
+            <display-entity entity-name="WorkEffortPurposeType"/>
+        </field>
+        <field name="fixedAssetId" title="${uiLabelMap.ManufacturingMachineGroup}">
+            <display-entity entity-name="FixedAsset" description="${fixedAssetName}"/>
+        </field>
+
+        <field name="estimatedSetupMillis"><display/></field>
+        <field name="estimatedMilliSeconds"><display/></field>
+        <!--
+        <field name="deleteRoutingTask" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="RemoveRoutingTask?workEffortId=${workEffortId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+        -->
+    </form>
+    <form name="EditRoutingTask" type="single"
+            target="UpdateRoutingTask" title="" default-map-name="routingTask"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="routingTask==null" target="CreateRoutingTask"/>
+        <field name="workEffortTypeId" use-when="routingTask==null"><hidden value="ROU_TASK"/></field>
+        <field name="currentStatusId" use-when="routingTask==null"><hidden value="ROU_ACTIVE"/></field>
+        <field name="workEffortId" use-when="routingTask!=null"><hidden/></field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingTaskName}"><text/></field>
+        <field name="workEffortPurposeTypeId" title="${uiLabelMap.ManufacturingTaskPurpose}">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="WorkEffortPurposeType">
+                    <entity-constraint name="workEffortPurposeTypeId" operator="like" value="ROU%"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="description"><text/></field>
+        <field name="fixedAssetId">
+            <drop-down allow-empty="true">
+                <entity-options description="${fixedAssetName} [${fixedAssetId}]" entity-name="FixedAsset">
+                    <entity-constraint name="fixedAssetTypeId" operator="equals" value="GROUP_EQUIPMENT"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="estimatedSetupMillis"><text/></field>
+        <field name="estimatedMilliSeconds"><text/></field>
+        <field name="submitButton" title="Submit" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+    <form name="ListRoutingTaskRoutings" type="list" 
+            title="" list-name="allRoutings"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <field name="workEffortIdFrom" title="${uiLabelMap.ManufacturingRouting}">
+            <display-entity entity-name="WorkEffort" key-field-name="workEffortId" description="[${workEffortId}] ${workEffortName}"/>
+        </field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="editRouting" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="EditRouting?workEffortId=${workEffortIdFrom}" description="[${uiLabelMap.ManufacturingEditRouting}]" also-hidden="false"/>
+        </field>
+    </form>
+    
+    <!-- Routing Task Assoc Forms -->
+    <form name="ListRoutingTaskAssoc" type="list" 
+            target="EditRoutingTaskAssoc" title="" list-name="allRoutingTasks"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
+        <field name="workEffortIdFrom"><hidden/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"><display/></field>
+        <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingTaskName}" widget-style="buttontext">
+            <hyperlink target="EditRoutingTask?workEffortId=${workEffortIdTo}" description="[${workEffortIdTo}] ${workEffortToName}" also-hidden="false"/>
+        </field>
+        <field name="workEffortAssocTypeId" ><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ><display/></field>
+        <field name="workEffortToSetup" title="${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}" ><display/></field>
+        <field name="workEffortToRun" title="${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}" ><display/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="RemoveRoutingTaskAssoc?workEffortId=${workEffortIdFrom}&amp;workEffortIdFrom=${workEffortIdFrom}&amp;workEffortIdTo=${workEffortIdTo}&amp;fromDate=${fromDate}&amp;workEffortAssocTypeId=ROUTING_COMPONENT" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+        <sort-order>
+            <sort-field name="workEffortIdFrom"/>
+            <sort-field name="workEffortIdTo"/>
+            <sort-field name="sequenceNum"/>
+        </sort-order>
+    </form>
+ 
+     <form name="UpdateRoutingTaskAssoc" type="single" 
+            target="UpdateRoutingTaskAssoc" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <auto-fields-service service-name="updateWorkEffortAssoc" map-name="routingTaskAssoc"/>
+        <field name="workEffortId"><hidden value="${workEffortIdFrom}"/></field>
+        <field name="workEffortIdFrom"><hidden/></field>
+        <field name="sequenceNum" title="${uiLabelMap.CommonSequenceNum}"></field>
+        <field name="workEffortIdTo"  title="${uiLabelMap.ManufacturingRoutingTaskId}">
+        	<display description="${routingTask.workEffortName}"/></field>
+        <field name="workEffortAssocTypeId" ><hidden/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" ></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <sort-order>
+            <sort-field name="workEffortIdFrom"/>
+            <sort-field name="workEffortIdTo"/>
+            <sort-field name="sequenceNum"/>
+        </sort-order>
+    </form>
+
+    <!-- Routing Product Assoc -->
+    <form name="AddRoutingProductLink" type="single" 
+            target="AddRoutingProductLink" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <auto-fields-service service-name="createWorkEffortGoodStandard" map-name="routingProductLink"/>
+        <field name="statusId">
+            <hidden/>
+        </field>
+        <field name="workEffortId" use-when="${byProduct} == null">
+            <hidden/>
+        </field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}" use-when="${byProduct} == null">
+            <display description="${workEffortName}[${workEffortId}]"/>
+        </field>
+        <field name="productId" title="${uiLabelMap.ProductProductId}" use-when="${byProduct} == null">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="byProduct" use-when="${byProduct} != null">
+            <hidden/>
+        </field>
+        <field name="productId" use-when="${byProduct} != null">
+            <hidden value="${byProduct}"/>
+        </field>
+        <field name="productName" title="${uiLabelMap.ProductProductName}" use-when="${byProduct} != null">
+            <display description="${productName}[${byProduct}]"/>
+        </field>
+        <field name="workEffortId" title="${uiLabelMap.ManufacturingRoutingId}" use-when="${byProduct} != null">
+            <lookup target-form-name="LookupRouting"/>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+        <sort-order>
+            <sort-field name="workEffortName"/>
+            <sort-field name="productName"/>
+            <sort-field name="workEffortId"/>
+            <sort-field name="productId"/>
+            <sort-field name="fromDate"/>
+            <sort-field name="thruDate"/>
+            <sort-field name="estimatedQuantity"/>
+        </sort-order>
+    </form>
+     <form name="UpdateRoutingProductLink" type="single" 
+            target="UpdateRoutingProductLink" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <auto-fields-service service-name="updateWorkEffortGoodStandard" map-name="routingProductLink"/>
+        <field name="byProduct"><hidden/></field>
+        <field name="statusId"><hidden/></field>
+         <field name="workEffortId"><hidden/></field>
+        <field name="productId" ><hidden/></field>
+        <field name="workEffortName" title="${uiLabelMap.ManufacturingRoutingName}" position="1"><display description="${workEffortName} [${routingProductLink.workEffortId}]"/></field>
+        <field name="productName" title="${uiLabelMap.ProductProductName}" position="2"><display description="${internalName} [${routingProductLink.productId}]"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" position="1"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}" position="2"></field>
+        <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}" position="3"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="smallSubmit" ><submit button-type="button"/></field>
+		<sort-order>
+			<sort-field name="workEffortName"/>
+			<sort-field name="productName"/>
+			<sort-field name="fromDate"/>
+			<sort-field name="thruDate"/>
+			<sort-field name="estimatedQuantity"/>
+		</sort-order>
+    </form>
+
+   <form name="ListRoutingProductLink" type="list" 
+            target="EditRoutingProductLink" title="" list-name="allRoutingProductLinks"
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <actions>
+            <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+        </actions>
+        <field name="workEffortName"  title="${uiLabelMap.ManufacturingRoutingName}"><display description="${workEffortName} [${workEffortId}]"/></field>
+        <field name="productName" title="${uiLabelMap.ProductProductName}"><display description="${internalName} [${productId}]"/></field>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}"><display/></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"><display/></field>
+        <field name="estimatedQuantity" title="${uiLabelMap.ManufacturingQuantity}"><display/></field>
+        <field name="editLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="EditRoutingProductLink?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="[${uiLabelMap.CommonEdit}]" also-hidden="false"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="RemoveWorkEffortGoodStandard?workEffortId=${workEffortId}&amp;productId=${productId}&amp;fromDate=${fromDate}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+
+</forms>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <Content contentId="WebStoreFORUM" contentTypeId="WEB_SITE_PUB_PT" contentName="WebStore Forum Root" description="Ecommerce Forums"/>
+    <Content contentId="WIDGETS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreFORUM" contentName="Widgets" description="Widgets" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin" statusId="BLOG_SUBMITTED"/>
+    <ContentAttribute contentId="WIDGETS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <ContentAssoc contentId="WIDGETS" contentIdTo="WebStoreFORUM" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="WIDGETSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WIDGETS" contentName="Care &amp; Groom" description="Care and Grooming" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+
+    <Content contentId="WIDGETSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WIDGETS" contentName="Sightings" description="Sightings of Widgets" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+
+    <Content contentId="WebStoreCONTENT" contentTypeId="WEB_SITE_PUB_PT" contentName="WebStore Content Root" description="Ecommerce Content Categories"/>
+
+    <Content contentId="GIZMOS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreFORUM" contentName="Gizmos" description="Widgets" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin" statusId="BLOG_PUBLISHED"/>
+    <Content contentId="CNTGIZMOS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Gizmos" description="Gizmos" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="GIZMOS" contentIdTo="WebStoreFORUM" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="GIZMOS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <Content contentId="GIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Advocacy" description="Advocacy" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="GIZMOSLRG" contentIdTo="CNTGIZMOS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="GIZMOSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="GIZMOS" contentName="Case Studies" description="Case Studies" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="GIZMOSSML" contentIdTo="CNTGIZMOS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="ASK" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreFORUM" contentName="Ask the Experts" description="Ask the Experts" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="ASK" contentIdTo="WebStoreFORUM" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin" statusId="BLOG_SUBMITTED"/>
+    <ContentAttribute contentId="ASK" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <ContentPurpose contentId="WebStoreFORUM" contentPurposeTypeId="ARTICLE"/>
+    <ContentPurpose contentId="WebStoreFORUM" contentPurposeTypeId="RESPONSE"/>
+
+    <Content contentId="CNTWIDGETS" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Widgets" description="Widgets" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="CNTWIDGETS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <ContentAssoc contentId="CNTWIDGETS" contentIdTo="WebStoreCONTENT" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="WIDGETSSML" contentIdTo="CNTWIDGETS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAssoc contentId="WIDGETSLRG" contentIdTo="CNTWIDGETS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="CNTWIDGETSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTWIDGETS" contentName="Large Widgets" description="Large Widgets" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="CNTWIDGETSLRG" contentIdTo="CNTWIDGETS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="CNTWIDGETSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTWIDGETS" contentName="Small Widgets" description="Large Widgets" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="CNTWIDGETSSML" contentIdTo="CNTWIDGETS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+
+    <ContentAssoc contentId="CNTGIZMOS" contentIdTo="WebStoreCONTENT" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="CNTGIZMOS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <Content contentId="CNTGIZMOSLRG" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Large Gizmos" description="Large Widgets" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="CNTGIZMOSLRG" contentIdTo="CNTGIZMOS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="CNTGIZMOSSML" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="CNTGIZMOS" contentName="Small Gizmos" description="Large Widgets" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="CNTGIZMOSSML" contentIdTo="CNTGIZMOS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <Content contentId="POLICY" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="WebStoreCONTENT" contentName="Policies" description="Policies" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+
+    <ContentAssoc contentId="POLICY" contentIdTo="WebStoreCONTENT" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
+    <ContentAttribute contentId="POLICY" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <Content contentId="WebStoreFACTOID" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="" contentName="Factoids" description="Factoids" createdDate="2004-07-05 12:00:00.000" createdByUserLogin="admin"/>
+
+</entity-engine-xml>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Product Store Email Setup</property>
+    <property name="titleProperty">PageTitleEditProductStoreEmailSetup</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="headerItem">store</property>
+    <property name="tabButtonItem">EditProductStoreEmails</property>
+    <content-action name="/store/EditProductStoreEmails.bsh"/>
+</page>

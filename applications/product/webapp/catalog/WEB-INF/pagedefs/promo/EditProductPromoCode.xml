@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Edit Product Promotion Code</property>
+    <property name="titleProperty">PageTitleEditProductPromotionCode</property> 
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="headerItem">promos</property>
+    <property name="tabButtonItem">FindProductPromoCode</property>
+    <content-action name="/promo/EditProductPromoCode.bsh"/>
+</page>

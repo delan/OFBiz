@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @version    $Rev:$
+ * @since      3.2
+ -->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <simple-method method-name="getOrderedSummaryInformation" short-description="Get Summary Information About Orders for a Customer">
+        <if>
+            <condition>
+                <and>
+                    <not><if-has-permission permission="ORDERMGR" action="_VIEW"/></not>
+                    <if-compare-field field-name="parameters.partyId" operator="not-equals" to-field-name="userLogin.partyId"/>
+                </and>
+            </condition>
+            <then>
+                <string-to-list string="To get order summary information you must have the ORDERMGR_VIEW permission, or be logged in as the party to get the summary information for." list-name="error_list"/>
+            </then>
+        </if>
+        <check-errors/>
+        
+        <if-not-empty field-name="monthsToInclude">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <call-bsh><![CDATA[
+                calendar = java.util.Calendar.getInstance();
+                calendar.setTimeInMillis(nowTimestamp.getTime());
+                calendar.add(java.util.Calendar.MONTH, -monthsToInclude.intValue());
+                parameters.put("fromDate", new Timestamp(calendar.getTimeInMillis()));
+            ]]></call-bsh>
+            <env-to-env env-name="nowTimestamp" to-env-name="parameters.thruDate"/>
+        </if-not-empty>
+
+        <if-empty field-name="parameters.roleTypeId">
+            <string-to-field string="PLACING_CUSTOMER" field-name="parameters.roleTypeId"/>
+        </if-empty>
+        <if-empty field-name="parameters.orderTypeId">
+            <string-to-field string="SALES_ORDER" field-name="parameters.orderTypeId"/>
+        </if-empty>
+        <if-empty field-name="parameters.statusId">
+            <string-to-field string="ORDER_COMPLETED" field-name="parameters.statusId"/>
+        </if-empty>
+
+        <entity-condition entity-name="OrderHeaderAndRoleSummary" list-name="orderInfoList">
+            <condition-list combine="and">
+                <condition-expr field-name="partyId" operator="equals" env-name="parameters.partyId"/>
+                <condition-expr field-name="roleTypeId" operator="equals" env-name="parameters.roleTypeId"/>
+                <condition-expr field-name="orderTypeId" operator="equals" env-name="parameters.orderTypeId"/>
+                <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId"/>
+                <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromDate" ignore-if-null="true"/>
+                <condition-expr field-name="orderDate" operator="less-equals" env-name="parameters.thruDate" ignore-if-null="true"/>
+            </condition-list>
+            <select-field field-name="partyId"/>
+            <select-field field-name="roleTypeId"/>
+            <select-field field-name="totalGrandAmount"/>
+            <select-field field-name="totalSubRemainingAmount"/>
+            <select-field field-name="totalOrders"/>
+        </entity-condition>
+        
+        <!-- because we specified the partyId and the roleTypeId, should only be one item in list returned -->
+        <first-from-list list-name="orderInfoList" entry-name="orderInfo"/>
+        <if-empty field-name="orderInfo">
+            <calculate field-name="plainDoubleZero" type="Double"><number value="0.0"/></calculate>
+            <calculate field-name="plainLongZero" type="Long"><number value="0"/></calculate>
+            <field-to-result field-name="plainDoubleZero" result-name="totalGrandAmount"/>
+            <field-to-result field-name="plainDoubleZero" result-name="totalSubRemainingAmount"/>
+            <field-to-result field-name="plainLongZero" result-name="totalOrders"/>
+        <else>
+            <field-to-result field-name="orderInfo.totalGrandAmount" result-name="totalGrandAmount"/>
+            <field-to-result field-name="orderInfo.totalSubRemainingAmount" result-name="totalSubRemainingAmount"/>
+            <field-to-result field-name="orderInfo.totalOrders" result-name="totalOrders"/>
+        </else>
+        </if-empty>
+    </simple-method>
+    <simple-method method-name="createOrderShipment" short-description="Create OrderShipment">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run createOrderShipment you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <string-to-field string="Create OrderShipment" field-name="operationName"/>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="OrderShipment"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="deleteOrderShipment" short-description="Delete OrderShipment">
+        <check-permission permission="ORDERMGR" action="_DELETE">
+            <fail-message message="Security Error: to run deleteOrderShipment you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <string-to-field string="Delete OrderShipment" field-name="operationName"/>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="OrderShipment"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="OrderShipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="checkCreateOrderRequirement" short-description="Create OrderRequirementCommitment and Requirement">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run checkCreateOrderRequirement you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        <entity-one entity-name="OrderHeader" auto-field-map="true" value-name="order"/>
+        <if-compare field-name="order.orderTypeId" operator="equals" value="SALES_ORDER">
+            <entity-one entity-name="Product" auto-field-map="true" value-name="product"/>
+            <field-to-field field-name="product.requirementMethodEnumId" to-field-name="requirementMethodId"/>
+            <if-empty field-name="requirementMethodId">
+                <entity-one entity-name="ProductStore" value-name="productStore">
+                    <field-map env-name="order.productStoreId" field-name="productStoreId"/>
+                </entity-one>
+                <field-to-field field-name="productStore.requirementMethodEnumId" to-field-name="requirementMethodId"/>
+            </if-empty>
+            <if-compare field-name="requirementMethodId" operator="equals" value="PRODRQM_AUTO">
+                <field-to-field field-name="parameters.productId" to-map-name="inputMap" to-field-name="productId"/>
+                <field-to-field field-name="parameters.quantity" to-map-name="inputMap" to-field-name="quantity"/>
+                <string-to-field string="PRODUCT_REQUIREMENT" map-name="inputMap" field-name="requirementTypeId"/>
+                <call-service service-name="createRequirement" in-map-name="inputMap">
+                    <result-to-field field-name="parameters.requirementId" result-name="requirementId"/>
+                </call-service>
+
+                <make-value value-name="commitment" entity-name="OrderRequirementCommitment"/>
+                <set-pk-fields map-name="parameters" value-name="commitment"/>
+                <set-nonpk-fields map-name="parameters" value-name="commitment"/>
+                <create-value value-name="commitment"/>
+
+                <field-to-result field-name="parameters.requirementId" result-name="requirementId"/>
+            </if-compare>
+        </if-compare>
+    </simple-method>
+
+    <simple-method method-name="checkCreateStockRequirement" short-description="Create a Requirement if QOA goes under the minimum stock level">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run checkCreateStockRequirement you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        
+        <!-- If the service is triggered by the updateItemIssuance service, get the ItemIssuance by the passed itemIssuanceId -->
+        <if-not-empty field-name="parameters.itemIssuanceId">
+            <entity-one entity-name="ItemIssuance" auto-field-map="true" value-name="itemIssuance"/>
+            <entity-one entity-name="InventoryItem" value-name="inventoryItem">
+                <field-map env-name="itemIssuance.inventoryItemId" field-name="inventoryItemId"/>
+            </entity-one>
+        <else>
+            <entity-one entity-name="InventoryItem" auto-field-map="true" value-name="inventoryItem"/>
+        </else>
+        </if-not-empty>
+
+        <!-- Get the Product and check if it is managed with the STOCK requirement method -->
+        <entity-one entity-name="Product" value-name="product">
+            <field-map env-name="inventoryItem.productId" field-name="productId"/>
+        </entity-one>
+        <field-to-field field-name="product.requirementMethodEnumId" to-field-name="requirementMethodId"/>
+        <if-empty field-name="requirementMethodId">
+            <!-- If the requirement method is not specified, try to get it from the product store -->
+            <entity-one entity-name="OrderHeader" auto-field-map="true" value-name="order"/>
+            <entity-one entity-name="ProductStore" value-name="productStore">
+                <field-map env-name="order.productStoreId" field-name="productStoreId"/>
+            </entity-one>
+            <field-to-field field-name="productStore.requirementMethodEnumId" to-field-name="requirementMethodId"/>
+        </if-empty>
+
+        <if-compare field-name="requirementMethodId" operator="equals" value="PRODRQM_STOCK">
+            <!-- Get the ProductFacility for the minimum stock level -->
+            <entity-one entity-name="ProductFacility" value-name="productFacility">
+                <field-map env-name="inventoryItem.productId" field-name="productId"/>
+                <field-map env-name="inventoryItem.facilityId" field-name="facilityId"/>
+            </entity-one>
+            <if-not-empty field-name="productFacility.minimumStock">
+                <!-- Get the product's total quantityOnHand in the facility -->
+                <field-to-field field-name="inventoryItem.productId" to-map-name="inputMap" to-field-name="productId"/>
+                <field-to-field field-name="inventoryItem.facilityId" to-map-name="inputMap" to-field-name="facilityId"/>
+                <call-service service-name="getInventoryAvailableByFacility" in-map-name="inputMap">
+                    <result-to-field field-name="quantityOnHandTotal" result-name="quantityOnHandTotal"/>
+                    <result-to-field field-name="availableToPromiseTotal" result-name="availableToPromiseTotal"/>
+                </call-service>
+                <clear-field field-name="inputMap"/>
+                <!-- If this new issuance will cause the quantityOnHandTotal to go below the minimumStock, create a new requirement -->
+                <if-compare-field field-name="quantityOnHandTotal" to-field-name="productFacility.minimumStock" operator="greater-equals" type="Double">
+                    <calculate field-name="newQuantityOnHand">
+                        <calcop field-name="quantityOnHandTotal" operator="subtract">
+                            <calcop operator="get" field-name="parameters.quantity"/>
+                        </calcop>
+                    </calculate>
+                    <if-compare-field field-name="newQuantityOnHand" to-field-name="productFacility.minimumStock" operator="less" type="Double">
+                        <field-to-field field-name="inventoryItem.productId" to-map-name="inputMap" to-field-name="productId"/>
+                        <if-not-empty field-name="productFacility.reorderQuantity">
+                            <field-to-field field-name="productFacility.reorderQuantity" to-map-name="inputMap" to-field-name="quantity"/>
+                        <else>
+                            <field-to-field field-name="parameters.quantity" to-map-name="inputMap" to-field-name="quantity"/>
+                        </else>
+                        </if-not-empty>
+                        <string-to-field string="PRODUCT_REQUIREMENT" map-name="inputMap" field-name="requirementTypeId"/>
+                        <call-service service-name="createRequirement" in-map-name="inputMap">
+                            <result-to-field field-name="parameters.requirementId" result-name="requirementId"/>
+                        </call-service>
+                        <field-to-result field-name="parameters.requirementId" result-name="requirementId"/>
+                    </if-compare-field>
+                </if-compare-field>
+            </if-not-empty>
+        </if-compare>
+    </simple-method>
+    
+</simple-methods>
+

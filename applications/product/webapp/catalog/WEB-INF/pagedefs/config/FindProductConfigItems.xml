@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Find Config Items</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="headerItem">configs</property>
+    <content-action name="/config/FindProductConfigItems.bsh"/>
+</page>

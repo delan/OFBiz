@@ -1,0 +1,169 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones (jonesde@ofbiz.org)
+ *@version    $Rev$
+ *@since      2.2
+ */
+
+import java.util.*;
+import java.sql.Timestamp;
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.base.util.*;
+
+delegator = request.getAttribute("delegator");
+
+lookupFlag = request.getParameter("lookupFlag");
+shipmentTypeId = request.getParameter("shipmentTypeId");
+originFacilityId = request.getParameter("originFacilityId");
+destinationFacilityId = request.getParameter("destinationFacilityId");
+statusId = request.getParameter("statusId");
+minDate = request.getParameter("minDate");
+maxDate = request.getParameter("maxDate");
+
+findShipmentExprs = new LinkedList();
+paramListBuffer = new StringBuffer();
+if (UtilValidate.isNotEmpty(shipmentTypeId)) {
+    paramListBuffer.append("&shipmentTypeId=");
+    paramListBuffer.append(shipmentTypeId);
+    findShipmentExprs.add(new EntityExpr("shipmentTypeId", EntityOperator.EQUALS, shipmentTypeId));
+
+    currentShipmentType = delegator.findByPrimaryKeyCache("ShipmentType", UtilMisc.toMap("shipmentTypeId", shipmentTypeId));
+    context.put("currentShipmentType", currentShipmentType);
+}
+if (UtilValidate.isNotEmpty(originFacilityId)) {
+    paramListBuffer.append("&originFacilityId=");
+    paramListBuffer.append(originFacilityId);
+    findShipmentExprs.add(new EntityExpr("originFacilityId", EntityOperator.EQUALS, originFacilityId));
+
+    currentOriginFacility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", originFacilityId));
+    context.put("currentOriginFacility", currentOriginFacility);
+}
+if (UtilValidate.isNotEmpty(destinationFacilityId)) {
+    paramListBuffer.append("&destinationFacilityId=");
+    paramListBuffer.append(destinationFacilityId);
+    findShipmentExprs.add(new EntityExpr("destinationFacilityId", EntityOperator.EQUALS, destinationFacilityId));
+
+    currentDestinationFacility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", destinationFacilityId));
+    context.put("currentDestinationFacility", currentDestinationFacility);
+}
+if (UtilValidate.isNotEmpty(statusId)) {
+    paramListBuffer.append("&statusId=");
+    paramListBuffer.append(statusId);
+    findShipmentExprs.add(new EntityExpr("statusId", EntityOperator.EQUALS, statusId));
+
+    currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId));
+    context.put("currentStatus", currentStatus);
+}
+if (minDate != null && minDate.length() > 8) {            
+    minDate = minDate.trim();
+    if (minDate.length() < 14) minDate = minDate + " " + "00:00:00.000";
+    paramListBuffer.append("&minDate=");
+    paramListBuffer.append(minDate);
+    findShipmentExprs.add(new EntityExpr("estimatedShipDate", EntityOperator.GREATER_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(minDate, "Timestamp", null, null)));        
+}
+if (maxDate != null && maxDate.length() > 8) {
+    maxDate = maxDate.trim();
+    if (maxDate.length() < 14) maxDate = maxDate + " " + "23:59:59.999";
+    paramListBuffer.append("&maxDate=");
+    paramListBuffer.append(maxDate);
+    findShipmentExprs.add(new EntityExpr("estimatedShipDate", EntityOperator.LESS_THAN_EQUAL_TO, ObjectType.simpleTypeConvert(maxDate, "Timestamp", null, null)));
+}
+
+if ("Y".equals(lookupFlag)) {
+	context.put("paramList", paramListBuffer.toString());
+	
+	if (findShipmentExprs.size() > 0) {
+	    mainCond = new EntityConditionList(findShipmentExprs, EntityOperator.AND);
+		shipmentList = delegator.findByCondition("Shipment", mainCond, null, null);
+		context.put("shipmentList", shipmentList);
+
+		// set the page parameters
+		viewIndex = 0;
+		try {
+		    viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+		} catch (Exception e) {
+		    viewIndex = 0;
+		}
+		
+		viewSize = 20;
+		try {
+		    viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+		} catch (Exception e) {
+		    viewSize = 20;
+		}
+		
+		listSize = 0;
+		if (shipmentList != null) {
+		    listSize = shipmentList.size();
+		}
+		
+		lowIndex = viewIndex * viewSize;
+		highIndex = (viewIndex + 1) * viewSize;
+		
+		if (listSize < highIndex) {
+		    highIndex = listSize;
+		}
+		context.put("viewIndex", viewIndex);
+		context.put("listSize", listSize);
+		context.put("highIndex", highIndex);
+		context.put("lowIndex", lowIndex);
+		context.put("viewSize", viewSize);
+	}
+}
+
+// =============== Prepare the Option Data for the Find Form =================
+
+shipmentTypes = delegator.findAll("ShipmentType", UtilMisc.toList("description"));
+context.put("shipmentTypes", shipmentTypes);
+
+facilities = delegator.findAll("Facility", UtilMisc.toList("facilityName"));
+context.put("facilities", facilities);
+
+shipmentStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "SHIPMENT_STATUS"), UtilMisc.toList("sequenceId"));
+context.put("shipmentStatuses", shipmentStatuses);
+
+// create the fromDate for calendar
+fromCal = Calendar.getInstance();
+fromCal.setTimeInMillis(System.currentTimeMillis());
+//fromCal.set(Calendar.DAY_OF_WEEK, fromCal.getActualMinimum(Calendar.DAY_OF_WEEK));
+fromCal.set(Calendar.HOUR_OF_DAY, fromCal.getActualMinimum(Calendar.HOUR_OF_DAY));
+fromCal.set(Calendar.MINUTE, fromCal.getActualMinimum(Calendar.MINUTE));
+fromCal.set(Calendar.SECOND, fromCal.getActualMinimum(Calendar.SECOND));
+fromCal.set(Calendar.MILLISECOND, fromCal.getActualMinimum(Calendar.MILLISECOND));
+fromTs = new Timestamp(fromCal.getTimeInMillis());
+fromStr = fromTs.toString();
+fromStr = fromStr.substring(0, fromStr.indexOf('.'));
+context.put("fromDateStr", fromStr);
+
+// create the thruDate for calendar
+toCal = Calendar.getInstance();
+toCal.setTimeInMillis(System.currentTimeMillis());
+//toCal.set(Calendar.DAY_OF_WEEK, toCal.getActualMaximum(Calendar.DAY_OF_WEEK));
+toCal.set(Calendar.HOUR_OF_DAY, toCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+toCal.set(Calendar.MINUTE, toCal.getActualMaximum(Calendar.MINUTE));
+toCal.set(Calendar.SECOND, toCal.getActualMaximum(Calendar.SECOND));
+toCal.set(Calendar.MILLISECOND, toCal.getActualMaximum(Calendar.MILLISECOND));
+toTs = new Timestamp(toCal.getTimeInMillis());
+toStr = toTs.toString();
+context.put("thruDateStr", toStr);
+

@@ -1,0 +1,72 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@author     Brad Steiner
+ *@version    $Rev$
+ *@since      2.2
+ */
+
+import java.util.*;
+import java.io.*;
+import java.lang.Integer;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.widget.html.*;
+
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
+
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
+    context.put("hasPermission", Boolean.TRUE);
+} else {
+    context.put("hasPermission", Boolean.FALSE);
+}
+
+String productPromoId = request.getParameter("productPromoId");
+
+GenericValue productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
+List productPromoRules = null;
+if (productPromo != null) {
+    productPromoRules = productPromo.getRelated("ProductPromoRule", null, UtilMisc.toList("ruleName"));
+}
+
+List promoProductPromoCategories = delegator.findByAnd("ProductPromoCategory", UtilMisc.toMap("productPromoId", productPromoId, "productPromoRuleId", "_NA_", "productPromoActionSeqId", "_NA_", "productPromoCondSeqId", "_NA_"));
+List promoProductPromoProducts = delegator.findByAnd("ProductPromoProduct", UtilMisc.toMap("productPromoId", productPromoId, "productPromoRuleId", "_NA_", "productPromoActionSeqId", "_NA_", "productPromoCondSeqId", "_NA_"));
+
+List inputParamEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PROMO_IN_PARAM"), UtilMisc.toList("sequenceId"));
+List condOperEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PROMO_COND"), UtilMisc.toList("sequenceId"));
+List productPromoActionEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PROMO_ACTION"), UtilMisc.toList("sequenceId"));
+List orderAdjustmentTypes = delegator.findAllCache("OrderAdjustmentType", UtilMisc.toList("description"));
+List productPromoApplEnums = delegator.findByAndCache("Enumeration", UtilMisc.toMap("enumTypeId", "PROD_PROMO_PCAPPL"), UtilMisc.toList("sequenceId"));
+List productCategories = delegator.findAllCache("ProductCategory", UtilMisc.toList("description"));
+
+context.put("productPromoId", productPromoId);
+context.put("productPromo", productPromo);
+context.put("productPromoRules", productPromoRules);
+context.put("promoProductPromoCategories", promoProductPromoCategories);
+context.put("promoProductPromoProducts", promoProductPromoProducts);
+context.put("inputParamEnums", inputParamEnums);
+context.put("condOperEnums", condOperEnums);
+context.put("productPromoActionEnums", productPromoActionEnums);
+context.put("orderAdjustmentTypes", orderAdjustmentTypes);
+context.put("productPromoApplEnums", productPromoApplEnums);
+context.put("productCategories", productCategories);

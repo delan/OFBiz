@@ -1,0 +1,37 @@
+#description.length=28
+#productId.length=27
+#quantity.length=6
+#price.length=10
+#infoString.length=34
+#dateFormat=EEE, d MMM yyyy HH:mm:ss z
+${CENTER}${DOUBLE_HEIGHT}${BOLD}Company XYZ
+${CENTER}${BOLD}7 E. 8th St. #308
+${CENTER}${BOLD}New York, NY 10003
+${CENTER}${BOLD}212.655.3052
+
+${CENTER}Sale: ${orderId} Tx: ${transactionId} Dr: ${drawerNo} Clerk: ${userId}
+${CENTER}${dateStamp}
+
+DESC                              PRICE    QTY
+==============================================
+[BEGIN ITEM LOOP]
+${productId} ${isTaxable}${basePrice} ${quantity}
+${description} ${adjustments}
+[END ITEM LOOP]
+
+                         SALES TAX: ${taxTotal}
+                             TOTAL: ${grandTotal}
+
+[BEGIN PAY LOOP]
+${payInfo}: ${amount}
+${nameOnCard}
+${authInfoString}
+[END PAY LOOP]
+
+                            CHANGE: ${change}
+
+
+[ORDER BARCODE]
+
+${CENTER}${DOUBLE_HEIGHT}${BOLD}THANK-YOU
+

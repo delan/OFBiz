@@ -1,0 +1,19 @@
+import java.util.*;
+import org.ofbiz.security.*;
+import org.ofbiz.entity.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.service.*;
+import org.ofbiz.workeffort.workeffort.*;
+
+delegator = request.getAttribute("delegator");
+String requirementId = request.getParameter("requirementId");
+if (requirementId == null)
+	requirementId = (String) request.getSession().getAttribute("requirementId");
+
+if (requirementId != null) {
+	request.getSession().setAttribute("requirementId", requirementId);
+	context.put("requirementId", requirementId);
+	Collection tasks = delegator.findByAnd("WorkEffortAndFulfillment", UtilMisc.toMap("requirementId", requirementId));
+	if (tasks.size() > 0) context.put("tasks", tasks);
+}
+

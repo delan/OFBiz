@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Edit Facility</property>
+    <property name="titleProperty">ProductEditFacility</property>
+    <property name="headerItem">facility</property>
+    <property name="tabButtonItem">EditFacility</property>
+    <content-action name="/facility/EditFacility.bsh"/> 
+</page>

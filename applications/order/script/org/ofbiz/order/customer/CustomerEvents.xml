@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Rev:$
+ * @since      2.2
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
+        <!-- timestamp to be used -->
+        <now-timestamp-to-env env-name="nowStamp"/>
+
+        <!-- create the party/person -->
+        <field-to-field field-name="personalTitle" map-name="parameters" to-map-name="personMap"/>
+        <field-to-field field-name="firstName" map-name="parameters" to-map-name="personMap"/>
+        <field-to-field field-name="middleName" map-name="parameters" to-map-name="personMap"/>
+        <field-to-field field-name="lastName" map-name="parameters" to-map-name="personMap"/>
+        <field-to-field field-name="suffix" map-name="parameters" to-map-name="personMap"/>
+        <!-- call the create person service -->
+        <call-service service-name="createPerson" in-map-name="personMap">
+            <result-to-field result-name="partyId" map-name="tmpMap"/>
+            <result-to-request result-name="partyId"/>
+        </call-service>
+
+        <!-- the rest of the methods require a userLogin object; so if we are anonymous lets fake it -->
+        <if-empty field-name="userLogin">
+            <string-to-field field-name="userLoginId" map-name="ulLookup" string="anonymous"/>
+            <find-by-primary-key entity-name="UserLogin" map-name="ulLookup" value-name="userLogin"/>
+            <field-to-field field-name="partyId" map-name="tmpMap" to-map-name="userLogin"/>
+            <set-current-user-login value-name="userLogin"/>
+        </if-empty>
+        <log level="info" message="UserLogin : ${userLogin}"/>
+
+        <!-- add the party to the customer role -->
+        <string-to-field field-name="roleTypeId" map-name="roleMap" string="CUSTOMER"/>
+        <field-to-field field-name="partyId" map-name="tmpMap" to-map-name="roleMap"/>
+        <call-service service-name="createPartyRole" in-map-name="roleMap"/>
+
+        <!-- create the email address -->
+        <field-to-field field-name="emailAddress" map-name="parameters" to-field-name="emailAddress" to-map-name="emailMap"/>
+        <field-to-field field-name="emailSol" map-name="parameters" to-field-name="allowSolicitation" to-map-name="emailMap"/>
+        <field-to-field field-name="partyId" map-name="tmpMap" to-map-name="emailMap"/>
+        <string-to-field field-name="contactMechPurposeTypeId" map-name="emailMap" string="PRIMARY_EMAIL"/>
+        <!-- call the create email service -->
+        <call-service service-name="createPartyEmailAddress" in-map-name="emailMap"/>
+
+        <!-- create home phone -->
+        <if-not-empty field-name="homeContactNumber" map-name="parameters">
+            <field-to-field field-name="homeCountryCode" map-name="parameters" to-field-name="countryCode" to-map-name="homePhoneMap"/>
+            <field-to-field field-name="homeAreaCode" map-name="parameters" to-field-name="areaCode" to-map-name="homePhoneMap"/>
+            <field-to-field field-name="homeContactNumber" map-name="parameters" to-field-name="contactNumber" to-map-name="homePhoneMap"/>
+            <field-to-field field-name="homeExt" map-name="parameters" to-field-name="extension" to-map-name="homePhoneMap"/>
+            <field-to-field field-name="homeSol" map-name="parameters" to-field-name="allowSolicitation" to-map-name="homePhoneMap"/>
+            <field-to-field field-name="partyId" map-name="tmpMap" to-map-name="homePhoneMap"/>
+            <string-to-field field-name="contactMechPurposeTypeId" map-name="homePhoneMap" string="PHONE_HOME"/>
+            <!-- call create telecom service -->
+            <call-service service-name="createPartyTelecomNumber" in-map-name="homePhoneMap"/>
+        </if-not-empty>
+
+        <!-- create work phone -->
+        <if-not-empty field-name="workContactNumber" map-name="parameters">
+            <field-to-field field-name="workCountryCode" map-name="parameters" to-field-name="countryCode" to-map-name="workPhoneMap"/>
+            <field-to-field field-name="workAreaCode" map-name="parameters" to-field-name="areaCode" to-map-name="workPhoneMap"/>
+            <field-to-field field-name="workContactNumber" map-name="parameters" to-field-name="contactNumber" to-map-name="workPhoneMap"/>
+            <field-to-field field-name="workExt" map-name="parameters" to-field-name="extension" to-map-name="workPhoneMap"/>
+            <field-to-field field-name="workSol" map-name="parameters" to-field-name="allowSolicitation" to-map-name="workPhoneMap"/>
+            <field-to-field field-name="partyId" map-name="tmpMap" to-map-name="workPhoneMap"/>
+            <string-to-field field-name="contactMechPurposeTypeId" map-name="workPhoneMap" string="PHONE_WORK"/>
+            <!-- call create telecom service -->
+            <call-service service-name="createPartyTelecomNumber" in-map-name="workPhoneMap"/>
+        </if-not-empty>
+
+        <!-- create userLogin -->
+        <if-not-empty field-name="userLoginId" map-name="parameters">
+            <field-to-field field-name="userLoginId" map-name="parameters" to-map-name="loginMap"/>
+            <!-- call create userLogin -->
+            <!-- call reset password (to email a password) -->
+        </if-not-empty>
+    </simple-method>
+</simple-methods>
+

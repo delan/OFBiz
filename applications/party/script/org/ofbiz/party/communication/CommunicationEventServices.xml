@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @author     Olivier.Heintz@nereide.biz 
+ * @version    $Rev$
+ * @since      2.2
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+	<simple-method method-name="createCommunicationEvent" short-description="Create a CommunicationEvent">
+        <if>
+            <condition>
+                <and>
+                    <if-compare-field field-name="partyIdFrom" map-name="parameters" to-map-name="userLogin" to-field-name="partyId" operator="not-equals"/>
+                    <if-compare-field field-name="partyIdTo" map-name="parameters" to-map-name="userLogin" to-field-name="partyId" operator="not-equals"/>
+                </and>
+            </condition>
+            <then>
+                <check-permission permission="PARTYMGR" action="_CREATE">
+				    <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPermissionError"/>
+                </check-permission>
+            </then>
+        </if>
+
+        <if-empty map-name="parameters" field-name="statusId">
+            <string-to-field string="COM_ENTERED" field-name="statusId" map-name="parameters"/>     
+        </if-empty>
+
+		<make-value value-name="newEntity" entity-name="CommunicationEvent"/>
+		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+		
+		<sequenced-id-to-env sequence-name="CommunicationEvent" env-name="communicationEventId"/>
+		<to-string field-name="communicationEventId"/>
+		<env-to-field env-name="communicationEventId" map-name="newEntity"/>
+		
+		<now-timestamp-to-env env-name="nowTimestamp"/>
+		<env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+		
+		<field-to-result field-name="communicationEventId" result-name="communicationEventId"/>
+		<create-value value-name="newEntity"/>	
+	</simple-method>
+	<simple-method method-name="updateCommunicationEvent" short-description="Update a CommunicationEvent">
+		<check-permission permission="PARTYMGR" action="_UPDATE">
+			<fail-property resource="PartyUiLabels" property="PartyUpdateCommunicationEventPermissionError"/>
+		</check-permission>
+		<check-errors/>
+		
+		<field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
+		<find-by-primary-key entity-name="CommunicationEvent" map-name="lookupPKMap" value-name="event"/>
+		<set-nonpk-fields map-name="parameters" value-name="event"/>
+		<store-value value-name="event"/>
+	</simple-method>
+	<simple-method method-name="createCommunicationEventPurpose" short-description="Create a CommunicationEventPurpose">
+		<check-permission permission="PARTYMGR" action="_CREATE">
+			<fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPurposePermissionError"/>
+		</check-permission>
+		<check-errors/>
+		
+		<make-value value-name="newEntity" entity-name="CommunicationEventPurpose"/>
+		<set-pk-fields map-name="parameters" value-name="newEntity"/>
+		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>		
+		<create-value value-name="newEntity"/>	
+	</simple-method>
+	<simple-method method-name="removeCommunicationEventPurpose" short-description="Remove a CommunicationEventPurpose">
+		<check-permission permission="PARTYMGR" action="_DELETE">
+			<fail-property resource="PartyUiLabels" property="PartyRemoveCommunicationEventPurposePermissionError"/>
+		</check-permission>
+		<check-errors/>
+		
+		<field-to-field field-name="communicationEventPrpTypId" map-name="parameters" to-map-name="lookupPKMap"/>
+		<field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
+		<find-by-primary-key entity-name="CommunicationEventPurpose" map-name="lookupPKMap" value-name="eventPurpose"/>		
+		<remove-value value-name="eventPurpose"/>
+	</simple-method>
+	<simple-method method-name="createCommunicationEventRole" short-description="Create a CommunicationEventRole">
+		<check-permission permission="PARTYMGR" action="_CREATE">
+			<fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventRolePermissionError"/>
+		</check-permission>
+		<check-errors/>
+		
+		<make-value value-name="newEntity" entity-name="CommunicationEventRole"/>
+		<set-pk-fields map-name="parameters" value-name="newEntity"/>
+		<set-nonpk-fields map-name="parameters" value-name="newEntity"/>		
+		<create-value value-name="newEntity"/>	
+	</simple-method>
+	<simple-method method-name="removeCommunicationEventRole" short-description="Remove a CommunicationEventRole">
+		<check-permission permission="PARTYMGR" action="_DELETE">
+			<fail-property resource="PartyUiLabels" property="PartyRemoveCommunicationEventRolePermissionError"/>
+		</check-permission>
+		<check-errors/>
+				
+		<field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
+		<field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
+		<field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
+		<find-by-primary-key entity-name="CommunicationEventRole" map-name="lookupPKMap" value-name="eventRole"/>		
+		<remove-value value-name="eventRole"/>
+	</simple-method>
+
+    <simple-method method-name="markEventRead" short-description="Marks a Communication Event as Read">
+        <if-empty field-name="communicationEventId" map-name="parameters">
+            <field-to-field field-name="messageId" map-name="parameters" to-field-name="communicationEventId" to-map-name="parameters"/>   
+        </if-empty>
+        <field-to-field field-name="communicationEventId" map-name="parameters" to-map-name="lookupPKMap"/>
+		<find-by-primary-key entity-name="CommunicationEvent" map-name="lookupPKMap" value-name="event"/>
+        <if>
+            <condition>
+                <or>
+                    <if-compare-field field-name="partyIdTo" map-name="event" to-map-name="userLogin" to-field-name="partyId" operator="equals"/>
+                    <if-has-permission permission="PARTYMGR" action="_UPDATE"/>
+                </or>
+            </condition>
+            <then>
+                <if>
+                    <condition>
+                        <or>
+                            <if-compare field-name="statusId" map-name="event" operator="equals" value="COM_ENTERED"/>
+                            <if-compare field-name="statusId" map-name="event" operator="equals" value="COM_PENDING"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <string-to-field string="COM_READ" field-name="statusId" map-name="event"/>
+                        <store-value value-name="event"/>
+                    </then>
+                </if>
+            </then>
+        </if>        
+    </simple-method>
+</simple-methods>

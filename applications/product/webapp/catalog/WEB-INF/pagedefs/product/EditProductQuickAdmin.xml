@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="title">Product Quick Administration</property>
+    <property name="titleProperty">PageTitleEditProductQuickAdmin</property>
+    <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="tabButtonItem">EditProductQuickAdmin</property>
+    <content-action name="/product/EditProductQuickAdmin.bsh"/>
+</page>

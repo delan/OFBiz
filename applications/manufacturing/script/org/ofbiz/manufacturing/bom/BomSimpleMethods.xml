@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Jacopo Cappellato (tiz@sastau.it)
+ * @version    $Rev$
+ * @since      3.0
+-->
+
+<simple-methods xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/simple-methods.xsd">
+    <!-- ProductAssoc -->
+    <simple-method method-name="createBOMAssoc" short-description="Create Product to Product Association">
+        <field-to-field field-name="productId" map-name="parameters" to-field-name="productId" to-map-name="searchDuplicatedAncestorContext" />
+        <field-to-field field-name="productIdTo" map-name="parameters" to-field-name="productIdTo" to-map-name="searchDuplicatedAncestorContext" />
+        <if-not-empty field-name="fromDate" map-name="parameters">
+            <field-to-field field-name="fromDate" map-name="parameters" to-field-name="fromDate" to-map-name="searchDuplicatedAncestorContext" />
+        </if-not-empty>
+        <field-to-field field-name="productAssocTypeId" map-name="parameters" to-field-name="productAssocTypeId" to-map-name="searchDuplicatedAncestorContext" />
+        <call-service service-name="searchDuplicatedAncestor" in-map-name="searchDuplicatedAncestorContext">
+            <result-to-field result-name="duplicatedProductAssoc" field-name="duplicatedProductAssoc"/>
+        </call-service>
+        <if-not-empty field-name="duplicatedProductAssoc">
+            <field-to-list field-name="productId" map-name="duplicatedProductAssoc" list-name="productToProduct"/>
+            <field-to-list field-name="productIdTo" map-name="duplicatedProductAssoc" list-name="productToProduct"/>
+            <property-to-field property="ManufacturingDuplicatedComponentInBOM" resource="ManufacturingUiLabels" field-name="errorMessage" arg-list-name="productToProduct"/>
+            <field-to-result field-name="errorMessage" result-name="errorMessage"/>
+            <return/>
+        </if-not-empty>
+        <!--
+        <make-value value-name="newEntity" entity-name="ProductAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <if-empty field-name="fromDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
+        </if-empty>
+        
+        <create-value value-name="newEntity"/>
+        -->
+        <if-empty field-name="fromDate" map-name="parameters">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="parameters"/>
+        </if-empty>
+        <set-service-fields service-name="createProductAssoc" map-name="parameters" to-map-name="context"/>
+        <call-service service-name="createProductAssoc" in-map-name="context"/>
+    </simple-method>
+    
+    <simple-method method-name="copyBOMAssocs" short-description="Copy BOM associations from one product to another">
+        <make-value value-name="lookupMap" entity-name="ProductAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-and entity-name="ProductAssoc" map-name="lookupMap" list-name="assocs"/>
+        <iterate entry-name="assoc" list-name="assocs">
+            <set-service-fields service-name="createBOMAssoc" map-name="assoc" to-map-name="context"/>
+            <field-to-field field-name="copyToProductId" map-name="parameters" to-field-name="productId" to-map-name="context"/>
+            <call-service service-name="createBOMAssoc" in-map-name="context" break-on-error="false"/>
+        </iterate>
+    </simple-method>
+
+    <simple-method method-name="eventEditBOM" short-description="Add, update, delete components in BOM">
+        <if-compare value="UPDATE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
+            <set-service-fields service-name="updateProductAssoc" map-name="parameters" to-map-name="context"/>
+            <call-map-processor xml-resource="org/ofbiz/manufacturing/bom/BomMapProcs.xml"
+                                processor-name="prepareUpdateBOMAssoc" 
+                                in-map-name="parameters" out-map-name="context"/>
+            <check-errors/>
+            <call-service service-name="updateProductAssoc" in-map-name="context"/>
+            <check-errors/>
+        </if-compare>
+        <if-compare value="CREATE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
+            <set-service-fields service-name="createBOMAssoc" map-name="parameters" to-map-name="context"/>
+            <call-map-processor xml-resource="org/ofbiz/manufacturing/bom/BomMapProcs.xml"
+                                processor-name="prepareUpdateBOMAssoc" 
+                                in-map-name="parameters" out-map-name="context"/>
+            <check-errors/>
+            <call-service service-name="createBOMAssoc" in-map-name="context">
+                <result-to-field field-name="errorMessage" result-name="errorMessage"/>
+            </call-service>
+             <if-not-empty field-name="errorMessage">
+                <add-error>
+                    <fail-message message="${errorMessage}"/>
+                </add-error>
+            </if-not-empty>
+            <!--<check-errors/>-->
+        </if-compare>
+        <if-compare value="DELETE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
+            <set-service-fields service-name="deleteProductAssoc" map-name="parameters" to-map-name="context"/>
+            <call-map-processor xml-resource="org/ofbiz/manufacturing/bom/BomMapProcs.xml"
+                                processor-name="prepareDeleteProductAssoc" 
+                                in-map-name="parameters" out-map-name="context"/>
+            <check-errors/>
+            <call-service service-name="deleteProductAssoc" in-map-name="context"/>
+            <check-errors/>
+        </if-compare>
+        <if-compare value="COPY" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
+            <set-service-fields service-name="copyBOMAssocs" map-name="parameters" to-map-name="context"/>
+            <call-service service-name="copyBOMAssocs" in-map-name="context"/>
+            <check-errors/>
+        </if-compare>
+    </simple-method>
+    
+    <simple-method method-name="updateProductManufacturingRule" short-description="Update Manufacturing Rule">
+        <check-permission permission="MANUFACTURING" action="_UPDATE">
+            <fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupPermissionError"/>
+        </check-permission>
+        <check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="ProductManufacturingRule"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="ProductManufacturingRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="addProductManufacturingRule" short-description="Create Product Manufacturing Rule">
+    	<check-permission permission="MANUFACTURING" action="_CREATE">
+            <fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupPermissionError"/>
+        </check-permission>
+    	<check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="ProductManufacturingRule"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>        
+        <find-by-primary-key entity-name="ProductManufacturingRule" map-name="lookupPKMap" value-name="newEntity"/>
+        <if-not-empty field-name="ruleId" map-name="newEntity">
+            <add-error>
+                <fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupIdAlreadyExist"/>
+            </add-error>
+            <check-errors/>
+	<else>
+            <make-value value-name="newEntity" entity-name="ProductManufacturingRule"/>
+            <if-empty field-name="ruleId" map-name="parameters">
+                <sequenced-id-to-env sequence-name="ProductManufacturingRule" env-name="ruleId"/>
+                <env-to-field env-name="ruleId" map-name="parameters"/>
+            </if-empty>
+            <set-pk-fields map-name="parameters" value-name="newEntity"/>
+            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+            <create-value value-name="newEntity"/>
+	</else>
+	</if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="deleteProductManufacturingRule" short-description="Remove a Product Manufacturing Rule">
+        <check-permission permission="MANUFACTURING" action="_DELETE">
+            <fail-property resource="ManufacturingUiLabels" property="ManufacturingCalendarPermissionError"/>
+        </check-permission>
+        <check-errors/>
+        <make-value value-name="lookupPKMap" entity-name="ProductManufacturingRule"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductManufacturingRule" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-not-empty map-name="lookedUpValue" field-name="ruleId">
+            <remove-value value-name="lookedUpValue"/>
+        </if-not-empty>
+    </simple-method>
+
+</simple-methods>
