@@ -247,19 +247,12 @@
                     <#if postalAddress.countryGeoId?has_content><br>${postalAddress.countryGeoId}</#if>
                   </div>
                   <#if (postalAddress?has_content && !postalAddress.countryGeoId?has_content) || postalAddress.countryGeoId = "USA">
-                    <#assign addr1 = postalAddress.address1?default("")>                 
-                    <#if (addr1?index_of(' ') > 0)>
-                      <#assign addressOther = "">
-                      <#assign addressNum = "">
-                      <#list addr1?split(" ") as seq>
-                       <#if seq_index = 0>
-                        <#assign addressNum = seq>
-                       <#else>
-                        <#assign addressOther = addressOther + " " + seq>
-                       </#if>
-                      </#list>
-                      <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther?trim}&c=${postalAddress.city?if_exists}&s=${postalAddress.stateProvinceGeoId?if_exists}&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
-                    </#if>
+                      <#assign addr1 = postalAddress.address1?if_exists>
+                      <#if (addr1.indexOf(" ") > 0)>
+                        <#assign addressNum = addr1.substring(0, addr1.indexOf(" "))>
+                        <#assign addressOther = addr1.substring(addr1.indexOf(" ")+1)>
+                        <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=${addressNum}&s_a=${addressOther}&c=${postalAddress.city?if_exists}&s=${postalAddress.stateProvinceGeoId?if_exists}&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
+                      </#if>
                   </#if>
               <#elseif "TELECOM_NUMBER" = contactMech.contactMechTypeId>
                   <#assign telecomNumber = contactMechMap.telecomNumber>
@@ -281,7 +274,7 @@
                   <div class="tabletext">
                     ${contactMech.infoString?if_exists}
                     <#assign openAddress = contactMech.infoString?default("")>
-                    <#if !openAddress?starts_with("http") && !openAddress.starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
+                    <#if !openAddress?starts_with("http") && !openAddress?starts_with("HTTP")><#assign openAddress = "http://" + openAddress></#if>
                     <a target='_blank' href='${openAddress}' class='buttontext'>(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
                   </div>
               <#else>
