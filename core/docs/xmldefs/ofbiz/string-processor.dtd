@@ -50,6 +50,7 @@
     operator CDATA #REQUIRED
     value CDATA #REQUIRED
     type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) "String"
+    format CDATA #IMPLIED
 >
 
 <!ELEMENT regexp ( fail-message | fail-property )>
@@ -76,6 +77,7 @@
     to-field CDATA #REQUIRED
     type ( String | Double | Float | Long | Integer | Date | Time | Timestamp ) #REQUIRED
     replace ( true | false ) "true"
+    format CDATA #IMPLIED
 >
 
 <!-- 
