@@ -295,7 +295,7 @@ public class CSPaymentServices {
         if (billingAddress == null || creditCard == null)
             throw new GeneralException("Null billing or payment information");
 
-        Collection orderItems = orh.getOrderItems();
+        Collection orderItems = (Collection) orh.getOrderItems();
 
         // Create a new ICSClientRequest Object.
         ICSClientRequest request = new ICSClientRequest(client);

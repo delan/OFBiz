@@ -570,7 +570,7 @@ public class TaxwareConst {
     public static int OUT_SIZ_SECCITY = 4;
 
     /*
-     * Define the constants for the Output Buffer. When the;
+     * Define the constants for the Output Buffer. When the
      * Output buffer is returned from the API, it actual starts
      * at position OUT_PARAM_SIZE + 1 of the returned buffer.
      * We take that into account after returning.
