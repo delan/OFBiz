@@ -6,7 +6,123 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
     
-    <!-- Receipt Services -->    
+    <!-- Shipment Services -->
+    <service name="createShipment" default-entity-name="Shipment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipment" auth="true">
+        <description>Create Shipment</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipment" default-entity-name="Shipment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipment" auth="true">
+        <description>Update Shipment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipment" default-entity-name="Shipment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipment" auth="true">
+        <description>Delete Shipment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ShipmentItem Services -->
+    <service name="createShipmentItem" default-entity-name="ShipmentItem" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentItem" auth="true">
+        <description>Create ShipmentItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="shipmentItemSeqId" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateShipmentItem" default-entity-name="ShipmentItem" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentItem" auth="true">
+        <description>Update ShipmentItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentItem" default-entity-name="ShipmentItem" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentItem" auth="true">
+        <description>Delete ShipmentItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ShipmentPackage Services -->
+    <service name="createShipmentPackage" default-entity-name="ShipmentPackage" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentPackage" auth="true">
+        <description>Create ShipmentPackage</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="shipmentPackageSeqId" mode="INOUT" optional="true"/>
+    </service>
+    <service name="updateShipmentPackage" default-entity-name="ShipmentPackage" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentPackage" auth="true">
+        <description>Update ShipmentPackage</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentPackage" default-entity-name="ShipmentPackage" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentPackage" auth="true">
+        <description>Delete ShipmentPackage</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ShipmentPackageContent Services -->
+    <service name="createShipmentPackageContent" default-entity-name="ShipmentPackageContent" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentPackageContent" auth="true">
+        <description>Create ShipmentPackageContent</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentPackageContent" default-entity-name="ShipmentPackageContent" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentPackageContent" auth="true">
+        <description>Update ShipmentPackageContent</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentPackageContent" default-entity-name="ShipmentPackageContent" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentPackageContent" auth="true">
+        <description>Delete ShipmentPackageContent</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ShipmentContactMech Services -->
+    <service name="createShipmentContactMech" default-entity-name="ShipmentContactMech" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentContactMech" auth="true">
+        <description>Create ShipmentContactMech</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentContactMech" default-entity-name="ShipmentContactMech" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentContactMech" auth="true">
+        <description>Update ShipmentContactMech</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentContactMech" default-entity-name="ShipmentContactMech" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentContactMech" auth="true">
+        <description>Delete ShipmentContactMech</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- ShipmentRouteSegment Services -->
+    <service name="createShipmentRouteSegment" default-entity-name="ShipmentRouteSegment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipmentRouteSegment" auth="true">
+        <description>Create ShipmentRouteSegment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateShipmentRouteSegment" default-entity-name="ShipmentRouteSegment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentRouteSegment" auth="true">
+        <description>Update ShipmentRouteSegment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteShipmentRouteSegment" default-entity-name="ShipmentRouteSegment" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentRouteSegment" auth="true">
+        <description>Delete ShipmentRouteSegment</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Receipt Services -->
     <service name="interfaceShipmentReceipt" engine="interface" location="" invoke="">
     	<description>ShipmentReceipt Interface</description>
     	<attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>

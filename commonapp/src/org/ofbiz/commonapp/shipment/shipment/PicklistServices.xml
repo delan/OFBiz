@@ -36,8 +36,8 @@
     			insufficientQohList: List of Maps with inventoryItem and quantityNeeded
     	-->
     	
-        <check-permission permission="ORDERMGR" action="_VIEW">
-            <fail-message message="Security Error: to run createProduct you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        <check-permission permission="FACILITY" action="_VIEW">
+            <fail-message message="Security Error: to run getPicklistData you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-errors/>
         
