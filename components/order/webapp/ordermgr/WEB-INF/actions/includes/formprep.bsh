@@ -1,5 +1,5 @@
 /*
- * $Id: formprep.bsh,v 1.1 2004/07/30 16:01:46 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,7 +23,7 @@
  *
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * Builds an edit or add single form wrapper and puts the "currentValue"

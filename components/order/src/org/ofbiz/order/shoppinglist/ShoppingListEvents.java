@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingListEvents.java,v 1.7 2004/08/17 19:51:25 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * Shopping cart events.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class ShoppingListEvents {

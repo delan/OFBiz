@@ -1,5 +1,5 @@
 /*
- * $Id: OrderManagerEvents.java,v 1.3 2004/07/31 04:10:39 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Order Manager Events
  *
  * @author <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version $Revision: 1.3 $
+ * @version $Rev:$
  * @since 2.0
  */
 public class OrderManagerEvents {

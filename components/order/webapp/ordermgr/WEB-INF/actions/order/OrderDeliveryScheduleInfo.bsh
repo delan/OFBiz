@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Tristan Austin (tristana@twibble.org)
- *@version    $Revision: 1.2 $
+ *@version    $Rev:$
  */
 
 import org.ofbiz.base.util.*;

@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.17 2004/08/17 19:51:25 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.17 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ShoppingCartHelper {

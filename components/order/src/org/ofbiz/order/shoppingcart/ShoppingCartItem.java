@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.34 2004/08/17 19:51:25 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.34 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
