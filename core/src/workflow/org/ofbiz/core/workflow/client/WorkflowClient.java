@@ -146,13 +146,15 @@ public class WorkflowClient {
         if (fromPartyId == null && fromRoleTypeId == null && fromFromDate == null) {            
             Iterator i = activity.getIteratorAssignment();
             fromAssign = (WfAssignment) i.next();
-            if (i.hasNext())
+            if (i.hasNext()) {
                 throw new WfException("Cannot locate the assignment to delegate from, there is more then one " +
                         "assignment for this activity.");
+            }
         }
 
-        if (fromAssign == null)
-            fromAssign = WfFactory.getWfAssignment(delegator, workEffortId, fromPartyId, fromRoleTypeId, fromFromDate);                    
+        if (fromAssign == null) {
+            fromAssign = WfFactory.getWfAssignment(delegator, workEffortId, fromPartyId, fromRoleTypeId, fromFromDate);
+        }                    
         fromAssign.delegate();   
         
         // check for a restartOnDelegate
@@ -193,16 +195,17 @@ public class WorkflowClient {
      * @throws WfException
      */
     public void delegateAndAccept(String workEffortId, String fromPartyId, String fromRoleTypeId, Timestamp fromFromDate, String toPartyId, String toRoleTypeId, Timestamp toFromDate, boolean start) throws WfException {                                 
-        WfAssignment assign = delegate(workEffortId, fromPartyId, fromRoleTypeId, fromFromDate, toPartyId, toRoleTypeId, toFromDate);
-                      
+        WfAssignment assign = delegate(workEffortId, fromPartyId, fromRoleTypeId, fromFromDate, toPartyId, toRoleTypeId, toFromDate);                      
         assign.accept();
         Debug.logVerbose("Delegated assignment.", module);
+        
         if (start) {
             Debug.logVerbose("Starting activity.", module);
-            if (!activityRunning(assign.activity()))
+            if (!activityRunning(assign.activity())) {
                 start(assign.activity().runtimeKey());
-            else
+            } else {            
                 Debug.logWarning("Activity already running; not starting.", module);
+            }
         } else {
             Debug.logVerbose("Not starting assignment.", module);
         }              
@@ -214,7 +217,11 @@ public class WorkflowClient {
      * @return GenericResultWaiter of the start job.
      * @throws WfException
      */
-    public void start(String workEffortId) throws WfException {        
+    public void start(String workEffortId) throws WfException {
+        if (dispatcher == null) {
+            throw new WfException("LocalDispatcher is null; cannot create job for activity startup");      
+        }
+        
         WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
 
         if (Debug.verboseOn()) Debug.logVerbose("Starting activity: " + activity.name(), module);

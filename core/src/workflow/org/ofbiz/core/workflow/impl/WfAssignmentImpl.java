@@ -99,7 +99,7 @@ public class WfAssignmentImpl implements WfAssignment {
                 GenericValue v = activity.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
 
                 value = activity.getDelegator().create(v);
-                Debug.logVerbose("[WfAssignment.checkAssignment] : created new party assignment.", module);
+                Debug.logVerbose("[WfAssignment.checkAssignment] : created new party assignment : " + v, module);
             } catch (GenericEntityException e) {
                 throw new WfException(e.getMessage(), e);
             }
@@ -126,20 +126,22 @@ public class WfAssignmentImpl implements WfAssignment {
 
                 while (ai.hasNext() && allDelegated) {
                     WfAssignment a = (WfAssignment) ai.next();
-                    if (!a.equals(this) && !a.status().equals("CAL_DELEGATED"))
+                    if (!a.equals(this) && !a.status().equals("CAL_DELEGATED")) {
                         allDelegated = false;
+                    }
                 }
                 // we cannot accept if the activity is running, with active assignments
-                if (!allDelegated)
+                if (!allDelegated) {
                     throw new WfException("Cannot accept. Activity already running with active assignments.");
+                }
             } else {
                 // activity not running, auto change all assignments to delegated status
-                Debug.logInfo("[WfAssignment.accept] : setting other assignments to delegated status.", module);
+                Debug.logVerbose("[WfAssignment.accept] : setting other assignments to delegated status.", module);
                 Iterator ai = activity.getIteratorAssignment();
 
                 while (ai.hasNext()) {
                     WfAssignment a = (WfAssignment) ai.next();
-                    if (!a.equals(this)) a.delegate();
+                    if (!this.isEqual(a)) a.delegate();                    
                 }
             }
         }
@@ -179,7 +181,7 @@ public class WfAssignmentImpl implements WfAssignment {
         try {
             valueObject.set("thruDate", UtilDateTime.nowTimestamp());
             valueObject.store();
-            if (Debug.infoOn()) Debug.logInfo("[WfAssignment.delegated()] : set the thru-date.", module);
+            if (Debug.verboseOn()) Debug.logVerbose("[WfAssignment.delegated()] : set the thru-date.", module);
         } catch (GenericEntityException e) {
             e.printStackTrace();            
             throw new WfException(e.getMessage(), e);
@@ -198,7 +200,7 @@ public class WfAssignmentImpl implements WfAssignment {
         try {
             valueObject.set("statusId", status);
             valueObject.store();
-            if (Debug.infoOn()) Debug.logInfo("[WfAssignment.changeStatus] : changed status to " + status, module);
+            if (Debug.verboseOn()) Debug.logVerbose("[WfAssignment.changeStatus] : changed status to " + status, module);
         } catch (GenericEntityException e) {
             e.printStackTrace();
             throw new WfException(e.getMessage(), e);
@@ -270,6 +272,51 @@ public class WfAssignmentImpl implements WfAssignment {
         if (value == null)
             throw new WfException("Invalid assignment runtime entity");
         return value;
+    }
+    
+    private boolean isEqual(WfAssignment asgn) throws WfException {
+        // compare this to null = different assignment
+        if (asgn == null) {
+            return false;
+        }
+        
+        // if status is different; we must be different
+        if (!this.status().equals(asgn.status())) {
+            return false;
+        }
+        
+        // different activity = different assignment
+        WfActivity thisActivity = this.activity();
+        WfActivity compActivity = asgn.activity();               
+        if ((thisActivity == null && compActivity != null) || (thisActivity != null && compActivity == null)) {
+            return false;              
+        } else {
+            String thisKey = thisActivity.runtimeKey();
+            String compKey = compActivity.runtimeKey();
+            if ((thisKey != null && compKey == null) || (thisKey == null && compKey != null)) {
+                return false;
+            } else if (thisKey != null && compKey != null && !thisKey.equals(compKey)) {
+                return false;
+            }                                
+        }
+        
+        // different participantId = different assignment - the rest doesn't matter
+        WfResource thisResource = this.assignee();
+        WfResource compResource = asgn.assignee();       
+        if ((thisResource == null && compResource != null) || (thisResource != null && compResource == null)) {
+            return false;              
+        } else {
+            String thisKey = thisResource.resourceKey();
+            String compKey = compResource.resourceKey();
+            if ((thisKey != null && compKey == null) || (thisKey == null && compKey != null)) {
+                return false;
+            } else if (thisKey != null && compKey != null && !thisKey.equals(compKey)) {
+                return false;
+            }                                
+        }               
+        
+        // same status, same activity, same participantId = same assignement
+        return true;
     }
 }
 

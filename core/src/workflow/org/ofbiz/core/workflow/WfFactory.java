@@ -41,15 +41,10 @@ import org.ofbiz.core.workflow.client.*;
  * @since      2.0
  */
 public class WfFactory {
-
-    // a cache of loaded objects
-    private static UtilCache manager = new UtilCache("workflow.processmgr", 0, 0, true);
-    private static UtilCache process = new UtilCache("workflow.process", 0, 0, true);
-    private static UtilCache activity = new UtilCache("workflow.activity", 0, 0, true);
-    private static UtilCache assign = new UtilCache("workflow.assignment", 0, 0, true);
-    private static UtilCache resource = new UtilCache("workflow.resource", 0, 0, true);
-    private static UtilCache client = new UtilCache("workflow.client", 0, 0, true);
-
+        
+    protected static UtilCache wfProcessMgrCache = new UtilCache("workflow.processmgr");
+    protected static UtilCache wfClientCache = new UtilCache("workflow.client");
+  
     /**
      * Creates a new {@link WfActivity} instance.
      * @param value GenericValue object defining this activity.
@@ -60,24 +55,13 @@ public class WfFactory {
     public static WfActivity getWfActivity(GenericValue value, String process) throws WfException {
         if (value == null) throw new WfException("Activity definition value object cannot be null");
         if (process == null) throw new WfException("Parent process WorkEffort key cannot be null");
-        WfActivity act = new WfActivityImpl(value, process);
-        String mapKey = value.getDelegator().getDelegatorName() + ":" + act.runtimeKey();
-        activity.put(mapKey, act);
-        return act;
+        return new WfActivityImpl(value, process);                      
     }
 
     public static WfActivity getWfActivity(GenericDelegator delegator, String workEffortId) throws WfException {
         if (delegator == null) throw new WfException("The delegator object cannot be null");
         if (workEffortId == null) throw new WfException("The WorkEffort key cannot be null");
-        String mapKey = delegator.getDelegatorName() + ":" + workEffortId;
-
-        if (!activity.containsKey(mapKey)) {
-            synchronized (WfFactory.class) {
-                if (!activity.containsKey(mapKey))
-                    activity.put(mapKey, new WfActivityImpl(delegator, workEffortId));
-            }
-        }
-        return (WfActivity) activity.get(mapKey);
+        return new WfActivityImpl(delegator, workEffortId);
     }
 
     /**
@@ -88,21 +72,11 @@ public class WfFactory {
     public static WfAssignment getWfAssignment(WfActivity activity, WfResource resource, Timestamp fromDate, boolean create) throws WfException {            
         if (activity == null) throw new WfException("WfActivity cannot be null");
         if (resource == null) throw new WfException("WfResource cannot be null");
-        if (fromDate == null) fromDate = new Timestamp(new Date().getTime());
-        String mapKey = activity.runtimeKey() + ":" + resource.resourcePartyId() + ":" +
-                resource.resourceRoleId() + ":" + fromDate.getTime();
-
-        if (!assign.containsKey(mapKey)) {
-            synchronized (WfFactory.class) {
-                if (!assign.containsKey(mapKey))
-                    assign.put(mapKey, new WfAssignmentImpl(activity, resource, fromDate, create));
-            }
-        }
-        return (WfAssignment) assign.get(mapKey);
+        if (fromDate == null) fromDate = new Timestamp(new Date().getTime());        
+        return new WfAssignmentImpl(activity, resource, fromDate, create);        
     }
 
-    public static WfAssignment getWfAssignment(GenericDelegator delegator, String work, String party, String role,
-            Timestamp from) throws WfException {
+    public static WfAssignment getWfAssignment(GenericDelegator delegator, String work, String party, String role, Timestamp from) throws WfException {
         WfActivity act = getWfActivity(delegator, work);
         WfResource res = getWfResource(delegator, null, null, party, role);
         return getWfAssignment(act, res, from, false);
@@ -118,28 +92,18 @@ public class WfFactory {
     public static WfProcess getWfProcess(GenericValue value, WfProcessMgr mgr) throws WfException {
         if (value == null) throw new WfException("Process definition value object cannot be null");
         if (mgr == null) throw new WfException("WfProcessMgr cannot be null");
-        WfProcess proc = new WfProcessImpl(value, mgr);
-        String mapKey = value.getDelegator().getDelegatorName() + ":" + proc.runtimeKey();
-        process.put(mapKey, proc);
-        return proc;
+        return new WfProcessImpl(value, mgr);        
     }
 
     public static WfProcess getWfProcess(GenericDelegator delegator, String workEffortId) throws WfException {
         if (delegator == null) throw new WfException("The delegator object cannot be null");
         if (workEffortId == null) throw new WfException("The WorkEffort key cannot be null");
-        String mapKey = delegator.getDelegatorName() + ":" + workEffortId;
-        if (!process.containsKey(mapKey)) {
-            synchronized (WfFactory.class) {
-                if (!process.containsKey(mapKey))
-                    process.put(mapKey, new WfProcessImpl(delegator, workEffortId));
-            }
-        }
-        return (WfProcess) process.get(mapKey);
+        return new WfProcessImpl(delegator, workEffortId);        
     }
 
     /** 
      * Creates a new {@link WfProcessMgr} instance.
-     * @param del The GenericDelegator to use for this manager.
+     * @param delegator The GenericDelegator to use for this manager.
      * @param pkg The Workflow Package ID.
      * @param pkver The Workflow Package Version.
      * @param pid The Workflow Process ID.
@@ -147,21 +111,20 @@ public class WfFactory {
      * @return An instance of the WfProcessMgr Interface.
      * @throws WfException
      */
-    public static WfProcessMgr getWfProcessMgr(GenericDelegator del, String pkg, String pkver, String pid, String pver) throws WfException {
-        if (del == null) throw new WfException("Delegator cannot be null");
+    public static WfProcessMgr getWfProcessMgr(GenericDelegator delegator, String pkg, String pkver, String pid, String pver) throws WfException {
+        if (delegator == null) throw new WfException("Delegator cannot be null");
         if (pkg == null) throw new WfException("Workflow package id cannot be null.");
         if (pid == null) throw new WfException("Workflow process id cannot be null");
-
-        String mapKey = del.getDelegatorName() + ":" + pkg + ":" + pkver + ":" + pid + ":" + pver;         
-        WfProcessMgr mgr = null;
-
-        if (!manager.containsKey(mapKey)) {
+        
+        String key = delegator.getDelegatorName() + ":" + pkg + ":" + pkver + ":" + pid + ":" + pver;
+        if (!wfProcessMgrCache.containsKey(key)) {
             synchronized (WfFactory.class) {
-                if (!manager.containsKey(mapKey))
-                    manager.put(mapKey, new WfProcessMgrImpl(del, pkg, pkver, pid, pver));
+                if (!wfProcessMgrCache.containsKey(key)) {                
+                    wfProcessMgrCache.put(key, new WfProcessMgrImpl(delegator, pkg, pkver, pid, pver));
+                }
             }
         }
-        return (WfProcessMgr) manager.get(mapKey);
+        return (WfProcessMgr) wfProcessMgrCache.get(key);                
     }
 
     /** 
@@ -181,12 +144,7 @@ public class WfFactory {
      */
     public static WfResource getWfResource(GenericValue value) throws WfException {
         if (value == null) throw new WfException("Value object for WfResource definition cannot be null");
-        WfResource res = new WfResourceImpl(value);
-        String mapKey = value.getDelegator().getDelegatorName() + ":" + res.resourceKey() + ":" + res.resourceName() +
-                ":" + res.resourcePartyId() + ":" + res.resourceRoleId();
-
-        resource.put(mapKey, res);
-        return res;
+        return new WfResourceImpl(value);        
     }
 
     /** 
@@ -199,18 +157,11 @@ public class WfFactory {
      * @return An instance of the WfResource Interface.
      * @throws WfException
      */
-    public static WfResource getWfResource(GenericDelegator delegator, String key, String name, String party, String role) throws WfException {        
+    public static WfResource getWfResource(GenericDelegator delegator, String key, String name, String party, String role) throws WfException {
+        if (delegator == null) throw new WfException("Delegator cannot be null");        
         if (party == null) party = "_NA_";
         if (role == null) role = "_NA_";
-        String mapKey = delegator.getDelegatorName() + ":" + key + ":" + name + ":" + party + ":" + role;
-
-        if (!resource.containsKey(mapKey)) {
-            synchronized (WfFactory.class) {
-                if (!resource.containsKey(mapKey))
-                    resource.put(mapKey, new WfResourceImpl(delegator, key, name, party, role));
-            }
-        }
-        return (WfResource) resource.get(mapKey);
+        return new WfResourceImpl(delegator, key, name, party, role);        
     }
 
     /** 
@@ -223,13 +174,13 @@ public class WfFactory {
     }
 
     public static WorkflowClient getClient(DispatchContext dctx) {
-        if (!client.containsKey(dctx)) {
+        if (!wfClientCache.containsKey(dctx)) {
             synchronized (WfFactory.class) {
-                if (!client.containsKey(dctx))
-                    resource.put(dctx, new WorkflowClient(dctx));
+                if (!wfClientCache.containsKey(dctx))
+                wfClientCache.put(dctx, new WorkflowClient(dctx));
             }
         }
-        return (WorkflowClient) resource.get(dctx);
+        return (WorkflowClient) wfClientCache.get(dctx);
     }
 
 }

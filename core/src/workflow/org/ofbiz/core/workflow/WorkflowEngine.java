@@ -89,7 +89,7 @@ public class WorkflowEngine implements GenericEngine {
             try {
                 parentTrans = tm.suspend();                
                 beganTransaction = TransactionUtil.begin();
-                Debug.logInfo("Suspended transaction; began new: " + beganTransaction, module);
+                //Debug.logInfo("Suspended transaction; began new: " + beganTransaction, module);
             } catch (SystemException se) {
                 Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
             } catch (GenericTransactionException e) {
@@ -274,7 +274,7 @@ public class WorkflowEngine implements GenericEngine {
             if (parentTrans != null) {
                 try {
                     tm.resume(parentTrans);
-                    Debug.logInfo("Resumed the parent transaction.", module);
+                    //Debug.logInfo("Resumed the parent transaction.", module);
                 } catch (InvalidTransactionException ite) {
                     throw new GenericServiceException("Cannot resume transaction", ite);
                 } catch (SystemException se) {

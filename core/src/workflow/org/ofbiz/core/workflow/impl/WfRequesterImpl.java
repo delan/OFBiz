@@ -65,7 +65,7 @@ public class WfRequesterImpl implements WfRequester {
 
         // Validate the process context w/ what was passed.
         try {
-            Debug.logInfo("Validating w/ signature: " + mgr.contextSignature(), module);
+            if (Debug.verboseOn()) Debug.logVerbose("Validating w/ signature: " + mgr.contextSignature(), module);
             ModelService.validate(mgr.contextSignature(), context, true);
         } catch (GenericServiceException e) {
             throw new WfException("Context passed does not validate against defined signature: ", e);

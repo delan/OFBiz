@@ -115,10 +115,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             
         boolean limitAfterStart = valueObject.getBoolean("limitAfterStart").booleanValue();
 
-        if (Debug.infoOn())
-            Debug.logInfo("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
-        if (!limitAfterStart && valueObject.get("limitService") != null &&
-                !valueObject.getString("limitService").equals("")) {
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("[WfActivity.init]: limitAfterStart - " + limitAfterStart, module);
+        }
+        if (!limitAfterStart && valueObject.get("limitService") != null && !valueObject.getString("limitService").equals("")) {
             Debug.logVerbose("[WfActivity.init]: limit service is not after start, setting up now.", module);
             setLimitService();
         }                    
@@ -365,7 +365,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             activityWe.set("actualCompletionDate", UtilDateTime.nowTimestamp());
             activityWe.store();                       
         } catch (InvalidState is) {
-            throw new WfException(is.getMessage(), is);
+            throw new WfException("Invalid WF State", is);
         } catch (TransitionNotAllowed tna) {
             throw new WfException(tna.getMessage(), tna);
         } catch (GenericEntityException gee) {
@@ -634,7 +634,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         String inParams = StringUtil.join(inList, ",");        
         
         Map serviceContext = actualContext(inParams, null, null, true);                                              
-        Debug.logInfo("Setting limit service with context: " + serviceContext, module);
+        Debug.logVerbose("Setting limit service with context: " + serviceContext, module);
 
         Double timeLimit = null;
 
@@ -695,10 +695,9 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         } catch (GenericServiceException e) {
             throw new WfException(e.getMessage(), e);
         }
-        if (Debug.infoOn())
-            Debug.logInfo(
-                "[WfActivity.setLimitService]: Set limit service (" + limitService + " ) to run at " + startTime,
-                module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("[WfActivity.setLimitService]: Set limit service (" + limitService + " ) to run at " + startTime, module);
+        }
     }
 
     Map actualContext(String actualParameters, String extendedAttr, List serviceSignature, boolean ignoreUnknown) throws WfException {
@@ -726,7 +725,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         context.put("userLogin", userLogin);
         context.put("workEffortId", runtimeKey());
         if (howManyAssignment() == 1) {
-            Debug.logInfo("Single assignment; getting assignment info.", module);
+            Debug.logVerbose("Single assignment; getting assignment info.", module);
             List assignments = getAssignments();
             WfAssignment assign = (WfAssignment) assignments.iterator().next();
             WfResource res = assign.assignee();
