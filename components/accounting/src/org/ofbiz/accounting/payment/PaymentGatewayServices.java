@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.2 2003/08/21 01:33:14 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.3 2003/08/25 20:00:19 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,6 +45,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.party.contact.ContactHelper;
+import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
@@ -55,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class PaymentGatewayServices {    
@@ -238,7 +239,7 @@ public class PaymentGatewayServices {
             String productStoreId = orderHeader.getString("productStoreId");
             String paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
             if (productStoreId != null && paymentMethodTypeId != null) {
-                paymentSettings = PaymentWorker.getPaymentSetting(delegator, productStoreId, paymentMethodTypeId, paymentServiceType);
+                paymentSettings = ProductStoreWorker.getProductStorePaymentSetting(delegator, productStoreId, paymentMethodTypeId, paymentServiceType);
             }            
         }
         return paymentSettings;        
@@ -443,10 +444,14 @@ public class PaymentGatewayServices {
         }
         
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        double orderTotal = orh.getOrderGrandTotal();                
+        double orderTotal = orh.getOrderGrandTotal();
+        double totalPayments = PaymentWorker.getPaymentsTotal(orh.getOrderPayments());
+        double remainingTotal = orderTotal - totalPayments;             
         if (captureAmount == null) {         
-            captureAmount = new Double(orderTotal);
+            captureAmount = new Double(remainingTotal);
         }
+        Debug.log("Remaining total : " + remainingTotal, module);
+        
         double amountToCapture = captureAmount.doubleValue();
         Debug.log("Amount to capture : " + amountToCapture, module);
         
@@ -462,12 +467,17 @@ public class PaymentGatewayServices {
                 Debug.log("Nothing to capture; authAmount = 0", module);
                 continue;
             }
-            Debug.log("Auth amount : " + authAmount, module);
+            Debug.log("Actual Auth amount : " + authAmount, module);
             
+            // if the authAmount is more then the remaining total; just use that
+            if (authAmount.doubleValue() > remainingTotal) {
+                authAmount = new Double(remainingTotal);
+            }
+                                               
             double amountThisCapture = 0.00;
             if (authAmount.doubleValue() >= amountToCapture) {
                 amountThisCapture = amountToCapture;
-            } else if (payments.hasNext()){
+            } else if (payments.hasNext()) {
                 amountThisCapture = authAmount.doubleValue();
             } else {
                 // problem we need to capture more then what was authorized
