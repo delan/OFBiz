@@ -45,6 +45,8 @@ import org.ofbiz.core.workflow.*;
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
 
+    public static final String module = WfExecutionObjectImpl.class.getName();
+
     protected String packageId;
     protected String processId;
     protected String activityId;
@@ -105,7 +107,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             if (dataObject != null)
                 getDelegator().create(dataObject);
             Debug.logInfo("Created new runtime object (Workeffort: " +
-                          runtimeKey() + ")");
+                          runtimeKey() + ")", module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -609,7 +611,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             dataObject.set("serviceLoaderName", loader);
             dataObject.store();
             Debug.logInfo("------- EXECUTION OBJECT : Service loader set: " +
-                          dataObject.getString("serviceLoaderName"));
+                          dataObject.getString("serviceLoaderName"), module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }

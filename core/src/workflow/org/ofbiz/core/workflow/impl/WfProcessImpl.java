@@ -44,6 +44,8 @@ import org.ofbiz.core.workflow.*;
 
 public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
 
+    public static final String module = WfProcessImpl.class.getName();
+
     private WfRequester requester;
     private WfProcessMgr manager;
 
@@ -228,7 +230,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public synchronized void activityComplete(WfActivity activity) throws WfException {
         if (!activity.state().equals("closed.completed"))
             throw new WfException("Activity state is not completed");
-        Debug.logInfo("Activity: " + activity.name() + " is complete");
+        Debug.logInfo("Activity: " + activity.name() + " is complete", module);
         queueNext(activity);
     }
 
@@ -361,7 +363,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             }
         }
 
-        Debug.logInfo("Transitions: " + transList.size());
+        Debug.logInfo("Transitions: " + transList.size(), module);
         return transList;
     }
 

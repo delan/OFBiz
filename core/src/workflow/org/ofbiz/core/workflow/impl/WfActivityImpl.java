@@ -44,6 +44,8 @@ import org.ofbiz.core.workflow.*;
 
 public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity {
 
+    public static final String module = WfActivityImpl.class.getName();
+
     protected String process;
 
     /**
@@ -98,7 +100,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
 
         if (!assignAll) {
             if (performer != null) {
-                Debug.logInfo("[WfActivity.createAssignments] : (S) Single assignment");
+                Debug.logInfo("[WfActivity.createAssignments] : (S) Single assignment", module);
                 assign(WfFactory.getWfResource(performer), false);
             }
             return;
@@ -131,7 +133,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                     throw new WfException(e.getMessage(), e);
                 }
                 // make assignments for these parties
-                Debug.logInfo("[WfActivity.createAssignments] : Group assignment");
+                Debug.logInfo("[WfActivity.createAssignments] : Group assignment", module);
                 Iterator i = partyRelations.iterator();
                 while (i.hasNext()) {
                     GenericValue value = (GenericValue) i.next();
@@ -140,7 +142,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 }
             } else {
                 // not a group
-                Debug.logInfo("[WfActivity.createAssignments] : (G) Single assignment");
+                Debug.logInfo("[WfActivity.createAssignments] : (G) Single assignment", module);
                 assign(WfFactory.getWfResource(performer), false);
             }
         }
@@ -155,7 +157,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                 throw new WfException(e.getMessage(), e);
             }
             // loop through the roles and create assignments
-            Debug.logInfo("[WfActivity.createAssignments] : Role assignment");
+            Debug.logInfo("[WfActivity.createAssignments] : Role assignment", module);
             Iterator i = partyRoles.iterator();
             while (i.hasNext()) {
                 GenericValue value = (GenericValue) i.next();
@@ -406,10 +408,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         if ((type == 2 && completeAll) || (type == 1 && acceptAll)) {
             return true;
         } else {
-            Debug.logInfo("[checkAssignStatus] : need only one assignment to finish");
+            Debug.logInfo("[checkAssignStatus] : need only one assignment to finish", module);
             if (foundOne)
                 return true;
-            Debug.logInfo("[checkAssignStatus] : found no assignment(s)");
+            Debug.logInfo("[checkAssignStatus] : found no assignment(s)", module);
             return false;
         }
     }
