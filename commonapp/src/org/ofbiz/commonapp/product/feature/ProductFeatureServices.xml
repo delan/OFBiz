@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ * Copyright (c) 2001 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on April 2, 2002
+ -->
+<simple-methods>
+    <simple-method method-name="createProductFeatureCategory" short-description="Create Product Feature Category">
+        <!-- TODO: do security check, make sure has "CATALOG", "_CREATE" -->
+        <call-map-processor in-map-name="parameters" out-map-name="newEntityContext">
+            <simple-map-processor name="populateEntity">
+                <process field="parentCategoryId"><copy/></process>
+                <process field="description"><copy/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <sequenced-id-to-env sequence-name="ProductFeatureCategory" env-name="productFeatureCategoryId"/>
+        <to-string field-name="productFeatureCategoryId"/>
+        <env-to-field env-name="productFeatureCategoryId" map-name="newEntityContext"/>
+        <field-to-result field-name="productFeatureCategoryId" result-name="productFeatureCategoryId"/>
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="ProductFeatureCategory" map-name="newEntityContext"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="createProductFeature" short-description="Create Product Feature">
+        <!-- TODO: do security check, make sure has "CATALOG", "_CREATE" -->
+        <call-map-processor in-map-name="parameters" out-map-name="newEntityContext">
+            <simple-map-processor name="populateEntity">
+                <process field="productFeatureTypeId"><copy/></process>
+                <process field="productFeatureCategoryId"><copy/></process>
+                <process field="description"><copy/></process>
+                <process field="uomId"><copy/></process>
+                <process field="numberSpecified"><copy/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <sequenced-id-to-env sequence-name="ProductFeature" env-name="productFeatureId"/>
+        <to-string field-name="productFeatureId"/>
+        <env-to-field env-name="productFeatureId" map-name="newEntityContext"/>
+        <field-to-result field-name="productFeatureId" result-name="productFeatureId"/>
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="ProductFeature" map-name="newEntityContext"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductFeature" short-description="Update Product Feature">
+        <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
+        <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="productFeaturePKMap"/>
+        <find-by-primary-key entity-name="ProductFeature" map-name="productFeaturePKMap" value-name="productFeature"/>
+        <call-map-processor in-map-name="parameters" out-map-name="productFeature">
+            <simple-map-processor name="populateEntity">
+                <process field="productFeatureTypeId"><copy/></process>
+                <process field="productFeatureCategoryId"><copy/></process>
+                <process field="description"><copy/></process>
+                <process field="uomId"><copy/></process>
+                <process field="numberSpecified"><copy/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <check-errors/>
+        <store-value value-name="productFeature"/>
+    </simple-method>
+
+    <simple-method method-name="applyFeatureToProduct" short-description="Apply Feature to Product">
+        <!-- TODO: do security check, make sure has "CATALOG", "_CREATE" -->
+        <if-empty field-name="fromDate" map-name="parameters">
+            <now-timestamp-to-env env-name="nowStamp"/>
+            <env-to-field env-name="nowStamp" field-name="fromDate" map-name="parameters"/>
+            <!-- TODO: if fromDate is not specified make sure no ProductFeatureAppl exists with a valid date range -->
+        </if-empty>
+        <call-map-processor in-map-name="parameters" out-map-name="newEntityContext">
+            <simple-map-processor name="populateEntity">
+                <process field="productId"><copy/></process>
+                <process field="productFeatureId"><copy/></process>
+                <process field="productFeatureApplTypeId"><copy/></process>
+                <process field="fromDate"><copy/></process>
+                <process field="thruDate"><copy/></process>
+                <process field="sequenceNum"><copy/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <check-errors/>
+        <make-value value-name="newEntity" entity-name="ProductFeatureAppl" map-name="newEntityContext"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateFeatureToProductApplication" short-description="Update Feature to Product Application">
+        <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
+        <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
+        <field-to-field field-name="fromDate" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
+        <find-by-primary-key entity-name="ProductFeatureAppl" map-name="productFeatureApplPKMap" value-name="productFeatureAppl"/>
+        <call-map-processor in-map-name="parameters" out-map-name="productFeatureAppl">
+            <simple-map-processor name="populateEntity">
+                <process field="productFeatureApplTypeId"><copy/></process>
+                <process field="thruDate"><copy/></process>
+                <process field="sequenceNum"><copy/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <check-errors/>
+        <store-value value-name="productFeatureAppl"/>
+    </simple-method>
+    <simple-method method-name="removeFeatureFromProduct" short-description="Remove Feature from Product">
+        <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
+        <field-to-field field-name="productFeatureId" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
+        <field-to-field field-name="fromDate" map-name="parameters" to-map-name="productFeatureApplPKMap"/>
+        <find-by-primary-key entity-name="ProductFeatureAppl" map-name="productFeatureApplPKMap" value-name="productFeatureAppl"/>
+        <if-empty field-name="thruDate" map-name="parameters">
+            <now-timestamp-to-env env-name="nowStamp"/>
+            <env-to-field env-name="nowStamp" field-name="thruDate" map-name="parameters"/>
+        </if-empty>
+        <field-to-field field-name="thruDate" map-name="parameters" to-map-name="productFeatureAppl"/>
+        <check-errors/>
+        <store-value value-name="productFeatureAppl"/>
+    </simple-method>
+</simple-methods>

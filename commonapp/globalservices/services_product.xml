@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Common Application Components Order Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>
+
+    <!-- Product Feature Services -->
+    <service name="createProductFeatureCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCategory" auth="true">
+        <description>Create a ProductFeature record</description>
+        <attribute name="parentCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureCategoryId" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="createProductFeature" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="createProductFeature" auth="true">
+        <description>Create a ProductFeature record</description>
+        <attribute name="productFeatureTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="numberSpecified" type="Double" mode="IN" optional="true"/>
+        <attribute name="productFeatureId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateProductFeature" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="updateProductFeature" auth="true">
+        <description>Update a ProductFeature record</description>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
+        <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="numberSpecified" type="Double" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="applyFeatureToProduct" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="applyFeatureToProduct" auth="true">
+        <description>Apply a ProductFeature to a Product; a fromDate can be used 
+            to specify when the feature will be applied, if no fromDate is specified, 
+            it will be applied now.</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureApplTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="updateFeatureToProductApplication" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="updateFeatureToProductApplication" auth="true">
+        <description>Update a ProductFeature to Product Application</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureApplTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="removeFeatureFromProduct" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="removeFeatureFromProduct" auth="true">
+        <description>Remove a ProductFeature from a Product; a thruDate can be used 
+            to specify when the feature will be removed, if no thruDate is specified, 
+            it will be removed now.</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+    </service>
+</services>
