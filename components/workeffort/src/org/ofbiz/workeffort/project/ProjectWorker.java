@@ -1,5 +1,5 @@
 /*
- * $Id: ProjectWorker.java,v 1.1 2003/08/18 16:29:44 jonesde Exp $
+ * $Id: ProjectWorker.java,v 1.2 2003/08/18 17:02:17 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.condition.EntityOperator;
  * WorkEffortWorker - Worker class to reduce code in JSPs & make it more reusable
  *
  * @author     <a href="mailto:dustin@dscv.org">Dustin Caldwell</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ProjectWorker {
@@ -51,7 +51,7 @@ public class ProjectWorker {
 
     public static void getAssignedProjects(PageContext pageContext, String projectsAttrName) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute("userLogin");
 
         Collection validWorkEfforts = null;
 
@@ -77,7 +77,7 @@ public class ProjectWorker {
 
     public static void getAllAssignedProjects(PageContext pageContext, String projectsAttrName) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute("userLogin");
 
         Collection validWorkEfforts = null;
 
@@ -100,7 +100,7 @@ public class ProjectWorker {
 
     public static void getAllProjectPhases(PageContext pageContext, String phasesAttrName) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute("userLogin");
 
         String projectWorkEffortId = pageContext.getRequest().getParameter("projectWorkEffortId");
 
@@ -148,7 +148,7 @@ public class ProjectWorker {
 
     public static void getAllPhaseTasks(PageContext pageContext, String tasksAttrName) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute("userLogin");
 
         String phaseWorkEffortId = pageContext.getRequest().getParameter("phaseWorkEffortId");
 
@@ -195,7 +195,7 @@ public class ProjectWorker {
 
     public static void getTaskNotes(PageContext pageContext, String notesAttrName) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute("userLogin");
 
         String workEffortId = pageContext.getRequest().getParameter("workEffortId");
 
