@@ -890,7 +890,7 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
-    <service name="deleteSurveyQuestion" default-entity-name="SurveyQuestionOption" auth="true" engine="simple"
+    <service name="deleteSurveyQuestionOption" default-entity-name="SurveyQuestionOption" auth="true" engine="simple"
         location="org/ofbiz/content/survey/SurveyServices.xml" invoke="deleteSurveyQuestionOption">
         <description>Delete SurveyQuestionOption</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
