@@ -225,7 +225,7 @@
     	<security https="true" auth="true" direct-request="false"/>
     	<event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="checkExternalPayment"/>
     	<response name="none" type="request" value="renderconfirmorder"/>
-    	<response name="worldpay" type="request" value="callWorldpay"/>
+    	<response name="worldpay" type="request" value="callWorldPay"/>
     	<response name="paypal" type="request" value="callPayPal"/>
     	<response name="error" type="view" value="checkout"/>
     </request-map> 
