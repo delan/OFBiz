@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -58,7 +58,7 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
 </table>
 
 <#if showList?default("Y") == "Y">
-	${listWrapper.renderFormString()}
+    ${listWrapper.renderFormString()}
 </#if>
 <hr/>
 	

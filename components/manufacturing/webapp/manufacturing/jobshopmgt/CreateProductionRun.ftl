@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -32,11 +32,14 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
   <br>
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <tr>
-      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>
+      <td width='26%' align='right' valign='top'>
+        <div class="tableheadtext">${uiLabelMap.ProductProductId}</div>
+      </td>
       <td width="5">&nbsp;</td>
-      <td width="74%"><input type="text" class="inputBox" size="16" name="productId" value="${productionRunData.productId?if_exists}">
-					<a href="javascript:call_fieldlookup(document.productionRunform.productId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
-	  </td>			
+      <td width="74%">
+        <input type="text" class="inputBox" size="16" name="productId" value="${productionRunData.productId?if_exists}">
+        <a href="javascript:call_fieldlookup(document.productionRunform.productId,'<@ofbizUrl>/LookupProduct</@ofbizUrl>', 'none',640,460);"><img src='/images/fieldlookup.gif' width='15' height='14' border='0' alt='Click here For Field Lookup'></a>
+      </td>			
     </tr>
     <tr>
       <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingQuantity}</div></td>
@@ -50,6 +53,27 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
          			<a href="javascript:call_cal(document.productionRunform.startDate, null);"><img src="/images/cal.gif" width="16" height="16" border="0" alt="Click here For Calendar"></a>
        </td>			
     </tr>
+
+    <tr>
+      <td width='26%' align='right' valign='top'>
+        <div class="tableheadtext">${uiLabelMap.ProductFacilityId}</div>
+      </td>
+      <td width="5">&nbsp;</td>
+      <td width="74%">
+        <select name='facilityId' class='selectBox'>
+          <#if currentFacilityId?has_content>
+            <option value="${currentFacilityId.facilityId}">${currentFacilityId.facilityName} [${currentFacilityId.facilityId}]</option>
+            <option value="${currentFacilityId.facilityId}">---</option>
+          </#if>
+          <option value=""></option>
+          <#list warehouses as warehouse>
+            <option value="${warehouse.facilityId}">${warehouse.facilityName} [${warehouse.facilityId}]</option>
+          </#list>
+        </select>
+      </td>
+    </tr>
+
+
     <tr>
       <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingRoutingId}</div></td>
       <td width="5">&nbsp;</td>

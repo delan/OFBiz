@@ -20,28 +20,77 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
 
 <#if productionRunId?has_content>
-	<table border=0 width="100%" cellspacing="0" cellpadding="0">
-		<tr valign=top>
-			<td>  <#-- ProductionRun Update sub-screen -->
-				<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
-				  <tr><td>	
-					<table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-						<tr>
-				    		<td><div class="boxhead">${uiLabelMap.ManufacturingProductionRunId} : ${productionRunId}</div></td>
-				    	</tr>
-					</table>
-					${updateProductionRunWrapper.renderFormString()}
-				  </td></tr>
-				</table>
-			</td>
-		<#if routingTaskId?has_content || actionForm=="addRoutingTask">  <#-- RoutingTask sub-screen  Update or Add  -->
+<#-- Mandatory work efforts -->
+<#if mandatoryWorkEfforts?has_content>
+    <div class="tabletext">
+    ${uiLabelMap.ManufacturingMandatoryProductionRuns}:
+    <#list mandatoryWorkEfforts as mandatoryWorkEffortAssoc>
+        <#assign mandatoryWorkEffort = mandatoryWorkEffortAssoc.getRelatedOne("FromWorkEffort")>
+        <#if "PRUN_COMPLETED" == mandatoryWorkEffort.getString("currentStatusId") || "PRUN_CLOSED" == mandatoryWorkEffort.getString("currentStatusId")>
+            [${mandatoryWorkEffort.workEffortId}]&nbsp;
+        <#else>
+            <#if "PRUN_CREATED" == mandatoryWorkEffort.getString("currentStatusId")>
+                <a href="<@ofbizUrl>/EditProductionRun?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${mandatoryWorkEffort.workEffortId}]</a>
+            <#else>
+                <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${mandatoryWorkEffort.workEffortId}]</a>
+            </#if>
+        </#if>
+    </#list>
+    </div>
+</#if>
+<#-- Dependent work efforts -->
+<#if dependentWorkEfforts?has_content>
+    <div class="tabletext">
+    ${uiLabelMap.ManufacturingDependentProductionRuns}: 
+    <#list dependentWorkEfforts as dependentWorkEffortAssoc>
+        <#assign dependentWorkEffort = dependentWorkEffortAssoc.getRelatedOne("ToWorkEffort")>
+        <#if "PRUN_COMPLETED" == dependentWorkEffort.currentStatusId || "PRUN_CLOSED" == dependentWorkEffort.currentStatusId>
+            [${dependentWorkEffort.workEffortId}]&nbsp;
+        <#else>
+            <#if "PRUN_CREATED" == dependentWorkEffort.getString("currentStatusId")>
+                <a href="<@ofbizUrl>/EditProductionRun?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${dependentWorkEffort.workEffortId}]</a>
+            <#else>
+                <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${dependentWorkEffort.workEffortId}]</a>
+            </#if>
+        </#if>
+    </#list>
+    </div>
+</#if>
+
+
+<table border=0 width="100%" cellspacing="0" cellpadding="0">
+    <tr valign=top>
+        <td>
+            <#-- ProductionRun Update sub-screen -->
+            <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+                <tr>
+                    <td>
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+                            <tr>
+                                <td>
+                                    <div class="boxhead">${uiLabelMap.ManufacturingProductionRunId}: ${productionRunId}</div>
+                                </td>
+                            </tr>
+                        </table>
+                        ${updateProductionRunWrapper.renderFormString()}
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center">
+                        <a href="<@ofbizUrl>/changeProductionRunStatusToPrinted?productionRunId=${productionRunId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductionRunPrintDocuments}]</a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        <#-- RoutingTask sub-screen  Update or Add  -->
+        <#if routingTaskId?has_content || actionForm=="AddRoutingTask">
 			<td> &nbsp; </td>
 			<td>
 				<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -60,7 +109,9 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
 				</table>
 			</td>
 		</#if>	
-		<#if productId?has_content || actionForm=="addProductComponent">  <#-- Product component sub-screen  Update or Add  -->
+                <#-- Product component sub-screen  Update or Add  -->
+                <#if productId?has_content || actionForm=="AddProductComponent">
+
 			<td> &nbsp; </td>
 			<td>
 				<table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
@@ -90,7 +141,7 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
 			<tr>
 	    		<td><div class="boxhead">${uiLabelMap.ManufacturingListOfProductionRunRoutingTasks}</div></td>
         		<td align="right"><div class="tabletext">
-                	<a href="<@ofbizUrl>/EditProductionRun?productionRunId=${productionRunId}&amp;actionForm=addRoutingTask</@ofbizUrl>" class="submenutextright">
+                	<a href="<@ofbizUrl>/EditProductionRun?productionRunId=${productionRunId}&amp;actionForm=AddRoutingTask</@ofbizUrl>" class="submenutextright">
                 					${uiLabelMap.ManufacturingAddRoutingTask}</a>
                 </td>	
 	    	</tr>
@@ -106,7 +157,7 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
 			<tr>
 	    		<td><div class="boxhead">${uiLabelMap.ManufacturingListOfProductionRunComponents}</div></td>
         		<td align="right"><div class="tabletext">
-                	<a href="<@ofbizUrl>/EditProductionRun?productionRunId=${productionRunId}&amp;actionForm=addProductComponent</@ofbizUrl>" class="submenutextright">
+                	<a href="<@ofbizUrl>/EditProductionRun?productionRunId=${productionRunId}&amp;actionForm=AddProductComponent</@ofbizUrl>" class="submenutextright">
                 					${uiLabelMap.ManufacturingAddProductionRunProductComponent}</a>
                 </td>	
 	    	</tr>
