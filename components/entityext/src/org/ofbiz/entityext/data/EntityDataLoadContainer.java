@@ -25,6 +25,7 @@
 package org.ofbiz.entityext.data;
 
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,6 +36,8 @@ import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityDataLoader;
@@ -55,6 +58,7 @@ public class EntityDataLoadContainer implements Container {
 
     protected String configFile = null;
     protected String readers = null;
+    protected boolean single = false;
     protected int txTimeout = -1;
 
     public EntityDataLoadContainer() {
@@ -106,7 +110,9 @@ public class EntityDataLoadContainer implements Container {
         List readerNames = null;
         if (this.readers != null) {
             if (this.readers.indexOf(",") == -1) {
-                if (!"all".equalsIgnoreCase(readers)) {
+                if (UtilValidate.isUrl(this.readers)) {
+                    this.single = true;
+                } else if (!"all".equalsIgnoreCase(readers)) {
                     readerNames = new LinkedList();
                     readerNames.add(this.readers);
                 }
@@ -119,7 +125,13 @@ public class EntityDataLoadContainer implements Container {
         String helperName = delegator.getGroupHelperName(entityGroupName);
         List urlList = null;
 
-        if (readerNames == null) {
+        if (readerNames == null && single) {
+            try {
+                urlList = UtilMisc.toList(new URL(this.readers));
+            } catch (MalformedURLException e) {
+                throw new ContainerException("Url problems; not a valid URL");
+            }
+        } else if (readerNames == null) {
             urlList = EntityDataLoader.getUrlList(helperName);
         } else {
             urlList = EntityDataLoader.getUrlList(helperName, readerNames);
