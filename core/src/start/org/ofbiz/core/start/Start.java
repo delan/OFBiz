@@ -128,17 +128,20 @@ public class Start implements Runnable {
         System.out.println("java.version...: " + conf.javaVersion);
         System.out.println("ofbiz.home.....: " + conf.ofbizHome);        
         System.out.println("server.class...: " + conf.serverClass);
-        System.out.println("config.file....: " + conf.configFile);        
-        System.out.println("");                       
+        System.out.println("config.file....: " + conf.configFile);                               
         
         System.setProperty("java.class.path", classPath.toString());
         Thread.currentThread().setContextClassLoader(cl);   
         
         // stat the log directory
-        File logDir = new File(conf.jettyHome + "/logs");
+        boolean createdDir = false;
+        File logDir = new File(conf.logDir);
         if (!logDir.exists()) {
             logDir.mkdir();
-        }
+            createdDir = true;
+        }        
+        System.out.println("log.dir........: " + conf.logDir + (createdDir ? " [Created]" : ""));
+        System.out.println("");
                            
         // invoke the main method on the defined class                            
         invokeServerMain(cl, conf.serverClass, (String[]) xargs.toArray(args));
@@ -286,6 +289,7 @@ class Configuration {
     
     protected String serverClass;
     protected String configFile;
+    protected String logDir;
     protected String ofbizHome;
     protected String jettyHome;
     protected String javaHome;
@@ -304,7 +308,8 @@ class Configuration {
     
     protected void setConfig(String config) throws IOException {   
         serverClass = System.getProperty("server.class");
-        configFile = System.getProperty("config.file");              
+        configFile = System.getProperty("config.file");
+        logDir = System.getProperty("log.dir");             
         ofbizHome = System.getProperty("ofbiz.home");
         jettyHome = System.getProperty("jetty.home");
         javaHome = System.getProperty("java.home");
@@ -317,19 +322,24 @@ class Configuration {
         props.load(propsStream); 
                 
         // grab default home paths if not on command line            
-        if (ofbizHome == null)
-            ofbizHome = props.getProperty("ofbiz.home", ".");                
-        if (jettyHome == null)
-            jettyHome = props.getProperty("jetty.home", ofbizHome);
-        if (javaHome == null)
-            javaHome = props.getProperty("java.home");
-        
-        // get a full path
-        if (ofbizHome.equals(".")) {        
-            ofbizHome = System.getProperty("user.dir");
-            ofbizHome = ofbizHome.replace('\\', '/');
+        if (ofbizHome == null) {        
+            ofbizHome = props.getProperty("ofbiz.home", ".");
+            // get a full path
+            if (ofbizHome.equals(".")) {        
+                ofbizHome = System.getProperty("user.dir");
+                ofbizHome = ofbizHome.replace('\\', '/');
+            }            
         }
-        
+        if (logDir == null) {
+            logDir = props.getProperty("log.dir", ofbizHome + "/logs");                
+        }
+        if (jettyHome == null) {        
+            jettyHome = props.getProperty("jetty.home", ofbizHome);
+        }
+        if (javaHome == null) {        
+            javaHome = props.getProperty("java.home");
+        }
+                
         // set the home fields
         System.setProperty("ofbiz.home", ofbizHome);
         System.setProperty("jetty.home", jettyHome);
