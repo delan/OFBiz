@@ -554,9 +554,6 @@
   <ShoppingListType description="Wedding Registry" shoppingListTypeId="SLT_WEDDING_REG"/>
   <ShoppingListType description="Frequent Purchases" shoppingListTypeId="SLT_FREQ_PURCHASES"/>
 
-  <StatusType description="Order" hasTable="N" parentTypeId="" statusTypeId="ORDER_STATUS"/>
-  <StatusType description="Order Item" hasTable="N" parentTypeId="ORDER_STATUS" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusType description="Payment Preference" hasTable="N" parentTypeId="" statusTypeId="PAYMENT_PREF_STATUS"/>
   <StatusType description="Workeffort" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_STATUS"/>
   <StatusType description="Calendar" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="CALENDAR_STATUS"/>
   <StatusType description="Task" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="TASK_STATUS"/>
@@ -567,14 +564,9 @@
   <StatusType description="Case" hasTable="N" parentTypeId="" statusTypeId="CASE_STATUS"/>
   <StatusType description="Communication Event" hasTable="N" parentTypeId="" statusTypeId="COM_EVENT_STATUS"/>
   <StatusType description="Employment Application" hasTable="N" parentTypeId="" statusTypeId="EMPLOYMENT_APP_STTS"/>
-  <StatusType description="Inventory Item" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_ITEM_STTS"/>
-  <StatusType description="Serialized Inventory Item" hasTable="N" parentTypeId="INVENTORY_ITEM_STTS" statusTypeId="INV_SERIALIZED_STTS"/>
-  <StatusType description="Non-Serialized Inventory Item" hasTable="N" parentTypeId="INVENTORY_ITEM_STTS" statusTypeId="INV_NON_SER_STTS"/>
   <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
   <StatusType description="Position" hasTable="N" parentTypeId="" statusTypeId="POSITION_STATUS"/>
   <StatusType description="Requirement" hasTable="N" parentTypeId="" statusTypeId="REQUIREMENT_STATUS"/>
-  <StatusType description="Shipment" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
-  <StatusType description="Synchronize" hasTable="N" parentTypeId="" statusTypeId="SYNCHRONIZE_STATUS"/>
   <StatusType description="Unemployment Claim" hasTable="N" parentTypeId="" statusTypeId="UNEMPL_CLAIM_STATUS"/>
   <StatusType description="WorkEffort Asset" hasTable="N" parentTypeId="" statusTypeId="WORK_EFF_ASSET_STTS"/>
   <StatusType description="Party Asset" hasTable="N" parentTypeId="" statusTypeId="PARTY_ASSET_STATUS"/>
@@ -582,39 +574,6 @@
   <StatusType description="Server Hit" hasTable="N" parentTypeId="" statusTypeId="SERVER_HIT_STATUS"/>
   <StatusType description="Web Content" hasTable="N" parentTypeId="" statusTypeId="WEB_CONTENT_STATUS"/>
   <StatusType description="WorkEffort Assignment" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_ASSIGN"/>
-
-  <StatusItem description="On Order" sequenceId="01" statusCode="ON_ORDER" statusId="INV_ON_ORDER" statusTypeId="INV_SERIALIZED_STTS"/>
-  <StatusItem description="Available" sequenceId="02" statusCode="AVAILABLE" statusId="INV_AVAILABLE" statusTypeId="INV_SERIALIZED_STTS"/>
-  <StatusItem description="Promised" sequenceId="03" statusCode="PROMISED" statusId="INV_PROMISED" statusTypeId="INV_SERIALIZED_STTS"/>
-  <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="INV_DELIVERED" statusTypeId="INV_SERIALIZED_STTS"/>
-
-  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDER_ORDERED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ORDER_APPROVED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ORDER_COMPLETED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ORDER_BACKORDERED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ORDER_REJECTED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="ORDER_STATUS"/>
-
-  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ITEM_ORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ITEM_COMPLETED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ITEM_BACKORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ITEM_REJECTED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
-
-  <StatusItem description="Not-Authorized" sequenceId="01" statusCode="NOT_AUTHORIZED" statusId="PAYMENT_NOT_AUTH" statusTypeId="PAYMENT_PREF_STATUS"/>
-  <StatusItem description="Authorized" sequenceId="02" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
-  <StatusItem description="Settled" sequenceId="03" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
-  <StatusItem description="Declined" sequenceId="04" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
-
-  <StatusItem description="Scheduled" sequenceId="01" statusCode="SCHEDULED" statusId="SHIPMENT_SCHEDULED" statusTypeId="SHIPMENT_STATUS"/>
-  <StatusItem description="Shipped" sequenceId="02" statusCode="SHIPPED" statusId="SHIPMENT_SHIPPED" statusTypeId="SHIPMENT_STATUS"/>
-  <StatusItem description="In-Route" sequenceId="03" statusCode="INROUTE" statusId="SHIPMENT_INROUTE" statusTypeId="SHIPMENT_STATUS"/>
-  <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="SHIPMENT_DELIVERED" statusTypeId="SHIPMENT_STATUS"/>
-  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="SHIPMENT_CANCELLED" statusTypeId="SHIPMENT_STATUS"/>
-
-  <StatusItem description="Not-Synchronized" sequenceId="01" statusCode="NOT_SYNCHRONIZED" statusId="NOT_SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
-  <StatusItem description="Synchronized" sequenceId="02" statusCode="SYNCHRONIZED" statusId="SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
 
   <StatusItem description="Needs Action" sequenceId="01" statusCode="NEEDS ACTION" statusId="CAL_NEEDS_ACTION" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Sent" sequenceId="02" statusCode="SENT" statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
@@ -639,28 +598,6 @@
   <StatusItem description="Under Test"  sequenceId="02" statusCode="UNDER_TEST" statusId="WPS_UNDER_TEST" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Released"  sequenceId="03" statusCode="RELEASED" statusId="WPS_RELEASED" statusTypeId="WORKFLOW_PUB_STATUS"/>
 
-  <StatusValidChange condition="" statusId="INV_ON_ORDER" statusIdTo="INV_AVAILABLE" transitionName="Order Arrived"/>
-  <StatusValidChange condition="" statusId="INV_AVAILABLE" statusIdTo="INV_PROMISED" transitionName="Promise"/>
-  <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_AVAILABLE" transitionName="Cancel Promise"/>
-  <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_DELIVERED" transitionName="Deliver"/>
-  <StatusValidChange condition="" statusId="INV_DELIVERED" statusIdTo="INV_AVAILABLE" transitionName="Return"/>
-  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_APPROVED" transitionName="Approve Order"/>
-  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_REJECTED" transitionName="Reject Order"/>
-  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_COMPLETED" transitionName="Comlpete Order"/>
-  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
-  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
-  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
-  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
-  <StatusValidChange condition="" statusId="ORDER_BACKORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Back Order"/>
-  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item"/>
-  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_REJECTED" transitionName="Reject Item"/>
-  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_COMPLETED" transitionName="Complete Item"/>
-  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
-  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
-  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
-  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
-  <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item Back Order"/>
-  <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_SETTLED" transitionName="Payment Settled"/>
   <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_SENT" transitionName="Send"/>
   <StatusValidChange condition="" statusId="CAL_NEEDS_ACTION" statusIdTo="CAL_CANCELLED" transitionName="Cancel"/>
   <StatusValidChange condition="" statusId="CAL_SENT" statusIdTo="CAL_ACCEPTED" transitionName="Accept"/>
@@ -678,6 +615,78 @@
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_COMPLETED" transitionName="Complete"/>
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_TERMINATED" transitionName="Terminate"/>
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_ABORTED" transitionName="Abort"/>
+
+  <!-- inventory item status -->
+  <StatusType description="Inventory Item" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_ITEM_STTS"/>
+  <StatusType description="Serialized Inventory Item" hasTable="N" parentTypeId="INVENTORY_ITEM_STTS" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusType description="Non-Serialized Inventory Item" hasTable="N" parentTypeId="INVENTORY_ITEM_STTS" statusTypeId="INV_NON_SER_STTS"/>
+  <StatusItem description="On Order" sequenceId="01" statusCode="ON_ORDER" statusId="INV_ON_ORDER" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Available" sequenceId="02" statusCode="AVAILABLE" statusId="INV_AVAILABLE" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Promised" sequenceId="03" statusCode="PROMISED" statusId="INV_PROMISED" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="INV_DELIVERED" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusValidChange condition="" statusId="INV_ON_ORDER" statusIdTo="INV_AVAILABLE" transitionName="Order Arrived"/>
+  <StatusValidChange condition="" statusId="INV_AVAILABLE" statusIdTo="INV_PROMISED" transitionName="Promise"/>
+  <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_AVAILABLE" transitionName="Cancel Promise"/>
+  <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_DELIVERED" transitionName="Deliver"/>
+  <StatusValidChange condition="" statusId="INV_DELIVERED" statusIdTo="INV_AVAILABLE" transitionName="Return"/>
+
+  <StatusType description="Order Item Inventory Res" hasTable="N" parentTypeId="" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusItem description="Reserved" sequenceId="01" statusCode="RESERVED" statusId="OIIR_RESERVED" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusItem description="Cancelled" sequenceId="02" statusCode="CANCELLED" statusId="OIIR_CANCELLED" statusTypeId="ORDITM_INVRES_STTS"/>
+  <StatusValidChange condition="" statusId="OIIR_RESERVED" statusIdTo="OIIR_CANCELLED" transitionName="Cancel Reservation"/>
+  
+  <!-- order and order item status -->
+  <StatusType description="Order" hasTable="N" parentTypeId="" statusTypeId="ORDER_STATUS"/>
+  <StatusType description="Order Item" hasTable="N" parentTypeId="ORDER_STATUS" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDER_ORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ORDER_APPROVED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ORDER_COMPLETED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ORDER_BACKORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ORDER_REJECTED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ITEM_ORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ITEM_COMPLETED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ITEM_BACKORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ITEM_REJECTED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_APPROVED" transitionName="Approve Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_REJECTED" transitionName="Reject Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_COMPLETED" transitionName="Comlpete Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
+  <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ORDER_BACKORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Back Order"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_REJECTED" transitionName="Reject Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_COMPLETED" transitionName="Complete Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
+  <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
+  <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
+  <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item Back Order"/>
+
+  <!-- order payment pref status -->
+  <StatusType description="Payment Preference" hasTable="N" parentTypeId="" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Not-Authorized" sequenceId="01" statusCode="NOT_AUTHORIZED" statusId="PAYMENT_NOT_AUTH" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Authorized" sequenceId="02" statusCode="AUTHORIZED" statusId="PAYMENT_AUTHORIZED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Settled" sequenceId="03" statusCode="SETTLED" statusId="PAYMENT_SETTLED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusItem description="Declined" sequenceId="04" statusCode="DECLINED" statusId="PAYMENT_DECLINED" statusTypeId="PAYMENT_PREF_STATUS"/>
+  <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_SETTLED" transitionName="Payment Settled"/>
+
+  <!-- shipment status -->
+  <StatusType description="Shipment" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Scheduled" sequenceId="01" statusCode="SCHEDULED" statusId="SHIPMENT_SCHEDULED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Shipped" sequenceId="02" statusCode="SHIPPED" statusId="SHIPMENT_SHIPPED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="In-Route" sequenceId="03" statusCode="INROUTE" statusId="SHIPMENT_INROUTE" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="SHIPMENT_DELIVERED" statusTypeId="SHIPMENT_STATUS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="SHIPMENT_CANCELLED" statusTypeId="SHIPMENT_STATUS"/>
+
+  <!-- sync status -->
+  <StatusType description="Synchronize" hasTable="N" parentTypeId="" statusTypeId="SYNCHRONIZE_STATUS"/>
+  <StatusItem description="Not-Synchronized" sequenceId="01" statusCode="NOT_SYNCHRONIZED" statusId="NOT_SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
+  <StatusItem description="Synchronized" sequenceId="02" statusCode="SYNCHRONIZED" statusId="SYNCHRONIZED" statusTypeId="SYNCHRONIZE_STATUS"/>
 
   <SubscriptionType description="Newsgroup" hasTable="N" parentTypeId="" subscriptionTypeId="NEWSGROUP_SUBSCR"/>
   <SubscriptionType description="Other" hasTable="N" parentTypeId="" subscriptionTypeId="OTHER_SUBSCR"/>
