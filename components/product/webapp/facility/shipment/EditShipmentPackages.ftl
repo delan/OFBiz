@@ -20,18 +20,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 ${pages.get("/shipment/ShipmentTabBar.ftl")}
 
 <#if shipment?exists>
 <table width="100%" cellspacing="0" cellpadding="2" border="1">
     <tr>
-        <td><div class="tableheadtext">Package#</div></td>
-        <td><div class="tableheadtext">Created</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.ProductPackage}#</div></td>
+        <td><div class="tableheadtext">${uiLabelMap.CommonCreated}</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
         <td><div class="tableheadtext">&nbsp;</div></td>
@@ -48,8 +49,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
     <tr>
         <td><div class="tabletext">${shipmentPackage.shipmentPackageSeqId}</div></td>
         <td><div class="tabletext">${(shipmentPackage.dateCreated.toString())?if_exists}</div></td>
-        <td><span class="tabletext">Weight:</span><input type="text" size="5" name="weight" value="${shipmentPackage.weight?if_exists}" class="inputBox"/></td>
-        <td><span class="tabletext">WeightUnit:</span>
+        <td><span class="tabletext">${uiLabelMap.ProductWeight}:</span><input type="text" size="5" name="weight" value="${shipmentPackage.weight?if_exists}" class="inputBox"/></td>
+        <td><span class="tabletext">${uiLabelMap.ProductWeightUnit}:</span>
             <select name="weightUomId" class="selectBox">
                 <#if weightUom?has_content>
                     <option value="${weightUom.uomId}">${weightUom.description}</option>
@@ -62,18 +63,18 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                 </#list>
             </select>
         </td>
-        <td><a href="javascript:document.updateShipmentPackageForm${shipmentPackageData_index}.submit();" class="buttontext">Update</a></td>
-        <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackage?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackage.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+        <td><a href="javascript:document.updateShipmentPackageForm${shipmentPackageData_index}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
+        <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackage?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackage.shipmentPackageSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
     </tr>
     </form>
     <#list shipmentPackageContents as shipmentPackageContent>
         <tr>
             <td><div class="tabletext">&nbsp;</div></td>
-            <td><div class="tabletext">Item:${shipmentPackageContent.shipmentItemSeqId}</div></td>
-            <td><div class="tabletext">Quantity:${shipmentPackageContent.quantity?if_exists}</div></td>
+            <td><div class="tabletext">${uiLabelMap.ProductItem} :${shipmentPackageContent.shipmentItemSeqId}</div></td>
+            <td><div class="tabletext">${uiLabelMap.ProductQuantity} :${shipmentPackageContent.quantity?if_exists}</div></td>
             <td><div class="tabletext">&nbsp;</div></td>
             <td><div class="tabletext">&nbsp;</div></td>
-            <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackageContent?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+            <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackageContent?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageContent.shipmentPackageSeqId}&shipmentItemSeqId=${shipmentPackageContent.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
         </tr>
     </#list>
     <tr>
@@ -82,7 +83,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
         <td><div class="tabletext">&nbsp;</div></td>
         <td>
-            <div class="tabletext">Add from Item:
+            <div class="tabletext">${uiLabelMap.ProductAddFromItem} :
             <select name="shipmentItemSeqId" class="selectBox">
                 <#list shipmentItems as shipmentItem>
                     <option>${shipmentItem.shipmentItemSeqId}</option>
@@ -90,9 +91,9 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </select>
             </div>
         </td>
-        <td><div class="tabletext">Quantity:<input name="quantity" size="5" value="0" class="inputBox"/></div></td>
+        <td><div class="tabletext">${uiLabelMap.ProductQuantity} :<input name="quantity" size="5" value="0" class="inputBox"/></div></td>
         <td><div class="tabletext">&nbsp;</div></td>
-        <td><a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="buttontext">Add</a></td>
+        <td><a href="javascript:document.createShipmentPackageContentForm${shipmentPackageData_index}.submit()" class="buttontext">${uiLabelMap.CommonAdd}</a></td>
         <td><div class="tabletext">&nbsp;</div></td>
         </form>
     </tr>
@@ -103,11 +104,11 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackageRouteSeg.shipmentPackageSeqId}"/>
         <tr>
             <td><div class="tabletext">&nbsp;</div></td>
-            <td><div class="tabletext">RouteSegment:${shipmentPackageRouteSeg.shipmentRouteSegmentId}</div></td>
-            <td><span class="tabletext">Track#:</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
-            <td><span class="tabletext">Box#:</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
-            <td><a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="buttontext">Update</a></td>
-            <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackageRouteSeg?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">Delete</a></div></td>
+            <td><div class="tabletext">${uiLabelMap.ProductRouteSegment} :${shipmentPackageRouteSeg.shipmentRouteSegmentId}</div></td>
+            <td><span class="tabletext">${uiLabelMap.ProductTrack} #:</span><input type="text" size="22" name="trackingCode" value="${shipmentPackageRouteSeg.trackingCode?if_exists}" class="inputBox"/></td>
+            <td><span class="tabletext">${uiLabelMap.ProductBox} #:</span><input type="text" size="5" name="boxNumber" value="${shipmentPackageRouteSeg.boxNumber?if_exists}" class="inputBox"/></td>
+            <td><a href="javascript:document.updateShipmentPackageRouteSegForm${shipmentPackageData_index}${shipmentPackageRouteSeg_index}.submit();" class="buttontext">${uiLabelMap.CommonUpdate}</a></td>
+            <td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentPackageRouteSeg?shipmentId=${shipmentId}&shipmentPackageSeqId=${shipmentPackageRouteSeg.shipmentPackageSeqId}&shipmentRouteSegmentId=${shipmentPackageRouteSeg.shipmentRouteSegmentId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
         </tr>
         </form>
     </#list>
@@ -118,7 +119,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <input type="hidden" name="shipmentPackageSeqId" value="${shipmentPackage.shipmentPackageSeqId}"/>
         <td><div class="tabletext">&nbsp;</div></td>
         <td>
-            <div class="tabletext">Add Route Segment Info:
+            <div class="tabletext">${uiLabelMap.ProductAddRouteSegmentInfo}:
             <select name="shipmentRouteSegmentId" class="selectBox">
                 <#list shipmentRouteSegments as shipmentRouteSegment>
                     <option>${shipmentRouteSegment.shipmentRouteSegmentId}</option>
@@ -128,7 +129,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         </td>
         <td><span class="tabletext">Track#:</span><input type="text" size="22" name="trackingCode" class="inputBox"/></td>
         <td><span class="tabletext">Box#:</span><input type="text" size="5" name="boxNumber" class="inputBox"/></td>
-        <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="buttontext">Add</a></td>
+        <td><a href="javascript:document.createShipmentPackageRouteSegForm${shipmentPackageData_index}.submit()" class="buttontext">${uiLabelMap.CommonAdd}</a></td>
         <td><div class="tabletext">&nbsp;</div></td>
         </form>
     </tr>
@@ -138,26 +139,26 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <form action="<@ofbizUrl>/createShipmentPackage</@ofbizUrl>" name="createShipmentPackageForm">
     <input type="hidden" name="shipmentId" value="${shipmentId}"/>
     <tr>
-        <td><div class="tabletext">New Package:</div></td>
+        <td><div class="tabletext">${uiLabelMap.ProductNewPackage} :</div></td>
         <td><div class="tabletext">&nbsp;</div></td>
-        <td><span class="tabletext">Weight:</span><input type="text" size="5" name="weight" class="inputBox"/></td>
-        <td><span class="tabletext">WeightUnit:</span>
+        <td><span class="tabletext">${uiLabelMap.ProductWeight} :</span><input type="text" size="5" name="weight" class="inputBox"/></td>
+        <td><span class="tabletext">${uiLabelMap.ProductWeightUnit} :</span>
             <select name="weightUomId" class="selectBox">
                 <#list weightUoms as weightUomOption>
                     <option value="${weightUomOption.uomId}">${weightUomOption.description} [${weightUomOption.abbreviation}]</option>
                 </#list>
             </select>
         </td>
-        <td><a href="javascript:document.createShipmentPackageForm.submit();" class="buttontext">Create</a></td>
+        <td><a href="javascript:document.createShipmentPackageForm.submit();" class="buttontext">${uiLabelMap.CommonCreate}</a></td>
         <td>&nbsp;</td>
     </tr>
 </form>
 -->
 </table>
 <#else>
-  <h3>The Shipment was not found with ID: [${shipmentId?if_exists}]</h3>
+  <h3>${uiLabelMap.ProductShipmentNotFoundId} : [${shipmentId?if_exists}]</h3>
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

@@ -21,10 +21,11 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
     <#if illegalInventoryItem?exists>
         <div class="errorMessage">${illegalInventoryItem}</div>
@@ -32,16 +33,16 @@
 
 	${pages.get("/facility/FacilityTabBar.ftl")}
 
-    <div class="head1">Inventory Transfer <span class="head2">from&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
+    <div class="head1">${uiLabelMap.ProductInventoryTransfer} <span class="head2">${uiLabelMap.CommonFrom}&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
 
-    <table border="0" cellpadding="2" cellspacing="0">
+<#--    <table border="0" cellpadding="2" cellspacing="0">  -->
 
-    <#if !(inventoryItem?exists)>
+   <#if !(inventoryItem?exists)>
         <form method="post" action="<@ofbizUrl>/TransferInventoryItem</@ofbizUrl>" style="margin: 0;">
-        <table border="0" cellpadding="2" cellspacing="0">
+         <table border="0" cellpadding="2" cellspacing="0">
         <tr>
-            <td width="25%" align="right"><div class="tabletext">Inventory Item ID</div></td>
+            <td width="25%" align="right"><div class="tabletext">${uiLabelMap.ProductInventoryItemId}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="25%">
             <input type="text" class="inputBox" name="inventoryItemId" size="20" maxlength="20">
@@ -54,7 +55,7 @@
         </table>
         </form>
     <#else>
-        <#if !(inventoryTransfer?exists)>
+       <#if !(inventoryTransfer?exists)>
             <form method="post" action="<@ofbizUrl>/CreateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
         <#else>
             <form method="post" action="<@ofbizUrl>/UpdateInventoryTransfer</@ofbizUrl>" name="transferform" style="margin: 0;">
@@ -71,7 +72,7 @@
         <input type="hidden" name="locationSeqId" value="${(inventoryItem.locationSeqId)?if_exists}">
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%"align="right"><div class="tabletext">InventoryItem ID</div></td>
+            <td width="6%"align="right"><div class="tabletext">${uiLabelMap.ProductInventoryItemId}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <b>${inventoryItemId}</b>
@@ -80,7 +81,7 @@
 
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">InventoryItem Type Id</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductInventoryItemTypeId}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <#if inventoryItemType?exists>
@@ -90,7 +91,7 @@
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">Product Id</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductProductId}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
                 <#if inventoryItem?exists && (inventoryItem.productId)?exists>
@@ -100,7 +101,7 @@
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">Status</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductStatus}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <#if inventoryStatus?exists>
@@ -113,7 +114,7 @@
 
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">Comments</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductComments}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <#if (inventoryItem.comments)?exists>
@@ -126,7 +127,7 @@
 
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">Serial# | ATP/QOH</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductSerialAtpQoh}</div></td>
             <td width="6%">&nbsp;</td>
             <#if inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
                 <td width="74%">
@@ -136,18 +137,16 @@
             <#elseif inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("SERIALIZED_INV_ITEM")>
                 <td width="74%"><div class="tabletext">${(inventoryItem.serialNumber)?if_exists}</div></td>
             <#elseif inventoryItem?exists>
-                <td width="74%"><div class="tabletext" style="color: red;">Error: type ${(inventoryItem.inventoryItemTypeId)?if_exists} unknown; specify a type.</div></td>
+                <td width="74%"><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)?if_exists} ${uiLabelMap.ProductUnknownSpecifyType}.</div></td>
             </#if>
         </tr>
-    </#if>
-
     <tr>
         <td width="14%">&nbsp;</td>
         <td colspan="3"><hr class="sepbar"></td>
     </tr>
     <tr>
         <td width="14%">&nbsp;</td>
-        <td width="6%" align="right" nowrap><div class="tabletext">Transfer Status</div></td>
+        <td width="6%" align="left" nowrap><div class="tabletext">${uiLabelMap.ProductTransferStatus}</div></td>
         <td width="6%">&nbsp;</td>
         <td width="74%">
         <select name="statusId" class="selectBox">
@@ -162,34 +161,34 @@
         </td>
     </tr>
     <tr>
-        <td width="14%">&nbsp;</td>
-        <td width="6%" align="right" nowrap><div class="tabletext">Transfer Send Date</div></td>
+       <td width="14%">&nbsp;</td>
+        <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductTransferSendDate}</div></td>
         <td width="6%">&nbsp;</td>
         <td width="74%">
         <input type="text" name="sendDate" value="${(inventoryTransfer.sendDate)?if_exists}" size="22" class="inputBox">
-        <a href="#" onclick="setNow('sendDate')" class="buttontext">[Now]</a>
+        <a href="#" onclick="setNow('sendDate')" class="buttontext">[${uiLabelMap.CommonNow}]</a>
         </td>
     </tr>
     <#if !(inventoryTransfer?exists)>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">To Facility/Container</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductToFacilityContainer}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
-            <span class="tabletext">Select a Facility:</span>
+            <span class="tabletext">${uiLabelMap.ProductSelectFacility}:</span>
             <select name="facilityIdTo" class="selectBox">
                 <#list facilities as nextFacility>
                 <option value="${(nextFacility.facilityId)?if_exists}">${(nextFacility.facilityName)?if_exists} [${(nextFacility.facilityId)?if_exists}]</option>
                 </#list>
             </select>
             <br>
-            <span class="tabletext">OR enter a Container ID:</span>
+            <span class="tabletext">${uiLabelMap.ProductOrEnterContainerId}:</span>
             <input type="text" name="containerIdTo" value="${(inventoryTransfer.containerIdTo)?if_exists}" size="20" maxlength="20" class="inputBox">
             </td>
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">To Location</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductToLocation}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <input type="text" size="20" name="locationSeqIdTo" value="${(inventoryTransfer.locationSeqIdTo)?if_exists}" maxlength="20" class="inputBox">
@@ -197,7 +196,7 @@
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">Comments</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductComments}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <input type="text" name="comments" size="60" maxlength="250" class="inputBox">
@@ -205,7 +204,7 @@
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">Quantity To Transfer</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductQuantityToTransfer}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <#if inventoryItem?exists && inventoryItem.inventoryItemTypeId.equals("NON_SERIAL_INV_ITEM")>
@@ -214,30 +213,30 @@
                 <input type="hidden" name="xferQty" value="1">
                 <div class="tabletext">1</div>
             <#elseif inventoryItem?exists>
-                <div class="tabletext" style="color: red;">Error: type ${(inventoryItem.inventoryItemTypeId)?if_exists} unknown; specify a type.</div>
+                <div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)?if_exists} ${uiLabelMap.ProductUnknownSpecifyType}.</div>
             </#if>
             </td>
         </tr>
     <#else>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">Transfer Receive Date</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductTransferReceiveDate}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <input type="text" name="receiveDate" value="${(inventoryTransfer.receiveDate)?if_exists}" size="22" class="inputBox">
-            <a href="#" onclick="setNow('receiveDate')" class="buttontext">[Now]</a>
+            <a href="#" onclick="setNow('receiveDate')" class="buttontext">[${uiLabelMap.CommonNow}]</a>
             </td>
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">To Facility/Container</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductToFacilityContainer}</div></td>
             <td width="6%">&nbsp;</td>
             <#assign fac = delegator.findByPrimaryKey("Facility", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", inventoryTransfer.facilityIdTo))>
             <td width="74%"><div class="tabletext">${(fac.facilityName)?if_exists}</div></td>
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">To Location</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductToLocation}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <input type="text" size="20" name="locationSeqIdTo" value="${(inventoryTransfer.locationSeqIdTo)?if_exists}" maxlength="20" class="inputBox">
@@ -245,7 +244,7 @@
         </tr>
         <tr>
             <td width="14%">&nbsp;</td>
-            <td width="6%" align="right" nowrap><div class="tabletext">Comments</div></td>
+            <td width="6%" align="right" nowrap><div class="tabletext">${uiLabelMap.ProductComments}</div></td>
             <td width="6%">&nbsp;</td>
             <td width="74%">
             <input type="text" name="comments" value=${(inventoryTransfer.comments)?if_exists}" size="60" maxlength="250" class="inputBox">
@@ -255,13 +254,14 @@
     <tr>
         <td colspan="2">&nbsp;</td>
         <#if !(inventoryTransfer?exists)>
-            <td colspan="1" align=left><input type="submit" value="Transfer"></td>
+            <td colspan="1" align=left><input type="submit" value="${uiLabelMap.ProductTransfer}"></td>
         <#else>
-            <td colspan="1" align=left><input type="submit" value="Update"></td>
+            <td colspan="1" align=left><input type="submit" value="${uiLabelMap.CommonUpdate}"></td>
         </#if>
     </tr>
     </table>
     </form>
+    </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_CREATE" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

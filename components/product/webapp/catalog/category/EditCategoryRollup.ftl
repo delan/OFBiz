@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 
@@ -90,7 +90,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 <form method="POST" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addParentForm">
   <input type="hidden" name="productCategoryId" value="${productCategoryId}">
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
-  <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductParent}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
+  <div class="tabletext">${uiLabelMap.CommonAddA} <b>${uiLabelMap.ProductParent}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
     <select name="parentProductCategoryId" class="selectBox">
     <#list productCategoryCol as curCategory>
         <#if productCategoryId != curCategory.productCategoryId>
@@ -157,7 +157,7 @@ ${pages.get("/category/CategoryTabBar.ftl")}
 <form method="POST" action="<@ofbizUrl>/addProductCategoryToCategory</@ofbizUrl>" style="margin: 0;" name="addChildForm">
   <input type="hidden" name="showProductCategoryId" value="${productCategoryId}">
   <input type="hidden" name="parentProductCategoryId" value="${productCategoryId}">
-  <div class="tabletext">${uiLabelMap.CommonAdd} <b>${uiLabelMap.ProductChild}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
+  <div class="tabletext">${uiLabelMap.CommonAddA} <b>${uiLabelMap.ProductChild}</b> ${uiLabelMap.ProductCategorySelectCategoryAndEnterFromDate}:</div>
     <select name="productCategoryId" class="selectBox">
     <#list productCategoryCol as curCategory>
         <#if productCategoryId != curCategory.productCategoryId>

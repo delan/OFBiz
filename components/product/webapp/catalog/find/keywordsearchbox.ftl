@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -97,7 +97,7 @@
                 </select>
               </div>
               <div class="tabletext">
-                <a href="javascript:document.advancedsearchform.submit()" class="buttontext">Advanced Search</a>
+                <a href="javascript:document.advancedsearchform.submit()" class="buttontext">${uiLabelMap.ProductAdvancedSearch}</a>
               </div>
             </form>
           </td>
