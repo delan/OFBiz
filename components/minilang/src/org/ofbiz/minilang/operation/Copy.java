@@ -1,5 +1,5 @@
 /*
- * $Id: Copy.java,v 1.1 2003/08/17 06:06:11 ajzeneski Exp $
+ * $Id: Copy.java,v 1.2 2004/04/04 07:04:25 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import org.w3c.dom.*;
  * Copies a field in the in-map to the out-map
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class Copy extends SimpleMapOperation {
@@ -60,8 +60,9 @@ public class Copy extends SimpleMapOperation {
 
         if (fieldValue instanceof java.lang.String) {
             if (((String) fieldValue).length() == 0) {
-                if (setIfNull && (replace || !results.containsKey(toField)))
+                if (setIfNull && (replace || !results.containsKey(toField))) {
                     results.put(toField, null);
+                }
                 return;
             }
         }
