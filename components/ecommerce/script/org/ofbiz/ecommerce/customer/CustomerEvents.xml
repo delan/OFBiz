@@ -385,6 +385,20 @@
             <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
         </if-not-empty>
 
+        <!-- club number -->
+        <if-not-empty field-name="REQUIRE_CLUB" map-name="parameters">
+            <field-to-field field-name="partyId" map-name="tempMap" to-map-name="personLookup"/>
+            <find-by-primary-key map-name="personLookup" value-name="personVo" entity-name="Person"/>
+            <if-empty field-name="CLUB_NUMBER" map-name="parameters">
+                <call-bsh><![CDATA[
+                    clubId = org.ofbiz.party.party.PartyWorker.createClubId(delegator, "999", 13);
+                    parameters.put("CLUB_NUMBER", clubId);
+                ]]></call-bsh>
+            </if-empty>
+            <field-to-field field-name="CLUB_NUMBER" map-name="parameters" to-field-name="memberId" to-map-name="personVo"/>
+            <store-value value-name="personVo"/>
+        </if-not-empty>
+
         <!-- now finished, log in the user... -->
         <if-compare field-name="allowPassword" operator="equals" value="Y">
             <call-bsh><![CDATA[
