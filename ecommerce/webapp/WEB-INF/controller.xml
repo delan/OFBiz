@@ -144,8 +144,10 @@
     </request-map>
 
     <request-map uri="processorder">
-        <security https="true" auth="false"/>
-        <response name="success" type="request" value="createorder"/>
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="createOrder"/>
+        <response name="success" type="request" value="authorizePayment"/>
+        <response name="error" type="view" value="checkout"/>
     </request-map>
 
     <request-map uri="createorder">
@@ -154,6 +156,13 @@
         <response name="success" type="request" value="renderconfirmorder"/>
         <response name="error" type="view" value="checkout"/>
     </request-map>
+
+    <request-map uri="authorizePayment">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.core.events.CoreEvents" invoke="respondSuccess"/>
+        <response name="success" type="request" value="renderconfirmorder"/>
+        <response name="error" type="view" value="checkout"/>
+    </response-map>
 
     <request-map uri="renderconfirmorder">
         <security https="true" auth="true"/>
@@ -409,21 +418,21 @@
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="region"/>
     <view-map name="login" type="region"/>
-    
+
     <view-map name="showcart" type="region"/>
-    
+
     <view-map name="quickadd" type="region"/>
     <view-map name="category" type="region"/>
     <view-map name="product" type="region"/>
     <view-map name="keywordsearch" type="region"/>
-    
+
     <view-map name="checkoutoptions" type="region"/>
     <view-map name="checkout" type="region"/>
     <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
     <view-map name="showconfirmorder" type="region"/>
     <view-map name="orderhistory" type="region"/>
     <view-map name="orderstatus" type="region"/>
-    
+
     <view-map name="viewprofile" type="region"/>
     <view-map name="newcustomer" type="region"/>
     <view-map name="editcontactmech" type="region"/>
@@ -431,7 +440,7 @@
     <view-map name="editeftaccount" type="region"/>
     <view-map name="changepassword" type="region"/>
     <view-map name="editperson" type="region"/>
-    
+
     <view-map name="newAffiliate" type="region"/>
     <!-- End of View Mappings -->
 </site-conf>
