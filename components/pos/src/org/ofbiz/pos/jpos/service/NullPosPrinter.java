@@ -26,10 +26,12 @@ package org.ofbiz.pos.jpos.service;
 
 import jpos.JposException;
 
+import org.ofbiz.base.util.Debug;
+
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.2
  */
 public class NullPosPrinter extends BaseService implements jpos.services.POSPrinterService12 {
@@ -484,18 +486,23 @@ public class NullPosPrinter extends BaseService implements jpos.services.POSPrin
     }
 
     public void printBarCode(int i, String s, int i1, int i2, int i3, int i4, int i5) throws JposException {
+        Debug.log("Barcode:\n" + s + "\n", module);
     }
 
     public void printBitmap(int i, String s, int i1, int i2) throws JposException {
+        Debug.log("Bitmap:\n" + s + "\n", module);
     }
 
     public void printImmediate(int i, String s) throws JposException {
+        Debug.log("Immediate:\n" + s + "\n", module);
     }
 
     public void printNormal(int i, String s) throws JposException {
+        Debug.log("Normal:\n" + s + "\n", module);
     }
 
     public void printTwoNormal(int i, String s, String s1) throws JposException {
+        Debug.log("2Normal:\n" + s + "\n", module);
     }
 
     public void rotatePrint(int i, int i1) throws JposException {

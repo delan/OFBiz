@@ -24,11 +24,21 @@
  */
 package org.ofbiz.pos.device;
 
+import java.net.URL;
+import java.io.InputStream;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.POSPrinter;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilURL;
+import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.screen.DialogCallback;
 import org.ofbiz.pos.screen.PosDialog;
@@ -103,56 +113,77 @@ public class Receipt extends GenericDevice implements DialogCallback {
         this.lastTransaction = trans;
 
         try {
-            // check the printer's state
             if (!checkState(printer)) {
                 return;
             }
-
-            // transaction mode causes all output to be buffered
-            printer.transactionPrint(POSPrinterConst.PTR_S_RECEIPT, POSPrinterConst.PTR_TP_TRANSACTION);
-
-            // print a LF
-            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, LF);
-
-            // print the receipt
-            this.printHeader();
-            this.printItems(trans);
-            this.printTotal(trans);
-            this.printBarcode(trans.getOrderId());
-            this.printFooter();
-
-            // terminate the transaction causing all of the above buffered data to be sent to the printer
-            printer.transactionPrint(POSPrinterConst.PTR_S_RECEIPT, POSPrinterConst.PTR_TP_NORMAL);
-
         } catch (JposException e) {
             Debug.logError(e, module);
         }
+
+        String[] receiptTemplate = this.readTemplate();
+
+        if (receiptTemplate != null) {
+            for (int i = 0; i < receiptTemplate.length; i++) {
+                if (receiptTemplate[i] != null) {
+                    if ("[ORDER_BARCODE]".equals(receiptTemplate[i])) {
+                        this.printBarcode(trans.getOrderId());
+                    } else if (receiptTemplate[i].startsWith("[LOOP]")) {                    
+                        // print item loop - minus the LOOP flag
+                    } else {
+                        this.printInfo(receiptTemplate[i]);
+                    }
+                }
+            }
+        }
     }
 
-    private void printHeader() {
-        this.println(ALIGN_CENTER + TEXT_DOUBLE_HEIGHT + TEXT_BOLD + "Company XYZ");
-        this.println(ALIGN_CENTER + TEXT_BOLD + "7 E. 8th St #308");
-        this.println(ALIGN_CENTER + TEXT_BOLD + "New York, NY 10003");
-        this.println(ALIGN_CENTER + TEXT_BOLD + "212.655.3052");
-        this.println();
-    }
+    private String[] readTemplate() {
+        String[] templateString = new String[4];
+        int currentPart = 0;
 
-    private void printItems(PosTransaction trans) {
-        trans.isEmpty();
-    }
+        URL fileUrl = UtilURL.fromResource("receipt.txt");
+        StringBuffer buf = new StringBuffer();
 
-    private void printTotal(PosTransaction trans) {
-        trans.isEmpty();
-    }
-
-    private void printFooter() {
-        // print the thank-you message
-        this.println(ALIGN_CENTER + TEXT_DOUBLE_HEIGHT + TEXT_BOLD + "Thank You");
-
-        // send the cut paper signal
         try {
-            ((POSPrinter) control).printNormal(POSPrinterConst.PTR_S_RECEIPT, PAPER_CUT);
-        } catch (JposException e) {
+            InputStream in = fileUrl.openStream();
+            BufferedReader dis = new BufferedReader(new InputStreamReader(in));
+
+            String line;
+            while ((line = dis.readLine()) != null) {
+                if (line.trim().startsWith("[BEGIN LOOP]")) {
+                    templateString[currentPart++] = buf.toString();
+                    buf = new StringBuffer();
+                    buf.append("[LOOP]");
+                } else if (line.trim().startsWith("[END LOOP]")) {
+                    templateString[currentPart++] = buf.toString();
+                    buf = new StringBuffer();
+                } else if (line.trim().startsWith("[ORDER BARCODE]")) {
+                    templateString[currentPart++] = buf.toString();
+                    templateString[currentPart++] = "[ORDER_BARCODE]";
+                    buf = new StringBuffer();
+                } else {
+                    buf.append(line);
+                }
+            }
+            in.close();
+        } catch (IOException e) {
+            Debug.logError(e, "Unable to open receipt template", module);
+        }
+
+        templateString[currentPart] = buf.toString();
+        return templateString;
+    }
+
+    private void printInfo(String template) {
+        Map expandMap = new HashMap();
+        expandMap.put("DOUBLE_HEIGHT", TEXT_DOUBLE_HEIGHT);
+        expandMap.put("CENTER", ALIGN_CENTER);
+        expandMap.put("BOLD", TEXT_BOLD);
+        expandMap.put("LF", LF);
+        String toPrint = FlexibleStringExpander.expandString(template, expandMap);
+        try {
+            ((POSPrinter) control).printNormal(POSPrinterConst.PTR_S_RECEIPT, toPrint);
+        } catch (jpos.JposException e) {
             Debug.logError(e, module);
         }
     }
