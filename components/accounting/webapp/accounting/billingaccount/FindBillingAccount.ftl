@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -53,7 +53,7 @@
         <td><div class="tabletext">${billingAccount.accountLimit?default(0)?string.currency}</div></td>
         <td><div class="tabletext">${roleType.description}</div></td>
         <td align="right">
-          <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
         </td>
       </tr>
     </#list>
