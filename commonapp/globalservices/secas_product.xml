@@ -3,7 +3,7 @@
 
 <service-eca>
 
-	<!-- Inventory Transfer ECAs -->
+    <!-- Inventory Transfer ECAs -->
     <eca service="createInventoryTransfer" event="invoke">  
     	<condition field-name="statusId" operator="not-equals" value="IXF_CANCELLED"/>  	
         <action service="prepareInventoryTransfer" mode="sync"/>
@@ -22,7 +22,7 @@
         <action service="completeInventoryTransfer" mode="sync"/>
     </eca>
 
-	<!-- Product Price Change ECAs -->
+    <!-- Product Price Change ECAs -->
     <eca service="createProductPrice" event="commit">
         <action service="saveProductPriceChange" mode="sync"/>
     </eca>
@@ -33,5 +33,10 @@
     <eca service="deleteProductPrice" event="commit">
         <action service="saveProductPriceChange" mode="sync"/>
     </eca>
-	
+
+    <!-- Product Price Change ECAs -->
+    <eca service="addPartyToCategory" event="invoke">
+    	<condition field-name="roleTypeId" operator="equals" value="_NA_"/>
+        <action service="ensureNaPartyRole" mode="sync"/>
+    </eca>
 </service-eca>
