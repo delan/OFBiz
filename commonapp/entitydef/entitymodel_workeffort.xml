@@ -521,7 +521,7 @@
         <key-map field-name="workEffortId"/>
       </relation>
     </entity>
-    <view-entity entity-name="WorkEffortAndFullfillment"
+    <view-entity entity-name="WorkEffortAndFulfillment"
             package-name="org.ofbiz.commonapp.order.request"
             title="WorkEffort Requirement View Entity">
       <member-entity entity-alias="WRF" entity-name="WorkRequirementFulfillment"/>

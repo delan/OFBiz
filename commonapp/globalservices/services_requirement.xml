@@ -46,5 +46,12 @@
         <description>Delete a requirement</description>
         <attribute name="requirementId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="addRequirementTask" engine="simple"
+            location="org/ofbiz/commonapp/order/requirement/RequirementServices.xml" invoke="addTaskToRequirement">
+        <description>Associate an existing task w/ a requirement</description>
+        <attribute name="requirementId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+    </service>
+
 </services>
 

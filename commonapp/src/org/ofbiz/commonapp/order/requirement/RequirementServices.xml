@@ -31,4 +31,13 @@
 
     <simple-method method-name="deleteRequirement" short-description="Delete a requirement">
     </simple-method>
+
+    <simple-method method-name="addTaskToRequirement" short-description="Add a task to a requirement">
+        <make-value value-name="newEntity" entity-name="WorkRequirementFulfillment"/>
+        <to-string field-name="requirementId"/>
+        <to-string field-name="workEffortId"/>
+        <env-to-field env-name="requirementId" map-name="newEntity"/>
+        <env-to-field env-name="workEffortId" map-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
 </simple-methods>
