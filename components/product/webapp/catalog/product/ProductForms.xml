@@ -356,7 +356,7 @@
         <auto-fields-entity entity-name="ProductContent" map-name="productContentData"/>
         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
         <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
-       <field name="description" title="${uiLabelMap.ProductDescription}" map-name="content"><text size="40"/></field>
+        <field name="description" title="${uiLabelMap.ProductDescription}" map-name="content"><text size="40"/></field>
         <field name="localeString" title="${uiLabelMap.ProductLocaleString}" map-name="content"><text size="40"/></field>
         <field use-when="contentId == null" name="contentId"><ignored/></field>
         <field use-when="contentId != null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
@@ -370,5 +370,45 @@
         <field name="productContentTypeId"><hidden/></field>
         <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
+   <form name="AddSupplierProduct" type="single"
+        target="updateSupplierProduct" title="" default-map-name="supplierProduct"
+        default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+
+        <alt-target use-when="supplierProduct==null" target="createSupplierProduct"/>
+
+        <auto-fields-service service-name="updateSupplierProduct" map-name=""/>
+        <field name="productId"><hidden value="${productId}"/></field>
+        <field name="quantityUomId">
+            <drop-down allow-empty="true">
+                <entity-options entity-name="UomType" key-field-name="uomTypeId" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field use-when="supplierProduct == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="supplierProduct != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
+    <form name="UpdateSupplierProduct" type="list"
+            target="updateSupplierProduct" title="" list-name="productSuppliers"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <!--<auto-fields-service service-name="updateSupplierProduct" map-name="supplierProduct"/>-->
+
+        <field name="partyId" widget-style="buttontext">
+            <hyperlink target="/partymgr/control/viewprofile?partyId=${partyId}" target-type="inter-app" description="${partyId}" also-hidden="false"/>
+        </field>
+        <field name="supplierProductId" service-name="updateSupplierProduct"><display/></field>
+        <field name="lastPrice" service-name="updateSupplierProduct"><display/></field>
+
+        <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="EditProductSuppliers?productId=${productId}&amp;partyId=${partyId}"
+                description="[${uiLabelMap.CommonUpdate}]" also-hidden="false"/>
+        </field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeSupplierProduct?productId=${productId}&amp;partyId=${partyId}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
     </form>
 </forms>

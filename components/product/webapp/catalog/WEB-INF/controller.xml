@@ -1447,7 +1447,7 @@
         <response name="error" type="view" value="EditKeywordThesaurus"/>
     </request-map>
 
-    <!-- ================ Keyword Thesaurus Requests ================= -->
+    <!-- ================ Product Review Requests ================= -->
     <request-map uri="pendingReviews">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="pendingReviews"/>
@@ -1457,6 +1457,30 @@
         <event type="service" path="" invoke="updateProductReview"/>
         <response name="success" type="view" value="pendingReviews"/>
         <response name="error" type="view" value="pendingReviews"/>
+    </request-map>
+
+    <!-- ================ Supplier Product Requests ================= -->
+    <request-map uri="EditProductSuppliers">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditSupplierProduct"/>
+    </request-map>
+    <request-map uri="createSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSupplierProduct"/>
+        <response name="success" type="view" value="EditSupplierProduct"/>
+        <response name="error" type="view" value="EditSupplierProduct"/>
+    </request-map>
+    <request-map uri="updateSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSupplierProduct"/>
+        <response name="success" type="view" value="EditSupplierProduct"/>
+        <response name="error" type="view" value="EditSupplierProduct"/>
+    </request-map>
+    <request-map uri="removeSupplierProduct">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeSupplierProduct"/>
+        <response name="success" type="view" value="EditSupplierProduct"/>
+        <response name="error" type="view" value="EditSupplierProduct"/>
     </request-map>
 
     <!-- end of request mappings -->
@@ -1497,6 +1521,7 @@
     <view-map name="EditProductInventoryItems" type="jpublish" page="/product/EditProductInventoryItems.ftl"/>
     <view-map name="EditProductGlAccounts" type="jpublish" page="/product/EditProductGlAccounts.ftl"/>
     <view-map name="EditProductContentContent" type="jpublish" page="/product/EditProductContentContent.ftl"/>
+    <view-map name="EditSupplierProduct" type="jpublish" page="/product/EditSupplierProduct.ftl"/>
     <view-map name="UploadImage" type="region"/>
 
     <view-map name="QuickAddVariants" type="jpublish" page="/product/QuickAddVariants.ftl"/>
