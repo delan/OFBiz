@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.11  2001/09/27 19:59:53  epabst
  * added areEqual method
  *
@@ -638,15 +641,18 @@ public class UtilValidate
     // look for @
     while((i < sLength) && (s.charAt(i) != '@')) i++;
 
-    if((i >= sLength) || (s.charAt(i) != '@')) return false;
-    else i += 2;
+    // there must be at least one character after the .
+    if((i >= sLength - 1) || (s.charAt(i) != '@')) return false;
+    else return true;
+    
+    //DEJ 2001-10-13 Don't look for '.', some valid emails do not have a dot in the domain name
+    //else i += 2;
 
     // look for .
-    while((i < sLength) && (s.charAt(i) != '.')) i++; 
-
+    //while((i < sLength) && (s.charAt(i) != '.')) i++; 
     // there must be at least one character after the .
-    if((i >= sLength - 1) || (s.charAt(i) != '.')) return false;
-    else return true;
+    //if((i >= sLength - 1) || (s.charAt(i) != '.')) return false;
+    //else return true;
   }
 
   /** isYear returns true if string s is a valid 
