@@ -80,7 +80,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         context.put("entityOperation", "_CREATE");
 
         Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
@@ -118,7 +118,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = createDataResourceMethod(dctx, context);
         return result;
     }
@@ -179,7 +179,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = createElectronicTextMethod(dctx, context);
         return result;
     }
@@ -217,7 +217,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         context.put("entityOperation", "_CREATE");
 
         return createFileMethod(dctx, context);
@@ -331,7 +331,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
         String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
@@ -366,7 +366,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = updateDataResourceMethod(dctx, context);
         return result;
     }
@@ -422,7 +422,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = updateElectronicTextMethod(dctx, context);
         return result;
     }
@@ -486,7 +486,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = null;
         try {
             result = updateFileMethod(dctx, context);
@@ -591,7 +591,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = updateImageMethod(dctx, context);
         return result;
     }
@@ -639,7 +639,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = createImageMethod(dctx, context);
         return result;
     }
@@ -680,7 +680,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = null;
         try {
             result = createBinaryFileMethod(dctx, context);
@@ -748,7 +748,7 @@ public class DataServices {
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
-        context.put("skipPermissionCheck", null);
+        //context.put("skipPermissionCheck", null);
         Map result = null;
         try {
             result = updateBinaryFileMethod(dctx, context);

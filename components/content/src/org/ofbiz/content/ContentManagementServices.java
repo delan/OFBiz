@@ -230,6 +230,16 @@ public class ContentManagementServices {
                 context.put("skipPermissionCheck", "granted"); // TODO: a temp hack because I don't want to bother with DataResource permissions at this time.
                 if (UtilValidate.isEmpty(dataResourceId)) {
                     dataResourceExists = false;
+                } else {
+                	try {
+                    	GenericValue val = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+                    	if (val == null)
+                        	dataResourceExists = false;
+                	} catch(GenericEntityException e) {
+                    	return ServiceUtil.returnError(e.getMessage());
+                	}
+            	}
+                if (!dataResourceExists) {
                     Map thisResult = DataServices.createDataResourceMethod(dctx, context);
                     String errorMsg = ServiceUtil.getErrorMessage(thisResult);
                     if (UtilValidate.isNotEmpty(errorMsg)) {
