@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.7 2003/10/26 05:44:02 ajzeneski Exp $
+ * $Id: OrderChangeHelper.java,v 1.8 2003/11/01 18:01:49 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -241,8 +241,6 @@ public class OrderChangeHelper {
         payment.set("partyIdTo", payToPartyId); 
         if (paymentRefNumber != null) { 
             payment.set("paymentRefNum", paymentRefNumber);
-        } else {
-            payment.set("paymentRefNum", orderPaymentPreference.getString("authRefNum"));
         }
         if (paymentFromId != null) {
             payment.set("partyIdFrom", paymentFromId);
