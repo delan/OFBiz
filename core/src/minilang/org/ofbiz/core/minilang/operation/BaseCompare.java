@@ -51,18 +51,32 @@ public abstract class BaseCompare extends SimpleMapOperation {
         this.operator = element.getAttribute("operator");
         this.type = element.getAttribute("type");
         this.format = element.getAttribute("format");
-        if (this.format == null || this.format.length() == 0) {
-            if ("Date".equals(type)) {
-                this.format = "yyyy-MM-dd";
-            } else if ("Time".equals(type)) {
-                this.format = "HH:mm:ss";
-            } else if ("Timestamp".equals(type)) {
-                this.format = "yyyy-MM-dd HH:mm:ss";
+        
+        /* -- Let ObjectType handle the default --
+            if (this.format == null || this.format.length() == 0) {
+                if ("Date".equals(type)) {
+                    this.format = "yyyy-MM-dd";
+                } else if ("Time".equals(type)) {
+                    this.format = "HH:mm:ss";
+                } else if ("Timestamp".equals(type)) {
+                    this.format = "yyyy-MM-dd HH:mm:ss";
+                }
             }
-        }
+        */
     }
 
     public void doCompare(Object value1, Object value2, List messages, Locale locale, ClassLoader loader) {
+        Boolean success = BaseCompare.doRealCompare(value1, value2, this.operator, this.type, this.format, messages, locale, loader);
+        if (success != null && success.booleanValue() == false) {
+            addMessage(messages, loader);
+        }
+    }
+
+    public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
+    }
+    
+    public static Boolean doRealCompare(Object value1, Object value2, String operator, String type, String format, 
+            List messages, Locale locale, ClassLoader loader) {
         //Debug.logInfo("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\", value2:\"" + value2 + "\"");
 
         int result = 0;
@@ -72,7 +86,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
             convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
         } catch (GeneralException e) {
             messages.add("Could not convert value1 for comparison: " + e.getMessage());
-            return;
+            return null;
         }
 
         Object convertedValue2 = null;
@@ -80,33 +94,37 @@ public abstract class BaseCompare extends SimpleMapOperation {
             convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format, locale);
         } catch (GeneralException e) {
             messages.add("Could not convert value2 for comparison: " + e.getMessage());
-            return;
+            return null;
         }
 
         if (convertedValue1 == null) {
-            return;
+            messages.add("Value1 was null, cannot complete comparison");
+            return null;
         }
         if (convertedValue2 == null) {
-            return;
+            messages.add("Value2 was null, cannot complete comparison");
+            return null;
         }
 
         if ("contains".equals(operator)) {
             if (!"String".equals(type)) {
-                messages.add("Error in string-processor file: cannot do a contains compare with a non-String type");
-                return;
+                messages.add("Error in MiniLang XML file: cannot do a contains compare with a non-String type");
+                return null;
             }
 
             String str1 = (String) convertedValue1;
             String str2 = (String) convertedValue2;
-            if (str1.indexOf(str2) < 0)
-                addMessage(messages, loader);
+            if (str1.indexOf(str2) < 0) {
+                return Boolean.FALSE;
+            }
         }
 
         if ("String".equals(type)) {
             String str1 = (String) convertedValue1;
             String str2 = (String) convertedValue2;
-            if (str1.length() == 0 || str2.length() == 0)
-                return;
+            if (str1.length() == 0 || str2.length() == 0) {
+                return null;
+            }
             result = str1.compareTo(str2);
         } else if ("Double".equals(type) || "Float".equals(type) || "Long".equals(type) || "Integer".equals(type)) {
             Number tempNum = (Number) convertedValue1;
@@ -135,33 +153,33 @@ public abstract class BaseCompare extends SimpleMapOperation {
             result = value1Timestamp.compareTo(value2Timestamp);
         } else {
             messages.add("Type \"" + type + "\" specified for compare not supported.");
+            return null;
         }
 
         //Debug.logInfo("[BaseCompare.doCompare] Got Compare result: " + result + ", operator: " + operator);
         if ("less".equals(operator)) {
             if (result >= 0)
-                addMessage(messages, loader);
+                return Boolean.FALSE;
         } else if ("greater".equals(operator)) {
             if (result <= 0)
-                addMessage(messages, loader);
+                return Boolean.FALSE;
         } else if ("less-equals".equals(operator)) {
             if (result > 0)
-                addMessage(messages, loader);
+                return Boolean.FALSE;
         } else if ("greater-equals".equals(operator)) {
             if (result < 0)
-                addMessage(messages, loader);
+                return Boolean.FALSE;
         } else if ("equals".equals(operator)) {
             if (result != 0)
-                addMessage(messages, loader);
+                return Boolean.FALSE;
         } else if ("not-equals".equals(operator)) {
             if (result == 0)
-                addMessage(messages, loader);
+                return Boolean.FALSE;
         } else {
             messages.add("Specified compare operator \"" + operator + "\" not known.");
+            return null;
         }
+        
+        return Boolean.TRUE;
     }
-
-    public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
-    }
-
 }

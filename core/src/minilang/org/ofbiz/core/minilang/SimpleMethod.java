@@ -416,6 +416,14 @@ public class SimpleMethod {
                     methodOperations.add(new FieldToSession(curOperElem, simpleMethod));
                 } else if ("field-to-field".equals(nodeName)) {
                     methodOperations.add(new FieldToField(curOperElem, simpleMethod));
+                } else if ("if-validate-method".equals(nodeName)) {
+                    methodOperations.add(new IfValidateMethod(curOperElem, simpleMethod));
+                } else if ("if-compare".equals(nodeName)) {
+                    methodOperations.add(new IfCompare(curOperElem, simpleMethod));
+                } else if ("if-compare-field".equals(nodeName)) {
+                    methodOperations.add(new IfCompareField(curOperElem, simpleMethod));
+                } else if ("if-regexp".equals(nodeName)) {
+                    methodOperations.add(new IfRegexp(curOperElem, simpleMethod));
                 } else if ("if-empty".equals(nodeName)) {
                     methodOperations.add(new IfEmpty(curOperElem, simpleMethod));
                 } else if ("if-not-empty".equals(nodeName)) {

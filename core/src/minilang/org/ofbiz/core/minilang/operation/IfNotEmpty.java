@@ -49,8 +49,8 @@ public class IfNotEmpty extends MethodOperation {
 
     public IfNotEmpty(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
+        this.mapName = element.getAttribute("map-name");
+        this.fieldName = element.getAttribute("field-name");
         
         SimpleMethod.readOperations(element, subOps, simpleMethod);
     }
