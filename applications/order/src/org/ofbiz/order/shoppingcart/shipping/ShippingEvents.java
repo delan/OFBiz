@@ -69,6 +69,9 @@ public class ShippingEvents {
             }
 
             Double shippingTotal = (Double) result.get("shippingTotal");
+            if (shippingTotal == null) {
+                shippingTotal = new Double(0.00);
+            }
             cart.setItemShipGroupEstimate(shippingTotal.doubleValue(), i);
         }
 
