@@ -67,7 +67,7 @@ if (mode != null && mode.equals("SALES_ORDER")) {
         context.put("associatedProducts", associatedProducts);
 
     //Get Promo Text Data
-    productPromos = ProductPromoWorker.getCatalogProductPromos(delegator, request);
+    productPromos = ProductPromoWorker.getStoreProductPromos(delegator, request);
     //Make sure that at least one promo has non-empty promoText
     showPromoText = false;
     productPromoIterator = productPromos.iterator(); 
