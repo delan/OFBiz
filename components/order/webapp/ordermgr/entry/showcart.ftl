@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 
@@ -69,6 +69,38 @@ function removeSelected() {
 function addToList() {
     var cform = document.cartform;
     cform.action = "<@ofbizUrl>/addBulkToShoppingList</@ofbizUrl>";
+    cform.submit();
+}
+function gwAll(e) {
+    var cform = document.cartform;
+    var len = cform.elements.length;
+    var selectedValue = e.value;
+    if (selectedValue == "") {
+        return;
+    }
+
+    var cartSize = ${shoppingCartSize};
+    var passed = 0;
+    for (var i = 0; i < len; i++) {
+        var element = cform.elements[i];
+        var ename = element.name;
+        var sname = ename.substring(0,16);
+        if (sname == "option^GIFT_WRAP") {
+            var options = element.options;
+            var olen = options.length;
+            var matching = -1;
+            for (var x = 0; x < olen; x++) {
+                var thisValue = element.options[x].value;
+                if (thisValue == selectedValue) {
+                    element.selectedIndex = x;
+                    passed++;
+                }
+            }
+        }
+    }
+    if (cartSize > passed && selectedValue != "NO^") {
+        alert("Selected Gift Wrap is not avaiable for all items. The items which are available have been selected, the others remain unchanged.");
+    }
     cform.submit();
 }
 //-->
@@ -191,6 +223,18 @@ function addToList() {
         <TR> 
           <TD NOWRAP>&nbsp;</TD>
           <TD NOWRAP><div class="tabletext"><b>Product</b></div></TD>
+          <#if showOrderGiftWrap?default("true") == "true">
+            <td NOWRAP align="right">
+              <select class="selectBox" name="GWALL" onChange="javascript:gwAll(this);">
+                <option value="">Gift Wrap All Items</option>
+                <option value="NO^">No Gift Wrap</option>
+                <#list allgiftWraps as option>
+                  <option value="${option.productFeatureId}">${option.description} : ${option.defaultAmount?default(0)?string.currency}</option>
+                </#list>
+              </select>
+          <#else>
+            <td NOWRAP>&nbsp;</td>
+          </#if>
           <TD NOWRAP align="center"><div class="tabletext"><b>Quantity</b></div></TD>
           <TD NOWRAP align="right"><div class="tabletext"><b>Unit Price</b></div></TD>
           <TD NOWRAP align="right"><div class="tabletext"><b>Adjustments</b></div></TD>
@@ -200,6 +244,7 @@ function addToList() {
         <#assign itemsFromList = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
+          <#assign lineOptionalFeatures = cartLine.getOptionalProductFeatures()>
           <tr><td colspan="7"><hr class="sepbar"></td></tr>
           <tr>
             <td>&nbsp;</td>         
@@ -227,6 +272,29 @@ function addToList() {
                   </#if>                    
                 </div>
             </td>
+
+            <#-- gift wrap option -->
+            <#assign showNoGiftWrapOptions = false>
+            <td nowrap align="right">
+              <#assign giftWrapOption = lineOptionalFeatures.GIFT_WRAP?if_exists>
+              <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")?if_exists>
+              <#if giftWrapOption?has_content>
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onChange="javascript:document.cartform.submit()">
+                  <option value="NO^">No Gift Wrap</option>
+                  <#list giftWrapOption as option>
+                    <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?exists && selectedOption.productFeatureId == option.productFeatureId)>SELECTED</#if>>${option.description} : ${option.amount?default(0)?string.currency}</option>
+                  </#list>
+                </select>
+              <#elseif showNoGiftWrapOptions>
+                <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onChange="javascript:document.cartform.submit()">
+                  <option value="">No Gift Wrap</option>
+                </select>
+              <#else>
+                &nbsp;
+              </#if>
+            </td>
+            <#-- end gift wrap option -->
+
             <td nowrap align="center">
               <div class="tabletext">
                 <#if cartLine.getIsPromo() || cartLine.getShoppingListId()?exists>
