@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.11 2004/03/24 16:04:19 byersa Exp $
+ * $Id: RequestHandler.java,v 1.12 2004/06/10 20:43:32 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -95,6 +95,13 @@ public class RequestHandler implements Serializable {
         // Grab data from request object to process
         String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
         String nextView = RequestHandler.getNextPageUri(request.getPathInfo());
+        if (request.getAttribute("targetRequestUri") == null) {
+            if (request.getSession().getAttribute("_PREVIOUS_REQUEST_") != null) {
+                request.setAttribute("targetRequestUri", request.getSession().getAttribute("_PREVIOUS_REQUEST_"));
+            } else {
+                request.setAttribute("targetRequestUri", "/" + requestUri);
+            }
+        }
 
         // Check for chained request.
         if (chain != null) {
