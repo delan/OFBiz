@@ -92,6 +92,10 @@
         </if-empty>
         
         <create-value value-name="newEntity"/>
+        
+        <!-- this is for the ecommerce cache of products in a category, findByAnd -->
+        <field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductToCategory" short-description="Update Product to Category Application">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductToCategory you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -102,6 +106,10 @@
         <find-by-primary-key entity-name="ProductCategoryMember" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
+        
+        <!-- this is for the ecommerce cache of products in a category, findByAnd -->
+        <field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="removeProductFromCategory" short-description="Remove Product From Category">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductFromCategory you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -111,6 +119,10 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryMember" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+        
+        <!-- this is for the ecommerce cache of products in a category, findByAnd -->
+        <field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
     </simple-method>
 
     <!-- ProductCategoryRollup Services -->
@@ -128,6 +140,10 @@
         </if-empty>
         
         <create-value value-name="newEntity"/>
+        
+        <!-- this is for the ecommerce cache of category in a parent category, findByAnd -->
+        <field-to-field field-name="parentProductCategoryId" map-name="newEntity" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="updateProductCategoryToCategory" short-description="Update ProductCategory to Category Application">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProducCategorytToCategory you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
@@ -138,6 +154,10 @@
         <find-by-primary-key entity-name="ProductCategoryRollup" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
+        
+        <!-- this is for the ecommerce cache of category in a parent category, findByAnd -->
+        <field-to-field field-name="parentProductCategoryId" map-name="lookedUpValue" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
     </simple-method>
     <simple-method method-name="removeProductCategoryFromCategory" short-description="Remove ProductCategory From Category">
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductCategoryFromCategory you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
@@ -147,5 +167,9 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductCategoryRollup" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+        
+        <!-- this is for the ecommerce cache of category in a parent category, findByAnd -->
+        <field-to-field field-name="parentProductCategoryId" map-name="lookedUpValue" to-map-name="cacheClearMap"/>
+        <clear-cache-line entity-name="ProductCategoryRollup" map-name="cacheClearMap"/>
     </simple-method>
 </simple-methods>
