@@ -47,7 +47,7 @@ public class ModelGroupReader {
     private Set groupNames = null;
 
     public String modelName;
-    public ResourceHandler entityGroupResourceHandler;
+    public List entityGroupResourceHandlers = new LinkedList();
 
     public static ModelGroupReader getModelGroupReader(String delegatorName) throws GenericEntityConfException {
         EntityConfigUtil.DelegatorInfo delegatorInfo = EntityConfigUtil.getDelegatorInfo(delegatorName);
@@ -79,7 +79,11 @@ public class ModelGroupReader {
         if (entityGroupReaderInfo == null) {
             throw new GenericEntityConfException("Cound not find an entity-group-reader with the name " + modelName);
         }
-        entityGroupResourceHandler = new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, entityGroupReaderInfo.resourceElement);
+        Iterator resourceElementIter = entityGroupReaderInfo.resourceElements.iterator();
+        while (resourceElementIter.hasNext()) {
+            Element resourceElement = (Element) resourceElementIter.next();
+            entityGroupResourceHandlers.add(new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, resourceElement));
+        }
 
         // preload caches...
         getGroupCache();
@@ -90,59 +94,57 @@ public class ModelGroupReader {
         {
             synchronized (ModelGroupReader.class) {
                 // must check if null again as one of the blocked threads can still enter
-                if (groupCache == null) // now it's safe
-                {
+                if (groupCache == null) {
+                    // now it's safe
                     groupCache = new HashMap();
                     groupNames = new TreeSet();
 
                     UtilTimer utilTimer = new UtilTimer();
                     // utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocument");
 
-                    Document document = null;
-
-                    try {
-                        document = entityGroupResourceHandler.getDocument();
-                    } catch (GenericConfigException e) {
-                        Debug.logError(e, "Error loading entity group model", module);
-                    }
-                    if (document == null) {
-                        groupCache = null;
-                        return null;
-                    }
-
-                    Hashtable docElementValues = null;
-
-                    docElementValues = new Hashtable();
-
-                    // utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
-                    Element docElement = document.getDocumentElement();
-
-                    if (docElement == null) {
-                        groupCache = null;
-                        return null;
-                    }
-                    docElement.normalize();
-                    Node curChild = docElement.getFirstChild();
-
                     int i = 0;
+                    Iterator entityGroupResourceHandlerIter = entityGroupResourceHandlers.iterator();
+                    while (entityGroupResourceHandlerIter.hasNext()) {
+                        ResourceHandler entityGroupResourceHandler = (ResourceHandler) entityGroupResourceHandlerIter.next();
+                        Document document = null;
 
-                    if (curChild != null) {
-                        utilTimer.timerString("[ModelGroupReader.getGroupCache] Before start of entity loop");
-                        do {
-                            if (curChild.getNodeType() == Node.ELEMENT_NODE && "entity-group".equals(curChild.getNodeName())) {
-                                Element curEntity = (Element) curChild;
-                                String entityName = UtilXml.checkEmpty(curEntity.getAttribute("entity"));
-                                String groupName = UtilXml.checkEmpty(curEntity.getAttribute("group"));
+                        try {
+                            document = entityGroupResourceHandler.getDocument();
+                        } catch (GenericConfigException e) {
+                            Debug.logError(e, "Error loading entity group model", module);
+                        }
+                        if (document == null) {
+                            groupCache = null;
+                            return null;
+                        }
 
-                                if (groupName == null || entityName == null) continue;
-                                groupNames.add(groupName);
-                                groupCache.put(entityName, groupName);
-                                // utilTimer.timerString("  After entityEntityName -- " + i + " --");
-                                i++;
-                            }
-                        } while ((curChild = curChild.getNextSibling()) != null);
-                    } else
-                        Debug.logWarning("[ModelGroupReader.getGroupCache] No child nodes found.", module);
+                        // utilTimer.timerString("[ModelGroupReader.getGroupCache] Before getDocumentElement");
+                        Element docElement = document.getDocumentElement();
+                        if (docElement == null) {
+                            continue;
+                        }
+                        docElement.normalize();
+
+                        Node curChild = docElement.getFirstChild();
+                        if (curChild != null) {
+                            utilTimer.timerString("[ModelGroupReader.getGroupCache] Before start of entity loop");
+                            do {
+                                if (curChild.getNodeType() == Node.ELEMENT_NODE && "entity-group".equals(curChild.getNodeName())) {
+                                    Element curEntity = (Element) curChild;
+                                    String entityName = UtilXml.checkEmpty(curEntity.getAttribute("entity"));
+                                    String groupName = UtilXml.checkEmpty(curEntity.getAttribute("group"));
+
+                                    if (groupName == null || entityName == null) continue;
+                                    groupNames.add(groupName);
+                                    groupCache.put(entityName, groupName);
+                                    // utilTimer.timerString("  After entityEntityName -- " + i + " --");
+                                    i++;
+                                }
+                            } while ((curChild = curChild.getNextSibling()) != null);
+                        } else {
+                            Debug.logWarning("[ModelGroupReader.getGroupCache] No child nodes found.", module);
+                        }
+                    }
                     utilTimer.timerString("[ModelGroupReader.getGroupCache] FINISHED - Total Entity-Groups: " + i + " FINISHED");
                 }
             }

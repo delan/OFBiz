@@ -297,11 +297,13 @@ public class EntityConfigUtil {
 
     public static class EntityGroupReaderInfo {
         public String name;
-        public Element resourceElement;
+        public List resourceElements;
 
         public EntityGroupReaderInfo(Element element) {
             this.name = element.getAttribute("name");
-            resourceElement = element;
+            resourceElements = new LinkedList();
+            resourceElements.add(element);
+            resourceElements.addAll(UtilXml.childElementList(element, "resource"));
         }
     }
 
