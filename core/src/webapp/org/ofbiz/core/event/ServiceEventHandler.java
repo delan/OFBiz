@@ -2,16 +2,17 @@
  * $Id$
  */
 
-package org.ofbiz.core.service;
+package org.ofbiz.core.event;
 
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Generic Service HTTP Interface
- * <p><b>Description:</b> None
+ * <p><b>Title:</b> ServiceEventHandler.java
+ * <p><b>Description:</b> Service Event Handler
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
@@ -36,40 +37,46 @@ import org.ofbiz.core.util.*;
  *@created    December 7, 2001
  *@version    1.0
  */
-
-public class HTTPServiceEvents {
+public class ServiceEventHandler {
     
-    /** Web event to invoke a generic service */
-    public static String eventToService(HttpServletRequest request, HttpServletResponse response) {
+    private String serviceName = null;
+    
+    /** Initialize the required parameters
+     *@param eventPath The path or location of this event
+     *@param eventMethod The method to invoke
+     */
+    public void initialize(String eventPath, String eventMethod) {
+        this.serviceName = eventMethod;
+    }
+    
+    /** Invoke the web event
+     *@param request The servlet request object
+     *@param response The servlet response object
+     *@return String Result code
+     *@throws EventHandlerException
+     */
+    public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         HttpSession session = request.getSession();
         ServletContext context = session.getServletContext();
         LocalDispatcher dispatcher = (LocalDispatcher) context.getAttribute("dispatcher");
-        String serviceName = request.getParameter("#SERVICE#");
-        if ( serviceName == null ) {
-            Debug.logInfo("[HTTPServiceEvents.eventToService] : No service name passed");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"No service name passed.");
-            return "error";
-        }
+        
+        if ( serviceName == null )
+            throw new EventHandlerException("Service name (eventMethod) cannot be null");
         
         // get the service model to generate context
-        ModelService model = null; 
-        try { 
+        ModelService model = null;
+        try {
             model = dispatcher.getDispatchContext().getModelService(serviceName);
         }
         catch ( GenericServiceException e ) {
-            Debug.logError(e,"[HTTPServiceEvents.eventToService] : Cannot get service model.");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Problems getting service model : " + e.getMessage());
-            return "error";
+            throw new EventHandlerException("Problems getting the service model",e);
         }
         
-        if ( model == null ) {
-            Debug.logInfo("[HTTPServiceEvents.eventToService] : Cannot get service model.");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Problems getting service model.");
-            return "error";
-        }
+        if ( model == null )
+            throw new EventHandlerException("Problems getting the service model");
         
         // we have a service and the model; build the context
-        Map serviceContext = new HashMap();        
+        Map serviceContext = new HashMap();
         Iterator ci = model.contextInfo.keySet().iterator();
         while ( ci.hasNext() ) {
             String name = (String) ci.next();
@@ -84,18 +91,17 @@ public class HTTPServiceEvents {
             result = dispatcher.runSync(serviceName,serviceContext);
         }
         catch ( GenericServiceException e ) {
-            Debug.logError(e,"[HTTPServiceEvents.eventToService] : Error invoking service");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Service invocation error : " + e.getMessage());
-            return "error";
+            throw new EventHandlerException("Service invocation error",e);
         }
         
         String responseString = null;
-        if ( result == null || !result.containsKey("response") ) 
-            responseString = "success";            
-        else                        
+        if ( result == null || !result.containsKey("response") )
+            responseString = "success";
+        else
             responseString = (String) result.get("response");
         
         if ( result.containsKey("errorMessage") ) {
+            // TODO check if this is a string or a list, if list create a long string
             request.setAttribute(SiteDefs.ERROR_MESSAGE,result.get("errorMessage"));
         }
         
@@ -109,6 +115,6 @@ public class HTTPServiceEvents {
         }
         
         return responseString;
-            
+        
     }
 }

@@ -40,13 +40,21 @@ public class JavaEventHandler implements EventHandler {
     private String eventPath = null;
     private String eventMethod = null;
     
-    /** Initialize the required parameters */
+    /** Initialize the required parameters
+     *@param eventPath The path or location of this event
+     *@param eventMethod The method to invoke
+     */
     public void initialize(String eventPath, String eventMethod) {
         this.eventPath = eventPath;
         this.eventMethod = eventMethod;
     }
     
-     /** Invoke the event. */     
+    /** Invoke the web event
+     *@param request The servlet request object
+     *@param response The servlet response object
+     *@return String Result code
+     *@throws EventHandlerException
+     */
     public String invoke(HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         Class[] paramTypes = new Class[] {HttpServletRequest.class, HttpServletResponse.class};
         Object[] params = new Object[] {request,response};
