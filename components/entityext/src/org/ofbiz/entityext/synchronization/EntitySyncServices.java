@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.16 2003/12/14 10:14:43 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.17 2003/12/14 10:27:57 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -229,7 +229,7 @@ public class EntitySyncServices {
                 long totalRowsToStoreCur = valuesToStore.size();
                 long totalRowsToRemoveCur = keysToRemove.size();
 
-                long totalRowsPerSplit = totalRowsToStoreCur + totalRowsToStoreCur;
+                long totalRowsPerSplit = totalRowsToStoreCur + totalRowsToRemoveCur;
                 
                 if (totalRowsPerSplit < perSplitMinItems) {
                     perSplitMinItems = totalRowsPerSplit;
