@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.17 2003/12/14 10:27:57 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.18 2003/12/15 10:27:57 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -319,15 +319,25 @@ public class EntitySyncServices {
 
             // the lastSuccessfulSynchTime on EntitySync will already be set, so just set status as completed 
             Map completeEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_COMPLETE", "userLogin", userLogin));
-            if (ModelService.RESPOND_ERROR.equals(completeEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
+            if (ServiceUtil.isError(completeEntitySyncRes)) {
                 // what to do here? try again?
                 return ServiceUtil.returnError("Could not mark Entity Sync as complete, but all synchronization was successful", null, null, completeEntitySyncRes);
             }
-            // the lastSuccessfulSynchTime on EntitySync will already be set, so just set status as completed 
-            Map completeEntitySyncHistRes = dispatcher.runSync("updateEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "runStatusId", "ESR_COMPLETE", "userLogin", userLogin));
-            if (ModelService.RESPOND_ERROR.equals(completeEntitySyncHistRes.get(ModelService.RESPONSE_MESSAGE))) {
-                // what to do here? try again?
-                return ServiceUtil.returnError("Could not mark Entity Sync History as complete, but all synchronization was successful", null, null, completeEntitySyncHistRes);
+            
+            // if nothing moved over, remove the history record, otherwise store status
+            long totalRows = totalRowsToStore + totalRowsToRemove;
+            if (totalRows == 0) {
+                Map deleteEntitySyncHistRes = dispatcher.runSync("deleteEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "userLogin", userLogin));
+                if (ServiceUtil.isError(deleteEntitySyncHistRes)) {
+                    return ServiceUtil.returnError("Could not remove Entity Sync History (done becuase nothing was synced in this call), but all synchronization was successful", null, null, deleteEntitySyncHistRes);
+                }
+            } else {
+                // the lastSuccessfulSynchTime on EntitySync will already be set, so just set status as completed 
+                Map completeEntitySyncHistRes = dispatcher.runSync("updateEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "runStatusId", "ESR_COMPLETE", "userLogin", userLogin));
+                if (ServiceUtil.isError(completeEntitySyncHistRes)) {
+                    // what to do here? try again?
+                    return ServiceUtil.returnError("Could not mark Entity Sync History as complete, but all synchronization was successful", null, null, completeEntitySyncHistRes);
+                }
             }
         } catch (GenericEntityException e) {
             String errorMessage = "Error running EntitySync [" + entitySyncId + "], data access error: " + e.toString();
@@ -350,7 +360,7 @@ public class EntitySyncServices {
         // set error statuses on the EntitySync and EntitySyncHistory entities
         try {
             Map errorEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", runStatusId, "userLogin", userLogin));
-            if (ModelService.RESPOND_ERROR.equals(errorEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
+            if (ServiceUtil.isError(errorEntitySyncRes)) {
                 errorMessages.add("Could not save error run status [" + runStatusId + "] on EntitySync with ID [" + entitySyncId + "]: " + errorEntitySyncRes.get(ModelService.ERROR_MESSAGE));
             }
         } catch (GenericServiceException e) {
@@ -359,7 +369,7 @@ public class EntitySyncServices {
         if (startDate != null) {
             try {
                 Map errorEntitySyncHistoryRes = dispatcher.runSync("updateEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "runStatusId", runStatusId, "userLogin", userLogin));
-                if (ModelService.RESPOND_ERROR.equals(errorEntitySyncHistoryRes.get(ModelService.RESPONSE_MESSAGE))) {
+                if (ServiceUtil.isError(errorEntitySyncHistoryRes)) {
                     errorMessages.add("Could not save error run status [" + runStatusId + "] on EntitySyncHistory with ID [" + entitySyncId + "]: " + errorEntitySyncHistoryRes.get(ModelService.ERROR_MESSAGE));
                 }
             } catch (GenericServiceException e) {

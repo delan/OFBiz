@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
 -->
 
@@ -73,8 +73,17 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
+    <simple-method method-name="deleteEntitySyncHistory" short-description="Delete EntitySyncHistory">
+        <check-permission permission="ENTITY_SYNC" action="_DELETE"><fail-message message="Security Error: to run deleteEntitySyncHistory you must have the ENTITY_SYNC_DELETE or ENTITY_SYNC_ADMIN permission"/></check-permission>
+        <check-errors/>
 
-    <!-- EntitySyncHistory services -->
+        <make-value value-name="lookupPKMap" entity-name="EntitySyncHistory"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <!-- EntitySyncInclude services -->
     <simple-method method-name="createEntitySyncInclude" short-description="Create EntitySyncInclude">
         <check-permission permission="ENTITY_SYNC" action="_CREATE"><fail-message message="Security Error: to run createEntitySyncInclude you must have the ENTITY_SYNC_CREATE or ENTITY_SYNC_ADMIN permission"/></check-permission>
         <check-errors/>
