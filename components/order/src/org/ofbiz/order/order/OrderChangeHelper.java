@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.4 2003/09/02 04:18:04 ajzeneski Exp $
+ * $Id: OrderChangeHelper.java,v 1.5 2003/09/05 17:49:18 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -188,7 +188,7 @@ public class OrderChangeHelper {
         payment.set("paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId"));
         payment.set("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"));
         payment.set("amount", orderPaymentPreference.getDouble("maxAmount"));
-        payment.set("statusId", "PAYMENT_PAID");
+        payment.set("statusId", "PMNT_RECEIVED");
         payment.set("effectiveDate", UtilDateTime.nowTimestamp());        
         payment.set("partyIdTo", payToPartyId); 
         if (paymentRefNumber != null) { 
