@@ -1,5 +1,5 @@
 /*
- * $Id: WfEventAuditImpl.java,v 1.1 2003/08/17 09:29:34 ajzeneski Exp $
+ * $Id: WfEventAuditImpl.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.workflow.WfProcess;
  * WfEventAuditImpl - Workflow Event Audit implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class WfEventAuditImpl implements WfEventAudit {
@@ -80,7 +80,7 @@ public class WfEventAuditImpl implements WfEventAudit {
      */
     public String activityKey() throws WfException {
         try {
-            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
+            if (ObjectType.instanceOf(object, "org.ofbiz.workflow.WfActivity"))
                 return object.key();
         } catch (Exception e) {
             throw new WfException("Source is not a WfActivity object");
@@ -93,7 +93,7 @@ public class WfEventAuditImpl implements WfEventAudit {
      */
     public String activityName() throws WfException {
         try {
-            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
+            if (ObjectType.instanceOf(object, "org.ofbiz.workflow.WfActivity"))
                 return object.name();
         } catch (Exception e) {}
         throw new WfException("Source is not a WfActivity object");
@@ -105,7 +105,7 @@ public class WfEventAuditImpl implements WfEventAudit {
      */
     public String processKey() throws WfException {
         try {
-            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
+            if (ObjectType.instanceOf(object, "org.ofbiz.workflow.WfProcess"))
                 return object.key();
         } catch (Exception e) {}
         throw new WfException("Source is not a WfProcess object");
@@ -117,7 +117,7 @@ public class WfEventAuditImpl implements WfEventAudit {
      */
     public String processName() throws WfException {
         try {
-            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
+            if (ObjectType.instanceOf(object, "org.ofbiz.workflow.WfProcess"))
                 return object.name();
         } catch (Exception e) {}
         throw new WfException("Source is not a WfProcess object");
@@ -129,9 +129,9 @@ public class WfEventAuditImpl implements WfEventAudit {
      */
     public String processMgrName() throws WfException {
         try {
-            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
+            if (ObjectType.instanceOf(object, "org.ofbiz.workflow.WfProcess"))
                 return ((WfProcess) object).manager().name();
-            else if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
+            else if (ObjectType.instanceOf(object, "org.ofbiz.workflow.WfActivity"))
                 return ((WfActivity) object).container().manager().name();
         } catch (Exception e) {}
         throw new WfException("Illegal source object");
@@ -142,9 +142,9 @@ public class WfEventAuditImpl implements WfEventAudit {
      */
     public String processMgrVersion() throws WfException {
         try {
-            if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfProcess"))
+            if (ObjectType.instanceOf(object, "org.ofbiz.workflow.WfProcess"))
                 return ((WfProcess) object).manager().version();
-            else if (ObjectType.instanceOf(object, "org.ofbiz.core.workflow.WfActivity"))
+            else if (ObjectType.instanceOf(object, "org.ofbiz.workflow.WfActivity"))
                 return ((WfActivity) object).container().manager().version();
         } catch (Exception e) {}
         throw new WfException("Illegal source object");

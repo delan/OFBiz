@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.1 2003/08/17 08:40:11 ajzeneski Exp $
+ * $Id: HtmlFormRenderer.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -138,7 +138,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderHyperlinkField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HyperlinkField)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderHyperlinkField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HyperlinkField)
      */
     public void renderHyperlinkField(StringBuffer buffer, Map context, HyperlinkField hyperlinkField) {
         ModelFormField modelFormField = hyperlinkField.getModelFormField();

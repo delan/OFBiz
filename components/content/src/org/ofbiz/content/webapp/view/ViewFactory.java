@@ -1,5 +1,5 @@
 /*
- * $Id: ViewFactory.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id: ViewFactory.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.content.webapp.control.RequestManager;
  * ViewFactory - View Handler Factory
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ViewFactory {
@@ -65,7 +65,7 @@ public class ViewFactory {
         // check if we are new / empty and add the default handler in
         if (handlers.size() == 0) {            
             try {
-                ViewHandler h = (ViewHandler) ObjectType.getInstance("org.ofbiz.core.view.JspViewHandler");
+                ViewHandler h = (ViewHandler) ObjectType.getInstance("org.ofbiz.content.webapp.view.JspViewHandler");
                 h.init(context);
                 handlers.put("default", h);
             } catch (Exception e) {

@@ -1,5 +1,5 @@
 /*
- * $Id: UtilTimer.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UtilTimer.java,v 1.2 2003/08/18 18:32:07 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ package org.ofbiz.base.util;
  * and the time since the start are reported in each call to timerString.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class UtilTimer {
@@ -72,7 +72,7 @@ public class UtilTimer {
             secondsSinceLast() + "]]";
 
         lastMessage = message;
-        if (log) Debug.log(Debug.TIMING, null, retString, module, "org.ofbiz.core.util.UtilTimer");
+        if (log) Debug.log(Debug.TIMING, null, retString, module, "org.ofbiz.base.util.UtilTimer");
 
         // have lastMessageTime come as late as possible to just time what happens between calls
         lastMessageTime = System.currentTimeMillis();
