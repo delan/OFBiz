@@ -108,7 +108,7 @@ public class PaymentGatewayServices {
             grandTotal = (Double) formatter.parse(grandTotalString);
         } catch (ParseException e) {
             Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
-            grandTotal = new Double(orh.getOrderGrandTotal());
+            return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
         }
         
         double amountToBill = grandTotal.doubleValue();        
@@ -179,7 +179,7 @@ public class PaymentGatewayServices {
         Map processContext = null;
         try {
             processContext = makeAuthContext(orh, paymentPref, paymentConfig, authTotal);
-        } catch (GenericEntityException e) {
+        } catch (GeneralException e) {
             Debug.logError(e, "Problems creating the context for the auth service", module);
             return null;                
         }
@@ -228,7 +228,7 @@ public class PaymentGatewayServices {
         return paymentSettings;        
     }
             
-    private static Map makeAuthContext(OrderReadHelper orh, GenericValue paymentPreference, String paymentConfig, double authTotal) throws GenericEntityException {
+    private static Map makeAuthContext(OrderReadHelper orh, GenericValue paymentPreference, String paymentConfig, double authTotal) throws GeneralException {
         Map processContext = new HashMap();        
                 
         processContext.put("orderId", orh.getOrderId());
@@ -251,9 +251,16 @@ public class PaymentGatewayServices {
         }
         
         // format the decimal
-        DecimalFormat formatter = new DecimalFormat("##0.00");
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
         String amountString = formatter.format(thisAmount);        
-        Double processAmount = new Double(amountString);
+        Double processAmount = null;
+        try {
+            processAmount = new Double(formatter.parse(amountString).doubleValue());
+        } catch (ParseException e) {
+            Debug.logError(e, "Problems parsing string formatted double to Double", module);
+            throw new GeneralException("ParseException in number format", e);
+        }
         
         if (Debug.verboseOn())
             Debug.logVerbose("Charging amount: " + processAmount, module);                  
@@ -765,9 +772,16 @@ public class PaymentGatewayServices {
                 }
                 
                 // format the price
-                DecimalFormat formatter = new DecimalFormat("##0.00");
+                String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+                DecimalFormat formatter = new DecimalFormat(currencyFormat);
                 String amountString = formatter.format(refundAmount);        
-                Double processAmount = new Double(amountString);
+                Double processAmount = null;
+                try {
+                    processAmount = new Double(formatter.parse(amountString).doubleValue());
+                } catch (ParseException e) {
+                    Debug.logError(e, "Problem parsing amount using DecimalFormat", module);
+                    return ServiceUtil.returnError("Refund processor problems; see logs");
+                }
                 serviceContext.put("refundAmount", processAmount);
                                                          
                 // call the service

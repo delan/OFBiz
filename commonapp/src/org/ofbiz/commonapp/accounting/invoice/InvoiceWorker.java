@@ -97,7 +97,7 @@ public class InvoiceWorker {
         String invoiceTotalString = formatter.format(invoiceTotal);
         Double formattedTotal = null;
         try {
-            formattedTotal = (Double) formatter.parse(invoiceTotalString);
+            formattedTotal = new Double(formatter.parse(invoiceTotalString).doubleValue());
         } catch (ParseException e) {
             Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
             formattedTotal = new Double(invoiceTotal);

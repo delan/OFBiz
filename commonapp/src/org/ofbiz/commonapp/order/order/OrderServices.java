@@ -1459,18 +1459,20 @@ public class OrderServices {
                     String amountStr = formatter.format(taxTotal);
                     Double taxAmount = null;
                     try {
-                        taxAmount = (Double) formatter.parse(amountStr);
+                        taxAmount = new Double(formatter.parse(amountStr).doubleValue());
                     } catch (ParseException e) {
-                        Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
-                        taxAmount = new Double(taxTotal);    
+                        throw new GeneralException("Problem getting parsed amount from string", e);                        
                     }
                                        
                     adjustments.add(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", taxLookup.getString("description"))));                        
                 }                                              
-            }                                                                                             
+            }                                                                                                         
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up tax rates", module);
             return new ArrayList();            
+        } catch (GeneralException e) {
+            Debug.logError(e, "Problems looking up tax rates", module);
+            return new ArrayList();
         }
         
         return adjustments;

@@ -214,10 +214,11 @@ public class CheckOutEvents {
 		String grandTotalString = formatter.format(cartTotal);               
         Double grandTotal = null;
 		try {
-			grandTotal = (Double) formatter.parse(grandTotalString);
+			grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
 		} catch (ParseException e) {
-            Debug.logError(e, "Problem getting parsed tax amount; using the primitive value", module);
-            grandTotal = new Double(cartTotal);			
+            Debug.logError(e, "Problem getting parsed currency amount from DecimalFormat", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Could not create order (problem parsing order totals");
+            return "error";			
 		}
 
         // store the order - build the context
