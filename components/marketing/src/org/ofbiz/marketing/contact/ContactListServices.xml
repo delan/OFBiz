@@ -2,7 +2,7 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- * Copyright (c) 2001 The Open For Business Project and repective authors.
+ * Copyright (c) 2001-2004 The Open For Business Project and repective authors.
  * Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
@@ -26,7 +26,6 @@
  * Created on October 19, 2002
  -->
 <simple-methods>
-
     <!-- ContactList methods -->
     <simple-method method-name="createContactList" short-description="Create an ContactList">
         <check-permission permission="MARKETING" action="_CREATE"><fail-message message="Security Error: to run createContactList you must have the MARKETING_CREATE or MARKETING_ADMIN permission"/></check-permission>
@@ -34,15 +33,9 @@
 
         <make-value entity-name="ContactList" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-
-        <!-- ContactList uses a sequenced id, so get the next one now and set it... -->        
-        <sequenced-id-to-env sequence-name="ContactList" env-name="newSequencedId"/>
-        <to-string field-name="newSequencedId"/>
-        <env-to-field env-name="newSequencedId" field-name="contactListId" map-name="newEntity"/>
-        
+        <sequenced-id-to-env sequence-name="ContactList" env-name="newEntity.contactListId" to-string="true"/>
+        <field-to-result field-name="newEntity.contactListId" result-name="contactListId"/>
         <create-value value-name="newEntity"/>
-        
-        <field-to-result field-name="newSequencedId" result-name="contactListId"/>
     </simple-method>
     <simple-method method-name="updateContactList" short-description="Update an ContactList">
         <check-permission permission="MARKETING" action="_UPDATE"><fail-message message="Security Error: to run updateContactList you must have the MARKETING_UPDATE or MARKETING_ADMIN permission"/></check-permission>
@@ -50,9 +43,8 @@
 
         <make-value entity-name="ContactList" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ContactList" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteContactList" short-description="Delete an ContactList">
@@ -61,39 +53,37 @@
 
         <make-value entity-name="ContactList" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ContactList" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
     <!-- ContactListParty methods -->
-    <simple-method method-name="addPartyToContactList" short-description="Add Party To ContactList">
-        <check-permission permission="MARKETING" action="_CREATE"><fail-message message="Security Error: to run addPartyToContactList you must have the MARKETING_CREATE or MARKETING_ADMIN permission"/></check-permission>
+    <simple-method method-name="createContactListParty" short-description="Add Party To ContactList">
+        <check-permission permission="MARKETING" action="_CREATE"><fail-message message="Security Error: to run createContactListParty you must have the MARKETING_CREATE or MARKETING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="ContactListParty" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
-
         <create-value value-name="newEntity"/>
     </simple-method>
-    <simple-method method-name="updatePartyToContactList" short-description="Update Add Party To ContactList">
-        <check-permission permission="MARKETING" action="_UPDATE"><fail-message message="Security Error: to run updateContactList you must have the MARKETING_UPDATE or MARKETING_ADMIN permission"/></check-permission>
+    <simple-method method-name="updateContactListParty" short-description="Update Add Party To ContactList">
+        <check-permission permission="MARKETING" action="_UPDATE"><fail-message message="Security Error: to run updateContactListParty you must have the MARKETING_UPDATE or MARKETING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="ContactListParty" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ContactListParty" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removePartyFromContactList" short-description="Remove Party from ContactList">
-        <check-permission permission="MARKETING" action="_DELETE"><fail-message message="Security Error: to run removePartyFromContactList you must have the MARKETING_DELETE or MARKETING_ADMIN permission"/></check-permission>
+    <simple-method method-name="deleteContactListParty" short-description="Remove Party from ContactList">
+        <check-permission permission="MARKETING" action="_DELETE"><fail-message message="Security Error: to run deleteContactListParty you must have the MARKETING_DELETE or MARKETING_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <make-value entity-name="ContactListParty" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ContactListParty" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>
