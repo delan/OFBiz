@@ -231,13 +231,21 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     }
 
     public PosDialog showDialog(String pageName) {
-        return showDialog(pageName, this);
+        return showDialog(pageName, this, null);
+    }
+
+    public PosDialog showDialog(String pageName, String text) {
+        return showDialog(pageName, this, text);
     }
 
     public PosDialog showDialog(String pageName, DialogCallback cb) {
+        return showDialog(pageName, cb, null);    
+    }
+
+    public PosDialog showDialog(String pageName, DialogCallback cb, String text) {
         XPage dialogPage = XProjectManager.getPageManager().loadPage(pageName);        
         PosDialog dialog = PosDialog.getInstance(dialogPage);
-        dialog.showDialog(this, cb);
+        dialog.showDialog(this, cb, text);
         return dialog;
     }
 
