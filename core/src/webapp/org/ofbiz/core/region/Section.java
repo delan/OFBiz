@@ -32,8 +32,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
+import org.ofbiz.core.control.JPublishWrapper;
 import org.ofbiz.core.control.RequestHandler;
 import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.GeneralException;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilJ2eeCompat;
 import org.ofbiz.core.view.ViewHandler;
@@ -58,6 +60,8 @@ public class Section extends Content {
     protected final String name;
     protected final String info;
     protected RegionManager regionManager;
+    
+    public final static String module = Section.class.getName();
 
     public Section(String name, String info, String content, String type, RegionManager regionManager) {
         super(content, type);
@@ -125,6 +129,29 @@ public class Section extends Content {
                     RegionStack.push(request, region);
                     region.render(request, response);
                     RegionStack.pop(request);
+                } else if ("jpublish".equals(type)) {
+                    // rather then using the view handler use the wrapper directly
+                    ServletContext sctx = (ServletContext) request.getAttribute("servletContext");
+                    if (sctx != null) {
+                        JPublishWrapper jp = (JPublishWrapper) sctx.getAttribute("jpublishWrapper");
+                        if (jp != null) {
+                            String contentStr = "<!-- " + content + " Not Processed -->";
+                            try {
+                                contentStr = jp.render(content, request, response);
+                            } catch (GeneralException e) {
+                                Debug.logError(e, "Problems rendering view from JPublish", module);                                
+                            }
+                            if (UtilJ2eeCompat.useOutputStreamNotWriter(context)) {
+                                response.getOutputStream().print(contentStr);
+                            } else {
+                                response.getWriter().print(contentStr);
+                            }
+                        } else {
+                            throw new IllegalStateException("No jpublishWrapper found in ServletContext");
+                        }
+                    } else {
+                        throw new IllegalStateException("No servletContext found in request");
+                    }
                 } else {
                     // default is the string that the ViewFactory expects for webapp resources
                     viewHandlerRender("default", request, response);

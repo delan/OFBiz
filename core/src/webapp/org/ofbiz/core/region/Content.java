@@ -23,15 +23,12 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.region;
-
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
 
 /**
  * Abstract base class for Section and Region
