@@ -37,6 +37,5 @@
 	
 	<RejectionReason rejectionId="SRJ_DAMAGED" description="Damaged"/>
 	<RejectionReason rejectionId="SRJ_NOT_ORDERED" description="Not Ordered"/>
-	<RejectionReason rejectionId="SRJ_OVER_SHIPPED" description="Over Shipped"/>
-	
+	<RejectionReason rejectionId="SRJ_OVER_SHIPPED" description="Over Shipped"/>	
 </entity-engine-xml>
