@@ -670,11 +670,16 @@ public class CheckOutHelper {
                 }
                 authCtx.put("processAmount", opp.getDouble("maxAmount"));
                 authCtx.put("authRefNum", opp.getString("manualRefNum"));
+                authCtx.put("authResult", new Boolean(true));
+                authCtx.put("userLogin", userLogin);
 
                 Map authResp = dispatcher.runSync("processAuthResult", authCtx);
                 if (authResp != null && ServiceUtil.isError(authResp)) {
                     throw new GeneralException(ServiceUtil.getErrorMessage(authResp));
                 }
+
+                // approve the order
+                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
 
                 if (productStore.get("manualAuthIsCapture") != null &&
                         "Y".equalsIgnoreCase(productStore.getString("manualAuthIsCapture"))) {
@@ -684,8 +689,10 @@ public class CheckOutHelper {
                         captCtx.put("serviceTypeEnum", "PRDS_PAY_EXTERNAL");
                     }
                     captCtx.put("isFromAuth", new Boolean(false));
+                    captCtx.put("captureResult", new Boolean(true));
                     captCtx.put("captureAmount", opp.getDouble("maxAmount"));
                     captCtx.put("captureRefNum", opp.getString("manualRefNum"));
+                    captCtx.put("userLogin", userLogin);
 
                     Map capResp = dispatcher.runSync("processCaptureResult", captCtx);
                     if (capResp != null && ServiceUtil.isError(capResp)) {
