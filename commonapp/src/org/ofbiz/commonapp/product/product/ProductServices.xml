@@ -37,6 +37,7 @@
         <create-value value-name="newEntity"/>
 
         <!-- if setting the primaryProductCategoryId create a member entity too -->
+        <!-- THIS IS REMOVED BECAUSE IT CAUSES PROBLEMS FOR WORKING ON PRODUCTION SITES
         <if-not-empty field-name="primaryProductCategoryId" map-name="newEntity">
             <make-value entity-name="ProductCategoryMember" value-name="newMember"/>
             <field-to-field field-name="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
@@ -48,7 +49,8 @@
             <field-to-field field-name="productCategoryId" map-name="newMember" to-map-name="cacheClearMap"/>
             <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
         </if-not-empty>
-
+        -->
+        
         <!-- induce keywords if autoCreateKeywords is emtpy or Y-->
         <if-empty field-name="autoCreateKeywords" map-name="newEntity">
             <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]></call-bsh>
@@ -71,9 +73,9 @@
         <store-value value-name="lookedUpValue"/>
 
         <!-- if setting the primaryParentCategoryId, create a rollup entity too -->
+        <!-- THIS IS REMOVED BECAUSE IT CAUSES PROBLEMS FOR WORKING ON PRODUCTION SITES
         <if-not-empty field-name="primaryProductCategoryId" map-name="lookedUpValue">
             <if-compare-field field-name="primaryProductCategoryId" map-name="lookedUpValue" operator="equals" to-map-name="saveIdMap">
-                <!-- TODO: check to see if already exists in a valid data range... -->
                 <make-value entity-name="ProductCategoryMember" value-name="newMember"/>
                 <field-to-field field-name="productId" map-name="newEntity" to-field-name="productId" to-map-name="newMember"/>
                 <field-to-field field-name="primaryProductCategoryId" map-name="newEntity" to-field-name="productCategoryId" to-map-name="newMember"/>
@@ -85,6 +87,7 @@
                 <clear-cache-line entity-name="ProductCategoryMember" map-name="cacheClearMap"/>
             </if-compare-field>
         </if-not-empty>
+        -->
         
         <!-- induce keywords if autoCreateKeywords is emtpy or Y-->
         <if-empty field-name="autoCreateKeywords" map-name="lookedUpValue">
