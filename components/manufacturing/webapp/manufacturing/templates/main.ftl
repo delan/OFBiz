@@ -23,7 +23,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -86,7 +86,7 @@ ${pages.get("/includes/appbar.ftl")}
         <tr>
           <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
           <td width='100%' valign='top' align='left'>
-            ${pages.get("/includes/errormsg.ftl")}
+            ${common.get("/includes/errormsg.ftl")}
             ${pages.get(page.path)}
           </td>
           <#if page.rightbar?exists>${pages.get(page.rightbar)}</#if>

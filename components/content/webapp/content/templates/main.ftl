@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      3.0
 -->
 
@@ -183,7 +183,7 @@ ${pages.get("/includes/appbar.ftl")}
         <tr>
           <#if page.leftbar?exists>${pages.get(page.leftbar)}</#if>
           <td width='100%' valign='top' align='left'>
-            ${pages.get("/includes/errormsg.ftl")}
+            ${common.get("/includes/errormsg.ftl")}
             <#assign subMenu=page.getProperty("subMenu")?if_exists />
             <#if subMenu?exists && (0 < subMenu?length ) >${pages.get(subMenu)}</#if>
             <#assign entityName= page.getProperty("entityName")?if_exists />
