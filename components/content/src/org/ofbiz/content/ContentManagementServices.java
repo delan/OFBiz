@@ -404,7 +404,9 @@ public class ContentManagementServices {
             try {
                 GenericValue contentAssoc = delegator.makeValue("ContentAssoc", null);
                 GenericValue contentAssocPK = delegator.makeValue("ContentAssoc", null);
+                contentAssoc.setAllFields(context, false, null, null);
                 contentAssoc.setAllFields(context, false, "ca", null);
+                contentAssocPK.setAllFields(context, false, null, new Boolean(true));
                 contentAssocPK.setAllFields(context, false, "ca", new Boolean(true));
                 context.putAll(contentAssoc);
                 GenericValue contentAssocExisting = null;
