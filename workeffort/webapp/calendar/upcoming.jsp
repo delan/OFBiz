@@ -1,6 +1,6 @@
 <%
 /**
- *  Title: Calendar Month View Page
+ *  Title: Calendar Upcoming View Page
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Calendar Month View</div>
+            <div class='boxhead'>&nbsp;Calendar Up-Coming Events View</div>
           </TD>
           <TD align=right width='60%'>
             <A href='<ofbiz:url>/day</ofbiz:url>' class='lightbuttontext'>[Day&nbsp;View]</A>

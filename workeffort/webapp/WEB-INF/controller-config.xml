@@ -75,6 +75,9 @@
     <request-map uri="month"><security https="true" auth="true"/>
     	<response name="success" type="view" value="month"/>
     </request-map>
+    <request-map uri="upcoming"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="upcoming"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -88,5 +91,6 @@
     <view-map name="day" page="/calendar/day.jsp"/>
     <view-map name="week" page="/calendar/week.jsp"/>
     <view-map name="month" page="/calendar/month.jsp"/>
+    <view-map name="upcoming" page="/calendar/upcoming.jsp"/>
     <!-- end of view mappings -->
 </site-conf>

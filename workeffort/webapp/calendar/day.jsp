@@ -42,10 +42,16 @@
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
-          <TD align=left width='90%' >
+          <TD align=left width='40%' >
             <div class='boxhead'>&nbsp;Calendar Day View</div>
           </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <TD align=right width='60%'>
+            <A href='<ofbiz:url>/day</ofbiz:url>' class='lightbuttontext'>[Day&nbsp;View]</A>
+            <A href='<ofbiz:url>/week</ofbiz:url>' class='lightbuttontext'>[Week&nbsp;View]</A>
+            <A href='<ofbiz:url>/month</ofbiz:url>' class='lightbuttontext'>[Month&nbsp;View]</A>
+            <A href='<ofbiz:url>/upcoming</ofbiz:url>' class='lightbuttontext'>[Upcoming&nbsp;Events]</A>
+            <A href='<ofbiz:url>/event</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Event]</A>
+          </TD>
         </tr>
       </table>
     </TD>

@@ -30,22 +30,34 @@
 
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.core.security.*" %>
+<%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 
 <% pageContext.setAttribute("PageName", "Calendar Event Editor Page"); %> 
 
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
+<%
+  WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView");
+  boolean useValues = pageContext.getAttribute("workEffort")==null?false:true;
+%>
+
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
-          <TD align=left width='90%' >
+          <TD align=left width='40%' >
             <div class='boxhead'>&nbsp;Calendar Event Editor</div>
           </TD>
-          <TD align=right width='10%'>&nbsp;</TD>
+          <TD align=right width='60%'>
+            <A href='<ofbiz:url>/day</ofbiz:url>' class='lightbuttontext'>[Day&nbsp;View]</A>
+            <A href='<ofbiz:url>/week</ofbiz:url>' class='lightbuttontext'>[Week&nbsp;View]</A>
+            <A href='<ofbiz:url>/month</ofbiz:url>' class='lightbuttontext'>[Month&nbsp;View]</A>
+            <A href='<ofbiz:url>/upcoming</ofbiz:url>' class='lightbuttontext'>[Upcoming&nbsp;Events]</A>
+            <A href='<ofbiz:url>/event</ofbiz:url>' class='lightbuttontext'>[New&nbsp;Event]</A>
+          </TD>
         </tr>
       </table>
     </TD>
@@ -55,7 +67,17 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-            <DIV class='tabletext'>NOTE: This page is currently empty, so don't bother looking for anything.</DIV>
+            <ofbiz:if name="workEffort">
+              <ofbiz:if name="canView" type="Boolean">
+                <DIV class='tabletext'>NOTE: This page is currently empty, so don't bother looking for anything.</DIV>
+              </ofbiz:if>
+              <ofbiz:unless name="canView" type="Boolean">
+                <DIV class='tabletext'>ERROR: You do not have permission to view this Event. This event must belong to you, or you must be an administrator.</DIV>
+              </ofbiz:unless>
+            </ofbiz:if>
+            <ofbiz:unless name="workEffort">
+                <DIV class='tabletext'>ERROR: Could not find Event with workEffortId "<ofbiz:print attribute="workEffortId"/>"</DIV>
+            </ofbiz:unless>
           </td>
         </tr>
       </table>
