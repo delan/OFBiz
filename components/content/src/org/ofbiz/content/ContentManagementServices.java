@@ -176,7 +176,7 @@ public class ContentManagementServices {
      * The keys for determining if each entity is created is the presence
      * of the contentTypeId, contentAssocTypeId and dataResourceTypeId.
      */
-    public static Map persistContentAndAssoc(DispatchContext dctx, Map context) throws GenericServiceException{
+    public static Map persistContentAndAssoc(DispatchContext dctx, Map context) throws GenericServiceException {
 
         HashMap result = new HashMap();
         Security security = dctx.getSecurity();

@@ -135,6 +135,7 @@
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
         <attribute mode="INOUT" name="contentId" optional="true" type="String"/>
         <override name="contentTypeId" optional="false"/>
@@ -148,6 +149,7 @@
         <attribute mode="IN" name="contentPurposeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
         <attribute mode="IN" name="skipPermissionCheck" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     <service name="removeContent" default-entity-name="Content" engine="simple"
@@ -179,6 +181,7 @@
         <attribute mode="IN" name="statusId" optional="true" type="String"/>
         <attribute mode="IN" name="privilegeEnumId" optional="true" type="String"/>
         <attribute mode="IN" name="quickCheckContentId" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
         <attribute mode="OUT" name="permissionStatus" optional="true" type="String"/>
         <attribute mode="OUT" name="permissionRecorder" optional="true" type="org.ofbiz.content.content.PermissionRecorder"/>
     </service>
@@ -241,6 +244,7 @@
     </service>
 
     <service name="createContentAssoc" default-entity-name="ContentAssoc" engine="java"
+        transaction-timout="72000" 
         location="org.ofbiz.content.content.ContentServices" invoke="createContentAssoc" auth="true">
         <description>Create a ContentAssoc</description>
         <auto-attributes include="pk" mode="INOUT" optional="true"/>
@@ -1309,6 +1313,7 @@
         <attribute mode="IN" name="_imageData_fileName" optional="true" type="String"/>
         <attribute mode="IN" name="deactivateExisting" optional="true" type="String"/>
         <attribute mode="IN" name="forceElectronicText" optional="true" type="String"/>
+        <attribute mode="IN" name="displayFailCond" optional="true" type="Boolean"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     <service name="deactivateAssocs" engine="java"

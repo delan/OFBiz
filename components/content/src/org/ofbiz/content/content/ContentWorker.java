@@ -863,6 +863,7 @@ public class ContentWorker {
             serviceInMap.put("contentPurposeString", context.get("contentPurposeString"));
             serviceInMap.put("entityOperation", context.get("entityOperation"));
             serviceInMap.put("currentContent", context.get("currentContent"));
+            serviceInMap.put("displayFailCond", context.get("displayFailCond"));
 
             try {
                 permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
@@ -1367,7 +1368,8 @@ public class ContentWorker {
 
     public static String prepPermissionErrorMsg(Map permResults) {
 
-        String errorMessage = "Permission is denied."; 
+        String permissionStatus = (String)permResults.get("permissionStatus");
+        String errorMessage = "Permission is denied." + permissionStatus; 
         errorMessage += ServiceUtil.getErrorMessage(permResults);
         PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
             Debug.logInfo("recorder(0):" + recorder, "");

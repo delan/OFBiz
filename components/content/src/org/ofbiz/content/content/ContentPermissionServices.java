@@ -48,7 +48,9 @@ import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.GenericServiceException;
 import org.w3c.dom.Element;
 
 /**
@@ -112,6 +114,11 @@ public class ContentPermissionServices {
         String statusId = (String) context.get("statusId");
         String privilegeEnumId = (String) context.get("privilegeEnumId");
         GenericValue content = (GenericValue) context.get("currentContent"); 
+        Boolean bDisplayFailCond = (Boolean)context.get("displayFailCond");
+        boolean displayFailCond = false;
+        if (bDisplayFailCond != null && bDisplayFailCond.booleanValue()) {
+             displayFailCond = true;   
+        }
         Map results  = new HashMap();
         String contentId = null;
         if (content != null)
@@ -185,10 +192,16 @@ public class ContentPermissionServices {
         }
         try {
             boolean check = checkPermissionMethod(delegator, partyId,  "Content", entityIds, auxGetter, roleGetter, permCondGetter);
-            if (check)
+            if (check) {
                 results.put("permissionStatus", "granted");
-            else
+            } else {
                 results.put("permissionStatus", "rejected");
+                if (displayFailCond) {
+                     String errMsg = permCondGetter.dumpAsText();
+                     results.put("permissionStatus", errMsg);
+                     ServiceUtil.returnError("Permission is denied. \nThese are the conditions of which one must be met:\n" + errMsg);   
+                }
+            }
         } catch (GenericEntityException e) {
             ServiceUtil.returnError(e.getMessage());   
         }
@@ -1021,69 +1034,65 @@ public class ContentPermissionServices {
         Map results = new HashMap();
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         String contentIdFrom = (String) context.get("contentIdFrom");
         String contentIdTo = (String) context.get("contentIdTo");
-        String statusId = (String) context.get("statusId");
-        String privilegeEnumId = (String) context.get("privilegeEnumId");
-        GenericValue content = (GenericValue) context.get("currentContent"); 
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
-        List purposeList = (List) context.get("contentPurposeList"); 
-        //if (Debug.infoOn()) Debug.logInfo("in checkAssocPerm, purposeList:" + purposeList, "");
-        List targetOperations = (List) context.get("targetOperationList"); 
-        List roleList = (List) context.get("roleTypeList"); 
-        if (roleList == null) roleList = new ArrayList();
         String entityAction = (String) context.get("entityOperation");
         if (entityAction == null) entityAction = "_ADMIN";
         List roleIds = null;
+        String permissionStatus = null;
 
         GenericValue contentTo = null;
         GenericValue contentFrom = null;
         try {
-                contentTo = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentIdTo) );
-                contentFrom = delegator.findByPrimaryKey("Content", 
-                                                 UtilMisc.toMap("contentId", contentIdFrom) );
+            contentTo = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentIdTo) );
+            contentFrom = delegator.findByPrimaryKeyCache("Content",  UtilMisc.toMap("contentId", contentIdFrom) );
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Error in retrieving content To or From. " + e.getMessage());
         }
         if (contentTo == null || contentFrom == null) {
             return ServiceUtil.returnError("contentTo[" + contentTo + "]/From[" + contentFrom + "] is null. ");
         }
-        String creatorLoginTo = (String)contentTo.get("createdByUserLogin");
-        String creatorLoginFrom = (String)contentFrom.get("createdByUserLogin");
-        if(creatorLoginTo != null && creatorLoginFrom != null 
-           && creatorLoginTo.equals(creatorLoginFrom) ) {
-            roleList.add("OWNER");
-        }
-    
-        Map resultsMap = checkPermission( null, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId, null);
+        Map resultsMap = null;
         boolean isMatch = false;
-        String permissionStatus = (String)resultsMap.get("permissionStatus");
-        if(permissionStatus != null && permissionStatus.equals("granted") ) isMatch = true;
 
         boolean isMatchTo = false;
         boolean isMatchFrom = false;
-        if(!isMatch){
-            roleList = (List)resultsMap.get("roleTypeList");
-            resultsMap = checkPermission( contentTo, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId, null);
-            permissionStatus = (String)resultsMap.get("permissionStatus");
-            if(permissionStatus != null && permissionStatus.equals("granted") ) isMatchTo = true;
-            results.putAll(resultsMap);
+        Map permResults = new HashMap();
+        String skipPermissionCheck = null;
 
-            resultsMap = checkPermission( contentFrom, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId, null);
-            permissionStatus = (String)resultsMap.get("permissionStatus");
-            if(permissionStatus != null && permissionStatus.equals("granted") ) isMatchFrom = true;
-            results.put("roleTypeList", resultsMap.get("roleTypeList"));
-            results.put("permissionRecorderTo", results.get("permissionRecorder"));
-            results.putAll(resultsMap);
+        if (skipPermissionCheck == null
+            || skipPermissionCheck.length() == 0
+            || (!skipPermissionCheck.equalsIgnoreCase("true") && !skipPermissionCheck.equalsIgnoreCase("granted"))) {
+            List relatedPurposes = getRelatedPurposes(contentFrom, null);
+            Map serviceInMap = new HashMap();
+            serviceInMap.put("userLogin", userLogin);
+            serviceInMap.put("targetOperationList", UtilMisc.toList("CONTENT_LINK_TO"));
+            serviceInMap.put("contentPurposeList", relatedPurposes);
+            serviceInMap.put("currentContent", contentTo);
 
-            if(isMatchTo && isMatchFrom) isMatch = true;
+            try {
+                permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem checking permissions", "ContentServices");
+            }
+            permissionStatus = (String)permResults.get("permissionStatus");
+            if(permissionStatus == null || !permissionStatus.equals("granted") ) return results;
+            serviceInMap.put("currentContent", contentFrom);
+            serviceInMap.put("targetOperationList", UtilMisc.toList("CONTENT_LINK_FROM"));
+            try {
+                permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problem checking permissions", "ContentServices");
+            }
+            permissionStatus = (String)permResults.get("permissionStatus");
+            if(permissionStatus != null && permissionStatus.equals("granted") ) {
+                results.put("permissionStatus", "granted");   
+            }
         } else {
-            results.putAll(resultsMap);
+            results.put("permissionStatus", "granted");   
         }
-
-        String permStatus = null;
-        if( isMatch ) permStatus = "granted";
-        results.put("permissionStatus", permStatus);
         return results;
     }
 
