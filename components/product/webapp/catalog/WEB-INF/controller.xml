@@ -433,6 +433,12 @@
         <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
     </request-map>
+    <request-map uri="UpdateProductVariants">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="copyToProductVariants"/>
+        <response name="success" type="view" value="EditProduct"/>
+        <response name="error" type="view" value="EditProduct"/>
+    </request-map>
 
     <!-- ================ Product Asset Usage (rental) Requests ================= -->
     <request-map uri="EditProductAssetUsage">

@@ -84,6 +84,19 @@
         <attribute name="removeFeatureAppls" type="String" mode="IN" optional="true"/>
         <attribute name="removeInventoryItems" type="String" mode="IN" optional="true"/>
     </service>
+    <service name="copyToProductVariants" engine="simple"
+                location="org/ofbiz/product/product/ProductServices.xml" invoke="updateProductVariants" auth="true">
+        <description>Copy Virtual Product's data to the Variant Products</description>
+        <attribute name="virtualProductId" type="String" mode="IN" optional="false"/>
+        <attribute name="removeBefore" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateProduct" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicatePrices" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateIDs" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateContent" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateCategoryMembers" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateAttributes" type="String" mode="IN" optional="true"/>
+        <attribute name="duplicateFacilities" type="String" mode="IN" optional="true"/>
+    </service>
 
     <service name="quickAddVariant" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="quickAddVariant">
