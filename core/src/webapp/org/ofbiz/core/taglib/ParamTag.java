@@ -42,6 +42,7 @@ import org.ofbiz.core.util.*;
 public class ParamTag extends TagSupport {
 
     protected String name = null;
+    protected String map = null;
     protected String attribute = null;
     protected Object paramValue = null;
 
@@ -70,14 +71,34 @@ public class ParamTag extends TagSupport {
         return paramValue;
     }
 
+    public void setMap(String map) {
+        this.map = map;
+    }
+
+    public String getMap() {
+        return map;
+    }
+
     public int doStartTag() throws JspTagException {
         AbstractParameterTag sTag =  (AbstractParameterTag) findAncestorWithClass(this, AbstractParameterTag.class);
         if (sTag == null)
             throw new JspTagException("ParamTag not inside a ServiceTag.");
 
         Object value = null;
-        if (attribute != null)
-            paramValue = pageContext.findAttribute(attribute);
+        if (attribute != null) {
+            if (map == null) {
+                paramValue = pageContext.findAttribute(attribute);
+                if (paramValue == null)
+                    paramValue = pageContext.getRequest().getParameter(attribute);
+            } else {
+                try {
+                    Map mapObject = (Map) pageContext.findAttribute(map);
+                    paramValue = mapObject.get(attribute);
+                } catch (Exception e) {
+                    throw new JspTagException("Problem processing map (" + map + ") for attributes.");
+                }
+            }
+        }
         if (value == null && paramValue != null)
             value = paramValue;
         if (value == null)

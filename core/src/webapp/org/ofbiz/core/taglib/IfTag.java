@@ -87,6 +87,8 @@ public class IfTag extends BodyTagSupport {
         try {
             object = pageContext.findAttribute(name);
             if (object == null)
+                object = pageContext.getRequest().getParameter(name);
+            if (object == null)
                 return SKIP_BODY;
         } catch (RuntimeException e) {
             return SKIP_BODY;
