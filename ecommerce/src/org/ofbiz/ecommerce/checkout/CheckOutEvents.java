@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2001/09/14 21:19:27  epabst
+ * added security code to confirmorder page
+ * cleaned up
+ *
  * Revision 1.11  2001/09/14 20:06:16  epabst
  * fixed E-mail sending
  *
@@ -228,7 +232,6 @@ public class CheckOutEvents {
         final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.securityCode");
     
         String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
-        //XXX need to add secret code since no security yet
         try {
             java.net.URL url = new java.net.URL(request.getSession().getAttribute(SiteDefs.SERVER_ROOT_URL) + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
             HttpClient httpClient = new HttpClient(url);
