@@ -29,8 +29,9 @@
 %>
 
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
+<%@ page import="org.ofbiz.commonapp.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
-<%WorkEffortWorker.getEventStatusItems(pageContext, "eventStatusItems");%>
+<%StatusWorker.getStatusItems(pageContext, "eventStatusItems", "EVENT_STATUS");%>
 
 <%pageContext.setAttribute("PageName", "Calendar Event Editor Page");%>
 
@@ -101,7 +102,7 @@
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <SELECT name='CURRENT_STATUS_ID'>
-                      <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
+                      <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_TENTATIVE"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
                       <OPTION value=''>--</OPTION>
                       <ofbiz:iterator name="statusItem" property="eventStatusItems">
                         <OPTION value='<ofbiz:entityfield field="statusId" attribute="statusItem"/>'><ofbiz:entityfield field="description" attribute="statusItem"/></OPTION>
