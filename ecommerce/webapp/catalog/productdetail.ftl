@@ -209,7 +209,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 </table>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
-<#macro associated assocProducts beforeName showName afterName>
+<#macro associated assocProducts beforeName showName afterName formNamePrefix>
   <#if assocProducts?exists && 0 < assocProducts?size>
     <tr><td>&nbsp;</td></tr> 
     <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
@@ -225,6 +225,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
       </td></tr>      
       ${setRequestAttribute("optProductId", productAssoc.productIdTo)}
       ${setRequestAttribute("listIndex", listIndex)}
+      ${setRequestAttribute("formNamePrefix", formNamePrefix)}
       <tr>
         <td>
           ${pages.get("/catalog/productsummary.ftl")}
@@ -242,12 +243,12 @@ ${setRequestAttribute("productValue", productValue)}
 
 <table width='100%'>
   <#-- obsolete -->
-  <@associated assocProducts=requestAttributes.obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:"/>
+  <@associated assocProducts=requestAttributes.obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:" formNamePrefix="obs"/>
   <#-- cross sell -->
-  <@associated assocProducts=requestAttributes.crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:"/>
+  <@associated assocProducts=requestAttributes.crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:" formNamePrefix="cssl"/>
   <#-- up sell -->
-  <@associated assocProducts=requestAttributes.upSellProducts beforeName="Try these instead of " showName="Y" afterName=":"/>
+  <@associated assocProducts=requestAttributes.upSellProducts beforeName="Try these instead of " showName="Y" afterName=":" formNamePrefix="upsl"/>
   <#-- obsolescence -->
-  <@associated assocProducts=requestAttributes.obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:"/>
+  <@associated assocProducts=requestAttributes.obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:" formNamePrefix="obce"/>
 </table>
 
