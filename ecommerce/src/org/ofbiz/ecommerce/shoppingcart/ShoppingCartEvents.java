@@ -1,63 +1,16 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.11  2001/10/03 01:32:51  jonesde
- * Change Integer.parseInt to NumberFormat parser to handle commas, dots, etc
- *
- * Revision 1.10  2001/09/28 21:57:53  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.9  2001/09/25 23:05:22  jonesde
- * Added cross sell, up sell, and obsolete product association support.
- *
- * Revision 1.8  2001/09/19 08:42:08  jonesde
- * Initial checkin of refactored entity engine.
- *
- * Revision 1.7  2001/09/06 15:36:31  epabst
- * watch for null value array
- *
- * Revision 1.6  2001/09/06 14:46:30  epabst
- * avoid exception in common case
- *
- * Revision 1.5  2001/08/31 17:44:04  epabst
- * added shopping cart code
- *
- * Revision 1.4  2001/08/30 22:16:10  epabst
- * added new event for adding items from order to cart
- * improved/fixed orderstatus
- *
- * Revision 1.3  2001/08/28 02:24:34  azeneski
- * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
- * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
- *
- * Revision 1.2  2001/08/27 17:29:31  epabst
- * simplified
- *
- * Revision 1.1.1.1  2001/08/24 01:01:43  azeneski
- * Initial Import
- *
  */
 
 package org.ofbiz.ecommerce.shoppingcart;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
-
 import java.util.*;
 import java.text.*;
+import javax.servlet.http.*;
+import javax.servlet.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
 
-import org.ofbiz.ecommerce.shoppingcart.ShoppingCart;
-import org.ofbiz.ecommerce.shoppingcart.ShoppingCartItem;
-
-import org.ofbiz.core.entity.GenericDelegator;
-import org.ofbiz.core.entity.GenericValue;
-import org.ofbiz.core.entity.GenericEntityException;
-
-import org.ofbiz.core.util.SiteDefs;
-import org.ofbiz.core.util.UtilMisc;
-import org.ofbiz.core.util.Debug;
 
 /**
  * <p><b>Title:</b> ShoppingCartEvents.java

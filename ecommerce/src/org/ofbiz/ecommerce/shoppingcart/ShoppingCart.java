@@ -1,60 +1,10 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.15  2001/10/23 20:06:51  jonesde
- * Added quick add functionality
- *
- * Revision 1.14  2001/10/14 09:59:42  jonesde
- * Updated field names for round of resolving reserved word collisions
- *
- * Revision 1.13  2001/10/10 14:02:14  azeneski
- * Pass two on shipping calc. Requires updated commonapp datamodel.
- *
- * Revision 1.12  2001/09/19 08:42:08  jonesde
- * Initial checkin of refactored entity engine.
- *
- * Revision 1.11  2001/09/17 16:00:40  jonesde
- * Removed automatic shipping charges on cart add/remove; should be calced AFTER shipping method selected, etc.
- *
- * Revision 1.10  2001/09/14 20:05:54  epabst
- * keep the name (not the description w/o the name)
- *
- * Revision 1.9  2001/09/14 19:13:41  epabst
- * added method to ShoppingCart to make the order items
- *
- * Revision 1.8  2001/09/13 15:12:25  epabst
- * cleaned up a little
- * separated shippingMethod into carrierPartyId and shipmentMethodTypeId
- *
- * Revision 1.7  2001/09/11 17:27:14  epabst
- * updated order process to be more complete
- *
- * Revision 1.6  2001/09/10 21:56:22  epabst
- * updated/improved
- *
- * Revision 1.5  2001/09/07 21:59:50  epabst
- * checkout process improved
- *
- * Revision 1.4  2001/09/05 21:51:13  epabst
- * added more data that is used for staging the Order in the shopping cart
- *
- * Revision 1.3  2001/08/31 17:45:36  epabst
- * added method to simplify code
- *
- * Revision 1.2  2001/08/28 02:24:34  azeneski
- * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
- * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
- *
- * Revision 1.1.1.1  2001/08/24 01:01:42  azeneski
- * Initial Import
- *
  */
 
 package org.ofbiz.ecommerce.shoppingcart;
 
-import java.io.Serializable;
 import java.util.*;
-
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.order.Adjustment;
@@ -85,7 +35,7 @@ import org.ofbiz.commonapp.order.order.Adjustment;
  * @version 1.0
  * Created on August 4, 2001, 8:21 PM
  */
-public class ShoppingCart {
+public class ShoppingCart implements java.io.Serializable {
     private ArrayList cartLines;
     
     //either creditCardId or poNumber must be null (use one or the other)

@@ -1,39 +1,11 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.7  2001/10/07 21:56:18  azeneski
- * First pass of shipping setup. Now includes NO model and UPS via UPSOnLine.
- * Coming next: Manual Shipping Calc based on weight/quantity/price
- *
- * Revision 1.6  2001/09/28 21:57:53  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.5  2001/09/05 00:56:24  jonesde
- * Added getName to cart item, and uses it in the minicart because description is too long; should use in real cart too.
- *
- * Revision 1.4  2001/08/29 13:08:49  azeneski
- * Update the cart line item object.
- *
- * Revision 1.3  2001/08/28 02:24:34  azeneski
- * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
- * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
- *
- * Revision 1.2  2001/08/27 17:29:31  epabst
- * simplified
- *
- * Revision 1.1.1.1  2001/08/24 01:01:42  azeneski
- * Initial Import
- * 
  */
 
 package org.ofbiz.ecommerce.shoppingcart;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.ofbiz.core.entity.GenericValue;
+import java.util.*;
+import org.ofbiz.core.entity.*;
 
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
@@ -61,7 +33,7 @@ import org.ofbiz.core.entity.GenericValue;
  * @version 1.0
  * Created on August 4, 2001, 8:21 PM
  */
-public class ShoppingCartItem implements Serializable {
+public class ShoppingCartItem implements java.io.Serializable {
     
     private transient GenericValue product;
     private String productId;    
