@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-    <RecurrenceRule recurrenceRuleId="100" untilDateTime="1969-12-31 19:00:00.000" frequency="DAILY" intervalNumber="1" countNumber="-1"/>
-    <RecurrenceInfo recurrenceInfoId="100" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="100" recurrenceCount="0"/>
-    <RecurrenceInfo recurrenceInfoId="101" startDateTime="2000-01-01 03:00:00.000" recurrenceRuleId="100" recurrenceCount="0"/>
+    <RecurrenceRule recurrenceRuleId="200" untilDateTime="1969-12-31 19:00:00.000" frequency="DAILY" intervalNumber="1" countNumber="-1"/>
+    <RecurrenceInfo recurrenceInfoId="200" startDateTime="2000-01-01 00:00:00.000" recurrenceRuleId="200" recurrenceCount="0"/>
+    <RecurrenceInfo recurrenceInfoId="201" startDateTime="2000-01-01 03:00:00.000" recurrenceRuleId="200" recurrenceCount="0"/>
     
-    <JobSandbox jobName="BackOrder Notification" runTime="2000-01-01 00:00:00.000" serviceName="checkInventoryAvailability" loaderName="order" runAsUser="admin" recurrenceInfoId="100"/>
-    <JobSandbox jobName="Order Auto-Cancel" runTime="2000-01-01 03:00:00.000" serviceName="autoCancelOrderItems" loaderName="order" runAsUser="admin" recurrenceInfoId="101"/>
+    <JobSandbox jobName="BackOrder Notification" runTime="2000-01-01 00:00:00.000" serviceName="checkInventoryAvailability" poolId="pool" runAsUser="admin" recurrenceInfoId="200"/>
+    <JobSandbox jobName="Order Auto-Cancel" runTime="2000-01-01 03:00:00.000" serviceName="autoCancelOrderItems" poolId="pool" runAsUser="admin" recurrenceInfoId="201"/>
 </entity-engine-xml>
