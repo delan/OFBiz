@@ -33,6 +33,7 @@ import org.ofbiz.entity.transaction.*;
 import org.ofbiz.base.util.*;
 
 delegator = request.getAttribute("delegator");
+security = request.getAttribute("security");
 
 // get the order types
 orderTypes = delegator.findAll("OrderType", UtilMisc.toList("description"));
@@ -324,6 +325,10 @@ if (lookupFlag != null) {
         orderHeaderListSize = 0;
     }
 
+    // viewing of purchase orders requires a special permission.  if user doesn't have it, only SALES_ORDER
+    if (!security.hasEntityPermission("ORDERMGR", "_PURCHASE_VIEW", session)) {
+        orderHeaderList = EntityUtil.filterOutByCondition(orderHeaderList, new EntityExpr("orderTypeId", EntityOperator.EQUALS, "PURCHASE_ORDER"));
+    }
     context.put("orderHeaderList", orderHeaderList);
     context.put("orderHeaderListSize", orderHeaderListSize);
 

@@ -16,12 +16,17 @@
     <SecurityPermission description="Sales Order Entry in the Order Manager." permissionId="ORDERMGR_SALES_ENTRY"/>
     <SecurityPermission description="Price change permission for sales orders." permissionId="ORDERMGR_SALES_PRICEMOD"/>
     <SecurityPermission description="Purchase Order Entry in the Order Manager." permissionId="ORDERMGR_PURCHASE_ENTRY"/>
+    <SecurityPermission description="View purchase orders in the Order Manager." permissionId="ORDERMGR_PURCHASE_VIEW"/>
+    <SecurityPermission description="Create purchase orders in the Order Manager." permissionId="ORDERMGR_PURCHASE_CREATE"/>
+    <SecurityPermission description="Create sales orders for all stores in the Order Manager." permissionId="ORDERMGR_SALES_CREATE"/>
 
     <SecurityGroup description="Admin group for restricted order processing." groupId="ORDERPROC"/>
     <SecurityGroup description="Order Entry Admin group; permissions for creating orders." groupId="ORDERENTRY"/>
     <SecurityGroup description="Order Admin group, has all order permissions." groupId="ORDERADMIN"/>
     <SecurityGroup description="Limited Order Admin group, has all limited order permissions." groupId="ORDERADMIN_LTD"/>
     <SecurityGroup description="Limited Order Admin group for Supplier Agents." groupId="ORDERSUPPLIER_LTD"/>
+    <SecurityGroup description="Order entry with purchasing permissions" groupId="ORDERPURCH"/>
+    <SecurityGroup description="Order entry permission for all stores.  No special role is needed." groupId="ORDERENTRY_ALL"/>
     
     <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
     <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
@@ -59,6 +64,38 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_NOTE"/>
+
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="ORDERMGR_NOTE"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="ORDERMGR_PURCHASE_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="ORDERMGR_PURCHASE_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="PARTYMGR_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="PARTYMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="PARTYMGR_NOTE"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="PAY_INFO_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="PAY_INFO_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="PAY_INFO_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERPURCH" permissionId="CATALOG_VIEW"/>
+    
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="ORDERMGR_SALES_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="ORDERMGR_NOTE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="PARTYMGR_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="PARTYMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="PARTYMGR_NOTE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="PAY_INFO_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="PAY_INFO_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="PAY_INFO_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY_ALL" permissionId="CATALOG_VIEW"/>
+    
     <UserLogin userLoginId="supplier" partyId="externaluser" currentPassword="ofbiz" passwordHint=""/>
     <UserLoginSecurityGroup groupId="ORDERSUPPLIER_LTD" userLoginId="supplier" fromDate="2001-01-01 12:00:00.0"/>
 

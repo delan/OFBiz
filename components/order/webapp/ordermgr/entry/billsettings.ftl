@@ -55,7 +55,7 @@ function makeExpDate() {
 // -->
 </script>
 
-<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
+<#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>

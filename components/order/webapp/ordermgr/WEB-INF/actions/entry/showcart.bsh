@@ -36,6 +36,7 @@ import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
+security = request.getAttribute("security");
 dispatcher= (LocalDispatcher)request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
 
@@ -65,42 +66,7 @@ context.put("productStores", productStores);
 suppliers = delegator.findByAnd("PartyRole", UtilMisc.toMap("roleTypeId", "SUPPLIER"));
 context.put("suppliers", suppliers);
 
-// check the selected product store
-productStoreId = request.getParameter("productStoreId");
-productStore = null;
-
-if (UtilValidate.isNotEmpty(productStoreId)) {
-    productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
-    if (productStore != null) {
-    	// put in the default currency, to help selecting a currency for a purchase order
-    	context.put("defaultCurrencyUomId", productStore.getString("defaultCurrencyUomId"));
-
-        // check security on the store
-        storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStore.getString("productStoreId"),
-                "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
-        storeReps = EntityUtil.filterByDate(storeReps);
-        if (storeReps != null && storeReps.size() > 0) {
-            shoppingCart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
-            context.put("currencyUomId", shoppingCart.getCurrency());            
-        } else {
-            request.setAttribute("_ERROR_MESSAGE_", "You do not have permission to take orders for this store.");
-            shoppingCart.clear();
-            session.removeAttribute("orderMode");
-            session.removeAttribute("agreementsMode");
-            return;
-        }
-        shoppingCart.setProductStoreId(productStoreId);
-    } else {
-        shoppingCart.setProductStoreId(null);
-    }
-}
-
-salesChannelEnumId = request.getParameter("salesChannelEnumId");
-if (UtilValidate.isNotEmpty(salesChannelEnumId)) {
-    shoppingCart.setChannelType(salesChannelEnumId);
-}
-
-// Get the order mode
+//Get the order mode
 mode = request.getParameter("orderMode");
 if (mode != null) {
     session.setAttribute("orderMode", mode);
@@ -128,7 +94,56 @@ if ("SALES_ORDER".equals(mode) && UtilValidate.isEmpty(shoppingCart.getProductSt
     session.removeAttribute("agreementsMode");
     return;
 }
-    
+
+// check the selected product store
+productStoreId = request.getParameter("productStoreId");
+productStore = null;
+
+if (UtilValidate.isNotEmpty(productStoreId)) {
+    productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+    if (productStore != null) {
+        // put in the default currency, to help selecting a currency for a purchase order
+        context.put("defaultCurrencyUomId", productStore.getString("defaultCurrencyUomId"));
+
+        // check permission for taking the order
+        hasPermission = false;
+        if ((mode.equals("PURCHASE_ORDER")) && (security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session))) {
+            hasPermission = true;
+        } else if (mode.equals("SALES_ORDER")) {
+            if (security.hasEntityPermission("ORDERMGR", "_SALES_CREATE", session)) {
+                hasPermission = true;
+            } else {
+                // if the user is a rep of the store, then he also has permission
+                storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStore.getString("productStoreId"),
+                        "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
+                storeReps = EntityUtil.filterByDate(storeReps);
+                if (storeReps != null && storeReps.size() > 0) {
+                    hasPermission = true;
+                }
+            }
+        }
+        
+        if (hasPermission) {
+            shoppingCart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
+            context.put("currencyUomId", shoppingCart.getCurrency());            
+        } else {
+            request.setAttribute("_ERROR_MESSAGE_", "You do not have permission to take orders for this store.");
+            shoppingCart.clear();
+            session.removeAttribute("orderMode");
+            session.removeAttribute("agreementsMode");
+            return;
+        }
+        shoppingCart.setProductStoreId(productStoreId);
+    } else {
+        shoppingCart.setProductStoreId(null);
+    }
+}
+
+salesChannelEnumId = request.getParameter("salesChannelEnumId");
+if (UtilValidate.isNotEmpty(salesChannelEnumId)) {
+    shoppingCart.setChannelType(salesChannelEnumId);
+}
+
 if (mode != null && mode.equals("SALES_ORDER")) {
     // Get Cart Associated Products Data
     associatedProducts = ProductDisplayWorker.getRandomCartProductAssoc(request, true);
