@@ -77,6 +77,11 @@
     	<response name="success" type="view" value="activity"/>
         <response name="error" type="view" value="activity"/>
     </request-map>
+    <request-map uri="updateactivityassign"><security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.workeffort.workeffort.WorkEffortEvents" invoke="updateWorkEffortPartyAssignment"/>
+    	<response name="success" type="view" value="activity"/>
+        <response name="error" type="view" value="activity"/>
+    </request-map>
 
     <request-map uri="tasklist"><security https="true" auth="true"/>
     	<response name="success" type="view" value="tasklist"/>
