@@ -5512,7 +5512,7 @@
       <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
       <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
       <field><col-name>ROLE_TYPE_ID</col-name><type>id</type></field>
-      <field><col-name>NON_SOLICITATION_INDICATOR</col-name><type>indicator</type></field>
+      <field><col-name>ALLOW_SOLICITATION</col-name><type>indicator</type></field>
       <field><col-name>EXTENSION</col-name><type>very-short</type></field>
       <field><col-name>COMMENT</col-name><type>comment</type></field>	
       <prim-key-col>PARTY_ID</prim-key-col>	
