@@ -65,6 +65,8 @@
   </filter-mapping>  
 
   <listener><listener-class>org.ofbiz.core.control.ControlEventListener</listener-class></listener>
+  <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
+  <!-- <listener><listener-class>org.ofbiz.core.control.ControlActivationEventListener</listener-class></listener> -->
   
   <servlet>
     <servlet-name>ControlServlet</servlet-name>
@@ -84,7 +86,6 @@
 
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
-    <welcome-file>main.jsp</welcome-file>
   </welcome-file-list>
 
   <error-page>
