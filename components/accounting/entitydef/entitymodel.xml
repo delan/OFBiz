@@ -1912,6 +1912,7 @@
       <field name="transCodeEnumId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="referenceNum" type="short-varchar"></field>
+      <field name="altReference" type="short-varchar"></field>
       <field name="subReference" type="short-varchar"></field>
       <field name="gatewayCode" type="short-varchar"></field>
       <field name="gatewayFlag" type="short-varchar"></field>
