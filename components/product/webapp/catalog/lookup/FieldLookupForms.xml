@@ -61,7 +61,7 @@
             </service>
         </actions>
         <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
+            <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_values('${productId}', '${internalName}')"/>
         </field>
         <field name="internalName"><display/></field>
         <field name="productTypeId"><display/></field>
