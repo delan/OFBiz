@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/16 11:32:05  jonesde
+ * Changed Debug.log message to Debug.logInfo
+ *
  * Revision 1.4  2001/09/11 17:25:20  epabst
  * debugging info added/minor changes
  *
@@ -191,16 +194,17 @@ public class IteratorTag extends BodyTagSupport {
         pageContext.removeAttribute(name);
         if ( this.iterator.hasNext() ) {
             element = this.iterator.next();
-            Debug.logInfo("iterator has another object: " + element);
+            //Debug.logInfo("iterator has another object: " + element);
         } else {
             Debug.logInfo("iterator has no more objects");
         }
         if ( element != null ) {
-            Debug.logInfo("set attribute " + name + " to be " + element + " as next value from iterator");
+            //Debug.logInfo("set attribute " + name + " to be " + element + " as next value from iterator");
             pageContext.setAttribute(name,element);
             return true;
         }
-        Debug.logInfo("no more iterations; element = " + element);
+        //Debug.logInfo("no more iterations; element = " + element);
+        Debug.logInfo("no more iterations");
         return false;        
     }
 }
