@@ -1,3 +1,6 @@
+if [ -z "$OFBIZ_HOME" ] ; then
+  export OFBIZ_HOME="."
+fi
 cd $OFBIZ_HOME/core
 echo "--- core ---"
 cvs update -P -d
