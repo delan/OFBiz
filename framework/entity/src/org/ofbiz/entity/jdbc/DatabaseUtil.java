@@ -658,6 +658,8 @@ public class DatabaseUtil {
                 Debug.logInfo("Database Driver JDBC Version is " + dbData.getJDBCMajorVersion() + "." + dbData.getJDBCMinorVersion(), module);
             } catch (SQLException sqle) {
                 Debug.logWarning("Unable to get Driver name & version information", module);
+            } catch (AbstractMethodError ame) {
+                Debug.logWarning("Unable to get Driver JDBC Version", module);
             }
         }
         // Db/Driver support settings
