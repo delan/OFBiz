@@ -4,28 +4,27 @@
         <Button name="menuSku" x="0" y="0" w="100" h="60" style="posButton" content="SKU" alignment="Center"/>
         <Button name="menuMain" x="102" y="0" w="100" h="60" style="posButton" content="MAIN" alignment="Center"/>
         <Button name="menuMgr" x="204" y="0" w="100" h="60" style="posButton" content="MGR" alignment="Center"/>
-        <Button name="testLogIdx" x="306" y="0" w="100" h="60" style="posButton" content="LOG IDX" alignment="Center"/>
-        <Button name="menuPromo" x="408" y="0" w="100" h="60" style="posButton" content="PROMO" alignment="Center"/>
-        <Button name="menuLock" x="510" y="0" w="100" h="60" style="posButton" content="LOCK" alignment="Center"/>
+        <Button name="menuPromo" x="306" y="0" w="100" h="60" style="posButton" content="PROMO" alignment="Center"/>
+        <Button name="" x="408" y="0" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="menuPay" x="510" y="0" w="100" h="60" style="posButton" content="PAY" alignment="Center"/>
 
-        <Edit name="pos_output" x="4" y="62" w="598" h="62" style="error" border="0" alignment="Center"/>
+        <Edit name="pos_output" x="4" y="62" w="600" h="62" style="error" border="0" alignment="Center"/>
 
         <Button name="payCash" x="0" y="248" w="100" h="60" style="posButton" content="CASH" alignment="Center"/>
         <Button name="payCheck" x="102" y="248" w="100" h="60" style="posButton" content="CHECK" alignment="Center"/>
         <Button name="payCredit" x="204" y="248" w="100" h="60" style="posButton" content="CREDIT" alignment="Center"/>
         <Button name="payGiftCard" x="306" y="248" w="100" h="60" style="posButton" content="GIFT CERT" alignment="Center"/>
-        <!--
+
         <Button name="" x="408" y="248" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="510" y="248" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        -->
 
         <Button name="payClear" x="0" y="310" w="100" h="60" style="posButton" content="CLEAR ONE" alignment="Center"/>
         <Button name="payClearAll" x="102" y="310" w="100" h="60" style="posButton" content="CLEAR ALL" alignment="Center"/>
         <Button name="paySetRef" x="204" y="310" w="100" h="60" style="posButton" content="SET REF#" alignment="Center"/>
-        <!--
+
         <Button name="" x="306" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="408" y="310" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        -->
+
+        <Button name="testMsr" x="408" y="310" w="100" h="60" style="posButton" content="TEST MGR" alignment="Center"/>
         <Button name="ALT.payFinish" x="510" y="310" w="100" h="60" style="posButton" content="FINISH" alignment="Center"/>
     </Components>
 </XPage>

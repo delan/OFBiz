@@ -26,11 +26,9 @@ package org.ofbiz.pos.event;
 
 import net.xoetrope.xui.XProjectManager;
 
-import org.ofbiz.pos.screen.PosScreen;
-import org.ofbiz.pos.device.DeviceLoader;
-import org.ofbiz.pos.component.Input;
 import org.ofbiz.base.util.UtilCache;
-import org.ofbiz.content.xui.XuiSession;
+import org.ofbiz.pos.device.DeviceLoader;
+import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
