@@ -202,6 +202,7 @@ public class EntityFieldTag extends TagSupport {
             throw new JspTagException(e.getMessage());
         }
 
+        defaultStr = "";
         return (SKIP_BODY);
     }
 }
