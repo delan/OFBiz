@@ -1,5 +1,5 @@
 /*
- * $Id: PartyHelper.java,v 1.5 2004/06/29 17:43:07 jonesde Exp $
+ * $Id: PartyHelper.java,v 1.6 2004/06/29 20:42:21 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.model.ModelEntity;
  * PartyHelper
  *
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class PartyHelper {
@@ -93,19 +93,18 @@ public class PartyHelper {
             if (lastNameFirst) {
                 if (UtilFormatOut.checkNull(partyValue.getString("lastName")) != null) {
                     result.append(UtilFormatOut.checkNull(partyValue.getString("lastName")));
-                    if (UtilFormatOut.checkNull(partyValue.getString("firstName")) != null) {
+                    if (partyValue.getString("firstName") != null) {
                         result.append(", ");
                     }
                 }
-                if (UtilFormatOut.checkNull(partyValue.getString("firstName")) != null) {
-                    result.append(UtilFormatOut.checkNull(partyValue.getString("firstName")));
-                }
+                result.append(UtilFormatOut.checkNull(partyValue.getString("firstName")));
             } else {
                 result.append(UtilFormatOut.ifNotEmpty(partyValue.getString("firstName"), "", " "));
                 result.append(UtilFormatOut.ifNotEmpty(partyValue.getString("middleName"), "", " "));
                 result.append(UtilFormatOut.checkNull(partyValue.getString("lastName")));
             }
-        } else if (modelEntity.isField("groupName")) {
+        }
+        if (modelEntity.isField("groupName")) {
             result.append(partyValue.getString("groupName"));
         }
         return result.toString();
