@@ -49,8 +49,8 @@ public class ModelServiceReader {
     
     public static ModelServiceReader getModelServiceReader(URL readerURL) {
         ModelServiceReader reader = null;
-        if ( readers.containsKey(readerURL) )
-            reader = (ModelServiceReader)readers.get(readerURL);
+        //if ( readers.containsKey(readerURL) ) <-- this is unnecessary as it will return null below if not found
+        reader = (ModelServiceReader)readers.get(readerURL);
         if(reader == null) { //don't want to block here
             synchronized(ModelServiceReader.class) {
                 //must check if null again as one of the blocked threads can still enter
@@ -120,7 +120,7 @@ public class ModelServiceReader {
                         } while((curChild = curChild.getNextSibling()) != null);
                     }
                     else Debug.logWarning("No child nodes found.");
-                    utilTimer.timerString("Finished file " + readerURL + " - Total Entities: " + i + " FINISHED");
+                    utilTimer.timerString("Finished file " + readerURL + " - Total Services: " + i + " FINISHED");
                 }
             }
         }
