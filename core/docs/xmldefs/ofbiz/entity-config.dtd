@@ -143,7 +143,6 @@
         pool-deadlock-retrywait CDATA "10000"
         pool-jdbc-test-stmt CDATA #IMPLIED
         pool-xa-wrapper-class CDATA "org.enhydra.jdbc.standard.StandardXADataSource"
-        pool-jdbc-test-stmt CDATA #IMPLIED
     >
     <!ELEMENT jndi-jdbc EMPTY>
     <!ATTLIST jndi-jdbc
