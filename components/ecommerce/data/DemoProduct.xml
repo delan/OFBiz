@@ -31,12 +31,13 @@
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="GIFT_CARD" paymentServiceTypeEnumId="PRDS_PAY_RELEASE" paymentService="testGCRelease"/>
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService=""/>
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EXT_WORLDPAY" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" paymentService=""/>
-  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CONFIRM" templatePath="/components/order/email/default/emailconfirmation.ftl" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
-  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_COMPLETE" templatePath="/components/order/email/default/emailcomplete.ftl" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
-  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_BACKORDER" templatePath="/components/order/email/default/emailbackorder.ftl" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
-  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CHANGE" templatePath="/components/order/email/default/emailorderchange.ftl" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CONFIRM" templatePath="/components/ecommerce/templates/email/emailconfirmation.ftl" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_COMPLETE" templatePath="/components/ecommerce/templates/email/emailcomplete.ftl" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_BACKORDER" templatePath="/components/ecommerce/templates/email/emailbackorder.ftl" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CHANGE" templatePath="/components/ecommerce/templates/email/emailorderchange.ftl" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
   <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_PWD_RETRIEVE" templatePath="/components/securityext/email/default/passwordemail.ftl" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
-  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_TELL_FRIEND" templatePath="/components/order/email/default/tellafriend.ftl" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_TELL_FRIEND" templatePath="/components/ecommerce/templates/email/tellafriend.ftl" subject="${sendFrom} has sent you a link!" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_GIFT_CARD" templatePath="/components/ecommerce/templates/email/giftcard.ftl" subject="A gift from ${senderName}!" fromAddress="ofbiztest@yahoo.com"/>
   <ProductStoreFacility productStoreId="9000" facilityId="WebStoreWarehouse" fromDate="2001-01-01 12:00:00.0"/>
   <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="9000" fromDate="2001-01-01 12:00:00.0"/>
   <ProductStoreKeywordOvrd productStoreId="9000" keyword="gizmo" fromDate="2001-01-01 12:00:00.0" target="100" targetTypeEnumId="KOTT_PRODCAT"/>
@@ -374,8 +375,118 @@
     <ProductStorePromoAppl productStoreId="9000" productPromoId="9015" fromDate="2003-11-08 11:20:16.031" sequenceNum="2"/>
     <ProductStorePromoAppl productStoreId="9000" productPromoId="9016" fromDate="2003-11-08 11:20:34.725" sequenceNum="1"/>
 
-  <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
-  <ProductPriceRule productPriceRuleId="9000" ruleName="Test Rule 1" isSale="Y"/>
-  <ProductPriceAction amount="-20.0" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_POL" productPriceRuleId="9000"/>
-  <ProductPriceCond condValue="PROMOTIONS" inputParamEnumId="PRIP_PROD_CAT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="9000"/>
+    <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
+    <ProductPriceRule productPriceRuleId="9000" ruleName="Test Rule 1" isSale="Y"/>
+    <ProductPriceAction amount="-20.0" productPriceActionSeqId="01" productPriceActionTypeId="PRICE_POL" productPriceRuleId="9000"/>
+    <ProductPriceCond condValue="PROMOTIONS" inputParamEnumId="PRIP_PROD_CAT_ID" operatorEnumId="PRC_EQ" productPriceCondSeqId="01" productPriceRuleId="9000"/>
+
+    <!-- example gift card product info -->
+    <ProductCategory productCategoryId="GC-100" productCategoryTypeId="CATALOG_CATEGORY" description="Gift Cards"/>
+    <ProductCategory productCategoryId="GC-101" productCategoryTypeId="CATALOG_CATEGORY" description="Gift Card Purchase"/>
+    <ProductCategory productCategoryId="GC-102" productCategoryTypeId="CATALOG_CATEGORY" description="Gift Card Reload"/>
+
+    <Product productId="GC-002" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GC-102" productName="Gift Card Reload" description="Add more money to your card!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001" productTypeId="DIGITAL_GOOD" primaryProductCategoryId="GC-101" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="Y" isVariant="N" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-C10" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-C100" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-C25" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-C50" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-CO" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" requireAmount="Y" amountUomTypeId="CURRENCY_MEASURE" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-H10" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-H100" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-H25" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-H50" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <Product productId="GC-001-HO" productTypeId="DIGITAL_GOOD" productName="Gift Card Activation" description="Give the perfect gift!" requireAmount="Y" amountUomTypeId="CURRENCY_MEASURE" returnable="N" taxable="N" chargeShipping="N" isVirtual="N" isVariant="Y" createdDate="2003-11-20 13:48:19.105" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:48:19.105" lastModifiedByUserLogin="admin"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-C10" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:51:53.223"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-C100" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:19.47"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-C25" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:01.811"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-C50" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:11.058"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-CO" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-21 10:26:48.764"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-H10" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:28.263"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-H100" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:54.596"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-H25" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:36.444"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-H50" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-20 13:52:45.335"/>
+    <ProductAssoc productId="GC-001" productIdTo="GC-001-HO" productAssocTypeId="PRODUCT_VARIANT" fromDate="2003-11-21 10:27:33.632"/>
+    <ProductPrice productId="GC-002" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="1.0" createdDate="2003-11-20 13:53:14.512" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:14.512" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-C10" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="10.0" createdDate="2003-11-20 13:53:14.512" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:14.512" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-C100" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="100.0" createdDate="2003-11-20 13:54:10.973" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:54:10.973" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-C25" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="25.0" createdDate="2003-11-20 13:53:39.985" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:39.985" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-C50" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="50.0" createdDate="2003-11-20 13:53:56.117" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:53:56.117" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-H10" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="10.0" createdDate="2003-11-20 13:54:39.665" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:54:44.287" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-H100" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="100.0" createdDate="2003-11-20 13:55:30.586" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:55:30.586" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-H25" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="25.0" createdDate="2003-11-20 13:55:00.324" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:55:00.324" lastModifiedByUserLogin="admin"/>
+    <ProductPrice productId="GC-001-H50" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" productStoreGroupId="_NA_" fromDate="2001-01-01 12:00:00.0" price="50.0" createdDate="2003-11-20 13:55:16.788" createdByUserLogin="admin" lastModifiedDate="2003-11-20 13:55:16.788" lastModifiedByUserLogin="admin"/>
+    <ProductCategoryMember productCategoryId="GC-102" productId="GC-002" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C10" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C100" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C25" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-C50" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-CO" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H10" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H100" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H25" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-H50" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryMember productCategoryId="GC-101" productId="GC-001-HO" fromDate="2001-01-01 12:00:00.0"/>
+    <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-101"/>
+    <ProductCategoryRollup fromDate="2001-01-01 12:00:00.0" parentProductCategoryId="GC-100" productCategoryId="GC-102"/>
+
+    <ProductFeatureCategory productFeatureCategoryId="2000" description="Gift Card Features"/>
+    <ProductFeature productFeatureId="2000" productFeatureTypeId="STYLE" productFeatureCategoryId="2000" description="Classic" defaultSequenceNum="1"/>
+    <ProductFeature productFeatureId="2001" productFeatureTypeId="STYLE" productFeatureCategoryId="2000" description="Holiday" defaultSequenceNum="2"/>
+    <ProductFeature productFeatureId="2002" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2000" description="$10.00" uomId="USD" numberSpecified="10.0" defaultSequenceNum="1"/>
+    <ProductFeature productFeatureId="2003" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2000" description="$25.00" uomId="USD" numberSpecified="25.0" defaultSequenceNum="2"/>
+    <ProductFeature productFeatureId="2004" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2000" description="$50.00" uomId="USD" numberSpecified="50.0" defaultSequenceNum="3"/>
+    <ProductFeature productFeatureId="2005" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2000" description="$100.00" uomId="USD" numberSpecified="100.0" defaultSequenceNum="4"/>
+    <ProductFeature productFeatureId="2006" productFeatureTypeId="AMOUNT" productFeatureCategoryId="2000" description="Other Amount"/>
+    <ProductFeature productFeatureId="2007" productFeatureTypeId="TYPE" productFeatureCategoryId="2000" description="Promo #10841" idCode="10841"/>
+    <ProductFeature productFeatureId="2008" productFeatureTypeId="TYPE" productFeatureCategoryId="2000" description="Promo #10840" idCode="10840"/>
+
+    <ProductFeatureAppl productId="GC-001" productFeatureId="2000" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-20 13:50:07.796" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001" productFeatureId="2001" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-20 13:50:26.411" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001" productFeatureId="2002" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-20 13:49:07.293" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001" productFeatureId="2003" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-20 13:49:26.542" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001" productFeatureId="2004" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-20 13:49:38.299" sequenceNum="3"/>
+    <ProductFeatureAppl productId="GC-001" productFeatureId="2005" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-20 13:49:52.782" sequenceNum="4"/>
+    <ProductFeatureAppl productId="GC-001" productFeatureId="2006" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2003-11-21 10:26:34.307"/>
+    <ProductFeatureAppl productId="GC-001-C10" productFeatureId="2000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.35" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001-C10" productFeatureId="2002" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:51:53.226" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001-C100" productFeatureId="2000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:19.575" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001-C100" productFeatureId="2005" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:19.472" sequenceNum="4"/>
+    <ProductFeatureAppl productId="GC-001-C25" productFeatureId="2000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:01.956" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001-C25" productFeatureId="2003" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:01.813" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001-C50" productFeatureId="2000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:11.151" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001-C50" productFeatureId="2004" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:11.059" sequenceNum="3"/>
+    <ProductFeatureAppl productId="GC-001-C50" productFeatureId="2008" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:11.059" sequenceNum="3"/>
+    <ProductFeatureAppl productId="GC-001-CO" productFeatureId="2000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:26:48.937" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001-CO" productFeatureId="2006" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:26:48.767"/>
+    <ProductFeatureAppl productId="GC-001-CO" productFeatureId="2007" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:26:48.767"/>
+    <ProductFeatureAppl productId="GC-001-H10" productFeatureId="2001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:28.339" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001-H10" productFeatureId="2002" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:28.265" sequenceNum="1"/>
+    <ProductFeatureAppl productId="GC-001-H100" productFeatureId="2001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:54.735" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001-H100" productFeatureId="2005" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:54.602" sequenceNum="4"/>
+    <ProductFeatureAppl productId="GC-001-H25" productFeatureId="2001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:36.601" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001-H25" productFeatureId="2003" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:36.451" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001-H50" productFeatureId="2001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:45.47" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001-H50" productFeatureId="2004" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-20 13:52:45.336" sequenceNum="3"/>
+    <ProductFeatureAppl productId="GC-001-HO" productFeatureId="2001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:27:33.716" sequenceNum="2"/>
+    <ProductFeatureAppl productId="GC-001-HO" productFeatureId="2006" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2003-11-21 10:27:33.633"/>
+
+    <!-- example gift card survey -->
+    <Survey surveyId="1000" description="Gift Card Purchase Informaion" isAnonymous="Y" allowMultiple="Y"/>
+    <SurveyQuestionCategory surveyQuestionCategoryId="1000" description="Gift Card Purchase Questions"/>
+    <SurveyQuestion surveyQuestionId="1000" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT" description="senderName" question="Sender&apos;s Name:"/>
+    <SurveyQuestion surveyQuestionId="1001" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT" description="recipientName" question="Recipient&apos;s Name:"/>
+    <SurveyQuestion surveyQuestionId="1002" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT" description="recipientEmail" question="Recipient&apos;s Email:"/>
+    <SurveyQuestion surveyQuestionId="1003" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXTAREA" description="giftMessage" question="Gift Message:"/>
+    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1000" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="1"/>
+    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1001" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="2"/>
+    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1002" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="3"/>
+    <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1003" fromDate="2001-01-01 00:00:00.00" requiredField="N" sequenceNum="4"/>
+
+    <Survey surveyId="1001" description="Gift Card Reload Informaion" isAnonymous="Y" allowMultiple="Y"/>
+    <SurveyQuestion surveyQuestionId="1010" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT" description="giftCardNumber" question="Gift Card Number:"/>
+    <SurveyQuestion surveyQuestionId="1011" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT" description="giftCardPin" question="PIN Number:"/>
+    <SurveyQuestionAppl surveyId="1001" surveyQuestionId="1010" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="1"/>
+    <SurveyQuestionAppl surveyId="1001" surveyQuestionId="1011" fromDate="2001-01-01 00:00:00.00" requiredField="Y" sequenceNum="2"/>
 </entity-engine-xml>

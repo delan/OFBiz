@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -33,15 +33,15 @@
 <#-- virtual product javascript -->
 ${requestAttributes.virtualJavaScript?if_exists}
 <script language="JavaScript">
- <!--
-     function addItem() {
-         if (document.addform.add_product_id.value == 'NULL') {
-             alert("Please enter all the required information.");
-             return;
-         } else {
-             document.addform.submit();
-         }
-     }
+<!--
+    function addItem() {
+       if (document.addform.add_product_id.value == 'NULL') {
+           alert("Please enter all the required information.");
+           return;
+       } else {
+           document.addform.submit();
+       }
+    }
  //-->
  </script>
 
@@ -116,7 +116,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <#-- tell a friend -->
       <div class="tabletext">&nbsp;</div>
       <div class="tabletext">
-        <a href="javascript:popUp('<@ofbizUrl>/tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend','300','450');" class="buttontext">Tell-A-Friend</a>
+        <a href="javascript:popUpSmall('<@ofbizUrl>/tellafriend?productId=${product.productId}</@ofbizUrl>','tellafriend');" class="buttontext">Tell-A-Friend</a>
       </div>
 
       <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="addform" style='margin: 0;'>
@@ -164,6 +164,10 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#-- check to see if the product requires inventory check and has inventory -->
         <#else>
           <#if inStock>
+            <div id="add_amount" class="tabletexthidden">
+              <nobr><b>Amount:</b></nobr>&nbsp;
+              <input type="text" class="inputBox" size="5" name="add_amount" value="">
+            </div>
             <a href="javascript:addItem()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddtoCart}]</nobr></a>&nbsp;
             <input type="text" class="inputBox" size="5" name="quantity" value="1">
           </#if>
