@@ -45,6 +45,8 @@
 	<field name="destFacilityId" class="java.lang.String"/>
 	<field name="originContactMechId" class="java.lang.String"/>
 	<field name="destContactMechId" class="java.lang.String"/>
+	<field name="originTelecomNumberId" class="java.lang.String"/>
+	<field name="destTelecomNumberId" class="java.lang.String"/>
 	<field name="carrierPartyId" class="java.lang.String"/>
 	<field name="shipmentMethodTypeId" class="java.lang.String"/>
 	<field name="actualCost" class="java.lang.Double"/>
@@ -64,6 +66,9 @@
 	<field name="originCountryGeoId" class="java.lang.String"/>
 	<field name="originStateProvinceGeoId" class="java.lang.String"/>
 	<field name="originPostalCodeGeoId" class="java.lang.String"/>
+	<field name="originCountryCode" class="java.lang.String"/>
+	<field name="originAreaCode" class="java.lang.String"/>
+	<field name="originContactNumber" class="java.lang.String"/>
 	<field name="destToName" class="java.lang.String"/>
 	<field name="destAttnName" class="java.lang.String"/>
 	<field name="destAddress1" class="java.lang.String"/>
@@ -74,6 +79,9 @@
 	<field name="destCountryGeoId" class="java.lang.String"/>
 	<field name="destStateProvinceGeoId" class="java.lang.String"/>
 	<field name="destPostalCodeGeoId" class="java.lang.String"/>
+	<field name="destCountryCode" class="java.lang.String"/>
+	<field name="destAreaCode" class="java.lang.String"/>
+	<field name="destContactNumber" class="java.lang.String"/>
 	<field name="carrierFirstName" class="java.lang.String"/>
 	<field name="carrierLastName" class="java.lang.String"/>
 	<field name="carrierGroupName" class="java.lang.String"/>
@@ -82,7 +90,7 @@
 		<group  name="ShipmentRouteSegment" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="true" minHeightToStartNewPage="0" >
 			<groupExpression><![CDATA[$F{shipmentRouteSegmentId}]]></groupExpression>
 			<groupHeader>
-			<band height="105">
+			<band height="120">
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Group" evaluationGroup="ShipmentRouteSegment"  hyperlinkType="None" >					<reportElement
 						mode="Opaque"
 						x="5"
@@ -372,6 +380,66 @@
 						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
 				<textFieldExpression   class="java.lang.String"><![CDATA["Attn: "]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Group" evaluationGroup="ShipmentRouteSegment"  hyperlinkType="None" >					<reportElement
+						mode="Opaque"
+						x="280"
+						y="104"
+						width="30"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false">
+							<printWhenExpression><![CDATA[new Boolean($F{destCountryCode} != null)]]></printWhenExpression>
+						</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{destCountryCode}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Group" evaluationGroup="ShipmentRouteSegment"  hyperlinkType="None" >					<reportElement
+						mode="Opaque"
+						x="310"
+						y="104"
+						width="30"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false">
+							<printWhenExpression><![CDATA[new Boolean($F{destAreaCode} != null)]]></printWhenExpression>
+						</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{destAreaCode}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Group" evaluationGroup="ShipmentRouteSegment"  hyperlinkType="None" >					<reportElement
+						mode="Opaque"
+						x="340"
+						y="104"
+						width="100"
+						height="14"
+						forecolor="#000000"
+						backcolor="#FFFFFF"
+						positionType="FixRelativeToTop"
+						isPrintRepeatedValues="true"
+						isRemoveLineWhenBlank="false"
+						isPrintInFirstWholeBand="false"
+						isPrintWhenDetailOverflows="false">
+							<printWhenExpression><![CDATA[new Boolean($F{destContactNumber} != null)]]></printWhenExpression>
+						</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="SansSerif" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
+					</textElement>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{destContactNumber}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
