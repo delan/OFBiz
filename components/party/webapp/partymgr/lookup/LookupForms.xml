@@ -84,5 +84,38 @@
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
         </field>
     </form>
+    <form name="lookupPartyName" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupPartyName" title="" type="single">
+        <auto-fields-entity entity-name="PartyNameView" default-field-type="find" />
+        <field name="partyTypeId">
+            <drop-down allow-empty="true">
+                <entity-options description="${description}" entity-name="PartyType"/>
+            </drop-down>
+        </field>
+        <field name="middleName"><hidden/></field>
+        <field name="personalTitle"><hidden/></field>
+        <field name="suffix"><hidden/></field>
+        <field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="listLookupPartyName" default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="display"
+        list-iterator-name="listIt" paginate-target="LookupPartyName" title="" type="list">
+      	<actions>
+          <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+            <field-map field-name="inputFields" env-name="requestParameters"/>
+            <field-map field-name="entityName" env-name="entityName"/>
+          </service>
+        </actions>
+        <auto-fields-entity entity-name="PartyNameView" default-field-type="display"/>
+        <field name="partyId" title="partyId" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
+        </field>
+        <field name="partyTypeId">
+            <display-entity also-hidden="false" entity-name="PartyType" description="${description}"/>
+        </field>
+        <field name="middleName"><hidden/></field>
+        <field name="personalTitle"><hidden/></field>
+        <field name="suffix"><hidden/></field>
+    </form>
 
 </forms>
