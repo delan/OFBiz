@@ -75,100 +75,67 @@ public class SqlJdbcUtil {
     }
     
     /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
-    public static String makeWhereStringAnd(List modelFields, GenericEntity entity) {
+    public static String makeWhereString(List modelFields, GenericEntity entity, String operator) {
         StringBuffer returnString = new StringBuffer("");
-        
+
         if (modelFields.size() < 1) {
             return "";
         }
-        
-        int i=0;
-        for (; i < modelFields.size() - 1; i++) {
-            ModelField modelField = (ModelField) modelFields.get(i);
-            
+        Iterator iter = modelFields.iterator();
+        while (iter.hasNext())
+        {
+            ModelField modelField = (ModelField) iter.next();
+
             returnString.append(modelField.getColName());
             if (entity.get(modelField.getName()) != null)
-                returnString.append("=? AND ");
+                returnString.append("=?");
             else
-                returnString.append(" IS NULL AND ");
+                returnString.append(" IS NULL");
+
+            if (iter.hasNext())
+                returnString.append( operator );
         }
-        ModelField modelField2 = (ModelField) modelFields.get(i);
-        
-        returnString.append(modelField2.getColName());
-        if (entity.get(modelField2.getName()) != null)
-            returnString.append("=?");
-        else
-            returnString.append(" IS NULL");
+
         return returnString.toString();
     }
-    
-    public static String makeWhereClauseAnd(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
+
+    public static String makeWhereClause(ModelEntity modelEntity, List modelFields, GenericEntity entity, String operator) {
         StringBuffer whereString = new StringBuffer("");
-        
+
         if (modelFields != null && modelFields.size() > 0) {
             whereString.append(makeWhereStringAnd(modelFields, entity));
         }
-        
+
         String viewClause = makeViewWhereClause(modelEntity);
-        
+
         if (viewClause.length() > 0) {
             if (whereString.length() > 0)
-                whereString.append(" AND ");
+                whereString.append( operator );
+
             whereString.append(viewClause);
         }
-        
+
         if (whereString.length() > 0)
             return " WHERE " + whereString.toString();
-        else
-            return "";
+
+        return "";
     }
-    
+
+    /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
+    public static String makeWhereStringAnd(List modelFields, GenericEntity entity) {
+        return makeWhereString( modelFields, entity, " AND ");
+    }
+
+    public static String makeWhereClauseAnd(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
+        return makeWhereClause( modelEntity, modelFields, entity, " AND " );
+    }
+
     public static String makeWhereStringOr(List modelFields, GenericEntity entity) {
-        StringBuffer returnString = new StringBuffer("");
-        
-        if (modelFields.size() < 1) {
-            return "";
-        }
-        
-        int i = 0;
-        for (; i < modelFields.size() - 1; i++) {
-            ModelField modelField = (ModelField) modelFields.get(i);
-            
-            returnString.append(modelField.getColName());
-            if (entity.get(modelField.getName()) != null)
-                returnString.append("=? OR ");
-            else
-                returnString.append(" IS NULL OR ");
-        }
-        ModelField modelField2 = (ModelField) modelFields.get(i);
-        
-        returnString.append(modelField2.getColName());
-        if (entity.get(modelField2.getName()) != null)
-            returnString.append("=?");
-        else
-            returnString.append(" IS NULL");
-        return returnString.toString();
+        return makeWhereString( modelFields, entity, " OR " );
     }
-    
+
     public static String makeWhereClauseOr(ModelEntity modelEntity, List modelFields, GenericEntity entity) {
-        StringBuffer whereString = new StringBuffer("");
-        
-        if (modelFields != null && modelFields.size() > 0) {
-            whereString.append(makeWhereStringOr(modelFields, entity));
-        }
-        
-        String viewClause = makeViewWhereClause(modelEntity);
-        
-        if (viewClause.length() > 0) {
-            if (whereString.length() > 0)
-                whereString.append(" AND ");
-            whereString.append(viewClause);
-        }
-        
-        if (whereString.length() > 0)
-            return " WHERE " + whereString.toString();
-        else
-            return "";
+        return makeWhereClause( modelEntity, modelFields, entity, " OR " );
     }
     
     public static String makeViewWhereClause(ModelEntity modelEntity) {
@@ -188,8 +155,9 @@ public class SqlJdbcUtil {
                     ModelField linkField = linkEntity.getField(keyMap.getFieldName());
                     ModelField relLinkField = relLinkEntity.getField(keyMap.getRelFieldName());
                     
-                    if (whereString.length() > 0)
+                    if (whereString.length() > 0) {
                         whereString.append(" AND ");
+                    }
                     whereString.append(viewLink.getEntityAlias());
                     whereString.append(".");
                     whereString.append(linkField.getColName());
@@ -328,39 +296,24 @@ public class SqlJdbcUtil {
         String fieldType = mft.getJavaType();
         
         try {
-            if (fieldType.equals("java.lang.String") || fieldType.equals("String")) {
-                entity.set(curField.getName(), rs.getString(ind));
-            } else if (fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp")) {
-                entity.set(curField.getName(), rs.getTimestamp(ind));
-            } else if (fieldType.equals("java.sql.Time") || fieldType.equals("Time")) {
-                entity.set(curField.getName(), rs.getTime(ind));
-            } else if (fieldType.equals("java.sql.Date") || fieldType.equals("Date")) {
-                entity.set(curField.getName(), rs.getDate(ind));
-            } else if (fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
-                if (rs.getObject(ind) == null)
-                    entity.set(curField.getName(), null);
-                else
-                    entity.set(curField.getName(), new Integer(rs.getInt(ind)));
-            } else if (fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
-                if (rs.getObject(ind) == null)
-                    entity.set(curField.getName(), null);
-                else
-                    entity.set(curField.getName(), new Long(rs.getLong(ind)));
-            } else if (fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
-                if (rs.getObject(ind) == null)
-                    entity.set(curField.getName(), null);
-                else
-                    entity.set(curField.getName(), new Float(rs.getFloat(ind)));
-            } else if (fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
-                if (rs.getObject(ind) == null)
-                    entity.set(curField.getName(), null);
-                else
-                    entity.set(curField.getName(), new Double(rs.getDouble(ind)));
+            //checking to see if the object is null is really only necessary for 
+            //  the numbers, but to keep the code simple we'll just do it here for all...
+            if (rs.getObject(ind) == null) {
+                entity.set(curField.getName(), null);
             } else {
-                throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
+                switch (getType(fieldType)) {
+                    case 1: entity.set(curField.getName(), rs.getString(ind)); break;
+                    case 2: entity.set(curField.getName(), rs.getTimestamp(ind)); break;
+                    case 3: entity.set(curField.getName(), rs.getTime(ind)); break;
+                    case 4: entity.set(curField.getName(), rs.getDate(ind)); break;
+                    case 5: entity.set(curField.getName(), new Integer(rs.getInt(ind))); break;
+                    case 6: entity.set(curField.getName(), new Long(rs.getLong(ind))); break;
+                    case 7: entity.set(curField.getName(), new Float(rs.getFloat(ind))); break;
+                    case 8: entity.set(curField.getName(), new Double(rs.getDouble(ind))); break;
+                }
             }
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("SQL Exception: ", sqle);
+            throw new GenericDataSourceException("SQL Exception while getting value: ", sqle);
         }
     }
     
@@ -392,27 +345,46 @@ public class SqlJdbcUtil {
         }
         
         try {
-            if (fieldType.equals("java.lang.String") || fieldType.equals("String")) {
-                sqlP.setValue((String) field);
-            } else if (fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp")) {
-                sqlP.setValue((java.sql.Timestamp) field);
-            } else if (fieldType.equals("java.sql.Time") || fieldType.equals("Time")) {
-                sqlP.setValue((java.sql.Time) field);
-            } else if (fieldType.equals("java.sql.Date") || fieldType.equals("Date")) {
-                sqlP.setValue((java.sql.Date) field);
-            } else if (fieldType.equals("java.lang.Integer") || fieldType.equals("Integer")) {
-                sqlP.setValue((java.lang.Integer) field);
-            } else if (fieldType.equals("java.lang.Long") || fieldType.equals("Long")) {
-                sqlP.setValue((java.lang.Long) field);
-            } else if (fieldType.equals("java.lang.Float") || fieldType.equals("Float")) {
-                sqlP.setValue((java.lang.Float) field);
-            } else if (fieldType.equals("java.lang.Double") || fieldType.equals("Double")) {
-                sqlP.setValue((java.lang.Double) field);
-            } else {
-                throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
+            switch (getType(fieldType)) {
+                case 1: sqlP.setValue((String) field); break;
+                case 2: sqlP.setValue((java.sql.Timestamp) field); break;
+                case 3: sqlP.setValue((java.sql.Time) field); break;
+                case 4: sqlP.setValue((java.sql.Date) field); break;
+                case 5: sqlP.setValue((java.lang.Integer) field); break;
+                case 6: sqlP.setValue((java.lang.Long) field); break;
+                case 7: sqlP.setValue((java.lang.Float) field); break;
+                case 8: sqlP.setValue((java.lang.Double) field); break;
             }
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException( "SQL Exception: ", sqle);
+            throw new GenericDataSourceException( "SQL Exception while setting value: ", sqle);
         }
+    }
+    
+    protected static HashMap fieldTypeMap = new HashMap();
+    static {
+        fieldTypeMap.put( "java.lang.String",   new Integer( 1 ));
+        fieldTypeMap.put( "String",             new Integer( 1 ));
+        fieldTypeMap.put( "java.sql.Timestamp", new Integer( 2 ));
+        fieldTypeMap.put( "Timestamp",          new Integer( 2 ));
+        fieldTypeMap.put( "java.sql.Time",      new Integer( 3 ));
+        fieldTypeMap.put( "Time",               new Integer( 3 ));
+        fieldTypeMap.put( "java.sql.Date",      new Integer( 4 ));
+        fieldTypeMap.put( "Date",               new Integer( 4 ));
+        fieldTypeMap.put( "java.lang.Integer",  new Integer( 5 ));
+        fieldTypeMap.put( "Integer",            new Integer( 5 ));
+        fieldTypeMap.put( "java.lang.Long",     new Integer( 6 ));
+        fieldTypeMap.put( "Long",               new Integer( 6 ));
+        fieldTypeMap.put( "java.lang.Float",    new Integer( 7 ));
+        fieldTypeMap.put( "Float",              new Integer( 7 ));
+        fieldTypeMap.put( "java.lang.Double",   new Integer( 8 ));
+        fieldTypeMap.put( "Double",             new Integer( 8 ));
+    }
+
+    public static int getType(String fieldType) throws GenericNotImplementedException {
+        Integer val = (Integer) fieldTypeMap.get(fieldType);
+        if (val == null) {
+            throw new GenericNotImplementedException("Java type " + fieldType + " not currently supported. Sorry.");
+        }
+        return val.intValue();
     }
 }

@@ -29,6 +29,7 @@ import java.util.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
+import org.ofbiz.core.entity.jdbc.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -220,24 +221,20 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         }
         if (type == null) throw new IllegalArgumentException("Type " + field.getType() + " not found");
         String fieldType = type.getJavaType();
-        if (fieldType.equals("java.lang.String") || fieldType.equals("String"))
-            set(name, value);
-        else if (fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
-            set(name, java.sql.Timestamp.valueOf(value));
-        else if (fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
-            set(name, java.sql.Time.valueOf(value));
-        else if (fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
-            set(name, java.sql.Date.valueOf(value));
-        else if (fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
-            set(name, Integer.valueOf(value));
-        else if (fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
-            set(name, Long.valueOf(value));
-        else if (fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
-            set(name, Float.valueOf(value));
-        else if (fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
-            set(name, Double.valueOf(value));
-        else {
-            throw new IllegalArgumentException("Java type " + fieldType + " not currently supported. Sorry.");
+
+        try {
+            switch (SqlJdbcUtil.getType(fieldType)) {
+                case 1: set(name, value); break;
+                case 2: set(name, java.sql.Timestamp.valueOf(value)); break;
+                case 3: set(name, java.sql.Time.valueOf(value)); break;
+                case 4: set(name, java.sql.Date.valueOf(value)); break;
+                case 5: set(name, Integer.valueOf(value)); break;
+                case 6: set(name, Long.valueOf(value)); break;
+                case 7: set(name, Float.valueOf(value)); break;
+                case 8: set(name, Double.valueOf(value)); break;
+            }
+        } catch (GenericNotImplementedException ex) {
+            throw new IllegalArgumentException(ex.getMessage());
         }
     }
 
