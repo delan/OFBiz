@@ -150,6 +150,12 @@
   <SecurityPermission description="Delete operations in the Content Manager." permissionId="CONTENTMGR_DELETE"/>
   <SecurityPermission description="ALL operations in the Content Manager." permissionId="CONTENTMGR_ADMIN"/>
 
+  <SecurityPermission description="View operations in the Manufacturing Manager." permissionId="MANUFACTURING_VIEW"/>
+  <SecurityPermission description="Create operations in the Manufacturing Manager." permissionId="MANUFACTURING_CREATE"/>
+  <SecurityPermission description="Update operations in the Manufacturing Manager." permissionId="MANUFACTURING_UPDATE"/>
+  <SecurityPermission description="Delete operations in the Manufacturing Manager." permissionId="MANUFACTURING_DELETE"/>
+  <SecurityPermission description="ALL operations in the Manufacturing Manager." permissionId="MANUFACTURING_ADMIN"/>
+
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SEND_CONTROL_APPLET"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
@@ -269,6 +275,12 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_ADMIN"/>
 
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WEBTOOLS_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WEBTOOLS_VIEW"/>
