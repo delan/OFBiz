@@ -40,7 +40,7 @@ public class GroupModel {
     
     public static final String module = GroupModel.class.getName();
     
-    private String groupName, sendMode;
+    private String groupName, sendMode;    
     private List services;
     private int lastServiceRan;
     
@@ -56,7 +56,7 @@ public class GroupModel {
             services.add(new GroupServiceModel(service));
         }
         this.groupName = group.getAttribute("name");
-        this.sendMode = group.getAttribute("send-mode"); 
+        this.sendMode = group.getAttribute("send-mode");        
         if (Debug.verboseOn()) Debug.logVerbose("Created Service Group Model --> " + this, module);       
     }
     
@@ -118,11 +118,19 @@ public class GroupModel {
     }
     
     private Map runAll(ServiceDispatcher dispatcher, String localName, Map context) throws GenericServiceException {
+        Map runContext = new HashMap(context);
         Map result = new HashMap();
         Iterator i = services.iterator();
         while (i.hasNext()) {
             GroupServiceModel model = (GroupServiceModel) i.next();
-            result.putAll(model.invoke(dispatcher, localName, context));
+            if (Debug.verboseOn()) Debug.logVerbose("Using Context: " + runContext, module);
+            Map thisResult = model.invoke(dispatcher, localName, runContext);
+            if (Debug.verboseOn()) Debug.logVerbose("Result: " + thisResult, module);
+            result.putAll(thisResult);
+            if (model.resultToContext()) {
+                runContext.putAll(thisResult);
+                Debug.logVerbose("Added result(s) to context.", module);
+            }
         }
         return result;
     }

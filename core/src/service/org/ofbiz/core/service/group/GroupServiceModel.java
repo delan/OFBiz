@@ -41,12 +41,14 @@ public class GroupServiceModel {
     public static final String module = GroupServiceModel.class.getName();
 
     private String serviceName, serviceMode;
+    private boolean resultToContext = false;
     
     /**
      * Constructor using DOM element     * @param service DOM element for the service     */
     public GroupServiceModel(Element service) {
         this.serviceName = service.getAttribute("name");
         this.serviceMode = service.getAttribute("mode");
+        this.resultToContext = service.getAttribute("result-to-context").equalsIgnoreCase("true") ? true : false;
     }  
     
     /**
@@ -67,6 +69,14 @@ public class GroupServiceModel {
     public String getName() {
         return this.serviceName;
     }  
+    
+    /**
+     * Returns true if the results of this service are to go back into the context
+     * @return boolean
+     */
+    public boolean resultToContext() {
+        return this.resultToContext;
+    }
     
     /**
      * Invoker method to invoke this service     * @param dispatcher ServiceDispatcher used for this invocation     * @param localName Name of the LocalDispatcher used     * @param context Context for this service (will use only valid parameters)     * @return Map result Map     * @throws GenericServiceException     */

@@ -39,6 +39,7 @@
 <!ATTLIST service
 	name CDATA #REQUIRED
 	mode (sync|async) "sync"
+	result-to-context (true|false) "false"
 >
 
 <!--
