@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <Party partyId="UPS" partyTypeId="PARTY_GROUP"/>
-  <PartyGroup partyId="UPS" groupName="UPS"/>
-  <PartyRole partyId="UPS" roleTypeId="CARRIER"/>  
-  <PartyRole partyId="Company" roleTypeId="CARRIER"/>
-  <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
-  <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="4"/>
-  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" sequenceNumber="3" carrierServiceCode="03"/>
-  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="AIR" sequenceNumber="2" carrierServiceCode="02"/>
-  <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY" sequenceNumber="1" carrierServiceCode="01"/>
-  <CarrierShipmentMethod partyId="_NA_" roleTypeId="CARRIER" shipmentMethodTypeId="STANDARD" sequenceNumber="5"/>
-  <ProductStoreShipmentMeth productStoreId="9000" partyId="UPS" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" sequenceNumber="3"/>
-  <ProductStoreShipmentMeth productStoreId="9000" partyId="UPS" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="AIR" sequenceNumber="2"/>
-  <ProductStoreShipmentMeth productStoreId="9000" partyId="UPS" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY" sequenceNumber="1"/>
-  <QuantityBreak fromQuantity="0.0" quantityBreakId="9000" quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
-  <QuantityBreak fromQuantity="0.0" quantityBreakId="9003" quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
-  <QuantityBreak fromQuantity="0.0" quantityBreakId="9009" quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
-  <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="5.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9000" shipmentMethodTypeId="AIR" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9000" weightUnitPrice="0.2"/>
-  <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="3.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9001" shipmentMethodTypeId="GROUND" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9003" weightUnitPrice="0.1"/>
-  <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="5.0" orderItemFlatPrice="0.0" carrierPartyId="Company" carrierRoleTypeId="CARRIER" orderPricePercent="0.0" shipmentCostEstimateId="9002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
-  <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="10.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9003" shipmentMethodTypeId="NEXT_DAY" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9009" weightUnitPrice="0.35"/>
-  <ShipmentCostEstimate productStoreId="9000" shipmentCostEstimateId="9004" shipmentMethodTypeId="STANDARD" carrierPartyId="_NA_" carrierRoleTypeId="CARRIER" orderFlatPrice="0.0" orderPricePercent="20.0" orderItemFlatPrice="0.0"/>
+    <Party partyId="UPS" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="UPS" groupName="UPS"/>
+    <PartyRole partyId="UPS" roleTypeId="CARRIER"/>
+    <PartyRole partyId="Company" roleTypeId="CARRIER"/>
+    <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
+
+    <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
+    <ShipmentMethodType description="Express" shipmentMethodTypeId="EXPRESS"/>
+	<ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
+	<ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
+	<ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
+	<ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+
+    <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="4"/>
+    <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" sequenceNumber="3" carrierServiceCode="03"/>
+    <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="AIR" sequenceNumber="2" carrierServiceCode="02"/>
+    <CarrierShipmentMethod partyId="UPS" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY" sequenceNumber="1" carrierServiceCode="01"/>
+    <CarrierShipmentMethod partyId="_NA_" roleTypeId="CARRIER" shipmentMethodTypeId="STANDARD" sequenceNumber="5"/>
+
+    <ProductStoreShipmentMeth productStoreId="9000" partyId="UPS" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="GROUND" sequenceNumber="3"/>
+    <ProductStoreShipmentMeth productStoreId="9000" partyId="UPS" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="AIR" sequenceNumber="2"/>
+    <ProductStoreShipmentMeth productStoreId="9000" partyId="UPS" allowUspsAddr="N" requireUspsAddr="N" roleTypeId="CARRIER" shipmentMethodTypeId="NEXT_DAY" sequenceNumber="1"/>
+    <QuantityBreak fromQuantity="0.0" quantityBreakId="9000" quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
+    <QuantityBreak fromQuantity="0.0" quantityBreakId="9003" quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
+    <QuantityBreak fromQuantity="0.0" quantityBreakId="9009" quantityBreakTypeId="SHIP_WEIGHT" thruQuantity="0.0"/>
+    <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="5.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9000" shipmentMethodTypeId="AIR" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9000" weightUnitPrice="0.2"/>
+    <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="3.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9001" shipmentMethodTypeId="GROUND" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9003" weightUnitPrice="0.1"/>
+    <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="5.0" orderItemFlatPrice="0.0" carrierPartyId="Company" carrierRoleTypeId="CARRIER" orderPricePercent="0.0" shipmentCostEstimateId="9002" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    <ShipmentCostEstimate productStoreId="9000" orderFlatPrice="10.0" orderItemFlatPrice="0.0" orderPricePercent="0.0" shipmentCostEstimateId="9003" shipmentMethodTypeId="NEXT_DAY" carrierPartyId="UPS" carrierRoleTypeId="CARRIER" weightBreakId="9009" weightUnitPrice="0.35"/>
+    <ShipmentCostEstimate productStoreId="9000" shipmentCostEstimateId="9004" shipmentMethodTypeId="STANDARD" carrierPartyId="_NA_" carrierRoleTypeId="CARRIER" orderFlatPrice="0.0" orderPricePercent="20.0" orderItemFlatPrice="0.0"/>
 </entity-engine-xml>
