@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.2 2003/09/19 21:39:55 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.3 2003/09/20 18:37:04 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -56,6 +56,9 @@ public class ModelEntity implements Comparable {
 
     /** The package-name of the Entity */
     protected String packageName = "";
+
+    /** The default-resource-name of the Entity, used with the getResource call to check for a value in a resource bundle */
+    protected String defaultResourceName = "";
 
     /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */
     protected String dependentOn = "";
@@ -168,6 +171,7 @@ public class ModelEntity implements Comparable {
         this.entityName = UtilXml.checkEmpty(entityElement.getAttribute("entity-name"));
         this.tableName = UtilXml.checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(this.entityName));
         this.packageName = UtilXml.checkEmpty(entityElement.getAttribute("package-name"));
+        this.defaultResourceName = UtilXml.checkEmpty(entityElement.getAttribute("default-resource-name"));
         this.dependentOn = UtilXml.checkEmpty(entityElement.getAttribute("dependent-on"));
         this.doLock = UtilXml.checkBoolean(entityElement.getAttribute("enable-lock"), false);
         this.neverCache = UtilXml.checkBoolean(entityElement.getAttribute("never-cache"), false);
@@ -259,6 +263,15 @@ public class ModelEntity implements Comparable {
 
     public void setPackageName(String packageName) {
         this.packageName = packageName;
+    }
+
+    /** The default-resource-name of the Entity */
+    public String getDefaultResourceName() {
+        return this.defaultResourceName;
+    }
+
+    public void setDefaultResourceName(String defaultResourceName) {
+        this.defaultResourceName = defaultResourceName;
     }
 
     /** The entity-name of the Entity that this Entity is dependent on, if empty then no dependency */

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.3 2003/09/04 22:44:58 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.4 2003/09/20 18:37:04 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,12 +29,16 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.Observable;
+import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.jdbc.SqlJdbcUtil;
@@ -55,7 +59,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, Serializable, Comparable, Cloneable {
@@ -350,15 +354,15 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         }
     }
 
-    // might be nice to add some ClassCastException handling... and auto conversion? hmmm...
     public String getString(String name) {
+        // might be nice to add some ClassCastException handling... and auto conversion? hmmm...
         Object object = get(name);
-
         if (object == null) return null;
-        if (object instanceof java.lang.String)
+        if (object instanceof java.lang.String) {
             return (String) object;
-        else
+        } else {
             return object.toString();
+        }
     }
 
     public java.sql.Timestamp getTimestamp(String name) {
@@ -395,6 +399,82 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         return wrapper.getBytes();
     }
 
+    /** Checks a resource bundle for a value for this field using the entity name, the field name 
+     *    and a composite of the Primary Key field values as a key. If no value is found in the 
+     *    resource then the field value is returned. Uses the default-resource-name from the entity
+     *    definition as the resource name. To specify a resource name manually, use the other getResource method.
+     *
+     *  So, the key in the resource bundle (properties file) should be as follows:
+     *    <entity-name>.<field-name>.<pk-field-value-1>.<pk-field-value-2>...<pk-field-value-n>
+     *  For example:
+     *    ProductType.description.FINISHED_GOOD
+     *
+     * @param name The name of the field on the entity
+     * @param locale The locale to use when finding the ResourceBundle, if null uses the default 
+     *    locale for the current instance of Java
+     * @return If the corresponding resource is found and contains a key as described above, then that 
+     *    property value is returned; otherwise returns the field value
+     */    
+    public Object getResource(String name, Locale locale) {
+        return getResource(name, null, locale);
+    }
+    
+    /** Same as the getResource method that does not take resource name, but instead allows manually 
+     *    specifying the resource name. In general you should use the other method for more consistent
+     *    naming and use of the corresponding properties files.
+     * @param name The name of the field on the entity
+     * @param resource The name of the resource to get the value from; if null defaults to the 
+     *    default-resource-name on the entity definition, if specified there
+     * @param locale The locale to use when finding the ResourceBundle, if null uses the default 
+     *    locale for the current instance of Java
+     * @return If the specified resource is found and contains a key as described above, then that 
+     *    property value is returned; otherwise returns the field value
+     */
+    public Object getResource(String name, String resource, Locale locale) {
+        Object fieldValue = get(name);
+        if (UtilValidate.isEmpty(resource)) {
+            resource = this.getModelEntity().getDefaultResourceName();
+            // still empty? return the fieldValue
+            if (UtilValidate.isEmpty(resource)) {
+                //Debug.logWarning("Tried to getResource value for field named " + name + " but no resource name was passed to the method or specified in the default-resource-name attribute of the entity definition", module);
+                return fieldValue;
+            }
+        }
+        ResourceBundle bundle = UtilProperties.getResourceBundle(resource, locale);
+        if (bundle == null) {
+            //Debug.logWarning("Tried to getResource value for field named " + name + " but no resource was found with the name " + resource + " in the locale " + locale, module);
+            return fieldValue;
+        }
+        
+        StringBuffer keyBuffer = new StringBuffer();
+        // start with the Entity Name
+        keyBuffer.append(this.getEntityName());
+        // next add the Field Name
+        keyBuffer.append('.');
+        keyBuffer.append(name);
+        // finish off by adding the values of all PK fields
+        Iterator iter = this.getModelEntity().getPksIterator();
+        while (iter != null && iter.hasNext()) {
+            ModelField curField = (ModelField) iter.next();
+            keyBuffer.append('.');
+            keyBuffer.append(this.get(curField.getName()));
+        }
+
+        String bundleKey = keyBuffer.toString();
+
+        Object resourceValue = null;
+        try {
+            resourceValue = bundle.getObject(bundleKey);
+        } catch (MissingResourceException e) {
+            return fieldValue;
+        }
+        if (resourceValue == null) {
+            return fieldValue;
+        } else {
+            return resourceValue;
+        }
+    }
+    
     public GenericPK getPrimaryKey() {
         Collection pkNames = new LinkedList();
         Iterator iter = this.getModelEntity().getPksIterator();
