@@ -92,7 +92,6 @@ public class SimpleMapProcessor {
                         Element simpleMapProcessorElement = (Element) strProcorIter.next();
                         SimpleMapProcessor.Processor processor = new SimpleMapProcessor.Processor(simpleMapProcessorElement);
                         simpleMapProcessors.put(simpleMapProcessorElement.getAttribute("name"), processor);
-
                     }
                     
                     //put it in the cache
@@ -374,18 +373,17 @@ public class SimpleMapProcessor {
         public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object obj = inMap.get(fieldName);
             
-            if (!(obj instanceof java.lang.String)) {
-                String msg = "Cannot validate non-String for field: " + fieldName;
-                messages.add(msg);
-                Debug.logError("[ValidateMethod.exec] " + msg);
+            String fieldValue = null;
+            try {
+                fieldValue = (String) ObjectType.simpleTypeConvert(obj, "String", null, locale);
+            } catch (GeneralException e) {
+                messages.add("Could not convert field value for comparison: " + e.getMessage());
                 return;
             }
             
             if (loader == null) {
-                loader = this.getClass().getClassLoader();
+                loader = Thread.currentThread().getContextClassLoader();
             }
-            
-            String fieldValue = (java.lang.String) obj;
             
             Class[] paramTypes = new Class[] {String.class};
             Object[] params = new Object[] {fieldValue};
@@ -601,14 +599,13 @@ public class SimpleMapProcessor {
         public void exec(Map inMap, Map results, List messages, Locale locale, ClassLoader loader) {
             Object obj = inMap.get(fieldName);
             
-            if (!(obj instanceof java.lang.String)) {
-                String msg = "Cannot validate non-String with regular expression for field: " + fieldName;
-                messages.add(msg);
-                Debug.logError("[ValidateMethod.exec] " + msg);
+            String fieldValue = null;
+            try {
+                fieldValue = (String) ObjectType.simpleTypeConvert(obj, "String", null, locale);
+            } catch (GeneralException e) {
+                messages.add("Could not convert field value for comparison: " + e.getMessage());
                 return;
             }
-            
-            String fieldValue = (java.lang.String) obj;
             
             if (pattern == null) {
                 messages.add("Could not compile regular expression \"" + expr + "\" for validation");
