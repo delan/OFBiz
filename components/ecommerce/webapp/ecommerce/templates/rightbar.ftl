@@ -21,14 +21,14 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 
   <td width='5'>&nbsp;&nbsp;&nbsp;</td>
   <td width='950' valign='top' align='right'>
     ${pages.get("/includes/language.ftl")}
-    ${pages.get("/cart/minicart.ftl")}
+    ${pages.get("/cart/minicart.ftl")}    
     ${pages.get("/cart/minipromotext.ftl")}
     ${pages.get("/catalog/miniassocprods.ftl")}
     ${pages.get("/catalog/minilastviewedcategories.ftl")}

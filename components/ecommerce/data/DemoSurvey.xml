@@ -3,9 +3,12 @@
     <Survey surveyId="1000" description="Gift Card Purchase Information" isAnonymous="Y" allowMultiple="Y" allowUpdate="N" lastUpdatedStamp="2003-12-05 16:49:33.835" lastUpdatedTxStamp="2003-12-05 16:49:33.835"/>
     <Survey surveyId="1001" description="Gift Card Reload Information" isAnonymous="Y" allowMultiple="Y" allowUpdate="N" lastUpdatedStamp="2003-12-05 16:49:41.943" lastUpdatedTxStamp="2003-12-05 16:49:41.943"/>
     <Survey surveyId="1002" surveyName="Shopping Survey" description="Tell us about your on-line shopping patterns" isAnonymous="N" allowMultiple="Y" allowUpdate="Y" lastUpdatedStamp="2003-12-05 19:11:04.883" lastUpdatedTxStamp="2003-12-05 19:11:04.883"/>
+    <Survey surveyId="1003" surveyName="Mini-Poll Poll" description="Tell us where the mini-poll should go" isAnonymous="N" allowMultiple="N" allowUpdate="N" lastUpdatedStamp="2003-12-05 19:11:04.883" lastUpdatedTxStamp="2003-12-05 19:11:04.883"/>
+    <Survey surveyId="1004" surveyName="Mouse Hand Poll" description="Your mouse hand is" isAnonymous="N" allowMultiple="N" allowUpdate="N" lastUpdatedStamp="2003-12-05 19:11:04.883" lastUpdatedTxStamp="2003-12-05 19:11:04.883"/>
 
     <SurveyQuestionCategory surveyQuestionCategoryId="1000" description="Gift Card Purchase Questions" lastUpdatedStamp="2003-12-04 21:40:23.207" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
     <SurveyQuestionCategory surveyQuestionCategoryId="1001" description="Shopping Questions" lastUpdatedStamp="2003-12-05 19:11:18.736" lastUpdatedTxStamp="2003-12-05 19:11:18.736"/>
+    <SurveyQuestionCategory surveyQuestionCategoryId="1002" description="Poll Questions" lastUpdatedStamp="2003-12-05 19:11:18.736" lastUpdatedTxStamp="2003-12-05 19:11:18.736"/>
 
     <SurveyQuestion surveyQuestionId="1000" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_LONG" description="senderName" question="Sender&apos;s Name:" lastUpdatedStamp="2003-12-04 21:40:23.216" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
     <SurveyQuestion surveyQuestionId="1001" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_LONG" description="recipientName" question="Recipient&apos;s Name:" lastUpdatedStamp="2003-12-04 21:40:23.222" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
@@ -13,7 +16,6 @@
     <SurveyQuestion surveyQuestionId="1003" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXTAREA" description="giftMessage" question="Gift Message:" lastUpdatedStamp="2003-12-04 21:40:23.228" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
     <SurveyQuestion surveyQuestionId="1010" surveyQuestionCategoryId="1000" surveyQuestionTypeId="GIFT_CARD" description="giftCardNumber" question="Gift Card Number:" lastUpdatedStamp="2003-12-04 21:40:23.251" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
     <SurveyQuestion surveyQuestionId="1011" surveyQuestionCategoryId="1000" surveyQuestionTypeId="TEXT_SHORT" description="giftCardPin" question="PIN Number:" lastUpdatedStamp="2003-12-04 21:40:23.255" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
-
     <SurveyQuestion surveyQuestionId="1030" surveyQuestionCategoryId="1001" surveyQuestionTypeId="OPTION" question="How often to you shop on-line?" lastUpdatedStamp="2003-12-05 19:12:29.893" lastUpdatedTxStamp="2003-12-05 19:12:29.893"/>
     <SurveyQuestion surveyQuestionId="1031" surveyQuestionCategoryId="1001" surveyQuestionTypeId="BOOLEAN" question="Have you shopped here before?" lastUpdatedStamp="2003-12-05 19:13:51.109" lastUpdatedTxStamp="2003-12-05 19:13:51.109"/>
     <SurveyQuestion surveyQuestionId="1032" surveyQuestionCategoryId="1001" surveyQuestionTypeId="SEPERATOR_LINE" lastUpdatedStamp="2003-12-05 19:14:08.69" lastUpdatedTxStamp="2003-12-05 19:14:08.69"/>
@@ -23,6 +25,8 @@
     <SurveyQuestion surveyQuestionId="1036" surveyQuestionCategoryId="1001" surveyQuestionTypeId="TEXTAREA" question="Comments:" lastUpdatedStamp="2003-12-05 19:19:22.968" lastUpdatedTxStamp="2003-12-05 19:19:22.968"/>
     <SurveyQuestion surveyQuestionId="1037" surveyQuestionCategoryId="1001" surveyQuestionTypeId="SEPERATOR_TEXT" question="&lt;img src=&quot;http://localhost:8080/images/ofbiz_logo.jpg&quot;&gt;" lastUpdatedStamp="2003-12-05 19:20:09.053" lastUpdatedTxStamp="2003-12-05 19:20:09.052"/>
     <SurveyQuestion surveyQuestionId="1038" surveyQuestionCategoryId="1001" surveyQuestionTypeId="SEPERATOR_LINE" lastUpdatedStamp="2003-12-05 19:21:53.36" lastUpdatedTxStamp="2003-12-05 19:21:53.36"/>
+    <SurveyQuestion surveyQuestionId="1040" surveyQuestionCategoryId="1002" surveyQuestionTypeId="OPTION" question="Which side should the mini-poll box show?" lastUpdatedStamp="2003-12-05 19:12:29.893" lastUpdatedTxStamp="2003-12-05 19:12:29.893"/>
+    <SurveyQuestion surveyQuestionId="1041" surveyQuestionCategoryId="1002" surveyQuestionTypeId="OPTION" question="Which hand do you use your mouse with?" lastUpdatedStamp="2003-12-05 19:12:29.893" lastUpdatedTxStamp="2003-12-05 19:12:29.893"/>
 
     <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1000" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1" lastUpdatedStamp="2003-12-04 21:40:23.233" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
     <SurveyQuestionAppl surveyId="1000" surveyQuestionId="1001" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="2" lastUpdatedStamp="2003-12-04 21:40:23.239" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
@@ -39,6 +43,8 @@
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1038" fromDate="2001-01-01 00:00:00.0" requiredField="N" sequenceNum="7" lastUpdatedStamp="2003-12-05 19:21:59.761" lastUpdatedTxStamp="2003-12-05 19:21:59.761"/>
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1036" fromDate="2001-01-01 00:00:00.0" requiredField="N" sequenceNum="9" lastUpdatedStamp="2003-12-05 19:22:03.015" lastUpdatedTxStamp="2003-12-05 19:22:03.015"/>
     <SurveyQuestionAppl surveyId="1002" surveyQuestionId="1035" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="8" lastUpdatedStamp="2003-12-05 19:22:07.669" lastUpdatedTxStamp="2003-12-05 19:22:07.669"/>
+    <SurveyQuestionAppl surveyId="1003" surveyQuestionId="1040" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1" lastUpdatedStamp="2003-12-04 21:40:23.233" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
+    <SurveyQuestionAppl surveyId="1004" surveyQuestionId="1041" fromDate="2001-01-01 00:00:00.0" requiredField="Y" sequenceNum="1" lastUpdatedStamp="2003-12-04 21:40:23.233" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
 
     <SurveyQuestionOption surveyQuestionId="1030" surveyOptionSeqId="00001" description="1-2 times per year" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:12:57.186" lastUpdatedTxStamp="2003-12-05 19:12:57.186"/>
     <SurveyQuestionOption surveyQuestionId="1030" surveyOptionSeqId="00002" description="2-5 times per year" sequenceNum="2" lastUpdatedStamp="2003-12-05 19:13:08.549" lastUpdatedTxStamp="2003-12-05 19:13:08.549"/>
@@ -52,10 +58,16 @@
     <SurveyQuestionOption surveyQuestionId="1034" surveyOptionSeqId="00001" description="Excellent Functionality" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:17:00.167" lastUpdatedTxStamp="2003-12-05 19:17:00.167"/>
     <SurveyQuestionOption surveyQuestionId="1034" surveyOptionSeqId="00002" description="Good Functionality" sequenceNum="2" lastUpdatedStamp="2003-12-05 19:17:27.067" lastUpdatedTxStamp="2003-12-05 19:17:27.067"/>
     <SurveyQuestionOption surveyQuestionId="1034" surveyOptionSeqId="00003" description="Poor Functionality" sequenceNum="3" lastUpdatedStamp="2003-12-05 19:17:37.407" lastUpdatedTxStamp="2003-12-05 19:17:37.407"/>
+    <SurveyQuestionOption surveyQuestionId="1040" surveyOptionSeqId="00001" description="Right Side" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:17:37.407" lastUpdatedTxStamp="2003-12-05 19:17:37.407"/>
+    <SurveyQuestionOption surveyQuestionId="1040" surveyOptionSeqId="00002" description="Left Side" sequenceNum="2" lastUpdatedStamp="2003-12-05 19:17:37.407" lastUpdatedTxStamp="2003-12-05 19:17:37.407"/>
+    <SurveyQuestionOption surveyQuestionId="1041" surveyOptionSeqId="00001" description="Right Hand" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:17:37.407" lastUpdatedTxStamp="2003-12-05 19:17:37.407"/>
+    <SurveyQuestionOption surveyQuestionId="1041" surveyOptionSeqId="00002" description="Left Hand" sequenceNum="2" lastUpdatedStamp="2003-12-05 19:17:37.407" lastUpdatedTxStamp="2003-12-05 19:17:37.407"/>
 
     <ProductStoreSurveyAppl productStoreSurveyId="1000" productStoreId="9000" surveyApplTypeId="CART_ADD" surveyId="1000" productCategoryId="GC-101" fromDate="2003-11-24 16:00:02.467" surveyTemplate="/components/ecommerce/templates/survey/genericsurvey.ftl" lastUpdatedStamp="2003-12-04 21:40:23.27" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
     <ProductStoreSurveyAppl productStoreSurveyId="1001" productStoreId="9000" surveyApplTypeId="CART_ADD" surveyId="1001" productCategoryId="GC-102" fromDate="2003-11-24 16:00:51.693" surveyTemplate="/components/ecommerce/templates/survey/genericsurvey.ftl" lastUpdatedStamp="2003-12-04 21:40:23.276" lastUpdatedTxStamp="2003-12-04 21:40:20.607"/>
-    <ProductStoreSurveyAppl productStoreSurveyId="10030" productStoreId="9000" surveyApplTypeId="CUSTOMER_PROFILE" surveyId="1002" fromDate="2003-12-05 19:22:40.925" surveyTemplate="/components/ecommerce/templates/survey/genericsurvey.ftl" resultTemplate="/components/ecommerce/templates/survey/genericresult.ftl" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:22:40.925" lastUpdatedTxStamp="2003-12-05 19:22:40.925"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1002" productStoreId="9000" surveyApplTypeId="CUSTOMER_PROFILE" surveyId="1002" fromDate="2003-12-05 19:22:40.925" surveyTemplate="/components/ecommerce/templates/survey/genericsurvey.ftl" resultTemplate="/components/ecommerce/templates/survey/genericresult.ftl" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:22:40.925" lastUpdatedTxStamp="2003-12-05 19:22:40.925"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1003" productStoreId="9000" surveyApplTypeId="RANDOM_POLL" groupName="testSurveyGroup" surveyId="1003" fromDate="2003-12-05 19:22:40.925" surveyTemplate="/components/ecommerce/templates/survey/minisurvey.ftl" resultTemplate="/components/ecommerce/templates/survey/miniresult.ftl" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:22:40.925" lastUpdatedTxStamp="2003-12-05 19:22:40.925"/>
+    <ProductStoreSurveyAppl productStoreSurveyId="1004" productStoreId="9000" surveyApplTypeId="RANDOM_POLL" groupName="testSurveyGroup" surveyId="1004" fromDate="2003-12-05 19:22:40.925" surveyTemplate="/components/ecommerce/templates/survey/minisurvey.ftl" resultTemplate="/components/ecommerce/templates/survey/miniresult.ftl" sequenceNum="1" lastUpdatedStamp="2003-12-05 19:22:40.925" lastUpdatedTxStamp="2003-12-05 19:22:40.925"/>
 </entity-engine-xml>
 
 

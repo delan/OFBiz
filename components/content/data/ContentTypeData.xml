@@ -99,6 +99,8 @@
 
   <SurveyApplType surveyApplTypeId="CART_ADD" description="Add-To Cart"/>
   <SurveyApplType surveyApplTypeId="CHECK_OUT" description="Check-Out"/>
+  <SurveyApplType surveyApplTypeId="GENERAL_POLL" description="General Poll"/>
+  <SurveyApplType surveyApplTypeId="RANDOM_POLL" description="Random Poll"/>
   <SurveyApplType surveyApplTypeId="CUSTOMER_PROFILE" description="Customer Profile"/>
   <SurveyApplType surveyApplTypeId="SORDER_PLACE" description="Sales Order Placement"/>
   <SurveyApplType surveyApplTypeId="PORDER_PLACE" description="Purchase Order Placement"/>

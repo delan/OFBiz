@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.27 2004/07/03 19:54:25 jonesde Exp $
+ * $Id: ProductStoreWorker.java,v 1.28 2004/07/06 21:17:23 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -23,12 +23,12 @@
  */
 package org.ofbiz.product.store;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +37,7 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -52,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -377,22 +378,59 @@ public class ProductStoreWorker {
         return returnShippingMethods;
     }
 
+    public static ProductStoreSurveyWrapper getRandomSurveyWrapper(ServletRequest request, String groupName) {
+        GenericValue productStore = getProductStore(request);
+        HttpSession session = ((HttpServletRequest)request).getSession();
+        if (productStore == null) {
+            return null;
+        }
+
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        if (userLogin == null) {
+            userLogin = (GenericValue) session.getAttribute("autoUserLogin");
+        }
+
+        String partyId = userLogin != null ? userLogin.getString("partyId") : null;
+        Map passThruFields = UtilHttp.getParameterMap(((HttpServletRequest)request));
+
+        return getRandomSurveyWrapper(productStore.getDelegator(), productStore.getString("productStoreId"), groupName, partyId, passThruFields);
+    }
+
+    public static ProductStoreSurveyWrapper getRandomSurveyWrapper(GenericDelegator delegator, String productStoreId, String groupName, String partyId, Map passThruFields) {
+        List randomSurveys = getSurveys(delegator, productStoreId, groupName, null, "RANDOM_POLL");        
+        if (!UtilValidate.isEmpty(randomSurveys)) {
+            Random rand = new Random();
+            int index = rand.nextInt(randomSurveys.size());
+            GenericValue appl = (GenericValue) randomSurveys.get(index);
+            return new ProductStoreSurveyWrapper(appl, partyId, passThruFields);
+        } else {
+            return null;
+        }
+    }
+
     public static List getProductSurveys(GenericDelegator delegator, String productStoreId, String productId, String surveyApplTypeId) {
-        List surveys = new ArrayList();
+        return getSurveys(delegator, productStoreId, null, productId, surveyApplTypeId);
+    }
+
+    public static List getSurveys(GenericDelegator delegator, String productStoreId, String groupName, String productId, String surveyApplTypeId) {
+        List surveys = new LinkedList();
         List storeSurveys = null;
         try {
             storeSurveys = delegator.findByAndCache("ProductStoreSurveyAppl", UtilMisc.toMap("productStoreId", productStoreId, "surveyApplTypeId", surveyApplTypeId), UtilMisc.toList("sequenceNum"));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to get ProductStoreSurveyAppl for store : " + productStoreId, module);
         }
+
+        // limit by date
         storeSurveys = EntityUtil.filterByDate(storeSurveys);
 
-        // null productId means get all of this trigger (appl) type
-        if (productId == null) {
-            return storeSurveys;
+        // limit based on group name
+        if (!UtilValidate.isEmpty(groupName)) {
+            storeSurveys = EntityUtil.filterByAnd(storeSurveys, UtilMisc.toMap("groupName", groupName));
         }
 
-        if (storeSurveys != null && storeSurveys.size() > 0) {
+        // limit by product
+        if (!UtilValidate.isEmpty(productId) && !UtilValidate.isEmpty(storeSurveys)) {
             Iterator ssi = storeSurveys.iterator();
             while (ssi.hasNext()) {
                 GenericValue surveyAppl = (GenericValue) ssi.next();
@@ -417,6 +455,8 @@ public class ProductStoreWorker {
                     }
                 }
             }
+        } else {
+            surveys.addAll(storeSurveys);
         }
 
         return surveys;
@@ -500,7 +540,6 @@ public class ProductStoreWorker {
             return false;
         }
 
-        String productStoreId = productStore.getString("productStoreId");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         return isStoreInventoryRequired(productStore.getString("productStoreId"), product, delegator);
     }

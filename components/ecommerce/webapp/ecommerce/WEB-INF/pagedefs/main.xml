@@ -4,6 +4,7 @@
     <property name="title">Main Page</property>
     <property name="title.property">PageTitleMain</property>
     <property name="headerItem">main</property>
+    <property name="randomSurveyGroup">testSurveyGroup</property>
     <content-action name="main.bsh"/>
     <content-action name="/catalog/category.bsh"/>
 </page>

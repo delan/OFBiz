@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.96 $
+ * @version    $Revision: 1.97 $
  */
 -->
 
@@ -2880,6 +2880,7 @@
       <field name="productStoreSurveyId" type="id-ne"></field>
       <field name="productStoreId" type="id-ne"></field>
       <field name="surveyApplTypeId" type="id-ne"></field>
+      <field name="groupName" type="name"></field>
       <field name="surveyId" type="id-ne"></field>
       <field name="productId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
