@@ -31,8 +31,12 @@ import java.util.Map;
 
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.UtilMisc;
+
 import org.w3c.dom.Element;
 
 /**
@@ -46,36 +50,47 @@ public class ServiceEcaCondition implements java.io.Serializable {
     
     public static final String module = ServiceEcaCondition.class.getName();
 
-    protected String lhsValueName, rhsValueName;
-    protected String lhsMapName, rhsMapName;
-    protected String operator;
-    protected String compareType;
-    protected String format;
-    protected boolean constant = false;
+    protected String conditionService = null;
+    protected String lhsValueName = null;
+    protected String rhsValueName = null;
+    protected String lhsMapName = null;
+    protected String rhsMapName = null;
+    protected String operator = null;
+    protected String compareType = null;
+    protected String format = null;
+    protected boolean isConstant = false;
+    protected boolean isService = false;
 
     protected ServiceEcaCondition() {}
 
-    public ServiceEcaCondition(Element condition, boolean constant) {
-        this.lhsValueName = condition.getAttribute("field-name");
-        this.lhsMapName = condition.getAttribute("map-name");
-
-        this.constant = constant;
-        if (constant) {
-            this.rhsValueName = condition.getAttribute("value");
-            this.rhsMapName = null;
+    public ServiceEcaCondition(Element condition, boolean isConstant, boolean isService) {
+        if (isService) {
+            this.isService = isService;
+            this.conditionService = condition.getAttribute("service-name");
         } else {
-            this.rhsValueName = condition.getAttribute("to-field-name");
-            this.rhsMapName = condition.getAttribute("to-map-name");
+            this.lhsValueName = condition.getAttribute("field-name");
+            this.lhsMapName = condition.getAttribute("map-name");
+
+            this.isConstant = isConstant;
+            if (isConstant) {
+                this.rhsValueName = condition.getAttribute("value");
+                this.rhsMapName = null;
+            } else {
+                this.rhsValueName = condition.getAttribute("to-field-name");
+                this.rhsMapName = condition.getAttribute("to-map-name");
+            }
+
+            this.operator = condition.getAttribute("operator");
+            this.compareType = condition.getAttribute("type");
+            this.format = condition.getAttribute("format");
+
+            if (lhsValueName == null) {
+                lhsValueName = "";
+            }
+            if (rhsValueName == null) {
+                rhsValueName = "";
+            }
         }
-
-        this.operator = condition.getAttribute("operator");
-        this.compareType = condition.getAttribute("type");
-        this.format = condition.getAttribute("format");
-
-        if (lhsValueName == null)
-            lhsValueName = "";
-        if (rhsValueName == null)
-            rhsValueName = "";
     }
 
     public boolean eval(String serviceName, DispatchContext dctx, Map context) throws GenericServiceException {
@@ -84,6 +99,23 @@ public class ServiceEcaCondition implements java.io.Serializable {
         }
 
         if (Debug.verboseOn()) Debug.logVerbose(this.toString() + ", In the context: " + context, module);
+
+        // condition-service; run the service and return the reply result
+        if (isService) {
+            LocalDispatcher dispatcher = dctx.getDispatcher();
+            Map conditionServiceResult = dispatcher.runSync(conditionService,
+                    UtilMisc.toMap("serviceContext", context, "serviceName", serviceName,
+                            "userLogin", context.get("userLogin")));
+
+            Boolean conditionReply = Boolean.FALSE;
+            if (ServiceUtil.isError(conditionServiceResult)) {
+                Debug.logError("Error in condition-service : " +
+                        ServiceUtil.getErrorMessage(conditionServiceResult), module);
+            } else {
+                conditionReply = (Boolean) conditionServiceResult.get("conditionReply");
+            }
+            return conditionReply.booleanValue();
+        }
 
         Object lhsValue = null;
         Object rhsValue = null;
@@ -106,7 +138,7 @@ public class ServiceEcaCondition implements java.io.Serializable {
             }
         }
 
-        if (constant) {
+        if (isConstant) {
             rhsValue = rhsValueName;
         } else if (rhsMapName != null && rhsMapName.length() > 0) {
             try {
@@ -151,12 +183,13 @@ public class ServiceEcaCondition implements java.io.Serializable {
     public String toString() {
         StringBuffer buf = new StringBuffer();
 
+        buf.append("[" + conditionService + "]");
         buf.append("[" + lhsMapName + "]");
         buf.append("[" + lhsValueName + "]");
         buf.append("[" + operator + "]");
         buf.append("[" + rhsMapName + "]");
         buf.append("[" + rhsValueName + "]");
-        buf.append("[" + constant + "]");
+        buf.append("[" + isConstant + "]");
         buf.append("[" + compareType + "]");
         buf.append("[" + format + "]");
         return buf.toString();

@@ -236,6 +236,24 @@ public class CommonServices {
         return ServiceUtil.returnError("Return Error Service : Returning Error");
     }
 
+    /**
+     * Return TRUE Service; ECA Condition Service
+     */
+    public static Map conditionTrueService(DispatchContext dctx, Map context) {
+        Map result = ServiceUtil.returnSuccess();
+        result.put("conditionReply", Boolean.TRUE);
+        return result;
+    }
+
+    /**
+     * Return FALSE Service; ECA Condition Service
+     */
+    public static Map conditionFalseService(DispatchContext dctx, Map context) {
+        Map result = ServiceUtil.returnSuccess();
+        result.put("conditionReply", Boolean.FALSE);
+        return result;
+    }
+
     /** Cause a Referential Integrity Error */
     public static Map entityFailTest(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
