@@ -49,9 +49,15 @@ suppliers = delegator.findByAnd("SupplierProduct", UtilMisc.toMap("productId", p
 context.put("productSuppliers", suppliers);
 
 partyId = request.getParameter("partyId");
+currencyUomId = request.getParameter("currencyUomId");
+minimumOrderQuantityStr = request.getParameter("minimumOrderQuantity");
 supplierProduct = null;
-if (partyId != null) {
-    supplierProduct = delegator.findByPrimaryKey("SupplierProduct", UtilMisc.toMap("productId", productId, "partyId", partyId));
+if (partyId != null && currencyUomId != null && minimumOrderQuantityStr != null) {
+    minimumOrderQuantity = 0;
+    try {
+        minimumOrderQuantity = Double.parseDouble(minimumOrderQuantityStr);
+    } catch(Exception exc) {}
+    supplierProduct = delegator.findByPrimaryKey("SupplierProduct", UtilMisc.toMap("productId", productId, "partyId", partyId, "currencyUomId", currencyUomId, "minimumOrderQuantity", new Double(minimumOrderQuantity)));
 }
 context.put("supplierProduct", supplierProduct);
 

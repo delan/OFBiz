@@ -42,9 +42,9 @@
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateSupplierProduct you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
-
+        <make-value value-name="lookupPKMap" entity-name="SupplierProduct"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        
         <find-by-primary-key entity-name="SupplierProduct" map-name="lookupPKMap" value-name="sprod"/>
         <set-nonpk-fields map-name="parameters" value-name="sprod"/>
         <store-value value-name="sprod"/>
@@ -54,9 +54,9 @@
         <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run updateSupplierProduct you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
-
+        <make-value value-name="lookupPKMap" entity-name="SupplierProduct"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        
         <find-by-primary-key entity-name="SupplierProduct" map-name="lookupPKMap" value-name="sprod"/>                
         <remove-value value-name="sprod"/>
     </simple-method>
