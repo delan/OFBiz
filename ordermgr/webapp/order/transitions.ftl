@@ -111,9 +111,11 @@
                     <td>
                       <select name="approvalCode" class="selectBox">
                         <#list wfTransitions as trans>
-                          <#assign attrs = Static["org.ofbiz.core.util.StringUtil"].strToMap(trans.extendedAttributes)>
-                          <#if attrs.approvalCode?exists>
-                            <option value="${attrs.approvalCode}">${trans.transitionName}</option>
+                          <#if trans.extendedAttributes?has_content>
+                            <#assign attrs = Static["org.ofbiz.core.util.StringUtil"].strToMap(trans.extendedAttributes)>
+                            <#if attrs.approvalCode?exists>
+                              <option value="${attrs.approvalCode}">${trans.transitionName}</option>
+                            </#if>
                           </#if>
                         </#list>
                       </select> 
