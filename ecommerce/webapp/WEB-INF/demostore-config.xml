@@ -122,7 +122,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>renderConfirmOrder</event-invoke> 
       <success>request:emailorder</success>
-      <error>view:checkout</error>
+      <error>view:orderhistory</error>
     </request-map>		
     <request-map><uri>confirmorder</uri><secure>false</secure><auth>false</auth><success>view:confirmorder</success></request-map>		
     <request-map>
@@ -186,6 +186,12 @@
       <uri>updatepassword</uri><secure>true</secure><auth>true</auth>
       <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>changePassword</event-invoke>
       <success>view:changepassword</success><error>view:changepassword</error>
+    </request-map>
+
+    <request-map>
+        <uri>forgotpassword</uri><secure>true</secure><auth>false</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>forgotPassword</event-invoke>
+        <success>view:login</success><error>view:login</error>
     </request-map>
     <!-- end of request mappings -->
 
