@@ -260,7 +260,10 @@
       <field name="estimatedShipCost" type="currency-amount"></field>
       <field name="latestCancelDate" type="date-time"></field>
       <field name="handlingInstructions" type="long-varchar"></field>
-      <field name="lastUpdated" type="date-time"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="shipmentId"/>
       <relation type="one" fk-name="SHPMNT_TYPE" rel-entity-name="ShipmentType">
         <key-map field-name="shipmentTypeId"/>
