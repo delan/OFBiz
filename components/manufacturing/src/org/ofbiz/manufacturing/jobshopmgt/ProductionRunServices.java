@@ -1144,6 +1144,11 @@ public class ProductionRunServices {
                     serviceContext.put("quantityOnHandDiff", new Double(1));
                     serviceContext.put("userLogin", userLogin);
                     Map resultService = resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+                    // Recompute reservations
+                    serviceContext = new HashMap();
+                    serviceContext.put("inventoryItemId", inventoryItemId);
+                    serviceContext.put("userLogin", userLogin);
+                    resultService = resultService = dispatcher.runSync("balanceInventoryItems", serviceContext);
                 }
             } catch(Exception exc) {
                 return ServiceUtil.returnError(exc.getMessage());
@@ -1170,6 +1175,11 @@ public class ProductionRunServices {
                 serviceContext.put("quantityOnHandDiff", quantity);
                 serviceContext.put("userLogin", userLogin);
                 Map resultService = resultService = dispatcher.runSync("createInventoryItemDetail", serviceContext);
+                // Recompute reservations
+                serviceContext = new HashMap();
+                serviceContext.put("inventoryItemId", inventoryItemId);
+                serviceContext.put("userLogin", userLogin);
+                resultService = resultService = dispatcher.runSync("balanceInventoryItems", serviceContext);
             } catch(Exception exc) {
                 return ServiceUtil.returnError(exc.getMessage());
             }
