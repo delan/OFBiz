@@ -270,101 +270,95 @@ public class ShippingEvents {
             return "success";
         }
         
-        // Clean up the estimates collection.
-        ArrayList deleteList = new ArrayList();
+        // Get some needed data from the cart.
+        double cartWeight = cart.getShippableWeight();
+        double cartQty = cart.getShippableQuantity();
+        double cartTotal = cart.getShippableTotal();
+               
+        // Get the possible estimates.
+        ArrayList estimateList = new ArrayList();
         Iterator i = estimates.iterator();
         while ( i.hasNext() ) {
-            boolean deleted = false;
-            GenericValue est = (GenericValue) i.next();
-            String toGeo = est.getString("geoIdTo");
-            // Remove useless geos.
-            if ( !toGeo.equals("") ) {
-                if ( !toGeo.equals(shipAddress.getString("countryGeoId")) &&
-                !toGeo.equals(shipAddress.getString("stateProvinceGeoId")) &&
-                !toGeo.equals(shipAddress.getString("postalCodeGeoId")) ) {
-                    deleteList.add(est);
-                    deleted = true;
-                }
-            }
-            // Remove invalid min/max
-            if ( !deleted ) {
-                double weightTotal = cart.getShippableWeight();
-                double quantTotal = cart.getShippableQuantity();
-                double priceTotal = cart.getShippableTotal();
+            GenericValue thisEstimate = (GenericValue) i.next();
+            String toGeo = thisEstimate.getString("geoIdTo");
+            // Make sure we have a valid GEOID.
+            if ( toGeo.equals("") || toGeo.equals(shipAddress.getString("countryGeoId")) || toGeo.equals(shipAddress.getString("stateProvinceGeoId")) || toGeo.equals(shipAddress.getString("postalCodeGeoId")) ) {
                 GenericValue wv = null;
                 GenericValue qv = null;
                 GenericValue pv = null;
-                try {
-                    wv = est.getRelatedOne("WeightQuantityBreak");
-                }
+                try {  wv = thisEstimate.getRelatedOne("WeightQuantityBreak"); }
                 catch ( GenericEntityException e ) { }
-                try {
-                    qv = est.getRelatedOne("QuantityQuantityBreak");
-                }
+                try { qv = thisEstimate.getRelatedOne("QuantityQuantityBreak"); }
                 catch ( GenericEntityException e ) { }
-                try {
-                    pv = est.getRelatedOne("PriceQuantityBreak");
-                }
+                try { pv = thisEstimate.getRelatedOne("PriceQuantityBreak"); }
                 catch ( GenericEntityException e ) { }
-                // Weight
-                if ( !deleted && wv != null ) {
-                    double min = wv.getDouble("fromQuantity").doubleValue();
-                    double max = wv.getDouble("thruQuantity").doubleValue();
-                    if ( !deleted && weightTotal < min ) {
-                        deleteList.add(est);
-                        deleted = true;
+                if ( wv == null && qv == null && pv == null )
+                    estimateList.add(thisEstimate);                                                                
+                else {                     
+                    // Do some testing.
+                    boolean useWeight = false;
+                    boolean weightValid = false;
+                    boolean useQty = false; 
+                    boolean qtyValid = false;
+                    boolean usePrice = false;
+                    boolean priceValid = false;
+                    
+                    if ( wv != null ) {
+                        useWeight = true;
+                        double min = 0.0001; 
+                        double max = 0.0001;
+                        try {
+                            min = wv.getDouble("fromQuantity").doubleValue();
+                            max = wv.getDouble("thruQuantity").doubleValue();
+                        } catch ( Exception e ) { }
+                        if ( cartWeight >= min && (max == 0 || cartWeight <= max) ) 
+                            weightValid = true;
                     }
-                    if ( !deleted && weightTotal > max && max != 0 ) {
-                        deleteList.add(est);
-                        deleted = true;
+                    if ( qv != null ) {
+                        useQty = true;
+                        double min = 0.0001; 
+                        double max = 0.0001;
+                        try {
+                            min = qv.getDouble("fromQuantity").doubleValue();
+                            max = qv.getDouble("thruQuantity").doubleValue();
+                        } catch ( Exception e ) { }
+                        if ( cartQty >= min && (max == 0 || cartQty <= max) ) 
+                            qtyValid = true;
                     }
-                }
-                // Quantity
-                if ( !deleted && qv != null ) {
-                    double min = qv.getDouble("fromQuantity").doubleValue();
-                    double max = qv.getDouble("thruQuantity").doubleValue();
-                    if ( !deleted && quantTotal < min ) {
-                        deleteList.add(est);
-                        deleted = true;
+                    if ( pv != null ) {
+                        usePrice = true;
+                        double min = 0.0001; 
+                        double max = 0.0001;
+                        try {
+                            min = pv.getDouble("fromQuantity").doubleValue();
+                            max = pv.getDouble("thruQuantity").doubleValue();
+                        } catch ( Exception e ) { }
+                        if ( cartTotal >= min && (max == 0 || cartTotal <= max) ) 
+                            priceValid = true;
                     }
-                    if ( !deleted && quantTotal > max && max != 0 ) {
-                        deleteList.add(est);
-                        deleted = true;
-                    }
-                }
-                // Price
-                if ( !deleted && pv != null ) {
-                    double min = pv.getDouble("fromQuantity").doubleValue();
-                    double max = pv.getDouble("thruQuantity").doubleValue();
-                    if ( !deleted && priceTotal < min ) {
-                        deleteList.add(est);
-                        deleted = true;
-                    }
-                    if ( !deleted && priceTotal > max && max != 0 ) {
-                        deleteList.add(est);
-                        deleted = true;
-                    }
+                    // Now check the tests.
+                    if ( (useWeight && weightValid) || (useQty && qtyValid) || (usePrice && priceValid) )
+                        estimateList.add(thisEstimate);
                 }
             }
         }
-        estimates.removeAll((Collection)deleteList);
+                                      
+        Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size());
         
-        Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimates.size());
-        
-        if ( estimates.size() < 1 ) 
+        if ( estimateList.size() < 1 ) 
             return "success";
         
         // Set the index of the estimate to use.
         int estIdx = 0;
-        for ( int x = 0; x < estimates.size(); x++ ) {
-            GenericValue value = (GenericValue) ((List)estimates).get(x);
+        for ( int x = 0; x < estimateList.size(); x++ ) {
+            GenericValue value = (GenericValue) ((List)estimateList).get(x);
             String toGeo = value.getString("geoIdTo");
              if ( toGeo.equals(shipAddress.getString("countryGeoId")) || toGeo.equals(shipAddress.getString("stateProvinceGeoId")) || toGeo.equals(shipAddress.getString("postalCodeGeoId")) ) 
                  estIdx = x;
         }
                     
         // Grab the estimate and work with it.                             
-        GenericValue estimate = (GenericValue) ((List)estimates).get(estIdx);
+        GenericValue estimate = (GenericValue) ((List)estimateList).get(estIdx);
         
         Debug.logInfo("[ShippingEvents.getShipEstimate] Working with estimate. ");
                 
@@ -377,11 +371,7 @@ public class ShippingEvents {
         double orderPercent = 0.00;
         if ( estimate.getDouble("orderPricePercent") != null )
             orderPercent = estimate.getDouble("orderPricePercent").doubleValue();
-        
-        double cartWeight = cart.getShippableWeight();
-        double cartQty = cart.getShippableQuantity();
-        double cartTotal = cart.getShippableTotal();
-        
+                
         double weightUnit = 0.00;
         if ( estimate.getDouble("weightUnitPrice") != null )
             weightUnit = estimate.getDouble("weightUnitPrice").doubleValue();
