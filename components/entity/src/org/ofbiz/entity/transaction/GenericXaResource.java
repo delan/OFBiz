@@ -1,5 +1,5 @@
 /*
- * $Id: GenericXaResource.java,v 1.1 2003/11/13 20:11:26 ajzeneski Exp $
+ * $Id: GenericXaResource.java,v 1.2 2003/12/04 21:54:20 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import javax.transaction.*;
  * GenericXaResource - Abstract XA Resource implementation supporting a single transaction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public abstract class GenericXaResource implements XAResource {
@@ -118,7 +118,7 @@ public abstract class GenericXaResource implements XAResource {
     }
 
     /**
-     * @see javax.transaction.xa.XAResource#commit(javax.transaction.xa.Xid xid, boolean onePhase)
+     * @see javax.transaction.xa.XAResource#prepare(javax.transaction.xa.Xid xid)
      */
     public int prepare(Xid xid) throws XAException {
         if (this.xid == null || !this.xid.equals(xid)) {

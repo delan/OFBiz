@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionUtil.java,v 1.3 2003/12/04 06:16:05 jonesde Exp $
+ * $Id: TransactionUtil.java,v 1.4 2003/12/04 21:54:20 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * <p>Provides a wrapper around the transaction objects to allow for changes in underlying implementations in the future.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class TransactionUtil implements Status {
@@ -74,7 +74,7 @@ public class TransactionUtil implements Status {
         if (ut != null) {
             try {
                 int currentStatus = ut.getStatus();
-                Debug.logVerbose("[TransactionUtil.begin] current status code : " + currentStatus, module);
+                Debug.logVerbose("[TransactionUtil.begin] current status : " + getTransactionStateString(currentStatus), module);
                 if (currentStatus == Status.STATUS_ACTIVE) {
                     Debug.logVerbose("[TransactionUtil.begin] active transaction in place, so no transaction begun", module);
                     return false;
@@ -144,7 +144,7 @@ public class TransactionUtil implements Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
-                Debug.logVerbose("[TransactionUtil.commit] current status code : " + status, module);
+                Debug.logVerbose("[TransactionUtil.commit] current status : " + getTransactionStateString(status), module);
                 
                 if (status != STATUS_NO_TRANSACTION) {
                     ut.commit();
@@ -193,7 +193,7 @@ public class TransactionUtil implements Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
-                Debug.logVerbose("[TransactionUtil.rollback] current status code : " + status, module);
+                Debug.logVerbose("[TransactionUtil.rollback] current status : " + getTransactionStateString(status), module);
 
                 if (status != STATUS_NO_TRANSACTION) {
                     //if (Debug.infoOn()) Thread.dumpStack();
@@ -224,7 +224,7 @@ public class TransactionUtil implements Status {
         if (ut != null) {
             try {
                 int status = ut.getStatus();
-                Debug.logVerbose("[TransactionUtil.setRollbackOnly] current status code : " + status, module);
+                Debug.logVerbose("[TransactionUtil.setRollbackOnly] current code : " + getTransactionStateString(status), module);
 
                 if (status != STATUS_NO_TRANSACTION) {
                     if (Debug.infoOn()) Thread.dumpStack();
@@ -289,7 +289,34 @@ public class TransactionUtil implements Status {
             throw new GenericTransactionException("System error, could not enlist resource in transaction even though transactions are available", e);
         }
     }
-    
+
+    public static String getTransactionStateString(int state) {
+        switch (state) {
+            case Status.STATUS_ACTIVE:
+                return "Transaction Active (" + state + ")";
+            case Status.STATUS_COMMITTED:
+                return "Transaction Committed (" + state + ")";
+            case Status.STATUS_COMMITTING:
+                return "Transaction Committing (" + state + ")";
+            case Status.STATUS_MARKED_ROLLBACK:
+                return "Transaction Marked Rollback (" + state + ")";
+            case Status.STATUS_NO_TRANSACTION:
+                return "No Transaction (" + state + ")";
+            case Status.STATUS_PREPARED:
+                return "Transaction Prepared (" + state + ")";
+            case Status.STATUS_PREPARING:
+                return "Transaction Preparing (" + state + ")";
+            case Status.STATUS_ROLLEDBACK:
+                return "Transaction Rolledback (" + state + ")";
+            case Status.STATUS_ROLLING_BACK:
+                return "Transaction Rolling Back (" + state + ")";
+            case Status.STATUS_UNKNOWN:
+                return "Transaction Status Unknown (" + state + ")";
+            default:
+                return "Not a valid state code (" + state + ")";
+        }
+    }
+
     public static void registerSynchronization(Synchronization sync) throws GenericTransactionException {
         if (sync == null) {
             return;
