@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_htmlarea</template> 
+    <property name="title">Add Response</property>
+    <property name="formDefFile">/forum/ForumForms.xml</property>    
+    <property name="singleFormName">AddResponse</property>    
+    <property name="addFormName">EditResponse</property>    
+    <property name="editFormName">EditResponse</property>    
+    <property name="subMenu">/blog_menu.ftl</property>    
+    <property name="headerItem">Blog</property>    
+    <property name="entityName">SubContentDataResourceView</property>    
+    <property name="permission">CONTENTMGR</property>    
+    <property name="primaryHTMLField">textData</property>    
+    <property name="secondaryHTMLField"></property>    
+    <property name="summaryDataResourceTypeId">ELECTRONIC_TEXT</property>    
+    <property name="priKeyName">contentId</property>    
+    <property name="permissionIdName">contentIdTo</property>    
+    <property name="entityOperation">_CREATE</property>    
+    <property name="addEntityOperation">_CREATE</property>    
+    <property name="editEntityOperation">_UPDATE</property>    
+    <property name="targetOperation">CONTENT_RESPOND</property>    
+    <property name="addTargetOperation">CONTENT_RESPOND</property>    
+    <property name="requiredRoles">BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER</property>    
+    <property name="contentPurposeTypeId">RESPONSE</property>    
+    <property name="contentAssocTypeId">RESPONSE</property>    
+    <property name="statusId">BLOG_PUBLISHED</property>    
+    <property name="permissionType">complex</property>    
+    <page-action name="/forum/currentvalprep.bsh"/>
+    <page-action name="/forum/htmlareaprep.bsh"/>
+    <page-action name="/forum/nodetrailprep.bsh"/>
+    <page-action name="/forum/formprep.bsh"/>
+    <page-action name="/forum/respondpermandprep.bsh"/>
+    <content-action name="/forum/responseprep.bsh"/>
+    <content-action name="/forum/ownercontentprep.bsh"/>
+</page>

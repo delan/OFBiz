@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_EDITOR" roleTypeId="BLOG_EDITOR" fromDate="2004-03-27 09:39:19.082" lastUpdatedStamp="2004-03-27 09:39:19.23" lastUpdatedTxStamp="2004-03-27 09:39:19.227" createdStamp="2004-03-27 09:39:19.23" createdTxStamp="2004-03-27 09:39:19.227"/>
+    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_PUBLISHER" fromDate="2004-03-27 09:39:19.082" lastUpdatedStamp="2004-03-27 09:39:19.23" lastUpdatedTxStamp="2004-03-27 09:39:19.227" createdStamp="2004-03-27 09:39:19.23" createdTxStamp="2004-03-27 09:39:19.227"/>
+    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_EDITOR" fromDate="2004-03-27 09:39:19.082" lastUpdatedStamp="2004-03-27 09:39:19.23" lastUpdatedTxStamp="2004-03-27 09:39:19.227" createdStamp="2004-03-27 09:39:19.23" createdTxStamp="2004-03-27 09:39:19.227"/>
+    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_AUTHOR" fromDate="2004-03-27 09:39:19.082" lastUpdatedStamp="2004-03-27 09:39:19.23" lastUpdatedTxStamp="2004-03-27 09:39:19.227" createdStamp="2004-03-27 09:39:19.23" createdTxStamp="2004-03-27 09:39:19.227"/>
+    <ContentRole contentId="WebStore_FORUM" partyId="BLOG_ADMIN" roleTypeId="BLOG_ADMIN" fromDate="2004-03-27 09:39:19.082" lastUpdatedStamp="2004-03-27 09:39:19.23" lastUpdatedTxStamp="2004-03-27 09:39:19.227" createdStamp="2004-03-27 09:39:19.23" createdTxStamp="2004-03-27 09:39:19.227"/>
+</entity-engine-xml>
