@@ -39,19 +39,18 @@
 	String showAll = request.getParameter("showAll");
 	String sort = request.getParameter("sort");
 	if (showAll == null || showAll.equals("")) showAll = "false";
-	List visitList = null;
 	
+	EntityListIterator visitList = null;			
 	List sortList = UtilMisc.toList("-fromDate");
 	if (sort != null) sortList.add(0, sort);
 	
 	if (partyId != null) {
-		visitList = delegator.findByAnd("Visit", UtilMisc.toMap("partyId", partyId), sortList);	
+		visitList = delegator.findListIteratorByCondition("Visit", new EntityExpr("partyId", EntityOperator.EQUALS, partyId), null, sortList);	
 	} else if (showAll.equalsIgnoreCase("true")) {
-		visitList = delegator.findAll("Visit", sortList);
+		visitList = delegator.findListIteratorByCondition("Visit", null, null, sortList);
 	} else {
-		// show active visits
-		List exprs = UtilMisc.toList(new EntityExpr("thruDate", EntityOperator.EQUALS, null));
-		visitList = delegator.findByAnd("Visit", exprs, sortList);		
+		// show active visits		
+		visitList = delegator.findListIteratorByCondition("Visit", new EntityExpr("thruDate", EntityOperator.EQUALS, null), null, sortList);		
 	}
 	if (visitList != null) pageContext.setAttribute("visitList", visitList);
 	String rowClass = "";
@@ -73,7 +72,9 @@
         viewSize = 20;
     }
     if (visitList != null) {
-        listSize = visitList.size();
+    	//visitList.afterLast();
+    	listSize = visitList.currentIndex();
+    	//visitList.beforeFirst();
     }
     lowIndex = viewIndex * viewSize;
     highIndex = (viewIndex + 1) * viewSize;
@@ -110,6 +111,9 @@
     </tr>
   </table>
 </ofbiz:if>
+<ofbiz:unless name="visitList" size="0">
+<br>
+</ofbiz:unless>
 
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
@@ -165,6 +169,8 @@
     </tr>
   </table>
 </ofbiz:if>
+
+<% visitList.close(); %>
 
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
