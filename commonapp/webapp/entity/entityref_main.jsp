@@ -25,12 +25,12 @@
 -->
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.core.entity.model.*" %>
+<%@ page import="org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*, org.ofbiz.core.util.*" %>
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 
 <% 
+  initReservedWords();
   String search = null;
   //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
   ModelReader reader = delegator.getModelReader();
@@ -102,6 +102,8 @@
         ModelEntity entity = reader.getModelEntity(entityName);
         if(entity.tableName.length() > 30)
           warningString = warningString + "<li><div style=\"color: red;\">[TableNameGT30]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
+        if(reservedWords.contains(entity.tableName.toUpperCase()))
+          warningString = warningString + "<li><div style=\"color: red;\">[TableNameRW]</div> Table name <b>" + entity.tableName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
 %>	
   <a name="<%= entityName %>"></a>
   <table width="95%" border="1" cellpadding='2' cellspacing='0'>
@@ -132,6 +134,8 @@
       ufields.add(field.name);
     if(field.colName.length() > 30)
       warningString = warningString + "<li><div style=\"color: red;\">[FieldNameGT30]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is longer than 30 characters.</li>";
+    if(reservedWords.contains(field.colName.toUpperCase()))
+      warningString = warningString + "<li><div style=\"color: red;\">[FieldNameRW]</div> Column name <b>" + field.colName + "</b> of entity <A href=\"#" + entity.entityName + "\">" + entity.entityName + "</A> is a reserved word.</li>";
 %>	
     <tr bgcolor="#EFFFFF">
       <td><div align="left" class='enametext'><%= javaName %></div></td>
@@ -245,3 +249,142 @@
 
 </body>
 </html>
+
+<%!
+public TreeSet reservedWords = new TreeSet();
+public static final String[] rwArray = 
+  { "ABORT", "ABS", "ABSOLUTE", "ACCEPT", "ACCES", "ACTIVATE", "ADD", "ADDFORM", 
+    "AFTER", "ALL", "ALTER", "AND", "ANDFILENAME", "ANY", "ANYFINISH", "APPEND", 
+    "ARCHIVE", "ARRAY", "AS", "ASC", "ASCENDING", "ASCII", "ASSERT", "ASSIGN", 
+    "AT", "ATTRIBUTE", "ATTRIBUTES", "AUDIT", "AUTHORIZATION", "AUTONEXT", 
+    "AVERAGE", "AVG", "AVGU", 
+    "BACKOUT", "BEFORE", "BEGIN", "BEGINLOAD", "BEGINMODIFY", "BEGINNING", 
+    "BEGWORK", "BETWEEN", "BETWEENBY", "BORDER", "BOTTOM", "BREAK", 
+    "BREAKDISPLAY", "BROWSE", "BUFERED", "BUFFER", "BUFFERED", "BULK", "BY", 
+    "BYTE", 
+    "CALL", "CANCEL", "CASCADE", "CASE", "CHANGE", "CHAR", "CHARACTER", 
+    "CHAR_CONVERT", "CHECK", "CHECKPOINT", "CHR2FL", "CHR2FLO", "CHR2FLOA", 
+    "CHR2FLOAT", "CHR2INT", "CLEAR", "CLEARROW", "CLIPPED", "CLOSE", "CLUSTER", 
+    "CLUSTERED", "CLUSTERING", "COBOL", "COLD", "COLUMN", "COLUMNS", "COMMAND", 
+    "COMMENT", "COMMIT", "COMMITTED", "COMPRESS", "COMPUTE", "CONCAT", "COND", 
+    "CONFIG", "CONFIRM", "CONNECT", "CONSTRAINT", "CONSTRUCT", "CONTAIN", 
+    "CONTAINS", "CONTINUE", "CONTROLROW", "CONVERT", "COPY", "COUNT", "COUNTU", 
+    "COUNTUCREATE", "CRASH", "CREATE", "CURRENT", "CURSOR", 
+    "DATA", "DATABASE", "DATAPAGES", "DATABASE", "DATA_PGS", "DATE", "DAY", 
+    "DAYNUM", "DBA", "DBCC", "DBE", "DBEFILE", "DBEFILEO", "DBEFILESET", 
+    "DBSPACE", "DBYTE", "DEC", "DECENDING", "DECIMAL", "DECLARE", "DEFAULT", 
+    "DEFAULTS", "DEFER", "DEFINE", "DEFINITION", "DELETE", "DELETEROW", "DESC", 
+    "DESCENDING", "DESCENDNG", "DESCRIBE", "DESCRIPTOR", "DESTPOS", "DESTROY", 
+    "DEVICE", "DEVSPACE", "DIRECT", "DIRTY", "DISCONNECT", "DISK", "DISPLACE", 
+    "DISPLAY", "DISTINCT", "DISTRIBUTION", "DIV", "DO", "DOES", "DOMAIN", 
+    "DOUBLE", "DOWN", "DROP", "DUAL", "DUMMY", "DUMP", "DUPLICATES", 
+    "EACH", "EBCDIC", "EDITADD", "EDITUPDATE", "ED_STRING", "ELSE", "ELSEIF", 
+    "END", "ENDDATA", "ENDDISPLAY", "ENDFORMS", "ENDIF", "ENDING", "ENDLOAD", 
+    "ENDLOOP", "ENDMODIFY", "ENDPOS", "ENDRETRIEVE", "ENDSELECT", "ENDWHILE", 
+    "END_ERROR", "END_FETCH", "END_FOR", "END_GET", "END_MODIFY", "END_PLACE", 
+    "END_SEGMENT_S", "END_SEGMENT_STRING", "END_STORE", "END_STREAM", "EQ", 
+    "ERASE", "ERROR", "ERRLVL", "ERROREXIT", "EVALUATE", "EVALUATING", "EVERY", 
+    "EXCEPT", "EXCLUSIVE", "EXEC", "EXECUTE", "EXISTS", "EXIT", "EXPLICIT", 
+    "EXTENT", "EXTERNAL", 
+    "FALSE", "FETCH", "FIELD", "FILE", "FILENAME", "FILLFACTOR", "FINALISE", 
+    "FINALIZE", "FINDSTR", "FINISH", "FIRST", "FIRSTPOS", "FIXED", "FL", 
+    "FLOAT", "FLUSH", "FOR", "FOREACH", "FORMAT", "FORMDATA", "FORMINIT", 
+    "FORMS", "FORTRAN", "FOUND", "FRANT", "FRAPHIC", "FREE", "FROM", "FRS", 
+    "FUNCTION", 
+    "GE", "GET", "GETFORM", "GETOPER", "GETROW", "GLOBAL", "GLOBALS", "GO", 
+    "GOTO", "GRANT", "GRAPHIC", "GROUP", "GT", 
+    "HAVING", "HEADER", "HELP", "HELPFILE", "HELP_FRS", "HOLD", "HOLDLOCK", 
+    "IDENTIFIED", "IDENTIFIELD", "IF", "IFDEF", "IGNORE", "IMAGE", "IMMEDIATE", 
+    "IMMIDIATE", "IMPLICIT", "IN", "INCLUDE", "INCREMENT", "INDEX", "INDEXED", 
+    "INDEXNAME", "INDEXPAGES", "INDICATOR", "INFIELD", "INFO", "INGRES", "INIT", 
+    "INITIAL", "INITIALISE", "INITIALIZE", "INITTABLE", "INPUT", "INQUIRE_EQUEL", 
+    "INQUIRE_FRS", "INQUIRE_INGRES", "INQUIR_FRS", "INSERT", "INSERTROW", 
+    "INSTRUCTIONS", "INT", "INT2CHR", "INTEGER", "INTEGRITY", "INTERESECT", 
+    "INTERRUPT", "INTERSECT", "INTO", "INTSCHR", "INVOKE", "IS", "ISAM", 
+    "ISOLATION", 
+    "JOURNALING", 
+    "KEY", "KILL", 
+    "LABEL", "LANGUAGE", "LAST", "LASTPOS", "LE", "LEFT", "LENGTH", "LENSTR", 
+    "LET", "LEVEL", "LIKE", "LIKEPROCEDURETP", "LINE", "LINENO", "LINES", 
+    "LINK", "LIST", "LOAD", "LOADTABLE", "LOADTABLERESUME", "LOCAL", "LOCATION", 
+    "LOCK", "LOCKING", "LOG", "LONG", "LOWER", "LPAD", "LT", 
+    "MAIN", "MANUITEM", 
+    "MARGIN", "MATCHES", "MATCHING", "MAX", "MAXEXTENTS", "MAXPUBLICUNION", 
+    "MAXRECLEN", "MDY", "MENU", "MENUITEM", "MENUITEMSCREEN", "MESSAGE", 
+    "MESSAGERELOCATE", "MESSAGESCROLL", "MFETCH", "MIN", "MINRECLEN", 
+    "MINRETURNUNTIL", "MINUS", "MIRROREXIT", "MISSING", "MIXED", "MOD", "MODE", 
+    "MODIFY", "MODIFYREVOKEUPDATE", "MODULE", "MONEY", "MONITOR", "MONTH", 
+    "MOVE", "MULTI", 
+    "NAME", "NE", "NEED", "NEW", "NEWLOG", "NEXT", "NEXTSCROLLDOWN", "NO", 
+    "NOAUDIT", "NOCOMPRESS", "NOCR", "NOJOURNALING", "NOLIST", "NOLOG", 
+    "NONCLUSTERED", "NORMAL", "NOSYSSORT", "NOT", "NOTFFOUND", "NOTFOUND", 
+    "NOTRANS", "NOTRIM", "NOTRIMSCROLLUP", "NOTROLLBACKUSER", "NOWAIT", "NULL", 
+    "NULLIFY", "NULLSAVEUSING", "NULLVAL", "NUMBER", "NUMERIC", "NXFIELD", 
+    "OF", "OFF", "OFFLINE", "OFSAVEPOINTVALUES", "OFFSETS", "OLD", "ON", "ONCE", 
+    "ONLINE", "ONSELECTWHERE", "ONTO", "OPEN", "OPENSETWHILE", "OPENSLEEP", 
+    "OPTIMIZE", "OPTION", "OPTIONS", "OR", "ORDER", "ORDERSQLWORK", "ORSOMEWITH", 
+    "ORSORT", "OTHERWISE", "OUT", "OUTER", "OUTPUT", "OUTPUT PAGE", "OUTSTOP", 
+    "OVER", "OWNER", "OWNERSHIP", 
+    "PAGE", "PAGENO", "PAGES", "PARAM", "PARTITION", "PASCAL", "PASSWORD", 
+    "PATHNAME", "PATTERN", "PAUSE", "PCTFREE", "PERCENT", "PERM", "PERMANENT", 
+    "PERMIT", "PERMITSUM", "PIPE", "PLACE", "PLAN", "PLI", "POS", "POWER", 
+    "PRECISION", "PREPARE", "PREPARETABLE", "PRESERVE", "PREV", "PREVIOUS", 
+    "PREVISION", "PRINT", "PRINTER", "PRINTSCREEN", "PRINTSCREENSCROLL", 
+    "PRINTSUBMENU", "PRINTSUMU", "PRIOR", "PRIV", "PRIVATE", "PRIVILAGES", 
+    "PRIVILAGESTHEN", "PRIVILEGES", "PROC", "PROCEDURE", "PROCESSEXIT", 
+    "PROGRAM", "PROGUSAGE", "PROMPT", "PROMPTSCROLLDOWN", "PROMPTTABLEDATA", 
+    "PROTECT", "PSECT", "PUBLIC", "PUBLICREAD", "PUT", "PUTFORM", 
+    "PUTFORMSCROLLUP", "PUTFORMUNLOADTABLE", "PUTOPER", "PUTOPERSLEEP", "PUTROW", 
+    "PUTROWSUBMENU", "PUTROWUP", 
+    "QUERY", "QUICK", "QUIT", 
+    "RAISERROR", "RANGE", "RANGETO", "RAW", "RDB$DB_KEY", "RDB$LENGTH", 
+    "RDB$MISSING", "RDB$VALUE", "RDB4DB_KEY", "RDB4LENGTH", "RDB4MISSING", 
+    "RDB4VALUE", "READ", "READONLY", "READPASS", "READTEXT", "READWRITE", 
+    "READY", "READ_ONLY", "READ_WRITE", "REAL", "RECONFIGURE", "RECONNECT", 
+    "RECORD", "RECOVER", "REDISPLAY", "REDISPLAYTABLEDATA", "REDISPLAYVALIDATE", 
+    "REDUCED", "REGISTER", "REGISTERUNLOADDATA", "REGISTERVALIDROW", "REJECT", 
+    "RELATIVE", "RELEASE", "RELOAD", "RELOCATE", "RELOCATEUNIQUE", "REMOVE", 
+    "REMOVEUPRELOCATEV", "REMOVEVALIDATE", "REMOVEWHENEVER", "RENAME", "REPEAT", 
+    "REPEATABLE", "REPEATED", "REPEATVALIDROW", "REPLACE", "REPLACEUNTIL", 
+    "REPLSTR", "REPORT", "REQUEST_HANDLE", "RESERVED_PGS", "RESERVING", "RESET", 
+    "RESOURCE", "REST", "RESTART", "RESTORE", "RESTRICT", "RESUME", "RETRIEVE", 
+    "RETRIEVEUPDATE", "RETURN", "RETURNING", "REVOKE", "RIGHT", "ROLLBACK", 
+    "ROLLFORWARD", "ROLLBACK", "ROUND", "ROW", "ROWCNT", "ROWCOUNT", "ROWID", 
+    "ROWNUM", "ROWS", "RPAD", "RULE", "RUN", "RUNTIME", 
+    "SAMPLSTDEV", "SAVE", "SAVEPOINT", "SAVEPOINTWHERE", "SAVEVIEW", "SCHEMA", 
+    "SCOPE", "SCREEN", "SCROLL", "SCROLLDOWN", "SCROLLUP", "SEARCH", "SEGMENT", 
+    "SEL", "SELE", "SELEC", "SELECT", "SELUPD", "SERIAL", "SESSION", "SET", 
+    "SETWITH", "SET_EQUEL", "SET_FRS", "SET_INGRES", "SETUSER", "SHARE", 
+    "SHARED", "SHORT", "SHOW", "SHUTDOWN", "SIZE", "SKIP", "SLEEP", "SMALLFLOAT", 
+    "SMALLINT", "SOME", "SORT", "SORTERD", "SOUNDS", "SOURCEPOS", "SPACE", 
+    "SPACES", "SQL", "SQLCODE", "SQLDA", "SQLERROR", "SQLEXEPTION", "SQLEXPLAIN", 
+    "SQLNOTFOUND", "SQRT", "STABILITY", "START", "STARTING", "STARTPOS", 
+    "START_SEGMENT", "START_SEGMENTED_?", "START_STREAM", "START_TRANSACTION", 
+    "STATE", "STATISTICS", "STDEV", "STEP", "STOP", "STORE", "STRING", "SUBMENU", 
+    "SUBSTR", "SUCCESFULL", "SUCCESSFULL", "SUM", "SUMU", "SUPERDBA", 
+    "SYB_TERMINATE", "SYNONYM", "SYSDATE", "SYSSORT", 
+    "TABLE", "TABLEDATA", "TEMP", "TEMPORARY", "TERMINATE", "TEXT", "TEXTSIZE", 
+    "THEN", "THROUGH", "THRU", "TID", "TIME", "TO", "TODAY", "TOLOWER", "TOP", 
+    "TOTAL", "TOUPPER", "TP", "TRAILER", "TRAN", "TRANS", "TRANSACTION", 
+    "TRANSACTION_HANDLE", "TRANSFER", "TRIGGER", "TRING", "TRUE", "TRUNC", 
+    "TRUNCATE", "TSEQUAL", "TYPE", 
+    "UID", "UNBUFFERED", "UNION", "UNIQUE", "UNLOAD", "UNLOADDATA", 
+    "UNLOADTABLE", "UNLOCK", "UNTIL", "UP", "UPDATE", "UPPER", "USAGE", "USE", 
+    "USED_PGS", "USER", "USING", 
+    "VALIDATE", "VALIDROW", "VALUES", "VARC", "VARCH", "VARCHA", "VARCHAR", 
+    "VARGRAPHIC", "VERB_TIME", "VERIFY", "VERSION", "VIEW", 
+    "WAIT", "WAITFOR", "WAITING", "WARNING", "WEEKDAY", "WHEN", "WHENEVER", 
+    "WHERE", "WHILE", "WINDOW", "WITH", "WITHOUT", "WORK", "WRAP", "WRITE", 
+    "WRITEPASS", "WRITETEXT", 
+    "YEAR" };
+
+
+public void initReservedWords() {
+  //create extensive list of reserved words
+  int asize = rwArray.length;
+  Debug.log("[initReservedWords] array length=" + asize);
+  for(int i=0; i<asize; i++) {
+    reservedWords.add(rwArray[i]);
+  }
+}
+%>
