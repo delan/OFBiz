@@ -200,6 +200,7 @@
         <description>Create a PartyContactMech</description>        
         <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
     </service>       
     <service name="updateContactMech" engine="simple"
@@ -239,6 +240,7 @@
         <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>         
         <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
         <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
         <override name="address1" optional="false"/>
         <override name="city" optional="false"/>
@@ -273,6 +275,7 @@
         <description>Create a Telecommunications Number</description>
         <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>        
         <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateTelecomNumber" engine="simple"
@@ -302,6 +305,7 @@
         <description>Create an Email Address</description>        
         <auto-attributes entity-name="ContactMech" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="PartyContactMech" include="all" mode="IN" optional="true"/>
+        <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>  
     </service>    
