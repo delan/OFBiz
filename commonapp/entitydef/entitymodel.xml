@@ -8034,11 +8034,10 @@
       <title>User Login History Entity</title>
       <package-name>org.ofbiz.commonapp.security.login</package-name>
       <table-name>USER_LOGIN_HISTORY</table-name>
-      <field><col-name>USER_LOGIN_ID</col-name><type>id-ne</type></field>
+      <field><col-name>USER_LOGIN_ID</col-name><type>id-vlong-ne</type></field>
       <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
       <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
-      <field><col-name>USER_ID</col-name><type>id</type></field>
       <field><col-name>REFERRER_URL</col-name><type>url</type></field>
       <field><col-name>PASSWORD</col-name><type>short-varchar</type></field>	
       <prim-key-col>USER_LOGIN_ID</prim-key-col>	
@@ -8058,10 +8057,8 @@
       <title>User Login Entity</title>
       <package-name>org.ofbiz.commonapp.security.login</package-name>
       <table-name>USER_LOGIN</table-name>
-      <field><col-name>USER_LOGIN_ID</col-name><type>id-ne</type></field>
+      <field><col-name>USER_LOGIN_ID</col-name><type>id-vlong-ne</type></field>
       <field><col-name>PARTY_ID</col-name><type>id</type></field>
-      <field><col-name>CONTACT_MECH_ID</col-name><type>id</type></field>
-      <field><col-name>CURRENT_USER_ID</col-name><type>id</type></field>
       <field><col-name>CURRENT_PASSWORD</col-name><type>short-varchar</type></field>	
       <prim-key-col>USER_LOGIN_ID</prim-key-col>
       <relation>
@@ -8083,11 +8080,6 @@
         <type>one</type>
         <rel-table-name>PERSON</rel-table-name>
         <key-map><col-name>PARTY_ID</col-name></key-map>
-      </relation>
-      <relation>
-        <type>one</type>
-        <rel-table-name>CONTACT_MECH</rel-table-name>
-        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
       </relation>
     </entity>
 

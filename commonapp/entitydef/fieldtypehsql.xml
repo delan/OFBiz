@@ -44,6 +44,7 @@
     <field-type-def><type>floating-point</type><sql-type>DOUBLE</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
     <field-type-def><type>id</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><type>id-long</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
+    <field-type-def><type>id-vlong</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><type>indicator</type><sql-type>CHAR</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><type>long-varchar</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><type>name</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
@@ -60,6 +61,7 @@
     <field-type-def><type>url</type><sql-type>VARCHAR</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><type>id-ne</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
     <field-type-def><type>id-long-ne</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
+    <field-type-def><type>id-vlong-ne</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isNotEmpty</validate></field-type-def>
     <field-type-def><type>tel-number</type><sql-type>VARCHAR</sql-type><java-type>String</java-type><validate>isInternationalPhoneNumber</validate></field-type-def>
 
 </fieldtypemodel>
