@@ -742,9 +742,8 @@ public class GenericDAO {
   
   public void checkDb(Map modelEntities, Collection messages, boolean addMissing) {
     UtilTimer timer = new UtilTimer();
-    timer.timerString("[GenericDAO.checkDb] Start - Before Get Table List");
+    timer.timerString("[GenericDAO.checkDb] Start - Before Get Database Meta Data");
     
-    timer.timerString("[GenericDAO.checkDb] Before Get Database Meta Data");
     //get ALL tables from this database
     TreeSet tableNames = this.getTableNames(messages);
     timer.timerString("[GenericDAO.checkDb] After Get All Table Names");
@@ -963,7 +962,7 @@ public class GenericDAO {
     try { connection = getConnection(); }
     catch(SQLException sqle) {
       String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
+      Debug.logError("[GenericDAO.getTableNames] " + message);
       if(messages != null) messages.add(message);
       return null;
     }
@@ -972,9 +971,24 @@ public class GenericDAO {
     try { dbData = connection.getMetaData(); }
     catch(SQLException sqle) {
       String message = "Unable to get database meta data... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
+      Debug.logError("[GenericDAO.getTableNames] " + message);
       if(messages != null) messages.add(message);
       return null;
+    }
+    
+    try {
+      Debug.logInfo("[GenericDAO.getTableNames] Database Product Name is " + dbData.getDatabaseProductName());
+      Debug.logInfo("[GenericDAO.getTableNames] Database Product Version is " + dbData.getDatabaseProductVersion());
+    }
+    catch(SQLException sqle) {
+      Debug.logInfo("[GenericDAO.getTableNames] Unable to get Database name & version information");
+    }
+    try {
+      Debug.logInfo("[GenericDAO.getTableNames] Database Driver Name is " + dbData.getDriverName());
+      Debug.logInfo("[GenericDAO.getTableNames] Database Driver Version is " + dbData.getDriverVersion());
+    }
+    catch(SQLException sqle) {
+      Debug.logInfo("[GenericDAO.getTableNames] Unable to get Driver name & version information");
     }
     
     //get ALL tables from this database
@@ -983,13 +997,13 @@ public class GenericDAO {
     try { tableSet = dbData.getTables(null, null, null, null); }
     catch(SQLException sqle) {
       String message = "Unable to get list of table information... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
+      Debug.logError("[GenericDAO.getTableNames] " + message);
       if(messages != null) messages.add(message);
 
       try{ connection.close(); }
       catch(SQLException sqle2) {
         String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
-        Debug.logError("[GenericDAO.checkDb] " + message2);
+        Debug.logError("[GenericDAO.getTableNames] " + message2);
         if(messages != null) messages.add(message2);
       }
       return null;
@@ -1006,7 +1020,7 @@ public class GenericDAO {
         }
         catch(SQLException sqle) {
           String message = "Error getting table information... Error was:" + sqle.toString();
-          Debug.logError("[GenericDAO.checkDb] " + message);
+          Debug.logError("[GenericDAO.getTableNames] " + message);
           if(messages != null) messages.add(message);
           continue;
         }
@@ -1014,7 +1028,7 @@ public class GenericDAO {
     }
     catch(SQLException sqle) {
       String message = "Error getting next table information... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
+      Debug.logError("[GenericDAO.getTableNames] " + message);
       if(messages != null) messages.add(message);
       return tableNames;
     }
@@ -1022,14 +1036,14 @@ public class GenericDAO {
       try{ tableSet.close(); }
       catch(SQLException sqle) {
         String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
-        Debug.logError("[GenericDAO.checkDb] " + message);
+        Debug.logError("[GenericDAO.getTableNames] " + message);
         if(messages != null) messages.add(message);
       }
 
       try{ connection.close(); }
       catch(SQLException sqle) {
         String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
-        Debug.logError("[GenericDAO.checkDb] " + message);
+        Debug.logError("[GenericDAO.getTableNames] " + message);
         if(messages != null) messages.add(message);
       }
     }
@@ -1042,7 +1056,7 @@ public class GenericDAO {
     try { connection = getConnection(); }
     catch(SQLException sqle) {
       String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
+      Debug.logError("[GenericDAO.getColumnInfo] " + message);
       if(messages != null) messages.add(message);
       return null;
     }
@@ -1051,16 +1065,31 @@ public class GenericDAO {
     try { dbData = connection.getMetaData(); }
     catch(SQLException sqle) {
       String message = "Unable to get database meta data... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
+      Debug.logError("[GenericDAO.getColumnInfo] " + message);
       if(messages != null) messages.add(message);
 
       try{ connection.close(); }
       catch(SQLException sqle2) {
         String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
-        Debug.logError("[GenericDAO.checkDb] " + message2);
+        Debug.logError("[GenericDAO.getColumnInfo] " + message2);
         if(messages != null) messages.add(message2);
       }
       return null;
+    }
+    
+    try {
+      Debug.logInfo("[GenericDAO.getColumnInfo] Database Product Name is " + dbData.getDatabaseProductName());
+      Debug.logInfo("[GenericDAO.getColumnInfo] Database Product Version is " + dbData.getDatabaseProductVersion());
+    }
+    catch(SQLException sqle) {
+      Debug.logInfo("[GenericDAO.getColumnInfo] Unable to get Database name & version information");
+    }
+    try {
+      Debug.logInfo("[GenericDAO.getColumnInfo] Database Driver Name is " + dbData.getDriverName());
+      Debug.logInfo("[GenericDAO.getColumnInfo] Database Driver Version is " + dbData.getDriverVersion());
+    }
+    catch(SQLException sqle) {
+      Debug.logInfo("[GenericDAO.getColumnInfo] Unable to get Driver name & version information");
     }
     
     Map colInfo = new HashMap();
@@ -1069,13 +1098,19 @@ public class GenericDAO {
       while(rsCols.next()) {
         try {
           ColumnCheckInfo ccInfo = new ColumnCheckInfo();
-          ccInfo.tableName = rsCols.getString("TABLE_NAME").toUpperCase();
-          ccInfo.columnName = rsCols.getString("COLUMN_NAME").toUpperCase();
-          ccInfo.typeName = rsCols.getString("TYPE_NAME").toUpperCase();
+          ccInfo.tableName = rsCols.getString("TABLE_NAME");
+          ccInfo.tableName = (ccInfo.tableName == null)?null:ccInfo.tableName.toUpperCase();
+          ccInfo.columnName = rsCols.getString("COLUMN_NAME");
+          ccInfo.columnName = (ccInfo.columnName == null)?null:ccInfo.columnName.toUpperCase();
+
+          ccInfo.typeName = rsCols.getString("TYPE_NAME");
+          ccInfo.typeName = (ccInfo.typeName == null)?null:ccInfo.typeName.toUpperCase();
           ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
           ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
-          ccInfo.isNullable = rsCols.getString("IS_NULLABLE").toUpperCase();
-          
+
+          ccInfo.isNullable = rsCols.getString("IS_NULLABLE");
+          ccInfo.isNullable = (ccInfo.isNullable == null)?null:ccInfo.isNullable.toUpperCase();
+
           List tableColInfo = (List)colInfo.get(ccInfo.tableName);
           if(tableColInfo == null) {
             tableColInfo = new Vector();
@@ -1085,7 +1120,7 @@ public class GenericDAO {
         }
         catch(SQLException sqle) {
           String message = "Error getting column info for column. Error was:" + sqle.toString();
-          Debug.logError("[GenericDAO.checkDb] " + message);
+          Debug.logError("[GenericDAO.getColumnInfo] " + message);
           if(messages != null) messages.add(message);
           continue;
         }
@@ -1094,13 +1129,13 @@ public class GenericDAO {
       try{ rsCols.close(); }
       catch(SQLException sqle) {
         String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
-        Debug.logError("[GenericDAO.checkDb] " + message);
+        Debug.logError("[GenericDAO.getColumnInfo] " + message);
         if(messages != null) messages.add(message);
       }
     }
     catch(SQLException sqle) {
       String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
-      Debug.logError("[GenericDAO.checkDb] " + message);
+      Debug.logError("[GenericDAO.getColumnInfo] " + message);
       if(messages != null) messages.add(message);
       colInfo = null;
     }
@@ -1108,10 +1143,9 @@ public class GenericDAO {
     try{ connection.close(); }
     catch(SQLException sqle) {
       String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
+      Debug.logError("[GenericDAO.getColumnInfo] " + message);
       if(messages != null) messages.add(message);
     }
-    
     return colInfo;
   }
 

@@ -38,6 +38,7 @@ public class ConnectionFactory {
   public static Connection getConnection(String helperName) throws SQLException {
     String jndiName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.jndi.name");
     if(jndiName != null && jndiName.length() > 0) {
+      //Debug.logInfo("[ConnectionFactory.getConnection] Trying JNDI name " + jndiName);
       DataSource ds;
       ds = (DataSource)dsCache.get(jndiName);
       if(ds != null) return ds.getConnection();
@@ -47,10 +48,14 @@ public class ConnectionFactory {
         if(ic != null) ds = (DataSource)ic.lookup(jndiName);
         if(ds != null) {
           dsCache.put(jndiName, ds);
-          return ds.getConnection();
+          Connection con = ds.getConnection();
+          //Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
+          return con;
         }
       }
-      catch(NamingException ne) { Debug.logWarning("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database."); }
+      catch(NamingException ne) {
+        // Debug.logWarning("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.");
+      }
     }
     
     // Try to use PoolMan Connection Pool.
@@ -63,7 +68,7 @@ public class ConnectionFactory {
     
     if(usingPoolMan) {
       String poolManName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.poolman");
-      //Debug.logInfo("Attempting to connect to '"+poolManName+"'");
+      //Debug.logInfo("[ConnectionFactory.getConnection] Attempting to connect to PoolMan pool with name '"+poolManName+"'");
       if(poolManName != null && poolManName.length() > 0) {
         Connection con = DriverManager.getConnection("jdbc:poolman://" + poolManName);
         if ( con != null ) {
