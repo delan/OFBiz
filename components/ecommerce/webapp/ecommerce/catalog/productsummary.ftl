@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.16 $
+ *@version    $Revision: 1.17 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -51,23 +51,21 @@
           </div>
           <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
           <div class="tabletext">
-            <nobr>
               <b>${product.productId?if_exists}</b>
                 <#if price.competitivePrice?exists && price.price?exists && price.price?double < price.competitivePrice?double>
-                  ${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span>
+                  <nobr>${uiLabelMap.ProductCompareAtPrice}: <span class='basePrice'><@ofbizCurrency amount=price.competitivePrice isoCode=price.currencyUsed/></span></nobr>
                 </#if>
                 <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-                  ${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span>
+                  <nobr>${uiLabelMap.ProductListPrice}: <span class="basePrice"><@ofbizCurrency amount=price.listPrice isoCode=price.currencyUsed/></span></nobr>
                 </#if>
-                <b>
+                <nobr><b>
                   <#if price.isSale>
                     <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
                   <if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
                     ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
-                </b>
-            </nobr>
+                </b></nobr>
           </div>
       </td>
       <td valign=center align=right>
