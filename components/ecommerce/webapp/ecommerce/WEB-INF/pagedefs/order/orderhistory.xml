@@ -2,6 +2,6 @@
 <page>
     <template>main_right</template> 
     <property name="title">Order History</property>
-      <property name="title.property">PageTitleOrderHistory</property>
+    <property name="title.property">PageTitleOrderHistory</property>
     <content-action name="/order/orderhistory.bsh"/>
 </page>

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.1
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -84,11 +84,12 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxbottom">
         <tr>
           <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
-              <td class="headerButtonLeft"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonLogout}</a></td>
+              <td class="headerButtonLeft" nowrap><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonLogout}</a></td>
           <#else>
-              <td class="headerButtonLeft"><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonLogin}</a></td>
+              <td class="headerButtonLeft" nowrap><a href="<@ofbizUrl>${checkLoginUrl}</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonLogin}</a></td>
           </#if>
-          <td class="headerButtonLeft"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonMain}</a></td>
+          <td class="headerButtonLeft" nowrap><a href="<@ofbizUrl>/contactus</@ofbizUrl>" class="headerbuttontext">Contact Us</a></td>
+          <td class="headerButtonLeft" nowrap><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonMain}</a></td>
 
           <#if sessionAttributes.autoName?has_content>
               <td width="90%" align="center" class="headerCenter">
@@ -100,11 +101,11 @@
           </#if>
 
           <#if catalogQuickaddUse>
-            <td class="headerButtonRight"><a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonQuickAdd}</a></td>
+            <td class="headerButtonRight" nowrap><a href="<@ofbizUrl>/quickadd</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonQuickAdd}</a></td>
           </#if>
-          <td class="headerButtonRight"><a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.OrderHistory}</a></td>
-          <td class="headerButtonRight"><a href="<@ofbizUrl>/editShoppingList</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.EcommerceShoppingLists}</a></td>
-          <td class="headerButtonRight"><a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonProfile}</a></td>
+          <td class="headerButtonRight" nowrap><a href="<@ofbizUrl>/orderhistory</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.OrderHistory}</a></td>
+          <td class="headerButtonRight" nowrap><a href="<@ofbizUrl>/editShoppingList</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.EcommerceShoppingLists}</a></td>
+          <td class="headerButtonRight" nowrap><a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonProfile}</a></td>
         </tr>
       </table>
     </td>
