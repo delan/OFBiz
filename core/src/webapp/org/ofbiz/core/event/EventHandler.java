@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -38,7 +38,9 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface EventHandler {
 
-    /** Invoke the web event
+    /** 
+     * Invoke the web event
+     * 
      *@param eventPath The path or location of this event
      *@param eventMethod The method to invoke
      *@param request The servlet request object
