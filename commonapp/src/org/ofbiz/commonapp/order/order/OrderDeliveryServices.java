@@ -32,6 +32,7 @@ import org.ofbiz.core.ftl.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.TransactionUtil;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.commonapp.product.catalog.*;
@@ -71,6 +72,7 @@ public class OrderDeliveryServices {
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Security security = ctx.getSecurity();
         Locale locale = (Locale) context.get("locale");
+        boolean beganTrans = false;
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         // check security
@@ -80,57 +82,130 @@ public class OrderDeliveryServices {
             return result;
         }
 
-        // get the order type
-        String orderTypeId = (String) context.get("orderTypeId");
-        
-        // create the schedule object
-        Object orderId = context.get("orderId");
-        Object shipmentMethodTypeId= context.get("shipmentMethodTypeId");
-        Object trackingNumber= context.get("trackingNumber");
-        Object deliveryDate= context.get("deliveryDate");
-        Object pickupDate= context.get("pickupDate");
-        Object cartons= context.get("cartons");
-        Object skidsPallets= context.get("skidsPallets");
-        Object unitsPieces= context.get("unitsPieces");
-        Object totalCubicSize= context.get("totalCubicSize");
-        Object totalCubicUomId= context.get("totalCubicUom");
-        Object totalWeight= context.get("totalWeight");
-        Object totalWeightUomId= context.get("totalWeightUomId");
-        Object statusId= context.get("statusId");
-        
-        // first try to create the OrderDeliverySchedule; if this does not fail, continue.
-        try {
-             Map scheduleParams = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", "_NA_");
-             scheduleParams.put("shipmentMethodTypeId", shipmentMethodTypeId);
-             scheduleParams.put("trackingNumber", trackingNumber);
-             scheduleParams.put("deliveryDate", deliveryDate);
-             scheduleParams.put("pickupDate", pickupDate);
-             scheduleParams.put("cartons", cartons);
-             scheduleParams.put("skidsPallets", skidsPallets);
-             scheduleParams.put("unitsPieces", unitsPieces);
-             scheduleParams.put("totalCubicSize", totalCubicSize);
-             scheduleParams.put("totalCubicUomId", totalCubicUomId);
-             scheduleParams.put("totalWeight", totalWeight);
-             scheduleParams.put("totalWeightUomId", totalWeightUomId);
-             scheduleParams.put("statusId", statusId);
+        try
+        {
+            //Initialize the transaction
+            try {
+                beganTrans = TransactionUtil.begin();
+            } catch (GenericTransactionException gte) {
+                throw new GenericServiceException("Cannot start the transaction.", gte.getNested());
+            }
 
-             GenericValue schedule = delegator.makeValue("OrderDeliverySchedule", scheduleParams);
+            // get the order type
+            String orderTypeId = (String) context.get("orderTypeId");
+            
+            // Retrieve the date related fields
+            Date deliveryDate = (Date)context.get("deliveryDate");
+            String deliveryWorkEffortId = (String)context.get("deliveryWorkEffortId");
+            Date pickupDate = (Date)context.get("pickupDate");
+            String pickupWorkEffortId = (String)context.get("pickupWorkEffortId");
+            
+            // Define the main fields of the OrderDeliverySchedule
+            Map scheduleParams = UtilMisc.toMap("orderId", context.get("orderId"), "orderItemSeqId", "_NA_");
+            scheduleParams.put("shipmentMethodTypeId", context.get("shipmentMethodTypeId"));
+            scheduleParams.put("trackingNumber", context.get("trackingNumber"));
+            scheduleParams.put("deliveryDate", deliveryDate);
+            scheduleParams.put("pickupDate", pickupDate);
+            scheduleParams.put("cartons", context.get("cartons"));
+            scheduleParams.put("skidsPallets", context.get("skidsPallets"));
+            scheduleParams.put("unitsPieces", context.get("unitsPieces"));
+            scheduleParams.put("totalCubicSize", context.get("totalCubicSize"));
+            scheduleParams.put("totalCubicUomId", context.get("totalCubicUom"));
+            scheduleParams.put("totalWeight", context.get("totalWeight"));
+            scheduleParams.put("totalWeightUomId", context.get("totalWeightUomId"));
+            scheduleParams.put("statusId", context.get("statusId"));
 
-             //See whether to create or update
-             if (doCreation) {
-                 delegator.create(schedule);
+            //Define the data structure to submit
+            GenericValue schedule = delegator.makeValue("OrderDeliverySchedule", scheduleParams);
+
+            //Now create the associated work efforts
+            Map deliveryWorkEffortMap = makeWorkEffort("Purchase Order Delivery", deliveryDate, userLogin);
+            Map pickupWorkEffortMap = makeWorkEffort("Purchase Order Pickup", pickupDate, userLogin);
+
+            //See whether to create or update
+            if (doCreation) {
+                //First create the delivery work effort
+                deliveryWorkEffortMap.put("quickAssignPartyId", partyId);
+                Map workEffortResult = dispatcher.runSync("createWorkEffort", deliveryWorkEffortMap);
+                deliveryWorkEffortId = (String)workEffortResult.get("workEffortId");
+
+                //Now create the pickup work effort
+                pickupWorkEffortMap.put("quickAssignPartyId", partyId);
+                workEffortResult = dispatcher.runSync("createWorkEffort", pickupWorkEffortMap);
+                pickupWorkEffortId = (String)workEffortResult.get("workEffortId");
+
+                //Finally, create the order delivery schedule in the repository
+                schedule.put("deliveryWorkEffortId", deliveryWorkEffortId);
+                schedule.put("pickupWorkEffortId", pickupWorkEffortId);
+                delegator.create(schedule);
              } else {
-                 delegator.store(schedule);
+                //Get a reference to the existing work efforts
+                deliveryWorkEffortMap.put("workEffortId", deliveryWorkEffortId);
+                pickupWorkEffortMap.put("workEffortId", pickupWorkEffortId);
+
+                //Update the existing work effort schedules
+                dispatcher.runSync("updateWorkEffort", deliveryWorkEffortMap);
+                dispatcher.runSync("updateWorkEffort", pickupWorkEffortMap);
+
+                //Finally, update the schedule in the repository
+                delegator.store(schedule);
              }
-            result = ServiceUtil.returnSuccess();
+
+            try {
+                //Commit the transaction
+                TransactionUtil.commit(beganTrans);
+                result = ServiceUtil.returnSuccess();
+            } catch (GenericTransactionException e) {
+                Debug.logError(e, "Could not commit transaction", module);     
+                throw new GenericServiceException("Commit transaction failed");
+            }  
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Could not create the WorkEffort associated with the delivery schedule", module);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "Could not create the WorkEffort associated with the delivery schedule");
+
+            try {
+                //Rollback the transaction
+                TransactionUtil.rollback(beganTrans);
+            } catch (GenericTransactionException te) {
+                Debug.logError(te, "Cannot rollback transaction", module);
+            }
         } catch (GenericEntityException e) {
-            e.printStackTrace();
             Debug.logError(e, "Cannot create OrderDeliverySchedule entity; problems with insert", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Schedule creation failed; please notify customer service.");
-            return result;
-        }            
+            result.put(ModelService.ERROR_MESSAGE, "Transaction error: " + e.getMessage());
+
+            try {
+                //Rollback the transaction
+                TransactionUtil.rollback(beganTrans);
+            } catch (GenericTransactionException te) {
+                Debug.logError(te, "Cannot rollback transaction", module);
+            }
+        }
 
         return result;
+    }
+
+    /**
+     * This will create the WorkEffor twith the given customized
+     * fields for the specified pickup or delivery dates.
+     *
+     * @param   workEffortName  The title of the work effort
+     * @param   date    The date to create the work effort for. This does
+     * not set a duration for the work effort.
+     * @param   userLogin   The userLogin credentials to associate
+     * with the service invocation
+     * @throws GenericServiceException If an error occurs invoking the
+     * the service to create the WorkEffort.
+     */
+    private static Map makeWorkEffort(String workEffortName, Date deliveryDate, GenericValue userLogin) throws GenericServiceException {
+        String workEffortTypeId = "EVENT";
+        String currentStatusId= "CAL_CONFIRMED";
+        Map workEffortMap = UtilMisc.toMap("workEffortTypeId", workEffortTypeId, 
+                "workEffortName", workEffortName, "currentStatusId", currentStatusId, 
+                "userLogin", userLogin);
+        workEffortMap.put("estimatedStartDate", deliveryDate);
+        workEffortMap.put("estimatedCompletionDate", deliveryDate);
+        return workEffortMap;
     }
 }
