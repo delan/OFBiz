@@ -56,9 +56,9 @@
   String rowClass2 = "viewOneTR2";
   String rowClass = "";
   GenericPK findByPK = new GenericPK(entity);
-  for(int fnum=0; fnum<entity.fields.size(); fnum++)
+  for(int fnum=0; fnum<entity.pks.size(); fnum++)
   {
-    ModelField field = (ModelField)entity.fields.get(fnum);
+    ModelField field = (ModelField)entity.pks.get(fnum);
     ModelFieldType type = field.modelFieldType;
     if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp"))
     {
