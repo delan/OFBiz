@@ -1,372 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <Party partyId="_NA_" partyTypeId="PERSON"/>
-  <Person partyId="_NA_"/>
-  <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
-  <PartyRole partyId="_NA_" roleTypeId="_NA_"/>
+    <Party partyId="_NA_" partyTypeId="PERSON"/>
+    <Person partyId="_NA_"/>
+    <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>
+    <PartyRole partyId="_NA_" roleTypeId="_NA_"/>
 
-  <Party partyId="admin" partyTypeId="PERSON"/>
-  <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>
-  <PartyRole partyId="admin" roleTypeId="BUYER"/>
-  <PartyRole partyId="admin" roleTypeId="MANAGER"/>
-  <PartyRole partyId="admin" roleTypeId="ORDER_CLERK"/>
-  <PartyRole partyId="admin" roleTypeId="SHIPMENT_CLERK"/>
-  <PartyRole partyId="admin" roleTypeId="SALES_REP"/>
-  <PartyRole partyId="admin" roleTypeId="_NA_"/>
-  <ContactMech contactMechId="5000" contactMechTypeId="EMAIL_ADDRESS" infoString="ofbiztest@yahoo.com"/>
-  <PartyContactMech partyId="admin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
+    <Party partyId="admin" partyTypeId="PERSON"/>
+    <Person firstName="THE" lastName="ADMINISTRATOR" middleName="PRIVILEGED" partyId="admin" personalTitle="Mr."/>
+    <PartyRole partyId="admin" roleTypeId="BUYER"/>
+    <PartyRole partyId="admin" roleTypeId="MANAGER"/>
+    <PartyRole partyId="admin" roleTypeId="ORDER_CLERK"/>
+    <PartyRole partyId="admin" roleTypeId="SHIPMENT_CLERK"/>
+    <PartyRole partyId="admin" roleTypeId="SALES_REP"/>
+    <PartyRole partyId="admin" roleTypeId="_NA_"/>
+    <ContactMech contactMechId="5000" contactMechTypeId="EMAIL_ADDRESS" infoString="ofbiztest@yahoo.com"/>
+    <PartyContactMech partyId="admin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
-  <Party partyId="ltdadmin" partyTypeId="PERSON"/>
-  <Person firstName="Limited" lastName="Administrator" middleName="" partyId="ltdadmin" personalTitle="Mr."/>
-  <PartyRole partyId="ltdadmin" roleTypeId="ORDER_CLERK"/>
-  <PartyRole partyId="ltdadmin" roleTypeId="LTD_ADMIN"/>
-  <PartyRole partyId="ltdadmin" roleTypeId="_NA_"/>
-  <PartyContactMech partyId="ltdadmin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
+    <Party partyId="ltdadmin" partyTypeId="PERSON"/>
+    <Person firstName="Limited" lastName="Administrator" middleName="" partyId="ltdadmin" personalTitle="Mr."/>
+    <PartyRole partyId="ltdadmin" roleTypeId="ORDER_CLERK"/>
+    <PartyRole partyId="ltdadmin" roleTypeId="LTD_ADMIN"/>
+    <PartyRole partyId="ltdadmin" roleTypeId="_NA_"/>
+    <PartyContactMech partyId="ltdadmin" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
-  <Party partyId="externaluser" partyTypeId="PERSON"/>
-  <Person firstName="External" lastName="User" middleName="" partyId="externaluser" personalTitle="Mr."/>
-  <PartyRole partyId="externaluser" roleTypeId="SUPPLIER"/>
-  <PartyContactMech partyId="externaluser" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
+    <Party partyId="externaluser" partyTypeId="PERSON"/>
+    <Person firstName="External" lastName="User" middleName="" partyId="externaluser" personalTitle="Mr."/>
+    <PartyRole partyId="externaluser" roleTypeId="SUPPLIER"/>
+    <PartyContactMech partyId="externaluser" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
-  <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
-  <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
-  <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
-  <SecurityGroup description="Admin group for restricted order processing." groupId="ORDERPROC"/>
-  <SecurityGroup description="Order Entry Admin group; permissions for creating orders." groupId="ORDERENTRY"/>
-  <SecurityGroup description="Catalog Admin group, has all catalog permissions." groupId="CATALOGADMIN"/>
-  <SecurityGroup description="Limited Catalog Admin group, has limited catalog permissions." groupId="CATALOGADMIN_LTD"/>
-  <SecurityGroup description="Order Admin group, has all order permissions." groupId="ORDERADMIN"/>
-  <SecurityGroup description="Limited Order Admin group, has all limited order permissions." groupId="ORDERADMIN_LTD"/>
-  <SecurityGroup description="Limited Order Admin group for Supplier Agents." groupId="ORDERSUPPLIER_LTD"/>
-  <SecurityGroup description="Party Admin group, has all party permissions." groupId="PARTYADMIN"/>
-
-  <SecurityPermission description="View the Server Statistics pages." permissionId="SERVER_STATS_VIEW"/>
-  <SecurityPermission description="Send to the Control Applet." permissionId="SEND_CONTROL_APPLET"/>
-  <SecurityPermission description="Use the Data File Maintenance pages." permissionId="DATAFILE_MAINT"/>
-  <SecurityPermission description="Use the Entity Maintenance pages." permissionId="ENTITY_MAINT"/>
-  <SecurityPermission description="Use the Service Maintenance pages." permissionId="SERVICE_MAINT"/>
-  <SecurityPermission description="Use the Rules Maintenance pages." permissionId="RULES_MAINT"/>
-  <SecurityPermission description="Use the Workflow Maintenance pages." permissionId="WORKFLOW_MAINT"/>
-  <SecurityPermission description="Use the Period Maintenance pages." permissionId="PERIOD_MAINT"/>
-  <SecurityPermission description="Use the Enum and Status Maintenance pages." permissionId="ENUM_STATUS_MAINT"/>
-  <SecurityPermission description="Use the Entity Sync Admin pages." permissionId="ENTITY_SYNC_ADMIN"/>
-  <SecurityPermission description="View a UtilCache instance." permissionId="UTIL_CACHE_VIEW"/>
-  <SecurityPermission description="Edit a UtilCache instance." permissionId="UTIL_CACHE_EDIT"/>
-  <SecurityPermission description="View a UtilDebug instance." permissionId="UTIL_CACHE_VIEW"/>
-  <SecurityPermission description="Edit a UtilDebug instance." permissionId="UTIL_CACHE_EDIT"/>
-  <SecurityPermission description="Permission to invoke any service remotely." permissionId="SERVICE_INVOKE_ANY"/>
-  <SecurityPermission description="Manual Payment Transaction." permissionId="MANUAL_PAYMENT"/>
-
-  <SecurityPermission description="View with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_VIEW"/>
-  <SecurityPermission description="Create with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_CREATE"/>
-  <SecurityPermission description="Update with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_UPDATE"/>
-  <SecurityPermission description="Delete with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_DELETE"/>
-  <SecurityPermission description="ALL with the Entity Data Maintenance pages." permissionId="ENTITY_DATA_ADMIN"/>
-
-  <SecurityPermission description="Permission to access the WebTools Menu." permissionId="WEBTOOLS_VIEW"/>
-
-  <SecurityPermission description="View operations in the Catalog Manager." permissionId="CATALOG_VIEW"/>
-  <SecurityPermission description="Create operations in the Catalog Manager." permissionId="CATALOG_CREATE"/>
-  <SecurityPermission description="Update operations in the Catalog Manager." permissionId="CATALOG_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Catalog Manager." permissionId="CATALOG_DELETE"/>
-  <SecurityPermission description="ALL operations in the Catalog Manager." permissionId="CATALOG_ADMIN"/>
-  <SecurityPermission description="Limited Create operations in the Catalog Manager." permissionId="CATALOG_ROLE_CREATE"/>
-  <SecurityPermission description="Limited Update operations in the Catalog Manager." permissionId="CATALOG_ROLE_UPDATE"/>
-  <SecurityPermission description="Limited Delete operations in the Catalog Manager." permissionId="CATALOG_ROLE_DELETE"/>
-  <SecurityPermission description="Permission required, in addition to other applicable permissions, to maintain product price information including prices, promotions, and price rules." permissionId="CATALOG_PRICE_MAINT"/>
-
-  <SecurityPermission description="View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
-  <SecurityPermission description="Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
-  <SecurityPermission description="Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
-  <SecurityPermission description="ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
-  <SecurityPermission description="Create notes in the Party Manager." permissionId="PARTYMGR_NOTE"/>
-
-  <SecurityPermission description="View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
-  <SecurityPermission description="Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
-  <SecurityPermission description="Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
-  <SecurityPermission description="ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
-  <SecurityPermission description="Limited view operations in the Order Manager." permissionId="ORDERMGR_ROLE_VIEW"/>
-  <SecurityPermission description="Limited Create operations in the Order Manager." permissionId="ORDERMGR_ROLE_CREATE"/>
-  <SecurityPermission description="Limited Update operations in the Order Manager." permissionId="ORDERMGR_ROLE_UPDATE"/>
-  <SecurityPermission description="Limited Delete operations in the Order Manager." permissionId="ORDERMGR_ROLE_DELETE"/>
-  <SecurityPermission description="Create notes in the Order Manager." permissionId="ORDERMGR_NOTE"/>
-  <SecurityPermission description="Process returns in the Order Manager." permissionId="ORDERMGR_RETURN"/>
-  <SecurityPermission description="Sales Order Entry in the Order Manager." permissionId="ORDERMGR_SALES_ENTRY"/>
-  <SecurityPermission description="Price change permission for sales orders." permissionId="ORDERMGR_SALES_PRICEMOD"/>
-  <SecurityPermission description="Purchase Order Entry in the Order Manager." permissionId="ORDERMGR_PURCHASE_ENTRY"/>
-
-  <SecurityPermission description="View operations in the Shipping Rate Editor." permissionId="SHIPRATE_VIEW"/>
-  <SecurityPermission description="Create operations in the Shipping Rate Editor." permissionId="SHIPRATE_CREATE"/>
-  <SecurityPermission description="Delete operations in the Shipping Rate Editor." permissionId="SHIPRATE_DELETE"/>
-  <SecurityPermission description="ALL operations in the Shipping Rate Editor." permissionId="SHIPRATE_ADMIN"/>
-
-  <SecurityPermission description="View operations in the Tax Rate Editor." permissionId="TAXRATE_VIEW"/>
-  <SecurityPermission description="Create operations in the Tax Rate Editor." permissionId="TAXRATE_CREATE"/>
-  <SecurityPermission description="Delete operations in the Tax Rate Editor." permissionId="TAXRATE_DELETE"/>
-  <SecurityPermission description="ALL operations in the Tax Rate Editor." permissionId="TAXRATE_ADMIN"/>
-
-  <SecurityPermission description="View operations in the Payment Processors Setup." permissionId="PAYPROC_VIEW"/>
-  <SecurityPermission description="Create operations in the Payment Processors Setup." permissionId="PAYPROC_CREATE"/>
-  <SecurityPermission description="Delete operations in the Payment Processors Setup." permissionId="PAYPROC_DELETE"/>
-  <SecurityPermission description="ALL operations in the Payment Processors Setup." permissionId="PAYPROC_ADMIN"/>
-
-  <SecurityPermission description="View Payment Information." permissionId="PAY_INFO_VIEW"/>
-  <SecurityPermission description="Create Payment Information." permissionId="PAY_INFO_CREATE"/>
-  <SecurityPermission description="Update Payment Information." permissionId="PAY_INFO_UPDATE"/>
-  <SecurityPermission description="Delete Payment Information." permissionId="PAY_INFO_DELETE"/>
-  <SecurityPermission description="ALL Payment Information Operations." permissionId="PAY_INFO_ADMIN"/>
-
-  <SecurityPermission description="View operations in the Security Management Screens." permissionId="SECURITY_VIEW"/>
-  <SecurityPermission description="Create operations in the Security Management Screens." permissionId="SECURITY_CREATE"/>
-  <SecurityPermission description="Update operations in the Security Management Screens." permissionId="SECURITY_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Security Management Screens." permissionId="SECURITY_DELETE"/>
-  <SecurityPermission description="ALL operations in the Security Management Screens." permissionId="SECURITY_ADMIN"/>
-
-  <SecurityPermission description="View operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_VIEW"/>
-  <SecurityPermission description="Create operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_CREATE"/>
-  <SecurityPermission description="Update operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_DELETE"/>
-  <SecurityPermission description="ALL operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_ADMIN"/>
-
-  <SecurityPermission description="View operations in the Accounting Manager." permissionId="ACCOUNTING_VIEW"/>
-  <SecurityPermission description="Create operations in the Accounting Manager." permissionId="ACCOUNTING_CREATE"/>
-  <SecurityPermission description="Update operations in the Accounting Manager." permissionId="ACCOUNTING_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Accounting Manager." permissionId="ACCOUNTING_DELETE"/>
-  <SecurityPermission description="ALL operations in the Accounting Manager." permissionId="ACCOUNTING_ADMIN"/>
-
-  <SecurityPermission description="View operations in the Facility Manager." permissionId="FACILITY_VIEW"/>
-  <SecurityPermission description="Create operations in the Facility Manager." permissionId="FACILITY_CREATE"/>
-  <SecurityPermission description="Update operations in the Facility Manager." permissionId="FACILITY_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Facility Manager." permissionId="FACILITY_DELETE"/>
-  <SecurityPermission description="ALL operations in the Facility Manager." permissionId="FACILITY_ADMIN"/>
-  <SecurityPermission description="Limited view operations in the Facility Manager." permissionId="FACILITY_ROLE_VIEW"/>
-  <SecurityPermission description="Limited update operations in the Facility Manager." permissionId="FACILITY_ROLE_UPDATE"/>
-
-  <SecurityPermission description="View operations in the Marketing Manager." permissionId="MARKETING_VIEW"/>
-  <SecurityPermission description="Create operations in the Marketing Manager." permissionId="MARKETING_CREATE"/>
-  <SecurityPermission description="Update operations in the Marketing Manager." permissionId="MARKETING_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Marketing Manager." permissionId="MARKETING_DELETE"/>
-  <SecurityPermission description="ALL operations in the Marketing Manager." permissionId="MARKETING_ADMIN"/>
-  <SecurityPermission description="Limited view operations in the Marketing Manager." permissionId="MARKETING_ROLE_VIEW"/>
-  <SecurityPermission description="Limited update operations in the Marketing Manager." permissionId="MARKETING_ROLE_UPDATE"/>
-
-  <SecurityPermission description="View operations in the Content Manager." permissionId="CONTENTMGR_VIEW"/>
-  <SecurityPermission description="Create operations in the Content Manager." permissionId="CONTENTMGR_CREATE"/>
-  <SecurityPermission description="Update operations in the Content Manager." permissionId="CONTENTMGR_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Content Manager." permissionId="CONTENTMGR_DELETE"/>
-  <SecurityPermission description="ALL operations in the Content Manager." permissionId="CONTENTMGR_ADMIN"/>
-
-  <SecurityPermission description="View operations in the Manufacturing Manager." permissionId="MANUFACTURING_VIEW"/>
-  <SecurityPermission description="Create operations in the Manufacturing Manager." permissionId="MANUFACTURING_CREATE"/>
-  <SecurityPermission description="Update operations in the Manufacturing Manager." permissionId="MANUFACTURING_UPDATE"/>
-  <SecurityPermission description="Delete operations in the Manufacturing Manager." permissionId="MANUFACTURING_DELETE"/>
-  <SecurityPermission description="ALL operations in the Manufacturing Manager." permissionId="MANUFACTURING_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVER_STATS_VIEW"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SEND_CONTROL_APPLET"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVICE_MAINT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="RULES_MAINT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKFLOW_MAINT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PERIOD_MAINT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENUM_STATUS_MAINT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_SYNC_ADMIN"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_EDIT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_VIEW"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_DEBUG_EDIT"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_DEBUG_VIEW"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVICE_INVOKE_ANY"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUAL_PAYMENT"/>
-
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVER_STATS_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SEND_CONTROL_APPLET"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="DATAFILE_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVICE_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="RULES_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKFLOW_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PERIOD_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENUM_STATUS_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_SYNC_ADMIN"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_EDIT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_DEBUG_EDIT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_DEBUG_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVICE_INVOKE_ANY"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUAL_PAYMENT"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_DATA_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_DATA_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_DATA_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_DATA_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_DATA_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_VIEW"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_PRICE_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_PRICE_MAINT"/>
-
-  <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_VIEW"/>
-  <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_ROLE_CREATE"/>
-  <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_ROLE_UPDATE"/>
-  <SecurityGroupPermission groupId="CATALOGADMIN_LTD" permissionId="CATALOG_ROLE_DELETE"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_NOTE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PARTYMGR_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_RETURN"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_NOTE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SHIPRATE_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SHIPRATE_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SHIPRATE_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SHIPRATE_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="TAXRATE_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PAYPROC_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PAY_INFO_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SECURITY_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SECURITY_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKEFFORTMGR_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ACCOUNTING_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ACCOUNTING_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="FACILITY_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="FACILITY_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="FACILITY_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="FACILITY_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="FACILITY_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="MARKETING_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_CREATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_DELETE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_UPDATE"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_ADMIN"/>
-
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="WEBTOOLS_VIEW"/>
-  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WEBTOOLS_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="WEBTOOLS_VIEW"/>
-
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SERVER_STATS_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="UTIL_CACHE_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="UTIL_DEBUG_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ENTITY_DATA_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="WORKFLOW_MAINT"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="CATALOG_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_NOTE"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_NOTE"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SHIPRATE_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TAXRATE_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PAYPROC_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="SECURITY_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="WORKEFFORTMGR_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ACCOUNTING_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="FACILITY_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MARKETING_VIEW"/>
-  <SecurityGroupPermission groupId="VIEWADMIN" permissionId="CONTENTMGR_VIEW"/>
-
-  <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_ROLE_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_NOTE"/>
-  <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_NOTE"/>
-
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_SALES_ENTRY"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_ROLE_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_NOTE"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_UPDATE"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_CREATE"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_CREATE"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_UPDATE"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_NOTE"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_UPDATE"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_CREATE"/>
-  <SecurityGroupPermission groupId="ORDERENTRY" permissionId="CATALOG_VIEW"/>
-
-  <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
-  <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>
-  <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_DELETE"/>
-
-  <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
-  <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
-  <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>
-
-  <SecurityGroupPermission groupId="CATALOGADMIN" permissionId="CATALOG_ADMIN"/>
-  <SecurityGroupPermission groupId="ORDERADMIN" permissionId="ORDERMGR_ADMIN"/>
-  <SecurityGroupPermission groupId="PARTYADMIN" permissionId="PARTYMGR_ADMIN"/>
-
-  <UserLogin userLoginId="anonymous" currentPassword="anonymous" passwordHint=""/>
-  <UserLogin userLoginId="admin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
-  <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
-  <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
-  <UserLogin userLoginId="ltdadmin" partyId="ltdadmin" currentPassword="ofbiz" passwordHint=""/>
-  <UserLogin userLoginId="supplier" partyId="externaluser" currentPassword="ofbiz" passwordHint=""/>
-  <UserLogin userLoginId="system" partyId="admin" currentPassword="" passwordHint="Do Not Enable This Account" enabled="N"/>
-
-  <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
-  <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
-  <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="demoadmin" fromDate="2001-01-01 12:00:00.0"/>
-
-  <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
-  <UserLoginSecurityGroup groupId="CATALOGADMIN_LTD" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
-
-  <UserLoginSecurityGroup groupId="ORDERSUPPLIER_LTD" userLoginId="supplier" fromDate="2001-01-01 12:00:00.0"/>
+    <!-- OFBiz Core security -->
+    <!-- Target file: components/securityext/data/SecurityData.xml -->
+    <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
+    <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
+    <SecurityGroup description="Demo Admin group, has all view permissions." groupId="VIEWADMIN"/>
+    <UserLogin userLoginId="anonymous" currentPassword="anonymous" passwordHint=""/>
+    <UserLogin userLoginId="admin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
+    <UserLogin userLoginId="flexadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
+    <UserLogin userLoginId="demoadmin" partyId="admin" currentPassword="ofbiz" passwordHint=""/>
+    <UserLogin userLoginId="ltdadmin" partyId="ltdadmin" currentPassword="ofbiz" passwordHint=""/>
+    <UserLogin userLoginId="system" partyId="admin" currentPassword="" passwordHint="Do Not Enable This Account" enabled="N"/>
+    <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
+    <UserLoginSecurityGroup groupId="FLEXADMIN" userLoginId="flexadmin" fromDate="2001-01-01 12:00:00.0"/>
+    <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="demoadmin" fromDate="2001-01-01 12:00:00.0"/>
+    <UserLoginSecurityGroup groupId="VIEWADMIN" userLoginId="ltdadmin" fromDate="2001-01-01 12:00:00.0"/>
 </entity-engine-xml>

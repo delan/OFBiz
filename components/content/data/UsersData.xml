@@ -2,13 +2,13 @@
 <entity-engine-xml>
 
     <Party partyId="BLOG_GUEST" partyTypeId="PERSON" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:37:41.016" lastUpdatedTxStamp="2004-03-27 09:37:41.016" createdStamp="2004-03-27 09:37:41.016" createdTxStamp="2004-03-27 09:37:41.016"/>
-    <Person partyId="BLOG_GUEST" lastName="Guest" firstName="Blog" />
+    <Person partyId="BLOG_GUEST" lastName="Guest" firstName="Blog"/>
     <UserLogin userLoginId="blog_guest" partyId="BLOG_GUEST" currentPassword="ofbiz" lastUpdatedStamp="2004-03-27 09:37:41.121" lastUpdatedTxStamp="2004-03-27 09:37:41.072" createdStamp="2004-03-27 09:37:41.121" createdTxStamp="2004-03-27 09:37:41.072"/>
     <PartyRole partyId="BLOG_GUEST" roleTypeId="PERMISSION_GROUP_MBR" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>
     <PartyRole partyId="BLOG_GUEST" roleTypeId="_NA_" lastUpdatedStamp="2004-03-27 09:37:41.072" lastUpdatedTxStamp="2004-03-27 09:37:41.072" createdStamp="2004-03-27 09:37:41.072" createdTxStamp="2004-03-27 09:37:41.072"/>
 
     <Party partyId="BLOG_ADMIN" partyTypeId="PERSON" createdDate="2004-03-27 09:38:48.337" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:38:48.337" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:38:48.34" lastUpdatedTxStamp="2004-03-27 09:38:48.34" createdStamp="2004-03-27 09:38:48.34" createdTxStamp="2004-03-27 09:38:48.34"/>
-    <Person partyId="BLOG_ADMIN" lastName="Admin" firstName="Blog" />
+    <Person partyId="BLOG_ADMIN" lastName="Admin" firstName="Blog"/>
     <UserLogin userLoginId="blog_admin" partyId="BLOG_ADMIN" currentPassword="ofbiz" lastUpdatedStamp="2004-03-27 09:38:48.394" lastUpdatedTxStamp="2004-03-27 09:38:48.393" createdStamp="2004-03-27 09:38:48.394" createdTxStamp="2004-03-27 09:38:48.393"/>
     <PartyRole partyId="BLOG_ADMIN" roleTypeId="BLOG_ADMIN" lastUpdatedStamp="2004-03-27 09:39:19.363" lastUpdatedTxStamp="2004-03-27 09:39:19.363" createdStamp="2004-03-27 09:39:19.363" createdTxStamp="2004-03-27 09:39:19.363"/>
     <PartyRole partyId="BLOG_ADMIN" roleTypeId="BLOG_AUTHOR" lastUpdatedStamp="2004-03-27 09:40:12.729" lastUpdatedTxStamp="2004-03-27 09:40:12.729" createdStamp="2004-03-27 09:40:12.729" createdTxStamp="2004-03-27 09:40:12.729"/>
@@ -18,7 +18,7 @@
     <PartyRole partyId="BLOG_ADMIN" roleTypeId="_NA_" lastUpdatedStamp="2004-03-27 09:38:48.393" lastUpdatedTxStamp="2004-03-27 09:38:48.393" createdStamp="2004-03-27 09:38:48.393" createdTxStamp="2004-03-27 09:38:48.393"/>
 
     <Party partyId="BLOG_AUTHOR" partyTypeId="PERSON" createdDate="2004-03-27 09:38:48.337" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:38:48.337" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:38:48.34" lastUpdatedTxStamp="2004-03-27 09:38:48.34" createdStamp="2004-03-27 09:38:48.34" createdTxStamp="2004-03-27 09:38:48.34"/>
-    <Person partyId="BLOG_AUTHOR" lastName="Author" firstName="Blog" />
+    <Person partyId="BLOG_AUTHOR" lastName="Author" firstName="Blog"/>
     <UserLogin userLoginId="blog_author" partyId="BLOG_AUTHOR" currentPassword="ofbiz" lastUpdatedStamp="2004-03-27 09:37:41.121" lastUpdatedTxStamp="2004-03-27 09:37:41.072" createdStamp="2004-03-27 09:37:41.121" createdTxStamp="2004-03-27 09:37:41.072"/>
     <PartyRole partyId="BLOG_AUTHOR" roleTypeId="BLOG_AUTHOR" lastUpdatedStamp="2004-03-27 09:40:12.729" lastUpdatedTxStamp="2004-03-27 09:40:12.729" createdStamp="2004-03-27 09:40:12.729" createdTxStamp="2004-03-27 09:40:12.729"/>
     <PartyRole partyId="BLOG_AUTHOR" roleTypeId="BLOG_PUBLISHER" lastUpdatedStamp="2004-03-27 09:39:19.478" lastUpdatedTxStamp="2004-03-27 09:39:19.478" createdStamp="2004-03-27 09:39:19.478" createdTxStamp="2004-03-27 09:39:19.478"/>
@@ -26,7 +26,7 @@
     <PartyRole partyId="BLOG_AUTHOR" roleTypeId="_NA_" lastUpdatedStamp="2004-03-27 09:38:48.393" lastUpdatedTxStamp="2004-03-27 09:38:48.393" createdStamp="2004-03-27 09:38:48.393" createdTxStamp="2004-03-27 09:38:48.393"/>
 
     <Party partyId="BLOG_EDITOR" partyTypeId="PERSON" createdDate="2004-03-27 09:38:48.337" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:38:48.337" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:38:48.34" lastUpdatedTxStamp="2004-03-27 09:38:48.34" createdStamp="2004-03-27 09:38:48.34" createdTxStamp="2004-03-27 09:38:48.34"/>
-    <Person partyId="BLOG_EDITOR" lastName="Editor" firstName="Blog" />
+    <Person partyId="BLOG_EDITOR" lastName="Editor" firstName="Blog"/>
     <UserLogin userLoginId="blog_editor" partyId="BLOG_EDITOR" currentPassword="ofbiz" lastUpdatedStamp="2004-03-27 09:37:41.121" lastUpdatedTxStamp="2004-03-27 09:37:41.072" createdStamp="2004-03-27 09:37:41.121" createdTxStamp="2004-03-27 09:37:41.072"/>
     <PartyRole partyId="BLOG_EDITOR" roleTypeId="BLOG_EDITOR" lastUpdatedStamp="2004-03-27 09:40:12.729" lastUpdatedTxStamp="2004-03-27 09:40:12.729" createdStamp="2004-03-27 09:40:12.729" createdTxStamp="2004-03-27 09:40:12.729"/>
     <PartyRole partyId="BLOG_EDITOR" roleTypeId="BLOG_EDITOR" lastUpdatedStamp="2004-03-27 09:39:19.227" lastUpdatedTxStamp="2004-03-27 09:39:19.227" createdStamp="2004-03-27 09:39:19.227" createdTxStamp="2004-03-27 09:39:19.227"/>
@@ -56,7 +56,7 @@
     <PartyRelationship partyIdFrom="BLOG_ADMIN" partyIdTo="BLOG_ADMINS" roleTypeIdFrom="PERMISSION_GROUP_MBR" roleTypeIdTo="PERMISSION_GROUP" fromDate="2004-03-27 22:50:38.845" partyRelationshipTypeId="BLOG_PERMISSION" lastUpdatedStamp="2004-03-27 22:50:39.122" lastUpdatedTxStamp="2004-03-27 22:50:39.122" createdStamp="2004-03-27 22:50:39.122" createdTxStamp="2004-03-27 22:50:39.122"/>
 
     <Party partyId="AL_BYERS" partyTypeId="PERSON" createdDate="2004-03-27 09:38:48.337" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:38:48.337" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:38:48.34" lastUpdatedTxStamp="2004-03-27 09:38:48.34" createdStamp="2004-03-27 09:38:48.34" createdTxStamp="2004-03-27 09:38:48.34"/>
-    <Person partyId="AL_BYERS" lastName="Byers" firstName="Al" />
+    <Person partyId="AL_BYERS" lastName="Byers" firstName="Al"/>
     <UserLogin userLoginId="byersa" partyId="AL_BYERS" currentPassword="ofbiz" lastUpdatedStamp="2004-03-27 09:38:48.394" lastUpdatedTxStamp="2004-03-27 09:38:48.393" createdStamp="2004-03-27 09:38:48.394" createdTxStamp="2004-03-27 09:38:48.393"/>
     <PartyRole partyId="AL_BYERS" roleTypeId="BLOG_ADMIN" lastUpdatedStamp="2004-03-27 09:39:19.363" lastUpdatedTxStamp="2004-03-27 09:39:19.363" createdStamp="2004-03-27 09:39:19.363" createdTxStamp="2004-03-27 09:39:19.363"/>
     <PartyRole partyId="AL_BYERS" roleTypeId="PERMISSION_GROUP_MBR" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>

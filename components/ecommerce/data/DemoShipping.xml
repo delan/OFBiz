@@ -8,10 +8,10 @@
 
     <ShipmentMethodType description="Standard" shipmentMethodTypeId="STANDARD"/>
     <ShipmentMethodType description="Express" shipmentMethodTypeId="EXPRESS"/>
-	<ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
-	<ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
-	<ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
-	<ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
+    <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
+    <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
+    <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
+    <ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
     <ShipmentMethodType description="No Shipping" shipmentMethodTypeId="NO_SHIPPING"/>
 
     <CarrierShipmentMethod partyId="Company" roleTypeId="CARRIER" shipmentMethodTypeId="LOCAL_DELIVERY" sequenceNumber="4"/>

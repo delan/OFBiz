@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-    
-<entity-engine-xml>  
+
+<entity-engine-xml>
     <!-- ******************** -->
     <!-- CONFIGURATOR EXAMPLE -->
     <!-- ******************** -->  
@@ -15,151 +15,151 @@
                 Input: WG-9943 Configurator Output: a virtual bom    
                 Input: WG-9943-B3 Configurator Output: a real bom (WG-COVER-B, 3 WG-WHEEL-STD)    
                 Input: WG-9943-S4 Configurator Output: a real bom (WG-COVER-S, 4 WG-WHEEL-STD)  
-       -->  
-    <Product productId="WG-FRAME" productTypeId="SUBASSEMBLY" internalName="Frame" description="Standard frame for widgets" isVirtual="N" />  
-    <Product productId="WG-COVER" productTypeId="SUBASSEMBLY" internalName="Virtual cover" description="Virtual cover for widgets" isVirtual="Y" />  
-    <Product productId="WG-COVER-B" productTypeId="SUBASSEMBLY" internalName="Black cover" description="Black cover for widgets" isVirtual="N" />  
-    <Product productId="WG-COVER-S" productTypeId="SUBASSEMBLY" internalName="Silver cover" description="Silver cover for widgets" isVirtual="N" />  
-    <Product productId="WG-WHEEL" productTypeId="SUBASSEMBLY" internalName="Virtual wheel" description="Virtual wheel for widgets" isVirtual="Y" />  
-    <Product productId="WG-WHEEL-STD" productTypeId="SUBASSEMBLY" internalName="Standard wheel" description="Standard wheel for widgets" isVirtual="N" />  
-    <Product productId="SCREW" productTypeId="FINISHED_GOOD" internalName="Screw" description="Screw" isVirtual="N" />  
+       -->
+    <Product productId="WG-FRAME" productTypeId="SUBASSEMBLY" internalName="Frame" description="Standard frame for widgets" isVirtual="N"/>
+    <Product productId="WG-COVER" productTypeId="SUBASSEMBLY" internalName="Virtual cover" description="Virtual cover for widgets" isVirtual="Y"/>
+    <Product productId="WG-COVER-B" productTypeId="SUBASSEMBLY" internalName="Black cover" description="Black cover for widgets" isVirtual="N"/>
+    <Product productId="WG-COVER-S" productTypeId="SUBASSEMBLY" internalName="Silver cover" description="Silver cover for widgets" isVirtual="N"/>
+    <Product productId="WG-WHEEL" productTypeId="SUBASSEMBLY" internalName="Virtual wheel" description="Virtual wheel for widgets" isVirtual="Y"/>
+    <Product productId="WG-WHEEL-STD" productTypeId="SUBASSEMBLY" internalName="Standard wheel" description="Standard wheel for widgets" isVirtual="N"/>
+    <Product productId="SCREW" productTypeId="FINISHED_GOOD" internalName="Screw" description="Screw" isVirtual="N"/>
     
     <!-- This product doesn't exist when this data is loaded  
      <ProductAssoc productId="WG-9943" productIdTo="WG-FRAME" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>  
-     -->  
-     <ProductAssoc productId="WG-FRAME" productIdTo="WG-COVER" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="WG-FRAME" productIdTo="WG-WHEEL" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="2" quantity="2.0" reason=""/>  
-     <ProductAssoc productId="WG-FRAME" productIdTo="SCREW" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="3" quantity="13.0" reason=""/>  
-     <ProductManufacturingRule ruleId="R01" productId="" productIdFor="" productIdIn="WG-COVER" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="WG-COVER-B" productFeature="9000" ruleOperator="OR" quantity="0"/>  
-     <ProductManufacturingRule ruleId="R02" productId="" productIdFor="" productIdIn="WG-COVER" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="WG-COVER-S" productFeature="9001" ruleOperator="OR" quantity="0"/>  
-     <ProductManufacturingRule ruleId="R03" productId="" productIdFor="" productIdIn="WG-WHEEL" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="WG-WHEEL-STD" productFeature="9002" ruleOperator="OR" quantity="3"/>  
-     <ProductManufacturingRule ruleId="R04" productId="" productIdFor="" productIdIn="WG-WHEEL" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="WG-WHEEL-STD" productFeature="9003" ruleOperator="OR" quantity="4"/>  
-     
-      <!-- ******************** -->  
-      <!-- CONFIGURATOR EXAMPLE -->  
-      <!-- ******************** -->
-      <!--    
-          
-       A note about the example data    
-       
-    The "wardrobe" product component (productType = PRODUCT_PART) is a special product that can be linked to one or more finished product.<br>
-     It is a wardrobe (100cm width and 201cm height) made up by a frame and two doors.<br>
-    The "frame" product is a subassembly and is made up by 6 boards ("board_melamine" products).<br>
-    The "door" product is a virtual product (productType = VIRTUAL): when a product is ordered/produced the virtual    
-    product is substituted with a real one ("door_white" or "door_birch") according to the    
-    product features selected for the order and the product to part rules (see the ProductPartRule entity).<br>    
-    The virtual door is made up of a knob and a virtual board (again, the board is substituted    
-    by "board_melamine" or "board_wood" accordingly to the product features selected).<br>    
-    The PRODUCT_PART are never sold directly, only products are sold: 
-    the PRODUCT_PARTs are linked to real products through the ProductAssoc entity (type = PRODUCT_PART).    
-    
-    Four products have been defined: a virtual product (JAC-3000) and its variants (JAC-3000-W, JAC-3000-B, JAC-3000-S).    
-    JAC-3000 is a virtual wardrobe that can be offered in two colors (selectable feature): white or veered birch.    
-    JAC-3000-W is the white variant wardrobe.    
-    JAC-3000-B is the birch variant wardrobe.    
-    JAC-3000-S will be explained soon...    
-    Both JAC-3000 and JAC-3000-S are directly linked to the "wardrobe" product (for manufacturing purposes)    
-    by the ProductAssoc entity (type = PRODUCT_PART). However, since JAC-3000-W and JAC-3000-B are variants of JAC-3000,    
-    also these products are indirectly linked to the "wardrobe" product.    
-    
-    The entity ProductPartRule contains the rules used by the configurator engine to perform the bill of materials breakdown.    
-    The rules for productId JAC-3000 state that, in order to use the "wardrobe" product to produce a JAC-3000    
-    variant (JAC-3000-W or JAC-3000-B), the configurator has to:    
-    - substitute the virtual component "door" with the real component "door_white" if the product has the product feature 3000 (COLOR = white) selected    
-    - substitute the virtual component "board" with the real component "board_melamine" if the product has the product feature 3000 (COLOR = white) selected    
-    - substitute the virtual component "door" with the real component "door_birch" if the product has the product feature 3001 (COLOR = birch) selected    
-    - substitute the virtual component "board" with the real component "board_wood" if the product has the product feature 3001 (COLOR = birch) selected    
-    
-    In order to see how the product configurator works in the bill of materials breakdown process go to the "Bill Of Materials" menu funcion, select the "Manufacturing Bill of Materials" for the "Bill Of materials Type" field and insert in the "Product Id" field:    
-    - JAC-3000: you will see the virtual part breakdown    
-    - JAC-3000-W: you will see a configured part breakdown (door and board substituted by door_white and board_melamine)    
-    - JAC-3000-B: you will see a configured part breakdown (door and board substituted by door_birch and board_wood)    
-    - JAC-3000-S: you will see a configured part breakdown (door substituted by door_white and board not present)
--->
-<!--  
-     <Product productId="wardrobe" productTypeId="FINISHED_GOOD" productName="Wardrobe 100x201" description="Wardrobe 100x201" isVirtual="Y" />  
-     <Product productId="frame" productTypeId="SUBASSEMBLY" productName="Frame 100x201" description="Frame 100x201" />  
-     <Product productId="door" productTypeId="SUBASSEMBLY" productName="Virtual Door" description="Virtual Door" isVirtual="Y"/>  
-     <Product productId="board" productTypeId="SUBASSEMBLY" productName="Virtual Board 50x200" description="Virtual Board 50x200" isVirtual="Y"/>  
-     <Product productId="knob" productTypeId="RAW_MATERIAL" productName="Standard Knob" description="Standard Knob" />  
-     <Product productId="door_white" productTypeId="SUBASSEMBLY" productName="White Door 50x200" description="White Door 50x200" />  
-     <Product productId="door_birch" productTypeId="SUBASSEMBLY" productName="Birch Door 50x200" description="Birch Door 50x200" />  
-     <Product productId="board_wood" productTypeId="SUBASSEMBLY" productName="Wood Board 50x200" description="Wood Board 50x200" />  
-     <Product productId="board_melamine" productTypeId="SUBASSEMBLY" productName="Melamine Board 50x200" description="Melamine Board 50x200" />  
+     -->
+    <ProductAssoc productId="WG-FRAME" productIdTo="WG-COVER" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>
+    <ProductAssoc productId="WG-FRAME" productIdTo="WG-WHEEL" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="2" quantity="2.0" reason=""/>
+    <ProductAssoc productId="WG-FRAME" productIdTo="SCREW" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="3" quantity="13.0" reason=""/>
+    <ProductManufacturingRule ruleId="R01" productId="" productIdFor="" productIdIn="WG-COVER" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="WG-COVER-B" productFeature="9000" ruleOperator="OR" quantity="0"/>
+    <ProductManufacturingRule ruleId="R02" productId="" productIdFor="" productIdIn="WG-COVER" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="WG-COVER-S" productFeature="9001" ruleOperator="OR" quantity="0"/>
+    <ProductManufacturingRule ruleId="R03" productId="" productIdFor="" productIdIn="WG-WHEEL" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="WG-WHEEL-STD" productFeature="9002" ruleOperator="OR" quantity="3"/>
+    <ProductManufacturingRule ruleId="R04" productId="" productIdFor="" productIdIn="WG-WHEEL" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="WG-WHEEL-STD" productFeature="9003" ruleOperator="OR" quantity="4"/>
 
-     <ProductAssoc productId="wardrobe" productIdTo="frame" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="wardrobe" productIdTo="door" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="2" quantity="2.0" reason=""/>  
-     <ProductAssoc productId="door" productIdTo="board" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="door" productIdTo="knob" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="frame" productIdTo="board_melamine" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="6.0" reason=""/>  
-     <ProductAssoc productId="door" productIdTo="door_white" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="door" productIdTo="door_birch" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" sequenceNum="2" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="board" productIdTo="board_wood" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="board" productIdTo="board_melamine" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" sequenceNum="2" quantity="1.0" reason=""/>  
+    <!-- ******************** -->
+    <!-- CONFIGURATOR EXAMPLE -->
+    <!-- ******************** -->
+    <!--
 
-     <Product productId="JAC-3000" productTypeId="FINISHED_GOOD" productName="JAC Wardrobe" description="Wardrobe 100x201" longDescription="Wardrobe with two doors (available in different colors). Frame in particleboard and melamine foil." isVirtual="Y"/>  
-     <Product productId="JAC-3000-W" productTypeId="FINISHED_GOOD" productName="JAC White Wardrobe" description="Wardrobe 100x201 with white doors" longDescription="Wardrobe with two white doors. Frame in particleboard and melamine foil." isVariant="Y"/>  
-     <Product productId="JAC-3000-B" productTypeId="FINISHED_GOOD" productName="JAC Birch Wardrobe" description="Wardrobe 100x201 with birch doors" longDescription="Wardrobe with two birch veneered doors. Frame in particleboard and melamine foil." isVariant="Y"/>  
-     <Product productId="JAC-3000-S" productTypeId="FINISHED_GOOD" productName="JAC Simple Wardrobe" description="Simple Wardrobe 100x201 with white doors" longDescription="Simple Wardrobe with two white doors. Frame in particleboard and melamine foil." isVariant="Y"/>   
+     A note about the example data
 
-     <ProductFeatureCategory productFeatureCategoryId="3000" description="Furniture Features"/>  <ProductFeature productFeatureId="3000" productFeatureCategoryId="3000" productFeatureTypeId="COLOR" description="White"/>  
-     <ProductFeature productFeatureId="3001" productFeatureCategoryId="3000" productFeatureTypeId="COLOR" description="Birch"/>  
-     <ProductFeatureAppl productId="JAC-3000" productFeatureId="3000" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>  
-     <ProductFeatureAppl productId="JAC-3000" productFeatureId="3001" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>  
-     <ProductFeatureAppl productId="JAC-3000-W" productFeatureId="3000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>  
-     <ProductFeatureAppl productId="JAC-3000-B" productFeatureId="3001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>  
-     <ProductFeatureAppl productId="JAC-3000-S" productFeatureId="3000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>  
-     <ProductAssoc productId="JAC-3000" productIdTo="JAC-3000-W" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="JAC-3000" productIdTo="JAC-3000-B" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="JAC-3000" productIdTo="JAC-3000-S" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="JAC-3000" productIdTo="wardrobe" productAssocTypeId="PRODUCT_MANUFACTURED" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>  
-     <ProductAssoc productId="JAC-3000-S" productIdTo="wardrobe" productAssocTypeId="PRODUCT_MANUFACTURED" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>  
-     <ProductManufacturingRule ruleId="R01" productId="JAC-3000" productIdFor="wardrobe" productIdIn="door" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="door_white" productFeature="3000" ruleOperator="OR" quantity="50"/>  
-     <ProductManufacturingRule ruleId="R02" productId="JAC-3000" productIdFor="wardrobe" productIdIn="door" ruleSeqId="2" fromDate="2001-01-01 12:00:00.0" productIdInSubst="door_birch" productFeature="3001" ruleOperator="OR" quantity="0"/>  
-     <ProductManufacturingRule ruleId="R03" productId="JAC-3000" productIdFor="door" productIdIn="board" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="board_melamine" productFeature="3000" ruleOperator="OR" quantity="0"/>  
-     <ProductManufacturingRule ruleId="R04" productId="JAC-3000" productIdFor="door" productIdIn="board" ruleSeqId="2" fromDate="2001-01-01 12:00:00.0" productIdInSubst="board_wood" productFeature="3001" ruleOperator="OR" quantity="0"/>  
-     <ProductManufacturingRule ruleId="R05" productId="JAC-3000-S" productIdFor="wardrobe" productIdIn="door" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="door_white" ruleOperator="OR" quantity="0"/>  
-     <ProductManufacturingRule ruleId="R06" productId="JAC-3000-S" productIdFor="door" productIdIn="board" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="" ruleOperator="OR" quantity="0"/>  
-     <ProductManufacturingRule ruleId="R07" productId="" productIdFor="wardrobe" productIdIn="door" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="door_white" ruleOperator="OR" quantity="0"/>  
-     <ProductManufacturingRule ruleId="R08" productId="" productIdFor="" productIdIn="board" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="board_melamine" ruleOperator="OR" quantity="0"/> 
- -->  
-     
-      <!-- ******************** -->  
-      <!-- Data for MRP EXAMPLE or demonstartion -->  
-       <!-- ******************** -->    
-        
-    <TechDataCalendarWeek calendarWeekId="STD24H-7D" description="Standard calendar open 24h per day 7days per  week" mondayStartTime="00:00:00" mondayCapacity="8.64E7" tuesdayStartTime="00:00:00" tuesdayCapacity="8.64E7" wednesdayStartTime="00:00:00" wednesdayCapacity="8.64E7" thursdayStartTime="00:00:00" thursdayCapacity="8.64E7" fridayStartTime="00:00:00" fridayCapacity="8.64E7" saturdayStartTime="00:00:00" saturdayCapacity="8.64E7" sundayStartTime="00:00:00" sundayCapacity="8.64E7"/>    
+  The "wardrobe" product component (productType = PRODUCT_PART) is a special product that can be linked to one or more finished product.<br>
+   It is a wardrobe (100cm width and 201cm height) made up by a frame and two doors.<br>
+  The "frame" product is a subassembly and is made up by 6 boards ("board_melamine" products).<br>
+  The "door" product is a virtual product (productType = VIRTUAL): when a product is ordered/produced the virtual
+  product is substituted with a real one ("door_white" or "door_birch") according to the
+  product features selected for the order and the product to part rules (see the ProductPartRule entity).<br>
+  The virtual door is made up of a knob and a virtual board (again, the board is substituted
+  by "board_melamine" or "board_wood" accordingly to the product features selected).<br>
+  The PRODUCT_PART are never sold directly, only products are sold:
+  the PRODUCT_PARTs are linked to real products through the ProductAssoc entity (type = PRODUCT_PART).
+
+  Four products have been defined: a virtual product (JAC-3000) and its variants (JAC-3000-W, JAC-3000-B, JAC-3000-S).
+  JAC-3000 is a virtual wardrobe that can be offered in two colors (selectable feature): white or veered birch.
+  JAC-3000-W is the white variant wardrobe.
+  JAC-3000-B is the birch variant wardrobe.
+  JAC-3000-S will be explained soon...
+  Both JAC-3000 and JAC-3000-S are directly linked to the "wardrobe" product (for manufacturing purposes)
+  by the ProductAssoc entity (type = PRODUCT_PART). However, since JAC-3000-W and JAC-3000-B are variants of JAC-3000,
+  also these products are indirectly linked to the "wardrobe" product.
+
+  The entity ProductPartRule contains the rules used by the configurator engine to perform the bill of materials breakdown.
+  The rules for productId JAC-3000 state that, in order to use the "wardrobe" product to produce a JAC-3000
+  variant (JAC-3000-W or JAC-3000-B), the configurator has to:
+  - substitute the virtual component "door" with the real component "door_white" if the product has the product feature 3000 (COLOR = white) selected
+  - substitute the virtual component "board" with the real component "board_melamine" if the product has the product feature 3000 (COLOR = white) selected
+  - substitute the virtual component "door" with the real component "door_birch" if the product has the product feature 3001 (COLOR = birch) selected
+  - substitute the virtual component "board" with the real component "board_wood" if the product has the product feature 3001 (COLOR = birch) selected
+
+  In order to see how the product configurator works in the bill of materials breakdown process go to the "Bill Of Materials" menu funcion, select the "Manufacturing Bill of Materials" for the "Bill Of materials Type" field and insert in the "Product Id" field:
+  - JAC-3000: you will see the virtual part breakdown
+  - JAC-3000-W: you will see a configured part breakdown (door and board substituted by door_white and board_melamine)
+  - JAC-3000-B: you will see a configured part breakdown (door and board substituted by door_birch and board_wood)
+  - JAC-3000-S: you will see a configured part breakdown (door substituted by door_white and board not present)
+    -->
+    <!--
+         <Product productId="wardrobe" productTypeId="FINISHED_GOOD" productName="Wardrobe 100x201" description="Wardrobe 100x201" isVirtual="Y" />
+         <Product productId="frame" productTypeId="SUBASSEMBLY" productName="Frame 100x201" description="Frame 100x201" />
+         <Product productId="door" productTypeId="SUBASSEMBLY" productName="Virtual Door" description="Virtual Door" isVirtual="Y"/>
+         <Product productId="board" productTypeId="SUBASSEMBLY" productName="Virtual Board 50x200" description="Virtual Board 50x200" isVirtual="Y"/>
+         <Product productId="knob" productTypeId="RAW_MATERIAL" productName="Standard Knob" description="Standard Knob" />
+         <Product productId="door_white" productTypeId="SUBASSEMBLY" productName="White Door 50x200" description="White Door 50x200" />
+         <Product productId="door_birch" productTypeId="SUBASSEMBLY" productName="Birch Door 50x200" description="Birch Door 50x200" />
+         <Product productId="board_wood" productTypeId="SUBASSEMBLY" productName="Wood Board 50x200" description="Wood Board 50x200" />
+         <Product productId="board_melamine" productTypeId="SUBASSEMBLY" productName="Melamine Board 50x200" description="Melamine Board 50x200" />
+
+         <ProductAssoc productId="wardrobe" productIdTo="frame" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>
+         <ProductAssoc productId="wardrobe" productIdTo="door" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="2" quantity="2.0" reason=""/>
+         <ProductAssoc productId="door" productIdTo="board" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>
+         <ProductAssoc productId="door" productIdTo="knob" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>
+         <ProductAssoc productId="frame" productIdTo="board_melamine" productAssocTypeId="MANUF_COMPONENT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="6.0" reason=""/>
+         <ProductAssoc productId="door" productIdTo="door_white" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>
+         <ProductAssoc productId="door" productIdTo="door_birch" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" sequenceNum="2" quantity="1.0" reason=""/>
+         <ProductAssoc productId="board" productIdTo="board_wood" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" sequenceNum="1" quantity="1.0" reason=""/>
+         <ProductAssoc productId="board" productIdTo="board_melamine" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" sequenceNum="2" quantity="1.0" reason=""/>
+
+         <Product productId="JAC-3000" productTypeId="FINISHED_GOOD" productName="JAC Wardrobe" description="Wardrobe 100x201" longDescription="Wardrobe with two doors (available in different colors). Frame in particleboard and melamine foil." isVirtual="Y"/>
+         <Product productId="JAC-3000-W" productTypeId="FINISHED_GOOD" productName="JAC White Wardrobe" description="Wardrobe 100x201 with white doors" longDescription="Wardrobe with two white doors. Frame in particleboard and melamine foil." isVariant="Y"/>
+         <Product productId="JAC-3000-B" productTypeId="FINISHED_GOOD" productName="JAC Birch Wardrobe" description="Wardrobe 100x201 with birch doors" longDescription="Wardrobe with two birch veneered doors. Frame in particleboard and melamine foil." isVariant="Y"/>
+         <Product productId="JAC-3000-S" productTypeId="FINISHED_GOOD" productName="JAC Simple Wardrobe" description="Simple Wardrobe 100x201 with white doors" longDescription="Simple Wardrobe with two white doors. Frame in particleboard and melamine foil." isVariant="Y"/>
+
+         <ProductFeatureCategory productFeatureCategoryId="3000" description="Furniture Features"/>  <ProductFeature productFeatureId="3000" productFeatureCategoryId="3000" productFeatureTypeId="COLOR" description="White"/>
+         <ProductFeature productFeatureId="3001" productFeatureCategoryId="3000" productFeatureTypeId="COLOR" description="Birch"/>
+         <ProductFeatureAppl productId="JAC-3000" productFeatureId="3000" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+         <ProductFeatureAppl productId="JAC-3000" productFeatureId="3001" productFeatureApplTypeId="SELECTABLE_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
+         <ProductFeatureAppl productId="JAC-3000-W" productFeatureId="3000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+         <ProductFeatureAppl productId="JAC-3000-B" productFeatureId="3001" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+         <ProductFeatureAppl productId="JAC-3000-S" productFeatureId="3000" productFeatureApplTypeId="STANDARD_FEATURE" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
+         <ProductAssoc productId="JAC-3000" productIdTo="JAC-3000-W" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>
+         <ProductAssoc productId="JAC-3000" productIdTo="JAC-3000-B" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>
+         <ProductAssoc productId="JAC-3000" productIdTo="JAC-3000-S" productAssocTypeId="PRODUCT_VARIANT" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>
+         <ProductAssoc productId="JAC-3000" productIdTo="wardrobe" productAssocTypeId="PRODUCT_MANUFACTURED" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>
+         <ProductAssoc productId="JAC-3000-S" productIdTo="wardrobe" productAssocTypeId="PRODUCT_MANUFACTURED" fromDate="2001-01-01 12:00:00.0" quantity="1.0" reason=""/>
+         <ProductManufacturingRule ruleId="R01" productId="JAC-3000" productIdFor="wardrobe" productIdIn="door" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="door_white" productFeature="3000" ruleOperator="OR" quantity="50"/>
+         <ProductManufacturingRule ruleId="R02" productId="JAC-3000" productIdFor="wardrobe" productIdIn="door" ruleSeqId="2" fromDate="2001-01-01 12:00:00.0" productIdInSubst="door_birch" productFeature="3001" ruleOperator="OR" quantity="0"/>
+         <ProductManufacturingRule ruleId="R03" productId="JAC-3000" productIdFor="door" productIdIn="board" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="board_melamine" productFeature="3000" ruleOperator="OR" quantity="0"/>
+         <ProductManufacturingRule ruleId="R04" productId="JAC-3000" productIdFor="door" productIdIn="board" ruleSeqId="2" fromDate="2001-01-01 12:00:00.0" productIdInSubst="board_wood" productFeature="3001" ruleOperator="OR" quantity="0"/>
+         <ProductManufacturingRule ruleId="R05" productId="JAC-3000-S" productIdFor="wardrobe" productIdIn="door" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="door_white" ruleOperator="OR" quantity="0"/>
+         <ProductManufacturingRule ruleId="R06" productId="JAC-3000-S" productIdFor="door" productIdIn="board" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="" ruleOperator="OR" quantity="0"/>
+         <ProductManufacturingRule ruleId="R07" productId="" productIdFor="wardrobe" productIdIn="door" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="door_white" ruleOperator="OR" quantity="0"/>
+         <ProductManufacturingRule ruleId="R08" productId="" productIdFor="" productIdIn="board" ruleSeqId="1" fromDate="2001-01-01 12:00:00.0" productIdInSubst="board_melamine" ruleOperator="OR" quantity="0"/>
+     -->
+
+    <!-- ******************** -->
+    <!-- Data for MRP EXAMPLE or demonstartion -->
+    <!-- ******************** -->
+
+    <TechDataCalendarWeek calendarWeekId="STD24H-7D" description="Standard calendar open 24h per day 7days per  week" mondayStartTime="00:00:00" mondayCapacity="8.64E7" tuesdayStartTime="00:00:00" tuesdayCapacity="8.64E7" wednesdayStartTime="00:00:00" wednesdayCapacity="8.64E7" thursdayStartTime="00:00:00" thursdayCapacity="8.64E7" fridayStartTime="00:00:00" fridayCapacity="8.64E7" saturdayStartTime="00:00:00" saturdayCapacity="8.64E7" sundayStartTime="00:00:00" sundayCapacity="8.64E7"/>
     <TechDataCalendarWeek calendarWeekId="STD8H-5D" description="Standard calendar 8hours/days 5days/week starting at 8h30 from monday to friday" mondayStartTime="08:30:00" mondayCapacity="2.88E7" tuesdayStartTime="08:30:00" tuesdayCapacity="2.88E7" wednesdayStartTime="08:30:00" wednesdayCapacity="2.88E7" thursdayStartTime="08:30:00" thursdayCapacity="2.88E7" fridayStartTime="08:30:00" fridayCapacity="2.88E7"/>
-    <TechDataCalendarWeek calendarWeekId="HOLIDAY" description="Calendar for holiday period, 0hours/days 0days/week" mondayStartTime="08:30:00" mondayCapacity="0" tuesdayStartTime="08:30:00" tuesdayCapacity="0" />    
-    <TechDataCalendar calendarId="MACHINING" description="Machining Workshop calendar" calendarWeekId="STD8H-5D"/>    
-    <TechDataCalendar calendarId="DRYING" description="Drying Workshop calendar" calendarWeekId="STD24H-7D"/>    
-    <TechDataCalendarExcDay calendarId="MACHINING" exceptionDateStartTime="2004-12-24 00:01:00.0" exceptionCapacity="0" description="Christmas Day"/>    
-    <TechDataCalendarExcDay calendarId="DRYING" exceptionDateStartTime="2004-12-24 00:01:00.0" exceptionCapacity="0" description="Christmas Day"/>    
-         
-    <FixedAsset fixedAssetId="MACHINING-ELEC01" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Electrolytic Machining"/>    
-	<FixedAsset fixedAssetId="MACHINING-GANG01" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Gang Machining"/>    
-	<FixedAsset fixedAssetId="DRIER01" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="DRIER Machining"/>
+    <TechDataCalendarWeek calendarWeekId="HOLIDAY" description="Calendar for holiday period, 0hours/days 0days/week" mondayStartTime="08:30:00" mondayCapacity="0" tuesdayStartTime="08:30:00" tuesdayCapacity="0"/>
+    <TechDataCalendar calendarId="MACHINING" description="Machining Workshop calendar" calendarWeekId="STD8H-5D"/>
+    <TechDataCalendar calendarId="DRYING" description="Drying Workshop calendar" calendarWeekId="STD24H-7D"/>
+    <TechDataCalendarExcDay calendarId="MACHINING" exceptionDateStartTime="2004-12-24 00:01:00.0" exceptionCapacity="0" description="Christmas Day"/>
+    <TechDataCalendarExcDay calendarId="DRYING" exceptionDateStartTime="2004-12-24 00:01:00.0" exceptionCapacity="0" description="Christmas Day"/>
+
+    <FixedAsset fixedAssetId="MACHINING-ELEC01" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Electrolytic Machining"/>
+    <FixedAsset fixedAssetId="MACHINING-GANG01" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="Gang Machining"/>
+    <FixedAsset fixedAssetId="DRIER01" fixedAssetTypeId="GROUP_EQUIPMENT" fixedAssetName="DRIER Machining"/>
     <FixedAsset fixedAssetId="MACH-ELEC01-A" fixedAssetName="Electrolytic Machining #01-A" fixedAssetTypeId="PRODUCTION_EQUIPMENT" parentFixedAssetId="MACHINING-ELEC01" calendarId="MACHINING"/>
     <FixedAsset fixedAssetId="MACH-GANG01-A" fixedAssetName="Gang Machining #01-A" fixedAssetTypeId="PRODUCTION_EQUIPMENT" parentFixedAssetId="MACHINING-GANG01" calendarId="MACHINING"/>
     <FixedAsset fixedAssetId="MACH-GANG01-B" fixedAssetName="Gang Machining #01-B" fixedAssetTypeId="PRODUCTION_EQUIPMENT" parentFixedAssetId="MACHINING-GANG01" calendarId="MACHINING"/>
     <FixedAsset fixedAssetId="DRIER01M" fixedAssetName="DRIER Machining #01" fixedAssetTypeId="PRODUCTION_EQUIPMENT" parentFixedAssetId="DRIER01" calendarId="DRYING"/>
-        
-<!--
-    <Product productId="TableA" productTypeId="FINISHED_GOOD" productName="TableA 100x201" description="Table 100x201, modelA" isVirtual="N" billOfMaterialLevel="0"/>    
-    <Product productId="AluTube15" productTypeId="RAW_MATERIAL" internalName="Aluminium Tube diam 15" description="Aluminium Tube diam 15" billOfMaterialLevel="3"/>    
-    <Product productId="screw30" productTypeId="RAW_MATERIAL" internalName="screw30" description="screw 8x30" billOfMaterialLevel="2"/>    
-    <Product productId="TableFrameA" productTypeId="SUBASSEMBLY" internalName="TableFrameA" description="TableFrameA" billOfMaterialLevel="1"/>    
-    <Product productId="TableBoardA" productTypeId="SUBASSEMBLY" internalName="TableBoardA" description="TableBoardA" billOfMaterialLevel="1"/>    
-    <Product productId="MelaminePanelA" productTypeId="SUBASSEMBLY" internalName="melaminePanelA" description="melaminePanelA" billOfMaterialLevel="2"/>    
-    <Product productId="woodPannel300x100" productTypeId="RAW_MATERIAL" internalName="woodPannel300x100" description="woodPannel300x100" billOfMaterialLevel="3"/>    
-    <Product productId="Paint" productTypeId="RAW_MATERIAL" internalName="Paint" description="Paint" billOfMaterialLevel="3"/>    
-    <Product productId="FootBl" productTypeId="SUBASSEMBLY" internalName="FootBl" description="FootBl" billOfMaterialLevel="2"/>    
-    <Product productId="EndCap1" productTypeId="SUBASSEMBLY" internalName="EndCap1" description="EndCap1" billOfMaterialLevel="3"/>    
-    <Product productId="PlasticCube" productTypeId="RAW_MATERIAL" internalName="PlasticCube" description="PlasticCube" billOfMaterialLevel="4"/>    
-    <Product productId="BottomFrame" productTypeId="SUBASSEMBLY" internalName="BottomFrame" description="BottomFrame" billOfMaterialLevel="2"/>    
-    <Product productId="LeftFrame" productTypeId="SUBASSEMBLY" internalName="LeftFrame" description="LeftFrame" billOfMaterialLevel="3"/>    
-    <Product productId="RightFrame" productTypeId="SUBASSEMBLY" internalName="RightFrame" description="RightFrame" billOfMaterialLevel="3"/>    
-    <Product productId="SteelTube30" productTypeId="RAW_MATERIAL" internalName="SteelTube30" description="SteelTube30" billOfMaterialLevel="4"/>
--->
+
+    <!--
+        <Product productId="TableA" productTypeId="FINISHED_GOOD" productName="TableA 100x201" description="Table 100x201, modelA" isVirtual="N" billOfMaterialLevel="0"/>
+        <Product productId="AluTube15" productTypeId="RAW_MATERIAL" internalName="Aluminium Tube diam 15" description="Aluminium Tube diam 15" billOfMaterialLevel="3"/>
+        <Product productId="screw30" productTypeId="RAW_MATERIAL" internalName="screw30" description="screw 8x30" billOfMaterialLevel="2"/>
+        <Product productId="TableFrameA" productTypeId="SUBASSEMBLY" internalName="TableFrameA" description="TableFrameA" billOfMaterialLevel="1"/>
+        <Product productId="TableBoardA" productTypeId="SUBASSEMBLY" internalName="TableBoardA" description="TableBoardA" billOfMaterialLevel="1"/>
+        <Product productId="MelaminePanelA" productTypeId="SUBASSEMBLY" internalName="melaminePanelA" description="melaminePanelA" billOfMaterialLevel="2"/>
+        <Product productId="woodPannel300x100" productTypeId="RAW_MATERIAL" internalName="woodPannel300x100" description="woodPannel300x100" billOfMaterialLevel="3"/>
+        <Product productId="Paint" productTypeId="RAW_MATERIAL" internalName="Paint" description="Paint" billOfMaterialLevel="3"/>
+        <Product productId="FootBl" productTypeId="SUBASSEMBLY" internalName="FootBl" description="FootBl" billOfMaterialLevel="2"/>
+        <Product productId="EndCap1" productTypeId="SUBASSEMBLY" internalName="EndCap1" description="EndCap1" billOfMaterialLevel="3"/>
+        <Product productId="PlasticCube" productTypeId="RAW_MATERIAL" internalName="PlasticCube" description="PlasticCube" billOfMaterialLevel="4"/>
+        <Product productId="BottomFrame" productTypeId="SUBASSEMBLY" internalName="BottomFrame" description="BottomFrame" billOfMaterialLevel="2"/>
+        <Product productId="LeftFrame" productTypeId="SUBASSEMBLY" internalName="LeftFrame" description="LeftFrame" billOfMaterialLevel="3"/>
+        <Product productId="RightFrame" productTypeId="SUBASSEMBLY" internalName="RightFrame" description="RightFrame" billOfMaterialLevel="3"/>
+        <Product productId="SteelTube30" productTypeId="RAW_MATERIAL" internalName="SteelTube30" description="SteelTube30" billOfMaterialLevel="4"/>
+    -->
 
 </entity-engine-xml>

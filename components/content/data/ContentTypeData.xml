@@ -1,130 +1,130 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <ContentAssocType contentAssocTypeId="TEMPLATE_MEMBER" description="Template Member"/>
-  <ContentAssocType contentAssocTypeId="STRUCTURE_DEF" description="Document Structure Definition"/>
-  <ContentAssocType contentAssocTypeId="TXFORM_DEF" description="Transformation Definition"/>
-  <ContentAssocType contentAssocTypeId="LIST_ENTRY" description="List Entry"/>
-  <ContentAssocType contentAssocTypeId="TREE_CHILD" description="Tree Child"/>
-  <ContentAssocType contentAssocTypeId="GRAPH_LINK" description="Graph Link"/>
-  <ContentAssocType contentAssocTypeId="ALTERNATE_LOCALE" description="Alternate Locale"/>
-  <ContentAssocType contentAssocTypeId="RESPONSE" description="Response"/>
-  <ContentAssocType contentAssocTypeId="SUB_CONTENT" description="SubContent"/>
-  <ContentAssocType contentAssocTypeId="TOPIC" description="Topic"/>
-  <ContentAssocType contentAssocTypeId="DESCRIPTION" description="Description"/>
+    <ContentAssocType contentAssocTypeId="TEMPLATE_MEMBER" description="Template Member"/>
+    <ContentAssocType contentAssocTypeId="STRUCTURE_DEF" description="Document Structure Definition"/>
+    <ContentAssocType contentAssocTypeId="TXFORM_DEF" description="Transformation Definition"/>
+    <ContentAssocType contentAssocTypeId="LIST_ENTRY" description="List Entry"/>
+    <ContentAssocType contentAssocTypeId="TREE_CHILD" description="Tree Child"/>
+    <ContentAssocType contentAssocTypeId="GRAPH_LINK" description="Graph Link"/>
+    <ContentAssocType contentAssocTypeId="ALTERNATE_LOCALE" description="Alternate Locale"/>
+    <ContentAssocType contentAssocTypeId="RESPONSE" description="Response"/>
+    <ContentAssocType contentAssocTypeId="SUB_CONTENT" description="SubContent"/>
+    <ContentAssocType contentAssocTypeId="TOPIC" description="Topic"/>
+    <ContentAssocType contentAssocTypeId="DESCRIPTION" description="Description"/>
 
-  <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
-  <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
-  <ContentAssocPredicate contentAssocPredicateId="extends" description="The object extends the subject."/>
-  <ContentAssocPredicate contentAssocPredicateId="related-to" description="The object is related to the subject."/>
-  <ContentAssocPredicate contentAssocPredicateId="references" description="The object references the subject."/>
+    <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
+    <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
+    <ContentAssocPredicate contentAssocPredicateId="extends" description="The object extends the subject."/>
+    <ContentAssocPredicate contentAssocPredicateId="related-to" description="The object is related to the subject."/>
+    <ContentAssocPredicate contentAssocPredicateId="references" description="The object references the subject."/>
 
-  <MetaDataPredicate metaDataPredicateId="author-name" description="Name of the author or creator of the subject."/>
-  <MetaDataPredicate metaDataPredicateId="author-email" description="eMail address of the author or creator of the subject."/>
-  <MetaDataPredicate metaDataPredicateId="event-date" description="The date and time the subject event took place, preferably in the descending standard format: [yyyy-MM-dd hh:mm:ss]."/>
-  <MetaDataPredicate metaDataPredicateId="event-location" description="The location where subject event took place."/>
-  <MetaDataPredicate metaDataPredicateId="event-person-name" description="The name of a person involved in the subject event."/>
+    <MetaDataPredicate metaDataPredicateId="author-name" description="Name of the author or creator of the subject."/>
+    <MetaDataPredicate metaDataPredicateId="author-email" description="eMail address of the author or creator of the subject."/>
+    <MetaDataPredicate metaDataPredicateId="event-date" description="The date and time the subject event took place, preferably in the descending standard format: [yyyy-MM-dd hh:mm:ss]."/>
+    <MetaDataPredicate metaDataPredicateId="event-location" description="The location where subject event took place."/>
+    <MetaDataPredicate metaDataPredicateId="event-person-name" description="The name of a person involved in the subject event."/>
 
-  <!-- These ContentTypes are primarily for structuring documents or content -->  
-  <ContentPurposeType contentPurposeTypeId="ARTICLE" description="Article"/>
-  <ContentPurposeType contentPurposeTypeId="MESSAGE" description="Message"/>
-  <ContentPurposeType contentPurposeTypeId="FEEDBACK" description="Feedback"/>
-  <ContentPurposeType contentPurposeTypeId="COMMENT" description="Comment"/>
-  <ContentPurposeType contentPurposeTypeId="PRODUCT_INFO" description="Product Info"/>
-  <ContentPurposeType contentPurposeTypeId="COMPANY_INFO" description="Company Info"/>
-  <ContentPurposeType contentPurposeTypeId="ADVERTISEMENT" description="Advertisement"/>
-  <ContentPurposeType contentPurposeTypeId="GENERAL_INFO" description="General Info"/>
+    <!-- These ContentTypes are primarily for structuring documents or content -->
+    <ContentPurposeType contentPurposeTypeId="ARTICLE" description="Article"/>
+    <ContentPurposeType contentPurposeTypeId="MESSAGE" description="Message"/>
+    <ContentPurposeType contentPurposeTypeId="FEEDBACK" description="Feedback"/>
+    <ContentPurposeType contentPurposeTypeId="COMMENT" description="Comment"/>
+    <ContentPurposeType contentPurposeTypeId="PRODUCT_INFO" description="Product Info"/>
+    <ContentPurposeType contentPurposeTypeId="COMPANY_INFO" description="Company Info"/>
+    <ContentPurposeType contentPurposeTypeId="ADVERTISEMENT" description="Advertisement"/>
+    <ContentPurposeType contentPurposeTypeId="GENERAL_INFO" description="General Info"/>
 
-  <!-- These ContentTypes are primarily for structuring knowledge -->  
-  <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="ANNOTATION" description="Annotation" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="CONTENT_LIST" description="Content List" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="TREE_ROOT" description="Tree Root" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="GRAPH_ROOT" description="Graph Root" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="STRUCTURE_NODE" description="Structure Node" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="STRUCTURE_LEAF" description="Structure Leaf" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="STRUCTURE_DEF" description="Structure Definition (like DTD)" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="TXFORM_DEF" description="Transformation Definition (like XSLT)" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
-  <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
+    <!-- These ContentTypes are primarily for structuring knowledge -->
+    <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="ANNOTATION" description="Annotation" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="CONTENT_LIST" description="Content List" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="TREE_ROOT" description="Tree Root" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="GRAPH_ROOT" description="Graph Root" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="STRUCTURE_NODE" description="Structure Node" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="STRUCTURE_LEAF" description="Structure Leaf" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="STRUCTURE_DEF" description="Structure Definition (like DTD)" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="TXFORM_DEF" description="Transformation Definition (like XSLT)" hasTable="N" parentTypeId=""/>
+    <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
+    <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
 
-  <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="OFBIZ_FILE" description="File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="CONTEXT_FILE" description="File (rel to webapp root)" hasTable="N" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="LINK" description="HyperLink" hasTable="N" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="URL_RESOURCE" description="URL Resource" hasTable="N" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="SHORT_TEXT" description="Short Text" hasTable="N" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="ELECTRONIC_TEXT" description="Long Text" hasTable="Y" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="LOCAL_FILE_BIN" description="Local Binary File" hasTable="N" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="OFBIZ_FILE_BIN" description="Binary File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
-  <DataResourceType dataResourceTypeId="CONTEXT_FILE_BIN" description="Binary File (rel to webapp root)" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="OFBIZ_FILE" description="File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="CONTEXT_FILE" description="File (rel to webapp root)" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="LINK" description="HyperLink" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="URL_RESOURCE" description="URL Resource" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="SHORT_TEXT" description="Short Text" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="ELECTRONIC_TEXT" description="Long Text" hasTable="Y" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="IMAGE_OBJECT" description="Image" hasTable="Y" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="OTHER_OBJECT" description="Other" hasTable="Y" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="LOCAL_FILE_BIN" description="Local Binary File" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="OFBIZ_FILE_BIN" description="Binary File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
+    <DataResourceType dataResourceTypeId="CONTEXT_FILE_BIN" description="Binary File (rel to webapp root)" hasTable="N" parentTypeId=""/>
 
-  <DataTemplateType dataTemplateTypeId="NONE" description="No Template" extension=""/>
-  <DataTemplateType dataTemplateTypeId="FTL" description="FreeMarker" extension="ftl"/>
-  <DataTemplateType dataTemplateTypeId="VTL" description="Velocity" extension="vtl"/>
-  <DataTemplateType dataTemplateTypeId="WM" description="WebMacro" extension="wm"/>
-  <DataTemplateType dataTemplateTypeId="XSLT" description="XSLT" extension="xsl"/>
+    <DataTemplateType dataTemplateTypeId="NONE" description="No Template" extension=""/>
+    <DataTemplateType dataTemplateTypeId="FTL" description="FreeMarker" extension="ftl"/>
+    <DataTemplateType dataTemplateTypeId="VTL" description="Velocity" extension="vtl"/>
+    <DataTemplateType dataTemplateTypeId="WM" description="WebMacro" extension="wm"/>
+    <DataTemplateType dataTemplateTypeId="XSLT" description="XSLT" extension="xsl"/>
 
-  <DocumentType description="Shipping" documentTypeId="SHIPPING_DOCUMENT" hasTable="Y" parentTypeId=""/>
-  <DocumentType description="Bill Of Lading" documentTypeId="BILL_OF_LADING" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="Export" documentTypeId="EXPORT_DOCUMENTATION" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="Haz Mat" documentTypeId="HAZ_MAT_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="Manifest" documentTypeId="MANIFEST" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="Other Shipping" documentTypeId="OTHER_SHIP_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="Packing Slip" documentTypeId="PACKAGING_SLIP" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="Port Charge" documentTypeId="PORT_CHARGE_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="Tax Tariff" documentTypeId="TAX_TARIFF_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+    <DocumentType description="Shipping" documentTypeId="SHIPPING_DOCUMENT" hasTable="Y" parentTypeId=""/>
+    <DocumentType description="Bill Of Lading" documentTypeId="BILL_OF_LADING" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+    <DocumentType description="Export" documentTypeId="EXPORT_DOCUMENTATION" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+    <DocumentType description="Haz Mat" documentTypeId="HAZ_MAT_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+    <DocumentType description="Manifest" documentTypeId="MANIFEST" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+    <DocumentType description="Other Shipping" documentTypeId="OTHER_SHIP_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+    <DocumentType description="Packing Slip" documentTypeId="PACKAGING_SLIP" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+    <DocumentType description="Port Charge" documentTypeId="PORT_CHARGE_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+    <DocumentType description="Tax Tariff" documentTypeId="TAX_TARIFF_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
 
-  <ServerHitType description="Request" hitTypeId="REQUEST"/>
-  <ServerHitType description="Event" hitTypeId="EVENT"/>
-  <ServerHitType description="View" hitTypeId="VIEW"/>
-  <ServerHitType description="Entity" hitTypeId="ENTITY"/>
-  <ServerHitType description="Service" hitTypeId="SERVICE"/>
+    <ServerHitType description="Request" hitTypeId="REQUEST"/>
+    <ServerHitType description="Event" hitTypeId="EVENT"/>
+    <ServerHitType description="View" hitTypeId="VIEW"/>
+    <ServerHitType description="Entity" hitTypeId="ENTITY"/>
+    <ServerHitType description="Service" hitTypeId="SERVICE"/>
 
-  <StatusType description="Server Hit" hasTable="N" parentTypeId="" statusTypeId="SERVER_HIT_STATUS"/>
-  <StatusType description="Web Content" hasTable="N" parentTypeId="" statusTypeId="WEB_CONTENT_STATUS"/>
+    <StatusType description="Server Hit" hasTable="N" parentTypeId="" statusTypeId="SERVER_HIT_STATUS"/>
+    <StatusType description="Web Content" hasTable="N" parentTypeId="" statusTypeId="WEB_CONTENT_STATUS"/>
 
-  <StatusType description="Content" hasTable="N" parentTypeId="" statusTypeId="CONTENT_STATUS"/>
-  <StatusItem description="In Progress" sequenceId="01" statusCode="IN_PROGRESS" statusId="CTNT_IN_PROGRESS" statusTypeId="CONTENT_STATUS"/>
-  <StatusItem description="Initial Draft" sequenceId="02" statusCode="INITIAL_DRAFT" statusId="CTNT_INITIAL_DRAFT" statusTypeId="CONTENT_STATUS"/>
-  <StatusItem description="Revised Draft" sequenceId="03" statusCode="REVISED_DRAFT" statusId="CTNT_REVISED_DRAFT" statusTypeId="CONTENT_STATUS"/>
-  <StatusItem description="Final Draft" sequenceId="04" statusCode="FINAL_DRAFT" statusId="CTNT_FINAL_DRAFT" statusTypeId="CONTENT_STATUS"/>
-  <StatusItem description="Published" sequenceId="05" statusCode="PUBLISHED" statusId="CTNT_PUBLISHED" statusTypeId="CONTENT_STATUS"/>
-  <StatusItem description="Deactivated" sequenceId="99" statusCode="DEACTIVATED" statusId="CTNT_DEACTIVATED" statusTypeId="CONTENT_STATUS"/>
+    <StatusType description="Content" hasTable="N" parentTypeId="" statusTypeId="CONTENT_STATUS"/>
+    <StatusItem description="In Progress" sequenceId="01" statusCode="IN_PROGRESS" statusId="CTNT_IN_PROGRESS" statusTypeId="CONTENT_STATUS"/>
+    <StatusItem description="Initial Draft" sequenceId="02" statusCode="INITIAL_DRAFT" statusId="CTNT_INITIAL_DRAFT" statusTypeId="CONTENT_STATUS"/>
+    <StatusItem description="Revised Draft" sequenceId="03" statusCode="REVISED_DRAFT" statusId="CTNT_REVISED_DRAFT" statusTypeId="CONTENT_STATUS"/>
+    <StatusItem description="Final Draft" sequenceId="04" statusCode="FINAL_DRAFT" statusId="CTNT_FINAL_DRAFT" statusTypeId="CONTENT_STATUS"/>
+    <StatusItem description="Published" sequenceId="05" statusCode="PUBLISHED" statusId="CTNT_PUBLISHED" statusTypeId="CONTENT_STATUS"/>
+    <StatusItem description="Deactivated" sequenceId="99" statusCode="DEACTIVATED" statusId="CTNT_DEACTIVATED" statusTypeId="CONTENT_STATUS"/>
 
-  <SubscriptionType description="Newsgroup" hasTable="N" parentTypeId="" subscriptionTypeId="NEWSGROUP_SUBSCR"/>
-  <SubscriptionType description="Other" hasTable="N" parentTypeId="" subscriptionTypeId="OTHER_SUBSCR"/>
-  <SubscriptionType description="Product Info" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
+    <SubscriptionType description="Newsgroup" hasTable="N" parentTypeId="" subscriptionTypeId="NEWSGROUP_SUBSCR"/>
+    <SubscriptionType description="Other" hasTable="N" parentTypeId="" subscriptionTypeId="OTHER_SUBSCR"/>
+    <SubscriptionType description="Product Info" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
 
-  <SurveyApplType surveyApplTypeId="CART_ADD" description="Add-To Cart"/>
-  <SurveyApplType surveyApplTypeId="CHECK_OUT" description="Check-Out"/>
-  <SurveyApplType surveyApplTypeId="GENERAL_POLL" description="General Poll"/>
-  <SurveyApplType surveyApplTypeId="RANDOM_POLL" description="Random Poll"/>
-  <SurveyApplType surveyApplTypeId="CUSTOMER_PROFILE" description="Customer Profile"/>
-  <SurveyApplType surveyApplTypeId="SORDER_PLACE" description="Sales Order Placement"/>
-  <SurveyApplType surveyApplTypeId="PORDER_PLACE" description="Purchase Order Placement"/>
-  <SurveyApplType surveyApplTypeId="PORDITM_PLACE" description="Purchase Order Item Placement"/>
+    <SurveyApplType surveyApplTypeId="CART_ADD" description="Add-To Cart"/>
+    <SurveyApplType surveyApplTypeId="CHECK_OUT" description="Check-Out"/>
+    <SurveyApplType surveyApplTypeId="GENERAL_POLL" description="General Poll"/>
+    <SurveyApplType surveyApplTypeId="RANDOM_POLL" description="Random Poll"/>
+    <SurveyApplType surveyApplTypeId="CUSTOMER_PROFILE" description="Customer Profile"/>
+    <SurveyApplType surveyApplTypeId="SORDER_PLACE" description="Sales Order Placement"/>
+    <SurveyApplType surveyApplTypeId="PORDER_PLACE" description="Purchase Order Placement"/>
+    <SurveyApplType surveyApplTypeId="PORDITM_PLACE" description="Purchase Order Item Placement"/>
 
-  <SurveyQuestionType surveyQuestionTypeId="BOOLEAN" description="Boolean (Yes/No)"/>
-  <SurveyQuestionType surveyQuestionTypeId="CREDIT_CARD" description="Credit Card Number"/>
-  <SurveyQuestionType surveyQuestionTypeId="GIFT_CARD" description="Gift Card Number"/>
-  <SurveyQuestionType surveyQuestionTypeId="DATE" description="Date String (mm/dd/yyyy)"/>
-  <SurveyQuestionType surveyQuestionTypeId="EMAIL" description="Email Address"/>
-  <SurveyQuestionType surveyQuestionTypeId="NUMBER_CURRENCY" description="Numeric (Currency)"/>
-  <SurveyQuestionType surveyQuestionTypeId="NUMBER_FLOAT" description="Numeric (Float)"/>
-  <SurveyQuestionType surveyQuestionTypeId="NUMBER_LONG" description="Numeric (Long)"/>
-  <SurveyQuestionType surveyQuestionTypeId="OPTION" description="Selected Option"/>
-  <SurveyQuestionType surveyQuestionTypeId="PASSWORD" description="Password"/>
-  <SurveyQuestionType surveyQuestionTypeId="SEPERATOR_LINE" description="Seperator Line"/>
-  <SurveyQuestionType surveyQuestionTypeId="SEPERATOR_TEXT" description="Seperator Text"/>
-  <SurveyQuestionType surveyQuestionTypeId="TEXT_SHORT" description="Short Text (single-line)"/>
-  <SurveyQuestionType surveyQuestionTypeId="TEXT_LONG" description="Long Text (single-line)"/>
-  <SurveyQuestionType surveyQuestionTypeId="TEXTAREA" description="Text (multi-line)"/>
-  <SurveyQuestionType surveyQuestionTypeId="URL" description="URL"/>
+    <SurveyQuestionType surveyQuestionTypeId="BOOLEAN" description="Boolean (Yes/No)"/>
+    <SurveyQuestionType surveyQuestionTypeId="CREDIT_CARD" description="Credit Card Number"/>
+    <SurveyQuestionType surveyQuestionTypeId="GIFT_CARD" description="Gift Card Number"/>
+    <SurveyQuestionType surveyQuestionTypeId="DATE" description="Date String (mm/dd/yyyy)"/>
+    <SurveyQuestionType surveyQuestionTypeId="EMAIL" description="Email Address"/>
+    <SurveyQuestionType surveyQuestionTypeId="NUMBER_CURRENCY" description="Numeric (Currency)"/>
+    <SurveyQuestionType surveyQuestionTypeId="NUMBER_FLOAT" description="Numeric (Float)"/>
+    <SurveyQuestionType surveyQuestionTypeId="NUMBER_LONG" description="Numeric (Long)"/>
+    <SurveyQuestionType surveyQuestionTypeId="OPTION" description="Selected Option"/>
+    <SurveyQuestionType surveyQuestionTypeId="PASSWORD" description="Password"/>
+    <SurveyQuestionType surveyQuestionTypeId="SEPERATOR_LINE" description="Seperator Line"/>
+    <SurveyQuestionType surveyQuestionTypeId="SEPERATOR_TEXT" description="Seperator Text"/>
+    <SurveyQuestionType surveyQuestionTypeId="TEXT_SHORT" description="Short Text (single-line)"/>
+    <SurveyQuestionType surveyQuestionTypeId="TEXT_LONG" description="Long Text (single-line)"/>
+    <SurveyQuestionType surveyQuestionTypeId="TEXTAREA" description="Text (multi-line)"/>
+    <SurveyQuestionType surveyQuestionTypeId="URL" description="URL"/>
 
-    <DataResource dataResourceId="STDWRAP001" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="FTL" />
-    <ElectronicText dataResourceId="STDWRAP001" >
+    <DataResource dataResourceId="STDWRAP001" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="FTL"/>
+    <ElectronicText dataResourceId="STDWRAP001">
         <textData><![CDATA[<#assign mapKey=wrapMapKey?if_exists/>
 <#assign subDataResourceId=wrapDataResourceId?if_exists/>
 <#assign subDataResourceTypeId=wrapDataResourceTypeId?if_exists/>
@@ -156,5 +156,5 @@
 </div>
 </div>]]></textData>
     </ElectronicText>
-  <Content contentId="STDWRAP001" contentTypeId="DOCUMENT" dataResourceId="STDWRAP001" contentName="Standard SubContent Wrapper" description="Standard SubContent Wrapper" />
+    <Content contentId="STDWRAP001" contentTypeId="DOCUMENT" dataResourceId="STDWRAP001" contentName="Standard SubContent Wrapper" description="Standard SubContent Wrapper"/>
 </entity-engine-xml>

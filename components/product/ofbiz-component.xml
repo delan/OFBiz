@@ -4,24 +4,24 @@
 <!--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.11 2004/01/15 17:45:38 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.12 2004/07/31 00:24:08 ajzeneski Exp $
 -->
 
 <ofbiz-component name="product">
@@ -36,21 +36,22 @@
     <entity-resource type="data" reader-name="main" loader="main" location="data/ProductScheduledServices.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ProductTypeData.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/ShipmentTypeData.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/ProductSecurityData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services_shipment.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas_shipment.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups_shipment.xml"/>
-    <webapp name="catalog" 
-            title="Catalog" 
-            server="default-server" 
-            location="webapp/catalog"
-            base-permission="CATALOG"
-            mount-point="/catalog"/>
-    <webapp name="facility" 
-            title="Facility" 
-            server="default-server" 
-            location="webapp/facility"
-            base-permission="FACILITY"
-            mount-point="/facility"/>
+    <webapp name="catalog"
+        title="Catalog"
+        server="default-server"
+        location="webapp/catalog"
+        base-permission="CATALOG"
+        mount-point="/catalog"/>
+    <webapp name="facility"
+        title="Facility"
+        server="default-server"
+        location="webapp/facility"
+        base-permission="FACILITY"
+        mount-point="/facility"/>
 </ofbiz-component>

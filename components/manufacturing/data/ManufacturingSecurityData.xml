@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <!-- Manufacturing Manager security -->
+    <!-- Target file: components/manufacturing/data/ManufacturingSecurityData.xml -->
+    <SecurityPermission description="View operations in the Manufacturing Manager." permissionId="MANUFACTURING_VIEW"/>
+    <SecurityPermission description="Create operations in the Manufacturing Manager." permissionId="MANUFACTURING_CREATE"/>
+    <SecurityPermission description="Update operations in the Manufacturing Manager." permissionId="MANUFACTURING_UPDATE"/>
+    <SecurityPermission description="Delete operations in the Manufacturing Manager." permissionId="MANUFACTURING_DELETE"/>
+    <SecurityPermission description="ALL operations in the Manufacturing Manager." permissionId="MANUFACTURING_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="MANUFACTURING_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MANUFACTURING_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="MANUFACTURING_VIEW"/>
+</entity-engine-xml>

@@ -21,17 +21,16 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.3 2003/08/27 18:12:56 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.4 2004/07/31 00:24:02 ajzeneski Exp $
 -->
 
-<ofbiz-component name="images">	
-    <resource-loader name="main" type="component"/>              
-    <webapp name="images" 
-    	    title="Images" 
-    	    server="default-server" 
-    	    location="webapp/images" 
-    	    mount-point="/images"
-    	    app-bar-display="false"/>
-    	    
+<ofbiz-component name="images">
+    <resource-loader name="main" type="component"/>
+    <webapp name="images"
+        title="Images"
+        server="default-server"
+        location="webapp/images"
+        mount-point="/images"
+        app-bar-display="false"/>
 </ofbiz-component>
 

@@ -53,7 +53,6 @@
     <ContentAssoc contentId="CNTWIDGETSSML" contentIdTo="CNTWIDGETS" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
 
 
-
     <ContentAssoc contentId="CNTGIZMOS" contentIdTo="WebStoreCONTENT" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="CNTGIZMOS" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
 

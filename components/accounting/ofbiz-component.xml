@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.12 2004/06/18 09:47:17 jonesde Exp $
+ *  $Id: ofbiz-component.xml,v 1.13 2004/07/31 00:23:56 ajzeneski Exp $
 -->
 
 <ofbiz-component name="accounting">
@@ -36,14 +36,15 @@
     <entity-resource type="group" reader-name="main" loader="main" location="entitydef/entitygroup.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/AccountingTypeData.xml"/>
     <entity-resource type="data" reader-name="main" loader="main" location="data/UsTaxAccountGroups.xml"/>
+    <entity-resource type="data" reader-name="main" loader="main" location="data/AccountingSecurityData.xml"/>
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
     <service-resource type="group" loader="main" location="servicedef/groups.xml"/>
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
-	<webapp name="accounting"
-    	    title="Accounting"
-    	    server="default-server"
-    	    location="webapp/accounting"
-            base-permission="ACCOUNTING"
-    	    mount-point="/accounting"/>
+    <webapp name="accounting"
+        title="Accounting"
+        server="default-server"
+        location="webapp/accounting"
+        base-permission="ACCOUNTING"
+        mount-point="/accounting"/>
 </ofbiz-component>
 

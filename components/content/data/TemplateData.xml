@@ -63,7 +63,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers(byersa@automationgroups.com)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -138,7 +138,7 @@
        alert("REQUERY" + document.sectionform.sectionId.value);
    }
 </script>
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="RIGHTBAR" lastUpdatedStamp="2004-02-18 23:34:03.642" lastUpdatedTxStamp="2004-02-18 23:34:03.642">
         <textData><![CDATA[       <table width='127' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
@@ -155,7 +155,7 @@
               </#if>
           </#list>
          </table>
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="STDWRAP001" lastUpdatedStamp="2004-01-16 15:28:58.335" lastUpdatedTxStamp="2004-01-16 15:28:58.306">
         <textData><![CDATA[<#assign mapKey=wrapMapKey?if_exists/>
@@ -228,7 +228,7 @@ ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
     </ElectronicText>
     <ElectronicText dataResourceId="TEMPLATE_TEXT_ONLY" lastUpdatedStamp="2004-03-18 10:05:46.703" lastUpdatedTxStamp="2004-03-18 10:05:46.703" createdStamp="2004-01-16 19:34:15.048" createdTxStamp="2004-01-16 19:34:15.047">
         <textData><![CDATA[<@renderSubContentCache mapKey="ARTICLE" wrapTemplateId=""/>
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_ARTICLE" lastUpdatedStamp="2004-03-16 12:05:33.806" lastUpdatedTxStamp="2004-03-16 12:05:33.806" createdStamp="2004-01-21 16:10:53.043" createdTxStamp="2004-01-21 16:10:53.026">
         <textData><![CDATA[<#assign thisContentId = ""/>
@@ -241,7 +241,7 @@ ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
 
 <a class="tabButton" href="<@ofbizUrl>/ViewArticle?contentId=${thisContentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
 
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_ARTICLE_TABLE" lastUpdatedStamp="2004-03-16 12:04:07.687" lastUpdatedTxStamp="2004-03-16 12:04:07.687" createdStamp="2004-03-16 12:04:07.687" createdTxStamp="2004-03-16 12:04:07.687">
         <textData><![CDATA[<#assign thisContentId = ""/>
@@ -262,7 +262,7 @@ ${wrappedContent?if_exists}
 <a class="tabButton" href="<@ofbizUrl>/ViewArticle?contentId=${thisContentId}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >View</a>
 </td>
 </tr>
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_NEXT_PREV" lastUpdatedStamp="2004-02-12 15:41:07.692" lastUpdatedTxStamp="2004-02-12 15:41:07.692" createdStamp="2004-02-03 14:04:15.768" createdTxStamp="2004-02-03 14:04:15.768">
         <textData><![CDATA[<tr><td>${wrappedContent}</td></tr>
@@ -296,7 +296,7 @@ ${wrappedContent?if_exists}
                 </#if>
               </#if>
 </td></tr>
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_STD_001" lastUpdatedStamp="2004-01-21 16:12:56.653" lastUpdatedTxStamp="2004-01-21 16:12:56.568" createdStamp="2004-01-21 16:10:53.064" createdTxStamp="2004-01-21 16:10:53.026">
         <textData><![CDATA[<#assign mapKey=wrapMapKey?if_exists/>
@@ -399,7 +399,7 @@ ResourceId=${subDataResourceId?if_exists}</@ofbizUrl>">[Edit]</a>
     </td></tr>
 </table>
 </td></tr>
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="WRAP_VIEW" lastUpdatedStamp="2004-03-06 15:18:33.369" lastUpdatedTxStamp="2004-03-06 15:18:33.369" createdStamp="2004-01-21 16:10:53.054" createdTxStamp="2004-01-21 16:10:53.026">
         <textData><![CDATA[<#assign txt=wrappedContent?default("")/>
@@ -409,7 +409,7 @@ ${txt}
 <a class="tabButton" href="<@ofbizUrl>/AddResponse?contentIdTo=${subContentId?if_exists}&nodeTrailCsv=${nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
 </@checkPermission>
 <br/>
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <ElectronicText dataResourceId="10250" lastUpdatedStamp="2004-01-16 19:20:58.895" lastUpdatedTxStamp="2004-01-16 19:20:58.892" createdStamp="2004-01-16 01:24:06.499" createdTxStamp="2004-01-16 01:24:06.482">
         <textData><![CDATA[<table>
@@ -447,7 +447,7 @@ ${txt}
         <textData><![CDATA[<@editRenderSubContent mapKey="ARTICLE">
   <@renderSubContent/>
 </@editRenderSubContent>
-]]></textData>
+            ]]></textData>
     </ElectronicText>
     <DataResource dataResourceId="TMPLT_IMG_CENTER_FL" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="FTL" dataResourceName="Image Centered" mimeTypeId="text/html" createdDate="2004-01-16 01:24:06.522" createdByUserLogin="admin" lastModifiedDate="2004-01-16 19:20:58.891" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-01-21 16:12:56.675" lastUpdatedTxStamp="2004-01-21 16:12:56.568" createdStamp="2004-01-16 01:24:06.482" createdTxStamp="2004-01-16 01:24:06.482"/>
     <ElectronicText dataResourceId="TMPLT_IMG_CENTER_FL" lastUpdatedStamp="2004-01-30 16:48:06.505" lastUpdatedTxStamp="2004-01-30 16:48:06.505" createdStamp="2004-01-16 01:24:06.499" createdTxStamp="2004-01-16 01:24:06.482">

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <!-- Order Manager security -->
+    <!-- Target file: components/order/data/OrderSecurityData.xml -->
+    <SecurityPermission description="View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
+    <SecurityPermission description="Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
+    <SecurityPermission description="Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
+    <SecurityPermission description="Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
+    <SecurityPermission description="ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
+    <SecurityPermission description="Limited view operations in the Order Manager." permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityPermission description="Limited Create operations in the Order Manager." permissionId="ORDERMGR_ROLE_CREATE"/>
+    <SecurityPermission description="Limited Update operations in the Order Manager." permissionId="ORDERMGR_ROLE_UPDATE"/>
+    <SecurityPermission description="Limited Delete operations in the Order Manager." permissionId="ORDERMGR_ROLE_DELETE"/>
+    <SecurityPermission description="Create notes in the Order Manager." permissionId="ORDERMGR_NOTE"/>
+    <SecurityPermission description="Process returns in the Order Manager." permissionId="ORDERMGR_RETURN"/>
+    <SecurityPermission description="Sales Order Entry in the Order Manager." permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityPermission description="Price change permission for sales orders." permissionId="ORDERMGR_SALES_PRICEMOD"/>
+    <SecurityPermission description="Purchase Order Entry in the Order Manager." permissionId="ORDERMGR_PURCHASE_ENTRY"/>
+    <SecurityGroup description="Admin group for restricted order processing." groupId="ORDERPROC"/>
+    <SecurityGroup description="Order Entry Admin group; permissions for creating orders." groupId="ORDERENTRY"/>
+    <SecurityGroup description="Order Admin group, has all order permissions." groupId="ORDERADMIN"/>
+    <SecurityGroup description="Limited Order Admin group, has all limited order permissions." groupId="ORDERADMIN_LTD"/>
+    <SecurityGroup description="Limited Order Admin group for Supplier Agents." groupId="ORDERSUPPLIER_LTD"/>
+    <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERADMIN_LTD" permissionId="ORDERMGR_ROLE_DELETE"/>
+    <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERSUPPLIER_LTD" permissionId="ORDERMGR_ROLE_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERADMIN" permissionId="ORDERMGR_ADMIN"/>
+    <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_NOTE"/>
+    <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_NOTE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_SALES_ENTRY"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_ROLE_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_NOTE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PARTYMGR_NOTE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_VIEW"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_UPDATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="PAY_INFO_CREATE"/>
+    <SecurityGroupPermission groupId="ORDERENTRY" permissionId="CATALOG_VIEW"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_RETURN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_NOTE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="ORDERMGR_NOTE"/>
+    <UserLogin userLoginId="supplier" partyId="externaluser" currentPassword="ofbiz" passwordHint=""/>
+    <UserLoginSecurityGroup groupId="ORDERSUPPLIER_LTD" userLoginId="supplier" fromDate="2001-01-01 12:00:00.0"/>
+
+    <!-- Tax Rate security -->
+    <!-- Target file: components/order/data/OrderSecurityData.xml -->
+    <SecurityPermission description="View operations in the Tax Rate Editor." permissionId="TAXRATE_VIEW"/>
+    <SecurityPermission description="Create operations in the Tax Rate Editor." permissionId="TAXRATE_CREATE"/>
+    <SecurityPermission description="Delete operations in the Tax Rate Editor." permissionId="TAXRATE_DELETE"/>
+    <SecurityPermission description="ALL operations in the Tax Rate Editor." permissionId="TAXRATE_ADMIN"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="TAXRATE_ADMIN"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_CREATE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_DELETE"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_VIEW"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="TAXRATE_VIEW"/>
+
+</entity-engine-xml>

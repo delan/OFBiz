@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+    <!-- Workflow security -->
+    <!-- Target file: components/workflow/data/WorkFlowSecurityData.xml -->
+    <SecurityPermission description="Use the Workflow Maintenance pages." permissionId="WORKFLOW_MAINT"/>
+    <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKFLOW_MAINT"/>
+    <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKFLOW_MAINT"/>
+    <SecurityGroupPermission groupId="VIEWADMIN" permissionId="WORKFLOW_MAINT"/>
+</entity-engine-xml>

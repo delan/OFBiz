@@ -21,11 +21,11 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component-example.xml,v 1.4 2004/07/28 03:40:41 jonesde Exp $
+ *  $Id: ofbiz-component-example.xml,v 1.5 2004/07/31 00:24:02 ajzeneski Exp $
 -->
 
 <ofbiz-component name="example">
-	<!-- define resource loaders; most common is to use the component resource loader -->
+    <!-- define resource loaders; most common is to use the component resource loader -->
     <resource-loader name="main" type="component"/>
     
     <!-- place the config directory on the classpath to access configuration files -->
@@ -52,10 +52,11 @@
     -->
     
     <!-- web applications; will be mounted when using the embedded Jetty container -->
-    <webapp name="example" 
-    	    title="Example" 
-    	    server="default-server" 
-    	    location="webapp/example" 
-    	    mount-point="/example"/>
+    <webapp name="example"
+        title="Example"
+        server="default-server"
+        location="webapp/example"
+        mount-point="/example"/>
+
 </ofbiz-component>
 
