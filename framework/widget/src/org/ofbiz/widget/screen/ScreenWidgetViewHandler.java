@@ -78,14 +78,14 @@ public class ScreenWidgetViewHandler implements ViewHandler {
     protected HtmlScreenRenderer htmlScreenRenderer = new HtmlScreenRenderer();
 
     /**
-     * @see org.ofbiz.content.webapp.view.ViewHandler#init(javax.servlet.ServletContext)
+     * @see org.ofbiz.webapp.view.ViewHandler#init(javax.servlet.ServletContext)
      */
     public void init(ServletContext context) throws ViewHandlerException {
         this.servletContext = context;
     }
     
     /**
-     * @see org.ofbiz.content.webapp.view.ViewHandler#render(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * @see org.ofbiz.webapp.view.ViewHandler#render(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         Writer writer = null;
@@ -114,15 +114,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             throw new ViewHandlerException("XML Error rendering page: " + e.toString(), e);
         } catch (GeneralException e) {
             throw new ViewHandlerException("Lower level error rendering page: " + e.toString(), e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    throw new ViewHandlerException("Error closing the writer/output stream: " + e.toString(), e);
-                }
-            }
-        }
+        } 
     }
 
     public static void populateContext(MapStack context, ScreenRenderer screens, HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
@@ -159,16 +151,16 @@ public class ScreenWidgetViewHandler implements ViewHandler {
 
         // make sure the "nullField" object is in there for entity ops; note this is nullField and not null because as null causes problems in FreeMarker and such...
         context.put("nullField", GenericEntity.NULL_FIELD);
-        
+
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         context.put("userLogin", userLogin);
         context.put("autoUserLogin", session.getAttribute("autoUserLogin"));
         context.put("person", session.getAttribute("person"));
         context.put("partyGroup", session.getAttribute("partyGroup"));
-        
+
         // some things also seem to require this, so here it is:
         request.setAttribute("userLogin", userLogin);
-        
+
         // ========== setup values that are specific to OFBiz webapps
         context.put("request", request);
         context.put("response", response);
@@ -199,15 +191,15 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         TaglibFactory JspTaglibs = new TaglibFactory(servletContext);
         context.put("JspTaglibs", JspTaglibs);
         context.put("requestParameters",  UtilHttp.getParameterMap(request));
-        
+
         // this is a dummy object to stand-in for the JPublish page object for backward compatibility
         context.put("page", new HashMap());
-        
+
         context.put("formStringRenderer", new HtmlFormRenderer(request, response));
 
         // make sure the locale is in the context
         context.put("locale", UtilHttp.getLocale(request));
-        
+
         // get all locale information
         context.put("availableLocales", UtilMisc.availableLocales());
 
@@ -220,7 +212,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         String externalKeyParam = externalLoginKey == null ? "" : "&externalLoginKey=" + externalLoginKey;
         context.put("externalLoginKey", externalLoginKey);
         context.put("externalKeyParam", externalKeyParam);
-        
+
         // setup message lists
         List eventMessageList = (List) request.getAttribute("eventMessageList");
         if (eventMessageList == null) eventMessageList = new LinkedList();
@@ -249,12 +241,12 @@ public class ScreenWidgetViewHandler implements ViewHandler {
         }
         context.put("eventMessageList", eventMessageList);
         context.put("errorMessageList", errorMessageList);
-        
+
         if (request.getAttribute("serviceValidationException") != null) {
             context.put("serviceValidationException", request.getAttribute("serviceValidationException"));
             request.removeAttribute("serviceValidationException");
         }
-        
+
         // if there was an error message, this is an error
         if (errorMessageList.size() > 0) {
             context.put("isError", Boolean.TRUE);

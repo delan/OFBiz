@@ -86,14 +86,6 @@ public class JPublishViewHandler implements ViewHandler {
             throw new ViewHandlerException("Problems with the response writer/output stream", e);
         } catch (GeneralException e) {
             throw new ViewHandlerException("Cannot render page", e);
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    throw new ViewHandlerException("Problems with closing the writer/output stream: " + e.toString(), e);
-                }
-            }
         }
     }
 }
