@@ -124,7 +124,7 @@ if (mode != null && mode.equals("SALES_ORDER")) {
 context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
 
 // get productCategory list
-productCategoryList = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+productCategoryList = delegator.findAll("ProductCategory", UtilMisc.toList("description", "productCategoryId"));
 context.put("productCategoryList", productCategoryList);
 
 // set party info
