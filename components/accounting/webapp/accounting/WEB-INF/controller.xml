@@ -419,6 +419,79 @@
         <response name="success" type="view" value="EditFixedAssetRollup"/>
         <response name="error" type="view" value="EditFixedAssetRollup"/>
     </request-map>
+    
+    <!-- =============== Agreement mapping =================-->
+    <request-map uri="FindAgreement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindAgreement"/>
+    </request-map>
+    <request-map uri="EditAgreement">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreement"/>
+    </request-map>
+    <request-map uri="ListAgreementItems">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListAgreementItems"/>
+    </request-map>
+    <request-map uri="EditAgreementItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreementItem"/>
+    </request-map>
+    <request-map uri="ListAgreementTerms">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="ListAgreementTerms"/>
+    </request-map>
+    <request-map uri="EditAgreementTerm">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditAgreementTerm"/>
+    </request-map>
+    
+    <request-map uri="createAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createAgreement"/>
+        <response name="success" type="view" value="EditAgreement"/>
+    </request-map>
+    <request-map uri="updateAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateAgreement"/>
+        <response name="success" type="view" value="EditAgreement"/>
+    </request-map>
+    <request-map uri="cancelAgreement">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="cancelAgreement"/>
+        <response name="success" type="view" value="FindAgreement"/>
+    </request-map>
+    <request-map uri="createAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createAgreementItem"/>
+        <response name="success" type="view" value="EditAgreementItem"/>
+    </request-map>
+    <request-map uri="updateAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateAgreementItem"/>
+        <response name="success" type="view" value="EditAgreementItem"/>
+    </request-map>
+    <request-map uri="removeAgreementItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeAgreementItem"/>
+        <response name="success" type="view" value="ListAgreementItems"/>
+    </request-map>
+    <request-map uri="createAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementTerm"/>
+    </request-map>
+    <request-map uri="updateAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateAgreementTerm"/>
+        <response name="success" type="view" value="EditAgreementTerm"/>
+    </request-map>
+    <request-map uri="removeAgreementTerm">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeAgreementTerm"/>
+        <response name="success" type="view" value="ListAgreementTerms"/>
+    </request-map>
+
     <!-- ================ Entity Lookup Requests ================= -->
     <request-map uri="LookupProduct">
         <security auth="true" https="true"/>
@@ -484,6 +557,13 @@
     <view-map name="updateFixedAssetCalendar" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#updateFixedAssetCalendar"/> 
     <view-map name="ListFixedAssetParties" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetParties"/> 
     <view-map name="ListFixedAssetsRollUp" type="screen" page="component://accounting/widget/FixedAssetScreens.xml#ListFixedAssetRollUp"/> 
+
+    <view-map name="FindAgreement" type="screen" page="component://accounting/widget/AgreementScreens.xml#FindAgreement"/>
+    <view-map name="EditAgreement" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreement"/>
+    <view-map name="ListAgreementItems" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementItems"/>
+    <view-map name="EditAgreementItem" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementItem"/>
+    <view-map name="ListAgreementTerms" type="screen" page="component://accounting/widget/AgreementScreens.xml#ListAgreementTerms"/>
+    <view-map name="EditAgreementTerm" type="screen" page="component://accounting/widget/AgreementScreens.xml#EditAgreementTerm"/>
 
     <!-- Lookup request mappings -->
     <view-map name="LookupPerson" page="component://party/widget/partymgr/LookupScreens.xml#LookupPerson" type="screen"/>
