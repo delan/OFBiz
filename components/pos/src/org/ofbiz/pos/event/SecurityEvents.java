@@ -90,8 +90,10 @@ public class SecurityEvents {
         if (func != null && func[0].equals(loginFunc)) {
             if (UtilValidate.isEmpty(func[1]) && UtilValidate.isEmpty(text)) {
                 output.print(Output.ULOGIN);
+                input.setFunction(loginFunc);
             } else if (UtilValidate.isEmpty(func[1])) {
                 output.print(Output.UPASSW);
+                input.setFunction(loginFunc);
             } else {
                 String username = func[1];
                 String password = text;
@@ -105,9 +107,9 @@ public class SecurityEvents {
                         input.clear();
                     }
                     if (passed) {
+                        input.clear();
                         pos.setLock(false);
                         pos.refresh();
-                        input.clear();
                         return;
                     }
                 } else {
@@ -131,8 +133,6 @@ public class SecurityEvents {
                     }
                 }
             }
-            input.setFunction(loginFunc);
-
         } else {
             Debug.log("Login function called but not prepared as a function!", module);
         }
