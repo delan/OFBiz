@@ -19,7 +19,7 @@
             </actions>
             <widgets>
                 <!-- render header -->
-                <platform-specific><html><html-template location="component://opentravelsystem/hotelbackend/includes/header.ftl"/></html></platform-specific>
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/header.ftl"/></html></platform-specific>
                 <!-- render appbar -->
                 <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
                 <container style="centerarea">
