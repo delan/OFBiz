@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.4 2004/05/25 20:29:26 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.5 2004/05/25 22:45:53 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.net.URL;
 import java.io.IOException;
+import java.io.File;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -43,9 +44,56 @@ import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
 /**
+ * --- Access Log Pattern Information - From Tomcat 5 AccessLogValve.java
+ * <p>Patterns for the logged message may include constant text or any of the
+ * following replacement strings, for which the corresponding information
+ * from the specified Response is substituted:</p>
+ * <ul>
+ * <li><b>%a</b> - Remote IP address
+ * <li><b>%A</b> - Local IP address
+ * <li><b>%b</b> - Bytes sent, excluding HTTP headers, or '-' if no bytes
+ *     were sent
+ * <li><b>%B</b> - Bytes sent, excluding HTTP headers
+ * <li><b>%h</b> - Remote host name
+ * <li><b>%H</b> - Request protocol
+ * <li><b>%l</b> - Remote logical username from identd (always returns '-')
+ * <li><b>%m</b> - Request method
+ * <li><b>%p</b> - Local port
+ * <li><b>%q</b> - Query string (prepended with a '?' if it exists, otherwise
+ *     an empty string
+ * <li><b>%r</b> - First line of the request
+ * <li><b>%s</b> - HTTP status code of the response
+ * <li><b>%S</b> - User session ID
+ * <li><b>%t</b> - Date and time, in Common Log Format format
+ * <li><b>%u</b> - Remote user that was authenticated
+ * <li><b>%U</b> - Requested URL path
+ * <li><b>%v</b> - Local server name
+ * <li><b>%D</b> - Time taken to process the request, in millis
+ * <li><b>%T</b> - Time taken to process the request, in seconds
+ * </ul>
+ * <p>In addition, the caller can specify one of the following aliases for
+ * commonly utilized patterns:</p>
+ * <ul>
+ * <li><b>common</b> - <code>%h %l %u %t "%r" %s %b</code>
+ * <li><b>combined</b> -
+ *   <code>%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"</code>
+ * </ul>
+ *
+ * <p>
+ * There is also support to write information from the cookie, incoming
+ * header, the Session or something else in the ServletRequest.<br>
+ * It is modeled after the apache syntax:
+ * <ul>
+ * <li><code>%{xxx}i</code> for incoming headers
+ * <li><code>%{xxx}c</code> for a specific cookie
+ * <li><code>%{xxx}r</code> xxx is an attribute in the ServletRequest
+ * <li><code>%{xxx}s</code> xxx is an attribute in the HttpSession
+ * </ul>
+ * </p>
+ *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      May 21, 2004
  */
 public class CatalinaContainer implements Container {
@@ -57,6 +105,8 @@ public class CatalinaContainer implements Container {
     protected Embedded embedded = null;
     protected Map engines = new HashMap();
     protected Map hosts = new HashMap();
+    protected boolean crossContext = false;
+    protected boolean distribute = false;
 
     protected boolean enableDefaultMimeTypes = true;
 
@@ -85,6 +135,17 @@ public class CatalinaContainer implements Container {
             } catch (Exception e) {
                 debug = 0;
             }
+        }
+
+        // default application behavior
+        ContainerConfig.Container.Property crossCtxProp = cc.getProperty("apps-cross-context");
+        if (crossCtxProp != null) {
+            crossContext = "true".equalsIgnoreCase(crossCtxProp.value);
+        }
+
+        ContainerConfig.Container.Property distributeProp = cc.getProperty("apps-distributable");
+        if (distributeProp != null) {
+            distribute = "true".equalsIgnoreCase(distributeProp.value);
         }
 
         // create the instance of Embedded
@@ -151,8 +212,40 @@ public class CatalinaContainer implements Container {
         Host host = createHost(engine, hostName);
         hosts.put(engineName + "._DEFAULT", host);
 
-        AccessLogValve al = new AccessLogValve();
-        engine.addValve(al);
+        ContainerConfig.Container.Property alp1 = engineConfig.getProperty("access-log-dir");
+        AccessLogValve al = null;
+        if (alp1 != null) {
+            al = new AccessLogValve();
+            String logDir = alp1.value;
+            if (!logDir.startsWith("/")) {
+                logDir = System.getProperty("ofbiz.home") + "/" + alp1.value;
+            }
+            File logFile = new File(logDir);
+            if (!logFile.isDirectory()) {
+                throw new ContainerException("Log directory [" + logDir + "] is not available; make sure the directory is created");
+            }
+            al.setDirectory(logFile.getAbsolutePath());
+        }
+        ContainerConfig.Container.Property alp2 = engineConfig.getProperty("access-log-pattern");
+        if (al != null && alp2 != null) {
+            al.setPattern(alp2.value);
+        }
+        ContainerConfig.Container.Property alp3 = engineConfig.getProperty("access-log-prefix");
+        if (al != null && alp3 != null) {
+            al.setPrefix(alp3.value);
+        }
+        ContainerConfig.Container.Property alp4 = engineConfig.getProperty("access-log-resolve");
+        if (al != null && alp4 != null) {
+            al.setResolveHosts("true".equalsIgnoreCase(alp4.value));
+        }
+        ContainerConfig.Container.Property alp5 = engineConfig.getProperty("access-log-rotate");
+        if (al != null && alp5 != null) {
+            al.setRotatable("true".equalsIgnoreCase(alp5.value));
+        }
+
+        if (al != null) {
+            engine.addValve(al);
+        }
 
         embedded.addEngine(engine);
         return engine;
@@ -317,8 +410,8 @@ public class CatalinaContainer implements Container {
                             context.setDisplayName(appInfo.name);
                             context.setDocBase(location);
 
-                            context.setDistributable(true);
-                            context.setCrossContext(true);
+                            context.setDistributable(distribute);
+                            context.setCrossContext(crossContext);
                             context.getServletContext().setAttribute("_serverId", appInfo.server);
 
                             // create the Default Servlet instance to mount
