@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "http://www.ofbiz.org/dtds/widget-menu.dtd">
+<!--
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "http://localhost:8443/ageps/images/widget-menu.dtd">
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "file:///usr/local/agi/ofbiz/hot-deploy/ageps/webapp/ageps/images/widget-menu.dtd">
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<menus>
+
+    <menu name="contentsetup" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="content"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN"
+        default-associated-content-id="${userLogin.userLoginId}"
+        title="" type="simple">
+
+        <menu-item name="contentPurposeOp" title="PurposeOperation" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="EditContentPurposeOperation"/>
+        </menu-item>
+
+        <menu-item name="contentOp" title="Operation" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="EditContentOperation"/>
+        </menu-item>
+
+        <menu-item name="assocPred" title="AssocPredicate" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="EditContentAssocPredicate"/>
+        </menu-item>
+
+        <menu-item name="typeAttr" title="TypeAttr" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="EditContentTypeAttr"/>
+        </menu-item>
+
+        <menu-item name="purposeType" title="PurposeType" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="EditContentPurposeType"/>
+        </menu-item>
+
+        <menu-item name="assocType" title="AssocType" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="EditContentAssocType"/>
+        </menu-item>
+
+        <menu-item name="type" title="Type" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="EditContentType"/>
+        </menu-item>
+
+        <menu-item name="userpermissions" title="Permissions" default-target-name="UserPermissions"
+                permission-entity-action="_ADMIN">
+            <target name="UserPermissions" request-name="UserPermissions">
+                <param name="partyId" value="${userpermissions.currentValue.partyId}"/>
+                <param name="userLoginId" value="${userpermissions.currentValue.userLoginId}"/>
+            </target>
+        </menu-item>
+
+    </menu>
+
+</menus>
