@@ -223,6 +223,7 @@
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="CONTACT_REL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="GROUP_ROLLUP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="PARTNERSHIP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="SALES_AFFILIATE" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="SUPPLIER_REL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="CUSTOMER_REL" roleTypeIdValidFrom="CUSTOMER" roleTypeIdValidTo=""/>
   <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="HOST_SERVER_VISITOR" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
