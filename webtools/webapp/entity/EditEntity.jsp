@@ -31,8 +31,8 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <%
