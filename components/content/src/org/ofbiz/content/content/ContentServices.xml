@@ -27,30 +27,110 @@
  -->
 <simple-methods>
     <!-- Methods for Content -->
+    <!-- DEPRECATED This simple method has been replaced by a java equivalent in ContentServices.java 
+         It will be removed soon. -->
     <simple-method method-name="createContent" short-description="Create a Content">
-        <check-permission permission="CONTENTMGR" action="_CREATE">
-            <fail-message message="Security Error: to run createContent you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/>
-        </check-permission>
-        <check-errors/>
-
-        <make-value entity-name="Content" value-name="newEntity"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <make-value entity-name="Content" value-name="currentContent"/>
+        <set-pk-fields map-name="parameters" value-name="currentContent"/>
+        <set-nonpk-fields map-name="parameters" value-name="currentContent"/>
+        <field-to-env field-name="userLogin" map-name="parameters" env-name="userLogin"/>
+        <now-timestamp-to-env env-name="nowTimestamp" />
+        <if-empty field-name="createdDate" map-name="currentContent">
+            <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="currentContent" />
+        </if-empty>
+        <if-empty field-name="lastModifiedDate" map-name="currentContent">
+            <env-to-field env-name="nowTimestamp" map-name="currentContent" field-name="lastModifiedDate" />
+        </if-empty>
+        <if-not-empty field-name="userLogin" >
+            <if-empty map-name="currentContent" field-name="createdByUserLogin">
+                <field-to-field map-name="userLogin" field-name="userLoginId"
+                             to-map-name="currentContent" to-field-name="createdByUserLogin" />
+            </if-empty>
+            <if-empty map-name="currentContent" field-name="lastModifiedByUserLogin">
+                <field-to-field map-name="userLogin" field-name="userLoginId"
+                             to-map-name="currentContent" to-field-name="lastModifiedByUserLogin" />
+            </if-empty>
+        </if-not-empty>
         
-        <create-value value-name="newEntity"/>
-        <field-to-result map-name="newEntity" field-name="contentId" />
+        <if-empty field-name="contentId" map-name="currentContent">
+          <sequenced-id-to-env env-name="id" sequence-name="Content" to-string="true"/>
+          <env-to-field env-name="id" field-name="contentId" map-name="currentContent"/>
+        </if-empty>
+    
+        <if-not-empty map-name="parameters" field-name="contentPurposeTypeId" >
+            <field-to-list list-name="contentPurposeList" 
+                          map-name="parameters" field-name="contentPurposeTypeId" />
+        </if-not-empty>
+        <if-empty map-name="parameters" field-name="contentPurposeTypeId" >
+            <string-to-list list-name="contentPurposeList" string="ARTICLE"/>
+        </if-empty>
+        <field-to-field field-name="contentPurposeList" to-map-name="context"/>
+    
+        <if-empty map-name="parameters" field-name="targetOperationList" >
+            <string-to-list list-name="targetOperationList" string="CREATE_CONTENT"/>
+        </if-empty>
+        <field-to-field field-name="targetOperationList" to-map-name="context"/>
+    
+        <field-to-field field-name="currentContent" to-map-name="context"/>
+        <field-to-field field-name="userLogin" map-name="parameters" to-map-name="context"/>
+        <call-service in-map-name="context" service-name="checkContentPermission">
+            <result-to-field field-name="permissionStatus" result-name="permissionStatus"/>
+            <result-to-field field-name="roleTypeList" result-name="roleTypeList"/>
+        </call-service>
+        <log level="always" message="permissionStatus:${permissionStatus}"/>
+        <if-compare field-name="permissionStatus" operator="not-equals"
+          type="String" value="granted">
+          <add-error>
+            <fail-message message="Permission not granted for creating Content."/>
+          </add-error>
+        </if-compare>
+        <check-errors/>
+        <if-compare field-name="permissionStatus" operator="equals" type="String" value="granted">
+            <create-value value-name="currentContent"/>
+        </if-compare>
+        <log level="always" message="currentContent:${currentContent}"/>
+        <field-to-field map-name="currentContent" field-name="contentId" to-map-name="parameters"/>
+        <field-to-result map-name="currentContent" field-name="contentId" result-name="contentId"/>
+        <field-to-result field-name="roleTypeList" result-name="roleTypeList" />
+        <log level="always" message="result:${result}"/>
+        <log level="always" message="parameters:${parameters}"/>
     </simple-method>
     <simple-method method-name="updateContent" short-description="Update a Content">
-        <check-permission permission="CONTENTMGR" action="_UPDATE"><fail-message message="Security Error: to run updateContent you must have the CONTENTMGR_UPDATE or CONTENTMGR_ADMIN permission"/></check-permission>
-        <check-errors/>
 
         <make-value entity-name="Content" value-name="lookupKeyValue"/>
         <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
-        <find-by-primary-key entity-name="Content" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <find-by-primary-key entity-name="Content" map-name="lookupKeyValue" value-name="currentContent"/>
 	<to-string map-name="parameters" field-name="locale" />
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        <store-value value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="currentContent"/>
+
+        <get-related value-name="currentContent" relation-name="ContentPurpose"
+                  list-name="contentPurposeList" />
+        <field-to-field field-name="contentPurposeList" to-map-name="context"/>
+    
+        <if-empty map-name="parameters" field-name="targetOperationList" >
+            <string-to-list list-name="targetOperationList" string="UPDATE_CONTENT"/>
+        </if-empty>
+        <field-to-field field-name="targetOperationList" to-map-name="context"/>
+    
+        <field-to-field field-name="currentContent" to-map-name="context"/>
+        <field-to-field field-name="userLogin" map-name="parameters" to-map-name="context"/>
+        <call-service in-map-name="context" service-name="checkContentPermission">
+            <result-to-field field-name="permissionStatus" result-name="permissionStatus"/>
+            <result-to-field field-name="roleTypeList" result-name="roleTypeList"/>
+        </call-service>
+        <log level="always" message="permissionStatus:${permissionStatus}"/>
+        <if-compare field-name="permissionStatus" operator="not-equals"
+          type="String" value="granted">
+          <add-error>
+            <fail-message message="Permission not granted for creating Content."/>
+          </add-error>
+        </if-compare>
+        <check-errors/>
+        <if-compare field-name="permissionStatus" operator="equals" type="String" value="granted">
+            <store-value value-name="currentContent"/>
+        </if-compare>
     </simple-method>
+
     <simple-method method-name="deleteContent" short-description="Delete a Content">
         <check-permission permission="CONTENTMGR" action="_DELETE"><fail-message message="Security Error: to run updateContent you must have the CONTENTMGR_DELETE or CONTENTMGR_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -62,6 +142,56 @@
     </simple-method>
     
     <!-- Methods for ContentAssoc -->
+    <simple-method login-required="true" method-name="assocContent">
+        <log level="always" message="assocContent, parameters:${parameters}"/>
+        <log level="always" message="assocContent, context:${context}"/>
+        <call-service in-map-name="parameters" service-name="checkAssocPermission">
+            <result-to-field field-name="permissionStatus" result-name="permissionStatus"/>
+            <result-to-field field-name="rolesOut" result-name="rolesOut"/>
+        </call-service>
+        <log level="always" message="permissionStatus:${permissionStatus}"/>
+
+
+        <field-to-field map-name="parameters" field-name="contentIdTo" 
+                     to-map-name="pk" to-field-name="contentId" />
+        <field-to-field field-name="currentContent" to-map-name="context"/>
+
+        <field-to-field map-name="parameters" field-name="contentIdFrom" 
+                     to-map-name="pk" to-field-name="contentId" />
+        <field-to-field field-name="userLogin" map-name="parameters" to-map-name="context"/>
+        <find-by-primary-key value-name="currentContent" entity-name="Content" map-name="pk" />
+        <find-by-primary-key value-name="fromContent" entity-name="Content" map-name="pk" />
+
+        <if-compare field-name="permissionStatus" operator="equals" type="String" value="granted">
+                <make-value entity-name="ContentAssoc" value-name="newContentAssoc"/>
+                <field-to-field map-name="parameters" field-name="contentIdTo" 
+                         to-map-name="newContentAssoc" to-field-name="contentIdTo" />
+                <field-to-field map-name="parameters" field-name="contentIdFrom" 
+                         to-map-name="newContentAssoc" to-field-name="contentId" />
+                <field-to-field 
+                        map-name="parameters" field-name="contentAssocTypeId" 
+                        to-map-name="newContentAssoc" to-field-name="contentAssocTypeId" />
+                <now-timestamp-to-env env-name="nowTimestamp"/>
+                <field-to-field map-name="newUserLogin" field-name="userLoginId"
+                    to-field-name="createdByUserLogin" to-map-name="newContentAssoc"/>
+                <field-to-field map-name="newUserLogin" field-name="userLoginId"
+                    to-field-name="lastModifiedByUserLogin" to-map-name="newContentAssoc"/>
+                <env-to-field env-name="nowTimestamp" field-name="createdDate" map-name="newContentAssoc"/>
+                <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="newContentAssoc"/>
+              
+                <if-empty map-name="parameters" field-name="fromDate" >
+                    <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="parameters"/>
+                    <to-string map-name="parameters" field-name="fromDate" />
+                </if-empty>
+                <field-to-field map-name="parameters" field-name="fromDate" to-map-name="newContentAssoc"/>
+                <if-not-empty map-name="parameters" field-name="thruDate" >
+                    <field-to-field map-name="parameters" field-name="thruDate" to-map-name="newContentAssoc"/>
+                </if-not-empty>
+                <create-value value-name="newContentAssoc" />
+        </if-compare>
+        <check-errors/>
+    </simple-method>
+
     <simple-method method-name="createContentAssoc" short-description="Create an Content Assoc">
         <check-permission permission="CONTENTMGR" action="_CREATE"><fail-message message="Security Error: to run createContentAssoc you must have the CONTENTMGR_CREATE or CONTENTMGR_ADMIN permission"/></check-permission>
         <check-errors/>
@@ -538,4 +668,6 @@
         <find-by-primary-key entity-name="ContentMetaData" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
+
+
 </simple-methods>

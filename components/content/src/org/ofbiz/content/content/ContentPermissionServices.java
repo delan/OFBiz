@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ * $Id: ContentPermissionServices.java,v 1.3 2003/10/27 19:52:31 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -103,61 +103,111 @@ public class ContentPermissionServices {
 
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
-        String contentId = (String) context.get("contentId");
+        String statusId = (String) context.get("statusId");
         GenericValue content = (GenericValue) context.get("currentContent"); 
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
         List passedPurposes = (List) context.get("contentPurposeList"); 
         List targetOperations = (List) context.get("targetOperationList"); 
         List passedRoles = (List) context.get("roleTypeList"); 
         if (passedRoles == null) passedRoles = new ArrayList();
+        // If the current user created the content, then add "_OWNER_" as one of
+        //   the contentRoles that is in effect.
+        if (content != null && content.get("createdByUserLogin") != null 
+            && userLogin != null) {
+            String userLoginId = (String)userLogin.get("userLoginId");
+            String userLoginIdCB = (String)content.get("createdByUserLogin");
+            if (userLoginIdCB.equals(userLoginId)) {
+                passedRoles.add("_OWNER_");
+            }
+        }
+        String entityAction = (String) context.get("entityActioneration");
+        if (entityAction == null) entityAction = "_ADMIN";
 
-        // Get the ContentPurposeOperation table and save the results to be reused.
+//Debug.logInfo("targetOperations(0):" + targetOperations, null);
+//Debug.logInfo("content:" + content, null);
+
+        Map results = checkPermission( content, statusId,
+                                      userLogin, passedPurposes,
+                                      targetOperations, passedRoles,
+                                      delegator, security, entityAction);
+        return results;
+    }
+
+    public static Map checkPermission(GenericValue content, String statusId,
+                                      GenericValue userLogin, List passedPurposes,
+                                      List targetOperations, List passedRoles,
+                                      GenericDelegator delegator ,
+                                      Security security, String entityAction
+        ) {
+
+	List roleIds = null;
+        Map result = new HashMap();
+        String permissionStatus = null;
+        result.put("roleTypeList", passedRoles);
+
+        // Get the ContentPurposeOperation table and save the result to be reused.
         List purposeOperations = null;
         try {
             purposeOperations = delegator.findAllCache("ContentPurposeOperation");
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Error in retrieving ContentPurposeOperations. " + e.getMessage());
         }
-
-        if (content == null || content.isEmpty()) {
-            return ServiceUtil.returnError("Content not found.");
-        }
+//Debug.logInfo("purposeOperations:" + purposeOperations, null);
+//Debug.logInfo("targetOperations:" + targetOperations, null);
 
 
         // Combine any passed purposes with those linked to the Content entity
         // Note that purposeIds is a list of contentPurposeTypeIds, not GenericValues
         List purposeIds = getRelatedPurposes(content, passedPurposes );
+//Debug.logInfo("purposeIds:" + purposeIds, null);
 
         // Do check of non-RoleType conditions
-        boolean isMatch = publicMatches(purposeOperations, targetOperations, content, purposeIds, null);
+        boolean isMatch = publicMatches(purposeOperations, targetOperations, purposeIds, passedRoles, statusId);
         
-        if (!isMatch && userLogin == null) {
-            Debug.logInfo("No unauthorized permissions found. ", module);
-            return ServiceUtil.returnError("No unauthorized permissions found. ");
+        if( isMatch ) {
+            result.put("permissionStatus", "granted");
+            return result;
         }
 
-        if (!isMatch) {
-            isMatch = security.hasEntityPermission("CONTENTMGR", "_CREATE", userLogin);
+        if (userLogin != null ) {
+            isMatch = security.hasEntityPermission("CONTENTMGR", entityAction, userLogin);
         }
 
-        if (!isMatch) {
+        if( isMatch ) {
+            result.put("permissionStatus", "granted");
+            return result;
+        }
+
+
+        if (content == null || content.isEmpty() ) {
+            return result;
+        }
+
+//Debug.logInfo("userLogin:" + userLogin, null);
+        if (userLogin != null ) {
 
             // Get all roles associated with this Content and the user,
             // including groups.
-            List roleIds = getUserRoles(content, userLogin, passedRoles, delegator);
+//Debug.logInfo("before getUserRoles, content(1):" + content, null);
+            roleIds = getUserRoles(content, userLogin, passedRoles, delegator);
+//Debug.logInfo("roleIds:" + roleIds, null);
+		if (passedRoles == null) {
+                    passedRoles = roleIds;
+                } else {
+                    passedRoles.addAll(roleIds);
+                }
+                result.put("roleTypeList", passedRoles);
 
             // This is a recursive query that looks for any "owner" content in the 
             // ancestoral path that might have ContentRole associations that
             // make a ContentPurposeOperation condition match.
-            isMatch = checkPermissionWithRoles(content, purposeIds, roleIds, 
-                             targetOperations, purposeOperations, userLogin, delegator );
+            Map thisResult = checkPermissionWithRoles(content, purposeIds, passedRoles, 
+                             targetOperations, purposeOperations, userLogin, delegator, statusId );
+            result.put("roleTypeList", thisResult.get("roleTypeList"));
+            result.put("permissionStatus", thisResult.get("permissionStatus"));
         }
+        return result;
 
-        Map results = new HashMap();
-        String permissionStatus = null;
-        if( isMatch ) permissionStatus = "granted";
-        results.put("permissionStatus", permissionStatus);
-        return results;
     }
 
     /**
@@ -174,63 +224,56 @@ public class ContentPermissionServices {
      *@return boolean True if a match is found, else false.
      *
      */
-    public static boolean checkPermissionWithRoles( GenericValue content, List passedPurposes, 
+    public static Map checkPermissionWithRoles( GenericValue content, List passedPurposes, 
                                            List passedRoles, 
                                            List targetOperations, List purposeOperations,
-                                           GenericValue userLogin, GenericDelegator delegator){ 
+                                           GenericValue userLogin, GenericDelegator delegator, 
+                                           String statusId){ 
 
-        boolean isMatch = publicMatches(purposeOperations, targetOperations, content,  
-                                        passedPurposes, passedRoles);
-        if (isMatch) return isMatch;
+        String permissionStatus = null;
+        Map result = new HashMap();
+        result.put("permissionStatus", permissionStatus);
+        result.put("roleTypeList", passedRoles);
+        List roleIds = null;
+        boolean isMatch = publicMatches(purposeOperations, targetOperations, 
+                                        passedPurposes, passedRoles, statusId);
+        if (isMatch) {
+            result.put("permissionStatus", "granted");
+            return result;
+        }
 
         // recursively try if the "owner" Content has ContentRoles that allow a match
         String ownerContentId = (String)content.get("ownerContentId");
+//Debug.logInfo("ownerContentId:" + ownerContentId, null);
         if (ownerContentId != null && ownerContentId.length() > 0 ) {
             GenericValue ownerContent = null;
             try {
                 ownerContent = delegator.findByPrimaryKeyCache("Content", 
                                                  UtilMisc.toMap("contentId", ownerContentId) );
+//Debug.logInfo("ownerContent:" + ownerContent, null);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Owner content not found. ", module);
             }
             if (ownerContent != null) {
-                List roleIds = getUserRoles(ownerContent, userLogin, null, delegator);
-                isMatch = checkPermissionWithRoles(ownerContent, passedPurposes, roleIds, 
-                             targetOperations, purposeOperations, userLogin,  delegator );
-            }
-        }
-        return isMatch;
-
-    }
-
-    /**
-     * publicMatches
-     * Takes all the criteria and performs a check to see if there is a match.
-     */
-    public static boolean publicMatches(List purposeOperations, List targetOperations, GenericValue content, 
-                   List purposes, List roles) {
-        boolean isMatch = false;
-        Iterator purposeOpsIter = purposeOperations.iterator();
-        while (purposeOpsIter.hasNext() ) {
-            GenericValue purposeOp = (GenericValue)purposeOpsIter.next();
-            String roleTypeId = (String)purposeOp.get("roleTypeId");
-            String contentPurposeTypeId = (String)purposeOp.get("contentPurposeTypeId");
-            String contentOperationId = (String)purposeOp.get("contentOperationId");
- 
-            if ( targetOperations.contains(contentOperationId)           
-                 && (purposes.contains(contentPurposeTypeId) 
-                     || contentPurposeTypeId.equals("_NA_") ) ) {
-                if ( roleTypeId == null 
-                    || roleTypeId.equals("_NA_") 
-                    || (roles != null && roles.contains(roleTypeId) ) ){
-                
-                    isMatch = true;
-                    break;
+//Debug.logInfo("before getUserRoles, ownerContent(2):" + ownerContent, null);
+                roleIds = getUserRoles(ownerContent, userLogin, null, delegator);
+		if (passedRoles == null) {
+                    passedRoles = roleIds;
+                } else {
+                    passedRoles.addAll(roleIds);
                 }
+//Debug.logInfo("after getUserRoles, passedRoles(2):" + passedRoles, null);
+                Map result2 = checkPermissionWithRoles(ownerContent, passedPurposes, roleIds, 
+                             targetOperations, purposeOperations, userLogin,  delegator, statusId );
+                result.put("roleTypeList", result2.get("roleTypeList"));
+                result.put("permissionStatus", result2.get("permissionStatus"));
             }
         }
-        return isMatch;
+        return result;
+
     }
+
+
 
     /**
      * getUserRoles
@@ -240,6 +283,9 @@ public class ContentPermissionServices {
      */
     public static List getUserRoles(GenericValue content, GenericValue userLogin, 
                                     List passedRoles, GenericDelegator delegator) {
+
+        if(content == null) return passedRoles;
+
         ArrayList roles = null;
         if (passedRoles == null) {
             roles = new ArrayList( );
@@ -285,6 +331,47 @@ public class ContentPermissionServices {
         }
         return roles;
     }
+
+
+
+    /**
+     * publicMatches
+     * Takes all the criteria and performs a check to see if there is a match.
+     */
+    public static boolean publicMatches(List purposeOperations, List targetOperations, 
+                   List purposes, List roles, String targStatusId) {
+        boolean isMatch = false;
+        Iterator purposeOpsIter = purposeOperations.iterator();
+        while (purposeOpsIter.hasNext() ) {
+            GenericValue purposeOp = (GenericValue)purposeOpsIter.next();
+            String roleTypeId = (String)purposeOp.get("roleTypeId");
+            String contentPurposeTypeId = (String)purposeOp.get("contentPurposeTypeId");
+            String contentOperationId = (String)purposeOp.get("contentOperationId");
+            String testStatusId = (String)purposeOp.get("statusId");
+//Debug.logInfo("purposeOp:" + purposeOp, null);
+//Debug.logInfo("purposes:" + purposes, null);
+//Debug.logInfo("roles:" + roles, null);
+//Debug.logInfo("targetOperations:" + targetOperations, null);
+ 
+            if ( targetOperations != null && targetOperations.contains(contentOperationId)           
+                 && ( (purposes != null && purposes.contains(contentPurposeTypeId) )
+                     || contentPurposeTypeId.equals("_NA_") ) 
+                 && (testStatusId == null || testStatusId.equals("_NA_")
+                     || testStatusId.equals(targStatusId) ) 
+               ) {
+                if ( roleTypeId == null 
+                    || roleTypeId.equals("_NA_") 
+                    || (roles != null && roles.contains(roleTypeId) ) ){
+                
+                    isMatch = true;
+                    break;
+                }
+            }
+        }
+        return isMatch;
+    }
+
+
 
     /**
      * isGroupMember
@@ -351,6 +438,8 @@ public class ContentPermissionServices {
      */
     public static List getRelatedPurposes(GenericValue content, List passedPurposes) {
 
+        if(content == null) return passedPurposes;
+
         List purposeIds = null;
         if (passedPurposes == null) {
             purposeIds = new ArrayList( );
@@ -381,4 +470,79 @@ public class ContentPermissionServices {
     }
 
 
+
+    public static Map checkAssocPermission(DispatchContext dctx, Map context) {
+
+//Debug.logInfo("checkAssoc", null);
+        Map results = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+//Debug.logInfo("checkAssoc, delegator:" + delegator, null);
+        String contentIdFrom = (String) context.get("contentIdFrom");
+        String contentIdTo = (String) context.get("contentIdTo");
+        String statusId = (String) context.get("statusId");
+        GenericValue content = (GenericValue) context.get("currentContent"); 
+        GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+        List purposeList = (List) context.get("contentPurposeList"); 
+        List targetOperations = (List) context.get("targetOperationList"); 
+        List roleList = (List) context.get("roleTypeList"); 
+        if (roleList == null) roleList = new ArrayList();
+        String entityAction = (String) context.get("entityOperation");
+        if (entityAction == null) entityAction = "_ADMIN";
+	List roleIds = null;
+
+//Debug.logInfo("contentIdTo:" + contentIdTo, null);
+//Debug.logInfo("contentIdFrom:" + contentIdFrom, null);
+        GenericValue contentTo = null;
+        GenericValue contentFrom = null;
+        try {
+                contentTo = delegator.findByPrimaryKeyCache("Content", 
+                                                 UtilMisc.toMap("contentId", contentIdTo) );
+                contentFrom = delegator.findByPrimaryKeyCache("Content", 
+                                                 UtilMisc.toMap("contentId", contentIdFrom) );
+//Debug.logInfo("contentTo:" + contentTo, null);
+//Debug.logInfo("contentFrom:" + contentFrom, null);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, " content To or From not found. ", module);
+            return ServiceUtil.returnError("Error in retrieving content To or From. " + e.getMessage());
+        }
+        String creatorLoginTo = (String)contentTo.get("createdByUserLogin");
+        String creatorLoginFrom = (String)contentFrom.get("createdByUserLogin");
+        if(creatorLoginTo != null && creatorLoginFrom != null 
+           && creatorLoginTo.equals(creatorLoginFrom) ) {
+            roleList.add("_OWNER_");
+        }
+    
+        Map resultsMap = checkPermission( null, statusId,
+                                      userLogin, purposeList,
+                                      targetOperations, roleList,
+                                      delegator, security, entityAction);
+        boolean isMatch = false;
+        if(resultsMap.get("permissionStatus").equals("granted") ) isMatch = true;
+
+        boolean isMatchTo = false;
+        boolean isMatchFrom = false;
+        if(!isMatch){
+            roleList = (List)resultsMap.get("roleTypeList");
+            resultsMap = checkPermission( contentTo, statusId,
+                                      userLogin, purposeList,
+                                      targetOperations, roleList,
+                                      delegator, security, entityAction);
+            if(resultsMap.get("permissionStatus").equals("granted") ) isMatchTo = true;
+
+            resultsMap = checkPermission( contentFrom, statusId,
+                                      userLogin, purposeList,
+                                      targetOperations, roleList,
+                                      delegator, security, entityAction);
+            if(resultsMap.get("permissionStatus").equals("granted") ) isMatchFrom = true;
+            results.put("roleTypeList", resultsMap.get("roleTypeList"));
+
+            if(isMatchTo && isMatchFrom) isMatch = true;
+        }
+
+        String permissionStatus = null;
+        if( isMatch ) permissionStatus = "granted";
+        results.put("permissionStatus", permissionStatus);
+        return results;
+    }
 }
