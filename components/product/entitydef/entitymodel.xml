@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.79 $
+ * @version    $Revision: 1.80 $
  */
 -->
 
@@ -1926,18 +1926,26 @@
             package-name="org.ofbiz.product.product"
             title="Product Review Entity">
         <field name="productReviewId" type="id-ne"></field>
+        <field name="productStoreId" type="id-ne"></field>
         <field name="productId" type="id-ne"></field>
         <field name="userLoginId" type="id-vlong-ne"></field>
+        <field name="statusId" type="id"></field>
         <field name="postedAnonymous" type="indicator"></field>
         <field name="postedDateTime" type="date-time"></field>
         <field name="productRating" type="floating-point"></field>
         <field name="productReview" type="very-long"></field>
         <prim-key field="productReviewId"/>
+        <relation type="one" fk-name="PROD_REVIEW_PRDSTR" rel-entity-name="ProductStore">
+          <key-map field-name="productStoreId"/>
+        </relation>
         <relation type="one" fk-name="PROD_REVIEW_PROD" rel-entity-name="Product">
           <key-map field-name="productId" rel-field-name="productId"/>
         </relation>
         <relation type="one" fk-name="PROD_REVIEW_ULH" rel-entity-name="UserLogin">
           <key-map field-name="userLoginId" rel-field-name="userLoginId"/>
+        </relation>
+        <relation type="one" fk-name="PROD_REVIEW_STTS" rel-entity-name="StatusItem">
+          <key-map field-name="statusId"/>
         </relation>
     </entity>
     <entity entity-name="ProductSearchConstraint"

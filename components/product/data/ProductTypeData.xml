@@ -292,6 +292,15 @@
   <StatusValidChange condition="" statusId="IXF_SCHEDULED" statusIdTo="IXF_CANCELLED" transitionName="Scheduled Inventory Cancelled"/>
   <StatusValidChange condition="" statusId="IXF_EN_ROUTE" statusIdTo="IXF_COMPLETE" transitionName="In Route Transfer Completed"/>
 
+  <!-- product review status -->
+  <StatusType description="Inventory Transfer" hasTable="N" parentTypeId="" statusTypeId="PRODUCT_REVIEW_STTS"/>
+  <StatusItem description="Pending" sequenceId="01" statusCode="PENDING" statusId="PRR_PENDING" statusTypeId="PRODUCT_REVIEW_STTS"/>
+  <StatusItem description="Approved" sequenceId="02" statusCode="APPROVED" statusId="PRR_APPROVED" statusTypeId="PRODUCT_REVIEW_STTS"/>
+  <StatusItem description="Deleted" sequenceId="99" statusCode="DELETED" statusId="PRR_DELETED" statusTypeId="PRODUCT_REVIEW_STTS"/>
+  <StatusValidChange condition="" statusId="PRR_PENDING" statusIdTo="PRR_APPROVED" transitionName="Review Approved"/>
+  <StatusValidChange condition="" statusId="PRR_PENDING" statusIdTo="PRR_DELETED" transitionName="Review Deleted"/>
+  <StatusValidChange condition="" statusId="PRR_APPROVED" statusIdTo="PRR_DELETED" transitionName="Review Deleted"/>
+
   <VarianceReason varianceReasonId="VAR_LOST" description="Lost"/>
   <VarianceReason varianceReasonId="VAR_STOLEN" description="Stolen"/>
   <VarianceReason varianceReasonId="VAR_FOUND" description="Found"/>

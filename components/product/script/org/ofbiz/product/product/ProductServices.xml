@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  -->
 
@@ -406,6 +406,7 @@
         <make-value value-name="newEntity" entity-name="ProductReview"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="newEntity"/>
+        <string-to-field string="PRR_PENDING" field-name="statusId" map-name="newEntity"/> 
 
         <sequenced-id-to-env sequence-name="ProductReview" env-name="productReviewId"/>
         <to-string field-name="productReviewId"/>

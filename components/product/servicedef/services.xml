@@ -63,6 +63,7 @@
     <service name="createProductReview" engine="simple"
             location="org/ofbiz/product/product/ProductServices.xml" invoke="createProductReview" auth="true">
         <description>Create a product review entity</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>        
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="postedAnonymous" type="Boolean" mode="IN" optional="true"/>
         <attribute name="productRating" type="Double" mode="IN" optional="false"/>

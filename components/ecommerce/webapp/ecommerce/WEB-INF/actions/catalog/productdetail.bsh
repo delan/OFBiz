@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.30 $
+ *@version    $Revision: 1.31 $
  *@since      2.1
  */
 
@@ -177,7 +177,8 @@ if (product != null) {
     request.setAttribute("priceMap", priceMap);
 
     // get the product review(s)
-    reviews = product.getRelatedCache("ProductReview", null, UtilMisc.toList("-postedDateTime"));
+    reviewByAnd = UtilMisc.toMap("statusId", "PRR_APPROVED", "productStoreId", productStoreId);
+    reviews = product.getRelatedCache("ProductReview", reviewByAnd, UtilMisc.toList("-postedDateTime"));
     context.put("productReviews", reviews);
     // get the average rating
     if (reviews != null && reviews.size() > 0) {
