@@ -146,6 +146,7 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
         }
         if (clientConnections.size() > 0)
             return;  // Only take action if the last connection referring to this is closed
+
         boolean trans = resource.isTransaction(); // could be committed directly on notification?  Seems unlikely, but let's not rule it out.
         Vector local = (Vector) listeners.clone();
         for (int i = local.size() - 1; i >= 0; i--)

@@ -601,8 +601,8 @@ public class ObjectPool implements PoolEventListener {
 
         Object result = factory.isUniqueRequest();
         if (result != null) // If this is identical to a previous request,
-            return result; // return the same result.  This is the 2.4 total hack to
-        //share local connections within a managed tx.
+            return result;  // return the same result.  This is the 2.4 total hack to
+                            // share local connections within a managed tx.
 
         try {
             if (permits.attempt(blockingTimeout)) {
@@ -629,13 +629,16 @@ public class ObjectPool implements PoolEventListener {
                     try {
                         rec = createNewObject(parameters);
                     } catch (Exception e) {
+                        log.error("Exception in creating new object for pool", e);
                         permits.release();
                         throw e;
                     }
                 } // end of if ()
                 if (rec == null) {
                     permits.release();
-                    throw new RuntimeException("Pool is broken, did not find or create an object");
+                    String message = "Pool is broken, did not find or create an object";
+                    log.error(message);
+                    throw new RuntimeException(message);
                 } // end of if ()
                 Object ob = rec.getObject();
 
