@@ -120,15 +120,14 @@
 
         <!-- Remove associated/dependent entries from other entities here -->
         <remove-related value-name="lookedUpValue" relation-name="WorkEffortAttribute"/>
-        <remove-related value-name="lookedUpValue" relation-name="WorkEffortCategoryMember"/>
-        <remove-related value-name="lookedUpValue" relation-name="WorkEffortPartyAssignment"/>
+        <remove-related value-name="lookedUpValue" relation-name="WorkOrderItemFulfillment"/>
         <remove-related value-name="lookedUpValue" relation-name="FromWorkEffortAssoc"/>
         <remove-related value-name="lookedUpValue" relation-name="ToWorkEffortAssoc"/>
-        <remove-related value-name="lookedUpValue" relation-name="WorkEffortStatus"/>
-        <remove-related value-name="lookedUpValue" relation-name="ContextRuntimeData"/>
-        <remove-related value-name="lookedUpValue" relation-name="ResultRuntimeData"/>
         <remove-related value-name="lookedUpValue" relation-name="NoteData"/>
         <remove-related value-name="lookedUpValue" relation-name="RecurrenceInfo"/>
+        <remove-related value-name="lookedUpValue" relation-name="RuntimeData"/>
+        <remove-related value-name="lookedUpValue" relation-name="WorkEffortPartyAssignment"/>
+        <remove-related value-name="lookedUpValue" relation-name="WorkEffortStatus"/>
 
         <!-- Delete actual main entity last -->
         <remove-value value-name="lookedUpValue"/>
@@ -188,8 +187,7 @@
         <!-- create new status entry, and set lastStatusUpdate date -->
         <make-value value-name="newWorkEffortNote" entity-name="WorkEffortNote"/>
         <field-to-field field-name="noteId" map-name="newEntity" to-map-name="newWorkEffortNote"/>
-<!--        <string-to-field string="10000" field-name="workEffortId" map-name="newWorkEffortNote"/>-->
         <field-to-field field-name="workEffortId" map-name="parameters" to-map-name="newWorkEffortNote"/>
-        <create-value value-name="newWorkEffortNote"/>-->
+        <create-value value-name="newWorkEffortNote"/>
     </simple-method>
 </simple-methods>
