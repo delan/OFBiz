@@ -794,17 +794,7 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        
-        // first nuke the userlogin
-        userLogin.set("enabled", "N");
-        try {
-            userLogin.store();
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Problems de-activating userLogin.", module);
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Database error.");
-            return "error";
-        }
-                    
+                                    
         // Load the order.properties file.
         URL orderPropertiesUrl = null;
         try {
@@ -864,6 +854,17 @@ public class CheckOutEvents {
             return "error";
         }
         
+        // nuke the userlogin
+        userLogin.set("enabled", "N");
+        try {
+            userLogin.store();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems de-activating userLogin.", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Database error.");
+            return "error";
+        }        
+        
+        // wipe the cart and session
         cart.clear();
         session.invalidate();
         return "success";
