@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -32,7 +32,7 @@
     <link rel='stylesheet' href='${baseUrl}/images/maincss.css' type='text/css'>      
 </head>
 
-<body class="ecbody>
+<body class="ecbody">
 
 <#-- custom logo or text can be inserted here -->
 
