@@ -52,7 +52,7 @@ public class ProductEvents {
         String errMsg = "";
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Security security = (Security) request.getAttribute("security");
-
+        
         String updateMode = request.getParameter("UPDATE_MODE");
         if (updateMode == null || updateMode.length() <= 0) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Update Mode was not specified, but is required.");
@@ -80,12 +80,11 @@ public class ProductEvents {
             //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
             delProduct.remove();
             return "success";
-          }
-          else {
+          } else {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not find Product with ID" + productId + ", product not deleted.");
             return "error";
           }
-    }
+         }
          */
 
         String primaryProductCategoryId = request.getParameter("PRIMARY_PRODUCT_CATEGORY_ID");
