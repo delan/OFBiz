@@ -73,7 +73,7 @@
                     <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                       <tr>
                         <td><div class="tableheadtext">Order&nbsp;Number</div></td>
-                        <td><div class="tableheadtext">Vendor&nbsp;Name</div></td>
+                        <td><div class="tableheadtext">Name</div></td>
                         <td><div class="tableheadtext">Order&nbsp;Date</div></td>
                         <td><div class="tableheadtext">Status</div></td>
                         <td width="1" align="right"><div class="tableheadtext">Items</div></td>
@@ -136,7 +136,7 @@
                     <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                       <tr>
                         <td><a href="<@ofbizUrl>/tasklist?sort=orderId</@ofbizUrl>" class="tableheadbutton">Order&nbsp;Number</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=name</@ofbizUrl>" class="tableheadbutton">Customer&nbsp;Name</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=name</@ofbizUrl>" class="tableheadbutton">Name</a></td>
                         <td><a href="<@ofbizUrl>/tasklist?sort=orderDate</@ofbizUrl>" class="tableheadbutton">Order&nbsp;Date</a></td>
                         <td width="1" align="right"><a href="<@ofbizUrl>/tasklist?sort=grandTotal</@ofbizUrl>" class="tableheadbutton">Total</a></td>
                         <td width="1">&nbsp;&nbsp;</td>
@@ -154,11 +154,13 @@
                             </a>
                           </td>
                           <td>
-                            <#if task.customerPartyId?exists>
-                            <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.ordermgr.task.TaskWorker"].getCustomerName(task)}</a>
-                            <#else>
-                            &nbsp;
-                            </#if>
+                            <div class="tabletext">
+                              <#if task.customerPartyId?exists>
+                                <a href="/partymgr/control/viewprofile?party_id=${task.customerPartyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${Static["org.ofbiz.ordermgr.task.TaskWorker"].getCustomerName(task)}</a>
+                              <#else>
+                                N/A
+                              </#if>
+                            </div>
                           </td>
                           <td>
                             <div class="tabletext">
@@ -198,7 +200,7 @@
                     <table width='100%' cellpadding='2' cellspacing='0' border='0'>
                       <tr>
                         <td><a href="<@ofbizUrl>/tasklist?sort=orderId</@ofbizUrl>" class="tableheadbutton">Order&nbsp;Number</a></td>
-                        <td><a href="<@ofbizUrl>/tasklist?sort=name</@ofbizUrl>" class="tableheadbutton">Customer&nbsp;Name</a></td>
+                        <td><a href="<@ofbizUrl>/tasklist?sort=name</@ofbizUrl>" class="tableheadbutton">Name</a></td>
                         <td><a href="<@ofbizUrl>/tasklist?sort=orderDate</@ofbizUrl>" class="tableheadbutton">Order&nbsp;Date</a></td>                                  
                         <td width="1" align="right"><a href="<@ofbizUrl>/tasklist?sort=grandTotal</@ofbizUrl>" class="tableheadbutton">Total</a></td>
                         <td width="1">&nbsp;&nbsp;</td>
