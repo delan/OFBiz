@@ -37,9 +37,12 @@
 
         <!-- ContactList uses a sequenced id, so get the next one now and set it... -->        
         <sequenced-id-to-env sequence-name="ContactList" env-name="newSequencedId"/>
+        <to-string field-name="newSequencedId"/>
         <env-to-field env-name="newSequencedId" field-name="contactListId" map-name="newEntity"/>
         
         <create-value value-name="newEntity"/>
+        
+        <field-to-result field-name="newSequencedId" result-name="contactListId"/>
     </simple-method>
     <simple-method method-name="updateContactList" short-description="Update an ContactList">
         <check-permission permission="MARKETING" action="_UPDATE"><fail-message message="Security Error: to run updateContactList you must have the MARKETING_UPDATE or MARKETING_ADMIN permission"/></check-permission>

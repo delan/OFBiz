@@ -37,9 +37,12 @@
 
         <!-- MarketingCampaign uses a sequenced id, so get the next one now and set it... -->        
         <sequenced-id-to-env sequence-name="MarketingCampaign" env-name="newSequencedId"/>
+        <to-string field-name="newSequencedId"/>
         <env-to-field env-name="newSequencedId" field-name="marketingCampaignId" map-name="newEntity"/>
         
         <create-value value-name="newEntity"/>
+        
+        <field-to-result field-name="newSequencedId" result-name="marketingCampaignId"/>
     </simple-method>
     <simple-method method-name="updateMarketingCampaign" short-description="Update an MarketingCampaign">
         <check-permission permission="MARKETING" action="_UPDATE"><fail-message message="Security Error: to run updateMarketingCampaign you must have the MARKETING_UPDATE or MARKETING_ADMIN permission"/></check-permission>
