@@ -1,5 +1,5 @@
 /*
- * $Id: DelegatorInterface.java,v 1.3 2003/09/04 18:47:15 jonesde Exp $
+ * $Id: DelegatorInterface.java,v 1.4 2003/09/19 06:05:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public interface DelegatorInterface {
@@ -148,11 +148,6 @@ public interface DelegatorInterface {
     List findByLike(String entityName, Map fields) throws GenericEntityException;
 
     List findByLike(String entityName, Map fields, List orderBy) throws GenericEntityException;
-
-    /* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
-    List findByClause(String entityName, List entityClauses, Map fields) throws GenericEntityException;
-    List findByClause(String entityName, List entityClauses, Map fields, List orderBy) throws GenericEntityException;
-     */
 
     List findByCondition(String entityName, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException;
 

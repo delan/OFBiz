@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.4 2003/09/04 18:47:15 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.5 2003/09/19 06:05:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -75,7 +75,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -950,29 +950,6 @@ public class GenericDelegator implements DelegatorInterface {
         EntityConditionList ecl = new EntityConditionList(likeExpressions, EntityOperator.AND);
         return findByCondition(entityName, ecl, null, orderBy);
     }
-
-/* tentatively removing by clause methods, unless there are really big complaints... because it is a kludge
-    public List findByClause(String entityName, List entityClauses, Map fields) throws GenericEntityException {
-        return findByClause(entityName, entityClauses, fields, null);
-    }
-
-    public List findByClause(String entityName, List entityClauses, Map fields, List orderBy) throws GenericEntityException {
-        //TODO: add eca eval calls
-        if (entityClauses == null) return null;
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(entityName);
-
-        for (int i = 0; i < entityClauses.size(); i++) {
-            EntityClause genEntityClause = (EntityClause) entityClauses.get(i);
-            genEntityClause.setModelEntities(getModelReader());
-        }
-
-        List list = null;
-        list = helper.findByClause(modelEntity, entityClauses, fields, orderBy);
-        absorbList(list);
-        return list;
-    }
-*/
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param entityName The Name of the Entity as defined in the entity model XML file
