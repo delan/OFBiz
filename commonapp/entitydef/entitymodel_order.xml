@@ -1281,9 +1281,6 @@
       <field name="originContactMechId" type="id"></field>
       <field name="destinationFacilityId" type="id"></field>
       <prim-key field="returnId"/>
-      <relation type="one" fk-name="RTN_HEAD_TYPE" rel-entity-name="ReturnType">
-        <key-map field-name="returnTypeId"/>
-      </relation>
       <relation type="many" rel-entity-name="ReturnItem">
         <key-map field-name="returnId"/>        
       </relation>
