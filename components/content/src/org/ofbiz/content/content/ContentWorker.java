@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.35 2004/07/12 19:18:25 byersa Exp $
+ * $Id: ContentWorker.java,v 1.36 2004/07/24 20:34:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  * @since 2.2
  * 
  *  
@@ -1061,8 +1061,8 @@ public class ContentWorker {
             String targetLocaleString = locale.toString();
             String thisLocaleString = (String) view.get("localeString");
             thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
-            if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, thisLocaleString(2):" + thisLocaleString, "");
-            if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, targetLocaleString(2):" + targetLocaleString, "");
+            //if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, thisLocaleString(2):" + thisLocaleString, "");
+            //if (Debug.infoOn()) Debug.logInfo("renderContentAsTextCache, targetLocaleString(2):" + targetLocaleString, "");
             if (UtilValidate.isNotEmpty(targetLocaleString) && !targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
                 GenericValue localeView = findAlternateLocaleContent(delegator, view, locale);
                 if (localeView != null)

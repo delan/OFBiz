@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentTransform.java,v 1.10 2004/04/30 23:08:27 ajzeneski Exp $
+ * $Id: RenderSubContentTransform.java,v 1.11 2004/07/24 20:34:35 ajzeneski Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -23,9 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+
+import freemarker.core.Environment;
+import freemarker.template.TemplateTransformModel;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -35,25 +37,23 @@ import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateTransformModel;
 /**
  * RenderSubContentTransform - Freemarker Transform for Content rendering
- * 
+ *
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 3.0
- * 
+ *
  * This transform cannot be called recursively (at this time).
  */
 public class RenderSubContentTransform implements TemplateTransformModel {
 
     public static final String module = RenderSubContentTransform.class.getName();
-    
+
     /**
      * Does a conditional search to return a value for a parameter with the passed name. Looks first to see if it was passed as an argument to the transform.
      * Secondly, it looks to see if it is passed as a parameter in the template context object.
-     * <p>
+     * <p/>
      * Note that this is different from the getArg method of EditRenderDataResourceTransform, which checks the request object instead of the template context
      * object.
      */
@@ -126,7 +126,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
                 templateContext.put("rootDir", rootDir);
 
                 Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
-                
+
                 templateRoot.put("context", templateContext);
                 if (subContentDataResourceView != null) {
                 }
@@ -144,8 +144,7 @@ public class RenderSubContentTransform implements TemplateTransformModel {
                 templateContext.put("contentId", contentId);
                 templateContext.put("mimeTypeId", null);
                 templateContext.put("locale", locale);
-                
-                
+
                 return;
             }
         };

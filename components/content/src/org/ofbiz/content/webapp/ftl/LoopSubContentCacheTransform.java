@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.26 2004/07/13 17:22:48 ajzeneski Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.27 2004/07/24 20:34:35 ajzeneski Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,15 +49,15 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.26 $
+ * @version $Revision: 1.27 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
     public static final String module = LoopSubContentCacheTransform.class.getName();
 
-    public static final String [] upSaveKeyNames = {"globalNodeTrail"};
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "entityList", "entityIndex", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail", "outputIndex"};
+    public static final String[] upSaveKeyNames = {"globalNodeTrail"};
+    public static final String[] saveKeyNames = {"contentId", "subContentId", "entityList", "entityIndex", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale", "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail", "outputIndex"};
 
     /**
      * A wrapper for the FreeMarkerWorker version.
@@ -79,7 +79,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //String contentId = (String)ctx.get("contentId");
         //String mimeTypeId = (String)ctx.get("mimeTypeId");
         List lst = (List) ctx.get("entityList");
-        int entityIndex = ((Integer)ctx.get("entityIndex")).intValue();
+        int entityIndex = ((Integer) ctx.get("entityIndex")).intValue();
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, prepCtx, entityIndex :" + entityIndex, module);
         if (entityIndex >= lst.size()) {
             return false;
@@ -93,7 +93,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //String mapKey = (String) view.get("caMapKey");
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
-        String subDataResourceTypeId = (String)ctx.get("subDataResourceTypeId");
+        String subDataResourceTypeId = (String) ctx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
             subDataResourceTypeId = (String) view.get("drDataResourceTypeId");
             // TODO: If this value is still empty then it is probably necessary to get a value from
@@ -102,26 +102,21 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         }
 
         String mimeTypeId = FreeMarkerWorker.getMimeTypeId(delegator, view, ctx);
-
-
         Map trailNode = FreeMarkerWorker.makeNode(view);
-        Map whenMap = (Map)ctx.get("whenMap");
+        Map whenMap = (Map) ctx.get("whenMap");
         Locale locale = (Locale) ctx.get("locale");
         if (locale == null)
             locale = Locale.getDefault();
         GenericValue assocContent = null;
         ContentWorker.checkConditions(delegator, trailNode, assocContent, whenMap);
-        Boolean isReturnBeforeObj = (Boolean)trailNode.get("isReturnBefore");
-        Boolean isReturnAfterObj = (Boolean)trailNode.get("isReturnAfter");
-        Boolean isPickObj = (Boolean)trailNode.get("isPick");
-        Boolean isFollowObj = (Boolean)trailNode.get("isFollow");
+        Boolean isReturnBeforeObj = (Boolean) trailNode.get("isReturnBefore");
+        Boolean isReturnAfterObj = (Boolean) trailNode.get("isReturnAfter");
+        Boolean isPickObj = (Boolean) trailNode.get("isPick");
+        Boolean isFollowObj = (Boolean) trailNode.get("isFollow");
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, isReturnBeforeObj" + isReturnBeforeObj + " isPickObj:" + isPickObj + " isFollowObj:" + isFollowObj + " isReturnAfterObj:" + isReturnAfterObj, module);
-        if ( (isReturnBeforeObj == null || !isReturnBeforeObj.booleanValue())
-           && ( (isPickObj != null && isPickObj.booleanValue())
-              ||  (isFollowObj != null && isFollowObj.booleanValue()))
-        ) {
-     
-            List globalNodeTrail = (List)ctx.get("globalNodeTrail");
+        if ((isReturnBeforeObj == null || !isReturnBeforeObj.booleanValue()) && ((isPickObj != null &&
+                isPickObj.booleanValue()) || (isFollowObj != null && isFollowObj.booleanValue()))) {
+            List globalNodeTrail = (List) ctx.get("globalNodeTrail");
             globalNodeTrail.add(trailNode);
             ctx.put("globalNodeTrail", globalNodeTrail);
             String csvTrail = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
@@ -129,26 +124,29 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             //if (Debug.infoOn()) Debug.logInfo("prepCtx, csvTrail(2):" + csvTrail, "");
             int indentSz = globalNodeTrail.size();
             ctx.put("indent", new Integer(indentSz));
-                //if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(2):" + trail, "");
-                //if (Debug.infoOn()) Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
-//            GenericValue electronicText = null;
-//            try {
-//                electronicText = view.getRelatedOneCache("ElectronicText");
-//            } catch (GenericEntityException e) {
-//                throw new GeneralException(e.getMessage());
-//            }
-//            if (electronicText != null)
-//                ctx.put("textData", electronicText.get("textData"));
-//            else
-//                ctx.put("textData", null);
+            //if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(2):" + trail, "");
+            //if (Debug.infoOn()) Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
+
+            /*
+            GenericValue electronicText = null;
+            try {
+                electronicText = view.getRelatedOneCache("ElectronicText");
+            } catch (GenericEntityException e) {
+                throw new GeneralException(e.getMessage());
+            }
+            if (electronicText != null)
+                ctx.put("textData", electronicText.get("textData"));
+            else
+                ctx.put("textData", null);
+            */
 
             ctx.put("subDataResourceTypeId", subDataResourceTypeId);
             ctx.put("mimeTypeId", mimeTypeId);
             ctx.put("subContentId", subContentIdSub);
             ctx.put("content", view);
-//            ctx.put("drDataResourceId", dataResourceId);
-//            ctx.put("dataResourceId", dataResourceId);
-//            ctx.put("subContentIdSub", subContentIdSub);
+            //ctx.put("drDataResourceId", dataResourceId);
+            //ctx.put("dataResourceId", dataResourceId);
+            //ctx.put("subContentIdSub", subContentIdSub);
 
             env.setVariable("subDataResourceTypeId", FreeMarkerWorker.autoWrap(subDataResourceTypeId, env));
             env.setVariable("indent", FreeMarkerWorker.autoWrap(new Integer(indentSz), env));
@@ -209,13 +207,13 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
         final Map savedValues = new HashMap();
         FreeMarkerWorker.overrideWithArgs(templateRoot, args);
-        String contentAssocTypeId = (String)templateRoot.get("contentAssocTypeId");
+        String contentAssocTypeId = (String) templateRoot.get("contentAssocTypeId");
         //if (UtilValidate.isEmpty(contentAssocTypeId)) {
-            //throw new RuntimeException("contentAssocTypeId is empty");
+        //throw new RuntimeException("contentAssocTypeId is empty");
         //}
         List assocTypes = StringUtil.split(contentAssocTypeId, "|");
 
-        String contentPurposeTypeId = (String)templateRoot.get("contentPurposeTypeId");
+        String contentPurposeTypeId = (String) templateRoot.get("contentPurposeTypeId");
         List purposeTypes = StringUtil.split(contentPurposeTypeId, "|");
         templateRoot.put("purposeTypes", purposeTypes);
         Locale locale = (Locale) templateRoot.get("locale");
@@ -225,30 +223,30 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         }
 
         Map whenMap = new HashMap();
-        whenMap.put("followWhen", (String)templateRoot.get( "followWhen"));
-        whenMap.put("pickWhen", (String)templateRoot.get( "pickWhen"));
-        whenMap.put("returnBeforePickWhen", (String)templateRoot.get( "returnBeforePickWhen"));
-        whenMap.put("returnAfterPickWhen", (String)templateRoot.get( "returnAfterPickWhen"));
+        whenMap.put("followWhen", (String) templateRoot.get("followWhen"));
+        whenMap.put("pickWhen", (String) templateRoot.get("pickWhen"));
+        whenMap.put("returnBeforePickWhen", (String) templateRoot.get("returnBeforePickWhen"));
+        whenMap.put("returnAfterPickWhen", (String) templateRoot.get("returnAfterPickWhen"));
         templateRoot.put("whenMap", whenMap);
 
-        String fromDateStr = (String)templateRoot.get("fromDateStr");
+        String fromDateStr = (String) templateRoot.get("fromDateStr");
         Timestamp fromDate = null;
         if (UtilValidate.isNotEmpty(fromDateStr)) {
             fromDate = UtilDateTime.toTimestamp(fromDateStr);
         }
         if (fromDate == null)
             fromDate = UtilDateTime.nowTimestamp();
-       
+
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
-        List globalNodeTrail = (List)templateRoot.get("globalNodeTrail");
+        List globalNodeTrail = (List) templateRoot.get("globalNodeTrail");
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), nodeTrailCsv ." + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), module);
-        String strNullThruDatesOnly = (String)templateRoot.get("nullThruDatesOnly");
-        String orderBy = (String)templateRoot.get("orderBy");
-        Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
+        String strNullThruDatesOnly = (String) templateRoot.get("nullThruDatesOnly");
+        String orderBy = (String) templateRoot.get("orderBy");
+        Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) : new Boolean(false);
         GenericValue val = null;
         try {
             val = FreeMarkerWorker.getCurrentContent(delegator, globalNodeTrail, userLogin, templateRoot, nullThruDatesOnly, null);
-        } catch(GeneralException e) {
+        } catch (GeneralException e) {
             Debug.logError(e, module);
         }
         final GenericValue view = val;
@@ -256,35 +254,35 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         if (view != null) {
             templateRoot.put("contentId", null);
             templateRoot.put("subContentId", null);
-    
-            String contentId = (String)view.get("contentId");
+
+            String contentId = (String) view.get("contentId");
             //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
             final String contentIdTo = contentId;
-    
-            String thisMapKey = (String)templateRoot.get("mapKey");
+
+            String thisMapKey = (String) templateRoot.get("mapKey");
             //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), thisMapKey ." + thisMapKey, module);
             Map results = null;
             //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
-            String contentAssocPredicateId = (String)templateRoot.get("contentAssocPredicateId");
+            String contentAssocPredicateId = (String) templateRoot.get("contentAssocPredicateId");
             try {
                 results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId, orderBy);
-            } catch(MiniLangException e2) {
+            } catch (MiniLangException e2) {
                 throw new RuntimeException(e2.getMessage());
-            } catch(GenericEntityException e) {
+            } catch (GenericEntityException e) {
                 throw new RuntimeException(e.getMessage());
             }
             List longList = (List) results.get("entityList");
             //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
-            String viewSizeStr = (String)templateRoot.get("viewSize");
+            String viewSizeStr = (String) templateRoot.get("viewSize");
             if (UtilValidate.isEmpty(viewSizeStr))
                 viewSizeStr = UtilProperties.getPropertyValue("content", "viewSize");
             if (UtilValidate.isEmpty(viewSizeStr))
                 viewSizeStr = "10";
-            int viewSize = Integer.parseInt(viewSizeStr); 
-            String viewIndexStr = (String)templateRoot.get("viewIndex");
+            int viewSize = Integer.parseInt(viewSizeStr);
+            String viewIndexStr = (String) templateRoot.get("viewIndex");
             if (UtilValidate.isEmpty(viewIndexStr))
                 viewIndexStr = "0";
-            int viewIndex = Integer.parseInt(viewIndexStr); 
+            int viewIndex = Integer.parseInt(viewIndexStr);
             int lowIndex = viewIndex * viewSize;
             int listSize = longList.size();
             int highIndex = (viewIndex + 1) * viewSize;
@@ -331,12 +329,12 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                     return TransformControl.SKIP_BODY;
                 }
 
-                List globalNodeTrail = (List)templateRoot.get("globalNodeTrail");
+                List globalNodeTrail = (List) templateRoot.get("globalNodeTrail");
                 String trailCsv = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
                 //if (Debug.infoOn()) Debug.logInfo("in Loop, onStart, trailCsv:" + trailCsv, "");
-                int viewIndex = ((Integer)templateRoot.get("viewIndex")).intValue(); 
-                int viewSize = ((Integer)templateRoot.get("viewSize")).intValue(); 
-                int listSize = ((Integer)templateRoot.get("listSize")).intValue(); 
+                int viewIndex = ((Integer) templateRoot.get("viewIndex")).intValue();
+                int viewSize = ((Integer) templateRoot.get("viewSize")).intValue();
+                int listSize = ((Integer) templateRoot.get("listSize")).intValue();
                 int lowIndex = viewIndex * viewSize;
                 int highIndex = (viewIndex + 1) * viewSize;
                 if (highIndex > listSize)
@@ -374,13 +372,13 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
             public int afterBody() throws TemplateModelException, IOException {
                 FreeMarkerWorker.reloadValues(templateRoot, savedValues, env);
-                List list = (List)templateRoot.get("globalNodeTrail");
-                List subList = list.subList(0, list.size() - 1 );
+                List list = (List) templateRoot.get("globalNodeTrail");
+                List subList = list.subList(0, list.size() - 1);
                 templateRoot.put("globalNodeTrail", subList);
                 env.setVariable("globalNodeTrail", FreeMarkerWorker.autoWrap(subList, env));
-                
-                int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
-                int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 
+
+                int outputIndex = ((Integer) templateRoot.get("outputIndex")).intValue();
+                int highIndex = ((Integer) templateRoot.get("highIndex")).intValue();
                 Integer highIndexInteger = new Integer(highIndex);
                 env.setVariable("highIndex", FreeMarkerWorker.autoWrap(highIndexInteger, env));
                 //if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndexInteger , "");
@@ -402,9 +400,9 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                     return;
                 }
                 FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp, env);
-                int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
+                int outputIndex = ((Integer) templateRoot.get("outputIndex")).intValue();
                 //if (Debug.infoOn()) Debug.logInfo("outputIndex(3):" + outputIndex , "");
-                int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 
+                int highIndex = ((Integer) templateRoot.get("highIndex")).intValue();
                 Integer highIndexInteger = new Integer(highIndex);
                 env.setVariable("highIndex", FreeMarkerWorker.autoWrap(highIndexInteger, env));
                 //if (Debug.infoOn()) Debug.logInfo("highIndex(3):" + highIndexInteger , "");
@@ -418,14 +416,14 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
                 //if (Debug.infoOn()) Debug.logInfo("in LoopSubContent, wrappedContent:" + wrappedContent, module);
-        //try {
-        //Profiler.end("Loop");
-        //FileOutputStream fw = new FileOutputStream(new File("/usr/local/agi/ofbiz/hot-deploy/sfmp/misc/profile.data"));
-        //Profiler.print(fw);
-        //fw.close();
-        //} catch (IOException e) {
-           //Debug.logError("[PROFILER] " + e.getMessage(),"");
-        //}
+                //try {
+                //Profiler.end("Loop");
+                //FileOutputStream fw = new FileOutputStream(new File("/usr/local/agi/ofbiz/hot-deploy/sfmp/misc/profile.data"));
+                //Profiler.print(fw);
+                //fw.close();
+                //} catch (IOException e) {
+                //Debug.logError("[PROFILER] " + e.getMessage(),"");
+                //}
             }
         };
     }
