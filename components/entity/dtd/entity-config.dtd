@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *  $Id: entity-config.dtd,v 1.5 2003/08/20 03:20:19 ajzeneski Exp $
+ *  $Id: entity-config.dtd,v 1.6 2003/11/23 01:33:58 ajzeneski Exp $
 -->
 
 <!-- ====================== Root Element ======================= -->
@@ -143,7 +143,7 @@
         jdbc-uri CDATA #REQUIRED
         jdbc-username CDATA #REQUIRED
         jdbc-password CDATA #REQUIRED
-        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) "ReadCommitted"
+        isolation-level ( None | ReadCommitted | ReadUncommitted | RepeatableRead | Serializable ) #IMPLIED
         pool-maxsize CDATA "50"
         pool-minsize CDATA "2"
         pool-sleeptime CDATA "300000"
