@@ -20,23 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.1 $
  *@since      3.1
 -->
-<#assign forumRootId = "WebStoreFORUM" />
-
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#-- variable setup and worker calls -->
-<#assign curCategoryId = requestAttributes.curCategoryId?if_exists>
-<#assign forumTrailCsv=requestParameters.forumTrailCsv?if_exists/>
-<#assign forumTrail=[]/>
-<#assign firstContentId=""/>
-<#if forumTrailCsv?has_content>
-  <#assign forumTrail=Static["org.ofbiz.base.util.StringUtil"].split(forumTrailCsv, ",") />
-  <#if 0 < forumTrail?size>
-    <#assign firstContentId=forumTrail[0]?string/>
-  </#if>
-</#if>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -44,42 +31,20 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-            <div class="boxhead">${uiLabelMap.ProductBrowseForums}</div>
+            <div class="boxhead">${uiLabelMap.MostRecentlyUsed}</div>
           </td>
         </tr>
       </table>
     </td>
   </tr>
+<#list mrvList as mrvArr>
   <tr>
     <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <div style='margin-left: 10px;'>
-
-                <#assign count_1=0 />
-                <@loopSubContentCache subContentId=forumRootId
-                    viewIndex=0
-                    viewSize=9999
-                    orderBy="contentName"
-                    contentAssocTypeId="SUBSITE"
-                >
-                       <tr>
-                         <td >
-                           <div class="browsecategorytext" style="margin-left: 10px">
-                             -&nbsp;<a href="<@ofbizUrl>/showforum?forumId=${subContentId}</@ofbizUrl>" class="browsecategorybutton">${content.contentName}</a>
-                           </div>
-                         </td >
-                       </tr>
-                    <#assign count_1=count_1 + 1 />
-                </@loopSubContentCache >
-            </div>
-          </td>
-        </tr>
-      </table>
+       <div class="browsecategorytext" style="margin-left: 10px">
+         -&nbsp;<a href="<@ofbizUrl>/viewcontent?contentId=${mrvArr[0]}</@ofbizUrl>" class="browsecategorybutton">${mrvArr[1]}</a>
+       </div>
+   
     </td>
   </tr>
+</#list>
 </table>
-        <br>
-
-

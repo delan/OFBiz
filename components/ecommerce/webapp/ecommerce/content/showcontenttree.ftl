@@ -1,10 +1,12 @@
 <#include "bloglib.ftl" />
 <#assign siteId = requestParameters.contentId?if_exists />
-<@renderAncestryPath trail=ancestorList?default([]) endIndexOffset=1 siteId=siteId/>
+<@renderAncestryPath trail=ancestorList?default([]) endIndexOffset=1 siteId=siteId searchOn="true"/>
  
 <#if ancestorList?has_content && (0 < ancestorList?size) >
     <#assign lastContent=ancestorList?last />
-    <div class="head1">[${lastContent.contentId}] ${lastContent.description}</div>
+    <div class="head1">[${lastContent.contentId}] ${lastContent.description}
+              <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${lastContent.contentId?if_exists}</@ofbizUrl>" >Search</a> 
+    </div>
 </#if>
 <table width="100%" border="0" >
 <#assign viewIdx = "" />
@@ -100,6 +102,7 @@
             <#local thisCsv=thisNodeTrailCsv />
             <#local thisCsv=thisNodeTrailCsv + "," + subContentId />
             <a class="tabButton" href="<@ofbizUrl>/showcontenttree?contentId=${siteId?if_exists}&nodeTrailCsv=${thisCsv}</@ofbizUrl>" >${plusMinus}</a> &nbsp;${content.description?if_exists}
+              <a class="tabButton" href="<@ofbizUrl>/searchContent?siteId=${subContentId?if_exists}&nodeTrailCsv=${thisCsv}</@ofbizUrl>" >Search</a> 
          </td >
        </tr>
        <#if thisContentId == subContentId>

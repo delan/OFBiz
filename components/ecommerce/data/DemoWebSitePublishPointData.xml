@@ -69,4 +69,7 @@
 
     <ContentAssoc contentId="POLICY" contentIdTo="WebStoreCONTENT" contentAssocTypeId="SUBSITE" fromDate="2004-03-01 12:00:00.000" createdDate="2004-03-01 12:00:00.000" createdByUserLogin="admin"/>
     <ContentAttribute contentId="POLICY" attrName="publishOperation" attrValue="HAS_USER_ROLE"/>
+
+    <Content contentId="WebStoreFACTOID" contentTypeId="WEB_SITE_PUB_PT" ownerContentId="" contentName="Factoids" description="Factoids" createdDate="2004-07-05 12:00:00.000" createdByUserLogin="admin"/>
+
 </entity-engine-xml>
