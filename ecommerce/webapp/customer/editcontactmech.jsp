@@ -65,7 +65,7 @@
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
           <td width="74%">
             <select name="CONTACT_MECH_TYPE_ID">
-              <%Iterator contactMechTypes = UtilMisc.toIterator(delegator.findByAnd("ContactMechType", null, null));%>
+              <%Iterator contactMechTypes = UtilMisc.toIterator(delegator.findAll("ContactMechType", null));%>
               <%while(contactMechTypes != null && contactMechTypes.hasNext()){%>
                 <%GenericValue contactMechType = (GenericValue)contactMechTypes.next();%>
                 <option value='<%=contactMechType.getString("contactMechTypeId")%>'><%=contactMechType.getString("description")%></option>
@@ -105,12 +105,11 @@
           <td width="26%" valign=top><div class="tabletext">Contact Purposes</div></td>
           <td width="74%">
             <table border='0' cellspacing='1' bgcolor='black'>
-              <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));%>
+              <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose")));%>
               <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
                 <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
                 <%if(partyContactMechPurpose != null) {%>
-                  <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>            
-                  <%if(partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                    <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
                     <tr>
                       <td bgcolor='white'>
                         <div class="tabletext">&nbsp;
@@ -124,7 +123,6 @@
                         &nbsp;</div></td>
                       <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + partyContactMechPurpose.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                     </tr>
-                  <%}%>
                 <%}%>
               <%}%>
               <%Iterator purposeTypes = UtilMisc.toIterator(delegator.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>

@@ -40,8 +40,8 @@
   GenericValue party = userLogin.getRelatedOne("Party");
   if(party != null)
   {
-    Iterator partyContactMechIterator = UtilMisc.toIterator(party.getRelated("PartyContactMech"));
-    Iterator creditCardInfoIterator = UtilMisc.toIterator(party.getRelated("CreditCardInfo"));
+    Iterator partyContactMechIterator = UtilMisc.toIterator(showOld ? party.getRelated("PartyContactMech") : EntityUtil.filterByDate(party.getRelated("PartyContactMech")));
+    Iterator creditCardInfoIterator = UtilMisc.toIterator(showOld ? party.getRelated("CreditCardInfo") : EntityUtil.filterByDate(party.getRelated("CreditCardInfo")));
 %>
 
 <%-- Main Heading --%>
@@ -170,8 +170,7 @@
         <%GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();%>
         <%GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");%>
         <%GenericValue contactMechType = (contactMech==null?null:contactMech.getRelatedOne("ContactMechType"));%>
-        <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));%>
-        <%if(showOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date())) {%>
+        <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(showOld ? partyContactMech.getRelated("PartyContactMechPurpose") : EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose")));%>
           <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
           <tr>
             <td align="right" valign="top" width="15%">
@@ -183,7 +182,6 @@
                 <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
                 <%if(partyContactMechPurpose != null) {%>
                   <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
-                  <%if(showOld || partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
                     <div class="tabletext">
                       <%if(contactMechPurposeType != null) {%>
                         <b><%=contactMechPurposeType.getString("description")%></b>
@@ -194,7 +192,6 @@
                         (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
                       <%}%>
                     </div>
-                  <%}%>
                 <%}%>
               <%}%>
           <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
@@ -263,7 +260,6 @@
               [Delete]</a></div>
             </td>
           </tr>
-        <%}%>
       <%}%>
     </table>
   <%}else{%>
@@ -305,7 +301,6 @@
           <table width="100%" cellpadding="2" cellspacing="0" border="0">
             <%while(creditCardInfoIterator.hasNext()){%>
               <%GenericValue creditCardInfo = (GenericValue)creditCardInfoIterator.next();%>
-              <%if(showOld || creditCardInfo.get("thruDate") == null || creditCardInfo.getTimestamp("thruDate").after(new java.util.Date())) {%>
                 <tr>
                   <td width="90%" valign="top">
                     <div class="tabletext">
@@ -326,7 +321,6 @@
                     [Delete]</a></div>
                   </td>
                 </tr>
-              <%}%>
             <%}//end while loop%>
           </table>
         <%}else{//if paymentIterator%>

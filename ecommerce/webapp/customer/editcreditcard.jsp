@@ -44,7 +44,7 @@
   String creditCardId = request.getParameter("CREDIT_CARD_ID");
   if(creditCardId == null) creditCardId = (String)request.getAttribute("CREDIT_CARD_ID");
 
-  Iterator partyContactMechIterator = UtilMisc.toIterator(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null));
+  Iterator partyContactMechIterator = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId")), null)));
   GenericValue creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
 %>
 
@@ -167,7 +167,7 @@
         <%GenericValue curContactMech = curPartyContactMech!=null?curPartyContactMech.getRelatedOne("ContactMech"):null;%>
         <%GenericValue curPostalAddress = curContactMech!=null?curContactMech.getRelatedOne("PostalAddress"):null;%>
         <%if(curPostalAddress != null){%>
-          <%Iterator curPartyContactMechPurposesIter = UtilMisc.toIterator(curPartyContactMech.getRelated("PartyContactMechPurpose"));%>
+          <%Iterator curPartyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose")));%>
           <tr>
             <td align="right" valign="top" width="1%">
               <INPUT type=radio name='CC_CONTACT_MECH_ID' value='<%=curContactMech.getString("contactMechId")%>' checked>
@@ -177,14 +177,12 @@
               <%while(curPartyContactMechPurposesIter != null && curPartyContactMechPurposesIter.hasNext()){%>
                 <%GenericValue curPartyContactMechPurpose = (GenericValue)curPartyContactMechPurposesIter.next();%>
                 <%GenericValue curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
-                <%if(curPartyContactMechPurpose.get("thruDate") == null || curPartyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
                   <div class="tabletext">
                     <b><%=curContactMechPurposeType.getString("description")%></b>
                     <%if(curPartyContactMechPurpose.get("thruDate") != null){%>
                       (Expire:<%=UtilDateTime.toDateTimeString(curPartyContactMechPurpose.getTimestamp("thruDate"))%>)
                     <%}%>
                   </div>
-                <%}%>
               <%}%>
               <div class="tabletext">
                 <%=UtilFormatOut.ifNotEmpty(curPostalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
@@ -218,8 +216,7 @@
             <%while(partyContactMechIterator.hasNext()) {%>
               <%GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();%>
               <%GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");%>
-              <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));%>
-              <%if(partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date())) {%>
+              <%Iterator partyContactMechPurposesIter = UtilMisc.toIterator(EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose")));%>
                 <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) && !contactMech.getString("contactMechId").equals(curContactMechId)){%>
                   <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
                 <tr>
@@ -228,16 +225,14 @@
                   </td>
                   <td align="left" valign="top" width="80%">
                     <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
-                      <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
-                      <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
-                      <%if(partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                        <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
+                        <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
                         <div class="tabletext">
                           <b><%=contactMechPurposeType.getString("description")%></b>
                           <%if(partyContactMechPurpose.get("thruDate") != null){%>
                             (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
                           <%}%>
                         </div>
-                      <%}%>
                     <%}%>
                     <div class="tabletext">
                       <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
@@ -254,7 +249,6 @@
                   </td>
                 </tr>
                 <%}%>
-              <%}%>
             <%}%>
           <%}else{%>
             <p>No contact information on file.</p><br>

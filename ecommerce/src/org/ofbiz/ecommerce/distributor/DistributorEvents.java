@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/26 18:41:44  epabst
+ * renamed getActive to filterByDate()
+ * renamed getContactMech to getContactMechByPurpose/ByType
+ *
  * Revision 1.1  2001/09/26 15:09:53  epabst
  * track the distributorId now and store in PartyRelationship
  * It can be initially set via http://.../setdistributor?distributor_id=3433
@@ -121,9 +125,8 @@ public class DistributorEvents {
     }
 
     private static GenericValue getDistributorPartyRelationship(GenericValue party) {
-        GenericDelegator delegator = party.getDelegator();
         try {
-            return EntityUtil.getFirst(EntityUtil.filterByDate(delegator.findByAnd("PartyRelationship", UtilMisc.toMap("partyIdFrom", party.getString("partyId"), "roleTypeIdTo", "DISTRIBUTOR"), null)));
+            return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelatedByAnd("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo", "DISTRIBUTOR"))));
         } catch (GenericEntityException gee) { Debug.logWarning(gee); }
         return null;
     }

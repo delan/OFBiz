@@ -1,6 +1,11 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/26 18:40:34  epabst
+ * created getRelatedByAnd (filtering)
+ * created helper methods for getting Related from a collection
+ * renamed getActive to filterByDate()
+ *
  * Revision 1.4  2001/09/25 20:15:54  epabst
  * added getContactMech() overload that is based on the ContactMechPurposeType.
  *
@@ -49,27 +54,11 @@ import org.ofbiz.core.util.*;
  */
 public class ContactHelper {  
     public static Collection getContactMech(GenericValue party, boolean includeOld) {
-        return getContactMechByType(party, null, includeOld);
+        return getContactMech(party, null, null, includeOld);
     }
 
     public static Collection getContactMechByType(GenericValue party, String contactMechTypeId, boolean includeOld) {
-        Collection partyContactMechList = null;
-        try { partyContactMechList = party.getRelated("PartyContactMech"); }
-        catch(GenericEntityException e) { Debug.logWarning(e); }
-        
-        if (partyContactMechList == null) return null;
-        
-        if (!includeOld) {
-            //remove all that are not applicable now
-            partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
-        }//else keep all
-        try {
-            if (contactMechTypeId == null) {
-                return EntityUtil.getRelated("ContactMech", partyContactMechList);
-            } else {
-                return EntityUtil.getRelatedByAnd("ContactMech", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), partyContactMechList);
-            }
-        } catch(GenericEntityException e) { Debug.logWarning(e); return null; }
+        return getContactMech(party, null, contactMechTypeId, includeOld);
     }
     
     public static Collection getContactMechByPurpose(GenericValue party, String contactMechPurposeTypeId, boolean includeOld) {
@@ -78,35 +67,31 @@ public class ContactHelper {
 
 
     public static Collection getContactMech(GenericValue party, String contactMechPurposeTypeId, String contactMechTypeId, boolean includeOld) {
-        GenericDelegator delegator = party.getDelegator();
-        Iterator partyContactMechPurposeIter = null;
+        if (party == null) return null;
         try {
-            partyContactMechPurposeIter = delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap("partyId", party.getString("partyId"), "contactMechPurposeTypeId", contactMechPurposeTypeId), null).iterator();
+            Collection partyContactMechList;
+            if (contactMechPurposeTypeId == null) {
+                partyContactMechList = party.getRelated("PartyContactMech");
+            } else {
+                Collection list;
+                list = party.getRelatedByAnd("PartyContactMechPurpose", UtilMisc.toMap("contactMechPurposeTypeId", contactMechPurposeTypeId));
+                if (!includeOld) {
+                    list = EntityUtil.filterByDate(list);
+                }
+                partyContactMechList = EntityUtil.getRelated("PartyContactMech", list);
+            }
+            if (!includeOld) {
+                partyContactMechList = EntityUtil.filterByDate(partyContactMechList);
+            }
+            if (contactMechTypeId == null) {
+                return EntityUtil.getRelated("ContactMech", partyContactMechList);
+            } else {
+                return EntityUtil.getRelatedByAnd("ContactMech", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), partyContactMechList);
+            }
         } catch (GenericEntityException gee) {
             Debug.logWarning(gee);
             return Collections.EMPTY_LIST;
         }
-        Collection result = new ArrayList();
-        java.util.Date now = new java.util.Date();
-        while(partyContactMechPurposeIter.hasNext()) {
-            GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposeIter.next();
-            if(includeOld || partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(now)){
-                try {
-                    GenericValue partyContactMech = partyContactMechPurpose.getRelatedOne("PartyContactMech");
-                    if(includeOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(now)) {
-                        GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
-                        if(contactMech != null) {
-                          if(contactMechTypeId == null || contactMechTypeId.equals(contactMech.get("contactMechTypeId"))) {
-                              result.add(contactMech);
-                          }//else wrong type
-                        }
-                    }
-                } catch (GenericEntityException gee) {
-                    Debug.logWarning(gee);
-                }
-            }
-        }
-        return result;
     }
 
     public static String formatCreditCard(GenericValue creditCardInfo) {

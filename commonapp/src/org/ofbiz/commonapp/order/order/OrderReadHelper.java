@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/09/26 17:18:14  epabst
+ * added getDistributorId() method
+ *
  * Revision 1.8  2001/09/26 15:17:42  epabst
  * moved getFirst() method into new EntityUtil class
  *
@@ -83,8 +86,8 @@ public class OrderReadHelper {
   public GenericValue getShippingAddress() {
     GenericDelegator delegator = orderHeader.getDelegator();
     try {
-      GenericValue orderContactMech = EntityUtil.getFirst(delegator.findByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId",
-                                               "SHIPPING_LOCATION", "orderId", orderHeader.getString("orderId")), null));
+      GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap(
+              "contactMechPurposeTypeId", "SHIPPING_LOCATION")));
       if (orderContactMech != null) {
         GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
         if (contactMech != null) {
@@ -99,8 +102,7 @@ public class OrderReadHelper {
   public GenericValue getBillingAddress() {
     GenericDelegator delegator = orderHeader.getDelegator();
     try {
-      GenericValue orderContactMech = EntityUtil.getFirst(delegator.findByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId",
-      "BILLING_LOCATION", "orderId", orderHeader.getString("orderId")), null));
+      GenericValue orderContactMech = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderContactMech", UtilMisc.toMap("contactMechPurposeTypeId", "BILLING_LOCATION")));
       if (orderContactMech != null) {
         GenericValue contactMech = orderContactMech.getRelatedOne("ContactMech");
         if (contactMech != null) {
@@ -151,9 +153,7 @@ public class OrderReadHelper {
   public GenericValue getBillToPerson() {
     GenericDelegator delegator = orderHeader.getDelegator();
     try {
-      GenericEntity billToRole = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap(
-                                          "orderId", orderHeader.getString("orderId"),
-                                          "roleTypeId", "BILL_TO_CUSTOMER"), null));
+      GenericEntity billToRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "BILL_TO_CUSTOMER")));
       if (billToRole != null) {
         return delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", billToRole.getString("partyId")));
       } 
@@ -168,9 +168,7 @@ public class OrderReadHelper {
   public String getDistributorId() {
     GenericDelegator delegator = orderHeader.getDelegator();
     try {
-      GenericEntity distributorRole = EntityUtil.getFirst(delegator.findByAnd("OrderRole", UtilMisc.toMap(
-                                          "orderId", orderHeader.getString("orderId"),
-                                          "roleTypeId", "DISTRIBUTOR"), null));
+      GenericEntity distributorRole = EntityUtil.getFirst(orderHeader.getRelatedByAnd("OrderRole", UtilMisc.toMap("roleTypeId", "DISTRIBUTOR")));
       return distributorRole == null ? null : distributorRole.getString("partyId");
     }
     catch(GenericEntityException e) { Debug.logWarning(e); }

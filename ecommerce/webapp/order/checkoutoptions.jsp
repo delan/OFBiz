@@ -181,9 +181,7 @@
 <%-- ======================================================================== --%>
 <%-- ======================================================================== --%>
 <td height='100%'>
-<% pageContext.setAttribute("shippingPartyContactPurposeList", delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
-        "partyId", userLogin.getString("partyId"),
-        "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null)); %>  
+<% pageContext.setAttribute("shippingContactMechList", ContactHelper.getContactMech(userLogin.getRelatedOne("Party"), "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)); %>  
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>' style='height: 100%;'>
   <TR>
     <TD width='100%'>
@@ -203,17 +201,14 @@
           <td valign=top>
 
   <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CM_NEW_PURPOSE_TYPE_ID=SHIPPING_LOCATION&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add New Address]</a>
- <ofbiz:if name="shippingPartyContactPurposeList" size="0">
+ <ofbiz:if name="shippingContactMechList" size="0">
   <table width="90%" border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
     </tr>
-    <ofbiz:iterator name="shippingPartyContactPurpose" property="shippingPartyContactPurposeList">
-    <%GenericValue partyContactMech = shippingPartyContactPurpose.getRelatedOne("PartyContactMech");%>
-    <%GenericValue shippingAddress = partyContactMech.getRelatedOne("ContactMech").getRelatedOne("PostalAddress");%>
+    <ofbiz:iterator name="shippingContactMech" property="shippingContactMechList">
+    <%GenericValue shippingAddress = shippingContactMech.getRelatedOne("PostalAddress");%>
     <%pageContext.setAttribute("shippingAddress", shippingAddress);%>
-    <%if(partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date())) {%>
-      <ofbiz:if name="shippingAddress">
       <tr>
         <td align="left" valign="top" width="1%" nowrap>
             <%String shippingContactMechId = (String) shippingAddress.get("contactMechId");%>
@@ -237,8 +232,6 @@
       <tr>
         <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
       </tr>
-      </ofbiz:if>
-    <%}%>
   </ofbiz:iterator>
   </table>
  </ofbiz:if>
@@ -255,7 +248,7 @@
 <%-- ======================================================================== --%>
 <td>
 
-<% pageContext.setAttribute("creditCardInfoList", userLogin.getRelatedOne("Party").getRelated("CreditCardInfo")); %>
+<% pageContext.setAttribute("creditCardInfoList", EntityUtil.filterByDate(userLogin.getRelatedOne("Party").getRelated("CreditCardInfo"))); %>
 
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>' style='height: 100%;'>
   <TR>
@@ -282,7 +275,6 @@
     <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
   </tr>
   <ofbiz:iterator name="creditCardInfo" property="creditCardInfoList">
-    <%if(creditCardInfo.get("thruDate") == null || creditCardInfo.getTimestamp("thruDate").after(new java.util.Date())) {%>
       <tr>
         <td width="1%" nowrap>
           <%String creditCardId = creditCardInfo.getString("creditCardId");%>
@@ -299,7 +291,6 @@
       <tr>
         <td colspan="3" height="1" bgcolor="888888"></td>
       </tr>
-    <%}%>
   </ofbiz:iterator>
 </table>
 </ofbiz:if>

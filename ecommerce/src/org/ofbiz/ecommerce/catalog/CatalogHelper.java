@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.24  2001/09/26 05:09:06  jonesde
+ * Fixed keyword stuff to work minimally with group name
+ *
  * Revision 1.23  2001/09/26 03:00:05  jonesde
  * Started cart assoc prods
  *
@@ -439,10 +442,10 @@ public class CatalogHelper {
     if(product == null) return;
     
     try {
-      Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
-      Collection complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
-      Collection obsolescenceProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", product.get("productId"), "productAssocTypeId", "PRODUCT_OBSOLESCENCE"), null);
-      Collection obsoleteByProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_OBSOLESCENCE"), null);
+      Collection upgradeProducts = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_UPGRADE"));
+      Collection complementProducts = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_COMPLEMENT"));
+      Collection obsolescenceProducts = product.getRelatedByAndCache("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
+      Collection obsoleteByProducts = product.getRelatedByAndCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_OBSOLESCENCE"));
 
       if(upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
       if(complementProducts != null && complementProducts.size() > 0) pageContext.setAttribute(assocPrefix + "complement", complementProducts);
