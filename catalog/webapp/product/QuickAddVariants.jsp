@@ -45,9 +45,9 @@
     pageContext.setAttribute("featureTypeValues", featureTypeValues);
 
     //just get the selectable features
-    Collection productFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", 
+    Collection productFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", 
             UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"), 
-            UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description"));
+            UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description")));
     if (productFeatureAndAppls != null) {
         pageContext.setAttribute("productFeatureAndAppls", productFeatureAndAppls);
 
@@ -95,6 +95,7 @@
         <td><div class="tabletext"><b><%=featureType%></b></div></td>
     </ofbiz:iterator>
     <td><div class="tabletext"><b>New Product ID and Create!</b></div></td>
+    <td><div class="tabletext"><b>Already Exists?</b></div></td>
   </tr>
 
 <%boolean carryIncrement = false;%>
@@ -104,9 +105,11 @@
             <input type=hidden name='productId' value='<%=productId%>'>
             <input type=hidden name='featureTypeSize' value='<%=featureTypeSize%>'>
             
+            <%List curProductFeatureAndAppls = new ArrayList();%>
             <%for (int featureTypeIndex = 0; featureTypeIndex < featureTypeSize; featureTypeIndex++) {%>
                 <%List featureValues = (List) featureTypeValues.get(featureTypeIndex);%>
                 <%GenericValue productFeatureAndAppl = (GenericValue) featureValues.get(indices[featureTypeIndex]);%>
+                <%curProductFeatureAndAppls.add(productFeatureAndAppl);%>
                 <td>
                     <div class='tabletext'><%=UtilFormatOut.checkNull(productFeatureAndAppl.getString("description"))%></div>
                     <input type=hidden name='feature_<%=featureTypeIndex%>' value='<%=UtilFormatOut.checkNull(productFeatureAndAppl.getString("productFeatureId"))%>'>
@@ -136,6 +139,45 @@
             <td>
                 <input type=text size='20' maxlength='20' name='variantProductId'>
                 <INPUT type=submit value='Create!'>
+            </td>
+            <td>
+                <div class='tabletext'>&nbsp;
+                <%-- find PRODUCT_VARIANT associations that have these features as STANDARD_FEATUREs --%>
+                <%
+                    Collection productAssocs = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")));
+                    if (productAssocs != null && productAssocs.size() > 0) {
+                        Iterator productAssocIter = productAssocs.iterator();
+                        while (productAssocIter.hasNext()) {
+                            GenericValue productAssoc = (GenericValue) productAssocIter.next();
+                            
+                            //for each associated product, if it has all standard features, display it's productId
+                            boolean hasAllFeatures = true;
+                            Iterator curProductFeatureAndApplIter = curProductFeatureAndAppls.iterator();
+                            while (curProductFeatureAndApplIter.hasNext()) {
+                                GenericValue productFeatureAndAppl = (GenericValue) curProductFeatureAndApplIter.next();
+                                Map findByMap = UtilMisc.toMap("productId", productAssoc.getString("productIdTo"), 
+                                        "productFeatureTypeId", productFeatureAndAppl.get("productFeatureTypeId"),
+                                        "description", productFeatureAndAppl.get("description"),
+                                        "productFeatureApplTypeId", "STANDARD_FEATURE");
+                                //Debug.logInfo("Using findByMap: " + findByMap);
+
+                                Collection standardProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", findByMap));
+                                if (standardProductFeatureAndAppls == null || standardProductFeatureAndAppls.size() == 0) {
+                                    //Debug.logInfo("Does NOT have this standard feature");
+                                    hasAllFeatures = false;
+                                    break;
+                                } else {
+                                    //Debug.logInfo("DOES have this standard feature");
+                                }
+                            }
+
+                            if (hasAllFeatures) {
+                                %><%=productAssoc.getString("productIdTo")%>,&nbsp;<%
+                            }
+                        }
+                    }
+                %>
+                </div>
             </td>
         </FORM>
     </tr>
