@@ -51,7 +51,7 @@ public class TrackingCodeEvents {
      * of events that run on every request. This event looks for the parameter 
      * <code>autoTrackingCode</code>.
      */
-    public static String checkTrackingCode(HttpServletRequest request, HttpServletResponse response) {
+    public static String checkAutoTrackingCode(HttpServletRequest request, HttpServletResponse response) {
         String trackingCodeId = request.getParameter("autoTrackingCode");
         if (UtilValidate.isNotEmpty(trackingCodeId)) {
             //tracking code is specified on the request, get the TrackingCode value and handle accordingly
@@ -88,6 +88,8 @@ public class TrackingCodeEvents {
             //TODO: keep a list of current tracking codes in the session (is this needed?)
             
             //TODO: keep a tracking code history in cookies too
+            
+            //TODO: if forward/redirect is needed, do a response.sendRedirect and return null to tell the control servlet to not do any other requests/views
         }
         
         return "success";
