@@ -12,7 +12,11 @@
         <attribute name="message" type="String" mode="IN" optional="true"/>
         <attribute name="resp" type="String" mode="OUT"/>
     </service>
-    
+    <service name="testRmi" engine="rmi" validate="false"
+            location="rmi://localhost:1099/RMIDispatcher" invoke="testScv">
+        <implements service="testScv"/>
+    </service>
+
     <service name="testWorkflow" engine="workflow" location="TEST-PKG" invoke="TestWorkflow">
         <attribute name="orderId" type="String" mode="IN"/>        
         <attribute name="partyId" type="String" mode="IN"/>
