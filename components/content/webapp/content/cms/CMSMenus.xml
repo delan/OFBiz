@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "http://www.ofbiz.org/dtds/widget-menu.dtd">
+<!--
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "http://localhost:8443/ageps/images/widget-menu.dtd">
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "file:///usr/local/agi/ofbiz/hot-deploy/ageps/webapp/ageps/images/widget-menu.dtd">
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<menus>
+
+    <menu name="cms" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="content"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN"
+        default-associated-content-id="${userLogin.userLoginId}"
+        title="" type="simple">
+
+
+       <menu-item name="content" title="Content" default-target-name="CMSContentFind"
+                permission-operation="HAS_AUTHOR_ROLE|HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
+                permission-entity-action="_ADMIN">
+            <target name="CMSContentFind" request-name="CMSContentFind"
+                permission-operation="HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
+                permission-entity-action="_ADMIN">
+                <param name="listSize" value="${content.listSize}"/>
+                <param name="highIndex" value="${content.highIndex}"/>
+                <param name="lowIndex" value="${content.lowIndex}"/>
+                <param name="viewSize" value="${content.viewSize}"/>
+                <param name="viewIndex" value="${content.viewIndex}"/>
+                <param name="queryString" value="${content.queryString}" type="map"/>
+            </target>
+            <target name="CMSFindOwnedContent" request-name="CMSFindOwnedContent"
+                permission-operation="HAS_AUTHOR_ROLE"
+                permission-entity-action="_UPDATE">
+                <param name="listSize" value="${content.listSize}"/>
+                <param name="highIndex" value="${content.highIndex}"/>
+                <param name="lowIndex" value="${content.lowIndex}"/>
+                <param name="viewSize" value="${content.viewSize}"/>
+                <param name="viewIndex" value="${content.viewIndex}"/>
+                <param name="queryString" value="${content.queryString}" type="map"/>
+            </target>
+            <target name="CMSContentEdit" request-name="CMSContentEdit"
+                permission-operation="HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
+                permission-entity-action="_ADMIN">
+                <param name="contentId" value="${content.currentValue.contentId}"/>
+                <param name="dataResourceId" value="${content.currentValue.dataResourceId}"/>
+            </target>
+            <target name="CMSContentAdd" request-name="CMSContentAdd"
+                permission-operation="HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
+                permission-entity-action="_ADMIN">
+            </target>
+        </menu-item>
+
+
+        <menu-item name="subsites" title="SubSites" default-target-name="dflt" permission-entity-action="_ADMIN">
+            <target name="dflt" request-name="CMSSites">
+                <param name="forumId" value="${subsites.forumId}"/>
+            </target>
+        </menu-item>
+
+       <menu-item name="permissions" title="Permissions" default-target-name="EditContentPurposeOperation"
+                permission-operation="HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
+                permission-entity-action="_ADMIN">
+            <target name="EditContentPurposeOperation" request-name="CMSEditContentPurposeOperation">
+            </target>
+        </menu-item>
+
+
+    </menu>
+
+</menus>
