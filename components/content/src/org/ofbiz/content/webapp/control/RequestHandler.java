@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.12 2004/06/10 20:43:32 ajzeneski Exp $
+ * $Id: RequestHandler.java,v 1.13 2004/07/09 17:29:11 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -62,12 +63,17 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
 
     public static final String module = RequestHandler.class.getName();
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "ContentErrorUiLabel";
     
     private ServletContext context = null;
     private RequestManager requestManager = null;
@@ -253,7 +259,13 @@ public class RequestHandler implements Serializable {
 
                     if (tryErrorMsg != null) {
                         eventReturnString = "error";
-                        request.setAttribute("_ERROR_MESSAGE_", "Error calling event: " + e.toString());
+                        Locale locale = UtilHttp.getLocale(request);
+                        String errMsg = UtilProperties.getMessage(
+                        RequestHandler.RESOURCE,
+                                "layoutEvents.error_call_event", (locale != null
+                                        ? locale
+                                            : Locale.getDefault())) + ": ";            
+                       request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
                     } else {
                         throw new RequestHandlerException("Error calling event and no error repsonse was specified", e);
                     }

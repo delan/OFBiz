@@ -1,6 +1,7 @@
 package org.ofbiz.content.layout;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.service.ServiceUtil;
@@ -16,7 +20,7 @@ import org.ofbiz.service.ServiceUtil;
  * LayoutWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  *
  * 
@@ -24,7 +28,19 @@ import org.ofbiz.service.ServiceUtil;
 public class LayoutWorker {
 
     public static final String module = LayoutWorker.class.getName();
-
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "ContentErrorUiLabel";
+    /**
+     * Contains an error message.
+     */
+    private static String errMsg = "";
+    /**
+     * Language setting.
+     */
+    private static Locale locale;
 
     /**
      * Uploads image data from a form and stores it in ImageDataResource. 
@@ -35,7 +51,8 @@ public class LayoutWorker {
 
         //Debug.logVerbose("in uploadAndStoreImage", "");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-
+        LayoutWorker.locale = UtilHttp.getLocale(request); 
+        
         HashMap results = new HashMap();
         HashMap formInput = new HashMap();
         results.put("formInput", formInput);
@@ -48,7 +65,12 @@ public class LayoutWorker {
         }
 
         if (lst.size() == 0) {
-           request.setAttribute("_ERROR_MESSAGE_", "No files uploaded");
+            LayoutWorker.errMsg = UtilProperties.getMessage(
+            LayoutWorker.RESOURCE,
+                    "layoutEvents.no_files_uploaded", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+           request.setAttribute("_ERROR_MESSAGE_", errMsg);
             //Debug.logWarning("[DataEvents.uploadImage] No files uploaded", module);
             return ServiceUtil.returnError("No files uploaded.");
         }
@@ -70,7 +92,13 @@ public class LayoutWorker {
         }
 
         if (imageFi == null ) {
-           request.setAttribute("_ERROR_MESSAGE_", "imageFi(" + imageFi  + ") is null");
+            Map messageMap = UtilMisc.toMap("imageFi", imageFi);          
+            LayoutWorker.errMsg = UtilProperties.getMessage(
+            LayoutWorker.RESOURCE,
+                    "layoutEvents.image_null", messageMap, (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+           request.setAttribute("_ERROR_MESSAGE_", errMsg);
             //Debug.logWarning("[DataEvents.uploadImage] imageFi(" + imageFi + ") is null", module);
             return null;
         }

@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -16,6 +17,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -28,7 +30,7 @@ import org.ofbiz.service.LocalDispatcher;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      3.0
  *
  * 
@@ -36,6 +38,19 @@ import org.ofbiz.service.LocalDispatcher;
 public class DataEvents {
 
     public static final String module = DataEvents.class.getName();
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "ContentErrorUiLabel";
+    /**
+     * Contains an error message.
+     */
+    private static String errMsg = "";
+    /**
+     * Language setting.
+     */
+    private static Locale locale;
 
     public static String uploadImage(HttpServletRequest request, HttpServletResponse response) {
 
@@ -57,11 +72,17 @@ public class DataEvents {
        
         GenericValue dataResource = null;
         try {
+            DataEvents.locale = UtilHttp.getLocale(request);            
             dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
         } catch (GenericEntityException e) {
+            DataEvents.errMsg = UtilProperties.getMessage(
+            DataEvents.RESOURCE,
+                    "dataEvents.error_get_image", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ": ";            
             String errorMsg = "Error getting image record from db: " + e.toString();
             Debug.logError(e, errorMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+            request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
             return "error";
         }
 
@@ -74,8 +95,15 @@ public class DataEvents {
             try {
                 b = DataResourceWorker.acquireImage(delegator, dataResource);
                 if (imageType == null || b == null || b.length == 0) {
+                    Map messageMap = UtilMisc.toMap("b",
+                            b, "imageType", imageType);             
+                    DataEvents.errMsg = UtilProperties.getMessage(
+                    DataEvents.RESOURCE,
+                            "dataEvents.image_or_type_null", messageMap, (locale != null
+                                    ? locale
+                                        : Locale.getDefault())) + ".";            
                         String errorMsg = "image(" + b + ") or type(" + imageType + ") is null or empty.";
-                        request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                        request.setAttribute("_ERROR_MESSAGE_", errMsg);
                         return "error";
                 } else {
                     try {
@@ -83,16 +111,26 @@ public class DataEvents {
                         UtilHttp.streamContentToBrowser(response, b, imageType);
                         response.flushBuffer();
                     } catch (IOException e) {
+                        DataEvents.errMsg = UtilProperties.getMessage(
+                        DataEvents.RESOURCE,
+                                "dataEvents.error_write_image", (locale != null
+                                        ? locale
+                                            : Locale.getDefault())) + ": ";                        
                         String errorMsg = "Error writing image to OutputStream: " + e.toString();
                         Debug.logError(e, errorMsg, module);
-                        request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                        request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
                         return "error";
                     }
                 }
             } catch (GenericEntityException e) {
+                DataEvents.errMsg = UtilProperties.getMessage(
+                DataEvents.RESOURCE,
+                        "dataEvents.error_get_image", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ": ";
                 String errorMsg = "Error getting image record from acquireImage: " + e.toString();
                 Debug.logError(e, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
                 return "error";
             }
         } else if (dataResourceTypeId != null && dataResourceTypeId.indexOf("_FILE") >= 0) {
@@ -107,20 +145,35 @@ public class DataEvents {
                 int fileSize = (new Long(contentFile.length())).intValue();
                 UtilHttp.streamContentToBrowser(response, fis, fileSize, imageType);
             } catch (FileNotFoundException e4) {
+                DataEvents.errMsg = UtilProperties.getMessage(
+                DataEvents.RESOURCE,
+                        "dataEvents.error_get_image", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ": ";                
                 String errorMsg = "Error getting image record from db: " + e4.toString();
                 Debug.logError(e4, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg + e4.toString());
                 return "error";
 
             } catch (IOException e2) {
+                DataEvents.errMsg = UtilProperties.getMessage(
+                DataEvents.RESOURCE,
+                        "dataEvents.error_get_image", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ": ";                
                 String errorMsg = "Error getting image record from db: " + e2.toString();
                 Debug.logError(e2, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg + e2.toString());
                 return "error";
             } catch (GeneralException e3) {
+                DataEvents.errMsg = UtilProperties.getMessage(
+                DataEvents.RESOURCE,
+                        "dataEvents.error_get_image", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ": ";                
                 String errorMsg = "Error getting image record from db: " + e3.toString();
                 Debug.logError(e3, errorMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errorMsg);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg + e3.toString());
                 return "error";
             }
         }
@@ -150,11 +203,17 @@ public class DataEvents {
 
         if (mode != null && mode.equals("UPDATE")) {
             try {
+                DataEvents.locale = UtilHttp.getLocale(request);                
                 result = dispatcher.runSync("updateDataResource", serviceInMap);
             } catch (GenericServiceException e) {
-                String errMsg = "Error calling the updateDataResource service." + e.toString();
-                Debug.logError(e, errMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                DataEvents.errMsg = UtilProperties.getMessage(
+                DataEvents.RESOURCE,
+                        "dataEvents.error_call_update_service", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";                
+                String errorMsg = "Error calling the updateDataResource service." + e.toString();
+                Debug.logError(e, errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
                 return "error";
             }
         } else {
@@ -162,9 +221,14 @@ public class DataEvents {
             try {
                 result = dispatcher.runSync("createDataResource", serviceInMap);
             } catch (GenericServiceException e) {
-                String errMsg = "Error calling the createDataResource service." + e.toString();
-                Debug.logError(e, errMsg, module);
-                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                DataEvents.errMsg = UtilProperties.getMessage(
+                DataEvents.RESOURCE,
+                        "dataEvents.error_call_create_service", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";                                
+                String errorMsg = "Error calling the createDataResource service." + e.toString();
+                Debug.logError(e, errorMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg + e.toString());
                 return "error";
             }
             dataResourceId = (String)result.get("dataResourceId");
