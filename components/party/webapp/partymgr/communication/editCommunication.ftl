@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -170,7 +170,7 @@
   <form name="addevent" method="post" action="<@ofbizUrl>${formAction}</@ofbizUrl>" style="margin: 0;">  
     <input type="hidden" name="partyId" value="${partyId}">
     <input type="hidden" name="partyIdFrom" value="${partyId}">
-    <input type="hidden" name="partyIdTo" value="${sessionAttributes.userLogin.userLoginId}">
+    <input type="hidden" name="partyIdTo" value="${sessionAttributes.userLogin.partyId}">
     <#if communicationEvent?has_content>      
       <input type="hidden" name="communicationEventId" value="${communicationEvent.communicationEventId}">      
     </#if>
