@@ -22,9 +22,9 @@
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if security.hasEntityPermission("MANUFACTURING", "_VIEW", session)>
-${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <#if shipment?exists>
   <div class="head1">Shipment Plan: ${shipment.shipmentId}</div>
@@ -44,6 +44,3 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
 
 </#if>
 
-<#else>
-  <h3>${uiLabelMap.ManufacturingPermissionError}</h3>
-</#if>

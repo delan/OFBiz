@@ -23,10 +23,9 @@
  *@version    $Rev$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#assign locale = requestAttributes.locale>
-
-${pages.get("/mrp/MrpTabBar.ftl")}
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
   <div class="head1">${uiLabelMap.ManufacturingRunningMrp}</div>
   <form name="runningMrpform" method="post" action="<@ofbizUrl>/RunningMrpGo</@ofbizUrl>">

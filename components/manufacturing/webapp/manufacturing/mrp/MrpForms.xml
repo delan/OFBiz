@@ -30,6 +30,9 @@
   <form name="findProposedOrder" type="single" 
 	target="FindProposedOrder" title=""
 	default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+    <actions>
+        <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+    </actions>
     <field name="hideSearch"><hidden value="Y"/></field>
     <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><text-find default-value="equals"/></field>
     <field name="requirementTypeId" title="${uiLabelMap.ManufacturingRequirementTypeId}">
@@ -57,6 +60,9 @@
   <form name="listProposedOrder" type="multi" use-row-submit="true" 
         target="approveRequirements" title="" list-name="requirementList" paginate-target="/FindProposedOrder"
         default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+    <actions>
+        <property-map resource="ManufacturingUiLabels" map-name="uiLabelMap"/>
+    </actions>
     <field name="requirementId" title="${uiLabelMap.ManufacturingRequirementId}"><display/></field>
     <field name="statusId" title="${uiLabelMap.ManufacturingStatusId}"><display/></field>
     <field name="description" title="descritpion"><display/></field>
