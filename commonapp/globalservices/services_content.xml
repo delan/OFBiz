@@ -95,6 +95,25 @@
         <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
     </service>
        
+	<!--Contentservices.-->
+	<service name="createContent" default-entity-name="Content" engine="simple"
+			location="org/ofbiz/commonapp/content/content/ContentServices.xml" invoke="createContent" auth="true">
+		<description>Create a Content</description>
+		<auto-attributes include="pk" mode="IN" optional="true"/>
+		<auto-attributes include="nonpk" mode="IN" optional="true"/>
+	</service>
+	<service name="updateContent" default-entity-name="Content" engine="simple"
+			location="org/ofbiz/commonapp/content/content/ContentServices.xml" invoke="updateContent" auth="true">
+		<description>Update a Content</description>
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+		<auto-attributes include="nonpk" mode="IN" optional="true"/>
+	</service>
+	<service name="removeContent" default-entity-name="Content" engine="simple"
+			location="org/ofbiz/commonapp/content/content/ContentServices.xml" invoke="removeContent" auth="true">
+		<description>Remove Content</description>
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+	</service>
+	
 	<!--ContentType services.-->
 	<service name="contentTypeInterface" engine="interface" default-entity-name="ContentType" invoke="" location="">
 		<description>ContentType Interface</description>
@@ -244,8 +263,27 @@
 		<auto-attributes entity-name="CharacterSet" include="pk" mode="IN" optional="false"/>
 	</service>
 	
+	<!--DataResource services.-->
+	<service auth="true" default-entity-name="DataResource" engine="simple" invoke="createDataResource"
+			location="org/ofbiz/commonapp/content/data/DataServices.xml" name="createDataResource">
+		<description>Create a DataResource</description>
+		<auto-attributes include="pk" mode="IN" optional="true"/>
+		<auto-attributes include="nonpk" mode="IN" optional="true"/>
+	</service>
+	<service auth="true" default-entity-name="DataResource" engine="simple" invoke="updateDataResource"
+			location="org/ofbiz/commonapp/content/data/DataServices.xml" name="updateDataResource">
+		<description>Update a DataResource</description>
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+		<auto-attributes include="nonpk" mode="IN" optional="true"/>
+	</service>
+	<service auth="true" default-entity-name="DataResource" engine="simple" invoke="removeDataResource"
+			location="org/ofbiz/commonapp/content/data/DataServices.xml" name="removeDataResource">
+		<description>Remove DataResource</description>
+		<auto-attributes include="pk" mode="IN" optional="false"/>
+	</service>
+
 	<!--DataResourceType services.-->
-	<service name="dataResourceInterface" default-entity-name="DataResourceType" engine="interface" invoke="" location="">
+	<service name="dataResourceTypeInterface" default-entity-name="DataResourceType" engine="interface" invoke="" location="">
 		<description>DataResourceType Interface</description>
 		<auto-attributes include="pk" mode="IN" optional="false"/>
 		<auto-attributes include="nonpk" mode="IN" optional="true"/>
@@ -253,12 +291,12 @@
 	<service auth="true" engine="simple" invoke="createDataResourceType"
 			location="org/ofbiz/commonapp/content/data/DataServices.xml" name="createDataResourceType">
 		<description>Create a DataResourceType</description>
-		<implements service="dataResourceInterface"/>
+		<implements service="dataResourceTypeInterface"/>
 	</service>
 	<service auth="true" engine="simple" invoke="updateDataResourceType"
 			location="org/ofbiz/commonapp/content/data/DataServices.xml" name="updateDataResourceType">
 		<description>Update a DataResourceType</description>
-		<implements service="dataResourceInterface"/>
+		<implements service="dataResourceTypeInterface"/>
 	</service>
 	<service auth="true" engine="simple" invoke="removeDataResourceType"
 			location="org/ofbiz/commonapp/content/data/DataServices.xml" name="removeDataResourceType">
