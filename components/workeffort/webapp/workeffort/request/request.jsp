@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.0
 --%>
 
@@ -181,11 +181,11 @@
                       </tr>                                          
                       <tr>
                         <td align="right"><div class="tableheadtext">Name</div></td>
-                        <td><input type="text" class="inputBox" size="50" value="<%=custRequestName%>"</td>
+                        <td><input type="text" class="inputBox" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestName" fullattrs="true"/>></td>
                       </tr>
                       <tr>
                         <td align="right"><div class="tableheadtext">Description</div></td>
-                        <td><input type="text" class="inputBox" size="50"  <ofbiz:inputvalue entityAttr="custRequest" field="description" fullattrs="true"/>></td>
+                        <td><input type="text" class="inputBox" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="description" fullattrs="true"/>></td>
                       </tr>
 
                       <ofbiz:unless name="custRequest">
