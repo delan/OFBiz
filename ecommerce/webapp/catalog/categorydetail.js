@@ -30,6 +30,8 @@ importPackage(Packages.org.ofbiz.core.entity);
 importPackage(Packages.org.ofbiz.core.service);
 importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 
+var requestParameters = UtilHttp.getParameterMap(request);
+
 // set the default view size
 var defaultViewSize = request.getAttribute("defaultViewSize");
 if (defaultViewSize == null) {
@@ -51,8 +53,8 @@ request.setAttribute("limitView", limitView);
 // get the product category & members
 var dispatcher = request.getAttribute("dispatcher");
 var catResult = dispatcher.runSync("getProductCategoryAndLimitedMembers", UtilMisc.toMap("productCategoryId", 
-        request.getAttribute("productCategoryId"), "viewIndexString", request.getParameter("VIEW_INDEX"),
-        "viewSizeString", request.getParameter("VIEW_SIZE"), "defaultViewSize", defaultViewSize, "limitView", limitView));
+        request.getAttribute("productCategoryId"), "viewIndexString", requestParameters.get("VIEW_INDEX"),
+        "viewSizeString", requestParameters.get("VIEW_SIZE"), "defaultViewSize", defaultViewSize, "limitView", limitView));
        
 if (catResult != null) {
     request.setAttribute("productCategoryMembers", catResult.get("productCategoryMembers"));

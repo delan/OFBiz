@@ -40,9 +40,9 @@ var keywordString = request.getAttribute("keywordString");
 var viewIndex = request.getAttribute("viewIndex");
 var viewSize = request.getAttribute("viewSize");
 
-var baseSearchStr = "SEARCH_STRING="+keywordString+"&SEARCH_OPERATOR="+searchOperator+"&SEARCH_CATEGORY_ID="+searchCategoryId+"&VIEW_SIZE="+viewSize;
-var nextStr = baseSearchStr+"&VIEW_INDEX="+(viewIndex.intValue()+1);
-var prevStr = baseSearchStr+"&VIEW_INDEX="+(viewIndex.intValue()-1);
+var baseSearchStr = "~SEARCH_STRING="+keywordString+"/~SEARCH_OPERATOR="+searchOperator+"/~SEARCH_CATEGORY_ID="+searchCategoryId+"/~VIEW_SIZE="+viewSize;
+var nextStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()+1);
+var prevStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()-1);
 request.setAttribute("baseSearchStr", baseSearchStr);
 request.setAttribute("nextStr", nextStr);
 request.setAttribute("prevStr", prevStr);

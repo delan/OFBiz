@@ -72,13 +72,13 @@
     <td align=right>
       <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+          <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.productCategoryId}/~VIEW_SIZE=${requestAttributes.viewSize}/~VIEW_INDEX=${requestAttributes.viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>
-          | <a href="<@ofbizUrl>/category?category_id=${requestAttributes.productCategoryId}&VIEW_SIZE=${requestAttributes.viewSize}&VIEW_INDEX=${requestAttributes.viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a> |
+          | <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.productCategoryId}/~VIEW_SIZE=${requestAttributes.viewSize}/~VIEW_INDEX=${requestAttributes.viewIndex?int + 1}</@ofbizUrl>" class="buttontext">[Next]</a> |
         </#if>
       </b>
     </td>

@@ -35,9 +35,10 @@ var dispatcher = request.getAttribute("dispatcher");
 var delegator = request.getAttribute("delegator");
 var contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 var catalogName = CatalogWorker.getCatalogName(request);
+var requestParams = UtilHttp.getParameterMap(request);
 
 var detailTemplate = "/catalog/productdetail.ftl";
-var productId = request.getParameter("product_id");
+var productId = requestParams.get("product_id");
 if (productId != null) {
     request.setAttribute("productId", productId);
 }

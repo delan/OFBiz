@@ -50,11 +50,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <tr>
       <td colspan="2" align="right">
         <#if requestAttributes.previousProductId?exists>
-          <a href='<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[Previous]</a>&nbsp;|&nbsp;
+          <a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.previousProductId?if_exists}</@ofbizUrl>' class="buttontext">[Previous]</a>&nbsp;|&nbsp;
         </#if>
-        <a href="<@ofbizUrl>/category?category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
+        <a href="<@ofbizUrl>/category/~category_id=${requestAttributes.categoryId?if_exists}</@ofbizUrl>" class="buttontext">${requestAttributes.category.description?if_exists}</a>
         <#if requestAttributes.nextProductId?exists>
-          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product?category_id=${requestAttributes.categoryId?if_exists}&product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[Next]</a>
+          &nbsp;|&nbsp;<a href='<@ofbizUrl>/product/~category_id=${requestAttributes.categoryId?if_exists}/~product_id=${requestAttributes.nextProductId?if_exists}</@ofbizUrl>' class="buttontext">[Next]</a>
         </#if>
       </td>
     </tr>
@@ -217,7 +217,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
     <#list assocProducts as productAssoc>
       <tr><td>
         <div class="tabletext">
-          <a href='<@ofbizUrl>/product?product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
+          <a href='<@ofbizUrl>/product/~product_id=${productAssoc.productIdTo?if_exists}</@ofbizUrl>' class="buttontext">
             ${productAssoc.productIdTo?if_exists}
           </a>
           - <b>${productAssoc.reason?if_exists}</b>

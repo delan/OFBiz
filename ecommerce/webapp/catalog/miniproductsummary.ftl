@@ -25,7 +25,7 @@
 -->
 
 <#if miniProduct?exists>
-    <a href='<@ofbizUrl>/product?product_id=${miniProduct.productId}</@ofbizUrl>' class='buttontext'>${miniProduct.productName}</a>
+    <a href='<@ofbizUrl>/product/~product_id=${miniProduct.productId}</@ofbizUrl>' class='buttontext'>${miniProduct.productName}</a>
     <div class='tabletext'><b>${miniProduct.productId}, 
         <span class='<#if priceResult.isSale>salePrice<#else>normalPrice</#if>'>${priceResult.price?string.currency}</span></b></div>
         
@@ -38,7 +38,7 @@
         <div class='tabletext' style='color: red;'>No Longer Available</div>
     
     <#elseif miniProduct.isVirtual?exists && miniProduct.isVirtual?exists = "Y">
-        <a href='<@ofbizUrl>/product?<#if requestParameters.category_id?exists>category_id=${requestParameters.category_id}&</#if>product_id=${miniProduct.productId}</@ofbizUrl>' class="buttontext"><nobr>[Choose Variation...]</nobr></a>
+        <a href='<@ofbizUrl>/product/<#if requestParameters.category_id?exists>~category_id=${requestParameters.category_id}/</#if>~product_id=${miniProduct.productId}</@ofbizUrl>' class="buttontext"><nobr>[Choose Variation...]</nobr></a>
     
     <#else>
         <form method="POST" action="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?has_content>/${requestAttributes._CURRENT_VIEW_}</#if></@ofbizUrl>" name="${miniProdFormName}" style='margin: 0;'>

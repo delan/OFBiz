@@ -34,13 +34,13 @@
   <table border="0" width='100%' cellpadding='0' cellspacing='0'>
     <tr>
       <td valign="top">    
-          <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>'>
+          <a href='<@ofbizUrl>/product/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>'>
             <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.smallImageUrl?default("/images/defaultImage.jpg")}</@ofbizContentUrl>' align="left" height="50" class='imageborder' border='0'> 
           </a>
       </td>
       <td align="left" valign="top" width="100%">
           <div class="tabletext">
-            <a href='<@ofbizUrl>/product?<#if requestAttributes.categoryId?exists>category_id=${requestAttributes.categoryId}&</#if>product_id=${product.productId?if_exists}</@ofbizUrl>' class='buttontext'>${product.productName?if_exists}</a>
+            <a href='<@ofbizUrl>/product/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>' class='buttontext'>${product.productName?if_exists}</a>
           </div>
           <div class="tabletext">${product.description?if_exists}</div>
           <div class="tabletext">
@@ -91,7 +91,7 @@
                   <#if requestParameters.VIEW_INDEX?exists><input type='hidden' name='VIEW_INDEX' value='${requestParameters.VIEW_INDEX}'></#if>
                   <#if requestParameters.SEARCH_STRING?exists><input type='hidden' name='SEARCH_STRING' value='${requestParameters.SEARCH_STRING}'></#if>
                   <#if requestParameters.SEARCH_CATEGORY_ID?exists><input type='hidden' name='SEARCH_CATEGORY_ID' value='${requestParameters.SEARCH_CATEGORY_ID}'></#if>                                              
-                  <a href="javascript:document.the<%=UtilFormatOut.formatQuantity(listIndex)%>defaultform.submit()" class="buttontext"><nobr>[Add Default(<%EntityField.run("productCategoryMember", "quantity", pageContext);%>) to Cart]</nobr></a>
+                  <a href="javascript:document.the<%=UtilFormatOut.formatQuantity(listIndex)%>defaultform.submit()" class="buttontext"><nobr>[Add Default(${productCategoryMember.quantity?string.number}) to Cart]</nobr></a>
                 </form>
               </#if>
             </#if>

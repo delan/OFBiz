@@ -39,13 +39,13 @@
       <td align=right>
         <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch?${requestAttributes.prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+          <a href="<@ofbizUrl>/keywordsearch/${requestAttributes.prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch?${requestAttributes.nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
+          | <a href="<@ofbizUrl>/keywordsearch/${requestAttributes.nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
         </#if>
         </b>
       </td>

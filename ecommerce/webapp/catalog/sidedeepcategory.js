@@ -29,8 +29,10 @@ importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 importPackage(Packages.org.ofbiz.commonapp.product.category);
 
+var requestParameters = UtilHttp.getParameterMap(request);
+
 CategoryWorker.getRelatedCategories(request, "topLevelList", CatalogWorker.getCatalogTopCategoryId(request, CatalogWorker.getCurrentCatalogId(request)), true);
-var curCategoryId = UtilFormatOut.checkNull(request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));
+var curCategoryId = UtilFormatOut.checkNull(requestParameters.get("category_id"), requestParameters.get("CATEGORY_ID"));
 request.setAttribute("curCategoryId", curCategoryId);
 CategoryWorker.setTrail(request, curCategoryId);
 

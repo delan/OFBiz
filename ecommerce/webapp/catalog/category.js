@@ -27,13 +27,19 @@
 importPackage(Packages.java.lang);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
+importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 
 var delegator = request.getAttribute("delegator");
-var productCategoryId = request.getParameter("category_id");
+var requestParameters = UtilHttp.getParameterMap(request);
+var productCategoryId = requestParameters.get("category_id");
 var category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+var catalogName = CatalogWorker.getCatalogName(request);
 var content = context.get("content");
 content.setTitle(category.getString("description"));
+context.put("metaDescription", category.getString("description"));
+context.put("metaKeywords", category.getString("description") + ", " + catalogName);
 
 request.setAttribute("productCategoryId", productCategoryId);
 request.setAttribute("defaultViewSize", new Integer(10));
 request.setAttribute("limitView", new Boolean(true));
+
