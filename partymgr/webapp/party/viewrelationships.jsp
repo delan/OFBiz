@@ -117,8 +117,6 @@
               <tr>
                 <td><div class="tabletext"><b>&nbsp;Description</b></div></td>
                 <td><div class="tabletext"><b>&nbsp;From Date</b></div></td>
-                <td><div class="tabletext"><b>&nbsp;Thru Date</b></div></td>
-                <td><div class="tabletext"><b>&nbsp;Status</b></div></td>
                 <td>&nbsp;</td>
               </tr>
               <ofbiz:iterator name="partyRelationship" property="partyRelationships">
@@ -141,10 +139,23 @@
 		                <%}%>
 	                </div></td>
 	                <td><div class="tabletext">&nbsp;<%inputValue.run("fromDate", "partyRelationship");%></div></td>
-	                <td><div class="tabletext">&nbsp;<%inputValue.run("thruDate", "partyRelationship");%></div></td>
-	                <td><div class="tabletext">&nbsp;<%entityField.run("partyRelationship", "statusId");%></div></td>
 	                <td align="right">
-	                  &nbsp;<a href='<ofbiz:url>/deletePartyRelationship?partyIdTo=<%inputValue.run("partyIdTo", "partyRelationship");%>&roleTypeIdTo=<%inputValue.run("roleTypeIdTo", "partyRelationship");%>&roleTypeIdFrom=<%inputValue.run("roleTypeIdFrom", "partyRelationship");%>&partyIdFrom=<%inputValue.run("partyIdFrom", "partyRelationship");%>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyRelationship.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp
+	                  <a href='<ofbiz:url>/deletePartyRelationship?partyIdTo=<%inputValue.run("partyIdTo", "partyRelationship");%>&roleTypeIdTo=<%inputValue.run("roleTypeIdTo", "partyRelationship");%>&roleTypeIdFrom=<%inputValue.run("roleTypeIdFrom", "partyRelationship");%>&partyIdFrom=<%inputValue.run("partyIdFrom", "partyRelationship");%>&fromDate=<%=UtilFormatOut.encodeQueryValue(partyRelationship.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">[Remove]</a>&nbsp
+	                </td>
+	              </tr>
+	              <tr>
+	                <td colspan='3' align='right'>
+				        <form method="post" action="<ofbiz:url>/updatePartyRelationship</ofbiz:url>">
+				        	<input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='partyIdFrom' fullattrs="true"/>/>
+				        	<input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='roleTypeIdFrom' fullattrs="true"/>/>
+				        	<input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='partyIdTo' fullattrs="true"/>/>
+				        	<input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='roleTypeIdTo' fullattrs="true"/>/>
+				        	<input type="hidden" <ofbiz:inputvalue entityAttr='partyRelationship' field='fromDate' fullattrs="true"/>/>
+	                		<span class='tabletext'><b>Thru Date: </b></span><input type="text" size="24" style="font-size: x-small;" <ofbiz:inputvalue entityAttr='partyRelationship' field='thruDate' fullattrs="true"/>/>
+	                		<%-- <%entityField.run("partyRelationship", "statusId");%>--%>
+	                		<span class='tabletext'><b>Comments: </b></span><input type="text" size="50" style="font-size: x-small;" <ofbiz:inputvalue entityAttr='partyRelationship' field='comments' fullattrs="true"/>/>
+	                		<input type="submit" value="Update" style="font-size: x-small;"/>
+	                	</form>
 	                </td>
 	              </tr>
               </ofbiz:iterator>
