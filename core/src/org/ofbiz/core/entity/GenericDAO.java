@@ -222,12 +222,12 @@ public class GenericDAO
 
     ps.executeUpdate();
     entity.modified = false;
-    try { if (ps != null) ps.close(); } catch (SQLException sqle) { }
+    try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle); }
   }
   
   private void storeAllOther(GenericEntity entity, Connection connection) throws SQLException
   {
-    //also store valueObject.relatedToStore related entities
+    //also store valueObject.otherToStore entities
     if(entity.otherToStore != null && entity.otherToStore.size() > 0)
     {
       Iterator entities = entity.otherToStore.iterator();
@@ -240,7 +240,8 @@ public class GenericDAO
   }
   
   private void singleStore(GenericEntity entity, Connection connection) throws SQLException {
-    if(select(entity)) singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().nopks, connection);
+    GenericPK tempPK = entity.getPrimaryKey();
+    if(select(tempPK)) singleUpdate(entity, entity.getModelEntity(), entity.getModelEntity().nopks, connection);
     else singleInsert(entity, entity.getModelEntity(), entity.getModelEntity().fields, connection);
   }
   
