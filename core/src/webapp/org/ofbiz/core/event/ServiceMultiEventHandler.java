@@ -60,7 +60,7 @@ public class ServiceMultiEventHandler implements EventHandler {
     
     public static final String module = ServiceMultiEventHandler.class.getName();
     
-    public static final String DELIMITER = "|";
+    public static final String DELIMITER = "_o_";
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
 

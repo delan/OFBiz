@@ -109,12 +109,12 @@ function removeSelected() {
       <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
       <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">   
       <#-- special service fields -->
-      <input type="hidden" name="productId|0" value="${requestParameters.productId?if_exists}">
-      <input type="hidden" name="facilityId|0" value="${requestParameters.facilityId?if_exists}">      
+      <input type="hidden" name="productId_o_0" value="${requestParameters.productId?if_exists}">
+      <input type="hidden" name="facilityId_o_0" value="${requestParameters.facilityId?if_exists}">      
       <input type="hidden" name="_rowCount" value="1">
       <#if purchaseOrder?has_content>
-      <input type="hidden" name="orderId|0" value="${purchaseOrder.orderId}">
-      <input type="hidden" name="orderItemSeqId|0" value="${firstOrderItem.orderItemSeqId}">
+      <input type="hidden" name="orderId_o_0" value="${purchaseOrder.orderId}">
+      <input type="hidden" name="orderItemSeqId_o_0" value="${firstOrderItem.orderItemSeqId}">
       <tr>
         <td width='14%'>&nbsp;</td>
         <td width='6%' align='right' nowrap><div class="tabletext">Purchase Order</div></td>
@@ -158,7 +158,7 @@ function removeSelected() {
         <td width='6%' align='right' nowrap><div class="tabletext">Item Description</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='itemDescription|0' size='30' maxlength='60' class="inputBox">
+          <input type='text' name='itemDescription_o_0' size='30' maxlength='60' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -166,7 +166,7 @@ function removeSelected() {
         <td width='6%' align='right' nowrap><div class="tabletext">Inventory Item <br>(optional will create new if empty)</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='inventoryItemId|0' size='20' maxlength='20' class="inputBox">
+          <input type='text' name='inventoryItemId_o_0' size='20' maxlength='20' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -174,7 +174,7 @@ function removeSelected() {
         <td width='6%' align='right' nowrap><div class="tabletext">Inventory Item Type</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <select name="inventoryItemTypeId|0" size=1 class="selectBox">  
+          <select name="inventoryItemTypeId_o_0" size=1 class="selectBox">  
             <#list inventoryItemTypes as nextInventoryItemType>                      
               <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
             </#list>
@@ -189,7 +189,7 @@ function removeSelected() {
         <td width='6%' align='right' nowrap><div class="tabletext">Date Received</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='datetimeReceived|0' size='24' value="${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}" class="inputBox">
+          <input type='text' name='datetimeReceived_o_0' size='24' value="${Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()}" class="inputBox">
           <!--<a href='#' onclick='setNow("datetimeReceived")' class='buttontext'>[Now]</a>-->
         </td>                
       </tr>	
@@ -198,7 +198,7 @@ function removeSelected() {
         <td width='6%' align='right' nowrap><div class="tabletext">Facility Location</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='locationSeqId|0' size='20' maxlength="20" class="inputBox">
+          <input type='text' name='locationSeqId_o_0' size='20' maxlength="20" class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -206,7 +206,7 @@ function removeSelected() {
         <td width='6%' align='right' nowrap><div class="tabletext">Rejected Reason</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <select name="rejectionId|0" size='1' class='selectBox'>   
+          <select name="rejectionId_o_0" size='1' class='selectBox'>   
             <option></option>    
             <#list rejectReasons as nextRejection>                 
               <option value='${nextRejection.rejectionId}'>${nextRejection.description?default(nextRejection.rejectionId)}</option>
@@ -219,7 +219,7 @@ function removeSelected() {
         <td width='6%' align='right' nowrap><div class="tabletext">Quantity Rejected</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='quantityRejected|0' size='5' value='0' class="inputBox">
+          <input type='text' name='quantityRejected_o_0' size='5' value='0' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -227,7 +227,7 @@ function removeSelected() {
         <td width='6%' align='right' nowrap><div class="tabletext">Quantity Accepted</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <input type='text' name='quantityAccepted|0' size='5' value='${defaultQuantity?default(1)?string.number}' class="inputBox">
+          <input type='text' name='quantityAccepted_o_0' size='5' value='${defaultQuantity?default(1)?string.number}' class="inputBox">
         </td>                
       </tr>	
       <tr>
@@ -264,10 +264,10 @@ function removeSelected() {
                
         <#list purchaseOrderItems as orderItem>
           <#assign orderItemType = orderItem.getRelatedOne("OrderItemType")>
-          <input type="hidden" name="orderId|${rowCount}" value="${orderItem.orderId}">
-          <input type="hidden" name="orderItemSeqId|${rowCount}" value="${orderItem.orderItemSeqId}"> 
-          <input type="hidden" name="facilityId|${rowCount}" value="${requestParameters.facilityId?if_exists}">       
-          <input type="hidden" name="datetimeReceived|${rowCount}" value="${now}">        
+          <input type="hidden" name="orderId_o_${rowCount}" value="${orderItem.orderId}">
+          <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"> 
+          <input type="hidden" name="facilityId_o_${rowCount}" value="${requestParameters.facilityId?if_exists}">       
+          <input type="hidden" name="datetimeReceived_o_${rowCount}" value="${now}">        
           <tr>
             <td colspan="2"><hr class="sepbar"></td>
           </tr>                 
@@ -277,7 +277,7 @@ function removeSelected() {
                 <tr>
                   <#if orderItem.productId?exists>
                     <#assign product = orderItem.getRelatedOneCache("Product")>  
-                    <input type="hidden" name="productId|${rowCount}" value="${product.productId}">                      
+                    <input type="hidden" name="productId_o_${rowCount}" value="${product.productId}">                      
                     <td width="45%">
                       <div class="tabletext">
                         ${orderItem.orderItemSeqId}:&nbsp;<a href="/catalog/control/EditProduct?productId=${product.productId}${requestAttributes.externalKeyParam?if_exists}" target="catalog" class="buttontext">${product.productId}&nbsp;-&nbsp;${product.productName?if_exists}</a> : ${product.description?if_exists}
@@ -287,7 +287,7 @@ function removeSelected() {
                     <td width="45%">
                       <div class="tabletext">
                         <b>${orderItemType.description}</b> : ${orderItem.itemDescription?if_exists}&nbsp;&nbsp;
-                        <input type="text" class="inputBox" size="12" name="productId|${rowCount}">
+                        <input type="text" class="inputBox" size="12" name="productId_o_${rowCount}">
                         <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">Create Product</a>
                       </div>
                     </td>
@@ -296,19 +296,19 @@ function removeSelected() {
                     <div class="tableheadtext">Location:</div>
                   </td>
                   <td align="right">
-                    <input type="text" class="inputBox" name="locationSeqId|${rowCount}" size="12">
+                    <input type="text" class="inputBox" name="locationSeqId_o_${rowCount}" size="12">
                   </td>
                   <td align="right">
                     <div class="tableheadtext">Qty Received:</div>
                   </td>
                   <td align="right">
-                    <input type="text" class="inputBox" name="quantityAccepted|${rowCount}" size="6" value="${orderItem.quantity?string.number}">
+                    <input type="text" class="inputBox" name="quantityAccepted_o_${rowCount}" size="6" value="${orderItem.quantity?string.number}">
                   </td>                                                      
                 </tr>
                 <tr>
                   <td width="45%">
                     <span class="tableheadtext">Inventory Item Type:</span>&nbsp;&nbsp;
-                    <select name="inventoryItemTypeId|${rowCount}" size='1' class="selectBox">  
+                    <select name="inventoryItemTypeId_o_${rowCount}" size='1' class="selectBox">  
                       <#list inventoryItemTypes as nextInventoryItemType>                      
                       <option value='${nextInventoryItemType.inventoryItemTypeId}'>${nextInventoryItemType.description?default(nextInventoryItemType.inventoryItemTypeId)}</option>
                       </#list>
@@ -318,7 +318,7 @@ function removeSelected() {
                     <div class="tableheadtext">Rejection Reason:</div>
                   </td>
                   <td align="right">
-                    <select name="rejectionId|${rowCount}" size='1' class='selectBox'>   
+                    <select name="rejectionId_o_${rowCount}" size='1' class='selectBox'>   
                       <option></option>    
                       <#list rejectReasons as nextRejection>                 
                       <option value='${nextRejection.rejectionId}'>${nextRejection.description?default(nextRejection.rejectionId)}</option>
@@ -329,13 +329,13 @@ function removeSelected() {
                     <div class="tableheadtext">Qty Rejected:</div>
                   </td>
                   <td align="right">
-                    <input type="text" class="inputBox" name="quantityRejected|${rowCount}" size="6">
+                    <input type="text" class="inputBox" name="quantityRejected_o_${rowCount}" size="6">
                   </td>
                 </tr>
               </table>
             </td>
             <td align="right">              
-              <input type="checkbox" name="_rowSubmit|${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
+              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
             </td>
           </tr>          
           <#assign rowCount = rowCount + 1>
