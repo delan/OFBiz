@@ -54,6 +54,7 @@ public class EntityConfigUtil {
     protected static Map delegatorInfos = new HashMap();
     protected static Map entityModelReaderInfos = new HashMap();
     protected static Map entityGroupReaderInfos = new HashMap();
+    protected static Map entityEcaReaderInfos = new HashMap();
     protected static Map fieldTypeInfos = new HashMap();
     protected static Map datasourceInfos = new HashMap();
 
@@ -92,14 +93,13 @@ public class EntityConfigUtil {
 
     public static void initialize(Element rootElement) throws GenericEntityException {
         Element transactionFactoryElement = UtilXml.firstChildElement(rootElement, "transaction-factory");
-
         if (transactionFactoryElement == null) {
             throw new GenericEntityConfException("ERROR: no transaction-factory definition was found in " + ENTITY_ENGINE_XML_FILENAME);
         }
+
         EntityConfigUtil.txFactoryClass = transactionFactoryElement.getAttribute("class");
 
         Element userTxJndiElement = UtilXml.firstChildElement(transactionFactoryElement, "user-transaction-jndi");
-
         if (userTxJndiElement != null) {
             EntityConfigUtil.txFactoryUserTxJndiName = userTxJndiElement.getAttribute("jndi-name");
             EntityConfigUtil.txFactoryUserTxJndiServerName = userTxJndiElement.getAttribute("jndi-server-name");
@@ -107,8 +107,8 @@ public class EntityConfigUtil {
             EntityConfigUtil.txFactoryUserTxJndiName = null;
             EntityConfigUtil.txFactoryUserTxJndiServerName = null;
         }
-        Element txMgrJndiElement = UtilXml.firstChildElement(transactionFactoryElement, "transaction-manager-jndi");
 
+        Element txMgrJndiElement = UtilXml.firstChildElement(transactionFactoryElement, "transaction-manager-jndi");
         if (txMgrJndiElement != null) {
             EntityConfigUtil.txFactoryTxMgrJndiName = txMgrJndiElement.getAttribute("jndi-name");
             EntityConfigUtil.txFactoryTxMgrJndiServerName = txMgrJndiElement.getAttribute("jndi-server-name");
@@ -127,7 +127,6 @@ public class EntityConfigUtil {
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             EntityConfigUtil.ResourceLoaderInfo resourceLoaderInfo = new EntityConfigUtil.ResourceLoaderInfo(curElement);
-
             EntityConfigUtil.resourceLoaderInfos.put(resourceLoaderInfo.name, resourceLoaderInfo);
         }
 
@@ -137,7 +136,6 @@ public class EntityConfigUtil {
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             EntityConfigUtil.DelegatorInfo delegatorInfo = new EntityConfigUtil.DelegatorInfo(curElement);
-
             EntityConfigUtil.delegatorInfos.put(delegatorInfo.name, delegatorInfo);
         }
 
@@ -147,7 +145,6 @@ public class EntityConfigUtil {
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             EntityConfigUtil.EntityModelReaderInfo entityModelReaderInfo = new EntityConfigUtil.EntityModelReaderInfo(curElement);
-
             EntityConfigUtil.entityModelReaderInfos.put(entityModelReaderInfo.name, entityModelReaderInfo);
         }
 
@@ -157,8 +154,16 @@ public class EntityConfigUtil {
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             EntityConfigUtil.EntityGroupReaderInfo entityGroupReaderInfo = new EntityConfigUtil.EntityGroupReaderInfo(curElement);
-
             EntityConfigUtil.entityGroupReaderInfos.put(entityGroupReaderInfo.name, entityGroupReaderInfo);
+        }
+
+        // entity-eca-reader - entityEcaReaderInfos
+        childElements = UtilXml.childElementList(rootElement, "entity-eca-reader");
+        elementIter = childElements.iterator();
+        while (elementIter.hasNext()) {
+            Element curElement = (Element) elementIter.next();
+            EntityConfigUtil.EntityEcaReaderInfo entityEcaReaderInfo = new EntityConfigUtil.EntityEcaReaderInfo(curElement);
+            EntityConfigUtil.entityEcaReaderInfos.put(entityEcaReaderInfo.name, entityEcaReaderInfo);
         }
 
         // field-type - fieldTypeInfos
@@ -167,7 +172,6 @@ public class EntityConfigUtil {
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             EntityConfigUtil.FieldTypeInfo fieldTypeInfo = new EntityConfigUtil.FieldTypeInfo(curElement);
-
             EntityConfigUtil.fieldTypeInfos.put(fieldTypeInfo.name, fieldTypeInfo);
         }
 
@@ -177,7 +181,6 @@ public class EntityConfigUtil {
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
             EntityConfigUtil.DatasourceInfo datasourceInfo = new EntityConfigUtil.DatasourceInfo(curElement);
-
             EntityConfigUtil.datasourceInfos.put(datasourceInfo.name, datasourceInfo);
         }
     }
@@ -245,6 +248,7 @@ public class EntityConfigUtil {
         public String name;
         public String entityModelReader;
         public String entityGroupReader;
+        public String entityEcaReader;
         public boolean useDistributedCacheClear;
         public String distributedCacheClearClassName;
         public String distributedCacheClearUserLoginId;
@@ -254,6 +258,7 @@ public class EntityConfigUtil {
             this.name = element.getAttribute("name");
             this.entityModelReader = element.getAttribute("entity-model-reader");
             this.entityGroupReader = element.getAttribute("entity-group-reader");
+            this.entityEcaReader = element.getAttribute("entity-eca-reader");
             // this defaults to false, ie anything but true is false
             this.useDistributedCacheClear = "true".equals(element.getAttribute("distributed-cache-clear-enabled"));
             this.distributedCacheClearClassName = element.getAttribute("distributed-cache-clear-class-name");
@@ -292,6 +297,17 @@ public class EntityConfigUtil {
         public EntityGroupReaderInfo(Element element) {
             this.name = element.getAttribute("name");
             resourceElement = element;
+        }
+    }
+
+
+    public static class EntityEcaReaderInfo {
+        public String name;
+        public List resourceElements;
+
+        public EntityEcaReaderInfo(Element element) {
+            this.name = element.getAttribute("name");
+            resourceElements = UtilXml.childElementList(element, "resource");
         }
     }
 
