@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.30 2004/01/28 16:27:28 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.31 2004/01/28 16:54:05 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.30 $
+ * @version    $Revision: 1.31 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -351,7 +351,15 @@ public class ProductUtilServices {
             
             List paList = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")), nowTimestamp);
             if (paList.size() > 1) {
-                return ServiceUtil.returnError("Found more than one valid variant, not doing merge...");
+                String errMsg = "Found more than one valid variant for virtual ID [" + productId + "], not doing merge...";
+                Debug.logInfo(errMsg, module);
+                return ServiceUtil.returnError(errMsg);
+            }
+            
+            if (paList.size() == 0) {
+                String errMsg = "Did not find any valid variants for virtual ID [" + productId + "], not doing merge...";
+                Debug.logInfo(errMsg, module);
+                return ServiceUtil.returnError(errMsg);
             }
             
             GenericValue productAssoc = EntityUtil.getFirst(paList);
