@@ -221,6 +221,10 @@ public class EntityConfigUtil {
         return (EntityConfigUtil.EntityGroupReaderInfo) entityGroupReaderInfos.get(name);
     }
 
+    public static EntityConfigUtil.EntityEcaReaderInfo getEntityEcaReaderInfo(String name) {
+        return (EntityConfigUtil.EntityEcaReaderInfo) entityEcaReaderInfos.get(name);
+    }
+
     public static EntityConfigUtil.FieldTypeInfo getFieldTypeInfo(String name) {
         return (EntityConfigUtil.FieldTypeInfo) fieldTypeInfos.get(name);
     }
