@@ -74,9 +74,7 @@
 
     <target name="prepare" depends="clean">
         <mkdir dir="${lib.dir}" />
-		<mkdir dir="${lib.dir}/ejb" />
 	    <mkdir dir="${lib.dir}/ejb/META-INF" />
-		<mkdir dir="$[lib.dir}/jar" />
 		<mkdir dir="${lib.dir}/jar/META-INF" />
         <mkdir dir="${build.dir}" />
         <mkdir dir="${deploy.dir}" />
