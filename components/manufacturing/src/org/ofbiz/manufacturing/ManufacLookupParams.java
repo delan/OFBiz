@@ -37,13 +37,13 @@ import org.ofbiz.base.util.UtilMisc;
  * Product Information Related Events
  *
  * @author     <a href="mailto:holivier@nereide.biz">Olivier Heintz</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ManufacLookupParams {
-
+    
     public static final String module = ManufacLookupParams.class.getName();
-
+    
     /**
      * Set up parameters to be able to start the generic lockup to have LookupRoutingTask
      *
@@ -74,7 +74,7 @@ public class ManufacLookupParams {
         }
         return "success";
     }
-
+    
     /**
      * Set up parameters to be able to start the generic lockup to have LookupRoutingTask
      *
@@ -105,7 +105,7 @@ public class ManufacLookupParams {
         }
         return "success";
     }
-
+    
     /**
      * Set up parameters to be able to start the generic lockup to have LookupProduct
      *
@@ -133,10 +133,10 @@ public class ManufacLookupParams {
             paramLookup.put("permission", "MANUFACTURING");
             paramLookup.put("permissionType", "simple");
         }
-
+        
         return "success";
     }
-
+    
     /**
      * Set up parameters to be able to start the generic lockup to have LookupVirtualProduct
      *
@@ -165,7 +165,7 @@ public class ManufacLookupParams {
             paramLookup.put("permissionType", "simple");
             paramLookup.put("initialConstraint", UtilMisc.toMap("isVirtual", "Y", "isVirtual_op", "equals"));
         }
-
+        
         return "success";
     }
 }
