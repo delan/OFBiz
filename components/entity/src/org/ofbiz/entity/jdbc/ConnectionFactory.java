@@ -1,5 +1,5 @@
 /*
- * $Id: ConnectionFactory.java,v 1.2 2003/09/18 16:01:22 jonesde Exp $
+ * $Id: ConnectionFactory.java,v 1.3 2003/12/01 20:46:49 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.transaction.DBCPConnectionFactory;
 import org.ofbiz.entity.transaction.TransactionFactory;
+import org.ofbiz.entity.transaction.MinervaConnectionFactory;
 import org.w3c.dom.Element;
 
 /**
@@ -39,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ConnectionFactory {
@@ -57,7 +58,15 @@ public class ConnectionFactory {
     }
     
     public static Connection tryGenericConnectionSources(String helperName, Element inlineJdbcElement) throws SQLException, GenericEntityException {
-        // first try DBCP
+        // first try Minerva
+        try {
+            Connection con = MinervaConnectionFactory.getConnection(helperName, inlineJdbcElement);
+            if (con != null) return con;
+        } catch (Exception ex) {
+            Debug.logError(ex, "There was an error getting a Minerva datasource.", module);
+        }
+
+        // next try DBCP
         try {
             Connection con = DBCPConnectionFactory.getConnection(helperName, inlineJdbcElement);
             if (con != null) return con;

@@ -1,5 +1,5 @@
 /*
- * $Id: JNDIFactory.java,v 1.2 2003/08/17 04:56:27 jonesde Exp $
+ * $Id: JNDIFactory.java,v 1.3 2003/12/01 20:46:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.w3c.dom.Element;
  * Central source for Tyrex JTA objects from JNDI
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class JNDIFactory implements TransactionFactoryInterface {
@@ -150,7 +150,7 @@ public class JNDIFactory implements TransactionFactoryInterface {
             Connection con = getJndiConnection(jndiName, jndiServerName);
             if (con != null) return con;
         } else {
-            Debug.logError("JNDI loaded is the configured transaction manager but no jndi-jdbc element was specified in the " + helperName + " datasource. Please check your configuration; will try other sources", module);
+           // Debug.logError("JNDI loaded is the configured transaction manager but no jndi-jdbc element was specified in the " + helperName + " datasource. Please check your configuration; will try other sources", module);
         }
         
         if (datasourceInfo.inlineJdbcElement != null) {

@@ -10,16 +10,17 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             
     <!-- the transaction factory class to use, one is needed for each way of getting JTA interfaces -->
     <!-- Use this one for JOTM -->
-    <transaction-factory class="org.ofbiz.entity.transaction.JotmFactory"/>
-    
-    <!-- Use this one for JNDI -->
-    <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->    
     <!--
+    <transaction-factory class="org.ofbiz.entity.transaction.JotmFactory"/>
+    -->
+
+    <!-- Use this one for JNDI -->
+    <!-- NOTE: to use the JndiFactory you must specify the necessary JNDI properties -->
     <transaction-factory class="org.ofbiz.entity.transaction.JNDIFactory">
         <user-transaction-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
         <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/UserTransaction"/>
     </transaction-factory>   
-    -->
+
     <!-- 
     	It is common to use UserTransaction for the TransactionManager, but if that doesn't work, try this: <transaction-manager-jndi jndi-server-name="default" jndi-name="java:comp/TransactionManager"/>
         Common UserTransaction locations:
@@ -96,7 +97,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 pool-maxsize="20"
                 pool-jdbc-test-stmt="SELECT count(seqName) FROM SEQUENCE_VALUE_ITEM"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="ReadUncommitted"/> -->
-        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localhsql" isolation-level="ReadUncommitted"/> <!-- Orion Style JNDI name -->
+        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localhsql" isolation-level="ReadUncommitted"/> --> <!-- Orion Style JNDI name -->
     </datasource>
 
     <datasource name="localcloudscape"
@@ -147,8 +148,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="20"/>                          
-        <!--<jndi-jdbc jndi-server-name="default" jndi-name="java:comp/env/jdbc/localpostgres" isolation-level="ReadCommitted"/>-->
-        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localpostgres" isolation-level="ReadCommitted"/> <!-- Orion Style JNDI name -->
+        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="java:comp/env/jdbc/localpostgres" isolation-level="ReadCommitted"/>-->
+        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localpostgres" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="localweblogic" jndi-name="PostgresDataSource"/> --> <!-- Weblogic Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="jdbc/localpostgres" isolation-level="ReadCommitted"/> --> <!-- JRun4 Style JNDI name -->
         <!-- <tyrex-dataSource dataSource-name="localpostgres" isolation-level="ReadCommitted"/> -->
@@ -206,7 +207,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="20"/>     
-        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/> <!-- Orion Style JNDI name -->
+        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="localweblogic" jndi-name="SapDBDataSource"/> --> <!-- Weblogic Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="jdbc/localsapdb" isolation-level="ReadCommitted"/> --> <!-- JRun4 Style JNDI name -->
         <!-- <tyrex-dataSource dataSource-name="localsapdb" isolation-level="ReadCommitted"/> -->
@@ -243,7 +244,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="Serializable"/>
-        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localmssql" isolation-level="ReadCommitted"/> <!-- Orion Style JNDI name -->
+        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localmssql" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
     </datasource>
      
     <datasource name="localp6spy"
