@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2002/01/23 10:22:03  jonesde
+ * Major refactoring of contact mech stuff, more things working too
+ *
  *
  */
 package org.ofbiz.commonapp.party.contact;
@@ -39,13 +42,12 @@ import org.ofbiz.core.util.*;
  *@created January 22, 2002
  */
 public class ContactMechWorker {
-    public static void getContactMechAndRelated(PageContext pageContext, String contactMechAttr, String contactMechIdAttr,
+    public static void getContactMechAndRelated(PageContext pageContext, String partyId, String contactMechAttr, String contactMechIdAttr,
             String partyContactMechAttr, String partyContactMechPurposesAttr, String contactMechTypeIdAttr, String contactMechTypeAttr, String purposeTypesAttr,
-            String postalAddressAttr, String telecomNumberAttr, String requestNameAttr, String tryEntityAttr) {
+            String postalAddressAttr, String telecomNumberAttr, String requestNameAttr, String tryEntityAttr, String contactMechTypesAttr) {
 
         ServletRequest request = pageContext.getRequest();
         GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
-        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
         boolean tryEntity = true;
         if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -64,7 +66,7 @@ public class ContactMechWorker {
         //try to find a PartyContactMech with a valid date range
         Collection partyContactMechs = null;
         try {
-            partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId)));
+            partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", contactMechId)));
         } catch (GenericEntityException e) {
             //not much we can do, log the error and move along
             Debug.logWarning(e);
@@ -190,5 +192,156 @@ public class ContactMechWorker {
         }
 
         pageContext.setAttribute(tryEntityAttr, new Boolean(tryEntity));
+
+        try {
+            Collection contactMechTypes = delegator.findAll("ContactMechType", null);
+            if (contactMechTypes != null) {
+                pageContext.setAttribute(contactMechTypesAttr, contactMechTypes);
+            }
+        } catch (GenericEntityException e) {
+            //not much we can do, log the error and move along
+            Debug.logWarning(e);
+        }
+    }
+    
+    public static void getCreditCardInfoAndRelated(PageContext pageContext, String partyId, 
+            String creditCardAttr, String creditCardIdAttr, String curContactMechIdAttr, 
+            String curPartyContactMechAttr, String curContactMechAttr, String curPostalAddressAttr, 
+            String curPartyContactMechPurposesAttr, String donePageAttr, String tryEntityAttr) {
+
+        ServletRequest request = pageContext.getRequest();
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+
+        boolean tryEntity = true;
+        if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null)
+            tryEntity = false;
+
+        String donePage = request.getParameter("DONE_PAGE");
+        if (donePage == null || donePage.length() <= 0)
+            donePage = "viewprofile";
+        pageContext.setAttribute(donePageAttr, donePage);
+
+        String creditCardId = request.getParameter("creditCardId");
+        if (request.getAttribute("creditCardId") != null)
+            creditCardId = (String)request.getAttribute("creditCardId");
+        if (creditCardId != null)
+            pageContext.setAttribute(creditCardIdAttr, creditCardId);
+
+        GenericValue creditCard = null;
+        if (UtilValidate.isNotEmpty(creditCardId)) {
+            try {
+                creditCard = delegator.findByPrimaryKey("CreditCardInfo", UtilMisc.toMap("creditCardId", creditCardId));
+            } catch (GenericEntityException e) {
+                //not much we can do, log the error and move along
+                Debug.logWarning(e);
+            }
+        }
+        if (creditCard != null)
+            pageContext.setAttribute(creditCardAttr, creditCard);
+        else
+            tryEntity = false;
+
+
+        String curContactMechId = UtilFormatOut.checkNull(tryEntity?creditCard.getString("contactMechId"):request.getParameter("contactMechId"));
+        if (curContactMechId != null) {
+            pageContext.setAttribute(curContactMechIdAttr, curContactMechId);
+            
+            Collection partyContactMechs = null;
+            try {
+                partyContactMechs = EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", curContactMechId)));
+            } catch (GenericEntityException e) {
+                //not much we can do, log the error and move along
+                Debug.logWarning(e);
+            }
+            GenericValue curPartyContactMech = EntityUtil.getFirst(partyContactMechs);
+
+            GenericValue curContactMech = null;
+            if (curPartyContactMech != null) {
+                pageContext.setAttribute(curPartyContactMechAttr, curPartyContactMech);
+                try {
+                    curContactMech = curPartyContactMech.getRelatedOne("ContactMech");
+                } catch (GenericEntityException e) {
+                    //not much we can do, log the error and move along
+                    Debug.logWarning(e);
+                }
+
+                Collection curPartyContactMechPurposes = null;
+                try {
+                    curPartyContactMechPurposes = EntityUtil.filterByDate(curPartyContactMech.getRelated("PartyContactMechPurpose"));
+                } catch (GenericEntityException e) {
+                    //not much we can do, log the error and move along
+                    Debug.logWarning(e);
+                }
+                if (curPartyContactMechPurposes != null && curPartyContactMechPurposes.size() > 0) {
+                    pageContext.setAttribute(curPartyContactMechPurposesAttr, curPartyContactMechPurposes);
+                }
+            }
+
+            GenericValue curPostalAddress = null;
+            if (curContactMech != null) {
+                pageContext.setAttribute(curContactMechAttr, curContactMech);
+                try {
+                    curPostalAddress = curContactMech.getRelatedOne("PostalAddress");
+                } catch (GenericEntityException e) {
+                    //not much we can do, log the error and move along
+                    Debug.logWarning(e);
+                }
+            }
+
+            if (curPostalAddress != null) {
+                pageContext.setAttribute(curPostalAddressAttr, curPostalAddress);
+            }
+        }
+
+        pageContext.setAttribute(tryEntityAttr, new Boolean(tryEntity));
+    }
+    
+    public static void getPartyPostalAddresses(PageContext pageContext, String partyId, String curContactMechId, String postalAddressInfosAttr) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getServletContext().getAttribute("delegator");
+        Collection postalAddressInfos = new LinkedList();
+        
+        Iterator allPartyContactMechs = null;
+        try {
+            allPartyContactMechs = UtilMisc.toIterator(EntityUtil.filterByDate(delegator.findByAnd("PartyContactMech", UtilMisc.toMap("partyId", partyId))));
+        } catch (GenericEntityException e) {
+            //not much we can do, log the error and move along
+            Debug.logWarning(e);
+        }
+        while(allPartyContactMechs != null && allPartyContactMechs.hasNext()) {
+            GenericValue partyContactMech = (GenericValue) allPartyContactMechs.next();
+            GenericValue contactMech = null;
+            try {
+                contactMech = partyContactMech.getRelatedOne("ContactMech");
+            } catch (GenericEntityException e) {
+                //not much we can do, log the error and move along
+                Debug.logWarning(e);
+            }
+            if (contactMech != null && "POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId")) && !contactMech.getString("contactMechId").equals(curContactMechId)) {
+                Map postalAddressInfo = new HashMap();
+                postalAddressInfos.add(postalAddressInfo);
+                postalAddressInfo.put("contactMech", contactMech);
+                postalAddressInfo.put("partyContactMech", partyContactMech);
+
+                try {
+                    GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");
+                    postalAddressInfo.put("postalAddress", postalAddress);
+                } catch (GenericEntityException e) {
+                    //not much we can do, log the error and move along
+                    Debug.logWarning(e);
+                }
+
+                try {
+                    Collection partyContactMechPurposes = EntityUtil.filterByDate(partyContactMech.getRelated("PartyContactMechPurpose"));
+                    postalAddressInfo.put("partyContactMechPurposes", partyContactMechPurposes);
+                } catch (GenericEntityException e) {
+                    //not much we can do, log the error and move along
+                    Debug.logWarning(e);
+                }
+            }
+        }
+        
+        if (postalAddressInfos.size() > 0) {
+            pageContext.setAttribute(postalAddressInfosAttr, postalAddressInfos);
+        }
     }
 }
