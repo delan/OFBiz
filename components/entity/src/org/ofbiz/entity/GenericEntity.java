@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.22 2004/04/11 08:28:19 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.23 2004/04/23 04:40:02 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.22 $
+ *@version    $Revision: 1.23 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -691,7 +691,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      * @return True if locking is enabled
      */
     public boolean lockEnabled() {
-        return modelEntity.lock();
+        return getModelEntity().lock();
     }
 
     // ======= XML Related Methods ========
@@ -969,10 +969,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         if (tempResult != 0) return tempResult;
 
         // both have same entityName, should be the same so let's compare PKs
-        int pksSize = modelEntity.getPksSize();
+        int pksSize = getModelEntity().getPksSize();
 
         for (int i = 0; i < pksSize; i++) {
-            ModelField curField = modelEntity.getPk(i);
+            ModelField curField = getModelEntity().getPk(i);
             Comparable thisVal = (Comparable) this.fields.get(curField.getName());
             Comparable thatVal = (Comparable) that.fields.get(curField.getName());
 
@@ -993,10 +993,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
 
         // okay, if we got here it means the primaryKeys are exactly the SAME, so compare the rest of the fields
-        int nopksSize = modelEntity.getNopksSize();
+        int nopksSize = getModelEntity().getNopksSize();
 
         for (int i = 0; i < nopksSize; i++) {
-            ModelField curField = modelEntity.getNopk(i);
+            ModelField curField = getModelEntity().getNopk(i);
             Comparable thisVal = (Comparable) this.fields.get(curField.getName());
             Comparable thatVal = (Comparable) that.fields.get(curField.getName());
 
