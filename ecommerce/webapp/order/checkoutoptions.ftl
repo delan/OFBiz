@@ -59,7 +59,11 @@ function submitForm(form, mode, value) {
 		// edit eft account
 		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?DONE_PAGE=checkoutoptions&paymentMethodId="+value+"</@ofbizUrl>";
 		form.submit();
-	}
+	} else if (mode == "SA") {
+        // selected shipping address
+        form.action="<@ofbizUrl>/updateCheckoutOptions/checkoutoptions</@ofbizUrl>";
+        form.submit();
+    }
 }
 // -->
 </script>
@@ -97,8 +101,14 @@ function submitForm(form, mode, value) {
                           </td>
                           <td valign="top">        
                             <#assign shipmentMethodType = carrierShipmentMethod.getRelatedOneCache("ShipmentMethodType")>
-                            <div class='tabletext'>                              
-                              <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${shipmentMethodType.description?if_exists}
+                            <div class='tabletext'>
+                              <#if cart.getShippingContactMechId()?exists>
+                                <#assign shippingEstMap = Static["org.ofbiz.commonapp.shipment.shipment.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
+                                <#if shippingEstMap?has_content && shippingEstMap.shippingTotal?exists>
+                                  <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>                                  
+                                </#if>                              
+                              </#if>
+                              <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${shipmentMethodType.description?if_exists}${shippingEstimate?if_exists}
                             </div>                           
                           </td>
                         </tr>
@@ -151,7 +161,10 @@ function submitForm(form, mode, value) {
                       <tr>
                         <td colspan="2">
                           <span class="head2"><b>PO Number</b></span>&nbsp;
-                          <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${cart.getPoNumber()?if_exists}'>
+                          <#if cart.getPoNumber()?exists && cart.getPoNumber() != "(none)">
+                            <#assign currentPoNumber = cart.getPoNumber()>
+                          </#if>
+                          <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${currentPoNumber?if_exists}'>
                         </td>
                       </tr>                                                           
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>                      
@@ -236,7 +249,7 @@ function submitForm(form, mode, value) {
                            <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                            <tr>
                              <td align="left" valign="top" width="1%" nowrap>
-                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}" <#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId>checked</#if>>        
+                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"  onclick="javascript:submitForm(document.checkoutInfoForm, 'SA', null);"<#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId> checked</#if>>        
                              </td>
                              <td align="left" valign="top" width="99%" nowrap>
                                <div class="tabletext">
