@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.4 2003/11/25 06:05:36 jonesde Exp $
+ * $Id: ProductEvents.java,v 1.5 2004/01/21 14:28:49 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ProductEvents {
@@ -96,6 +96,8 @@ public class ProductEvents {
         }
 
         if (updateMode.equals("CREATE")) {
+            keyword = keyword.toLowerCase();
+            
             GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword, "relevancyWeight", relevancyWeight));
             GenericValue newValue = null;
 
