@@ -62,6 +62,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   search = (String) request.getParameter("search");
   //as we are iterating through, check a few things and put any warnings here inside <li></li> tags
   String warningString = "";
+
+  TreeSet fkNames = new TreeSet();
 %>
 
 <html>
@@ -207,6 +209,14 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         relations.add(relation.getTitle() + relation.getRelEntityName());
       }
 
+      if (relation.getFkName().length() > 0) {
+          if (fkNames.contains(relation.getFkName())) {
+            warningString = warningString + "<li><div style=\"color: red;\">[RelationFkDuplicate]</div> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has a duplicate fk-name \"" + relation.getFkName() + "\".</li>";
+          } else {
+            fkNames.add(relation.getFkName());
+          }
+      }
+
       ModelEntity relatedEntity = reader.getModelEntity(relation.getRelEntityName());
       if (relatedEntity != null) {
         //if relation is of type one, make sure keyMaps match the PK of the relatedEntity
@@ -248,6 +258,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         <div align="left" class='relationtext'>
           <b><%=relation.getTitle()%></b><A href='#<%=relation.getRelEntityName()%>' class='rlinktext'><%=relation.getRelEntityName()%></A>
         </div>
+          <%if (relation.getFkName().length() > 0) {%><div class='relationtext'>fk-name: <%=relation.getFkName()%></div><%}%>
       </td>
       <td width="60%" colspan='4'><div align="left" class='relationtext'>
         <%=relation.getType()%>:<%if(relation.getType().length()==3){%>&nbsp;<%}%>

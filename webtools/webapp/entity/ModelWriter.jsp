@@ -206,7 +206,8 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   if (entity.getRelationsSize() > 0) {
     for (int r=0; r<entity.getRelationsSize(); r++) {
       ModelRelation relation = entity.getRelation(r);%>
-      <relation type="<%=relation.getType()%>"<%if (relation.getTitle().length() > 0) {%> title="<%=relation.getTitle()%>"<%}
+      <relation type="<%=relation.getType()%>"<%if (relation.getFkName().length() > 0) {%> fk-name="<%=relation.getFkName()%>"<%}
+              %><%if (relation.getTitle().length() > 0) {%> title="<%=relation.getTitle()%>"<%}
               %> rel-entity-name="<%=relation.getRelEntityName()%>"><%for (int km = 0; km < relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = relation.getKeyMap(km);%>
         <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%>/><%}%>
       </relation><%
