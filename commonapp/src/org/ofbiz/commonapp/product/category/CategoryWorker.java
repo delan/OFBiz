@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2002/02/02 12:01:47  jonesde
+ * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
+ *
  * Revision 1.8  2002/02/01 12:18:47  jonesde
  * Small speedup to not relead session item list caches on the first page for all loads
  *
@@ -247,12 +250,18 @@ public class CategoryWorker {
     }
 
     public static void getRelatedCategories(PageContext pageContext, String attributeName, String parentId) {
+        ArrayList categories = getRelatedCategoriesRet(pageContext, attributeName, parentId);
+        if (categories.size() > 0)
+            pageContext.setAttribute(attributeName, categories);
+    }
+    
+    public static ArrayList getRelatedCategoriesRet(PageContext pageContext, String attributeName, String parentId) {
         ArrayList categories = new ArrayList();
         ServletRequest request = pageContext.getRequest();
 
         Debug.logInfo("[CatalogHelper.getRelatedCategories] ParentID: " + parentId);
 
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         Collection rollups = null;
         try {
             rollups = delegator.findByAndCache("ProductCategoryRollup", UtilMisc.toMap("parentProductCategoryId",parentId), UtilMisc.toList("sequenceNum"));
@@ -277,9 +286,7 @@ public class CategoryWorker {
                     categories.add(cv);
             }
         }
-
-        if (categories.size() > 0)
-            pageContext.setAttribute(attributeName, categories);
+        return categories;
     }
 
     public static void setTrail(PageContext pageContext, String currentCategory) {
