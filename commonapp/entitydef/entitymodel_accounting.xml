@@ -72,6 +72,27 @@
       <relation type="many" rel-entity-name="BudgetAttribute">
         <key-map field-name="budgetId"/>
       </relation>
+      <relation type="many" rel-entity-name="BudgetReview">
+        <key-map field-name="budgetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetRevision">
+        <key-map field-name="budgetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetRevisionImpact">
+        <key-map field-name="budgetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetRole">
+        <key-map field-name="budgetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetScenarioApplication">
+        <key-map field-name="budgetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetStatus">
+        <key-map field-name="budgetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PaymentBudgetAllocation">
+        <key-map field-name="budgetId"/>
+      </relation>
     </entity>
     <entity entity-name="BudgetAttribute"
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -106,6 +127,18 @@
         <key-map field-name="budgetItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetItemAttribute">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetRevisionImpact">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetScenarioApplication">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="budgetItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PaymentBudgetAllocation">
         <key-map field-name="budgetId"/>
         <key-map field-name="budgetItemSeqId"/>
       </relation>
@@ -146,6 +179,12 @@
         <key-map field-name="budgetItemTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="BudgetItem">
+        <key-map field-name="budgetItemTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetScenarioRule">
+        <key-map field-name="budgetItemTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="GeneralLedgerBudgetXref">
         <key-map field-name="budgetItemTypeId"/>
       </relation>
     </entity>
@@ -195,6 +234,9 @@
       <field name="description" type="description"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="budgetReviewResultTypeId"/>
+      <relation type="many" rel-entity-name="BudgetReview">
+        <key-map field-name="budgetReviewResultTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="BudgetRevision"
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -206,6 +248,10 @@
       <prim-key field="revisionSeqId"/>
       <relation type="one" fk-name="BUDGET_RVSN_BDGT" rel-entity-name="Budget">
         <key-map field-name="budgetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetRevisionImpact">
+        <key-map field-name="budgetId"/>
+        <key-map field-name="revisionSeqId"/>
       </relation>
     </entity>
     <entity entity-name="BudgetRevisionImpact"
@@ -258,6 +304,12 @@
       <field name="budgetScenarioId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="budgetScenarioId"/>
+      <relation type="many" rel-entity-name="BudgetScenarioApplication">
+        <key-map field-name="budgetScenarioId"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetScenarioRule">
+        <key-map field-name="budgetScenarioId"/>
+      </relation>
     </entity>
     <entity entity-name="BudgetScenarioApplication"
             package-name="org.ofbiz.commonapp.accounting.budget"
@@ -363,6 +415,9 @@
       <field name="description" type="description"></field>
       <field name="formula" type="long-varchar"></field>
       <prim-key field="depreciationMethodId"/>
+      <relation type="many" rel-entity-name="FixedAssetDepMethod">
+        <key-map field-name="depreciationMethodId"/>
+      </relation>
     </entity>
     <entity entity-name="FixedAsset"
             package-name="org.ofbiz.commonapp.accounting.fixedasset"
@@ -401,6 +456,15 @@
         <key-map field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffort">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AcctgTrans">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FixedAssetDepMethod">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyFixedAssetAssignment">
         <key-map field-name="fixedAssetId"/>
       </relation>
     </entity>
@@ -547,6 +611,24 @@
       <relation type="many" rel-entity-name="OrderItemBilling">
         <key-map field-name="invoiceId"/>
       </relation>
+      <relation type="many" rel-entity-name="AcctgTrans">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PaymentApplication">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceItem">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceRole">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceStatus">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceTerm">
+        <key-map field-name="invoiceId"/>
+      </relation>
     </entity>
     <entity entity-name="InvoiceAttribute"
             package-name="org.ofbiz.commonapp.accounting.invoice"
@@ -605,6 +687,14 @@
         <key-map field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderItemBilling">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PaymentApplication">
+        <key-map field-name="invoiceId"/>
+        <key-map field-name="invoiceItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceTerm">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
       </relation>
@@ -863,6 +953,9 @@
       <relation type="many" rel-entity-name="AcctgTransAttribute">
         <key-map field-name="acctgTransId"/>
       </relation>
+      <relation type="many" rel-entity-name="AcctgTransDetail">
+        <key-map field-name="acctgTransId"/>
+      </relation>
     </entity>
     <entity entity-name="AcctgTransAttribute"
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -957,6 +1050,15 @@
       <relation type="one" fk-name="GLACCT_TYPE" rel-entity-name="GeneralLedgerAccountType">
         <key-map field-name="generalLedgerAccountTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="AcctgTransDetail">
+        <key-map field-name="generalLedgerAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="GeneralLedgerBudgetXref">
+        <key-map field-name="generalLedgerAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrganizationGlAccount">
+        <key-map field-name="generalLedgerAccountId"/>
+      </relation>
     </entity>
     <entity entity-name="GeneralLedgerAccountType"
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -964,6 +1066,9 @@
       <field name="generalLedgerAccountTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="generalLedgerAccountTypeId"/>
+      <relation type="many" rel-entity-name="GeneralLedgerAccount">
+        <key-map field-name="generalLedgerAccountTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="GeneralLedgerBudgetXref"
             package-name="org.ofbiz.commonapp.accounting.ledger"
@@ -1162,6 +1267,12 @@
         <key-map field-name="finAccountTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="FinAccountAttribute">
+        <key-map field-name="finAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FinAccountRole">
+        <key-map field-name="finAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountId"/>
       </relation>
     </entity>
@@ -1383,6 +1494,15 @@
       </relation>
       <relation type="one" fk-name="PAYMENT_FACTX" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AcctgTrans">
+        <key-map field-name="paymentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PaymentApplication">
+        <key-map field-name="paymentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PaymentBudgetAllocation">
+        <key-map field-name="paymentId"/>
       </relation>
     </entity>
     <entity entity-name="PaymentApplication"

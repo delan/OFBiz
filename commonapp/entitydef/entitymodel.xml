@@ -253,6 +253,9 @@
       <relation type="many" rel-entity-name="StandardTimePeriod">
         <key-map field-name="periodTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="AccoutingPeriod">
+        <key-map field-name="periodTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="StandardTimePeriod"
             package-name="org.ofbiz.commonapp.common.period"
@@ -303,6 +306,18 @@
       </relation>
       <relation type="many" title="To" rel-entity-name="StatusValidChange">
         <key-map field-name="statusId" rel-field-name="statusIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="BudgetStatus">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PartyFixedAssetAssignment">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Invoice">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceStatus">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="StatusType"
@@ -384,6 +399,12 @@
       </relation>
       <relation type="many" title="ConvTo" rel-entity-name="UomConversion">
         <key-map field-name="uomId" rel-field-name="uomIdTo"/>
+      </relation>
+      <relation type="many" rel-entity-name="FixedAsset">
+        <key-map field-name="uomId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InvoiceItem">
+        <key-map field-name="uomId"/>
       </relation>
     </entity>
     <entity entity-name="UomConversion"
