@@ -41,8 +41,7 @@ public class UtilDateTime {
      * @return Timestamp for right now
      */
     public static java.sql.Timestamp nowTimestamp() {
-        java.util.Date nowDate = new java.util.Date();
-        return new java.sql.Timestamp(nowDate.getTime());
+        return new java.sql.Timestamp(System.currentTimeMillis());
     }
 
     /** Return a Date for right now
