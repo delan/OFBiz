@@ -41,10 +41,10 @@
 <%ModelReader reader = delegator.getModelReader();%>
 <%ModelEntity entity = reader.getModelEntity(entityName);%>
 
-<%boolean hasViewPermission=security.hasEntityPermission(entity.getTableName(), "_VIEW", session);%>
-<%boolean hasCreatePermission=security.hasEntityPermission(entity.getTableName(), "_CREATE", session);%>
-<%boolean hasUpdatePermission=security.hasEntityPermission(entity.getTableName(), "_UPDATE", session);%>
-<%boolean hasDeletePermission=security.hasEntityPermission(entity.getTableName(), "_DELETE", session);%>
+<%boolean hasViewPermission = security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(entity.getTableName(), "_VIEW", session);%>
+<%boolean hasCreatePermission = security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(entity.getTableName(), "_CREATE", session);%>
+<%boolean hasUpdatePermission = security.hasEntityPermission("ENTITY_DATA", "_UPDATE", session) || security.hasEntityPermission(entity.getTableName(), "_UPDATE", session);%>
+<%boolean hasDeletePermission = security.hasEntityPermission("ENTITY_DATA", "_DELETE", session) || security.hasEntityPermission(entity.getTableName(), "_DELETE", session);%>
 <%if(hasViewPermission){%>
 <%
   String rowClassTop1 = "viewOneTR1";

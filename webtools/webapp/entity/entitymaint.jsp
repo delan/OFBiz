@@ -52,10 +52,10 @@
   String rowColor2 = "CCFFFF";
   String rowColor = "";
 %>
-<TABLE cellpadding='2' cellspacing='2' border='0'>
+<TABLE cellpadding='1' cellspacing='1' border='0'>
   <TR>
-    <TD>
-        <TABLE cellpadding='2' cellspacing='2' border='0'>
+    <TD valign=top>
+        <TABLE cellpadding='1' cellspacing='1' border='0'>
           <TR bgcolor='CCCCFF'>
             <TD>Entity&nbsp;Name</TD>
             <TD>&nbsp;</TD>
@@ -67,21 +67,21 @@
         <%int kIdx = 0;%>
         <%while (classNamesIterator != null && classNamesIterator.hasNext()) { ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());%>
             <%rowColor=(rowColor==rowColor1?rowColor2:rowColor1);%><tr bgcolor="<%=rowColor%>">
-              <TD><div class='tabletext'><%=entity.getEntityName()%></div></TD>
+              <TD><div class='tabletext' style='FONT-SIZE: xx-small;'><%=entity.getEntityName()%></div></TD>
               <%if (entity instanceof ModelViewEntity) {%>
-                    <TD colspan='3' align=center><div class='tabletext'>View Entity</div></TD>
+                    <TD colspan='3' align=center><div class='tabletext' style='FONT-SIZE: xx-small;'>View Entity</div></TD>
               <%} else {%>
-                  <%if (security.hasEntityPermission(entity.getTableName(), "_CREATE", session)){%>
-                    <TD><a href='<ofbiz:url>/ViewGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext">Create</a></TD>
+                  <%if (security.hasEntityPermission("ENTITY_DATA", "_CREATE", session) || security.hasEntityPermission(entity.getTableName(), "_CREATE", session)) {%>
+                    <TD><a href='<ofbiz:url>/ViewGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Crt</a></TD>
                   <%} else {%>
-                    <TD><div class='tabletext'>Perm</div></TD>
+                    <TD><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></TD>
                   <%}%>
-                  <%if (security.hasEntityPermission(entity.getTableName(), "_VIEW", session)){%>
-                    <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext">Find</a></TD>
-                    <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0</ofbiz:url>' class="buttontext">Find All</a></TD>
+                  <%if (security.hasEntityPermission("ENTITY_DATA", "_VIEW", session) || security.hasEntityPermission(entity.getTableName(), "_VIEW", session)) {%>
+                    <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%></ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>Fnd</a></TD>
+                    <TD><a href='<ofbiz:url>/FindGeneric?entityName=<%=entity.getEntityName()%>&find=true&VIEW_SIZE=50&VIEW_INDEX=0</ofbiz:url>' class="buttontext" style='FONT-SIZE: xx-small;'>All</a></TD>
                   <%} else {%>
-                    <TD><div class='tabletext'>Perm</div></TD>
-                    <TD><div class='tabletext'>Perm</div></TD>
+                    <TD><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></TD>
+                    <TD><div class='tabletext' style='FONT-SIZE: xx-small;'>NP</div></TD>
                   <%}%>
               <%}%>
             </TR>
@@ -92,7 +92,7 @@
               </TABLE>
             </TD>
             <TD valign=top>
-              <TABLE cellpadding='2' cellspacing='2' border='0'>
+              <TABLE cellpadding='1' cellspacing='1' border='0'>
               <%rowColor = "";%>
               <TR bgcolor='CCCCFF'>
                 <TD>Entity&nbsp;Name</TD>

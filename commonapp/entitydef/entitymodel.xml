@@ -1358,7 +1358,7 @@
     <entity entity-name="SecurityGroupPermission"
             package-name="org.ofbiz.commonapp.security.securitygroup"
             title="Security Component - Security Group Permission Entity">
-      <description>Defines a permission available to a security group</description>
+      <description>Defines a permission available to a security group; there is no FK to SecurityPermission because we want to leave open the possibility of ad-hoc permissions, especially for the Entity Data Maintenance pages which have TONS of permissions</description>
       <field name="groupId" type="id-ne"></field>
       <field name="permissionId" type="id-long-ne"></field>
       <prim-key field="groupId"/>
@@ -1366,7 +1366,7 @@
       <relation type="one" fk-name="SEC_GRP_PERM_GRP" rel-entity-name="SecurityGroup">
         <key-map field-name="groupId"/>
       </relation>
-      <relation type="one" fk-name="SEC_GRP_PERM_PERM" rel-entity-name="SecurityPermission">
+      <relation type="one-nofk" rel-entity-name="SecurityPermission">
         <key-map field-name="permissionId"/>
       </relation>
     </entity>

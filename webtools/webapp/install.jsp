@@ -86,7 +86,9 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
         <%}else{%>
           <LI><DIV class='tabletext'>No SQL Files found.</DIV>
         <%}%>
+<%-- NOTE: no longer using these generated settings. Instead we will use the ENTITY_DATA_* permissions for the admin user
         <LI><DIV class='tabletext'>Entity granularity security settings (auto generated, not in a file)</DIV>
+--%>
       </UL>
       <A href='<ofbiz:url>/install?loadfiles=true&groupfile=group&groupName=<%=groupName%></ofbiz:url>' class='buttontext'>[Yes, Load Now]</A>
     <%}else{%>
@@ -106,9 +108,11 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
         <%}else{%>
           <LI><DIV class='tabletext'>No SQL Files found.</DIV>
         <%}%>
+<%-- NOTE: no longer using these generated settings. Instead we will use the ENTITY_DATA_* permissions for the admin user
         <%int genRowsChanged = generateData(delegator);%>
          <%totalRowsChanged += genRowsChanged;%>
         <LI><DIV class='tabletext'>Loaded <%=genRowsChanged%> rows for generated entity granularity security settings (<%=totalRowsChanged%> total rows so far)</DIV>
+--%>
       </UL>
       <DIV class='head2'>Finished loading all data; <%=totalRowsChanged%> total rows updated.</DIV>
 
