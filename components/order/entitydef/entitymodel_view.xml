@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE entitymodel PUBLIC "-//OFBiz//DTD Entity Model//EN" "http://www.ofbiz.org/dtds/entitymodel.dtd">
+<!--
+/**
+ *  Title: Entity Generator Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Rev:$
+ */
+-->
+
+<entitymodel>
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <copyright>Copyright (c) 2002 The Open For Business Project - www.ofbiz.org</copyright>
+    <author>None</author>
+    <version>1.0</version>
+
+  <!-- ========================================================= -->
+  <!-- ======================== Data Model ===================== -->
+  <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.order.order -->
+  <!--  - org.ofbiz.order.picklist -->
+  <!--  - org.ofbiz.order.quote -->
+  <!--  - org.ofbiz.order.request -->
+  <!--  - org.ofbiz.order.shoppingcart -->
+  <!--  - org.ofbiz.order.shoppinglist -->
+  <!-- ========================================================= -->
+
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.order.order -->
+  <!-- ========================================================= -->
+
+    <view-entity entity-name="OrderHeaderAndItems"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Order Items View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OH" name="orderStatusId" field="statusId"/>
+      <alias entity-alias="OH" name="grandTotal"/>
+      <alias entity-alias="OH" name="productStoreId"/>
+      <alias entity-alias="OI" name="orderItemSeqId"/>
+      <alias entity-alias="OI" name="productId"/>
+      <alias entity-alias="OI" name="quantity"/>
+      <alias entity-alias="OI" name="unitPrice"/>
+      <alias entity-alias="OI" name="unitListPrice"/>
+      <alias entity-alias="OI" name="itemDescription"/>
+      <alias entity-alias="OI" name="itemStatusId" field="statusId"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="OrderHeaderAndPaymentPref"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Payment Preference View Entity">
+      <member-entity entity-alias="PF" entity-name="OrderPaymentPreference"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="productStoreId"/>
+      <alias entity-alias="PF" name="orderPaymentPreferenceId"/>
+      <alias entity-alias="PF" name="paymentMethodTypeId"/>
+      <alias entity-alias="OH" name="orderStatusId" field="statusId"/>
+      <alias entity-alias="PF" name="paymentStatusId" field="statusId"/>
+      <view-link entity-alias="OH" rel-entity-alias="PF">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="OrderHeader">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderPaymentPreference">
+        <key-map field-name="orderPaymentPreferenceId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="OrderHeaderAndRoleSummary"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Roles View Entity">
+      <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <alias entity-alias="ORLE" name="partyId" group-by="true"/>
+      <alias entity-alias="ORLE" name="roleTypeId" group-by="true"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OH" name="statusId"/>
+      <alias entity-alias="OH" name="totalGrandAmount" field="grandTotal" function="sum"/>
+      <alias entity-alias="OH" name="totalSubRemainingAmount" field="remainingSubTotal" function="sum"/>
+      <alias entity-alias="OH" name="totalOrders" field="orderId" function="count"/>
+      <view-link entity-alias="ORLE" rel-entity-alias="OH">
+        <key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="OrderHeaderAndRoles"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Roles View Entity">
+      <member-entity entity-alias="ORLE" entity-name="OrderRole"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <alias-all entity-alias="ORLE"/>
+      <alias-all entity-alias="OH"/>
+      <view-link entity-alias="ORLE" rel-entity-alias="OH">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="OrderType">
+        <key-map field-name="orderTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="Origin" rel-entity-name="Facility">
+        <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderTypeAttr">
+        <key-map field-name="orderTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderAttribute">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderAdjustment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderContactMech">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" title="Sales" rel-entity-name="OrderItemAssociation">
+        <key-map field-name="orderId" rel-field-name="salesOrderId"/>
+      </relation>
+      <relation type="many" title="Purchase" rel-entity-name="OrderItemAssociation">
+        <key-map field-name="orderId" rel-field-name="purchaseOrderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItemBilling">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItemContactMech">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItemRole">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderRole">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderShipment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderStatus">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderTerm">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkOrderItemFulfillment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductOrderItem">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderShipmentPreference">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="BillingAccount">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderPaymentPreference">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderHeaderNoteView">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="UserLogin">
+        <key-map field-name="createdBy" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one-nofk" title="Sync" rel-entity-name="StatusItem">
+        <key-map field-name="syncStatusId" rel-field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderRequirementCommitment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="orderId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="OrderHeaderItemAndRoles"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header And Roles View Entity">
+      <member-entity entity-alias="OT" entity-name="OrderRole"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OT" name="partyId"/>
+      <alias entity-alias="OT" name="roleTypeId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OH" name="entryDate"/>
+      <alias entity-alias="OH" name="visitId"/>
+      <alias entity-alias="OH" name="statusId"/>
+      <alias entity-alias="OH" name="createdBy"/>
+      <alias entity-alias="OH" name="firstAttemptOrderId"/>
+      <alias entity-alias="OH" name="currencyUom"/>
+      <alias entity-alias="OH" name="syncStatusId"/>
+      <alias entity-alias="OH" name="billingAccountId"/>
+      <alias entity-alias="OH" name="originFacilityId"/>
+      <alias entity-alias="OH" name="productStoreId"/>
+      <alias entity-alias="OH" name="webSiteId"/>
+      <alias entity-alias="OH" name="grandTotal"/>
+      <alias entity-alias="OI" name="productId"/>
+      <alias entity-alias="OI" name="quantity"/>
+      <alias entity-alias="OI" name="unitPrice"/>
+      <alias entity-alias="OI" name="unitListPrice"/>
+      <alias entity-alias="OI" name="estimatedShipDate"/>
+      <alias entity-alias="OI" name="autoCancelDate"/>
+      <alias entity-alias="OI" name="correspondingPoId"/>
+      <view-link entity-alias="OT" rel-entity-alias="OH">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="OrderType">
+        <key-map field-name="orderTypeId"/>
+      </relation>
+      <relation type="one-nofk" title="Origin" rel-entity-name="Facility">
+        <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderTypeAttr">
+        <key-map field-name="orderTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderAttribute">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderAdjustment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItem">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderContactMech">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" title="Sales" rel-entity-name="OrderItemAssociation">
+        <key-map field-name="orderId" rel-field-name="salesOrderId"/>
+      </relation>
+      <relation type="many" title="Purchase" rel-entity-name="OrderItemAssociation">
+        <key-map field-name="orderId" rel-field-name="purchaseOrderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItemBilling">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItemContactMech">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderItemRole">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderRole">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderShipment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderStatus">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderTerm">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkOrderItemFulfillment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductOrderItem">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderShipmentPreference">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="BillingAccount">
+        <key-map field-name="billingAccountId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderPaymentPreference">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderHeaderNoteView">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="UserLogin">
+        <key-map field-name="createdBy" rel-field-name="userLoginId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one-nofk" title="Sync" rel-entity-name="StatusItem">
+        <key-map field-name="syncStatusId" rel-field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="OrderRequirementCommitment">
+        <key-map field-name="orderId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="orderId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="OrderHeaderNoteView"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Header Note View Entity">      
+      <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
+      <alias entity-alias="OD" name="orderId"/>
+      <alias entity-alias="ND" name="noteId"/>
+      <alias entity-alias="ND" name="noteName"/>
+      <alias entity-alias="ND" name="noteInfo"/>
+      <alias entity-alias="ND" name="noteDateTime"/>
+      <alias entity-alias="ND" name="noteParty"/>
+      <view-link entity-alias="OD" rel-entity-alias="ND">
+        <key-map field-name="noteId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="OrderItemInventoryResAndItem"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Item Inventory Reservation and Inventory Item View Entity">
+      <member-entity entity-alias="OIIR" entity-name="OrderItemInventoryRes"/>
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <alias-all entity-alias="OIIR"/>
+      <alias-all entity-alias="II"/>
+      <view-link entity-alias="OIIR" rel-entity-alias="II">
+        <key-map field-name="inventoryItemId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="OrderItemInventoryResAndItemLocation"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Item Inventory Reservation and Inventory Item View Entity">
+      <member-entity entity-alias="OIIR" entity-name="OrderItemInventoryRes"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <member-entity entity-alias="II" entity-name="InventoryItem"/>
+      <member-entity entity-alias="FL" entity-name="FacilityLocation"/>
+      <alias-all entity-alias="OIIR"/>
+      <alias-all entity-alias="II"/>
+      <alias-all entity-alias="FL"/>
+      <alias entity-alias="OI" name="orderItemStatusId" field="statusId"/>
+      <view-link entity-alias="OIIR" rel-entity-alias="II">
+        <key-map field-name="inventoryItemId"/>
+      </view-link>
+      <view-link entity-alias="II" rel-entity-alias="FL">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </view-link>
+      <view-link entity-alias="OIIR" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+        <key-map field-name="locationSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="OrderItemInventoryRes">
+        <key-map field-name="orderId"/>
+        <key-map field-name="orderItemSeqId"/>
+        <key-map field-name="inventoryItemId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="OrderReportView"
+            package-name="org.ofbiz.order.order"
+            never-cache="true"
+            title="Order Report View Entity">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OPP" entity-name="OrderPaymentPreference"/>
+      <member-entity entity-alias="PMT" entity-name="PaymentMethodType"/>
+      <member-entity entity-alias="OSP" entity-name="OrderShipmentPreference"/>
+      <member-entity entity-alias="SMT" entity-name="ShipmentMethodType"/>
+      <member-entity entity-alias="OS" entity-name="StatusItem"/>
+      <member-entity entity-alias="OI" entity-name="OrderItem"/>
+      <member-entity entity-alias="OIS" entity-name="StatusItem"/>
+      <alias entity-alias="OS" name="groupName" field="description"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OS" name="orderStatus" field="description"/>
+      <alias entity-alias="PMT" name="paymentMethod" field="description"/>
+      <alias entity-alias="OSP" name="shipCarrier" field="carrierPartyId"/>
+      <alias entity-alias="SMT" name="shipMethod" field="description"/>
+      <alias entity-alias="OH" name="visitId"/>
+      <alias entity-alias="OH" name="currencyUom"/>
+      <alias entity-alias="OH" name="originFacilityId"/>
+      <alias entity-alias="OH" name="webSiteId"/>
+      <alias entity-alias="OH" name="grandTotal"/>
+      <alias entity-alias="OI" name="productId"/>
+      <alias entity-alias="OI" name="itemDescription"/>
+      <alias entity-alias="OIS" name="itemStatus" field="description"/>
+      <alias entity-alias="OI" name="quantity"/>
+      <alias entity-alias="OI" name="unitPrice"/>
+      <view-link entity-alias="OH" rel-entity-alias="OI">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OPP" rel-optional="true">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OPP" rel-entity-alias="PMT" rel-optional="true">
+        <key-map field-name="paymentMethodTypeId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OSP" rel-optional="true">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OSP" rel-entity-alias="SMT" rel-optional="true">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="OS">
+        <key-map field-name="statusId"/>
+      </view-link>
+      <view-link entity-alias="OI" rel-entity-alias="OIS">
+        <key-map field-name="statusId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="OrderTaskList"
+            package-name="org.ofbiz.order.order"
+            title="Order WorkEffort Task List">
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <member-entity entity-alias="OHR" entity-name="OrderRole"/>
+      <member-entity entity-alias="PS" entity-name="Person"/>
+      <member-entity entity-alias="WE" entity-name="WorkEffort"/>
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment"/>
+      <alias entity-alias="OH" name="orderId"/>
+      <alias entity-alias="OH" name="orderTypeId"/>
+      <alias entity-alias="OH" name="orderDate"/>
+      <alias entity-alias="OH" name="entryDate"/>
+      <alias entity-alias="OH" name="grandTotal"/>
+      <alias entity-alias="OHR" name="orderRoleTypeId" field="roleTypeId"/>
+      <alias entity-alias="OHR" name="customerPartyId" field="partyId"/>
+      <alias entity-alias="PS" name="customerFirstName" field="firstName"/>
+      <alias entity-alias="PS" name="customerLastName" field="lastName"/>
+      <alias entity-alias="WE" name="workEffortId"/>
+      <alias entity-alias="WE" name="workEffortTypeId"/>
+      <alias entity-alias="WE" name="currentStatusId"/>
+      <alias entity-alias="WE" name="lastStatusUpdate"/>
+      <alias entity-alias="WE" name="priority"/>
+      <alias entity-alias="WE" name="workEffortName"/>
+      <alias entity-alias="WE" name="description"/>
+      <alias entity-alias="WE" name="createdDate"/>
+      <alias entity-alias="WE" name="createdByUserLogin"/>
+      <alias entity-alias="WE" name="lastModifiedDate"/>
+      <alias entity-alias="WE" name="lastModifiedByUserLogin"/>
+      <alias entity-alias="WE" name="estimatedStartDate"/>
+      <alias entity-alias="WE" name="estimatedCompletionDate"/>
+      <alias entity-alias="WE" name="actualStartDate"/>
+      <alias entity-alias="WE" name="actualCompletionDate"/>
+      <alias entity-alias="WE" name="infoUrl"/>
+      <alias entity-alias="WEPA" name="wepaPartyId" field="partyId"/>
+      <alias entity-alias="WEPA" name="roleTypeId"/>
+      <alias entity-alias="WEPA" name="fromDate"/>
+      <alias entity-alias="WEPA" name="thruDate"/>
+      <alias entity-alias="WEPA" name="statusId"/>
+      <alias entity-alias="WEPA" name="statusDateTime"/>
+      <view-link entity-alias="OH" rel-entity-alias="OHR" rel-optional="true">
+        <key-map field-name="orderId"/>
+      </view-link>
+      <view-link entity-alias="OHR" rel-entity-alias="PS" rel-optional="true">
+        <key-map field-name="partyId"/>
+      </view-link>
+      <view-link entity-alias="OH" rel-entity-alias="WE">
+        <key-map field-name="orderId" rel-field-name="sourceReferenceId"/>
+      </view-link>
+      <view-link entity-alias="WE" rel-entity-alias="WEPA">
+        <key-map field-name="workEffortId"/>
+      </view-link>
+    </view-entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.order.request -->
+  <!-- ========================================================= -->
+
+    <view-entity entity-name="CustRequestAndRole"
+            package-name="org.ofbiz.order.request"
+            title="Customer Request And Role View Entity">
+      <member-entity entity-alias="CR" entity-name="CustRequest"/>
+      <member-entity entity-alias="CRR" entity-name="CustRequestRole"/>
+      <alias entity-alias="CR" name="custRequestId"/>
+      <alias entity-alias="CR" name="custRequestTypeId"/>
+      <alias entity-alias="CR" name="statusId"/>
+      <alias entity-alias="CR" name="priority"/>
+      <alias entity-alias="CR" name="custRequestDate"/>
+      <alias entity-alias="CR" name="responseRequiredDate"/>
+      <alias entity-alias="CR" name="custRequestName"/>
+      <alias entity-alias="CR" name="description"/>
+      <alias entity-alias="CR" name="createdDate"/>
+      <alias entity-alias="CR" name="lastModifiedDate"/>
+      <alias entity-alias="CR" name="lastModifiedByUserLogin"/>
+      <alias entity-alias="CRR" name="partyId"/>
+      <alias entity-alias="CRR" name="roleTypeId"/>
+      <view-link entity-alias="CR" rel-entity-alias="CRR">
+        <key-map field-name="custRequestId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CustRequestRole">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="CustRequestItemNoteView"
+            package-name="org.ofbiz.order.request"
+            title="Customer Request Item View Entity">
+      <member-entity entity-alias="PR" entity-name="Person"/>
+      <member-entity entity-alias="CR" entity-name="CustRequestItemNote"/>
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
+      <alias entity-alias="CR" name="custRequestId"/>
+      <alias entity-alias="CR" name="custRequestItemSeqId"/>
+      <alias entity-alias="ND" name="noteId"/>
+      <alias entity-alias="ND" name="noteName"/>
+      <alias entity-alias="ND" name="noteInfo"/>
+      <alias entity-alias="ND" name="noteDateTime"/>
+      <alias entity-alias="PR" name="partyId"/>
+      <alias entity-alias="PR" name="firstName"/>
+      <alias entity-alias="PR" name="lastName"/>
+      <view-link entity-alias="CR" rel-entity-alias="ND">
+        <key-map field-name="noteId"/>
+      </view-link>
+      <view-link entity-alias="ND" rel-entity-alias="PR">
+        <key-map field-name="noteParty" rel-field-name="partyId"/>
+      </view-link>
+    </view-entity>
+    <view-entity entity-name="RequirementAndRole"
+            package-name="org.ofbiz.order.request"
+            title="Requirement And Role View Entity">
+      <member-entity entity-alias="RQ" entity-name="Requirement"/>
+      <member-entity entity-alias="RQR" entity-name="RequirementRole"/>
+      <alias entity-alias="RQ" name="requirementId"/>
+      <alias entity-alias="RQ" name="requirementTypeId"/>
+      <alias entity-alias="RQ" name="facilityId"/>
+      <alias entity-alias="RQ" name="deliverableId"/>
+      <alias entity-alias="RQ" name="fixedAssetId"/>
+      <alias entity-alias="RQ" name="productId"/>
+      <alias entity-alias="RQ" name="description"/>
+      <alias entity-alias="RQ" name="requirementStartDate"/>
+      <alias entity-alias="RQ" name="requiredByDate"/>
+      <alias entity-alias="RQ" name="estimatedBudget"/>
+      <alias entity-alias="RQ" name="quantity"/>
+      <alias entity-alias="RQ" name="reason"/>
+      <alias entity-alias="RQ" name="lastModifiedDate"/>
+      <alias entity-alias="RQ" name="lastModifiedByUserLogin"/>
+      <alias entity-alias="RQR" name="partyId"/>
+      <alias entity-alias="RQR" name="roleTypeId"/>
+      <alias entity-alias="RQR" name="fromDate"/>
+      <alias entity-alias="RQR" name="thruDate"/>
+      <view-link entity-alias="RQ" rel-entity-alias="RQR">
+        <key-map field-name="requirementId"/>
+      </view-link>
+      <relation type="one-nofk" rel-entity-name="Requirement">
+        <key-map field-name="requirementId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RequirementRole">
+        <key-map field-name="requirementId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="fromDate"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </view-entity>
+    <view-entity entity-name="RequirementCustRequestView"
+            package-name="org.ofbiz.order.request"
+            title="Requirement Customer Request View Entity">
+      <member-entity entity-alias="RR" entity-name="RequirementCustRequest"/>
+      <member-entity entity-alias="RQ" entity-name="Requirement"/>
+      <member-entity entity-alias="RI" entity-name="CustRequestItem"/>
+      <alias entity-alias="RR" name="custRequestId"/>
+      <alias entity-alias="RR" name="custRequestItemSeqId"/>
+      <alias entity-alias="RR" name="requirementId"/>
+      <alias entity-alias="RQ" name="requirementTypeId"/>
+      <alias entity-alias="RQ" name="description"/>
+      <alias entity-alias="RQ" name="productId"/>
+      <alias entity-alias="RQ" name="estimatedBudget"/>
+      <alias entity-alias="RQ" name="quantity"/>
+      <alias entity-alias="RQ" name="requirementStartDate"/>
+      <alias entity-alias="RQ" name="requiredByDate"/>
+      <alias entity-alias="RI" name="statusId"/>
+      <alias entity-alias="RI" name="priority"/>
+      <alias entity-alias="RI" name="maximumAmount"/>
+      <view-link entity-alias="RR" rel-entity-alias="RQ">
+        <key-map field-name="requirementId"/>
+      </view-link>
+      <view-link entity-alias="RR" rel-entity-alias="RI">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </view-link>
+    </view-entity>
+</entitymodel>
+
