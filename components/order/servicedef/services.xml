@@ -89,14 +89,14 @@
         <implements service="prepareOrderEmail"/>
         <override name="emailType" mode="OUT"/>
     </service>
-    <service name="sendOrderConfirmation" engine="java" max-retry="3"
+    <service name="sendOrderConfirmation" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
         <description>Send a order confirmation</description>
         <implements service="sendNotificationInterface"/>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="sendOrderChangeNotification" engine="java" max-retry="3"
+    <service name="sendOrderChangeNotification" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
@@ -104,7 +104,7 @@
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="sendOrderCompleteNotification" engine="java" max-retry="3"
+    <service name="sendOrderCompleteNotification" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
@@ -112,7 +112,7 @@
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="sendOrderBackorderNotification" engine="java" max-retry="3"
+    <service name="sendOrderBackorderNotification" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
@@ -120,7 +120,7 @@
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
-    <service name="sendOrderPayRetryNotification" engine="java" max-retry="3"
+    <service name="sendOrderPayRetryNotification" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.content.email.NotificationServices" invoke="sendNotification">
         <description>Send a order notification</description>
         <implements service="sendNotificationInterface"/>
@@ -129,7 +129,7 @@
         <attribute name="emailType" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="sendProcessNotification" engine="java" max-retry="3"
+    <service name="sendProcessNotification" engine="java" require-new-transaction="true" max-retry="3"
             location="org.ofbiz.order.order.OrderServices" invoke="sendProcessNotification">
     	<description>Limit Service for order processing workflow; sends activitiy notifications</description>
     	<attribute name="workEffortId" type="String" mode="IN"/>
