@@ -72,11 +72,11 @@ public class RequestHandler implements Serializable {
         // workaraound if we are in the root webapp
         String cname = UtilMisc.getApplicationName(request);
 
-        /* Grab data from request object to process. */
+        // Grab data from request object to process
         String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
         String nextView = RequestHandler.getNextPageUri(request.getPathInfo());
 
-        /* Check for chained request. */
+        // Check for chained request.
         if (chain != null) {
             requestUri = RequestHandler.getRequestUri(chain);
             nextView = RequestHandler.getNextPageUri(chain);
@@ -131,8 +131,10 @@ public class RequestHandler implements Serializable {
                             EventHandler eh = EventFactory.getEventHandler(this, eType);
                             String returnString = eh.invoke(ePath, eMeth, request, response);
 
-                            if (!returnString.equalsIgnoreCase("success"))
-                                throw new EventHandlerException("Event did not return 'success'.");
+                            if (returnString != null && !returnString.equalsIgnoreCase("success"))
+                            throw new EventHandlerException("First-Visit event did not return 'success'.");
+                        else if (returnString == null)
+                            nextView = "none:";
                         } catch (EventHandlerException e) {
                             Debug.logError(e, module);
                         }
@@ -142,7 +144,6 @@ public class RequestHandler implements Serializable {
 
             // Invoke the pre-processor (but NOT in a chain)
             Collection preProcEvents = rm.getPreProcessor();
-
             if (preProcEvents != null) {
                 Iterator i = preProcEvents.iterator();
 
@@ -151,13 +152,14 @@ public class RequestHandler implements Serializable {
                     String eType = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_TYPE);
                     String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
                     String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
-
                     try {
                         EventHandler preEvent = EventFactory.getEventHandler(this, eType);
                         String returnString = preEvent.invoke(ePath, eMeth, request, response);
 
-                        if (!returnString.equalsIgnoreCase("success"))
-                            throw new EventHandlerException("Event did not return 'success'.");
+                        if (returnString != null && !returnString.equalsIgnoreCase("success"))
+                            throw new EventHandlerException("Pre-Processor event did not return 'success'.");
+                        else if (returnString == null)
+                            nextView = "none:";
                     } catch (EventHandlerException e) {
                         Debug.logError(e, module);
                     }
@@ -165,11 +167,18 @@ public class RequestHandler implements Serializable {
             }
         }
 
+        // Pre-Processor/First-Visit event(s) can interrupt the flow by returning null.
+        // Warning: this could cause problems if more then one event attempts to return a response.
+        if ("none:".equals(nextView)) {
+            if (Debug.infoOn()) Debug.logInfo("[Pre-Processor Interrupted Request, not running: " + requestUri, module);
+            return;
+        }
+
         if (Debug.infoOn()) Debug.logInfo("[Processing Request]: " + requestUri, module);
 
         String eventReturnString = null;
 
-        /* Perform security check. */
+        // Perform security check.
         if (rm.requiresAuth(requestUri)) {
             // Invoke the security handler
             // catch exceptions and throw RequestHandlerException if failed.
@@ -213,6 +222,8 @@ public class RequestHandler implements Serializable {
                     eventReturnString = eh.invoke(eventPath, eventMethod, request, response);
                     ServerHitBin.countEvent(cname + "." + eventMethod, request, eventStartTime,
                         System.currentTimeMillis() - eventStartTime, userLogin, delegator);
+                    if (eventReturnString == null)
+                        nextView = "none:";
                 } catch (EventHandlerException e) {
                     // check to see if there is an "error" response, if so go there and make an request error message
                     String tryErrorMsg = rm.getRequestAttribute(requestUri, "error");
@@ -232,8 +243,8 @@ public class RequestHandler implements Serializable {
 
         if (Debug.verboseOn()) Debug.logVerbose("[Response Qualified]: " + eventReturn, module);
 
-        // Set the next view if we aren't 'success'
-        if (eventReturn != null && !"success".equalsIgnoreCase(eventReturnString)) nextView = eventReturn;
+        // Set the next view
+        if (eventReturn != null) nextView = eventReturn;
         if (Debug.verboseOn()) Debug.logVerbose("[Event Response Mapping]: " + nextView, module);
 
         // get the previous request info
@@ -242,36 +253,77 @@ public class RequestHandler implements Serializable {
 
         if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler]: previousRequest - " + previousRequest + " (" + loginPass + ")", module);
 
-        // check for a chain request.
-        if (nextView != null && nextView.startsWith("request:")) {
-            if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a chained request.", module);
-            nextView = nextView.substring(8);
-            doRequest(request, response, nextView, userLogin, delegator);
-        } // if previous request exists, and a login just succeeded, do that now.
-        else if (previousRequest != null && loginPass != null && loginPass.equalsIgnoreCase("TRUE")) {
+        // if previous request exists, and a login just succeeded, do that now.
+        if (previousRequest != null && loginPass != null && loginPass.equalsIgnoreCase("TRUE")) {
             request.getSession().removeAttribute(SiteDefs.PREVIOUS_REQUEST);
             if (Debug.infoOn()) Debug.logInfo("[Doing Previous Request]: " + previousRequest, module);
             doRequest(request, response, previousRequest, userLogin, delegator);
-        } // check for a url for redirection
-        else if (nextView != null && nextView.startsWith("url:")) {
-            if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect.", module);
-            nextView = nextView.substring(4);
-            callRedirect(nextView, request, response);
-        } // check for a View
-        else if (nextView != null && nextView.startsWith("view:")) {
-            Debug.logVerbose("[RequestHandler.doRequest]: Response is a view.", module);
-            nextView = nextView.substring(5);
-            renderView(nextView, rm.allowExtView(requestUri), request, response);
-        } // check for a no dispatch return (meaning the return was processed by the event
-        else if (nextView != null && nextView.startsWith("none:")) {
-            Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event.", module);
-        } // a page request
-        else if (nextView != null) {
-            Debug.logVerbose("[RequestHandler.doRequest]: Response is a page.", module);
-            renderView(nextView, rm.allowExtView(requestUri), request, response);
-        } // unknow request
+        }
+
+        // Handle the responses - chains/views
+        else if (nextView != null && nextView.startsWith("request:")) {
+            // chained requests
+            if (Debug.verboseOn())
+                Debug.logVerbose("[RequestHandler.doRequest]: Response is a chained request.", module);
+            nextView = nextView.substring(8);
+            doRequest(request, response, nextView, userLogin, delegator);
+        }
+
+        // the rest are view types
         else {
-            throw new RequestHandlerException("Illegal request; handler could not process the request.");
+            // first invoke the post-processor events.
+            Collection postProcEvents = rm.getPostProcessor();
+            if (postProcEvents != null) {
+                Iterator i = postProcEvents.iterator();
+
+                while (i.hasNext()) {
+                    Map eventMap = (HashMap) i.next();
+                    String eType = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_TYPE);
+                    String ePath = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_PATH);
+                    String eMeth = (String) eventMap.get(org.ofbiz.core.util.ConfigXMLReader.EVENT_METHOD);
+                    try {
+                        EventHandler preEvent = EventFactory.getEventHandler(this, eType);
+                        String returnString = preEvent.invoke(ePath, eMeth, request, response);
+
+                        if (returnString != null && !returnString.equalsIgnoreCase("success"))
+                            throw new EventHandlerException("Post-Processor event did not return 'success'.");
+                        else if (returnString == null)
+                            nextView = "none:";
+                    } catch (EventHandlerException e) {
+                        Debug.logError(e, module);
+                    }
+                }
+            }
+
+            // check for a url for redirection
+            if (nextView != null && nextView.startsWith("url:")) {
+                if (Debug.verboseOn()) Debug.logVerbose("[RequestHandler.doRequest]: Response is a URL redirect.", module);
+                nextView = nextView.substring(4);
+                callRedirect(nextView, request, response);
+            }
+
+            // check for a View
+            else if (nextView != null && nextView.startsWith("view:")) {
+                Debug.logVerbose("[RequestHandler.doRequest]: Response is a view.", module);
+                nextView = nextView.substring(5);
+                renderView(nextView, rm.allowExtView(requestUri), request, response);
+            }
+
+            // check for a no dispatch return (meaning the return was processed by the event
+            else if (nextView != null && nextView.startsWith("none:")) {
+                Debug.logVerbose("[RequestHandler.doRequest]: Response is handled by the event.", module);
+            }
+
+            // a page request
+            else if (nextView != null) {
+                Debug.logVerbose("[RequestHandler.doRequest]: Response is a page.", module);
+                renderView(nextView, rm.allowExtView(requestUri), request, response);
+            }
+
+            // unknown request
+            else {
+                throw new RequestHandlerException("Illegal request; handler could not process the request.");
+            }
         }
     }
 

@@ -275,19 +275,16 @@ public class RequestManager implements Serializable {
 
     public Collection getFirstVisitEvents() {
         Collection c = (Collection) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.FIRSTVISIT);
-
         return c;
     }
 
     public Collection getPreProcessor() {
         Collection c = (Collection) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.PREPROCESSOR);
-
         return c;
     }
 
     public Collection getPostProcessor() {
         Collection c = (Collection) ConfigXMLReader.getConfigMap(configFileUrl).get(ConfigXMLReader.POSTPROCESSOR);
-
         return c;
     }
 }

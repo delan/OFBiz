@@ -93,7 +93,7 @@ public abstract class AbstractJmsListener implements GenericMessageListener, Exc
     public void onMessage(Message message) {
         MapMessage mapMessage = null;
 
-        if (Debug.infoOn()) Debug.logInfo("JMS Message Received --> " + message, module);
+        if (Debug.verboseOn()) Debug.logVerbose("JMS Message Received --> " + message, module);
         if (message instanceof MapMessage) {
             mapMessage = (MapMessage) message;
         } else {

@@ -71,6 +71,16 @@ public class CoreEvents {
     }
 
     /**
+     * Return null event. Used as a place holder for events.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return Response code string
+     */
+    public static String returnNull(HttpServletRequest request, HttpServletResponse response) {
+        return null;
+    }
+
+    /**
      * Change delegator event. Changes the delegator for the current session
      * @param request HttpServletRequest
      * @param response HttpServletResponse
