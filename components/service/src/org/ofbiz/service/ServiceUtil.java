@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.13 2004/06/17 00:52:13 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.14 2004/07/09 16:53:54 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -47,12 +48,25 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class ServiceUtil {
     
     public static final String module = ServiceUtil.class.getName();
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "ServiceErrorUiLabel";
+    /**
+     * Contains an error message.
+     */
+    private static String errMsg = "";
+    /**
+     * Language setting.
+     */
+    private static Locale locale;
     
     /** A little short-cut method to check to see if a service returned an error */
     public static boolean isError(Map results) {
@@ -134,6 +148,7 @@ public class ServiceUtil {
      */
     public static String getPartyIdCheckSecurity(GenericValue userLogin, Security security, Map context, Map result, String secEntity, String secOperation) {
         String partyId = (String) context.get("partyId");
+        ServiceUtil.locale = (Locale) context.get("locale");
         if (partyId == null || partyId.length() == 0) {
             partyId = userLogin.getString("partyId");
         }
@@ -141,7 +156,12 @@ public class ServiceUtil {
         // partyId might be null, so check it
         if (partyId == null || partyId.length() == 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Party ID missing");
+            ServiceUtil.errMsg = UtilProperties.getMessage(
+            ServiceUtil.RESOURCE,
+                    "serviceUtil.party_id_missing", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";
+            result.put(ModelService.ERROR_MESSAGE, errMsg);
             return partyId;
         }
 
@@ -149,7 +169,12 @@ public class ServiceUtil {
         if (!partyId.equals(userLogin.getString("partyId"))) {
             if (!security.hasEntityPermission(secEntity, secOperation, userLogin)) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "You do not have permission to perform this operation for this party");
+                ServiceUtil.errMsg = UtilProperties.getMessage(
+                ServiceUtil.RESOURCE,
+                        "serviceUtil.no_permission_to_operation", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";
+                result.put(ModelService.ERROR_MESSAGE, errMsg);
                 return partyId;
             }
         }
@@ -322,8 +347,14 @@ public class ServiceUtil {
         GenericDelegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        ServiceUtil.locale = (Locale) context.get("locale");
         if (!security.hasPermission("SERVICE_INVOKE_ANY", userLogin)) {
-            return ServiceUtil.returnError("You do not have permission to run this service");
+            ServiceUtil.errMsg = UtilProperties.getMessage(
+            ServiceUtil.RESOURCE,
+                    "serviceUtil.no_permission_to_run", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            return ServiceUtil.returnError(errMsg);
         }
 
         String jobId = (String) context.get("jobId");
@@ -339,7 +370,12 @@ public class ServiceUtil {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Unable to cancel job : " + fields);
+            ServiceUtil.errMsg = UtilProperties.getMessage(
+            ServiceUtil.RESOURCE,
+                    "serviceUtil.unable_to_cancel_job", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + " : " + fields;            
+            return ServiceUtil.returnError(errMsg);
         }
 
         Timestamp cancelDate = job.getTimestamp("cancelDateTime");
@@ -348,7 +384,12 @@ public class ServiceUtil {
             result.put("cancelDateTime", cancelDate);
             return result;
         } else {
-            return ServiceUtil.returnError("Unable to cancel job : " + job);
+            ServiceUtil.errMsg = UtilProperties.getMessage(
+            ServiceUtil.RESOURCE,
+                    "serviceUtil.unable_to_cancel_job", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + " : " + job;            
+            return ServiceUtil.returnError(errMsg);
         }
     }
 
@@ -356,8 +397,14 @@ public class ServiceUtil {
         GenericDelegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        ServiceUtil.locale = (Locale) context.get("locale");       
         if (!security.hasPermission("SERVICE_INVOKE_ANY", userLogin)) {
-            return ServiceUtil.returnError("You do not have permission to run this service");
+            ServiceUtil.errMsg = UtilProperties.getMessage(
+            ServiceUtil.RESOURCE,
+                    "serviceUtil.no_permission_to_run", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ".";            
+            return ServiceUtil.returnError(errMsg);
         }
 
         String jobId = (String) context.get("jobId");
@@ -372,14 +419,24 @@ public class ServiceUtil {
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
-            return ServiceUtil.returnError("Unable to cancel job retries : " + fields);
+            ServiceUtil.errMsg = UtilProperties.getMessage(
+            ServiceUtil.RESOURCE,
+                    "serviceUtil.unable_to_cancel_job_retries", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + " : " + fields;            
+            return ServiceUtil.returnError(errMsg);
         }
 
         Timestamp cancelDate = job.getTimestamp("cancelDateTime");
         if (cancelDate != null) {
             return ServiceUtil.returnSuccess();
         } else {
-            return ServiceUtil.returnError("Unable to cancel job retries : " + job);
+            ServiceUtil.errMsg = UtilProperties.getMessage(
+            ServiceUtil.RESOURCE,
+                    "serviceUtil.unable_to_cancel_job_retries", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + " : " + job;            
+            return ServiceUtil.returnError(errMsg);
         }
     }
 }
