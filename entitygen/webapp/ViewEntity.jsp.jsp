@@ -111,7 +111,7 @@ function ShowViewTab(lname)
 [ltp]}%>
 
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 [ltp]}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 [ltp]}%>
@@ -352,10 +352,11 @@ function ShowTab(lname)
 [ltp]}%>
   
 <%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
-[ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>
+[ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: one --%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>
-    [ltp]<%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related = <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>);%>
+    [ltp]-- <%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related = <%=relatedEntity.ejbName%>Helper.findByPrimaryKey(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>); --%>
+    [ltp]<%=relatedEntity.ejbName%> <%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related = <%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.relationTitle%><%=relatedEntity.ejbName%>();%>
   <DIV id=area<%=relIndex+1%> style="VISIBILITY: <%=(relIndex==0?"visible":"hidden")%>; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b><%=relation.relationTitle%></b> Related Entity: <b><%=relatedEntity.ejbName%></b> with (<%=relatedEntity.colNameString(relatedEntity.pks)%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)
@@ -419,12 +420,13 @@ function ShowTab(lname)
   </div>
   [ltp]}%>
 [ltp]}%>
-[ltp]-- End Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>
+[ltp]-- End Relation for <%=relation.relatedEjbName%>, type: one --%>
   <%}else if(relation.relationType.equalsIgnoreCase("many")){%>
-[ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>
+[ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: many --%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>    
-    [ltp]Iterator relatedIterator = <%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>Iterator(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>);%>
+    [ltp]-- Iterator relatedIterator = UtilMisc.toIterator(<%=relatedEntity.ejbName%>Helper.findBy<%=relation.keyMapRelatedUpperString("And","")%>(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("(), " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()")%>)); --%>
+    [ltp]Iterator relatedIterator = UtilMisc.toIterator(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.relationTitle%><%=relatedEntity.ejbName%>s());%>
   <DIV id=area<%=relIndex+1%> style="VISIBILITY: <%=(relIndex==0?"visible":"hidden")%>; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b><%=relation.relationTitle%></b> Related Entities: <b><%=relatedEntity.ejbName%></b> with (<%=relation.keyMapRelatedColumnString(", ", "")%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)
@@ -529,7 +531,7 @@ Displaying [ltp]=relatedLoopCount%> entities.
   </div>
   [ltp]}%>
 [ltp]}%>
-[ltp]-- End Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>
+[ltp]-- End Relation for <%=relation.relatedEjbName%>, type: many --%>
   <%}%>
 <%}%>
 

@@ -145,16 +145,6 @@ public class <%=entity.ejbName%>Helper
     return <%=GenUtil.lowerFirstChar(entity.ejbName)%>;
   }
 
-  /** Finds all <%=entity.ejbName%> entities, returning an Iterator
-   *@return    Iterator containing all <%=entity.ejbName%> entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all <%=entity.ejbName%> entities
    *@return    Collection containing all <%=entity.ejbName%> entities
    */
@@ -213,7 +203,7 @@ public class <%=entity.ejbName%>Helper
   public static void removeBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.typeNameString(finderDesc.fields)%>)
   {
     if(<%=entity.nameString(finderDesc.fields, " == null || ", " == null")%>) return;
-    Iterator iterator = findBy<%=entity.classNameString(finderDesc.fields,"And","")%>Iterator(<%=entity.nameString(finderDesc.fields)%>);
+    Iterator iterator = UtilMisc.toIterator(findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.nameString(finderDesc.fields)%>));
 
     while(iterator.hasNext())
     {
@@ -225,17 +215,6 @@ public class <%=entity.ejbName%>Helper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method<%for(int j=0;j<finderDesc.fields.size();j++){%>
-   *@param  <%=((Field)finderDesc.fields.elementAt(j)).fieldName%>                  Field of the <%=((Field)finderDesc.fields.elementAt(j)).columnName%> column.<%}%>
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findBy<%=entity.classNameString(finderDesc.fields,"And","")%>Iterator(<%=entity.typeNameString(finderDesc.fields)%>)
-  {
-    Collection collection = findBy<%=entity.classNameString(finderDesc.fields,"And","")%>(<%=entity.nameString(finderDesc.fields)%>);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds <%=entity.ejbName%> records by the following parameters:<%for(int j=0;j<finderDesc.fields.size();j++){%>
@@ -262,7 +241,7 @@ public class <%=entity.ejbName%>Helper
    */
   public static void fastLoadValues() throws java.rmi.RemoteException
   {
-    Iterator iterator = findAllIterator();
+    Iterator iterator = UtilMisc.toIterator(findAll());
     if(iterator == null) { return; }
     <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%>;
 

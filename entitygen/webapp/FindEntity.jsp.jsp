@@ -161,7 +161,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b><%=entity.ejbName%>s found by:&nbsp; [ltp]=searchType%> : [ltp]=UtilFormatOut.checkNull(searchParam1)%> : [ltp]=UtilFormatOut.checkNull(searchParam2)%> : [ltp]=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 [ltp]if(hasCreatePermission){%>
-  <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>.jsp")%>" class="buttontext">[Create New <%=entity.ejbName%>]</a>
+  <a href="[ltp]=response.encodeURL("View<%=entity.ejbName%>")%>" class="buttontext">[Create New <%=entity.ejbName%>]</a>
 [ltp]}%>
 <table border="0" width="100%" cellpadding="2">
 [ltp] if(arraySize > 0) { %>
