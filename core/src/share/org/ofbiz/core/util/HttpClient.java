@@ -35,11 +35,14 @@ import java.net.*;
  * @since      2.0
  */
 public class HttpClient {
-
-    private String url = null;
+    
     private boolean lineFeed = true;
+    private boolean followRedirects = true;
+    
+    private String url = null;
     private Map parameters = null;
     private Map headers = null;
+    
     private URL requestUrl = null;
     private URLConnection con = null;
 
@@ -59,7 +62,7 @@ public class HttpClient {
     /** Creates a new HttpClient object. */
     public HttpClient(String url, Map parameters) {
         this.url = url;
-        this.parameters = parameters;
+        this.parameters = parameters;      
     }
 
     /** Creates a new HttpClient object. */
@@ -82,11 +85,16 @@ public class HttpClient {
         this.headers = headers;
     }
 
+    /** Enables this request to follow redirect 3xx codes (default true) */
+     public void followRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
+    }
+    
     /** Turns on or off line feeds in the request. (default is on) */
     public void setLineFeed(boolean lineFeed) {
         this.lineFeed = lineFeed;
     }
-
+    
     /** Set the URL for this request. */
     public void setUrl(URL url) {
         this.url = url.toExternalForm();
@@ -157,37 +165,51 @@ public class HttpClient {
     }
 
     /** Returns the value of the specified named response header field. */
-    public String getResponseHeader(String header) {
+    public String getResponseHeader(String header) throws HttpClientException {
+        if (con == null)
+            throw new HttpClientException("Connection not yet established");
         return con.getHeaderField(header);
     }
 
     /** Returns the key for the nth response header field. */
-    public String getResponseHeaderFieldKey(int n) {
+    public String getResponseHeaderFieldKey(int n) throws HttpClientException {
+        if (con == null)
+            throw new HttpClientException("Connection not yet established");
         return con.getHeaderFieldKey(n);
     }
 
     /** Returns the value for the nth response header field. It returns null of there are fewer then n fields. */
-    public String getResponseHeaderField(int n) {
+    public String getResponseHeaderField(int n) throws HttpClientException {
+        if (con == null)
+            throw new HttpClientException("Connection not yet established");
         return con.getHeaderField(n);
     }
 
     /** Returns the content of the response. */
-    public Object getResponseContent() throws java.io.IOException {
+    public Object getResponseContent() throws java.io.IOException, HttpClientException {
+        if (con == null)
+            throw new HttpClientException("Connection not yet established");
         return con.getContent();
     }
 
     /** Returns the content-type of the response. */
-    public String getResponseContentType() {
+    public String getResponseContentType() throws HttpClientException {
+        if (con == null)
+            throw new HttpClientException("Connection not yet established");
         return con.getContentType();
     }
 
     /** Returns the content length of the response */
-    public int getResponseContentLength() {
+    public int getResponseContentLength() throws HttpClientException {
+        if (con == null)
+            throw new HttpClientException("Connection not yet established");
         return con.getContentLength();
     }
 
     /** Returns the content encoding of the response. */
-    public String getResponseContentEncoding() {
+    public String getResponseContentEncoding() throws HttpClientException {
+        if (con == null)
+            throw new HttpClientException("Connection not yet established");
         return con.getContentEncoding();
     }
 
@@ -245,6 +267,9 @@ public class HttpClient {
         try {
             requestUrl = new URL(url);
             con = requestUrl.openConnection();
+            if ((con instanceof HttpURLConnection))                 
+                ((HttpURLConnection) con).setInstanceFollowRedirects(followRedirects);
+            
             con.setDoOutput(true);
             con.setUseCaches(false);
 
