@@ -289,9 +289,11 @@ public class GenericDAO {
       throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
     }
 
+    ModelViewEntity modelViewEntity = null;
     if(modelEntity instanceof ModelViewEntity) {
-      throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation select not supported yet for view entities");
+      modelViewEntity = (ModelViewEntity)modelEntity;
     }
+
 
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
@@ -312,7 +314,10 @@ public class GenericDAO {
     String sql = "SELECT ";
     if(modelEntity.nopks.size() > 0) sql += modelEntity.colNameString(modelEntity.nopks, ", ", "");
     else sql += "*";
-    sql += " FROM " + modelEntity.tableName + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
+
+    sql += makeFromClause(modelEntity);
+    sql += makeWhereClauseAnd(modelEntity, modelEntity.pks, entity);
+    
     //Debug.logInfo(" select: sql=" + sql);
     try {
       ps = connection.prepareStatement(sql);
@@ -386,8 +391,9 @@ public class GenericDAO {
     String sql = "SELECT ";
     if(partialFields.size() > 0) sql += modelEntity.colNameString(partialFields, ", ", "");
     else sql += "*";
-    sql += " FROM " + modelEntity.tableName + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
-    
+    sql += makeFromClause(modelEntity);
+    sql += makeWhereClauseAnd(modelEntity, modelEntity.pks, entity);
+
     try {
       ps = connection.prepareStatement(sql);
       
@@ -462,74 +468,11 @@ public class GenericDAO {
     String sql = "SELECT ";
     if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
     else sql = sql + "*";
-    if(modelViewEntity == null) {
-      sql += " FROM " + modelEntity.tableName;
-    }
-    else {
-      sql += " FROM ";
-      Iterator meIter = modelViewEntity.memberEntities.entrySet().iterator();
-      while(meIter.hasNext()) {
-        Map.Entry entry = (Map.Entry)meIter.next();
-        ModelEntity fromEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(entry.getKey());
-        sql += fromEntity.tableName + " " + (String)entry.getKey();
-        if(meIter.hasNext()) sql += ", ";
-      }
-    }
-    
-    String whereString = "";
-    if(fields != null && fields.size() > 0) {
-      whereString += makeWhereStringAnd(whereFields, dummyValue);
-    }
-    if(modelViewEntity != null) {
-      for(int i=0; i<modelViewEntity.viewLinks.size(); i++) {
-        ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink)modelViewEntity.viewLinks.get(i);
-        
-        ModelEntity linkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.entityAlias);
-        ModelEntity relLinkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.relEntityAlias);
 
-        for(int j=0; j<viewLink.keyMaps.size(); j++) {
-          ModelKeyMap keyMap = (ModelKeyMap)viewLink.keyMaps.get(j);
-          ModelField linkField = linkEntity.getField(keyMap.fieldName);
-          ModelField relLinkField = relLinkEntity.getField(keyMap.relFieldName);
-        
-          if(whereString.length() > 0) whereString += " AND ";
-          whereString += viewLink.entityAlias + "." + linkField.colName;
-          whereString += "=" + viewLink.relEntityAlias + "." + relLinkField.colName;
-        }
-      }
-    }
-    if(whereString.length() > 0) {
-      sql += " WHERE " + whereString;
-    }
-    
-    if(orderBy != null && orderBy.size() > 0) {
-      Vector orderByStrings = new Vector();
-      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
-        ModelField curField=(ModelField)modelEntity.fields.get(fi);
-        
-        for(int oi=0; oi<orderBy.size(); oi++) {
-          String keyName = (String)orderBy.get(oi);
-          int spaceIdx = keyName.indexOf(' ');
-          if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
-          if(curField.name.equals(keyName)) {
-            if(spaceIdx > 0) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
-            else orderByStrings.add(curField.colName);
-          }
-        }
-      }
-      
-      if(orderByStrings.size() > 0) {
-        sql = sql + " ORDER BY ";
-        
-        Iterator iter = orderByStrings.iterator();
-        while(iter.hasNext()) {
-          String curString = (String)iter.next();
-          sql = sql + curString;
-          if(iter.hasNext()) sql = sql + ", ";
-        }
-      }
-    }
-    
+    sql += makeFromClause(modelEntity);
+    sql += makeWhereClauseAnd(modelEntity, whereFields, dummyValue);
+    sql += makeOrderByClause(modelEntity, orderBy);
+
     //Debug.logInfo("[GenericDAO.selectByAnd] sql=" + sql);
     try {
       ps = connection.prepareStatement(sql);
@@ -601,82 +544,36 @@ public class GenericDAO {
       }
     }
     
-    String sql = "SELECT ";
-    if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
-    else sql = sql + "*";
-    if(modelViewEntity == null) {
-      sql += " FROM " + modelEntity.tableName;
-    }
-    else {
-      sql += " FROM ";
-      Iterator meIter = modelViewEntity.memberEntities.entrySet().iterator();
-      while(meIter.hasNext()) {
-        Map.Entry entry = (Map.Entry)meIter.next();
-        ModelEntity fromEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(entry.getKey());
-        sql += fromEntity.tableName + " " + (String)entry.getKey();
-        if(meIter.hasNext()) sql += ", ";
-      }
-    }
-    
-    String whereString = "";
+    StringBuffer sqlBuffer = new StringBuffer("SELECT ");
+    if(selectFields.size() > 0) sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
+    else sqlBuffer.append("*");
+    sqlBuffer.append(" ");
+    sqlBuffer.append(makeFromClause(modelEntity));
+
+    StringBuffer whereString = new StringBuffer("");
     if(whereFields != null && whereFields.size() > 0) {
       int i = 0;
       for(; i < whereFields.size() - 1; i++) {
-        whereString += ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? AND ";
+        whereString.append(((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode());
+        whereString.append(" ? AND ");
       }
-      whereString += ((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode() + " ? ";
+      whereString.append(((ModelField)whereFields.elementAt(i)).colName + ((EntityOperator)intraFieldOperations.get(i)).getCode());
+      whereString.append(" ? ");
     }
     
-    if(modelViewEntity != null) {
-      for(int i=0; i<modelViewEntity.viewLinks.size(); i++) {
-        ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink)modelViewEntity.viewLinks.get(i);
-        
-        ModelEntity linkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.entityAlias);
-        ModelEntity relLinkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.relEntityAlias);
-
-        for(int j=0; j<viewLink.keyMaps.size(); j++) {
-          ModelKeyMap keyMap = (ModelKeyMap)viewLink.keyMaps.get(j);
-          ModelField linkField = linkEntity.getField(keyMap.fieldName);
-          ModelField relLinkField = relLinkEntity.getField(keyMap.relFieldName);
-        
-          if(whereString.length() > 0) whereString += " AND ";
-          whereString += viewLink.entityAlias + "." + linkField.colName;
-          whereString += "=" + viewLink.relEntityAlias + "." + relLinkField.colName;
-        }
-      }
+    String viewClause = makeViewWhereClause(modelEntity);
+    if(viewClause.length() > 0) {
+      whereString.append(" AND ");
+      whereString.append(viewClause);
     }
+    
     if(whereString.length() > 0) {
-      sql += " WHERE " + whereString;
+      sqlBuffer.append(" WHERE ");
+      sqlBuffer.append(whereString);
     }
-    
 
-    if(orderBy != null && orderBy.size() > 0) {
-      Vector orderByStrings = new Vector();
-      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
-        ModelField curField=(ModelField)modelEntity.fields.get(fi);
-        
-        for(int oi=0; oi<orderBy.size(); oi++) {
-          String keyName = (String)orderBy.get(oi);
-          int spaceIdx = keyName.indexOf(' ');
-          if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
-          if(curField.name.equals(keyName)) {
-            if(spaceIdx > 0) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
-            else orderByStrings.add(curField.colName);
-          }
-        }
-      }
-      
-      if(orderByStrings.size() > 0) {
-        sql = sql + " ORDER BY ";
-        
-        Iterator iter = orderByStrings.iterator();
-        while(iter.hasNext()) {
-          String curString = (String)iter.next();
-          sql = sql + curString;
-          if(iter.hasNext()) sql = sql + ", ";
-        }
-      }
-    }
+    sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
+    String sql = sqlBuffer.toString();
     //Debug.logInfo("[GenericDAO.selectByAnd] sql=" + sql);
 
     try {
@@ -754,33 +651,7 @@ public class GenericDAO {
     sql += " FROM " + modelEntity.tableName;
     if(fields != null && fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, " LIKE ? AND ", " LIKE ?");
     
-    if(orderBy != null && orderBy.size() > 0) {
-      Vector orderByStrings = new Vector();
-      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
-        ModelField curField=(ModelField)modelEntity.fields.get(fi);
-        
-        for(int oi=0; oi<orderBy.size(); oi++) {
-          String keyName = (String)orderBy.get(oi);
-          int spaceIdx = keyName.indexOf(' ');
-          if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
-          if(curField.name.equals(keyName)) {
-            if(spaceIdx > 0) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
-            else orderByStrings.add(curField.colName);
-          }
-        }
-      }
-      
-      if(orderByStrings.size() > 0) {
-        sql = sql + " ORDER BY ";
-        
-        Iterator iter = orderByStrings.iterator();
-        while(iter.hasNext()) {
-          String curString = (String)iter.next();
-          sql = sql + curString;
-          if(iter.hasNext()) sql = sql + ", ";
-        }
-      }
-    }
+    sql += makeOrderByClause(modelEntity, orderBy);
     
     try {
       ps = connection.prepareStatement(sql);
@@ -906,34 +777,7 @@ public class GenericDAO {
     select.append(modelEntity.colNameString(selectFields, ", " + tableNamePrefix, ""));
     
     
-    if(orderBy != null && orderBy.size() > 0) {
-      Vector orderByStrings = new Vector();
-      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
-        ModelField curField=(ModelField)modelEntity.fields.get(fi);
-        
-        for(int oi=0; oi<orderBy.size(); oi++) {
-          String keyName = (String)orderBy.get(oi);
-          int spaceIdx = keyName.indexOf(' ');
-          if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
-          if(curField.name.equals(keyName)) {
-            if(spaceIdx > 0) orderByStrings.add(modelEntity.tableName + "." + curField.colName + keyName.substring(spaceIdx));
-            else orderByStrings.add(modelEntity.tableName + "." + curField.colName);
-          }
-        }
-      }
-      
-      if(orderByStrings.size() > 0) {
-        order.append(" ORDER BY ");
-        
-        Iterator iter = orderByStrings.iterator();
-        while(iter.hasNext()) {
-          String curString = (String)iter.next();
-          order.append(curString);
-          if(iter.hasNext()) order.append(", ");
-        }
-      }
-    }
-    
+    select.append(makeOrderByClause(modelEntity, orderBy));
     
     String sql = "";
     try {
@@ -976,7 +820,7 @@ public class GenericDAO {
     
     return collection;
   }
-  
+
 /* ====================================================================== */
 /* ====================================================================== */
   
@@ -1085,9 +929,31 @@ public class GenericDAO {
   
 /* ====================================================================== */
 /* ====================================================================== */
+
+  protected String makeFromClause(ModelEntity modelEntity) {
+    StringBuffer sql = new StringBuffer("");
+    if(modelEntity instanceof ModelViewEntity) {
+      ModelViewEntity modelViewEntity = (ModelViewEntity)modelEntity;
+      sql.append(" FROM ");
+      Iterator meIter = modelViewEntity.memberEntities.entrySet().iterator();
+      while(meIter.hasNext()) {
+        Map.Entry entry = (Map.Entry)meIter.next();
+        ModelEntity fromEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(entry.getKey());
+        sql.append(fromEntity.tableName);
+        sql.append(" ");
+        sql.append((String)entry.getKey());
+        if(meIter.hasNext()) sql.append(", ");
+      }
+    }
+    else {
+      sql.append(" FROM ");
+      sql.append(modelEntity.tableName);
+    }
+    return sql.toString();
+  }
   
   /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
-  public String makeWhereStringAnd(Vector modelFields, GenericEntity entity) {
+  protected String makeWhereStringAnd(Vector modelFields, GenericEntity entity) {
     StringBuffer returnString = new StringBuffer("");
     if(modelFields.size() < 1) { return ""; }
     
@@ -1104,6 +970,87 @@ public class GenericDAO {
     else returnString.append(" IS NULL");
     return returnString.toString();
   }
+  
+  protected String makeWhereClauseAnd(ModelEntity modelEntity, Vector modelFields, GenericEntity entity) {
+    StringBuffer whereString = new StringBuffer("");
+    if(modelFields != null && modelFields.size() > 0) {
+      whereString.append(makeWhereStringAnd(modelFields, entity));
+    }
+
+    String viewClause = makeViewWhereClause(modelEntity);
+    if(viewClause.length() > 0) {
+      whereString.append(" AND ");
+      whereString.append(viewClause);
+    }
+    
+    if(whereString.length() > 0) return " WHERE " + whereString.toString();
+    else return "";
+  }
+  
+  protected String makeViewWhereClause(ModelEntity modelEntity) {
+    StringBuffer whereString = new StringBuffer("");
+    if(modelEntity instanceof ModelViewEntity) {
+      ModelViewEntity modelViewEntity = (ModelViewEntity)modelEntity;
+
+      for(int i=0; i<modelViewEntity.viewLinks.size(); i++) {
+        ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink)modelViewEntity.viewLinks.get(i);
+        
+        ModelEntity linkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.entityAlias);
+        ModelEntity relLinkEntity = (ModelEntity)modelViewEntity.memberModelEntities.get(viewLink.relEntityAlias);
+
+        for(int j=0; j<viewLink.keyMaps.size(); j++) {
+          ModelKeyMap keyMap = (ModelKeyMap)viewLink.keyMaps.get(j);
+          ModelField linkField = linkEntity.getField(keyMap.fieldName);
+          ModelField relLinkField = relLinkEntity.getField(keyMap.relFieldName);
+        
+          if(whereString.length() > 0) whereString.append(" AND ");
+          whereString.append(viewLink.entityAlias);
+          whereString.append(".");
+          whereString.append(linkField.colName);
+          whereString.append("=");
+          whereString.append(viewLink.relEntityAlias);
+          whereString.append(".");
+          whereString.append(relLinkField.colName);
+        }
+      }
+    }
+    return whereString.toString();
+  }
+  
+  protected String makeOrderByClause(ModelEntity modelEntity, List orderBy) {
+    StringBuffer sql = new StringBuffer("");
+    if(orderBy != null && orderBy.size() > 0) {
+      Vector orderByStrings = new Vector();
+      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
+        ModelField curField=(ModelField)modelEntity.fields.get(fi);
+        
+        for(int oi=0; oi<orderBy.size(); oi++) {
+          String keyName = (String)orderBy.get(oi);
+          int spaceIdx = keyName.indexOf(' ');
+          if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
+          if(curField.name.equals(keyName)) {
+            if(spaceIdx > 0) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
+            else orderByStrings.add(curField.colName);
+          }
+        }
+      }
+      
+      if(orderByStrings.size() > 0) {
+        sql.append(" ORDER BY ");
+        
+        Iterator iter = orderByStrings.iterator();
+        while(iter.hasNext()) {
+          String curString = (String)iter.next();
+          sql.append(curString);
+          if(iter.hasNext()) sql.append(", ");
+        }
+      }
+    }
+    return sql.toString();
+  }
+    
+/* ====================================================================== */
+/* ====================================================================== */
   
   public void getValue(ResultSet rs, int ind, ModelField curField, GenericEntity entity) throws SQLException, GenericEntityException {
     ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.type);
