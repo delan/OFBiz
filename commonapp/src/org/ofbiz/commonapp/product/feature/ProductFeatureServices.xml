@@ -41,6 +41,7 @@
         <check-errors/>
         <make-value value-name="newEntity" entity-name="ProductFeatureCategory" map-name="newEntityContext"/>
         <create-value value-name="newEntity"/>
+        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
     <simple-method method-name="updateProductFeatureCategory" short-description="Update Product Feature Category">
         <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
@@ -54,6 +55,7 @@
         </call-map-processor>
         <check-errors/>
         <store-value value-name="productFeatureCategory"/>
+        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
 
     <simple-method method-name="createProductFeature" short-description="Create Product Feature">
@@ -74,6 +76,7 @@
         <check-errors/>
         <make-value value-name="newEntity" entity-name="ProductFeature" map-name="newEntityContext"/>
         <create-value value-name="newEntity"/>
+        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
     <simple-method method-name="updateProductFeature" short-description="Update Product Feature">
         <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
@@ -90,6 +93,7 @@
         </call-map-processor>
         <check-errors/>
         <store-value value-name="productFeature"/>
+        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
 
     <simple-method method-name="applyFeatureToProduct" short-description="Apply Feature to Product">
@@ -112,6 +116,7 @@
         <check-errors/>
         <make-value value-name="newEntity" entity-name="ProductFeatureAppl" map-name="newEntityContext"/>
         <create-value value-name="newEntity"/>
+        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
     <simple-method method-name="updateFeatureToProductApplication" short-description="Update Feature to Product Application">
         <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
@@ -128,6 +133,7 @@
         </call-map-processor>
         <check-errors/>
         <store-value value-name="productFeatureAppl"/>
+        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
     <simple-method method-name="removeFeatureFromProduct" short-description="Remove Feature from Product">
         <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
@@ -142,5 +148,6 @@
         <field-to-field field-name="thruDate" map-name="parameters" to-map-name="productFeatureAppl"/>
         <check-errors/>
         <store-value value-name="productFeatureAppl"/>
+        <!-- TODO: what caches need to be cleared? -->
     </simple-method>
 </simple-methods>
