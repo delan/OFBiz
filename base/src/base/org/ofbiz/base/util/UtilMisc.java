@@ -1,5 +1,5 @@
 /*
- * $Id: UtilMisc.java,v 1.3 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: UtilMisc.java,v 1.4 2003/09/26 17:05:35 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.Map;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class UtilMisc {
@@ -287,20 +287,32 @@ public class UtilMisc {
     /**
      * Parse a locale string Locale object
      * @param localeString The locale string (en_US)
-     * @return Locale The new Locale object
+     * @return Locale The new Locale object or null if no valid locale can be interpreted
      */
     public static Locale parseLocale(String localeString) {
-        if (localeString == null || localeString.length() == 0)
+        if (localeString == null || localeString.length() == 0) {
             return null;
+        }
         
-        List splitList = StringUtil.split(localeString, "_");
-        if (splitList.size() != 2)
-            return null;
-            
-        String language = (String) splitList.get(0);
-        String country = (String) splitList.get(1);
+        Locale locale = null;
+        if (localeString.length() == 2) {
+            // two letter language code
+            locale = new Locale(localeString);
+        } else if (localeString.length() == 5) {
+            // positions 0-1 language, 3-4 are country
+            String language = localeString.substring(0, 2);
+            String country = localeString.substring(3, 5);
+            locale = new Locale(language, country);
+        } else if (localeString.length() > 6) {
+            // positions 0-1 language, 3-4 are country, 6 and on are special extensions
+            String language = localeString.substring(0, 2);
+            String country = localeString.substring(3, 5);
+            String extension = localeString.substring(6);
+            locale = new Locale(language, country, extension);
+        } else {
+            Debug.logWarning("Do not know what to do with the localeString [" + localeString + "], should be length 2, 5, or greater than 6, returning null", module);
+        }
         
-        Locale locale = new Locale(language, country);
         return locale;
     }
 
