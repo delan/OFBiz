@@ -14,15 +14,38 @@
 
 <h3 align="left"><a name="Table of Contents">Table of Contents</a></h3>
 <ul>
-  <li>Introduction</li>
-  <li>MySQL Setup (or other database)</li>
-  <li>JBoss &amp; Tomcat (and Ant) Setup</li>
-  <li>OFBiz Setup</li>
-  <li>Running</li>
+  <li><a href="#Introduction">Introduction</a></li>
+  <li><a href="#Quick &amp; Easy Setup">Quick &amp; Easy Setup</a></li>
+  <li><a href="#MySQL Setup">MySQL Setup (or other database)</a></li>
+  <li><a href="#JBoss &amp; Tomcat Setup">JBoss &amp; Tomcat (and Ant and
+    PoolMan) Setup</a></li>
+  <li><a href="#OFBiz Setup">OFBiz Setup</a></li>
+  <li><a href="#Running">Running</a></li>
 </ul>
 
 <h3><a name="Introduction">Introduction</a></h3>
-<p>This document describes an initial setup for the Open For Business Project.</p>
+<p>This document describes an initial setup process for the Open For Business Project.</p>
+
+<h3><a name="Quick &amp; Easy Setup">Quick &amp; Easy Setup</a></h3>
+
+<p>You can get up and running quickly by downloading the OFBiz &amp;
+Tomcat4/PoolMan distribution and following some simple instructions. For more
+options and explanations, see the rest of this document.</p>
+<ol>
+  <li>Download the OFBiz &amp; Tomcat4/PoolMan archive and unzip it in <b>/ofbiz/work</b>.
+    This should create two directories under <b>/ofbiz/work</b>: <b>ofbiz</b>
+    &amp; <b>catalina</b> (note that &quot;catalina&quot; is the code name, and
+    semi-official name, for Jakarta Tomcat 4.0)</li>
+  <li>If MySQL is not setup on the target computer, download and install it as
+    instructed below. Don't worry about the JDBC driver, it is already in place
+    in the OFBiz &amp; Tomcat4 archive. For this simple setup, just make sure
+    there is a MySQL database on <b>localhost</b> called &quot;<b>ofbiz</b>&quot;,
+    and make sure it is accessible through the username &quot;<b>mysqldb</b>&quot;
+    and the password &quot;<b>mysqldb</b>&quot;.</li>
+  <li>Start Tomcat 4 by executing the <b>startup.bat</b> or <b>startup.sh</b>
+    script in <b>/ofbiz/work/catalina/bin</b>.</li>
+</ol>
+
 <h3><a name="MySQL Setup">MySQL Setup</a></h3>
 <p>MySQL is the default database for ofbiz. It will run with any database that
 JBoss supports with Container Managed Persistence, which is a lot of databases.
@@ -30,9 +53,13 @@ For other databases, the SQL table creation and data loading files will have to
 be changed, and the jaws.xml deployment descriptor may have to be changed, but
 that is all.</p>
 <p>You can download MySQL from <a href="http://www.mysql.com" target="_blank">www.mysql.com</a>,
-get the newest version.</p>
-<p>You will also need the MySQL JDBC driver, get the <a href="http://www.mysql.com/Downloads/Contrib/mm.mysql-2.0.4-bin.jar">mm.mysql-2.0.4-bin.jar</a>
- file, or a newer version if available.</p>
+get the most recent stable version.</p>
+<p>You will also need the MySQL JDBC driver, get the most recent stable version
+from Mark Matthews on his SourceForge site at <a href="http://mmmysql.sourceforge.net/">http://mmmysql.sourceforge.net/</a>.
+If you download the jar files there, you can't just put it in <b>catalina/lib</b>
+or <b>jboss/lib/ext</b> because it has all of the source and docs and is not
+just the driver jar. Open up the jar and get the jar in the base path of the
+archive and use that, it is the real binary jar driver file.</p>
 <p>To use the default settings in the ofbiz configuration files, create a
 database called &quot;ofbiz&quot; and start the MySQL server with a username of
 &quot;mysqldb&quot; and a password of &quot;mysqldb&quot;. If you use different
@@ -54,6 +81,7 @@ along with the entitymodel.xml file which contains database independent entity
 definitions.</p>
 <p>Default data can be loaded automatically once the server has been started by
 going to a JSP, which is listed below in the Running section.&nbsp;</p>
+
 <h3><a name="JBoss &amp; Tomcat Setup">JBoss &amp; Tomcat Setup</a></h3>
 <p>Open For Business can be run with either a simple servlet engine alone (like
 Tomcat) or with a full J2EE container (like JBoss &amp; Tomcat together). This
