@@ -852,6 +852,95 @@ public class OrderServices {
         return result;
     }
     
+    /** Service to prepare notification data */
+    public static Map prepareOrderEmail(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        
+        try {
+            GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));                               
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);                        
+            List orderItems = orh.getOrderItems();                        
+            List orderAdjustments = orh.getAdjustments();                 
+            List orderHeaderAdjustments = orh.getOrderHeaderAdjustments();                                                           
+            double orderSubTotal = orh.getOrderItemsSubTotal();
+            List headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
+           
+            //templateContext.put("localOrderReadHelper", orh);
+            result.put("orderHeader", OrderReadHelper.getOrderHeaderDisplay(orderHeader, orderHeaderAdjustments, orderSubTotal));
+            result.put("orderItems", OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments));
+            result.put("statusString", orh.getStatusString());
+            result.put("orderAdjustments", orderAdjustments);
+            result.put("orderHeaderAdjustments", orderHeaderAdjustments);
+            result.put("orderSubTotal", new Double(orderSubTotal));
+            result.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
+                       
+            double shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
+            shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
+            result.put("orderShippingTotal", new Double(shippingAmount));
+    
+            double taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
+            taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);
+            result.put("orderTaxTotal", new Double(taxAmount));   
+            result.put("orderGrandTotal", new Double(OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments)));
+                    
+            List placingCustomerOrderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+            GenericValue placingCustomerOrderRole = EntityUtil.getFirst(placingCustomerOrderRoles);        
+            GenericValue placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
+            result.put("placingCustomerPerson", placingCustomerPerson);
+      
+
+            GenericValue shippingAddress = orh.getShippingAddress();
+            result.put("shippingAddress", shippingAddress);
+            GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
+            result.put("billingAccount", billingAccount);
+    
+            Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
+            if (orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
+                GenericValue orderPaymentPreference = (GenericValue) orderPaymentPreferences.next();
+                GenericValue paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");        
+                GenericValue paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
+                result.put("paymentMethod", paymentMethod);
+                result.put("paymentMethodType", paymentMethodType);
+          
+                if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
+                    GenericValue creditCard = (GenericValue) paymentMethod.getRelatedOneCache("CreditCard");
+                    result.put("creditCard", creditCard);
+                    result.put("formattedCardNumber", ContactHelper.formatCreditCard(creditCard));
+                } else if (paymentMethod != null && "EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
+                    GenericValue eftAccount = (GenericValue) paymentMethod.getRelatedOneCache("EftAccount");
+                    result.put("eftAccount", eftAccount);
+                }        
+            }   
+           
+            Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
+            if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
+                GenericValue shipmentPreference = (GenericValue) orderShipmentPreferences.next();
+                result.put("carrierPartyId", shipmentPreference.getString("carrierPartyId"));
+                result.put("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId"));       
+                GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId")));
+                result.put("shipMethDescription", shipmentMethodType.getString("description"));       
+                result.put("shippingInstructions", shipmentPreference.getString("shippingInstructions"));
+                result.put("maySplit", shipmentPreference.getBoolean("maySplit"));
+                result.put("giftMessage", shipmentPreference.getString("giftMessage"));
+                result.put("isGift", shipmentPreference.getBoolean("isGift"));
+                result.put("trackingNumber", shipmentPreference.getString("trackingNumber"));
+            }
+         
+            Iterator orderItemPOIter = UtilMisc.toIterator(orderItems);
+            if (orderItemPOIter != null && orderItemPOIter.hasNext()) {
+                GenericValue orderItemPo = (GenericValue) orderItemPOIter.next();
+                result.put("customerPoNumber", orderItemPo.getString("correspondingPoId"));
+            }   
+      
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Entity read error", module);
+            ServiceUtil.returnError("Problem with entity lookup, see error log");            
+        }             
+        return result;
+    }
+    
     /** Helper method to prepare a FTL template w/ order data */
     public static Writer prepareOrderConfirm(GenericDelegator delegator, String orderId, URL template, Locale localLocale) {
         // build the template data-model

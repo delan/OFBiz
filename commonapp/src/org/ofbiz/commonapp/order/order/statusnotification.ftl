@@ -28,7 +28,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <#-- this needs to be fully qualified to appear in email; the server must also be available -->
-    <link rel='stylesheet' href='${contentPrefix}/images/maincss.css' type='text/css'>      
+    <link rel='stylesheet' href='${baseUrl}/images/maincss.css' type='text/css'>      
 </head>
 
 <body> 
@@ -87,7 +87,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <#if orderHeader?has_content>                                                
-                          <div class="tabletext">${localOrderReadHelper.getStatusString()}</div>
+                          <div class="tabletext">${statusString?default("N/A")}</div>
                         <#else>
                           <div class="tabletext"><b>Not Yet Ordered</b></div>
                         </#if>
