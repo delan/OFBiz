@@ -80,7 +80,9 @@
                       <div class="tabletext"><a href="/partymgr/control/editcontactmech?party_id=<%=partyId%>&contactMechId=<%=shippingContactMechId%>" target="_blank" class="buttontext">[Update]</a></div>
                     </td>                      
                   </tr>
+                  <#if shippingContactMech_has_next>
                   <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                  </#if>
                 </#list>
               </form>
             </table>  
