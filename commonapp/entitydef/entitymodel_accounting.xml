@@ -1316,6 +1316,7 @@
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="General Ledger Reconciliation Entity">
       <field name="glReconciliationId" type="id-ne"></field>
+      <field name="glReconciliationName" type="name"></field>
       <field name="description" type="description"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
