@@ -47,7 +47,7 @@
     </tr>
     <tr>
       <td colspan="3">
-        <a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<%=response.encodeURL(controlPath + "/shippingAddress")%>" class="buttontext">[Checkout]</a>
+        <a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<%=response.encodeURL(controlPath + "/checkoutoptions")%>" class="buttontext">[Checkout]</a>
       </td>
     </tr>
 <%}else{%>
