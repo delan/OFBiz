@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.17 2004/04/01 14:49:36 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.18 2004/04/01 15:58:01 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.UtilValidate;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.17 $
+  *@version    $Revision: 1.18 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
@@ -70,9 +70,15 @@ public class ComponentContainer implements Container {
             loaderConfig = cc.getProperty("loader-config").value;
         }
 
+        // check for en override update classpath
+        boolean updateClassPath = true;
+        if (cc.getProperty("update-classpath") != null) {
+            updateClassPath = "true".equalsIgnoreCase(cc.getProperty("update-classpath").value);
+        }
+
         // load the components
         try {
-            loadComponents(loaderConfig, true);
+            loadComponents(loaderConfig, updateClassPath);
         } catch (AlreadyLoadedException e) {
             throw new ContainerException(e);
         } catch (ComponentException e) {
