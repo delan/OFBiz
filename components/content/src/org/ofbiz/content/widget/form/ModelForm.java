@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.6 2004/01/17 03:57:46 byersa Exp $
+ * $Id: ModelForm.java,v 1.7 2004/03/15 14:53:57 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class ModelForm {
@@ -79,6 +79,7 @@ public class ModelForm {
     protected String defaultTooltipStyle;
     protected String itemIndexSeparator;
     protected String paginateTarget;
+    protected boolean separateColumns = false;
 
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
@@ -159,6 +160,7 @@ public class ModelForm {
                 this.itemIndexSeparator = parent.itemIndexSeparator;
                 this.fieldList = parent.fieldList;
                 this.fieldMap = parent.fieldMap;
+                this.separateColumns = parent.separateColumns;
             }
         }
 
@@ -177,20 +179,25 @@ public class ModelForm {
             this.listEntryName = formElement.getAttribute("list-entry-name");
         if (this.defaultMapName == null || formElement.hasAttribute("default-map-name"))
             this.setDefaultMapName(formElement.getAttribute("default-map-name"));
-        if (this.defaultEntityName == null || formElement.hasAttribute("defaultEntityName"))
-            this.defaultEntityName = formElement.getAttribute("default-entity-name");
-        if (this.defaultServiceName == null || formElement.hasAttribute("defaultServiceName"))
+        if (this.defaultServiceName == null || formElement.hasAttribute("default-service-name"))
             this.defaultServiceName = formElement.getAttribute("default-service-name");
-        if (this.defaultTitleStyle == null || formElement.hasAttribute("defaultTitleStyle"))
+        if (this.defaultEntityName == null || formElement.hasAttribute("default-entity-name"))
+            this.defaultEntityName = formElement.getAttribute("default-entity-name");
+        if (this.defaultTitleStyle == null || formElement.hasAttribute("default-title-style"))
             this.defaultTitleStyle = formElement.getAttribute("default-title-style");
-        if (this.defaultWidgetStyle == null || formElement.hasAttribute("defaultWidgetStyle"))
+        if (this.defaultWidgetStyle == null || formElement.hasAttribute("default-widget-style"))
             this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
-        if (this.defaultTooltipStyle == null || formElement.hasAttribute("defaultTooltipStyle"))
+        if (this.defaultTooltipStyle == null || formElement.hasAttribute("default-tooltip-style"))
             this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
-        if (this.itemIndexSeparator == null || formElement.hasAttribute("itemIndexSeparator"))
+        if (this.itemIndexSeparator == null || formElement.hasAttribute("item-index-separator"))
             this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
-        if (this.paginateTarget == null || formElement.hasAttribute("paginateTarget"))
+        if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
             this.paginateTarget = formElement.getAttribute("paginate-target");
+        if (formElement.hasAttribute("separate-columns")) {
+            String sepColumns = formElement.getAttribute("separate-columns");
+            if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
+                separateColumns = true;
+        }
 
         // alt-target
         List altTargetElements = UtilXml.childElementList(formElement, "alt-target");
@@ -697,8 +704,14 @@ public class ModelForm {
             ModelFormField modelFormField = (ModelFormField) headerFormFieldIter.next();
             ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
 
+            if (separateColumns || modelFormField.getSeparateColumn()) 
+                formStringRenderer.renderFormatItemRowCellOpen(buffer, context, this, modelFormField);
+
             // render title (unless this is a submit or a reset field)
             formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
+
+            if (separateColumns || modelFormField.getSeparateColumn()) 
+                formStringRenderer.renderFormatItemRowCellClose(buffer, context, this, modelFormField);
 
             if (headerFormFieldIter.hasNext()) {
                 // TODO: determine somehow if this is the last one... how?
@@ -817,8 +830,13 @@ public class ModelForm {
                         continue;
                     }
 
+                    if (separateColumns || modelFormField.getSeparateColumn()) 
+                        formStringRenderer.renderFormatItemRowCellOpen(buffer, localContext, this, modelFormField);
                     // render field widget
                     modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
+
+                    if (separateColumns || modelFormField.getSeparateColumn()) 
+                        formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
                 }
 
                 if (formPerItem) {
@@ -1162,6 +1180,13 @@ public class ModelForm {
      */
     public String getPaginateTarget() {
         return this.paginateTarget;
+    }
+
+    /**
+     * @return
+     */
+    public boolean getSeparateColumns() {
+        return this.separateColumns;
     }
 
     /**
