@@ -64,16 +64,14 @@
   if(find == null) find="false";
   String curFindString = "entityName=" + entityName + "&find=" + find;
   GenericEntity findByEntity = delegator.makeValue(entityName, null);
-  for(int fnum=0; fnum<entity.fields.size(); fnum++)
-  {
-    ModelField field = (ModelField)entity.fields.get(fnum);
-    String fval = request.getParameter(field.name);
-    if(fval != null)
-    {
+  for(int fnum=0; fnum < entity.getFieldsSize(); fnum++) {
+    ModelField field = entity.getField(fnum);
+    String fval = request.getParameter(field.getName());
+    if(fval != null) {
       if(fval.length() > 0)
       {
-        curFindString = curFindString + "&" + field.name + "=" + fval;
-        findByEntity.setString(field.name, fval);
+        curFindString = curFindString + "&" + field.getName() + "=" + fval;
+        findByEntity.setString(field.getName(), fval);
       }
     }
   }
@@ -134,13 +132,13 @@
 <form method="post" action="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName)%>" style='margin:0;'>
 <INPUT type=hidden name='find' value='true'>
 <table cellpadding="2" cellspacing="2" border="0">
-  <%for(int fnum=0; fnum<entity.fields.size(); fnum++){%>
-    <%ModelField field = (ModelField)entity.fields.get(fnum);%>
-    <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
+  <%for (int fnum=0; fnum<entity.getFieldsSize(); fnum++) {%>
+    <%ModelField field = entity.getField(fnum);%>
+    <%ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());%>
     <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
-      <td valign="top"><%=field.name%>(<%=type.javaType%>,<%=type.sqlType%>):</td>
+      <td valign="top"><%=field.getName()%>(<%=type.getJavaType()%>,<%=type.getSqlType()%>):</td>
       <td valign="top">
-        <input type="text" name="<%=field.name%>" value="" size="40">
+        <input type="text" name="<%=field.getName()%>" value="" size="40">
       </td>
     </tr>
   <%}%>
@@ -180,71 +178,66 @@
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
-    <%for(int fnum=0;fnum<entity.fields.size();fnum++){%>
-      <%ModelField field = (ModelField)entity.fields.get(fnum);%>
-      <td nowrap><div class="tabletext"><b><%=field.name%></b></div></td>
+    <%for(int fnum = 0; fnum < entity.getFieldsSize(); fnum++){%>
+      <%ModelField field = entity.getField(fnum);%>
+      <td nowrap><div class="tabletext"><b><%=field.getName()%></b></div></td>
     <%}%>
     </tr>
 <%
- if(resultArray != null && resultArray.length > 0)
- {
+ if(resultArray != null && resultArray.length > 0) {
   int loopIndex;
   //for(loopIndex=resultArray.length-1; loopIndex>=0 ; loopIndex--)
-  for(loopIndex=lowIndex; loopIndex<=highIndex; loopIndex++)
-  {
+  for(loopIndex=lowIndex; loopIndex<=highIndex; loopIndex++) {
     GenericValue value = (GenericValue)resultArray[loopIndex-1];
-    if(value != null)
-    {
+    if(value != null) {
 %>
     <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
       <td>
         <%
           String findString = "entityName=" + entityName;
-          for(int pknum=0; pknum<entity.pks.size(); pknum++)
-          {
-            ModelField pkField = (ModelField)entity.pks.get(pknum);
-            ModelFieldType type = delegator.getEntityFieldType(entity, pkField.type);
-            if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){
-              String dtStr = value.getTimestamp(pkField.name).toString();
-              findString += "&" + pkField.name + "_DATE=" + dtStr.substring(0, dtStr.indexOf(' '));
-              findString += "&" + pkField.name + "_TIME=" + dtStr.substring(dtStr.indexOf(' ') + 1);
-            }
-            else {
-              findString += "&" + pkField.name + "=" + value.get(pkField.name);
+          for (int pknum = 0; pknum < entity.getPksSize(); pknum++) {
+            ModelField pkField = entity.getPk(pknum);
+            ModelFieldType type = delegator.getEntityFieldType(entity, pkField.getType());
+            if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")){
+              String dtStr = value.getTimestamp(pkField.getName()).toString();
+              findString += "&" + pkField.getName() + "_DATE=" + dtStr.substring(0, dtStr.indexOf(' '));
+              findString += "&" + pkField.getName() + "_TIME=" + dtStr.substring(dtStr.indexOf(' ') + 1);
+            } else {
+              findString += "&" + pkField.getName() + "=" + value.get(pkField.getName());
             }
           }
         %>
         <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[View]</a>
       </td>
-      <%if(hasDeletePermission){%>
+      <%if (hasDeletePermission) {%>
         <td>
           <a href="<%=response.encodeURL(controlPath + "/UpdateGeneric?" + findString + "&UPDATE_MODE=DELETE&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
-    <%for(int fnum=0;fnum<entity.fields.size();fnum++){%>
-      <%ModelField field = (ModelField)entity.fields.get(fnum);%>
-      <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
+    <%for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {%>
+      <%ModelField field = entity.getField(fnum);%>
+      <%ModelFieldType type = delegator.getEntityFieldType(entity, field.getType());%>
       <td>
         <div class="tabletext">
-      <%if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){%>
-        <%java.sql.Timestamp dtVal = value.getTimestamp(field.name);%>
+      <%if(type.getJavaType().equals("Timestamp") || type.getJavaType().equals("java.sql.Timestamp")){%>
+        <%java.sql.Timestamp dtVal = value.getTimestamp(field.getName());%>
         <%=dtVal==null?"":dtVal.toString()%>
-      <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
-        <%java.sql.Date dateVal = value.getDate(field.name);%>
+      <%} else if(type.getJavaType().equals("Date") || type.getJavaType().equals("java.sql.Date")){%>
+        <%java.sql.Date dateVal = value.getDate(field.getName());%>
         <%=dateVal==null?"":dateVal.toString()%>
-      <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
-        <%java.sql.Time timeVal = value.getTime(field.name);%>
+      <%} else if(type.getJavaType().equals("Time") || type.getJavaType().equals("java.sql.Time")){%>
+        <%java.sql.Time timeVal = value.getTime(field.getName());%>
         <%=timeVal==null?"":timeVal.toString()%>
-      <%}else if(type.javaType.indexOf("Integer") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Integer)value.get(field.name))%>
-      <%}else if(type.javaType.indexOf("Long") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Long)value.get(field.name))%>
-      <%}else if(type.javaType.indexOf("Double") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Double)value.get(field.name))%>
-      <%}else if(type.javaType.indexOf("Float") >= 0){%>
-        <%=UtilFormatOut.formatQuantity((Float)value.get(field.name))%>
-      <%}else if(type.javaType.indexOf("String") >= 0){%>
-        <%=UtilFormatOut.checkNull((String)value.get(field.name))%>
+      <%}else if(type.getJavaType().indexOf("Integer") >= 0){%>
+        <%=UtilFormatOut.formatQuantity((Integer)value.get(field.getName()))%>
+      <%}else if(type.getJavaType().indexOf("Long") >= 0){%>
+        <%=UtilFormatOut.formatQuantity((Long)value.get(field.getName()))%>
+      <%}else if(type.getJavaType().indexOf("Double") >= 0){%>
+        <%=UtilFormatOut.formatQuantity((Double)value.get(field.getName()))%>
+      <%}else if(type.getJavaType().indexOf("Float") >= 0){%>
+        <%=UtilFormatOut.formatQuantity((Float)value.get(field.getName()))%>
+      <%}else if(type.getJavaType().indexOf("String") >= 0){%>
+        <%=UtilFormatOut.checkNull((String)value.get(field.getName()))%>
       <%}%>
         &nbsp;</div>
       </td><%}%>
@@ -257,7 +250,7 @@
  {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="<%=entity.fields.size() + 2%>">
+<td colspan="<%=entity.getFieldsSize() + 2%>">
 <h3>No <%=entity.getEntityName()%>s Found.</h3>
 </td>
 </tr>
