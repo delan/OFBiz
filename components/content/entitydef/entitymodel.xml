@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.40 $
+ * @version    $Revision: 1.41 $
  */
 -->
 
@@ -104,35 +104,11 @@
       <relation type="many" rel-entity-name="ContentTypeAttr">
         <key-map field-name="contentTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="ContentAttribute">
-        <key-map field-name="contentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContentMetaData">
-        <key-map field-name="contentId"/>
-      </relation>
-      <relation type="many" title="From" rel-entity-name="ContentAssoc">
-        <key-map field-name="contentId"/>
-      </relation>
-      <relation type="many" title="To" rel-entity-name="ContentAssoc">
-        <key-map field-name="contentId" rel-field-name="contentIdTo"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContentRole">
-        <key-map field-name="contentId"/>
-      </relation>
       <relation type="one" fk-name="CONTENT_CB_ULGN" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
       </relation>
       <relation type="one" fk-name="CONTENT_LMB_ULGN" title="LastModifiedBy" rel-entity-name="UserLogin">
         <key-map field-name="lastModifiedByUserLogin" rel-field-name="userLoginId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WebPage">
-        <key-map field-name="contentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyContent">
-        <key-map field-name="contentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductContent">
-        <key-map field-name="contentId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductFeatureDataResource">
         <key-map field-name="dataResourceId"/>
@@ -142,9 +118,6 @@
       </relation>
       <relation type="one" fk-name="CONTENT_PCNTNT" title="Owner" rel-entity-name="Content">
         <key-map field-name="ownerContentId" rel-field-name="contentId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContentPurpose">
-          <key-map field-name="contentId"/>
       </relation>
       <relation type="many" rel-entity-name="ContentAssocDataResourceViewFrom">
         <key-map field-name="contentId" rel-field-name="contentIdStart" />
@@ -290,9 +263,6 @@
       <field name="contentAssocPredicateId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="contentAssocPredicateId"/>
-      <relation type="many" rel-entity-name="ContentAssoc">
-        <key-map field-name="contentAssocPredicateId"/>
-      </relation>
     </entity>
     <entity entity-name="ContentAssocType"
             package-name="org.ofbiz.content.content"
@@ -300,9 +270,6 @@
       <field name="contentAssocTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="contentAssocTypeId"/>
-      <relation type="many" rel-entity-name="ContentAssoc">
-        <key-map field-name="contentAssocTypeId"/>
-      </relation>
     </entity>
     <view-entity entity-name="ContentAssocViewFrom"
                 package-name="org.ofbiz.commonapp.content"
@@ -406,9 +373,6 @@
       <field name="contentOperationId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="contentOperationId"/>
-      <relation type="many" rel-entity-name="ContentPurposeOperation">
-        <key-map field-name="contentOperationId"/>
-      </relation>
     </entity>
     <entity entity-name="ContentPurpose"
             package-name="org.ofbiz.content.content"
@@ -459,12 +423,6 @@
       <field name="contentPurposeTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="contentPurposeTypeId"/>
-      <relation type="many" rel-entity-name="ContentPurpose">
-        <key-map field-name="contentPurposeTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResourcePurpose">
-        <key-map field-name="contentPurposeTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ContentRole"
             package-name="org.ofbiz.content.content"
@@ -499,15 +457,6 @@
       <prim-key field="contentTypeId"/>
       <relation type="one" fk-name="CNTNT_TYPE_PARENT" title="Parent" rel-entity-name="ContentType">
         <key-map field-name="parentTypeId" rel-field-name="contentTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="ContentType">
-        <key-map field-name="contentTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ContentTypeAttr">
-        <key-map field-name="contentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Content">
-        <key-map field-name="contentTypeId"/>
       </relation>
     </entity>
     <entity entity-name="ContentTypeAttr"
@@ -576,12 +525,6 @@
       <field name="characterSetId" type="id-long-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="characterSetId"/>
-      <relation type="many" rel-entity-name="Content">
-        <key-map field-name="characterSetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResource">
-        <key-map field-name="characterSetId"/>
-      </relation>
     </entity>
     <entity entity-name="DataCategory"
             package-name="org.ofbiz.content.data"
@@ -593,14 +536,8 @@
       <relation type="one" fk-name="DATA_CAT_PARENT" title="Parent" rel-entity-name="DataCategory">
         <key-map field-name="parentCategoryId" rel-field-name="dataCategoryId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="DataCategory">
-        <key-map field-name="dataCategoryId" rel-field-name="parentCategoryId"/>
-      </relation>
       <relation type="many" title="Sibling" rel-entity-name="DataCategory">
         <key-map field-name="parentCategoryId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResource">
-        <key-map field-name="dataCategoryId"/>
       </relation>
     </entity>
     <entity entity-name="DataResource"
@@ -622,20 +559,8 @@
       <field name="lastModifiedDate" type="date-time"></field>
       <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="dataResourceId"/>
-      <relation type="one-nofk" rel-entity-name="ElectronicText">
-        <key-map field-name="dataResourceId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="ImageDataResource">
-        <key-map field-name="dataResourceId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="OtherDataResource">
-        <key-map field-name="dataResourceId"/>
-      </relation>
       <relation type="one" fk-name="DTRSRC_STATUS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Content">
-        <key-map field-name="dataResourceId"/>
       </relation>
       <relation type="one" fk-name="DATA_REC_TO_TYPE" rel-entity-name="DataResourceType">
         <key-map field-name="dataResourceTypeId"/>
@@ -657,15 +582,6 @@
       </relation>
       <relation type="many" rel-entity-name="DataResourceTypeAttr">
         <key-map field-name="dataResourceTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResourceAttribute">
-        <key-map field-name="dataResourceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResourceRole">
-        <key-map field-name="dataResourceId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ProductFeatureDataResource">
-        <key-map field-name="dataResourceId"/>
       </relation>
       <relation type="one" fk-name="DATA_REC_CB_ULGN" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
@@ -806,15 +722,6 @@
       <relation type="one" fk-name="DATA_OBTYPE_PARENT" title="Parent" rel-entity-name="DataResourceType">
         <key-map field-name="parentTypeId" rel-field-name="dataResourceTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="DataResourceType">
-        <key-map field-name="dataResourceTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResourceTypeAttr">
-        <key-map field-name="dataResourceTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="DataResource">
-        <key-map field-name="dataResourceTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="DataResourceTypeAttr"
             package-name="org.ofbiz.content.data"
@@ -840,9 +747,6 @@
       <field name="description" type="description"></field>
       <field name="extension" type="short-varchar"></field>
       <prim-key field="dataTemplateTypeId"/>
-      <relation type="many" rel-entity-name="DataResource">
-        <key-map field-name="dataTemplateTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="ElectronicText"
             package-name="org.ofbiz.content.data"

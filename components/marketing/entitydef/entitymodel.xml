@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  */
 -->
 
@@ -170,9 +170,6 @@
       <relation type="one" fk-name="CNCT_LST_TYP" rel-entity-name="ContactListType">
         <key-map field-name="contactListTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="ContactListParty">
-        <key-map field-name="contactListId"/>
-      </relation>
     </entity>
     <entity entity-name="ContactListParty"
             package-name="org.ofbiz.marketing.contact"
@@ -197,9 +194,6 @@
       <field name="contactListTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="contactListTypeId"/>
-      <relation type="many" rel-entity-name="ContactList">
-        <key-map field-name="contactListTypeId"/>
-      </relation>
     </entity>
 
   <!-- ========================================================= -->

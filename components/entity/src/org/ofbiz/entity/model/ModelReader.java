@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.6 2004/04/30 22:34:36 doogie Exp $
+ * $Id: ModelReader.java,v 1.7 2004/06/18 14:46:23 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,24 +25,27 @@ package org.ofbiz.entity.model;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
-import org.ofbiz.entity.GenericEntityConfException;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericModelException;
-import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.entity.GenericEntityConfException;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericModelException;
+import org.ofbiz.entity.config.EntityConfigUtil;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -52,7 +55,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ModelReader {
@@ -66,6 +69,7 @@ public class ModelReader {
     protected int numViewEntities = 0;
     protected int numFields = 0;
     protected int numRelations = 0;
+    protected int numAutoRelations = 0;
 
     protected String modelName;
 
@@ -144,6 +148,7 @@ public class ModelReader {
                     numViewEntities = 0;
                     numFields = 0;
                     numRelations = 0;
+                    numAutoRelations = 0;
 
                     entityCache = new HashMap();
                     List tempViewEntityList = new LinkedList();
@@ -261,9 +266,99 @@ public class ModelReader {
                             if (me == null) throw new GenericEntityConfException("View " + curViewEntity.getEntityName() + " references non-existant entity: " + mve.getEntityName());
                         }
                     }
+                    
+                    // auto-create relationships
+                    TreeSet orderedMessages = new TreeSet();
+                    Iterator entityNamesIter = new TreeSet(this.getEntityNames()).iterator();
+                    while (entityNamesIter.hasNext()) {
+                        String curEntityName = (String) entityNamesIter.next();
+                        ModelEntity curModelEntity = this.getModelEntity(curEntityName);
+                        if (curModelEntity instanceof ModelViewEntity) {
+                            // for view-entities auto-create relationships for all member-entity relationships that have all corresponding fields in the view-entity
+                            
+                        } else {
+                            // for entities auto-create many relationships for all type one relationships
+                            
+                            // just in case we add a new relation to the same entity, keep in a separate list and add them at the end
+                            List newSameEntityRelations = new LinkedList();
+                            
+                            Iterator relationsIter = curModelEntity.getRelationsIterator();
+                            while (relationsIter.hasNext()) {
+                                ModelRelation modelRelation = (ModelRelation) relationsIter.next();
+                                if ("one".equals(modelRelation.getType())) {
+                                    ModelEntity relatedEnt = this.getModelEntity(modelRelation.getRelEntityName());
+                                    if (relatedEnt != null) {
+                                        // don't do relationship to the same entity, unless title is "Parent", then do a "Child" automatically
+                                        String targetTitle = modelRelation.getTitle();
+                                        if (curModelEntity.getEntityName().equals(relatedEnt.getEntityName()) && "Parent".equals(targetTitle)) {
+                                            targetTitle = "Child";
+                                        }
+                                        
+                                        if (relatedEnt.getRelation(targetTitle + curModelEntity.getEntityName()) == null) {
+                                            ModelRelation newRel = new ModelRelation();
+                                            if (curModelEntity.getEntityName().equals(relatedEnt.getEntityName())) {
+                                                newSameEntityRelations.add(newRel);
+                                            } else {
+                                                relatedEnt.addRelation(newRel);
+                                            }
+                                            newRel.setMainEntity(relatedEnt);
+                                            newRel.setRelEntityName(curModelEntity.getEntityName());
+                                            newRel.setTitle(targetTitle);
+                                            newRel.setAutoRelation(true);
+
+                                            Set curEntityKeyFields = new HashSet();
+                                            for (int kmn = 0; kmn < modelRelation.getKeyMapsSize(); kmn++) {
+                                                ModelKeyMap curkm = modelRelation.getKeyMap(kmn);
+                                                ModelKeyMap newkm = new ModelKeyMap();
+                                                newRel.addKeyMap(newkm);
+                                                newkm.setFieldName(curkm.getRelFieldName());
+                                                newkm.setRelFieldName(curkm.getFieldName());
+                                                
+                                                curEntityKeyFields.add(curkm.getFieldName());
+                                            }
+
+                                            // decide whether it should be one or many by seeing if the key map represents the complete pk of the relEntity
+                                            if (curModelEntity.containsAllPkFieldNames(curEntityKeyFields)) {
+                                                // always use one-nofk, we don't want auto-fks getting in
+                                                newRel.setType("one-nofk");
+                                            } else {
+                                                newRel.setType("many");
+                                            }
+                                            
+                                            numAutoRelations++;
+                                        } else {
+                                            // don't warn if the target title+entity = current title+entity
+                                            if (!(targetTitle + curModelEntity.getEntityName()).equals(modelRelation.getTitle() + modelRelation.getRelEntityName())) {
+                                                //String errorMsg = "Relation already exists to entity [] with title [" + targetTitle + "],from entity []";
+                                                String message = "Entity [" + relatedEnt.getEntityName() + "] already has relationship to entity [" + curModelEntity.getEntityName() + "] title [" + targetTitle + "]";
+                                                orderedMessages.add(message);
+                                            }
+                                        }
+                                    } else {
+                                        String errorMsg = "Could not find related entity ["
+                                                + modelRelation.getRelEntityName() + "], no reverse relation added.";
+                                        Debug.logWarning(errorMsg, module);
+                                    }
+                                }
+                            }
+                            
+                            if (newSameEntityRelations.size() > 0) {
+                                Iterator newRelsIter = newSameEntityRelations.iterator();
+                                while (newRelsIter.hasNext()) {
+                                    ModelRelation newRel = (ModelRelation) newRelsIter.next();
+                                    curModelEntity.addRelation(newRel);
+                                }
+                            }
+                        }
+                    }
+                    
+                    Iterator omIter = orderedMessages.iterator();
+                    while (omIter.hasNext()) {
+                        Debug.logInfo((String) omIter.next(), module);
+                    }
 
                     Debug.log("FINISHED LOADING ENTITIES - ALL FILES; #Entities=" + numEntities + " #ViewEntities=" +
-                        numViewEntities + " #Fields=" + numFields + " #Relationships=" + numRelations, module);
+                        numViewEntities + " #Fields=" + numFields + " #Relationships=" + numRelations + " #AutoRelationships=" + numAutoRelations, module);
                 }
             }
         }
@@ -315,13 +410,10 @@ public class ModelReader {
      */
     public ModelEntity getModelEntity(String entityName) throws GenericEntityException {
         Map ec = getEntityCache();
-
         if (ec == null) {
             throw new GenericEntityConfException("ERROR: Unable to load Entity Cache");
         }
-
         ModelEntity modelEntity = (ModelEntity) ec.get(entityName);
-
         if (modelEntity == null) {
             throw new GenericModelException("Could not find definition for entity name " + entityName);
         }
@@ -347,7 +439,6 @@ public class ModelReader {
      */
     public Iterator getEntityNamesIterator() throws GenericEntityException {
         Collection collection = getEntityNames();
-
         if (collection != null) {
             return collection.iterator();
         } else {
@@ -360,7 +451,6 @@ public class ModelReader {
      */
     public Collection getEntityNames() throws GenericEntityException {
         Map ec = getEntityCache();
-
         if (ec == null) {
             throw new GenericEntityConfException("ERROR: Unable to load Entity Cache");
         }
@@ -371,7 +461,6 @@ public class ModelReader {
         if (entityElement == null) return null;
         this.numEntities++;
         ModelEntity entity = new ModelEntity(this, entityElement, docElement, utilTimer, docElementValues);
-
         return entity;
     }
 
@@ -379,21 +468,18 @@ public class ModelReader {
         if (entityElement == null) return null;
         this.numViewEntities++;
         ModelViewEntity entity = new ModelViewEntity(this, entityElement, docElement, utilTimer, docElementValues);
-
         return entity;
     }
 
     public ModelRelation createRelation(ModelEntity entity, Element relationElement) {
         this.numRelations++;
         ModelRelation relation = new ModelRelation(entity, relationElement);
-
         return relation;
     }
 
     public ModelField findModelField(ModelEntity entity, String fieldName) {
         for (int i = 0; i < entity.fields.size(); i++) {
             ModelField field = (ModelField) entity.fields.get(i);
-
             if (field.name.compareTo(fieldName) == 0) {
                 return field;
             }

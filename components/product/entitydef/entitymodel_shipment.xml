@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  */
 -->
 
@@ -234,21 +234,6 @@
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="CARR_SHMETH_PROLE" rel-entity-name="PartyRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="OrderShipmentPreference">
-        <key-map field-name="shipmentMethodTypeId"/>
-        <key-map field-name="partyId" rel-field-name="carrierPartyId"/>
-        <key-map field-name="roleTypeId" rel-field-name="carrierRoleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentCostEstimate">
-        <key-map field-name="shipmentMethodTypeId"/>
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FacilityCarrierShipment">
-        <key-map field-name="shipmentMethodTypeId"/>
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>

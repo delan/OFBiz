@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  */
 -->
 
@@ -72,30 +72,6 @@
       <relation type="many" rel-entity-name="BudgetTypeAttr">
         <key-map field-name="budgetTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="BudgetAttribute">
-        <key-map field-name="budgetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetReview">
-        <key-map field-name="budgetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetRevision">
-        <key-map field-name="budgetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetRevisionImpact">
-        <key-map field-name="budgetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetRole">
-        <key-map field-name="budgetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetScenarioApplication">
-        <key-map field-name="budgetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetStatus">
-        <key-map field-name="budgetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentBudgetAllocation">
-        <key-map field-name="budgetId"/>
-      </relation>
       <relation type="many" rel-entity-name="RequirementBudgetAllocation">
         <key-map field-name="budgetId"/>
       </relation>
@@ -132,27 +108,7 @@
       <relation type="many" rel-entity-name="BudgetItemTypeAttr">
         <key-map field-name="budgetItemTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="BudgetItemAttribute">
-        <key-map field-name="budgetId"/>
-        <key-map field-name="budgetItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetRevisionImpact">
-        <key-map field-name="budgetId"/>
-        <key-map field-name="budgetItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetScenarioApplication">
-        <key-map field-name="budgetId"/>
-        <key-map field-name="budgetItemSeqId"/>
-      </relation>
       <relation type="many" rel-entity-name="PaymentBudgetAllocation">
-        <key-map field-name="budgetId"/>
-        <key-map field-name="budgetItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="RequirementBudgetAllocation">
-        <key-map field-name="budgetId"/>
-        <key-map field-name="budgetItemSeqId"/>
-      </relation>
-      <relation type="many" rel-entity-name="EmplPosition">
         <key-map field-name="budgetId"/>
         <key-map field-name="budgetItemSeqId"/>
       </relation>
@@ -185,21 +141,6 @@
       <prim-key field="budgetItemTypeId"/>
       <relation type="one" fk-name="BUDGET_ITM_TYPPAR" title="Parent" rel-entity-name="BudgetItemType">
         <key-map field-name="parentTypeId" rel-field-name="budgetItemTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="BudgetItemType">
-        <key-map field-name="budgetItemTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetItemTypeAttr">
-        <key-map field-name="budgetItemTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetItem">
-        <key-map field-name="budgetItemTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetScenarioRule">
-        <key-map field-name="budgetItemTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="GlBudgetXref">
-        <key-map field-name="budgetItemTypeId"/>
       </relation>
     </entity>
     <entity entity-name="BudgetItemTypeAttr"
@@ -248,9 +189,6 @@
       <field name="description" type="description"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="budgetReviewResultTypeId"/>
-      <relation type="many" rel-entity-name="BudgetReview">
-        <key-map field-name="budgetReviewResultTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="BudgetRevision"
             package-name="org.ofbiz.accounting.budget"
@@ -262,10 +200,6 @@
       <prim-key field="revisionSeqId"/>
       <relation type="one" fk-name="BUDGET_RVSN_BDGT" rel-entity-name="Budget">
         <key-map field-name="budgetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetRevisionImpact">
-        <key-map field-name="budgetId"/>
-        <key-map field-name="revisionSeqId"/>
       </relation>
     </entity>
     <entity entity-name="BudgetRevisionImpact"
@@ -318,12 +252,6 @@
       <field name="budgetScenarioId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="budgetScenarioId"/>
-      <relation type="many" rel-entity-name="BudgetScenarioApplication">
-        <key-map field-name="budgetScenarioId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetScenarioRule">
-        <key-map field-name="budgetScenarioId"/>
-      </relation>
     </entity>
     <entity entity-name="BudgetScenarioApplication"
             package-name="org.ofbiz.accounting.budget"
@@ -390,15 +318,6 @@
       <relation type="one" fk-name="BUDGET_TYPE_PAR" title="Parent" rel-entity-name="BudgetType">
         <key-map field-name="parentTypeId" rel-field-name="budgetTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="BudgetType">
-        <key-map field-name="budgetTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BudgetTypeAttr">
-        <key-map field-name="budgetTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Budget">
-        <key-map field-name="budgetTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="BudgetTypeAttr"
             package-name="org.ofbiz.accounting.budget"
@@ -455,14 +374,8 @@
       <relation type="many" rel-entity-name="FixedAssetTypeAttr">
         <key-map field-name="fixedAssetTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="FixedAssetAttribute">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
       <relation type="one" fk-name="FIXEDAST_PAR" title="Parent" rel-entity-name="FixedAsset">
         <key-map field-name="parentFixedAssetId" rel-field-name="fixedAssetId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="FixedAsset">
-        <key-map field-name="fixedAssetId" rel-field-name="parentFixedAssetId"/>
       </relation>
       <relation type="one" fk-name="FIXEDAST_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -476,27 +389,6 @@
       </relation>
       <relation type="one" fk-name="FIXEDAST_UOM" rel-entity-name="Uom">
         <key-map field-name="uomId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffort">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FixedAssetDepMethod">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PartyFixedAssetAssignment">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Requirement">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Delivery">
-        <key-map field-name="fixedAssetId"/>
       </relation>
       <relation type="one" fk-name="FIXEDAST_CALENDAR" rel-entity-name="TechDataCalendar">
         <key-map field-name="calendarId"/>
@@ -568,9 +460,6 @@
       <field name="fixedAssetProductTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <prim-key field="fixedAssetProductTypeId"/>
-      <relation type="many" rel-entity-name="FixedAssetProduct">
-        <key-map field-name="fixedAssetProductTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="FixedAssetType"
             package-name="org.ofbiz.accounting.fixedasset"
@@ -582,18 +471,6 @@
       <prim-key field="fixedAssetTypeId"/>
       <relation type="one" fk-name="FIXEDAST_TYPPAR" title="Parent" rel-entity-name="FixedAssetType">
         <key-map field-name="parentTypeId" rel-field-name="fixedAssetTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="FixedAssetType">
-        <key-map field-name="fixedAssetTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FixedAssetTypeAttr">
-        <key-map field-name="fixedAssetTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FixedAsset">
-        <key-map field-name="fixedAssetTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="WorkEffortFixedAssetStd">
-        <key-map field-name="fixedAssetTypeId"/>
       </relation>
     </entity>
     <entity entity-name="FixedAssetTypeAttr"
@@ -1081,12 +958,6 @@
       <relation type="many" rel-entity-name="AcctgTransTypeAttr">
         <key-map field-name="acctgTransTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="AcctgTransAttribute">
-        <key-map field-name="acctgTransId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTransEntry">
-        <key-map field-name="acctgTransId"/>
-      </relation>
     </entity>
     <entity entity-name="AcctgTransAttribute"
             package-name="org.ofbiz.accounting.ledger"
@@ -1170,12 +1041,6 @@
       <relation type="one" fk-name="ACCTTXE_TYPE_PAR" title="Parent" rel-entity-name="AcctgTransEntryType">
         <key-map field-name="parentTypeId" rel-field-name="acctgTransEntryTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="AcctgTransEntryType">
-        <key-map field-name="acctgTransEntryTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTransEntry">
-        <key-map field-name="acctgTransEntryTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="AcctgTransType"
             package-name="org.ofbiz.accounting.ledger"
@@ -1187,15 +1052,6 @@
       <prim-key field="acctgTransTypeId"/>
       <relation type="one" fk-name="ACCTTX_TYPE_PAR" title="Parent" rel-entity-name="AcctgTransType">
         <key-map field-name="parentTypeId" rel-field-name="acctgTransTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="AcctgTransType">
-        <key-map field-name="acctgTransTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTransTypeAttr">
-        <key-map field-name="acctgTransTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="AcctgTrans">
-        <key-map field-name="acctgTransTypeId"/>
       </relation>
     </entity>
     <entity entity-name="AcctgTransTypeAttr"
@@ -1540,21 +1396,6 @@
       <field name="description" type="description"></field>
       <field name="externalAccountId" type="id"></field>
       <prim-key field="billingAccountId"/>
-      <relation type="many" rel-entity-name="OrderHeader">
-        <key-map field-name="billingAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BillingAccountRole">
-        <key-map field-name="billingAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="BillingAccountTerm">
-        <key-map field-name="billingAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="Invoice">
-        <key-map field-name="billingAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PaymentApplication">
-        <key-map field-name="billingAccountId"/>
-      </relation>
       <relation type="one" fk-name="BILLACCT_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
@@ -1766,15 +1607,6 @@
       <relation type="many" rel-entity-name="FinAccountTypeAttr">
         <key-map field-name="finAccountTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="FinAccountAttribute">
-        <key-map field-name="finAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FinAccountRole">
-        <key-map field-name="finAccountId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FinAccountTrans">
-        <key-map field-name="finAccountId"/>
-      </relation>
     </entity>
     <entity entity-name="FinAccountAttribute"
             package-name="org.ofbiz.accounting.payment"
@@ -1834,9 +1666,6 @@
       <relation type="many" rel-entity-name="FinAccountTransTypeAttr">
         <key-map field-name="finAccountTransTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="FinAccountTransAttribute">
-        <key-map field-name="finAccountTransId"/>
-      </relation>
       <relation type="one" fk-name="FIN_ACT_TX_FNACT" rel-entity-name="FinAccount">
         <key-map field-name="finAccountId"/>
       </relation>
@@ -1873,15 +1702,6 @@
       <relation type="one" fk-name="FINACCT_TX_TYPPAR" title="Parent" rel-entity-name="FinAccountTransType">
         <key-map field-name="parentTypeId" rel-field-name="finAccountTransTypeId"/>
       </relation>
-      <relation type="many" title="Child" rel-entity-name="FinAccountTransType">
-        <key-map field-name="finAccountTransTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FinAccountTransTypeAttr">
-        <key-map field-name="finAccountTransTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FinAccountTrans">
-        <key-map field-name="finAccountTransTypeId"/>
-      </relation>
     </entity>
     <entity entity-name="FinAccountTransTypeAttr"
             package-name="org.ofbiz.accounting.payment"
@@ -1910,15 +1730,6 @@
       <prim-key field="finAccountTypeId"/>
       <relation type="one" fk-name="FINACCT_TYPE_PAR" title="Parent" rel-entity-name="FinAccountType">
         <key-map field-name="parentTypeId" rel-field-name="finAccountTypeId"/>
-      </relation>
-      <relation type="many" title="Child" rel-entity-name="FinAccountType">
-        <key-map field-name="finAccountTypeId" rel-field-name="parentTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FinAccountTypeAttr">
-        <key-map field-name="finAccountTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="FinAccount">
-        <key-map field-name="finAccountTypeId"/>
       </relation>
     </entity>
     <entity entity-name="FinAccountTypeAttr"
