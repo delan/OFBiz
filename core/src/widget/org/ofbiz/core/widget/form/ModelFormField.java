@@ -1147,14 +1147,7 @@ public class ModelFormField {
             super(element, modelFormField);
             
             this.current = element.getAttribute("current");
-            String allowEmptyStr = element.getAttribute("allow-empty");
-            try {
-                this.allowEmpty = Boolean.getBoolean(allowEmptyStr);
-            } catch (Exception e) {
-                if (allowEmptyStr != null && allowEmptyStr.length() > 0) {
-                    Debug.logError("Could not parse the size value of the text element: [" + allowEmptyStr + "], setting to default of " + allowEmpty);
-                }
-            }
+            this.allowEmpty = "true".equals(element.getAttribute("allow-empty"));
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
@@ -1172,7 +1165,11 @@ public class ModelFormField {
          * @return
          */
         public String getCurrent() {
-            return current;
+            if (UtilValidate.isEmpty(this.current)) {
+                return "first-in-list";
+            } else {
+                return this.current;
+            }
         }
 
         /**

@@ -23,6 +23,8 @@
  */
 package org.ofbiz.core.widgetimpl;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -281,8 +283,62 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDropDownField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DropDownField)
      */
     public void renderDropDownField(StringBuffer buffer, Map context, DropDownField dropDownField) {
-        // TODO Auto-generated method stub
+        ModelFormField modelFormField = dropDownField.getModelFormField();
+        ModelForm modelForm = modelFormField.getModelForm();
+        
+        buffer.append("<select");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
 
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName());
+        buffer.append('"');
+
+        buffer.append(" size=\"1\">");
+        
+        String currentValue = modelFormField.getEntry(context);
+
+        // if the current value should go first, stick it in
+        if (UtilValidate.isNotEmpty(currentValue) && "first-in-list".equals(dropDownField.getCurrent())) {
+            buffer.append("<option");
+            buffer.append(" selected");
+            buffer.append(" value=\"");
+            buffer.append(currentValue);
+            buffer.append("\">");
+            // TODO: need some way of looking up a description corresponding to the current selected option
+            buffer.append(currentValue);
+            buffer.append("</option>");
+            
+        }
+        
+        // if allow empty is true, add an empty option
+        if (dropDownField.isAllowEmpty()) {
+            buffer.append("<option value=\"\">---</option>");
+        }
+        
+        // list out all options according to the option list
+        List allOptionValues = dropDownField.getAllOptionValues(context, modelForm.getDelegator());
+        Iterator optionValueIter = allOptionValues.iterator();
+        while (optionValueIter.hasNext()) {
+            ModelFormField.OptionValue optionValue = (ModelFormField.OptionValue) optionValueIter.next();
+            buffer.append("<option");
+            // if current value should be selected in the list, select it
+            if (UtilValidate.isNotEmpty(currentValue) && currentValue.equals(optionValue.getKey()) && "selected".equals(dropDownField.getCurrent())) {
+                buffer.append(" selected");
+            }
+            buffer.append(" value=\"");
+            buffer.append(optionValue.getKey());
+            buffer.append("\">");
+            buffer.append(optionValue.getDescription());
+            buffer.append("</option>");
+        }
+
+        buffer.append("</select>");
     }
 
     /* (non-Javadoc)
