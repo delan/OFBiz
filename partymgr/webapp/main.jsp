@@ -51,8 +51,10 @@
   </TR>
   <TR>
     <TD bgcolor='white'>
+<%if(userLogin == null) {%>
 <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
 <BR>
+<%}%>
 <DIV class='tabletext'>This application is primarily intended for those repsonsible for the maintenance of party related information.</DIV>
     </TD>
   </TR>

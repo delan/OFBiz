@@ -51,8 +51,10 @@
   </TR>
   <TR>
     <TD bgcolor='white'>
+<%if(userLogin == null) {%>
 <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
 <BR>
+<%}%>
 <DIV class='tabletext'>The purpose of this Common Application Components administration package is to contain all of the 
 administration tools that directly relate to the Common Application Components. The Common Application Component layer is
 defined in the architecture documents as the container of all entity definitions shared by the vertical applications that
