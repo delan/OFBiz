@@ -59,7 +59,7 @@
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
-<form method="post" action="<ofbiz:url>/main</ofbiz:url>" name="newuserform" style='margin:0;'>
+<form method="post" action="<ofbiz:url>/createAffiliate</ofbiz:url>" name="newuserform" style='margin:0;'>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Company name</font></div></td>
@@ -166,13 +166,13 @@
       <td width="74%">
           <input type="text" name="CONTACT_LAST_NAME" value="<%=UtilFormatOut.checkNull(request.getParameter("CONTACT_LAST_NAME"))%>" size="30" maxlength="30">
       * </td>
-    </tr>
+    </tr><%--
     <tr>
       <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Company title</font></div></td>
       <td width="74%">
           <input type="text" name="CONTACT_TITLE" value="<%=UtilFormatOut.checkNull(request.getParameter("CONTACT_TITLE"))%>" size="30" maxlength="30">
       * </td>
-    </tr>    
+    </tr>--%>  
   </table>
           </td>
         </tr>
@@ -342,7 +342,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
-            <p class="head2"><font color="white">&nbsp;Username and Password</font>
+            <p class="head2"><font color="white">&nbsp;Affiliate Password</font>
           </td>
           <td>
             &nbsp;
@@ -357,12 +357,6 @@
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
-    <tr>
-      <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Username</font></div></td>
-      <td width="74%">
-          <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
-      * </td>
-    </tr>
     <% if(UtilProperties.propertyValueEqualsIgnoreCase(application.getResource("/WEB-INF/ecommerce.properties"), "create.allow.password", "true")) { pageContext.setAttribute("createAllowPassword", "true"); }%>
     <ofbiz:if name="createAllowPassword">
       <tr>
