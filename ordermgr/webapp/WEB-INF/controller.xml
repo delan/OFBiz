@@ -233,5 +233,7 @@
     
     <view-map name="shipsetup" type="region"/>
     <view-map name="taxsetup" type="region"/>
+    
+    <view-map name="wfOrderNotify" page="/notifications/pendingOrderNotify.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
