@@ -227,25 +227,25 @@ OR Specify the filename of a ".sql" or ".xml" file to load:<br>
     Iterator classNamesIterator = entityCol.iterator();
     while(classNamesIterator != null && classNamesIterator.hasNext()) { 
       ModelEntity entity = reader.getModelEntity((String)classNamesIterator.next());
-      String baseName = entity.tableName;
+      String baseName = entity.getTableName();
       if(entity instanceof ModelViewEntity) {
-        baseName = ModelUtil.javaNameToDbName(entity.entityName);
+        baseName = ModelUtil.javaNameToDbName(entity.getEntityName());
       }
 
       if(baseName != null) {
-          try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_ADMIN", "description", "Permission to Administer a " + entity.entityName + " entity.")); rowsChanged++; }
+          try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_ADMIN", "description", "Permission to Administer a " + entity.getEntityName() + " entity.")); rowsChanged++; }
           catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating ADMIN SecurityPermission"); }
 
-          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_VIEW", "description", "Permission to View a " + entity.entityName + " entity.")); rowsChanged++; }
+          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_VIEW", "description", "Permission to View a " + entity.getEntityName() + " entity.")); rowsChanged++; }
           //catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating VIEW SecurityPermission"); }
 
-          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_CREATE", "description", "Permission to Create a " + entity.entityName + " entity.")); rowsChanged++; }
+          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_CREATE", "description", "Permission to Create a " + entity.getEntityName() + " entity.")); rowsChanged++; }
           //catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating CREATE SecurityPermission"); }
 
-          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_UPDATE", "description", "Permission to Update a " + entity.entityName + " entity.")); rowsChanged++; }
+          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_UPDATE", "description", "Permission to Update a " + entity.getEntityName() + " entity.")); rowsChanged++; }
           //catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating UPDATE SecurityPermission"); }
 
-          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_DELETE", "description", "Permission to Delete a " + entity.entityName + " entity.")); rowsChanged++; }
+          //try { delegator.create("SecurityPermission", UtilMisc.toMap("permissionId", baseName + "_DELETE", "description", "Permission to Delete a " + entity.getEntityName() + " entity.")); rowsChanged++; }
           //catch(GenericEntityException e) { errorMessages.add("[install.generateData]: Generated Data Load error for entity \"" + baseName + "\" creating DELETE SecurityPermission"); }
 
           try { delegator.create("SecurityGroupPermission", UtilMisc.toMap("groupId", "FULLADMIN", "permissionId", baseName + "_ADMIN")); rowsChanged++; }
