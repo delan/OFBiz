@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -128,6 +128,8 @@
         </tr>
       </table>
       <br>
+
+      <#if paymentMethods?has_content || paymentMethodType?has_content || billingAccount?has_content>
       <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->
         <tr>
@@ -174,40 +176,110 @@
                         </#if>
                       </tr>
                     </#if>
-                    <#if paymentMethod?has_content>
-                      <#assign outputted = true>
-                      <#-- credit card info -->                     
-                      <#if creditCard?has_content>
-                        <tr>
-                          <td align="right" valign="top" width="15%">
-                            <div class="tabletext">&nbsp;<b>Credit Card</b></div>
-                          </td>
-                          <td width="5">&nbsp;</td>
-                          <td align="left" valign="top" width="80%">
-                            <div class="tabletext">
-                              ${creditCard.nameOnCard}<br>
-                              <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br></#if>
-                              ${formattedCardNumber}
-                            </div>
-                          </td>
-                        </tr>
-                      <#-- EFT account info -->
-                      <#elseif eftAccount?has_content>
-                        <tr>
-                          <td align="right" valign="top" width="15%">
-                            <div class="tabletext">&nbsp;<b>EFT Account</b></div>
-                          </td>
-                          <td width="5">&nbsp;</td>
-                          <td align="left" valign="top" width="80%">
-                            <div class="tabletext">
-                              ${eftAccount.nameOnAccount?if_exists}<br>
-                              <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
-                              Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
-                              Account #: ${eftAccount.accountNumber}
-                            </div>
-                          </td>
-                        </tr>
-                      </#if>
+                    <#if paymentMethods?has_content>
+                      <#list paymentMethods as paymentMethod>
+                        <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId>
+                          <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
+                          <#assign formattedCardNumber = Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)>
+                        <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId>
+                          <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
+                        <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId>
+                          <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
+                        </#if>
+                        <#-- credit card info -->
+                        <#if "CREDIT_CARD" == paymentMethod.paymentMethodTypeId && creditCard?has_content>
+                          <#if outputted?default(false)>
+                            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                          </#if>
+                          <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")>
+                          <tr>
+                            <td align="right" valign="top" width="15%">
+                              <div class="tabletext">&nbsp;<b>Credit Card</b></div>
+                            </td>
+                            <td width="5">&nbsp;</td>
+                            <td align="left" valign="top" width="80%">
+                              <div class="tabletext">
+                                ${creditCard.nameOnCard}<br>
+                                <#if creditCard.companyNameOnCard?has_content>${creditCard.companyNameOnCard}<br></#if>
+                                ${formattedCardNumber}
+                              </div>
+                            </td>
+                          </tr>
+                        <#-- Gift Card info -->
+                        <#elseif "GIFT_CARD" == paymentMethod.paymentMethodTypeId && giftCard?has_content>
+                          <#if outputted?default(false)>
+                            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                          </#if>
+                          <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                            <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress")?if_exists>
+                            <#assign giftCardNumber = "">
+                            <#assign pcardNumber = giftCard.cardNumber>
+                            <#if pcardNumber?has_content>
+                              <#assign psize = pcardNumber?length - 4>
+                              <#if 0 < psize>
+                                <#list 0 .. psize-1 as foo>
+                                  <#assign giftCardNumber = giftCardNumber + "*">
+                                </#list>
+                                <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
+                              <#else>
+                                <#assign giftCardNumber = pcardNumber>
+                              </#if>
+                            </#if>
+                          </#if>
+                          <tr>
+                            <td align="right" valign="top" width="15%">
+                              <div class="tabletext">&nbsp;<b>Gift Card</b></div>
+                            </td>
+                            <td width="5">&nbsp;</td>
+                            <td align="left" valign="top" width="80%">
+                              <div class="tabletext">
+                                ${giftCardNumber}
+                              </div>
+                            </td>
+                          </tr>
+                        <#-- EFT account info -->
+                        <#elseif "EFT_ACCOUNT" == paymentMethod.paymentMethodTypeId && eftAccount?has_content>
+                          <#if outputted?default(false)>
+                            <tr><td colspan="3"><hr class='sepbar'></td></tr>
+                          </#if>
+                          <#assign pmBillingAddress = eftAccount.getRelatedOne("PostalAddress")>
+                          <tr>
+                            <td align="right" valign="top" width="15%">
+                              <div class="tabletext">&nbsp;<b>EFT Account</b></div>
+                            </td>
+                            <td width="5">&nbsp;</td>
+                            <td align="left" valign="top" width="80%">
+                              <div class="tabletext">
+                                ${eftAccount.nameOnAccount?if_exists}<br>
+                                <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
+                                Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
+                                Account #: ${eftAccount.accountNumber}
+                              </div>
+                            </td>
+                          </tr>
+                        </#if>
+                        <#if pmBillingAddress?has_content>
+                          <tr><td>&nbsp;</td><td colspan="2"><hr class="sepbar"></td></tr>
+                          <tr>
+                            <td align="right" valign="top" width="15%">
+                              <div class="tabletext">&nbsp;</div>
+                            </td>
+                            <td width="5">&nbsp;</td>
+                            <td align="left" valign="top" width="80%">
+                              <div class="tabletext">
+                                <#if pmBillingAddress.toName?has_content><b>To:</b> ${pmBillingAddress.toName}<br></#if>
+                                <#if pmBillingAddress.attnName?has_content><b>Attn:</b> ${pmBillingAddress.attnName}<br></#if>
+                                ${pmBillingAddress.address1}<br>
+                                <#if pmBillingAddress.address2?has_content>${pmBillingAddress.address2}<br></#if>
+                                ${pmBillingAddress.city}<#if pmBillingAddress.stateProvinceGeoId?has_content>, ${pmBillingAddress.stateProvinceGeoId} </#if>
+                                ${pmBillingAddress.postalCode?if_exists}<br>
+                                ${pmBillingAddress.countryGeoId?if_exists}
+                              </div>
+                            </td>
+                          </tr>
+                        </#if>
+                        <#assign outputted = true>
+                      </#list>
                     </#if>
                     <#-- billing account info -->
                     <#if billingAccount?has_content>
@@ -236,7 +308,7 @@
                           <div class="tabletext">${customerPoNumber?if_exists}</div>
                         </td>
                       </tr>
-                    </#if>                
+                    </#if>
                   </table>
                 </td>
               </tr>
@@ -244,6 +316,7 @@
           </td>
         </tr>
       </table>
+      </#if>
     </td>
     <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
     <#-- right side -->
