@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.LinkedList;
 
 import javax.transaction.InvalidTransactionException;
 import javax.transaction.SystemException;
@@ -79,6 +80,7 @@ public class ServiceDispatcher {
     protected GenericEngineFactory factory = null;
     protected Security security = null;
     protected Map localContext = null;
+    protected Map callbacks = null;
     protected JobManager jm = null;
     protected JmsListenerFactory jlf = null;
 
@@ -90,6 +92,8 @@ public class ServiceDispatcher {
 
         this.delegator = delegator;
         this.localContext = new HashMap();
+        this.callbacks = new HashMap();
+
         if (delegator != null) {
             try {
                 this.security = SecurityFactory.getInstance(delegator);
@@ -178,6 +182,19 @@ public class ServiceDispatcher {
                  Debug.logError(e, "Trouble shutting down ServiceDispatcher!", module);
              }
          }
+    }
+
+    public synchronized void registerCallback(String serviceName, GenericServiceCallback cb) {
+        List callBackList = (List) callbacks.get(serviceName);
+        if (callBackList == null) {
+            callBackList = new LinkedList();
+        }
+        callBackList.add(cb);
+        callbacks.put(serviceName, callBackList);
+    }
+
+    public List getCallbacks(String serviceName) {
+        return (List) callbacks.get(serviceName);
     }
 
     /**
@@ -274,8 +291,9 @@ public class ServiceDispatcher {
             }
         }
 
-        // needed for events
+        // setup the engine and context
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
+        GenericEngine engine = this.getGenericEngine(modelService.engineName);
 
         try {
             // get eventMap once for all calls for speed, don't do event calls if it is null
@@ -294,9 +312,6 @@ public class ServiceDispatcher {
             if (modelService.auth && userLogin == null) {
                 throw new ServiceAuthException("User authorization is required for this service: " + modelService.name + modelService.debugInfo());
             }
-
-            // setup the engine
-            GenericEngine engine = getGenericEngine(modelService.engineName);
 
             // pre-validate ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "in-validate", ctx, context, result, false, false);
@@ -325,7 +340,8 @@ public class ServiceDispatcher {
             // ===== invoke the service =====
             if (!isError && !isFailure) {
                 Map invokeResult = engine.runSync(localName, modelService, context);
-                if (invokeResult != null) {                    
+                engine.sendCallbacks(modelService, context, invokeResult, GenericEngine.SYNC_MODE);
+                if (invokeResult != null) {
                     result.putAll(invokeResult);
                 } else {
                     Debug.logWarning("Service (in runSync : " + modelService.name + ") returns null result", module);
@@ -405,6 +421,7 @@ public class ServiceDispatcher {
             return result;
         } catch (Throwable t) {
             Debug.logError(t, "Service [" + modelService.name + "] threw an unexpected exception/error", module);
+            engine.sendCallbacks(modelService, context, t, GenericEngine.SYNC_MODE);
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
@@ -490,8 +507,9 @@ public class ServiceDispatcher {
             }
         }
 
-        // needed for events
+        // setup the engine and context
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
+        GenericEngine engine = this.getGenericEngine(service.engineName);
 
         try {
             // get eventMap once for all calls for speed, don't do event calls if it is null
@@ -506,13 +524,10 @@ public class ServiceDispatcher {
             if (service.auth && userLogin == null)
                 throw new ServiceAuthException("User authorization is required for this service: " + service.name + service.debugInfo());
 
-            // setup the engine
-            GenericEngine engine = getGenericEngine(service.engineName);
-
             // pre-validate ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, result, isError, isFailure);
 
-            // check for pre-validate failure/erros
+            // check for pre-validate failure/errors
             isFailure = ModelService.RESPOND_FAIL.equals(result.get(ModelService.RESPONSE_MESSAGE));
             isError = ModelService.RESPOND_ERROR.equals(result.get(ModelService.RESPONSE_MESSAGE));
 
@@ -533,6 +548,7 @@ public class ServiceDispatcher {
                 } else {
                     engine.runAsync(localName, service, context, persist);
                 }
+                engine.sendCallbacks(service, context, null, GenericEngine.ASYNC_MODE);
             }
 
             // always try to commit the transaction since we don't know in this case if its was an error or not
@@ -561,6 +577,7 @@ public class ServiceDispatcher {
             checkDebug(service, 0, debugging);
         } catch (Throwable t) {
             Debug.logError(t, "Service [" + service.name + "] threw an unexpected exception/error", module);
+            engine.sendCallbacks(service, context, t, GenericEngine.ASYNC_MODE);
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {

@@ -35,10 +35,13 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public interface GenericEngine {
+
+    public static final int ASYNC_MODE = 22;
+    public static final int SYNC_MODE = 21;
 
     /**
      * Run the service synchronously and return the result.
@@ -85,5 +88,14 @@ public interface GenericEngine {
      */
     public void runAsync(String localName, ModelService modelService, Map context, boolean persist) throws GenericServiceException;
 
+    /**
+     * Send the service callbacks
+     * @param modelService Service model object
+     * @param context Map of name, value pairs composing the context 
+     * @param cbObj Object to return to callback (Throwable or Map)
+     * @param mode Service mode (sync or async)
+     * @throws GenericServiceException
+     */
+    public void sendCallbacks(ModelService modelService, Map context, Object cbObj, int mode) throws GenericServiceException;
 }
 
