@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilXml;
@@ -175,6 +177,19 @@ public class EntityFinderUtil {
                 throw new IllegalArgumentException("Could not find an entity operator for the name: " + operatorName);
             }
 
+            // If IN operator, see if value is a literal list and split it
+            if (operator == EntityOperator.IN && value instanceof String) {
+                String delim = null;
+                if (((String)value).indexOf("|") >= 0) {
+                    delim = "|";   
+                } else if (((String)value).indexOf(",") >= 0) {
+                    delim = ",";   
+                }
+                if (UtilValidate.isNotEmpty(delim)) {
+                    value = StringUtil.split((String)value, delim);   
+                }
+            }
+            
             // don't convert the field to the desired type if this is an IN operator and we have a Collection
             if (!(operator == EntityOperator.IN && value instanceof Collection)) {
                 // now to a type conversion for the target fieldName
