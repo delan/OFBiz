@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.9 2003/10/16 03:05:06 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.10 2003/10/22 23:03:40 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -245,18 +245,12 @@ public class CheckOutHelper {
               if (Character.isLetter(checkOutPaymentId.charAt(0))) {
                   this.cart.addPaymentMethodTypeId(checkOutPaymentId);
               } else {
-                  if (paymentAmount == null) {
-                      if (billingAccountAmt != null) {
-                          paymentAmount = new Double(cart.getGrandTotal() - billingAccountAmt.doubleValue());
-                      } else {
-                          paymentAmount = new Double(cart.getGrandTotal());
-                      }
-                  }
                   this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount);
+                  Debug.logInfo("Set Payment Method : " + checkOutPaymentId + " @ " + paymentAmount, module);
               }
           }
       } else {
-          errorMessages.add("Please select a method of billing.");
+          errorMessages.add("Please select a method of payment.");
       }
 
       return errorMessages;
