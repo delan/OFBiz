@@ -190,8 +190,8 @@
   <StatusType description="Communication Event" hasTable="N" parentTypeId="" statusTypeId="COM_EVENT_STATUS"/>
   <StatusItem description="Entered" sequenceId="01" statusCode="ENTERED" statusId="COM_ENTERED" statusTypeId="COM_EVENT_STATUS"/>
   <StatusItem description="Pending" sequenceId="02" statusCode="PENDING" statusId="COM_PENDING" statusTypeId="COM_EVENT_STATUS"/>
-  <StatusItem description="Read" sequenceId="02" statusCode="READ" statusId="COM_READ" statusTypeId="COM_EVENT_STATUS"/>
-  <StatusItem description="In-Progress" sequenceId="03" statusCode="IN_PROGRESS" statusId="COM_IN_PROGRESS" statusTypeId="COM_EVENT_STATUS"/>
+  <StatusItem description="Read" sequenceId="03" statusCode="READ" statusId="COM_READ" statusTypeId="COM_EVENT_STATUS"/>
+  <StatusItem description="In-Progress" sequenceId="05" statusCode="IN_PROGRESS" statusId="COM_IN_PROGRESS" statusTypeId="COM_EVENT_STATUS"/>
   <StatusItem description="Complete" sequenceId="20" statusCode="COMPLETE" statusId="COM_COMPLETE" statusTypeId="COM_EVENT_STATUS"/>
   <StatusItem description="Resolved" sequenceId="21" statusCode="RESOLVED" statusId="COM_RESOLVED" statusTypeId="COM_EVENT_STATUS"/>
   <StatusItem description="Referred" sequenceId="22" statusCode="REFERRED" statusId="COM_REFERRED" statusTypeId="COM_EVENT_STATUS"/>

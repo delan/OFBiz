@@ -24,7 +24,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
 -->
 
@@ -126,26 +126,25 @@
 		<find-by-primary-key entity-name="CommunicationEvent" map-name="lookupPKMap" value-name="event"/>
         <if>
             <condition>
-                <if-compare-field field-name="partyIdTo" map-name="event" to-map-name="userLogin" to-field-name="partyId" operator="not-equals"/>
-            </condition>
-            <then>
-                <check-permission permission="PARTYMGR" action="_CREATE">
-				    <fail-property resource="PartyUiLabels" property="PartyCreateCommunicationEventPermissionError"/>
-                </check-permission>
-            </then>
-        </if>
-
-        <if>
-            <condition>
                 <or>
-                    <if-compare field-name="statusId" map-name="event" operator="equals" value="COM_ENTERED"/>
-                    <if-compare field-name="statusId" map-name="event" operator="equals" value="COM_PENDING"/>
+                    <if-compare-field field-name="partyIdTo" map-name="event" to-map-name="userLogin" to-field-name="partyId" operator="equals"/>
+                    <if-has-permission permission="PARTYMGR" action="_UPDATE"/>
                 </or>
             </condition>
             <then>
-                <string-to-field string="COM_READ" field-name="statusId" map-name="event"/>
-                <store-value value-name="event"/>
+                <if>
+                    <condition>
+                        <or>
+                            <if-compare field-name="statusId" map-name="event" operator="equals" value="COM_ENTERED"/>
+                            <if-compare field-name="statusId" map-name="event" operator="equals" value="COM_PENDING"/>
+                        </or>
+                    </condition>
+                    <then>
+                        <string-to-field string="COM_READ" field-name="statusId" map-name="event"/>
+                        <store-value value-name="event"/>
+                    </then>
+                </if>
             </then>
-        </if>
+        </if>        
     </simple-method>
 </simple-methods>
