@@ -80,16 +80,13 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
             </td>
             <td>
                 <div class="tabletext">
-                    [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
-                    <#if (totalQuantityIssuedAndReserved > orderItem.quantity)> 
-                        <span style="color: red;"><b>&gt; ${orderItem.quantity}</b></span>
-                    <#else>
-                        <#if (totalQuantityIssuedAndReserved < orderItem.quantity)> 
-                            <span style="color: red;"><b>&lt; ${orderItem.quantity}</b></span>
-                        <#else>
-                            <b>= ${orderItem.quantity}</b>
-                        </#if>
-                    </#if>
+                    <#if (totalQuantityIssuedAndReserved != orderItem.quantity)><span style="color: red;"><#else><span></#if>
+                        [${totalQuantityIssued} + ${totalQuantityReserved} = ${totalQuantityIssuedAndReserved}]
+                        <b>
+                            <#if (totalQuantityIssuedAndReserved > orderItem.quantity)>&gt;<#else><#if (totalQuantityIssuedAndReserved < orderItem.quantity)>&lt;<#else>=</#if></#if>
+                            ${orderItem.quantity}
+                        </b>
+                    </span>
                 </div>
             </td>
             <td><div class="tabletext">&nbsp;</div></td>
