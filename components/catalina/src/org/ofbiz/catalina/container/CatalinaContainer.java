@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.18 2004/07/31 20:40:42 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.19 2004/07/31 22:13:07 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -124,7 +124,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -527,8 +527,6 @@ public class CatalinaContainer implements Container {
         if (algorithm != null) {
             sf.setAlgorithm(algorithm);
         }
-
-
 
         connector.setFactory(sf);
     }
