@@ -117,12 +117,14 @@
                   <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class='buttontext'>Read XPDL File</A>
                 </ul>
               <%}%>
-              <li><div class='tabletext'>Misc. Setup</div>
-              <ul>
-                <%if(security.hasPermission("PERIOD_MAINT", session)){%>
-                  <li><a href="<ofbiz:url>/EditCustomTimePeriod</ofbiz:url>" class='buttontext'>Edit Custom Time Period</a>
-                <%}%>
-              </ul>
+              <% if (session.getAttribute("userLogin") != null) { %>
+                <li><div class='tabletext'>Misc. Setup</div>
+                <ul>
+                  <%if(security.hasPermission("PERIOD_MAINT", session)){%>
+                    <li><a href="<ofbiz:url>/EditCustomTimePeriod</ofbiz:url>" class='buttontext'>Edit Custom Time Period</a>
+                  <%}%>
+                </ul>
+              <%}%>
               <%if(security.hasPermission("SERVER_STATS_VIEW", session)){%>
                 <li><div class='tabletext'>Server Hit Statistics</div>
                 <ul>
