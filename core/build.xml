@@ -239,8 +239,10 @@
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs">
-        <javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
-            destdir="${doc.dir}/api">
+        <javadoc packagenames="org.ofbiz.*" 
+                 classpath="${classpath}"
+                 destdir="${doc.dir}/api" 
+                 Windowtitle="Open for Business - Core API">
             <sourcepath path="${src.dir}/share" />
             <sourcepath path="${src.dir}/entity" />
             <sourcepath path="${src.dir}/service" />
