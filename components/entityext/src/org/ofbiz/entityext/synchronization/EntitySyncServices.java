@@ -27,6 +27,8 @@ package org.ofbiz.entityext.synchronization;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -264,6 +266,7 @@ public class EntitySyncServices {
             Map remoteCallContext = new HashMap();
             remoteCallContext.put("entitySyncId", entitySyncId);
             remoteCallContext.put("delegatorName", context.get("remoteDelegatorName"));
+            remoteCallContext.put("userLogin", context.get("userLogin"));
 
             remoteCallContext.put("startDate", startDate);
             remoteCallContext.put("toCreateInserted", toCreateInserted);
@@ -283,31 +286,47 @@ public class EntitySyncServices {
                 }
                 
                 startDate = (Timestamp) result.get("startDate");
-                if (startDate != null) {
-                    gotMoreData = true;
-                }
                 
                 try {
                     // store data returned, get results (just call storeEntitySyncData locally, get the numbers back and boom shakalaka)
-                    Map callLocalStoreContext = UtilMisc.toMap("entitySyncId", entitySyncId, "delegatorName", context.get("localDelegatorName"),
-                            "valuesToCreate", result.get("valuesToCreate"), "valuesToStore", result.get("valuesToStore"), 
-                            "keysToRemove", result.get("keysToRemove"));
                     
-                    Map storeResult = dispatcher.runSync("storeEntitySyncData", callLocalStoreContext);
-                    if (ServiceUtil.isError(storeResult)) {
-                        String errMsg = "Error calling service to store data locally";
-                        return ServiceUtil.returnError(errMsg, null, null, storeResult);
+                    // anything to store locally?
+                    if (UtilValidate.isEmpty((Collection) result.get("valuesToCreate")) || 
+                            UtilValidate.isEmpty((Collection) result.get("valuesToCreate")) ||
+                            UtilValidate.isEmpty((Collection) result.get("valuesToCreate"))) {
+                        
+                        // yep, we got more data
+                        gotMoreData = true;
+
+                        // at least one of the is not empty, make sure none of them are null now too...
+                        List valuesToCreate = (List) result.get("valuesToCreate");
+                        if (valuesToCreate == null) valuesToCreate = Collections.EMPTY_LIST;
+                        List valuesToStore = (List) result.get("valuesToStore");
+                        if (valuesToStore == null) valuesToStore = Collections.EMPTY_LIST;
+                        List keysToRemove = (List) result.get("keysToRemove");
+                        if (keysToRemove == null) keysToRemove = Collections.EMPTY_LIST;
+                        
+                        Map callLocalStoreContext = UtilMisc.toMap("entitySyncId", entitySyncId, "delegatorName", context.get("localDelegatorName"),
+                                "valuesToCreate", valuesToCreate, "valuesToStore", valuesToStore, 
+                                "keysToRemove", keysToRemove);
+                        
+                        callLocalStoreContext.put("userLogin", context.get("userLogin"));
+                        Map storeResult = dispatcher.runSync("storeEntitySyncData", callLocalStoreContext);
+                        if (ServiceUtil.isError(storeResult)) {
+                            String errMsg = "Error calling service to store data locally";
+                            return ServiceUtil.returnError(errMsg, null, null, storeResult);
+                        }
+                        
+                        // get results for next pass
+                        toCreateInserted = (Long) storeResult.get("toCreateInserted");
+                        toCreateUpdated = (Long) storeResult.get("toCreateUpdated");
+                        toCreateNotUpdated = (Long) storeResult.get("toCreateNotUpdated");
+                        toStoreInserted = (Long) storeResult.get("toStoreInserted");
+                        toStoreUpdated = (Long) storeResult.get("toStoreUpdated");
+                        toStoreNotUpdated = (Long) storeResult.get("toStoreNotUpdated");
+                        toRemoveDeleted = (Long) storeResult.get("toRemoveDeleted");
+                        toRemoveAlreadyDeleted = (Long) storeResult.get("toRemoveAlreadyDeleted");
                     }
-                    
-                    // get results for next pass
-                    toCreateInserted = (Long) storeResult.get("toCreateInserted");
-                    toCreateUpdated = (Long) storeResult.get("toCreateUpdated");
-                    toCreateNotUpdated = (Long) storeResult.get("toCreateNotUpdated");
-                    toStoreInserted = (Long) storeResult.get("toStoreInserted");
-                    toStoreUpdated = (Long) storeResult.get("toStoreUpdated");
-                    toStoreNotUpdated = (Long) storeResult.get("toStoreNotUpdated");
-                    toRemoveDeleted = (Long) storeResult.get("toRemoveDeleted");
-                    toRemoveAlreadyDeleted = (Long) storeResult.get("toRemoveAlreadyDeleted");
                 } catch (GenericServiceException e) {
                     String errMsg = "Error calling service to store data locally: " + e.toString();
                     Debug.logError(e, errMsg, module);
