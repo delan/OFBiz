@@ -58,69 +58,73 @@ public class ContextSecurityFilter implements Filter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponseWrapper wrapper = new HttpServletResponseWrapper((HttpServletResponse) response);
 
-        String allowedPath = config.getInitParameter("allowedPaths");
-        String redirectPath = config.getInitParameter("redirectPath");
-        String errorCode = config.getInitParameter("errorCode");
+        //test to see if we have come through the control servlet already, if not do the processing
+        if (request.getAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET) == null) {
+            String allowedPath = config.getInitParameter("allowedPaths");
+            String redirectPath = config.getInitParameter("redirectPath");
+            String errorCode = config.getInitParameter("errorCode");
 
-        List allowList = StringUtil.split(allowedPath, ":");
-        allowList.add("/");    // No path is allowed.
-        allowList.add("");      // No path is allowed.
+            List allowList = StringUtil.split(allowedPath, ":");
+            allowList.add("/");    // No path is allowed.
+            allowList.add("");      // No path is allowed.
 
-        //Debug.logInfo("[ContextSecurityFilter.debug] : " + httpRequest.getRequestURI());
+            //Debug.logInfo("[ContextSecurityFilter.debug] : " + httpRequest.getRequestURI());
 
-        String requestPath = httpRequest.getServletPath();
-        if (requestPath == null) requestPath = "";
+            String requestPath = httpRequest.getServletPath();
+            if (requestPath == null) requestPath = "";
 
-        if (requestPath.lastIndexOf("/") > 0) {
-            if (requestPath.indexOf("/") == 0)
-                requestPath = "/" + requestPath.substring(1, requestPath.indexOf("/", 1));
-            else
-                requestPath = requestPath.substring(1, requestPath.indexOf("/"));
-        }
-
-        String requestInfo = httpRequest.getServletPath();
-        if (requestInfo == null) requestInfo = "";
-
-        if (requestInfo.lastIndexOf("/") >= 0) {
-            requestInfo = requestInfo.substring(0, requestInfo.lastIndexOf("/")) + "/*";
-        }
-
-        StringBuffer contextUriBuffer = new StringBuffer();
-        if (httpRequest.getContextPath() != null)
-            contextUriBuffer.append(httpRequest.getContextPath());
-        if (httpRequest.getServletPath() != null)
-            contextUriBuffer.append(httpRequest.getServletPath());
-        if (httpRequest.getPathInfo() != null)
-            contextUriBuffer.append(httpRequest.getPathInfo());
-        String contextUri = contextUriBuffer.toString();
-
-        /* Debugging
-        for ( int i = 0; i < allowList.size(); i++ ) {
-            Debug.logInfo("[ContextSecurityFilter.debug] : allow - " + ((String)allowList.get(i)));
-        }
-        Debug.logInfo("[ContextSecurityFilter.debug] : request path - " + requestPath);
-        Debug.logInfo("[ContextSecurityFilter.debug] : request info - " + requestInfo);
-        Debug.logInfo("[ContextSecurityFilter.debug] : servlet path - " + httpRequest.getServletPath());
-        */
-
-        if (!allowList.contains(requestPath) && !allowList.contains(requestInfo) &&
-                !allowList.contains(httpRequest.getServletPath())) {
-            String filterMessage = "[ContextSecurityFilter] : Filtered request - " + contextUri;
-            if (redirectPath == null) {
-                int error;
-                try {
-                    error = Integer.parseInt(errorCode);
-                } catch (NumberFormatException nfe) {
-                    error = 404;
-                }
-                filterMessage = filterMessage + " (" + error + ")";
-                wrapper.sendError(error, contextUri);
-            } else {
-                filterMessage = filterMessage + " (" + redirectPath + ")";
-                wrapper.sendRedirect(redirectPath);
+            if (requestPath.lastIndexOf("/") > 0) {
+                if (requestPath.indexOf("/") == 0)
+                    requestPath = "/" + requestPath.substring(1, requestPath.indexOf("/", 1));
+                else
+                    requestPath = requestPath.substring(1, requestPath.indexOf("/"));
             }
-            Debug.logInfo(filterMessage);
-            return;
+
+            String requestInfo = httpRequest.getServletPath();
+            if (requestInfo == null) requestInfo = "";
+
+            if (requestInfo.lastIndexOf("/") >= 0) {
+                requestInfo = requestInfo.substring(0, requestInfo.lastIndexOf("/")) + "/*";
+            }
+
+            StringBuffer contextUriBuffer = new StringBuffer();
+            if (httpRequest.getContextPath() != null)
+                contextUriBuffer.append(httpRequest.getContextPath());
+            if (httpRequest.getServletPath() != null)
+                contextUriBuffer.append(httpRequest.getServletPath());
+            if (httpRequest.getPathInfo() != null)
+                contextUriBuffer.append(httpRequest.getPathInfo());
+            String contextUri = contextUriBuffer.toString();
+
+            /* Debugging
+            for ( int i = 0; i < allowList.size(); i++ ) {
+                Debug.logInfo("[ContextSecurityFilter.debug] : allow - " + ((String)allowList.get(i)));
+            }
+            Debug.logInfo("[ContextSecurityFilter.debug] : request path - " + requestPath);
+            Debug.logInfo("[ContextSecurityFilter.debug] : request info - " + requestInfo);
+            Debug.logInfo("[ContextSecurityFilter.debug] : servlet path - " + httpRequest.getServletPath());
+            */
+
+            if (!allowList.contains(requestPath) && !allowList.contains(requestInfo) &&
+                    !allowList.contains(httpRequest.getServletPath())) {
+                String filterMessage = "[ContextSecurityFilter] : Filtered request - " + contextUri;
+                if (redirectPath == null) {
+                    int error;
+                    try {
+                        error = Integer.parseInt(errorCode);
+                    } catch (NumberFormatException nfe) {
+                        error = 404;
+                    }
+                    filterMessage = filterMessage + " (" + error + ")";
+                    wrapper.sendError(error, contextUri);
+                } else {
+                    filterMessage = filterMessage + " (" + redirectPath + ")";
+                    wrapper.sendRedirect(httpRequest.getContextPath() + redirectPath);
+                    //request.getRequestDispatcher(redirectPath).forward(request, response);
+                }
+                Debug.logInfo(filterMessage);
+                return;
+            }
         }
 
         chain.doFilter(request, response);

@@ -166,6 +166,8 @@ public class ControlServlet extends HttpServlet {
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
         if (nextPage != null) {
+            //some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
+            request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
             RequestDispatcher rd = request.getRequestDispatcher(nextPage);
             if (rd != null) rd.forward(request, response);
         }
