@@ -48,17 +48,24 @@
 <div class="head1"><%=person.getString("firstName")%> <%=person.getString("lastName")%>'s Profile</div>
 &nbsp;<br>
 
-<table width="100%" border="0" bgcolor="#678475" cellpadding="0" cellspacing="0">
-<tr bgcolor="#678475">
-    <td bgcolor="#678475" valign="middle" align="left">
+<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor="#678475">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="middle" align="left">
       <p class="head2"><font color="white">&nbsp;Personal Info</font>
     </td>
-    <td bgcolor="#678475" valign="middle" align="right">
+    <td valign="middle" align="right">
         <a href="editprofile.jsp" class="lightbuttontext">
         [Update]&nbsp;&nbsp;</a>
     </td>
-</tr>
-</table>
+  </tr>
+  </table>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor='white' colspan='2'>
 <table width="80%" border="0" cellpadding="1">
     <tr>
         <td align="right" valign="top" width="5%"><div class="tabletext"><b>Name</b></div></td>
@@ -82,14 +89,14 @@
         <div class="tabletext"><b>Contact Information</b></div>
         <div class="tabletext">
           <a href="<%=response.encodeURL(controlPath + "/editcontactmech")%>" class="buttontext">
-          [Add Contact Information]&nbsp;&nbsp;</a>
+          [Add Contact Information]</a>
           <br>
           <%if(showOld){%>
             <a href="<%=response.encodeURL(controlPath + "/viewprofile")%>" class="buttontext">
-            [Hide Old Contact Info]&nbsp;&nbsp;</a>
+            [Hide Old Contact Info]</a>
           <%}else{%>
             <a href="<%=response.encodeURL(controlPath + "/viewprofile?SHOW_OLD=true")%>" class="buttontext">
-            [Show Old Contact Info]&nbsp;&nbsp;</a>
+            [Show Old Contact Info]</a>
           <%}%>
         </div>
       </td>
@@ -118,6 +125,8 @@
                 <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
                   <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
                     <div class="tabletext">
+                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
                       <%=UtilFormatOut.checkNull(postalAddress.getString("address1"))%><br>
                       <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("address2"), "", "<br>")%>
                       <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>, 
@@ -169,7 +178,7 @@
         <div class="tabletext"><b>Credit Cards</b></div>
         <div class="tabletext">
           <a href="profilenewcc.jsp" class="buttontext">
-          [Add Card]&nbsp;&nbsp;</a>
+          [Add Card]</a>
         </div>
       </td>
       <td width="5">&nbsp;</td>
@@ -208,20 +217,30 @@
       </td>
     </tr>
 <%-- ============================================================= --%>
-
 </table>
-<table width="100%" border="0" bgcolor="#678475" cellpadding="0" cellspacing="0">
-<tr bgcolor="#678475">
-  <td bgcolor="#678475" valign="middle" align="left">
-    <div class="head2"><font color="white">&nbsp;User Name & Password</font></div>
-  </td>
-  <td bgcolor="#678475" valign="middle" align="right">
-    <a href="changepassword.jsp" class="lightbuttontext">
-    [Update]&nbsp;&nbsp;</a>
-  </td>
-</tr>
+    </td>
+  </tr>
 </table>
 
+<br>
+<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor="#678475">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="middle" align="left">
+      <p class="head2"><font color="white">&nbsp;User Name & Password</font>
+    </td>
+    <td valign="middle" align="right">
+      <a href="changepassword.jsp" class="lightbuttontext">
+      [Update]&nbsp;&nbsp;</a>
+    </td>
+  </tr>
+  </table>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor='white' colspan='2'>
 <table width="80%" border="0" cellpadding="1">
   <tr>
     <td align="right" valign="top" width="15%" nowrap><div class="tabletext"><b>User Name</b></div></td>
@@ -229,6 +248,10 @@
     <td align="left" valign="top"><div class="tabletext"><%=userLogin.getString("userLoginId")%></div></td>
   </tr>
 </table>
+  </td>
+</tr>
+</table>
+
   <%}else{%>
 No party found for current user with user name: <%=userLogin.getString("userLoginId")%>
   <%}%>

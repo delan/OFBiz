@@ -30,7 +30,7 @@
 
 <%@ page import="javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="org.ofbiz.core.util.*" %> 
 
 <%pageContext.setAttribute("PageName", "newuser");%>
 <%@ include file="/includes/header.jsp" %>
@@ -39,11 +39,24 @@
 <%String createFormUrl=controlPath + "/createcustomer"; if(previousParams != null) createFormUrl=createFormUrl + "?" + previousParams;%>
 
 <p class="head1">Request a New Account</p>
-
+<br>
 <%String fontColor = "Black";%>
 
+<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor="#678475">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="middle" align="left">
+      <p class="head2"><font color="white">&nbsp;Name and Address</font>
+    </td>
+  </tr>
+  </table>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor='white' colspan='2'>
 <p>If you already have an account, use your browser's Back button to return to the Login page and log in from there.</p>
-
 <form method="post" action="<%=response.encodeURL(controlPath + "/createcustomer")%>" name="newuserform" style='margin:0;'>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
@@ -118,17 +131,34 @@
       * </td>
   </tr>
   <tr>
-      <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Allow Address Solicitation?</font></div></td>
-      <td width="74%">
-        <select name="CUSTOMER_ADDRESS_ALLOW_SOL">
-          <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ADDRESS_ALLOW_SOL"), "Y")%></option>
-          <option></option><option>Y</option><option>N</option>
-        </select>
-      </td>
+    <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Allow Address Solicitation?</font></div></td>
+    <td width="74%">
+      <select name="CUSTOMER_ADDRESS_ALLOW_SOL">
+        <option><%=UtilFormatOut.checkNull(request.getParameter("CUSTOMER_ADDRESS_ALLOW_SOL"), "Y")%></option>
+        <option></option><option>Y</option><option>N</option>
+      </select>
+    </td>
+  </tr>
+</table>
+    </td>
+  </tr>
+</table>
+<br>
+<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor="#678475">
+  <table width="100%" border="0" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="middle" align="left">
+      <p class="head2"><font color="white">&nbsp;Phone Numbers and Email</font>
+    </td>
+  </tr>
+  </table>
+    </td>
   </tr>
   <tr>
-    <td colspan='2' height='2' bgcolor='#CCCCCC'></td>
-  </tr>
+    <td bgcolor='white' colspan='2'>
+<table width="100%">
   <tr>
     <td colspan='2'>All phone numbers: [Country Code] [Area Code] [Contact Number] [Extension]</td>
   </tr>
@@ -208,57 +238,70 @@
   </tr>
 --%>
 </table>
-<br>
-<table width="100%" border="0" bgcolor="#678475" cellpadding="2" cellspacing="0">
-<tr bgcolor="#678475">
-    <td bgcolor="#678475" valign="middle" align="left">
-      <p class="head2"><font color="white">&nbsp;Username and Password</font>
     </td>
-    <td bgcolor="#678475">
-      &nbsp;
-    </td>
-</tr>
-</table>
-
-<p>&nbsp;</p>
-
-<table width="100%" border="0" cellpadding="2" cellspacing="0">
-  <tr>
-    <td width="27%"><div class="tabletext"><font color='<%=fontColor%>'>Username</font></div></td>
-    <td width="73%">
-        <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
-    * </td>
   </tr>
-  <% if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) { %>
-    <tr>
-      <td width="27%">
-          <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
-      </td>
-      <td width="73%">
-          <input type="password" name="PASSWORD" value="" size="20" maxlength="50">
-        * </td>
-    </tr>
-    <tr>
-      <td width="27%">
-          <div class="tabletext"><font color='<%=fontColor%>'>Repeat password to confirm</font></div>
-      </td>
-      <td width="73%">
-          <input type="password" name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
-      * </td>
-    </tr>
-  <% } else { %>
-    <tr>
-      <td width="27%">
-          <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
-      </td>
-      <td>
-         <div class="commentary">You will receive a password by email when your new account is approved.</div>
-      </td>
-    </tr>
-  <% } %>
-  <tr><td colspan="2"><div class="commentary"><br>Fields marked with (*) are required.</div></td></tr>
 </table>
+<br>
+
+<table width="100%" border="0" bgcolor="black" cellpadding="4" cellspacing="1">
+  <tr>
+    <td bgcolor="#678475">
+      <table width="100%" border="0" cellpadding="2" cellspacing="0">
+        <tr>
+          <td valign="middle" align="left">
+            <p class="head2"><font color="white">&nbsp;Username and Password</font>
+          </td>
+          <td>
+            &nbsp;
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td bgcolor="white">
+      <table width="100%" border="0" cellpadding="2" cellspacing="0">
+        <tr>
+          <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Username</font></div></td>
+          <td width="74%">
+              <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
+          * </td>
+        </tr>
+        <% if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) { %>
+          <tr>
+            <td width="26%">
+                <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
+            </td>
+            <td width="74%">
+                <input type="password" name="PASSWORD" value="" size="20" maxlength="50">
+              * </td>
+          </tr>
+          <tr>
+            <td width="26%">
+                <div class="tabletext"><font color='<%=fontColor%>'>Repeat password to confirm</font></div>
+            </td>
+            <td width="74%">
+                <input type="password" name="CONFIRM_PASSWORD" value="" size="20" maxlength="50">
+            * </td>
+          </tr>
+        <% } else { %>
+          <tr>
+            <td width="26%">
+                <div class="tabletext"><font color='<%=fontColor%>'>Password</font></div>
+            </td>
+            <td>
+               <div class="commentary">You will receive a password by email when your new account is approved.</div>
+            </td>
+          </tr>
+        <% } %>
+      </table>
+    </td>
+  </tr>
+</table>
+
 </form>
+
+<br><div class="commentary">Fields marked with (*) are required.</div>
 
 <a href="/login" class="buttontext">&nbsp;&nbsp;[Back]</a>
 <a href="javascript:document.newuserform.submit()" class="buttontext">&nbsp;&nbsp;[Save]</a>

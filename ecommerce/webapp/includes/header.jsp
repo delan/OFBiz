@@ -17,16 +17,7 @@
 <%-- <link rel="stylesheet" href="<%=controlPath + "/view/includes/maincss.css"%>" type="text/css"> --%>
 <link rel="stylesheet" href="/ecommerce/includes/maincss.css" type="text/css">
 <%-- <%@ include file="/includes/maincss.jsp"%> --%>
-</head>
 
-<body>
-<TABLE width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='CCCCCC'>
-  <TR>
-    <TD>
-      <H1 style="margin:0;">&nbsp;The Open For Business Project</H1>
-    </TD>
-  </TR>
-</TABLE>
 <script language="javascript">
 function mOvr(src,clrOver){ 
   if (!src.contains(event.fromElement)){ 
@@ -45,36 +36,61 @@ function mClk(src){
 		src.children.tags('A')[0].click();
 }
 </script>
-<TABLE width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='CCCCCC'>
+<style>
+ .headerButtonLeft { border-right:solid white 1px;padding-right:10px;padding-left:10px; }
+ .headerButtonRight { border-left:solid white 1px;padding-right:10px;padding-left:10px; }
+</style>
+</head>
+
+<body>
+
+<TABLE width='100%' cellpadding='4' cellspacing='1' border='0' bgcolor='black'>
   <TR>
-    <%
-      String queryString = null;
-      Enumeration parameterNames = request.getParameterNames();
-      while(parameterNames != null && parameterNames.hasMoreElements())
-      {
-        String paramName = (String)parameterNames.nextElement();
-        if(paramName != null)
-        {
-          if(queryString == null) queryString = paramName + "=" + request.getParameter(paramName);
-          else queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
-        }
-      }
-      
-      String loginUrl = controlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)session.getAttribute(SiteDefs.CURRENT_VIEW));
-      if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
-    %>
-    <%if(userLogin==null){%>
-      <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(loginUrl)%>" class="buttontext">Login</a></td>
-    <%}else{%>
-      <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(controlPath + "/logout/main")%>" class="buttontext">Logout</a></td>
-    <%}%>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttontext">Main</a></td>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(controlPath + "/catalog?catalog_id=CATALOG1")%>" class="buttontext">Catalog</a></td>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Order&nbsp;History</a></td>
-    <TD bgcolor="#cccc99" width="90%">&nbsp;</TD>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(controlPath + "/viewprofile")%>" class="buttontext">Profile</a></td>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">ViewCart</a></td>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(controlPath + "/shippingAddress")%>" class="buttontext">CheckOut</a></td>
-    <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(controlPath + "/sitemap")%>" class="buttontext">Site&nbsp;Map</a></td>
+    <TD bgcolor='#CCCCCC'>
+      <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
+        <TR>
+          <TD>
+            <H1 style="margin:0;">&nbsp;The Open For Business Project</H1>
+          </TD>
+        </TR>
+      </TABLE>
+    </TD>
+  </TR>
+  <TR>
+    <TD bgcolor='#cccc99'>
+      <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
+        <TR>
+          <%
+            String queryString = null;
+            Enumeration parameterNames = request.getParameterNames();
+            while(parameterNames != null && parameterNames.hasMoreElements())
+            {
+              String paramName = (String)parameterNames.nextElement();
+              if(paramName != null)
+              {
+                if(queryString == null) queryString = paramName + "=" + request.getParameter(paramName);
+                else queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
+              }
+            }
+
+            String loginUrl = controlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)session.getAttribute(SiteDefs.CURRENT_VIEW));
+            if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
+          %>
+          <%if(userLogin==null){%>
+            <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonLeft"><a href="<%=response.encodeURL(loginUrl)%>" class="buttontext">Login</a></td>
+          <%}else{%>
+            <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonLeft"><a href="<%=response.encodeURL(controlPath + "/logout/main")%>" class="buttontext">Logout</a></td>
+          <%}%>
+          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonLeft"><a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttontext">Main</a></td>
+          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonLeft"><a href="<%=response.encodeURL(controlPath + "/catalog?catalog_id=CATALOG1")%>" class="buttontext">Catalog</a></td>
+          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonLeft"><a href="<%=response.encodeURL(controlPath + "/orderhistory")%>" class="buttontext">Order&nbsp;History</a></td>
+          <TD bgcolor="#cccc99" width="90%">&nbsp;</TD>
+          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/viewprofile")%>" class="buttontext">Profile</a></td>
+          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">ViewCart</a></td>
+          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/shippingAddress")%>" class="buttontext">CheckOut</a></td>
+          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" class="headerButtonRight"><a href="<%=response.encodeURL(controlPath + "/sitemap")%>" class="buttontext">Site&nbsp;Map</a></td>
+        </TR>
+      </TABLE>
+    </TD>
   </TR>
 </TABLE>

@@ -47,38 +47,39 @@
   GenericValue partyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
   GenericValue contactMech = helper.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
   String contactMechTypeId = null;
-  if(contactMech != null )contactMechTypeId = contactMech.getString("contactMechTypeId");
+  if(contactMech != null) contactMechTypeId = contactMech.getString("contactMechTypeId");
 %>
-
-<%if(contactMech == null){%>
-  <%if(request.getParameter("CONTACT_MECH_TYPE_ID") == null){%>
-  <p class="head1">Create New Contact Information</p>
-  <form method="post" action="<%=response.encodeURL(controlPath + "/editcontactmech?DONE_PAGE=" + donePage)%>" name="createcontactmechform">
-    <table width="90%" border="0" cellpadding="2" cellspacing="0">
-      <tr>
-        <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
-        <td width="74%">
-          <select name="CONTACT_MECH_TYPE_ID">
-            <%Iterator contactMechTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechType", null, null));%>
-            <%while(contactMechTypes != null && contactMechTypes.hasNext()){%>
-              <%GenericValue contactMechType = (GenericValue)contactMechTypes.next();%>
-              <option value='<%=contactMechType.getString("contactMechTypeId")%>'><%=contactMechType.getString("description")%></option>
-            <%}%>
-          </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[Create]</a>
-        </td>
-      </tr>
-    </table>
-  </form>
-  <%-- <p><h3>ERROR: Contact information with ID "<%=UtilFormatOut.checkNull(contactMechId)%>" not found!</h3></p> --%>
-  <%}else{%>
-    <%contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");%>
-    <%useValues = false;%>
-  <%}%>
-<%}%>
 
 <%if(!security.hasPermission("USER_ADMIN", session) && partyContactMech == null && contactMech != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
 <%}else{%>
+
+  <%if(contactMech == null){%>
+    <%if(request.getParameter("CONTACT_MECH_TYPE_ID") == null){%>
+    <p class="head1">Create New Contact Information</p>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/editcontactmech?DONE_PAGE=" + donePage)%>" name="createcontactmechform">
+      <table width="90%" border="0" cellpadding="2" cellspacing="0">
+        <tr>
+          <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
+          <td width="74%">
+            <select name="CONTACT_MECH_TYPE_ID">
+              <%Iterator contactMechTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechType", null, null));%>
+              <%while(contactMechTypes != null && contactMechTypes.hasNext()){%>
+                <%GenericValue contactMechType = (GenericValue)contactMechTypes.next();%>
+                <option value='<%=contactMechType.getString("contactMechTypeId")%>'><%=contactMechType.getString("description")%></option>
+              <%}%>
+            </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[Create]</a>
+          </td>
+        </tr>
+      </table>
+    </form>
+    <%-- <p><h3>ERROR: Contact information with ID "<%=UtilFormatOut.checkNull(contactMechId)%>" not found!</h3></p> --%>
+    <%}else{%>
+      <%contactMechTypeId = request.getParameter("CONTACT_MECH_TYPE_ID");%>
+      <%useValues = false;%>
+    <%}%>
+  <%}%>
+
   <%if(contactMechTypeId != null){%>
     <%if(contactMech == null){%>
       <p class="head1">Create New Contact Information</p>
