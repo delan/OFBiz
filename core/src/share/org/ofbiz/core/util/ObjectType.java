@@ -4,6 +4,8 @@
 
 package org.ofbiz.core.util;
 
+import java.text.*;
+
 /**
  * <p><b>Title:</b> ObjectType
  * <p><b>Description:</b> None
@@ -28,11 +30,11 @@ package org.ofbiz.core.util;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    December 3, 2001
  *@version    1.0
  */
 public class ObjectType {
-    
     /** Loads a class with the current thread's context classloader 
      * @param className The name of the class to load
      */
@@ -42,8 +44,7 @@ public class ObjectType {
         try {
             loader = Thread.currentThread().getContextClassLoader();
             c = loader.loadClass(className);
-        }
-        catch ( Exception e ) {
+        } catch ( Exception e ) {
             c = Class.forName(className);
         }            
         return c;
@@ -145,7 +146,7 @@ public class ObjectType {
     /** Tests if an object is an instance of a sub-class of or properly implements an interface
      * @param obj Object to test
      * @param typeClass Class to test against
-     */    
+     */
     public static boolean instanceOf(Object obj, Class typeClass) {
         if (obj == null) return true;
         Class objectClass = obj.getClass();
@@ -153,5 +154,138 @@ public class ObjectType {
             return interfaceOf(obj,typeClass);
         else
             return isOrSubOf(obj,typeClass);
+    }
+    
+    /** Converts the passed object to the named simple type; supported types
+     * include: String, Double, Float, Long, Integer, Date (java.sql.Date), 
+     * Time, Timestamp; 
+     * @param obj Object to convert
+     * @param type Name of type to convert to
+     * @param format Optional format string for Timestamps, etc.
+     */
+    public static Object simpleTypeConvert(Object obj, String type, String format) throws GeneralException {
+        if (obj == null)
+            return null;
+        
+        if (format == null || format.length() == 0) {
+            if ("Date".equals(type)) {
+                format = "yyyy-MM-dd";
+            } else if ("Time".equals(type)) {
+                format = "HH:mm:ss";
+            } else if ("Timestamp".equals(type)) {
+                format = "yyyy-MM-dd HH:mm:ss";
+            }
+        }
+
+        String fromType = null;
+        if (obj instanceof java.lang.String) {
+            fromType = "String";
+            String str = (String) obj;
+            if ("String".equals(type)) {
+                return obj;
+            } else if ("Double".equals(type)) {
+                try {
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    Number tempNum = nf.parse(str);
+                    return new Double(tempNum.doubleValue());
+                } catch (ParseException e) {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                }
+            } else if ("Float".equals(type)) {
+                try {
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    Number tempNum = nf.parse(str);
+                    return new Float(tempNum.floatValue());
+                } catch (ParseException e) {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                }
+            } else if ("Long".equals(type)) {
+                try {
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    nf.setMaximumFractionDigits(0);
+                    Number tempNum = nf.parse(str);
+                    return new Long(tempNum.longValue());
+                } catch (ParseException e) {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                }
+            } else if ("Integer".equals(type)) {
+                try {
+                    NumberFormat nf = NumberFormat.getNumberInstance();
+                    nf.setMaximumFractionDigits(0);
+                    Number tempNum = nf.parse(str);
+                    return new Integer(tempNum.intValue());
+                } catch (ParseException e) {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                }
+            } else if ("Date".equals(type)) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    java.util.Date fieldDate = sdf.parse(str);
+                    return new java.sql.Date(fieldDate.getTime());
+                } catch (ParseException e) {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                }
+            } else if ("Time".equals(type)) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    java.util.Date fieldDate = sdf.parse(str);
+                    return new java.sql.Time(fieldDate.getTime());
+                } catch (ParseException e) {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                }
+            } else if ("Timestamp".equals(type)) {
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat(format);
+                    java.util.Date fieldDate = sdf.parse(str);
+                    return new java.sql.Timestamp(fieldDate.getTime());
+                } catch (ParseException e) {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
+                }
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
+        } else if (obj instanceof java.lang.Double) {
+            fromType = "Double";
+            if ("String".equals(type)) {
+                //use format string to print
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else if ("Double".equals(type)) {
+                return obj;
+            } else if ("Float".equals(type)) {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else if ("Long".equals(type)) {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else if ("Integer".equals(type)) {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else if ("Date".equals(type)) {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else if ("Time".equals(type)) {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else if ("Timestamp".equals(type)) {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            } else {
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
+        } else if (obj instanceof java.lang.Float) {
+            fromType = "Float";
+            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+        } else if (obj instanceof java.lang.Long) {
+            fromType = "Long";
+            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+        } else if (obj instanceof java.lang.Integer) {
+            fromType = "Integer";
+            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+        } else if (obj instanceof java.sql.Date) {
+            fromType = "Date";
+            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+        } else if (obj instanceof java.sql.Time) {
+            fromType = "Time";
+            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+        } else if (obj instanceof java.sql.Timestamp) {
+            fromType = "Timestamp";
+            throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+        } else {
+            throw new GeneralException("Conversion from " + obj.getClass().getName() + " to " + type + " not currently supported");
+        }
     }
 }

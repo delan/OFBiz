@@ -39,26 +39,26 @@ import org.ofbiz.core.util.*;
 public class SimpleMapProcessor {
     protected static UtilCache simpleMapProcessors = new UtilCache("SimpleMapProcessors", 0, 0);
     
-    public static void runSimpleMapProcessor(String xmlResource, Map strings, Map results, List messages) throws MiniLangException {
-        runSimpleMapProcessor(xmlResource, strings, results, messages, null);
+    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages) throws MiniLangException {
+        runSimpleMapProcessor(xmlResource, inMap, results, messages, null);
     }
 
-    public static void runSimpleMapProcessor(String xmlResource, Map strings, Map results, List messages, Class contextClass) throws MiniLangException {
+    public static void runSimpleMapProcessor(String xmlResource, Map inMap, Map results, List messages, Class contextClass) throws MiniLangException {
         URL xmlURL = UtilURL.fromResource(contextClass, xmlResource);
         if (xmlURL == null) {
             throw new MiniLangException("Could not find SimpleMapProcessor XML document in resource: " + xmlResource);
         }
                     
-        runSimpleMapProcessor(xmlURL, strings, results, messages, contextClass);
+        runSimpleMapProcessor(xmlURL, inMap, results, messages, contextClass);
     }
 
-    public static void runSimpleMapProcessor(URL xmlURL, Map strings, Map results, List messages, Class contextClass) throws MiniLangException {
+    public static void runSimpleMapProcessor(URL xmlURL, Map inMap, Map results, List messages, Class contextClass) throws MiniLangException {
         List simpleMapProcesses = getSimpleMapProcesses(xmlURL);
         if (simpleMapProcesses != null && simpleMapProcesses.size() > 0) {
             Iterator strPrsIter = simpleMapProcesses.iterator();
             while (strPrsIter.hasNext()) {
                 SimpleMapProcess simpleMapProcess = (SimpleMapProcess) strPrsIter.next();
-                simpleMapProcess.exec(strings, results, messages, contextClass);
+                simpleMapProcess.exec(inMap, results, messages, contextClass);
             }
         }
     }
@@ -120,11 +120,11 @@ public class SimpleMapProcessor {
             return field;
         }
         
-        public void exec(Map strings, Map results, List messages, Class contextClass) {
+        public void exec(Map inMap, Map results, List messages, Class contextClass) {
             Iterator strOpsIter = simpleMapOperations.iterator();
             while (strOpsIter.hasNext()) {
                 SimpleMapOperation simpleMapOperation = (SimpleMapOperation) strOpsIter.next();
-                simpleMapOperation.exec(strings, results, messages, contextClass);
+                simpleMapOperation.exec(inMap, results, messages, contextClass);
             }
         }
         
@@ -182,7 +182,7 @@ public class SimpleMapProcessor {
             this.fieldName = simpleMapProcess.getFieldName();
         }
         
-        public abstract void exec(Map strings, Map results, List messages, Class contextClass);
+        public abstract void exec(Map inMap, Map results, List messages, Class contextClass);
         
         public void addMessage(List messages, Class contextClass) {
             if (!isProperty && message != null) {
@@ -214,8 +214,8 @@ public class SimpleMapProcessor {
             this.className = element.getAttribute("class");
         }
         
-        public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) strings.get(fieldName);
+        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) inMap.get(fieldName);
             
             Class[] paramTypes = new Class[] {String.class};
             Object[] params = new Object[] {fieldValue};
@@ -277,8 +277,33 @@ public class SimpleMapProcessor {
             }
         }
         
-        public void doCompare(String value1, String value2, List messages, Class contextClass) {
+        public void doCompare(Object value1, Object value2, List messages, Class contextClass) {
             //Debug.logInfo("[BaseCompare.doCompare] Comparing value1: \"" + value1 + "\", value2:\"" + value2 + "\"");
+            
+            int result = 0;
+            
+            Object convertedValue1 = null;
+            try {
+                convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format);
+            } catch (GeneralException e) {
+                messages.add("Could not convert value1 for comparison: " + e.getMessage());
+                return;
+            }
+
+            Object convertedValue2 = null;
+            try {
+                convertedValue2 = ObjectType.simpleTypeConvert(value2, type, format);
+            } catch (GeneralException e) {
+                messages.add("Could not convert value2 for comparison: " + e.getMessage());
+                return;
+            }
+            
+            if (convertedValue1 == null) {
+                return;
+            }
+            if (convertedValue2 == null) {
+                return;
+            }
             
             if ("contains".equals(operator)) {
                 if (!"String".equals(type)) {
@@ -286,58 +311,45 @@ public class SimpleMapProcessor {
                     return;
                 }
                 
-                if (value1.indexOf(value2) < 0)
+                String str1 = (String) convertedValue1;
+                String str2 = (String) convertedValue2;
+                if (str1.indexOf(str2) < 0)
                     addMessage(messages, contextClass);
             }
             
-            int result = 0;            
             if ("String".equals(type)) {
-                result = value1.compareTo(value2);
-            } else if ("Number".equals(type)) {
-                NumberFormat nf = NumberFormat.getNumberInstance();
-                Number tempNum = null;
-                try {
-                    tempNum = nf.parse(value1);
-                } catch (ParseException e) {
-                    messages.add("Could not parse comparison value1 \"" + value1 + "\" for validation: " + e.getMessage());
+                String str1 = (String) convertedValue1;
+                String str2 = (String) convertedValue2;
+                if (str1.length() == 0 || str2.length() == 0)
                     return;
-                }
+                result = str1.compareTo(str2);
+            } else if ("Double".equals(type) || "Float".equals(type) || "Long".equals(type) || "Integer".equals(type)) {
+                Number tempNum = (Number) convertedValue1;
                 double value1Double = tempNum.doubleValue();
 
-                try {
-                    tempNum = nf.parse(value2);
-                } catch (ParseException e) {
-                    messages.add("Could not parse value2 \"" + value2 + "\" for validation: " + e.getMessage());
-                    return;
-                }
-                double fieldDouble = tempNum.doubleValue();
+                tempNum = (Number) convertedValue2;
+                double value2Double = tempNum.doubleValue();
 
-                if (value1Double < fieldDouble)
+                if (value1Double < value2Double)
                     result = -1;
-                else if (value1Double < fieldDouble)
+                else if (value1Double < value2Double)
                     result = 1;
                 else
                     result = 0;
-            } else if ("Date".equals(type) || "Time".equals(type) || "Timestamp".equals(type)) {
-                SimpleDateFormat sdf = new SimpleDateFormat(format);
-                java.util.Date value1Date = null;
-                try {
-                    value1Date = sdf.parse(value1);
-                } catch (ParseException e) {
-                    messages.add("Could not parse comparison value1 \"" + value1 + "\" for validation: " + e.getMessage());
-                    return;
-                }
-                
-                java.util.Date fieldDate = null;
-                try {
-                    fieldDate = sdf.parse(value2);
-                } catch (ParseException e) {
-                    messages.add("Could not parse value2 \"" + value2 + "\" for validation: " + e.getMessage());
-                    return;
-                }
-                result = value1Date.compareTo(fieldDate);
+            } else if ("Date".equals(type)) {
+                java.sql.Date value1Date = (java.sql.Date) convertedValue1;
+                java.sql.Date value2Date = (java.sql.Date) convertedValue2;
+                result = value1Date.compareTo(value2Date);
+            } else if ("Time".equals(type)) {
+                java.sql.Time value1Time = (java.sql.Time) convertedValue1;
+                java.sql.Time value2Time = (java.sql.Time) convertedValue2;
+                result = value1Time.compareTo(value2Time);
+            } else if ("Timestamp".equals(type)) {
+                java.sql.Timestamp value1Timestamp= (java.sql.Timestamp) convertedValue1;
+                java.sql.Timestamp value2Timestamp = (java.sql.Timestamp) convertedValue2;
+                result = value1Timestamp.compareTo(value2Timestamp);
             } else {
-                messages.add("Specified compare conversion type \"" + type + "\" not known.");
+                messages.add("Type \"" + type + "\" specified for compare not supported.");
             }
             
             //Debug.logInfo("[BaseCompare.doCompare] Got Compare result: " + result + ", operator: " + operator);
@@ -373,13 +385,10 @@ public class SimpleMapProcessor {
             this.value = element.getAttribute("value");
         }
         
-        public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) strings.get(fieldName);
+        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+            Object fieldValue = inMap.get(fieldName);
             
-            if (UtilValidate.isEmpty(value) || UtilValidate.isEmpty(fieldValue))
-                return;
-
-            doCompare(value, fieldValue, messages, contextClass);
+            doCompare(fieldValue, value, messages, contextClass);
         }
     }
 
@@ -391,14 +400,11 @@ public class SimpleMapProcessor {
             this.compareName = element.getAttribute("field");
         }
         
-        public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String compareValue = (java.lang.String) strings.get(compareName);
-            String fieldValue = (java.lang.String) strings.get(fieldName);
+        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+            Object compareValue = inMap.get(compareName);
+            Object fieldValue = inMap.get(fieldName);
             
-            if (UtilValidate.isEmpty(compareValue) || UtilValidate.isEmpty(fieldValue))
-                return;
-
-            doCompare(compareValue, fieldValue, messages, contextClass);
+            doCompare(fieldValue, compareValue, messages, contextClass);
         }
     }
 
@@ -418,8 +424,8 @@ public class SimpleMapProcessor {
             }
         }
         
-        public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) strings.get(fieldName);
+        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) inMap.get(fieldName);
             
             if (pattern == null) {
                 messages.add("Could not compile regular expression \"" + expr + "\" for validation");
@@ -437,8 +443,8 @@ public class SimpleMapProcessor {
             super(element, simpleMapProcess);
         }
         
-        public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) strings.get(fieldName);
+        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+            String fieldValue = (java.lang.String) inMap.get(fieldName);
             
             if (!UtilValidate.isNotEmpty(fieldValue)) {
                 addMessage(messages, contextClass);
@@ -460,8 +466,8 @@ public class SimpleMapProcessor {
             replace = "true".equals(element.getAttribute("replace"));
         }
         
-        public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) strings.get(fieldName);
+        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+            Object fieldValue = inMap.get(fieldName);
             
             if (fieldValue == null)
                 return;
@@ -497,109 +503,40 @@ public class SimpleMapProcessor {
             this.replace = "true".equals(element.getAttribute("replace"));
 
             this.format = element.getAttribute("format");
-            if (this.format == null || this.format.length() == 0) {
-                if ("Date".equals(type)) {
-                    this.format = "yyyy-MM-dd";
-                } else if ("Time".equals(type)) {
-                    this.format = "HH:mm:ss";
-                } else if ("Timestamp".equals(type)) {
-                    this.format = "yyyy-MM-dd HH:mm:ss";
-                }
-            }
         }
         
-        public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String fieldValue = (java.lang.String) strings.get(fieldName);
+        public void exec(Map inMap, Map results, List messages, Class contextClass) {
+            Object fieldObject = inMap.get(fieldName);
             
-            Object fieldObject = null;
-            
-            if (fieldValue == null || fieldValue.length() == 0) {
+            if (fieldObject == null) {
                 return;
             }
             
-            if ("String".equals(type)) {
-                fieldObject = fieldValue;
-            } else if ("Double".equals(type)) {
-                try {
-                    NumberFormat nf = NumberFormat.getNumberInstance();
-                    Number tempNum = nf.parse(fieldValue);
-                    fieldObject = new Double(tempNum.doubleValue());
-                } catch (ParseException e) {
-                    addMessage(messages, contextClass);
+            if (fieldObject instanceof java.lang.String) {
+                if (((String)fieldObject).length() == 0)
                     return;
-                }
-            } else if ("Float".equals(type)) {
-                try {
-                    NumberFormat nf = NumberFormat.getNumberInstance();
-                    Number tempNum = nf.parse(fieldValue);
-                    fieldObject = new Float(tempNum.floatValue());
-                } catch (ParseException e) {
-                    addMessage(messages, contextClass);
-                    return;
-                }
-            } else if ("Long".equals(type)) {
-                try {
-                    NumberFormat nf = NumberFormat.getNumberInstance();
-                    nf.setMaximumFractionDigits(0);
-                    Number tempNum = nf.parse(fieldValue);
-                    fieldObject = new Long(tempNum.longValue());
-                } catch (ParseException e) {
-                    addMessage(messages, contextClass);
-                    return;
-                }
-            } else if ("Integer".equals(type)) {
-                try {
-                    NumberFormat nf = NumberFormat.getNumberInstance();
-                    nf.setMaximumFractionDigits(0);
-                    Number tempNum = nf.parse(fieldValue);
-                    fieldObject = new Integer(tempNum.intValue());
-                } catch (ParseException e) {
-                    addMessage(messages, contextClass);
-                    return;
-                }
-            } else if ("Date".equals(type)) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat(format);
-                    java.util.Date fieldDate = sdf.parse(fieldValue);
-                    fieldObject = new java.sql.Date(fieldDate.getTime());
-                } catch (ParseException e) {
-                    addMessage(messages, contextClass);
-                    return;
-                }
-            } else if ("Time".equals(type)) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat(format);
-                    java.util.Date fieldDate = sdf.parse(fieldValue);
-                    fieldObject = new java.sql.Time(fieldDate.getTime());
-                } catch (ParseException e) {
-                    addMessage(messages, contextClass);
-                    return;
-                }
-            } else if ("Timestamp".equals(type)) {
-                try {
-                    SimpleDateFormat sdf = new SimpleDateFormat(format);
-                    java.util.Date fieldDate = sdf.parse(fieldValue);
-                    fieldObject = new java.sql.Timestamp(fieldDate.getTime());
-                } catch (ParseException e) {
-                    addMessage(messages, contextClass);
-                    return;
-                }
-            } else {
-                messages.add("Specified type \"" + type + "\" not known in conversion operation.");
             }
             
-            if (fieldObject == null)
+            Object convertedObject = null;
+            try {
+                convertedObject = ObjectType.simpleTypeConvert(fieldObject, type, format);
+            } catch (GeneralException e) {
+                messages.add(e.getMessage());
+                return;
+            }
+            
+            if (convertedObject == null)
                 return;
             
             if (replace) {
-                results.put(toField, fieldObject);
-                //Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + fieldObject + "\" in field \"" + toField + "\"");
+                results.put(toField, convertedObject);
+                //Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
             } else {
                 if (results.containsKey(toField)) {
                     //do nothing
                 } else {
-                    results.put(toField, fieldObject);
-                    //Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + fieldObject + "\" in field \"" + toField + "\"");
+                    results.put(toField, convertedObject);
+                    //Debug.logInfo("[SimpleMapProcessor.Converted.exec] Put converted value \"" + convertedObject + "\" in field \"" + toField + "\"");
                 }
             }
         }
