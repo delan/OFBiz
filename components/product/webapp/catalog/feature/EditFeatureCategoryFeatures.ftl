@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
@@ -47,6 +47,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
     <td><div class="tabletext"><b>${uiLabelMap.ProductFeatureCategory}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductUnitOfMeasureId}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductQuantity}</b></div></td>
+    <td><div class="tabletext"><b>${uiLabelMap.ProductAmount}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductIdSeqNum}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductIdCode}</b></div></td>
     <td><div class="tabletext"><b>${uiLabelMap.ProductAbbrev}</b></div></td>
@@ -91,6 +92,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
       </select></td>
       <td><input type=text class='inputBox' size='10' name="uomId" value="${productFeature.uomId?if_exists}"></td>
       <td><input type=text class='inputBox' size='5' name="numberSpecified" value="${productFeature.numberSpecified?if_exists}"></td>
+      <td><input type=text class='inputBox' size='5' name="defaultAmount" value="${productFeature.defaultAmount?if_exists}"></td>
       <td><input type=text class='inputBox' size='5' name="defaultSequenceNum" value="${productFeature.defaultSequenceNum?if_exists}"></td>
       <td><input type=text class='inputBox' size='5' name="idCode" value="${productFeature.idCode?if_exists}"></td>
       <td><input type=text class='inputBox' size='5' name="abbrev" value="${productFeature.abbrev?if_exists}"></td>
@@ -112,7 +114,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
         </td>
         <td><input type=text size='25' name='fromDate' class='inputBox'><a href="javascript:call_cal(document.lineForm${productFeature_index}.fromDate, '${nowTimestampString}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
         <td><input type=text size='25' name='thruDate' class='inputBox'><a href="javascript:call_cal(document.lineForm${productFeature_index}.thruDate, '${nowTimestampString}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
-        <td><input type=text size='6' name='amount' class='inputBox'></td>
+        <td><input type=text size='6' name='amount' class='inputBox' value='${productFeature.defaultAmount?if_exists}'></td>
         <td><input type=text size='5' name='sequenceNum' class='inputBox' value='${productFeature.defaultSequenceNum?if_exists}'></td>
       <td colspan='3' align=left><input type=submit value='Apply'></td>
       </form>
@@ -158,6 +160,10 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
     <tr>
       <td><div class='tabletext'>${uiLabelMap.ProductNumberQuantity}:</div></td>
       <td><input type=text size='10' name='numberSpecified' class='inputBox' value=''></td>
+    </tr>
+    <tr>
+      <td><div class='tabletext'>${uiLabelMap.ProductDefaultAmount}:</div></td>
+      <td><input type=text size='10' name='defaultAmount' class='inputBox' value=''></td>
     </tr>
     <tr>
       <td><div class='tabletext'>${uiLabelMap.ProductDefaultSequenceNumber}:</div></td>

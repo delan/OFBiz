@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.56 $
+ * @version    $Revision: 1.57 $
  */
 -->
 
@@ -573,6 +573,7 @@
       <field name="description" type="description"></field>
       <field name="uomId" type="id"></field>
       <field name="numberSpecified" type="floating-point"></field>
+      <field name="defaultAmount" type="currency-amount"></field>
       <field name="defaultSequenceNum" type="numeric"></field>
       <field name="abbrev" type="id"></field>
       <field name="idCode" type="id"></field>
