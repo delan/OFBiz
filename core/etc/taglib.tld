@@ -95,4 +95,16 @@
 	  <attribute><name>type</name><required>false</required></attribute>
     </tag>
 	
+	<tag>
+	  <name>entityfield</name>
+	  <tagclass>org.ofbiz.core.taglib.EntityFieldTag</tagclass>
+	  <bodycontent>NONE</bodycontent>
+	  <info>
+	    Displays a properly formatted internationalized string 
+		entity field.
+	  </info>
+	  <attribute><name>attribute</name><required>true</required></attribute>
+	  <attribute><name>field</name><required>true</required></attribute>
+	</tag>  
+	
 </taglib>
