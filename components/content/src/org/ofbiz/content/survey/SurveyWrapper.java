@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.3 2003/11/26 18:41:21 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.4 2003/12/05 21:03:55 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -79,6 +79,7 @@ public class SurveyWrapper {
         Map templateContext = new HashMap();
         templateContext.put("survey", survey);
         templateContext.put("surveyQuestions", questions);
+        templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));
         templateContext.put("additionalFields", passThru);
 
         Template template = this.getTemplate();
