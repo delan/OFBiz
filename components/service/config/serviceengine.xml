@@ -7,7 +7,7 @@
 
     <!-- Thread pool configuration (max/min threads, uses to live and time to live) -->
     <thread-pool send-to-pool="pool"
-                 purge-job-days="30"
+                 purge-job-days="4"
                  failed-retry-min="3"
                  ttl="18000000"
                  wait-millis="750"
