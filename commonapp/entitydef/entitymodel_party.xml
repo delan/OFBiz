@@ -695,6 +695,10 @@
       <relation type="one-nofk" rel-entity-name="TelecomNumber">
         <key-map field-name="contactMechId"/>
       </relation>
+      <relation type="many" rel-entity-name="PartyContactMechPurpose">
+        <key-map field-name="partyId"/>
+        <key-map field-name="contactMechId"/>
+      </relation>
     </entity>
     <entity entity-name="PartyContactMechPurpose"
             package-name="org.ofbiz.commonapp.party.contact"
