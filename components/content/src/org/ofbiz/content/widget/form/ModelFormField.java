@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.10 2004/02/28 01:33:56 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.11 2004/03/15 14:53:57 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -85,6 +85,7 @@ public class ModelFormField {
 
     protected FieldInfo fieldInfo = null;
     protected String idName;
+    protected boolean separateColumn = false;
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -111,6 +112,10 @@ public class ModelFormField {
         this.redWhen = fieldElement.getAttribute("red-when");
         this.setUseWhen(fieldElement.getAttribute("use-when"));
         this.idName = fieldElement.getAttribute("id-name");
+        String sepColumns = fieldElement.getAttribute("separate-column");
+        if (sepColumns != null && sepColumns.equalsIgnoreCase("true"))
+            separateColumn = true;
+
 
 
 
@@ -170,6 +175,10 @@ public class ModelFormField {
                 this.fieldInfo = new LookupField(subElement, this);
             } else if ("file".equals(subElementName)) {
                 this.fieldInfo = new FileField(subElement, this);
+            } else if ("password".equals(subElementName)) {
+                this.fieldInfo = new PasswordField(subElement, this);
+            } else if ("image".equals(subElementName)) {
+                this.fieldInfo = new ImageField(subElement, this);
             } else {
                 throw new IllegalArgumentException("The field sub-element with name " + subElementName + " is not supported");
             }
@@ -1068,6 +1077,13 @@ public class ModelFormField {
         this.tooltipStyle = string;
     }
 
+    /**
+     * @return
+     */
+    public boolean getSeparateColumn() {
+        return this.separateColumn;
+    }
+
     public static abstract class FieldInfo {
 
         public static final int DISPLAY = 1;
@@ -1087,6 +1103,8 @@ public class ModelFormField {
         public static final int RANGEQBE = 15;
         public static final int LOOKUP = 16;
         public static final int FILE = 17;
+        public static final int PASSWORD = 18;
+        public static final int IMAGE = 19;
 
         // the numbering here represents the priority of the source;
         //when setting a new fieldInfo on a modelFormField it will only set
@@ -1116,6 +1134,8 @@ public class ModelFormField {
             fieldTypeByName.put("range-find", new Integer(15));
             fieldTypeByName.put("lookup", new Integer(16));
             fieldTypeByName.put("file", new Integer(17));
+            fieldTypeByName.put("password", new Integer(18));
+            fieldTypeByName.put("image", new Integer(19));
         }
 
         protected int fieldType;
@@ -2338,4 +2358,146 @@ public class ModelFormField {
             formStringRenderer.renderFileField(buffer, context, this);
         }
     }
+
+    public static class PasswordField extends TextField {
+
+        public PasswordField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+        }
+
+        public PasswordField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, modelFormField);
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderPasswordField(buffer, context, this);
+        }
+    }
+
+    public static class ImageField extends FieldInfo {
+        protected int border = 0;
+        protected Integer width;
+        protected Integer height;
+        protected FlexibleStringExpander defaultValue;
+        protected FlexibleStringExpander value;
+        protected SubHyperlink subHyperlink;
+
+        protected ImageField() {
+            super();
+        }
+
+        public ImageField(ModelFormField modelFormField) {
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.IMAGE, modelFormField);
+        }
+
+        public ImageField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.IMAGE, modelFormField);
+        }
+
+        public ImageField(Element element, ModelFormField modelFormField) {
+            super(element, modelFormField);
+            this.setValue(element.getAttribute("value"));
+
+            String borderStr = element.getAttribute("border");
+            try {
+                border = Integer.parseInt(borderStr);
+            } catch (Exception e) {
+                if (borderStr != null && borderStr.length() > 0) {
+                    Debug.logError("Could not parse the border value of the text element: [" + borderStr + "], setting to the default of " + border, module);
+                }
+            }
+
+            String widthStr = element.getAttribute("width");
+            try {
+                width = Integer.valueOf(widthStr);
+            } catch (Exception e) {
+                width = null;
+                if (widthStr != null && widthStr.length() > 0) {
+                    Debug.logError(
+                        "Could not parse the size value of the text element: [" + widthStr + "], setting to null; default of no width will be used",
+                        module);
+                }
+            }
+
+            String heightStr = element.getAttribute("height");
+            try {
+                height = Integer.valueOf(heightStr);
+            } catch (Exception e) {
+                height = null;
+                if (heightStr != null && heightStr.length() > 0) {
+                    Debug.logError(
+                        "Could not parse the size value of the text element: [" + heightStr + "], setting to null; default of no height will be used",
+                        module);
+                }
+            }
+
+            Element subHyperlinkElement = UtilXml.firstChildElement(element, "sub-hyperlink");
+            if (subHyperlinkElement != null) {
+                this.subHyperlink = new SubHyperlink(subHyperlinkElement);
+            }
+        }
+
+        public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+            formStringRenderer.renderImageField(buffer, context, this);
+        }
+
+
+        /**
+         * @param str
+         */
+        public void setDefaultValue(String str) {
+            this.defaultValue = new FlexibleStringExpander(str);
+        }
+
+        public SubHyperlink getSubHyperlink() {
+            return this.subHyperlink;
+        }
+        public void setSubHyperlink(SubHyperlink newSubHyperlink) {
+            this.subHyperlink = newSubHyperlink;
+        }
+        /**
+         * @return
+         */
+        public Integer getWidth() {
+            return width;
+        }
+        /**
+         * @return
+         */
+        public Integer getHeight() {
+            return height;
+        }
+
+        /**
+         * @return
+         */
+        public int getBorder() {
+            return border;
+        }
+
+        /**
+         * @return
+         */
+        public String getDefaultValue(Map context) {
+            if (this.defaultValue != null) {
+                return this.defaultValue.expandString(context);
+            } else {
+                return "";
+            }
+        }
+
+        public String getValue(Map context) {
+            if (this.value != null && !this.value.isEmpty()) {
+                return this.value.expandString(context);
+            } else {
+                return modelFormField.getEntry(context);
+            }
+        }
+
+        public void setValue(String string) {
+            this.value = new FlexibleStringExpander(string);
+        }
+
+    }
+
 }

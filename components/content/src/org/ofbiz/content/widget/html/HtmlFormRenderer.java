@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.6 2003/12/05 20:42:51 byersa Exp $
+ * $Id: HtmlFormRenderer.java,v 1.7 2004/03/15 14:53:57 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,6 +49,7 @@ import org.ofbiz.content.widget.form.ModelFormField.HyperlinkField;
 import org.ofbiz.content.widget.form.ModelFormField.IgnoredField;
 import org.ofbiz.content.widget.form.ModelFormField.LookupField;
 import org.ofbiz.content.widget.form.ModelFormField.FileField;
+import org.ofbiz.content.widget.form.ModelFormField.PasswordField;
 import org.ofbiz.content.widget.form.ModelFormField.RadioField;
 import org.ofbiz.content.widget.form.ModelFormField.RangeFindField;
 import org.ofbiz.content.widget.form.ModelFormField.ResetField;
@@ -56,13 +57,14 @@ import org.ofbiz.content.widget.form.ModelFormField.SubmitField;
 import org.ofbiz.content.widget.form.ModelFormField.TextField;
 import org.ofbiz.content.widget.form.ModelFormField.TextFindField;
 import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
+import org.ofbiz.content.widget.form.ModelFormField.ImageField;
 
 /**
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -1596,6 +1598,108 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("/>");
 
         this.makeHyperlinkString(buffer, textField.getSubHyperlink(), context);
+
+        this.appendTooltip(buffer, context, modelFormField);
+
+        this.appendWhitespace(buffer);
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderPasswordField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.PasswordField)
+     */
+    public void renderPasswordField(StringBuffer buffer, Map context, PasswordField passwordField) {
+        ModelFormField modelFormField = passwordField.getModelFormField();
+
+        buffer.append("<input type=\"password\"");
+
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName(context));
+        buffer.append('"');
+
+        String value = modelFormField.getEntry(context, passwordField.getDefaultValue(context));
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+
+        buffer.append(" size=\"");
+        buffer.append(passwordField.getSize());
+        buffer.append('"');
+
+        Integer maxlength = passwordField.getMaxlength();
+        if (maxlength != null) {
+            buffer.append(" maxlength=\"");
+            buffer.append(maxlength.intValue());
+            buffer.append('"');
+        }
+
+        String idName = modelFormField.getIdName();
+        if (UtilValidate.isNotEmpty(idName)) {
+            buffer.append(" id=\"");
+            buffer.append(idName);
+            buffer.append('"');
+        }
+
+        buffer.append("/>");
+
+        this.makeHyperlinkString(buffer, passwordField.getSubHyperlink(), context);
+
+        this.appendTooltip(buffer, context, modelFormField);
+
+        this.appendWhitespace(buffer);
+    }
+
+    /* (non-Javadoc)
+     * @see org.ofbiz.content.widget.form.FormStringRenderer#renderImageField(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField.ImageField)
+     */
+    public void renderImageField(StringBuffer buffer, Map context, ImageField imageField) {
+        ModelFormField modelFormField = imageField.getModelFormField();
+
+        buffer.append("<img ");
+
+
+        String value = modelFormField.getEntry(context, imageField.getValue(context));
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" src=\"");
+            ContentUrlTag.appendContentPrefix(request, buffer);
+            buffer.append(value);
+            buffer.append('"');
+        }
+
+        buffer.append(" border=\"");
+        buffer.append(imageField.getBorder());
+        buffer.append('"');
+
+        Integer width = imageField.getWidth();
+        if (width != null) {
+            buffer.append(" width=\"");
+            buffer.append(width.intValue());
+            buffer.append('"');
+        }
+
+        Integer height = imageField.getHeight();
+        if (height != null) {
+            buffer.append(" height=\"");
+            buffer.append(height.intValue());
+            buffer.append('"');
+        }
+
+        buffer.append("/>");
+
+        this.makeHyperlinkString(buffer, imageField.getSubHyperlink(), context);
 
         this.appendTooltip(buffer, context, modelFormField);
 
