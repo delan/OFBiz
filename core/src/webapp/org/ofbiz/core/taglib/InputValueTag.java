@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,22 +22,14 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.taglib;
 
-
 import java.io.*;
-import java.text.*;
-import java.util.*;
 import javax.servlet.jsp.*;
 import javax.servlet.jsp.tagext.*;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.entity.model.*;
-import org.ofbiz.core.util.*;
-
 import org.ofbiz.core.pseudotag.*;
-
+import org.ofbiz.core.util.*;
 
 /**
  * InputValueTag - Outputs a string for an input box from either an entity field or
@@ -46,8 +38,8 @@ import org.ofbiz.core.pseudotag.*;
  *     attribute is false, always tries to use the request parameter and ignores the entity field.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @created    November 5, 2001
- * @version    1.0
+ * @version    $Revision$
+ * @since      2.0
  */
 public class InputValueTag extends TagSupport {
 
