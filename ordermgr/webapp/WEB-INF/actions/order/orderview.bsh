@@ -149,6 +149,12 @@ if (orderHeader != null) {
     
     // get a list of all shipments, and a list of ItemIssuances per order item
     allShipmentsMap = new HashMap();
+    primaryShipments = orderHeader.getRelated("PrimaryShipment");
+    primaryShipmentIter = primaryShipments.iterator();
+    while (primaryShipmentIter.hasNext()) {
+    	primaryShipment = primaryShipmentIter.next();
+    	allShipmentsMap.put(primaryShipment.get("shipmentId"), primaryShipment);
+    }
     itemIssuancesPerItem = new HashMap();
     itemIssuances = orderHeader.getRelated("ItemIssuance", null, UtilMisc.toList("shipmentId", "shipmentItemSeqId"));
     itemIssuanceIter = itemIssuances.iterator();
