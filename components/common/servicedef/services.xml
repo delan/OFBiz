@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+    <description>Common Application Services</description>
+    <vendor>OFBiz</vendor>
+    <version>1.0</version>	
+    
+    <service name="echoService" engine="java" validate="false"
+            location="org.ofbiz.common.CommonServices" invoke="echoService">
+        <description>Echos back all passed parameters</description>        
+    </service>
+    
+    <service name="sendMailInterface" engine="interface" location="" invoke="">
+    	<description>Interface service for mail services</description>
+        <attribute name="sendTo" type="String" mode="IN" optional="false"/>
+        <attribute name="sendCc" type="String" mode="IN" optional="true"/>
+        <attribute name="sendBcc" type="String" mode="IN" optional="true"/>
+        <attribute name="sendFrom" type="String" mode="IN" optional="false"/>
+        <attribute name="subject" type="String" mode="IN" optional="false"/>
+        <attribute name="authUser" type="String" mode="IN" optional="true"/>
+        <attribute name="authPass" type="String" mode="IN" optional="true"/>        
+        <attribute name="sendVia" type="String" mode="IN" optional="true"/>
+        <attribute name="sendType" type="String" mode="IN" optional="true"/>
+        <attribute name="contentType" type="String" mode="IN" optional="true"/>    	
+    </service>
+    
+    <service name="sendMail" engine="java"
+            location="org.ofbiz.common.CommonServices" invoke="sendMail">
+        <description>Send E-Mail Service</description>   
+        <implements service="sendMailInterface"/>     
+        <attribute name="body" type="String" mode="IN" optional="false"/>        
+    </service>
+    
+    <service name="prepareNotificationInterface" engine="interface"
+            location="" invoke="">
+        <description>Send Template Based Notification Service</description>   
+        <implements service="sendMailInterface"/>
+        <attribute name="body" type="String" mode="INOUT" optional="true"/>        
+    	<attribute name="baseUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="templateData" type="Map" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="sendNotificationInterface" engine="interface"
+            location="" invoke="">
+        <description>Send Template Based Notification Service</description>   
+        <implements service="prepareNotificationInterface"/>
+        <attribute name="body" type="String" mode="IN" optional="true"/>
+        <attribute name="templateName" type="String" mode="IN" optional="false"/>
+        <attribute name="templateData" type="Map" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
+    </service>
+    
+    <service name="sendGenericNotificationEmail" engine="java"
+            location="org.ofbiz.common.NotificationServices" invoke="sendNotification">
+        <description>Generic Template Based Notification Service</description>   
+        <implements service="sendNotificationInterface"/>        
+    </service>    
+    
+    <service name="sendMailFromUrl" engine="java"
+            location="org.ofbiz.common.CommonServices" invoke="sendMailFromUrl">
+        <description>Send E-Mail From URL Service</description>
+        <implements service="sendMailInterface"/>
+        <attribute name="bodyUrl" type="String" mode="IN" optional="false"/>
+        <attribute name="bodyUrlParameters" type="java.util.Map" mode="IN" optional="true"/>
+        <attribute name="body" type="String" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="createNote" engine="java"
+            location="org.ofbiz.common.CommonServices" invoke="createNote">
+        <description>Create a new note record</description>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="noteName" type="String" mode="IN" optional="true"/>
+        <attribute name="note" type="String" mode="IN"/>
+        <attribute name="noteId" type="String" mode="OUT"/>
+    </service>
+
+    <service name="updateDebugLevel" engine="java"
+            location="org.ofbiz.common.CommonServices" invoke="setDebugLevels">
+        <description>Sets/Updates cached debugging levels</description>
+        <attribute name="verbose" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="timing" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="info" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="important" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="warning" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="error" type="Boolean" mode="IN" optional="true"/>
+        <attribute name="fatal" type="Boolean" mode="IN" optional="true"/>
+    </service>
+    
+    <!-- DataSource Services -->
+    <service name="interfaceDataSource" engine="interface" location="" invoke="">
+        <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
+        <attribute name="dataSourceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createDataSource" engine="simple"
+            location="org/ofbiz/common/datasource/DataSourceServices.xml" invoke="createDataSource" auth="true">
+        <description>Create a DataSource record</description>
+        <implements service="interfaceDataSource"/>
+    </service>
+    <service name="updateDataSource" engine="simple"
+            location="org/ofbiz/common/datasource/DataSourceServices.xml" invoke="updateDataSource" auth="true">
+        <description>Update a DataSource record</description>
+        <implements service="interfaceDataSource"/>
+    </service>
+    <service name="deleteDataSource" engine="simple"
+            location="org/ofbiz/common/datasource/DataSourceServices.xml" invoke="deleteDataSource" auth="true">
+        <description>Delete a DataSource record</description>
+        <attribute name="dataSourceId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- CustomTimePeriod Services -->
+    <service name="interfaceCustomTimePeriod" engine="interface" location="" invoke="">
+        <attribute name="parentPeriodId" type="String" mode="IN" optional="true"/>
+        <attribute name="organizationPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="periodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="periodNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="periodName" type="String" mode="IN" optional="true"/>
+        <attribute name="fromDate" type="java.sql.Date" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="java.sql.Date" mode="IN" optional="true"/>
+    </service>
+    <service name="createCustomTimePeriod" engine="simple"
+            location="org/ofbiz/common/period/PeriodServices.xml" invoke="createCustomTimePeriod" auth="true">
+        <description>Create a CustomTimePeriod record</description>
+        <implements service="interfaceCustomTimePeriod"/>
+        <attribute name="customTimePeriodId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateCustomTimePeriod" engine="simple"
+            location="org/ofbiz/common/period/PeriodServices.xml" invoke="updateCustomTimePeriod" auth="true">
+        <description>Update a CustomTimePeriod record</description>
+        <implements service="interfaceCustomTimePeriod"/>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteCustomTimePeriod" engine="simple"
+            location="org/ofbiz/common/period/PeriodServices.xml" invoke="deleteCustomTimePeriod" auth="true">
+        <description>Delete a CustomTimePeriod record</description>
+        <attribute name="customTimePeriodId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- Status services -->
+    <service name="getStatusItems" engine="java"
+            location="org.ofbiz.common.status.StatusServices" invoke="getStatusItems" auth="false">
+        <description>Gets all StatusItem entries for the supplied StatusTypeId's</description>
+        <attribute name="statusTypeIds" type="List" mode="IN" optional="false"/>
+        <attribute name="statusItems" type="List" mode="OUT" optional="false"/>
+    </service>
+    <service name="getStatusValidChangeToDetails" engine="java"
+            location="org.ofbiz.common.status.StatusServices" invoke="getStatusValidChangeToDetails" auth="false">
+        <description>Gets all StatusValidChangeToDetails entries for the supplied StatusTypeId</description>
+        <attribute name="statusTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="statusValidChangeToDetails" type="Collection" mode="OUT" optional="true"/>
+    </service>    
+    
+    <!-- Lookup services -->
+    <service name="lookupParty" engine="simple"
+            location="org/ofbiz/common/LookupServices.xml" invoke="lookupParty" auth="true">
+        <description>Performs a lookup for parties</description>
+        <attribute name="firstName" type="String" form-display="true" form-label="First name" mode="IN" optional="true"/>
+        <attribute name="lastName" type="String" form-display="true" form-label="Last name" mode="IN" optional="true"/>
+        <attribute name="lookupResult" type="List" mode="OUT" optional="false"/>
+    </service>    
+    <service name="performFind" auth="false" engine="java" invoke="performFind"
+            location="org.ofbiz.common.FindServices">
+        <description>Generic service to return an entity iterator</description>
+        <attribute name="entityName" type="String" mode="IN" optional="false"/>
+        <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
+        <attribute name="listIt" type="org.ofbiz.core.entity.EntityListIterator" mode="OUT" optional="true"/>
+    </service>
+</services>
