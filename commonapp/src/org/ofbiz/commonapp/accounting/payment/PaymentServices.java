@@ -43,7 +43,7 @@ public class PaymentServices {
 
     /**
      * Deletes a PaymentMethod entity according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal paymentMethod partyId, or must have PARTYMGR_DELETE permission
+     * <b>security check</b>: userLogin partyId must equal paymentMethod partyId, or must have PAY_INFO_DELETE permission
      * @param ctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -70,9 +70,9 @@ public class PaymentServices {
             return ServiceUtil.returnError("ERROR: Could not find Payment Method to delete (read failure)");
         }
 
-        //<b>security check</b>: userLogin partyId must equal paymentMethod partyId, or must have PARTYMGR_DELETE permission
+        //<b>security check</b>: userLogin partyId must equal paymentMethod partyId, or must have PAY_INFO_DELETE permission
         if (paymentMethod.get("partyId") == null || !paymentMethod.getString("partyId").equals(userLogin.getString("partyId"))) {
-            if (!security.hasEntityPermission("PARTYMGR", "_DELETE", userLogin)) {
+            if (!security.hasEntityPermission("PAY_INFO", "_DELETE", userLogin)) {
                 return ServiceUtil.returnError("You do not have permission to delete Payment Method for this partyId");
             }
         }
@@ -91,7 +91,7 @@ public class PaymentServices {
 
     /**
      * Creates CreditCard and PaymentMethod entities according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PAY_INFO_CREATE permission
      * @param ctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -104,7 +104,7 @@ public class PaymentServices {
         
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
         if (result.size() > 0)
             return result;
         
@@ -183,7 +183,7 @@ public class PaymentServices {
     
     /**
      * Updates CreditCard and PaymentMethod entities according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PAY_INFO_UPDATE permission
      * @param ctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -196,7 +196,7 @@ public class PaymentServices {
         
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
         if (result.size() > 0)
             return result;
 
@@ -312,7 +312,7 @@ public class PaymentServices {
 
     /**
      * Creates EftAccount and PaymentMethod entities according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PAY_INFO_CREATE permission
      * @param ctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -325,7 +325,7 @@ public class PaymentServices {
         
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_CREATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_CREATE");
         if (result.size() > 0)
             return result;
         
@@ -392,7 +392,7 @@ public class PaymentServices {
     
     /**
      * Updates EftAccount and PaymentMethod entities according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PAY_INFO_UPDATE permission
      * @param ctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -405,7 +405,7 @@ public class PaymentServices {
         
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
         if (result.size() > 0)
             return result;
 
@@ -509,7 +509,7 @@ public class PaymentServices {
 
     /**
      * Creates a Payment entity according to the parameters passed in the context
-     * <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_UPDATE permission
+     * <b>security check</b>: userLogin partyId must equal partyId, or must have PAY_INFO_UPDATE permission
      * @param ctx The DispatchContext that this service is operating in
      * @param context Map containing the input parameters
      * @return Map with the result of the service, the output parameters
@@ -522,7 +522,7 @@ public class PaymentServices {
         
         Timestamp now = UtilDateTime.nowTimestamp();
 
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PARTYMGR", "_UPDATE");
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "PAY_INFO", "_UPDATE");
         if (result.size() > 0)
             return result;
         
