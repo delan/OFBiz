@@ -26,6 +26,34 @@
      */
 %>
 
+<%
+	if (delegate == null)
+		fromDate = request.getParameter("fromFromDate");
+	if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) { 
+		Debug.logInfo("Required parameters are here");   	
+		Map fields = UtilMisc.toMap("workEffortId", workEffortId, "partyId", assignPartyId, "roleTypeId", assignRoleTypeId, "fromDate", fromDate);
+	    GenericValue wepa = delegator.findByPrimaryKey("WorkEffortPartyAssignment", fields);
+	    Debug.logInfo("Got WorkEffortPartyAssignment :: " + wepa);
+	    if (wepa != null && wepa.get("statusId") != null && wepa.getString("statusId").equals("CAL_ACCEPTED")) {
+	    	Debug.logInfo("Status is accepted.");	   
+    		GenericValue workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));      		
+    		if (workEffort != null) {
+    			Debug.logInfo("Got WorkEffort");
+    			if ((delegate != null && delegate.equals("true")) || (workEffort.get("currentStatusId") != null && workEffort.getString("currentStatusId").equals("WF_RUNNING"))) {
+    				Debug.logInfo("Either start activity is true, or workeffort is running");
+    				Map actFields = UtilMisc.toMap("packageId", workEffort.getString("workflowPackageId"), "packageVersion", workEffort.getString("workflowPackageVersion"), "processId", workEffort.getString("workflowProcessId"), "processVersion", workEffort.getString("workflowProcessVersion"), "activityId", workEffort.getString("workflowActivityId"));
+    				GenericValue activity = delegator.findByPrimaryKey("WorkflowActivity", actFields);  
+    				if (activity != null) {
+    					Debug.logInfo("Got activity definition");
+    					List transitions = activity.getRelated("FromWorkflowTransition", null, UtilMisc.toList("-transitionId"));
+    					if (transitions != null) pageContext.setAttribute("wfTransitions", transitions);
+    				}
+    			}
+    		}
+    	}
+    }
+%>
+
 <ofbiz:if name="wfTransitions">
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -48,7 +76,7 @@
               <input type="hidden" name="workEffortId" value="<%=workEffortId%>">
               <input type="hidden" name="partyId" value="<%=assignPartyId%>">
               <input type="hidden" name="roleTypeId" value="<%=assignRoleTypeId%>">
-              <input type="hidden" name="fromDate" value="<%=fromDate%>">
+              <input type="hidden" name="fromDate" value="<%=fromDate%>">             
               <table>
                 <tr>
                   <td>

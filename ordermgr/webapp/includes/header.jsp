@@ -43,7 +43,7 @@
         <tr>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="headerbuttontext">Main</a></td>
 
-		  <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
+		  <%if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) {%>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/tasklist</ofbiz:url>" class="headerbuttontext">Order&nbsp;List</a></td>
           <%}%>
 

@@ -47,28 +47,11 @@
     String assignPartyId = request.getParameter("partyId");
     String assignRoleTypeId = request.getParameter("roleTypeId");
     String fromDate = request.getParameter("fromDate");
-
-    GenericValue orderHeader = null;
-    GenericValue orderRole = null;
-    GenericValue we = null;
-    GenericValue activity = null;
-    List transitions = null;
+    String delegate = request.getParameter("delegate");
     
-    if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) {    	
-    	we = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));  
-    	if (we != null && we.get("currentStatusId") != null && !we.getString("currentStatusId").equals("WF_RUNNING")) we = null;  	
-    	if (we != null) {
-    		pageContext.setAttribute("workeffort", we);
-    		Map actFields = UtilMisc.toMap("packageId", we.getString("workflowPackageId"), "packageVersion", we.getString("workflowPackageVersion"), "processId", we.getString("workflowProcessId"), "processVersion", we.getString("workflowProcessVersion"), "activityId", we.getString("workflowActivityId"));
-    		activity = delegator.findByPrimaryKey("WorkflowActivity", actFields);    	
-    		if (activity != null) {
-    			pageContext.setAttribute("wfActivity", activity);
-    			transitions = activity.getRelated("FromWorkflowTransition", null, UtilMisc.toList("-transitionId"));
-    			if (transitions != null) pageContext.setAttribute("wfTransitions", transitions);
-    		}
-    	}
-    }
-
+    GenericValue orderHeader = null;
+    GenericValue orderRole = null; 
+    
     if(orderId != null && orderId.length() > 0) {
         orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         List orderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));

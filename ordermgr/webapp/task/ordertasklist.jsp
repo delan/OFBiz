@@ -33,7 +33,7 @@
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
-<%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
+<% if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) { %>
 
 <%		
 	GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
@@ -50,7 +50,7 @@
 			sortOrder.add(0, sort);
 		}
 	}
-	List partyTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("currentStatusId", "WF_RUNNING", "orderRoleTypeId", "PLACING_CUSTOMER", "wepaPartyId", userLogin.getString("partyId")), sortOrder);
+	List partyTasks = delegator.findByAnd("OrderTaskList", UtilMisc.toMap("statusId", "CAL_ACCEPTED", "orderRoleTypeId", "PLACING_CUSTOMER", "wepaPartyId", userLogin.getString("partyId")), sortOrder);
 	if (partyTasks != null) partyTasks = EntityUtil.filterByDate(partyTasks);
 	if (partyTasks != null) pageContext.setAttribute("partyTasks", partyTasks);
 
@@ -62,8 +62,11 @@
 	List pRolesList = new ArrayList();
 	while (pri.hasNext()) {
 		GenericValue partyRole = (GenericValue) pri.next();
-		pRolesList.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, partyRole.getString("roleTypeId")));
+		if (!partyRole.getString("roleTypeId").equals("_NA_"))
+			pRolesList.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, partyRole.getString("roleTypeId")));
 	}
+	
+	pRolesList = UtilMisc.toList(new EntityExpr("roleTypeId", EntityOperator.EQUALS, "ORDER_CLERK"));
 	
 	/* This does not work -- need to find out why
 	// constant values for getting single orders (by customer)
@@ -83,12 +86,14 @@
 	
 	// invoke the query
 	List roleTasks = delegator.findByCondition("OrderTaskList", conditions, null, sortOrder);
+	//List roleTasks = delegator.findByOr("OrderTaskList", pRolesList, sortOrder);
+	if (roleTasks != null) roleTasks = EntityUtil.filterByAnd(roleTasks, baseList);
 	if (roleTasks != null) roleTasks = EntityUtil.filterByDate(roleTasks);	
 	if (roleTasks != null) pageContext.setAttribute("roleTasks", roleTasks);	
-	Iterator i = roleTasks.iterator();
-	while (i.hasNext()) {
-		Debug.logError("Entity ----> : " + i.next());
-	}
+//	Iterator i = roleTasks.iterator();
+//	while (i.hasNext()) {
+//		Debug.logError("Entity ----> : " + i.next());
+//	}
 
 %>
 
@@ -198,21 +203,23 @@
                   <form method="get" name="F<ofbiz:print attribute="workEffortId"/>">
                     <input type="hidden" name="order_id" value="<ofbiz:print attribute="orderId"/>">
                     <input type="hidden" name="workEffortId" value="<ofbiz:print attribute="workEffortId"/>">
-                    <input type="hidden" name="taskStatus" value="<ofbiz:print attribute="currentStatusId"/>">
-                    <ofbiz:if name="currentStatusId" value="WF_NOT_STARTED">
+                    <input type="hidden" name="taskStatus" value="<ofbiz:print attribute="currentStatusId"/>">                    
+                    <ofbiz:if name="statusId" value="CAL_SENT">
                       <input type="hidden" name="partyId" value="<%=userLogin.getString("partyId")%>">
                       <input type="hidden" name="roleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
                       <input type="hidden" name="fromDate" value="<ofbiz:print attribute="fromDate"/>">                      
                     </ofbiz:if>
-                    <ofbiz:unless name="currentStatusId" value="WF_NOT_STARTED">
+                    <ofbiz:unless name="statusId" value="CAL_SENT">
+                      <% java.sql.Timestamp now = UtilDateTime.nowTimestamp(); %>
                       <input type="hidden" name="partyId" value="<%=userLogin.getString("partyId")%>">
                       <input type="hidden" name="roleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
-                      <input type="hidden" name="fromDate" value="<ofbiz:print attribute="fromDate"/>">
+                      <input type="hidden" name="fromDate" value="<%=now%>">
                       <input type="hidden" name="fromPartyId" value="<ofbiz:print attribute="wepaPartyId"/>">
                       <input type="hidden" name="fromRoleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
                       <input type="hidden" name="fromFromDate" value="<ofbiz:print attribute="fromDate"/>">  
                       <input type="hidden" name="toPartyId" value="<%=userLogin.getString("partyId")%>">                    
                       <input type="hidden" name="toRoleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
+                      <input type="hidden" name="toFromDate" value="<%=now%>">
                       <input type="hidden" name="startActivity" value="true">
                     </ofbiz:unless>
                     <tr>
@@ -230,18 +237,26 @@
                         </div>
                       </td>                                          
                       <td><div class='tabletext'><ofbiz:print attribute="actualStartDate" default="N/A"/></div></td>
-                      <td><div class='tabletext'><ofbiz:print attribute="wepaPartyId" default="N/A"/></div></td>
+                      <td>
+                        <ofbiz:if name="wepaPartyId" value="_NA_">
+                          <div class="tabletext">N/A</div>
+                        </ofbiz:if>
+                        <ofbiz:unless name="wepaPartyId" value="_NA_">
+                          <a href="/partymgr/control/viewprofile?party_id=<%=task.getString("wepaPartyId")%>" target="partymgr" class="buttontext"><ofbiz:print attribute="wepaPartyId"/></a>
+                        </ofbiz:unless>
+                      </td>  
                       <td><div class='tabletext'><%=TaskWorker.getRoleDescription(task)%></div></td>
                       <td><div class='tabletext'><ofbiz:print attribute="priority"/></div></td>
                       <td>
                         <a href="/workeffort/control/activity?workEffortId=<ofbiz:print attribute="workEffortId"/>" target="workeffort" class="buttontext">
                           <%=TaskWorker.getPrettyStatus(task)%>
+                          <%--<%=task.getString("statusId")%>--%>
                         </a>
                       </td>
-                      <ofbiz:if name="currentStatusId" value="WF_NOT_STARTED">
+                      <ofbiz:if name="statusId" value="CAL_SENT">
                         <td align="right"><input type="checkbox" name="delegate" value="true" checked></td>
                       </ofbiz:if>
-                      <ofbiz:unless name="currentStatusId" value="WF_NOT_STARTED">
+                      <ofbiz:unless name="currentStatusId" value="CAL_SENT">
                         <td align="right"><input type="checkbox" name="delegate" value="true"></td>
                       </ofbiz:unless>
                     </tr>

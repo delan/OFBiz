@@ -81,21 +81,21 @@
     <!-- Order Manager Task List Requests -->
     <request-map uri="acceptassignment">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="wfAcceptRoleAssignment"/>
+        <event type="java" path="org.ofbiz.ordermgr.task.TaskEvents" invoke="acceptRoleAssignment"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="ordertasklist"/>
     </request-map>
 
     <request-map uri="delegateassignment">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="wfDelegateAndAcceptAssignmet"/>
+        <event type="java" path="org.ofbiz.ordermgr.task.TaskEvents" invoke="delegateAndAcceptAssignment"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="ordertasklist"/>
     </request-map>
 
 	<request-map uri="completeassignment">
 		<security https="true" auth="true"/>
-		<event type="java" path="org.ofbiz.ordermgr.task.TaskWorker" invoke="completeAssignment"/>
+		<event type="java" path="org.ofbiz.ordermgr.task.TaskEvents" invoke="completeAssignment"/>
 		<response name="success" type="view" value="ordertasklist"/>
 		<response name="error" type="view" value="ordertasklist"/>
 	</request-map>  
