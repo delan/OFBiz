@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/09/28 21:57:53  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.3  2001/09/27 15:53:31  epabst
  * refactored code to use getRelatedByAnd, filterByDate
  *
@@ -52,114 +55,110 @@ import org.ofbiz.commonapp.party.contact.ContactHelper;
  * Created on August 29, 2001
  */
 public class DistributorEvents {
-    private static final String DISTRIBUTOR_ID = "_DISTRIBUTOR_ID_";  
-
-    /** Save the distributorId specified in the request object into the session.
-    *@param request The HTTPRequest object for the current request
-    *@param response The HTTPResponse object for the current request
-    *@return String specifying the exit status of this event
-    */
-    public static String setDistributor(HttpServletRequest request, HttpServletResponse response) {
-        String distributorId = request.getParameter("distributor_id");
-        if(!UtilValidate.isNotEmpty(distributorId)) {
-            //the distributorId was not given
-            //Don't show this error to the user
-            Debug.logWarning("setDistributor was called without 'distributor_id' being specified");
-            return "error";
-        }
-
-        setDistributorId(request, distributorId);
-        
-        //ignore return value
-        updateAssociatedDistributor(request, response);
-        
-        return "success";
+  private static final String DISTRIBUTOR_ID = "_DISTRIBUTOR_ID_";
+  
+  /** Save the distributorId specified in the request object into the session.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String setDistributor(HttpServletRequest request, HttpServletResponse response) {
+    String distributorId = request.getParameter("distributor_id");
+    if(!UtilValidate.isNotEmpty(distributorId)) {
+      //the distributorId was not given
+      //Don't show this error to the user
+      Debug.logWarning("setDistributor was called without 'distributor_id' being specified");
+      return "error";
     }
     
-    /** Update the distributor association for the logged in user, if possible.
-    *@param request The HTTPRequest object for the current request
-    *@param response The HTTPResponse object for the current request
-    *@return String specifying the exit status of this event
-    */
-    public static String updateAssociatedDistributor(HttpServletRequest request, HttpServletResponse response) {
-        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        GenericValue party = null;
-        try {
-            party = userLogin == null ? null : userLogin.getRelatedOne("Party");
-        } catch (GenericEntityException gee) { Debug.logWarning(gee); }
-        if (party != null) {
-            //if a distributorId is already associated, it will be used instead
-            String currentDistributorId = getDistributorId(party);
-            if (UtilValidate.isEmpty(currentDistributorId)) {
-                String distributorId = getDistributorId(request);
-                if (UtilValidate.isNotEmpty(distributorId)) {
-                    assignDistributorToPartyWithNone(party, distributorId);
-                } else {
-                    //no distributorId is available
-                    Debug.log("no distributor in session or already associated with user " + userLogin.getString("partyId"));
-                    return "error";
-                }
-            } else {
-                setDistributorId(request, currentDistributorId);
-            }
-            return "success";
-        } else {
-            //not logged in
-            Debug.log("can't associate distributor since not logged in yet");
-            return "error";
-        }
-    }
-
-    /** Get the distributorId for the active session.
-    *@param request The HTTPRequest object for the current request
-    *@return String the distributor id
-    */
-    public static String getDistributorId(HttpServletRequest request) {
-        return (String) request.getSession().getAttribute(DISTRIBUTOR_ID);
-    }
+    setDistributorId(request, distributorId);
     
-    /** Set the distributorId for the active session.
-    *@param request The HTTPRequest object for the current request
-    *@param distributorId the distributor id
-    */
-    public static void setDistributorId(HttpServletRequest request, String distributorId) {
-        request.getSession().setAttribute(DISTRIBUTOR_ID, distributorId);
-        Debug.logInfo("set distributorId in session to " + distributorId);
-    }
-
-    private static GenericValue getDistributorPartyRelationship(GenericValue party) {
-        try {
-            return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelatedByAnd("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo", "DISTRIBUTOR"))));
-        } catch (GenericEntityException gee) { Debug.logWarning(gee); }
-        return null;
-    }
+    //ignore return value
+    updateAssociatedDistributor(request, response);
     
-    private static String getDistributorId(GenericValue party) {
-        GenericValue partyRelationship = getDistributorPartyRelationship(party);
-        return partyRelationship == null ? null : partyRelationship.getString("partyIdTo");
-    }
+    return "success";
+  }
+  
+  /** Update the distributor association for the logged in user, if possible.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String updateAssociatedDistributor(HttpServletRequest request, HttpServletResponse response) {
+    GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
 
-    /**
-     * @param party a Party to be associated to a distributor
-     * @param distributorId the distributor to assign (assumes they have no current distributor)
-     */
-    public static void assignDistributorToPartyWithNone(GenericValue party, String distributorId) {
-        if (!UtilValidate.isNotEmpty(distributorId)) {
-            throw new IllegalArgumentException("assignDistributor() was passed an empty distributorId");
-        }
-        
-        Timestamp now = UtilDateTime.nowTimestamp();
-        
-        GenericDelegator delegator = party.getDelegator();
-        GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", party.getString("partyId"), "partyIdTo", distributorId, "roleTypeIdFrom", "CUSTOMER", "roleTypeIdTo", "DISTRIBUTOR"));
-        partyRelationship.set("fromDate", now);
-        partyRelationship.set("partyRelationshipTypeId", "DISTRIBUTION_CHANNEL_RELATIONSHIP");
-        try {
+    GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    GenericValue party = null;
+    try { party = userLogin == null ? null : userLogin.getRelatedOne("Party"); } 
+    catch(GenericEntityException gee) { Debug.logWarning(gee); }
+    if(party != null) {
+      //if a distributorId is already associated, it will be used instead
+      String currentDistributorId = getDistributorId(party);
+      if(UtilValidate.isEmpty(currentDistributorId)) {
+        String distributorId = getDistributorId(request);
+        if(UtilValidate.isNotEmpty(distributorId)) {
+          //create distributor Party
+          //create distributor PartyRole
+          //create PartyRelationship
+          GenericValue partyRelationship = delegator.makeValue("PartyRelationship", UtilMisc.toMap("partyIdFrom", party.getString("partyId"), "partyIdTo", distributorId, "roleTypeIdFrom", "CUSTOMER", "roleTypeIdTo", "DISTRIBUTOR"));
+          partyRelationship.set("fromDate", UtilDateTime.nowTimestamp());
+          partyRelationship.set("partyRelationshipTypeId", "DISTRIBUTION_CHANNEL_RELATIONSHIP");
+
+          partyRelationship.preStoreOther(delegator.makeValue("Party", UtilMisc.toMap("partyId", distributorId)));
+          partyRelationship.preStoreOther(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
+          try {
             partyRelationship.create();
             Debug.logInfo("distributor for user " + party.getString("partyId") + " set to " + distributorId);
-        } catch (GenericEntityException gee) {
-            //XXX the current definition of PartyRelationship does not have a good unique primary key
+          } 
+          catch (GenericEntityException gee) { 
             Debug.logWarning(gee);
+          }
         }
+        else {
+          //no distributorId is available
+          Debug.log("no distributor in session or already associated with user " + userLogin.getString("partyId"));
+          return "error";
+        }
+      } 
+      else {
+        setDistributorId(request, currentDistributorId);
+      }
+      
+      return "success";
+    } 
+    else {
+      //not logged in
+      Debug.log("can't associate distributor since not logged in yet");
+      return "error";
     }
+  }
+  
+  /** Get the distributorId for the active session.
+   *@param request The HTTPRequest object for the current request
+   *@return String the distributor id
+   */
+  public static String getDistributorId(HttpServletRequest request) {
+    return (String) request.getSession().getAttribute(DISTRIBUTOR_ID);
+  }
+  
+  /** Set the distributorId for the active session.
+   *@param request The HTTPRequest object for the current request
+   *@param distributorId the distributor id
+   */
+  public static void setDistributorId(HttpServletRequest request, String distributorId) {
+    request.getSession().setAttribute(DISTRIBUTOR_ID, distributorId);
+    Debug.logInfo("set distributorId in session to " + distributorId);
+  }
+  
+  private static GenericValue getDistributorPartyRelationship(GenericValue party) {
+    try {
+      return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelatedByAnd("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo", "DISTRIBUTOR"))));
+    } catch (GenericEntityException gee) { Debug.logWarning(gee); }
+    return null;
+  }
+  
+  private static String getDistributorId(GenericValue party) {
+    GenericValue partyRelationship = getDistributorPartyRelationship(party);
+    return partyRelationship == null ? null : partyRelationship.getString("partyIdTo");
+  }
 }
