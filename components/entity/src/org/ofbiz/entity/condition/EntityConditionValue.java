@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionValue.java,v 1.6 2004/07/21 03:03:33 doogie Exp $
+ * $Id: EntityConditionValue.java,v 1.7 2004/07/21 06:32:47 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 public abstract class EntityConditionValue extends EntityConditionBase {
 
@@ -71,9 +71,13 @@ public abstract class EntityConditionValue extends EntityConditionBase {
         throw new IllegalArgumentException("accept not implemented");
     }
 
+    public void toString(StringBuffer sb) {
+        addSqlValue(sb, null, new ArrayList(), false, null);
+    }
+    
     public String toString() {
         StringBuffer sql = new StringBuffer();
-        addSqlValue(sql, null, new ArrayList(), false, null);
+        toString(sql);
         return sql.toString();
     }
 }
