@@ -239,7 +239,7 @@ public class ModelTree {
             
             context.put("rootEntityId", trail.get(0));
             context.put(pkName, trail.get(0));
-            context.put("trail", trail);
+            context.put("targetNodeTrail", trail);
         }
         StringWriter writer = new StringWriter();
         try {

@@ -109,58 +109,59 @@ public class SearchWorker {
 	
 	public static void indexContentList(GenericDelegator delegator, Map context, List idList, String path) throws Exception {
 		String indexAllPath = getIndexPath(path);
-                if (Debug.infoOn()) Debug.logInfo("in indexContent, indexAllPath:" + indexAllPath, module);
+		if (Debug.infoOn())
+			Debug.logInfo("in indexContent, indexAllPath:" + indexAllPath, module);
 		GenericValue content = null;
-		
 		// Delete existing documents
-                Iterator iter = null;
-                List contentList = null;
+		Iterator iter = null;
+		List contentList = null;
 		IndexReader reader = null;
-	  	try {
-		    reader = IndexReader.open(indexAllPath);
-	        } catch(Exception e) {
-                  // ignore
-                }
-		//if (Debug.infoOn()) Debug.logInfo("in indexContent, reader:" + reader, module);
-    		    contentList = new ArrayList();
-    		    iter = idList.iterator();
-    		    while (iter.hasNext()) {
-    			String id = (String)iter.next();
-    		  	if (Debug.infoOn()) Debug.logInfo("in indexContent, id:" + id, module);
-    			try {
-    		  		content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId",id));
-                                if (content != null) {
-                                    if (reader != null) {
-    			                deleteContentDocument(content, reader);
-                                    }
-    		  		    contentList.add(content);
-                                }
-    		  	} catch(GenericEntityException e) {
-    		  		Debug.logError(e, module);
-    		  		return;
-    		  	}
-    		    }
-                    if (reader != null) {
-    		        reader.close();
-                    }
-		
-		// Now create
-	  	IndexWriter writer =  null;
-	  	try {
-	  	    writer =  new IndexWriter(indexAllPath, new StandardAnalyzer(), false);
-	        } catch(Exception e) {
-		    writer = new IndexWriter(indexAllPath, new StandardAnalyzer(), true);
+		try {
+			reader = IndexReader.open(indexAllPath);
+		} catch (Exception e) {
+			// ignore
 		}
-	  	//if (Debug.infoOn()) Debug.logInfo("in indexContent, writer:" + writer, module);
-		
+		//if (Debug.infoOn()) Debug.logInfo("in indexContent, reader:" +
+		// reader, module);
+		contentList = new ArrayList();
+		iter = idList.iterator();
+		while (iter.hasNext()) {
+			String id = (String) iter.next();
+			if (Debug.infoOn())
+				Debug.logInfo("in indexContent, id:" + id, module);
+			try {
+				content = delegator.findByPrimaryKeyCache("Content", UtilMisc .toMap("contentId", id));
+				if (content != null) {
+					if (reader != null) {
+						deleteContentDocument(content, reader);
+					}
+					contentList.add(content);
+				}
+			} catch (GenericEntityException e) {
+				Debug.logError(e, module);
+				return;
+			}
+		}
+		if (reader != null) {
+			reader.close();
+		}
+		// Now create
+		IndexWriter writer = null;
+		try {
+			writer = new IndexWriter(indexAllPath, new StandardAnalyzer(), false);
+		} catch (Exception e) {
+			writer = new IndexWriter(indexAllPath, new StandardAnalyzer(), true);
+		}
+		//if (Debug.infoOn()) Debug.logInfo("in indexContent, writer:" +
+		// writer, module);
 		iter = contentList.iterator();
 		while (iter.hasNext()) {
-			content = (GenericValue)iter.next();
+			content = (GenericValue) iter.next();
 			indexContent(delegator, context, content, writer);
 		}
 		writer.optimize();
 		writer.close();
-    }
+	}
 	
 	
 	public static void deleteContentDocument(GenericValue content, String path) throws Exception {

@@ -662,6 +662,7 @@ public abstract class ModelScreenWidget {
         
         protected FlexibleStringExpander contentId;
         protected FlexibleStringExpander editRequest;
+        protected boolean xmlEscape = false;
         
         public Content(ModelScreen modelScreen, Element subContentElement) {
             super(modelScreen, subContentElement);
@@ -669,6 +670,7 @@ public abstract class ModelScreenWidget {
             // put the text attribute first, then the pcdata under the element, if both are there of course
             this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
             this.editRequest = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("edit-request")));
+            this.xmlEscape = "true".equals(subContentElement.getAttribute("xml-escape"));
             return;
         }
 
@@ -693,6 +695,10 @@ public abstract class ModelScreenWidget {
             return this.editRequest.expandString(context);
         }
         
+        public boolean xmlEscape() {
+            return this.xmlEscape;
+        }
+        
     }
 
     public static class SubContent extends ModelScreenWidget {
@@ -700,6 +706,7 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander contentId;
         protected FlexibleStringExpander assocName;
         protected FlexibleStringExpander editRequest;
+        protected boolean xmlEscape = false;
         
         public SubContent(ModelScreen modelScreen, Element subContentElement) {
             super(modelScreen, subContentElement);
@@ -708,6 +715,7 @@ public abstract class ModelScreenWidget {
             this.contentId = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("content-id")));
             this.assocName = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("assoc-name")));
             this.editRequest = new FlexibleStringExpander(UtilFormatOut.checkNull(subContentElement.getAttribute("edit-request")));
+            this.xmlEscape = "true".equals(subContentElement.getAttribute("xml-escape"));
 
         }
 
@@ -733,6 +741,10 @@ public abstract class ModelScreenWidget {
         
         public String getEditRequest(Map context) {
             return this.editRequest.expandString(context);
+        }
+        
+        public boolean xmlEscape() {
+            return this.xmlEscape;
         }
         
     }

@@ -353,23 +353,21 @@ public class DataServices {
             }
             String textData = (String) context.get("textData");
             if (Debug.infoOn()) Debug.logInfo("in updateElectronicText, textData:" + textData, module);
-            if (textData != null && textData.length() > 0) {
                 try {
                     electronicText = delegator.findByPrimaryKey("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
                     if (electronicText != null) {
                     	electronicText.put("textData", textData);
                     	electronicText.store();
                     } else {
-                    	electronicText = delegator.makeValue("ElectronicText", null);
-                    	electronicText.put("dataResourceId", dataResourceId);
-                    	electronicText.put("textData", textData);
-                    	electronicText.create();
+                    		electronicText = delegator.makeValue("ElectronicText", null);
+                    		electronicText.put("dataResourceId", dataResourceId);
+                    		electronicText.put("textData", textData);
+                    		electronicText.create();
                     }
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e, module);
                     return ServiceUtil.returnError("electronicText.update.read_failure" + e.getMessage());
                 }
-            }
 
         return result;
     }

@@ -317,13 +317,15 @@ public class ContentManagementServices {
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
                         // assume ELECTRONIC_TEXT
-                        fileContext.put("dataResourceId", dataResourceId);
-                        fileContext.put("textData", textData);
-                        thisResult = dispatcher.runSync("updateElectronicText", fileContext);
-                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                    	if (UtilValidate.isNotEmpty(errorMsg)) {
-                        	return ServiceUtil.returnError(errorMsg);
-                    	}
+                        if (UtilValidate.isNotEmpty(textData)) {
+    						fileContext.put("dataResourceId", dataResourceId);
+    						fileContext.put("textData", textData);
+    						thisResult = dispatcher.runSync("createElectronicText", fileContext);
+    						errorMsg = ServiceUtil.getErrorMessage(thisResult);
+    						if (UtilValidate.isNotEmpty(errorMsg)) {
+    							return ServiceUtil.returnError(errorMsg);
+    						}
+                        }
                     }
                 } else {
                     Map thisResult = dispatcher.runSync("updateDataResource", newDrContext);

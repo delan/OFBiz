@@ -277,6 +277,7 @@
     <!ATTLIST content
         content-id CDATA #REQUIRED
         edit-request CDATA #IMPLIED
+        xml-escape ( true | false ) "false"
     >
     
     <!ELEMENT sub-content EMPTY>
@@ -284,6 +285,7 @@
         content-id CDATA #REQUIRED
         assoc-name CDATA #REQUIRED
         edit-request CDATA #IMPLIED
+        xml-escape ( true | false ) "false"
     >
 
     <!ELEMENT image (#PCDATA)>
