@@ -135,8 +135,8 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#else>          
           <input type='hidden' name="product_id" value='${product.productId}'>
           <input type='hidden' name="add_product_id" value='${product.productId}'>
-          <#if !Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryAvailable(request, product.productId?string, 1.0?double)>
-            <#if Static["org.ofbiz.commonapp.product.catalog.CatalogWorker"].isCatalogInventoryRequired(request, product)> 
+          <#if !Static["org.ofbiz.commonapp.product.store.ProductStoreWorker"].isStoreInventoryAvailable(request, product.productId?string, 1.0?double)>
+            <#if Static["org.ofbiz.commonapp.product.store.ProductStoreWorker"].isStoreInventoryRequired(request, product)> 
               <div class='tabletext'><b>This item is out of stock.</b></div>
               <#assign inStock = false>
             <#else>
