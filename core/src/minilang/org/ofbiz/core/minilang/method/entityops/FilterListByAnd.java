@@ -43,16 +43,23 @@ import org.ofbiz.core.entity.*;
  */
 public class FilterListByAnd extends MethodOperation {
     String listName;
+    String toListName;
     String mapName;
 
     public FilterListByAnd(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         listName = element.getAttribute("list-name");
+        toListName = element.getAttribute("to-list-name");
+        if (UtilValidate.isEmpty(toListName)) toListName = listName;
         mapName = element.getAttribute("map-name");
     }
 
     public boolean exec(MethodContext methodContext) {
-        methodContext.putEnv(listName, EntityUtil.filterByAnd((Collection) methodContext.getEnv(listName), (Map) methodContext.getEnv(mapName)));
+        Map theMap = null;
+        if (UtilValidate.isNotEmpty(mapName)) {
+            theMap = (Map) methodContext.getEnv(mapName);
+        }
+        methodContext.putEnv(toListName, EntityUtil.filterByAnd((Collection) methodContext.getEnv(listName), theMap));
         return true;
     }
 }

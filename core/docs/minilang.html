@@ -14,7 +14,7 @@
 <A href="http://sf.net/projects/ofbiz"><IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: February 23, 2002<br>
+Last Updated: July 18, 2002<br>
 $Id$ <br>
 <hr>
 <br>
@@ -1272,9 +1272,15 @@ placed in the method environment using the specified list-name.</p>
     <td>The name of the method environment field that contains the list of GenericValue objects.</td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
+    <td>to-list-name</td><td>N</td>
+    <td>The name of the method environment field the filtered list will be put
+    into. Defaults to the value of the list-name attribute (ie goes to the same
+    place it came from, replacing the old list).</td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
     <td>The name of a map in the method environment that will be used for the
-    entity fields.</td>
+    entity fields. If no map is used this will just make a copy of the list.</td>
 </tr>
 </table>
 <p>The filter-list-by-and tag filters the given list by the fields in the specified map.</p>
@@ -1291,8 +1297,29 @@ placed in the method environment using the specified list-name.</p>
     <td>The name of the method environment field that contains the list of GenericValue objects.</td>
 </tr>
 <tr>
+    <td>to-list-name</td><td>N</td>
+    <td>The name of the method environment field the filtered list will be put
+    into. Defaults to the value of the list-name attribute (ie goes to the same
+    place it came from, replacing the old list).</td>
+</tr>
+<tr>
     <td>valid-date-name</td><td>N</td>
     <td>The name of a field in the method environment date to filter by. Defaults to now.</td>
+</tr>
+<tr>
+    <td>from-field-name</td><td>N</td>
+    <td>The name of the GenericValue field to use as the beginning effective
+    date. Defaults to <b>fromDate</b>.</td>
+</tr>
+<tr>
+    <td>thru-field-name</td><td>N</td>
+    <td>The name of the GenericValue field to use as the ending effective date.
+    Defaults to <b>thruDate</b>.</td>
+</tr>
+<tr>
+    <td>all-same</td><td>N</td>
+    <td>Specifies whether or not all GenericValue objects in the list are of the
+    same entity. Defaults to <b>true</b>.</td>
 </tr>
 </table>
 <p>The filter-list-by-date tag filters the given list by the valid date using the from and thru dates in each value object.</p>

@@ -67,7 +67,7 @@ public class EntityUtil {
      *@return Collection of GenericValue's that are currently active
      */
     public static Collection filterByDate(Collection datedValues) {
-        return filterByDate(datedValues, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", false);
+        return filterByDate(datedValues, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", true);
     }
 
     /**
@@ -89,7 +89,7 @@ public class EntityUtil {
      *@return Collection of GenericValue's that are active at the moment
      */
     public static Collection filterByDate(Collection datedValues, java.util.Date moment) {
-        return filterByDate(datedValues, new java.sql.Timestamp(moment.getTime()), "fromDate", "thruDate", false);
+        return filterByDate(datedValues, new java.sql.Timestamp(moment.getTime()), "fromDate", "thruDate", true);
     }
     
     /**
@@ -100,7 +100,7 @@ public class EntityUtil {
      *@return Collection of GenericValue's that are active at the moment
      */
     public static Collection filterByDate(Collection datedValues, java.sql.Timestamp moment) {
-        return filterByDate(datedValues, moment, "fromDate", "thruDate", false);
+        return filterByDate(datedValues, moment, "fromDate", "thruDate", true);
     }
     
     /**
@@ -169,13 +169,18 @@ public class EntityUtil {
     public static Collection filterByAnd(Collection values, Map fields) {
         if (values == null) return null;
 
-        Collection result = new ArrayList();
-        Iterator iter = values.iterator();
-        while (iter.hasNext()) {
-            GenericValue value = (GenericValue) iter.next();
-            if (value.matchesFields(fields)) {
-                result.add(value);
-            }//else did not match
+        Collection result = null;
+        if (fields == null || fields.size() == 0) {
+            result = new ArrayList(values);
+        } else {
+            result = new ArrayList(values.size());
+            Iterator iter = values.iterator();
+            while (iter.hasNext()) {
+                GenericValue value = (GenericValue) iter.next();
+                if (value.matchesFields(fields)) {
+                    result.add(value);
+                }//else did not match
+            }
         }
         return result;
     }

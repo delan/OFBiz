@@ -379,12 +379,17 @@ engine and facilitate related operations.
 <!ELEMENT filter-list-by-and EMPTY>
 <!ATTLIST filter-list-by-and
     list-name CDATA #REQUIRED
-    map-name CDATA #REQUIRED
+    to-list-name CDATA #IMPLIED
+    map-name CDATA #IMPLIED
 >
 <!ELEMENT filter-list-by-date EMPTY>
 <!ATTLIST filter-list-by-date
     list-name CDATA #REQUIRED
+    to-list-name CDATA #IMPLIED
     valid-date-name CDATA #IMPLIED
+    from-field-name CDATA "fromDate"
+    thru-field-name CDATA "thruDate"
+    all-same ( true | false ) "true"
 >
 
 <!ELEMENT make-value EMPTY>

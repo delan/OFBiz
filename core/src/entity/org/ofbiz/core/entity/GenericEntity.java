@@ -454,10 +454,11 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
 
     public boolean matchesFields(Map keyValuePairs) {
         if (fields == null) return true;
-        Iterator keyIter = keyValuePairs.keySet().iterator();
-        while (keyIter.hasNext()) {
-            String key = (String) keyIter.next();
-            if (!UtilValidate.areEqual(keyValuePairs.get(key), this.fields.get(key))) {
+        if (keyValuePairs == null || keyValuePairs.size() == 0) return true;
+        Iterator entries = keyValuePairs.entrySet().iterator();
+        while (entries.hasNext()) {
+            Map.Entry anEntry = (Map.Entry) entries.next();
+            if (!UtilValidate.areEqual(anEntry.getValue(), this.fields.get(anEntry.getKey()))) {
                 return false;
             }
         }

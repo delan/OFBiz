@@ -43,21 +43,32 @@ import org.ofbiz.core.entity.*;
  */
 public class FilterListByDate extends MethodOperation {
     String listName;
+    String toListName;
     String validDateName;
-    String fromDateName = "fromDate";
-    String thruDateName = "thruDate";
+    String fromFieldName;
+    String thruFieldName;
+    boolean allSame;
 
     public FilterListByDate(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         listName = element.getAttribute("list-name");
+        toListName = element.getAttribute("to-list-name");
+        if (UtilValidate.isEmpty(toListName)) toListName = listName;
         validDateName = element.getAttribute("valid-date-name");
+        
+        fromFieldName = element.getAttribute("from-field-name");
+        if (UtilValidate.isEmpty(fromFieldName)) fromFieldName = "fromDate";
+        thruFieldName = element.getAttribute("thru-field-name");
+        if (UtilValidate.isEmpty(thruFieldName)) thruFieldName = "thruDate";
+        
+        allSame = !"false".equals(element.getAttribute("all-same"));
     }
 
     public boolean exec(MethodContext methodContext) {
         if (UtilValidate.isNotEmpty(validDateName)) {
-            methodContext.putEnv(listName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), (java.sql.Timestamp) methodContext.getEnv(validDateName), fromDateName, thruDateName, true));
+            methodContext.putEnv(toListName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), (java.sql.Timestamp) methodContext.getEnv(validDateName), fromFieldName, thruFieldName, true));
         } else {
-            methodContext.putEnv(listName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), UtilDateTime.nowTimestamp(), fromDateName, thruDateName, true));
+            methodContext.putEnv(toListName, EntityUtil.filterByDate((Collection) methodContext.getEnv(listName), UtilDateTime.nowTimestamp(), fromFieldName, thruFieldName, true));
         }
         return true;
     }
