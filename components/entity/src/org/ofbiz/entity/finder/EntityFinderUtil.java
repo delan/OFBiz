@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFinderUtil.java,v 1.3 2004/07/31 12:17:41 jonesde Exp $
+ * $Id: EntityFinderUtil.java,v 1.4 2004/08/14 07:37:25 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class EntityFinderUtil {
@@ -132,16 +132,18 @@ public class EntityFinderUtil {
         public EntityCondition createCondition(Map context, String entityName, GenericDelegator delegator);
     }
     public static class ConditionExpr implements Condition {
-        FlexibleStringExpander fieldNameExdr;
-        FlexibleStringExpander operatorExdr;
-        FlexibleMapAccessor envNameAcsr;
-        FlexibleStringExpander valueExdr;
+        protected FlexibleStringExpander fieldNameExdr;
+        protected FlexibleStringExpander operatorExdr;
+        protected FlexibleMapAccessor envNameAcsr;
+        protected FlexibleStringExpander valueExdr;
+        protected boolean ignoreIfNull;
         
         public ConditionExpr(Element conditionExprElement) {
             this.fieldNameExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("field-name"));
             this.operatorExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("operator"));
             this.envNameAcsr = new FlexibleMapAccessor(conditionExprElement.getAttribute("env-name"));
             this.valueExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("value"));
+            this.ignoreIfNull = "true".equals(conditionExprElement.getAttribute("ignore-if-null"));
         }
         
         public EntityCondition createCondition(Map context, String entityName, GenericDelegator delegator) {
@@ -159,6 +161,10 @@ public class EntityFinderUtil {
             }
             // now to a type conversion for the target fieldName
             value = modelEntity.convertFieldValue(fieldName, value, delegator);
+            
+            if (this.ignoreIfNull && value == null) {
+                return null;
+            }
             
             String operatorName = operatorExdr.expandString(context);
             EntityOperator operator = EntityOperator.lookup(operatorName);
@@ -203,7 +209,10 @@ public class EntityFinderUtil {
             Iterator conditionIter = conditionList.iterator();
             while (conditionIter.hasNext()) {
                 Condition curCondition = (Condition) conditionIter.next();
-                entityConditionList.add(curCondition.createCondition(context, entityName, delegator));
+                EntityCondition econd = curCondition.createCondition(context, entityName, delegator);
+                if (econd != null) {
+                    entityConditionList.add(econd);
+                }
             }
             
             String operatorName = combineExdr.expandString(context);

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     David E. Jones (jonesde@ofbiz.org)
+ * @version    $Revision: 1.1 $
+ * @since      3.2
+ -->
+
+<simple-methods>
+    <simple-method method-name="getOrderedSummaryInformation" short-description="Get Summary Information About Orders for a Customer">
+        <if>
+            <condition>
+                <and>
+                    <not><if-has-permission permission="ORDERMGR" action="_VIEW"/></not>
+                    <if-compare-field field-name="parameters.partyId" operator="not-equals" to-field-name="userLogin.partyId"/>
+                </and>
+            </condition>
+            <then>
+                <string-to-list string="To get order summary information you must have the ORDERMGR_VIEW permission, or be logged in as the party to get the summary information for." list-name="error_list"/>
+            </then>
+        </if>
+        <check-errors/>
+
+        <if-empty field-name="parameters.roleTypeId">
+            <string-to-field string="PLACING_CUSTOMER" field-name="parameters.roleTypeId"/>
+        </if-empty>
+        <if-empty field-name="parameters.orderTypeId">
+            <string-to-field string="SALES_ORDER" field-name="parameters.orderTypeId"/>
+        </if-empty>
+        <if-empty field-name="parameters.statusId">
+            <string-to-field string="ORDER_COMPLETED" field-name="parameters.statusId"/>
+        </if-empty>
+
+        <entity-condition entity-name="OrderHeaderAndRoleSummary" list-name="orderInfoList">
+            <condition-list combine="and">
+                <condition-expr field-name="partyId" operator="equals" env-name="parameters.partyId"/>
+                <condition-expr field-name="roleTypeId" operator="equals" env-name="parameters.roleTypeId"/>
+                <condition-expr field-name="orderTypeId" operator="equals" env-name="parameters.orderTypeId"/>
+                <condition-expr field-name="statusId" operator="equals" env-name="parameters.statusId"/>
+                <condition-expr field-name="orderDate" operator="greater-equals" env-name="parameters.fromDate" ignore-if-null="true"/>
+                <condition-expr field-name="orderDate" operator="less-equals" env-name="parameters.thruDate" ignore-if-null="true"/>
+            </condition-list>
+            <select-field field-name="partyId"/>
+            <select-field field-name="roleTypeId"/>
+            <select-field field-name="totalAmount"/>
+            <select-field field-name="totalOrders"/>
+        </entity-condition>
+        
+        <!-- because we specified the partyId and the roleTypeId, should only be one item in list returned -->
+        <first-from-list list-name="orderInfoList" entry-name="orderInfo"/>
+        <field-to-result field-name="orderInfo.totalAmount" result-name="totalAmount"/>
+        <field-to-result field-name="orderInfo.totalOrders" result-name="totalOrders"/>
+    </simple-method>
+</simple-methods>
+

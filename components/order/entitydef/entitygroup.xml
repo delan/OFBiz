@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  */
 -->
 
@@ -48,6 +48,7 @@
     <entity-group group="org.ofbiz" entity="OrderHeader" />
     <entity-group group="org.ofbiz" entity="OrderHeaderAndItems" />
     <entity-group group="org.ofbiz" entity="OrderHeaderAndPaymentPref" />
+    <entity-group group="org.ofbiz" entity="OrderHeaderAndRoleSummary" />
     <entity-group group="org.ofbiz" entity="OrderHeaderAndRoles" />
     <entity-group group="org.ofbiz" entity="OrderHeaderItemAndRoles" />    
     <entity-group group="org.ofbiz" entity="OrderHeaderNote" />
