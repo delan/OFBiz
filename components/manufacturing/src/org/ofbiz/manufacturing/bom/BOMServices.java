@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.3 2004/04/17 07:44:14 jacopo Exp $
+ * $Id: BOMServices.java,v 1.4 2004/04/21 07:01:42 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,6 +59,7 @@ public class BOMServices {
     /** Returns the product's low level code (llc) i.e. the maximum depth
      * in which the productId can be found in any of the
      * bills of materials of bomType type.
+     * If the bomType input field is not passed then the depth is searched for all the bom types and the lowest depth is returned.
      * @param dctx
      * @param context
      * @return
@@ -83,19 +84,68 @@ public class BOMServices {
         if (fromDate == null) {
             fromDate = new Date();
         }
+        List bomTypes = new ArrayList();
+        if (bomType == null) {
+            try {
+                List bomTypesValues = delegator.findByAnd("ProductAssocType", UtilMisc.toMap("parentTypeId", "PRODUCT_COMPONENT"));
+                Iterator bomTypesValuesIt = bomTypesValues.iterator();
+                while (bomTypesValuesIt.hasNext()) {
+                    bomTypes.add(((GenericValue)bomTypesValuesIt.next()).getString("productAssocTypeId"));
+                }
+            } catch(GenericEntityException gee) {
+                return ServiceUtil.returnError("Error running max depth algorithm: " + gee.getMessage());
+            }
+        } else {
+            bomTypes.add(bomType);
+        }
         
-        Integer depth = null;
+        int depth = 0;
+        int maxDepth = 0;
+        Iterator bomTypesIt = bomTypes.iterator();
         try {
-            depth = new Integer(BOMHelper.getMaxDepth(productId, bomType, fromDate, delegator));
+            while (bomTypesIt.hasNext()) {
+                String oneBomType = (String)bomTypesIt.next();
+                depth = BOMHelper.getMaxDepth(productId, oneBomType, fromDate, delegator);
+                if (depth > maxDepth) {
+                    maxDepth = depth;
+                }
+            }
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error running max depth algorithm: " + gee.getMessage());
         }
-
-        result.put("depth", depth);
+        result.put("depth", new Integer(maxDepth));
 
         return result;
     }
 
+    /** Updates the product's low level code (llc) 
+     * Given a product id, computes and updates the product's low level code (field billOfMaterialLevel in Product entity).
+     * @param dctx
+     * @param context
+     * @return
+     */    
+    public static Map updateLowLevelCode(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String productId = (String) context.get("productId");
+    
+        Integer llc = null;
+        try {
+            GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            Map depthResult = dispatcher.runSync("getMaxDepth", context);
+            llc = (Integer)depthResult.get("depth");
+            product.set("billOfMaterialLevel", llc);
+            product.store();
+            // FIXME: also all the variants llc should be updated?
+        } catch (Exception e) {
+            return ServiceUtil.returnError("Error running updateLowLevelCode: " + e.getMessage());
+        }
+        result.put("lowLevelCode", llc);
+        return result;
+    }
+    
     /** Returns the ProductAssoc generic value for a duplicate productIdKey
      * ancestor if present, null otherwise.
      * Useful to avoid loops when adding new assocs (components)
