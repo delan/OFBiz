@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.11 2004/03/15 14:53:57 byersa Exp $
+ * $Id: ModelFormField.java,v 1.12 2004/04/16 07:17:06 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.content.widget.form;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -57,7 +58,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -607,6 +608,11 @@ public class ModelFormField {
             }
 
             if (retVal != null) {
+            	// format number in the default way for the server because that is how it will parse it; may want to change this to be based on the user's locale instead of the server's sometime in the future
+            	if (retVal instanceof Double || retVal instanceof Float) {
+            	    return NumberFormat.getInstance().format(retVal);
+            	}
+            	
                 return retVal.toString();
             } else {
                 return defaultValue;
