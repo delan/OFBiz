@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.2 2003/12/03 20:37:26 ajzeneski Exp $
+ * $Id: ZipSalesServices.java,v 1.3 2003/12/04 00:52:17 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,34 +33,36 @@ import org.ofbiz.datafile.DataFile;
 import org.ofbiz.datafile.DataFileException;
 import org.ofbiz.datafile.Record;
 import org.ofbiz.datafile.RecordIterator;
-import org.ofbiz.base.util.UtilURL;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.*;
 import org.ofbiz.security.Security;
 
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 import java.net.URL;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.text.DecimalFormat;
+import java.io.File;
 
 /**
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ZipSalesServices {
 
     public static final String module = ZipSalesServices.class.getName();
-    public static final String dataFile = "org/ofbiz/order/thirdparty/zipsales/FlatTable.xml";
-    public static final String flatTable = "FlatTable";
+    public static final String dataFile = "org/ofbiz/order/thirdparty/zipsales/ZipSalesTaxTables.xml";
+    public static final String flatTable = "FlatTaxTable";
+    public static final String ruleTable = "FreightRuleTable";
 
     // number formatting
     private static String curFmtStr = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
@@ -74,43 +76,44 @@ public class ZipSalesServices {
         GenericDelegator delegator = dctx.getDelegator();
         Security security = dctx.getSecurity();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
-        String importFileLocation = (String) context.get("fileLocation");
+        String taxFileLocation = (String) context.get("taxFileLocation");
+        String ruleFileLocation = (String) context.get("ruleFileLocation");
 
         // do security check
         if (!security.hasPermission("SERVICE_INVOKE_ANY", userLogin)) {
             return ServiceUtil.returnError("You do not have permission to load tax tables");
         }
 
-        // load the datafile
-        DataFile df = null;
+        // get a now stamp (we'll use 2000-01-01)
+        Timestamp now = parseDate("20000101", null);
+
+        // load the data file
+        DataFile tdf = null;
         try {
-            df = DataFile.makeDataFile(UtilURL.fromResource(dataFile), flatTable);
+            tdf = DataFile.makeDataFile(UtilURL.fromResource(dataFile), flatTable);
         } catch (DataFileException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Unable to read ZipSales DataFile");
         }
 
         // locate the file to be imported
-        URL url = null;
-        try {
-            url = new URL(importFileLocation);
-        } catch (MalformedURLException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("Not a valid URL for fileLocation");
+        URL tUrl = UtilURL.fromResource(taxFileLocation);
+        if (tUrl == null) {
+            return ServiceUtil.returnError("Unable to locate tax file at location : " + taxFileLocation);
         }
 
-        RecordIterator ri = null;
+        RecordIterator tri = null;
         try {
-            ri = df.makeRecordIterator(url);
+            tri = tdf.makeRecordIterator(tUrl);
         } catch (DataFileException e) {
             Debug.logError(e, module);
             return ServiceUtil.returnError("Problem getting the Record Iterator");
         }
-        if (ri != null) {
-            while (ri.hasNext()) {
+        if (tri != null) {
+            while (tri.hasNext()) {
                 Record entry = null;
                 try {
-                    entry = ri.next();
+                    entry = tri.next();
                 } catch (DataFileException e) {
                     Debug.logError(e, module);
                 }
@@ -120,7 +123,7 @@ public class ZipSalesServices {
                 newValue.set("stateCode", entry.get("stateCode") != null ? entry.getString("stateCode").trim() : "_NA_");
                 newValue.set("city", entry.get("city") != null ? entry.getString("city").trim() : "_NA_");
                 newValue.set("county", entry.get("county") != null ? entry.getString("county").trim() : "_NA_");
-                newValue.set("fromDate", parseDate(entry.getString("effectiveDate")));
+                newValue.set("fromDate", parseDate(entry.getString("effectiveDate"), now));
 
                 // non-PK fields
                 newValue.set("countyFips", entry.get("countyFips"));
@@ -142,7 +145,8 @@ public class ZipSalesServices {
                 newValue.set("comboUseTax", entry.get("comboUseTax"));
 
                 try {
-                    delegator.create(newValue);
+                    // using storeAll as an easy way to create/update
+                    delegator.storeAll(UtilMisc.toList(newValue));
                 } catch (GenericEntityException e) {
                     Debug.logError(e, module);
                     return ServiceUtil.returnError("Error writing record(s) to the database");
@@ -150,6 +154,63 @@ public class ZipSalesServices {
 
                 // console log
                 Debug.log(newValue.get("zipCode") + "/" + newValue.get("stateCode") + "/" + newValue.get("city") + "/" + newValue.get("county") + "/" + newValue.get("fromDate"));
+            }
+        }
+
+        // load the data file
+        DataFile rdf = null;
+        try {
+            rdf = DataFile.makeDataFile(UtilURL.fromResource(dataFile), ruleTable);
+        } catch (DataFileException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Unable to read ZipSales DataFile");
+        }
+
+        // locate the file to be imported
+        URL rUrl = UtilURL.fromResource(ruleFileLocation);
+        if (rUrl == null) {
+            return ServiceUtil.returnError("Unable to locate rule file from location : " + ruleFileLocation);
+        }
+
+        RecordIterator rri = null;
+        try {
+            rri = rdf.makeRecordIterator(rUrl);
+        } catch (DataFileException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError("Problem getting the Record Iterator");
+        }
+        if (rri != null) {
+            while (rri.hasNext()) {
+                Record entry = null;
+                try {
+                    entry = rri.next();
+                } catch (DataFileException e) {
+                    Debug.logError(e, module);
+                }
+                if (entry.get("stateCode") != null && entry.getString("stateCode").length() > 0) {
+                    GenericValue newValue = delegator.makeValue("ZipSalesRuleLookup", null);
+                    // PK fields
+                    newValue.set("stateCode", entry.get("stateCode") != null ? entry.getString("stateCode").trim() : "_NA_");
+                    newValue.set("city", entry.get("city") != null ? entry.getString("city").trim() : "_NA_");
+                    newValue.set("county", entry.get("county") != null ? entry.getString("county").trim() : "_NA_");
+                    newValue.set("fromDate", parseDate(entry.getString("effectiveDate"), now));
+
+                    // non-PK fields
+                    newValue.set("idCode", entry.get("idCode") != null ? entry.getString("idCode").trim() : null);
+                    newValue.set("taxable", entry.get("taxable") != null ? entry.getString("taxable").trim() : null);
+                    newValue.set("condition", entry.get("condition") != null ? entry.getString("condition").trim() : null);
+
+                    try {
+                        // using storeAll as an easy way to create/update
+                        delegator.storeAll(UtilMisc.toList(newValue));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError("Error writing record(s) to the database");
+                    }
+
+                    // console log
+                    Debug.log(newValue.get("stateCode") + "/" + newValue.get("city") + "/" + newValue.get("county") + "/" + newValue.get("fromDate"));
+                }
             }
         }
 
@@ -264,14 +325,21 @@ public class ZipSalesServices {
     }
 
     // formatting methods
-    private static Timestamp parseDate(String dateString) {
+    private static Timestamp parseDate(String dateString, Timestamp useWhenNull) {
         Timestamp ts = null;
-        try {
-            ts = new Timestamp(dateFormat.parse(dateString).getTime());
-        } catch (ParseException e) {
-            Debug.logError(e, module);
+        if (dateString != null) {
+            try {
+                ts = new Timestamp(dateFormat.parse(dateString).getTime());
+            } catch (ParseException e) {
+                Debug.logError(e, module);
+            }
         }
-        return ts;
+
+        if (ts != null) {
+            return ts;
+        } else {
+            return useWhenNull;
+        }
     }
 
     private static String formatCurrency(double currency) {

@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  */
 -->
 
@@ -86,6 +86,7 @@
     <entity-group group="org.ofbiz" entity="ReturnStatus" /> 
     <entity-group group="org.ofbiz" entity="ReturnType" />   
     <entity-group group="org.ofbiz" entity="WorkOrderItemFulfillment" />
+    <entity-group group="org.ofbiz" entity="ZipSalesRuleLookup" />
     <entity-group group="org.ofbiz" entity="ZipSalesTaxLookup" />
 
   <!-- ========================================================= -->
