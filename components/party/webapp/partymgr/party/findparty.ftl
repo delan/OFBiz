@@ -210,7 +210,7 @@ function refreshInfo() {
         </td>
       </tr>
     </table>
-    <input type="image" src="/images/spacer.gif" onClick="javascript:document.lookupparty.submit();">
+    <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.lookupparty.submit();">
   </form>
 <#if requestParameters.hideFields?default("N") != "Y">
   <script language="JavaScript">

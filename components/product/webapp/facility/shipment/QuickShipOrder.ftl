@@ -115,7 +115,7 @@ function setWeight(weight) {
                   </td>
                   <td><span class="tabletext">&nbsp;</span></td>
                   <td width="80%">
-                    <input type="image" src="/images/spacer.gif" onClick="javascript:document.routeForm.submit();">  
+                    <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.routeForm.submit();">  
                   </td>
                 </tr>                
               </table>              
@@ -159,7 +159,7 @@ function setWeight(weight) {
               <tr>
                 <td colspan="2">&nbsp;</td>
                 <td width="80%" align="left">
-                  <input type="image" src="/images/spacer.gif" onClick="javascript:document.weightForm.submit();">
+                  <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.weightForm.submit();">
                   <a href="javascript:document.weightForm.submit();" class="buttontext">${uiLabelMap.ProductSetWeight}</a>
                 </td>
               </tr>
@@ -205,7 +205,7 @@ function setWeight(weight) {
         <tr>
           <td colspan="2">&nbsp;</td>
           <td colspan="2">
-            <input type="image" src="/images/spacer.gif" onClick="javascript:document.selectOrderForm.submit();">
+            <input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.selectOrderForm.submit();">
             <a href="javascript:document.selectOrderForm.submit();" class="buttontext">${uiLabelMap.ProductShipOrder}</a>
           </td>
         </tr>        

@@ -422,7 +422,7 @@
     </td>
   </tr>
 </table>
-<input type="image" src="/images/spacer.gif" onClick="javascript:document.newuserform.submit();">
+<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:document.newuserform.submit();">
 </form>
 
 <br/><div class="commentary">${uiLabelMap.CommonFieldsMarkedAreRequired}</div>

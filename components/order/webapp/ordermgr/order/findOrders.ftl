@@ -227,7 +227,7 @@ function lookupOrders(click) {
     </td>
   </tr>
 </table>
-<input type="image" src="/images/spacer.gif" onClick="javascript:lookupOrders(true);">
+<input type="image" src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" onClick="javascript:lookupOrders(true);">
 </form>
 <#if requestParameters.hideFields?default("N") != "Y">
 <script language="JavaScript">
