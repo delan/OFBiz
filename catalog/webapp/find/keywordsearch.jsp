@@ -59,13 +59,13 @@
       <td align=right>
         <b>
         <%if(viewIndex.intValue() > 0){%>
-          <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&SEARCH_OPERATOR=" + searchOperator + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
           <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
-          | <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&SEARCH_OPERATOR=" + searchOperator + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
@@ -100,13 +100,13 @@
       <td align=right>
         <b>
         <%if(viewIndex.intValue() > 0){%>
-          <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&SEARCH_OPERATOR=" + searchOperator + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
           <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
-          | <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/keywordsearch?SEARCH_STRING=" + keywordString + "&SEARCH_OPERATOR=" + searchOperator + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
