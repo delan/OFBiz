@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.30 2004/06/10 00:10:06 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.31 2004/06/16 02:36:27 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.30 $
+ * @version $Revision: 1.31 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -837,8 +837,10 @@ public class DataResourceWorker {
         String mimeType = null;
         if (view != null)
             mimeType = view.getString("mimeTypeId");
+            //if (Debug.infoOn()) Debug.logInfo("getDataResourceMimeType, mimeType(2):" + mimeType, "");
         if (UtilValidate.isEmpty(mimeType) && UtilValidate.isNotEmpty(dataResourceId)) {
                 GenericValue dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+                //if (Debug.infoOn()) Debug.logInfo("getDataResourceMimeType, dataResource(2):" + dataResource, "");
                 mimeType = dataResource.getString("mimeTypeId");
                 
         }
