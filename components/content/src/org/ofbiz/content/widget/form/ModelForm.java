@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.4 2003/11/15 21:52:15 jonesde Exp $
+ * $Id: ModelForm.java,v 1.5 2003/12/04 21:55:57 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class ModelForm {
@@ -381,6 +381,10 @@ public class ModelForm {
         Iterator modelFieldIter = modelEntity.getFieldsIterator();
         while (modelFieldIter.hasNext()) {
             ModelField modelField = (ModelField) modelFieldIter.next();
+            if (modelField.getIsAutoCreatedInternal()) {
+                // don't ever auto-add these, should only be added if explicitly referenced
+                continue;
+            }
             ModelFormField modelFormField = this.addFieldFromEntityField(modelEntity, modelField, autoFieldsEntity.defaultFieldType);
             if (UtilValidate.isNotEmpty(autoFieldsEntity.mapName)) {
                 modelFormField.setMapName(autoFieldsEntity.mapName);
