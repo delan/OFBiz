@@ -62,15 +62,29 @@
 <div class="head1">Edit SecurityGroup with ID "<%=UtilFormatOut.checkNull(groupId)%>"</div>
 <%if (securityGroup == null) {%>
   <%if (groupId != null) {%>
-    <form action="<ofbiz:url>/CreateSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <h3>Could not find securityGroup with ID "<%=groupId%>".</h3>
+      <tr>
+        <td align=right><div class="tabletext">SecurityGroup ID</div></td>
+        <td>&nbsp;</td>
+        <td>
+          <input type=text name='groupId' value='<%=groupId%>' size='20'>
+        </td>
+      </tr>
   <%} else {%>
-    <form action="<ofbiz:url>/CreateSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
     <table border='0' cellpadding='2' cellspacing='0'>
+      <tr>
+        <td align=right><div class="tabletext">SecurityGroup ID</div></td>
+        <td>&nbsp;</td>
+        <td>
+          <input type=text name='groupId' value='' size='20'>
+        </td>
+      </tr>
   <%}%>
 <%} else {%>
-  <form action="<ofbiz:url>/UpdateSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
+  <form action="<ofbiz:url>/updateSecurityGroup</ofbiz:url>" method=POST style='margin: 0;'>
   <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="groupId" value="<%=groupId%>">
   <tr>

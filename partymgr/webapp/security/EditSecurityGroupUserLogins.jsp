@@ -75,8 +75,6 @@
 <%}%>
 
 <div class="head1">Inventory Items for SecurityGroup with ID "<%=UtilFormatOut.checkNull(groupId)%>"</div>
-<a href='<ofbiz:url>/EditPermission?groupId=<%=groupId%></ofbiz:url>' class="buttontext">
-[Create New Inventory Item for this SecurityGroup]</a>
 
 <ofbiz:if name="userLoginSecurityGroups" size="0">
   <table border="0" width="100%" cellpadding="2">
