@@ -1,5 +1,5 @@
 /*
- * $Id: DelegatorInterface.java,v 1.2 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: DelegatorInterface.java,v 1.3 2003/09/04 18:47:15 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public interface DelegatorInterface {
@@ -78,6 +78,8 @@ public interface DelegatorInterface {
     Collection getEntityFieldTypeNames(ModelEntity entity) throws GenericEntityException;
 
     GenericValue makeValue(String entityName, Map fields);
+
+    GenericValue makeValidValue(String entityName, Map fields);
 
     GenericPK makePK(String entityName, Map fields);
 

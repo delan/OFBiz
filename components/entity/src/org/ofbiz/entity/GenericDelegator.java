@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.3 2003/08/18 03:15:10 ajzeneski Exp $
+ * $Id: GenericDelegator.java,v 1.4 2003/09/04 18:47:15 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -75,7 +75,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -436,12 +436,23 @@ public class GenericDelegator implements DelegatorInterface {
     /** Creates a Entity in the form of a GenericValue without persisting it */
     public GenericValue makeValue(String entityName, Map fields) {
         ModelEntity entity = this.getModelEntity(entityName);
-
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + entityName);
         }
         GenericValue value = new GenericValue(entity, fields);
+        value.setDelegator(this);
+        return value;
+    }
 
+    /** Creates a Entity in the form of a GenericValue without persisting it; only valid fields will be pulled from the fields Map */
+    public GenericValue makeValidValue(String entityName, Map fields) {
+        ModelEntity entity = this.getModelEntity(entityName);
+        if (entity == null) {
+            throw new IllegalArgumentException("[GenericDelegator.makeValidValue] could not find entity for entityName: " + entityName);
+        }
+        GenericValue value = new GenericValue(entity, null);
+        value.setPKFields(fields, true);
+        value.setNonPKFields(fields, true);
         value.setDelegator(this);
         return value;
     }
