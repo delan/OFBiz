@@ -81,38 +81,7 @@ public class RecurrenceUtil {
             newList.add(formatDate((Date)i.next()));
         return newList;
     }
-    
-    /** Creates a string seperated by delim from a List of strings */
-    public static String join(List list, String delim) {
-        if ( list == null || list.size() < 1 )
-            return null;
-        StringBuffer buf = new StringBuffer();
-        Iterator i = list.iterator();
-        while ( i.hasNext() ) {
-            buf.append((String)i.next());
-            if ( i.hasNext() )
-                buf.append(delim);
-        }
-        return buf.toString();
-    }
-    
-    /** Uses StringTokenizer to split the string. */
-    public static List split(String str, String delim) {
-        List splitList = null;
-        StringTokenizer st;
-        
-        if ( delim != null )
-            st = new StringTokenizer(str,delim);
-        else
-            st = new StringTokenizer(str);
-        if ( st.hasMoreTokens() )
-            splitList = new ArrayList();
-        
-        while ( st.hasMoreTokens() )
-            splitList.add(st.nextToken());
-        return splitList;
-    }
-    
+         
     /** Returns the time as of now. */
     public static long now() {
         return (new Date()).getTime();

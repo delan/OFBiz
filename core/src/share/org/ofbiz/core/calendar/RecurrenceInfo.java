@@ -96,9 +96,9 @@ public class RecurrenceInfo {
         }
         
         // Get the recurrence date list
-        rDateList = RecurrenceUtil.parseDateList(RecurrenceUtil.split(info.getString("recurrenceDateTimes"),","));
+        rDateList = RecurrenceUtil.parseDateList(StringUtil.split(info.getString("recurrenceDateTimes"),","));
         // Get the exception date list
-        eDateList = RecurrenceUtil.parseDateList(RecurrenceUtil.split(info.getString("exceptionDateTimes"),","));
+        eDateList = RecurrenceUtil.parseDateList(StringUtil.split(info.getString("exceptionDateTimes"),","));
         
         // Sort the lists.
         Collections.sort(rDateList);

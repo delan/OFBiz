@@ -96,15 +96,15 @@ public class RecurrenceRule {
             throw new RecurrenceRuleException("Recurrence INTERVAL must be a positive integer.");
         
         // Initialize the byXXX lists
-        bySecondList = RecurrenceUtil.split(rule.getString("bySecondList"),",");
-        byMinuteList = RecurrenceUtil.split(rule.getString("byMinuteList"),",");
-        byHourList = RecurrenceUtil.split(rule.getString("byHourList"),",");
-        byDayList = RecurrenceUtil.split(rule.getString("byDayList"),",");
-        byMonthDayList = RecurrenceUtil.split(rule.getString("byMonthDayList"),",");
-        byYearDayList = RecurrenceUtil.split(rule.getString("byYearDayList"),",");
-        byWeekNoList = RecurrenceUtil.split(rule.getString("byWeekNoList"),",");
-        byMonthList = RecurrenceUtil.split(rule.getString("byMonthList"),",");
-        bySetPosList = RecurrenceUtil.split(rule.getString("bySetPosList"),",");
+        bySecondList = StringUtil.split(rule.getString("bySecondList"),",");
+        byMinuteList = StringUtil.split(rule.getString("byMinuteList"),",");
+        byHourList = StringUtil.split(rule.getString("byHourList"),",");
+        byDayList = StringUtil.split(rule.getString("byDayList"),",");
+        byMonthDayList = StringUtil.split(rule.getString("byMonthDayList"),",");
+        byYearDayList = StringUtil.split(rule.getString("byYearDayList"),",");
+        byWeekNoList = StringUtil.split(rule.getString("byWeekNoList"),",");
+        byMonthList = StringUtil.split(rule.getString("byMonthList"),",");
+        bySetPosList = StringUtil.split(rule.getString("bySetPosList"),",");
     }
     
     /** Gets the current date/time. */
