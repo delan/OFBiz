@@ -59,13 +59,15 @@ import org.ofbiz.content.widget.form.ModelFormField.SubmitField;
 import org.ofbiz.content.widget.form.ModelFormField.TextField;
 import org.ofbiz.content.widget.form.ModelFormField.TextFindField;
 import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
+import java.util.StringTokenizer;
+
 
 /**
  * Widget Library - HTML Form Renderer implementation
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -176,8 +178,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void makeHyperlinkString(StringBuffer buffer, String linkStyle, String targetType, String target, String description) {
 
         Map context = null;
-        List paramList = null;
-        WidgetWorker.makeHyperlinkString(buffer, linkStyle, targetType, target, description, this.request, this.response, context, paramList);
+        WidgetWorker.makeHyperlinkString(buffer, linkStyle, targetType, target, description, this.request, this.response, context);
     }
 
     /* (non-Javadoc)
@@ -1458,31 +1459,37 @@ public class HtmlFormRenderer implements FormStringRenderer {
         try {
             viewSize = ((Integer) context.get("viewSize")).intValue();
         } catch (Exception e) {
-            viewSize = 0;
+            viewSize = modelForm.getViewSize();
         }
 
         int listSize = -1;
         try {
-            listSize = ((Integer) context.get("listSize")).intValue();
+            listSize = modelForm.getListSize();
         } catch (Exception e) {
-            listSize = 0;
+            listSize = -1;
         }
 
         int highIndex = -1;
         try {
-            highIndex = ((Integer) context.get("highIndex")).intValue();
+            highIndex = modelForm.getHighIndex();
         } catch (Exception e) {
             highIndex = 0;
         }
 
         int lowIndex = -1;
         try {
-            lowIndex = ((Integer) context.get("lowIndex")).intValue();
+            lowIndex = modelForm.getLowIndex();
         } catch (Exception e) {
             lowIndex = 0;
         }
+        
+        int actualPageSize = modelForm.getActualPageSize();
+        // if this is all there seems to be (if listSize < 0, then size is unknown)
+        if (actualPageSize >= listSize && listSize >= 0)
+            return;
 
-        String queryString = (String) context.get("queryString");
+        String str = (String) context.get("queryString");
+        String queryString = stripViewParamsFromQueryString(str);
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
 
@@ -1674,5 +1681,26 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         this.appendWhitespace(buffer);
     }
-
+    
+    public static String stripViewParamsFromQueryString(String queryString) {
+        String retStr = null;
+        if (UtilValidate.isNotEmpty(queryString)) {
+            StringTokenizer queryTokens = new StringTokenizer(queryString, "&");
+            StringBuffer cleanQuery = new StringBuffer();
+            while (queryTokens.hasMoreTokens()) {
+                String token =  queryTokens.nextToken();
+                if ((token.indexOf("VIEW_INDEX") == -1) && (token.indexOf("VIEW_SIZE")==-1)
+                    && (token.indexOf("viewIndex") == -1) && (token.indexOf("viewSize")==-1)) {
+                    cleanQuery.append(token);
+                    if(queryTokens.hasMoreTokens()){
+                        cleanQuery.append("&");
+                    }
+                }
+            }
+            retStr = cleanQuery.toString();
+        }
+        return retStr;
+    }
+    
+ 
 }

@@ -38,6 +38,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateDataResourceType" title="" type="list">
         <auto-fields-service service-name="updateDataResourceType"/>
         <field name="dataResourceTypeId" title="DataResourceTypeId" widget-style="buttontext">
@@ -74,6 +75,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateDataResourceTypeAttr" title="" type="list">
         <auto-fields-service service-name="createDataResourceTypeAttr"/>
         <field name="dataResourceTypeId" title="DataResourceTypeId" widget-style="buttontext">
@@ -103,6 +105,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateCharacterSet" title="" type="list">
         <auto-fields-service service-name="updateCharacterSet"/>
         <field name="characterSetId" title="CharacterSetId" widget-style="buttontext">
@@ -139,6 +142,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateDataCategory" title="" type="list">
         <auto-fields-service service-name="updateDataCategory"/>
         <field name="dataCategoryId" title="DataCategoryId" widget-style="buttontext">
@@ -181,6 +185,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateFileExtension" title="" type="list">
         <auto-fields-service service-name="updateFileExtension"/>
         <field name="fileExtensionId" title="FileExtensionId" widget-style="buttontext">
@@ -216,6 +221,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateMetaDataPredicate" title="" type="list">
         <auto-fields-service service-name="updateMetaDataPredicate"/>
         <field name="metaDataPredicateId" title="MetaDataPredicateId" widget-style="buttontext">
@@ -245,6 +251,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
+        paginate="false"
         target="updateMimeType" title="" type="list">
         <auto-fields-service service-name="updateMimeType"/>
         <field name="mimeTypeId" title="MimeTypeId" widget-style="buttontext">

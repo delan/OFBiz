@@ -40,7 +40,14 @@
 
     </form>
 
-    <form name="listFindContent" type="list" target="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" paginate-target="/CMSContentFind">
+    <form name="listFindContent" type="list" target="" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext" paginate-target="/CMSContentFind" view-size="20">
+                               	<actions>
+                    			<service service-name="performFind" result-map-name="result" list-iterator-name="listIt">
+                    				<field-map field-name="inputFields" env-name="requestParameters"/>
+                    				<field-map field-name="entityName" env-name="entityName"/>
+                    			</service>
+                    			</actions>
+    
         <field name="editContent" title="">
             <hyperlink also-hidden="false" description="Edit" target="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}&amp;contentIdTo=${contentIdTo}"/> 
 <!--

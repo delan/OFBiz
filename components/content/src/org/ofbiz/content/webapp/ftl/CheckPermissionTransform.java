@@ -44,7 +44,7 @@ import freemarker.template.TransformControl;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev:$
+ * @version $Rev$
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
@@ -73,7 +73,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
     public Writer getWriter(final Writer out, Map args) {
         final StringBuffer buf = new StringBuffer();
         final Environment env = Environment.getCurrentEnvironment();
-        final Map templateCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
+        final Map templateCtx = FreeMarkerWorker.createEnvironmentMap(env);
         //FreeMarkerWorker.convertContext(templateCtx);
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);

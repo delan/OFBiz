@@ -42,7 +42,7 @@ import org.ofbiz.entity.condition.EntityOperator;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  *
  * 
@@ -161,7 +161,8 @@ public class ContentManagementWorker {
         currentEntityMap.put(entityName, ent);
     }
 
-    public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
+    //public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, org.jpublish.JPublishContext context) {
+        public static String getFromSomewhere(String name, org.ofbiz.base.util.collections.OrderedMap paramMap, HttpServletRequest request, Map context) {
 
         String ret = null;
         if (paramMap != null)

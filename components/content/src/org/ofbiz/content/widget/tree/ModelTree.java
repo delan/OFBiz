@@ -55,7 +55,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class ModelTree {
@@ -192,10 +192,15 @@ public class ModelTree {
             if (actionElement != null) {
                actions.add(new ModelTreeAction.EntityOne(modelTree, actionElement));
             }
-        
+            
             actionElement = UtilXml.firstChildElement(nodeElement, "service");
             if (actionElement != null) {
                 actions.add(new ModelTreeAction.Service(modelTree, actionElement));
+            }
+            
+            actionElement = UtilXml.firstChildElement(nodeElement, "script");
+            if (actionElement != null) {
+                actions.add(new ModelTreeAction.Script(modelTree, actionElement));
             }
         
             Element screenElement = UtilXml.firstChildElement(nodeElement, "include-screen");
@@ -293,7 +298,6 @@ public class ModelTree {
             }
 
 
-            // TODO: the item below needs to be moved to a TreeStringRenderer class, shouldn't be in the TreeStringRenderer
             treeStringRenderer.renderNodeEnd(writer, context,  this);
         }
 
@@ -372,6 +376,11 @@ public class ModelTree {
                 actionElement = UtilXml.firstChildElement(nodeElement, "entity-condition");
                 if (actionElement != null) {
                     actions.add(new ModelTreeAction.EntityCondition(modelNode.modelTree, actionElement));
+                }
+                
+                actionElement = UtilXml.firstChildElement(nodeElement, "script");
+                if (actionElement != null) {
+                    actions.add(new ModelTreeAction.Script(modelNode.modelTree, actionElement));
                 }
         
             }

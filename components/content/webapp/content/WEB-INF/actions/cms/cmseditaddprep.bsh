@@ -58,7 +58,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 
  */
@@ -68,10 +68,10 @@ userLogin = session.getAttribute("userLogin");
 paramMap = UtilHttp.getParameterMap(request);
 contentAssocDataResourceViewFrom = delegator.makeValue("ContentAssocDataResourceViewFrom", null);
 
-singleWrapper = context.get("singleWrapper");
-singleWrapper.putInContext("contentPurposeTypeId", page.getProperty("contentPurposeTypeId"));
-singleWrapper.putInContext("targetOperation", page.getProperty("targetOperation"));
-singleWrapper.putInContext("entityOperation", page.getProperty("entityOperation"));
+//singleWrapper = context.get("singleWrapper");
+//context.put("contentPurposeTypeId", page.getProperty("contentPurposeTypeId"));
+//context.put("targetOperation", page.getProperty("targetOperation"));
+//context.put("entityOperation", page.getProperty("entityOperation"));
 
 previousParams = request.getAttribute("previousParams");
 if (previousParams == null) {
@@ -127,14 +127,14 @@ if (previousParams == null) {
     currentValue.put("textData", textData);
     currentValue.put("nowTimestamp", UtilDateTime.nowTimestamp());
     //singleWrapper.putInContext("currentValue", contentAssocDataResourceViewFrom);
-    singleWrapper.putInContext("currentValue", currentValue);
+    context.put("currentValue", currentValue);
     request.setAttribute("previousParams", currentValue);
 } else {
-    singleWrapper.putInContext("currentValue", previousParams);
+    context.put("currentValue", previousParams);
 }
 
 persistAction = paramMap.get("persistAction");
 if (UtilValidate.isEmpty(persistAction))
     persistAction = "persistContent";
-singleWrapper.putInContext("persistAction", persistAction);
+context.put("persistAction", persistAction);
 

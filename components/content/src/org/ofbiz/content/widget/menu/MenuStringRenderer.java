@@ -25,13 +25,12 @@ package org.ofbiz.content.widget.menu;
 
 import java.util.Map;
 
-import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
 
 /**
  * Widget Library - Form String Renderer interface
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public interface MenuStringRenderer {
@@ -44,5 +43,4 @@ public interface MenuStringRenderer {
     public void setUserLoginIdHasChanged(boolean b);
     public void renderLink(StringBuffer buffer, Map context, ModelMenuItem.Link link);
     public void renderImage(StringBuffer buffer, Map context, ModelMenuItem.Image image);
-    public MenuTarget selectMenuTarget(ModelMenuItem menuItem, Map context);
 }

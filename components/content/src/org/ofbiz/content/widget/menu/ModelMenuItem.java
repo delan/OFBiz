@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.Map;
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -45,7 +46,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -66,26 +67,22 @@ public class ModelMenuItem {
     protected String selectedStyle;
     protected Integer position = null;
 
-    protected Map targetMap = new HashMap();
-    protected List targetList = new ArrayList();
-    protected String defaultMenuTargetName;
-    protected String currentMenuTargetName;
-    protected String permissionOperation;
-    protected String permissionStatusId;
-    protected String permissionEntityAction;
-    protected String privilegeEnumId;
     protected FlexibleStringExpander associatedContentId;
     protected String cellWidth;
     protected Boolean hideIfSelected;
     protected Boolean hasPermission;
-    protected MenuImage menuImage;
     protected String disableIfEmpty;
     protected ModelMenu subMenu;
     protected Link link;
+    
+    protected List menuItemList = new LinkedList();
+    protected Map menuItemMap = new HashMap();
+
 
     public static String DEFAULT_TARGET_TYPE = "intra-app";
     
     protected EntityPermissionChecker permissionChecker;
+    protected ModelMenuItem parentMenuItem;
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
     public ModelMenuItem(ModelMenu modelMenu) {
@@ -93,7 +90,17 @@ public class ModelMenuItem {
     }
 
     /** XML Constructor */
+    public ModelMenuItem(Element fieldElement, ModelMenuItem modelMenuItem) {
+        parentMenuItem = modelMenuItem;
+        loadMenuItem(fieldElement, modelMenuItem.getModelMenu());
+    }
+    
+
     public ModelMenuItem(Element fieldElement, ModelMenu modelMenu) {
+        loadMenuItem(fieldElement, modelMenu);
+    }
+    
+    public void loadMenuItem(Element fieldElement, ModelMenu modelMenu) {
         this.modelMenu = modelMenu;
         this.name = fieldElement.getAttribute("name");
         this.entityName = fieldElement.getAttribute("entity-name");
@@ -104,7 +111,6 @@ public class ModelMenuItem {
         this.widgetStyle = fieldElement.getAttribute("widget-style");
         this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
         this.selectedStyle = fieldElement.getAttribute("selected-style");
-        this.defaultMenuTargetName = fieldElement.getAttribute("default-target-name");
         this.setHideIfSelected(fieldElement.getAttribute("hide-if-selected"));
         this.disableIfEmpty = fieldElement.getAttribute("disable-if-empty");
 
@@ -120,32 +126,12 @@ public class ModelMenuItem {
                 module);
         }
 
-        this.permissionOperation = fieldElement.getAttribute("permission-operation");
-        this.permissionStatusId = fieldElement.getAttribute("permission-status-id");
-        this.permissionEntityAction = fieldElement.getAttribute("permission-entity-action");
         this.setAssociatedContentId( fieldElement.getAttribute("associated-content-id"));
         this.cellWidth = fieldElement.getAttribute("cell-width");
-        this.privilegeEnumId = fieldElement.getAttribute("privilege-enum-id");
 
         dataMap.put("name", this.name);
         //dataMap.put("associatedContentId", this.associatedContentId);
 
-        // read in add target defs, add/override one by one using the targetList and targetMap
-        List targetElements = UtilXml.childElementList(fieldElement, "target");
-        Iterator targetElementIter = targetElements.iterator();
-        while (targetElementIter.hasNext()) {
-            Element targetElement = (Element) targetElementIter.next();
-            MenuTarget target = new MenuTarget(targetElement, this);
-            this.addUpdateMenuTarget(target);
-            //Debug.logInfo("Added target " + modelMenuItem.getName() + " from def, mapName=" + modelMenuItem.getMapName(), module);
-        }
-        List imgElements = UtilXml.childElementList(fieldElement, "img");
-        Iterator imgElementIter = imgElements.iterator();
-        while (imgElementIter.hasNext()) {
-            Element imgElement = (Element) imgElementIter.next();
-            menuImage = new MenuImage(imgElement);
-            if (Debug.infoOn()) Debug.logInfo("in new ModelMenuItem, menuImage:" + menuImage, module);
-        }
         Element subMenuElement = UtilXml.firstChildElement(fieldElement, "sub-menu");
         if (subMenuElement != null) {
             String subMenuLocation = subMenuElement.getAttribute("location");
@@ -175,7 +161,33 @@ public class ModelMenuItem {
         if (permissionElement != null)
             permissionChecker = new EntityPermissionChecker(permissionElement);
 
+        // read in add item defs, add/override one by one using the menuItemList and menuItemMap
+        List itemElements = UtilXml.childElementList(fieldElement, "menu-item");
+        Iterator itemElementIter = itemElements.iterator();
+        while (itemElementIter.hasNext()) {
+            Element itemElement = (Element) itemElementIter.next();
+            ModelMenuItem modelMenuItem = new ModelMenuItem(itemElement, this);
+            modelMenuItem = this.addUpdateMenuItem(modelMenuItem);
+            //Debug.logInfo("Added item " + modelMenuItem.getName() + " from def, mapName=" + modelMenuItem.getMapName(), module);
+        }
+     }
+    
+    public ModelMenuItem addUpdateMenuItem(ModelMenuItem modelMenuItem) {
+
+        // not a conditional item, see if a named item exists in Map
+        ModelMenuItem existingMenuItem = (ModelMenuItem) this.menuItemMap.get(modelMenuItem.getName());
+        if (existingMenuItem != null) {
+            // does exist, update the item by doing a merge/override
+            existingMenuItem.mergeOverrideModelMenuItem(modelMenuItem);
+            return existingMenuItem;
+        } else {
+            // does not exist, add to List and Map
+            this.menuItemList.add(modelMenuItem);
+            this.menuItemMap.put(modelMenuItem.getName(), modelMenuItem);
+            return modelMenuItem;
+        }
     }
+
 
     public void setHideIfSelected(String val) {
         if (UtilValidate.isNotEmpty(val))
@@ -190,24 +202,6 @@ public class ModelMenuItem {
     }
 
 
-    /**
-     * add/override modelMenuItem using the targetList and targetMap
-     *
-     * @return The same ModelMenuItem, or if merged with an existing target, the existing target.
-     */
-    public void addUpdateMenuTarget(MenuTarget target) {
-
-            // not a conditional target, see if a named target exists in Map
-            MenuTarget existingMenuTarget = (MenuTarget) this.targetMap.get(target.getMenuTargetName());
-            if (existingMenuTarget != null) {
-                // does exist, update the target by doing a merge/override
-                //existingMenuTarget.mergeOverrideMenuTarget(target);
-            } else {
-                // does not exist, add to List and Map
-                this.targetList.add(target);
-                this.targetMap.put(target.getMenuTargetName(), target);
-            }
-    }
 
     public void mergeOverrideModelMenuItem(ModelMenuItem overrideModelMenuItem) {
         if (overrideModelMenuItem == null)
@@ -264,6 +258,8 @@ public class ModelMenuItem {
     public String getEntityName() {
         if (UtilValidate.isNotEmpty(this.entityName)) {
             return this.entityName;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getEntityName();
         } else {
             return this.modelMenu.getDefaultEntityName();
         }
@@ -301,7 +297,9 @@ public class ModelMenuItem {
     public String getTitleStyle() {
         if (UtilValidate.isNotEmpty(this.titleStyle)) {
             return this.titleStyle;
-        } else {
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getTitleStyle();
+         } else {
             return this.modelMenu.getDefaultTitleStyle();
         }
     }
@@ -312,6 +310,8 @@ public class ModelMenuItem {
     public String getDisabledTitleStyle() {
         if (UtilValidate.isNotEmpty(this.disabledTitleStyle)) {
             return this.disabledTitleStyle;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getDisabledTitleStyle();
         } else {
             return this.modelMenu.getDefaultDisabledTitleStyle();
         }
@@ -323,6 +323,8 @@ public class ModelMenuItem {
     public String getSelectedStyle() {
         if (UtilValidate.isNotEmpty(this.selectedStyle)) {
             return this.selectedStyle;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getSelectedStyle();
         } else {
             return this.modelMenu.getDefaultSelectedStyle();
         }
@@ -346,6 +348,8 @@ public class ModelMenuItem {
     public String getWidgetStyle() {
         if (UtilValidate.isNotEmpty(this.widgetStyle)) {
             return this.widgetStyle;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getWidgetStyle();
         } else {
             return this.modelMenu.getDefaultWidgetStyle();
         }
@@ -357,6 +361,8 @@ public class ModelMenuItem {
     public String getTooltipStyle() {
         if (UtilValidate.isNotEmpty(this.tooltipStyle)) {
             return this.tooltipStyle;
+        } else if (parentMenuItem != null) {
+            return parentMenuItem.getTooltipStyle();
         } else {
             return this.modelMenu.getDefaultTooltipStyle();
         }
@@ -420,56 +426,6 @@ public class ModelMenuItem {
         this.tooltipStyle = string;
     }
 
-    /**
-     * @param string
-     */
-    public void setCurrentMenuTargetName(String target) {
-        this.currentMenuTargetName = target;
-        //if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, setCurrentMenuTargetItem:" + currentMenuTargetName, module);
-    }
-
-    public String getCurrentMenuTargetName() {
-        //if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, getCurrentMenuTargetItem:" + currentMenuTargetName, module);
-        return this.currentMenuTargetName;
-    }
-
-    public String getDefaultMenuTargetName() {
-        return this.defaultMenuTargetName;
-    }
-
-    /**
-     * @return
-     */
-    public MenuTarget getCurrentMenuTarget() {
-        
-        MenuTarget target = null;
-        if (subMenu != null ) {
-            ModelMenuItem subMenuItem = subMenu.getCurrentMenuItem();
-            target = subMenuItem.getCurrentMenuTarget();
-        } else {
-            target = (MenuTarget)targetMap.get(currentMenuTargetName);
-            //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target: " + target + " targetMap:" + targetMap, module);
-            if (target == null) {
-                target = (MenuTarget)targetMap.get(defaultMenuTargetName);
-            //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target(2): " + target + " defaultMenuTargetName:" + defaultMenuTargetName, module);
-                if (target == null) {
-                   if (targetList.size() > 0) {
-                       target = (MenuTarget)targetList.get(0);
-            //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target(3): " + target + " targetList:" + targetList, module);
-                   } 
-                }
-            }
-        }
-        return target;
-    }
-
-    public Map getMenuTargetMap() {
-        return this.targetMap;
-    }
-
-    public List getMenuTargetList() {
-        return this.targetList;
-    }
 
     /**
      * @param string
@@ -492,77 +448,6 @@ public class ModelMenuItem {
         return retStr;
     }
 
-    /**
-     * @param string
-     */
-    public void setPermissionOperation(String string) {
-        this.permissionOperation = string;
-    }
-
-    /**
-     * @return
-     */
-    public String getPermissionOperation() {
-        if (UtilValidate.isNotEmpty(this.permissionOperation )) {
-            return this.permissionOperation ;
-        } else {
-            return this.modelMenu.getDefaultPermissionOperation ();
-        }
-    }
-
-    /**
-     * @param string
-     */
-    public void setPermissionStatusId(String string) {
-        this.permissionStatusId = string;
-    }
-
-    /**
-     * @return
-     */
-    public String getPermissionStatusId() {
-        if (UtilValidate.isNotEmpty(this.permissionStatusId )) {
-            return this.permissionStatusId ;
-        } else {
-            return this.modelMenu.getDefaultPermissionStatusId ();
-        }
-    }
-
-    /**
-     * @param string
-     */
-    public void setPrivilegeEnumId(String string) {
-        this.privilegeEnumId = string;
-    }
-
-    /**
-     * @return
-     */
-    public String getPrivilegeEnumId() {
-        if (UtilValidate.isNotEmpty(this.privilegeEnumId )) {
-            return this.privilegeEnumId ;
-        } else {
-            return this.modelMenu.getDefaultPrivilegeEnumId ();
-        }
-    }
-
-    /**
-     * @param string
-     */
-    public void setPermissionEntityAction(String string) {
-        this.permissionEntityAction = string;
-    }
-
-    /**
-     * @return
-     */
-    public String getPermissionEntityAction() {
-        if (UtilValidate.isNotEmpty(this.permissionEntityAction )) {
-            return this.permissionEntityAction ;
-        } else {
-            return this.modelMenu.getDefaultPermissionEntityAction ();
-        }
-    }
 
     /**
      * @param string
@@ -630,413 +515,32 @@ public class ModelMenuItem {
             + "\n     widgetStyle=" + this.widgetStyle
             + "\n     tooltipStyle=" + this.tooltipStyle
             + "\n     selectedStyle=" + this.selectedStyle
-            + "\n     defaultMenuTargetName=" + this.defaultMenuTargetName
-            + "\n     currentMenuTargetName=" + this.currentMenuTargetName
             + "\n\n");
      
-        Iterator iter = targetList.iterator();
-        while (iter.hasNext()) {
-            MenuTarget item = (MenuTarget)iter.next();
-            item.dump(buffer);
-        }
             
         return;
-    }
-    public MenuImage getMenuImage() {
-       return this.menuImage;
     }
 
     public Link getLink() {
        return this.link;
     }
-
-    public class MenuTarget {
-
-        protected String targetName;
-        protected String targetTitle;
-        protected String requestName;
-        protected String requestType;
-        protected String targetType;
-        protected String permissionOperation;
-        protected String permissionStatusId;
-        protected String permissionEntityAction;
-        protected String privilegeEnumId;
-        protected MenuImage menuImage;
     
-        protected Map paramMap = new HashMap();
-        protected List paramList = new ArrayList();
-        protected ModelMenuItem modelMenuItem;
+    public boolean isSelected(Map context) {
 
-        public MenuTarget() {
-        }
-    
-        /** XML Constructor */
-        public MenuTarget(Element fieldElement, ModelMenuItem item) {
-
-            this.modelMenuItem = item;
-            this.targetName = fieldElement.getAttribute("name");
-            this.targetTitle = fieldElement.getAttribute("title");
-            this.requestName = fieldElement.getAttribute("request-name");
-            this.requestType = fieldElement.getAttribute("request-type");
-            this.targetType = fieldElement.getAttribute("target-type");
-            this.permissionOperation = fieldElement.getAttribute("permission-operation");
-            this.permissionStatusId = fieldElement.getAttribute("permission-status-id");
-            this.permissionEntityAction = fieldElement.getAttribute("permission-entity-action");
-            this.privilegeEnumId = fieldElement.getAttribute("privilege-enum-id");
-    
-            // read in add param defs, add/override one by one using the paramList and paramMap
-            List subElements = UtilXml.childElementList(fieldElement, "param");
-            Iterator subElementIter = subElements.iterator();
-            while (subElementIter.hasNext()) {
-                Element subElement = (Element) subElementIter.next();
-                MenuParam sub =  new MenuParam(subElement);
-                this.addUpdateMenuParam(sub);
-            }
-            subElements = UtilXml.childElementList(fieldElement, "img");
-            subElementIter = subElements.iterator();
-            while (subElementIter.hasNext()) {
-                Element subElement = (Element) subElementIter.next();
-                menuImage = new MenuImage(subElement);
-            }
-    
-        }
-
-        /**
-         * @param string
-         */
-        public void setPermissionOperation(String string) {
-            this.permissionOperation = string;
-        }
-    
-        /**
-         * @return
-         */
-        public String getPermissionOperation() {
-            if (UtilValidate.isNotEmpty(this.permissionOperation )) {
-                return this.permissionOperation ;
-            } else {
-                return this.modelMenuItem.getPermissionOperation();
-            }
-        }
-    
-        /**
-         * @param string
-         */
-        public void setPermissionStatusId(String string) {
-            this.permissionStatusId = string;
-        }
-    
-        /**
-         * @return
-         */
-        public String getPermissionStatusId() {
-            if (UtilValidate.isNotEmpty(this.permissionStatusId )) {
-                return this.permissionStatusId ;
-            } else {
-                return this.modelMenuItem.getPermissionStatusId ();
-            }
-        }
-    
-        /**
-         * @param string
-         */
-        public void setPrivilegeEnumId(String string) {
-            this.privilegeEnumId = string;
-        }
-    
-        /**
-         * @return
-         */
-        public String getPrivilegeEnumId() {
-            if (UtilValidate.isNotEmpty(this.privilegeEnumId )) {
-                return this.privilegeEnumId ;
-            } else {
-                return this.modelMenuItem.getPrivilegeEnumId ();
-            }
-        }
-    
-        /**
-         * @param string
-         */
-        public void setPermissionEntityAction(String string) {
-            this.permissionEntityAction = string;
-        }
-    
-        /**
-         * @return
-         */
-        public String getPermissionEntityAction() {
-            if (UtilValidate.isNotEmpty(this.permissionEntityAction )) {
-                return this.permissionEntityAction ;
-            } else {
-                return this.modelMenuItem.getPermissionEntityAction ();
-            }
-        }
-
-    public void dump(StringBuffer buffer ) {
-        buffer.append("        MenuTarget:" 
-            + "\n     targetName=" + this.targetName
-            + "\n     targetTitle=" + this.targetTitle
-            + "\n     requestName=" + this.requestName
-            + "\n     requestType=" + this.requestType
-            + "\n\n");
-            
-        return;
-    }
-
-        public void addUpdateMenuParam(MenuParam param) {
-
-            this.paramList.add(param);
-            this.paramMap.put(param.getName(), param);
-        }
-
-        public String getMenuTargetTitle() {
-            return this.targetTitle;
-        }
-
-        public String getMenuTargetTitle(Map context) {
-            if (UtilValidate.isNotEmpty(this.targetTitle)) {
-                return this.targetTitle;
-            } else {
-                return modelMenuItem.getTitle(context);
-            }
-        }
-
-        public String getRequestName() {
-            return this.requestName;
-        }
-
-        public String getTargetType() {
-            if (UtilValidate.isNotEmpty(this.targetType)) {
-                return this.targetType;
-            } else {
-                return ModelMenuItem.DEFAULT_TARGET_TYPE;
-            }
-        }
-
-        public MenuImage getMenuImage() {
-            if (this.menuImage != null) 
-                return this.menuImage;
-            else
-                return this.modelMenuItem.getMenuImage();
-        }
-
-        public List getParamList() {
-            return this.paramList;
-        }
-
-        /**
-         * @return
-         */
-        public String getMenuTargetName() {
-                return targetName;
-        }
-
+        String selectedMenuItemContextFieldName = modelMenu.getSelectedMenuItemContextFieldName();
+        String currentMenuItemName = (String)context.get(selectedMenuItemContextFieldName);
+        if (currentMenuItemName != null && currentMenuItemName.equals(this.name)) 
+            return true;
+        else
+            return false;
     }
 
 
-        public class MenuParam {
-        
-            protected MenuParamInfo menuParamInfo;
-            protected String paramName;
 
-            public MenuParam() {
-            }
-
-            public MenuParam(Element fieldElement) {
-                paramName = fieldElement.getAttribute("name");
-                String paramType = fieldElement.getAttribute("type");
-                if (paramType != null && paramType.equals("map")) {
-                    menuParamInfo = new MenuParamInfoMap(fieldElement, this);
-                } else {
-                    menuParamInfo = new MenuParamInfoNameValue(fieldElement, this);
-                }
-            }
-
-            /**
-             * @return
-             */
-            public String getName() {
-                return this.paramName;
-            }
-
-
-           public Map getParamMap(Map context) {
-               Map map = menuParamInfo.getParamMap(context);
-               return map;
-           }
-
-        }
-
-        public class MenuParamInfo {
-
-            protected MenuParam menuParam;
-            protected String infoName;
-            protected FlexibleStringExpander paramValue;
-            protected String defaultValue;
-
-            public MenuParamInfo() {
-            }
-            public MenuParamInfo(Element fieldElement, MenuParam menuParam) {
-                this.menuParam = menuParam;
-                this.infoName = fieldElement.getAttribute("name");
-                this.paramValue = setParamValue(fieldElement.getAttribute("value"));
-                this.defaultValue = fieldElement.getAttribute("default-value");
-            }
-
-           public Map getParamMap(Map context) {
-               Map map = new HashMap();
-               return map;
-           }
-
-            /**
-             * @return
-             */
-            public String getName() {
-                return this.infoName;
-            }
-
-            /**
-             * @return
-             */
-            public Object getValue(Map context) {
-
-                String s = paramValue.expandString(context);
-
-                if (UtilValidate.isEmpty(s))
-                    s = paramValue.expandString(dataMap);
-
-                if (UtilValidate.isEmpty(s))
-                    s = this.defaultValue;
-
-                return s;
-            }
-
-            /**
-             * @param string
-             */
-            public FlexibleStringExpander setParamValue(String string) {
-                this.paramValue = new FlexibleStringExpander(string);
-                return this.paramValue;
-            }
-
-
-
-        }
-
-        public class MenuParamInfoNameValue extends MenuParamInfo {
-        
-    
-            public MenuParamInfoNameValue() {
-            }
-        
-            /** XML Constructor */
-            public MenuParamInfoNameValue(Element fieldElement, MenuParam menuParam) {
-                super(fieldElement, menuParam);
-            }
-           public Map getParamMap(Map context) {
-               Map map = new HashMap();
-               map.put(infoName, (String)getValue(context));
-               //if (Debug.infoOn()) Debug.logInfo("in getParamMap, context: " + context + " map:" + map, module);
-               return map;
-           }
-
-        }
-
-        public class MenuParamInfoMap extends MenuParamInfo {
-    
-            public MenuParamInfoMap() {
-            }
-        
-            /** XML Constructor */
-            public MenuParamInfoMap(Element fieldElement, MenuParam menuParam) {
-                super(fieldElement, menuParam);
-            }
-
-           public Map getParamMap(Map context) {
-
-               Map map = null;
-               Object obj = getValue(context);
-               if (obj != null && obj instanceof Map)
-                   map = (Map)getValue(context);
-               return map;
-           }
-
-        }
-
-
-        public class MenuImage {
-
-        protected FlexibleStringExpander requestName;
-        protected FlexibleStringExpander disabledRequestName;
-        protected String targetType;
-        protected Map paramMap = new HashMap();
-        protected List paramList = new ArrayList();
-        protected ModelMenuItem modelMenuItem;
-
-
-        public MenuImage(Element fieldElement) {
-
-            setRequestName(fieldElement.getAttribute("request-name"));
-            setDisabledRequestName(fieldElement.getAttribute("disabled-request-name"));
-                Debug.logInfo("in new MenuImage, requestName:" + requestName.getOriginal(), module);
-            this.targetType = fieldElement.getAttribute("target-type");
-
-            // read in add param defs, add/override one by one using the paramList and paramMap
-            List subElements = UtilXml.childElementList(fieldElement, "param");
-            Iterator subElementIter = subElements.iterator();
-            while (subElementIter.hasNext()) {
-                Element subElement = (Element) subElementIter.next();
-                MenuParam sub =  new MenuParam(subElement);
-                this.addUpdateMenuParam(sub);
-            }
-    
-        }
-
-        /**
-         * @param string
-         */
-        public void setRequestName(String string) {
-            this.requestName = new FlexibleStringExpander(string);
-        }
-
-        /**
-         * @param string
-         */
-        public void setDisabledRequestName(String string) {
-            this.disabledRequestName = new FlexibleStringExpander(string);
-        }
-
-        public String getRequestName(Map context) {
-            String s = requestName.expandString(context);
-            return s;
-        }
-
-        public String getDisabledRequestName(Map context) {
-            String s = disabledRequestName.expandString(context);
-            return s;
-        }
-
-        public String getTargetType() {
-            return this.targetType;
-        }
-
-        public void addUpdateMenuParam(MenuParam param) {
-
-            this.paramList.add(param);
-            this.paramMap.put(param.getName(), param);
-        }
-
-        public List getParamList() {
-            return this.paramList;
-        }
-
-
-    }
 
         public static class Link {
 
-            protected ModelMenuItem parentMenuItem;
+            protected ModelMenuItem linkMenuItem;
             protected FlexibleStringExpander textExdr;
             protected FlexibleStringExpander idExdr;
             protected FlexibleStringExpander styleExdr;
@@ -1051,7 +555,7 @@ public class ModelMenuItem {
             
             public Link( Element linkElement, ModelMenuItem parentMenuItem) {
     
-                this.parentMenuItem = parentMenuItem;
+                this.linkMenuItem = parentMenuItem;
                 setText(linkElement.getAttribute("text"));
                 setId(linkElement.getAttribute("id"));
                 setStyle(linkElement.getAttribute("style"));
@@ -1076,7 +580,7 @@ public class ModelMenuItem {
             public String getText(Map context) {
                 String txt =  this.textExdr.expandString(context);
                 if (UtilValidate.isEmpty(txt))
-                    txt = parentMenuItem.getTitle(context);
+                    txt = linkMenuItem.getTitle(context);
                 return txt;
             }
             
@@ -1170,6 +674,10 @@ public class ModelMenuItem {
             }
             public void setImage( Image img ) {
                 this.image = img;
+            }
+            
+            public ModelMenuItem getLinkMenuItem() {
+            	return linkMenuItem;
             }
                 
         }

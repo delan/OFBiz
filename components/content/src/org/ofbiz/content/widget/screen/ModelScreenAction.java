@@ -46,12 +46,14 @@ import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 import org.w3c.dom.Element;
+import org.ofbiz.base.util.ObjectType;
+
 
 /**
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public abstract class ModelScreenAction {
@@ -113,6 +115,7 @@ public abstract class ModelScreenAction {
         protected FlexibleMapAccessor fromField;
         protected FlexibleStringExpander valueExdr;
         protected FlexibleStringExpander globalExdr;
+        protected String type;
         
         public SetField(ModelScreen modelScreen, Element setElement) {
             super (modelScreen, setElement);
@@ -120,6 +123,7 @@ public abstract class ModelScreenAction {
             this.fromField = UtilValidate.isNotEmpty(setElement.getAttribute("from-field")) ? new FlexibleMapAccessor(setElement.getAttribute("from-field")) : null;
             this.valueExdr = UtilValidate.isNotEmpty(setElement.getAttribute("value")) ? new FlexibleStringExpander(setElement.getAttribute("value")) : null;
             this.globalExdr = new FlexibleStringExpander(setElement.getAttribute("global"));
+            this.type = setElement.getAttribute("type");
             if (this.fromField != null && this.valueExdr != null) {
                 throw new IllegalArgumentException("Cannot specify a from-field [" + setElement.getAttribute("from-field") + "] and a value [" + setElement.getAttribute("value") + "] on the set action in a screen widget");
             }
@@ -136,6 +140,16 @@ public abstract class ModelScreenAction {
                 if (Debug.verboseOn()) Debug.logVerbose("In screen getting value for field from [" + this.fromField.getOriginalName() + "]: " + newValue, module);
             } else if (this.valueExdr != null) {
                 newValue = this.valueExdr.expandString(context);
+            }
+            if (UtilValidate.isNotEmpty(this.type)) {
+                try {
+                    newValue = ObjectType.simpleTypeConvert(newValue, this.type, null, null);
+                } catch (GeneralException e) {
+                    String errMsg = "Could not convert field value for the field: [" + this.field.getOriginalName() + "] to the [" + this.type + "] type for the value [" + newValue + "]: " + e.toString();
+                    Debug.logError(e, errMsg, module);
+                    throw new IllegalArgumentException(errMsg);
+                }
+         
             }
             if (Debug.verboseOn()) Debug.logVerbose("In screen setting field [" + this.field.getOriginalName() + "] to value: " + newValue, module);
             this.field.put(context, newValue);

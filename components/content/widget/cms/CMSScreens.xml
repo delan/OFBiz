@@ -31,6 +31,7 @@
 		<section>
 		<actions>
 		    <script location="component://content/widget/getMenuContext.bsh"/>
+		    <set field="headerItem" value="CMS"/>
 		</actions>
                   <widgets>
                        <decorator-screen name="main" location="component://content/widget/CommonScreens.xml" >
@@ -45,16 +46,17 @@
 
 	<screen name="CMSContentFind">
 		<section>
+			<condition>
+				<if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+			</condition>
 		<actions>
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="CMS Content Find Page"/>
-                    <set field="titleProperty" value="PageTitleEditOfbizDoc"/>
                     <set field="entityName" value="ContentAssocDataResourceViewFrom"/>
-                    <service service-name="performFind" result-map-name="result">
-                    	<field-map field-name="inputFields" env-name="requestParameters"/>
-                    	<field-map field-name="entityName" env-name="entityName"/>
-                    </service>
                     <set field="queryString" from-field="result.queryString"/>
+                    <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
+                    <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer"/>
+                    <set field="menuContext.contentTarget" value="CMSContentFind"/>
 		</actions>
                   <widgets>
                        <decorator-screen name="cmsCommon" >
@@ -69,6 +71,9 @@
 
 	<screen name="CMSContentEdit">
 		<section>
+			<condition>
+				<if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+			</condition>
 		<actions>
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="CMS Content Edit Page"/>
@@ -76,11 +81,25 @@
 			<entity-one entity-name="Content" value-name="currentValue">
 				<field-map field-name="contentId" env-name="parameters.contentId"/>
 			</entity-one>
+			<entity-one entity-name="ElectronicText" value-name="electronicText">
+				<field-map field-name="dataResourceId" env-name="parameters.drDataResourceId"/>
+			</entity-one>
+			<set field="textData" from-field="electronicText.textData"/>
+			<set field="contentId" from-field="currentValue.contentId"/>
+			<set field="dataResourceId" from-field="parameters.drDataResourceId"/>
+            <set field="rootForumId" value="WebStoreFORUM" />
+            <set field="rootForumId2" value="WebStoreCONTENT" />
+		    <script location="component://content/widget/cms/featureprep.bsh"/>
+            <set field="menuContext.contentTarget" value="CMSContentEdit?contentId=${contentId}&amp;drDataResourceId=${dataResourceId}"/>
 		</actions>
                   <widgets>
                        <decorator-screen name="cmsCommon" >
                          <decorator-section name="body">
-                           <form name="EditContent" location="component://content/webapp/content/cms/CMSForms.xml" />
+                    		<platform-specific>
+                         		<html>
+                             		<html-template location="component://content/webapp/content/cms/CMSContentEdit.ftl"/>
+                         		</html>
+                    		</platform-specific>
                           </decorator-section>
                         </decorator-screen>
                   </widgets>
@@ -89,6 +108,9 @@
 	
 	<screen name="CMSContentAdd">
 		<section>
+			<condition>
+				<if-has-permission permission="CONTENTMGR" action="CREATE"/>
+			</condition>
 		<actions>
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="CMS Content Edit Page"/>
@@ -104,12 +126,39 @@
 		</section>
 	</screen>
 	
+	<screen name="EditAddContent">
+		<section>
+			<condition>
+				<if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+			</condition>
+			<actions>
+			    <script location="component://content/widget/getMenuContext.bsh"/>
+            	<set field="title" value="CMS Content Edit Page"/>
+                <set field="entityOperation" value="_UPDATE"/>
+                <set field="targetOperation" value="CONTENT_UPDATE|CONTENT_CREATE|CONTENT_CREATE_SUB"/>
+                <set field="requiredRoles" value="_OWNER_|BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER"/>
+                <set field="contentPurposeTypeId" value="ARTICLE"/>
+			    <script location="component://content/widget/cms/cmseditaddprep.bsh"/>
+			</actions>
+	    	<widgets>
+                       <decorator-screen name="cmsCommon" >
+                         <decorator-section name="body">
+                           <form name="EditAddContentStuff" location="component://content/webapp/content/cms/CMSForms.xml" />
+                          </decorator-section>
+                        </decorator-screen>
+	    	</widgets>
+		</section>
+	</screen>
+	
 	<screen name="AdminSearch">
 		<section>
+			<condition>
+				<if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+			</condition>
 		<actions>
 		    <script location="component://content/widget/getMenuContext.bsh"/>
-		    <script location="component://content/webapp/content/WEB-INF/actions/cms/advancedsearchprep.bsh"/>
-		    <script location="component://content/webapp/content/WEB-INF/actions/cms/search.bsh"/>
+		    <script location="component://content/widget/cms/advancedsearchprep.bsh"/>
+		    <script location="component://content/widget/cms/search.bsh"/>
                     <set field="title" value="CMS Search Page"/>
                     <set field="titleProperty" value="PageTitleSearchContent"/>
 		</actions>
@@ -131,6 +180,9 @@
 	
 	<screen name="AdminIndex">
 		<section>
+			<condition>
+				<if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+			</condition>
 		<actions>
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="CMS Search Page"/>
@@ -149,19 +201,48 @@
 	
 	<screen name="CMSSites">
 		<section>
+			<condition>
+				<if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+			</condition>
 		<actions>
 		    <script location="component://content/widget/getMenuContext.bsh"/>
                     <set field="title" value="CMS Search Page"/>
                     <set field="titleProperty" value="PageTitleSearchContent"/>
                     <set field="forumId" from-field="parameters.contentId"/>
+                    <set field="defaultSiteId" value="WebStoreFORUM"/>
+		    <script location="component://content/widget/cms/userpermprep.bsh"/>
 		</actions>
                   <widgets>
                        <decorator-screen name="cmsCommon" >
                          <decorator-section name="body">
-                           <form name="searchQuery" location="component://content/webapp/content/cms/CMSForms.xml" />
                     <platform-specific>
                          <html>
                              <html-template location="component://content/webapp/content/cms/CMSSites.ftl"/>
+                         </html>
+                    </platform-specific>
+                          </decorator-section>
+                        </decorator-screen>
+                  </widgets>
+		</section>
+	</screen>
+
+
+	<screen name="addSubSite">
+		<section>
+			<condition>
+				<if-has-permission permission="CONTENTMGR" action="UPDATE"/>
+			</condition>
+		<actions>
+		    <script location="component://content/widget/getMenuContext.bsh"/>
+                    <set field="title" value="Add SubSite"/>
+                    <set field="titleProperty" value="PageTitleSearchContent"/>
+		</actions>
+                  <widgets>
+                       <decorator-screen name="cmsCommon" >
+                         <decorator-section name="body">
+                    <platform-specific>
+                         <html>
+                             <html-template location="component://content/webapp/content/cms/addSubSite.ftl"/>
                          </html>
                     </platform-specific>
                           </decorator-section>

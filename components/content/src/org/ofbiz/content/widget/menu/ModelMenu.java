@@ -49,7 +49,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class ModelMenu {
@@ -81,6 +81,7 @@ public class ModelMenu {
     protected String defaultCellWidth;
     protected Boolean defaultHideIfSelected;
     protected String defaultDisabledTitleStyle;
+    protected String selectedMenuItemContextFieldName;
 
     /** This List will contain one copy of each item for each item name in the order
      * they were encountered in the service, entity, or menu definition; item definitions
@@ -216,6 +217,8 @@ public class ModelMenu {
         }
         if (this.defaultDisabledTitleStyle == null || menuElement.hasAttribute("default-disabled-title-style"))
             this.defaultDisabledTitleStyle = menuElement.getAttribute("default-disabled-title-style");
+        if (this.selectedMenuItemContextFieldName == null || menuElement.hasAttribute("selected-menuitem-context-field-name"))
+            this.selectedMenuItemContextFieldName = menuElement.getAttribute("selected-menuitem-context-field-name");
 
 
         // read in add item defs, add/override one by one using the menuItemList and menuItemMap
@@ -387,6 +390,13 @@ public class ModelMenu {
      */
     public String getDefaultMenuItemName() {
         return this.defaultMenuItemName;
+    }
+
+    /**
+     * @return
+     */
+    public String getSelectedMenuItemContextFieldName() {
+        return this.selectedMenuItemContextFieldName;
     }
 
     /**
@@ -695,13 +705,4 @@ public class ModelMenu {
         return;
     }
 
-    public void clearCurrentMenuTargets() {
-      
-        Iterator iter = menuItemList.iterator();
-        while (iter.hasNext()) {
-            ModelMenuItem menuItem = (ModelMenuItem)iter.next();
-            menuItem.setCurrentMenuTargetName(null);
-            if (Debug.infoOn()) Debug.logInfo("in clearCurrentMenuTargets, menuItem:" + menuItem.getName(), module);
-        }
-    }
 }

@@ -34,61 +34,58 @@
         default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
         default-permission-entity-action="_ADMIN"
         default-associated-content-id="${userLogin.userLoginId}"
+        selected-menuitem-context-field-name="tabButtonItem"
         title="" type="simple">
 
 
-       <menu-item name="content" title="Content" default-target-name="CMSContentFind"
-                permission-operation="HAS_AUTHOR_ROLE|HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
-                permission-entity-action="_ADMIN">
-            <target name="CMSContentFind" request-name="CMSContentFind"
-                permission-operation="HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
-                permission-entity-action="_ADMIN">
-                <param name="listSize" value="${content.listSize}"/>
-                <param name="highIndex" value="${content.highIndex}"/>
-                <param name="lowIndex" value="${content.lowIndex}"/>
-                <param name="viewSize" value="${content.viewSize}"/>
-                <param name="viewIndex" value="${content.viewIndex}"/>
-                <param name="queryString" value="${content.queryString}" type="map"/>
-            </target>
-            <target name="CMSFindOwnedContent" request-name="CMSFindOwnedContent"
-                permission-operation="HAS_AUTHOR_ROLE"
-                permission-entity-action="_UPDATE">
-                <param name="listSize" value="${content.listSize}"/>
-                <param name="highIndex" value="${content.highIndex}"/>
-                <param name="lowIndex" value="${content.lowIndex}"/>
-                <param name="viewSize" value="${content.viewSize}"/>
-                <param name="viewIndex" value="${content.viewIndex}"/>
-                <param name="queryString" value="${content.queryString}" type="map"/>
-            </target>
-            <target name="CMSContentEdit" request-name="CMSContentEdit"
-                permission-operation="HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
-                permission-entity-action="_ADMIN">
-                <param name="contentId" value="${content.currentValue.contentId}"/>
-                <param name="dataResourceId" value="${content.currentValue.dataResourceId}"/>
-            </target>
-            <target name="CMSContentAdd" request-name="CMSContentAdd"
-                permission-operation="HAS_EDITOR_ROLE|HAS_ADMIN_ROLE"
-                permission-entity-action="_ADMIN">
-            </target>
+        <menu-item name="contentfind" title="Content" >
+            <link id="contentfind" target="${menuContext.contentTarget}"/>
+        </menu-item>
+        <menu-item name="subsites" title="SubSites" >
+            <link id="dflt" target="CMSSites?forumId=${subsites.forumId}"/>
+        </menu-item>
+
+        <menu-item name="index" title="Index" >
+            <link id="dflt" target="AdminIndex">
+            </link>
+        </menu-item>
+
+        <menu-item name="search" title="Search" >
+            <link id="dflt" target="AdminSearch">
+            </link>
         </menu-item>
 
 
-        <menu-item name="subsites" title="SubSites" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="CMSSites">
-                <param name="forumId" value="${subsites.forumId}"/>
-            </target>
-        </menu-item>
+    </menu>
 
-        <menu-item name="index" title="Index" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="AdminIndex">
-            </target>
-        </menu-item>
+    <menu name="content" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="content"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN"
+        default-associated-content-id="${userLogin.userLoginId}"
+        selected-menuitem-context-field-name="tabButtonItem"
+        title="" type="simple">
 
-        <menu-item name="search" title="Search" default-target-name="dflt" permission-entity-action="_ADMIN">
-            <target name="dflt" request-name="AdminSearch">
-            </target>
-        </menu-item>
 
+       <menu-item name="contentfind" title="Content" >
+            <link id="CMSContentFind" target="CMSContentFind?listSize=${content.listSize}&amp;highIndex=${content.highIndex}&amp;lowIndex=${content.lowIndex}&amp;viewSize=${content.viewSize}&amp;viewIndex=${content.viewIndex}&amp;queryString=${content.queryString}" >
+            </link>
+        </menu-item>
+       <menu-item name="ownedcontentfind" title="Content" >
+            <link id="CMSFindOwnedContent" target="CMSFindOwnedContent?listSize=${content.listSize}&amp;highIndex=${content.highIndex}&amp;lowIndex=${content.lowIndex}&amp;viewSize=${content.viewSize}&amp;viewIndex=${content.viewIndex}&amp;queryString=${content.queryString}" >
+            </link>
+        </menu-item>
+       <menu-item name="contentedit" title="Edit" >
+            <link id="CMSContentEdit" target="CMSContentEdit?contentId=${content.currentValue.contentId}&amp;dataResourceId=${content.currentValue.dataResourceId}"/>
+        </menu-item>
+       <menu-item name="contentadd" title="Add" >
+            <link id="CMSContentAdd" target="CMSContentAdd">
+            </link>
+        </menu-item>
 
     </menu>
 
