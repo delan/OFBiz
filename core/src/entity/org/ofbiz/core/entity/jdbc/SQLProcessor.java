@@ -211,7 +211,26 @@ public class SQLProcessor {
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
-
+        
+        if (Debug.verboseOn()) {
+            int isoLevel = -999;
+            try {
+                isoLevel = _connection.getTransactionIsolation();
+            } catch (SQLException e) {
+                Debug.logError(e, "Problems getting the connection's isolation level", module);
+            }
+            if (isoLevel == Connection.TRANSACTION_NONE) 
+                Debug.logVerbose("Transaction isolation level set to 'None'.", module);
+            else if (isoLevel == Connection.TRANSACTION_READ_COMMITTED)
+                Debug.logVerbose("Transaction isolation level set to 'ReadCommited'.", module);
+            else if (isoLevel == Connection.TRANSACTION_READ_UNCOMMITTED)
+                Debug.logVerbose("Transaction isolation level set to 'ReadUncommitted'.", module);
+            else if (isoLevel == Connection.TRANSACTION_REPEATABLE_READ)
+                Debug.logVerbose("Transaction isolation level set to 'RepeatableRead'.", module);
+            else if (isoLevel == Connection.TRANSACTION_SERIALIZABLE)
+                Debug.logVerbose("Transaction isolation level set to 'Serializable'.", module);
+        }
+                            
         // NOTE: the fancy ethernet type stuff is for the case where transactions not available
         try {
             _connection.setAutoCommit(false);
