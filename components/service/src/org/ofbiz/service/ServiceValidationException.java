@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceValidationException.java,v 1.2 2004/02/19 18:52:35 ajzeneski Exp $
+ * $Id: ServiceValidationException.java,v 1.3 2004/03/12 23:45:01 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,22 +31,24 @@ import java.util.ArrayList;
  * ServiceValidationException
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ServiceValidationException extends GenericServiceException {
 
     protected List missingFields = new ArrayList();
     protected List extraFields = new ArrayList();
+    protected String errorMode = null;
     protected ModelService service = null;
 
     protected ServiceValidationException() {
         super();
     }
 
-    public ServiceValidationException(ModelService service, List missingFields, List extraFields) {
+    public ServiceValidationException(ModelService service, List missingFields, List extraFields, String errorMode) {
         super();
         this.service = service;
+        this.errorMode = errorMode;
         if (missingFields != null) {
             this.missingFields = missingFields;
         }
@@ -59,9 +61,10 @@ public class ServiceValidationException extends GenericServiceException {
         super(str);
     }
 
-    public ServiceValidationException(String str, ModelService service, List missingFields, List extraFields) {
+    public ServiceValidationException(String str, ModelService service, List missingFields, List extraFields, String errorMode) {
         super(str);
         this.service = service;
+        this.errorMode = errorMode;
         if (missingFields != null) {
             this.missingFields = missingFields;
         }
@@ -74,9 +77,10 @@ public class ServiceValidationException extends GenericServiceException {
         super(str, nested);
     }
 
-    public ServiceValidationException(String str, Throwable nested, ModelService service, List missingFields, List extraFields) {
+    public ServiceValidationException(String str, Throwable nested, ModelService service, List missingFields, List extraFields, String errorMode) {
         super(str, nested);
         this.service = service;
+        this.errorMode = errorMode;
         if (missingFields != null) {
             this.missingFields = missingFields;
         }
@@ -95,6 +99,10 @@ public class ServiceValidationException extends GenericServiceException {
 
     public ModelService getModelService() {
         return service;
+    }
+
+    public String getMode() {
+        return errorMode;
     }
 
     public String getServiceName() {
