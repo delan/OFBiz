@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.26 2004/06/10 00:10:07 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.27 2004/06/11 00:32:51 byersa Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.26 $
+ * @version    $Revision: 1.27 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -517,7 +517,7 @@ public class FreeMarkerWorker {
     }
 
 
-    public static void reloadValues(Map context, Map saveValues ) {
+    public static void reloadValues(Map context, Map saveValues, Environment env ) {
         Set keySet = saveValues.keySet();
         Iterator it = keySet.iterator();
         while (it.hasNext()) {
@@ -534,6 +534,7 @@ public class FreeMarkerWorker {
             } else {
                 context.put(key, o);
             }
+            env.setVariable(key, autoWrap(o, env));
         }
         return;
     }

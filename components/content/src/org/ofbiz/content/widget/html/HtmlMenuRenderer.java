@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.15 2004/06/02 23:44:26 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.16 2004/06/11 00:32:55 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -403,6 +403,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         ModelMenu menu = menuItem.getModelMenu();
         String currentMenuItemName = menu.getCurrentMenuItemName();
         String currentItemName = menuItem.getName();
+            if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, currentMenuItemName(0):" + currentMenuItemName + " currentItemName:" + currentItemName,"");
         if (currentMenuItemName != null && currentMenuItemName.equals(currentItemName)) 
             return true;
         else

@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentCacheTransform.java,v 1.11 2004/04/30 23:08:25 ajzeneski Exp $
+ * $Id: EditRenderSubContentCacheTransform.java,v 1.12 2004/06/11 00:32:50 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 3.0
  */
 public class EditRenderSubContentCacheTransform implements TemplateTransformModel {
@@ -135,7 +135,7 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
             }
 
             public void close() throws IOException {
-                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                FreeMarkerWorker.reloadValues(templateCtx, savedValues, env);
                 String wrappedContent = buf.toString();
                 String editTemplate = (String)templateCtx.get("editTemplate");
 //                if (editTemplate != null && editTemplate.equalsIgnoreCase("true")) {

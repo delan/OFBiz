@@ -1,5 +1,5 @@
 /*
- * $Id: WrapSubContentCacheTransform.java,v 1.7 2004/04/30 23:08:28 ajzeneski Exp $
+ * $Id: WrapSubContentCacheTransform.java,v 1.8 2004/06/11 00:32:54 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  */
 public class WrapSubContentCacheTransform implements TemplateTransformModel {
@@ -144,7 +144,7 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public void close() throws IOException {
-                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                FreeMarkerWorker.reloadValues(templateCtx, savedValues, env);
                 //if (Debug.infoOn()) Debug.logInfo("in Wrap(2), savedValues ." + savedValues , module);
                 String wrappedContent = buf.toString();
                 
@@ -181,7 +181,7 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
                         throw new IOException("Error rendering content" + e2.toString());
                     }
                         
-                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
+                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp, env);
                         //if (Debug.infoOn()) Debug.logInfo("in Wrap(2), savedValuesUp ." + savedValuesUp , module);
                 }
             }

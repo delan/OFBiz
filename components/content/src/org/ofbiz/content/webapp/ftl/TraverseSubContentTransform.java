@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentTransform.java,v 1.7 2004/04/30 23:08:28 ajzeneski Exp $
+ * $Id: TraverseSubContentTransform.java,v 1.8 2004/06/11 00:32:54 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TransformControl;
  * TraverseSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  */
 public class TraverseSubContentTransform implements TemplateTransformModel {
@@ -271,7 +271,7 @@ public class TraverseSubContentTransform implements TemplateTransformModel {
                         out.write(wrappedFTL);
                 }
                     FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                    FreeMarkerWorker.reloadValues(templateCtx, savedValues, env);
             }
 
             private boolean checkWhen (GenericValue thisContent, String contentAssocTypeId) {

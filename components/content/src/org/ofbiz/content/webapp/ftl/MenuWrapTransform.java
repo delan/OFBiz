@@ -1,5 +1,5 @@
 /*
- * $Id: MenuWrapTransform.java,v 1.7 2004/06/02 17:50:10 byersa Exp $
+ * $Id: MenuWrapTransform.java,v 1.8 2004/06/11 00:32:53 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import freemarker.template.TransformControl;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.0
  */
 public class MenuWrapTransform implements TemplateTransformModel {
@@ -152,14 +152,14 @@ public class MenuWrapTransform implements TemplateTransformModel {
             }
 
             public void close() throws IOException {
-                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                FreeMarkerWorker.reloadValues(templateCtx, savedValues, env);
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
                 String renderOnClose = (String)templateCtx.get("renderOnClose");
                 if (renderOnClose == null || !renderOnClose.equalsIgnoreCase("false")) {
                     renderMenu();
                 }
-                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
+                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp, env);
             }
 
             public void renderMenu() throws IOException {
