@@ -79,7 +79,7 @@ public abstract class GenericDevice implements JposDevice {
 
     protected void callEnter() {
         try {
-            ButtonEventConfig.invokeButtonEvent("menuEnter", PosScreen.currentScreen);
+            ButtonEventConfig.invokeButtonEvent("menuEnter", PosScreen.currentScreen, null);
         } catch (ButtonEventConfig.ButtonEventException e) {
             Debug.logError(e, module);
         } catch (ButtonEventConfig.ButtonEventNotFound e) {

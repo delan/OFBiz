@@ -29,6 +29,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
+import java.awt.AWTEvent;
 
 import net.xoetrope.swing.XButton;
 
@@ -86,12 +87,12 @@ public class ButtonEventConfig {
         if (buttonNames != null) {
             Iterator i = buttonNames.iterator();
             while (i.hasNext()) {
-                invokeButtonEvent(((String) i.next()), pos);
+                invokeButtonEvent(((String) i.next()), pos, null);
             }
         }
     }
 
-    public static void invokeButtonEvent(String buttonName, PosScreen pos) throws ButtonEventNotFound, ButtonEventException {
+    public static void invokeButtonEvent(String buttonName, PosScreen pos, AWTEvent event) throws ButtonEventNotFound, ButtonEventException {
         // load / re-load the button configs
         if (buttonConfig.size() == 0) {
             synchronized(ButtonEventConfig.class) {
@@ -113,7 +114,7 @@ public class ButtonEventConfig {
         if (bef == null) {
             throw new ButtonEventNotFound("No button definition found for button - " + buttonName);
         }
-        bef.invoke(pos);
+        bef.invoke(pos, event);
     }
 
     public static List findButtonKeyAssign(int keyCode) {
@@ -129,20 +130,15 @@ public class ButtonEventConfig {
         return buttonAssignments;
     }
 
-    public static String getButtonName(PosScreen pos) {
-        if (pos == null) {
-            throw new IllegalArgumentException("PosScreen parameter cannot be null");
+    public static String getButtonName(AWTEvent event) {
+        if (event == null) {
+            throw new IllegalArgumentException("AWTEvent parameter cannot be null");
         }
-        if (pos.getCurrentEvent() != null) {
-            Object source = pos.getCurrentEvent().getSource();
-            if (source instanceof XButton) {
-                XButton button = (XButton) source;
-                return button.getName();
-            } else {
-                return null;
-            }
+        Object source = event.getSource();
+        if (source instanceof XButton) {
+            XButton button = (XButton) source;
+            return button.getName();
         } else {
-            Debug.logWarning("No POS event found for obj - " + pos.toString(), module);
             return null;
         }
     }
@@ -177,22 +173,54 @@ public class ButtonEventConfig {
         return !disableLock;
     }
 
-    public void invoke(PosScreen pos) throws ButtonEventNotFound, ButtonEventException {
+    public void invoke(PosScreen pos, AWTEvent event) throws ButtonEventNotFound, ButtonEventException {
         ClassLoader cl = this.getClass().getClassLoader();
 
-        Class[] paramTypes = new Class[] { PosScreen.class };
-        Object[] params = new Object[] { pos };
+        // two variations are available
+        Class[] paramTypes1 = new Class[] { PosScreen.class, AWTEvent.class };
+        Class[] paramTypes2 = new Class[] { PosScreen.class };
+        Object[] params1 = new Object[] { pos, event };
+        Object[] params2 = new Object[] { pos };
+
+        // load the class
+        Class buttonClass = null;
         try {
-            Class c = cl.loadClass(this.className);
-            Method m = c.getMethod(this.method, paramTypes);
-            m.invoke(null, params);
-        } catch (NoSuchMethodException e) {
-            throw new ButtonEventNotFound(e);
+            buttonClass = cl.loadClass(this.className);
         } catch (ClassNotFoundException e) {
             throw new ButtonEventNotFound(e);
-        } catch (InvocationTargetException e) {
-            throw new ButtonEventException(e);
+        }
+
+        // load the method
+        Method buttonMethod = null;
+        int methodType = 0;
+        try {
+            buttonMethod = buttonClass.getMethod(this.method, paramTypes1);
+            methodType = 1;
+        } catch (NoSuchMethodException e) {
+            try {
+                buttonMethod = buttonClass.getMethod(this.method, paramTypes2);
+                methodType = 2;
+            } catch (NoSuchMethodException e2) {
+                Debug.logError(e2, "No method found with matching signatures - " + this.buttonName, module);
+                throw new ButtonEventNotFound(e);
+            }
+        }
+
+        // invoke the method
+        try {
+            switch (methodType) {
+                case 1:
+                    buttonMethod.invoke(null, params1);
+                    break;
+                case 2:
+                    buttonMethod.invoke(null, params2);
+                    break;
+                default:
+                    throw new ButtonEventNotFound("No class method found for button - " + this.buttonName);
+            }
         } catch (IllegalAccessException e) {
+            throw new ButtonEventException(e);
+        } catch (InvocationTargetException e) {
             throw new ButtonEventException(e);
         } catch (Throwable t) {
             throw new ButtonEventException(t);

@@ -26,6 +26,7 @@ package org.ofbiz.pos.component;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.AWTEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -101,27 +102,26 @@ public class PosButton {
         }
     }
 
-    public synchronized void buttonPressed(final PosScreen pos) {
+    public void buttonPressed(final PosScreen pos, final AWTEvent event) {
         if (pos == null) {
             Debug.logWarning("Received a null PosScreen object in buttonPressed event", module);
             return;
         }
-        final String buttonName = ButtonEventConfig.getButtonName(pos);
-        if (buttonName != null) {
-            Debug.log("Event buttonPressed - " + buttonName, module);
-            pos.getButtons().setLock(true);
-            pos.refresh(false);
+        if (event == null) {
+            Debug.logWarning("Received a null AWTEvent object in buttonPressed event", module);
+            return;
+        }
+        final String buttonName = ButtonEventConfig.getButtonName(event);
+        if (buttonName != null) {            
             final SwingWorker worker = new SwingWorker() {
                 public Object construct() {
                     try {
-                        ButtonEventConfig.invokeButtonEvent(buttonName, pos);
+                        ButtonEventConfig.invokeButtonEvent(buttonName, pos, event);
                     } catch (ButtonEventConfig.ButtonEventNotFound e) {
                         Debug.logWarning(e, "Button not found - " + buttonName, module);
                     } catch (ButtonEventConfig.ButtonEventException e) {
                         Debug.logError(e, "Button invocation exception - " + buttonName, module);
                     }
-                    pos.getButtons().setLock(false);
-                    pos.refresh(false);
                     return null;
                 }
             };
