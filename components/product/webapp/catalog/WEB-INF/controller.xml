@@ -9,6 +9,7 @@
     <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
     <handler name="soap" type="request" class="org.ofbiz.content.webapp.event.SOAPEventHandler"/>
     <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
+    <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
 
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
@@ -846,7 +847,7 @@
     </request-map>
     <request-map uri="UpdateFeatureToProductApplication">
         <security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateFeatureToProductApplication"/>
+        <event type="service-multi" path="" invoke="updateFeatureToProductApplication"/>
         <response name="success" type="view" value="EditProductFeatures"/>
         <response name="error" type="view" value="EditProductFeatures"/>
     </request-map>
