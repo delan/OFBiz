@@ -249,7 +249,8 @@
   <FacilityType description="Warehouse" facilityTypeId="WAREHOUSE" hasTable="N" parentTypeId=""/>
 
   <FinAccountTransType description="" finAccountTransTypeId="DEPOSIT" hasTable="N" parentTypeId=""/>
-  <FinAccountTransType description="" finAccountTransTypeId="WITHDRAWAL" hasTable="Y" parentTypeId=""/>
+  <FinAccountTransType description="" finAccountTransTypeId="WITHDRAWAL" hasTable="N" parentTypeId=""/>
+  <FinAccountTransType description="" finAccountTransTypeId="ADJUSTMENT" hasTable="N" parentTypeId=""/>
 
   <FinAccountType description="" finAccountTypeId="BANK_ACCOUNT" hasTable="N" parentTypeId=""/>
   <FinAccountType description="" finAccountTypeId="INVESTMENT_ACCOUNT" hasTable="N" parentTypeId=""/>
@@ -398,8 +399,8 @@
   <PaymentMethodType description="Offline Payment" paymentMethodTypeId="OFFLINE"/>
 
   <PaymentType description="" hasTable="N" parentTypeId="" paymentTypeId="DISBURSEMENT"/>
-  <PaymentType description="" hasTable="Y" parentTypeId="DISBURSEMENT" paymentTypeId="PAY_CHECK"/>
-  <PaymentType description="" hasTable="Y" parentTypeId="" paymentTypeId="RECEIPT"/>
+  <PaymentType description="" hasTable="N" parentTypeId="DISBURSEMENT" paymentTypeId="PAY_CHECK"/>
+  <PaymentType description="" hasTable="N" parentTypeId="" paymentTypeId="RECEIPT"/>
 
   <ProdCatalogCategoryType description="Browse Root Category (One)" prodCatalogCategoryTypeId="PCCT_BROWSE_ROOT"/>
   <ProdCatalogCategoryType description="Search Constraint Category (One)" prodCatalogCategoryTypeId="PCCT_SEARCH"/>
