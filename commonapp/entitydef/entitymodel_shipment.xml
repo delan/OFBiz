@@ -131,6 +131,8 @@
       <field name="shipmentPackageId" type="id"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
+      <field name="returnId" type="id"></field>
+      <field name="returnItemSeqId" type="id"></field>
       <field name="rejectionId" type="id"></field>
       <field name="datetimeReceived" type="date-time"></field>
       <field name="itemDescription" type="description"></field>

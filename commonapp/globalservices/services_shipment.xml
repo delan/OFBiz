@@ -14,6 +14,8 @@
     	<attribute name="shipmentPackageId" type="String" mode="IN" optional="true"/>
     	<attribute name="orderId" type="String" mode="IN" optional="true"/>
     	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+    	<attribute name="returnId" type="String" mode="IN" optional="true"/>
+    	<attribute name="returnItemSeqId" type="String" mode="IN" optional="true"/>
     	<attribute name="rejectionId" type="String" mode="IN" optional="true"/>
     	<attribute name="datetimeReceived" type="Timestamp" mode="IN" optional="true"/>
     	<attribute name="itemDescription" type="String" mode="IN" optional="true"/>
