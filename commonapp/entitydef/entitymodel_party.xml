@@ -1182,7 +1182,7 @@
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentRouteSegment">
-        <key-map field-name="partyId"/>
+        <key-map field-name="partyId" rel-field-name="carrierPartyId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyResume">
         <key-map field-name="partyId"/>
@@ -1738,10 +1738,6 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="ShipmentRouteSegment">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
-      </relation>
       <relation type="many" title="Employee" rel-entity-name="PerfReviewItem">
         <key-map field-name="partyId" rel-field-name="employeePartyId"/>
         <key-map field-name="roleTypeId" rel-field-name="employeeRoleTypeId"/>
@@ -1957,9 +1953,6 @@
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="ShipmentRouteSegment">
         <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="EmplPositionType">

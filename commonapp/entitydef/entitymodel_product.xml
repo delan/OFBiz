@@ -2013,8 +2013,11 @@
       <relation type="many" rel-entity-name="Requirement">
         <key-map field-name="facilityId"/>
       </relation>
+      <relation type="many" rel-entity-name="Shipment">
+        <key-map field-name="facilityId" rel-field-name="originFacilityId"/>
+      </relation>
       <relation type="many" rel-entity-name="ShipmentRouteSegment">
-        <key-map field-name="facilityId"/>
+        <key-map field-name="facilityId" rel-field-name="originFacilityId"/>
       </relation>
       <relation type="many" rel-entity-name="FacilityCarrierShipment">
         <key-map field-name="facilityId"/>
