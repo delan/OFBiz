@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServicesComplex.java,v 1.6 2004/01/07 19:30:11 byersa Exp $
+ * $Id: ContentServicesComplex.java,v 1.7 2004/01/17 03:57:46 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.minilang.SimpleMapProcessor;
  * ContentServicesComplex Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  *
  * 
@@ -307,7 +307,10 @@ public class ContentServicesComplex {
         while (it.hasNext()) {
             contentAssoc = (GenericValue)it.next();
             content = contentAssoc.getRelatedOneCache(assocRelationName);
+            if (Debug.verboseOn()) Debug.logVerbose("content:" + content, module);
             dataResource = content.getRelatedOneCache("DataResource");
+            if (dataResource == null) 
+                continue;
             if (contentTypes != null && contentTypes.size() > 0) {
                 String contentTypeId = (String)content.get("contentTypeId");
                 if (contentTypes.contains(contentTypeId)) {
@@ -318,6 +321,8 @@ public class ContentServicesComplex {
                 subContentDataResourceView = delegator.makeValue("SubContentDataResourceView", null);
                 subContentDataResourceView.setAllFields(content, true, null, null);
             }
+            if (Debug.verboseOn()) Debug.logVerbose("dataResource:" + dataResource, module);
+            if (Debug.verboseOn()) Debug.logVerbose("subContentDataResourceView:" + subContentDataResourceView, module);
             SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, subContentDataResourceView, new ArrayList(), locale);
             subContentDataResourceList.add(subContentDataResourceView );
         }

@@ -1,5 +1,5 @@
 /*
- * $Id: DataServices.java,v 1.10 2004/01/07 19:30:11 byersa Exp $
+ * $Id: DataServices.java,v 1.11 2004/01/17 03:57:46 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,6 +41,7 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;
@@ -52,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * DataServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 3.0
  * 
  *  
@@ -123,7 +124,7 @@ public class DataServices {
 
             // If textData exists, then create DataResource and return dataResourceId
             String dataResourceId = (String) context.get("dataResourceId");
-            if (dataResourceId == null)
+            if (UtilValidate.isEmpty(dataResourceId))
                 dataResourceId = delegator.getNextSeqId("DataResource").toString();
             GenericValue dataResource = delegator.makeValue("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
             dataResource.setNonPKFields(context);
@@ -135,6 +136,8 @@ public class DataServices {
                 dataResource.create();
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
+            } catch(Exception e2) {
+                return ServiceUtil.returnError(e2.getMessage());
             }
             result.put("dataResourceId", dataResourceId);
             result.put("dataResource", dataResource);
@@ -468,4 +471,79 @@ public class DataServices {
         DataResourceWorker.renderDataResourceAsText(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
         return;
     }
+
+    /**
+     * A service wrapper for the updateImageMethod method. Forces permissions to be checked.
+     */
+    public static Map updateImage(DispatchContext dctx, Map context) {
+        context.put("entityOperation", "_UPDATE");
+        List targetOperations = new ArrayList();
+        targetOperations.add("UPDATE_CONTENT");
+        context.put("targetOperationList", targetOperations);
+        context.put("skipPermissionCheck", null);
+        Map result = updateImageMethod(dctx, context);
+        return result;
+    }
+
+    public static Map updateImageMethod(DispatchContext dctx, Map context) {
+        HashMap result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue image = null;
+        //Locale locale = (Locale) context.get("locale");
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            String dataResourceId = (String) context.get("dataResourceId");
+            ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+            if (byteWrapper != null) {
+                byte[] imageBytes = byteWrapper.getBytes();
+                try {
+                    GenericValue imageDataResource = delegator.findByPrimaryKey("ImageDataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+                    imageDataResource.set("imageData", imageBytes);
+                    imageDataResource.store();
+                } catch (GenericEntityException e) {
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * A service wrapper for the createImageMethod method. Forces permissions to be checked.
+     */
+    public static Map createImage(DispatchContext dctx, Map context) {
+        context.put("entityOperation", "_CREATE");
+        List targetOperations = new ArrayList();
+        targetOperations.add("CREATE_CONTENT");
+        context.put("targetOperationList", targetOperations);
+        context.put("skipPermissionCheck", null);
+        Map result = createImageMethod(dctx, context);
+        return result;
+    }
+
+    public static Map createImageMethod(DispatchContext dctx, Map context) {
+        HashMap result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
+        if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
+            String dataResourceId = (String) context.get("dataResourceId");
+            ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+            if (byteWrapper != null) {
+                byte[] imageBytes = byteWrapper.getBytes();
+                try {
+                    GenericValue imageDataResource = delegator.makeValue("ImageDataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+                    imageDataResource.set("imageData", imageBytes);
+                    imageDataResource.create();
+                } catch (GenericEntityException e) {
+                    return ServiceUtil.returnError(e.getMessage());
+                }
+            }
+        }
+
+        return result;
+    }
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.5 2003/12/04 21:55:57 jonesde Exp $
+ * $Id: ModelForm.java,v 1.6 2004/01/17 03:57:46 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ModelForm {
@@ -745,7 +745,7 @@ public class ModelForm {
         } else {
             // render item rows
             Iterator itemIter = items.iterator();
-            int itemIndex = 0;
+            int itemIndex = -1;
             while (itemIter.hasNext()) {
                 itemIndex++;
                 Map localContext = new HashMap(context);

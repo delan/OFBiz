@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.15 2004/01/07 19:30:11 byersa Exp $
+ * $Id: ContentServices.java,v 1.16 2004/01/17 03:57:46 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @since 2.2
  * 
  *  
@@ -202,7 +202,7 @@ public class ContentServices {
         String contentId = (String) context.get("contentId");
         //String contentTypeId = (String) context.get("contentTypeId");
 
-        if (contentId == null)
+        if (UtilValidate.isEmpty(contentId))
             contentId = delegator.getNextSeqId("Content").toString();
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", contentId));
         content.setNonPKFields(context);
@@ -220,11 +220,13 @@ public class ContentServices {
             content.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
             content.put("createdDate", createdDate);
             content.put("lastModifiedDate", lastModifiedDate);
-            //Debug.logVerbose("in createContent, content:" + content, "");
+            if (Debug.infoOn()) Debug.logInfo("in createContent, content:" + content, "");
             try {
                 content.create();
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
+            } catch(Exception e2) {
+                return ServiceUtil.returnError(e2.getMessage());
             }
             result.put("contentId", contentId);
         }
