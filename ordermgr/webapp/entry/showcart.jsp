@@ -118,7 +118,7 @@
               </div>
             </td>
             <td nowrap align="right">
-            <%if (item.getIsPromo()) {%>
+            <%if (!item.getIsPromo()) {%>
                 <input size="6" type="text" name="price_<%=cart.getItemIndex(item)%>" value="<%=UtilFormatOut.formatPrice(item.getBasePrice())%>" style="font-size: x-small;">
             <%} else {%>
                 <div class="tabletext"><%=UtilFormatOut.formatPrice(item.getBasePrice())%></div>
