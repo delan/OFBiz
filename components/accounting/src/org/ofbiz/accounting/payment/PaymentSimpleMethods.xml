@@ -26,15 +26,15 @@
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Olivier Heintz (olivier.heintz@nereide.biz)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
 -->
 
 <simple-methods>
     <simple-method method-name="createBillingAccount" short-description="Create Billing Account">
-    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountPermissionError"/></check-permission>
-    	<check-errors/>
-    	
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountPermissionError"/></check-permission>
+        <check-errors/>
+        
         <make-value value-name="newEntity" entity-name="BillingAccount"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
@@ -61,9 +61,9 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="createBillingAccountRole" short-description="Create Billing Account Role">
-    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountRolePermissionError"/></check-permission>
-    	<check-errors/>
-    	
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountRolePermissionError"/></check-permission>
+        <check-errors/>
+        
         <make-value value-name="newEntity" entity-name="BillingAccountRole"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
@@ -84,9 +84,9 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>    
     <simple-method method-name="createBillingAccountTerm" short-description="Create Billing Account Term">
-    	<check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountTermPermissionError"/></check-permission>
-    	<check-errors/>
-    	
+        <check-permission permission="ACCOUNTING" action="_CREATE"><fail-property resource="AccountingUiLabels" property="AccountingCreateBillingAccountTermPermissionError"/></check-permission>
+        <check-errors/>
+        
         <make-value value-name="newEntity" entity-name="BillingAccountTerm"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
@@ -142,7 +142,6 @@
             <field-to-request field-name="preContactMechTypeId"/>
             <field-to-request field-name="contactMechPurposeTypeId"/>
         </if-compare>
-
     </simple-method>
     <simple-method method-name="updateCreditCard" short-description="Update Credit Card">
         <call-map-processor xml-resource="org/ofbiz/accounting/payment/PaymentMapProcs.xml"
@@ -243,7 +242,7 @@
         
         <find-by-and entity-name="CreditCard" map-name="lookupMap" list-name="creditCards"/>
         <iterate entry-name="creditCard" list-name="creditCards">
-            <map-to-map map-name="creditCard" to-map-name="uccMap"/>
+            <set-service-fields service-name="updateCreditCard" map-name="creditCard" to-map-name="uccMap"/>
             <field-to-field field-name="newContactMechId" map-name="parameters" to-field-name="contactMechId" to-map-name="uccMap"/>
             <!-- use the service so it will expire the old card and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
             <call-service service-name="updateCreditCard" in-map-name="uccMap" break-on-error="false"/>
@@ -258,27 +257,21 @@
         </iterate>
     </simple-method>
     
-    <simple-method method-name="createPayment" short-description="Create a Payment">    	
-    	<if>
-    	  <condition>
-    	  	<and>
-              <not>
-    	  	    <if-has-permission permission="PAY_INFO" action="_UPDATE"/>    	  	   
-    	  	  </not>
-    	  	  <not>
-    	  	  	<if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="parameters"/>
-    	  	  </not>
-    	  	  <not>
-    	  	  	<if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="parameters"/>
-    	  	  </not>
-    	  	</and>    	  	  
-    	  </condition>
-    	  <then>
-    	    <add-error>
-    	      <fail-property resource="AccountingUiLabels" property="AccountingCreatePaymentPermissionError"/>
-    	    </add-error>
-    	  </then>
-    	</if>
+    <simple-method method-name="createPayment" short-description="Create a Payment">        
+        <if>
+          <condition>
+              <and>
+                  <not><if-has-permission permission="PAY_INFO" action="_UPDATE"/></not>
+                  <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="parameters"/></not>
+                  <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="parameters"/></not>
+              </and>                
+          </condition>
+          <then>
+              <add-error>
+                  <fail-property resource="AccountingUiLabels" property="AccountingCreatePaymentPermissionError"/>
+              </add-error>
+          </then>
+        </if>
         <check-errors/>
         
         <make-value entity-name="Payment" value-name="payment"/>
@@ -287,8 +280,8 @@
         <env-to-field env-name="paymentId" map-name="payment"/>
         
         <if-empty field-name="effectiveDate" map-name="parameters">
-        	<now-timestamp-to-env env-name="timestamp"/>
-        	<env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
+            <now-timestamp-to-env env-name="timestamp"/>
+            <env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
         </if-empty>
         
         <set-nonpk-fields map-name="parameters" value-name="payment"/>
@@ -297,30 +290,30 @@
     </simple-method>
     
     <simple-method method-name="updatePayment" short-description="Update a Payment">
-    	<make-value entity-name="Payment" value-name="lookupPayment"/>
-    	<set-pk-fields value-name="lookupPayment" map-name="parameters"/>
-    	
-    	<find-by-primary-key entity-name="Payment" map-name="lookupPayment" value-name="payment"/>
-    	<if>
-    	  <condition>
-    	  	<and>
+        <make-value entity-name="Payment" value-name="lookupPayment"/>
+        <set-pk-fields value-name="lookupPayment" map-name="parameters"/>
+        
+        <find-by-primary-key entity-name="Payment" map-name="lookupPayment" value-name="payment"/>
+        <if>
+          <condition>
+              <and>
               <not>
-    	  	    <if-has-permission permission="PAY_INFO" action="_UPDATE"/>    	  	   
-    	  	  </not>
-    	  	  <not>
-    	  	  	<if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="payment"/>
-    	  	  </not>
-    	  	  <not>
-    	  	  	<if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="payment"/>
-    	  	  </not>
-    	  	</and>    	  	  
-    	  </condition>
-    	  <then>
-    	    <add-error>
-    	      <fail-property resource="AccountingUiLabels" property="AccountingUpdatePaymentPermissionError"/>
-    	    </add-error>
-    	  </then>
-    	</if>
+                  <if-has-permission permission="PAY_INFO" action="_UPDATE"/>                 
+                </not>
+                <not>
+                    <if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="payment"/>
+                </not>
+                <not>
+                    <if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="payment"/>
+                </not>
+              </and>                
+          </condition>
+          <then>
+            <add-error>
+              <fail-property resource="AccountingUiLabels" property="AccountingUpdatePaymentPermissionError"/>
+            </add-error>
+          </then>
+        </if>
         <check-errors/>
         
         <set-nonpk-fields map-name="parameters" value-name="payment"/>
@@ -328,28 +321,28 @@
     </simple-method>
     
     <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
-    	<if-empty field-name="invoiceId" map-name="parameters">
-    		<if-empty field-name="billingAccountId" map-name="parameters">
-    			<add-error><fail-property resource="AccountingUiLabels" property="AccountingBothInvoiceIdBillingAccountIdEmptyError"/></add-error>
-    			<check-errors/>
-    		</if-empty>
-    	</if-empty>
-    	
-    	<field-to-field field-name="invoiceId" map-name="parameters" to-map-name="invoiceLookup"/>
-    	<find-by-primary-key entity-name="Invoice" map-name="invoiceLookup" value-name="invoice"/>
-    	
-    	<make-value entity-name="PaymentApplication" value-name="paymentAppl"/>
-    	<set-nonpk-fields map-name="parameters" value-name="paymentAppl"/>
-    	
-    	<if-not-empty field-name="billingAccountId" map-name="invoice">
-    		<field-to-field field-name="billingAccountId" map-name="invoice" to-map-name="paymentAppl"/>
-    	</if-not-empty>
-    	
-    	<sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentApplicationId"/>
-    	<to-string field-name="paymentApplicationId"/>
-    	<env-to-field env-name="paymentApplicationId" field-name="paymentApplicationId" map-name="paymentAppl"/>
-    	
-    	<create-value value-name="paymentAppl"/>
-    	<field-to-result field-name="paymentApplicationId" map-name="paymentAppl"/>
+        <if-empty field-name="invoiceId" map-name="parameters">
+            <if-empty field-name="billingAccountId" map-name="parameters">
+                <add-error><fail-property resource="AccountingUiLabels" property="AccountingBothInvoiceIdBillingAccountIdEmptyError"/></add-error>
+                <check-errors/>
+            </if-empty>
+        </if-empty>
+        
+        <field-to-field field-name="invoiceId" map-name="parameters" to-map-name="invoiceLookup"/>
+        <find-by-primary-key entity-name="Invoice" map-name="invoiceLookup" value-name="invoice"/>
+        
+        <make-value entity-name="PaymentApplication" value-name="paymentAppl"/>
+        <set-nonpk-fields map-name="parameters" value-name="paymentAppl"/>
+        
+        <if-not-empty field-name="billingAccountId" map-name="invoice">
+            <field-to-field field-name="billingAccountId" map-name="invoice" to-map-name="paymentAppl"/>
+        </if-not-empty>
+        
+        <sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentApplicationId"/>
+        <to-string field-name="paymentApplicationId"/>
+        <env-to-field env-name="paymentApplicationId" field-name="paymentApplicationId" map-name="paymentAppl"/>
+        
+        <create-value value-name="paymentAppl"/>
+        <field-to-result field-name="paymentApplicationId" map-name="paymentAppl"/>
     </simple-method>
 </simple-methods>

@@ -38,7 +38,7 @@
     <#-- When creating a new contact mech, first select the type, then actually create -->
     <#if !preContactMechTypeId?has_content>
     <p class="head1">${uiLabelMap.PartyCreateNewContact}</p>
-    <form method="post" action='<@ofbizUrl>/editcontactmech</@ofbizUrl>' name="createcontactmechform">
+    <form method="post" action="<@ofbizUrl>/editcontactmech</@ofbizUrl>" name="createcontactmechform">
       <input type="hidden" name="DONE_PAGE" value="${donePage}">
       <input type="hidden" name="partyId" value="${partyId}">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -47,7 +47,7 @@
           <td width="74%">
             <select name="preContactMechTypeId" class="selectBox">
               <#list mechMap.contactMechTypes as contactMechType>
-                <option value='${contactMechType.contactMechTypeId}'>${contactMechType.description}</option>
+                <option value="${contactMechType.contactMechTypeId}">${contactMechType.description}</option>
               </#list>
             </select>&nbsp;<a href="javascript:document.createcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonCreate}]</a>
           </td>
@@ -60,23 +60,23 @@
   <#if mechMap.contactMechTypeId?has_content>
     <#if !mechMap.contactMech?has_content>
       <p class="head1">${uiLabelMap.PartyCreateNewContact}</p>
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage?if_exists}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href="<@ofbizUrl>/authview/${donePage?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <#if contactMechPurposeType?exists>
         <div>(${uiLabelMap.PartyMsgContactHavePurpose} <b>"${contactMechPurposeType.description?if_exists}"</b>)</div>
       </#if>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <form method="post" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
-        <input type=hidden name='DONE_PAGE' value='${donePage}'>
-        <input type=hidden name='contactMechTypeId' value='${mechMap.contactMechTypeId}'>
-        <input type=hidden name='partyId' value='${partyId}'>        
-        <#if preContactMechTypeId?exists><input type='hidden' name='preContactMechTypeId' value='${preContactMechTypeId}'></#if>
-        <#if contactMechPurposeTypeId?exists><input type='hidden' name='contactMechPurposeTypeId' value='${contactMechPurposeTypeId?if_exists}'></#if>
-        
-        <#if paymentMethodId?exists><input type='hidden' name='paymentMethodId' value='${paymentMethodId}'></#if>
+        <form method="post" action="<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform">
+        <input type=hidden name="DONE_PAGE" value="${donePage}">
+        <input type=hidden name="contactMechTypeId" value="${mechMap.contactMechTypeId}">
+        <input type=hidden name="partyId" value="${partyId}">        
+        <#if cmNewPurposeTypeId?has_content><input type="hidden" name="contactMechPurposeTypeId" value="${cmNewPurposeTypeId}"></#if>
+        <#if preContactMechTypeId?exists><input type="hidden" name="preContactMechTypeId" value="${preContactMechTypeId}"></#if>
+        <#if contactMechPurposeTypeId?exists><input type="hidden" name="contactMechPurposeTypeId" value="${contactMechPurposeTypeId?if_exists}"></#if>
+        <#if paymentMethodId?has_content><input type='hidden' name='paymentMethodId' value='${paymentMethodId}'></#if>
     <#else>
       <p class="head1">${uiLabelMap.PartyEditContactInformation}</p>
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class='buttontext'>[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <#if mechMap.purposeTypes?has_content>
@@ -84,12 +84,12 @@
           <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.PartyContactPurposes}</div></td>
           <td width="5">&nbsp;</td>
           <td width="74%">
-            <table border='0' cellspacing='1' bgcolor='black'>  
+            <table border="0" cellspacing="1" bgcolor="black">  
             <#if mechMap.partyContactMechPurposes?has_content>          
               <#list mechMap.partyContactMechPurposes as partyContactMechPurpose>
                 <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                 <tr>
-                  <td bgcolor='white'>
+                  <td bgcolor="white">
                     <div class="tabletext">&nbsp;
                       <#if contactMechPurposeType?has_content>
                         <b>${contactMechPurposeType.description}</b>
@@ -99,36 +99,36 @@
                       (${uiLabelMap.CommonSince}:${partyContactMechPurpose.fromDate.toString()})
                       <#if partyContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate.toString()}</#if>
                     &nbsp;</div></td>
-                  <td bgcolor='white'><div><a href='<@ofbizUrl>/deletePartyContactMechPurpose?partyId=${partyId}&contactMechId=${contactMechId}&contactMechPurposeTypeId=${partyContactMechPurpose.contactMechPurposeTypeId}&fromDate=${partyContactMechPurpose.fromDate.toString()}&DONE_PAGE=${donePage?replace("=","%3d")}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a></div></td>
+                  <td bgcolor="white"><div><a href="<@ofbizUrl>/deletePartyContactMechPurpose?partyId=${partyId}&contactMechId=${contactMechId}&contactMechPurposeTypeId=${partyContactMechPurpose.contactMechPurposeTypeId}&fromDate=${partyContactMechPurpose.fromDate.toString()}&DONE_PAGE=${donePage?replace("=","%3d")}&useValues=true</@ofbizUrl>" class="buttontext">&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a></div></td>
                 </tr>
               </#list>
             </#if>              
             
               <tr>
-                <form method=POST action='<@ofbizUrl>/createPartyContactMechPurpose</@ofbizUrl>' name='newpurposeform'>
-                <input type=hidden name='partyId' value='${partyId}'>
-                <input type=hidden name='DONE_PAGE' value='${donePage}'>
-                <input type=hidden name='useValues' value='true'>
-                <input type=hidden name='contactMechId' value='${contactMechId?if_exists}'>
-                  <td bgcolor='white'>
-                    <select name='contactMechPurposeTypeId' class="selectBox">
+                <form method=POST action="<@ofbizUrl>/createPartyContactMechPurpose</@ofbizUrl>" name="newpurposeform">
+                <input type=hidden name="partyId" value="${partyId}">
+                <input type=hidden name="DONE_PAGE" value="${donePage}">
+                <input type=hidden name="useValues" value="true">
+                <input type=hidden name="contactMechId" value="${contactMechId?if_exists}">
+                  <td bgcolor="white">
+                    <select name="contactMechPurposeTypeId" class="selectBox">
                       <option></option>
                       <#list mechMap.purposeTypes as contactMechPurposeType>
-                        <option value='${contactMechPurposeType.contactMechPurposeTypeId}'>${contactMechPurposeType.description}</option>
+                        <option value="${contactMechPurposeType.contactMechPurposeTypeId}">${contactMechPurposeType.description}</option>
                       </#list>
                     </select>
                   </td>
                 </form>
-                <td bgcolor='white'><div><a href='javascript:document.newpurposeform.submit()' class='buttontext'>&nbsp;${uiLabelMap.PartyAddPurpose}&nbsp;</a></div></td>
+                <td bgcolor="white"><div><a href="javascript:document.newpurposeform.submit()" class="buttontext">&nbsp;${uiLabelMap.PartyAddPurpose}&nbsp;</a></div></td>
               </tr>
             </table>
           </td>
         </tr>
         </#if>
-        <form method="post" action='<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>' name="editcontactmechform">
-        <input type=hidden name="contactMechId" value='${contactMechId}'>
-        <input type=hidden name="contactMechTypeId" value='${mechMap.contactMechTypeId}'>
-        <input type=hidden name='partyId' value='${partyId}'>
+        <form method="post" action="<@ofbizUrl>/${mechMap.requestName}</@ofbizUrl>" name="editcontactmechform">
+        <input type="hidden" name="contactMechId" value="${contactMechId}">
+        <input type="hidden" name="contactMechTypeId" value="${mechMap.contactMechTypeId}">
+        <input type="hidden" name="partyId" value="${partyId}">
     </#if>
   
   <#if "POSTAL_ADDRESS" = mechMap.contactMechTypeId?if_exists>
@@ -242,9 +242,9 @@
   </form>
   </table>
 
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
   <#else>
-    &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+    &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
   </#if>
 </#if>

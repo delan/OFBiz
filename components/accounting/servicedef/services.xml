@@ -166,21 +166,22 @@
         <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
     </service>
 
-    <service name="createCreditCard" engine="java"
+    <service name="createCreditCard" default-entity-name="CreditCard" engine="java"
             location="org.ofbiz.accounting.payment.PaymentServices" invoke="createCreditCard" auth="true">
         <description>Create CreditCard</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <!-- these three fields are for updating on the PaymentMethod -->
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="nameOnCard" type="String" mode="IN" optional="false"/>
-        <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
-        <attribute name="cardType" type="String" mode="IN" optional="false"/>
-        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
-        <attribute name="expireDate" type="String" mode="IN" optional="false"/>
+        <!-- these two will be assembled into a expireDate by buildCcExpireDate on an ECA if needed -->
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
         <attribute name="expYear" type="String" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="OUT" optional="true"/>
+        <override name="nameOnCard" optional="false"/>
+        <override name="cardType" optional="false"/>
+        <override name="cardNumber" optional="false"/>
+        <override name="expireDate" optional="false"/>
     </service>
     <service name="createCreditCardAndAddress" engine="group" location="createCreditCardAndAddress" invoke="" auth="true">
         <description>Creates a CreditCard and PostalAddress</description>
@@ -192,22 +193,19 @@
         <attribute name="contactMechId" type="String" mode="INOUT" optional="true"/>
         <attribute name="paymentMethodId" type="String" mode="INOUT" optional="true"/>
     </service>
-    <service name="updateCreditCard" engine="java"
+    <service name="updateCreditCard" default-entity-name="CreditCard" engine="java"
             location="org.ofbiz.accounting.payment.PaymentServices" invoke="updateCreditCard" auth="true">
         <description>Update CreditCard</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <!-- these three fields are for updating on the PaymentMethod -->
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
-        <attribute name="paymentMethodId" type="String" mode="IN" optional="false"/>
-        <attribute name="nameOnCard" type="String" mode="IN" optional="false"/>
-        <attribute name="companyNameOnCard" type="String" mode="IN" optional="true"/>
-        <attribute name="cardType" type="String" mode="IN" optional="false"/>
-        <attribute name="cardNumber" type="String" mode="IN" optional="false"/>
-        <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
-        <attribute name="expireDate" type="String" mode="IN" optional="false"/>
+        <!-- these two will be assembled into a expireDate by buildCcExpireDate on an ECA if needed -->
         <attribute name="expMonth" type="String" mode="IN" optional="true"/>
         <attribute name="expYear" type="String" mode="IN" optional="true"/>
-        <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="true"/>
+        <attribute name="newPaymentMethodId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="buildCcExpireDate" engine="java"
                 location="org.ofbiz.accounting.payment.PaymentServices" invoke="makeExpireDate">

@@ -22,7 +22,7 @@
  *@author     Johan Isacsson
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
@@ -51,22 +51,28 @@ context.put("mechMap", mechMap);
 String contactMechId = (String) mechMap.get("contactMechId");
 if(contactMechId != null) context.put("contactMechId", contactMechId);
 
-String preContactMechTypeId = request.getParameter("preContactMechTypeId");
-if(preContactMechTypeId != null) context.put("preContactMechTypeId", preContactMechTypeId);
+preContactMechTypeId = request.getParameter("preContactMechTypeId");
+if (preContactMechTypeId == null) preContactMechTypeId = request.getAttribute("preContactMechTypeId");
+if (preContactMechTypeId != null) context.put("preContactMechTypeId", preContactMechTypeId);
 
-String paymentMethodId = request.getParameter("paymentMethodId");
-if(paymentMethodId == null) paymentMethodId = (String) request.getAttribute("paymentMethodId");
-if(paymentMethodId != null) context.put("paymentMethodId", paymentMethodId);
+paymentMethodId = request.getParameter("paymentMethodId");
+if (paymentMethodId == null) paymentMethodId = request.getAttribute("paymentMethodId");
+if (paymentMethodId != null) context.put("paymentMethodId", paymentMethodId);
+
+cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");
+if (cmNewPurposeTypeId == null) cmNewPurposeTypeId = request.getAttribute("contactMechPurposeTypeId");
+if (cmNewPurposeTypeId != null) {
+    contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));
+    if (contactMechPurposeType != null) {
+        context.put("contactMechPurposeType", contactMechPurposeType);
+    } else {
+        cmNewPurposeTypeId = null;
+    }
+    context.put("cmNewPurposeTypeId", cmNewPurposeTypeId);
+}
 
 String donePage = request.getParameter("DONE_PAGE");
 if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
 if (donePage == null || donePage.length() <= 0) donePage = "viewprofile?party_id=" + partyId;
 context.put("donePage", donePage);
 
-String cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");
-if (cmNewPurposeTypeId == null) cmNewPurposeTypeId = (String) mechMap.get("contactMechPurposeTypeId");
-if (cmNewPurposeTypeId != null) {
-    context.put("contactMechPurposeTypeId", cmNewPurposeTypeId);
-    GenericValue contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));
-    if(contactMechPurposeType != null) context.put("contactMechPurposeType", contactMechPurposeType);
-}

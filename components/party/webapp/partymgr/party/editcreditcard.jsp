@@ -122,7 +122,7 @@
     </tr>
     <%-- Should not be storing this
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
+      <td width="26%" align="right" valign="top"><div class="tabletext">Card Security Code</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" size="5" maxlength="10" <ofbiz:inputvalue field="cardSecurityCode" entityAttr="creditCard" tryEntityAttr="tryEntity" fullattrs="true"/>>
@@ -161,12 +161,15 @@
         <select name="expYear" class="selectBox">
           <option><ofbiz:if name="tryEntity"><%=UtilFormatOut.checkNull(expYear)%></ofbiz:if><ofbiz:unless name="tryEntity"><%=UtilFormatOut.checkNull(request.getParameter("expYear"))%></ofbiz:unless></option>
           <option></option>
-          <option>2001</option>
-          <option>2002</option>
-          <option>2003</option>
           <option>2004</option>
           <option>2005</option>
           <option>2006</option>
+          <option>2007</option>
+          <option>2008</option>
+          <option>2009</option>
+          <option>2010</option>
+          <option>2011</option>
+          <option>2012</option>
         </select>
       *</td>
     </tr>
@@ -178,8 +181,10 @@
         <a href="<ofbiz:url>/editcontactmech</ofbiz:url>" class="buttontext">
           [Create New Address]</a>&nbsp;&nbsp;
         --%>
+        <%boolean hasCurrent = false;%>
         <table width="100%" border="0" cellpadding="1">
         <ofbiz:if name="curPostalAddress">
+          <%hasCurrent = true;%>
           <tr>
             <td align="right" valign="top" width="1%">
               <INPUT type=radio name='contactMechId' value='<ofbiz:print attribute="curContactMechId"/>' checked>
@@ -259,7 +264,7 @@
           </ofbiz:unless>
           <tr>
             <td align="right" valigh="top" width="1%">
-              <input type="radio" name="contactMechId" value="_NEW_">
+              <input type="radio" name="contactMechId" value="_NEW_" <%if (!hasCurrent) {%>checked<%}%>>
             </td>
             <td align="left" valign="middle" width="80%">
               <span class="tabletext">Create a new billing address for this credit card.</span>
@@ -282,5 +287,4 @@
           &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
       <%}%>
   </ofbiz:if>
-
 <%}%>
