@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.27 2003/11/23 01:17:04 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.28 2003/11/24 20:04:20 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,7 @@ import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
  * <p><b>Title:</b> ShoppingCart.java
@@ -42,7 +43,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -119,6 +120,7 @@ public class ShoppingCart implements java.io.Serializable {
         this.productPromoCodes = new HashSet(cart.productPromoCodes);
         this.locale = cart.getLocale();
         this.currencyUom = cart.getCurrency();
+        this.viewCartOnAdd = cart.viewCartOnAdd();
 
         // clone the items
         List items = cart.items();
@@ -139,6 +141,13 @@ public class ShoppingCart implements java.io.Serializable {
         // make sure locale is initialized if nothing other than from jvm
         // for a web shopping cart this would be set later by the webShoppingCart methods
         this.locale = Locale.getDefault();
+
+        // set the default view cart on add for this store
+        GenericValue productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+        String storeViewCartOnAdd = productStore.getString("viewCartOnAdd");
+        if (storeViewCartOnAdd != null && "Y".equalsIgnoreCase(storeViewCartOnAdd)) {
+            this.viewCartOnAdd = true;
+        }
     }
 
     public GenericDelegator getDelegator() {
