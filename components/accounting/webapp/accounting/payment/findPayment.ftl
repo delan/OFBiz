@@ -20,26 +20,26 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
- *@since      2.2
+ *@version    $Revision: 1.1 $
+ *@since      3.0
 -->
 
 <script language="JavaScript">
 <!-- //
-function lookupInvoices() {
-    invoiceIdValue = document.lookupinvoice.invoiceId.value;
-    if (invoiceIdValue.length > 1) {
-        document.lookupinvoice.action = "<@ofbizUrl>/viewInvoice</@ofbizUrl>";
+function lookupPayment() {
+    paymentIdValue = document.lookuppayment.paymentId.value;
+    if (paymentIdValue.length > 1) {
+        document.lookuppayment.action = "<@ofbizUrl>/editPayment</@ofbizUrl>";
     } else {
-        document.lookupinvoice.action = "<@ofbizUrl>/findInvoices</@ofbizUrl>";
+        document.lookuppayment.action = "<@ofbizUrl>/findPayment</@ofbizUrl>";
     }
-    document.lookupinvoice.submit();
+    document.lookuppayment.submit();
 }
 // -->
 </script>
 
 <#if security.hasEntityPermission("ACCOUNTING", "_VIEW", session)>
-<form method='post' name="lookupinvoice" action="<@ofbizUrl>/findInvoices</@ofbizUrl>">
+<form method='post' name="lookuppayment" action="<@ofbizUrl>/findPayment</@ofbizUrl>">
 <input type='hidden' name='lookupFlag' value='Y'>
 <input type='hidden' name='hideFields' value='Y'>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -47,14 +47,14 @@ function lookupInvoices() {
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td><div class='boxhead'>Find Invoices</div></td>
+          <td><div class='boxhead'>Find Payments</div></td>
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findInvoices?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                <a href="<@ofbizUrl>/findPayment?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
               <#else>
-                <#if invoiceList?exists><a href="<@ofbizUrl>/findInvoices?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                <a href="javascript:lookupInvoices();" class="submenutextright">Lookup Invoices(s)</a>                
+                <#if invoiceList?exists><a href="<@ofbizUrl>/findPayment?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
+                <a href="javascript:lookupPayment();" class="submenutextright">Lookup Payment(s)</a>                
               </#if>
             </div>
           </td>
@@ -66,26 +66,52 @@ function lookupInvoices() {
           <td align='center' width='100%'>
             <table border='0' cellspacing='0' cellpadding='2'>
               <tr>
-                <td width='25%' align='right'><div class='tableheadtext'>Invoice ID:</div></td>
+                <td width='25%' align='right'><div class='tableheadtext'>Payment ID:</div></td>
                 <td width='5%'>&nbsp;</td>
-                <td><input type='text' class='inputBox' name='invoiceId'></td>
-              </tr>              
+                <td><input type='text' class='inputBox' name='paymentId'></td>
+              </tr> 
+              <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>Payment Method Type:</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td>
+                  <select name='paymentMethodTypeId' class='selectBox'> 
+                    <#if currentMethod?has_content>
+                    <option value="${currentMethod.paymentMethodTypeId}">${currentMethod.description}</option>
+                    <option value="${currentMethod.paymentMethodTypeId}">---</option>
+                    </#if>                                     
+                    <option value="ANY">Any Payment Method</option>                   
+                    <#list paymentMethodTypes as paymentMethodType>
+                      <option value="${paymentMethodType.paymentMethodTypeId}">${paymentMethodType.description}</option>
+                    </#list>
+                  </select>
+                </td>
+              </tr>                           
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Status:</div></td>
                 <td width='5%'>&nbsp;</td>
                 <td>
-                  <select name='invoiceStatusId' class='selectBox'> 
+                  <select name='paymentStatusId' class='selectBox'> 
                     <#if currentStatus?has_content>
                     <option value="${currentStatus.statusId}">${currentStatus.description}</option>
                     <option value="${currentStatus.statusId}">---</option>
                     </#if>                                     
-                    <option value="ANY">Any Invoice Status</option>                   
-                    <#list invoiceStatuses as invoiceStatus>
-                      <option value="${invoiceStatus.statusId}">${invoiceStatus.description}</option>
+                    <option value="ANY">Any Payment Status</option>                   
+                    <#list paymentStatuses as paymentStatus>
+                      <option value="${paymentStatus.statusId}">${paymentStatus.description}</option>
                     </#list>
                   </select>
                 </td>
-              </tr>                            
+              </tr> 
+              <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>From Party:</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td><input type='text' class='inputBox' name='fromPartyId' value='${fromPartyId?if_exists}'></td>
+              </tr>
+              <tr>
+                <td width='25%' align='right'><div class='tableheadtext'>To Party:</div></td>
+                <td width='5%'>&nbsp;</td>
+                <td><input type='text' class='inputBox' name='toPartyId' value='${toPartyId?if_exists}'></td>
+              </tr>                                                     
               <tr>
                 <td width='25%' align='right'>
                   <div class='tableheadtext'>Date Filter:</div>
@@ -118,27 +144,27 @@ function lookupInvoices() {
     </td>
   </tr>
 </table>
-<input type="image" src="/images/spacer.gif" onClick="javascript:lookupInvoices();">
+<input type="image" src="/images/spacer.gif" onClick="javascript:lookupPayment();">
 </form> 
 <script language="JavaScript">
 <!--//
-document.lookupinvoice.invoiceId.focus();
+document.lookuppayment.paymentId.focus();
 //-->
 </script>
 
-<#if invoiceList?exists>
+<#if paymentList?exists>
 <br>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td width="50%"><div class="boxhead">Invoices Found</div></td>
+          <td width="50%"><div class="boxhead">Payment(s) Found</div></td>
           <td width="50%">
             <div class="boxhead" align=right>
-              <#if 0 < invoiceList?size>             
+              <#if 0 < paymentList?size>             
                 <#if 0 < viewIndex>
-                  <a href="<@ofbizUrl>/findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
+                  <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutext">Previous</a>
                 <#else>
                   <span class="submenutextdisabled">Previous</span>
                 </#if>
@@ -146,7 +172,7 @@ document.lookupinvoice.invoiceId.focus();
                   <span class="submenutextinfo">${lowIndex+1} - ${highIndex} of ${listSize}</span>
                 </#if>
                 <#if highIndex < listSize>
-                  <a href="<@ofbizUrl>/findInvoices?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
+                  <a href="<@ofbizUrl>/findPayment?VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}&hideFields=${requestParameters.hideFields?default("N")}${paramList}</@ofbizUrl>" class="submenutextright">Next</a>
                 <#else>
                   <span class="submenutextrightdisabled">Next</span>
                 </#if>
@@ -158,34 +184,35 @@ document.lookupinvoice.invoiceId.focus();
       </table>
       <table width='100%' border='0' cellspacing='0' cellpadding='2' class='boxbottom'>
         <tr>
-          <td width="5%" align="left"><div class="tableheadtext">Type</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">Invoice #</div></td>
-          <td width="10%" align="right"><div class="tableheadtext">Invoice Total</div></td>
-          <td width="5%" align="left"><div class="tableheadtext">&nbsp;</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Status</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Invoice Date</div></td>
-          <td width="10%">&nbsp;</td>
+          <td align="left"><div class="tableheadtext">Payment #</div></td>
+          <td align="left"><div class="tableheadtext">Type</div></td>
+          <td align="left"><div class="tableheadtext">Method</div></td>
+          <td align="left"><div class="tableheadtext">Status</div></td>
+          <td align="left"><div class="tableheadtext">From Party</div></td>
+          <td align="left"><div class="tableheadtext">To Party</div></td>
+          <td align="left"><div class="tableheadtext">Effective</div></td>
+          <td align="right"><div class="tableheadtext">Amount</div></td>
+          <td width="5%">&nbsp;</td>
         </tr>
         <tr>
           <td colspan='10'><hr class='sepbar'></td>
         </tr>
-        <#if invoiceList?has_content>
+        <#if paymentList?has_content>
           <#assign rowClass = "viewManyTR2">
-          <#list invoiceList[lowIndex..highIndex-1] as invoice>            
-            <#assign statusItem = invoice.getRelatedOneCache("StatusItem")>
-            <#assign invoiceType = invoice.getRelatedOneCache("InvoiceType")>
-            <#assign invoiceTotal = Static["org.ofbiz.accounting.invoice.InvoiceWorker"].getInvoiceTotal(invoice)>        
+          <#list paymentList[lowIndex..highIndex-1] as payment>            
+            <#assign statusItem = payment.getRelatedOne("StatusItem")?if_exists>
+            <#assign paymentType = payment.getRelatedOne("PaymentType")>
+            <#assign paymentMethodType = payment.getRelatedOne("PaymentMethodType")?if_exists>            
             <tr class='${rowClass}'>
-              <td><div class='tabletext'>${invoiceType.description?default(invoiceType.invoiceTypeId?default(""))}</div></td>
-              <td><a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${invoice.invoiceId}</a></td>
-              
-              <td align="right"><div class="tabletext">${invoiceTotal?default(0.00)?string.currency}</div></td>
-              <td>&nbsp;</td>
-              <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
-              <td><div class="tabletext"><nobr>${invoice.invoiceDate?default("N/A").toString()}</nobr></div></td>                            
-              <td align='right'>
-                <a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>View</a>
-              </td>
+              <td><a href="<@ofbizUrl>/editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>${payment.paymentId}</a></td>            
+              <td><div class='tabletext'>${paymentType.description?default(paymentType.paymentTypeId?default(""))}</div></td>
+              <td><div class='tabletext'>${paymentMethodType.description?if_exists}</div></td>
+              <td><div class='tabletext'>${statusItem.description?default("Not Set")}</div></td>
+              <td><div class='tabletext'>${payment.partyIdFrom}</div></td>
+              <td><div class='tabletext'>${payment.partyIdTo}</div></td>
+              <td><div class='tabletext'>${(payment.effectiveDate?string)?if_exists}</div></td>
+              <td align='right'><div class='tabletext'>${payment.amount?string.currency}</div></td>
+              <td align='right'><a href="<@ofbizUrl>/editPayment?paymentId=${payment.paymentId}</@ofbizUrl>" class='buttontext'>Edit</a></td>
             </tr>
             <#-- toggle the row color -->
             <#if rowClass == "viewManyTR2">
@@ -196,7 +223,7 @@ document.lookupinvoice.invoiceId.focus();
           </#list>          
         <#else>
           <tr>
-            <td colspan='4'><div class='head3'>No invoices found.</div></td>
+            <td colspan='4'><div class='head3'>No payments found.</div></td>
           </tr>        
         </#if>
         <#if lookupErrorMessage?exists>

@@ -164,7 +164,12 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="invoicePayments"/>
     </request-map>
-      
+    
+    <!-- payment requests -->
+    <request-map uri="findPayment">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findPayment"/>
+    </request-map>      
                 
     <!-- end of request mappings -->
 
@@ -183,5 +188,7 @@
     <view-map name="findInvoices" type="jpublish" page="/invoice/findInvoices.ftl"/>
     <view-map name="editInvoice" type="jpublish" page="/invoice/editInvoice.ftl"/>
     <view-map name="invoicePayments" type="jpublish" page="/invoice/invoicePayments.ftl"/>
+    
+    <view-map name="findPayment" type="jpublish" page="/payment/findPayment.ftl"/>
     <!-- end of view mappings -->
 </site-conf>

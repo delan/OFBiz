@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -35,6 +35,7 @@
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>  
   <div class="col"><a href="<@ofbizUrl>/findBillingAccount</@ofbizUrl>" class="${selectedLeftClassMap.billingaccount?default(unselectedLeftClassName)}">Billing Accounts</a></div>
   <div class="col"><a href="<@ofbizUrl>/findInvoices</@ofbizUrl>" class="${selectedLeftClassMap.invoices?default(unselectedLeftClassName)}">Invoices</a></div>
+  <div class="col"><a href="<@ofbizUrl>/findPayment</@ofbizUrl>" class="${selectedLeftClassMap.payments?default(unselectedLeftClassName)}">Payments</a></div>
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">Logout</a></div>
   <#else>
