@@ -31,12 +31,13 @@ import org.ofbiz.base.util.UtilDateTime;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.3
  */
 public class RunningService {
 
     protected ModelService model;
+    protected String name;
     protected int mode;
 
     protected Timestamp startStamp;
@@ -47,8 +48,9 @@ public class RunningService {
         this.endStamp = null;
     }
 
-    public RunningService(ModelService model, int mode) {
+    public RunningService(String localName, ModelService model, int mode) {
         this();
+        this.name = localName;
         this.model = model;
         this.mode = mode;
     }
@@ -57,6 +59,10 @@ public class RunningService {
         return this.model;
     }
 
+    public String getLocalName() {
+        return this.name;
+    }
+    
     public int getMode() {
         return mode;
     }

@@ -250,7 +250,7 @@ public class ServiceDispatcher {
         boolean isError = false;
 
         // set up the running service log
-        RunningService rs = new RunningService(modelService, GenericEngine.SYNC_MODE);
+        RunningService rs = new RunningService(localName, modelService, GenericEngine.SYNC_MODE);
         runLog.put(rs, this);
 
         // check the locale
@@ -472,7 +472,7 @@ public class ServiceDispatcher {
         boolean isError = false;
 
         // set up the running service log
-        RunningService rs = new RunningService(service, GenericEngine.ASYNC_MODE);
+        RunningService rs = new RunningService(localName, service, GenericEngine.ASYNC_MODE);
         runLog.put(rs, this);
 
         // check the locale
