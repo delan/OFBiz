@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.10 2004/02/03 23:26:13 jonesde Exp $
+ * $Id: ZipSalesServices.java,v 1.11 2004/02/05 16:45:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.io.File;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  */
 public class ZipSalesServices {
@@ -465,7 +465,7 @@ public class ZipSalesServices {
 
         // format the number
         Double taxAmount = new Double(formatCurrency(taxCalc));
-        adjustments.add(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", "Sales Tax (" + stateCode + ")")));
+        adjustments.add(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", new Double(taxRate).toString(), "description", "Sales Tax (" + stateCode + ")")));
 
         return adjustments;
     }
