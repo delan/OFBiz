@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.5 2003/12/04 20:54:53 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.6 2003/12/11 01:58:19 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -136,6 +136,12 @@ public class ModelEntity implements Comparable {
             ModelField newField = reader.createModelField(STAMP_TX_FIELD, "date-time", null, false);
             newField.setIsAutoCreatedInternal(true);
             this.fields.add(newField);
+            
+            // also add an index for this field
+            String indexName = ModelUtil.shortenDbName(this.tableName + "_TXSTMP", 18);
+            ModelIndex txIndex = new ModelIndex(this, indexName, false);
+            txIndex.addIndexField(ModelEntity.STAMP_TX_FIELD);
+            indexes.add(txIndex);
         }
 
         if (utilTimer != null) utilTimer.timerString("  createModelEntity: before prim-keys");

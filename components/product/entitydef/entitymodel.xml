@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.58 $
+ * @version    $Revision: 1.59 $
  */
 -->
 
@@ -1638,7 +1638,7 @@
       <relation type="many" rel-entity-name="InvoiceItem">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="many" rel-entity-name="AgreementProductApplic">
+      <relation type="many" rel-entity-name="AgreementProductAppl">
         <key-map field-name="productId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyNeed">
