@@ -25,9 +25,10 @@
  *@version    $Rev$
  *@since      2.2
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
-<#if hasPermission>
 <script language="JavaScript">
 <!-- //
 function lookupBom() {
@@ -37,8 +38,6 @@ function lookupBom() {
 }
 // -->
 </script>
-
-${pages.get("/bom/BomTabBar.ftl")}
 
     <div class="head1">${uiLabelMap.ManufacturingBillOfMaterials} <span class="head2"> <#if product?exists>${(product.internalName)?if_exists}</#if>[ID:${productId?if_exists}]</span></div>
     <#if product?has_content>
@@ -305,6 +304,3 @@ ${pages.get("/bom/BomTabBar.ftl")}
         <br>
         <div class="tabletext">NOTE: <b style="color: red;">Red</b> date/time entries denote that the current time is before the From Date or after the Thru Date. If the From Date is <b style="color: red;">red</b>, association has not started yet; if Thru Date is <b style="color: red;">red</b>, association has expired (<u>and should probably be deleted</u>).</div>
     </#if>
-<#else>
-  <h3>${uiLabelMap.ManufacturingViewPermissionError}</h3>
-</#if>

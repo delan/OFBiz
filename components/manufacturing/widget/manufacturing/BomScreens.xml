@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  $Id: CommonScreens.xml 2951 2004-08-03 16:33:32Z jonesde $
+-->
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="CommonBomDecorator">
+        <section>
+            <actions>
+                <!-- <set field="leftbarScreenName" value="leftbar"/> -->
+                <!-- <set field="leftbarScreenLocation" value=""/> -->
+            </actions>
+            <widgets>
+                <decorator-screen name="main-decorator" location="component://manufacturing/widget/manufacturing/CommonScreens.xml">
+                    <decorator-section name="body">
+                        <section>
+                            <!-- do check for MANUFACTURING, _VIEW permission -->
+                            <condition>
+                                <if-has-permission permission="MANUFACTURING" action="_VIEW"/>
+                            </condition>
+                            <widgets>
+                                <platform-specific>
+                                    <html><html-template location="component://manufacturing/webapp/manufacturing/bom/BomTabBar.ftl"/></html>
+                                </platform-specific>
+<!--
+                                <container>
+                                    <label style="head1">${uiLabelMap.${labelTitleProperty}} ${product.internalName} [${uiLabelMap.CommonId}:${productId}]  ${${extraFunctionName}}</label>
+                                </container>
+-->
+                                <!-- add Create Product and View Product (in ecommerce) links -->
+<!--
+                                <container>
+                                    <link target="EditProduct" text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
+                                    <link target="CreateVirtualWithVariantsForm" text="[New Virtual Product]" style="buttontext"/>
+-->
+                                    <!-- TODO: make link conditional on non-empty productId... -->
+<!--
+                                    <link target="/ecommerce/control/product?product_id=${productId}" url-mode="plain" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
+                                </container>
+-->
+                                <decorator-section-include name="body"/>
+                            </widgets>
+                            <fail-widgets>
+                                <label style="head3">${uiLabelMap.ManufacturingViewPermissionError}</label>
+                            </fail-widgets>
+                        </section>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductBom">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Bill of Materials"/>
+                <set field="titleProperty" value="PageTitleEditProductBom"/>
+                <set field="tabButtonItem" value="EditProductBom"/>
+                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+                <set field="headerItem" value="bom"/>
+    
+                <set field="productId" from-field="parameters.productId"/>
+                <entity-one entity-name="Product" value-name="product"/>
+                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/EditProductBom.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBomDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/bom/EditProductBom.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="EditProductManufacturingRules">
+        <section>
+            <actions>
+                <set field="title" value="Edit Product Manufacturing rules"/>
+                <set field="titleProperty" value="PageTitleEditProductManufacturingRules"/>
+                <set field="tabButtonItem" value="productManufacturingRules"/>
+                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+                <set field="headerItem" value="bom"/>
+    
+                <set field="ruleId" from-field="parameters.ruleId"/>
+                <entity-one entity-name="ProductManufacturingRule" value-name="manufacturingRule"/>
+                <entity-and entity-name="ProductManufacturingRule" list-name="manufacturingRules">
+                    <order-by field-name="ruleId"/>
+                    <order-by field-name="fromDate"/>
+                </entity-and>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBomDecorator">
+                    <decorator-section name="body">
+                        <include-form name="UpdateProductManufacturingRule" location="component://manufacturing/webapp/manufacturing/bom/BomForms.xml"/>
+                        <include-form name="ListProductManufacturingRules" location="component://manufacturing/webapp/manufacturing/bom/BomForms.xml"/>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="InitLowLevelCode">
+        <section>
+            <actions>
+                <set field="title" value="Initialize Low Level Codes"/>
+                <set field="titleProperty" value="ManufacturingLLCInit"/>
+                <set field="tabButtonItem" value="ManufacturingLLCInit"/>
+                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+                <set field="headerItem" value="bom"/>
+
+                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/InitLowLevelCode.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBomDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/bom/InitLowLevelCode.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+    <screen name="BomSimulation">
+        <section>
+            <actions>
+                <set field="title" value="Bill Of Materials Simulation"/>
+                <set field="titleProperty" value="ManufacturingBomSimulation"/>
+                <set field="tabButtonItem" value="findBom"/>
+                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+                <set field="headerItem" value="bom"/>
+
+                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/findBom.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonBomDecorator">
+                    <decorator-section name="body">
+                        <platform-specific>
+                            <html><html-template location="component://manufacturing/webapp/manufacturing/bom/findBom.ftl"/></html>
+                        </platform-specific>
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>
+

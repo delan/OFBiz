@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template> 
-    <property name="title">Edit Product Bill of Materials</property>
-    <property name="headerItem">bom</property>
-    <property name="tabButtonItem">EditProductBom</property>   
-    <content-action name="/bom/EditProductBom.bsh"/>
-</page>
