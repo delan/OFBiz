@@ -33,7 +33,7 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
-<%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
+<%if(security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)) {%>
 
 <%
     Collection orderHeaderList = null;
