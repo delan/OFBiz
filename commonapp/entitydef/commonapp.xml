@@ -44,7 +44,7 @@
     <field-type-def><field-type>blob</field-type><sql-type>BLOB</sql-type><java-type>java.lang.Object</java-type></field-type-def>
     <field-type-def><field-type>comment</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><field-type>currency-amount</field-type><sql-type>NUMERIC(18,2)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
-    <field-type-def><field-type>date-time</field-type><sql-type>DATETIME</sql-type><java-type>java.util.Date</java-type></field-type-def>
+    <field-type-def><field-type>date-time</field-type><sql-type>DATETIME</sql-type><java-type>java.sql.Timestamp</java-type></field-type-def>
     <field-type-def><field-type>description</field-type><sql-type>VARCHAR(255)</sql-type><java-type>String</java-type></field-type-def>
     <field-type-def><field-type>floating-point</field-type><sql-type>NUMERIC(18,6)</sql-type><java-type>Double</java-type><validate>isSignedDouble</validate></field-type-def>
     <field-type-def><field-type>id</field-type><sql-type>VARCHAR(20)</sql-type><java-type>String</java-type></field-type-def>
