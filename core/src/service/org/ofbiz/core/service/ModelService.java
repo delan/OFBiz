@@ -533,11 +533,56 @@ public class ModelService {
                         Debug.logWarning("Inherited model [" + serviceName + "] not found for [" + this.name + "]", module);
                     }
                 }
-                                            
-                // add in the added parameters
-                newInfo.putAll(this.contextInfo);
-                newParams.addAll(this.contextParamList);
-                                  
+                
+                // add in the non-override parameters                
+                Set keySet = contextInfo.keySet();
+                             
+                // handle all non-override params first
+                Iterator keySetIter = keySet.iterator(); 
+                while (keySetIter.hasNext()) { 
+                    String key = (String) keySetIter.next();
+                    ModelParam param = (ModelParam) this.contextInfo.get(key);
+                    if (!param.overrideParam) {                      
+                        newInfo.put(key, param);
+                        newParams.add(param);
+                    }                                  
+                }
+                
+                keySetIter = keySet.iterator();
+                while (keySetIter.hasNext()) {
+                    String key = (String) keySetIter.next();
+                    ModelParam param = (ModelParam) this.contextInfo.get(key);
+                    if (param.overrideParam) {
+                        ModelParam existingParam = (ModelParam) newInfo.get(param.name);
+                        if (existingParam != null) {
+                            // now re-write the parameters
+                            if (param.type != null && param.type.length() > 0) {
+                                existingParam.type = param.type;                                   
+                            }
+                            if (param.mode != null && param.mode.length() > 0) {
+                                existingParam.mode = param.mode;
+                            }
+                            if (param.entityName != null && param.entityName.length() > 0) {
+                                existingParam.entityName = param.entityName;
+                            }
+                            if (param.fieldName != null && param.fieldName.length() > 0) {
+                                existingParam.fieldName = param.fieldName;
+                            }
+                            if (param.formLabel != null && param.formLabel.length() > 0) {
+                                existingParam.formLabel = param.formLabel;
+                            }
+                            if (param.formDisplay != existingParam.formDisplay) {
+                                existingParam.formDisplay = param.formDisplay;
+                            }
+                            if (param.optional != existingParam.optional) {
+                                existingParam.optional = param.optional;
+                            }
+                            newInfo.put(key, existingParam);
+                            newParams.add(existingParam);
+                        }
+                    }
+                }
+                              
                 // overwrite the variables
                 this.contextInfo = new HashMap(newInfo);
                 this.contextParamList = new LinkedList(newParams);            

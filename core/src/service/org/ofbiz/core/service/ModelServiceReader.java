@@ -507,9 +507,7 @@ public class ModelServiceReader {
                 param = new ModelParam();
                 param.name = name;
             }
-                        
-            Debug.log(service.name + " param(b): " + param.name + " = " + param.toString(), module);
-            
+                                               
             // set the overrideParam flag
             param.overrideParam = true;
             
@@ -535,8 +533,7 @@ public class ModelServiceReader {
             if (attribute.getAttribute("form-display") != null && attribute.getAttribute("form-display").length() > 0) {                
                 param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
             }
-            
-            Debug.log(service.name + " param(a): " + param.name + " = " + param.toString(), module);               
+                                     
             service.addParam(param);                                     
         }        
     }
