@@ -39,10 +39,8 @@
         <make-value value-name="newEntity" entity-name="InventoryItem"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
-        <to-string field-name="inventoryItemId"/>
-        <env-to-field env-name="inventoryItemId" map-name="newEntity"/>
-        <field-to-result field-name="inventoryItemId" result-name="inventoryItemId"/>
+        <sequenced-id-to-env sequence-name="InventoryItem" env-name="newEntity.inventoryItemId" to-string="true"/>
+        <field-to-result field-name="newEntity.inventoryItemId" result-name="inventoryItemId"/>
 
         <create-value value-name="newEntity"/>
     </simple-method>
