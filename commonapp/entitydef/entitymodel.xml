@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Thu Sep 06 01:27:59 MDT 2001
+ *@created    Fri Sep 07 12:02:16 MDT 2001
  *@version    1.0
  */
 -->
@@ -3439,8 +3439,7 @@
       <field><col-name>ORDER_DATE</col-name><type>date-time</type></field>
       <field><col-name>ENTRY_DATE</col-name><type>date-time</type></field>
       <field><col-name>VISIT_ID</col-name><type>id</type></field>
-      <field><col-name>STATUS_ID</col-name><type>id</type></field>
-      <field><col-name>SHIPPING_INSTRUCTIONS</col-name><type>description</type></field>	
+      <field><col-name>STATUS_ID</col-name><type>id</type></field>	
       <prim-key-col>ORDER_ID</prim-key-col>
       <relation>
         <type>one</type>
@@ -3527,6 +3526,11 @@
         <rel-table-name>PRODUCT_ORDER_ITEM</rel-table-name>
         <key-map><col-name>ORDER_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_SHIPMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Order Item Entity</title>
@@ -3546,7 +3550,6 @@
       <field><col-name>QUANTITY</col-name><type>floating-point</type></field>
       <field><col-name>UNIT_PRICE</col-name><type>currency-amount</type></field>
       <field><col-name>ESTIMATED_DELIVERY_DATE</col-name><type>date-time</type></field>
-      <field><col-name>SHIPPING_INSTRUCTIONS</col-name><type>long-varchar</type></field>
       <field><col-name>ITEM_DESCRIPTION</col-name><type>description</type></field>
       <field><col-name>COMMENT</col-name><type>comment</type></field>
       <field><col-name>CORRESPONDING_PO_ID</col-name><type>id</type></field>
@@ -3644,6 +3647,12 @@
         <type>one</type>
         <rel-table-name>PRODUCT</rel-table-name>
         <key-map><col-name>PRODUCT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_SHIPMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -3935,6 +3944,53 @@
         <rel-table-name>SHIPMENT_ITEM</rel-table-name>
         <key-map><col-name>SHIPMENT_ID</col-name></key-map>
         <key-map><col-name>SHIPMENT_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+    </entity>	
+    <entity>
+      <title>The Order Shipment Preference Entity</title>
+      <package-name>org.ofbiz.commonapp.order.order</package-name>
+      <table-name>ORDER_SHIPMENT_PREFERENCE</table-name>
+      <field><col-name>ORDER_ID</col-name><type>id-ne</type></field>
+      <field><col-name>ORDER_ITEM_SEQ_ID</col-name><type>id-ne</type></field>
+      <field><col-name>SHIPMENT_METHOD_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>CARRIER_PARTY_ID</col-name><type>id</type></field>
+      <field><col-name>CARRIER_ROLE_TYPE_ID</col-name><type>id</type></field>
+      <field><col-name>SHIPPING_INSTRUCTIONS</col-name><type>long-varchar</type></field>	
+      <prim-key-col>ORDER_ID</prim-key-col>	
+      <prim-key-col>ORDER_ITEM_SEQ_ID</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CARRIER_SHIPMENT_METHOD</rel-table-name>
+        <key-map><col-name>SHIPMENT_METHOD_TYPE_ID</col-name></key-map>
+        <key-map><col-name>CARRIER_PARTY_ID</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
+        <key-map><col-name>CARRIER_ROLE_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_HEADER</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>ORDER_ITEM</rel-table-name>
+        <key-map><col-name>ORDER_ID</col-name></key-map>
+        <key-map><col-name>ORDER_ITEM_SEQ_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Carrier</title>
+        <rel-table-name>PARTY</rel-table-name>
+        <key-map><col-name>CARRIER_PARTY_ID</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type><title>Carrier</title>
+        <rel-table-name>PARTY_ROLE</rel-table-name>
+        <key-map><col-name>CARRIER_PARTY_ID</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
+        <key-map><col-name>CARRIER_ROLE_TYPE_ID</col-name><rel-col-name>ROLE_TYPE_ID</rel-col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>SHIPMENT_METHOD_TYPE</rel-table-name>
+        <key-map><col-name>SHIPMENT_METHOD_TYPE_ID</col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -5844,6 +5900,11 @@
         <rel-table-name>ORDER_ROLE</rel-table-name>
         <key-map><col-name>PARTY_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type><title>Carrier</title>
+        <rel-table-name>ORDER_SHIPMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name><rel-col-name>CARRIER_PARTY_ID</rel-col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Party Attribute Entity</title>
@@ -6098,6 +6159,12 @@
         <rel-table-name>ORDER_ROLE</rel-table-name>
         <key-map><col-name>PARTY_ID</col-name></key-map>
         <key-map><col-name>ROLE_TYPE_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>many</type><title>Carrier</title>
+        <rel-table-name>ORDER_SHIPMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>PARTY_ID</col-name><rel-col-name>CARRIER_PARTY_ID</rel-col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name><rel-col-name>CARRIER_ROLE_TYPE_ID</rel-col-name></key-map>
       </relation>
     </entity>	
     <entity>
@@ -8289,6 +8356,13 @@
         <rel-table-name>SHIPMENT_METHOD_TYPE</rel-table-name>
         <key-map><col-name>SHIPMENT_METHOD_TYPE_ID</col-name></key-map>
       </relation>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_SHIPMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>SHIPMENT_METHOD_TYPE_ID</col-name></key-map>
+        <key-map><col-name>PARTY_ID</col-name><rel-col-name>CARRIER_PARTY_ID</rel-col-name></key-map>
+        <key-map><col-name>ROLE_TYPE_ID</col-name><rel-col-name>CARRIER_ROLE_TYPE_ID</rel-col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Packaging Content Entity</title>
@@ -8409,6 +8483,11 @@
       <field><col-name>SHIPMENT_METHOD_TYPE_ID</col-name><type>id-ne</type></field>
       <field><col-name>DESCRIPTION</col-name><type>description</type></field>	
       <prim-key-col>SHIPMENT_METHOD_TYPE_ID</prim-key-col>
+      <relation>
+        <type>many</type>
+        <rel-table-name>ORDER_SHIPMENT_PREFERENCE</rel-table-name>
+        <key-map><col-name>SHIPMENT_METHOD_TYPE_ID</col-name></key-map>
+      </relation>
     </entity>	
     <entity>
       <title>Shipment Package Entity</title>
