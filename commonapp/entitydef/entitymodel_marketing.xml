@@ -213,7 +213,7 @@
       <field name="trackingCodeTypeId" type="id-ne"></field>
       <field name="trackingCodeId" type="id-ne"></field>
       <prim-key field="orderId"/>
-      <prim-key field="trackingCodeApplTypeId"/>
+      <prim-key field="trackingCodeTypeId"/>
       <relation type="one" fk-name="TKNG_CODODR_ODR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
