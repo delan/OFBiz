@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
  */
 
@@ -69,7 +69,7 @@ product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", prod
 
 productInventoryItems = delegator.findByAnd("InventoryItem", 
         UtilMisc.toMap("productId", productId), 
-        UtilMisc.toList("facilityId", "-receivedDate", "-inventoryItemId"));
+        UtilMisc.toList("facilityId", "-datetimeReceived", "-inventoryItemId"));
 
 // TODO: get all incoming shipments not yet arrived coming into each facility that this product is in, use a view entity with ShipmentAndItem
 findIncomingShipmentsConds = new LinkedList();
