@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.33 2003/11/30 18:06:40 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.34 2003/12/03 06:24:08 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -1062,6 +1062,7 @@ public class ShoppingCart implements java.io.Serializable {
         if (UtilValidate.isNotEmpty(productPromoCodeId) && !this.productPromoCodes.contains(productPromoCodeId)) {
             throw new IllegalStateException("Cannot add a use to a promo code use for a code that has not been entered.");
         }
+        if (Debug.infoOn()) Debug.logInfo("Used promotion [" + productPromoId + "] with code [" + productPromoCodeId + "] for total discount [" + totalDiscountAmount + "] and quantity left in actions [" + quantityLeftInActions + "]", module);
         this.productPromoUseInfoList.add(new ProductPromoUseInfo(productPromoId, productPromoCodeId, totalDiscountAmount, quantityLeftInActions));
     }
 
