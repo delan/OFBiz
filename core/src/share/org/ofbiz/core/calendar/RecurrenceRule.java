@@ -76,7 +76,9 @@ public class RecurrenceRule {
     protected List byMonthList;
     protected List bySetPosList;
     
-    /** Creates a new RecurrenceRule object from a RecurrenceInfo entity. */
+    /** Creates a new RecurrenceRule object from a RecurrenceInfo entity. 
+     *@param rule GenericValue object defining this rule.
+     */
     public RecurrenceRule(GenericValue rule) throws RecurrenceRuleException {
         this.rule = rule;
         if ( !rule.getEntityName().equals("RecurrenceRule") )
@@ -84,7 +86,9 @@ public class RecurrenceRule {
         init();
     }
     
-    /** Initializes the rules for this RecurrenceInfo object. */
+    /** Initializes the rules for this RecurrenceInfo object. 
+     *@throws RecurrenceRuleException 
+     */
     public void init() throws RecurrenceRuleException {
         // Check the validity of the rule
         String freq = rule.getString("frequency");
@@ -107,12 +111,14 @@ public class RecurrenceRule {
         bySetPosList = StringUtil.split(rule.getString("bySetPosList"),",");
     }
     
-    /** Gets the current date/time. */
+    /** Gets the current date/time. 
+     *@return long Timestamp of the current date/time
+     */
     private long now() {
         return (new Date()).getTime();
     }
     
-    /** Checks for a valid frequency property. */
+    // Checks for a valid frequency property. 
     private boolean checkFreq(String freq) {
         if ( freq == null )
             return false;
@@ -133,7 +139,9 @@ public class RecurrenceRule {
         return false;
     }
     
-    /** Gets the end time of the recurrence rule or 0 if none. */
+    /** Gets the end time of the recurrence rule or 0 if none. 
+     *@return long The timestamp of the end time for this rule or 0 for none.
+     */
     public long getEndTime() {
         if ( rule == null )
             return -1;
@@ -148,19 +156,25 @@ public class RecurrenceRule {
         return time;
     }
     
-    /** Get the number of times this recurrence will run. */
+    /** Get the number of times this recurrence will run. 
+     *@return long The number of time this recurrence will run.
+     */
     public long getCount() {
         if ( rule.get("countNumber") != null )
             return rule.getLong("countNumber").longValue();
         return 0;
     }
     
-    /** Returns the frequency name of the recurrence. */
+    /** Returns the frequency name of the recurrence. 
+     *@return String The name of this frequency.
+     */
     public String getFrequencyName() {
         return rule.getString("frequency").toUpperCase();
     }
     
-    /** Returns the frequency of this recurrence */
+    /** Returns the frequency of this recurrence.
+     *@return int The reference value for the frequency        
+     */
     public int getFrequency() {
         String freq = rule.getString("frequency");
         if ( freq == null )
@@ -182,14 +196,18 @@ public class RecurrenceRule {
         return 0;
     }
     
-    /** Returns the interval of the frequency. */
+    /** Returns the interval of the frequency.
+     *@return long Interval value
+     */
     public long getInterval() {
         if ( rule.get("intervalNumber") == null )
             return 1;
         return rule.getLong("intervalNumber").longValue();
     }
     
-    /** Returns the interval of the frequency as an int.*/
+    /** Returns the interval of the frequency as an int.
+     *@return The interval of this frequency as an integer.
+     */
     public int getIntervalInt() {
         //Debug.logInfo("[RecurrenceInfo.getInterval] : " + getInterval());
         return (int) getInterval();
@@ -199,7 +217,7 @@ public class RecurrenceRule {
      *@param startTime The time this recurrence first began.
      *@param fromTime The time to base the next recurrence on.
      *@param currentCount The total number of times the recurrence has run.
-     *@returns The next recurrence as a long.
+     *@return long The next recurrence as a long.
      */
     public long next(long startTime, long fromTime, long currentCount)  {
         // Set up the values
@@ -234,7 +252,7 @@ public class RecurrenceRule {
     
     /** Tests the date to see if it falls within the rules
      *@param The date object to test
-     *@returns True if the date is within the rules
+     *@return True if the date is within the rules
      */
     public boolean isValid(Date startDate, Date date) {
         return isValid(startDate.getTime(),date.getTime());
@@ -242,7 +260,7 @@ public class RecurrenceRule {
     
     /** Tests the date to see if it falls within the rules
      *@param The date object to test
-     *@returns True if the date is within the rules
+     *@return True if the date is within the rules
      */
     public boolean isValid(long startTime, long dateTime) {
         long testTime = startTime;
@@ -256,7 +274,19 @@ public class RecurrenceRule {
         return false;
     }
     
-    /** Gets the next frequency/interval recurrence from specified time */
+    /** Removes this rule from the persistant store.
+     *@throws RecurrenceRuleException
+     */
+    public void remove() throws RecurrenceRuleException {
+        try {
+            rule.remove();
+        }
+        catch ( GenericEntityException e ) {
+            throw new RecurrenceRuleException(e.getMessage(),e);
+        }
+    }
+    
+    // Gets the next frequency/interval recurrence from specified time 
     private Date getNextFreq(long startTime, long fromTime) {
         // Build a Calendar object
         Calendar cal = Calendar.getInstance();
@@ -295,7 +325,7 @@ public class RecurrenceRule {
         return new Date(nextStartTime);
     }
     
-    /** Checks to see if a date is valid by the byXXX rules */
+    // Checks to see if a date is valid by the byXXX rules 
     private boolean validByRule(Date date) {
         // Build a Calendar object
         Calendar cal = Calendar.getInstance();
@@ -454,7 +484,7 @@ public class RecurrenceRule {
         return true;
     }
     
-    /** Tests a string for the contents of a number at the beginning */
+    // Tests a string for the contents of a number at the beginning 
     private boolean hasNumber(String str) {
         String list[] = {"+","-","1","2","3","4","5","6","7","8","9","0"};
         List numberList = Arrays.asList(list);
@@ -464,7 +494,7 @@ public class RecurrenceRule {
         return false;
     }
     
-    /** Gets the numeric value of the number at the beginning of the string */
+    // Gets the numeric value of the number at the beginning of the string 
     private int getDailyNumber(String str) {
         int number = 0;
         StringBuffer numberBuf = new StringBuffer();
@@ -483,7 +513,7 @@ public class RecurrenceRule {
         return number;
     }
     
-    /** Gets the string part of the combined number+string */
+    // Gets the string part of the combined number+string 
     private String getDailyString(String str) {
         StringBuffer sBuf = new StringBuffer();
         for ( int i = 0; i < str.length(); i++ ) {
@@ -494,7 +524,7 @@ public class RecurrenceRule {
         return sBuf.toString();
     }
     
-    /** Returns the Calendar day of the rule day string */
+    // Returns the Calendar day of the rule day string 
     private int getCalendarDay(String day) {
         if ( day.equalsIgnoreCase("MO") )
             return Calendar.MONDAY;

@@ -125,6 +125,23 @@ public class Job implements Comparable, Serializable {
         }
         Debug.logInfo("[Job.receiveNotice] : Next Runtime: " + runtime);
         // This would be a good place to log async transactions.
+        
+        if ( runtime == 0 )
+            this.remove();
+    }
+    
+    // Removes this job from the persistant store
+    private void remove() {
+        try {
+            recurrence.remove();
+            job.remove();
+        }
+        catch ( RecurrenceInfoException rie ) {
+            Debug.logError(rie,"[Job.remove] : Recurrence object had trouble");
+        }
+        catch ( GenericEntityException gee ) {
+            Debug.logError(gee,"[Job.remove] : Could not remove this job");
+        }
     }
     
     /** Re-Schedules the job for the next recurrence */

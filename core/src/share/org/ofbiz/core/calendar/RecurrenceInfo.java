@@ -157,6 +157,25 @@ public class RecurrenceInfo {
         info.store();
     }
     
+    /** Removes the recurrence from persistant store. */
+    public void remove() throws RecurrenceInfoException {
+        List rulesList = new ArrayList();
+        rulesList.addAll(rRulesList);
+        rulesList.addAll(eRulesList);
+        Iterator i = rulesList.iterator();
+        try {
+            while ( i.hasNext() ) 
+                ((RecurrenceRule)i.next()).remove();
+            info.remove();
+        }
+        catch ( RecurrenceRuleException rre ) {
+            throw new RecurrenceInfoException(rre.getMessage(),rre);
+        }
+        catch ( GenericEntityException gee ) {
+            throw new RecurrenceInfoException(gee.getMessage(),gee);
+        }            
+    }
+    
     /** Returns the first recurrence. */
     public long first()  {
         return startDate.getTime();
