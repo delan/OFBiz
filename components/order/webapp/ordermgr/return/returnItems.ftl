@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.2
 -->
 
@@ -50,6 +50,7 @@
   <#if returnItems?has_content>
     <#list returnItems as item>
       <#assign orderItem = item.getRelatedOne("OrderItem")?if_exists>
+      <#assign orderHeader = orderItem.getRelatedOne("OrderHeader")?if_exists>
       <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
       <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
       <tr>
@@ -57,7 +58,7 @@
         <td><div class="tabletext">${item.orderItemSeqId?default("N/A")}</div></td>
         <td><div class="tabletext">${item.description?default("N/A")}</div></td>
         <td><div class="tabletext">${item.returnQuantity?string.number}</div></td>
-        <td><div class="tabletext">${item.returnPrice?string.currency}</div></td>
+        <td><div class="tabletext"><@ofbizCurrency amount=item.returnPrice isoCode=orderHeader.currencyUom/></div></td>
         <td><div class="tabletext">${returnReason.description?default("N/A")}</div></td>
         <td><div class="tabletext">${returnType.description?default("N/A")}</div></td>
         <#if returnHeader.statusId == "RETURN_REQUESTED">
@@ -166,7 +167,7 @@
           <input type="text" class="inputBox" size="6" name="returnQuantity_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnableQuantity")}">
         </td>
         <td align='left'>
-          <div class="tabletext">${orderItem.unitPrice?string.currency}</div>
+          <div class="tabletext"><@ofbizCurrency amount=orderItem.unitPrice isoCode=orderHeader.currencyUom/></div>
         </td>
         <td>
           <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${returnableItems.get(orderItem).get("returnablePrice")?string("##0.00")}">

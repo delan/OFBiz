@@ -41,6 +41,7 @@ userLogin = session.getAttribute("userLogin");
 shoppingCart = ShoppingCartEvents.getCartObject(request);
 context.put("shoppingCartSize", shoppingCart.size());
 context.put("shoppingCart", shoppingCart);
+context.put("currencyUomId", shoppingCart.getCurrency());
 
 // get all the possible gift wrap options
 allgiftWraps = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", "GIFT_WRAP"), UtilMisc.toList("defaultSequenceNum"));
@@ -60,20 +61,19 @@ context.put("suppliers", suppliers);
 // check the selected product store
 productStoreId = request.getParameter("productStoreId");
 if (UtilValidate.isNotEmpty(productStoreId)) {
-    productStore = ProductStoreWorker.getProductStore(request);
+    productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
     if (productStore != null) {
         // check security on the store
         storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStore.getString("productStoreId"),
                 "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
         storeReps = EntityUtil.filterByDate(storeReps);
         if (storeReps != null && storeReps.size() > 0) {
-            shoppingCart = ShoppingCartEvents.getCartObject(request, productStore.getString("productStoreId"));
-            session.setAttribute("productStoreId", productStoreId);
+            shoppingCart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
+            context.put("currencyUomId", shoppingCart.getCurrency());            
         } else {
-            request.setAttribute("_ERROR_MESSAGE_", "<li>You do not have permission to take orders for this store.");
+            request.setAttribute("_ERROR_MESSAGE_", "You do not have permission to take orders for this store.");
             shoppingCart.clear();
             session.removeAttribute("orderMode");
-            session.removeAttribute("productStoreId");
             return;
         }
     } else {
@@ -96,17 +96,16 @@ if (session.getAttribute("orderMode") != null && updateParty == null) {
 }     
 
 if (session.getAttribute("orderMode") == null && request.getParameter("finalizeMode") != null) {
-    request.setAttribute("_ERROR_MESSAGE_", "<li>Please select either sale or purchase order.");
+    request.setAttribute("_ERROR_MESSAGE_", "Please select either sale or purchase order.");
     return;
 } else if (session.getAttribute("orderMode") == null) {
     return;
 }
 
 if ("SALES_ORDER".equals(mode) && UtilValidate.isEmpty(shoppingCart.getProductStoreId())) {
-    request.setAttribute("_ERROR_MESSAGE_", "<li>A Product Store MUST be selected for a Sales Order.");
+    request.setAttribute("_ERROR_MESSAGE_", "A Product Store MUST be selected for a Sales Order.");
     shoppingCart.clear();
     session.removeAttribute("orderMode");
-    session.removeAttribute("productStoreId");
     return;
 }
     
@@ -142,18 +141,18 @@ if (partyId != null || userLoginId != null) {
         thisParty  = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
         //Debug.log("This party : " + thisParty);
         if (thisParty == null) {
-            request.setAttribute("_ERROR_MESSAGE_", "<li>Could not locate the selected party.");
+            request.setAttribute("_ERROR_MESSAGE_", "Could not locate the selected party.");
             context.put("updateParty", "Y");
             return;        
         } else {
-            session.setAttribute("orderPartyId", partyId);    
+            shoppingCart.setOrderPartyId(partyId);
         }
     } else if (partyId != null && partyId.length() == 0) {
-        session.setAttribute("orderPartyId", "_NA_");
+        shoppingCart.setOrderPartyId("_NA_");
         partyId = null;
     } 
 } else {
-    partyId = session.getAttribute("orderPartyId");
+    partyId = shoppingCart.getPartyId();
     if (partyId != null && partyId.equals("_NA_")) partyId = null;
 }
 
@@ -170,5 +169,16 @@ if (partyId != null) {
     }
 }
 
-context.put("defaultDesiredDeliveryDate", (new java.sql.Date(System.currentTimeMillis())).toString());
+defaultDesiredDeliveryDate = shoppingCart.getDefaultItemDeliveryDate();
+if (UtilValidate.isEmpty(defaultDesiredDeliveryDate)) {
+    defaultDesiredDeliveryDate = (new java.sql.Date(System.currentTimeMillis())).toString();
+} else {
+    context.put("useAsDefaultDesiredDeliveryDate", "true");
+}
+context.put("defaultDesiredDeliveryDate", defaultDesiredDeliveryDate);
 
+defaultComment = shoppingCart.getDefaultItemComment();
+if (!UtilValidate.isEmpty(defaultComment)) {
+    context.put("useAsDefaultComment", "true");
+}
+context.put("defaultComment", defaultComment);

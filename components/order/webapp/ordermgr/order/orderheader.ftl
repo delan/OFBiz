@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.25 $
+ *@version    $Revision: 1.26 $
  *@since      2.2
 -->
 
@@ -152,9 +152,9 @@
                             <td width="5">&nbsp;</td>
                             <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE">
                               <td align="left">
-                                <div class="tabletext">${orderPaymentPreference.maxAmount?default(0.00)?string.currency}</div>
+                                <div class="tabletext"><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/></div>
                                 <#--
-                                <div class="tabletext">${orderPaymentPreference.maxAmount?default(0.00)?string.currency}&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())?if_exists}</div>
+                                <div class="tabletext"><@ofbizCurrency amount=orderPaymentPreference.maxAmount?default(0.00) isoCode=currencyUomId/>&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())?if_exists}</div>
                                 <div class="tabletext">&nbsp;<#if orderPaymentPreference.authRefNum?exists>(Ref: ${orderPaymentPreference.authRefNum})</#if></div>
                                 -->
                              </td>

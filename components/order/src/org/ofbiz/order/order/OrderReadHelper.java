@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.22 2004/07/27 18:21:30 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.23 2004/07/29 20:56:35 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.22 $
+ * @version    $Revision: 1.23 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -75,10 +75,26 @@ public class OrderReadHelper {
         this.orderHeader = orderHeader;
         this.adjustments = adjustments;
         this.orderItems = orderItems;
+        if (!this.orderHeader.getEntityName().equals("OrderHeader")) {
+            try {
+                this.orderHeader = orderHeader.getDelegator().findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId",
+                        orderHeader.getString("orderId")));
+            } catch (GenericEntityException e) {
+                throw new IllegalArgumentException("Order header is not valid");
+            }
+        }
     }
 
     public OrderReadHelper(GenericValue orderHeader) {
-        this.orderHeader = orderHeader;
+        this(orderHeader, null, null);
+    }
+
+    public OrderReadHelper(GenericDelegator delegator, String orderId) {
+        try {
+            this.orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            throw new IllegalArgumentException("Invalid orderId");
+        }
     }
 
     // ==========================================

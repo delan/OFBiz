@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.2
 -->
 
@@ -333,7 +333,8 @@ document.lookuporder.order_id.focus();
               </td>
               <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
               <td align="right"><div class="tabletext">${orh.getOrderReturnedQuantity()?string.number}</div></td>
-              <td align="right"><div class="tabletext">${orh.getOrderGrandTotal()?string.currency}</div></td>
+              <td align="right"><div class="tabletext"><@ofbizCurrency amount=orh.getOrderGrandTotal() isoCode=orh.getCurrency()/></div></td>
+
               <td>&nbsp;</td>
               <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext"><nobr>${orderHeader.getString("orderDate")}</nobr></div></td>

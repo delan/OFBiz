@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.44 2004/07/27 18:21:30 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.45 2004/07/29 20:56:35 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -76,7 +76,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.44 $
+ * @version    $Revision: 1.45 $
  * @since      2.0
  */
 
@@ -373,6 +373,25 @@ public class OrderServices {
             itemStatus.put("orderItemSeqId", orderItem.get("orderItemSeqId"));
             itemStatus.put("statusDatetime", nowTimestamp);
             toBeStored.add(itemStatus);
+        }
+	
+        // set the additional party roles
+        Map additionalPartyRole = (Map) context.get("orderAdditionalPartyRoleMap");
+        if (additionalPartyRole != null) {
+            Iterator aprIt = additionalPartyRole.entrySet().iterator();
+            while (aprIt.hasNext()) {
+                Map.Entry entry = (Map.Entry) aprIt.next();
+                String additionalRoleTypeId = (String) entry.getKey();
+                List parties = (List) entry.getValue();
+                if (parties != null) {
+                    Iterator apIt = parties.iterator();
+                    while (apIt.hasNext()) {
+                        String additionalPartyId = (String) apIt.next();
+                        toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", additionalPartyId, "roleTypeId", additionalRoleTypeId)));
+                        toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", additionalPartyId, "roleTypeId", additionalRoleTypeId)));                        
+                    }
+                }
+            }
         }
 
         // set the item survey responses
