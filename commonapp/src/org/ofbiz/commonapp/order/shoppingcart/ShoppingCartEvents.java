@@ -86,9 +86,12 @@ public class ShoppingCartEvents {
         }
         
         // Create a HashMap of product attributes.
+        /* 
+         * commenting this out because this pulls in parameters that we don't want; we need some way to specify which parameters to put into attributes...
         if (paramMap.size() > 0) {
             attributes = new HashMap(paramMap);
         }
+         */
         
         try {
             cart.addOrIncreaseItem(delegator, productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
