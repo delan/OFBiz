@@ -233,9 +233,9 @@ public class BOMTree {
         print(arr, initialDepth, true);
     }
     
-    public void print(ArrayList arr, int initialDepth, boolean excludePhantoms) {
+    public void print(ArrayList arr, int initialDepth, boolean excludeWIPs) {
         if (root != null) {
-            root.print(arr, getRootQuantity(), initialDepth, excludePhantoms);
+            root.print(arr, getRootQuantity(), initialDepth, excludeWIPs);
         }
     }
     
@@ -248,8 +248,8 @@ public class BOMTree {
         print(arr, 0);
     }
 
-    public void print(ArrayList arr, boolean excludePhantoms) {
-        print(arr, 0, excludePhantoms);
+    public void print(ArrayList arr, boolean excludeWIPs) {
+        print(arr, 0, excludeWIPs);
     }
 
     /** It visits the in-memory tree that represents a bill of materials
