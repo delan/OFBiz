@@ -3,6 +3,6 @@
     <template>/templates/main_left.ftl</template>
     <property name="title">Shopping Cart</property>
 
-    <generator name="jsp"/>
+    <generator name="ofbiz-freemarker"/>
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>

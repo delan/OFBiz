@@ -3,6 +3,6 @@
     <template/>
     <property name="title">Welcome</property>
 
-    <generator name="jsp" />
+    <generator name="ofbiz-freemarker" />
     <pageEditor>OfbizOrderEditor</pageEditor>
 </page>
