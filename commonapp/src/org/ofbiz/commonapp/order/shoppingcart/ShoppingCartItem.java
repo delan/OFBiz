@@ -585,16 +585,16 @@ public class ShoppingCartItem implements java.io.Serializable {
     /** Compares the specified object with this cart item. */
     public boolean equals(ShoppingCartItem item) {
         if (item == null) return false;
-        return this.equals(item.getProductId(), item.additionalProductFeatureAndAppls, item.attributes, item.prodCatalogId, item.getIsPromo());
+        return this.equals(item.getProductId(), item.additionalProductFeatureAndAppls, item.prodCatalogId, item.getIsPromo());
     }
 
     /** Compares the specified object with this cart item. Defaults isPromo to false. */
-    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId) {
-        return equals(productId, additionalProductFeatureAndAppls, attributes, prodCatalogId, false);
+    public boolean equals(String productId, Map additionalProductFeatureAndAppls, String prodCatalogId) {
+        return equals(productId, additionalProductFeatureAndAppls, prodCatalogId, false);
     }
 
     /** Compares the specified object with this cart item. */
-    public boolean equals(String productId, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, boolean isPromo) {
+    public boolean equals(String productId, Map additionalProductFeatureAndAppls, String prodCatalogId, boolean isPromo) {
         if (!this.productId.equals(productId)) {
             return false;
         }
@@ -612,11 +612,7 @@ public class ShoppingCartItem implements java.io.Serializable {
             this.additionalProductFeatureAndAppls.equals(additionalProductFeatureAndAppls);
 
         if (!featuresEqual) return false;
-
-        boolean attributesEqual = this.attributes == null ? attributes == null : this.attributes.equals(attributes);
-
-        if (!attributesEqual) return false;
-
+        
         return true;
     }
 
