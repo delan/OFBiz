@@ -1,5 +1,5 @@
 /*
- * $Id: ModelForm.java,v 1.2 2003/11/05 00:15:48 byersa Exp $
+ * $Id: ModelForm.java,v 1.3 2003/11/05 15:12:06 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ModelForm {
@@ -89,7 +89,7 @@ public class ModelForm {
      * they were encountered in the service, entity, or form definition; field definitions
      * with constraints will also be in this list but may appear multiple times for the same
      * field name.
-     * 
+     *
      * When rendering the form the order in this list should be following and it should not be
      * necessary to use the Map. The Map is used when loading the form definition to keep the
      * list clean and implement the override features for field definitions.
@@ -111,7 +111,7 @@ public class ModelForm {
         this.delegator = delegator;
         this.dispatcher = dispatcher;
 
-        // check if there is a parent form to inherit from 
+        // check if there is a parent form to inherit from
         String parentResource = formElement.getAttribute("extends-resource");
         String parentForm = formElement.getAttribute("extends");
         //TODO: Modify this to allow for extending a form with the same name but different resource
@@ -269,9 +269,9 @@ public class ModelForm {
         }
     }
 
-    /** 
+    /**
      * add/override modelFormField using the fieldList and fieldMap
-     * 
+     *
      * @return The same ModelFormField, or if merged with an existing field, the existing field.
      */
     public ModelFormField addUpdateField(ModelFormField modelFormField) {
@@ -345,7 +345,7 @@ public class ModelForm {
                                 modelFormField.setMapName(autoFieldsService.mapName);
                             }
 
-                            // continue to skip creating based on service param                            
+                            // continue to skip creating based on service param
                             continue;
                         }
                     }
@@ -399,24 +399,29 @@ public class ModelForm {
     }
 
     /**
-     * Renders this form to a String, i.e. in a text format, as defined with the 
+     * Renders this form to a String, i.e. in a text format, as defined with the
      * FormStringRenderer implementation.
-     * 
+     *
      * @param buffer The StringBuffer that the form text will be written to
-     * @param context Map containing the form context; the following are 
-     *   reserved words in this context: parameters (Map), isError (Boolean), 
+     * @param context Map containing the form context; the following are
+     *   reserved words in this context: parameters (Map), isError (Boolean),
      *   itemIndex (Integer, for lists only, otherwise null), bshInterpreter,
-     *   formName (String, optional alternate name for form, defaults to the 
+     *   formName (String, optional alternate name for form, defaults to the
      *   value of the name attribute)
-     * @param formStringRenderer An implementation of the FormStringRenderer 
-     *   interface that is responsible for the actual text generation for 
-     *   different form elements; implementing you own makes it possible to 
+     * @param formStringRenderer An implementation of the FormStringRenderer
+     *   interface that is responsible for the actual text generation for
+     *   different form elements; implementing you own makes it possible to
      *   use the same form definitions for many types of form UIs
      */
     public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
-        //if useRequestParameters if not set in the context and a default-map-name is specific but does not exist in the context, set useRequestParameters to TRUE
+        // if useRequestParameters if not set in the context and a default-map-name is specific but does not exist in the context, set useRequestParameters to TRUE
         if (context.get("useRequestParameters") == null && !this.defaultMapName.isEmpty() && this.defaultMapName.get(context) == null) {
             context.put("useRequestParameters", Boolean.TRUE);
+        }
+
+        // if this is a list form, don't useRequestParameters
+        if ("list".equals(this.type) || "multi".equals(this.type)) {
+            context.put("useRequestParameters", Boolean.FALSE);
         }
 
         // find the highest position number to get the max positions used
@@ -528,7 +533,7 @@ public class ModelForm {
                 } else {
                     positionSpan = positions - currentFormField.getPosition();
                     if (!stayingOnRow && nextFormField.getPosition() > 1) {
-                        // TODO: here is a weird case where it is setup such 
+                        // TODO: here is a weird case where it is setup such
                         //that the first position(s) in the row are skipped
                         // not sure what to do about this right now...
                     }
@@ -629,7 +634,7 @@ public class ModelForm {
         //do a start after the first form input field and
         //render all display and hyperlink fields after the form
 
-        // do the first part of display and hyperlink fields 
+        // do the first part of display and hyperlink fields
         Iterator displayHyperlinkFieldIter = this.fieldList.iterator();
         while (displayHyperlinkFieldIter.hasNext()) {
             ModelFormField modelFormField = (ModelFormField) displayHyperlinkFieldIter.next();
@@ -685,7 +690,7 @@ public class ModelForm {
             headerFormFields.add(modelFormField);
         }
 
-        // render the "form" cell 
+        // render the "form" cell
         formStringRenderer.renderFormatHeaderRowFormCellOpen(buffer, context, this);
 
         Iterator headerFormFieldIter = headerFormFields.iterator();
@@ -704,7 +709,7 @@ public class ModelForm {
 
         formStringRenderer.renderFormatHeaderRowFormCellClose(buffer, context, this);
 
-        // render the rest of the display/hyperlink fields 
+        // render the rest of the display/hyperlink fields
         while (displayHyperlinkFieldIter.hasNext()) {
             ModelFormField modelFormField = (ModelFormField) displayHyperlinkFieldIter.next();
             ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
@@ -757,7 +762,7 @@ public class ModelForm {
                 // render row formatting open
                 formStringRenderer.renderFormatItemRowOpen(buffer, localContext, this);
 
-                // do the first part of display and hyperlink fields 
+                // do the first part of display and hyperlink fields
                 Iterator innerDisplayHyperlinkFieldIter = this.fieldList.iterator();
                 while (innerDisplayHyperlinkFieldIter.hasNext()) {
                     ModelFormField modelFormField = (ModelFormField) innerDisplayHyperlinkFieldIter.next();
@@ -784,7 +789,7 @@ public class ModelForm {
                     formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
                 }
 
-                // render the "form" cell 
+                // render the "form" cell
                 formStringRenderer.renderFormatItemRowFormCellOpen(buffer, localContext, this);
 
                 if (formPerItem) {
@@ -823,7 +828,7 @@ public class ModelForm {
 
                 formStringRenderer.renderFormatItemRowFormCellClose(buffer, localContext, this);
 
-                // render the rest of the display/hyperlink fields 
+                // render the rest of the display/hyperlink fields
                 while (innerDisplayHyperlinkFieldIter.hasNext()) {
                     ModelFormField modelFormField = (ModelFormField) innerDisplayHyperlinkFieldIter.next();
                     ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
