@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.28 $
+ *@version    $Revision: 1.29 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -64,6 +64,34 @@ function removeSelected() {
 function addToList() {
     var cform = document.cartform;
     cform.action = "<@ofbizUrl>/addBulkToShoppingList</@ofbizUrl>";
+    cform.submit();
+}
+function gwAll(e) {
+    var cform = document.cartform;
+    var len = cform.elements.length;
+    var cartSize = ${shoppingCartSize};
+    var passed = 0;
+    for (var i = 0; i < len; i++) {
+        var element = cform.elements[i];
+        var ename = element.name;
+        var sname = ename.substring(0,16);
+        if (sname == "option^GIFT_WRAP") {
+            var selectedValue = e.value;
+            var options = element.options;
+            var olen = options.length;
+            var matching = -1;
+            for (var x = 0; x < olen; x++) {
+                var thisValue = element.options[x].value;
+                if (thisValue == selectedValue) {
+                    element.selectedIndex = x;
+                    passed++;
+                }
+            }
+        }
+    }
+    if (cartSize > passed) {
+        alert("Selected Gift Wrap is not avaiable for all items. The items which are available have been selected, the others remain unchanged.");
+    }
     cform.submit();
 }
 //-->
@@ -147,7 +175,18 @@ function addToList() {
         <tr>
           <td NOWRAP>&nbsp;</td>
           <td NOWRAP><div class="tabletext"><b>${uiLabelMap.EcommerceProduct}</b></div></td>
-          <td NOWRAP>&nbsp;</td>
+          <#if showOrderGiftWrap?default("true") == "true">
+            <td NOWRAP align="right">
+              <select class="selectBox" name="GWALL" onChange="javascript:gwAll(this);">
+                <option value="">Gift Wrap All Items</option>
+                <option value="NO^">No Gift Wrap</option>
+                <#list allgiftWraps as option>
+                  <option value="${option.productFeatureId}">${option.description} : ${option.defaultAmount?default(0)?string.currency}</option>
+                </#list>
+              </select>
+          <#else>
+            <td NOWRAP>&nbsp;</td>
+          </#if>
           <td NOWRAP align="center"><div class="tabletext"><b>${uiLabelMap.CommonQuantity}</b></div></td>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceUnitPrice}</b></div></td>
           <td NOWRAP align="right"><div class="tabletext"><b>${uiLabelMap.EcommerceAdjustments}</b></div></td>
@@ -216,7 +255,7 @@ function addToList() {
               <#assign selectedOption = cartLine.getAdditionalProductFeatureAndAppl("GIFT_WRAP")?if_exists>
               <#if giftWrapOption?has_content>
                 <select class="selectBox" name="option^GIFT_WRAP_${cartLineIndex}" onChange="javascript:document.cartform.submit()">
-                  <option value="">No Gift Wrap</option>
+                  <option value="NO^">No Gift Wrap</option>
                   <#list giftWrapOption as option>
                     <option value="${option.productFeatureId}" <#if ((selectedOption.productFeatureId)?exists && selectedOption.productFeatureId == option.productFeatureId)>SELECTED</#if>>${option.description} : ${option.amount?default(0)?string.currency}</option>
                   </#list>
