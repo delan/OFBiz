@@ -34,7 +34,7 @@
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
-<%WorkEffortWorker.getWorkEffortsByDays(pageContext, "days", UtilDateTime.nowTimestamp(), 7);%>
+<%WorkEffortWorker.getWorkEffortEventsByDays(pageContext, "days", UtilDateTime.nowTimestamp(), 7);%>
 
 <BR>
 <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
