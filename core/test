@@ -1,1 +1,0 @@
-cvs -d :ext:azeneski@cvs.ofbiz.sourceforge.net:/cvsroot/ofbiz import -m "Initial Import" core ofbiz start
