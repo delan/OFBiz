@@ -362,6 +362,35 @@ public class CatalogWorker {
         return null;
     }
 
+    public static String getContentPathPrefix(PageContext pageContext) {
+        GenericValue prodCatalog = getProdCatalog(pageContext, getCurrentCatalogId(pageContext));
+        if (prodCatalog == null) return "";
+        String contentPathPrefix = prodCatalog.getString("contentPathPrefix");
+        return StringUtil.cleanUpPathPrefix(contentPathPrefix);
+    }
+    
+    public static String getTemplatePathPrefix(PageContext pageContext) {
+        GenericValue prodCatalog = getProdCatalog(pageContext, getCurrentCatalogId(pageContext));
+        if (prodCatalog == null) return "";
+        String templatePathPrefix = prodCatalog.getString("templatePathPrefix");
+        return StringUtil.cleanUpPathPrefix(templatePathPrefix);
+    }
+    
+    public static GenericValue getProdCatalog(PageContext pageContext) {
+        return getProdCatalog(pageContext, getCurrentCatalogId(pageContext));
+    }
+
+    public static GenericValue getProdCatalog(PageContext pageContext, String prodCatalogId) {
+        if (prodCatalogId == null || prodCatalogId.length() <= 0) return null;
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        try {
+            return delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+            return null;
+        }
+    }
+
     public static String getCatalogTopCategoryId(PageContext pageContext) {
         return getCatalogTopCategoryId(pageContext, getCurrentCatalogId(pageContext));
     }

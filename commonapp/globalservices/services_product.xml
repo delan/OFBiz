@@ -144,6 +144,7 @@
         <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
         <attribute name="contentPathPrefix" type="String" mode="IN" optional="true"/>
+        <attribute name="templatePathPrefix" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalog" auth="true">
@@ -160,6 +161,7 @@
         <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
         <attribute name="contentPathPrefix" type="String" mode="IN" optional="true"/>
+        <attribute name="templatePathPrefix" type="String" mode="IN" optional="true"/>
     </service>
     <service name="deleteProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="deleteProdCatalog" auth="true">

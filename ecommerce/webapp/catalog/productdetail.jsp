@@ -34,6 +34,7 @@
 <%-- ====================================================== --%>
 <%-- The product.jsp puts the product it finds in the request attribute "product" --%>
 
+<%String contentPathPrefix = CatalogWorker.getContentPathPrefix(pageContext);%>
 <ofbiz:if name="product">
     <ofbiz:object name="product" property="product"/>
     <%String productId = product.getString("productId");%>
@@ -269,8 +270,8 @@
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align="left" valign="top" width="0">
-        <%if (UtilValidate.isNotEmpty((String) product.get("largeImageUrl"))) {%>
-            <img src='<ofbiz:contenturl><%=(String) product.get("largeImageUrl")%></ofbiz:contenturl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align=left>
+        <%if (UtilValidate.isNotEmpty(product.getString("largeImageUrl"))) {%>
+            <img src='<ofbiz:contenturl><%=contentPathPrefix%><%=product.getString("largeImageUrl")%></ofbiz:contenturl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align=left>
         <%}%>
       </td>
       <td align="right" valign="top">
@@ -392,7 +393,7 @@
               <%if (imageUrl != null && imageUrl.length() > 0){%>
                 <td>
                   <table cellspacing="0" cellpadding="0">
-                    <tr><td><a href="#"><img src="<ofbiz:contenturl><%=imageUrl%></ofbiz:contenturl>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>',1);"></a></td></tr>
+                    <tr><td><a href="#"><img src="<ofbiz:contenturl><%=contentPathPrefix%><%=imageUrl%></ofbiz:contenturl>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>',1);"></a></td></tr>
                     <tr><td align="center" valign="top"><span class="tabletext"><%=featureDescription%></span></td></tr>
                   </table>
                 </td>

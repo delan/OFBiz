@@ -29,6 +29,7 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.commonapp.product.catalog.*, org.ofbiz.commonapp.product.product.*"%>
 
+<%String contentPathPrefix = CatalogWorker.getContentPathPrefix(pageContext);%>
 <%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
 <%String searchOperator = request.getParameter("SEARCH_OPERATOR");%>
 <%if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { searchOperator = "OR"; }%>

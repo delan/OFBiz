@@ -55,6 +55,7 @@
 <ofbiz:object name='listSize' type='java.lang.Integer'/>
 <ofbiz:object name='productCategory' type='org.ofbiz.core.entity.GenericValue'/>
 <ofbiz:object name='productCategoryMembers' type='java.util.Collection'/>
+<%String contentPathPrefix = CatalogWorker.getContentPathPrefix(pageContext);%>
 
 <br>
 <ofbiz:if name="productCategory">

@@ -199,17 +199,25 @@
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>
         </td>
+      </tr>
 
       <tr>
         <td width="26%" align=right><div class="tabletext">Content Path Prefix</div></td>
         <td>&nbsp;</td>
         <td width="74%" colspan='4'>
-            <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='detailTemplate' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
-            <br><span class='tabletext'>If specified will be prepended to image, template and other content paths.</span>
+            <input type="text" <ofbiz:inputvalue entityAttr='prodCatalog' field='contentPathPrefix' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+            <br><span class='tabletext'>If specified will be prepended to image and other content paths. Should start with a slash but not end with one.</span>
+        </td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Template Path Prefix</div></td>
+        <td>&nbsp;</td>
+        <td width="74%" colspan='4'>
+            <input type="text" <ofbiz:inputvalue entityAttr='prodCatalog' field='templatePathPrefix' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+            <br><span class='tabletext'>If specified will be prepended to template paths. Should start with a slash but not end with one.</span>
         </td>
       </tr>
 
-      </tr>
   <tr>
     <td colspan='2'>&nbsp;</td>
     <td colspan='1' align=left><input type="submit" name="Update" value="Update" style='font-size: x-small;'></td>

@@ -75,6 +75,7 @@
       <field name="requireInventory" type="indicator"></field>
       <field name="useQuickAdd" type="indicator"></field>
       <field name="contentPathPrefix" type="long-varchar"></field>
+      <field name="templatePathPrefix" type="long-varchar"></field>
       <prim-key field="prodCatalogId"/>
       <relation type="one" fk-name="PROD_CAT_FACILITY" rel-entity-name="Facility">
         <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>

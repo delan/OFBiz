@@ -47,6 +47,9 @@
         if (UtilValidate.isEmpty(detailTemplate)) {
             detailTemplate = "/catalog/productdetail.jsp";
         }
+        String templatePathPrefix = CatalogWorker.getTemplatePathPrefix(pageContext);
+        if (Debug.infoOn()) Debug.logInfo("Catalog template: prefix=" + templatePathPrefix + ", template=" + detailTemplate);
+        detailTemplate = templatePathPrefix + detailTemplate;
 
         RequestDispatcher rd = null;
         try {
@@ -55,7 +58,16 @@
             Debug.logError(e, "Error getting request dispatcher");
         }
         if (rd != null) {
-            rd.include(request, response);
+            try {
+                rd.include(request, response);
+            } catch (java.io.FileNotFoundException e) {
+                Debug.logError(e, "Error dispatching request");
+%>
+    <br>
+    <center><div class='head2'>ERROR: The template for this product was not found at <%=detailTemplate%>.</div></center>
+    <center><div class='head2'>Please try back later.</div></center>
+<%
+            }
         } else {
             Debug.logError("ERROR: The template for this product was not found at " + detailTemplate);
     %>
