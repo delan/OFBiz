@@ -172,23 +172,23 @@
         <description>Delete ShipmentRouteSegment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="upsShipmentConfirm" engine="simple"
-            location="org/ofbiz/commonapp/thirdparty/ups/UpsServices" invoke="upsShipmentConfirm" auth="true">
+    <service name="upsShipmentConfirm" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.ups.UpsServices" invoke="upsShipmentConfirm" auth="true">
         <description>UPS Shipment Confirm</description>
         <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="upsShipmentAccept" engine="simple"
-            location="org/ofbiz/commonapp/thirdparty/ups/UpsServices" invoke="upsShipmentAccept" auth="true">
+    <service name="upsShipmentAccept" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.ups.UpsServices" invoke="upsShipmentAccept" auth="true">
         <description>UPS Shipment Accept</description>
         <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="upsVoidShipment" engine="simple"
-            location="org/ofbiz/commonapp/thirdparty/ups/UpsServices" invoke="upsVoidShipment" auth="true">
+    <service name="upsVoidShipment" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.ups.UpsServices" invoke="upsVoidShipment" auth="true">
         <description>UPS Void Shipment</description>
         <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
     </service>
-    <service name="upsTrackShipment" engine="simple"
-            location="org/ofbiz/commonapp/thirdparty/ups/UpsServices" invoke="upsTrackShipment" auth="true">
+    <service name="upsTrackShipment" engine="java"
+            location="org.ofbiz.commonapp.thirdparty.ups.UpsServices" invoke="upsTrackShipment" auth="true">
         <description>UPS Track Shipment</description>
         <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
     </service>
