@@ -332,8 +332,10 @@
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
-                                    <div><a href='<ofbiz:url>/editcreditcard?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
-                                    [Update]</a></div>
+                                    <%if (security.hasEntityPermission("PAY_INFO", "_UPDATE", session)) {%>
+                                        <div><a href='<ofbiz:url>/editcreditcard?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
+                                        [Update]</a></div>
+                                    <%}%>
                                   </td>
                               <%} else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
                                   <td width="90%" valign="top">
@@ -347,13 +349,17 @@
                                   </td>
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
-                                    <div><a href='<ofbiz:url>/editeftaccount?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
-                                    [Update]</a></div>
+                                    <%if (security.hasEntityPermission("PAY_INFO", "_UPDATE", session)) {%>
+                                        <div><a href='<ofbiz:url>/editeftaccount?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
+                                        [Update]</a></div>
+                                    <%}%>
                                   </td>
                               <%}%>
                               <td align="right" valign="top" width='1%'>
-                                <div><a href='<ofbiz:url>/deletePaymentMethod/viewprofile?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
-                                [Delete]</a></div>
+                                <%if (security.hasEntityPermission("PAY_INFO", "_DELETE", session)) {%>
+                                    <div><a href='<ofbiz:url>/deletePaymentMethod/viewprofile?paymentMethodId=<%entityField.run("paymentMethod", "paymentMethodId");%></ofbiz:url>' class="buttontext">
+                                    [Delete]</a></div>
+                                <%}%>
                               </td>
                             </tr>
                         </ofbiz:iterator>
