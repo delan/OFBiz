@@ -58,6 +58,7 @@ public class RegionViewHandler implements ViewHandler {
         if (regionFile == null) {
             Debug.logWarning("No " + Region.regionsFileName + " file found in this webapp");
         } else {
+            Debug.logVerbose("Loading regions from XML file in: " + regionFile);
             RegionManager.getRegions(regionFile);
         }
     }
@@ -74,13 +75,15 @@ public class RegionViewHandler implements ViewHandler {
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
         
         Region region = RegionManager.getRegion(regionFile, viewSource);
+        RegionStack.push(request, region);
         
         try {
             region.render(request, response);
         } catch (IOException ie) {
-            throw new ViewHandlerException(ie.getMessage(), ie);
+            throw new ViewHandlerException("IO Error rendering region", ie);
         } catch (ServletException se) {
-            throw new ViewHandlerException(se.getMessage(), se);
+            throw new ViewHandlerException("Servlet Error rendering region", se);
         }
+        RegionStack.pop(request);
     }
 }

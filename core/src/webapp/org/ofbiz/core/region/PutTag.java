@@ -26,6 +26,7 @@
 
 package org.ofbiz.core.region;
 
+import java.net.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
@@ -59,6 +60,12 @@ public class PutTag extends BodyTagSupport {
     
     public int doAfterBody() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        URL regionFile = null;
+        try {
+            regionFile = pageContext.getServletContext().getResource(Region.regionsFileName);
+        } catch (java.net.MalformedURLException e) {
+            throw new IllegalArgumentException("regions.xml file URL invalid: " + e.getMessage());
+        }
         
         if(role != null && !request.isUserInRole(role))
             return EVAL_PAGE;
@@ -67,7 +74,7 @@ public class PutTag extends BodyTagSupport {
         if(regionTag == null)
             throw new JspException("No RegionTag ancestor");
         
-        regionTag.put(new Section(section, getActualContent(), isDirect()));
+        regionTag.put(new Section(section, getActualContent(), isDirect(), regionFile));
         return SKIP_BODY;
     }
     

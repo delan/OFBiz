@@ -47,16 +47,17 @@ public class RegionManager {
         return (Region) regions.get(regionName);
     }
     
-    public static void putRegion(URL regionFile, String regionName, Object region) {
+    public static void putRegion(URL regionFile, Region region) {
         if (regionFile == null) throw new IllegalArgumentException("regionFile cannot be null");
         
         Map regions = getRegions(regionFile);
-        regions.put(regionName, region);
+        regions.put(region.getId(), region);
     }
 
     public static Map getRegions(URL regionFile) {
         Map regions = RegionCache.getRegions(regionFile);
         if (regions == null) {
+            Debug.logVerbose("Regions not yet loaded for " + regionFile + ", loading now");
             regions = readRegionXml(regionFile);
             RegionCache.putRegions(regionFile, regions);
         }
@@ -85,16 +86,16 @@ public class RegionManager {
         Iterator defineIter = defineElements.iterator();
         while (defineIter.hasNext()) {
             Element defineElement = (Element) defineIter.next();
-            Region region = makeRegion(regionXmlLocation, defineElement);
-            regions.put(defineElement.getAttribute("id"), region);
+            addRegion(regionXmlLocation, defineElement, regions);
         }
         
         return regions;
     }
 
-    public static Region makeRegion(URL regionFile, Element defineElement) {
+    protected static void addRegion(URL regionFile, Element defineElement, Map regions) {
         Region newRegion = null;
         
+        String idAttr = defineElement.getAttribute("id");
         String templateAttr = defineElement.getAttribute("template");
         String regionAttr = defineElement.getAttribute("region");
         if (UtilValidate.isNotEmpty(templateAttr) && UtilValidate.isNotEmpty(regionAttr)) {
@@ -102,30 +103,30 @@ public class RegionManager {
         }
         
         if (UtilValidate.isNotEmpty(templateAttr)) {
-            newRegion = new Region(templateAttr, null);
+            newRegion = new Region(idAttr, templateAttr, null);
         } else {
             if (UtilValidate.isNotEmpty(regionAttr)) {
-                Region parentRegion = RegionManager.getRegion(regionFile, regionAttr);
+                Region parentRegion = (Region) regions.get(regionAttr);
                 if(parentRegion == null) {
                     throw new IllegalArgumentException("can't find page definition attribute with this key: " + regionAttr);
                 }
-                newRegion = new Region(parentRegion.getContent(), parentRegion.getSections());
+                newRegion = new Region(idAttr, parentRegion.getContent(), parentRegion.getSections());
             } else {
                 throw new IllegalArgumentException("Must specify either the template or the region attribute");
             }
         }
+
+        regions.put(idAttr, newRegion);
         
         List putElements = UtilXml.childElementList(defineElement, "put");
         Iterator putIter = putElements.iterator();
         while (putIter.hasNext()) {
             Element putElement = (Element) putIter.next();
-            newRegion.put(makeSection(putElement));
+            newRegion.put(makeSection(putElement, regionFile));
         }
-        
-        return newRegion;
     }
 
-    public static Section makeSection(Element putElement) {
+    protected static Section makeSection(Element putElement, URL readerFile) {
         String bodyContent = UtilXml.elementValue(putElement);
         String section = putElement.getAttribute("section");
         String content = putElement.getAttribute("content");
@@ -142,6 +143,6 @@ public class RegionManager {
             direct = "true";
         }
         
-        return new Section(section, content, direct);
+        return new Section(section, content, direct, readerFile);
     }
 }

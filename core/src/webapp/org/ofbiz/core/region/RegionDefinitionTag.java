@@ -41,14 +41,19 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class RegionDefinitionTag extends RegionTag {
 
+    protected String id = null;
+    
+    public void setId(String id) { this.id = id; }
+    public String getId() { return this.id; }
+    
     public int doStartTag() throws JspException {
         if(regionObj != null && template != null)
             throw new JspException("regions can be created from a template or another region, but not both");
 
-        createRegionFromRegion();
+        createRegionFromRegion(getId());
         
         if(regionObj == null)
-            createRegionFromTemplate();
+            createRegionFromTemplate(getId());
         
         return EVAL_BODY_INCLUDE;
     }
@@ -60,7 +65,7 @@ public class RegionDefinitionTag extends RegionTag {
         } catch (java.net.MalformedURLException e) {
             throw new IllegalArgumentException("regions.xml file URL invalid: " + e.getMessage());
         }
-        RegionManager.putRegion(regionFile, id, regionObj);
+        RegionManager.putRegion(regionFile, regionObj);
         return EVAL_PAGE;
     }
     

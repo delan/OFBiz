@@ -31,6 +31,8 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
+import org.ofbiz.core.util.*;
+
 /**
  * Tag to render a region
  *
@@ -67,18 +69,23 @@ public class RenderTag extends RegionTag {
         
         if(renderingRegion()) {
             if(!findRegionByKey()) {
-                createRegionFromTemplate();
+                createRegionFromTemplate(null);
             }
-            RegionStack.push(pageContext, regionObj);
+            RegionStack.push(pageContext.getRequest(), regionObj);
         }
         return EVAL_BODY_INCLUDE;
     }
     
     public int doEndTag() throws JspException {
-        Region regionEnd = RegionStack.peek(pageContext);
+        Region regionEnd = null;
+        try {
+            regionEnd = RegionStack.peek(pageContext.getRequest());
+        } catch (Exception e) {
+            throw new JspException("Error finding region on stack: " + e.getMessage());
+        }
         
         if(regionEnd == null)
-            throw new JspException("Can't find region");
+            throw new JspException("Can't find region on stack");
         
         if(renderingSection()) {
             Section section = regionEnd.get(sectionName);
@@ -90,10 +97,11 @@ public class RenderTag extends RegionTag {
         } else if (renderingRegion()) {
             try {
                 regionEnd.render(pageContext);
-                RegionStack.pop(pageContext);
+                RegionStack.pop(pageContext.getRequest());
             } catch(Exception ex) { 
+                Debug.logError(ex, "Error rendering region [" + regionEnd.getId() + "]: ");
                 // IOException or ServletException
-                throw new JspException(ex.getMessage());
+                throw new JspException("Error rendering region [" + regionEnd.getId() + "]: " + ex.getMessage());
             }
         }
         return EVAL_PAGE;

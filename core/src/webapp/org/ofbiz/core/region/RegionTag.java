@@ -69,21 +69,21 @@ public class RegionTag extends TagSupport {
         return regionObj != null;
     }
     
-    protected void createRegionFromTemplate() throws JspException {
+    protected void createRegionFromTemplate(String id) throws JspException {
         if(template == null)
             throw new JspException("can't find template");
         
-        regionObj = new Region(template);
+        regionObj = new Region(id, template);
     }
     
-    protected void createRegionFromRegion() throws JspException {
+    protected void createRegionFromRegion(String id) throws JspException {
         findRegionByKey();
         
         if(regionObj == null)
             return;
         
         // made from template and sections
-        regionObj = new Region(regionObj.getContent(), regionObj.getSections());
+        regionObj = new Region(id, regionObj.getContent(), regionObj.getSections());
     }
     
     public void put(Section section) {

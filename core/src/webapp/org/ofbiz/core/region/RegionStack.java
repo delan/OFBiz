@@ -26,30 +26,30 @@
 
 package org.ofbiz.core.region;
 
-import javax.servlet.jsp.PageContext;
+import javax.servlet.*;
 import java.util.Stack;
 
 public class RegionStack {
     private RegionStack() { } // no instantiations
     
-    public static Stack getStack(PageContext pc) {
-        Stack s = (Stack) pc.getAttribute("region-stack", PageContext.REQUEST_SCOPE);
+    public static Stack getStack(ServletRequest request) {
+        Stack s = (Stack) request.getAttribute("region-stack");
         if(s == null) {
             s = new Stack();
-            pc.setAttribute("region-stack", s, PageContext.REQUEST_SCOPE);
+            request.setAttribute("region-stack", s);
         }
         return s;
     }
     
-    public static Region peek(PageContext pc) {
-        return (Region) getStack(pc).peek();
+    public static Region peek(ServletRequest request) {
+        return (Region) getStack(request).peek();
     }
     
-    public static void push(PageContext pc, Region region) {
-        getStack(pc).push(region);
+    public static void push(ServletRequest request, Region region) {
+        getStack(request).push(region);
     }
     
-    public static Region pop(PageContext pc) {
-        return (Region) getStack(pc).pop();
+    public static Region pop(ServletRequest request) {
+        return (Region) getStack(request).pop();
     }
 }

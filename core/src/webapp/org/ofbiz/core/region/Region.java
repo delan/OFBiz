@@ -47,29 +47,25 @@ public class Region extends Content {
     public static final String regionsFileName = "/WEB-INF/regions.xml"; 
     
     private Map sections = new HashMap();
+    protected String id;
     
-    public Region(String content) {
-        this(content, null); // content is the name of a template
+    public Region(String id, String content) {
+        this(id, content, null); // content is the name of a template
     }
     
-    public Region(String content, Map sections) {
+    public Region(String id, String content, Map sections) {
         super(content);
-        
+        this.id = id;
         if (sections != null)
-            this.sections = new HashMap(sections);
+            this.sections.putAll(sections);
     }
+
+    public String getId() { return this.id; }
     
-    public void put(Section section) {
-        sections.put(section.getName(), section);
-    }
-    
-    public Section get(String name) {
-        return (Section) sections.get(name);
-    }
-    
-    public Map getSections() {
-        return sections;
-    }
+    public void put(Section section) { sections.put(section.getName(), section); }
+    public void putAll(Map newSections) { sections.putAll(newSections); }
+    public Section get(String name) { return (Section) sections.get(name); }
+    public Map getSections() { return sections; }
     
     public void render(PageContext pageContext) throws JspException {
         try {

@@ -53,13 +53,9 @@ public abstract class Content implements java.io.Serializable {
         this.direct  = direct;
     }
     
-    public String getContent() {
-        return content;
-    }
+    public String getContent() { return content; }
     
-    public String getDirect() {
-        return direct;
-    }
+    public String getDirect() { return direct; }
     
     public boolean isDirect() {
         return Boolean.valueOf(direct).booleanValue();

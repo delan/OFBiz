@@ -26,9 +26,12 @@
 
 package org.ofbiz.core.region;
 
+import java.net.*;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import org.w3c.dom.*;
+
+import org.ofbiz.core.util.*;
 
 /**
  * A section is content with a name that implements Content.render. 
@@ -46,10 +49,12 @@ import org.w3c.dom.*;
  */
 public class Section extends Content {
     protected final String name;
+    protected URL regionFile;
     
-    public Section(String name, String content, String direct) {
+    public Section(String name, String content, String direct, URL regionFile) {
         super(content, direct);
         this.name = name;
+        this.regionFile = regionFile;
     }
     
     public String getName() {
@@ -59,24 +64,26 @@ public class Section extends Content {
     public void render(PageContext pageContext) throws JspException {
         if(content != null) {
             // see if this section's content is a region
-            Region region = (Region)pageContext.findAttribute(content);
+            Region region = RegionManager.getRegion(regionFile, content);
             if (region != null) {
                 // render the content as a region
-                RegionStack.push(pageContext, region);
+                RegionStack.push(pageContext.getRequest(), region);
                 region.render(pageContext);
-                RegionStack.pop(pageContext);
+                RegionStack.pop(pageContext.getRequest());
             } else {
                 if (isDirect()) {
                     try {
                         pageContext.getOut().print(content.toString());
                     } catch (java.io.IOException ex) {
-                        throw new JspException(ex.getMessage());
+                        Debug.logError(ex, "Error writing direct content: ");
+                        throw new JspException("Error writing direct content: " + ex.getMessage());
                     }
                 } else {
                     try {
                         pageContext.include(content.toString());
                     } catch (Exception ex) {
-                        throw new JspException(ex.getMessage());
+                        // makes a redundant print: Debug.logError(ex, "Error including content [" + content + "]: ");
+                        throw new JspException("Error including content [" + content + "]: " + ex.getMessage());
                     }
                 }
             }
