@@ -389,7 +389,7 @@
             location="org.ofbiz.manufacturing.bom.BOMServices" invoke="getItemConfigurationTree">
         <description>Returns an ItemConfigurationTree (an object that represents a configured bill of material tree in memory). Useful for tree traversal (breakdown, explosion, implosion).</description>
         <attribute mode="IN" name="productId" optional="false" type="String"/>
-        <attribute mode="IN" name="explosion" optional="true" type="Boolean"/>
+        <attribute mode="IN" name="type" optional="true" type="Integer"/>
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
         <attribute mode="IN" name="bomType" optional="false" type="String"/>
         <attribute mode="OUT" name="tree" optional="true" type="org.ofbiz.manufacturing.bom.ItemConfigurationTree"/>
