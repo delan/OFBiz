@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.9 2004/02/10 23:24:11 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.10 2004/03/13 17:49:46 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -42,6 +42,13 @@
         <property name="delegator-name" value="default"/>
         <property name="client-factory" value="org.ofbiz.service.rmi.socket.CompressionClientSocketFactory"/>
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
+    </container>
+
+    <!-- load BeanShell remote telnet server -->
+    <container name="beanshell-container" class="org.ofbiz.base.container.BeanShellContainer">
+        <!-- the port below and port-1 will be opened by beanshell -->
+        <property name="telnet-port" value="9990"/>
+        <property name="app-name" value="OFBiz"/>
     </container>
 
     <!-- load jetty and all web applications -->
