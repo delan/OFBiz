@@ -305,6 +305,7 @@
   <RoleType description="" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="SALES_REP"/>
   <RoleType description="" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="CONTACT"/>
   <RoleType description="" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="FAMILY_MEMBER"/>
+  <RoleType description="" hasTable="N" parentTypeId="SALES_REP" roleTypeId="AFFILIATE"/>
   <RoleType description="" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="MANAGER"/>
   <RoleType description="" hasTable="N" parentTypeId="EMPLOYEE" roleTypeId="WORKER"/>
   <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="CUSTOMER"/>
