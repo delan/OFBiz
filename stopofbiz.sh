@@ -1,5 +1,6 @@
+#!/bin/sh
 ####
-# $Id: stopofbiz.sh,v 1.2 2004/07/31 21:42:27 ajzeneski Exp $
+# $Id$
 # ofbiz.admin.key and ofbiz.admin.port must match that which OFBIZ was started with
 ####
 
