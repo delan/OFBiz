@@ -1396,6 +1396,9 @@
       <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId"/>
+      </relation>
     </entity>
     <entity entity-name="UserLoginHistory"
             package-name="org.ofbiz.commonapp.security.login"
