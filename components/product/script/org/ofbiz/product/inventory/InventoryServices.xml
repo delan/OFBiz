@@ -90,16 +90,9 @@
     <simple-method method-name="updateInventoryItemFromDetail" short-description="Update an InventoryItem From the Associated Detail Records" login-required="false">
         <entity-one entity-name="InventoryItem" value-name="inventoryItem"/>
         <entity-one entity-name="InventoryItemDetailSummary" value-name="inventoryItemDetailSummary"/>
-        <!-- the above entity-one should work, though not totally sure with this view-entity...
-        <entity-and entity-name="InventoryItemDetailSummary" list-name="summaryList">
-            <field-map env-name="inventoryItemId"/>
-        </entity-and>
-        <!- - should just be one record, so grab it - ->
-        <first-from-list list-name="summaryList" entry-name="inventoryItemDetailSummary"/>
-        -->
         
-        <env-to-env to-env-name="inventoryItemDetailSummary.availableToPromiseTotal" env-name="inventoryItem.availableToPromiseTotal"/>
-        <env-to-env to-env-name="inventoryItemDetailSummary.quantityOnHandTotal" env-name="inventoryItem.quantityOnHandTotal"/>
+        <env-to-env env-name="inventoryItemDetailSummary.availableToPromiseTotal" to-env-name="inventoryItem.availableToPromiseTotal"/>
+        <env-to-env env-name="inventoryItemDetailSummary.quantityOnHandTotal" to-env-name="inventoryItem.quantityOnHandTotal"/>
         <store-value value-name="inventoryItem"/>
     </simple-method>
 
