@@ -2,7 +2,6 @@
 ###
 # create OFBiz database with
 #   - 20 MB data devspace and 8 MB log devspace
-#   - demo database user test (with password test)
 ###
 
 
@@ -30,7 +29,7 @@ PATH=/opt/sapdb/indep_prog/bin:$PATH
 export PATH
 
 # name of the database
-SID=ofbiz
+SID=OFBIZ
 
 # Database Manager / Password
 DBM=ofbdbm
@@ -47,12 +46,12 @@ DBUPW=ofbiz
 # start remote communication server
 x_server start >/dev/null 2>&1
 
-# stop and drop probably existing demo database
+# stop and drop probably existing database
 dbmcli -d $SID -u $DBM,$DBMPW db_offline >/dev/null 2>&1
 dbmcli -d $SID -u $DBM,$DBMPW db_drop >/dev/null 2>&1
 
 
-# create new demo database
+# create new database
 echo "create database $SID..."
 _o=`dbmcli -s -R  $INSTROOT db_create $SID $DBM,$DBMPW 2>&1`
 _test=`echo $_o | grep OK`
@@ -123,8 +122,8 @@ if [ "$_test" = "" ]; then
         exit 1
 fi
 
-# create database demo user
-echo "create database demo user..."
+# create database user
+echo "create database user ($DBU)..."
 _o=`cat <<EOF | dbmcli -d $SID -u $DBA,$DBAPW
 sql_connect $DBA,$DBAPW
 sql_execute CREATE USER $DBU PASSWORD $DBUPW DBA NOT EXCLUSIVE
