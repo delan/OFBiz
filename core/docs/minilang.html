@@ -39,6 +39,7 @@
   <li><a href="#Simple_Method">The Simple Method Mini-Language</a>
     <ul>
     <li><a href='#MethodOverview'>Simple Method Overview</a>
+    <li><a href='#SpecialSyntax'>Special Context Access Syntax</a>
     <li><a href='#Call'>Call Operations</a>
     <li><a href='#JavaCall'>Java Call Operations</a>
     <li><a href='#ControlError'>Control and Error Handling Operations</a>
@@ -236,6 +237,7 @@ in addition to all of the the attributes in the copy tag.</p>
 <h3><a name="Simple_Method">The Simple Method Mini-Language</a></h3>
 <ul>
 <li><a href='#MethodOverview'>Simple Method Overview</a>
+<li><a href='#SpecialSyntax'>Special Context Access Syntax</a>
 <li><a href='#Call'>Call Operations</a>
 <li><a href='#JavaCall'>Java Call Operations</a>
 <li><a href='#ControlError'>Control and Error Handling Operations</a>
@@ -387,6 +389,45 @@ them in the DTD).</p>
     <td>A LocalDispatcher object to use in the method</td>
 </tr>
 </table>
+
+<hr class='sepbar'>
+<h3><a name='SpecialSyntax'>Special Context Access Syntax</a></h3>
+
+<p class='contenttext'>In strings and field names a special syntax is supported
+to flexibly access Map member, List elements and to insert environment values into
+string constants.</p>
+
+<p class='contenttext'>The ${} (dollar-sign-curly-brace) syntax can be used to insert an
+environment variable value in pretty much any string constant in a simple-method file. Not
+only can it be used to reference top-level envrionment variables, the syntax elements 
+described below can be used to access values in sub-structures.</p>
+
+<p class='contenttext'>You can use the "." (dot) syntax to access Map members. 
+For example if you specify the attribute <code>field-name="product.productName"</code>
+it will reference the <code>productName</code> member of the <code>product</code> Map.
+This would be the same as specifying <code>map-name="product" field-name="productName"</code>.
+Note that this is, of course, more flexible than a field-name/map-name combination because
+the Map structure can be multiple levels deel. For example if you have use the attribute
+<code>field-name="products.widget.productName"</code> it will reference the <code>productName</code> in
+the <code>widget</code> Map which is in the <code>products</code> Map.</p>
+
+<p class='contenttext'>The "[]" (square-brace) syntax can be used to access list elements.
+For example you can specify the attribute <code>field-name="products[0].productName"</code>
+and it will reference the <code>productName</code> of the first (position zero) element in the 
+<code>products</code> List. To make this more useful you can pull a list index from the 
+environment using something like <code>field-name="products[${currentIndex}].productName"</code>.</p>
+
+<p class='contenttext'>There are two extensions to the [] syntax that can be used when
+refering to an environment location that is the target of an operation. If you do not include
+a number between the square braces the value will be put at the end of the list. If you put a
+"+" (plus sign) in front of the number between the square braces (ie: [+2]) it will insert
+the value before that position in the list instead of replacing the value at that location.
+For example, specifying [+0] would insert the value at the beginning of the list.</p>
+
+<p class='contenttext'>In fact, you can use the ${} syntax to substitute any string or other 
+value at any location in a field-name or other string constant. So, you could even reference
+a Map member named in some other environment variable. For example you could use 
+<code>field-name="products[${currentIndex}].${currentMember}"</code> to acheive this effect.</p>
 
 <p class='contenttext'>Okay, enough of the general stuff, here is a catalog and description of the 
 available operations.</p>
