@@ -37,6 +37,7 @@
   </simple-map-processor>
   <simple-map-processor name="updateContactMech">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
+    <process field="partyId"><copy/></process>
   </simple-map-processor>
   <simple-map-processor name="deleteContactMech">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
@@ -63,7 +64,7 @@
     <process field="extension"><copy/></process>
     <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
-  
+
   <simple-map-processor name="emailAddress">
     <process field="emailAddress">
         <copy/>
@@ -71,7 +72,7 @@
         <validate-method method="isEmail"><fail-message message="Email Address is not formatted correctly, must be like foo@bar.com"/></validate-method></process>
     <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
-  
+
   <!-- PartyContactMechPurpose map procs -->
   <simple-map-processor name="createPartyContactMechPurpose">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
