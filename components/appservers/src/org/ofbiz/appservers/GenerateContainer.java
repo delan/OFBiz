@@ -1,5 +1,5 @@
 /*
- * $Id: GenerateContainer.java,v 1.3 2004/03/31 03:38:42 ajzeneski Exp $
+ * $Id: GenerateContainer.java,v 1.4 2004/03/31 03:53:43 ajzeneski Exp $
  *
  */
 package org.ofbiz.appservers;
@@ -30,7 +30,7 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
  * ** This container requires the ComponentContainer to be loaded first.
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.1
  */
 public class GenerateContainer implements Container {
@@ -102,6 +102,7 @@ public class GenerateContainer implements Container {
         List c[] = getClasspath();
         dataMap.put("classpathJars", c[0]);
         dataMap.put("classpathDirs", c[1]);
+        dataMap.put("env", System.getProperties());
         dataMap.put("webApps", ComponentConfig.getAllWebappResourceInfos());
         return dataMap;
     }
