@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -111,6 +111,8 @@
         </tr>
       </table>
       <br>
+      
+      <#if !orderHeader?has_content || orderPaymentPreferences?has_content || billingAccount?has_content>
       <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- order payment info -->
         <tr>
@@ -227,6 +229,7 @@
           </td>
         </tr>
       </table>
+      </#if>
     </td>
     <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
     <#-- right side -->
