@@ -109,6 +109,60 @@ server hardware, network connections).</div>
     <td><div class="tabletext"><%=callsPerSecond%></div></td>
   </tr>
   <%
+  	List createTestList = new ArrayList();
+    calls = 1000; startTime = (double) System.currentTimeMillis();
+    for (int i=0; i < calls; i++) { 
+        GenericValue dummy = delegator.makeValue("Product", UtilMisc.toMap("autoCreateKeywords", "N", "description", "Initial Description", "productName", "Auto-Test Name", "productId", "_~WRITE_TEST~_" + i)); 
+        createTestList.add(dummy); 
+        delegator.create(dummy);
+    }
+    totalTime = (double) System.currentTimeMillis() - startTime;
+    callsPerSecond = (double) calls / (totalTime/1000);
+  %>
+  <tr>
+    <td><div class="tabletext">create</div></td>
+    <td><div class="tabletext">Large:Product</div></td>
+    <td><div class="tabletext"><%=calls%></div></td>
+    <td><div class="tabletext"><%=totalTime/1000%></div></td>
+    <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
+    <td><div class="tabletext"><%=callsPerSecond%></div></td>
+  </tr>  
+  <%
+    calls = 1000; startTime = (double) System.currentTimeMillis();    
+    for (int i=0; i < calls; i++) { 
+        GenericValue dummy = (GenericValue) createTestList.get(i); 
+        dummy.set("description", "This was a test from the performace JSP");
+        dummy.store();
+    }
+    totalTime = (double) System.currentTimeMillis() - startTime;
+    callsPerSecond = (double) calls / (totalTime/1000);
+  %>
+  <tr>
+    <td><div class="tabletext">update</div></td>
+    <td><div class="tabletext">Large:Product</div></td>
+    <td><div class="tabletext"><%=calls%></div></td>
+    <td><div class="tabletext"><%=totalTime/1000%></div></td>
+    <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
+    <td><div class="tabletext"><%=callsPerSecond%></div></td>
+  </tr>    
+  <%
+    calls = 1000; startTime = (double) System.currentTimeMillis();
+    for (int i=0; i < calls; i++) { 
+        GenericValue dummy = (GenericValue) createTestList.get(i); 
+        dummy.remove();
+    }
+    totalTime = (double) System.currentTimeMillis() - startTime;
+    callsPerSecond = (double) calls / (totalTime/1000);
+  %>
+  <tr>
+    <td><div class="tabletext">remove</div></td>
+    <td><div class="tabletext">Large:Product</div></td>
+    <td><div class="tabletext"><%=calls%></div></td>
+    <td><div class="tabletext"><%=totalTime/1000%></div></td>
+    <td><div class="tabletext"><%=1/callsPerSecond%></div></td>
+    <td><div class="tabletext"><%=callsPerSecond%></div></td>
+  </tr>      
+  <%
     calls = 100000; startTime = (double) System.currentTimeMillis();
     for (int i=0; i < calls; i++) { Map ptyMap = new HashMap(); ptyMap.put("partyId", "_NA_"); }
     totalTime = (double) System.currentTimeMillis() - startTime;
