@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.9 2003/12/12 03:42:55 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.10 2003/12/24 01:57:36 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,36 +24,14 @@
  */
 package org.ofbiz.entity.datasource;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.Vector;
+import java.sql.Timestamp;
+import java.util.*;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.entity.EntityLockedException;
-import org.ofbiz.entity.GenericDataSourceException;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntity;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericEntityNotFoundException;
-import org.ofbiz.entity.GenericModelException;
-import org.ofbiz.entity.GenericNotImplementedException;
-import org.ofbiz.entity.GenericPK;
-import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionParam;
 import org.ofbiz.entity.condition.EntityFieldMap;
@@ -68,8 +46,6 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelViewEntity;
-import org.ofbiz.entity.serialize.SerializeException;
-import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -83,7 +59,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -140,14 +116,30 @@ public class GenericDAO {
             return singleUpdateView(entity, (ModelViewEntity) modelEntity, fieldsToSave, sqlP);
         }
 
-        // if we have a STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
-        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD) && !entity.getIsFromEntitySync()) {
-            entity.set(ModelEntity.STAMP_TX_FIELD, TransactionUtil.getTransactionStartStamp());
+        // if we have a STAMP_TX_FIELD or CREATE_STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
+        boolean stampTxIsField = modelEntity.isField(ModelEntity.STAMP_TX_FIELD);
+        boolean createStampTxIsField = modelEntity.isField(ModelEntity.CREATE_STAMP_TX_FIELD);
+        if ((stampTxIsField || createStampTxIsField) && !entity.getIsFromEntitySync()) {
+            Timestamp txStartStamp = TransactionUtil.getTransactionStartStamp();
+            if (stampTxIsField) {
+                entity.set(ModelEntity.STAMP_TX_FIELD, txStartStamp);
+            }
+            if (createStampTxIsField) {
+                entity.set(ModelEntity.CREATE_STAMP_TX_FIELD, txStartStamp);
+            }
         }
 
-        // if we have a STAMP_FIELD then set it with NOW.
-        if (modelEntity.isField(ModelEntity.STAMP_FIELD) && !entity.getIsFromEntitySync()) {
-            entity.set(ModelEntity.STAMP_FIELD, TransactionUtil.getTransactionUniqueNowStamp());
+        // if we have a STAMP_FIELD or CREATE_STAMP_FIELD then set it with NOW
+        boolean stampIsField = modelEntity.isField(ModelEntity.STAMP_FIELD);
+        boolean createStampIsField = modelEntity.isField(ModelEntity.CREATE_STAMP_FIELD);
+        if ((stampIsField || createStampIsField)  && !entity.getIsFromEntitySync()) {
+            Timestamp startStamp = TransactionUtil.getTransactionUniqueNowStamp();
+            if (stampIsField) {
+                entity.set(ModelEntity.STAMP_FIELD, startStamp);
+            }
+            if (createStampIsField) {
+                entity.set(ModelEntity.CREATE_STAMP_FIELD, startStamp);
+            }
         }
         
         String sql = "INSERT INTO " + modelEntity.getTableName(datasourceInfo) + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
