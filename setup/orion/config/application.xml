@@ -29,7 +29,6 @@
     <library path="../../ofbiz/commonapp/etc"/>
     <library path="../../ofbiz/lib/share"/>
     <library path="../../ofbiz/lib/scripting"/>
-    <library path="../../ofbiz/lib/wspublisher"/>
     <library path="../../ofbiz/lib/datavision"/>
     <library path="../../ofbiz/lib/jasperreports"/>
     
@@ -38,9 +37,10 @@
     <library path="../../ofbiz/lib/common/commons-collections.jar"/>
     <library path="../../ofbiz/lib/common/commons-digester.jar"/>
     <library path="../../ofbiz/lib/common/commons-discovery.jar"/>
-    <library path="../../ofbiz/lib/common/commons-fileupload-1.0-dev.jar"/>
+    <library path="../../ofbiz/lib/common/commons-fileupload.jar"/>
     <library path="../../ofbiz/lib/common/commons-httpclient.jar"/>
     <library path="../../ofbiz/lib/common/commons-logging.jar"/>
+    <library path="../../ofbiz/lib/common/commons-vfs.jar"/>    
     <library path="../../ofbiz/lib/common/hsqldb.jar"/>
     <library path="../../ofbiz/lib/common/log4j.jar"/>
     <library path="../../ofbiz/lib/common/mm.mysql-2.0.14-bin.jar"/>

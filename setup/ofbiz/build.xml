@@ -70,9 +70,10 @@
         <copy file="lib/common/commons-collections.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-discovery.jar" toDir="${catalina.dir}/common/lib"/>
-        <copy file="lib/common/commons-fileupload-1.0-dev.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-fileupload.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-logging.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/commons-vfs.jar" toDir="${catalina.dir}/common/lib"/>
 
         <copy toDir="${catalina.dir}/lib">
             <fileset dir="lib/share" includes="*.jar"/>
@@ -125,8 +126,9 @@
         <copy file="lib/common/commons-httpclient.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/commons-digester.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/commons-discovery.jar" toDir="${catalina.dir}/shared/lib"/>
-        <copy file="lib/common/commons-fileupload-1.0-dev.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-fileupload.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/commons-beanutils.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/commons-vfs.jar" toDir="${catalina.dir}/shared/lib"/>
 
         <copy toDir="${catalina.dir}/shared/lib">
             <fileset dir="lib/share" includes="*.jar"/>
