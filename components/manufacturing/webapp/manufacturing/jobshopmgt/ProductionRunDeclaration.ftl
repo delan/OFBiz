@@ -35,12 +35,12 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
     <#list mandatoryWorkEfforts as mandatoryWorkEffortAssoc>
         <#assign mandatoryWorkEffort = mandatoryWorkEffortAssoc.getRelatedOne("FromWorkEffort")>
         <#if "PRUN_COMPLETED" == mandatoryWorkEffort.getString("currentStatusId") || "PRUN_CLOSED" == mandatoryWorkEffort.getString("currentStatusId")>
-            [${mandatoryWorkEffort.workEffortId}]&nbsp;
+            <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${mandatoryWorkEffort.workEffortId}]</a>
         <#else>
             <#if "PRUN_CREATED" == mandatoryWorkEffort.getString("currentStatusId")>
-                <a href="<@ofbizUrl>/EditProductionRun?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${mandatoryWorkEffort.workEffortId}]</a>
+                <a href="<@ofbizUrl>/EditProductionRun?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${mandatoryWorkEffort.workEffortId}]</a>[*]&nbsp;
             <#else>
-                <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${mandatoryWorkEffort.workEffortId}]</a>
+                <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${mandatoryWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${mandatoryWorkEffort.workEffortId}]</a>[*]&nbsp;
             </#if>
         </#if>
     </#list>
@@ -53,7 +53,7 @@ ${pages.get("/jobshopmgt/ProductionRunTabBar.ftl")}
     <#list dependentWorkEfforts as dependentWorkEffortAssoc>
         <#assign dependentWorkEffort = dependentWorkEffortAssoc.getRelatedOne("ToWorkEffort")>
         <#if "PRUN_COMPLETED" == dependentWorkEffort.currentStatusId || "PRUN_CLOSED" == dependentWorkEffort.currentStatusId>
-            [${dependentWorkEffort.workEffortId}]&nbsp;
+            <a href="<@ofbizUrl>/ProductionRunDeclaration?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${dependentWorkEffort.workEffortId}]</a>[*]&nbsp;
         <#else>
             <#if "PRUN_CREATED" == dependentWorkEffort.getString("currentStatusId")>
                 <a href="<@ofbizUrl>/EditProductionRun?productionRunId=${dependentWorkEffort.workEffortId}</@ofbizUrl>" class="buttontext">[${dependentWorkEffort.workEffortId}]</a>
