@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -153,6 +153,10 @@ function addToList() {
         <#assign promoItems = false>
         <#list shoppingCart.items() as cartLine>
           <#assign cartLineIndex = shoppingCart.getItemIndex(cartLine)>
+          <#-- show adjustment info -->
+          <#list cartLine.getAdjustments() as cartLineAdjustment>
+            <!-- cart line ${cartLineIndex} adjustment: ${cartLineAdjustment} -->
+          </#list>
           <tr><td colspan="7"><hr class="sepbar"></td></tr>
           <tr>
             <td>
@@ -213,6 +217,7 @@ function addToList() {
               </tr>
             <#list shoppingCart.getAdjustments() as cartAdjustment>
               <#assign adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType")>
+              <!-- adjustment info: ${cartAdjustment.toString()} -->
               <tr>
                 <td colspan="5" nowrap align="right"><div class="tabletext"><i>${uiLabelMap.EcommerceAdjustment}</i> - ${adjustmentType.description?if_exists}:</div></td>
                 <td nowrap align="right"><div class="tabletext"><@ofbizCurrency amount=Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal()) isoCode=shoppingCart.getCurrency()/></div></td>

@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.12 2003/11/19 11:18:52 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.13 2003/11/21 23:10:54 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -567,7 +567,7 @@ public class ProductPromoWorker {
                     quantityDesired -= quantityUsed;
 
                     // create an adjustment and add it to the cartItem that implements the promotion action
-                    double percentModifier = productPromoAction.get("amount") == null ? 1.0 : productPromoAction.getDouble("amount").doubleValue();
+                    double percentModifier = productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue()/100.0);
                     double discountAmount = -(quantityUsed * cartItem.getBasePrice() * percentModifier);
                     cartChanged = doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
                 }
@@ -596,6 +596,10 @@ public class ProductPromoWorker {
 
                     // create an adjustment and add it to the cartItem that implements the promotion action
                     double discount = productPromoAction.get("amount") == null ? 0.0 : productPromoAction.getDouble("amount").doubleValue();
+                    // don't allow the discount to be greater than the price
+                    if (discount > cartItem.getBasePrice()) {
+                        discount = cartItem.getBasePrice();
+                    }
                     double discountAmount = -(quantityUsed * discount);
                     cartChanged = doOrderItemPromoAction(productPromoAction, cartItem, discountAmount, "amount", delegator);
                 }
@@ -632,17 +636,17 @@ public class ProductPromoWorker {
             ranAction = false;
             if (totalAmount > desiredAmount && quantityDesired == 0) {
                 ranAction = true;
-                double discountAmount = totalAmount - desiredAmount;
+                double discountAmount = -(totalAmount - desiredAmount);
                 cartChanged = doOrderPromoAction(productPromoAction, cart, discountAmount, "amount", delegator);
             }
 
         } else if ("PROMO_ORDER_PERCENT".equals(productPromoActionEnumId)) {
             ranAction = true;
-            double amount = productPromoAction.get("amount") == null ? 0.0 : productPromoAction.getDouble("amount").doubleValue();
+            double amount = -(productPromoAction.get("amount") == null ? 0.0 : (productPromoAction.getDouble("amount").doubleValue() / 100.0));
             cartChanged = doOrderPromoAction(productPromoAction, cart, amount, "percentage", delegator);
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoActionEnumId)) {
             ranAction = true;
-            double amount = productPromoAction.get("amount") == null ? 0.0 : productPromoAction.getDouble("amount").doubleValue();
+            double amount = -(productPromoAction.get("amount") == null ? 0.0 : productPromoAction.getDouble("amount").doubleValue());
             cartChanged = doOrderPromoAction(productPromoAction, cart, amount, "amount", delegator);
         } else {
             Debug.logError("An un-supported productPromoActionType was used: " + productPromoActionEnumId + ", not performing any action", module);
