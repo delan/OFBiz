@@ -240,7 +240,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
                 Map componentData = component.getAllFields();
                 componentData.put("internalName", componentName);
                 componentData.put("workEffortName", workEffortName);
-                Iterator issuances = (delegator.findByAnd("WorkEffortInventoryAssign", UtilMisc.toMap("workEffortId", component.getString("workEffortId"), "productId", product.getString("productId")))).iterator();
+                Iterator issuances = (delegator.findByAnd("WorkEffortAndInventoryAssign", UtilMisc.toMap("workEffortId", component.getString("workEffortId"), "productId", product.getString("productId")))).iterator();
                 double totalIssued = 0.0;
                 while (issuances.hasNext()) {
                     GenericValue issuance = (GenericValue)issuances.next();
