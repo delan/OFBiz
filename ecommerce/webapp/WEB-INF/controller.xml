@@ -543,7 +543,7 @@
 
     <view-map name="viewprofile" type="wsp" page="/customer/viewprofile.ftl"/>
     <view-map name="newcustomer" type="wsp" page="/customer/newcustomer.ftl"/>
-    <view-map name="editcontactmech" type="region"/>
+    <view-map name="editcontactmech" type="wsp" page="/customer/editcontactmech.ftl"/>
     <view-map name="editcreditcard" type="region"/>
     <view-map name="editeftaccount" type="region"/>
     <view-map name="changepassword" type="region"/>

@@ -89,14 +89,14 @@
     </tr>
     <#if person.nickname?has_content><tr><td align=right nowrap><div class='tabletext'><b>Nickname</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.nickname}</div></td></tr></#if>
     <#if person.gender?has_content><tr><td align=right nowrap><div class='tabletext'><b>Gender</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.gender}</div></td></tr></#if>
-    <#if person.birthDate?exists><tr><td align=right nowrap><div class='tabletext'><b>Birth Date</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.birthDate}</div></td></tr></#if>
+    <#if person.birthDate?exists><tr><td align=right nowrap><div class='tabletext'><b>Birth Date</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.birthDate.toString()}</div></td></tr></#if>
     <#if person.height?exists><tr><td align=right nowrap><div class='tabletext'><b>Height</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.height}</div></td></tr></#if>
     <#if person.weight?exists><tr><td align=right nowrap><div class='tabletext'><b>Weight</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.weight}</div></td></tr></#if>
     <#if person.mothersMaidenName?has_content><tr><td align=right nowrap><div class='tabletext'><b>Mothers Maiden Name</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.mothersMaidenName}</div></td></tr></#if>
     <#if person.maritalStatus?has_content><tr><td align=right nowrap><div class='tabletext'><b>Marital Status</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.maritalStatus}</div></td></tr></#if>
     <#if person.socialSecurityNumber?has_content><tr><td align=right nowrap><div class='tabletext'><b>Social Security Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.socialSecurityNumber}</div></td></tr></#if>
     <#if person.passportNumber?has_content><tr><td align=right nowrap><div class='tabletext'><b>Passport Number</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportNumber}</div></td></tr></#if>
-    <#if person.passportExpireDate?exists><tr><td align=right nowrap><div class='tabletext'><b>Passport Expire</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportExpireDate}</div></td></tr></#if>
+    <#if person.passportExpireDate?exists><tr><td align=right nowrap><div class='tabletext'><b>Passport Expire</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.passportExpireDate.toString()}</div></td></tr></#if>
     <#if person.totalYearsWorkExperience?exists><tr><td align=right nowrap><div class='tabletext'><b>Years Work</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.totalYearsWorkExperience}</div></td></tr></#if>
     <#if person.comments?has_content><tr><td align=right nowrap><div class='tabletext'><b>Comments</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.comments}</div></td></tr></#if>
   </table>
@@ -160,7 +160,7 @@
                       <#else>
                         <b>Purpose Type not found with ID: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>
-                      <#if partyContactMechPurpose.thruDate?exists>(Expire:${partyContactMechPurpose.thruDate})</#if>
+                      <#if partyContactMechPurpose.thruDate?exists>(Expire:${partyContactMechPurpose.thruDate.toString()})</#if>
                     </div>
               </#list>
               <#if contactMech.contactMechTypeId?if_exists = "POSTAL_ADDRESS">

@@ -47,7 +47,7 @@
       </table>
     </form>
     <#-- <p><h3>ERROR: Contact information with ID "${contactMechId}" not found!</h3></p> -->
-    <%}%>
+    </#if>
   </#if>
 
   <#if contactMechTypeId?exists>
@@ -75,7 +75,7 @@
           <td width="5">&nbsp;</td>
           <td width="74%">
             <table border='0' cellspacing='1' bgcolor='black'>
-              <#list partyContactMechPurposes as partyContactMechPurpose>
+              <#list partyContactMechPurposes?if_exists as partyContactMechPurpose>
                 <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                 <tr>
                   <td bgcolor='white'>

@@ -23,6 +23,7 @@
  *@version    1.0
  */
 
+importClass(Packages.java.util.HashMap);
 importClass(Packages.org.ofbiz.core.util.SiteDefs);
 importClass(Packages.org.ofbiz.core.util.UtilHttp);
 
@@ -38,9 +39,8 @@ if (errorMessage != null && errorMessage.length() > 0) {
     tryEntity = false;    
 }
 var personData = person;
-if (!tryEntity) {
-    personData = UtilHttp.getParameterMap(request);
-}
+if (!tryEntity) personData = UtilHttp.getParameterMap(request);
+if (personData == null) personData = new HashMap();
 
 var donePage = request.getParameter("DONE_PAGE");
 if (donePage == null || donePage.length() == 0) { donePage = "viewprofile" }
