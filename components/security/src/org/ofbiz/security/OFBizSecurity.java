@@ -1,5 +1,5 @@
 /*
- * $Id: OFBizSecurity.java,v 1.3 2003/08/19 20:54:12 jonesde Exp $
+ * $Id: OFBizSecurity.java,v 1.4 2003/09/23 17:29:34 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,6 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityExprList;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 
@@ -52,7 +51,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:hermanns@aixcept.de">Rainer Hermanns</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class OFBizSecurity extends org.ofbiz.security.Security {
@@ -240,7 +239,7 @@ public class OFBizSecurity extends org.ofbiz.security.Security {
                     String role = (String) i.next();
                     expressions.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, role));                    
                 }
-                EntityExprList exprList = new EntityExprList(expressions, EntityOperator.OR);
+                EntityConditionList exprList = new EntityConditionList(expressions, EntityOperator.OR);
                 EntityExpr keyExpr = new EntityExpr(pkey, EntityOperator.EQUALS, primaryKey);
                 EntityExpr partyExpr = new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.getString("partyId"));
                 List joinList = UtilMisc.toList(exprList, keyExpr, partyExpr);

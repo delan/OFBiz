@@ -1,5 +1,5 @@
 /*
- * $Id: FindServices.java,v 1.1 2003/08/17 10:12:40 jonesde Exp $
+ * $Id: FindServices.java,v 1.2 2003/09/23 17:28:09 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,8 +36,8 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
-import org.ofbiz.entity.condition.EntityExprList;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * FindServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class FindServices {
@@ -181,7 +181,7 @@ public class FindServices {
         }
 
         // Now use only the values that correspond to entity fields to build
-        //   an EntityExprList
+        //   an EntityConditionList
         GenericDelegator delegator = dctx.getDelegator();
 
         GenericValue entityValue = delegator.makeValue(entityName, new HashMap());
@@ -283,7 +283,7 @@ public class FindServices {
             tmpList.add(cond);
 
         }
-        EntityExprList exprList = new EntityExprList(tmpList, entOp);
+        EntityConditionList exprList = new EntityConditionList(tmpList, entOp);
         EntityListIterator listIt = null;
 
         if (count > 0) {
