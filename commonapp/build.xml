@@ -65,8 +65,7 @@
             <fileset dir="${extlib.dir}/scripting" includes="*.jar"/>
             <fileset dir="${extlib.dir}/datavision" includes="*.jar"/>
             <fileset dir="${extlib.dir}/jasperreports" includes="*.jar"/>
-            <fileset dir="${extlib.dir}/weka" includes="*.jar"/>
-            <fileset dir="${extlib.dir}/wspublisher" includes="*.jar"/>
+            <fileset dir="${extlib.dir}/weka" includes="*.jar"/>            
         </path>
     </target>
 
