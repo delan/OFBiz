@@ -24,10 +24,8 @@
  *@version    $Rev:$
  *@since      2.1
 -->
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-${pages.get("/entry/OrderEntryTabBar.ftl")}
+<#assign searchOptionsHistoryList = Static["org.ofbiz.product.product.ProductSearchSession"].getSearchOptionsHistoryList(session)>
+
 <div class="head1">${uiLabelMap.ProductAdvancedSearchinCategory}</div>
 <br>
 <form name="advtokeywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch</@ofbizUrl>" style="margin: 0;">
@@ -97,7 +95,7 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
     </tr>
     <tr>
       <td align="right" valign="middle">
-        <div class="tabletext">Sort Order:</div>
+        <div class="tabletext">${uiLabelMap.ProductSortOrder}:</div>
       </td>
       <td valign="middle">
         <div class="tabletext">
@@ -120,16 +118,16 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
     <#if searchConstraintStrings?has_content>
       <tr>
         <td align="right" valign="top">
-          <div class="tabletext">Last Search:</div>
+          <div class="tabletext">${uiLabelMap.ProductLastSearch}:</div>
         </td>
         <td valign="top">
             <#list searchConstraintStrings as searchConstraintString>
                 <div class="tabletext">&nbsp;-&nbsp;${searchConstraintString}</div>
             </#list>
-            <div class="tabletext">Sorted by: ${searchSortOrderString}</div>
+            <div class="tabletext">${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
             <div class="tabletext">
-              New Search<input type="RADIO" name="clearSearch" value="Y" checked>
-              Refine Search<input type="RADIO" name="clearSearch" value="N">
+              ${uiLabelMap.ProductNewSearch}<input type="RADIO" name="clearSearch" value="Y" checked>
+              ${uiLabelMap.ProductRefineSearch}<input type="RADIO" name="clearSearch" value="N">
             </div>
         </td>
       </tr>
@@ -142,5 +140,31 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
       </td>
     </tr>
   </table>
+  
+  <#if searchOptionsHistoryList?has_content>
+    <hr class="sepbar"/>
+  
+    <div class="head2">${uiLabelMap.EcommerceLastSearches}...</div>
+  
+    <div class="tabletext">
+      <a href="<@ofbizUrl>/clearSearchOptionsHistoryList</@ofbizUrl>" class="buttontext">[Clear Search History]</a>
+      (Note that your history will automatically be cleared after you leave the site)
+    </div>
+    <#list searchOptionsHistoryList as searchOptions>
+    <#-- searchOptions type is ProductSearchSession.ProductSearchOptions -->
+        <div class="tabletext">
+          <b>Search #${searchOptions_index + 1}</b>
+          <a href="<@ofbizUrl>/setCurrentSearchFromHistoryAndSearch?searchHistoryIndex=${searchOptions_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[Search]</a>
+          <a href="<@ofbizUrl>/setCurrentSearchFromHistory?searchHistoryIndex=${searchOptions_index}</@ofbizUrl>" class="buttontext">[Refine]</a>
+        </div>
+        <#assign constraintStrings = searchOptions.searchGetConstraintStrings(false, delegator)>
+        <#list constraintStrings as constraintString>
+          <div class="tabletext">&nbsp;-&nbsp;${constraintString}</div>
+        </#list>
+        <#if searchOptions_has_next>
+          <hr class="sepbar"/>
+        </#if>
+    </#list>
+  </#if>
 </form>
 

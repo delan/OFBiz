@@ -26,10 +26,17 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
-<#assign security = requestAttributes.security>
-<#assign externalKeyParam = requestAttributes.externalKeyParam>
+<#if requestAttributes.security?exists>
+    <#assign security = requestAttributes.security>
+</#if>
+
+<#if requestAttributes.externalKeyParam?exists>
+    <#assign externalKeyParam = requestAttributes.externalKeyParam>
+</#if>
 
 <script language="JavaScript">
 <!--
@@ -107,24 +114,19 @@ function gwAll(e) {
 //-->
 </script>
 
-<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
-    <TD width="100%">
-${pages.get("/entry/OrderEntryTabBar.ftl")}
-    </TD>
-  </TR>
-  <TR>
-    <TD width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+    <TD >
+      <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>           
             <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">              
-              <table width="100%" border="0" cellspacing="0" cellpadding="2">
+              <table border="0" cellspacing="0" cellpadding="2">
                 <tr>
                   <td valign="middle">
                     <span class="tabletext">${uiLabelMap.OrderOrderFor} : </span>
                     <#if person?has_content>
-                      <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]</a>
+                      <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam?if_exists}" target="partymgr" class="buttontext">${person.firstName?if_exists}&nbsp;${person.lastName?if_exists}&nbsp;[${person.partyId}]</a>
                     <#elseif partyGroup?has_content>
                       <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" target="partymgr" class="buttontext">${partyGroup.groupName?if_exists}&nbsp;[${partyGroup.partyId}]</a>
                     <#else>
@@ -237,10 +239,10 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
 //-->
 </script>
 <BR>
-<TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+<TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
-    <TD width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+    <TD>
+      <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderItems}</div>
@@ -252,8 +254,8 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
     </TD>
   </TR>
   <TR>
-    <TD width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+    <TD>
+      <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>          
   <#if (shoppingCartSize > 0)>
@@ -265,7 +267,7 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
         <input type="hidden" name="finalizeReqPayInfo" value="false">
         <input type="hidden" name="finalizeReqAdditionalParty" value="false">
       </#if>
-      <table width="100%" cellspacing="0" cellpadding="1" border="0">
+      <table cellspacing="0" cellpadding="1" border="0">
         <TR> 
           <TD NOWRAP>&nbsp;</TD>
           <TD NOWRAP><div class="tabletext"><b>${uiLabelMap.ProductProduct}</b></div></TD>
@@ -452,10 +454,10 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
 
 <#if shoppingCart.getOrderType() == "SALES_ORDER">
   <br/>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+      <td>
+        <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;${uiLabelMap.OrderPromotionCouponCodes}</div>
@@ -466,8 +468,8 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
       </td>
     </tr>
     <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <td>
+        <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
               <div class="tabletext">
@@ -493,10 +495,10 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
 
 <#if showPromoText?exists && showPromoText>
   <br/>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+      <td>
+        <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;${uiLabelMap.EcommerceSpecialOffers}</div>
@@ -507,11 +509,11 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
       </td>
     </tr>
     <tr>
-      <td width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <td>
+        <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
-                <table width="100%" cellspacing="0" cellpadding="1" border="0">
+                <table cellspacing="0" cellpadding="1" border="0">
                   <#-- show promotions text -->
                   <#list productPromos as productPromo>
                     <tr>
@@ -540,10 +542,10 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
 
 <#if associatedProducts?has_content>
   <BR>
-  <TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <TABLE border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <TR>
-      <TD width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
+      <TD>
+        <table border="0" cellspacing="0" cellpadding="0" class="boxtop">
           <tr>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;${uiLabelMap.help_also_interested_in}</div>
@@ -554,18 +556,18 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
       </TD>
     </TR>
     <TR>
-      <TD width="100%">
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
+      <TD>
+        <table border="0" cellspacing="0" cellpadding="0" class="boxbottom">
           <tr>
             <td>
-    <table width="100%" cellspacing="0" cellpadding="1" border="0">
+    <table cellspacing="0" cellpadding="1" border="0">
       <#-- random complementary products -->
       <#list associatedProducts as assocProduct> 
         <tr>
           <td>
             ${setRequestAttribute("optProduct", assocProduct)} 
             ${setRequestAttribute("listIndex", assocProduct_index)}         
-            ${pages.get("/entry/catalog/productsummary.ftl")}
+            ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
           </td>
         </tr>
         <#if assocProduct_has_next>
@@ -581,8 +583,8 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
   </TABLE>
 </#if>
 
+
 <#if (shoppingCartSize?default(0) > 0)>
   <br/>
-  <#include "/entry/promoUseDetailsInline.ftl"/>
+  ${screens.render("component://order/widget/ordermgr/OrderEntryCartScreens.xml#promoUseDetailsInline")}
 </#if>
-

@@ -40,13 +40,18 @@
 
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.service.*;
 import org.ofbiz.webapp.taglib.*;
 import org.ofbiz.product.product.ProductContentWrapper;
+import org.ofbiz.product.product.ProductSearch;
+import org.ofbiz.product.product.ProductSearchSession;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
-import org.ofbiz.order.shoppingcart.*;
+import org.ofbiz.webapp.stats.VisitHandler;
+import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     keySet = map.keySet();
@@ -86,50 +91,46 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
     return buf.toString();
 }
 
-dispatcher = request.getAttribute("dispatcher");
-delegator = request.getAttribute("delegator");
-userLogin = session.getAttribute("userLogin");
 requestParams = UtilHttp.getParameterMap(request);
 cart = ShoppingCartEvents.getCartObject(request);
 
 // get the shopping lists for the user (if logged in)
 if (userLogin != null) {
-    shoppingLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId")), UtilMisc.toList("listName"));
-    context.put("shoppingLists", shoppingLists);
+    exprList = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.getString("partyId")),
+        new EntityExpr("listName", EntityOperator.NOT_EQUAL, "auto-save"));
+    condition = new EntityConditionList(exprList, EntityOperator.AND);
+    allShoppingLists = delegator.findByCondition("ShoppingList", condition, null, UtilMisc.toList("listName"));        
+    context.put("shoppingLists", allShoppingLists);
 }
 
 // set the content path prefix
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
-request.setAttribute("contentPathPrefix", contentPathPrefix);
+context.put("contentPathPrefix", contentPathPrefix);
 
 // get the product detail information
-product = request.getAttribute("product");
 if (product != null) {
     productId = product.getString("productId");
-    request.setAttribute("product_id", productId);
+    context.put("product_id", productId);
     productTypeId = product.getString("productTypeId");
     featureTypes = new HashMap();
     featureOrder = new LinkedList();
 
     // set this as a last viewed
+    int LAST_VIEWED_TO_KEEP = 10; // modify this to change the number of last viewed to keep
     lastViewedProducts = session.getAttribute("lastViewedProducts");
     if (lastViewedProducts == null) {
-        lastViewedProducts = new ArrayList();
+        lastViewedProducts = new LinkedList();
+        session.setAttribute("lastViewedProducts", lastViewedProducts);
     }
-    if (lastViewedProducts.contains(productId)) {
-        lastViewedProducts.remove(productId);
-    }
+    lastViewedProducts.remove(productId);
     lastViewedProducts.add(0, productId);
-    session.setAttribute("lastViewedProducts", lastViewedProducts);
-    if (lastViewedProducts.size() > 10) {
-        while (lastViewedProducts.size() > 10) {
-            lastViewedProducts.remove(lastViewedProducts.size() - 1);
-        }
+    while (lastViewedProducts.size() > LAST_VIEWED_TO_KEEP) { 
+        lastViewedProducts.remove(lastViewedProducts.size() - 1);
     }
 
     // make the productContentWrapper
     ProductContentWrapper productContentWrapper = new ProductContentWrapper(product, request);
-    request.setAttribute("productContentWrapper", productContentWrapper);
+    context.put("productContentWrapper", productContentWrapper);
 
     // get the main detail image (virtual or single product)
     mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL");
@@ -142,20 +143,24 @@ if (product != null) {
     // get next/previous information for category
     categoryId = requestParams.get("category_id");
     if (categoryId == null) categoryId = product.getString("primaryProductCategoryId");
-    if (categoryId != null) request.setAttribute("categoryId", categoryId);
+    if (categoryId != null) context.put("categoryId", categoryId);
 
     Map catNextPreviousResult = null;
-    if (categoryId != null) {
+    if (!UtilValidate.isEmpty(categoryId)) {
         catNextPreviousResult = dispatcher.runSync("getPreviousNextProducts", UtilMisc.toMap("categoryId", categoryId, "productId", productId));
-        if (catNextPreviousResult != null) {
-            request.setAttribute("category", catNextPreviousResult.get("category"));
-            request.setAttribute("previousProductId", catNextPreviousResult.get("previousProductId"));
-            request.setAttribute("nextProductId", catNextPreviousResult.get("nextProductId"));
+        if (catNextPreviousResult != null && catNextPreviousResult.get("category") != null) {
+            context.put("category", catNextPreviousResult.get("category"));
+            context.put("previousProductId", catNextPreviousResult.get("previousProductId"));
+            context.put("nextProductId", catNextPreviousResult.get("nextProductId"));
         }
     }
 
+    // get the product store
+    productStore = ProductStoreWorker.getProductStore(request);
+    productStoreId = productStore.getString("productStoreId");    
+    context.put("productStoreId", productStoreId);
+
     // get a defined survey
-    productStoreId = ProductStoreWorker.getProductStoreId(request);
     productSurvey = ProductStoreWorker.getProductSurveys(delegator, productStoreId, productId, "CART_ADD");
     if (productSurvey != null && productSurvey.size() > 0) {
         survey = EntityUtil.getFirst(productSurvey);
@@ -165,26 +170,34 @@ if (product != null) {
             surveyPartyId = userLogin.getString("partyId");
         }
         ProductStoreSurveyWrapper wrapper = new ProductStoreSurveyWrapper(survey, surveyPartyId, surveyContext);
-        request.setAttribute("surveyWrapper", wrapper);
+        context.put("surveyWrapper", wrapper);
     }
 
     // get the product price
     catalogId = CatalogWorker.getCurrentCatalogId(request);
+    currentCatalogId = catalogId;
     webSiteId = CatalogWorker.getWebSiteId(request);
-    currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
     autoUserLogin = request.getSession().getAttribute("autoUserLogin");
     fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId,
         "currencyUomId", cart.getCurrency(), "autoUserLogin", autoUserLogin);
     priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
-    request.setAttribute("priceMap", priceMap);
+    context.put("priceMap", priceMap);
 
     // get the product review(s)
-    reviews = product.getRelated("ProductReview", null, UtilMisc.toList("-postedDateTime"));
-    request.setAttribute("productReviews", reviews);
+    reviewByAnd = UtilMisc.toMap("statusId", "PRR_APPROVED", "productStoreId", productStoreId);
+    reviews = product.getRelatedCache("ProductReview", reviewByAnd, UtilMisc.toList("-postedDateTime"));
+    context.put("productReviews", reviews);
+    // get the average rating
+    if (reviews != null && reviews.size() > 0) {
+        List ratingReviews = EntityUtil.filterByAnd(reviews, UtilMisc.toList(new EntityExpr("productRating", EntityOperator.NOT_EQUAL, null)));
+        if (ratingReviews.size() > 0) {
+            context.put("averageRating", ProductWorker.getAverageProductRating(product, reviews, productStoreId));
+            context.put("numRatings", ratingReviews.size());
+        }
+    }
 
     // get the days to ship
-    productStore = ProductStoreWorker.getProductStore(request);
-    productStoreId = productStore.getString("productStoreId");
+
     facilityId = productStore.getString("inventoryFacilityId");
     productFacility = delegator.findByPrimaryKeyCache("ProductFacility", UtilMisc.toMap("productId", productId, "facilityId", facilityId));
     if (productFacility != null && productFacility.get("daysToShip") != null) {
@@ -194,7 +207,11 @@ if (product != null) {
     // get the product distinguishing features
     disFeatureMap = dispatcher.runSync("getProductFeatures", UtilMisc.toMap("productId", productId, "type", "DISTINGUISHING_FEAT"));
     disFeatureList = disFeatureMap.get("productFeatures");
-    request.setAttribute("disFeatureList", disFeatureList);
+    context.put("disFeatureList", disFeatureList);
+    
+    // an example of getting features of a certain type to show
+    sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", "SIZE"), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
+    context.put("sizeProductFeatureAndAppls", sizeProductFeatureAndAppls);
 
     // Special Variant Code
     if ("Y".equals(product.getString("isVirtual"))) {
@@ -205,17 +222,17 @@ if (product != null) {
             variantTree = variantTreeMap.get("variantTree");
             imageMap = variantTreeMap.get("variantSample");
             virtualVariant = variantTreeMap.get("virtualVariant");
-            request.setAttribute("virtualVariant", virtualVariant);
+            context.put("virtualVariant", virtualVariant);
             if (variantTree != null) {
-                request.setAttribute("variantTree", variantTree);
-                request.setAttribute("variantTreeSize", new Integer(variantTree.size()));
+                context.put("variantTree", variantTree);
+                context.put("variantTreeSize", new Integer(variantTree.size()));
             }
             if (imageMap != null) {
-                request.setAttribute("variantSample", imageMap);
-                request.setAttribute("variantSampleKeys", imageMap.keySet());
-                request.setAttribute("variantSampleSize", new Integer(imageMap.size()));
+                context.put("variantSample", imageMap);
+                context.put("variantSampleKeys", imageMap.keySet());
+                context.put("variantSampleSize", new Integer(imageMap.size()));
             }
-            request.setAttribute("featureSet", featureSet);
+            context.put("featureSet", featureSet);
 
             if (variantTree != null && variantTree.size() > 0) {
                 featureOrder = new LinkedList(featureSet);
@@ -227,10 +244,10 @@ if (product != null) {
                     featureTypes.put(featureKey, fValue);
                 }
             }
-            request.setAttribute("featureTypes", featureTypes);
-            request.setAttribute("featureOrder", featureOrder);
+            context.put("featureTypes", featureTypes);
+            context.put("featureOrder", featureOrder);
             if (featureOrder.size() > 0) {
-                request.setAttribute("featureOrderFirst", featureOrder.get(0));
+                context.put("featureOrderFirst", featureOrder.get(0));
             }
 
             if (variantTree != null && imageMap != null) {
@@ -349,7 +366,7 @@ if (product != null) {
                 jsBuf.append(amt.toString());
 	            jsBuf.append("</script>");
 
-	            request.setAttribute("virtualJavaScript", jsBuf.toString());
+	            context.put("virtualJavaScript", jsBuf.toString());
 	        }
         }
 
@@ -358,11 +375,56 @@ if (product != null) {
 
     // get product associations
     obsoleteProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_OBSOLESCENCE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
-    request.setAttribute("obsoleteProducts", obsoleteProducts.get("assocProducts"));
+    context.put("obsoleteProducts", obsoleteProducts.get("assocProducts"));
+    
     crossSellProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_COMPLEMENT", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
-    request.setAttribute("crossSellProducts", crossSellProducts.get("assocProducts"));
+    context.put("crossSellProducts", crossSellProducts.get("assocProducts"));
+    
     upSellProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productId", productId, "type", "PRODUCT_UPGRADE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
-    request.setAttribute("upSellProducts", upSellProducts.get("assocProducts"));
+    context.put("upSellProducts", upSellProducts.get("assocProducts"));
+    
     obsolenscenseProducts = dispatcher.runSync("getAssociatedProducts", UtilMisc.toMap("productIdTo", productId, "type", "PRODUCT_OBSOLESCENCE", "checkViewAllow", Boolean.TRUE, "prodCatalogId", currentCatalogId));
-    request.setAttribute("obsolenscenseProducts", obsolenscenseProducts.get("assocProducts"));
+    context.put("obsolenscenseProducts", obsolenscenseProducts.get("assocProducts"));
+    
+    // get other cross-sell information: product with a common feature
+    commonProductFeatureId = "SYMPTOM";
+    // does this product have that feature?
+    commonProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", commonProductFeatureId), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
+    if (commonProductFeatureAndAppls.size() > 0) {
+        commonProductFeatureIds = EntityUtil.getFieldListFromEntityList(commonProductFeatureAndAppls, "productFeatureId", true);
+        
+        // now search for other products that have this feature
+        visitId = VisitHandler.getVisitId(session);
+        
+        productSearchConstraintList = new LinkedList();
+        productSearchConstraintList.add(new ProductSearch.FeatureSetConstraint(commonProductFeatureIds));
+        // make sure the view allow category is included
+        productSearchConstraintList = ProductSearchSession.ensureViewAllowConstraint(productSearchConstraintList, currentCatalogId, delegator);
+
+        // don't care about the sort on this one
+        resultSortOrder = null;
+
+        commonFeatureResultIdsOrig = ProductSearch.searchProducts(productSearchConstraintList, resultSortOrder, delegator, visitId);
+        commonFeatureResultIds = new LinkedList();
+        commonFeatureResultIdIter = commonFeatureResultIdsOrig.iterator();
+        while (commonFeatureResultIdIter.hasNext()) {
+            commonFeatureResultId = commonFeatureResultIdIter.next();
+            // filter out the current product
+            if (commonFeatureResultId.equals(productId)) {
+                continue;
+            }
+            // filter out all variants
+            commonProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", commonFeatureResultId));
+            if (commonProduct == null || ("Y".equals(commonProduct.getString("isVariant")))) {
+                continue;
+            }
+            commonFeatureResultIds.add(commonFeatureResultId);
+        }
+        if (commonFeatureResultIds.size() > 0) {
+            context.put("commonFeatureResultIds", commonFeatureResultIds);
+        }
+    }
+    
+    // not the best to save info in an action, but this is probably the best place to count a view
+    dispatcher.runAsync("countProductView", UtilMisc.toMap("productId", productId, "weight", new Long(1)), false);
 }

@@ -23,10 +23,9 @@
  *@version    $Rev:$
  *@since      3.0
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if productPromo?has_content>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -43,7 +42,7 @@
         <table width="100%" border="0" cellspacing="0" cellpadding="4" class="boxbottom">
           <tr>
             <td>
-                <div class="tabletext">Manual Description: ${productPromo.promoText?if_exists}</div>
+                <div class="tabletext">${productPromo.promoText?if_exists}</div>
                 <div class="tabletext">Generated Description: ${promoAutoDescription?if_exists}</div>
             </td>
           </tr>
@@ -55,7 +54,7 @@
 <#if productPromoCategoryIncludeList?has_content || productPromoCategoryExcludeList?has_content || productPromoCategoryAlwaysList?has_content>
   <br/>
 
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -113,7 +112,7 @@
   <br/>
 
 <#if productIds?has_content>
-  <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
+  <table border="0" cellspacing="0" cellpadding="0" class="boxoutside">
     <tr>
       <td width="100%">
         <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
@@ -161,7 +160,7 @@
                 <td>
                   ${setRequestAttribute("optProductId", productId)}
                   ${setRequestAttribute("listIndex", productId_index)}
-                  ${pages.get("/entry/catalog/productsummary.ftl")}
+                  ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
                 </td>
               </tr>
           </#list>

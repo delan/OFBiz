@@ -24,26 +24,30 @@
  *@since      2.1
 -->
 
-<#if (requestAttributes.uiLabelMap)?exists>
-    <#assign uiLabelMap = requestAttributes.uiLabelMap>
-</#if>
-${pages.get("/entry/OrderEntryTabBar.ftl")}
-
-<div class="head1">Product Search, <span class="head2">you searched for:</span></div>
+<div class="head1">${uiLabelMap.ProductProductSearch}, <span class="head2">${uiLabelMap.ProductYouSearchedFor}:</span></div>
 <#list searchConstraintStrings as searchConstraintString>
     <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
 </#list>
-<div class="tabletext">Sorted by: ${searchSortOrderString}</div>
-<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[Refine Search]</a></div>
+<div class="tabletext">${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
+<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(requestParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductRefineSearch}]</a></div>
 
 <#if !productIds?has_content>
   <br><div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>
 </#if>
 
 <#if productIds?has_content>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
     <tr>
       <td align=right>
+        <#-- Start Page Select Drop-Down -->
+        <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
+        <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+          <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+          <#list 1..viewIndexMax as curViewNum>
+            <option value="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
+          </#list>
+        </select>
+        <#-- End Page Select Drop-Down -->
         <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -61,52 +65,37 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
 </#if>
 
 <#if productIds?has_content>
-    <#if sessionAttributes.shoppingCart?exists && sessionAttributes.shoppingCart.isPurchaseOrder()>
-        <center>
-          <form method="post" action="<@ofbizUrl>/addtocartbulk</@ofbizUrl>" name="bulkaddform" style='margin: 0;'>
-              <#if requestParameters.category_id?has_content><input type="hidden" name="category_id" value="${requestParameters.category_id}"></#if>
-              <#if requestParameters.VIEW_INDEX?has_content><input type="hidden" name="VIEW_INDEX" value="${requestParameters.VIEW_INDEX}"></#if>
-              <#if requestParameters.VIEW_SIZE?has_content><input type="hidden" name="VIEW_SIZE" value="${requestParameters.VIEW_SIZE}"></#if>
-              <input type="hidden" name="clearSearch" value="N">
-            <div class="tabletext" align="right">
-              <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
-            </div>     
-            <table border='1' width='100%' cellpadding='2' cellspacing='0'>      
-              <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
-                <tr>
-                    ${setRequestAttribute("optProductId", productId)}
-                    ${pages.get("/entry/catalog/quickaddsummary.ftl")}
-                </tr>        
-              </#list> 
-            </table>
-            <div class="tabletext" align="right">
-              <a href="javascript:document.bulkaddform.submit()" class="buttontext"><nobr>[${uiLabelMap.EcommerceAddAlltoCart}]</nobr></a>
-            </div>      
-          </form>
-        </center>
-    <#else>
-        <center>
-          <table width="100%" cellpadding="0" cellspacing="0">
-            <#assign listIndex = lowIndex>
-            <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
-              ${setRequestAttribute("optProductId", productId)}
-              ${setRequestAttribute("listIndex", productId_index)}
-              <tr><td colspan="2"><hr class="sepbar"></td></tr>
-              <tr>
-                <td>
-                  ${pages.get("/entry/catalog/productsummary.ftl")}
-                </td>
-              </tr>
-            </#list>
-          </table>
-        </center>
-    </#if>
+<center>
+  <table cellpadding="0" cellspacing="0">
+    <#assign listIndex = lowIndex>
+    <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
+      ${setRequestAttribute("optProductId", productId)}
+      ${setRequestAttribute("listIndex", productId_index)}
+      <tr><td colspan="2"><hr class="sepbar"></td></tr>
+      <tr>
+        <td>
+          ${screens.render("component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#productsummary")}
+        </td>
+      </tr>
+    </#list>
+  </table>
+</center>
 </#if>
 
 <#if productIds?has_content>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
+    <tr><td colspan="2"><hr class="sepbar"></td></tr>
     <tr>
       <td align=right>
+        <#-- Start Page Select Drop-Down -->
+        <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
+        <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+          <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+          <#list 1..viewIndexMax as curViewNum>
+            <option value="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${curViewNum?int - 1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>">Go to Page ${curViewNum}</option>
+          </#list>
+        </select>
+        <#-- End Page Select Drop-Down -->
         <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/keywordsearch/~VIEW_INDEX=${viewIndex-1}/~VIEW_SIZE=${viewSize}/~clearSearch=N</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |

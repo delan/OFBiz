@@ -25,7 +25,9 @@
  *@since      2.2
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if requestAttributes.uiLabelMap?exists>
+  <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session) || security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session)>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -189,7 +191,7 @@
                     <td width="74%">
                       <select name="stateProvinceGeoId" class="selectBox">
                         <option value=""></option>                       
-                        ${pages.get("/includes/states.ftl")}
+                        ${screens.render("component://common/widget/CommonScreens.xml#states")}
                       </select>
                     </td>
                   </tr>
@@ -205,7 +207,7 @@
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="countryGeoId" class="selectBox">                        
-                        ${pages.get("/includes/countries.ftl")}
+                        ${screens.render("component://common/widget/CommonScreens.xml#countries")}
                       </select>
                     *</td>
                   </tr>

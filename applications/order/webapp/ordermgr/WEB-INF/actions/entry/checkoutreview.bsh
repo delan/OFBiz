@@ -88,7 +88,8 @@ if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
 }  
 
 webSiteId = CatalogWorker.getWebSiteId(request);
-productStore = ProductStoreWorker.getProductStore(request);
+String productStoreId = ProductStoreWorker.getProductStoreId(request);
+productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
 if (productStore != null) {
     payToPartyId = productStore.getString("payToPartyId");
     paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId);    

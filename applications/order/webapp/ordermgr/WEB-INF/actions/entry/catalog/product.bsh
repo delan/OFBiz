@@ -40,7 +40,7 @@ catalogName = CatalogWorker.getCatalogName(request);
 currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
 requestParams = UtilHttp.getParameterMap(request);
 
-detailTemplate = "/entry/catalog/productdetail.ftl";
+detailScreen = "productdetail";
 productId = requestParams.get("product_id");
 
 // get the product entity
@@ -54,7 +54,7 @@ if (productId != null) {
         product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
     }
     
-    request.setAttribute("productId", productId);
+    context.put("productId", productId);
     
     // now check to see if there is a view allow category and if this product is in it...
     if (product != null) {
@@ -68,9 +68,9 @@ if (productId != null) {
     }
     
     if (product != null) {
-        request.setAttribute("product", product);  
+        context.put("product", product);  
         content = context.get("page");
-        content.setProperty("title", product.getString("productName"));
+        content.put("title", product.getString("productName"));
         context.put("metaDescription", product.getString("productName"));
         keywords = new ArrayList();
         keywords.add(product.getString("productName"));
@@ -84,20 +84,26 @@ if (productId != null) {
         }
         context.put("metaKeywords", StringUtil.join(keywords, ", "));
           
-        //productTemplate = product.getString("detailTemplate");
-        //if (productTemplate != null && productTemplate.length() > 0) {
-            //detailTemplate = productTemplate;
-        //}
+        // Set the default template for aggregated product (product component configurator ui)
+        if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED")) {
+            detailScreen = "component://order/widget/ordermgr/OrderEntryCatalogScreens.xml#configproductdetail";
+        }
+
+        productTemplate = product.getString("detailScreen");
+        if (productTemplate != null && productTemplate.length() > 0) {
+            detailScreen = productTemplate;
+        }
+
     }
 }
        
 //  check the catalog's template path and update
 templatePathPrefix = CatalogWorker.getTemplatePathPrefix(request);
 if (templatePathPrefix != null) {
-    detailTemplate = templatePathPrefix + detailTemplate;
+    detailScreen = templatePathPrefix + detailScreen;
 }    
     
 // set the template for the view
-request.setAttribute("detailTemplate", detailTemplate);
-    
+context.put("detailScreen", detailScreen);
+
     
