@@ -47,6 +47,9 @@ import bsh.*;
  *@version    1.0
  */
 public class CallBsh extends MethodOperation {
+    
+    public static final String module = CallBsh.class.getName();
+    
     public static final int bufferLength = 4096;
 
     String inline = null;
@@ -127,7 +130,7 @@ public class CallBsh extends MethodOperation {
                 methodContext.putAllEnv((Map) inlineResult);
             }
         } catch (EvalError e) {
-            Debug.logError(e, "BeanShell execution caused an error");
+            Debug.logError(e, "BeanShell execution caused an error", module);
             messages.add("BeanShell execution caused an error: " + e.getMessage());
         }
 

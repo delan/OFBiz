@@ -47,6 +47,9 @@ import org.ofbiz.core.minilang.method.*;
  *@version    1.0
  */
 public class CallService extends MethodOperation {
+    
+    public static final String module = CallService.class.getName();
+    
     String serviceName;
     String inMapName;
     boolean includeUserLogin = true;

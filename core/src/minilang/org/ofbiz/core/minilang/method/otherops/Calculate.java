@@ -43,6 +43,9 @@ import org.ofbiz.core.minilang.method.*;
  *@version    1.0
  */
 public class Calculate extends MethodOperation {
+    
+    public static final String module = Calculate.class.getName();
+    
     public static final int TYPE_DOUBLE = 1;
     public static final int TYPE_FLOAT = 2;
     public static final int TYPE_LONG = 3;
@@ -87,9 +90,9 @@ public class Calculate extends MethodOperation {
             } else if ("number".equals(nodeName)) {
                 calcops[i] = new Calculate.NumberOp(calcopElement);
             } else {
-                Debug.logError("Error: calculate operation with type " + nodeName);
+                Debug.logError("Error: calculate operation with type " + nodeName, module);
             }
-            // Debug.logInfo("Added operation type " + nodeName + " in position " + i);
+            // Debug.logInfo("Added operation type " + nodeName + " in position " + i, module);
             i++;
         }
     }
@@ -99,7 +102,7 @@ public class Calculate extends MethodOperation {
 
         for (int i = 0; i < calcops.length; i++) {
             resultValue += calcops[i].calcValue(methodContext);
-            // Debug.logInfo("main total so far: " + resultValue);
+            // Debug.logInfo("main total so far: " + resultValue, module);
         }
 
         Object resultObj = null;
@@ -126,7 +129,7 @@ public class Calculate extends MethodOperation {
             Map toMap = (Map) methodContext.getEnv(mapName);
 
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map", module);
                 toMap = new HashMap();
                 methodContext.putEnv(mapName, toMap);
             }
@@ -152,13 +155,13 @@ public class Calculate extends MethodOperation {
             try {
                 value = Double.parseDouble(valueStr);
             } catch (Exception e) {
-                Debug.logError(e, "Could not parse the number string: " + valueStr);
+                Debug.logError(e, "Could not parse the number string: " + valueStr, module);
                 throw new IllegalArgumentException("Could not parse the number string: " + valueStr);
             }
         }
 
         public double calcValue(MethodContext methodContext) {
-            // Debug.logInfo("calcValue number: " + value);
+            // Debug.logInfo("calcValue number: " + value, module);
             return value;
         }
 
@@ -212,7 +215,7 @@ public class Calculate extends MethodOperation {
                 } else if ("number".equals(calcopElement.getNodeName())) {
                     calcops[i] = new Calculate.NumberOp(calcopElement);
                 } else {
-                    Debug.logError("Error: calculate operation with type " + nodeName);
+                    Debug.logError("Error: calculate operation with type " + nodeName, module);
                 }
                 // Debug.logInfo("Added operation type " + nodeName + " in position " + i);
                 i++;
@@ -231,7 +234,7 @@ public class Calculate extends MethodOperation {
                     Map fromMap = (Map) methodContext.getEnv(mapName);
 
                     if (fromMap == null) {
-                        if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
+                        if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map", module);
                         fromMap = new HashMap();
                         methodContext.putEnv(mapName, fromMap);
                     }
@@ -253,7 +256,7 @@ public class Calculate extends MethodOperation {
                     if (operator == OPERATOR_NEGATIVE) resultValue = -resultValue;
                     isFirst = false;
                 } else {
-                    if (Debug.infoOn()) Debug.logInfo("Field not found with field-name " + fieldName + ", and map-name " + mapName + "using a default of 0");
+                    if (Debug.infoOn()) Debug.logInfo("Field not found with field-name " + fieldName + ", and map-name " + mapName + "using a default of 0", module);
                 }
             }
 

@@ -48,6 +48,8 @@ import org.ofbiz.core.minilang.method.*;
  *@version    1.0
  */
 public class CallObjectMethod extends MethodOperation {
+    
+    public static final String module = CallClassMethod.class.getName();
 
     String objFieldName;
     String objMapName;
@@ -80,7 +82,7 @@ public class CallObjectMethod extends MethodOperation {
                     methodObject = new FieldObject(parameterElement, simpleMethod);
                 } else {
                     //whoops, invalid tag here, print warning
-                    Debug.logWarning("Found an unsupported tag under the call-object-method tag: " + parameterElement.getNodeName() + "; ignoring");
+                    Debug.logWarning("Found an unsupported tag under the call-object-method tag: " + parameterElement.getNodeName() + "; ignoring", module);
                 }
                 if (methodObject != null) {
                     parameters.add(methodObject);
@@ -97,7 +99,7 @@ public class CallObjectMethod extends MethodOperation {
             Map fromMap = (Map) methodContext.getEnv(objMapName);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + objMapName + ", which should contain the object to execute a method on; not executing method, rerturning error.");
+                Debug.logWarning("Map not found with name " + objMapName + ", which should contain the object to execute a method on; not executing method, rerturning error.", module);
                 
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Map not found with name " + objMapName + ", which should contain the object to execute a method on]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
@@ -111,7 +113,7 @@ public class CallObjectMethod extends MethodOperation {
         }
 
         if (methodObject == null) {
-            if (Debug.infoOn()) Debug.logInfo("Object not found to execute method on with name " + objFieldName + " in Map with name " + objMapName + ", not executing method, rerturning error.");
+            if (Debug.infoOn()) Debug.logInfo("Object not found to execute method on with name " + objFieldName + " in Map with name " + objMapName + ", not executing method, rerturning error.", module);
             
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Object not found to execute method on with name " + objFieldName + " in Map with name " + objMapName + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);
@@ -139,7 +141,7 @@ public class CallObjectMethod extends MethodOperation {
                 Class typeClass = methodObjectDef.getTypeClass(methodContext.getLoader());
                 if (typeClass == null) {
                     String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Parameter type not found with name " + methodObjectDef.getTypeName() + "]";
-                    Debug.logError(errMsg);
+                    Debug.logError(errMsg, module);
                     methodContext.setErrorReturn(errMsg, simpleMethod);
                     return false;
                 }
@@ -171,33 +173,28 @@ public class CallObjectMethod extends MethodOperation {
                 }
                 
             } catch (IllegalAccessException e) {
-                Debug.logError(e, "Could not access method in call method operation");
-
+                Debug.logError(e, "Could not access method in call method operation", module);
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Could not access method to execute named " + methodName + ": " + e.toString() + "]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             } catch (IllegalArgumentException e) {
-                Debug.logError(e, "Illegal argument calling method in call method operation");
-
+                Debug.logError(e, "Illegal argument calling method in call method operation", module);
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Illegal argument calling method to execute named " + methodName + ": " + e.toString() + "]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             } catch (InvocationTargetException e) {
-                Debug.logError(e.getTargetException(), "Method in call method operation threw an exception");
-
+                Debug.logError(e.getTargetException(), "Method in call method operation threw an exception", module);
                 String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Method to execute named " + methodName + " threw an exception: " + e.getTargetException() + "]";
                 methodContext.setErrorReturn(errMsg, simpleMethod);
                 return false;
             }
         } catch (NoSuchMethodException e) {
-            Debug.logError(e, "Could not find method to execute in simple-method call method operation");
-            
+            Debug.logError(e, "Could not find method to execute in simple-method call method operation", module);            
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Could not find method to execute named " + methodName + ": " + e.toString() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;
         } catch (SecurityException e) {
-            Debug.logError(e, "Security exception finding method to execute in simple-method call method operation");
-            
+            Debug.logError(e, "Security exception finding method to execute in simple-method call method operation", module);            
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Security exception finding method to execute named " + methodName + ": " + e.toString() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);
             return false;

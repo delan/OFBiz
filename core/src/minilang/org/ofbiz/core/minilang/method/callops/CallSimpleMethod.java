@@ -45,6 +45,9 @@ import org.ofbiz.core.minilang.operation.*;
  *@version    1.0
  */
 public class CallSimpleMethod extends MethodOperation {
+    
+    public static final String module = CallSimpleMethod.class.getName();
+    
     String xmlResource;
     String methodName;
 

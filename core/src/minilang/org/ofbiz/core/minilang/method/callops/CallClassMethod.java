@@ -48,6 +48,8 @@ import org.ofbiz.core.minilang.method.*;
  *@version    1.0
  */
 public class CallClassMethod extends MethodOperation {
+    
+    public static final String module = CallClassMethod.class.getName();
 
     String className;
     String methodName;
@@ -78,7 +80,7 @@ public class CallClassMethod extends MethodOperation {
                     methodObject = new FieldObject(parameterElement, simpleMethod);
                 } else {
                     //whoops, invalid tag here, print warning
-                    Debug.logWarning("Found an unsupported tag under the call-object-method tag: " + parameterElement.getNodeName() + "; ignoring");
+                    Debug.logWarning("Found an unsupported tag under the call-object-method tag: " + parameterElement.getNodeName() + "; ignoring", module);
                 }
                 if (methodObject != null) {
                     parameters.add(methodObject);
@@ -92,7 +94,7 @@ public class CallClassMethod extends MethodOperation {
         try {
             methodClass = ObjectType.loadClass(className, methodContext.getLoader());
         } catch (ClassNotFoundException e) {
-            Debug.logError(e, "Class to create not found with name " + className + " in create-object operation");
+            Debug.logError(e, "Class to create not found with name " + className + " in create-object operation", module);
 
             String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Class to create not found with name " + className + ": " + e.toString() + "]";
             methodContext.setErrorReturn(errMsg, simpleMethod);

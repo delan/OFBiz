@@ -59,7 +59,7 @@ public class CartEventListener implements HttpSessionListener {
         //passing null for the delegator here because we don't want it to create a cart if none exists
         ShoppingCart cart = ShoppingCartEvents.getCartObject(session, null);
         if (cart == null) {
-            Debug.logInfo("No cart to save, doing nothing.");
+            Debug.logInfo("No cart to save, doing nothing.", module);
             return;
         }
         
@@ -104,11 +104,11 @@ public class CartEventListener implements HttpSessionListener {
                 }
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                Debug.logError(e, "An entity engine error occured while saving abandoned cart information");
+                Debug.logError(e, "An entity engine error occured while saving abandoned cart information", module);
                 TransactionUtil.rollback(beganTransaction);
             }
         } catch (GenericTransactionException e) {
-            Debug.logError(e, "A transaction error occured while saving abandoned cart information");
+            Debug.logError(e, "A transaction error occured while saving abandoned cart information", module);
         }
     }
 }
