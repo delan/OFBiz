@@ -46,6 +46,27 @@
         <attribute name="orderId" type="String" mode="OUT"/>
     </service>
 
+	<service name="createOrderAdjustment" engine="java"
+			location="org/ofbiz/commonapp/order/order/OrderSimpleMethods.xml" invoke="createOrderAdjustment">
+		<description>Creates a new order adjustment record</description>
+		<attribute name="orderAdjustmentTypeId" type="String" mode="IN" optional="false"/>
+		<attribute name="orderId" type="String" mode="IN" optional="false"/>
+		<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+		<attribute name="comments" type="String" mode="IN" optional="true"/>
+		<attribute name="description" type="String" mode="IN" optional="true"/>
+		<attribute name="amountPerQuantity" type="Double" mode="IN" optional="true"/>
+		<attribute name="percentage" type="Double" mode="IN" optional="true"/>
+		<attribute name="productPromoId" type="String" mode="IN" optional="true"/>
+		<attribute name="productPromoRuleId" type="String" mode="IN" optional="true"/>
+		<attribute name="productPromoActionSeqId" type="String" mode="IN" optional="true"/>
+		<attribute name="productFeatureId" type="String" mode="IN" optional="true"/>
+		<attribute name="correspondingProductId" type="String" mode="IN" optional="true"/>
+		<attribute name="sourceReferenceId" type="String" mode="IN" optional="true"/>
+		<attribute name="includeInTax" type="Boolean" mode="IN" optional="true"/>
+		<attribute name="includeInShipping" type="Boolean" mode="IN" optional="true"/>
+		<attribute name="orderAdjustmentId" type="String" mode="OUT" optional="false"/>
+	</service>
+    
     <service name="updateTrackingNumber" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="updateTrackingNumber">
         <description>Sets the tracking number on a shipment preference</description>
@@ -54,6 +75,12 @@
         <attribute name="trackingNumber" type="String" mode="IN" optional="false"/>
     </service>
 
+    <service name="resetGrandTotal" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="resetGrandTotal">
+        <description>Change the status of an existing order</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+    </service>
+        
     <service name="changeOrderStatus" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="setOrderStatus">
         <description>Change the status of an existing order</description>
@@ -67,6 +94,7 @@
     	<description>Change the status of an existing order item</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>
     	<attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
+    	<attribute name="fromStatusId" type="String" mode="IN" optional="true"/>
     	<attribute name="statusId" type="String" mode="IN" optional="false"/>
     </service>
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
+
+<service-eca>
+    <eca service="changeOrderItemStatus" event="commit">
+        <condition field-name="statusId" operator="equals" value="ITEM_CANCELLED"/>
+        <action service="resetGrandTotal" mode="sync"/>
+    </eca>
+    <eca service="createOrderAdjustment" event="commit">        
+        <action service="resetGrandTotal" mode="sync"/>
+    </eca>    
+</service-eca>

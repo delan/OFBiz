@@ -72,6 +72,11 @@ public class OrderReadHelper {
         }
         return (List) orderItems;
     }
+    
+    public List getValidOrderItems() {        
+        List exprs = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));
+        return EntityUtil.filterByAnd(getOrderItems(), exprs);                
+    }
 
     public List getOrderItemPriceInfos(GenericValue orderItem) {
         if (orderItem == null) return null;
@@ -322,7 +327,7 @@ public class OrderReadHelper {
     }
 
     public double getTotalOrderItemsQuantity() {
-        List orderItems = getOrderItems();
+        List orderItems = getValidOrderItems();
         double totalItems = 0;
 
         for (int i = 0; i < orderItems.size(); i++) {
@@ -335,7 +340,7 @@ public class OrderReadHelper {
 
     public double getOrderGrandTotal() {
         if (totalPrice == null) {
-            totalPrice = new Double(getOrderGrandTotal(getOrderItems(), getAdjustments()));
+            totalPrice = new Double(getOrderGrandTotal(getValidOrderItems(), getAdjustments()));
         }// else already set
         return totalPrice.doubleValue();
     }
@@ -381,7 +386,7 @@ public class OrderReadHelper {
     }
 
     public double getOrderAdjustmentsTotal() {
-        return getOrderAdjustmentsTotal(getOrderItems(), getAdjustments());
+        return getOrderAdjustmentsTotal(getValidOrderItems(), getAdjustments());
     }
 
     public static double getOrderAdjustmentsTotal(List orderItems, List adjustments) {
@@ -421,7 +426,7 @@ public class OrderReadHelper {
     // ================= Order Item Adjustments =================
 
     public double getOrderItemsSubTotal() {
-        return getOrderItemsSubTotal(getOrderItems(), getAdjustments());
+        return getOrderItemsSubTotal(getValidOrderItems(), getAdjustments());
     }
 
     public static double getOrderItemsSubTotal(List orderItems, List adjustments) {

@@ -411,6 +411,35 @@ public class OrderServices {
     	}
     }
 
+    /** Service for resetting the OrderHeader grandTotal */
+    public static Map resetGrandTotal(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String orderId = (String) context.get("orderId");         
+                
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));   
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError("ERROR: Cannot get OrderHeader entity: " + e.getMessage());
+        }
+        
+        if (orderHeader != null) {
+            OrderReadHelper orh = new OrderReadHelper(orderHeader);
+            Double currentTotal = orderHeader.getDouble("grandTotal");
+            if (orh.getOrderGrandTotal() != currentTotal.doubleValue()) {
+                orderHeader.set("grandTotal", new Double(orh.getOrderGrandTotal()));            
+                try {
+                    orderHeader.store();
+                } catch (GenericEntityException e) {
+                    return ServiceUtil.returnError("ERROR: Cannot write OrderHeader entity: " + e.getMessage());
+                }
+            }
+        }
+        
+        return ServiceUtil.returnSuccess();
+    }
+        
     /** Service for changing the status on order item(s) */
     public static Map setItemStatus(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
@@ -418,6 +447,7 @@ public class OrderServices {
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String orderId = (String) context.get("orderId");
         String orderItemSeqId = (String) context.get("orderItemSeqId");
+        String fromStatusId = (String) context.get("fromStatusId");
         String statusId = (String) context.get("statusId");
         
         // check and make sure we have permission to change the order
@@ -437,6 +467,8 @@ public class OrderServices {
         Map fields = UtilMisc.toMap("orderId", orderId);
         if (orderItemSeqId != null)
             fields.put("orderItemSeqId", orderItemSeqId);
+        if (fromStatusId != null)
+            fields.put("statusId", fromStatusId);
         
         List orderItems = null;
         try {
