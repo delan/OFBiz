@@ -111,7 +111,7 @@ public class ModelFormField {
         Element subElement = UtilXml.firstChildElement(fieldElement, null);
         if (subElement != null) {
             String subElementName = subElement.getTagName();
-            if (Debug.infoOn()) Debug.logInfo("Processing field " + this.name + " with type info tag " + subElementName);
+            if (Debug.verboseOn()) Debug.logVerbose("Processing field " + this.name + " with type info tag " + subElementName);
             
             if (UtilValidate.isEmpty(subElementName)) {
                 this.fieldInfo = null;
@@ -148,15 +148,15 @@ public class ModelFormField {
     public void mergeOverrideModelFormField(ModelFormField overrideFormField) {
         // incorporate updates for values that are not empty in the overrideFormField
         if (UtilValidate.isNotEmpty(overrideFormField.name)) this.name = overrideFormField.name;
-        if (!overrideFormField.mapAcsr.isEmpty()) this.mapAcsr = overrideFormField.mapAcsr;
+        if (overrideFormField.mapAcsr != null && !overrideFormField.mapAcsr.isEmpty()) this.mapAcsr = overrideFormField.mapAcsr;
         if (UtilValidate.isNotEmpty(overrideFormField.entityName)) this.entityName = overrideFormField.entityName;
         if (UtilValidate.isNotEmpty(overrideFormField.serviceName)) this.serviceName = overrideFormField.serviceName;
-        if (!overrideFormField.entryAcsr.isEmpty()) this.entryAcsr = overrideFormField.entryAcsr;
+        if (overrideFormField.entryAcsr != null && !overrideFormField.entryAcsr.isEmpty()) this.entryAcsr = overrideFormField.entryAcsr;
         if (UtilValidate.isNotEmpty(overrideFormField.parameterName)) this.parameterName = overrideFormField.parameterName;
         if (UtilValidate.isNotEmpty(overrideFormField.fieldName)) this.fieldName = overrideFormField.fieldName;
         if (UtilValidate.isNotEmpty(overrideFormField.attributeName)) this.attributeName = overrideFormField.attributeName;
-        if (!overrideFormField.title.isEmpty()) this.title = overrideFormField.title;
-        if (!overrideFormField.tooltip.isEmpty()) this.tooltip = overrideFormField.tooltip;
+        if (overrideFormField.title != null && !overrideFormField.title.isEmpty()) this.title = overrideFormField.title;
+        if (overrideFormField.tooltip != null && !overrideFormField.tooltip.isEmpty()) this.tooltip = overrideFormField.tooltip;
         if (UtilValidate.isNotEmpty(overrideFormField.titleStyle)) this.titleStyle = overrideFormField.titleStyle;
         if (UtilValidate.isNotEmpty(overrideFormField.widgetStyle)) this.widgetStyle = overrideFormField.widgetStyle;
         if (overrideFormField.position != null) this.position = overrideFormField.position;
@@ -775,9 +775,9 @@ public class ModelFormField {
             while (childElementIter.hasNext()) {
                 Element childElement = (Element) childElementIter.next();
                 if ("option".equals(childElement.getTagName())) {
-                    optionSources.add(new SingleOption(childElement));
+                    optionSources.add(new SingleOption(childElement, this));
                 } else if ("entity-options".equals(childElement.getTagName())) {
-                    optionSources.add(new EntityOptions(childElement));
+                    optionSources.add(new EntityOptions(childElement, this));
                 }
             }
         }
@@ -835,6 +835,8 @@ public class ModelFormField {
     }
     
     public static abstract class OptionSource {
+        protected FieldInfo fieldInfo;
+        
         public abstract void addOptionValues(List optionValues, Map context, GenericDelegator delegator);
     }
     
@@ -842,14 +844,16 @@ public class ModelFormField {
         protected FlexibleStringExpander key;
         protected FlexibleStringExpander description;
         
-        public SingleOption(String key, String description) {
+        public SingleOption(String key, String description, FieldInfo fieldInfo) {
             this.key = new FlexibleStringExpander(key);
             this.description = new FlexibleStringExpander(UtilXml.checkEmpty(description, key));
+            this.fieldInfo = fieldInfo;
         }
         
-        public SingleOption(Element optionElement) {
+        public SingleOption(Element optionElement, FieldInfo fieldInfo) {
             this.key = new FlexibleStringExpander(optionElement.getAttribute("key"));
             this.description = new FlexibleStringExpander(UtilXml.checkEmpty(optionElement.getAttribute("description"), optionElement.getAttribute("key")));
+            this.fieldInfo = fieldInfo;
         }
         
         public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
@@ -866,10 +870,11 @@ public class ModelFormField {
         protected Map constraintMap = null;
         protected List orderByList = null; 
         
-        public EntityOptions() {
+        public EntityOptions(FieldInfo fieldInfo) {
+            this.fieldInfo = fieldInfo;
         }
         
-        public EntityOptions(Element entityOptionsElement) {
+        public EntityOptions(Element entityOptionsElement, FieldInfo fieldInfo) {
             this.entityName = entityOptionsElement.getAttribute("entity-name");
             this.keyFieldName = entityOptionsElement.getAttribute("key-field-name");
             this.description = new FlexibleStringExpander(entityOptionsElement.getAttribute("description"));
@@ -888,6 +893,17 @@ public class ModelFormField {
                 Element orderByElement = (Element) orderByElementIter.next();
                 orderByList.add(orderByElement.getAttribute("field-name"));
             }
+            
+            this.fieldInfo = fieldInfo;
+        }
+        
+        public String getKeyFieldName() {
+            if (UtilValidate.isNotEmpty(this.keyFieldName)) {
+                return this.keyFieldName;
+            } else {
+                // get the modelFormField fieldName
+                return this.fieldInfo.getModelFormField().getFieldName();
+            }
         }
         
         public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
@@ -902,7 +918,7 @@ public class ModelFormField {
                 Iterator valueIter = values.iterator();
                 while (valueIter.hasNext()) {
                     GenericValue value = (GenericValue) valueIter.next();
-                    optionValues.add(new OptionValue(value.get(this.keyFieldName).toString(), this.description.expandString(value)));
+                    optionValues.add(new OptionValue(value.get(this.getKeyFieldName()).toString(), this.description.expandString(value)));
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting entity options in form");

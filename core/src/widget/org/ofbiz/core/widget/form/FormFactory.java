@@ -94,7 +94,7 @@ public class FormFactory {
         Map modelFormMap = (Map) formWebappCache.get(cacheKey);
         if (modelFormMap == null) {
             synchronized (FormFactory.class) {
-                modelFormMap = (Map) formClassCache.get(cacheKey);
+                modelFormMap = (Map) formWebappCache.get(cacheKey);
                 if (modelFormMap == null) {
                     ServletContext servletContext = (ServletContext) request.getAttribute("servletContext");
                     GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -103,7 +103,7 @@ public class FormFactory {
                     URL formFileUrl = servletContext.getResource(resourceName);
                     Document formFileDoc = UtilXml.readXmlDocument(formFileUrl, true);
                     modelFormMap = readFormDocument(formFileDoc, delegator, dispatcher);
-                    formClassCache.put(cacheKey, modelFormMap);
+                    formWebappCache.put(cacheKey, modelFormMap);
                 }
             }
         }

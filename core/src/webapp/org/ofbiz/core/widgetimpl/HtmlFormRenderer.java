@@ -221,7 +221,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(value);
         }
 
-        buffer.append("<textarea/>");
+        buffer.append("</textarea>");
         
         this.appendWhitespace(buffer);
     }
@@ -727,7 +727,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowTitleCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        buffer.append("<td width=\"20%\">");
+        buffer.append("<td width=\"20%\" align=\"right\">");
         
         this.appendWhitespace(buffer);
     }
@@ -755,9 +755,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormatFieldRowWidgetCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField, int positions) {
         if (positions == 1) {
-            buffer.append("<td width=\"80%\">");
+            buffer.append("<td width=\"80%\" align=\"left\">");
         } else {
-            buffer.append("<td width=\"30%\">");
+            buffer.append("<td width=\"30%\" align=\"left\">");
         }
         
         this.appendWhitespace(buffer);

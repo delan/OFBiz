@@ -46,7 +46,7 @@
     target CDATA #REQUIRED
     title CDATA #IMPLIED
     tooltip CDATA #IMPLIED
-    list-name #IMPLIED
+    list-name CDATA #IMPLIED
     list-entry-name CDATA #IMPLIED
     default-map-name CDATA #IMPLIED
     default-entity-name CDATA #IMPLIED

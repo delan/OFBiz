@@ -25,6 +25,7 @@ package org.ofbiz.core.widget.form;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -72,9 +73,9 @@ public class ModelForm {
     protected String defaultTitleStyle;
     protected String defaultWidgetStyle;
     
-    protected List altTargets;
-    protected List autoFieldsServices;
-    protected List autoFieldsEntities;
+    protected List altTargets = new LinkedList();
+    protected List autoFieldsServices = new LinkedList();
+    protected List autoFieldsEntities = new LinkedList();
 
     /** This List will contain one copy of each field for each field name in the order
      * they were encountered in the service, entity, or form definition; field definitions
@@ -85,13 +86,13 @@ public class ModelForm {
      * necessary to use the Map. The Map is used when loading the form definition to keep the
      * list clean and implement the override features for field definitions.
      */    
-    protected List fieldList;
+    protected List fieldList = new LinkedList();
     
     /** This Map is keyed with the field name and has a ModelFormField for the value; fields
      * with conditions will not be put in this Map so field definition overrides for fields
      * with conditions is not possible.
      */ 
-    protected Map fieldMap;
+    protected Map fieldMap = new HashMap();
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -219,6 +220,7 @@ public class ModelForm {
             
             // render each field row, except hidden & ignored rows
             fieldIter = this.fieldList.iterator();
+            boolean isFirstFieldRow = true;
             while (fieldIter.hasNext()) {
                 ModelFormField modelFormField = (ModelFormField) fieldIter.next();
                 ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
@@ -231,8 +233,20 @@ public class ModelForm {
                     continue;
                 }
 
-                // render row formatting open
-                formStringRenderer.renderFormatFieldRowOpen(buffer, context, this);
+                if (modelFormField.getPosition() == 1) {
+                    if (isFirstFieldRow) {
+                        isFirstFieldRow = false;
+                    } else {
+                        // render row formatting close
+                        formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
+                    }
+                    
+                    // render row formatting open
+                    formStringRenderer.renderFormatFieldRowOpen(buffer, context, this);
+                } else {
+                    // render spacer cell
+                    formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, modelFormField);
+                }
                 
                 // render title formatting open
                 formStringRenderer.renderFormatFieldRowTitleCellOpen(buffer, context, modelFormField);
@@ -258,10 +272,10 @@ public class ModelForm {
                 
                 // render widget formatting close
                 formStringRenderer.renderFormatFieldRowWidgetCellClose(buffer, context, modelFormField, positions);
-                
-                // render row formatting close
-                formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
+
             }
+            // always render row formatting close after the end
+            formStringRenderer.renderFormatFieldRowClose(buffer, context, this);
             
             // render formatting wrapper close
             formStringRenderer.renderFormatSingleWrapperClose(buffer, context, this);
