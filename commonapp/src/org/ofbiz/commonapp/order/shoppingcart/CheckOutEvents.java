@@ -161,6 +161,7 @@ public class CheckOutEvents {
         session.removeAttribute("_QUICK_REORDER_PRODUCTS_");
 
         String orderId = cart.getOrderId();
+        Double grandTotal = new Double(cart.getGrandTotal());
 
         // store the order - build the context
         Map context = cart.makeCartMap(dispatcher, explodeOrderItems(request));
@@ -178,6 +179,7 @@ public class CheckOutEvents {
         String partyId = session.getAttribute("orderPartyId") != null ? (String) session.getAttribute("orderPartyId") :
         		userLogin.getString("partyId");
         
+        context.put("grandTotal", grandTotal);
         context.put("userLogin", userLogin);
         context.put("partyId", partyId);
         context.put("prodCatalogId", CatalogWorker.getCurrentCatalogId(request));

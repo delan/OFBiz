@@ -34,6 +34,7 @@
         <attribute name="orderAdjustments" type="java.util.List" mode="IN"/>
         <attribute name="billingAccountId" type="String" mode="IN"/>
         <attribute name="shippingAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="grandTotal" type="Double" mode="IN" optional="true"/>
         <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="orderShipmentPreferences" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="paymentMethods" type="java.util.List" mode="IN" optional="true"/>

@@ -164,6 +164,9 @@ public class OrderServices {
                     "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
                     "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
 
+        if (context.get("grandTotal") != null)
+            order.set("grandTotal", context.get("grandTotal"));
+            
         if (UtilValidate.isNotEmpty((String) context.get("visitId"))) 
         	order.set("visitId", context.get("visitId"));
         	

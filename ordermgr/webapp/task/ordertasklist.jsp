@@ -134,6 +134,7 @@
                       <td><a href="<ofbiz:url>/tasklist?sort=orderId</ofbiz:url>" class="tableheadbutton">Order&nbsp;Number</a></td>
                       <td><a href="<ofbiz:url>/tasklist?sort=name</ofbiz:url>" class="tableheadbutton">Customer&nbsp;Name</a></td>
                       <td><a href="<ofbiz:url>/tasklist?sort=orderDate</ofbiz:url>" class="tableheadbutton">Order&nbsp;Date</a></td>
+                      <td><a href="<ofbiz:url>/tasklist?sort=grandTotal</ofbiz:url>" class="tableheadbutton">Total</a></td>
                       <TD><a href="<ofbiz:url>/tasklist?sort=actualStartDate</ofbiz:url>" class="tableheadbutton">Start&nbsp;Date/Time</a></td>
                       <TD><a href="<ofbiz:url>/tasklist?sort=priority</ofbiz:url>" class="tableheadbutton">Priority</a></td>
                       <TD><a href="<ofbiz:url>/tasklist?sort=currentStatusId</ofbiz:url>" class="tableheadbutton">My&nbsp;Status</a></td>
@@ -154,7 +155,8 @@
                           <div class="tabletext">
                             <ofbiz:print attribute="orderDate"/>
                           </div>
-                        </td>                                            
+                        </td>  
+                        <td><div class='tabletext'><%=UtilFormatOut.formatPrice(task.getDouble("grandTotal"))%></div></td>                                          
                         <TD><DIV class='tabletext'><ofbiz:print attribute="actualStartDate" default="N/A"/></DIV></TD>
                         <TD><DIV class='tabletext'><ofbiz:print attribute="priority"/></DIV></TD>
                         <td>
@@ -184,6 +186,7 @@
                   <td><a href="<ofbiz:url>/tasklist?sort=orderId</ofbiz:url>" class="tableheadbutton">Order&nbsp;Number</a></td>
                   <td><a href="<ofbiz:url>/tasklist?sort=name</ofbiz:url>" class="tableheadbutton">Customer&nbsp;Name</a></td>
                   <td><a href="<ofbiz:url>/tasklist?sort=orderDate</ofbiz:url>" class="tableheadbutton">Order&nbsp;Date</a></td>                                  
+                  <td><a href="<ofbiz:url>/tasklist?sort=grandTotal</ofbiz:url>" class="tableheadbutton">Total</a></td>
                   <td><a href="<ofbiz:url>/tasklist?sort=actualStartDate</ofbiz:url>" class="tableheadbutton">Start&nbsp;Date/Time</a></td>
                   <td><a href="<ofbiz:url>/tasklist?sort=wepaPartyId</ofbiz:url>" class="tableheadbutton">Party</a></td>
                   <td><a href="<ofbiz:url>/tasklist?sort=roleTypeId</ofbiz:url>" class="tableheadbutton">Role</a></td>
@@ -228,7 +231,8 @@
                         <div class="tabletext">
                           <ofbiz:print attribute="orderDate"/>
                         </div>
-                      </td>                                          
+                      </td>  
+                      <td><div class='tabletext'><%=UtilFormatOut.formatPrice(task.getDouble("grandTotal"))%></div></td>                                        
                       <td><div class='tabletext'><ofbiz:print attribute="actualStartDate" default="N/A"/></div></td>
                       <td>
                         <ofbiz:if name="wepaPartyId" value="_NA_">
