@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -43,9 +43,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       <td><div class="tableheadtext">Date</div></td>
       <td><div class="tableheadtext">Return #</div></td>
       <td><div class="tableheadtext">Line #</div></td>
-      <td><div class="tableheadtext">Product ID</div></td>
-      <td><div class="tableheadtext">Rejected</div></td>
-      <td><div class="tableheadtext">Accepted</div></td>
+      <td><div class="tableheadtext">Product ID</div></td>     
+      <td><div class="tableheadtext">Received</div></td>
     </tr>
     <tr><td colspan="7"><hr class="sepbar"></td></tr>
     <#list receivedItems as item>
@@ -55,7 +54,6 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td><div class="tabletext">${item.returnId}</div></td>
         <td><div class="tabletext">${item.returnItemSeqId}</div></td>
         <td><div class="tabletext">${item.productId?default("Not Found")}</div></td>
-        <td><div class="tabletext">${item.quantityRejected?default(0)?string.number}</div></td>
         <td><div class="tabletext">${item.quantityAccepted?string.number}</div></td>
       </tr>
     </#list>
@@ -98,7 +96,8 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
           <input type="hidden" name="returnId_o_${rowCount}" value="${returnItem.returnId}">
           <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="${returnItem.returnItemSeqId}"> 
           <input type="hidden" name="facilityId_o_${rowCount}" value="${requestParameters.facilityId?if_exists}">       
-          <input type="hidden" name="datetimeReceived_o_${rowCount}" value="${now}">          
+          <input type="hidden" name="datetimeReceived_o_${rowCount}" value="${now}">
+          <input type="hidden" name="quantityRejected_o_${rowCount}" value="0">         
           <input type="hidden" name="comments_o_${rowCount}" value="Returned Item RA# ${returnItem.returnId}">
           <tr>
             <td colspan="2"><hr class="sepbar"></td>
@@ -128,12 +127,28 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                       </div>
                     </td>
                   </#if>
+                  
+                  <#-- location(s) -->
                   <td align="right">
                     <div class="tableheadtext">Location:</div>
-                  </td>
+                  </td>                  
                   <td align="right">
-                    <input type="text" class="inputBox" name="locationSeqId_o_${rowCount}" size="12">
+                    <#assign facilityLocations = (product.getRelatedByAnd("ProductFacilityLocation", Static["org.ofbiz.base.util.UtilMisc"].toMap("facilityId", facilityId)))?if_exists>
+                    <#if facilityLocations?has_content>
+                      <select name="locationSeqId_o_${rowCount}" class="selectbox">
+                        <#list facilityLocations as productFacilityLocation>
+                          <#assign facility = productFacilityLocation.getRelatedOneCache("Facility")>
+                          <#assign facilityLocation = productFacilityLocation.getRelatedOne("FacilityLocation")?if_exists>
+                          <#assign facilityLocationTypeEnum = (facilityLocation.getRelatedOneCache("TypeEnumeration"))?if_exists>
+                          <option value="${productFacilityLocation.locationSeqId}"><#if facilityLocation?exists>${facilityLocation.areaId?if_exists}:${facilityLocation.aisleId?if_exists}:${facilityLocation.sectionId?if_exists}:${facilityLocation.levelId?if_exists}:${facilityLocation.positionId?if_exists}</#if><#if facilityLocationTypeEnum?exists>(${facilityLocationTypeEnum.description})</#if>[${productFacilityLocation.locationSeqId}]</option>
+                        </#list>
+                        <option value="">No Location</option>
+                      </select>
+                    <#else>
+                      <input type="text" class="inputBox" name="locationSeqId_o_${rowCount}" size="12">
+                    </#if>
                   </td>
+                  
                   <td align="right">
                     <div class="tableheadtext">Qty Received:</div>
                   </td>
@@ -147,22 +162,24 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <select name="statusId_o_${rowCount}" size='1' class="selectBox">
                       <option value="INV_RETURNED">Returned</option>
                       <option value="INV_AVAILABLE">Available</option>
-                      <option value="INV_DEFECTIVE">Defective</option>  
+                      <option value="INV_DEFECTIVE" <#if returnItem.returnReasonId?default("") == "RTN_DEFECTIVE_ITEM">selected</#if>>Defective</option>  
                     </select>                    
-                  </td>                    
-                  <td align="right">
-                    <div class="tableheadtext">Existing Inventory Item:</div>
-                    <a href="/catalog/control/EditProductInventoryItems?productId=${productId}${requestAttributes.externalKeyParam}" target="catalog" class="buttontext">Lookup Item</a>
                   </td>
-                  <td align="right">
-                    <input type="text" class="inputBox" name="inventoryItemId_o_${rowCount}" value="" size="15">                    
-                  </td>
-                  <td align="right">
-                    <div class="tableheadtext">Qty Rejected:</div>
-                  </td>
-                  <td align="right">
-                    <input type="text" class="inputBox" name="quantityRejected_o_${rowCount}" value="0" size="6">
-                  </td>                  
+                  <#if serializedInv?has_content>                   
+                    <td align="right">
+                      <div class="tableheadtext">Existing Inventory Item:</div>                    
+                    </td>
+                    <td align="right">
+                      <select name="inventoryItemId_o_${rowCount}" class="selectBox">
+                        <#list serializedInv as inventoryItem>
+                          <option>${inventoryItem.inventoryItemId}</option>
+                        </#list>
+                      </select>
+                    </td>                  
+                    <td colspan="2">&nbsp;</td>
+                  <#else>
+                    <td colspan="4">&nbsp;</td>
+                  </#if>
                 </tr>                                               
               </table>
             </td>

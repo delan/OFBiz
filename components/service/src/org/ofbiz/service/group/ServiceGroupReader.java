@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceGroupReader.java,v 1.3 2003/09/02 04:30:00 jonesde Exp $
+ * $Id: ServiceGroupReader.java,v 1.4 2003/09/02 18:41:32 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,7 +23,6 @@
  */
 package org.ofbiz.service.group;
 
-import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
 
@@ -31,17 +30,17 @@ import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
-import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.service.config.ServiceConfigUtil;
 import org.w3c.dom.Element;
 
 /**
  * ServiceGroupReader.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ServiceGroupReader {

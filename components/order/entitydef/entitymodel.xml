@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  */
 -->
 
@@ -767,6 +767,9 @@
       <relation type="many" rel-entity-name="ProductOrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFacilityLocation">
+        <key-map field-name="productId"/>
       </relation>
       <relation type="one" fk-name="ORDER_ITEM_PRODUCT" rel-entity-name="Product">
         <key-map field-name="productId"/>
