@@ -45,6 +45,7 @@ import org.ofbiz.entity.finder.ByAndFinder;
 import org.ofbiz.entity.finder.ByConditionFinder;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
 
@@ -285,7 +286,7 @@ public abstract class ModelFormAction {
         protected FlexibleStringExpander serviceNameExdr;
         protected FlexibleMapAccessor resultMapNameAcsr;
         protected FlexibleStringExpander autoFieldMapExdr;
-        protected FlexibleStringExpander listIteratorNameExdr;
+        protected FlexibleStringExpander resultMapListIteratorNameExdr;
         protected Map fieldMap;
         
         public Service(ModelForm modelForm, Element serviceElement) {
@@ -293,7 +294,7 @@ public abstract class ModelFormAction {
             this.serviceNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("service-name"));
             this.resultMapNameAcsr = UtilValidate.isNotEmpty(serviceElement.getAttribute("result-map-name")) ? new FlexibleMapAccessor(serviceElement.getAttribute("result-map-name")) : null;
             this.autoFieldMapExdr = new FlexibleStringExpander(serviceElement.getAttribute("auto-field-map"));
-            this.listIteratorNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("list-iterator-name"));
+            this.resultMapListIteratorNameExdr = new FlexibleStringExpander(serviceElement.getAttribute("result-map-list-iterator-name"));
             
             List fieldMapElementList = UtilXml.childElementList(serviceElement, "field-map");
             if (fieldMapElementList.size() > 0) {
@@ -343,9 +344,19 @@ public abstract class ModelFormAction {
                 } else {
                     context.putAll(result);
                 }
-                String listIteratorName = listIteratorNameExdr.expandString(context);
+                String listIteratorName = resultMapListIteratorNameExdr.expandString(context);
                 Object obj = result.get(listIteratorName);
                 if (obj != null && obj instanceof EntityListIterator) {
+                    try {
+                    boolean ok = ((EntityListIterator)obj).last();
+                    int lastIndex = -2;
+                    if (ok)
+                        lastIndex = ((EntityListIterator)obj).currentIndex();
+                        ok = ((EntityListIterator)obj).first();
+                    } catch (GenericEntityException e) {
+                		Debug.logError(e, module);
+                        throw new RuntimeException(e.getMessage());
+                    }
                 	context.put("listIteratorName", listIteratorName);
                     context.put(listIteratorName, obj);
                 }

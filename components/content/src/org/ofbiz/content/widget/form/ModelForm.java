@@ -85,7 +85,7 @@ public class ModelForm {
     protected String itemIndexSeparator;
     protected String paginateTarget;
     protected boolean separateColumns = false;
-    protected FlexibleMapAccessor listIteratorName;
+    protected String listIteratorName;
     protected boolean paginate = true;
     protected boolean useRowSubmit = false;
 
@@ -202,10 +202,12 @@ public class ModelForm {
             this.title = formElement.getAttribute("title");
         if (this.tooltip == null || formElement.hasAttribute("tooltip"))
             this.tooltip = formElement.getAttribute("tooltip");
-        if (this.listName == null || formElement.hasAttribute("listName"))
+        if (this.listName == null || formElement.hasAttribute("list-name"))
             this.listName = formElement.getAttribute("list-name");
-        if (this.listEntryName == null || formElement.hasAttribute("listEntryName"))
+        if (this.listEntryName == null || formElement.hasAttribute("list-entry-name"))
             this.listEntryName = formElement.getAttribute("list-entry-name");
+        if (this.listIteratorName == null || formElement.hasAttribute("list-iterator-name"))
+            this.listIteratorName = formElement.getAttribute("list-iterator-name");
         if (this.defaultMapName == null || formElement.hasAttribute("default-map-name"))
             this.setDefaultMapName(formElement.getAttribute("default-map-name"));
         if (this.defaultServiceName == null || formElement.hasAttribute("default-service-name"))
@@ -808,7 +810,12 @@ public class ModelForm {
     	this.rowCount = 0;
         // if list is empty, do not render rows
         ListIterator iter = getListIterator(context);
-        List items = (List) context.get(this.getListName());
+
+        List items = null;
+        String listName = this.getListName();
+        if (UtilValidate.isNotEmpty(listName))
+            items = (List) context.get(listName);
+            
         if (iter != null) {
             setPaginate(true);
         } else if (items != null) {
@@ -817,6 +824,7 @@ public class ModelForm {
         } 
         //setListIterator(iter);
         // set low and high index
+
         getListLimits(context);
         
         if (iter != null) {
@@ -1094,18 +1102,18 @@ public class ModelForm {
      * @param string
      */
     public void setListIteratorName(String string) {
-        this.listIteratorName = new FlexibleMapAccessor(string);
+        this.listIteratorName = string;
     }
     
    /**
      * @return
      */
     public String getListIteratorName() {
-        return this.listIteratorName.getOriginalName();
+        return this.listIteratorName;
     }
 
     public ListIterator getListIterator(Map context) {
-        String name = (String)context.get("listIteratorName");
+        String name = getListIteratorName();
         ListIterator iter = null;
         if (UtilValidate.isNotEmpty(name)) {
             iter = (ListIterator)context.get(name);
@@ -1399,7 +1407,7 @@ public class ModelForm {
                     try {
                         ((EntityListIterator)listIt).last();
                         listSize = ((EntityListIterator)listIt).currentIndex();
-                        ((EntityListIterator)listIt).first();
+                        ((EntityListIterator)listIt).beforeFirst();
                     } catch(GenericEntityException e2) {
                         listSize = -1;
                     }
