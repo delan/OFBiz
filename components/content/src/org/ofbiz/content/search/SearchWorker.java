@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.7 2004/07/02 20:18:23 byersa Exp $
+ * $Id: SearchWorker.java,v 1.8 2004/08/11 17:16:39 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.content.ContentWorker;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @since 3.1
  * 
  *  
@@ -82,6 +82,9 @@ public class SearchWorker {
                 String subSiteId = siteContent.getString("contentId");
                 indexTree(delegator, subSiteId, context, path);
             }
+            results.put("badIndexList", context.get("badIndexList"));
+            results.put("goodIndexCount", context.get("goodIndexCount"));
+            if (Debug.infoOn()) Debug.logInfo("in indexTree, results:" + results, module);
             return results;
         }
 	
@@ -92,7 +95,7 @@ public class SearchWorker {
 	
 	public static void indexContentList(GenericDelegator delegator, Map context, List idList, String path) throws Exception {
 		String indexAllPath = getIndexPath(path);
-                if (Debug.infoOn()) Debug.logInfo("in indexContent, indexAllPath:" + indexAllPath, module);
+                //if (Debug.infoOn()) Debug.logInfo("in indexContent, indexAllPath:" + indexAllPath, module);
 		GenericValue content = null;
 		
 		// Delete existing documents
@@ -196,7 +199,15 @@ public class SearchWorker {
 	public static void indexContent(GenericDelegator delegator, Map context, GenericValue content, IndexWriter writer) throws Exception {
 	    Document doc = ContentDocument.Document(content, context);
 	    //if (Debug.infoOn()) Debug.logInfo("in indexContent, content:" + content, module);
-            writer.addDocument(doc);
+            if (doc != null) {
+                writer.addDocument(doc);
+                Integer goodIndexCount = (Integer)context.get("goodIndexCount");
+                int newCount = goodIndexCount.intValue() + 1;
+                Integer newIndexCount = new Integer(newCount);
+                if (Debug.infoOn()) Debug.logInfo("in indexTree, goodIndexCount:" + goodIndexCount + " newIndexCount:" + newIndexCount + " newCount:" + newCount, module);
+                context.put("goodIndexCount", newIndexCount);
+                if (Debug.infoOn()) Debug.logInfo("in indexTree, goodIndexCount:" + context.get("goodIndexCount"), module);
+            }
             /*
             String dataResourceId = content.getString("dataResourceId");
             if (UtilValidate.isNotEmpty(dataResourceId)) {
