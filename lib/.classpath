@@ -68,7 +68,6 @@
     <classpathentry exported="true" kind="lib" path="jasperreports/jasperreports-applet.jar"/>
     <classpathentry exported="true" kind="lib" path="share/EdenLib.jar"/>
     <classpathentry exported="true" kind="lib" path="share/JPublish.jar"/>
-    <classpathentry exported="true" kind="lib" path="jotm/monolog.jar"/>
     <classpathentry exported="true" kind="lib" path="tyrex/castor-0.9.3.9.jar"/>
     <classpathentry exported="true" kind="lib" path="tyrex/tyrex-1.0.jar"/>
     <classpathentry kind="output" path=""/>
