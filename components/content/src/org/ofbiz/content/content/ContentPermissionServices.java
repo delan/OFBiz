@@ -31,6 +31,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Arrays;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
@@ -113,10 +114,15 @@ public class ContentPermissionServices {
         String statusId = (String) context.get("statusId");
         String privilegeEnumId = (String) context.get("privilegeEnumId");
         GenericValue content = (GenericValue) context.get("currentContent"); 
+        Map results  = new HashMap();
         String contentId = null;
         if (content != null)
             contentId = content.getString("contentId");
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
+        String partyId = (String) context.get("partyId");
+        if (UtilValidate.isEmpty(partyId) && userLogin != null) {
+            partyId = userLogin.getString("partyId");
+        }
 
  
         // Do entity permission check. This will pass users with administrative permissions.
@@ -134,6 +140,9 @@ public class ContentPermissionServices {
             }
             passedPurposes.addAll(purposesFromString);
         }
+        
+        StdAuxiliaryValueGetter auxGetter = new StdAuxiliaryValueGetter( "Content",  "contentPurposeTypeId", "contentId");
+        auxGetter.setList(passedPurposes);
         //Debug.logInfo("passedPurposes(b):" + passedPurposes, "");
         List targetOperations = (List) context.get("targetOperationList"); 
         String targetOperationString = (String) context.get("targetOperationString"); 
@@ -145,10 +154,14 @@ public class ContentPermissionServices {
             }
             targetOperations.addAll(operationsFromString);
         }
-        Map results  = new HashMap();
+        StdPermissionConditionGetter permCondGetter = new StdPermissionConditionGetter ( "ContentPurposeOperation",  "contentOperationId", "roleTypeId", "statusId", "contentPurposeTypeId", "privilegeEnumId");
+        permCondGetter.setOperationList(targetOperations);
+        
+        StdRelatedRoleGetter roleGetter = new StdRelatedRoleGetter ( "Content",  "roleTypeId", "contentId", "partyId", "ownerContentId", "ContentRole");
         //Debug.logInfo("targetOperations(b):" + targetOperations, "");
         List passedRoles = (List) context.get("roleTypeList"); 
         if (passedRoles == null) passedRoles = new ArrayList();
+        roleGetter.setList(passedRoles);
         // If the current user created the content, then add "_OWNER_" as one of
         //   the contentRoles that is in effect.
         String entityAction = (String) context.get("entityOperation");
@@ -167,11 +180,10 @@ public class ContentPermissionServices {
         String quickCheckContentId = (String) context.get("quickCheckContentId");
         if (UtilValidate.isNotEmpty(quickCheckContentId)) {
            List quickList = StringUtil.split(quickCheckContentId, "|"); 
-           if (UtilValidate.isNotEmpty(quickList))
-                   entityIds.addAll(quickList);
+           if (UtilValidate.isNotEmpty(quickList)) entityIds.addAll(quickList);
         }
         try {
-            boolean check  = checkPermissionMethod(delegator, userLogin, targetOperations, "Content", entityIds, passedPurposes, null, privilegeEnumId);
+            boolean check = checkPermissionMethod(delegator, partyId,  "Content", entityIds, auxGetter, roleGetter, permCondGetter );
             if (check)
                 results.put("permissionStatus", "granted");
             else
@@ -557,6 +569,8 @@ public class ContentPermissionServices {
     }
     public static boolean checkPermissionMethod(GenericDelegator delegator, String partyId,  String entityName, List entityIdList, AuxiliaryValueGetter auxiliaryValueGetter, RelatedRoleGetter relatedRoleGetter, PermissionConditionGetter permissionConditionGetter ) throws GenericEntityException {
 
+        if (Debug.infoOn()) Debug.logInfo("ENTITIES:" + StringUtil.join(entityIdList, ","), module);
+        if (Debug.infoOn()) Debug.logInfo(permissionConditionGetter.dumpAsText(), module);
         boolean passed = false;
 
         String lcEntityName = entityName.toLowerCase();
@@ -592,6 +606,7 @@ public class ContentPermissionServices {
         }
         
         if (auxiliaryValueGetter != null) {
+            if (Debug.infoOn()) Debug.logInfo(auxiliaryValueGetter.dumpAsText(), module);
             // Check with just purposes next.
             iter = entityIdList.iterator();
             while (iter.hasNext()) {
@@ -776,12 +791,16 @@ public class ContentPermissionServices {
         GenericDelegator delegator = entity.getDelegator();
         String pkFieldName = ContentWorker.getPkFieldName(entityName, modelEntity);
         String entityId = entity.getString(pkFieldName);
+        if (Debug.infoOn()) Debug.logInfo("\n\nIN hasMatch: entityId:" + entityId + " partyId:" + partyId + " checkAncestors:" + checkAncestors, module);
         boolean isMatch = false;
         permissionConditionGetter.restart();
         List auxiliaryValueList = null;
         if (auxiliaryValueGetter != null) {
            auxiliaryValueGetter.init(delegator, entityId);
            auxiliaryValueList =   auxiliaryValueGetter.getList();
+            if (Debug.infoOn()) Debug.logInfo(auxiliaryValueGetter.dumpAsText(), module);
+        } else {
+            if (Debug.infoOn()) Debug.logInfo("NO AUX GETTER", module);
         }
         List roleValueList = null;
         if (relatedRoleGetter != null) {
@@ -791,12 +810,16 @@ public class ContentPermissionServices {
                 relatedRoleGetter.init(delegator, entityId, partyId);
             }
             roleValueList =   relatedRoleGetter.getList();
+            if (Debug.infoOn()) Debug.logInfo(relatedRoleGetter.dumpAsText(), module);
+        } else {
+            if (Debug.infoOn()) Debug.logInfo("NO ROLE GETTER", module);
         }
         
         String targStatusId = null;
         if (modelEntity.getField("statusId") != null) {
             targStatusId = entity.getString("statusId");   
         }
+            if (Debug.infoOn()) Debug.logInfo("STATUS:" + targStatusId, module);
         
         while (permissionConditionGetter.getNext() ) {
             String roleConditionId = permissionConditionGetter.getRoleValue();
@@ -808,6 +831,7 @@ public class ContentPermissionServices {
             boolean roleCond = ( roleConditionId == null || roleConditionId.equals("_NA_") || (roleValueList != null && roleValueList.contains(roleConditionId) ) );
  
             if (auxiliaryCond && statusCond && roleCond) {
+                if (Debug.infoOn()) Debug.logInfo("MATCHED: role:" + roleConditionId + " status:" + statusConditionId + " aux:" + auxiliaryConditionId, module);
                     isMatch = true;
                     break;
             }
@@ -1063,6 +1087,7 @@ public class ContentPermissionServices {
         public void setOperationList(String operationIdString);
         public void setOperationList(List opList);
         public List getOperationList();
+        public String dumpAsText();
     }
     
     public static class StdPermissionConditionGetter implements PermissionConditionGetter {
@@ -1180,16 +1205,89 @@ public class ContentPermissionServices {
                 this.iter = this.entityList.listIterator();   
             }
         }
+    
+        public String dumpAsText() {
+             List fieldNames = UtilMisc.toList("operationFieldName",  "roleFieldName",  "auxiliaryFieldName",  "statusFieldName");
+             Map widths = UtilMisc.toMap("operationFieldName", new Integer(24), "roleFieldName", new Integer(24), "auxiliaryFieldName", new Integer(24), "statusFieldName", new Integer(24));
+             StringBuffer buf = new StringBuffer();
+             Integer wid = null;
+             
+             buf.append("Dump for ");
+             buf.append(this.entityName);
+             buf.append("\n");
+             Iterator itFields = fieldNames.iterator();
+             while (itFields.hasNext()) {
+                 String fld = (String)itFields.next();
+                 wid = (Integer)widths.get(fld);
+                 buf.append(fld);  
+                 for (int i=0; i < (wid.intValue() - fld.length()); i++) buf.append(" ");
+                 buf.append("  ");
+             }
+                     buf.append("\n");
+             itFields = fieldNames.iterator();
+             while (itFields.hasNext()) {
+                 String fld = (String)itFields.next();
+                 wid = (Integer)widths.get(fld);
+                 for (int i=0; i < wid.intValue(); i++) buf.append("-");
+                 buf.append("  ");
+             }
+                     buf.append("\n");
+             if (entityList != null) {
+                 Iterator it = this.entityList.iterator();
+                 while (it.hasNext()) {
+                     GenericValue contentPurposeOperation = (GenericValue)it.next();  
+                     String contentOperationId = contentPurposeOperation.getString(this.operationFieldName);
+                     if (UtilValidate.isEmpty(contentOperationId)) {
+                         contentOperationId = "";
+                     }
+                     wid = (Integer)widths.get("operationFieldName");
+                     buf.append(contentOperationId);  
+                     for (int i=0; i < (wid.intValue() - contentOperationId.length()); i++) buf.append(" ");
+                     buf.append("  ");
+                     
+                     String roleTypeId = contentPurposeOperation.getString(this.roleFieldName);
+                     if (UtilValidate.isEmpty(roleTypeId)) {
+                         roleTypeId = "";
+                     }
+                     wid = (Integer)widths.get("roleFieldName");
+                     buf.append(roleTypeId);  
+                     for (int i=0; i < (wid.intValue() - roleTypeId.length()); i++) buf.append(" ");
+                     buf.append("  ");
+                     
+                     String  auxiliaryFieldValue = contentPurposeOperation.getString(this.auxiliaryFieldName);
+                     if (UtilValidate.isEmpty(auxiliaryFieldValue)) {
+                         auxiliaryFieldValue = "";
+                     }
+                     wid = (Integer)widths.get("auxiliaryFieldName");
+                     buf.append(auxiliaryFieldValue);  
+                     for (int i=0; i < (wid.intValue() - auxiliaryFieldValue.length()); i++) buf.append(" ");
+                     buf.append("  ");
+                     
+                     String statusId = contentPurposeOperation.getString(this.statusFieldName);
+                     if (UtilValidate.isEmpty(statusId)) {
+                         statusId = "";
+                     }
+                     wid = (Integer)widths.get("statusFieldName");
+                     buf.append(statusId);  
+                     for (int i=0; i < (wid.intValue() - statusId.length()); i++) buf.append(" ");
+                     buf.append("  ");
+                     
+                     buf.append("\n");
+                 }
+             }
+             return buf.toString();
+        }
     }
     
     public interface AuxiliaryValueGetter {
         public void init(GenericDelegator delegator, String entityId) throws GenericEntityException;
         public List getList();
+        public String dumpAsText();
     }
     
     public static class StdAuxiliaryValueGetter implements AuxiliaryValueGetter {
     
-        protected List entityList;
+        protected List entityList = new ArrayList();
         protected String auxiliaryFieldName;
         protected String entityName;
         protected String entityIdName;
@@ -1219,6 +1317,10 @@ public class ContentPermissionServices {
             return entityList;
         }
         
+    	public void setList(List lst) {
+            this.entityList = lst;
+        }
+        
         public void init(GenericDelegator delegator, String entityId) throws GenericEntityException {
             
             this.entityList = null;
@@ -1226,7 +1328,6 @@ public class ContentPermissionServices {
                 return;   
             }
             List values = delegator.findByAndCache(this.entityName, UtilMisc.toMap(this.entityIdName, entityId));
-            this.entityList = new ArrayList();
             Iterator iter = values.iterator();
             while (iter.hasNext()) {
                 GenericValue entity = (GenericValue)iter.next();
@@ -1234,17 +1335,30 @@ public class ContentPermissionServices {
             }
         }
         
+        public String dumpAsText() {
+             StringBuffer buf = new StringBuffer();
+             buf.append("AUXILIARY: ");
+             if (entityList != null) {
+                for (int i=0; i < entityList.size(); i++) {
+                    String val = (String)entityList.get(i);
+                    buf.append(val);
+                    buf.append("  ");
+                }
+             }
+             return buf.toString();
+        }
     }
     
     public interface RelatedRoleGetter {
         public void init(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException;
         public void initWithAncestors(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException;
         public List getList();
+        public String dumpAsText();
     }
     
     public static class StdRelatedRoleGetter implements RelatedRoleGetter {
     
-        protected List roleIdList;
+        protected List roleIdList = new ArrayList();
         protected String roleTypeFieldName;
         protected String partyFieldName;
         protected String entityName;
@@ -1286,9 +1400,14 @@ public class ContentPermissionServices {
             return this.roleIdList;
         }
         
+    	public void setList(List lst) {
+            this.roleIdList = lst;
+        }
+        
         public void init(GenericDelegator delegator, String entityId, String partyId) throws GenericEntityException {
             
-            this.roleIdList = ContentWorker.getUserRolesFromList(delegator, UtilMisc.toList(entityId), partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
+            List lst = ContentWorker.getUserRolesFromList(delegator, UtilMisc.toList(entityId), partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
+            this.roleIdList.addAll(lst);
            return;
         }
         
@@ -1296,10 +1415,23 @@ public class ContentPermissionServices {
             
            List ownedContentIdList = new ArrayList();
            ContentWorker.getEntityOwners(delegator, entityId, ownedContentIdList, this.entityName, this.ownerEntityFieldName);
-           this.roleIdList = ContentWorker.getUserRolesFromList(delegator, ownedContentIdList, partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
+           List lst = ContentWorker.getUserRolesFromList(delegator, ownedContentIdList, partyId, this.roleEntityIdName, this.partyFieldName, this.roleTypeFieldName, this.roleEntityName);
+            this.roleIdList.addAll(lst);
            return;
         }
         
+        public String dumpAsText() {
+             StringBuffer buf = new StringBuffer();
+             buf.append("ROLES: ");
+             if (roleIdList != null) {
+                for (int i=0; i < roleIdList.size(); i++) {
+                    String val = (String)roleIdList.get(i);
+                    buf.append(val);
+                    buf.append("  ");
+                }
+             }
+             return buf.toString();
+        }
     }
     
 }
