@@ -516,7 +516,7 @@ public class EntitySyncContext {
             }
         }
         
-        if (Debug.infoOn()) Debug.logInfo("Finished runEntitySync: totalRows=" + totalRows + ", totalRowsToCreate=" + totalRowsToCreate + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
+        if (Debug.infoOn()) Debug.logInfo("Finished saveFinalSyncResults: totalRows=" + totalRows + ", totalRowsToCreate=" + totalRowsToCreate + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
     }
 
     public Set makeEntityNameToUseSet() {
@@ -594,7 +594,7 @@ public class EntitySyncContext {
             }
         }
         
-        if (Debug.infoOn()) Debug.logInfo("In runEntitySync with ID [" + entitySync.get("entitySyncId") + "] syncing " + entityModelToUseList.size() + " entities", module);
+        if (Debug.infoOn()) Debug.logInfo("In makeEntityModelToUseList for EntitySync with ID [" + entitySync.get("entitySyncId") + "] syncing " + entityModelToUseList.size() + " entities", module);
         return entityModelToUseList;
     }
 
@@ -676,12 +676,16 @@ public class EntitySyncContext {
         this.createInitialHistory();
     }
     
-    public void runPushSendData(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) throws SyncOtherErrorException, SyncServiceErrorException {
-        // grab the totals for this data
+    public void setTotalRowCounts(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) {
         this.totalRowsToCreate = valuesToCreate.size();
         this.totalRowsToStore = valuesToStore.size();
         this.totalRowsToRemove = keysToRemove.size();
         this.totalRowsPerSplit = this.totalRowsToCreate + this.totalRowsToStore + this.totalRowsToRemove;
+    }
+    
+    public void runPushSendData(ArrayList valuesToCreate, ArrayList valuesToStore, List keysToRemove) throws SyncOtherErrorException, SyncServiceErrorException {
+        // grab the totals for this data
+        this.setTotalRowCounts(valuesToCreate, valuesToStore, keysToRemove);
         
         // call service named on EntitySync, IFF there is actually data to send over
         if (this.totalRowsPerSplit > 0) {

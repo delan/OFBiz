@@ -291,9 +291,9 @@ public class EntitySyncServices {
                     // store data returned, get results (just call storeEntitySyncData locally, get the numbers back and boom shakalaka)
                     
                     // anything to store locally?
-                    if (UtilValidate.isEmpty((Collection) result.get("valuesToCreate")) || 
-                            UtilValidate.isEmpty((Collection) result.get("valuesToCreate")) ||
-                            UtilValidate.isEmpty((Collection) result.get("valuesToCreate"))) {
+                    if (startDate != null && (!UtilValidate.isEmpty((Collection) result.get("valuesToCreate")) || 
+                            !UtilValidate.isEmpty((Collection) result.get("valuesToCreate")) ||
+                            !UtilValidate.isEmpty((Collection) result.get("valuesToCreate")))) {
                         
                         // yep, we got more data
                         gotMoreData = true;
@@ -384,6 +384,7 @@ public class EntitySyncServices {
                 // ===== DELETES =====
                 List keysToRemove = esc.assembleKeysToRemove();
                 
+                esc.setTotalRowCounts(valuesToCreate, valuesToStore, keysToRemove);
                 if (esc.totalRowsToStore > 0) {
                     // stop if we found some data, otherwise look and try again
                     Map result = ServiceUtil.returnSuccess();
