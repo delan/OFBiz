@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -58,6 +58,11 @@
             <input type="hidden" name="finalizeMode" value="ship">
 
             <table width="100%" border="0" cellpadding="1" cellspacing="0">
+              <tr>
+                <td width="26%" align=right valign=top><div class="tableheadtext">Shipping Address</div></td>
+                <td width="5">&nbsp;</td>
+                <td width="74%">&nbsp;</td>
+              </tr>
               ${pages.get("/order/genericaddress.ftl")}
               <tr>
                 <td colspan="3" align="center"><input type="submit" class="smallsubmit" value="Continue"></td>

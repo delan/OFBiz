@@ -380,7 +380,6 @@
                                         ${uiLabelMap.AccountingGiftCard}:
                                         <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
                                             ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
-
                                         <#else>
                                             <#if giftCard?has_content && giftCard.cardNumber?has_content>
                                               <#assign giftCardNumber = "">

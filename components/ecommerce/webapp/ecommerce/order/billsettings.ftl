@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 
@@ -33,9 +33,9 @@ function shipBillAddr() {
       <#assign singleUse = "">
     </#if>
     if (document.billsetupform.useShipAddr.checked) {
-        window.location.replace("setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y${singleUse}");
+        window.location.replace("setBilling?createNew=Y&finalizeMode=payment&useGc=${requestParameters.useGc?if_exists}&paymentMethodType=${paymentMethodType?if_exists}&useShipAddr=Y${singleUse}");
     } else {
-        window.location.replace("setBilling?createNew=Y&finalizeMode=payment&paymentMethodType=${paymentMethodType?if_exists}${singleUse}");
+        window.location.replace("setBilling?createNew=Y&finalizeMode=payment&useGc=${requestParameters.useGc?if_exists}&paymentMethodType=${paymentMethodType?if_exists}${singleUse}");
     }
 }
 </script>
@@ -89,12 +89,7 @@ function shipBillAddr() {
                 </#if>
               </#if>
               <#if paymentMethodType == "GC">
-                <#if giftCard?has_content>
-                  <form method="post" action="<@ofbizUrl>/changeGiftCard</@ofbizUrl>" name="billsetupform">
-                  <input type="hidden" name="paymentMethodId" value="${eftAccount.paymentMethodId?if_exists}">
-                <#else>
-                  <form method="post" action="<@ofbizUrl>/enterGiftCard</@ofbizUrl>" name="billsetupform">
-                </#if>
+                <form method="post" action="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" name="billsetupform">
               </#if>
 
               <#if requestParameters.singleUsePayment?default("N") == "Y">
@@ -127,80 +122,12 @@ function shipBillAddr() {
                 </#if>
 
                 <#if (paymentMethodType == "CC" || paymentMethodType == "EFT")>
+                  <tr>
+                    <td width="26%" align=right valign=top><div class="tableheadtext">Billing Address</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">&nbsp;</td>
+                  </tr>
                   ${pages.get("/order/genericaddress.ftl")}
-                </#if>
-
-                <#-- gift card fields -->
-                <#if paymentMethodType == "GC">
-                  <#if !giftCard?has_content>
-                    <#assign giftCard = requestParameters>
-                  </#if>
-                  <tr><td colspan="3">&nbsp;</td></tr>
-                  <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Physical Number</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
-                      <input type="text" class="inputBox" size="20" maxlength="60" name="physicalNumber" value="${giftCard.physicalNumber?if_exists}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Physical PIN</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
-                      <input type="text" class="inputBox" size="10" maxlength="60" name="physicalPin" value="${giftCard.physicalPin?if_exists}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Virtual Number</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
-                      <input type="text" class="inputBox" size="20" maxlength="60" name="virtualNumber" value="${giftCard.virtualNumber?if_exists}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Virtual PIN</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
-                      <input type="text" class="inputBox" size="10" maxlength="60" name="virtualPin" value="${giftCard.virtualPin?if_exists}">
-                    </td>
-                  </tr>
-                  <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>
-                    <td width="5">&nbsp;</td>
-                    <td width="74%">
-                      <#assign expMonth = "">
-                      <#assign expYear = "">
-                      <#if giftCard?exists && giftCard.expireDate?exists>
-                        <#assign expDate = giftCard.expireDate>
-                        <#if (expDate?exists && expDate.indexOf("/") > 0)>
-                          <#assign expMonth = expDate.substring(0,expDate.indexOf("/"))>
-                          <#assign expYear = expDate.substring(expDate.indexOf("/")+1)>
-                        </#if>
-                      </#if>
-                      <select name="expMonth" class='selectBox'>
-                        <#if giftCard?has_content && expMonth?has_content>
-                          <#assign ccExprMonth = expMonth>
-                        <#else>
-                          <#assign ccExprMonth = requestParameters.expMonth?if_exists>
-                        </#if>
-                        <#if ccExprMonth?has_content>
-                          <option value="${ccExprMonth?if_exists}">${ccExprMonth?if_exists}</option>
-                        </#if>
-                        ${pages.get("/includes/ccmonths.ftl")}
-                      </select>
-                      <select name="expYear" class='selectBox'>
-                        <#if giftCard?has_content && expYear?has_content>
-                          <#assign ccExprYear = expYear>
-                        <#else>
-                          <#assign ccExprYear = requestParameters.expYear?if_exists>
-                        </#if>
-                        <#if ccExprYear?has_content>
-                          <option value="${ccExprYear?if_exists}">${ccExprYear?if_exists}</option>
-                        </#if>
-                        ${pages.get("/includes/ccyears.ftl")}
-                      </select>
-                    </td>
-                  </tr>
                 </#if>
 
                 <#-- credit card fields -->
@@ -212,21 +139,26 @@ function shipBillAddr() {
                     <td colspan="3"><hr class="sepbar"></td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
+                    <td width="26%" align=right valign=top><div class="tableheadtext">Credit Card Information</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Name on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnCard" value="${creditCard.nameOnCard?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Company Name on Card</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Company Name on Card</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnCard" value="${creditCard.companyNameOnCard?if_exists}">
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Card Type</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Card Type</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="cardType" class="selectBox">
@@ -239,21 +171,21 @@ function shipBillAddr() {
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Card Number</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="20" maxlength="30" name="cardNumber" value="${creditCard.cardNumber?if_exists}">
                     *</td>
                   </tr>
                   <#--<tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Card Security Code</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" size="5" maxlength="10" name="cardSecurityCode" value="">
                     </td>
                   </tr>-->
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Expiration Date</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <#assign expMonth = "">
@@ -300,35 +232,40 @@ function shipBillAddr() {
                     <td colspan="3"><hr class="sepbar"></td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Name on Account</div></td>
+                    <td width="26%" align=right valign=top><div class="tableheadtext">EFT Account Information</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Name on Account</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="nameOnAccount" value="${eftAccount.nameOnAccount?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Company Name on Account</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Company Name on Account</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="companyNameOnAccount" value="${eftAccount.companyNameOnAccount?if_exists}">
                     </td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Bank Name</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Bank Name</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="30" maxlength="60" name="bankName" value="${eftAccount.bankName?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Routing Number</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Routing Number</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="10" maxlength="30" name="routingNumber" value="${eftAccount.routingNumber?if_exists}">
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Account Type</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Account Type</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <select name="accountType" class='selectBox'>
@@ -340,13 +277,53 @@ function shipBillAddr() {
                     *</td>
                   </tr>
                   <tr>
-                    <td width="26%" align=right valign=top><div class="tabletext">Account Number</div></td>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Account Number</div></td>
                     <td width="5">&nbsp;</td>
                     <td width="74%">
                       <input type="text" class="inputBox" size="20" maxlength="40" name="accountNumber" value="${eftAccount.accountNumber?if_exists}">
                     *</td>
                   </tr>
                 </#if>
+
+                <#-- gift card fields -->
+                <#if requestParameters.useGc?default("") == "GC">
+                  <#assign giftCard = requestParameters>
+                  <input type="hidden" name="addGiftCard" value="Y">
+                  <#if paymentMethodType != "GC">
+                    <tr>
+                      <td colspan="3"><hr class="sepbar"></td>
+                    </tr>
+                  </#if>
+                  <tr>
+                    <td width="26%" align=right valign=top><div class="tableheadtext">Gift Card Information</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td width="26%" align=right valign=middle><div class="tabletext">Gift Card Number</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">
+                      <input type="text" class="inputBox" size="20" maxlength="60" name="giftCardNumber" value="${giftCard.cardNumber?if_exists}">
+                    *</td>
+                  </tr>
+                  <tr>
+                    <td width="26%" align=right valign=middle><div class="tabletext">PIN Number</div></td>
+                    <td width="5">&nbsp;</td>
+                    <td width="74%">
+                      <input type="text" class="inputBox" size="10" maxlength="60" name="giftCardPin" value="${giftCard.pinNumber?if_exists}">
+                    *</td>
+                  </tr>
+                  <#if paymentMethodType != "GC">
+                    <tr>
+                      <td width="26%" align=right valign=middle><div class="tabletext">Amount To Use</div></td>
+                      <td width="5">&nbsp;</td>
+                      <td width="74%">
+                        <input type="text" class="inputBox" size="5" maxlength="10" name="giftCardAmount" value="${giftCard.pinNumber?if_exists}">
+                      *</td>
+                    </tr>
+                  </#if>
+                </#if>
+
                 <tr>
                   <td align="center" colspan="3">
                     <input type="submit" class="smallsubmit" value="Continue">
@@ -359,6 +336,11 @@ function shipBillAddr() {
                 <input type="hidden" name="finalizeMode" value="payoption">
                 <input type="hidden" name="createNew" value="Y">
                 <table width="100%" border="0" cellpadding="1" cellspacing="0">
+                  <tr>
+                    <td width='5%' nowrap><input type="checkbox" name="useGc" value="GC" <#if paymentMethodType?exists && paymentMethodType == "GC">checked</#if></td>
+                    <td width='95%' nowrap><div class="tabletext">Check If You Have A Gift Card To Use Today</div></td>
+                  </tr>
+                  <tr><td colspan="2"><hr class='sepbar'></td></tr>
                   <tr>
                     <td width='5%' nowrap><input type="radio" name="paymentMethodType" value="offline" <#if paymentMethodType?exists && paymentMethodType == "offline">checked</#if></td>
                     <td width='95%'nowrap><div class="tabletext">Offline Payment: Check/Money Order</div></td>

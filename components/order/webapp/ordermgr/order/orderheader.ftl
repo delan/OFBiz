@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 -->
 
@@ -192,6 +192,7 @@
                                   &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                                 <#else>
                                   ${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}
+                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                                 </#if>
                               </div>
                               <#-- TODO: add transaction history
@@ -231,26 +232,45 @@
                           </tr>
                         <#elseif paymentMethod.paymentMethodTypeId?if_exists == "GIFT_CARD">
                           <#assign giftCard = paymentMethod.getRelatedOne("GiftCard")>
+                          <#if giftCard?exists>
+                            <#assign pmBillingAddress = giftCard.getRelatedOne("PostalAddress")?if_exists>
+                          </#if>
                           <tr>
                             <td align="right" valign="top" width="15%">
                               <div class="tabletext">&nbsp;<b>Gift Card</b></div>
                             </td>
                             <td width="5">&nbsp;</td>
                             <td align="left" valign="top" width="80%">
+                              <#assign oppStatusItem = orderPaymentPreference.getRelatedOne("StatusItem")>
                               <div class="tabletext">
                                 <#if security.hasEntityPermission("PAY_INFO", "_VIEW", session)>
-                                  ${giftCard.physicalNumber?default("N/A")} [${giftCard.physicalPin?default("N/A")}]
-                                  &nbsp;-&nbsp;
-                                  ${giftCard.virtualNumber?default("N/A")} [${giftCard.virtualPin?default("N/A")}]
+                                  ${giftCard.cardNumber?default("N/A")} [${giftCard.pinNumber?default("N/A")}]
+                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                                 <#else>
-                                  ${giveCard.physicalNumber?default("N/A")} - ${giftCard.virtualNumber?default("N/A")}
+                                  <#if giftCard?has_content && giftCard.cardNumber?has_content>
+                                    <#assign giftCardNumber = "">
+                                    <#assign pcardNumber = giftCard.cardNumber>
+                                    <#if pcardNumber?has_content>
+                                      <#assign psize = pcardNumber?length - 4>
+                                      <#if 0 < psize>
+                                        <#list 0 .. psize-1 as foo>
+                                          <#assign giftCardNumber = giftCardNumber + "*">
+                                        </#list>
+                                        <#assign giftCardNumber = giftCardNumber + pcardNumber[psize .. psize + 3]>
+                                      <#else>
+                                        <#assign giftCardNumber = pcardNumber>
+                                      </#if>
+                                    </#if>
+                                  </#if>
+                                  ${giftCardNumber?default("N/A")}
+                                  &nbsp;[<#if oppStatusItem?exists>${oppStatusItem.description}<#else>${orderPaymentPreference.statusId}</#if>]
                                 </#if>
                               </div>
                             </td>
                           </tr>
                         </#if>
                       </#if>
-                      <#if pmBillingAddress?exists>
+                      <#if pmBillingAddress?has_content>
                         <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="5"><hr class="sepbar"></td></tr>
                         <tr>
                           <td align="right" valign="top" width="15%">
