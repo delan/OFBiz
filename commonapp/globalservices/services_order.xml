@@ -488,6 +488,8 @@
     <service name="createSchedule" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderDeliveryServices" invoke="createSchedule">
         <description>Creates a delivery schedule for the specified purchase order</description>
+        <attribute name="deliveryWorkEffortId" type="String" mode="IN" optional="true"/>
+        <attribute name="pickupWorkEffortId" type="String" mode="IN" optional="true"/>
         <implements service="scheduleInterface"/>
     </service>
     <service name="updateSchedule" engine="java"

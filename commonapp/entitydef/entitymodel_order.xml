@@ -225,7 +225,9 @@
       <field name="shipmentMethodTypeId" type="id"></field>
       <field name="trackingNumber" type="short-varchar"></field>
       <field name="deliveryDate" type="date-time"></field>
+      <field name="deliveryWorkEffortId" type="id"></field>
       <field name="pickupDate" type="date-time"></field>
+      <field name="pickupWorkEffortId" type="id"></field>
       <field name="cartons" type="numeric"></field>
       <field name="skidsPallets" type="numeric"></field>
       <field name="unitsPieces" type="floating-point"></field>
@@ -254,6 +256,12 @@
       </relation>
       <relation type="one" fk-name="ORDER_DELSCH_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_DELSCH_DWE" rel-entity-name="WorkEffort">
+        <key-map field-name="deliveryWorkEffortId" rel-field-name="workEffortId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_DELSCH_PWE" rel-entity-name="WorkEffort">
+        <key-map field-name="pickupWorkEffortId" rel-field-name="workEffortId"/>
       </relation>
     </entity>
     <entity entity-name="OrderHeader"
