@@ -64,6 +64,14 @@ public class Copy extends SimpleMapOperation {
         if (fieldValue == null && !setIfNull)
             return;
 
+        if (fieldValue instanceof java.lang.String) {
+            if (((String) fieldValue).length() == 0) {
+                if (setIfNull && (replace || !results.containsKey(toField)))
+                    results.put(toField, null);
+                return;
+            }
+        }
+        
         if (replace) {
             results.put(toField, fieldValue);
             //Debug.logInfo("[SimpleMapProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
