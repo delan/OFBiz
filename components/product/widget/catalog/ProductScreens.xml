@@ -57,7 +57,7 @@
                                     <link target="EditProduct" text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
                                     <link target="CreateVirtualWithVariantsForm" text="[New Virtual Product]" style="buttontext"/>
                                     <!-- TODO: make link conditional on non-empty productId... -->
-                                    <link target="/ecommerce/control/product?product_id=${productId}" url-mode="raw" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
+                                    <link target="/ecommerce/control/product?product_id=${productId}" url-mode="plain" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
                                 </container>
                                 <decorator-section-include name="body"/>
                             </widgets>

@@ -142,7 +142,12 @@ public class EntityFinderUtil {
         
         public ConditionExpr(Element conditionExprElement) {
             this.fieldNameExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("field-name"));
-            this.operatorExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("operator"));
+            if (this.fieldNameExdr.isEmpty()) {
+                // no "field-name"? try "name"
+                this.fieldNameExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("name"));
+            }
+
+            this.operatorExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(conditionExprElement.getAttribute("operator"), "equals"));
             this.envNameAcsr = new FlexibleMapAccessor(conditionExprElement.getAttribute("env-name"));
             this.valueExdr = new FlexibleStringExpander(conditionExprElement.getAttribute("value"));
             this.ignoreIfNull = "true".equals(conditionExprElement.getAttribute("ignore-if-null"));
