@@ -479,7 +479,7 @@ public class LoginEvents {
                     person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
                     group = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", autoUserLogin.getString("partyId")));
                     session.setAttribute("autoUserLogin", autoUserLogin);
-                }b
+                }
                 if (person != null) {
                     session.setAttribute("autoName", person.getString("firstName") + " " + person.getString("lastName"));
                 } else if (group != null) {
