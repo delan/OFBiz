@@ -146,7 +146,9 @@
     
                 function getList(name, value) {
                     currentOrderIndex = findIndex(name);
-                    //alert(document.forms["addform"].elements[name].options[value].value);
+                    if (OPT.length == 1) {
+                        value = document.forms["addform"].elements[name].options[(value*1)+1].value;
+                    }
                     if (currentOrderIndex < 0 || value == "")
                         return;
                     if (currentOrderIndex < (OPT.length - 1)) {
