@@ -131,7 +131,7 @@
             </then>
         </if>
     </simple-method>
-    
+
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
         <string-to-field string="duplicateProduct" field-name="callingMethodName"/>
         <string-to-field string="CREATE" field-name="checkAction"/>
@@ -149,19 +149,6 @@
         <field-to-field field-name="productId" map-name="parameters" to-map-name="newProduct"/>
         <create-value value-name="newProduct"/>
         
-        <!-- induce keywords if autoCreateKeywords is empty or Y-->
-        <if>
-            <condition>
-            	<or>
-                    <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
-                    <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
-            	</or>
-            </condition>
-            <then>
-                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]></call-bsh>
-            </then>
-        </if>
-
         <!-- if requested, duplicate related data as well -->
         <if-not-empty field-name="duplicatePrices" map-name="parameters">
             <find-by-and entity-name="ProductPrice" map-name="productFindContext" list-name="foundValues"/>
@@ -234,6 +221,19 @@
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
+
+        <!-- induce keywords if autoCreateKeywords is empty or Y-->
+        <if>
+            <condition>
+            	<or>
+                    <if-empty field-name="autoCreateKeywords" map-name="newProduct"/>
+                    <if-compare field-name="autoCreateKeywords" map-name="newProduct" operator="equals" value="Y"/>
+            	</or>
+            </condition>
+            <then>
+                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newProduct);]]></call-bsh>
+            </then>
+        </if>
         
         <!-- if requested, remove related data as well -->
         <if-not-empty field-name="removePrices" map-name="parameters">
@@ -262,6 +262,29 @@
         </if-not-empty>
     </simple-method>
 
+    <simple-method method-name="indexProductKeywords" short-description="Index the Keywords for a Product">
+    	<!-- this service is meant to be called from an entity ECA for entities that include a productId -->
+    	<!-- if it is the Product entity itself triggering this action, then a [productInstance] parameter 
+    	    will be passed and we can save a few cycles looking that up -->
+    	<if-empty field-name="productInstance">
+    		<env-to-field env-name="productId" field-name="productId" map-name="findProductMap"/>
+            <find-by-primary-key entity-name="Product" map-name="findProductMap" value-name="productInstance"/>
+    	</if-empty>
+    
+        <!-- induce keywords if autoCreateKeywords is emtpy or Y-->
+        <if>
+            <condition>
+            	<or>
+                    <if-empty field-name="autoCreateKeywords" map-name="productInstance"/>
+                    <if-compare field-name="autoCreateKeywords" map-name="productInstance" operator="equals" value="Y"/>
+            	</or>
+            </condition>
+            <then>
+                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(productInstance);]]></call-bsh>
+            </then>
+        </if>
+    </simple-method>
+    
     <!-- GoodIdentification methods -->
     <simple-method method-name="createGoodIdentification" short-description="Create an GoodIdentification">
         <string-to-field string="createGoodIdentification" field-name="callingMethodName"/>
