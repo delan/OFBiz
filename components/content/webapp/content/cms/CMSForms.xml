@@ -378,16 +378,20 @@
     <form name="EditAddBioImage" target="persistBioImage" title="" type="upload" extends="EditAddImageMaster">
     </form>
    
-    <form name="AdminSearch" default-title-style="tableheadtext"
+    <form name="AdminIndex" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="AdminIndex" title="" type="single">
-        <field name="indexContentIds" title="Content ids to index (separate ids with a space)"><text size="50"/></field>
-        <field name="submitButton" title="Index Entered Ids" widget-style="standardSubmit"><submit button-type="button"/></field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Index All Content" target="AdminSearch?indexAll=true"/>
-        </field>
-
+        <field name="indexContentIds" title="Content ids to index (separate ids with a space)" position="1"><text size="50"/></field>
+        <field name="submitButton" title="Index Entered Ids" widget-style="standardSubmit" position="2"><submit button-type="button"/></field>
     </form>
+
+    <form name="AdminIndexAll" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="indexTree" title="" type="single">
+        <field name="contentId" title=" " position="1"><text size="50" default-value="WebStoreCONTENT"/></field>
+        <field name="submitButton" title="Index All Content Under" widget-style="standardSubmit" position="2"><submit button-type="button"/></field>
+    </form>
+
     <form name="searchQuery" default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="AdminSearch" title="" type="single">

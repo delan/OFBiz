@@ -1345,4 +1345,11 @@
         <attribute name="fieldName1" type="String" mode="IN" optional="true"/>
         <attribute name="fieldValue0" type="String" mode="IN" optional="true"/>
     </service>
+
+  <service auth="true" engine="java" name="indexTree" validate="true"
+        location="org.ofbiz.content.search.SearchServices" invoke="indexTree">
+    <description>Index content under publish point</description>
+    <attribute mode="IN" name="contentId" optional="false" type="String"/>
+  </service>
+
 </services>

@@ -22,6 +22,7 @@
     <page-action name="/menu/storecurrentmenuval.bsh"/>
     <page-action name="/menu/setcurrentmenuitem.bsh"/>
 
+    <content-action name="/cms/advancedsearchprep.bsh"/>
     <content-action name="/cms/search.bsh"/>
 </page>
 
