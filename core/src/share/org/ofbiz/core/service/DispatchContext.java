@@ -62,14 +62,12 @@ import org.ofbiz.core.security.*;
  */
 public class DispatchContext {
 
-    protected static final String GLOBAL_KEY = "global";
+    protected static final String GLOBAL_KEY = "global.services";
     protected static UtilCache modelService = new UtilCache("ModelServices", 0, 0);
     protected static String globalRoot =
             UtilProperties.getPropertyValue("servicesengine", "global.rootPath");
 
     protected String name;
-    protected String root;
-    protected String rootExt;
     protected Map attributes;
     protected Collection readers;
     protected ClassLoader loader;
@@ -79,17 +77,15 @@ public class DispatchContext {
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
-    public DispatchContext(String name, String root, String rootExt,                           Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
+    public DispatchContext(String name, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
         this.name = name;
-        this.root = root;
-        this.rootExt = rootExt;
         this.readers = readers;
         this.loader = loader;
         this.dispatcher = dispatcher;
         this.attributes = new HashMap();
         Map localService = addReaders(readers);
         if (localService != null)
-            modelService.put(root, localService);
+            modelService.put(name, localService);
         Map globalService = addGlobal();
         if (globalService != null)
             modelService.put(GLOBAL_KEY, globalService);
@@ -134,51 +130,19 @@ public class DispatchContext {
         return name;
     }
 
-    /** Gets the 'global root' property of this context (used as a path)
-     *@return String global root directory for this context (raw path)
-     */
-    public String getGlobalScriptPath() {
-        return globalRoot;
-    }
-
-    /** Gets the context script path
-     *@return String context script path
-     */
-    public String getScriptPath() {
-        if (root.endsWith("/") && rootExt.startsWith("/"))
-            return root + rootExt.substring(1);
-        else
-            return root + rootExt;
-    }
-
-    /** Gets the 'root' property of this context (used as a path)
-     *@return String root directory for this context (raw path)
-     */
-    public String getRootPath() {
-        return root;
-    }
-
-    /** Sets the 'root' path property for this context
-     *@param rootPath The 'root' path for this context (i.e. context path)
-     */
-    public void setRootPath(String rootPath) {
-        this.root = rootPath;
-    }
-
     /** Gets the GenericServiceModel instance that corresponds to given the name
      *@param serviceName Name of the service
      *@return GenericServiceModel that corresponds to the serviceName
      */
-    public ModelService getModelService(String serviceName)
-            throws GenericServiceException {
-        Map serviceMap = (Map) modelService.get(root);
+    public ModelService getModelService(String serviceName) throws GenericServiceException {
+        Map serviceMap = (Map) modelService.get(name);
         if (serviceMap == null) {
             synchronized (this) {
-                serviceMap = (Map) modelService.get(root);
+                serviceMap = (Map) modelService.get(name);
                 if (serviceMap == null) {
                     serviceMap = addReaders(readers);
                     if (serviceMap != null)
-                        modelService.put(root, serviceMap);
+                        modelService.put(name, serviceMap);
                 }
             }
         }
@@ -191,12 +155,11 @@ public class DispatchContext {
         return retVal;
     }
 
-    private ModelService getGlobalModelService(String serviceName)
-            throws GenericServiceException {
+    private ModelService getGlobalModelService(String serviceName) throws GenericServiceException {
         Map serviceMap = (Map) modelService.get(GLOBAL_KEY);
         if (serviceMap == null) {
             synchronized (this) {
-                serviceMap = (Map) modelService.get(root);
+                serviceMap = (Map) modelService.get(GLOBAL_KEY);
                 if (serviceMap == null) {
                     serviceMap = addGlobal();
                     if (serviceMap != null)

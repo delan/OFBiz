@@ -229,15 +229,11 @@ public class ControlServlet extends HttpServlet {
                     }
                 }
             }
-            // get the root path (sub-path) from init parameter
-            String scriptPath = getServletContext().getInitParameter("scriptLocationPath");
-            if (scriptPath == null)
-                scriptPath = "/";
-            String rootPath = getServletContext().getRealPath("/");
+            // get the unique name of this dispatcher
             String dispatcherName = getServletContext().getInitParameter("localDispatcherName");
             if (dispatcherName == null)
                 Debug.logError("No localDispatcherName specified in the web.xml file", module);
-            dispatcher = new LocalDispatcher(dispatcherName, rootPath, scriptPath, delegator, readers);
+            dispatcher = new LocalDispatcher(dispatcherName, delegator, readers);
             getServletContext().setAttribute("dispatcher", dispatcher);
             if (dispatcher == null)
                 Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.", module);

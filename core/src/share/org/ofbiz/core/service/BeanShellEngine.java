@@ -5,6 +5,7 @@
 package org.ofbiz.core.service;
 
 import java.io.*;
+import java.net.*;
 import java.util.*;
 import java.lang.reflect.*;
 
@@ -39,6 +40,8 @@ import org.ofbiz.core.util.*;
  * @version    1.0
  */
 public final class BeanShellEngine extends GenericAsyncEngine {
+
+    public static UtilCache beanShellCache = new UtilCache("BeanShellScripts", 0, 0);
 
     /** Creates new BeanShellEngine */
     public BeanShellEngine(ServiceDispatcher dispatcher) {
@@ -75,44 +78,30 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         else
             cl = dispatcher.getLocalContext(loader).getClassLoader();
 
-        String scriptPath = dispatcher.getLocalContext(loader).getScriptPath();
-        String globalScriptPath =
-                dispatcher.getLocalContext(loader).getGlobalScriptPath();
-
-        if (scriptPath.charAt(scriptPath.length() - 1) != '/')
-            scriptPath = scriptPath + "/";
-        if (globalScriptPath.charAt(globalScriptPath.length() - 1) != '/')
-            globalScriptPath = globalScriptPath + "/";
-
-        // locate the script
-        String path = null;
-        try {
-            java.io.File file = new java.io.File(modelService.location);
-            if (!file.exists()) {
-                Debug.logInfo("[BeanShellEngine.invoke] : File not found: " +
-                              modelService.location);
-                file = new java.io.File(scriptPath + modelService.location);
-                if (!file.exists()) {
-                    Debug.logInfo("[BeanShellEngine.invoke] : File not found: " +
-                                  scriptPath + modelService.location);
-                    file = new java.io.File(globalScriptPath + modelService.location);
-                    if (!file.exists()) {
-                        Debug.logInfo("[BeanShellEngine.invoke] : File not found: " +
-                                      globalScriptPath + modelService.location);
-                        throw new GenericServiceException("Script location not valid or file not found");
+        // source the script into a string
+        String script = (String) beanShellCache.get(loader + "_" + modelService.location);
+        if (script == null) {
+            synchronized (this) {
+                script = (String) beanShellCache.get(loader + "_" + modelService.location);
+                if (script == null) {
+                    URL scriptUrl = UtilURL.fromResource(modelService.location, cl);
+                    if (scriptUrl != null) {
+                        try {
+                            HttpClient http = new HttpClient(scriptUrl);
+                            script = http.get();
+                        } catch (HttpClientException e) {
+                            throw new GenericServiceException("Cannot read script from resource");
+                        }
                     } else {
-                        path = globalScriptPath + modelService.location;
+                        throw new GenericServiceException("Cannot read script from resource");
                     }
-                } else {
-                    path = scriptPath + modelService.location;
+                    if (script == null || script.length() < 2) {
+                        throw new GenericServiceException("Null or empty script");
+                    }
+                    beanShellCache.put(loader + "_" + modelService.location, script);
                 }
-            } else {
-                path = modelService.location;
             }
-        } catch (SecurityException e) {
-            throw new GenericServiceException(e.getMessage(), e);
         }
-
 
         Interpreter bsh = null;
         try {
@@ -130,22 +119,14 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         try {
             bsh.set("dctx", dispatcher.getLocalContext(loader)); // set the dispatch context
             bsh.set("context", context); // set the parameter context used for both IN and OUT
-            bsh.source(path);
-            Map bshResult = (Map) bsh.get("result");
-            if (bshResult != null)
-                context.putAll(bshResult);
+            bsh.eval(script);
+            Object bshResult = bsh.get("result");
+            if ((bshResult != null) && (bshResult instanceof Map))
+                context.putAll((Map)bshResult);
             result = modelService.makeValid(context, ModelService.OUT_PARAM);
-
-        } catch (FileNotFoundException e) {
-            throw new GenericServiceException("Cannot locate the BeanShell script");
-        } catch (IOException e) {
-            throw new GenericServiceException(e.getMessage(), e);
         } catch (EvalError e) {
             throw new GenericServiceException("BeanShell script threw an exception", e);
-        } catch (ClassCastException e) {
-            throw new GenericServiceException("BeanShell script did not return a proper response");
         }
-
         return result;
     }
 
