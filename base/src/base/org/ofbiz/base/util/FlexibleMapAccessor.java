@@ -1,5 +1,5 @@
 /*
- * $Id: FlexibleMapAccessor.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id: FlexibleMapAccessor.java,v 1.2 2003/08/17 01:43:48 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import java.util.Map;
  * list elements. See individual Map operations for more information.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class FlexibleMapAccessor {
@@ -95,16 +95,28 @@ public class FlexibleMapAccessor {
         if (base == null) {
             return null;
         }
+        
+        // so we can keep the passed context
+        Map newBase = new HashMap(base);
+        
         if (this.subMapAccessor != null) {
-            base = this.subMapAccessor.getSubMap(base);
+            newBase = this.subMapAccessor.getSubMap(base);
         }
         
+        Object ret = null;
         if (this.isListReference) {
-            List lst = (List) base.get(extName);
-            return lst.get(listIndex);
+            List lst = (List) newBase.get(extName);
+            ret = lst.get(listIndex);            
         } else {
-            return base.get(extName);
+            ret = newBase.get(extName);
         }
+        
+        // in case the name has a dot like system env values
+        if (ret == null) {
+            ret = base.get(original);
+        }        
+        
+        return ret;
     }
     
     /** Given the name based information in this accessor, put the value in the passed in Map. 
