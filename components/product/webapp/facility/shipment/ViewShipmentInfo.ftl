@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
   <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -83,7 +83,7 @@
         </td>
       </tr>
       <tr>
-        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductParties}</span></td>
+        <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.PartyParties}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
         <td width="80%" align="left">
           <span class="tabletext">

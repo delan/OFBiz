@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -40,8 +40,8 @@
   
   <table border="1" cellpadding="2" cellspacing="0" width="100%">
     <tr>
-      <td><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
-      <td><span class="tableheadtext">${uiLabelMap.ProductRole}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
+      <td><span class="tableheadtext">${uiLabelMap.PartyRole}</span></td>
       <td><span class="tableheadtext">${uiLabelMap.CommonFromDate}</span></td>
       <td><span class="tableheadtext">${uiLabelMap.CommonThruDate}</span></td>
       <td>&nbsp;</td>
@@ -72,7 +72,7 @@
     <input type="hidden" name="productStoreId" value="${productStoreId}">
     <table cellspacing="2" cellpadding="2">
       <tr>
-        <td><span class="tableheadtext">${uiLabelMap.ProductRoleType}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.PartyRoleType}</span></td>
         <td>
           <select class="selectBox" name="roleTypeId">
             <#list roleTypes as roleType>
@@ -82,7 +82,7 @@
         </td>
       </tr>
       <tr>
-        <td><span class="tableheadtext">${uiLabelMap.ProductParty}</span></td>
+        <td><span class="tableheadtext">${uiLabelMap.PartyParty}</span></td>
         <td><input type="text" class="inputBox" name="partyId" size="20"></td>
       </tr>
       <tr>

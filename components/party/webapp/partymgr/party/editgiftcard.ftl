@@ -20,7 +20,8 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -30,13 +31,13 @@
 &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonBack}]</a>
 <#else>
     <#if !giftCard?exists>
-      <p class="head1">Create New Gift Card</p>
+      <p class="head1">${uiLabelMap.AccountingCreateNewGiftCard}</p>
       &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
       &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/createGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#else>
-      <p class="head1">Edit Gift Card</p>
+      <p class="head1">${uiLabelMap.AccountingEditGiftCard}</p>
       &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
       &nbsp;<a href="javascript:document.editgiftcardform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
       <form method="post" action='<@ofbizUrl>/updateGiftCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editgiftcardform" style='margin: 0;'>
@@ -47,21 +48,21 @@
     <input type='hidden' name='partyId' value='${partyId}'>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="20" maxlength="60" name="cardNumber" value="${giftCardData.cardNumber?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">PIN Number</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.AccountingPinNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CommonExpireDate}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#assign expMonth = "">

@@ -105,7 +105,7 @@
                   <td width='74%'><input type='text' class='inputBox' size='60' maxlength='255' name='locationDesc' value='${(workEffort.locationDesc)?if_exists}'></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortDescription}</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonDescription}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><textarea name='description' class='textAreaBox' cols='50' rows='4'>${(workEffort.description)?if_exists}</TEXTAREA>
                 </tr>

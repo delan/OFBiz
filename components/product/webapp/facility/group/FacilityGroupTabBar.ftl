@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -33,6 +33,6 @@
         <a href="<@ofbizUrl>/EditFacilityGroup?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroup?default(unselectedClassName)}">${uiLabelMap.ProductFacilityGroup}</a>
         <a href="<@ofbizUrl>/EditFacilityGroupRollup?showFacilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRollup?default(unselectedClassName)}">${uiLabelMap.ProductRollups}</a>
         <a href="<@ofbizUrl>/EditFacilityGroupMembers?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupMembers?default(unselectedClassName)}">${uiLabelMap.ProductFacilities}</a>
-        <a href="<@ofbizUrl>/EditFacilityGroupRoles?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRoles?default(unselectedClassName)}">${uiLabelMap.ProductRoles}</a>
+        <a href="<@ofbizUrl>/EditFacilityGroupRoles?facilityGroupId=${facilityGroupId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroupRoles?default(unselectedClassName)}">${uiLabelMap.PartyRoles}</a>
     </div>
 </#if>
