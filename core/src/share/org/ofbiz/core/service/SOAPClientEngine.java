@@ -41,6 +41,8 @@ import org.ofbiz.core.util.*;
  */
 public final class SOAPClientEngine extends GenericAsyncEngine {
 
+    public static final String module = SOAPClientEngine.class.getName();
+
     /** Creates new SOAPClientEngine */
     public SOAPClientEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
@@ -93,7 +95,7 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
 
         Object[] params = new Object[context.size()];
         Debug.logInfo("[SOAPClientEngine.invoke] : Parameter length - " +
-                      params.length);
+                      params.length, module);
 
         call.setTargetEndpointAddress(endPoint);
         call.setOperationName(modelService.invoke);
@@ -106,14 +108,14 @@ public final class SOAPClientEngine extends GenericAsyncEngine {
             Object value = context.get(key);
             ModelParam p = (ModelParam) modelService.contextInfo.get(key);
             Debug.logInfo("[SOAPClientEngine.invoke} : Parameter : " + p.name + " (" +
-                          p.mode + ") - " + p.order);
+                          p.mode + ") - " + p.order, module);
             if (p.order > -1)
                 params[p.order] = value;
         }
 
         Object result = null;
         try {
-            Debug.logInfo("[SOAPClientEngine.invoke] : Sending Call To SOAP Server");
+            Debug.logInfo("[SOAPClientEngine.invoke] : Sending Call To SOAP Server", module);
             result = call.invoke(params);
         } catch (java.rmi.RemoteException e) {
             throw new GenericServiceException("RPC error", e);

@@ -23,7 +23,6 @@
  *
  */
 
-
 package org.ofbiz.core.service;
 
 import java.net.*;
@@ -34,27 +33,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.security.*;
 
 /**
- * <p><b>Title:</b> Dispatcher Context
- * <p><b>Description:</b> None
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Dispatcher Context
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    November 8, 2001
@@ -62,9 +41,10 @@ import org.ofbiz.core.security.*;
  */
 public class DispatchContext {
 
+    public static final String module = DispatchContext.class.getName();
+
     protected static final String GLOBAL_KEY = "global.services";
     protected static UtilCache modelService = new UtilCache("ModelServices", 0, 0);
-
     protected String name;
     protected Map attributes;
     protected Collection readers;
@@ -229,7 +209,7 @@ public class DispatchContext {
     private Map addGlobal() {
         Map globalMap = new HashMap();
         String path = UtilProperties.getPropertyValue("servicesengine", "global.paths");
-        Debug.logVerbose("[addGlobal] paths: " + path);
+        Debug.logVerbose("[addGlobal] paths: " + path, module);
         if (path == null)
             return null;
         List paths = StringUtil.split(path, ";");
@@ -241,7 +221,7 @@ public class DispatchContext {
             if (readerURL != null)
                 globalMap.putAll(addReader(readerURL));
             else
-                Debug.logInfo("[DispatchContext.addGlobal] : URL returned a 'null' service map");
+                Debug.logWarning("[DispatchContext.addGlobal] : URL returned a 'null' service map", module);
         }
         return globalMap;
     }

@@ -41,6 +41,8 @@ import org.ofbiz.core.security.*;
  */
 public class ServiceDispatcher {
 
+    public static final String module = ServiceDispatcher.class.getName();
+
     protected static Map dispatchers = new HashMap();
     protected GenericDelegator delegator;
     protected Security security;
@@ -48,7 +50,7 @@ public class ServiceDispatcher {
     protected JobManager jm;
 
     public ServiceDispatcher(GenericDelegator delegator) {
-        Debug.logInfo("[ServiceDispatcher] : Creating new instance.");
+        Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
         this.delegator = delegator;
         this.localContext = new HashMap();
         this.jm = new JobManager(this, this.delegator);
@@ -96,7 +98,7 @@ public class ServiceDispatcher {
      */
     public void register(String name, DispatchContext context) {
         Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " +
-                      context.getName());
+                      context.getName(), module);
         this.localContext.put(name, context);
     }
 
@@ -280,7 +282,7 @@ public class ServiceDispatcher {
         if (service == null)
             throw new GenericServiceException("No Authentication Service Defined");
 
-        Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service");
+        Debug.logVerbose("[ServiceDispathcer.authenticate] : Invoking UserLogin Service", module);
 
         // Manually invoke the service
         DispatchContext dctx = getLocalContext(localName);

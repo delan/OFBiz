@@ -1,4 +1,4 @@
-/*
+/*                                                                      Debug
  * $Id$
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
@@ -45,10 +45,11 @@ import org.ofbiz.core.util.*;
 
 public class ModelServiceReader {
 
-    public static Map readers = new HashMap();
+    public static final String module = ModelServiceReader.class.getName();
 
-    public URL readerURL = null;
-    public Map modelServices = null;
+    protected static UtilCache readers = new UtilCache("ModelServiceReader", 0, 0);
+    protected URL readerURL = null;
+    protected Map modelServices = null;
 
     public static ModelServiceReader getModelServiceReader(URL readerURL) {
         ModelServiceReader reader = null;
@@ -59,13 +60,12 @@ public class ModelServiceReader {
                 //must check if null again as one of the blocked threads can still enter
                 reader = (ModelServiceReader) readers.get(readerURL);
                 if (reader == null) {
-                    Debug.logInfo("[ModelServiceReader.getModelServiceReader] : creating reader.");
+                    Debug.logInfo("[Creating reader]: " + readerURL.toExternalForm(), module);
                     reader = new ModelServiceReader(readerURL);
                     readers.put(readerURL, reader);
                 }
             }
         }
-        Debug.logInfo("[ModelServiceReader.getModelServiceReader] : returning reader.");
         return reader;
     }
 
@@ -115,8 +115,8 @@ public class ModelServiceReader {
 
                                 //check to see if service with same name has already been read
                                 if (modelServices.containsKey(serviceName)) {
-                                    Debug.logWarning("WARNING: Service " +
-                                                     serviceName + " is defined more than once, most recent will over-write previous definition(s)");
+                                    Debug.logWarning("WARNING: Service " + serviceName + " is defined more than once, " +
+                                                     "most recent will over-write previous definition(s)", module);
                                 }
 
                                 //utilTimer.timerString("  After serviceName -- " + i + " --");
@@ -125,18 +125,18 @@ public class ModelServiceReader {
                                 if (service != null) {
                                     modelServices.put(serviceName, service);
                                     //utilTimer.timerString("  After modelServices.put -- " + i + " --");
-                                    Debug.logInfo("-- getModelService: #" + i +
-                                                  " Loaded service: " + serviceName);
+                                    Debug.logVerbose("-- getModelService: #" + i +
+                                                  " Loaded service: " + serviceName, module);
                                 } else
                                     Debug.logWarning(
                                             "-- -- SERVICE ERROR:getModelService: Could not create service for serviceName: " +
-                                            serviceName);
+                                            serviceName, module);
 
                             }
                         } while ((curChild = curChild.getNextSibling()) != null)
                                 ;
                     } else
-                        Debug.logWarning("No child nodes found.");
+                        Debug.logWarning("No child nodes found.", module);
                     utilTimer.timerString("Finished file " + readerURL +
                                           " - Total Services: " + i + " FINISHED");
                 }
