@@ -1,6 +1,125 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.pseudotag.*" %>
-<%@ page import="org.ofbiz.commonapp.product.product.*"%>
+<%@ page import="java.util.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*"%>
+<%@ page import="org.ofbiz.core.pseudotag.*, org.ofbiz.commonapp.product.product.*"%>
+
+<%-- ====================================================== --%>
+<%-- Special Variant Code                                   --%>
+<%-- ====================================================== --%>
+<%List featureOrder = UtilMisc.toList("COLOR", "SIZE");%>
+<%pageContext.setAttribute("featureOrder", featureOrder);%>
+<ofbiz:service name="getProductVariantTree">
+    <ofbiz:param name="productId" value="<%=request.getParameter("product_id")%>"/>
+    <ofbiz:param name="featureOrder" attribute="featureOrder"/>
+</ofbiz:service>
+
+<%
+  Map variantTree = (Map) pageContext.getAttribute("variantTree");
+%>
+
+<%!
+    public static String buildNext(Map map, List order, String current, String prefix) {
+        Set keySet = map.keySet();
+        int ct = 0;
+        Iterator i = keySet.iterator();
+        StringBuffer buf = new StringBuffer();
+        Debug.logInfo("KeySet: " +keySet);
+        buf.append("function list" + current + prefix + "() { ");
+        buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options.length = 1;");
+        buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[0] = new Option(\"" + current + "\",\"\",true,true);");
+        Debug.logInfo("Buffer: " + buf.toString());
+        while (i.hasNext()) {
+            Object key = i.next();
+            Object value = map.get(key);
+            Debug.logInfo("" + key + " value: " + value);
+            String optValue = null;
+            if (order.indexOf(current) == (order.size()-1))
+                optValue = ((String) ((List)value).iterator().next());
+            else
+                optValue = prefix + "" + ct;
+            buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[" + (ct + 1) + "] = new Option(\"" + key + "\",\"" + optValue + "\");");
+            ct++;
+        }
+        buf.append(" }");
+        if (order.indexOf(current) < (order.size()-1)) {
+            Iterator i2 = keySet.iterator();
+            ct = 0;
+            while (i2.hasNext()) {
+                String nextOrder = (String) order.get(order.indexOf(current)+1);
+                Object key = i2.next();
+                Map value = (Map) map.get(key);
+                String newPrefix = prefix + "_" + ct;
+                buf.append(buildNext(value, order, nextOrder, newPrefix));
+            }
+        }
+        return buf.toString();
+    }
+%>
+
+<script language="JavaScript">
+<!--
+var OPT = new Array(<%=featureOrder.size()%>);
+<% for (int li = 0; li < featureOrder.size(); li++) { %>
+  OPT[<%=li%>] = "<%=featureOrder.get(li)%>";
+<% } %>
+
+<%-- Build the top level --%>
+<% Set topLevelKeys = variantTree.keySet();%>
+<% String topLevelName = (String) featureOrder.get(0);%>
+function list<%=topLevelName%>() {
+     document.forms["addform"].elements["<%=topLevelName%>"].options.length = 1;
+     document.forms["addform"].elements["<%=topLevelName%>"].options[0] = new Option("<%=topLevelName%>","",true,true);
+  <%
+    Set vTreeKeySet = variantTree.keySet();
+    Iterator vti = vTreeKeySet.iterator();
+    int counter = 0;
+    while (vti.hasNext()) {
+  %>
+     document.forms["addform"].elements["<%=topLevelName%>"].options[<%=counter+1%>] = new Option("<%=vti.next()%>","<%=counter%>");
+  <%
+     counter++;
+    }
+  %>
+}
+
+<%-- Start of Dyno-Gen --%>
+<%Iterator tli = topLevelKeys.iterator();%>
+<%int topLevelKeysCt=0;%>
+<%while (tli.hasNext()){%>
+<%String cnt = "" + topLevelKeysCt;%>
+<%=buildNext((Map)variantTree.get(tli.next()), featureOrder, (String)featureOrder.get(1), cnt)%>
+<%topLevelKeysCt++;%>
+<%}%>
+<%-- End of Dynamic Gen --%>
+
+function findIndex(name) {
+  for (i=0; i<OPT.length; i++) {
+    if (OPT[i] == name) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function fixList(list) {
+  //alert("FixList Running...");
+  currentOrderIndex = findIndex(list.name);
+  selectedIndex = list.selectedIndex;
+  //alert("FixList: " + currentOrderIndex + " / " + selectedIndex);
+  if (currentOrderIndex < 0 || selectedIndex < 1)
+    return;
+  if (currentOrderIndex < (OPT.length - 1)) {
+    eval("list" + OPT[currentOrderIndex+1] + list.options[list.selectedIndex].value + "()");
+  } else {
+    //document.addform.product_id.value = list.options[list.selectedIndex].value;
+    document.addform.add_product_id.value = list.options[list.selectedIndex].value;
+  }
+}
+
+//-->
+</script>
+<%-- ====================================================== --%>
+<%-- End Special Variant Code                                   --%>
+<%-- ====================================================== --%>
 
 <%
   // Get the value object of the request product id.
@@ -22,14 +141,6 @@
         <ofbiz:entityfield attribute="productValue" field="largeImageUrl" prefix="<img src='" suffix="' vspace='5' hspace='5' border='1' width='200' align=left>"/>
       </td>
       <td align="right" valign="top">
-        <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="addform" style='margin: 0;'>
-          <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
-          <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
-          <input type="text" size="5" name="quantity" value="1">
-          <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
-          <a href="javascript:document.addform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>
-        </form>
-        <br>
         <div class="head2"><ofbiz:entityfield attribute="productValue" field="productName"/></div>
         <div class="tabletext"><ofbiz:entityfield attribute="productValue" field="description"/></div>
         <div class="tabletext"><b><ofbiz:entityfield attribute="productValue" field="productId"/></b></div>
@@ -44,6 +155,39 @@
         <%if (productValue.get("piecesIncluded") != null && productValue.getLong("piecesIncluded").longValue() != 0) {%>
             <ofbiz:entityfield attribute="productValue" field="piecesIncluded" prefix="<div class='tabletext'>Pieces: " suffix="</div>"/>
         <%}%>
+
+        <p>&nbsp;</p>
+
+        <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="addform" style='margin: 0;'>
+
+          <%-- Variant Selection --%>
+          <ofbiz:if name="variantTree" size="0">
+            <%Debug.logInfo("FeatureOrder: " + featureOrder.size() + " / " + featureOrder);%>
+            <ofbiz:iterator name="currentType" property="featureOrder" type="java.lang.String">
+              <%Debug.logInfo("CurrentType: " + currentType);%>
+              <div class="tabletext">
+                <select name="<%=currentType%>" onChange="fixList(this)">
+                  <option><%=currentType%></option>
+                </select>
+              </div>
+            </ofbiz:iterator>
+          </ofbiz:if>
+          <ofbiz:unless name="variantTree" size="0">
+            <%-- some hidden field w/ productId --%>
+          </ofbiz:unless>
+          <%-- End of Variant Selection --%>
+
+          <p>&nbsp;</p>
+
+          <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
+          <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
+
+          <a href="javascript:document.addform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
+          <input type="text" size="5" name="quantity" value="1">
+
+          <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
+        </form>
+        <script language="JavaScript">eval("list" + "<%=featureOrder.get(0)%>" + "()");</script>
       </td>
     </tr>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
