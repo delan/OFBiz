@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -49,7 +49,7 @@ productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("
 
 productCategoryRoles = null;
 if (productCategory != null) {
-    productCategoryRoles = productCategory.getRelated("ProductCategoryRole", null, UtilMisc.toList("roleTypeId", "sequenceNum", "partyId"));
+    productCategoryRoles = productCategory.getRelated("ProductCategoryRole", null, UtilMisc.toList("roleTypeId", "partyId"));
 }
 roleTypes = delegator.findAll("RoleType", UtilMisc.toList("description"));
 
