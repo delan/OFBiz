@@ -49,7 +49,6 @@ public class ProductConfigWrapper {
     protected GenericValue product = null; // the aggregated product
     protected List questions = null; // ProductConfigs
     protected List options = null; // lists of ProductConfigOptions
-    protected List choosenOptions = null; // lists of ProductConfigConfigs
     
     /** Creates a new instance of ProductConfigWrapper */
     public ProductConfigWrapper() {
@@ -61,15 +60,17 @@ public class ProductConfigWrapper {
     
     private void init(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, GenericValue autoUserLogin) throws Exception {
         product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+        questions = new ArrayList();
         options = new ArrayList();
-        choosenOptions = new ArrayList();
+        List questionsValues = new ArrayList();
         if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED")) {
-            questions = delegator.findByAnd("ProductConfig", UtilMisc.toMap("productId", productId), UtilMisc.toList("sequenceNum"));
-            questions = EntityUtil.filterByDate(questions);
-            Iterator questionsIt = questions.iterator();
-            while (questionsIt.hasNext()) {
-                GenericValue oneQuestion = (GenericValue)questionsIt.next();
-                List configOptions = delegator.findByAnd("ProductConfigOption", UtilMisc.toMap("configItemId", oneQuestion.getString("configItemId")), UtilMisc.toList("sequenceNum"));
+            questionsValues = delegator.findByAnd("ProductConfig", UtilMisc.toMap("productId", productId), UtilMisc.toList("sequenceNum"));
+            questionsValues = EntityUtil.filterByDate(questionsValues);
+            Iterator questionsValuesIt = questionsValues.iterator();
+            while (questionsValuesIt.hasNext()) {
+                ConfigItem oneQuestion = new ConfigItem((GenericValue)questionsValuesIt.next());
+                questions.add(oneQuestion);
+                List configOptions = delegator.findByAnd("ProductConfigOption", UtilMisc.toMap("configItemId", oneQuestion.getConfigItemAssoc().getString("configItemId")), UtilMisc.toList("sequenceNum"));
                 Iterator configOptionsIt = configOptions.iterator();
                 List availableOptions = new ArrayList();
                 while (configOptionsIt.hasNext()) {
@@ -77,66 +78,135 @@ public class ProductConfigWrapper {
                     availableOptions.add(option);
                 }
                 options.add(availableOptions);
-                choosenOptions.add(null);
             }
         }
     }
     
-    public String renderWebForm() throws Exception {
-        StringBuffer sb = new StringBuffer();
-        sb.append("<form>");
-        sb.append("<table>");
-        for (int i = 0; i < questions.size(); i++) {
-            GenericValue oneQuestionAssoc = (GenericValue)questions.get(i);
-            GenericValue oneQuestion = oneQuestionAssoc.getRelatedOne("ConfigItemProductConfigItem");
-            List avalOptions = (List)options.get(i);
-            sb.append("<tr><th>");
-            sb.append(oneQuestion.getString("description"));
-            sb.append("</th></tr>");
-            sb.append("<tr><td>");
-            if (oneQuestionAssoc.getString("configTypeId").equals("STANDARD")) {
-                for (int j = 0; j < avalOptions.size(); j++) {
-                    if (j > 0) {
-                        sb.append(", ");
-                    }
-                    ConfigOption oneOption = (ConfigOption)avalOptions.get(j);
-                    sb.append(oneOption.getDescription() + " (" + oneOption.getPrice() + ")");
-                }
-            } else if (oneQuestion.getString("configItemTypeId").equals("SINGLE")) {
-                sb.append("<tr><td>");
-                sb.append("<select class='selectBox'>");
-                for (int j = 0; j < avalOptions.size(); j++) {
-                    ConfigOption oneOption = (ConfigOption)avalOptions.get(j);
-                    sb.append("<option>");
-                    sb.append(oneOption.getDescription() + " (" + oneOption.getPrice() + ")");
-                    sb.append("</option>");
-                }
-                sb.append("</select>");
-                sb.append("</td></tr>");
-            } else {
-                // MULTI-CHOICE  question
-                for (int j = 0; j < avalOptions.size(); j++) {
-                    sb.append("<tr><td>");
-                    ConfigOption oneOption = (ConfigOption)avalOptions.get(j);
-                    sb.append("<input type='RADIO' name='" + i + "' value=''>");
-                    sb.append(oneOption.getDescription() + " (" + oneOption.getPrice() + ")");
-                    sb.append("</td></tr>");
-                }
-            }
-            sb.append("</td></tr>");
+    public List getQuestions() {
+        return questions;
+    }
+    
+    public List getOptions() {
+        return options;
+    }
 
-            
-        }
-        sb.append("</table>");
-        sb.append("</form>");
-        return sb.toString();
+    public GenericValue getProduct() {
+        return product;
     }
     
-    class ConfigOption {
+    public void setSelected(int question, int option) throws Exception {
+        ConfigItem ci = (ConfigItem)questions.get(question);
+        List avalOptions = (List)options.get(question);
+        if (ci.isSingleChoice()) {
+            for (int j = 0; j < avalOptions.size(); j++) {
+                ConfigOption oneOption = (ConfigOption)avalOptions.get(j);
+                oneOption.setSelected(false);
+            }
+        }
+        ConfigOption theOption = null;
+        if (option >= 0 && option < avalOptions.size()) {
+            theOption = (ConfigOption)avalOptions.get(option);
+        }
+        if (theOption != null) {
+            theOption.setSelected(true);
+        }
+    }
+    
+    public List getSelectedOptions() {
+        List selectedOptions = new ArrayList();
+        for (int i = 0; i < questions.size(); i++) {
+            ConfigItem ci = (ConfigItem)questions.get(i);
+            List availOptions = (List)options.get(i);
+            if (ci.isStandard()) {
+                selectedOptions.addAll(availOptions);
+            } else {
+                for (int j = 0; j < availOptions.size(); j++) {
+                    ConfigOption oneOption = (ConfigOption)availOptions.get(j);
+                    if (oneOption.isSelected()) {
+                        selectedOptions.add(oneOption);
+                    }
+                }
+            }
+        }
+        return selectedOptions;
+    }
+    
+    public double getTotalPrice() {
+        double totalPrice = 0.0;
+        for (int i = 0; i < options.size(); i++) {
+            ConfigItem ci = (ConfigItem)questions.get(i);
+            List availOptions = (List)options.get(i);
+            for (int j = 0; j < availOptions.size(); j++) {
+                ConfigOption oneOption = (ConfigOption)availOptions.get(j);
+                if (oneOption.isSelected() || ci.isStandard()) {
+                    totalPrice += oneOption.getPrice();
+                }
+            }
+        }
+        return totalPrice;
+    }
+    
+    public boolean isCompleted() {
+        boolean completed = true;
+        for (int i = 0; i < questions.size(); i++) {
+            ConfigItem ci = (ConfigItem)questions.get(i);
+            if (!ci.isStandard() && ci.isMandatory()) {
+                List availOptions = (List)options.get(i);
+                for (int j = 0; j < availOptions.size(); j++) {
+                    ConfigOption oneOption = (ConfigOption)availOptions.get(j);
+                    if (oneOption.isSelected()) {
+                        completed = true;
+                        break;
+                    } else {
+                        completed = false;
+                    }
+                }
+                if (!completed) {
+                    break;
+                }
+            }
+        }
+        return completed;
+    }
+    
+    class ConfigItem {
+        GenericValue configItem = null;
+        GenericValue configItemAssoc = null;
+        
+        public ConfigItem(GenericValue questionAssoc) throws Exception {
+            configItemAssoc = questionAssoc;
+            configItem = configItemAssoc.getRelatedOne("ConfigItemProductConfigItem");
+        }
+        
+        public GenericValue getConfigItem() {
+            return configItem;
+        }
+        
+        public GenericValue getConfigItemAssoc() {
+            return configItemAssoc;
+        }
+
+        public boolean isStandard() {
+            return configItemAssoc.getString("configTypeId").equals("STANDARD");
+        }
+        
+        public boolean isSingleChoice() {
+            return configItem.getString("configItemTypeId").equals("SINGLE");
+        }
+        
+        public boolean isMandatory() {
+            return configItemAssoc.getString("isMandatory") != null && configItemAssoc.getString("isMandatory").equals("Y");
+        }
+        
+    }
+    
+    public class ConfigOption {
         double optionPrice = 0;
         Date availabilityDate = null;
         List components = null; // lists of ProductConfigProduct
         GenericValue configOption = null;
+        boolean selected = false;
+        boolean available = true;
         
         public ConfigOption(GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue option, String catalogId, String webSiteId, String currencyUomId, GenericValue autoUserLogin) throws Exception {
             configOption = option;
@@ -175,6 +245,25 @@ public class ProductConfigWrapper {
             return optionPrice;
         }
         
+        public boolean isSelected() {
+            return selected;
+        }
+        
+        public void setSelected(boolean newValue) {
+            selected = newValue;
+        }
+        
+        public boolean isAvailable() {
+            return available;
+        }
+        
+        public void setAvailable(boolean newValue) {
+            available = newValue;
+        }
+
+        public List getComponents() {
+            return components;
+        }
     }
     
 }
