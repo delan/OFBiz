@@ -72,24 +72,28 @@
 	List dayApprove = EntityUtil.filterByAnd(dayList, UtilMisc.toMap("statusId", "ORDER_APPROVED"));
 	List dayComplete = EntityUtil.filterByAnd(dayList, UtilMisc.toMap("statusId", "ORDER_COMPLETED"));
 	List dayCancelled = EntityUtil.filterByAnd(dayList, UtilMisc.toMap("statusId", "ORDER_CANCELLED"));
+	List dayRejected = EntityUtil.filterByAnd(dayList, UtilMisc.toMap("statusId", "ORDER_REJECTED"));
 	
 	List weekList = delegator.findByAnd("OrderStatus", UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null), new EntityExpr("statusDatetime", EntityOperator.GREATER_THAN_EQUAL_TO, weekBegin)));
 	List weekOrder = EntityUtil.filterByAnd(weekList, UtilMisc.toMap("statusId", "ORDER_ORDERED"));
 	List weekApprove = EntityUtil.filterByAnd(weekList, UtilMisc.toMap("statusId", "ORDER_APPROVED"));
 	List weekComplete = EntityUtil.filterByAnd(weekList, UtilMisc.toMap("statusId", "ORDER_COMPLETED"));
 	List weekCancelled = EntityUtil.filterByAnd(weekList, UtilMisc.toMap("statusId", "ORDER_CANCELLED"));
+	List weekRejected = EntityUtil.filterByAnd(weekList, UtilMisc.toMap("statusId", "ORDER_REJECTED"));
 	
 	List monthList = delegator.findByAnd("OrderStatus", UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null), new EntityExpr("statusDatetime", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin)));
 	List monthOrder = EntityUtil.filterByAnd(monthList, UtilMisc.toMap("statusId", "ORDER_ORDERED"));
 	List monthApprove = EntityUtil.filterByAnd(monthList, UtilMisc.toMap("statusId", "ORDER_APPROVED"));
 	List monthComplete = EntityUtil.filterByAnd(monthList, UtilMisc.toMap("statusId", "ORDER_COMPLETED"));
 	List monthCancelled = EntityUtil.filterByAnd(monthList, UtilMisc.toMap("statusId", "ORDER_CANCELLED"));
+	List monthRejected = EntityUtil.filterByAnd(monthList, UtilMisc.toMap("statusId", "ORDER_REJECTED"));
 	
 	List yearList = delegator.findByAnd("OrderStatus", UtilMisc.toList(new EntityExpr("orderItemSeqId", EntityOperator.EQUALS, null), new EntityExpr("statusDatetime", EntityOperator.GREATER_THAN_EQUAL_TO, yearBegin)));
 	List yearOrder = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_ORDERED"));
 	List yearApprove = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_APPROVED"));
 	List yearComplete = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_COMPLETED"));
 	List yearCancelled = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_CANCELLED"));
+	List yearRejected = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_REJECTED"));
 	
 	// order totals
 	List dayItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
@@ -233,7 +237,15 @@
                 <td><div class="tabletext"><%=weekCancelled == null ? 0 : weekCancelled.size()%></div></td>
                 <td><div class="tabletext"><%=monthCancelled == null ? 0 : monthCancelled.size()%></div></td>
                 <td><div class="tabletext"><%=yearCancelled == null ? 0 : yearCancelled.size()%></div></td>
-              </tr>                          
+              </tr>  
+              <tr>
+                <td>&nbsp;</td>
+                <td><div class="tabletext">Rejected</div></td>
+                <td><div class="tabletext"><%=dayRejected == null ? 0 : dayRejected.size()%></div></td>
+                <td><div class="tabletext"><%=weekRejected == null ? 0 : weekRejected.size()%></div></td>
+                <td><div class="tabletext"><%=monthRejected == null ? 0 : monthRejected.size()%></div></td>
+                <td><div class="tabletext"><%=yearRejected == null ? 0 : yearRejected.size()%></div></td>
+              </tr>                                         
                     
             </TABLE>                    
           </td>
