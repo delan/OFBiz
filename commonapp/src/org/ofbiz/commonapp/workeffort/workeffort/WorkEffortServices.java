@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2001/12/30 04:22:56  jonesde
+ * Finished WorkEffortPartyAssignment services, cleaned up WorkEffort services
+ *
  * Revision 1.3  2001/12/29 12:26:08  jonesde
  * Finished moving WorkEffort functionality to services, party assignment still needs to be done
  *
@@ -113,9 +116,11 @@ public class WorkEffortServices {
         if (userLogin.get("partyId") != null) {
             newWorkEffort.set("createdByPartyId", userLogin.get("partyId"));
             //add a party assignment for the creator of the event
+            toBeStored.add(delegator.makeValue("PartyRole",
+                    UtilMisc.toMap("partyId", userLogin.get("partyId"), "roleTypeId", "CAL_OWNER")));
             toBeStored.add(delegator.makeValue("WorkEffortPartyAssignment",
-                    UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"), "roleTypeId", "CAL_OWNER", "fromDate", nowStamp, "statusId",
-                    "CAL_ASN_ACCEPTED")));
+                    UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId"), 
+                    "roleTypeId", "CAL_OWNER", "fromDate", nowStamp, "statusId", "CAL_ACCEPTED")));
         }
 
         try {

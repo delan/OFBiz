@@ -29,8 +29,7 @@
  * Created on January 1, 2001
  -->
 <simple-map-processors>
-  <simple-map-processor name="update">
-    <process field="workEffortId"><copy replace="false"/></process>
+  <simple-map-processor name="create">
     <process field="workEffortTypeId"><copy/></process>
     <process field="universalId"><copy/></process>
     <process field="scopeEnumId"><copy/></process>
@@ -64,7 +63,7 @@
     <process field="timeTransparency"><copy/></process>
     <process field="infoUrl"><copy/></process>
   </simple-map-processor>
-  <simple-map-processor name="delete">
+  <simple-map-processor name="idcopy">
     <process field="workEffortId"><copy/><not-empty><fail-message message="Work Effort ID is missing."/></not-empty></process>
   </simple-map-processor>
 </simple-map-processors>

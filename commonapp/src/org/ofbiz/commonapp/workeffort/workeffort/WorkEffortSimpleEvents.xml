@@ -31,7 +31,7 @@
 <simple-methods>
     <simple-method method-name="create" short-description="Create Work Effort">
         <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
-                processor-name="update" in-map-name="parameters" out-map-name="context"/>
+                processor-name="create" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createWorkEffort" in-map-name="context">
             <default-message>Work Effort successfully created.</default-message>
@@ -39,14 +39,16 @@
     </simple-method>
     <simple-method method-name="update" short-description="Update Work Effort">
         <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
-                processor-name="update" in-map-name="parameters" out-map-name="context"/>
+                processor-name="create" in-map-name="parameters" out-map-name="context"/>
+        <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
+                processor-name="idcopy" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updateWorkEffort" in-map-name="context">
             <default-message>Work Effort successfully updated.</default-message></call-service>
     </simple-method>
     <simple-method method-name="delete" short-description="Delete Work Effort">
         <call-map-processor xml-resource="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortMapProcessors.xml" 
-                processor-name="delete" in-map-name="parameters" out-map-name="context"/>
+                processor-name="idcopy" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="deleteWorkEffort" in-map-name="context">
             <default-message>Work Effort successfully deleted.</default-message></call-service>
