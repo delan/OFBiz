@@ -9,12 +9,12 @@ ${CENTER}${BOLD}212.655.3052
 ${CENTER}Sale: ${orderId} Tx: ${transactionId} Dr: ${drawerNo} Clerk: ${userId}
 ${CENTER}${dateStamp}
 
-${CENTER}${titleOnCard} ${firstNameOnCard} ${middleNameOnCard} ${lastNameOnCard} ${suffixOnCard}
-${CENTER}${cardType} : ${cardNumber} : ${expireDate}
+${CENTER}${cardNumber} - ${expireDate}
+${CENTER}${nameOnCard}
 ${CENTER}${authInfoString}
 
 
-${CENTER}${BOLD}$${amount}
+${CENTER}${BOLD}Amount: $${amount}
 
 
 

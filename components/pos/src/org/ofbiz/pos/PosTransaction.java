@@ -264,6 +264,7 @@ public class PosTransaction {
                 }
                 String nameOnCard = cc.getString("firstNameOnCard") + " " + cc.getString("lastNameOnCard");
                 nameOnCard.trim();
+                payInfo.put("nameOnCard", nameOnCard);
 
                 String cardNum = cc.getString("cardNumber");
                 String cardStr = cardNum.substring(0, 2);
@@ -271,8 +272,8 @@ public class PosTransaction {
                 cardStr = cardStr + cardNum.substring(cardNum.length() - 4);
 
                 String expDate = cc.getString("expireDate");
-                String infoString = (nameOnCard.length() > 0 ? nameOnCard + " " : "") + cardStr + " " + expDate;
-                payInfo.put("infoString", infoString);
+                String infoString = cardStr + " " + expDate;
+                payInfo.put("cardInfo", infoString);
                 payInfo.putAll(cc);
 
 
