@@ -227,7 +227,7 @@ public class GenericDelegator {
     ModelEntity entity = modelReader.getModelEntity(entityName);
     if(entity == null) throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + entityName);
     GenericValue value = new GenericValue(entity, fields);
-    value.delegator = this;
+    value.setDelegator(this);
     return value;
   }
   
@@ -236,6 +236,7 @@ public class GenericDelegator {
     ModelEntity entity = modelReader.getModelEntity(entityName);
     if(entity == null) throw new IllegalArgumentException("[GenericDelegator.makePK] could not find entity for entityName: " + entityName);
     GenericPK pk = new GenericPK(entity, fields);
+    pk.setDelegator(this);
     return pk;
   }
   

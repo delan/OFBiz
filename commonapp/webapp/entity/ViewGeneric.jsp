@@ -57,11 +57,11 @@
   String rowClass2 = "viewOneTR2";
   String rowClass = "";
   String curFindString = "entityName=" + entityName;
-  GenericPK findByPK = new GenericPK(entity);
+  GenericPK findByPK = delegator.makePK(entityName, null);
   for(int fnum=0; fnum<entity.pks.size(); fnum++)
   {
     ModelField field = (ModelField)entity.pks.get(fnum);
-    ModelFieldType type = field.modelFieldType;
+    ModelFieldType type = delegator.getEntityFieldType(entity, field.type);
     if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp"))
     {
       String fvalDate = request.getParameter(field.name + "_DATE");
@@ -138,17 +138,20 @@ function ShowViewTab(lname)
 <%}else{%>
     <%for(int fnum=0;fnum<entity.fields.size();fnum++){%>
       <%ModelField field = (ModelField)entity.fields.get(fnum);%>
-      <%ModelFieldType type = field.modelFieldType;%>
+      <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td valign="top"><div class="tabletext"><b><%=field.name%></b></div></td>
       <td valign="top">
         <div class="tabletext">
       <%if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){%>
-        <%=UtilDateTime.toDateTimeString((java.sql.Timestamp)value.get(field.name))%>
+        <%java.sql.Timestamp dtVal = value.getTimestamp(field.name);%>
+        <%=dtVal==null?"":dtVal.toString()%>
       <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
-        <%=UtilDateTime.toDateString((java.sql.Date)value.get(field.name))%>
+        <%java.sql.Date dateVal = value.getDate(field.name);%>
+        <%=dateVal==null?"":dateVal.toString()%>
       <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
-        <%=UtilDateTime.toTimeString((java.sql.Time)value.get(field.name))%>
+        <%java.sql.Time timeVal = value.getTime(field.name);%>
+        <%=timeVal==null?"":timeVal.toString()%>
       <%}else if(type.javaType.indexOf("Integer") >= 0){%>
         <%=UtilFormatOut.formatQuantity((Integer)value.get(field.name))%>
       <%}else if(type.javaType.indexOf("Long") >= 0){%>
@@ -192,7 +195,7 @@ function ShowViewTab(lname)
     <input type="hidden" name="UPDATE_MODE" value="CREATE">
     <%for(int fnum=0;fnum<entity.pks.size();fnum++){%>
       <%ModelField field = (ModelField)entity.pks.get(fnum);%>
-      <%ModelFieldType type = field.modelFieldType;%>
+      <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td valign="top"><div class="tabletext"><b><%=field.name%></b></div></td>
       <td valign="top">
@@ -202,37 +205,43 @@ function ShowViewTab(lname)
           String dateString = null;
           String timeString = null;
           if(findByPK.get(field.name) != null){
-            dateString = UtilDateTime.toDateString((java.sql.Timestamp)findByPK.get(field.name));
-            timeString = UtilDateTime.toTimeString((java.sql.Timestamp)findByPK.get(field.name));
+            java.sql.Timestamp dtVal = findByPK.getTimestamp(field.name);
+            if(dtVal != null) {
+              String dtStr = dtVal.toString();
+              dateString = dtStr.substring(0, dtStr.indexOf(' '));
+              timeString = dtStr.substring(dtStr.indexOf(' ') + 1);
+            }
           } else {
             dateString = request.getParameter(field.name + "_DATE");
             timeString = request.getParameter(field.name + "_TIME");
           }
         %>
-        Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=field.name%>_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
+        Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.name%>_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
         <a href="javascript:show_calendar('updateForm.<%=field.name%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
-        Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
+        Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
         <%
           String dateString = null;
           if(findByPK.get(field.name) != null){
-            dateString = UtilDateTime.toDateString((java.sql.Date)findByPK.get(field.name));
+            java.sql.Date dateVal = value.getDate(field.name);
+            dateString = dateVal==null?"":dateVal.toString();
           } else {
             dateString = request.getParameter(field.name);
           }
         %>
-        Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=field.name%>" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
+        Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.name%>" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
         <a href="javascript:show_calendar('updateForm.<%=field.name%>');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
       <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
         <%
           String timeString = null;
           if(findByPK.get(field.name) != null){
-            timeString = UtilDateTime.toTimeString((java.sql.Timestamp)findByPK.get(field.name));
+            java.sql.Time timeVal = value.getTime(field.name);
+            timeString = timeVal==null?"":timeVal.toString();
           } else {
             timeString = request.getParameter(field.name);
           }
         %>
-        Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>" value="<%=UtilFormatOut.checkNull(timeString)%>">
+        Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%}else if(type.javaType.indexOf("Integer") >= 0){%>
         <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=findByPK.get(field.name)!=null?UtilFormatOut.formatQuantity((Integer)findByPK.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("Long") >= 0){%>
@@ -264,21 +273,25 @@ function ShowViewTab(lname)
 
     <%for(int fnum=0;fnum<entity.pks.size();fnum++){%>
       <%ModelField field = (ModelField)entity.pks.get(fnum);%>
-      <%ModelFieldType type = field.modelFieldType;%>
+      <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td valign="top"><div class="tabletext"><b><%=field.name%></b></div></td>
       <td valign="top">
         <div class="tabletext">
       <%if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){%>
-        <input type="hidden" name="<%=field.name%>_DATE" value="<%=UtilDateTime.toDateString((java.sql.Timestamp)findByPK.get(field.name))%>">
-        <input type="hidden" name="<%=field.name%>_TIME" value="<%=UtilDateTime.toTimeString((java.sql.Timestamp)findByPK.get(field.name))%>">
-        <%=UtilDateTime.toDateTimeString((java.sql.Timestamp)value.get(field.name))%>
+        <%java.sql.Timestamp dtVal = value.getTimestamp(field.name);%>
+        <%String dtStr = dtVal==null?"":dtVal.toString();%>
+        <input type="hidden" name="<%=field.name%>_DATE" value="<%=dtStr.substring(0, dtStr.indexOf(' '))%>">
+        <input type="hidden" name="<%=field.name%>_TIME" value="<%=dtStr.substring(dtStr.indexOf(' ') + 1)%>">
+        <%=dtStr%>
       <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
-        <input type="hidden" name="<%=field.name%>" value="<%=UtilDateTime.toDateString((java.sql.Date)value.get(field.name))%>">
-        <%=UtilDateTime.toDateString((java.sql.Date)value.get(field.name))%>
+        <%java.sql.Date dateVal = value.getDate(field.name);%>
+        <input type="hidden" name="<%=field.name%>" value="<%=dateVal==null?"":dateVal.toString()%>">
+        <%=dateVal==null?"":dateVal.toString()%>
       <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
-        <input type="hidden" name="<%=field.name%>" value="<%=UtilDateTime.toTimeString((java.sql.Time)value.get(field.name))%>">
-        <%=UtilDateTime.toTimeString((java.sql.Time)value.get(field.name))%>
+        <%java.sql.Time timeVal = value.getTime(field.name);%>
+        <input type="hidden" name="<%=field.name%>" value="<%=timeVal==null?"":timeVal.toString()%>">
+        <%=timeVal==null?"":timeVal.toString()%>
       <%}else if(type.javaType.indexOf("Integer") >= 0){%>
         <input type="hidden" name="<%=field.name%>" value="<%=UtilFormatOut.formatQuantity((Integer)value.get(field.name))%>">
         <%=UtilFormatOut.formatQuantity((Integer)value.get(field.name))%>
@@ -310,7 +323,7 @@ function ShowViewTab(lname)
 
     <%for(int fnum=0;fnum<entity.nopks.size();fnum++){%>
       <%ModelField field = (ModelField)entity.nopks.get(fnum);%>
-      <%ModelFieldType type = field.modelFieldType;%>
+      <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td valign="top"><div class="tabletext"><b><%=field.name%></b></div></td>
       <td valign="top">
@@ -320,37 +333,43 @@ function ShowViewTab(lname)
           String dateString = null;
           String timeString = null;
           if(value != null && useValue){
-            dateString = UtilDateTime.toDateString((java.sql.Timestamp)value.get(field.name));
-            timeString = UtilDateTime.toTimeString((java.sql.Timestamp)value.get(field.name));
+            java.sql.Timestamp dtVal = findByPK.getTimestamp(field.name);
+            if(dtVal != null) {
+              String dtStr = dtVal.toString();
+              dateString = dtStr.substring(0, dtStr.indexOf(' '));
+              timeString = dtStr.substring(dtStr.indexOf(' ') + 1);
+            }
           } else {
             dateString = request.getParameter(field.name + "_DATE");
             timeString = request.getParameter(field.name + "_TIME");
           }
         %>
-        Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=field.name%>_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
+        Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.name%>_DATE" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
         <a href="javascript:show_calendar('updateForm.<%=field.name%>_DATE');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
-        Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
+        Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>_TIME" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
         <%
           String dateString = null;
           if(value != null && useValue){
-            dateString = UtilDateTime.toDateString((java.sql.Date)value.get(field.name));
+            java.sql.Date dateVal = value.getDate(field.name);
+            dateString = dateVal==null?"":dateVal.toString();
           } else {
             dateString = request.getParameter(field.name);
           }
         %>
-        Date(MM/DD/YYYY):<input class='editInputBox' type="text" name="<%=field.name%>" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
+        Date(YYYY-MM-DD):<input class='editInputBox' type="text" name="<%=field.name%>" size="11" value="<%=UtilFormatOut.checkNull(dateString)%>">
         <a href="javascript:show_calendar('updateForm.<%=field.name%>');" onmouseover="window.status='Date Picker';return true;" onmouseout="window.status='';return true;"><img src="/images/show-calendar.gif" border=0 width="24" height="22"></a>
       <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
         <%
           String timeString = null;
           if(value != null && useValue){
-            timeString = UtilDateTime.toTimeString((java.sql.Timestamp)value.get(field.name));
+            java.sql.Time timeVal = value.getTime(field.name);
+            timeString = timeVal==null?"":timeVal.toString();
           } else {
             timeString = request.getParameter(field.name);
           }
         %>
-        Time(HH:MM):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>" value="<%=UtilFormatOut.checkNull(timeString)%>">
+        Time(HH:mm:SS.sss):<input class='editInputBox' type="text" size="6" maxlength="10" name="<%=field.name%>" value="<%=UtilFormatOut.checkNull(timeString)%>">
       <%}else if(type.javaType.indexOf("Integer") >= 0){%>
         <input class='editInputBox' type="text" size="20" name="<%=field.name%>" value="<%=(value!=null&&useValue)?UtilFormatOut.formatQuantity((Integer)value.get(field.name)):UtilFormatOut.checkNull(request.getParameter(field.name))%>">
       <%}else if(type.javaType.indexOf("Long") >= 0){%>
@@ -457,17 +476,20 @@ function ShowTab(lname)
     <%}else{%>
       <%for(int fnum=0;fnum<relatedEntity.fields.size();fnum++){%>
         <%ModelField field = (ModelField)relatedEntity.fields.get(fnum);%>
-        <%ModelFieldType type = field.modelFieldType;%>
+        <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
       <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
         <td valign="top"><div class="tabletext"><b><%=field.name%></b></div></td>
         <td valign="top">
           <div class="tabletext">
         <%if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){%>
-          <%=UtilDateTime.toDateTimeString((java.sql.Timestamp)valueRelated.get(field.name))%>
+          <%java.sql.Timestamp dtVal = valueRelated.getTimestamp(field.name);%>
+          <%=dtVal==null?"":dtVal.toString()%>
         <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
-          <%=UtilDateTime.toDateString((java.sql.Date)valueRelated.get(field.name))%>
+          <%java.sql.Date dateVal = valueRelated.getDate(field.name);%>
+          <%=dateVal==null?"":dateVal.toString()%>
         <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
-          <%=UtilDateTime.toTimeString((java.sql.Time)valueRelated.get(field.name))%>
+          <%java.sql.Time timeVal = valueRelated.getTime(field.name);%>
+          <%=timeVal==null?"":timeVal.toString()%>
         <%}else if(type.javaType.indexOf("Integer") >= 0){%>
           <%=UtilFormatOut.formatQuantity((Integer)valueRelated.get(field.name))%>
         <%}else if(type.javaType.indexOf("Long") >= 0){%>

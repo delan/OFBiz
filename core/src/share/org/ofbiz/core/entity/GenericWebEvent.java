@@ -86,7 +86,7 @@ public class GenericWebEvent {
       return "error";
     }
     
-    GenericEntity findByEntity = new GenericEntity(entity);
+    GenericValue findByEntity = delegator.makeValue(entityName, null);
     
     //get the primary key parameters...
     for(int fnum=0; fnum<entity.pks.size(); fnum++) {

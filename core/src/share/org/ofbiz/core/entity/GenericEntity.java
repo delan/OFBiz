@@ -71,6 +71,18 @@ public class GenericEntity implements Serializable {
     return modelEntity; 
   }
   
+  /** Get the GenericDelegator implementation instance that created this value object and that is repsonsible for it.
+   *@return GenericDelegator object
+   */
+  public GenericDelegator getDelegator() {
+    if(delegator == null) throw new IllegalStateException("[GenericEntity.getDelegator] delegator not set");
+    return delegator;
+  }
+  /** Get the GenericDelegator implementation instance that created this value object and that is repsonsible for it.
+   *@return GenericDelegator object
+   */
+  public void setDelegator(GenericDelegator delegator) { this.delegator = delegator; }
+
   public Object get(String name) {
     if(getModelEntity().getField(name) == null) {
       throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
@@ -129,8 +141,9 @@ public class GenericEntity implements Serializable {
     if(field == null) set(name, value); //this will get an error...
     
     ModelFieldType type = null;
-    try { type = delegator.getEntityFieldType(getModelEntity(), field.type); }
-    catch(GenericEntityException e) { Debug.logWarning(e); throw new IllegalArgumentException("Type " + field.type + " not found: " + e.getMessage()); }
+    try { type = getDelegator().getEntityFieldType(getModelEntity(), field.type); }
+    catch(GenericEntityException e) { Debug.logWarning(e); }
+    if(type == null) throw new IllegalArgumentException("Type " + field.type + " not found");
     String fieldType = type.javaType;
     if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
       set(name, value);
@@ -297,13 +310,4 @@ public class GenericEntity implements Serializable {
     }
     return theString.toString();
   }
-  
-  /** Get the GenericDelegator implementation instance that created this value object and that is repsonsible for it.
-   *@return GenericDelegator object
-   */
-  public GenericDelegator getDelegator() { return delegator; }
-  /** Get the GenericDelegator implementation instance that created this value object and that is repsonsible for it.
-   *@return GenericDelegator object
-   */
-  public void setDelegator(GenericDelegator delegator) { this.delegator = delegator; }
 }

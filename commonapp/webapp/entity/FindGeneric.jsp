@@ -128,14 +128,14 @@
   //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
 <h3 style='margin:0;'>Find <%=entity.entityName%>s</h3>
-Note: you may use the '%' character as a wildcard for String fields.
+<%-- Note: you may use the '%' character as a wildcard for String fields. --%>
 <br>To find ALL <%=entity.entityName%>s, leave all entries blank.
 <form method="post" action="<%=response.encodeURL(controlPath + "/FindGeneric?entityName=" + entityName)%>" style='margin:0;'>
 <INPUT type=hidden name='find' value='true'>
 <table cellpadding="2" cellspacing="2" border="0">
   <%for(int fnum=0; fnum<entity.fields.size(); fnum++){%>
     <%ModelField field = (ModelField)entity.fields.get(fnum);%>
-    <%ModelFieldType type = field.modelFieldType;%>
+    <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
     <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
       <td valign="top"><%=field.name%>(<%=type.javaType%>,<%=type.sqlType%>):</td>
       <td valign="top">
@@ -198,15 +198,18 @@ Note: you may use the '%' character as a wildcard for String fields.
     <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
     <%for(int fnum=0;fnum<entity.fields.size();fnum++){%>
       <%ModelField field = (ModelField)entity.fields.get(fnum);%>
-      <%ModelFieldType type = field.modelFieldType;%>
+      <%ModelFieldType type = delegator.getEntityFieldType(entity, field.type);%>
       <td>
         <div class="tabletext">
       <%if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){%>
-        <%=UtilDateTime.toDateTimeString((java.sql.Timestamp)value.get(field.name))%>
+        <%java.sql.Timestamp dtVal = value.getTimestamp(field.name);%>
+        <%=dtVal==null?"":dtVal.toString()%>
       <%} else if(type.javaType.equals("Date") || type.javaType.equals("java.sql.Date")){%>
-        <%=UtilDateTime.toDateString((java.sql.Date)value.get(field.name))%>
+        <%java.sql.Date dateVal = value.getDate(field.name);%>
+        <%=dateVal==null?"":dateVal.toString()%>
       <%} else if(type.javaType.equals("Time") || type.javaType.equals("java.sql.Time")){%>
-        <%=UtilDateTime.toTimeString((java.sql.Time)value.get(field.name))%>
+        <%java.sql.Time timeVal = value.getTime(field.name);%>
+        <%=timeVal==null?"":timeVal.toString()%>
       <%}else if(type.javaType.indexOf("Integer") >= 0){%>
         <%=UtilFormatOut.formatQuantity((Integer)value.get(field.name))%>
       <%}else if(type.javaType.indexOf("Long") >= 0){%>
@@ -226,7 +229,15 @@ Note: you may use the '%' character as a wildcard for String fields.
           for(int pknum=0; pknum<entity.pks.size(); pknum++)
           {
             ModelField pkField = (ModelField)entity.pks.get(pknum);
-            findString = findString + "&" + pkField.name + "=" + value.get(pkField.name);
+            ModelFieldType type = delegator.getEntityFieldType(entity, pkField.type);
+            if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp")){
+              String dtStr = value.getTimestamp(pkField.name).toString();
+              findString += "&" + pkField.name + "_DATE=" + dtStr.substring(0, dtStr.indexOf(' '));
+              findString += "&" + pkField.name + "_TIME=" + dtStr.substring(dtStr.indexOf(' ') + 1);
+            }
+            else {
+              findString += "&" + pkField.name + "=" + value.get(pkField.name);
+            }
           }
         %>
         <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + findString)%>" class="buttontext">[View]</a>
