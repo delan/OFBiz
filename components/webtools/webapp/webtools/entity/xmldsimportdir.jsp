@@ -36,7 +36,9 @@
 <%
   String path = request.getParameter("path");
   boolean mostlyInserts = request.getParameter("mostlyInserts") != null;
-  
+  boolean keepStamps = request.getParameter("maintainTimeStamps") != null;
+  boolean createDummyFks = request.getParameter("createDummyFks") != null;
+
   String txTimeoutStr = UtilFormatOut.checkEmpty(request.getParameter("txTimeout"), "7200");
   String filePauseStr = UtilFormatOut.checkEmpty(request.getParameter("filePause"), "0");
   Integer txTimeout = null;
@@ -64,10 +66,14 @@
 
   <FORM method=POST action='<ofbiz:url>/xmldsimportdir</ofbiz:url>'>
     <div>Absolute directory path:</div>
+    <div>
     <INPUT type=text class='inputBox' size='60' name='path' value="<%=UtilFormatOut.checkNull(path)%>">
     Mostly Inserts?:<INPUT type=checkbox name='mostlyInserts' <%=mostlyInserts?"checked":""%>>
-    TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
-    Pause (secs) between files:<INPUT type="text" size="6" value="<%=filePauseStr%>" name="filePause">
+    Maintain Timestamps?:<INPUT type=checkbox name='maintainTimeStamps' <%=keepStamps?"checked":""%>>
+    Create "Dummy" FKs?:<INPUT type=checkbox name='createDummyFks' <%=createDummyFks?"checked":""%>>
+    </div>
+    <div>TX Timeout Seconds:<INPUT type="text" size="6" value="<%=txTimeoutStr%>" name='txTimeout'>
+    Pause (secs) between files:<INPUT type="text" size="6" value="<%=filePauseStr%>" name="filePause"></div>
     <INPUT type=submit value='Import Files'>
   </FORM>
   <hr>
@@ -114,6 +120,9 @@
                 }
                 if (txTimeout != null) {
                     reader.setTransactionTimeout(txTimeout.intValue());
+                }
+                if (createDummyFks) {
+                    reader.setCreateDummyFks(true);
                 }
 		        long numberRead = reader.parse(url);
 		        %><div>Got <%=numberRead%> entities from <%=curFile%></div><%

@@ -89,6 +89,8 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     protected int transactionTimeout = 7200;
     protected boolean useTryInsertMethod = false;
     protected boolean maintainTxStamps = false;
+    protected boolean createDummyFks = false;
+    protected boolean doCacheClear = true;
 
     protected List valuesToWrite = new ArrayList(valuesPerWrite);
 
@@ -146,6 +148,22 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
     public void setMaintainTxStamps(boolean maintainTxStamps) {
         this.maintainTxStamps = maintainTxStamps;
+    }
+
+    public boolean getCreateDummyFks() {
+        return this.createDummyFks;
+    }
+
+    public void setCreateDummyFks(boolean createDummyFks) {
+        this.createDummyFks = createDummyFks;
+    }
+
+    public boolean getDoCacheClear() {
+        return this.doCacheClear;
+    }
+
+    public void setDoCacheClear(boolean doCacheClear) {
+        this.doCacheClear = doCacheClear;
     }
 
     public long parse(String content) throws SAXException, java.io.IOException {
@@ -220,7 +238,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     }
 
     protected void writeValues(List valuesToWrite) throws GenericEntityException {
-        delegator.storeAll(valuesToWrite);
+        delegator.storeAll(valuesToWrite, doCacheClear, createDummyFks);
     }
 
     public void characters(char[] values, int offset, int count) throws org.xml.sax.SAXException {
@@ -443,7 +461,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 // JAZ 12/10/04 I think it should be specified when creating the reader
                 if (this.maintainTxStamps) {
                     currentValue.setIsFromEntitySync(true);
-                }
+                }                
             } catch (Exception e) {
                 Debug.logError(e, module);
             }
