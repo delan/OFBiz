@@ -20,11 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
 <#-- get these for the promoText -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign productPromos = Static["org.ofbiz.order.shoppingcart.product.ProductPromoWorker"].getStoreProductPromos(delegator, request)>
 
 <#-- Make sure that at least one promo has non-empty promoText -->
@@ -41,7 +42,7 @@
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
-              <div class="boxhead">&nbsp;Special&nbsp;Offers</div>
+              <div class="boxhead">${uiLabelMap.CatalogSpecialOffers}</div>
             </td>
           </tr>
         </table>

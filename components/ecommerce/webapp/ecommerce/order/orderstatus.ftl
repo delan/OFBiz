@@ -20,10 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if orderHeader?has_content>
   <#assign maySelectItems = true>
   <form name="addOrderToCartForm" action="<@ofbizUrl>/addordertocart/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" method="GET">
@@ -35,5 +35,5 @@
   </form>
 
 <#else>
-  <h3>The specified order was not found, please try again.</h3>
+  <h3>${requestAttributes.uiLabelMap.OrderSpecifiedNotFound}.</h3>
 </#if>

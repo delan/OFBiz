@@ -20,15 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <table border="0" width="100%" cellpadding="3">
   <tr>
     <td colspan="2">
       <div class="head1">
-        Products Last Viewed
+       ${uiLabelMap.CatalogProductsLastViewed}
       </div>
     </td>
   </tr>
@@ -58,7 +58,7 @@
   </tr>
   <tr>
     <td>
-      <div class='tabletext'>You have not viewed any products this session.</DIV>
+      <div class='tabletext'>${uiLabelMap.CatalogNotViewedAnyProducts}.</DIV>
     </td>
   </tr>
 </table>

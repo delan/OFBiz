@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -76,7 +76,7 @@ function toggleBillingAccount(box) {
         
 // -->
 </script>
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign cart = context.shoppingCart?if_exists>
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
@@ -90,7 +90,7 @@ function toggleBillingAccount(box) {
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
                   <td valign=middle align=left>
-                    <div class="boxhead">1)&nbsp;Where&nbsp;shall&nbsp;we&nbsp;ship&nbsp;it?</div>
+                    <div class="boxhead">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
                   </td>
                 </tr>
               </table>
@@ -104,7 +104,7 @@ function toggleBillingAccount(box) {
                     <table width="100%" border="0" cellpadding="1" cellspacing="0">
                       <tr>
                         <td colspan="2">
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[Add New Address]</a>
+                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.OrderAddNewAddress}]</a>
                         </td>
                       </tr>
                        <#if context.shippingContactMechList?has_content>
@@ -117,15 +117,15 @@ function toggleBillingAccount(box) {
                              </td>
                              <td align="left" valign="top" width="99%" nowrap>
                                <div class="tabletext">
-                                 <#if shippingAddress.toName?has_content><b>To:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                                 <#if shippingAddress.attnName?has_content><b>Attn:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.OrderTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.OrderAttn}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
                                  <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
                                  <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
                                  <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
                                  <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
                                  <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
                                  <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                            
-                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[Update]</a>
+                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.OrderUpdate}]</a>
                                </div>
                              </td>
                            </tr>
@@ -153,10 +153,10 @@ function toggleBillingAccount(box) {
 <table width="100%">
   <tr valign="top">
     <td align="left">
-      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[Back to Shopping Cart]</a>
+      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[${uiLabelMap.OrderBacktoShoppingCart}]</a>
     </td>
     <td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[Next]</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[${uiLabelMap.OrderNext}]</a>
     </td>
   </tr>
 </table>

@@ -20,10 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#if shoppingCart?has_content>
     <#assign shoppingCartSize = shoppingCart.size()>
@@ -33,18 +33,18 @@
 
 <div class='insideHeaderText'>
 <#if (shoppingCartSize > 0)>
-  Cart has <b>${shoppingCart.getTotalQuantity()}</b> items, <b>${shoppingCart.getGrandTotal()?string.currency}</b>
+  ${uiLabelMap.CartCartHas} <b>${shoppingCart.getTotalQuantity()}</b> ${uiLabelMap.CartCartHas}, <b>${shoppingCart.getGrandTotal()?string.currency}</b>
 <#else>
-  Shopping Cart is <b>Empty</b>
+  ${uiLabelMap.CartShoppingCartEmpty}</b>
 </#if>
   &nbsp;&nbsp;
 </div>
 <div class='insideHeaderDisabled'>
-  <a href="<transform ofbizUrl>/view/showcart</transform>" class="insideHeaderLink">[View&nbsp;Cart]</a>
+  <a href="<transform ofbizUrl>/view/showcart</transform>" class="insideHeaderLink">[${uiLabelMap.CartViewCart}]</a>
   <#if (shoppingCartSize > 0)>
-    <a href="<transform ofbizUrl>/quickcheckout</transform>" class="insideHeaderLink">[Checkout]</a>
+    <a href="<transform ofbizUrl>/quickcheckout</transform>" class="insideHeaderLink">[${uiLabelMap.CartCheckout}]</a>
   <#else>
-    [Checkout]
+    [${uiLabelMap.CartCheckout}]
   </#if>
   &nbsp;&nbsp;
 </div>

@@ -2,6 +2,7 @@
 <page>
     <template>main</template>    
     <property name="title">Edit Person</property>
+    <property name="title.property">PageTitleEditPerson</property>
     <page-action name="/customer/editperson.bsh"/>
 </page>
 

@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -77,6 +77,8 @@ function toggleBillingAccount(box) {
 // -->
 </script>
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 <#assign cart = context.shoppingCart?if_exists>
 
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
@@ -92,7 +94,7 @@ function toggleBillingAccount(box) {
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
                   <td valign=middle align=left>
-                    <div class="boxhead">3)&nbsp;How&nbsp;shall&nbsp;you&nbsp;pay?</div>
+                    <div class="boxhead">3)&nbsp;${uiLabelMap.OrderHowShallYouPay}?</div>
                   </td>
                 </tr>
               </table>
@@ -107,9 +109,9 @@ function toggleBillingAccount(box) {
                   <td valign=top>                
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
                       <tr><td colspan="2">
-                        <span class='tabletext'>Add:</span>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[Credit Card]</a>
-                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[EFT Account]</a>
+                        <span class='tabletext'>${uiLabelMap.OrderAdd}:</span>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NC', '');" class="buttontext">[${uiLabelMap.OrderCreditCard}]</a>
+                        <a href="javascript:submitForm(document.checkoutInfoForm, 'NE', '');" class="buttontext">[${uiLabelMap.OrderEFTAccount}]</a>
                       </td></tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
@@ -117,7 +119,7 @@ function toggleBillingAccount(box) {
                           <input type="radio" name="checkOutPaymentId" value="EXT_OFFLINE" <#if "EXT_OFFLINE" == context.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
-                          <span class="tabletext">Mail&nbsp;Check/Money Order</span>
+                          <span class="tabletext">${uiLabelMap.OrderMoneyOrder}</span>
                         </td>
                       </tr>
                       <tr>
@@ -125,7 +127,7 @@ function toggleBillingAccount(box) {
                           <input type="radio" name="checkOutPaymentId" value="EXT_COD" <#if "EXT_COD" == context.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
-                          <span class="tabletext">COD</span>
+                          <span class="tabletext">${uiLabelMap.OrderCOD}</span>
                         </td>
                       </tr>                       
                       <tr>
@@ -133,7 +135,7 @@ function toggleBillingAccount(box) {
                           <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == context.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
-                          <span class="tabletext">Pay With WorldPay</span>
+                          <span class="tabletext">${uiLabelMap.OrderPayWithWorldPay}</span>
                         </td>
                       </tr>    
                       <tr>
@@ -141,7 +143,7 @@ function toggleBillingAccount(box) {
                           <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == context.checkOutPaymentId>checked</#if>>
                         </td>
                         <td width="50%" nowrap>
-                          <span class="tabletext">Pay With PayPal</span>
+                          <span class="tabletext">${uiLabelMap.OrderPayWithPayPal}</span>
                         </td>
                       </tr>    
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -155,7 +157,7 @@ function toggleBillingAccount(box) {
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
-                              <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">[Update]</a>
+                              <a href="javascript:submitForm(document.checkoutInfoForm, 'EC', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.OrderUpdate}]</a>
                             </td>
                           </tr>
                         <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
@@ -166,7 +168,7 @@ function toggleBillingAccount(box) {
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
-                              <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">[Update]</a>
+                              <a href="javascript:submitForm(document.checkoutInfoForm, 'EE', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.OrderUpdate}]</a>
                             </td>
                           </tr>
                           <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -181,7 +183,7 @@ function toggleBillingAccount(box) {
                             <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT" <#if "EXT_BILLACT" == checkOutPaymentId>checked</#if>></hr>
                           </td>
                           <td width="50%" nowrap>
-                            <span class="tabletext">Pay only with Billing Account</span>                             
+                            <span class="tabletext">${uiLabelMap.OrderPayOnlyWithBillingAccount}</span>                             
                           </td>
                         </tr>
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
@@ -194,7 +196,7 @@ function toggleBillingAccount(box) {
                             <td align="left" valign="top" width="99%" nowrap>
                               <div class="tabletext">
                                ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${(availableAmount)?string.currency})<br>
-                               <b>Bill Up To:</b> <input type="text" size="5" class="inputBox" name="${billingAccount.billingAccountId}_amount" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
+                               <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="${billingAccount.billingAccountId}_amount" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>
                           </tr>                          
@@ -205,7 +207,7 @@ function toggleBillingAccount(box) {
                             <input type="hidden" name="_NA_amount" value="0.00">
                           </td>
                           <td align="left" valign="top" width="99%" nowrap>
-                            <div class="tabletext">No billing account</div>
+                            <div class="tabletext">${uiLabelMap.OrderNoBillingAccount}</div>
                            </td>
                         </tr>                        
                       </#if>
@@ -213,7 +215,7 @@ function toggleBillingAccount(box) {
                                             
                     </table>                    
                     <#if !paymentMethodList?has_content>                 
-                      <div class='tabletext'><b>There are no payment methods on file.</b></div>
+                      <div class='tabletext'><b>${uiLabelMap.OrderNoPaymentMethodsOnFile}.</b></div>
                     </#if>
                   </td>
                 </tr>
@@ -231,10 +233,10 @@ function toggleBillingAccount(box) {
 <table width="100%">
   <tr valign="top">
     <td align="left">
-      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[Back to Shopping Cart]</a>
+      &nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'CS', '');" class="buttontextbig">[${uiLabelMap.OrderBacktoShoppingCart}]</a>
     </td>
     <td align="right">
-      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[Continue to Final Order Review]</a>
+      <a href="javascript:submitForm(document.checkoutInfoForm, 'DN', '');" class="buttontextbig">[${uiLabelMap.OrderContinueToFinalOrderReview}]</a>
     </td>
   </tr>
 </table>

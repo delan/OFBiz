@@ -20,12 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-<p class="head1">Final Checkout Review</p>
-<p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
+<p class="head1">${uiLabelMap.OrderFinalCheckoutReview}</p>
+<p>${uiLabelMap.OrderDemoFrontNote}.</p>
 
 <#if cart?exists && 0 < cart.size()>
   ${pages.get("/order/orderheader.ftl")}
@@ -34,13 +35,13 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-        <a href="<@ofbizUrl>/${requestAttributes.DONE_PAGE?default("quickcheckout")}</@ofbizUrl>" class="buttontextbig">[Back&nbsp;to&nbsp;Options]</a>
+        <a href="<@ofbizUrl>/${requestAttributes.DONE_PAGE?default("quickcheckout")}</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderBacktoOptions}]</a>
       </td>
       <td align="right">
-        <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="buttontextbig">[Submit&nbsp;Order]&nbsp;</a>
+        <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderSubmitOrder}]&nbsp;</a>
       </td>
     </tr>
   </table>  
 <#else>
-  <h3>ERROR: Shopping cart empty, please start over.</h3>
+  <h3>${uiLabelMap.OrderErrorShoppingCartEmpty}.</h3>
 </#if>

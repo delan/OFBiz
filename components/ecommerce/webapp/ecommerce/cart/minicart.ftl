@@ -21,10 +21,10 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#if shoppingCart?has_content>
     <#assign shoppingCartSize = shoppingCart.size()>
@@ -38,7 +38,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-      <div class='boxhead'><b>Cart&nbsp;Summary</b></div>
+      <div class='boxhead'><b>${uiLabelMap.CartCartSummary}</b></div>
           </td>
         </tr>
       </table>
@@ -53,13 +53,13 @@
               <#if (shoppingCartSize > 0)>
                 <tr>
                   <td colspan="3">
-                    <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[View&nbsp;Cart]</a>&nbsp;<a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">[Checkout]</a>
+                    <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[${uiLabelMap.CartViewCart}]</a>&nbsp;<a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontext">[${uiLabelMap.CartCheckout}]</a>
                   </td>
                 </tr>
                 <tr>
                   <td valign="bottom"><div class="tabletext"><b>#<b></div></td>
-                  <td valign="bottom"><div class="tabletext"><b>Item<b></div></td>
-                  <td valign="bottom"><div class="tabletext"><b>Subtotal<b></div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.CartItem}<b></div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.CartSubtotal}<b></div></td>
                 </tr>
                 <#list shoppingCart.items() as cartLine>
                   <tr>
@@ -76,17 +76,17 @@
                 </#list>
                 <tr>
                   <td colspan="3" align="right">
-                    <div class="tabletext"><b>Total: ${shoppingCart.getGrandTotal()?string.currency}</b></div>
+                    <div class="tabletext"><b>${uiLabelMap.CartTotal}: ${shoppingCart.getGrandTotal()?string.currency}</b></div>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="3">
-                    <a href="<transform ofbizUrl>/view/showcart</transform>" class="buttontext">[View&nbsp;Cart]</a>&nbsp;<a href="<transform ofbizUrl>/quickcheckout</transform>" class="buttontext">[Checkout]</a>
+                    <a href="<transform ofbizUrl>/view/showcart</transform>" class="buttontext">[${uiLabelMap.CartViewCart}]</a>&nbsp;<a href="<transform ofbizUrl>/quickcheckout</transform>" class="buttontext">[${uiLabelMap.CartCheckout}]</a>
                   </td>
                 </tr>
               <#else>
                 <tr>
-                  <td nowrap colspan="3"><div class="tabletext">Shopping Cart is empty.</div></td>
+                  <td nowrap colspan="3"><div class="tabletext">${uiLabelMap.CartShoppingCartEmpty}.</div></td>
                 </tr>
               </#if>
             </table>

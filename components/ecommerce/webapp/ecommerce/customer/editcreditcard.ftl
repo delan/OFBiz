@@ -20,45 +20,45 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if canNotView>
-  <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
-&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[Back]</a>
+  <p><h3>${uiLabelMap.CustomerCardInfoNotBelongToYou}.</h3></p>
+&nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CustomerBack}]</a>
 <#else>
     <#if !creditCard?exists>
-      <p class="head1">Add New Credit Card</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[Go&nbsp;Back]</a>
-      &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
+      <p class="head1">${uiLabelMap.CustomerAddNewCreditCard}</p>
+      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CustomerGoBack}]</a>
+      &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
       <form method="post" action='<@ofbizUrl>/createCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
     <#else>
-      <p class="head1">Edit Credit Card</p>
-      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[Go&nbsp;Back]</a>
-      &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
+      <p class="head1">${uiLabelMap.CustomerEditCreditCard}</p>
+      &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CustomerGoBack}]</a>
+      &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
       <form method="post" action='<@ofbizUrl>/updateCreditCard?DONE_PAGE=${donePage}</@ofbizUrl>' name="editcreditcardform" style='margin: 0;'>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name='paymentMethodId' value='${paymentMethodId}'>
     </#if>
 
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Name on Card</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerNameOnCard}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="nameOnCard" value="${creditCardData.nameOnCard?if_exists}">
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Company Name on Card</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerCompanyNameOnCard}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="30" maxlength="60" name="companyNameOnCard" value="${creditCardData.companyNameOnCard?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Type</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerCardType}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <select name="cardType" class='selectBox'>
@@ -75,7 +75,7 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Number</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerCardNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#if creditCardData?has_content>
@@ -93,14 +93,14 @@
       *</td>
     </tr>
     <#--<tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Card Security Code</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerCardSecurityCode}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="text" class='inputBox' size="5" maxlength="10" name="cardSecurityCode" value="${creditCardData.cardSecurityCode?if_exists}">
       </td>
     </tr>-->
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Expiration Date</div></td>        
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerExpirationDate}</div></td>        
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#assign expMonth = "">
@@ -141,7 +141,7 @@
       *</td>
     </tr>
     <tr>
-      <td width="26%" align=right valign=top><div class="tabletext">Billing Address</div></td>
+      <td width="26%" align=right valign=top><div class="tabletext">${uiLabelMap.CustomerBillingAddress}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#-- Removed because is confusing, can add but would have to come back here with all data populated as before...
@@ -155,7 +155,7 @@
               <input type="radio" name="contactMechId" value="${curContactMechId}" checked>
             </td>
             <td align="left" valign="top" width="80%">
-              <div class="tabletext"><b>Use Current Address:</b></div>
+              <div class="tabletext"><b>${uiLabelMap.CustomerUseCurrentAddress}:</b></div>
               <#list curPartyContactMechPurposes as curPartyContactMechPurpose> 
                 <#assign curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                 <div class="tabletext">
@@ -166,21 +166,21 @@
                 </div>
               </#list>
               <div class="tabletext">
-                <#if curPostalAddress.toName?exists><b>To:</b> ${curPostalAddress.toName}<br></#if>
-                <#if curPostalAddress.attnName?exists><b>Attn:</b> ${curPostalAddress.attnName}<br></#if>
+                <#if curPostalAddress.toName?exists><b>${uiLabelMap.CustomerTo}:</b> ${curPostalAddress.toName}<br></#if>
+                <#if curPostalAddress.attnName?exists><b>${uiLabelMap.CustomerAttn}:</b> ${curPostalAddress.attnName}<br></#if>
                 ${curPostalAddress.address1?if_exists}<br>
                 <#if curPostalAddress.address2?exists>${curPostalAddress.address2}<br></#if>
                 ${curPostalAddress.city}<#if curPostalAddress.stateProvinceGeoId?has_content>,&nbsp;${curPostalAddress.stateProvinceGeoId}</#if>&nbsp;${curPostalAddress.postalCode} 
                 <#if curPostalAddress.countryGeoId?exists><br>${curPostalAddress.countryGeoId}</#if>
               </div>
-              <div class="tabletext">(Updated:&nbsp;${(curPartyContactMech.fromDate.toString())?if_exists})</div>
-              <#if curPartyContactMech.thruDate?exists><div class='tabletext'><b>Delete:&nbsp;${curPartyContactMech.thruDate.toString()}</b></div></#if>
+              <div class="tabletext">(${uiLabelMap.CustomerUpdated}:&nbsp;${(curPartyContactMech.fromDate.toString())?if_exists})</div>
+              <#if curPartyContactMech.thruDate?exists><div class='tabletext'><b>${uiLabelMap.CustomerDelete}:&nbsp;${curPartyContactMech.thruDate.toString()}</b></div></#if>
             </td>
           </tr>
         <#else>
            <#-- <tr>
             <td align="left" valign="top" colspan='2'>
-              <div class="tabletext">Billing Address Not Yet Selected</div>
+              <div class="tabletext">${uiLabelMap.CustomerAddressNotSelected}</div>
             </td>
           </tr> -->
         </#if>
@@ -205,31 +205,31 @@
                     <#assign contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType")>
                     <div class="tabletext">
                       <b>${contactMechPurposeType.description?if_exists}</b>
-                      <#if partyContactMechPurpose.thruDate?exists>(Expire:${partyContactMechPurpose.thruDate})</#if>
+                      <#if partyContactMechPurpose.thruDate?exists>(${uiLabelMap.CustomerExpire}:${partyContactMechPurpose.thruDate})</#if>
                     </div>
                 </#list>
                 <div class="tabletext">
-                  <#if postalAddress.toName?exists><b>To:</b> ${postalAddress.toName}<br></#if>
-                  <#if postalAddress.attnName?exists><b>Attn:</b> ${postalAddress.attnName}<br></#if>
+                  <#if postalAddress.toName?exists><b>${uiLabelMap.CustomerTo}:</b> ${postalAddress.toName}<br></#if>
+                  <#if postalAddress.attnName?exists><b>${uiLabelMap.CustomerAttn}:</b> ${postalAddress.attnName}<br></#if>
                   ${postalAddress.address1?if_exists}<br>
                   <#if postalAddress.address2?exists>${postalAddress.address2}<br></#if>
                   ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode} 
                   <#if postalAddress.countryGeoId?exists><br>${postalAddress.countryGeoId}</#if>
                 </div>
-                <div class="tabletext">(Updated:&nbsp;${(partyContactMech.fromDate.toString())?if_exists})</div>
-                <#if partyContactMech.thruDate?exists><div class='tabletext'><b>Delete:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
+                <div class="tabletext">(${uiLabelMap.CustomerUpdated}:&nbsp;${(partyContactMech.fromDate.toString())?if_exists})</div>
+                <#if partyContactMech.thruDate?exists><div class='tabletext'><b>${uiLabelMap.CustomerDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
               </td>
             </tr>
           </#list>
           <#if !postalAddressInfos?has_content && !curContactMech?exists>
-              <tr><td colspan='2'><div class="tabletext">No contact information on file.</div></td></tr>
+              <tr><td colspan='2'><div class="tabletext">${uiLabelMap.CustomerNoContactInfo}.</div></td></tr>
           </#if>
           <tr>
             <td align="right" valigh="top" width="1%">
               <input type="radio" name="contactMechId" value="_NEW_">
             </td>
             <td align="left" valign="middle" width="80%">
-              <span class="tabletext">Create a new billing address for this credit card.</span>
+              <span class="tabletext">${uiLabelMap.CustomerCreateNewBillingAddress}.</span>
             </td>
           </tr>
         </table>
@@ -238,7 +238,7 @@
   </table>
   </form>
 
-  &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[Go&nbsp;Back]</a>
-  &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
+  &nbsp;<a href='<@ofbizUrl>/authview/${donePage}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CustomerGoBack}]</a>
+  &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[${uiLabelMap.CustomerSave}]</a>
 </#if>
 

@@ -20,12 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
-<p class="head1">Order Confirmation</p>
-<p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<p class="head1">${uiLabelMap.OrderConfirmation}</p>
+<p>${uiLabelMap.OrderDemoFrontNote}.</p>
 
 <#if orderHeader?has_content>
   <#include "orderheader.ftl">
@@ -34,13 +34,13 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-        <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[Continue&nbsp;Shopping]</a>
+        <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderContinueShopping}]</a>
       </td>
       <td align="right">
-        <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[Continue&nbsp;Shopping]&nbsp;</a>
+        <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[${uiLabelMap.OrderContinueShopping}]&nbsp;</a>
       </td>
     </tr>
   </table>    
 <#else>
-  <h3>The specified order was not found, please try again.</h3>
+  <h3>${uiLabelMap.OrderSpecifiedNotFound}.</h3>
 </#if>

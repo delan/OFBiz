@@ -20,10 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if requestAttributes.product?exists>
   <#assign product = requestAttributes.product>
   <#assign price = requestAttributes.priceMap>     
@@ -38,7 +39,7 @@
   <td align="left" valign="middle" width="5%">
     <div class="tabletext">
       <#if price.listPrice?exists && price.price?exists && price.price?double < price.listPrice?double>
-        List:${price.listPrice?string.currency}
+        ${uiLabelMap.CatalogList}:${price.listPrice?string.currency}
       <#else>
         &nbsp;
       </#if>
@@ -52,18 +53,18 @@
   <td align="right" valign="middle">
     <#-- check to see if introductionDate hasn't passed yet -->
     <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
-      <div class='tabletext' style='color: red;'>Not Yet Available</div>
+      <div class='tabletext' style='color: red;'>${uiLabelMap.CatalogNotYetAvailable}</div>
     <#-- check to see if salesDiscontinuationDate has passed -->
     <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.before(product.salesDiscontinuationDate)>
-      <div class='tabletext' style='color: red;'>No Longer Available</div>          
+      <div class='tabletext' style='color: red;'>${uiLabelMap.CatalogNoLongerAvailable}</div>          
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?default("N") == "Y">
-      <a href='<@ofbizUrl>/product?<#if categoryId?exists>category_id=${categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>' class="buttontext">[Choose&nbsp;Variation...]</a>                                                          
+      <a href='<@ofbizUrl>/product?<#if categoryId?exists>category_id=${categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.CatalogChooseVariations}...]</a>                                                          
     <#else>                                  
       <input type="text" size="5" class="inputBox" name='quantity_${product.productId}' value="">
     </#if>
   </td>
 <#else>
-  <div class="head1">ERROR: Product not found.</div>
+  <div class="head1">${uiLabelMap.CatalogErrorProductNotFound}.</div>
 </#if>
 

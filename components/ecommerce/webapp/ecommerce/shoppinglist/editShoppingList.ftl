@@ -21,9 +21,10 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -31,10 +32,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Shopping Lists</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.CommonShoppingLists}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createEmptyShoppingList</@ofbizUrl>" class="submenutextright">Create New</a>
+            <a href="<@ofbizUrl>/createEmptyShoppingList</@ofbizUrl>" class="submenutextright">${uiLabelMap.ShoppingListCreateNew}</a>
           </td>
         </tr>
       </table>
@@ -59,10 +60,10 @@
                   </#list>
                 </select>
                 &nbsp;&nbsp;
-                <a href="javascript:document.selectShoppingList.submit();" class="buttontext">[Edit]</a>
+                <a href="javascript:document.selectShoppingList.submit();" class="buttontext">[${uiLabelMap.ShoppingListEdit}]</a>
               </form>
             <#else>
-              <div class="tabletext">No shopping lists to select, create a new one.</div>
+              <div class="tabletext">${uiLabelMap.ShoppingListNoShoppingLists}.</div>
             </#if>
           </td>
         </tr>
@@ -81,10 +82,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Shopping List Detail - ${shoppingList.listName}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.ShoppingListDetail} - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
-            <a href="javascript:document.updateList.submit();" class="submenutextright">Save</a>            
+            <a href="javascript:document.updateList.submit();" class="submenutextright">${uiLabelMap.ShoppingListSave}</a>            
           </td>
         </tr>
       </table>
@@ -100,15 +101,15 @@
                 <input type="hidden" class="inputBox" name="partyId" value="${shoppingList.partyId?if_exists}">
                 <table border='0' width='100%' cellspacing='0' cellpadding='0'>
                   <tr>
-                    <td><div class="tableheadtext">List Name</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.ShoppingListName}</div></td>
                     <td><input type="text" class="inputBox" size="25" name="listName" value="${shoppingList.listName}">
                   </tr>
                   <tr>
-                    <td><div class="tableheadtext">Description</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.ShoppingListDescription}</div></td>
                     <td><input type="text" class="inputBox" size="70" name="description" value="${shoppingList.description?if_exists}">
                   </tr>
                   <tr>
-                    <td><div class="tableheadtext">List Type</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.ShoppingListType}</div></td>
                     <td>
                       <select name="shoppingListTypeId" class="selectBox">
                       	<#if shoppingListType?exists>
@@ -122,7 +123,7 @@
                     </td>
                   </tr>                           
                   <tr>
-                    <td><div class="tableheadtext">Public?</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.ShoppingListPublic}?</div></td>
                     <td>
                       <select name="isPublic" class="selectBox">
                         <option>${shoppingList.isPublic}</option>
@@ -133,13 +134,13 @@
                     </td>
                   </tr>                           
                   <tr>
-                    <td><div class="tableheadtext">Parent List</div></td>
+                    <td><div class="tableheadtext">${uiLabelMap.ShoppingListParentList}</div></td>
                     <td>
                       <select name="parentShoppingListId" class="selectBox">
                       	<#if parentShoppingList?exists>
                           <option value="${parentShoppingList.shoppingListId}">${parentShoppingList.listName?default(parentShoppingList.shoppingListId)}</option>
                         </#if>
-                        <option value="">No Parent</option>
+                        <option value="">${uiLabelMap.ShoppingListNoParent}</option>
                         <#list allShoppingLists as newParShoppingList>
                           <option value="${newParShoppingList.shoppingListId}">${newParShoppingList.listName?default(newParShoppingList.shoppingListId)}</option>
                         </#list>
@@ -152,7 +153,7 @@
                   <tr>
                     <td><div class="tableheadtext">&nbsp;</div></td>
                     <td align="left">
-                      <a href="javascript:document.updateList.submit();" class="buttontext">[Save]</a>         
+                      <a href="javascript:document.updateList.submit();" class="buttontext">[${uiLabelMap.ShoppingListSave}]</a>         
                     </td>
                   </tr>
                 </table>
@@ -172,10 +173,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Child Shopping Lists - ${shoppingList.listName}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.ShoppingListChildLists} - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
-              <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">Add This List And Child List(s) To Cart</a>
+              <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}&includeChild=yes</@ofbizUrl>" class="submenutextright">${uiLabelMap.ShoppingListAddChildListsToCart}</a>
           </td>
         </tr>
       </table>
@@ -188,8 +189,8 @@
           <td>
 			<table width='100%' cellspacing="0" cellpadding="1" border="0">
 			  <TR> 
-				<TD NOWRAP><div class='tabletext'><b>List Name</b></div></TD>
-				<TD NOWRAP align="right"><div class='tabletext'><b>Total Price</b></div></TD>
+				<TD NOWRAP><div class='tabletext'><b>${uiLabelMap.ShoppingListName}</b></div></TD>
+				<TD NOWRAP align="right"><div class='tabletext'><b>${uiLabelMap.ShoppingListTotalPrice}</b></div></TD>
 				<td>&nbsp;</td>
 				<td>&nbsp;</td>
 			  </TR>
@@ -204,8 +205,8 @@
 					  <div class="tabletext">${totalPrice?string.currency}</div>
 					</td>                      
 					<td align="right">
-                      <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[Go&nbsp;To&nbsp;List]</a>
-                      <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[Add&nbsp;List&nbsp;To&nbsp;Cart]</a>
+                      <a href="<@ofbizUrl>/editShoppingList?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ShoppingListGoToList}]</a>
+                      <a href="<@ofbizUrl>/addListToCart?shoppingListId=${childShoppingList.shoppingListId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ShoppingListAddListToCart}]</a>
 					</td>                      
 				  </tr>
 				</form>
@@ -234,10 +235,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Shopping List Items - ${shoppingList.listName}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.ShoppingListItems} - ${shoppingList.listName}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">Add This List To Cart</a>
+            <a href="<@ofbizUrl>/addListToCart?shoppingListId=${shoppingList.shoppingListId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.ShoppingListAddListToCart}</a>
           </td>
         </tr>
       </table>
@@ -251,11 +252,11 @@
             <#if shoppingListItemDatas?has_content>
                 <table width='100%' cellspacing="0" cellpadding="1" border="0">
                   <TR>
-                    <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
-                    <TD NOWRAP align="center"><div class='tabletext'><b>Quantity</b></div></TD>
+                    <TD NOWRAP><div class='tabletext'><b>${uiLabelMap.ShoppingListProduct}</b></div></TD>
+                    <TD NOWRAP align="center"><div class='tabletext'><b>${uiLabelMap.ShoppingListQuantity}</b></div></TD>
                     <#-- <TD NOWRAP align="center"><div class='tabletext'><b>Purchased</b></div></TD> -->
-                    <TD NOWRAP align="right"><div class='tabletext'><b>Price</b></div></TD>
-                    <TD NOWRAP align="right"><div class='tabletext'><b>Total</b></div></TD>
+                    <TD NOWRAP align="right"><div class='tabletext'><b>${uiLabelMap.ShoppingListPrice}</b></div></TD>
+                    <TD NOWRAP align="right"><div class='tabletext'><b>${uiLabelMap.ShoppingListTotal}</b></div></TD>
                     <td>&nbsp;</td>
                   </TR>
 
@@ -295,8 +296,8 @@
                           <div class="tabletext">${totalPrice?string.currency}</div>
                         </td>
                         <td align="right">
-                        	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[Update]</a>
-                        	<a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+                        	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[${uiLabelMap.ShoppingListUpdate}]</a>
+                        	<a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ShoppingListRemove}]</a>
                           <#if isVirtual && productVariantAssocs?has_content>
                             <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_?if_exists>
                             <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_?if_exists>
@@ -314,12 +315,12 @@
                               	</#list>
                               </select>
                               <br/>
-                              <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${replaceItemAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[Replace&nbsp;With&nbsp;Variation]</a>
+                              <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${replaceItemAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[${uiLabelMap.ShoppingListReplaceWithVariation}]</a>
                               <br/>
-                              <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[Add&nbsp;${shoppingListItem.quantity?string}&nbsp;of&nbsp;Variation&nbsp;To&nbsp;Cart]</a>
+                              <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[${uiLabelMap.ShoppingListAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.ShoppingListVariationToCart}]</a>
                             </form>
                           <#else>
-                            <a href="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&quantity=${shoppingListItem.quantity}&add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">[Add&nbsp;${shoppingListItem.quantity?string}&nbsp;To&nbsp;Cart]</a>
+                            <a href="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&quantity=${shoppingListItem.quantity}&add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ShoppingListAdd}&nbsp;${shoppingListItem.quantity?string}&nbsp;${uiLabelMap.ShoppingListToCart}]</a>
                           </#if>
                         </td>
                       </tr>
@@ -337,7 +338,7 @@
 				  </tr>
                 </table>
             <#else>
-                <div class='head2'>Your shopping list is empty.</div>
+                <div class='head2'>${uiLabelMap.ShoppingListEmpty}.</div>
             </#if>
           </td>
         </tr>
@@ -353,7 +354,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Shopping List Price Totals - ${shoppingList.listName}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.ShoppingListPriceTotals} - ${shoppingList.listName}</div>
           </td>  
           <td valign="middle" align="right">
           </td>
@@ -366,7 +367,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td align="left" width="5%">
-          	<div class="tabletext">Child Lists Total Price</div>
+          	<div class="tabletext">${uiLabelMap.ShoppingListChildListTotalPrice}</div>
           </td>
           <td align="right" width="5%">
           	<div class="tabletext">${shoppingListChildTotal?string.currency}</div>
@@ -375,7 +376,7 @@
         </tr>
         <tr>
           <td align="left">
-          	<div class="tabletext">This&nbsp;List&nbsp;Items&nbsp;Total&nbsp;Price&nbsp;&nbsp;</div>
+          	<div class="tabletext">${uiLabelMap.ShoppingListItemsTotalPrice}&nbsp;</div>
           </td>
           <td align="right">
           	<div class="tabletext">${shoppingListItemTotal?string.currency}</div>
@@ -384,7 +385,7 @@
         </tr>
         <tr>
           <td align="left">
-          	<div class="tableheadtext">Grand Total</div>
+          	<div class="tableheadtext">${uiLabelMap.ShoppingListGrandTotal}</div>
           </td>
           <td align="right">
           	<div class="tableheadtext">${shoppingListTotalPrice?string.currency}</div>
@@ -398,6 +399,6 @@
 
 	<#else>
 		<#-- shoppingList was found, but belongs to a different party -->
-		<div class="head2">ERROR: The specified shopping list (with ID ${shoppingList.shoppingListId}) does not belong to you, please try again.</div>
+		<div class="head2">${uiLabelMap.ShoppingListError} ID ${shoppingList.shoppingListId}) ${uiLabelMap.ShoppingListDoesNotBelong}.</div>
 	</#if>
 </#if>
