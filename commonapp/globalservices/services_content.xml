@@ -7,17 +7,27 @@
     <version>1.0</version>
 
     <!-- WebSite Services -->
+    <service name="webSiteInterface" engine="interface" location="" invoke="">
+        <description>WebSite Interface</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="siteName" type="String" mode="IN" optional="false"/>
+        <attribute name="httpHost" type="String" mode="IN" optional="true"/>
+        <attribute name="httpPort" type="String" mode="IN" optional="true"/>
+        <attribute name="httpsHost" type="String" mode="IN" optional="true"/>
+        <attribute name="httpsPort" type="String" mode="IN" optional="true"/>
+        <attribute name="enableHttps" type="String" mode="IN" optional="true"/>
+        <attribute name="standardContentPrefix" type="String" mode="IN" optional="true"/>
+        <attribute name="secureContentPrefix" type="String" mode="IN" optional="true"/>
+    </service>
     <service name="createWebSite" engine="simple"
                 location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="createWebSite" auth="true">
         <description>Create an WebSite</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="siteName" type="String" mode="IN" optional="false"/>
+        <implements service="webSiteInterface"/>
     </service>
     <service name="updateWebSite" engine="simple"
                 location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="updateWebSite" auth="true">
         <description>Update an WebSite</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="siteName" type="String" mode="IN" optional="false"/>
+        <implements service="webSiteInterface"/>        
     </service>
 
 	<!-- WebSiteRole services -->
