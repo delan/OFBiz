@@ -143,7 +143,7 @@ public class CachedClassLoader extends URLClassLoader {
                         }
                     } catch (ClassNotFoundException e) {
                         //Debug.logInfo(e);
-                        if (Debug.infoOn()) Debug.logInfo("Remembering invalid class name: [" + name + "]");
+                        if (Debug.verboseOn()) Debug.logVerbose("Remembering invalid class name: [" + name + "]");
                         if (isGlobalPath(name)) {
                             globalBadClassNameSet.add(name);
                         } else {
