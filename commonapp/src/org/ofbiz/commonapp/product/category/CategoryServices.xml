@@ -365,9 +365,13 @@
         
         <!-- create Product -->
         <set-service-fields service-name="createProduct" map-name="parameters" to-map-name="callCreateProductMap"/>
+        <if-empty field-name="productTypeId" map-name="callCreateProductMap">
+            <string-to-field string="FINISHED_GOOD" field-name="productTypeId" map-name="callCreateProductMap"/>
+        </if-empty>
         <call-service service-name="createProduct" in-map-name="callCreateProductMap">
             <result-to-field result-name="productId"/>
         </call-service>
+        <field-to-result field-name="productId"/>
         
         <!-- create ProductCategoryMember -->
         <env-to-field env-name="productId" map-name="callCreateProductCategoryMemberMap"/>
@@ -375,23 +379,28 @@
         <call-service service-name="addProductToCategory" in-map-name="callCreateProductCategoryMemberMap"/>
         
         <!-- create defaultPrice and averageCost ProductPrice -->
-        <env-to-field env-name="productId" map-name="createDefaultPriceMap"/>
-        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="createDefaultPriceMap"/>
-        <env-to-env env-name="parameters.defaultPrice" to-env-name="createDefaultPriceMap.price"/>
-        <string-to-field string="_NA_" field-name="createDefaultPriceMap.facilityGroupId"/>
-        <string-to-field string="DEFAULT_PRICE" field-name="createDefaultPriceMap.productPriceTypeId"/>
-        <call-service service-name="createProductPrice" in-map-name="createDefaultPriceMap"/>
+        <if-not-empty field-name="parameters.defaultPrice">
+            <env-to-field env-name="productId" map-name="createDefaultPriceMap"/>
+            <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="createDefaultPriceMap"/>
+            <env-to-env env-name="parameters.defaultPrice" to-env-name="createDefaultPriceMap.price"/>
+            <string-to-field string="_NA_" field-name="createDefaultPriceMap.facilityGroupId"/>
+            <string-to-field string="DEFAULT_PRICE" field-name="createDefaultPriceMap.productPriceTypeId"/>
+            <call-service service-name="createProductPrice" in-map-name="createDefaultPriceMap"/>
+        </if-not-empty>
         
-        <env-to-field env-name="productId" map-name="createAverageCostMap"/>
-        <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="createAverageCostMap"/>
-        <env-to-env env-name="parameters.averageCost" to-env-name="createAverageCostMap.price"/>
-        <string-to-field string="_NA_" field-name="createAverageCostMap.facilityGroupId"/>
-        <string-to-field string="AVERAGE_COST" field-name="createAverageCostMap.productPriceTypeId"/>
-        <call-service service-name="createProductPrice" in-map-name="createAverageCostMap"/>
+        <if-not-empty field-name="parameters.averageCost">
+            <env-to-field env-name="productId" map-name="createAverageCostMap"/>
+            <field-to-field field-name="currencyUomId" map-name="parameters" to-map-name="createAverageCostMap"/>
+            <env-to-env env-name="parameters.averageCost" to-env-name="createAverageCostMap.price"/>
+            <string-to-field string="_NA_" field-name="createAverageCostMap.facilityGroupId"/>
+            <string-to-field string="AVERAGE_COST" field-name="createAverageCostMap.productPriceTypeId"/>
+            <call-service service-name="createProductPrice" in-map-name="createAverageCostMap"/>
+        </if-not-empty>
 
         <!-- create ProductFeatureAppl(s) -->
         <string-to-field string="N" field-name="hasSelectableFeatures"/>
-        <iterate-map map-name="productFeatureIdByType" key-name="productFeatureTypeId" value-name="productFeatureId">
+        <iterate-map map-name="parameters.productFeatureIdByType" key-name="productFeatureTypeId" value-name="productFeatureId">
+            <log level="info" message="Applying feature [${productFeatureId}] of type [${productFeatureTypeId}] to product [${productId}]"/>
             <env-to-field env-name="productId" map-name="createPfaMap"/>
             <env-to-field env-name="productFeatureId" map-name="createPfaMap"/>
             <if-compare field-name="${productFeatureTypeId}" map-name="productFeatureSelectableByType" operator="equals" value="Y">

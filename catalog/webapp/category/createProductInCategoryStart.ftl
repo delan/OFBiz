@@ -61,7 +61,7 @@
         </tr>
         <tr>
             <td width="15%"><div class="tabletext">Short Description:</div></td>
-            <td><input type="text" name="shortDescription" size="60" maxlength="250" class="inputBox"/></td>
+            <td><input type="text" name="description" size="60" maxlength="250" class="inputBox"/></td>
         </tr>
         <tr>
             <td width="15%"><div class="tabletext">Default Price:</div></td>

@@ -96,8 +96,8 @@
         <tr>
             <td width="15%"><div class="tabletext">Short Description:</div></td>
             <td>
-                <input type="hidden" name="shortDescription" value="${requestParameters.shortDescription?if_exists}"/>
-                <div class="tabletext">&nbsp;${requestParameters.shortDescription?default("&nbsp;")}</div>
+                <input type="hidden" name="description" value="${requestParameters.description?if_exists}"/>
+                <div class="tabletext">&nbsp;${requestParameters.description?default("&nbsp;")}</div>
             </td>
         </tr>
         <tr>

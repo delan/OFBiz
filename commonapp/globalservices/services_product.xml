@@ -65,7 +65,7 @@
         <description>Create an ProductPrice</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
-        <override name="fromDate" optional="true"/>
+        <override name="fromDate" mode="INOUT" optional="true"/>
         <override name="price" optional="false"/>
     </service>
     <service name="updateProductPrice" default-entity-name="ProductPrice" engine="simple"
@@ -281,7 +281,8 @@
                 location="org/ofbiz/commonapp/product/category/CategoryServices.xml" invoke="createProductInCategory" auth="true">
         <description></description>
         <auto-attributes entity-name="ProductCategory" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="Product" include="all" mode="IN" optional="true"/>
+        <auto-attributes entity-name="Product" include="pk" mode="INOUT" optional="true"/>
+        <auto-attributes entity-name="Product" include="nonpk" mode="IN" optional="true"/>
         <attribute name="productFeatureIdByType" type="java.util.Map" mode="IN" optional="false" string-map-prefix="pft_"/>
         <attribute name="productFeatureSelectableByType" type="java.util.Map" mode="IN" optional="false" string-map-prefix="pftsel_"/>
         <attribute name="defaultPrice" type="Double" mode="IN" optional="true"/>
