@@ -313,7 +313,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     
     // Activates an activity object
     private void startActivity(GenericValue value) throws WfException {
-        WfActivity activity = WfFactory.newWfActivity(value,this);
+        WfActivity activity = WfFactory.getWfActivity(value,this);
         activity.setDispatcher(dispatcher,serviceLoader);
         activity.setProcessContext(context);
         activeSteps.add(activity); // add to list of active steps
@@ -404,7 +404,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Complete this workflow
     private void finishProcess() throws WfException {
         changeState("closed.completed");
-        WfEventAudit audit = WfFactory.newWfEventAudit(this,null);     // this will need to be updated
+        WfEventAudit audit = WfFactory.getWfEventAudit(this,null);     // this will need to be updated
         try {
             requester.receiveEvent(audit);
         }

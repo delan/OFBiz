@@ -46,8 +46,8 @@ public class WfFactory {
      * @return An instance of the WfActivify Interface
      * @throws WfException
      */
-    public static WfActivity newWfActivity(GenericValue value, WfProcess proc) throws WfException {
-        return newWfActivity(value,null,proc);
+    public static WfActivity getWfActivity(GenericValue value, WfProcess proc) throws WfException {
+        return getWfActivity(value,null,proc);
     }
     
     /** Creates a new {@link WfActivity} instance. 
@@ -57,7 +57,7 @@ public class WfFactory {
      * @return An instance of the WfActivify Interface
      * @throws WfException
      */
-    public static WfActivity newWfActivity(GenericValue value, GenericValue data, WfProcess proc) throws WfException {
+    public static WfActivity getWfActivity(GenericValue value, GenericValue data, WfProcess proc) throws WfException {
         if ( value == null )
             throw new WfException("GenericValue object cannot be null");
         if ( proc == null )
@@ -70,7 +70,7 @@ public class WfFactory {
      * @throws WfException
      * @return An instance of the WfAssignment Interface
      */
-    public static WfAssignment newWfAssignment(WfActivity activity, WfResource resource) throws WfException {
+    public static WfAssignment getWfAssignment(WfActivity activity, WfResource resource) throws WfException {
         if ( activity == null )
             throw new WfException("WfActivity cannot be null");
         if ( resource == null )
@@ -85,8 +85,8 @@ public class WfFactory {
      * @return An instance of the WfProcess Interface.
      * @throws WfException     
      */
-    public static WfProcess newWfProcess(GenericValue value, WfProcessMgr mgr) throws WfException {
-       return newWfProcess(value,null,mgr);
+    public static WfProcess getWfProcess(GenericValue value, WfProcessMgr mgr) throws WfException {
+       return getWfProcess(value,null,mgr);
     }
     
     /** Creates a new {@link WfProcess} instance.
@@ -96,7 +96,7 @@ public class WfFactory {
      * @return An instance of the WfProcess Interface.
      * @throws WfException     
      */
-    public static WfProcess newWfProcess(GenericValue value, GenericValue data, WfProcessMgr mgr) throws WfException {
+    public static WfProcess getWfProcess(GenericValue value, GenericValue data, WfProcessMgr mgr) throws WfException {
         if ( value == null )
             throw new WfException("Process definition value object cannot be null");
         if ( mgr == null )
@@ -111,7 +111,7 @@ public class WfFactory {
      * @throws WfException
      * @return An instance of the WfProcessMgr Interface.
      */
-    public static WfProcessMgr newWfProcessMgr(GenericDelegator del, String pkg, String pid) throws WfException {
+    public static WfProcessMgr getWfProcessMgr(GenericDelegator del, String pkg, String pid) throws WfException {
         if ( del == null )
             throw new WfException("Delegator cannot be null");
         if ( pkg == null )
@@ -139,25 +139,38 @@ public class WfFactory {
      * @throws WfException
      * @return An instance of the WfRequester Interface.
      */
-    public static WfRequester newWfRequester() throws WfException {
+    public static WfRequester getWfRequester() throws WfException {
         return new WfRequesterImpl();
     }
     
     /** Creates a new {@link WfResource} instance.
+     * @param value The GenericValue object of the WorkflowParticipant     
      * @throws WfException
      * @return An instance of the WfResource Interface.
      */
-    public static WfResource newWfResource(GenericValue value) throws WfException {
+    public static WfResource getWfResource(GenericValue value) throws WfException {
         if ( value == null )
             throw new WfException("Value object for WfResource definition cannot be null");
         return new WfResourceImpl(value);
     }
+
+    /** Creates a new {@link WfResource} instance.
+     * @param key The key for the resource
+     * @param name The name of the resource
+     * @param party The partyId of the resource
+     * @param role The roleTypeId of the resource
+     * @throws WfException
+     * @return An instance of the WfResource Interface.
+     */
+    public static WfResource getWfResource(String key, String name, String party, String role) throws WfException {        
+        return new WfResourceImpl(key,name,party,role);
+    }    
     
     /** Creates a new {@link WfEventAudit} instance.
      * @throws WfException
      * @return An instance of the WfEventAudit Interface.
      */
-    public static WfEventAudit newWfEventAudit(WfExecutionObject object, String type) throws WfException {                
+    public static WfEventAudit getWfEventAudit(WfExecutionObject object, String type) throws WfException {                
         return new WfEventAuditImpl(object,type);
     }    
 }

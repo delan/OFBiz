@@ -111,7 +111,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
             throw new RequesterRequired();
         
         // test if the requestor is OK: how?        
-        WfProcess process = WfFactory.newWfProcess(processDef,this);
+        WfProcess process = WfFactory.getWfProcess(processDef,this);
         
         try {
             process.setRequester(requester);

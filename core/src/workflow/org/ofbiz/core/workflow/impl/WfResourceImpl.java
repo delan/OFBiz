@@ -37,26 +37,48 @@ import org.ofbiz.core.workflow.*;
  */
 
 public class WfResourceImpl implements WfResource {
-    
-    protected GenericValue valueObject;    
-    protected List workItems;
-    
+                
+    protected String resourceKey;
+    protected String resourceName;
+    protected String description;
+    protected String partyId;
+    protected String roleTypeId;
+    protected String type;  
+
+        
     /** Creates a new WfResource
-     * @param resourceName The name of the resource
      * @param resourceKey Uniquely identifies the resource
-     * @param workItems Assignments associated with this resource
+     * @param resourceName The name of the resource
+     * @param partyId The partyID of this resource
+     * @param roleTypeId The roleTypeId of this resource     
      */
-    public WfResourceImpl(GenericValue valueObject) {
-        this.valueObject = valueObject;
-        this.workItems = new ArrayList();
+    public WfResourceImpl(String resourceKey, String resourceName, String partyId, String roleTypeId) {
+        this.resourceKey = resourceKey;
+        this.resourceName = resourceName;
+        this.description = null;
+        this.partyId = partyId;
+        this.roleTypeId = roleTypeId;
+        this.type = "HUMAN";       
     }
     
+    /** Creates a new WfResource
+     * @param valueObject The GenericValue object of the WorkflowParticipant     
+     */
+    public WfResourceImpl(GenericValue valueObject) {
+        this.resourceKey = valueObject.getString("participantId");
+        this.resourceName = valueObject.getString("participantName");
+        this.description = valueObject.getString("description");                
+        this.partyId = valueObject.getString("partyId");
+        this.roleTypeId = valueObject.getString("roleTypeId");
+        this.type = valueObject.getString("participantTypeId");                
+    }
+                    
     /** Gets the number of work items
      * @throws WfException
      * @return Count of work items
      */
     public int howManyWorkItem() throws WfException {
-        return workItems.size();
+        return workItems().size();
     }
     
     /** Gets an iterator of work items
@@ -64,7 +86,7 @@ public class WfResourceImpl implements WfResource {
      * @return Iterator of work items
      */
     public Iterator getIteratorWorkItem() throws WfException {
-        return workItems.iterator();
+        return workItems().iterator();
     }
     
     /** Gets the work items
@@ -74,8 +96,8 @@ public class WfResourceImpl implements WfResource {
      */
     public List getSequenceWorkItem(int maxNumber) throws WfException {
         if ( maxNumber > 0 )
-            return workItems.subList(0,(maxNumber-1));
-        return workItems;
+            return workItems().subList(0,(maxNumber-1));
+        return workItems();
     }
     
     /** Checks if an assignment object is associated with this resource
@@ -84,7 +106,7 @@ public class WfResourceImpl implements WfResource {
      * @return true if assignment is part of the work list
      */
     public boolean isMemberOfWorkItems(WfAssignment member) throws WfException {
-        return workItems.contains(member);            
+        return workItems().contains(member);            
     }
     
     /** Gets the resource key.
@@ -92,7 +114,7 @@ public class WfResourceImpl implements WfResource {
      * @return String of the resouce key.
      */
     public String resourceKey() throws WfException {
-        return valueObject.getString("participantId");
+        return resourceKey;
     }
     
     /** Gets the resource name
@@ -100,7 +122,23 @@ public class WfResourceImpl implements WfResource {
      * @return String of the resource name
      */
     public String resourceName() throws WfException {
-        return valueObject.getString("participantName");
+        return resourceName;
+    }
+    
+    /** Gets the role id of this resource
+     * @throws WfException
+     * @return String role id of this participant or null if none
+     */
+    public String resourceRoleId() throws WfException {        
+        return roleTypeId;
+    }
+    
+    /** Gets the party id of this resource
+     * @throws WfException
+     * @return String party id of this participant or null if none
+     */
+    public String resourcePartyId() throws WfException {        
+        return partyId;
     }
     
     /** Release the resouce from the assignement
@@ -110,10 +148,14 @@ public class WfResourceImpl implements WfResource {
      * @throws NotAssigned
      */
     public void release(WfAssignment fromAssignment, String releaseInfo) throws WfException, NotAssigned {
-        if ( !workItems.contains(fromAssignment) )
+        if ( !workItems().contains(fromAssignment) )
             throw new NotAssigned();
-        workItems.remove(fromAssignment);
+        //workItems.remove(fromAssignment);
         // log the transaction
+    }
+    
+    private List workItems() throws WfException {
+        return new ArrayList();
     }
 }
 

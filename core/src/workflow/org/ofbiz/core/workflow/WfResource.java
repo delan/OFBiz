@@ -37,50 +37,62 @@ import java.util.List;
 
 public interface WfResource  {
     
-    /**
+    /** Gets the number of work items
      * @throws WfException
-     * @return
+     * @return Count of work items
      */
     public int howManyWorkItem() throws WfException;
     
-    /**
+    /** Gets an iterator of work items
      * @throws WfException
-     * @return
+     * @return Iterator of work items
      */
     public Iterator getIteratorWorkItem() throws WfException;
     
-    /**
+    /** Gets the work items
      * @param maxNumber
      * @throws WfException
      * @return List of WfAssignment objects.
      */
     public List getSequenceWorkItem(int maxNumber) throws WfException;
     
-    /**
-     * @param member
+    /** Checks if an assignment object is associated with this resource
+     * @param member The assignment object to check
      * @throws WfException
-     * @return
+     * @return true if assignment is part of the work list
      */
     public boolean isMemberOfWorkItems(WfAssignment member) throws WfException;
     
-    /**
+   /** Gets the resource key.
      * @throws WfException
-     * @return
+     * @return String of the resouce key.
      */
     public String resourceKey() throws WfException;
     
-    /**
+    /** Gets the resource name
      * @throws WfException
-     * @return
+     * @return String of the resource name
      */
     public String resourceName() throws WfException;
     
-    /**
+    /** Gets the role id of this resource
+     * @throws WfException
+     * @return String role id of this participant or null if none
+     */
+    public String resourceRoleId() throws WfException;
+    
+    /** Gets the party id of this resource
+     * @throws WfException
+     * @return String party id of this participant or null if none
+     */
+    public String resourcePartyId() throws WfException;
+    
+    /** Release the resouce from the assignement
      * @param fromAssigment
      * @param releaseInfo
      * @throws WfException
      * @throws NotAssigned
      */
-    public void release(WfAssignment fromAssignment, String releaseInfo) throws WfException, NotAssigned;
+    public void release(WfAssignment fromAssignment, String releaseInfo) throws WfException, NotAssigned;    
     
 } // interface WfResourceOperations

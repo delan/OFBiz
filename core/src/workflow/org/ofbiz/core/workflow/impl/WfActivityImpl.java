@@ -66,8 +66,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         
         if ( performer != null ) {
-            WfResource resource = WfFactory.newWfResource(performer);
-            WfAssignment assign = WfFactory.newWfAssignment(this,resource);
+            WfResource resource = WfFactory.getWfResource(performer);
+            WfAssignment assign = WfFactory.getWfAssignment(this,resource);
             assignments.add(assign);
         }          
     }

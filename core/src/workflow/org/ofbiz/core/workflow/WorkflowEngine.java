@@ -89,7 +89,7 @@ public class WorkflowEngine implements GenericEngine {
         // Build the requester
         WfRequester req = null;
         try {
-            req = WfFactory.newWfRequester();        
+            req = WfFactory.getWfRequester();        
         }
         catch ( WfException e ) {
             throw new GenericServiceException(e.getMessage(),e);
@@ -98,7 +98,7 @@ public class WorkflowEngine implements GenericEngine {
         // Build the process manager
         WfProcessMgr mgr = null;
         try {
-            mgr = WfFactory.newWfProcessMgr(dispatcher.getDelegator(),modelService.location,modelService.invoke);
+            mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(),modelService.location,modelService.invoke);
         }
         catch ( WfException e ) {
             throw new GenericServiceException(e.getMessage(),e);

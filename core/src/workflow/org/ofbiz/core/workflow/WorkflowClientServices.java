@@ -134,7 +134,7 @@ public class WorkflowClientServices {
     public static WfProcessMgr getProcessManager(GenericDelegator delegator, String pkg, String pid) {
         WfProcessMgr pm = null;
         try {
-            pm = WfFactory.newWfProcessMgr(delegator,pkg,pid);
+            pm = WfFactory.getWfProcessMgr(delegator,pkg,pid);
         }
         catch ( WfException e ) {
             throw new RuntimeException(e.getMessage());
