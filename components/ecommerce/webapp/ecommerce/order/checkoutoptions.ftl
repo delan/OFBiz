@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -65,6 +65,19 @@ function submitForm(form, mode, value) {
         form.submit();
     }
 }
+
+function toggleBillingAccount(box) {
+    var amountName = box.value + "_amount";
+    box.checked = true;   
+    box.form.elements[amountName].disabled = false;
+    
+    for (var i = 0; i < box.form.elements[box.name].length; i++) {
+        if (!box.form.elements[box.name][i].checked) {           
+            box.form.elements[box.form.elements[box.name][i].value + "_amount"].disabled = true;
+        }
+    }
+}
+        
 // -->
 </script>
 
@@ -289,6 +302,8 @@ function submitForm(form, mode, value) {
               </table>
             </td>
           </tr>
+          
+          <#-- Payment Method Selection -->
           <tr style='height: 100%;'>
             <td width='100%' valign=top height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
@@ -333,23 +348,8 @@ function submitForm(form, mode, value) {
                           <span class="tabletext">Pay With PayPal</span>
                         </td>
                       </tr>    
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>                      
-                      <#if billingAccountList?has_content>                                                         
-                        <#list billingAccountList as billingAccount>                          
-                          <tr>
-                            <td align="left" valign="top" width="1%" nowrap>                             
-                              <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT|${billingAccount.billingAccountId?if_exists}" <#if ((cart.getGrandTotal()?double + billingAccount.accountBalance?double) > billingAccount.accountLimit?double)>disabled<#elseif selectedBillingAccountId?default("") == billingAccount.billingAccountId>checked</#if>>
-                            </td>
-                            <td align="left" valign="top" width="99%" nowrap>
-                              <div class="tabletext">
-                               Bill Account #<b>${billingAccount.billingAccountId}</b>&nbsp;(${(billingAccount.accountLimit?double - billingAccount.accountBalance)?string.currency})<br>
-                               ${billingAccount.description?if_exists} 
-                              </div> 
-                            </td>
-                          </tr>
-                          <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                        </#list>
-                      </#if>                      
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                                            
                       <#list context.paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
@@ -376,6 +376,45 @@ function submitForm(form, mode, value) {
                           <tr><td colspan="2"><hr class='sepbar'></td></tr>
                         </#if>
                       </#list>
+
+                      <#-- special billing account functionality to allow use w/ a payment method -->                     
+                      <#if billingAccountList?has_content>                        
+                        <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                        <tr>                          
+                          <td width="1%" nowrap>             
+                            <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT" <#if "EXT_BILLACT" == checkOutPaymentId>checked</#if>></hr>
+                          </td>
+                          <td width="50%" nowrap>
+                            <span class="tabletext">Pay only with Billing Account</span>                             
+                          </td>
+                        </tr>
+                        <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                        <#list billingAccountList as billingAccount>
+                          <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>                       
+                          <tr>
+                            <td align="left" valign="top" width="1%" nowrap>                             
+                              <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="${billingAccount.billingAccountId}" <#if (billingAccount.billingAccountId == selectedBillingAccount?default(""))>checked</#if>>
+                            </td>
+                            <td align="left" valign="top" width="99%" nowrap>
+                              <div class="tabletext">
+                               ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${(availableAmount)?string.currency})<br>
+                               <b>Bill Up To:</b> <input type="text" size="5" class="inputBox" name="${billingAccount.billingAccountId}_amount" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
+                              </div>
+                            </td>
+                          </tr>                          
+                        </#list>
+                        <tr>
+                          <td align="left" valign="top" width="1%" nowrap>                             
+                            <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="_NA" <#if (selectedBillingAccount?default("") == "N")>checked</#if>>
+                            <input type="hidden" name="_NA_amount" value="0.00">
+                          </td>
+                          <td align="left" valign="top" width="99%" nowrap>
+                            <div class="tabletext">No billing account</div>
+                           </td>
+                        </tr>                        
+                      </#if>
+                      <#-- end of special billing account functionality -->
+                                            
                     </table>                    
                     <#if !paymentMethodList?has_content>                 
                       <div class='tabletext'><b>There are no payment methods on file.</b></div>
@@ -385,6 +424,8 @@ function submitForm(form, mode, value) {
               </table>
             </td>
           </tr>
+          <#-- End Payment Method Selection -->
+          
         </table>
       </td>
     </tr>

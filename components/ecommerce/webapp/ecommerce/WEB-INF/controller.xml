@@ -247,9 +247,16 @@
     <request-map uri="calcTax">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="calcTax"/>
-        <response name="success" type="view" value="checkout"/>
+        <response name="success" type="request" value="validateBillAccts"/>
         <response name="error" type="view" value="checkoutoptions"/>
     </request-map>
+    
+    <request-map uri="validateBillAccts">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.order.shoppingcart.CheckOutEvents" invoke="checkBillingAccounts"/>
+        <response name="success" type="view" value="checkout"/>
+        <response name="error" type="view" value="checkoutoptions"/>
+    </request-map>    
 
     <request-map uri="checkBlacklist">
         <security direct-request="false"/>
