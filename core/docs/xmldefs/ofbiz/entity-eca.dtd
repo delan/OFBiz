@@ -34,7 +34,7 @@
 <!ATTLIST eca
     entity CDATA #REQUIRED
     operation ( create | store | remove | find | create-store | create-remove | store-remove | create-store-remove | any ) #REQUIRED
-    event ( validate | run | return ) #REQUIRED
+    event ( validate | run | return | cache-check | cache-put | cache-clear ) #REQUIRED
     run-on-error ( true | false ) "false"
 >
 
