@@ -669,12 +669,7 @@
     <!-- Shopping List Services -->
     <service name="shoppingListInterface" engine="interface" location="" invoke="">
         <description>Shopping List Interface</description>
-        <attribute name="shoppingListTypeId" type="String" mode="IN" optional="true"/>
-        <attribute name="parentShoppingListId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="listName" type="String" mode="IN" optional="true"/>
-        <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="isPublic" type="String" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" entity-name="ShoppingList" include="nonpk" optional="true"/>        
     </service>
     <service name="createShoppingList" engine="simple" auth="true"
             location="org/ofbiz/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingList">

@@ -30,14 +30,17 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.product.catalog.*;
+import org.ofbiz.product.store.*;
 
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
+productStoreId = ProductStoreWorker.getProductStoreId(request);
 prodCatalogId = CatalogWorker.getCurrentCatalogId(request);
 webSiteId = CatalogWorker.getWebSiteId(request);
 currencyUomId = UtilHttp.getCurrencyUom(request);
 
+context.put("productStoreId", productStoreId);
 context.put("currencyUomId", currencyUomId);
 
 // get the top level shopping lists for the logged in user

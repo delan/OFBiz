@@ -35,7 +35,7 @@
             <div class="boxhead">&nbsp;${uiLabelMap.EcommerceShoppingLists}</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/createEmptyShoppingList</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
+            <a href="<@ofbizUrl>/createEmptyShoppingList?productStoreId=${productStoreId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
         </tr>
       </table>
