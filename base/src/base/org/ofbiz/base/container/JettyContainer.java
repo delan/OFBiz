@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.3 2003/08/15 23:44:08 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.base.util.Debug;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.2 $
+  *@version    $Revision: 1.3 $
  * @since      2.2
  */
 public class JettyContainer implements Container {
@@ -118,6 +118,17 @@ public class JettyContainer implements Container {
             if ("default".equals(listenerProps.getProperty("type").value)) {
                 SocketListener listener = new SocketListener();
                 setListenerOptions(listener, listenerProps);
+                if (listenerProps.getProperty("low-resource-persist-time") != null) {
+                    int value = 0;
+                    try {
+                        value = Integer.parseInt(listenerProps.getProperty("low-resource-persist-time").value);
+                    } catch (NumberFormatException e) {
+                        value = 0;
+                    }
+                    if (value > 0) {
+                        listener.setLowResourcePersistTimeMs(value);
+                    }
+                }                
                 server.addListener(listener);                                               
             } else if ("sun-jsse".equals(listenerProps.getProperty("type").value)) {
                 SunJsseListener listener = new SunJsseListener();
@@ -130,7 +141,18 @@ public class JettyContainer implements Container {
                 }                
                 if (listenerProps.getProperty("key-password") != null) {
                     listener.setKeystore(listenerProps.getProperty("key-password").value);    
-                }                                
+                }
+                if (listenerProps.getProperty("low-resource-persist-time") != null) {
+                    int value = 0;
+                    try {
+                        value = Integer.parseInt(listenerProps.getProperty("low-resource-persist-time").value);
+                    } catch (NumberFormatException e) {
+                        value = 0;
+                    }
+                    if (value > 0) {
+                        listener.setLowResourcePersistTimeMs(value);
+                    }
+                }                                               
                 server.addListener(listener);
             } else if ("ibm-jsse".equals(listenerProps.getProperty("type").value)) {
                 throw new ContainerException("Listener not supported yet [" + listenerProps.getProperty("type").value + "]");
@@ -208,7 +230,7 @@ public class JettyContainer implements Container {
             if (value > 0) {
                 listener.setMaxIdleTimeMs(value);
             }
-        }                    
+        }                                   
     }  
     
     /**
