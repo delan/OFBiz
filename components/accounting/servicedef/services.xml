@@ -120,6 +120,8 @@
         <attribute name="contactMechId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="billingAccountId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateBillingAccount" engine="simple"

@@ -18,6 +18,12 @@
         <action service="updatePaymentMethodAddress" mode="sync"/>
     </eca>
 
+    <eca service="createBillingAccount" event="return">
+        <condition field-name="roleTypeId" operator="is-not-empty"/>
+        <condition field-name="partyId" operator="is-not-empty"/>
+        <action service="createBillingAccountRole" mode="sync"/>
+    </eca>
+
     <eca service="createCreditCard" event="in-validate">
         <condition field-name="expMonth" operator="is-not-empty"/>
         <condition field-name="expYear" operator="is-not-empty"/>

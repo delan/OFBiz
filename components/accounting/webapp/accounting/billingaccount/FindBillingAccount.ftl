@@ -28,7 +28,7 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <div class="head1">${uiLabelMap.AccountingBillingAccounts}</div>
-<div><a href="<@ofbizUrl>/EditBillingAccount</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingNewAccount}]</a></div>
+<div><a href="<@ofbizUrl>/EditBillingAccount<#if (requestParameters.partyId)?has_content>?partyId=${requestParameters.partyId}&roleTypeId=BILL_TO_CUSTOMER</#if></@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingNewAccount}]</a></div>
 
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0"> 
