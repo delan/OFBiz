@@ -46,6 +46,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilJ2eeCompat;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.collections.MapStack;
 import org.ofbiz.content.webapp.control.LoginWorker;
 import org.ofbiz.content.widget.html.HtmlFormRenderer;
@@ -231,6 +232,7 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             if ("true".equals((String) parameterMap.get("isError"))) {
                 context.put("isError", Boolean.TRUE);
             }
+            context.put("nowTimestamp", UtilDateTime.nowTimestamp());
 
             // to preserve these values, push the MapStack
             context.push();
