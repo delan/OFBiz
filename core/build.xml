@@ -86,6 +86,7 @@
         <mkdir dir="${lib.dir}" />
 	    <mkdir dir="${lib.dir}/ejb/META-INF" />
 		<mkdir dir="${lib.dir}/jar/META-INF" />
+		<mkdir dir="${build.dir}" />
     </target>
 	
     <target name="prepare-docs" depends="init">
