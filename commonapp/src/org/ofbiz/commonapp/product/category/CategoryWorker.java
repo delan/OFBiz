@@ -1,34 +1,25 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.9  2002/02/02 12:01:47  jonesde
- * Changed method of getting dispatcher to get from request instead of ServletContext, more control to control servlet and works with Weblogic
  *
- * Revision 1.8  2002/02/01 12:18:47  jonesde
- * Small speedup to not relead session item list caches on the first page for all loads
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * Revision 1.7  2002/01/30 22:41:26  jonesde
- * Added order by for new sequenceNum
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * Revision 1.6  2002/01/30 10:07:25  jonesde
- * Added order by sequenceNum
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
  *
- * Revision 1.5  2002/01/30 06:11:25  jonesde
- * Formatting changes only, in preparation for other changes
- *
- * Revision 1.4  2001/10/23 22:12:33  jonesde
- * Made view limit optional
- *
- * Revision 1.3  2001/10/18 22:32:31  jonesde
- * Improved caching, caches used more and events invalidate more
- *
- * Revision 1.2  2001/10/18 18:07:31  jonesde
- * Added worker methods for multiple catalog, or multiple top category stuff
- *
- * Revision 1.1  2001/10/05 02:32:39  jonesde
- * Refactored CatalogHelper: split into CatalogWorker and in commonapp CategoryWorker and ProductWorker
- *
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.commonapp.product.category;
@@ -42,31 +33,12 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 
 /**
- * <p><b>Title:</b> CategoryWorker.java
- * <p><b>Description:</b> Helper class to reduce code in JSPs.
- * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
+ * CategoryWorker - Worker class to reduce code in JSPs.
  *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on August 23, 2001, 7:58 PM
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    1.0
+ * @created    August 23, 2001, 7:58 PM
  */
 public class CategoryWorker {
 
@@ -146,7 +118,6 @@ public class CategoryWorker {
             }
 
             if (prodCatMembers != null) {
-                //XXX should be synchronized from multiple clients thrashing eachother (?) - how?
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", prodCatMembers);
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
             }
@@ -191,7 +162,9 @@ public class CategoryWorker {
         pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
         pageContext.setAttribute(attributePrefix + "categoryId", parentId);
         if (someProducts.size() > 0)
-            pageContext.setAttribute(attributePrefix + "productList",someProducts);
+            pageContext.setAttribute(attributePrefix + "productList", someProducts);
+        if (prodCatMembers != null && prodCatMembers.size() > 0)
+            pageContext.setAttribute(attributePrefix + "productCategoryMembers", prodCatMembers);
     }
 
     public static String getCatalogTopCategory(PageContext pageContext, String defaultTopCategory) {
