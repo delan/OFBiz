@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -52,17 +52,17 @@ public class UtilProperties implements java.io.Serializable {
      *  corresponding to each properties file keyed by a String for the resource location.
      * This will be used for both non-locale and locale keyed FexibleProperties instances.
      */
-    public static UtilCache resourceCache = new UtilCache("properties.UtilPropertiesResourceCache");
+    protected static UtilCache resourceCache = new UtilCache("properties.UtilPropertiesResourceCache");
 
     /** An instance of the generic cache for storing the FlexibleProperties 
      *  corresponding to each properties file keyed by a URL object
      */
-    public static UtilCache urlCache = new UtilCache("properties.UtilPropertiesUrlCache");
+    protected static UtilCache urlCache = new UtilCache("properties.UtilPropertiesUrlCache");
 
     /** An instance of the generic cache for storing the ResourceBundle 
      *  corresponding to each properties file keyed by a String for the resource location and the locale
      */
-    public static UtilCache bundleLocaleCache = new UtilCache("properties.UtilPropertiesBundleLocaleCache");
+    protected static UtilCache bundleLocaleCache = new UtilCache("properties.UtilPropertiesBundleLocaleCache");
 
 
     /** Compares the specified property to the compareString, returns true if they are the same, false otherwise
