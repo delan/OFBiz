@@ -34,7 +34,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 
 /**
- * Copies a map field to a Service result entry
+ * Copies a map field to a map field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002
