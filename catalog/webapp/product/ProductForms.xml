@@ -35,8 +35,8 @@
 		<alt-target use-when="product==null" target="createProduct"/>
 		
 		<field use-when="product!=null" name="productId" tooltip="This cannot be changed without re-creating the product."><display/></field>
-		<field use-when="product==null&&productId==null" name="productId"><text size="20" maxlength="20"/></field>
-		<field use-when="product==null&&productId!=null" name="productId" tooltip="Could not find product with ID [${productId}]"><text size="20" maxlength="20"/></field>
+		<field use-when="product==null&amp;&amp;productId==null" name="productId"><text size="20" maxlength="20"/></field>
+		<field use-when="product==null&amp;&amp;productId!=null" name="productId" tooltip="Could not find product with ID [${productId}]"><text size="20" maxlength="20"/></field>
 		
 		<field position="1" name="isVirtual" title="Is VIRTUAL Product?" widget-style="selectBox">
 			<drop-down allow-empty="true"><option key="Y"/><option key="N"/></drop-down>
@@ -46,7 +46,7 @@
 		</field>
 		<field name="productTypeId" title="Product Type" widget-style="selectBox">
 			<drop-down>
-				<entity-options entity-name="ProductType" description-format="${description} [${productCategoryId}]"/>
+				<entity-options entity-name="ProductType" description="${description} [${productTypeId}]"/>
 			</drop-down>
 		</field>
 		<field name="primaryProductCategoryId" title="Product Category" widget-style="selectBox">
@@ -62,9 +62,9 @@
 		<field name="longDescription" widget-style="textAreaBox"><textarea cols="60" rows="7"/></field>
 		<field name="comments"><text size="60" maxlength="255"/></field>
 		
-		<field position="1" name="introductionDate" title="Intro Date" red-when="after-now"><datetime/></field>
-		<field position="2" name="salesDiscontinuationDate" title="Sales Thru Date" red-when="before-now"><datetime/></field>
-		<field position="1" name="supportDiscontinuationDate" title="Support Thru Date" red-when="before-now"><datetime/></field>
+		<field position="1" name="introductionDate" title="Intro Date" red-when="after-now"><date-time/></field>
+		<field position="2" name="salesDiscontinuationDate" title="Sales Thru Date" red-when="before-now"><date-time/></field>
+		<field position="1" name="supportDiscontinuationDate" title="Support Thru Date" red-when="before-now"><date-time/></field>
 		<field position="2" name="manufacturerPartyId" title="OEM Party ID" red-when="before-now"><text size="20" maxlength="20"/></field>
 		
 		<field position="1" name="requireInventory" widget-style="selectBox" tooltip="Should inventory be required to purchase this product? If not specified defaults to the Catalog setting.">
@@ -100,7 +100,7 @@
 		<field name="detailImageUrl"><text size="60" maxlength="255"/></field>
 		<field name="detailTemplate"><text size="60" maxlength="250"/></field>
 
-		<field name="submit" title="Update Product" widget-style="standardSubmit"><submit type="button"/></field>
+		<field name="submit" title="Update Product" widget-style="standardSubmit"><submit button-type="button"/></field>
 
 		<field position="1" name="lastUpdatedByText" title="Last Modified By:" widget-style="tabletext">
 			<display description="[${product.lastModifiedByUserLogin}] on ${product.lastModifiedDate}" also-hidden="false"/>
@@ -115,10 +115,10 @@
 		<field name="productId" map-name="product"><hidden/></field>
 		<field name="productCategoryId" widget-style="selectBox">
 			<drop-down>
-				<entity-options entity-name="ProductCategory" description-format="${description} [${productCategoryId}]"/>
+				<entity-options entity-name="ProductCategory" description="${description} [${productCategoryId}]"/>
 			</drop-down>
 		</field>
-		<field name="submit" title="Add"><submit type="button"/></field>
+		<field name="submit" title="Add"><submit button-type="button"/></field>
 	</form>
 	<form name="addProductCategoryMember" type="list" 
 		target="updateProductToCategory" title="" 
@@ -131,9 +131,9 @@
 				description="${productCategory.description} [${productCategory.productCategoryId}]"/>
 		</field>
 		<field name="fromDate"><display/></field>
-		<field name="comments"><ignore/></field>
+		<field name="comments"><ignored/></field>
 		<field name="deleteLink" title="" widget-style="buttontext">
-			<hyperlink target="removeProductFromCategory?productId=${productCategoryMember.productId}&productCategoryId=${productCategoryMember.productCategoryId}&fromDate=${productCategoryMember.fromDate}"
+			<hyperlink target="removeProductFromCategory?productId=${productCategoryMember.productId}&amp;productCategoryId=${productCategoryMember.productCategoryId}&amp;fromDate=${productCategoryMember.fromDate}"
 				description="[Delete]" also-hidden="false"/>
 		</field>
 	</form>
