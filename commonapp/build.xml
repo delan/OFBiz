@@ -128,7 +128,7 @@
         <javac debug="on" srcdir="${src.dir}" classpath="${classpath}" destdir="${build.dir}/jar" />
         <!-- also copy all .xml, .bsh & .logic files to classpath directory -->
         <copy todir="${build.dir}/jar">
-            <fileset dir="${src.dir}" includes="**/*.xml,**/*.bsh,**/*.logic" />
+            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
         </copy>
     </target>
 
