@@ -382,14 +382,14 @@
                 </Transition>                                  
                                                                                                            
                 <Transition Id="trans2" From="approveOrder" To="cancelOrder" Loop="NOLOOP" Name="Cancel Order">
-                    <Condition Type="CONDITION"><![CDATA[approvalCode == 0]]></Condition>        
+                    <Condition Type="CONDITION"><![CDATA[approvalCode.equals("0")]]></Condition>        
                     <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="0"/>
                     </ExtendedAttributes>                                    
                 </Transition>                             
                 <Transition Id="trans2.1" From="approveOrder" To="approveOrderEvent" Loop="NOLOOP" Name="Approve Order">
-                    <Condition Type="CONDITION"><![CDATA[approvalCode == 1]]></Condition>
+                    <Condition Type="CONDITION"><![CDATA[approvalCode.equals("1")]]></Condition>
                     <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="1"/>
@@ -401,14 +401,14 @@
                 </Transition>    
                                 
                 <Transition Id="trans4" From="completeOrder" To="cancelOrder" Loop="NOLOOP" Name="Cancel Order">
-                    <Condition Type="CONDITION"><![CDATA[approvalCode == 0]]></Condition> 
+                    <Condition Type="CONDITION"><![CDATA[approvalCode.equals("0")]]></Condition>        
                      <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="0"/>
                     </ExtendedAttributes>                                                     
                 </Transition>                             
                 <Transition Id="trans4.1" From="completeOrder" To="completeOrderEvent" Loop="NOLOOP" Name="Complete Order">
-                    <Condition Type="CONDITION"><![CDATA[approvalCode == 2]]></Condition>                                            
+                    <Condition Type="CONDITION"><![CDATA[approvalCode.equals("2")]]></Condition>        
                      <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="2"/>
