@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: ProductPromoWorker.java,v 1.2 2003/10/29 10:39:13 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -96,14 +96,15 @@ public class ProductPromoWorker {
                                 GenericValue productPromoCond = (GenericValue) productPromoConds.next();
 
                                 // evaluate the party related conditions; so we don't show the promo if it doesn't apply.
-                                if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId")))
+                                if ("PPIP_PARTY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
                                     condResult = checkCondition(productPromoCond, cart, null, 0, delegator);
-                                else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId")))
+                                } else if ("PRIP_PARTY_GRP_MEM".equals(productPromoCond.getString("inputParamEnumId"))) {
                                     condResult = checkCondition(productPromoCond, cart, null, 0, delegator);
-                                else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId")))
+                                } else if ("PRIP_PARTY_CLASS".equals(productPromoCond.getString("inputParamEnumId"))) {
                                     condResult = checkCondition(productPromoCond, cart, null, 0, delegator);
-                                else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId")))
+                                } else if ("PPIP_ROLE_TYPE".equals(productPromoCond.getString("inputParamEnumId"))) {
                                     condResult = checkCondition(productPromoCond, cart, null, 0, delegator);
+                                }
                             }
                         }
                         if (!condResult) productPromo = null;
@@ -272,9 +273,7 @@ public class ProductPromoWorker {
         if (Debug.verboseOn()) Debug.logVerbose("Checking promotion condition: " + productPromoCond, module);
         int compare = 0;
 
-        if ("PPIP_PRODUCT_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
-            compare = cartItem.getProductId().compareTo(productPromoCond.getString("condValue"));
-        } else if ("PPIP_PRODUCT_ID_IC".equals(productPromoCond.getString("inputParamEnumId"))) {
+        if ("PPIP_PRODUCT_ID_IC".equals(productPromoCond.getString("inputParamEnumId"))) {
             String candidateProductId = productPromoCond.getString("condValue");
 
             if (candidateProductId == null) {
@@ -299,7 +298,7 @@ public class ProductPromoWorker {
                     compare = 1;
                 }
             }
-        } else if ("PPIP_CATEGORY_ID".equals(productPromoCond.getString("inputParamEnumId"))) {
+        } else if ("PPIP_CATEGORY_ID_IC".equals(productPromoCond.getString("inputParamEnumId"))) {
             // if a ProductCategoryMember exists for this productId and the specified productCategoryId
             List productCategoryMembers = delegator.findByAndCache("ProductCategoryMember",
                     UtilMisc.toMap("productId", cartItem.getProductId(), "productCategoryId", productPromoCond.getString("condValue")));
@@ -343,12 +342,6 @@ public class ProductPromoWorker {
 
             if (Debug.verboseOn()) Debug.logVerbose("Doing order total compare: orderSubTotal=" + orderSubTotal, module);
             compare = orderSubTotal.compareTo(Double.valueOf(productPromoCond.getString("condValue")));
-        } else if ("PPIP_QUANTITY_ADDED".equals(productPromoCond.getString("inputParamEnumId"))) {
-            Double quantityAdded = new Double(cartItem.getQuantity() - oldQuantity);
-
-            compare = quantityAdded.compareTo(Double.valueOf(productPromoCond.getString("condValue")));
-        } else if ("PPIP_NEW_PROD_QUANT".equals(productPromoCond.getString("inputParamEnumId"))) {
-            compare = (new Double(cartItem.getQuantity())).compareTo(Double.valueOf(productPromoCond.getString("condValue")));
         } else {
             Debug.logWarning("An un-supported productPromoCond input parameter (lhs) was used: " + productPromoCond.getString("inputParamEnumId") + ", returning false, ie check failed", module);
             return false;
@@ -377,7 +370,7 @@ public class ProductPromoWorker {
 
     /** returns true if the cart was changed and rules need to be re-evaluted */
     public static boolean performAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, ShoppingCartItem cartItem, double oldQuantity, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException, CartItemModifyException {
-        if ("PROMO_GWP".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+        if ("PROMO_GWP".equals(productPromoAction.getString("productPromoActionEnumId"))) {
             if (apply) {
                 Integer itemLoc = findPromoItem(productPromoAction, cart);
 
@@ -439,7 +432,7 @@ public class ProductPromoWorker {
                     return false;
                 }
             }
-        } else if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+        } else if ("PROMO_FREE_SHIPPING".equals(productPromoAction.getString("productPromoActionEnumId"))) {
             // this may look a bit funny: on each pass all rules that do free shipping will set their own rule id for it,
             // and on unapply if the promo and rule ids are the same then it will clear it; essentially on any pass
             // through the promos and rules if any free shipping should be there, it will be there
@@ -451,18 +444,16 @@ public class ProductPromoWorker {
                 cart.removeFreeShippingProductPromoAction(productPromoAction.getPrimaryKey());
                 return false;
             }
-        } else if ("PROMO_ITEM_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+        } else if ("PROMO_ITEM_PERCENT".equals(productPromoAction.getString("productPromoActionEnumId"))) {
             return doItemPromoAction(apply, productPromoAction, cartItem, "percentage", delegator);
-        } else if ("PROMO_ITEM_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+        } else if ("PROMO_ITEM_AMOUNT".equals(productPromoAction.getString("productPromoActionEnumId"))) {
             return doItemPromoAction(apply, productPromoAction, cartItem, "amount", delegator);
-        } else if ("PROMO_ITEM_AMNTPQ".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            return doItemPromoAction(apply, productPromoAction, cartItem, "amountPerQuantity", delegator);
-        } else if ("PROMO_ORDER_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+        } else if ("PROMO_ORDER_PERCENT".equals(productPromoAction.getString("productPromoActionEnumId"))) {
             return doOrderPromoAction(apply, productPromoAction, cart, "percentage", delegator);
-        } else if ("PROMO_ORDER_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
+        } else if ("PROMO_ORDER_AMOUNT".equals(productPromoAction.getString("productPromoActionEnumId"))) {
             return doOrderPromoAction(apply, productPromoAction, cart, "amount", delegator);
         } else {
-            Debug.logError("An un-supported productPromoActionType was used: " + productPromoAction.getString("productPromoActionTypeId") + ", not performing any action", module);
+            Debug.logError("An un-supported productPromoActionType was used: " + productPromoAction.getString("productPromoActionEnumId") + ", not performing any action", module);
             return false;
         }
     }
