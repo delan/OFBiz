@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -76,5 +76,5 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </#if>
     </#if>
 <#else>
-  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
+  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>

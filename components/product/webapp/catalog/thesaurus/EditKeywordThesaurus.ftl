@@ -21,7 +21,7 @@
  *
  *@author     Nathan De Graw
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -80,5 +80,5 @@
     </tr>
   </table>
 <#else>
-  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
+  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>

@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -137,5 +137,5 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <div class="head2">${uiLabelMap.ProductProductNotFoundWithProduct} "${productId?if_exists}"</div>
     </#if>
 <#else>
-  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
+  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>

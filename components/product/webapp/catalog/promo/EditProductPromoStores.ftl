@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -89,5 +89,5 @@ ${pages.get("/promo/PromoTabBar.ftl")}
         </form>
    </#if>
 <#else>
-  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
+  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>

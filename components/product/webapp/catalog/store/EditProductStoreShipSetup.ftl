@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -851,5 +851,5 @@ function setAssocFields(select) {
     </table>
   </#if>
 <#else>
-  <h3>${uiLabelMap.ProductViewPermissionError}</h3>
+  <h3>${uiLabelMap.ProductCatalogViewPermissionError}</h3>
 </#if>

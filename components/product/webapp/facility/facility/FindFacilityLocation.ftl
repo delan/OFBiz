@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@authorn    thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -91,7 +91,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <table border="1" cellpadding="2" cellspacing="0">
         <tr>
             <td><div class="tabletext"><b>${uiLabelMap.ProductFacility}</b></div></td>
-            <td><div class="tabletext"><b>${uiLabelMap.ProductSeqId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductLocationSeqId}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductType}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.CommonArea}</b></div></td>
             <td><div class="tabletext"><b>${uiLabelMap.ProductAisle}</b></div></td>
