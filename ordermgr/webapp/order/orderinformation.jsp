@@ -38,8 +38,14 @@
     List orderHeaderStatuses = orderReadHelper.getOrderHeaderStatuses();
     if (orderHeaderStatuses != null) pageContext.setAttribute("orderHeaderStatuses", orderHeaderStatuses);
 
-    String partyId = orderRole.getString("partyId");
-    GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));
+	String partyId = null;
+	if (orderRole != null)
+		partyId = orderRole.getString("partyId");
+
+	GenericValue userPerson = null;
+	if (partyId != null)
+    	userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));
+    	
     String distributorId = orderReadHelper != null ? orderReadHelper.getDistributorId() : null;
     String affiliateId = orderReadHelper != null ? orderReadHelper.getAffiliateId() : null;
     if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);
