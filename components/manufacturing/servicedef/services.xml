@@ -7,19 +7,6 @@
     <version>1.0</version>
 
     <!-- Routing services -->
-    <service name="createMachineGroup" engine="simple"
-            location="org/ofbiz/manufacturing/techdata/RoutingSimpleServices.xml" invoke="createMachineGroup">
-        <description>Create a Machine Group</description>
-        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
-        <attribute name="fixedAssetName" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="updateMachineGroup" engine="simple"
-            location="org/ofbiz/manufacturing/techdata/RoutingSimpleServices.xml" invoke="updateMachineGroup">
-        <description>Update a Machine Group</description>
-        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
-        <attribute name="fixedAssetName" type="String" mode="IN" optional="true"/>
-    </service>
-
     <service name="createCalendar" engine="simple"
             location="org/ofbiz/manufacturing/techdata/RoutingSimpleServices.xml" invoke="createCalendar">
         <description>Create a calendar</description>
@@ -130,28 +117,6 @@
         <description>Remove a Calendar Exception Week</description>
         <attribute name="calendarId" type="String" mode="IN" optional="false"/>
         <attribute name="exceptionDateStart" type="java.sql.Date" mode="IN" optional="false"/>
-    </service>
-    
-    <service name="createMachine" engine="simple"
-            location="org/ofbiz/manufacturing/techdata/RoutingSimpleServices.xml" invoke="createMachine">
-        <description>Create a Machine</description>
-        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
-        <attribute name="fixedAssetName" type="String" mode="IN" optional="true"/>
-        <attribute name="parentFixedAssetId" type="String" mode="IN" optional="true"/>
-        <attribute name="calendarId" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="updateMachine" engine="simple"
-            location="org/ofbiz/manufacturing/techdata/RoutingSimpleServices.xml" invoke="updateMachine">
-        <description>Update a Machine</description>
-        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
-        <attribute name="fixedAssetName" type="String" mode="IN" optional="true"/>
-        <attribute name="parentFixedAssetId" type="String" mode="IN" optional="true"/>
-        <attribute name="calendarId" type="String" mode="IN" optional="true"/>
-    </service>
-    <service name="removeMachine" engine="simple"
-            location="org/ofbiz/manufacturing/techdata/RoutingSimpleServices.xml" invoke="removeMachine">
-        <description>Remove a Machine</description>
-        <attribute name="fixedAssetId" type="String" mode="IN" optional="false"/>
     </service>
     
     <!-- Misc services -->
