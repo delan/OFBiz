@@ -1,5 +1,5 @@
 /*
- * $Id: Debug.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: Debug.java,v 1.2 2003/08/17 06:09:29 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.apache.log4j.PropertyConfigurator;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public final class Debug {
@@ -128,7 +128,7 @@ public final class Debug {
     }
     
     public static void log(int level, Throwable t, String msg, String module) {
-        log(level, t, msg, module, "org.ofbiz.core.util.Debug");
+        log(level, t, msg, module, "org.ofbiz.base.util.Debug");
     }
 
     public static void log(int level, Throwable t, String msg, String module, String callingClass) {
