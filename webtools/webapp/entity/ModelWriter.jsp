@@ -40,7 +40,7 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
   {
     String title = "Entity of an Open For Business Project Component";
     String description = "None";
-    String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
+    String copyright = "Copyright (c) 2002 The Open For Business Project - www.ofbiz.org";
     String author = "None";
     String version = "1.0";
 %><?xml version="1.0" encoding="UTF-8"?>
@@ -49,7 +49,7 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
 /**
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
