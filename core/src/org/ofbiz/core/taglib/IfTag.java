@@ -1,6 +1,9 @@
 /*
  * $Id$
- * $Log$ 
+ * $Log$
+ * Revision 1.1  2001/09/01 01:59:06  azeneski
+ * Added two new JSP tags.
+ * 
  */
 
 package org.ofbiz.core.taglib;
@@ -11,6 +14,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.JspTagException;
 import java.util.Collection;
 import java.io.IOException;
+import java.lang.reflect.Method;
 
 import org.ofbiz.core.util.Debug;
 
@@ -87,33 +91,42 @@ public class IfTag extends BodyTagSupport {
             if ( object == null )
                 return SKIP_BODY;
         }
-        catch ( Exception e ) { return SKIP_BODY; }
+        catch ( RuntimeException e ) { return SKIP_BODY; }
         Debug.logInfo("Found object, and is not null");
         
         if ( size == -1 && value == null && type == null )
             return EVAL_BODY_TAG;
         
         if (  size > -1 ) {
-            // Assume the object is a Collection and compare the size.
             try {
-                Collection c = (Collection) object;
-                if ( c.size() > size )
-                    return EVAL_BODY_TAG;
+                if (object instanceof Collection) {
+                    // the object is a Collection so compare the size.
+                    if ( ((Collection) object).size() > size )
+                        return EVAL_BODY_TAG;
+                } else {
+                    //use reflection to find a size() method
+                    try {
+                        Method sizeMethod = object.getClass().getMethod("size", null);
+                        int objectSize = ((Integer) sizeMethod.invoke(object, null)).intValue();
+                        if ( objectSize > size )
+                            return EVAL_BODY_TAG;
+                    } catch (Exception e) { return SKIP_BODY; }
+                }
             }
-            catch ( Exception e ) { return SKIP_BODY; }
+            catch ( RuntimeException e ) { return SKIP_BODY; }
         }
         
-        else if ( type.equalsIgnoreCase("String") ) {
+        else if ( "String".equalsIgnoreCase(type) ) {
             // Assume the object is a string and compare to the String value of value.
             try {
                 String s = (String) object;
                 if ( s.equals(value) )
                     return EVAL_BODY_TAG;
             }
-            catch ( Exception e ) { return SKIP_BODY; }
+            catch ( RuntimeException e ) { return SKIP_BODY; }
         }
         
-        else if ( type.equalsIgnoreCase("Integer") ) {
+        else if ( "Integer".equalsIgnoreCase(type) ) {
             // Assume the object is a Integer and compare to the Integer value of value.
             try {
                 Integer i = (Integer) object;
@@ -121,10 +134,10 @@ public class IfTag extends BodyTagSupport {
                 if ( i == v )
                     return EVAL_BODY_TAG;
             }
-            catch ( Exception e ) { return SKIP_BODY; }
+            catch ( RuntimeException e ) { return SKIP_BODY; }
         }
         
-        else if ( type.equalsIgnoreCase("Double") ) {
+        else if ( "Double".equalsIgnoreCase(type) ) {
             // Assume the object is a Double and compare to the Double value of value.
             try {
                 Double d = (Double) object;
@@ -132,10 +145,10 @@ public class IfTag extends BodyTagSupport {
                 if ( d == v )
                     return EVAL_BODY_TAG;
             }
-            catch ( Exception e ) { return SKIP_BODY; }
+            catch ( RuntimeException e ) { return SKIP_BODY; }
         }
         
-        else if ( type.equalsIgnoreCase("Boolean") ) {
+        else if ( "Boolean".equalsIgnoreCase(type) ) {
             // Assume the object is a Boolean and compare to the Boolean value of value.
             try {
                 Boolean b = (Boolean) object;
@@ -143,7 +156,7 @@ public class IfTag extends BodyTagSupport {
                 if ( b.equals(v) )
                     return EVAL_BODY_TAG;
             }
-            catch ( Exception e ) { return SKIP_BODY; }
+            catch ( RuntimeException e ) { return SKIP_BODY; }
         }
         
         else {
@@ -154,7 +167,7 @@ public class IfTag extends BodyTagSupport {
                 if ( valueObject != null && valueObject.equals(object) )
                     return EVAL_BODY_TAG;
             }
-            catch ( Exception e ) { return SKIP_BODY; }
+            catch ( RuntimeException e ) { return SKIP_BODY; }
         }
         
         return SKIP_BODY;        
