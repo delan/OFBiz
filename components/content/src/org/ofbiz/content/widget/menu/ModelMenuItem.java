@@ -558,6 +558,7 @@ public class ModelMenuItem {
             protected FlexibleStringExpander targetExdr;
             protected FlexibleStringExpander targetWindowExdr;
             protected FlexibleStringExpander prefixExdr;
+            protected FlexibleStringExpander nameExdr;
             protected Image image;
             protected String urlMode = "intra-app";
             protected boolean fullPath = false;
@@ -577,6 +578,7 @@ public class ModelMenuItem {
                 setFullPath(linkElement.getAttribute("full-path"));
                 setSecure(linkElement.getAttribute("secure"));
                 setEncode(linkElement.getAttribute("encode"));
+                setName(linkElement.getAttribute("name"));
                 Element imageElement = UtilXml.firstChildElement(linkElement, "image");
                 if (imageElement != null) {
                     this.image = new Image(imageElement);
@@ -607,6 +609,10 @@ public class ModelMenuItem {
                 return style;
             }
             
+            public String getName(Map context) {
+                return this.nameExdr.expandString(context);
+            }
+        
             public String getTarget(Map context) {
                 return this.targetExdr.expandString(context);
             }
@@ -661,6 +667,9 @@ public class ModelMenuItem {
             public void setUrlMode( String val ) {
                 if (UtilValidate.isNotEmpty(val))
                     this.urlMode = val;
+            }
+            public void setName( String val ) {
+                this.nameExdr = new FlexibleStringExpander(val);
             }
             public void setFullPath( String val ) {
                 String sFullPath = val;

@@ -395,6 +395,12 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             buffer.append(style);
             buffer.append("\"");
         }
+        String name = link.getName(context);
+        if (UtilValidate.isNotEmpty(name)) {
+            buffer.append(" name=\"");
+            buffer.append(name);
+            buffer.append("\"");
+        }
         String targetWindow = link.getTargetWindow(context);
         if (UtilValidate.isNotEmpty(targetWindow)) {
             buffer.append(" target=\"");

@@ -66,6 +66,7 @@
         text CDATA #IMPLIED
         id CDATA #IMPLIED
         style CDATA #IMPLIED
+        name CDATA #IMPLIED
         target CDATA #IMPLIED
         target-window CDATA #IMPLIED
         prefix CDATA #IMPLIED

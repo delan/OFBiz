@@ -812,6 +812,7 @@ public abstract class ModelScreenWidget {
         protected FlexibleStringExpander targetExdr;
         protected FlexibleStringExpander targetWindowExdr;
         protected FlexibleStringExpander prefixExdr;
+        protected FlexibleStringExpander nameExdr;
         protected Image image;
         protected String urlMode = "intra-app";
         protected boolean fullPath = false;
@@ -825,6 +826,7 @@ public abstract class ModelScreenWidget {
             setText(linkElement.getAttribute("text"));
             setId(linkElement.getAttribute("id"));
             setStyle(linkElement.getAttribute("style"));
+            setName(linkElement.getAttribute("name"));
             setTarget(linkElement.getAttribute("target"));
             setTargetWindow(linkElement.getAttribute("target-window"));
             setPrefix(linkElement.getAttribute("prefix"));
@@ -863,6 +865,10 @@ public abstract class ModelScreenWidget {
         
         public String getTarget(Map context) {
             return this.targetExdr.expandString(context);
+        }
+        
+        public String getName(Map context) {
+            return this.nameExdr.expandString(context);
         }
         
         public String getTargetWindow(Map context) {
@@ -905,6 +911,9 @@ public abstract class ModelScreenWidget {
         }
         public void setTarget( String val ) {
             this.targetExdr = new FlexibleStringExpander(val);
+        }
+        public void setName( String val ) {
+            this.nameExdr = new FlexibleStringExpander(val);
         }
         public void setTargetWindow( String val ) {
             this.targetWindowExdr = new FlexibleStringExpander(val);
