@@ -535,7 +535,7 @@
 
     <view-map name="openapplication" page="/application/openapplication.jsp"/>
     <view-map name="task" type="jpublish" page="/task/task.ftl"/>
-    <view-map name="activity" type="region"/>
+    <view-map name="activity" type="jpublish" page="/task/activity.ftl"/>
     <view-map name="mytasks" type="jpublish" page="/task/mytasks.ftl"/>
     
     <view-map name="event" type="jpublish" page="/calendar/event.ftl"/>

@@ -44,10 +44,3 @@ context.put("canView",result.get("canView"));
 context.put("tryEntity",result.get("tryEntity"));
 context.put("currentStatusItem",result.get("currentStatusItem"));
 
-
-serviceCtx = UtilMisc.toMap(
-    "statusTypeIds",UtilMisc.toList("CALENDAR_STATUS", "TASK_STATUS"));
-result = dispatcher.runSync("getStatusItems",serviceCtx);    
-
-context.put("taskStatusItems",result.get("statusItems"));
-
