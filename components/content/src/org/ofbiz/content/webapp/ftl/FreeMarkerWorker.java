@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.31 2004/07/06 16:44:59 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.32 2004/07/10 16:24:09 byersa Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -100,6 +100,8 @@ public class FreeMarkerWorker {
     public static WrapSubContentCacheTransform  wrapSubContentCache = new WrapSubContentCacheTransform();
     public static MenuWrapTransform  menuWrap = new MenuWrapTransform();
     public static LimitedSubContentCacheTransform  limitedSubContent = new LimitedSubContentCacheTransform();
+    public static RenderSubContentAsText  renderSubContentAsText = new RenderSubContentAsText();
+    public static RenderContentAsText  renderContentAsText = new RenderContentAsText();
 
     public static Map cachedTemplates = new HashMap();
     
@@ -128,6 +130,8 @@ public class FreeMarkerWorker {
         context.put("injectNodeTrailCsv", injectNodeTrailCsv);
         context.put("menuWrap", menuWrap);
         context.put("limitedSubContent", limitedSubContent);
+        context.put("renderSubContentAsText", renderSubContentAsText);
+        context.put("renderContentAsText", renderContentAsText);
     }
     
     public static Configuration makeDefaultOfbizConfig() throws TemplateException {
@@ -189,7 +193,9 @@ public class FreeMarkerWorker {
         try {
             obj = env.getVariable(varName);
             if (obj != null) {
-                if (obj instanceof BeanModel) {
+                if (obj == TemplateModel.NOTHING) {
+                    obj = null;
+                } else if (obj instanceof BeanModel) {
                     BeanModel bean = (BeanModel) obj;
                     obj = bean.getWrappedObject();
                 } else if (obj instanceof SimpleScalar) {
@@ -315,7 +321,9 @@ public class FreeMarkerWorker {
     public static Object unwrap(Object o) {
         Object returnObj = null;
 
-        if (o instanceof SimpleScalar) {
+        if (o == TemplateModel.NOTHING) {
+            returnObj = null;
+        } else if (o instanceof SimpleScalar) {
             returnObj = o.toString();
         } else if (o instanceof BeanModel) {
             returnObj = ((BeanModel)o).getWrappedObject();
@@ -556,11 +564,16 @@ public class FreeMarkerWorker {
         while (it.hasNext()) {
             String key = (String)it.next();
             Object obj = args.get(key);
+            //if (Debug.infoOn()) Debug.logInfo("in overrideWithArgs, key(3):" + key + " obj:" + obj + " class:" + obj.getClass().getName() , module);
             if (obj != null) {
-                Object unwrappedObj = unwrap(obj);
-                if (unwrappedObj == null)
-                    unwrappedObj = obj;
-                ctx.put(key, unwrappedObj.toString());
+                if (obj == TemplateModel.NOTHING) {
+                    ctx.put(key, null);
+                } else {
+                    Object unwrappedObj = unwrap(obj);
+                    if (unwrappedObj == null)
+                        unwrappedObj = obj;
+                    ctx.put(key, unwrappedObj.toString());
+                }
             } else {
                 ctx.put(key, null);
             }

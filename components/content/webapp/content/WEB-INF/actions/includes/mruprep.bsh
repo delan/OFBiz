@@ -1,5 +1,5 @@
 /*
- * $Id: mruprep.bsh,v 1.2 2004/03/16 17:35:24 byersa Exp $
+ * $Id: mruprep.bsh,v 1.3 2004/07/10 16:24:10 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
 
  * Builds a list of most recently used EntityValues from a session-kept cache
@@ -66,45 +66,29 @@ if(lookupCaches == null){
     session.setAttribute("lookupCaches", lookupCaches);
 } 
 cacheEntityName = entityName;
-Debug.logInfo("index:" + entityName.indexOf("DataResource") , "");
-if (UtilValidate.isNotEmpty(entityName) && entityName.indexOf("DataResource") >= 0) {
-    cacheEntityName = "DataResourceContentView";
-    dataResourceTypeId = request.getParameter("drDataResourceTypeId");
-    if (UtilValidate.isNotEmpty(dataResourceTypeId)) {
-        cacheEntityName += "_" + dataResourceTypeId;
-        if (cacheEntityName.indexOf("ELECTRONIC_TEXT") >= 0) {
-            mimeTypeId = request.getParameter("drMimeTypeId");
-            if (UtilValidate.isNotEmpty(mimeTypeId)) {
-                cacheEntityName += "_" + mimeTypeId;
-            }
-        }
-    }
-}
 Debug.logInfo("cacheEntityName:" + cacheEntityName, "");
-utilCache = (UtilCache)lookupCaches.get(cacheEntityName);
-org.ofbiz.base.util.Debug.logInfo("utilCache:" + utilCache, "");
-    if(utilCache == null){
-        utilCache	= new UtilCache(cacheEntityName, 10, 0);
-        lookupCaches.put(cacheEntityName, utilCache);
+lifoSet = (LIFOSet)lookupCaches.get(cacheEntityName);
+org.ofbiz.base.util.Debug.logInfo("lifoSet:" + lifoSet, "");
+    if(lifoSet == null){
+        lifoSet	= new LIFOSet(10);
+        lookupCaches.put(cacheEntityName, lifoSet);
     }    
 
 LinkedList mruList = new LinkedList();
-int sz = utilCache.keyLRUList.size();
+iter = lifoSet.iterator();
 GenericValue gv	= null;
 GenericPK pk	= null;
 GenericPK pk2	= null;
 Object contentIdKey = null;
 
-for(int i=(sz-1); i >= 0; i--){
-    contentIdKey = utilCache.keyLRUList.get(i);
+mruList = new ArrayList();
+while(iter.hasNext()) {
 
-Debug.logInfo("contentIdKey:" + contentIdKey, "");
-    if (contentIdKey != null && contentIdKey.length() > 0) {
-        pk = (GenericEntity)utilCache.cacheLineTable.get(contentIdKey).getValue();
-        gv = delegator.findByPrimaryKey(pk);
-        if (gv != null)
-            mruList.add(gv);
-    }
+    pk = iter.next();
+    pk2 = pk.getPrimaryKey();
+    gv = delegator.findByPrimaryKey(pk2);
+    if (gv != null)
+        mruList.add(gv);
 }
 String formDefFile		= page.getProperty("formDefFile");
 String mruFormName		= page.getProperty("mruFormName");

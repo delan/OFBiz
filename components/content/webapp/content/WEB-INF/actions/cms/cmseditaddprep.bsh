@@ -1,5 +1,5 @@
 /*
- * $Id: cmseditaddprep.bsh,v 1.1 2004/07/02 15:52:02 byersa Exp $
+ * $Id: cmseditaddprep.bsh,v 1.2 2004/07/10 16:24:10 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Locale;
 import java.net.URLEncoder;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
@@ -47,6 +48,7 @@ import org.ofbiz.content.ContentManagementWorker;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.minilang.SimpleMapProcessor;
+import org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler;
 
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleSequence;
@@ -56,7 +58,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
 
  */
@@ -90,8 +92,10 @@ if (previousParams == null) {
     else
         SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", contentAssocPK, contentAssocDataResourceViewFrom, new ArrayList(), Locale.getDefault());
         
+    Debug.logInfo("in cmseditaddprep, contentAssocDataResourceViewFrom:" + contentAssocDataResourceViewFrom,"");
     contentIdTo = paramMap.get("contentIdTo");
     mapKey = paramMap.get("mapKey");
+    contentAssocDataResourceViewFrom.put("caMapKey", mapKey);
     contentAssocTypeId = paramMap.get("contentAssocTypeId");
     
     dataResourceId = "";
@@ -105,7 +109,11 @@ if (previousParams == null) {
             if (UtilValidate.isNotEmpty(dataResourceId)) {
                 dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
                 SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "dataResourceOut", dataResource, contentAssocDataResourceViewFrom, new ArrayList(), Locale.getDefault());
-                txt = DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, null, null, null, null);
+                templateRoot = new HashMap();
+                FreeMarkerViewHandler.prepOfbizRoot(templateRoot, request, response);
+                //txt = DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, templateRoot, null, null, null);
+                txt = DataResourceWorker.getDataResourceTextCache(dataResource, "text/html", Locale.getDefault(), templateRoot, delegator);
+
                 if (UtilValidate.isNotEmpty(txt)) {
                     textData = UtilFormatOut.encodeXmlValue(txt);
                 }

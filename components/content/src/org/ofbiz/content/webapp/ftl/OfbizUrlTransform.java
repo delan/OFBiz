@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizUrlTransform.java,v 1.5 2004/04/30 23:08:27 ajzeneski Exp $
+ * $Id: OfbizUrlTransform.java,v 1.6 2004/07/10 16:24:09 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import freemarker.template.TemplateTransformModel;
  * OfbizUrlTransform - Freemarker Transform for URLs (links)
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.1
  */
 public class OfbizUrlTransform implements TemplateTransformModel {
@@ -93,7 +93,7 @@ public class OfbizUrlTransform implements TemplateTransformModel {
                         }
                                             
                         // make the link
-                        RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");                                        
+                        RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
                         out.write(rh.makeLink(request, response, buf.toString(), fullPath, secure, encode));
                     } else if (prefix != null) {
                         if (prefix instanceof TemplateScalarModel) {

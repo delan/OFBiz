@@ -34,11 +34,9 @@
         <field name="dataResourceId" title="Data Resource Id" ><text-find/></field>
         <field name="contentName" title="Name" ><text-find/></field>
         <field name="submitButton" title="Find" widget-style="standardSubmit"><submit button-type="button"/></field>
-<!--
         <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Create New"  target="AddContent"/>
+            <hyperlink also-hidden="false" description="Create New"  target="EditAddContent"/>
         </field>
--->
 
     </form>
 
@@ -462,12 +460,16 @@
             use-when="&quot;${currentValue.contentId}&quot;.length()==0" >
             <text />
         </field>
-        <field name="contentTypeId" position="2">
+        <field name="templateDataResourceId">
+            <lookup target-form-name="LookupDataResource">
+            </lookup>
+        </field>
+        <field name="contentTypeId" position="1">
             <drop-down allow-empty="false">
                 <entity-options description="${description}" entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
-        <field name="ownerContentId" position="3">
+        <field name="ownerContentId" position="2">
             <lookup target-form-name="LookupContent"/>
         </field>
         <field name="contentName" title="Title" position="1">

@@ -17,5 +17,5 @@
     <page-action name="/includes/permprep.bsh"/>
     <page-action name="/includes/currentvalprep.bsh"/>
     <content-action name="/data/relatedimage.bsh" />
-    <content-action name="/data/checkresourcetype.bsh" />
+    <!--<content-action name="/data/checkresourcetype.bsh" />-->
 </page>

@@ -1,5 +1,5 @@
 /*
- * $Id: FormFactory.java,v 1.2 2004/07/08 06:19:28 jonesde Exp $
+ * $Id: FormFactory.java,v 1.3 2004/07/10 16:24:10 byersa Exp $
  *
  * Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Form factory class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class FormFactory {
@@ -72,7 +72,7 @@ public class FormFactory {
                     }
                     
                     URL formFileUrl = null;
-                    formFileUrl = FlexibleLocation.resolveLocation(resourceName, loader);
+                    formFileUrl = FlexibleLocation.resolveLocation(resourceName); //, loader);
                     Document formFileDoc = UtilXml.readXmlDocument(formFileUrl, true);
                     modelFormMap = readFormDocument(formFileDoc, delegator, dispatcher);
                     formLocationCache.put(resourceName, modelFormMap);

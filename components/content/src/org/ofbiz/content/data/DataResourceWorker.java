@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.35 2004/07/10 06:04:08 ajzeneski Exp $
+ * $Id: DataResourceWorker.java,v 1.36 2004/07/10 16:24:08 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.35 $
+ * @version $Revision: 1.36 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -360,12 +360,6 @@ public class DataResourceWorker {
         return outWriter.toString();
     }
     
-    public static String renderDataResourceAsTextCache(GenericDelegator delegator, String dataResourceId, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
-        Writer outWriter = new StringWriter();
-        renderDataResourceAsTextCache(delegator, dataResourceId, outWriter, templateContext, view, locale, mimeTypeId);
-        return outWriter.toString();
-    }
-    
     public static void renderDataResourceAsText(GenericDelegator delegator, String dataResourceId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
         if (templateContext == null) {
             templateContext = new HashMap();
@@ -452,6 +446,12 @@ public class DataResourceWorker {
                 throw new GeneralException("The dataTemplateTypeId [" + dataTemplateTypeId + "] is not yet supported");
             }
         }
+    }
+    
+    public static String renderDataResourceAsTextCache(GenericDelegator delegator, String dataResourceId, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+        Writer outWriter = new StringWriter();
+        renderDataResourceAsTextCache(delegator, dataResourceId, outWriter, templateContext, view, locale, mimeTypeId);
+        return outWriter.toString();
     }
     
     
@@ -560,8 +560,10 @@ public class DataResourceWorker {
                 try {
                     // This is something of a hack. FTL templates should need "contentId" value and
                     // not subContentId so that it will find subContent.
+                    templateRoot.put("contentId", subContentId);
                     templateRoot.put("subContentId", null);
                     templateRoot.put("globalNodeTrail", null); // Force getCurrentContent to query for subContent
+                    //if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsTextCache, templateRoot :" + templateRoot ,"");
                     //StringWriter sw = new StringWriter();
                     FreeMarkerWorker.renderTemplate("DataResource:" + dataResourceId, templateText, templateRoot, out);
                     //if (Debug.infoOn()) Debug.logInfo("in renderDataResourceAsText, sw:" + sw.toString(),"");
@@ -675,24 +677,24 @@ public class DataResourceWorker {
         if (context == null) 
             context = new HashMap();
 
+        String text = null;
         String webSiteId = (String) context.get("webSiteId");
         String https = (String) context.get("https");
         
         String dataResourceId = dataResource.getString("dataResourceId");
         String dataResourceTypeId = dataResource.getString("dataResourceTypeId");
+        String dataResourceMimeTypeId = dataResource.getString("mimeTypeId");
         if (UtilValidate.isEmpty(dataResourceTypeId)) {
             dataResourceTypeId = "SHORT_TEXT";
         }
         
         if (dataResourceTypeId.equals("SHORT_TEXT")) {
-            String text = dataResource.getString("objectInfo");
-            if (UtilValidate.isNotEmpty(text)) 
-                outWriter.write(text);
+            text = dataResource.getString("objectInfo");
+            writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
         } else if (dataResourceTypeId.equals("ELECTRONIC_TEXT")) {
             GenericValue electronicText = delegator.findByPrimaryKeyCache("ElectronicText", UtilMisc.toMap("dataResourceId", dataResourceId));
-            String text = electronicText.getString("textData");
-            if (UtilValidate.isNotEmpty(text)) 
-                outWriter.write(text);
+            text = electronicText.getString("textData");
+            writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
         } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
             // TODO: Is this where the image (or any binary) object URL is created? looks like it is just returning 
             //the ID, maybe is okay, but maybe should create the whole image tag so that text and images can be 
@@ -707,12 +709,12 @@ public class DataResourceWorker {
             }
             */
             
-            String text = (String) dataResource.get("dataResourceId");
-            outWriter.write(text);
+            text = (String) dataResource.get("dataResourceId");
+            writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
         } else if (dataResourceTypeId.equals("LINK")) {
-            String text = dataResource.getString("objectInfo");
-            outWriter.write(text);
-        } else if (dataResourceTypeId.equals("URL_RESOURCE")) { String text = null;
+            text = dataResource.getString("objectInfo");
+            writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
+        } else if (dataResourceTypeId.equals("URL_RESOURCE")) { 
             URL url = new URL(dataResource.getString("objectInfo"));
             if (url.getHost() != null) { // is absolute
                 InputStream in = url.openStream();
@@ -734,12 +736,47 @@ public class DataResourceWorker {
                 URL url2 = new URL(s2);
                 text = (String) url2.getContent();
             }
-            outWriter.write(text);
+            writeText(text, dataResourceMimeTypeId, mimeTypeId, outWriter);
+        } else if (dataResourceTypeId.indexOf("_FILE_BIN") >= 0) {
+            String rootDir = (String) context.get("rootDir");
+            //renderFileBin(dataResourceTypeId, dataResource.getString("objectInfo"), rootDir, outWriter);
+            String objectInfo = dataResource.getString("objectInfo");
+            dataResourceMimeTypeId = dataResource.getString("mimeTypeId");
+            writeText( dataResourceId, dataResourceMimeTypeId, "text/html", outWriter);
         } else if (dataResourceTypeId.indexOf("_FILE") >= 0) {
             String rootDir = (String) context.get("rootDir");
             renderFile(dataResourceTypeId, dataResource.getString("objectInfo"), rootDir, outWriter);
         } else {
             throw new GeneralException("The dataResourceTypeId [" + dataResourceTypeId + "] is not supported in renderDataResourceAsText");
+        }
+    }
+
+    public static void writeText( String textData, String dataResourceMimeType, String targetMimeType, Writer out) throws IOException {
+        if (UtilValidate.isEmpty(targetMimeType))
+            targetMimeType = "text/html";
+        if (UtilValidate.isEmpty(dataResourceMimeType))
+            dataResourceMimeType = "text/html";
+
+        if (dataResourceMimeType.startsWith("text") ) {
+                out.write(textData);
+        } else {
+            if( targetMimeType.equals("text/html")) {
+                /*
+                if (request == null || response == null) {
+                    throw new GeneralException("Request [" + request + "] or response [" + response + "] is null.");
+                }
+                ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+                boolean fullPath = false;
+                boolean secure = false;
+                boolean encode = false;
+                String url = rh.makeLink(request, response, buf.toString(), fullPath, secure, encode);
+                */
+                String img = "<img src=\"/content/control/img?imgId=" + textData + "\"/>";
+                out.write(img);
+            } else if( targetMimeType.equals("text/plain")) {
+                out.write(textData);
+            }
         }
     }
 
@@ -795,6 +832,7 @@ public class DataResourceWorker {
         return;
     }
 
+
     public static String buildRequestPrefix(GenericDelegator delegator, Locale locale, String webSiteId, String https) {
         String prefix = null;
         Map prefixValues = new HashMap();
@@ -818,20 +856,20 @@ public class DataResourceWorker {
     public static File getContentFile(String dataResourceTypeId, String objectInfo, String rootDir)  throws GeneralException, FileNotFoundException{
 
         File file = null;
-        if (dataResourceTypeId.equals("LOCAL_FILE")) {
+        if (dataResourceTypeId.startsWith("LOCAL_FILE")) {
             file = new File(objectInfo);
             if (!file.isAbsolute()) {
                 throw new GeneralException("File (" + objectInfo + ") is not absolute");
             }
             int c;
-        } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
+        } else if (dataResourceTypeId.startsWith("OFBIZ_FILE")) {
             String prefix = System.getProperty("ofbiz.home");
             String sep = "";
             if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
                 sep = "/";
             }
             file = new File(prefix + sep + objectInfo);
-        } else if (dataResourceTypeId.equals("CONTEXT_FILE")) {
+        } else if (dataResourceTypeId.startsWith("CONTEXT_FILE")) {
             String prefix = rootDir;
             String sep = "";
             if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {

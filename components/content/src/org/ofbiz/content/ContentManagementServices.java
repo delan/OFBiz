@@ -34,7 +34,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      3.0
  *
  * 
@@ -96,7 +96,7 @@ public class ContentManagementServices {
         GenericPK pk = val.getPrimaryKey();
         HttpSession session = (HttpSession)context.get("session");
 
-        ContentManagementWorker.mruAdd(session, pk, suffix);
+        ContentManagementWorker.mruAdd(session, pk);
         return results;
 
     }
@@ -186,6 +186,12 @@ public class ContentManagementServices {
                     if (dataResourceTypeId.indexOf("_FILE_BIN") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
+                        context.put("dataResourceId", dataResourceId);
+                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+                        byte[] imageBytes = byteWrapper.getBytes();
+                        if (Debug.infoOn()) Debug.logInfo("in persist... imageBytes(C):" + imageBytes, null);
+                        if (imageBytes != null) 
+                            context.put("imageData", imageBytes);
                         try {
                             thisResult = DataServices.createBinaryFileMethod(dctx, context);
                         } catch(GenericServiceException e) {
@@ -219,7 +225,21 @@ public class ContentManagementServices {
                 } else {
                     Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
                     if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
-                    if (dataResourceTypeId.indexOf("_FILE") >=0) {
+                    if (dataResourceTypeId.indexOf("_FILE_BIN") >=0) {
+                        dataResource = (GenericValue)thisResult.get("dataResource");
+                        context.put("dataResource", dataResource);
+                        context.put("dataResourceId", dataResourceId);
+                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+                        byte[] imageBytes = byteWrapper.getBytes();
+                        if (Debug.infoOn()) Debug.logInfo("in persist... imageBytes(U):" + imageBytes, null);
+                        if (imageBytes != null) 
+                            context.put("imageData", imageBytes);
+                        try {
+                            thisResult = DataServices.updateBinaryFileMethod(dctx, context);
+                        } catch(GenericServiceException e) {
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+                    } else if (dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
                         try {
@@ -257,6 +277,7 @@ public class ContentManagementServices {
             }
             //List targetOperations = new ArrayList();
             //context.put("targetOperations", targetOperations);
+            context.putAll(content);
             if (contentExists) {
                 //targetOperations.add("CONTENT_UPDATE");
                 Map thisResult = ContentServices.updateContentMethod(dctx, context);

@@ -1,5 +1,5 @@
 /*
- * $Id: currentvalprep.bsh,v 1.7 2003/12/30 07:28:06 jonesde Exp $
+ * $Id: currentvalprep.bsh,v 1.8 2004/07/10 16:24:10 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
 
  * A commonly called script to find the "current" entity (either Content or DataResource
@@ -186,11 +186,7 @@ if (currentValue != null) {
         }
 
 if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, suffix:" + suffix,module);
-        if (UtilValidate.isNotEmpty(suffix)) {
-            ContentManagementWorker.mruAdd(session, (GenericEntity)currentPK, suffix);
-        } else {
-            ContentManagementWorker.mruAdd(session, (GenericEntity)currentPK);
-        }
+        ContentManagementWorker.mruAdd(session, (GenericEntity)currentPK);
     } else {
         ContentManagementWorker.mruAdd(session, (GenericEntity)currentPK);
     }

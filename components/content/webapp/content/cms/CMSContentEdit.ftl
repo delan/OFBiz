@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 
@@ -47,9 +47,13 @@ ${menuWrapper.renderMenuString()}
 <#if currentValue?has_content>
     <@renderTextData content=currentValue textData=textData />
 </#if>
-<#list textList as map>
+<#--
+<#if textList?has_content>
+  <#list textList as map>
     <@renderTextData content=map.entity textData=map.text />
-</#list>
+  </#list>
+</#if>
+-->
 <#-- ============================================================= -->
 
 <br>
@@ -168,6 +172,7 @@ ${menuWrapper.renderMenuString()}
   </TR>
 </TABLE>
 
+<#--
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -199,6 +204,7 @@ ${menuWrapper.renderMenuString()}
     </TD>
   </TR>
 </TABLE>
+-->
 
 
 <#--
@@ -264,7 +270,8 @@ ${menuWrapper.renderMenuString()}
           <td>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr><td align=right nowrap><div class='tabletext'><b></b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>
-${textData?if_exists}
+<#-- ${textData?if_exists} -->
+<@renderContentAsText subContentId=content.contentId  editRequestName="/EditAddContent"/>
 <div></td></tr>
   </table>
           </td>
