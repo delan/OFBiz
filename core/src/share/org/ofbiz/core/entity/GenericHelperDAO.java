@@ -121,6 +121,19 @@ public class GenericHelperDAO implements GenericHelper {
   public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
     return genericDAO.selectByAnd(modelEntity, fields, orderBy);
   }
+
+  public Collection findByAnd(ModelEntity modelEntity, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException {
+    return genericDAO.selectByAnd(modelEntity, fields, intraFieldOperations, values, orderBy);
+  }
+
+  public Collection findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+    return genericDAO.selectByLike(modelEntity, fields, orderBy);
+  }
+
+  public Collection findByClause(ModelEntity modelEntity, List genericEntityClauses, Map fields, List orderBy) throws GenericEntityException {
+    return genericDAO.selectByClause(modelEntity, genericEntityClauses, fields, orderBy);
+  }
+
   
   /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file

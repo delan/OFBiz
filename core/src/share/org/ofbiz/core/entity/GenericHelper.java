@@ -79,6 +79,12 @@ public interface GenericHelper
    */
   public Collection findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
   
+  public Collection findByAnd(ModelEntity modelEntity, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException;
+
+  public Collection findByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException;
+
+  public Collection findByClause(ModelEntity modelEntity, List genericEntityClauses, Map fields, List orderBy) throws GenericEntityException;
+
   /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values

@@ -74,7 +74,7 @@ public class GenericDAO {
     boolean useTX = true;
     Connection connection = null;
     try { connection = getConnection(); }
-    catch (SQLException sqle) { 
+    catch (SQLException sqle) {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
@@ -94,7 +94,7 @@ public class GenericDAO {
       try { if(useTX) connection.rollback(); }
       catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
       throw new GenericDataSourceException("SQL Exception occured on insert or storeAllOther", sqle);
-    } 
+    }
     finally {
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
@@ -150,7 +150,7 @@ public class GenericDAO {
     boolean useTX = true;
     Connection connection = null;
     try { connection = getConnection(); }
-    catch (SQLException sqle) { 
+    catch (SQLException sqle) {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
@@ -168,7 +168,7 @@ public class GenericDAO {
       
       try { if(useTX) connection.rollback(); }
       catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
-
+      
       throw new GenericDataSourceException("SQL Exception occured in update or storeAllOther", sqle);
     }
     finally {
@@ -213,7 +213,7 @@ public class GenericDAO {
   /** Store the passed entity - insert if does not exist, otherwise update; then call storeAllOther to do a deep store */
   private void singleStore(GenericEntity entity, Connection connection) throws SQLException, GenericEntityException {
     GenericPK tempPK = entity.getPrimaryKey();
-    try { 
+    try {
       select(tempPK);
     }
     catch(GenericEntityNotFoundException e) {
@@ -236,7 +236,7 @@ public class GenericDAO {
     boolean useTX = true;
     Connection connection = null;
     try { connection = getConnection(); }
-    catch (SQLException sqle) { 
+    catch (SQLException sqle) {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
@@ -256,12 +256,12 @@ public class GenericDAO {
       //Debug.logWarning(sqle.getMessage());
       
       try { if(useTX) connection.rollback(); }
-      catch(SQLException sqle2) { 
+      catch(SQLException sqle2) {
         Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:");
         Debug.logWarning(sqle2);
       }
       throw new GenericDataSourceException("SQL Exception occured in storeAll", sqle);
-    } 
+    }
     finally {
       try { if(connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
@@ -319,12 +319,12 @@ public class GenericDAO {
         //Debug.logWarning("[GenericDAO.select]: select failed, result set was empty for entity: " + entity.toString());
         throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
       }
-    } 
+    }
     catch(SQLException sqle) {
       //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       //Debug.logWarning(sqle.getMessage());
       throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-    } 
+    }
     finally {
       try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
@@ -347,7 +347,7 @@ public class GenericDAO {
     PreparedStatement ps = null;
     ResultSet rs = null;
     try { connection = getConnection(); }
-    catch (SQLException sqle) { 
+    catch (SQLException sqle) {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
@@ -387,12 +387,12 @@ public class GenericDAO {
         //Debug.logWarning("[GenericDAO.select]: select failed, result set was empty.");
         throw new GenericEntityNotFoundException("Result set was empty for entity: " + entity.toString());
       }
-    } 
+    }
     catch (SQLException sqle) {
       //Debug.logWarning("[GenericDAO]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       //Debug.logWarning(sqle.getMessage());
       throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-    } 
+    }
     finally {
       try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
@@ -408,7 +408,7 @@ public class GenericDAO {
     PreparedStatement ps = null;
     ResultSet rs = null;
     try { connection = getConnection(); }
-    catch (SQLException sqle) { 
+    catch (SQLException sqle) {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
@@ -428,7 +428,7 @@ public class GenericDAO {
     GenericValue dummyValue;
     if(fields != null && fields.size() > 0) dummyValue = new GenericValue(modelEntity, fields);
     else dummyValue = new GenericValue(modelEntity);
-
+    
     String sql = "SELECT ";
     if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
     else sql = sql + "*";
@@ -488,17 +488,369 @@ public class GenericDAO {
         value.modified = false;
         collection.add(value);
       }
-    } 
+    }
     catch (SQLException sqle) {
       //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       //sqle.printStackTrace();
       throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-    } 
+    }
     finally {
       try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
+    return collection;
+  }
+  
+  public Collection selectByAnd(ModelEntity modelEntity, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException {
+    if(modelEntity == null) return null;
+    if(intraFieldOperations == null) return null;
+    Collection collection = new LinkedList();
+    
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try { connection = getConnection(); }
+    catch (SQLException sqle) {
+      throw new GenericDataSourceException("Unable to establish a connection with the database.", sqle);
+    }
+    
+    //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
+    Vector selectFields = modelEntity.fields;
+    
+    Vector whereFields = new Vector();
+    Vector modelEntityFields = modelEntity.fields;
+    if(fields != null && fields.size() > 0) {
+      for(int fi=0; fi<fields.size(); fi++) {
+        if(modelEntity.getField((String)fields.get(fi)) != null )
+          whereFields.add((ModelField)modelEntity.getField((String)fields.get(fi)));
+      }
+    }
+    
+    String sql = "SELECT ";
+    if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
+    else sql = sql + "*";
+    sql += " FROM " + modelEntity.tableName;
+    sql = sql + " WHERE ";
+    
+    if(whereFields != null && whereFields.size() > 0) {
+      int i = 0;
+      for(; i < whereFields.size() - 1; i++) {
+        sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((GenericEntityOperation)intraFieldOperations.get(i)).getCode() + " ? AND ";
+      }
+      sql = sql + ((ModelField)whereFields.elementAt(i)).colName + ((GenericEntityOperation)intraFieldOperations.get(i)).getCode() + " ? ";
+    }
+    
+    if(orderBy != null && orderBy.size() > 0) {
+      Vector orderByStrings = new Vector();
+      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
+        ModelField curField=(ModelField)modelEntity.fields.get(fi);
+        
+        for(int oi=0; oi<orderBy.size(); oi++) {
+          String keyName = (String)orderBy.get(oi);
+          int spaceIdx = keyName.indexOf(' ');
+          if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
+          if(curField.equals(keyName)) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
+          else orderByStrings.add(curField.colName);
+        }
+      }
+      
+      if(orderByStrings.size() > 0) {
+        sql = sql + " ORDER BY ";
+        
+        Iterator iter = orderByStrings.iterator();
+        while(iter.hasNext()) {
+          String curString = (String)iter.next();
+          sql = sql + curString;
+          if(iter.hasNext()) sql = sql + ", ";
+        }
+      }
+    }
+    
+    try {
+      ps = connection.prepareStatement(sql);
+      GenericValue dummyValue = null;
+      if(values != null && values.size() > 0 ) {
+        for(int i=0;i<whereFields.size();i++) {
+          dummyValue = new GenericValue(modelEntity);
+          String fieldName = (String)fields.get(i);
+          dummyValue.set(fieldName, values.get(i));
+          setValue(ps, i+1, ((ModelField)modelEntity.getField(fieldName)), dummyValue);
+        }
+      }
+      else dummyValue = new GenericValue(modelEntity);
+      rs = ps.executeQuery();
+      
+      while(rs.next()) {
+        GenericValue value = new GenericValue(dummyValue);
+        
+        for(int j=0;j<selectFields.size();j++) {
+          ModelField curField=(ModelField)selectFields.elementAt(j);
+          getValue(rs, curField, value);
+        }
+        
+        value.modified = false;
+        collection.add(value);
+      }
+    }
+    catch (SQLException sqle) {
+      //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      //sqle.printStackTrace();
+      throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+    }
+    finally {
+      try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+      try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+    }
+    return collection;
+  }
+  
+  public Collection selectByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+    if(modelEntity == null) return null;
+    Collection collection = new LinkedList();
+    
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    try { connection = getConnection(); }
+    catch (SQLException sqle) {
+      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
+    }
+    
+    //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
+    Vector whereFields = new Vector();
+    Vector selectFields = new Vector();
+    if(fields != null && fields.size() > 0) {
+      Set keys = fields.keySet();
+      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
+        ModelField curField=(ModelField)modelEntity.fields.elementAt(fi);
+        if(keys.contains(curField.name)){
+          whereFields.add(curField);
+          selectFields.add(curField);
+        }
+        else selectFields.add(curField);
+      }
+    }
+    else { selectFields = modelEntity.fields; }
+    
+    String sql = "SELECT ";
+    if(selectFields.size() > 0) sql = sql + modelEntity.colNameString(selectFields, ", ", "");
+    else sql = sql + "*";
+    sql += " FROM " + modelEntity.tableName;
+    if(fields != null && fields.size() > 0) sql = sql + " WHERE " + modelEntity.colNameString(whereFields, " LIKE ? AND ", " LIKE ?");
+    
+    if(orderBy != null && orderBy.size() > 0) {
+      Vector orderByStrings = new Vector();
+      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
+        ModelField curField=(ModelField)modelEntity.fields.get(fi);
+        
+        for(int oi=0; oi<orderBy.size(); oi++) {
+          String keyName = (String)orderBy.get(oi);
+          int spaceIdx = keyName.indexOf(' ');
+          if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
+          if(curField.equals(keyName)) orderByStrings.add(curField.colName + keyName.substring(spaceIdx));
+          else orderByStrings.add(curField.colName);
+        }
+      }
+      
+      if(orderByStrings.size() > 0) {
+        sql = sql + " ORDER BY ";
+        
+        Iterator iter = orderByStrings.iterator();
+        while(iter.hasNext()) {
+          String curString = (String)iter.next();
+          sql = sql + curString;
+          if(iter.hasNext()) sql = sql + ", ";
+        }
+      }
+    }
+    
+    try {
+      ps = connection.prepareStatement(sql);
+      
+      GenericValue dummyValue;
+      if(fields != null && fields.size() > 0) {
+        dummyValue = new GenericValue(modelEntity, fields);
+        for(int i=0;i<whereFields.size();i++) {
+          ModelField curField=(ModelField)whereFields.elementAt(i);
+          setValue(ps, i+1, curField, dummyValue);
+        }
+      }
+      else dummyValue = new GenericValue(modelEntity);
+      rs = ps.executeQuery();
+      
+      while(rs.next()) {
+        GenericValue value = new GenericValue(dummyValue);
+        for(int j=0;j<selectFields.size();j++) {
+          ModelField curField=(ModelField)selectFields.elementAt(j);
+          getValue(rs, curField, value);
+        }
+        value.modified = false;
+        collection.add(value);
+      }
+    }
+    catch (SQLException sqle) {
+      //Debug.logWarning("[GenericDAO.selectByLike]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      //sqle.printStackTrace();
+      throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+    }
+    finally {
+      try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+      try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+    }
+    return collection;
+  }
+  
+  public Collection selectByClause(ModelEntity modelEntity, List genericEntityClauses, Map fields, List orderBy) throws GenericEntityException {
+    if(genericEntityClauses == null) return null;
+    
+    Collection collection = new LinkedList();
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    
+    ModelEntity firstModelEntity = null;
+    ModelEntity secondModelEntity = null;
+    
+    ModelField firstModelField = null;
+    ModelField secondModelField = null;
+    
+    StringBuffer select = new StringBuffer(" SELECT ");
+    StringBuffer from = new StringBuffer(" FROM ");
+    StringBuffer where = new StringBuffer(" WHERE ");
+    StringBuffer order = new StringBuffer();
+    
+    String test = "";
+    
+    Vector whereTables = new Vector();
+    
+    try { connection = getConnection(); }
+    catch (SQLException sqle) {
+      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
+    }
+    
+    //each iteration defines one relationship for the query.
+    for(int i=0;i<genericEntityClauses.size();i++){
+      GenericEntityClause genericEntityClause = (GenericEntityClause)genericEntityClauses.get(i);
+      String interFieldOperation = genericEntityClause.getInterFieldOperation().getCode();
+      String intraFieldOperation = genericEntityClause.getIntraFieldOperation().getCode();
+      
+      firstModelEntity = genericEntityClause.getFirstModelEntity();
+      if(!whereTables.contains(firstModelEntity.tableName)){
+        whereTables.add(firstModelEntity.tableName);
+      }
+      
+      secondModelEntity = genericEntityClause.getSecondModelEntity();
+      if(!whereTables.contains(secondModelEntity.tableName)){
+        whereTables.add(secondModelEntity.tableName);
+      }
+      
+      firstModelField = firstModelEntity.getField(genericEntityClause.getFirstField());
+      secondModelField = secondModelEntity.getField(genericEntityClause.getSecondField());
+      
+      test = where.toString();
+      if(i > 0) where.append(interFieldOperation);
+      where.append(firstModelEntity.tableName + "." + firstModelField.colName + " " + intraFieldOperation + " " + secondModelEntity.tableName + "." + secondModelField.colName);
+    }
+    int ix=0;
+    for(;ix<whereTables.size()-1;ix++){
+      from.append(whereTables.get(ix) + ", ");
+    }
+    from.append(whereTables.get(ix));
+    
+    Vector whereFields = new Vector();
+    Vector selectFields = new Vector();
+    if(fields != null && fields.size() > 0) {
+      Set keys = fields.keySet();
+      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
+        ModelField curField=(ModelField)modelEntity.fields.elementAt(fi);
+        if(keys.contains(curField.name)){
+          whereFields.add(curField);
+          selectFields.add(curField);
+        } else selectFields.add(curField);
+      }
+    }
+    
+    String tableNamePrefix = modelEntity.tableName + ".";
+    if(fields != null && fields.size() > 0){
+      test = where.toString();
+      if(test.trim().length() > 0) where.append(" AND ");
+      where.append(tableNamePrefix);
+      where.append(modelEntity.colNameString(whereFields, "=? AND " + tableNamePrefix, "=?"));
+    }
+    
+    select.append(tableNamePrefix);
+    select.append(modelEntity.colNameString(selectFields, ", " + tableNamePrefix, ""));
+    
+    
+    if(orderBy != null && orderBy.size() > 0) {
+      Vector orderByStrings = new Vector();
+      for(int fi=0; fi<modelEntity.fields.size(); fi++) {
+        ModelField curField=(ModelField)modelEntity.fields.get(fi);
+        
+        for(int oi=0; oi<orderBy.size(); oi++) {
+          String keyName = (String)orderBy.get(oi);
+          int spaceIdx = keyName.indexOf(' ');
+          if(spaceIdx > 0) keyName = keyName.substring(0, spaceIdx);
+          if(curField.equals(keyName)) orderByStrings.add(modelEntity.tableName + "." + curField.colName + keyName.substring(spaceIdx));
+          else orderByStrings.add(modelEntity.tableName + "." + curField.colName);
+        }
+      }
+      
+      if(orderByStrings.size() > 0) {
+        order.append(" ORDER BY ");
+        
+        Iterator iter = orderByStrings.iterator();
+        while(iter.hasNext()) {
+          String curString = (String)iter.next();
+          order.append(curString);
+          if(iter.hasNext()) order.append(", ");
+        }
+      }
+    }
+    
+    
+    String sql = "";
+    try {
+      sql = select.toString() + " " + from.toString() + " " + where.toString() + (order.toString().trim().length() > 0 ? order.toString() : "");
+      ps = connection.prepareStatement(sql);
+      
+      GenericValue dummyValue;
+      if(fields != null && fields.size() > 0) {
+        dummyValue = new GenericValue(modelEntity, fields);
+        for(int i=0;i<whereFields.size();i++) {
+          ModelField curField=(ModelField)whereFields.elementAt(i);
+          setValue(ps, i+1, curField, dummyValue);
+        }
+      }
+      else dummyValue = new GenericValue(modelEntity);
+      rs = ps.executeQuery();
+      
+      while(rs.next()) {
+        GenericValue value = new GenericValue(dummyValue);
+        
+        for(int j=0;j<selectFields.size();j++) {
+          ModelField curField=(ModelField)selectFields.elementAt(j);
+          getValue(rs, curField, value);
+        }
+        
+        value.modified = false;
+        collection.add(value);
+      }
+    }
+    catch (SQLException sqle) {
+      //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
+      //sqle.printStackTrace();
+      throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
+    }
+    finally {
+      try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+      try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+    }
+    
     return collection;
   }
   
@@ -519,7 +871,7 @@ public class GenericDAO {
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); }
-    catch (SQLException sqle) { 
+    catch (SQLException sqle) {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
@@ -556,7 +908,7 @@ public class GenericDAO {
     Connection connection = null;
     PreparedStatement ps = null;
     try { connection = getConnection(); }
-    catch (SQLException sqle) { 
+    catch (SQLException sqle) {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
@@ -588,12 +940,12 @@ public class GenericDAO {
         }
       }
       ps.executeUpdate();
-    } 
+    }
     catch (SQLException sqle) {
       //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       //sqle.printStackTrace();
       throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-    } 
+    }
     finally {
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
@@ -602,7 +954,7 @@ public class GenericDAO {
   
 /* ====================================================================== */
 /* ====================================================================== */
-
+  
   /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
   public String makeWhereStringAnd(Vector modelFields, GenericEntity entity) {
     StringBuffer returnString = new StringBuffer("");
@@ -663,7 +1015,7 @@ public class GenericDAO {
     if(mft == null) {
       throw new GenericModelException("GenericDAO.getValue: definition fieldType " + curField.type + " not found, cannot setValue for field " + entity.getEntityName() + "." + curField.name + ".");
     }
-
+    
     String fieldType = mft.javaType;
     if(field != null) {
       Class fieldClass = field.getClass();
@@ -799,7 +1151,7 @@ public class GenericDAO {
     //get ALL tables from this database
     TreeSet tableNames = this.getTableNames(messages);
     timer.timerString("[GenericDAO.checkDb] After Get All Table Names");
-
+    
     //get ALL column info, put into hashmap by table name
     Map colInfo = this.getColumnInfo(tableNames, messages);
     timer.timerString("[GenericDAO.checkDb] After Get All Column Info");
@@ -850,21 +1202,21 @@ public class GenericDAO {
               if(modelFieldType != null) {
                 //make sure each corresponding column is of the correct type
                 String fullTypeStr = modelFieldType.sqlType;
-                String typeName;              
+                String typeName;
                 int columnSize = -1;
                 int decimalDigits = -1;
-
+                
                 int openParen = fullTypeStr.indexOf('(');
                 int closeParen = fullTypeStr.indexOf(')');
                 int comma = fullTypeStr.indexOf(',');
-
+                
                 if(openParen > 0 && closeParen > 0 && closeParen > openParen) {
                   typeName = fullTypeStr.substring(0, openParen);
                   if(comma > 0 && comma > openParen && comma < closeParen) {
                     String csStr = fullTypeStr.substring(openParen+1, comma);
                     try { columnSize = Integer.parseInt(csStr); }
                     catch(NumberFormatException e) { Debug.logError(e); }
-
+                    
                     String ddStr = fullTypeStr.substring(comma+1, closeParen);
                     try { decimalDigits = Integer.parseInt(ddStr); }
                     catch(NumberFormatException e) { Debug.logError(e); }
@@ -878,7 +1230,7 @@ public class GenericDAO {
                 else {
                   typeName = fullTypeStr;
                 }
-
+                
                 if(!ccInfo.typeName.equals(typeName.toUpperCase())) {
                   String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" + typeName + "\" in the entity definition.";
                   Debug.logError("[GenericDAO.checkDb] " + message);
@@ -967,10 +1319,10 @@ public class GenericDAO {
   public List induceModelFromDb(Collection messages) {
     //get ALL tables from this database
     TreeSet tableNames = this.getTableNames(messages);
-
+    
     //get ALL column info, put into hashmap by table name
     Map colInfo = this.getColumnInfo(tableNames, messages);
-
+    
     //go through each table and make a ModelEntity object, add to list
     //for each entity make corresponding ModelField objects
     //then print out XML for the entities/fields
@@ -981,12 +1333,12 @@ public class GenericDAO {
     while(tableNamesIter.hasNext()) {
       String tableName = (String)tableNamesIter.next();
       Vector colList = (Vector)colInfo.get(tableName);
-
+      
       ModelEntity newEntity = new ModelEntity();
       newEntity.tableName = tableName.toUpperCase();
       newEntity.entityName = ModelUtil.dbNameToClassName(newEntity.tableName);
       newEntList.add(newEntity);
-
+      
       Iterator columns = colList.iterator();
       while(columns.hasNext()) {
         ColumnCheckInfo ccInfo = (ColumnCheckInfo)columns.next();
@@ -1051,7 +1403,7 @@ public class GenericDAO {
       String message = "Unable to get list of table information... Error was:" + sqle.toString();
       Debug.logError("[GenericDAO.getTableNames] " + message);
       if(messages != null) messages.add(message);
-
+      
       try{ connection.close(); }
       catch(SQLException sqle2) {
         String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
@@ -1096,7 +1448,7 @@ public class GenericDAO {
         Debug.logError("[GenericDAO.getTableNames] " + message);
         if(messages != null) messages.add(message);
       }
-
+      
       try{ connection.close(); }
       catch(SQLException sqle) {
         String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
@@ -1107,7 +1459,7 @@ public class GenericDAO {
     
     return tableNames;
   }
-    
+  
   public Map getColumnInfo(Set tableNames, Collection messages) {
     Connection connection = null;
     try { connection = getConnection(); }
@@ -1124,7 +1476,7 @@ public class GenericDAO {
       String message = "Unable to get database meta data... Error was:" + sqle.toString();
       Debug.logError("[GenericDAO.getColumnInfo] " + message);
       if(messages != null) messages.add(message);
-
+      
       try{ connection.close(); }
       catch(SQLException sqle2) {
         String message2 = "Unable to close database connection, continuing anyway... Error was:" + sqle2.toString();
@@ -1159,18 +1511,18 @@ public class GenericDAO {
           ccInfo.tableName = (ccInfo.tableName == null)?null:ccInfo.tableName.toUpperCase();
           //ignore the column info if the table name is not in the list we are concerned with
           if(!tableNames.contains(ccInfo.tableName)) continue;
-            
+          
           ccInfo.columnName = rsCols.getString("COLUMN_NAME");
           ccInfo.columnName = (ccInfo.columnName == null)?null:ccInfo.columnName.toUpperCase();
-
+          
           ccInfo.typeName = rsCols.getString("TYPE_NAME");
           ccInfo.typeName = (ccInfo.typeName == null)?null:ccInfo.typeName.toUpperCase();
           ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
           ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
-
+          
           ccInfo.isNullable = rsCols.getString("IS_NULLABLE");
           ccInfo.isNullable = (ccInfo.isNullable == null)?null:ccInfo.isNullable.toUpperCase();
-
+          
           List tableColInfo = (List)colInfo.get(ccInfo.tableName);
           if(tableColInfo == null) {
             tableColInfo = new Vector();
@@ -1199,7 +1551,7 @@ public class GenericDAO {
       if(messages != null) messages.add(message);
       colInfo = null;
     }
-
+    
     try{ connection.close(); }
     catch(SQLException sqle) {
       String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
@@ -1208,7 +1560,7 @@ public class GenericDAO {
     }
     return colInfo;
   }
-
+  
   class ColumnCheckInfo {
     public String tableName;
     public String columnName;

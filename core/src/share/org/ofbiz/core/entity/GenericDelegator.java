@@ -527,6 +527,53 @@ public class GenericDelegator {
     return col;
   }
   
+  public Collection findByAnd(String entityName, List fields, List intraFieldOperations, List values) throws GenericEntityException {
+    return findByAnd(entityName, fields, intraFieldOperations, values, null);
+  }
+  
+  public Collection findByAnd(String entityName, List fields, List intraFieldOperations, List values, List orderBy) throws GenericEntityException {
+    ModelEntity modelEntity = modelReader.getModelEntity(entityName);
+    GenericHelper helper = getEntityHelper(modelEntity);
+
+    Collection collection = null;
+    collection = helper.findByAnd(modelEntity, fields, intraFieldOperations, values, orderBy);
+    absorbCollection(collection);
+    return collection;
+  }
+
+  public Collection findByLike(String entityName, Map fields) throws GenericEntityException {
+    return findByLike(entityName, fields, null);
+  }
+  
+  public Collection findByLike(String entityName, Map fields, List orderBy) throws GenericEntityException {
+    ModelEntity modelEntity = modelReader.getModelEntity(entityName);
+    GenericHelper helper = getEntityHelper(modelEntity);
+
+    Collection collection = null;
+    collection = helper.findByLike(modelEntity, fields, orderBy);
+    absorbCollection(collection);
+    return collection;
+  }
+
+  public Collection findByClause(String entityName, List genericEntityClauses, Map fields) throws GenericEntityException {
+    return findByClause(entityName, genericEntityClauses, fields, null);
+  }
+  
+  public Collection findByClause(String entityName, List genericEntityClauses, Map fields, List orderBy) throws GenericEntityException {
+    if(genericEntityClauses == null) return null;
+    ModelEntity modelEntity = modelReader.getModelEntity(entityName);
+    GenericHelper helper = getEntityHelper(modelEntity);
+
+    for(int i=0;i<genericEntityClauses.size();i++){
+      GenericEntityClause genEntityClause = (GenericEntityClause)genericEntityClauses.get(i);
+      genEntityClause.setModelEntities(modelReader);
+    }
+    Collection collection = null;
+    collection = helper.findByClause(modelEntity, genericEntityClauses, fields, orderBy);
+    absorbCollection(collection);
+    return collection;
+  }
+
   /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
    * @param entityName The Name of the Entity as defined in the entity XML file
    * @param fields The fields of the named entity to query by with their corresponging values
