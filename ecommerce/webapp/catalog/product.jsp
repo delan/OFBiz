@@ -5,7 +5,7 @@
 <%@ page import="org.ofbiz.ecommerce.catalog.*"%>
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-
+<%try {%>
 <%-- ====================================================== --%>
 <%-- Get the requested product                              --%>
 <%-- ====================================================== --%>
@@ -37,6 +37,14 @@
             <ofbiz:param name='productId' attribute='product_id'/>
         </ofbiz:service>
     </ofbiz:if>
+
+    <%-- calculate the "your" price --%>
+    <ofbiz:service name='calculateProductPrice'>
+        <ofbiz:param name='product' attribute='product'/>
+        <ofbiz:param name='prodCatalogId' value='<%=CatalogWorker.getCurrentCatalogId(pageContext)%>'/>
+        <%-- don't need to pass the partyId because it will use the one from the currently logged in user, if there user logged in --%>
+        <%-- returns: isSale, price, orderItemPriceInfos --%>
+    </ofbiz:service>
 
     <%-- ====================================================== --%>
     <%-- Special Variant Code                                   --%>
@@ -254,7 +262,7 @@
         <div class="head2"><%EntityField.run("product", "productName", pageContext);%></div>
         <div class="tabletext"><%EntityField.run("product", "description", pageContext);%></div>
         <div class="tabletext"><b><%EntityField.run("product", "productId", pageContext);%></b></div>
-        <div class="tabletext"><b>Our price: <font color="#126544"><%EntityField.run("product", "defaultPrice", pageContext);%></font></b>
+        <div class="tabletext"><b>Your price: <font color="#126544"><ofbiz:field attribute="price" type="currency"/><%--EntityField.run("product", "defaultPrice", pageContext);--%></font></b>
            (Reg. <%EntityField.run("product", "listPrice", pageContext);%>)</div>
             <%if (product.get("quantityIncluded") != null && product.getDouble("quantityIncluded").doubleValue() != 0) {%>
                 <div class="tabletext">Size:
@@ -520,3 +528,4 @@
     </ofbiz:if>
   </table>
 </ofbiz:if>
+<%} catch (Exception e) { Debug.logError(e); throw e; }%>

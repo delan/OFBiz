@@ -70,6 +70,10 @@ public class PriceServices {
 
         //NOTE: partyId CAN be null
         String partyId = (String) context.get("partyId");
+        if (partyId == null && context.get("userLogin") != null) {
+            GenericValue userLogin = (GenericValue) context.get("userLogin");
+            partyId = userLogin.getString("partyId");
+        }
         
         Double quantityDbl = (Double) context.get("quantity");
         if (quantityDbl == null) quantityDbl = new Double(1.0);
@@ -262,15 +266,15 @@ public class PriceServices {
                             double modifyAmount = 0;
                             if ("PRICE_POL".equals(productPriceAction.getString("productPriceActionTypeId"))) {
                                 if (productPriceAction.get("amount") != null) {
-                                    modifyAmount = listPrice * productPriceAction.getDouble("amount").doubleValue();
+                                    modifyAmount = listPrice * (productPriceAction.getDouble("amount").doubleValue()/100.0);
                                 }
                             } else if ("PRICE_POAC".equals(productPriceAction.getString("productPriceActionTypeId"))) {
                                 if (productPriceAction.get("amount") != null) {
-                                    modifyAmount = averageCostPrice * productPriceAction.getDouble("amount").doubleValue();
+                                    modifyAmount = averageCostPrice * (productPriceAction.getDouble("amount").doubleValue()/100.0);
                                 }
                             } else if ("PRICE_POM".equals(productPriceAction.getString("productPriceActionTypeId"))) {
                                 if (productPriceAction.get("amount") != null) {
-                                    modifyAmount = margin * productPriceAction.getDouble("amount").doubleValue();
+                                    modifyAmount = margin * (productPriceAction.getDouble("amount").doubleValue()/100.0);
                                 }
                             } else if ("PRICE_FOL".equals(productPriceAction.getString("productPriceActionTypeId"))) {
                                 if (productPriceAction.get("amount") != null) {
@@ -295,7 +299,7 @@ public class PriceServices {
                             priceInfoDescription.append("]");
 
                             GenericValue orderItemPriceInfo = delegator.makeValue("OrderItemPriceInfo", null);
-                            orderItemPriceInfo.set("productPriceRuleId", productPriceAction.get("productPriceAction"));
+                            orderItemPriceInfo.set("productPriceRuleId", productPriceAction.get("productPriceRuleId"));
                             orderItemPriceInfo.set("productPriceActionSeqId", productPriceAction.get("productPriceActionSeqId"));
                             orderItemPriceInfo.set("modifyAmount", new Double(modifyAmount));
                             orderItemPriceInfo.set("description", priceInfoDescription.toString());

@@ -240,4 +240,12 @@
     orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" productId="WG-1111" productPromoActionTypeId="PROMO_GWP" quantity="1.0" />
 
   <ProdCatalogPromoAppl fromDate="2001-01-01 12:00:00.0" prodCatalogId="DemoCatalog" productPromoId="testpromo1" />
+
+  <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
+  <ProductPriceRule productPriceRuleId="tr1" ruleName="Test Rule 1" isSale="Y"/>
+  <ProductPriceAction amount="-20.0" productPriceActionSeqId="1"
+    productPriceActionTypeId="PRICE_POL" productPriceRuleId="tr1"/>
+  <ProductPriceCond condValue="PROMOTIONS"
+    inputParamEnumId="PRIP_PROD_CAT_ID" operatorEnumId="PRC_EQ"
+    productPriceCondSeqId="1" productPriceRuleId="tr1"/>
 </entity-engine-xml>

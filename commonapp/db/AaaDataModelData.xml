@@ -446,8 +446,8 @@
   <ProductPriceActionType description="Percent Of List Price" productPriceActionTypeId="PRICE_POL"/>
   <ProductPriceActionType description="Percent Of Average Cost" productPriceActionTypeId="PRICE_POAC"/>
   <ProductPriceActionType description="Percent Of Margin" productPriceActionTypeId="PRICE_POM"/>
-  <ProductPriceActionType description="Flat Dollar Off List" productPriceActionTypeId="PRICE_FOL"/>
-  <ProductPriceActionType description="Flat Dollar Override" productPriceActionTypeId="PRICE_FLAT"/>
+  <ProductPriceActionType description="Flat Amount Modify" productPriceActionTypeId="PRICE_FOL"/>
+  <ProductPriceActionType description="Flat Amount Override" productPriceActionTypeId="PRICE_FLAT"/>
 
   <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
