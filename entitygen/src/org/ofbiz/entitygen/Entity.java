@@ -268,5 +268,47 @@ public class Entity
     returnString = returnString + "\"" + tableName + "_" + keyMap.relatedColumnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "()";
     return returnString;
   }
+
+  public String typeNameStringRelatedNoMapped(Vector flds, Relation relation)
+  {
+    String returnString = "";
+    if(flds.size() < 1) { return ""; }
+
+    int i = 0;
+    if(relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName) == null)
+      returnString = returnString + ((Field)flds.elementAt(i)).javaType + " " + ((Field)flds.elementAt(i)).fieldName;
+    i++;
+    for(; i < flds.size(); i++)
+    {
+      if(relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName) == null)
+      {
+        if(returnString.length() > 0) returnString = returnString + ", ";
+        returnString = returnString + ((Field)flds.elementAt(i)).javaType + " " + ((Field)flds.elementAt(i)).fieldName;
+      }
+    }
+    return returnString;
+  }
+
+  public String typeNameStringRelatedAndMain(Vector flds, Relation relation)
+  {
+    String returnString = "";
+    if(flds.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < flds.size() - 1; i++)
+    {
+      KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
+      if(keyMap != null)
+        returnString = returnString + keyMap.fieldName + ", ";
+      else
+        returnString = returnString + ((Field)flds.elementAt(i)).fieldName + ", ";
+    }
+    KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
+    if(keyMap != null)
+      returnString = returnString + keyMap.fieldName;
+    else
+      returnString = returnString + ((Field)flds.elementAt(i)).fieldName;
+    return returnString;
+  }
 }
 

@@ -82,6 +82,20 @@ public class Relation
     return null;
   }
 
+  public String keyMapString(String separator, String afterLast)
+  {
+    String returnString = "";
+    if(keyMaps.size() < 1) { return ""; }
+
+    int i = 0;
+    for(; i < keyMaps.size() - 1; i++)
+    {
+      returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).fieldName + separator;
+    }
+    returnString = returnString + ((KeyMap)keyMaps.elementAt(i)).fieldName + afterLast;
+    return returnString;
+  }
+
   public String keyMapUpperString(String separator, String afterLast)
   {
     String returnString = "";

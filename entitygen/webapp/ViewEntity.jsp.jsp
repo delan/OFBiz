@@ -183,22 +183,16 @@ function ShowTab(lname)
 }
 </SCRIPT>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
-<table cellpadding='0' cellspacing='0'><tr>
-<%for(int tabIndex=0;tabIndex<entity.relations.size();tabIndex++){%>
-  <%Relation relation = (Relation)entity.relations.elementAt(tabIndex);%>
+<table cellpadding='0' cellspacing='0'><tr><%for(int tabIndex=0;tabIndex<entity.relations.size();tabIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(tabIndex);%>
     [ltp]if(Security.hasEntityPermission("<%=relation.relatedTableName%>", "_VIEW", session)){%>
-    <td id=tab<%=tabIndex+1%> class=<%=(tabIndex==0?"ontab":"offtab")%>>
-      <a href='javascript:ShowTab("tab<%=tabIndex+1%>")' id=lnk<%=tabIndex+1%> class=<%=(tabIndex==0?"onlnk":"offlnk")%>><%=relation.relationTitle%> <%=relation.relatedEjbName%></a>
-    </td>
-    [ltp]}%>
-<%}%>
+      <td id=tab<%=tabIndex+1%> class=<%=(tabIndex==0?"ontab":"offtab")%>>
+        <a href='javascript:ShowTab("tab<%=tabIndex+1%>")' id=lnk<%=tabIndex+1%> class=<%=(tabIndex==0?"onlnk":"offlnk")%>><%=relation.relationTitle%> <%=relation.relatedEjbName%></a>
+      </td>
+    [ltp]}%><%}%>
 </tr></table>
 [ltp]}%>
   
-<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%>
-  <%Relation relation = (Relation)entity.relations.elementAt(relIndex);%>
-  <%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%>
-  <%if(relation.relationType.equalsIgnoreCase("one")){%>
+<%for(int relIndex=0;relIndex<entity.relations.size();relIndex++){%><%Relation relation = (Relation)entity.relations.elementAt(relIndex);%><%Entity relatedEntity = DefReader.getEntity(defFileName,relation.relatedEjbName);%><%if(relation.relationType.equalsIgnoreCase("one")){%>
 [ltp]-- Start Relation for <%=relation.relatedEjbName%>, type: <%=relation.relationType%> --%>
 [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> != null){%>
   [ltp]if(Security.hasEntityPermission("<%=relatedEntity.tableName%>", "_VIEW", session)){%>
@@ -208,12 +202,9 @@ function ShowTab(lname)
      <b><%=relation.relationTitle%></b> Related Entity: <b><%=relatedEntity.ejbName%></b> with (<%=relatedEntity.colNameString(relatedEntity.pks)%>: [ltp]=<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("()%" + ">, [ltp]=" + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "()%" + ">")%>)
     </div>
     [ltp]if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>.get<%=relation.keyMapUpperString("() != null && " + GenUtil.lowerFirstChar(entity.ejbName) + ".get", "() != null")%>){%>
-      <%
-        String packagePath = relatedEntity.packageName.replace('.','/');
+      <%String packagePath = relatedEntity.packageName.replace('.','/');
         //remove the first two folders (usually org/ and ofbiz/)
-        packagePath = packagePath.substring(packagePath.indexOf("/")+1);
-        packagePath = packagePath.substring(packagePath.indexOf("/")+1);
-      %>
+        packagePath = packagePath.substring(packagePath.indexOf("/")+1);packagePath = packagePath.substring(packagePath.indexOf("/")+1); %>
       <a href="[ltp]=response.encodeURL("/<%=packagePath%>/View<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relatedEntity.pks, relation)%>)%>" class="buttontext">[View <%=relatedEntity.ejbName%> Details]</a>
       
     [ltp]if(<%=GenUtil.lowerFirstChar(relatedEntity.ejbName)%>Related != null){%>
@@ -235,8 +226,7 @@ function ShowTab(lname)
   <tr class="[ltp]=rowClass%>">
     <td><b><%=((Field)relatedEntity.fields.elementAt(i)).columnName%></b></td>
     <td>
-    <%if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || 
-         ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+    <%if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
@@ -252,8 +242,7 @@ function ShowTab(lname)
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
       [ltp]}%>
-    <%} else if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || 
-                ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+    <%} else if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
@@ -304,12 +293,9 @@ function ShowTab(lname)
       String rowClassResult2 = "viewManyTR2"; 
       String rowClassResult = "";
     %>
-      <%
-        String packagePath = relatedEntity.packageName.replace('.','/');
+      <%String packagePath = relatedEntity.packageName.replace('.','/');
         //remove the first two folders (usually org/ and ofbiz/)
-        packagePath = packagePath.substring(packagePath.indexOf("/")+1);
-        packagePath = packagePath.substring(packagePath.indexOf("/")+1);
-      %>
+        packagePath = packagePath.substring(packagePath.indexOf("/")+1); packagePath = packagePath.substring(packagePath.indexOf("/")+1);%>
     [ltp]if(relatedCreatePerm){%>
       <a href="[ltp]=response.encodeURL("/<%=packagePath%>/Edit<%=relatedEntity.ejbName%>.jsp?" + <%=relatedEntity.httpRelationArgList(relation)%>)%>" class="buttontext">[Create <%=relatedEntity.ejbName%>]</a>
     [ltp]}%>
@@ -346,8 +332,7 @@ function ShowTab(lname)
   <%for(i=0;i<relatedEntity.fields.size();i++){%>
       <td>
         <div class="tabletext">
-    <%if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || 
-         ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
+    <%if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Timestamp") || ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.sql.Timestamp")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;
@@ -363,8 +348,7 @@ function ShowTab(lname)
       %>
       [ltp]=UtilFormatOut.checkNull(dateString)%>&nbsp;[ltp]=UtilFormatOut.checkNull(timeString)%>
       [ltp]}%>
-    <%} else if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || 
-                ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
+    <%} else if(((Field)relatedEntity.fields.elementAt(i)).javaType.equals("Date") || ((Field)relatedEntity.fields.elementAt(i)).javaType.equals("java.util.Date")){%>
       [ltp]{
         String dateString = null;
         String timeString = null;

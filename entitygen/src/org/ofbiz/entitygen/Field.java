@@ -67,6 +67,18 @@ public class Field
         return 255;
       }
     }
+    else if(sqlType.indexOf("CHAR") >= 0)
+    {
+      if(sqlType.indexOf("(") > 0 && sqlType.indexOf(")") > 0)
+      {
+        String length = sqlType.substring(sqlType.indexOf("(") + 1, sqlType.indexOf(")"));
+        return Integer.parseInt(length);
+      }
+      else
+      {
+        return 255;
+      }
+    }
     else if(sqlType.indexOf("TEXT") >= 0)
     {
       return 5000;
@@ -75,6 +87,6 @@ public class Field
     {
       return 25;
     }
-    return 0;
+    return 10;
   }
 }
