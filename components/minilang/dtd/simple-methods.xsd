@@ -29,35 +29,20 @@
     ==================================================
     (see further down for the Simple Map Processor Section)
 -->
+
+  <!-- Reusable artifacts (abstract elements, groups, attributeGroups -->
     <xs:element name="CallOperations" abstract="true"/>
     <xs:element name="CallJavaOperations" abstract="true"/>
     <xs:element name="EventOperations" abstract="true"/>
-    <xs:element name="ServiceOperations" abstract="true">
-        <xs:complexType>
-            <xs:attributeGroup ref="attlist.field-to-result"/>
-        </xs:complexType>
-    </xs:element>
+    <xs:element name="ServiceOperations" abstract="true"/>
     <xs:element name="EnvOperations" abstract="true"/>
     <xs:element name="EntityMiscOperations" abstract="true"/>
     <xs:element name="EntityFindOperations" abstract="true"/>
     <xs:element name="EntityValueOperations" abstract="true"/>
     <xs:element name="EntityListOperations" abstract="true"/>
     <xs:element name="EntityTxOperations" abstract="true"/>
-    <xs:group name="IfOperations">
-        <xs:choice>
-            <xs:element ref="if"/>
-            <xs:element ref="if-validate-method"/>
-            <xs:element ref="if-instance-of"/>
-            <xs:element ref="if-compare"/>
-            <xs:element ref="if-compare-field"/>
-            <xs:element ref="if-regexp"/>
-            <xs:element ref="if-empty"/>
-            <xs:element ref="if-not-empty"/>
-            <xs:element ref="if-has-permission"/>
-            <xs:element ref="check-permission"/>
-            <xs:element ref="check-id"/>
-        </xs:choice>
-    </xs:group>
+    <xs:element name="IfBasicOperations" abstract="true"/>
+    <xs:element name="IfOtherOperations" abstract="true"/>
     <xs:element name="OtherOperations" abstract="true"/>
     <xs:group name="SimpleMethodOperations">
         <xs:choice>
@@ -71,19 +56,61 @@
             <xs:element ref="EntityValueOperations"/>
             <xs:element ref="EntityListOperations"/>
             <xs:element ref="EntityTxOperations"/>
-            <xs:group ref="IfOperations"/>
+            <xs:element ref="IfBasicOperations"/>
+            <xs:element ref="IfOtherOperations"/>
             <xs:element ref="OtherOperations"/>
         </xs:choice>
     </xs:group>
+
+    <xs:attributeGroup name="attlist.propertyInfoOptional">
+        <xs:attribute type="xs:string" name="resource"/>
+        <xs:attribute type="xs:string" name="property"/>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="attlist.typeDefaultString">
+        <xs:attribute name="type" default="String">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="PlainString"/>
+                    <xs:enumeration value="String"/>
+                    <xs:enumeration value="Double"/>
+                    <xs:enumeration value="Float"/>
+                    <xs:enumeration value="Long"/>
+                    <xs:enumeration value="Integer"/>
+                    <xs:enumeration value="Date"/>
+                    <xs:enumeration value="Time"/>
+                    <xs:enumeration value="Timestamp"/>
+                    <xs:enumeration value="Boolean"/>
+                    <xs:enumeration value="Object"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+    <xs:attributeGroup name="attlist.operatorRequired">
+        <xs:attribute name="operator" use="required">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="less"/>
+                    <xs:enumeration value="greater"/>
+                    <xs:enumeration value="less-equals"/>
+                    <xs:enumeration value="greater-equals"/>
+                    <xs:enumeration value="equals"/>
+                    <xs:enumeration value="not-equals"/>
+                    <xs:enumeration value="contains"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+
+  <!-- ELEMENTS start here -->
     <xs:element name="field">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.field"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field">
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="type"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="type"/>
     </xs:attributeGroup>
     <xs:element name="string">
         <xs:complexType mixed="true">
@@ -91,7 +118,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.string">
-        <xs:attribute name="value"/>
+        <xs:attribute type="xs:string" name="value"/>
     </xs:attributeGroup>
     <xs:element name="simple-methods">
         <xs:complexType>
@@ -122,8 +149,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.simple-method">
-        <xs:attribute name="method-name" use="required"/>
-        <xs:attribute name="short-description" use="required"/>
+        <xs:attribute type="xs:string" name="method-name" use="required"/>
+        <xs:attribute type="xs:string" name="short-description" use="required"/>
         <xs:attribute name="login-required" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -140,25 +167,25 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="default-error-code" default="error"/>
-        <xs:attribute name="default-success-code" default="success"/>
-        <xs:attribute name="parameter-map-name" default="parameters"/>
-        <xs:attribute name="event-request-object-name" default="request"/>
-        <xs:attribute name="event-response-object-name" default="response"/>
-        <xs:attribute name="event-response-code-name" default="_response_code_"/>
-        <xs:attribute name="event-error-message-name" default="_error_message_"/>
-        <xs:attribute name="event-event-message-name" default="_event_message_"/>
-        <xs:attribute name="service-response-message-name" default="responseMessage"/>
-        <xs:attribute name="service-error-message-name" default="errorMessage"/>
-        <xs:attribute name="service-error-message-list-name" default="errorMessageList"/>
-        <xs:attribute name="service-error-message-map-name" default="errorMessageMap"/>
-        <xs:attribute name="service-success-message-name" default="successMessage"/>
-        <xs:attribute name="service-success-message-list-name" default="successMessageList"/>
-        <xs:attribute name="locale-name" default="locale"/>
-        <xs:attribute name="delegator-name" default="delegator"/>
-        <xs:attribute name="security-name" default="security"/>
-        <xs:attribute name="dispatcher-name" default="dispatcher"/>
-        <xs:attribute name="user-login-name" default="userLogin"/>
+        <xs:attribute type="xs:string" name="default-error-code" default="error"/>
+        <xs:attribute type="xs:string" name="default-success-code" default="success"/>
+        <xs:attribute type="xs:string" name="parameter-map-name" default="parameters"/>
+        <xs:attribute type="xs:string" name="event-request-object-name" default="request"/>
+        <xs:attribute type="xs:string" name="event-response-object-name" default="response"/>
+        <xs:attribute type="xs:string" name="event-response-code-name" default="_response_code_"/>
+        <xs:attribute type="xs:string" name="event-error-message-name" default="_error_message_"/>
+        <xs:attribute type="xs:string" name="event-event-message-name" default="_event_message_"/>
+        <xs:attribute type="xs:string" name="service-response-message-name" default="responseMessage"/>
+        <xs:attribute type="xs:string" name="service-error-message-name" default="errorMessage"/>
+        <xs:attribute type="xs:string" name="service-error-message-list-name" default="errorMessageList"/>
+        <xs:attribute type="xs:string" name="service-error-message-map-name" default="errorMessageMap"/>
+        <xs:attribute type="xs:string" name="service-success-message-name" default="successMessage"/>
+        <xs:attribute type="xs:string" name="service-success-message-list-name" default="successMessageList"/>
+        <xs:attribute type="xs:string" name="locale-name" default="locale"/>
+        <xs:attribute type="xs:string" name="delegator-name" default="delegator"/>
+        <xs:attribute type="xs:string" name="security-name" default="security"/>
+        <xs:attribute type="xs:string" name="dispatcher-name" default="dispatcher"/>
+        <xs:attribute type="xs:string" name="user-login-name" default="userLogin"/>
     </xs:attributeGroup>
     <xs:element name="call-map-processor" substitutionGroup="CallOperations">
         <xs:annotation>
@@ -175,11 +202,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.call-map-processor">
-        <xs:attribute name="xml-resource"/>
-        <xs:attribute name="processor-name"/>
-        <xs:attribute name="in-map-name" use="required"/>
-        <xs:attribute name="out-map-name" use="required"/>
-        <xs:attribute name="error-list-name" default="error_list"/>
+        <xs:attribute type="xs:string" name="xml-resource"/>
+        <xs:attribute type="xs:string" name="processor-name"/>
+        <xs:attribute type="xs:string" name="in-map-name" use="required"/>
+        <xs:attribute type="xs:string" name="out-map-name" use="required"/>
+        <xs:attribute type="xs:string" name="error-list-name" default="error_list"/>
     </xs:attributeGroup>
     <xs:element name="set-service-fields" substitutionGroup="CallOperations">
         <xs:complexType>
@@ -187,9 +214,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.set-service-fields">
-        <xs:attribute name="service-name" use="required"/>
-        <xs:attribute name="map-name" use="required"/>
-        <xs:attribute name="to-map-name" use="required"/>
+        <xs:attribute type="xs:string" name="service-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-map-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="call-service" substitutionGroup="CallOperations">
         <xs:annotation>
@@ -219,8 +246,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.call-service">
-        <xs:attribute name="service-name" use="required"/>
-        <xs:attribute name="in-map-name"/>
+        <xs:attribute type="xs:string" name="service-name" use="required"/>
+        <xs:attribute type="xs:string" name="in-map-name"/>
         <xs:attribute name="include-user-login" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -237,79 +264,51 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="error-code" default="error"/>
-        <xs:attribute name="success-code" default="success"/>
+        <xs:attribute type="xs:string" name="error-code" default="error"/>
+        <xs:attribute type="xs:string" name="success-code" default="success"/>
     </xs:attributeGroup>
     <xs:element name="error-prefix">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="attlist.error-prefix"/>
+            <xs:attributeGroup ref="attlist.propertyInfoOptional"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.error-prefix">
-        <xs:attribute name="resource"/>
-        <xs:attribute name="property"/>
-    </xs:attributeGroup>
     <xs:element name="error-suffix">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="attlist.error-suffix"/>
+            <xs:attributeGroup ref="attlist.propertyInfoOptional"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.error-suffix">
-        <xs:attribute name="resource"/>
-        <xs:attribute name="property"/>
-    </xs:attributeGroup>
     <xs:element name="success-prefix">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="attlist.success-prefix"/>
+            <xs:attributeGroup ref="attlist.propertyInfoOptional"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.success-prefix">
-        <xs:attribute name="resource"/>
-        <xs:attribute name="property"/>
-    </xs:attributeGroup>
     <xs:element name="success-suffix">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="attlist.success-suffix"/>
+            <xs:attributeGroup ref="attlist.propertyInfoOptional"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.success-suffix">
-        <xs:attribute name="resource"/>
-        <xs:attribute name="property"/>
-    </xs:attributeGroup>
     <xs:element name="message-prefix">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="attlist.message-prefix"/>
+            <xs:attributeGroup ref="attlist.propertyInfoOptional"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.message-prefix">
-        <xs:attribute name="resource"/>
-        <xs:attribute name="property"/>
-    </xs:attributeGroup>
     <xs:element name="message-suffix">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="attlist.message-suffix"/>
+            <xs:attributeGroup ref="attlist.propertyInfoOptional"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.message-suffix">
-        <xs:attribute name="resource"/>
-        <xs:attribute name="property"/>
-    </xs:attributeGroup>
     <xs:element name="default-message">
         <xs:complexType mixed="true">
-            <xs:attributeGroup ref="attlist.default-message"/>
+            <xs:attributeGroup ref="attlist.propertyInfoOptional"/>
         </xs:complexType>
     </xs:element>
-    <xs:attributeGroup name="attlist.default-message">
-        <xs:attribute name="resource"/>
-        <xs:attribute name="property"/>
-    </xs:attributeGroup>
     <xs:element name="results-to-map">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.results-to-map"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.results-to-map">
-        <xs:attribute name="map-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="result-to-field">
         <xs:complexType>
@@ -317,9 +316,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.result-to-field">
-        <xs:attribute name="result-name" use="required"/>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name"/>
+        <xs:attribute type="xs:string" name="result-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name"/>
     </xs:attributeGroup>
     <xs:element name="result-to-request">
         <xs:complexType>
@@ -327,8 +326,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.result-to-request">
-        <xs:attribute name="result-name" use="required"/>
-        <xs:attribute name="request-name"/>
+        <xs:attribute type="xs:string" name="result-name" use="required"/>
+        <xs:attribute type="xs:string" name="request-name"/>
     </xs:attributeGroup>
     <xs:element name="result-to-session">
         <xs:complexType>
@@ -336,8 +335,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.result-to-session">
-        <xs:attribute name="result-name" use="required"/>
-        <xs:attribute name="session-name"/>
+        <xs:attribute type="xs:string" name="result-name" use="required"/>
+        <xs:attribute type="xs:string" name="session-name"/>
     </xs:attributeGroup>
     <xs:element name="result-to-result">
         <xs:annotation>
@@ -352,8 +351,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.result-to-result">
-        <xs:attribute name="result-name" use="required"/>
-        <xs:attribute name="service-result-name"/>
+        <xs:attribute type="xs:string" name="result-name" use="required"/>
+        <xs:attribute type="xs:string" name="service-result-name"/>
     </xs:attributeGroup>
     <xs:element name="call-service-asynch" substitutionGroup="CallOperations">
         <xs:annotation>
@@ -368,8 +367,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.call-service-asynch">
-        <xs:attribute name="service-name" use="required"/>
-        <xs:attribute name="in-map-name"/>
+        <xs:attribute type="xs:string" name="service-name" use="required"/>
+        <xs:attribute type="xs:string" name="in-map-name"/>
         <xs:attribute name="include-user-login" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -399,8 +398,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.call-bsh">
-        <xs:attribute name="resource"/>
-        <xs:attribute name="error-list-name" default="error_list"/>
+        <xs:attribute type="xs:string" name="resource"/>
+        <xs:attribute type="xs:string" name="error-list-name" default="error_list"/>
     </xs:attributeGroup>
     <xs:element name="call-simple-method" substitutionGroup="CallOperations">
         <xs:complexType>
@@ -408,8 +407,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.call-simple-method">
-        <xs:attribute name="xml-resource"/>
-        <xs:attribute name="method-name" use="required"/>
+        <xs:attribute type="xs:string" name="xml-resource"/>
+        <xs:attribute type="xs:string" name="method-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="check-errors" substitutionGroup="CallOperations">
         <xs:complexType>
@@ -423,8 +422,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.check-errors">
-        <xs:attribute name="error-code" default="error"/>
-        <xs:attribute name="error-list-name" default="error_list"/>
+        <xs:attribute type="xs:string" name="error-code" default="error"/>
+        <xs:attribute type="xs:string" name="error-list-name" default="error_list"/>
     </xs:attributeGroup>
     <xs:element name="add-error" substitutionGroup="CallOperations">
         <xs:complexType>
@@ -436,7 +435,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.add-error">
-        <xs:attribute name="error-list-name" default="error_list"/>
+        <xs:attribute type="xs:string" name="error-list-name" default="error_list"/>
     </xs:attributeGroup>
     <xs:element name="return" substitutionGroup="CallOperations">
         <xs:complexType>
@@ -444,7 +443,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.return">
-        <xs:attribute name="response-code" default="success"/>
+        <xs:attribute type="xs:string" name="response-code" default="success"/>
     </xs:attributeGroup>
     <!-- Operations to call Java methods and create Java objects -->
     <xs:element name="call-object-method" substitutionGroup="CallJavaOperations">
@@ -457,11 +456,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.call-object-method">
-        <xs:attribute name="obj-field-name" use="required"/>
-        <xs:attribute name="obj-map-name"/>
-        <xs:attribute name="method-name" use="required"/>
-        <xs:attribute name="ret-field-name"/>
-        <xs:attribute name="ret-map-name"/>
+        <xs:attribute type="xs:string" name="obj-field-name" use="required"/>
+        <xs:attribute type="xs:string" name="obj-map-name"/>
+        <xs:attribute type="xs:string" name="method-name" use="required"/>
+        <xs:attribute type="xs:string" name="ret-field-name"/>
+        <xs:attribute type="xs:string" name="ret-map-name"/>
     </xs:attributeGroup>
     <xs:element name="call-class-method" substitutionGroup="CallJavaOperations">
         <xs:complexType>
@@ -473,10 +472,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.call-class-method">
-        <xs:attribute name="class-name" use="required"/>
-        <xs:attribute name="method-name" use="required"/>
-        <xs:attribute name="ret-field-name"/>
-        <xs:attribute name="ret-map-name"/>
+        <xs:attribute type="xs:string" name="class-name" use="required"/>
+        <xs:attribute type="xs:string" name="method-name" use="required"/>
+        <xs:attribute type="xs:string" name="ret-field-name"/>
+        <xs:attribute type="xs:string" name="ret-map-name"/>
     </xs:attributeGroup>
     <xs:element name="create-object" substitutionGroup="CallJavaOperations">
         <xs:complexType>
@@ -488,9 +487,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.create-object">
-        <xs:attribute name="class-name" use="required"/>
-        <xs:attribute name="field-name"/>
-        <xs:attribute name="map-name"/>
+        <xs:attribute type="xs:string" name="class-name" use="required"/>
+        <xs:attribute type="xs:string" name="field-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
     </xs:attributeGroup>
     <!-- Operations to copy map fields in the current env to context specific containers -->
     <!-- Event specific operations -->
@@ -500,9 +499,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field-to-request">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="request-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="request-name"/>
     </xs:attributeGroup>
     <xs:element name="field-to-session" substitutionGroup="EventOperations">
         <xs:complexType>
@@ -510,9 +509,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field-to-session">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="session-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="session-name"/>
     </xs:attributeGroup>
     <xs:element name="request-to-field" substitutionGroup="EventOperations">
         <xs:complexType>
@@ -520,10 +519,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.request-to-field">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="default"/>
-        <xs:attribute name="request-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="default"/>
+        <xs:attribute type="xs:string" name="request-name"/>
     </xs:attributeGroup>
     <xs:element name="request-parameters-to-list" substitutionGroup="EventOperations">
         <xs:complexType>
@@ -531,8 +530,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.request-parameters-to-list">
-        <xs:attribute name="request-name" use="required"/>
-        <xs:attribute name="list-name"/>
+        <xs:attribute type="xs:string" name="request-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name"/>
     </xs:attributeGroup>
     <xs:element name="session-to-field" substitutionGroup="EventOperations">
         <xs:complexType>
@@ -540,10 +539,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.session-to-field">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="default"/>
-        <xs:attribute name="session-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="default"/>
+        <xs:attribute type="xs:string" name="session-name"/>
     </xs:attributeGroup>
     <xs:element name="webapp-property-to-field" substitutionGroup="EventOperations">
         <xs:complexType>
@@ -551,18 +550,22 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.webapp-property-to-field">
-        <xs:attribute name="resource" use="required"/>
-        <xs:attribute name="property" use="required"/>
-        <xs:attribute name="default"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="session-name"/>
+        <xs:attribute type="xs:string" name="resource" use="required"/>
+        <xs:attribute type="xs:string" name="property" use="required"/>
+        <xs:attribute type="xs:string" name="default"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="session-name"/>
     </xs:attributeGroup>
     <!-- Service specific operations -->
-    <xs:element name="field-to-result" substitutionGroup="ServiceOperations"/>
+    <xs:element name="field-to-result" substitutionGroup="ServiceOperations">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.field-to-result"/>
+        </xs:complexType>
+    </xs:element>
     <xs:attributeGroup name="attlist.field-to-result">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="result-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="result-name"/>
     </xs:attributeGroup>
     <!-- Environment specific operations -->
     <xs:element name="map-to-map" substitutionGroup="EnvOperations">
@@ -571,8 +574,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.map-to-map">
-        <xs:attribute name="map-name" use="required"/>
-        <xs:attribute name="to-map-name"/>
+        <xs:attribute type="xs:string" name="map-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-map-name"/>
     </xs:attributeGroup>
     <xs:element name="field-to-field" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -580,10 +583,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field-to-field">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="to-map-name"/>
-        <xs:attribute name="to-field-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-map-name"/>
+        <xs:attribute type="xs:string" name="to-field-name"/>
     </xs:attributeGroup>
     <xs:element name="field-to-list" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -591,9 +594,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field-to-list">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="list-to-list" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -601,8 +604,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.list-to-list">
-        <xs:attribute name="list-name" use="required"/>
-        <xs:attribute name="to-list-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="env-to-env" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -610,8 +613,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.env-to-env">
-        <xs:attribute name="env-name" use="required"/>
-        <xs:attribute name="to-env-name" use="required"/>
+        <xs:attribute type="xs:string" name="env-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-env-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="env-to-field" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -619,9 +622,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.env-to-field">
-        <xs:attribute name="env-name" use="required"/>
-        <xs:attribute name="field-name"/>
-        <xs:attribute name="map-name"/>
+        <xs:attribute type="xs:string" name="env-name" use="required"/>
+        <xs:attribute type="xs:string" name="field-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
     </xs:attributeGroup>
     <xs:element name="field-to-env" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -629,9 +632,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field-to-env">
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="env-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="env-name"/>
     </xs:attributeGroup>
     <xs:element name="string-append" substitutionGroup="EnvOperations">
         <xs:annotation><xs:documentation>NOTE: the prefix and suffix will only be used IFF the current string and the string to be appended are both not empty</xs:documentation></xs:annotation>
@@ -640,12 +643,12 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.string-append">
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="string" use="required"/>
-        <xs:attribute name="arg-list-name"/>
-        <xs:attribute name="prefix"/>
-        <xs:attribute name="suffix"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="string" use="required"/>
+        <xs:attribute type="xs:string" name="arg-list-name"/>
+        <xs:attribute type="xs:string" name="prefix"/>
+        <xs:attribute type="xs:string" name="suffix"/>
     </xs:attributeGroup>
     <xs:element name="string-to-field" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -653,11 +656,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.string-to-field">
-        <xs:attribute name="string" use="required"/>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="arg-list-name"/>
-        <xs:attribute name="message-field-name"/>
+        <xs:attribute type="xs:string" name="string" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="arg-list-name"/>
+        <xs:attribute type="xs:string" name="message-field-name"/>
     </xs:attributeGroup>
     <xs:element name="string-to-list" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -665,10 +668,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.string-to-list">
-        <xs:attribute name="string" use="required"/>
-        <xs:attribute name="list-name" use="required"/>
-        <xs:attribute name="arg-list-name"/>
-        <xs:attribute name="message-field-name"/>
+        <xs:attribute type="xs:string" name="string" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="arg-list-name"/>
+        <xs:attribute type="xs:string" name="message-field-name"/>
     </xs:attributeGroup>
     <xs:element name="to-string" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -676,10 +679,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.to-string">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="format"/>
-        <xs:attribute name="numeric-padding"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="format"/>
+        <xs:attribute type="xs:string" name="numeric-padding"/>
     </xs:attributeGroup>
     <xs:element name="clear-field" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -687,8 +690,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.clear-field">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="iterate" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -697,8 +700,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.iterate">
-        <xs:attribute name="entry-name" use="required"/>
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="entry-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="iterate-map" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -707,9 +710,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.iterate-map">
-        <xs:attribute name="key-name" use="required"/>
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="map-name" use="required"/>
+        <xs:attribute type="xs:string" name="key-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="first-from-list" substitutionGroup="EnvOperations">
         <xs:complexType>
@@ -717,8 +720,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.first-from-list">
-        <xs:attribute name="entry-name" use="required"/>
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="entry-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
     <!--
         These operations are used to interact with a data source through the entity
@@ -730,7 +733,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.transaction-begin">
-        <xs:attribute name="began-transaction-name" default="beganTransaction"/>
+        <xs:attribute type="xs:string" name="began-transaction-name" default="beganTransaction"/>
     </xs:attributeGroup>
     <xs:element name="transaction-commit" substitutionGroup="EntityTxOperations">
         <xs:complexType>
@@ -738,7 +741,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.transaction-commit">
-        <xs:attribute name="began-transaction-name" default="beganTransaction"/>
+        <xs:attribute type="xs:string" name="began-transaction-name" default="beganTransaction"/>
     </xs:attributeGroup>
     <xs:element name="transaction-rollback" substitutionGroup="EntityTxOperations">
         <xs:complexType>
@@ -746,7 +749,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.transaction-rollback">
-        <xs:attribute name="began-transaction-name" default="beganTransaction"/>
+        <xs:attribute type="xs:string" name="began-transaction-name" default="beganTransaction"/>
     </xs:attributeGroup>
     <xs:element name="now-timestamp-to-env" substitutionGroup="EntityMiscOperations">
         <xs:complexType>
@@ -754,7 +757,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.now-timestamp-to-env">
-        <xs:attribute name="env-name" use="required"/>
+        <xs:attribute type="xs:string" name="env-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="now-date-to-env" substitutionGroup="EntityMiscOperations">
         <xs:complexType>
@@ -762,7 +765,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.now-date-to-env">
-        <xs:attribute name="env-name" use="required"/>
+        <xs:attribute type="xs:string" name="env-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="sequenced-id-to-env" substitutionGroup="EntityMiscOperations">
         <xs:complexType>
@@ -770,8 +773,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.sequenced-id-to-env">
-        <xs:attribute name="sequence-name" use="required"/>
-        <xs:attribute name="env-name" use="required"/>
+        <xs:attribute type="xs:string" name="sequence-name" use="required"/>
+        <xs:attribute type="xs:string" name="env-name" use="required"/>
         <xs:attribute name="get-long-only" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -780,7 +783,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="stagger-max"/>
+        <xs:attribute type="xs:string" name="stagger-max"/>
     </xs:attributeGroup>
     <xs:element name="make-next-seq-id" substitutionGroup="EntityMiscOperations">
         <xs:complexType>
@@ -788,10 +791,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.make-next-seq-id">
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="seq-field-name" use="required"/>
-        <xs:attribute name="numeric-padding" default="5"/>
-        <xs:attribute name="increment-by" default="1"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="seq-field-name" use="required"/>
+        <xs:attribute type="xs:string" name="numeric-padding" default="5"/>
+        <xs:attribute type="xs:string" name="increment-by" default="1"/>
     </xs:attributeGroup>
     <xs:element name="set-current-user-login" substitutionGroup="EntityMiscOperations">
         <xs:complexType>
@@ -799,7 +802,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.set-current-user-login">
-        <xs:attribute name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="find-by-primary-key" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -807,9 +810,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.find-by-primary-key">
-        <xs:attribute name="entity-name"/>
-        <xs:attribute name="map-name" use="required"/>
-        <xs:attribute name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name"/>
+        <xs:attribute type="xs:string" name="map-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -818,8 +821,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="fields-to-select-list"/>
-        <xs:attribute name="delegator-name"/>
+        <xs:attribute type="xs:string" name="fields-to-select-list"/>
+        <xs:attribute type="xs:string" name="delegator-name"/>
     </xs:attributeGroup>
     <xs:element name="find-by-and" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -827,10 +830,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.find-by-and">
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="map-name" use="required"/>
-        <xs:attribute name="order-by-list-name"/>
-        <xs:attribute name="delegator-name"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name" use="required"/>
+        <xs:attribute type="xs:string" name="order-by-list-name"/>
+        <xs:attribute type="xs:string" name="delegator-name"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -847,7 +850,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="entity-one" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -859,8 +862,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.entity-one">
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -894,7 +897,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.entity-and">
-        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -912,7 +915,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="entity-condition" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -934,7 +937,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.entity-condition">
-        <xs:attribute name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -960,8 +963,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="delegator-name"/>
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="delegator-name"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="condition-list">
         <xs:complexType>
@@ -1007,7 +1010,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.condition-expr">
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
         <xs:attribute name="operator" default="equals">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1023,8 +1026,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="env-name"/>
-        <xs:attribute name="value"/>
+        <xs:attribute type="xs:string" name="env-name"/>
+        <xs:attribute type="xs:string" name="value"/>
         <xs:attribute name="ignore-if-null" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1048,7 +1051,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.select-field">
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="order-by">
         <xs:complexType>
@@ -1056,7 +1059,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.order-by">
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="limit-range">
         <xs:complexType>
@@ -1064,8 +1067,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.limit-range">
-        <xs:attribute name="start" use="required"/>
-        <xs:attribute name="size" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="start" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="size" use="required"/>
     </xs:attributeGroup>
     <xs:element name="limit-view">
         <xs:complexType>
@@ -1073,8 +1076,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.limit-view">
-        <xs:attribute name="view-index" use="required"/>
-        <xs:attribute name="view-size" use="required"/>
+        <xs:attribute type="xs:nonNegativeInteger" name="view-index" use="required"/>
+        <xs:attribute type="xs:positiveInteger" name="view-size" use="required"/>
     </xs:attributeGroup>
     <xs:element name="use-iterator">
         <xs:complexType/>
@@ -1085,8 +1088,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.field-map">
-        <xs:attribute name="env-name" use="required"/>
-        <xs:attribute name="field-name"/>
+        <xs:attribute type="xs:string" name="env-name" use="required"/>
+        <xs:attribute type="xs:string" name="field-name"/>
     </xs:attributeGroup>
     <xs:element name="entity-count" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -1101,9 +1104,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.entity-count">
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="delegator-name"/>
-        <xs:attribute name="count-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="delegator-name"/>
+        <xs:attribute type="xs:string" name="count-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="get-related-one" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -1111,8 +1114,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.get-related-one">
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="relation-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="relation-name" use="required"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1121,7 +1124,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="to-value-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-value-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="get-related" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -1129,10 +1132,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.get-related">
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="relation-name" use="required"/>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="order-by-list-name"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="relation-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="order-by-list-name"/>
         <xs:attribute name="use-cache" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1141,7 +1144,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="order-value-list" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -1149,9 +1152,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.order-value-list">
-        <xs:attribute name="list-name" use="required"/>
-        <xs:attribute name="to-list-name"/>
-        <xs:attribute name="order-by-list-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-list-name"/>
+        <xs:attribute type="xs:string" name="order-by-list-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="filter-list-by-and" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -1159,9 +1162,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.filter-list-by-and">
-        <xs:attribute name="list-name" use="required"/>
-        <xs:attribute name="to-list-name"/>
-        <xs:attribute name="map-name"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-list-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
     </xs:attributeGroup>
     <xs:element name="filter-list-by-date" substitutionGroup="EntityFindOperations">
         <xs:complexType>
@@ -1169,11 +1172,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.filter-list-by-date">
-        <xs:attribute name="list-name" use="required"/>
-        <xs:attribute name="to-list-name"/>
-        <xs:attribute name="valid-date-name"/>
-        <xs:attribute name="from-field-name" default="fromDate"/>
-        <xs:attribute name="thru-field-name" default="thruDate"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-list-name"/>
+        <xs:attribute type="xs:string" name="valid-date-name"/>
+        <xs:attribute type="xs:string" name="from-field-name" default="fromDate"/>
+        <xs:attribute type="xs:string" name="thru-field-name" default="thruDate"/>
         <xs:attribute name="all-same" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1189,9 +1192,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.make-value">
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="map-name"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
     </xs:attributeGroup>
     <xs:element name="clone-value" substitutionGroup="EntityValueOperations">
         <xs:complexType>
@@ -1199,8 +1202,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.clone-value">
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="new-value-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="new-value-name" use="required"/>
     </xs:attributeGroup>
     <xs:element name="create-value" substitutionGroup="EntityValueOperations">
         <xs:complexType>
@@ -1208,7 +1211,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.create-value">
-        <xs:attribute name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
         <xs:attribute name="do-cache-clear" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1224,7 +1227,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.store-value">
-        <xs:attribute name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
         <xs:attribute name="do-cache-clear" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1240,7 +1243,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.refresh-value">
-        <xs:attribute name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
         <xs:attribute name="do-cache-clear" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1256,7 +1259,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.remove-value">
-        <xs:attribute name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
         <xs:attribute name="do-cache-clear" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1272,8 +1275,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.remove-related">
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="relation-name" use="required"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="relation-name" use="required"/>
         <xs:attribute name="do-cache-clear" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1289,8 +1292,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.remove-by-and">
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="map-name" use="required"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name" use="required"/>
         <xs:attribute name="do-cache-clear" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1306,8 +1309,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.clear-cache-line">
-        <xs:attribute name="entity-name" use="required"/>
-        <xs:attribute name="map-name"/>
+        <xs:attribute type="xs:string" name="entity-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
     </xs:attributeGroup>
     <xs:element name="clear-entity-caches" substitutionGroup="EntityValueOperations">
         <xs:complexType/>
@@ -1318,8 +1321,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.set-pk-fields">
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="map-name"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
         <xs:attribute name="set-if-null" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1335,8 +1338,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.set-nonpk-fields">
-        <xs:attribute name="value-name" use="required"/>
-        <xs:attribute name="map-name"/>
+        <xs:attribute type="xs:string" name="value-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
         <xs:attribute name="set-if-null" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1352,7 +1355,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.store-list">
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
         <xs:attribute name="do-cache-clear" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1368,7 +1371,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.remove-list">
-        <xs:attribute name="list-name" use="required"/>
+        <xs:attribute type="xs:string" name="list-name" use="required"/>
         <xs:attribute name="do-cache-clear" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1384,20 +1387,12 @@
     -->
     <xs:group name="IfConditions">
         <xs:choice>
-            <xs:element ref="or"/>
-            <xs:element ref="xor"/>
-            <xs:element ref="and"/>
-            <xs:element ref="not"/>
-            <xs:element ref="if-validate-method"/>
-            <xs:element ref="if-instance-of"/>
-            <xs:element ref="if-compare"/>
-            <xs:element ref="if-compare-field"/>
-            <xs:element ref="if-empty"/>
-            <xs:element ref="if-regexp"/>
-            <xs:element ref="if-has-permission"/>
+            <xs:element ref="IfCombineConditions"/>
+            <xs:element ref="IfBasicOperations"/>
         </xs:choice>
     </xs:group>
-    <xs:element name="if">
+    <xs:element name="IfCombineConditions" abstract="true"/>
+    <xs:element name="if" substitutionGroup="IfOtherOperations">
         <xs:annotation><xs:documentation>note that while the definitions for the if-* operations are used, the tags should be empty because of the differing semantics</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:sequence>
@@ -1431,27 +1426,27 @@
             <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="or">
+    <xs:element name="or" substitutionGroup="IfCombineConditions">
         <xs:complexType>
             <xs:group maxOccurs="unbounded" ref="IfConditions"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="xor">
+    <xs:element name="xor" substitutionGroup="IfCombineConditions">
         <xs:complexType>
             <xs:group maxOccurs="unbounded" ref="IfConditions"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="and">
+    <xs:element name="and" substitutionGroup="IfCombineConditions">
         <xs:complexType>
             <xs:group maxOccurs="unbounded" ref="IfConditions"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="not">
+    <xs:element name="not" substitutionGroup="IfCombineConditions">
         <xs:complexType>
             <xs:group ref="IfConditions"/>
         </xs:complexType>
     </xs:element>
-    <xs:element name="if-validate-method">
+    <xs:element name="if-validate-method" substitutionGroup="IfBasicOperations">
         <xs:annotation><xs:documentation>if-validate-method calls a static Java method that takes a String and returns a boolean</xs:documentation></xs:annotation>
         <xs:complexType>
             <xs:sequence>
@@ -1462,12 +1457,12 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-validate-method">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="method" use="required"/>
-        <xs:attribute name="class" default="org.ofbiz.base.util.UtilValidate"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="method" use="required"/>
+        <xs:attribute type="xs:string" name="class" default="org.ofbiz.base.util.UtilValidate"/>
     </xs:attributeGroup>
-    <xs:element name="if-instance-of">
+    <xs:element name="if-instance-of" substitutionGroup="IfBasicOperations">
         <xs:complexType>
             <xs:sequence>
                 <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
@@ -1477,102 +1472,46 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-instance-of">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="class" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="class" use="required"/>
     </xs:attributeGroup>
-    <xs:element name="if-compare">
+    <xs:element name="if-compare" substitutionGroup="IfBasicOperations">
         <xs:complexType>
             <xs:sequence>
                 <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
                 <xs:element minOccurs="0" ref="else"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.if-compare"/>
+            <xs:attributeGroup ref="attlist.operatorRequired"/>
+            <xs:attributeGroup ref="attlist.typeDefaultString"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-compare">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="operator" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="less"/>
-                    <xs:enumeration value="greater"/>
-                    <xs:enumeration value="less-equals"/>
-                    <xs:enumeration value="greater-equals"/>
-                    <xs:enumeration value="equals"/>
-                    <xs:enumeration value="not-equals"/>
-                    <xs:enumeration value="contains"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="value" use="required"/>
-        <xs:attribute name="type" default="String">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="PlainString"/>
-                    <xs:enumeration value="String"/>
-                    <xs:enumeration value="Double"/>
-                    <xs:enumeration value="Float"/>
-                    <xs:enumeration value="Long"/>
-                    <xs:enumeration value="Integer"/>
-                    <xs:enumeration value="Date"/>
-                    <xs:enumeration value="Time"/>
-                    <xs:enumeration value="Timestamp"/>
-                    <xs:enumeration value="Boolean"/>
-                    <xs:enumeration value="Object"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="format"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="value" use="required"/>
+        <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
-    <xs:element name="if-compare-field">
+    <xs:element name="if-compare-field" substitutionGroup="IfBasicOperations">
         <xs:complexType>
             <xs:sequence>
                 <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
                 <xs:element minOccurs="0" ref="else"/>
             </xs:sequence>
             <xs:attributeGroup ref="attlist.if-compare-field"/>
+            <xs:attributeGroup ref="attlist.operatorRequired"/>
+            <xs:attributeGroup ref="attlist.typeDefaultString"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-compare-field">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="operator" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="less"/>
-                    <xs:enumeration value="greater"/>
-                    <xs:enumeration value="less-equals"/>
-                    <xs:enumeration value="greater-equals"/>
-                    <xs:enumeration value="equals"/>
-                    <xs:enumeration value="not-equals"/>
-                    <xs:enumeration value="contains"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="to-map-name"/>
-        <xs:attribute name="to-field-name"/>
-        <xs:attribute name="type" default="String">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="PlainString"/>
-                    <xs:enumeration value="String"/>
-                    <xs:enumeration value="Double"/>
-                    <xs:enumeration value="Float"/>
-                    <xs:enumeration value="Long"/>
-                    <xs:enumeration value="Integer"/>
-                    <xs:enumeration value="Date"/>
-                    <xs:enumeration value="Time"/>
-                    <xs:enumeration value="Timestamp"/>
-                    <xs:enumeration value="Boolean"/>
-                    <xs:enumeration value="Object"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="format"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="to-map-name"/>
+        <xs:attribute type="xs:string" name="to-field-name"/>
+        <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
-    <xs:element name="if-regexp">
+    <xs:element name="if-regexp" substitutionGroup="IfBasicOperations">
         <xs:complexType>
             <xs:sequence>
                 <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
@@ -1582,11 +1521,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-regexp">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="expr" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="expr" use="required"/>
     </xs:attributeGroup>
-    <xs:element name="if-empty">
+    <xs:element name="if-empty" substitutionGroup="IfBasicOperations">
         <xs:complexType>
             <xs:sequence>
                 <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
@@ -1596,10 +1535,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-empty">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
     </xs:attributeGroup>
-    <xs:element name="if-not-empty">
+    <xs:element name="if-not-empty" substitutionGroup="IfOtherOperations">
         <xs:complexType>
             <xs:sequence>
                 <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
@@ -1609,10 +1548,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-not-empty">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
     </xs:attributeGroup>
-    <xs:element name="if-has-permission">
+    <xs:element name="if-has-permission" substitutionGroup="IfBasicOperations">
         <xs:complexType>
             <xs:sequence>
                 <xs:group minOccurs="0" maxOccurs="unbounded" ref="SimpleMethodOperations"/>
@@ -1622,10 +1561,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.if-has-permission">
-        <xs:attribute name="permission" use="required"/>
-        <xs:attribute name="action"/>
+        <xs:attribute type="xs:string" name="permission" use="required"/>
+        <xs:attribute type="xs:string" name="action"/>
     </xs:attributeGroup>
-    <xs:element name="check-permission">
+    <xs:element name="check-permission" substitutionGroup="IfOtherOperations">
         <xs:complexType>
             <xs:sequence>
                 <xs:element minOccurs="0" maxOccurs="unbounded" ref="alt-permission"/>
@@ -1638,9 +1577,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.check-permission">
-        <xs:attribute name="permission" use="required"/>
-        <xs:attribute name="action"/>
-        <xs:attribute name="error-list-name" default="error_list"/>
+        <xs:attribute type="xs:string" name="permission" use="required"/>
+        <xs:attribute type="xs:string" name="action"/>
+        <xs:attribute type="xs:string" name="error-list-name" default="error_list"/>
     </xs:attributeGroup>
     <xs:element name="alt-permission">
         <xs:complexType>
@@ -1648,10 +1587,10 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.alt-permission">
-        <xs:attribute name="permission" use="required"/>
-        <xs:attribute name="action"/>
+        <xs:attribute type="xs:string" name="permission" use="required"/>
+        <xs:attribute type="xs:string" name="action"/>
     </xs:attributeGroup>
-    <xs:element name="check-id">
+    <xs:element name="check-id" substitutionGroup="IfOtherOperations">
         <xs:complexType>
             <xs:choice minOccurs="0">
                 <xs:element ref="fail-message"/>
@@ -1661,9 +1600,9 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.check-id">
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="error-list-name" default="error_list"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="error-list-name" default="error_list"/>
     </xs:attributeGroup>
     <!-- the "Other" Operations -->
     <xs:element name="property-to-field" substitutionGroup="OtherOperations">
@@ -1672,11 +1611,11 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.property-to-field">
-        <xs:attribute name="resource" use="required"/>
-        <xs:attribute name="property" use="required"/>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
-        <xs:attribute name="default"/>
+        <xs:attribute type="xs:string" name="resource" use="required"/>
+        <xs:attribute type="xs:string" name="property" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="default"/>
         <xs:attribute name="no-locale" default="false">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1685,7 +1624,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="arg-list-name"/>
+        <xs:attribute type="xs:string" name="arg-list-name"/>
     </xs:attributeGroup>
     <xs:element name="log" substitutionGroup="OtherOperations">
         <xs:complexType>
@@ -1711,7 +1650,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="message"/>
+        <xs:attribute type="xs:string" name="message"/>
     </xs:attributeGroup>
     <xs:element name="calculate" substitutionGroup="OtherOperations">
         <xs:complexType>
@@ -1723,8 +1662,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.calculate">
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name" use="required"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name" use="required"/>
         <xs:attribute name="type" default="Double">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -1736,7 +1675,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="decimal-format"/>
+        <xs:attribute type="xs:string" name="decimal-format"/>
     </xs:attributeGroup>
     <xs:element name="calcop">
         <xs:complexType>
@@ -1760,8 +1699,8 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="map-name"/>
-        <xs:attribute name="field-name"/>
+        <xs:attribute type="xs:string" name="map-name"/>
+        <xs:attribute type="xs:string" name="field-name"/>
     </xs:attributeGroup>
     <xs:element name="number">
         <xs:complexType>
@@ -1769,7 +1708,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.number">
-        <xs:attribute name="value" use="required"/>
+        <xs:attribute type="xs:string" name="value" use="required"/>
     </xs:attributeGroup>
     <!--
         ======================================================
@@ -1793,7 +1732,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.simple-map-processor">
-        <xs:attribute name="name" use="required"/>
+        <xs:attribute type="xs:string" name="name" use="required"/>
     </xs:attributeGroup>
     <!-- Make In String & Operations -->
     <xs:element name="make-in-string">
@@ -1807,7 +1746,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.make-in-string">
-        <xs:attribute name="field" use="required"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
     </xs:attributeGroup>
     <xs:element name="in-field">
         <xs:complexType>
@@ -1815,7 +1754,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.in-field">
-        <xs:attribute name="field" use="required"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
     </xs:attributeGroup>
     <xs:element name="property">
         <xs:complexType>
@@ -1823,8 +1762,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.property">
-        <xs:attribute name="resource" use="required"/>
-        <xs:attribute name="property" use="required"/>
+        <xs:attribute type="xs:string" name="resource" use="required"/>
+        <xs:attribute type="xs:string" name="property" use="required"/>
     </xs:attributeGroup>
     <xs:element name="constant" type="xs:string"/>
     <!-- Field Process & Operations -->
@@ -1843,7 +1782,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.process">
-        <xs:attribute name="field" use="required"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
     </xs:attributeGroup>
     <xs:element name="validate-method">
         <xs:annotation><xs:documentation>validate-method calls a static Java method that takes a String and returns a boolean</xs:documentation></xs:annotation>
@@ -1856,8 +1795,8 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.validate-method">
-        <xs:attribute name="method" use="required"/>
-        <xs:attribute name="class" default="org.ofbiz.base.util.UtilValidate"/>
+        <xs:attribute type="xs:string" name="method" use="required"/>
+        <xs:attribute type="xs:string" name="class" default="org.ofbiz.base.util.UtilValidate"/>
     </xs:attributeGroup>
     <xs:element name="compare">
         <xs:complexType>
@@ -1866,41 +1805,13 @@
                 <xs:element ref="fail-property"/>
             </xs:choice>
             <xs:attributeGroup ref="attlist.compare"/>
+            <xs:attributeGroup ref="attlist.operatorRequired"/>
+            <xs:attributeGroup ref="attlist.typeDefaultString"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.compare">
-        <xs:attribute name="operator" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="less"/>
-                    <xs:enumeration value="greater"/>
-                    <xs:enumeration value="less-equals"/>
-                    <xs:enumeration value="greater-equals"/>
-                    <xs:enumeration value="equals"/>
-                    <xs:enumeration value="not-equals"/>
-                    <xs:enumeration value="contains"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="value" use="required"/>
-        <xs:attribute name="type" default="String">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="PlainString"/>
-                    <xs:enumeration value="String"/>
-                    <xs:enumeration value="Double"/>
-                    <xs:enumeration value="Float"/>
-                    <xs:enumeration value="Long"/>
-                    <xs:enumeration value="Integer"/>
-                    <xs:enumeration value="Date"/>
-                    <xs:enumeration value="Time"/>
-                    <xs:enumeration value="Timestamp"/>
-                    <xs:enumeration value="Boolean"/>
-                    <xs:enumeration value="Object"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="format"/>
+        <xs:attribute type="xs:string" name="value" use="required"/>
+        <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
     <xs:element name="compare-field">
         <xs:complexType>
@@ -1909,41 +1820,13 @@
                 <xs:element ref="fail-property"/>
             </xs:choice>
             <xs:attributeGroup ref="attlist.compare-field"/>
+            <xs:attributeGroup ref="attlist.operatorRequired"/>
+            <xs:attributeGroup ref="attlist.typeDefaultString"/>
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.compare-field">
-        <xs:attribute name="operator" use="required">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="less"/>
-                    <xs:enumeration value="greater"/>
-                    <xs:enumeration value="less-equals"/>
-                    <xs:enumeration value="greater-equals"/>
-                    <xs:enumeration value="equals"/>
-                    <xs:enumeration value="not-equals"/>
-                    <xs:enumeration value="contains"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="field" use="required"/>
-        <xs:attribute name="type" default="String">
-            <xs:simpleType>
-                <xs:restriction base="xs:token">
-                    <xs:enumeration value="PlainString"/>
-                    <xs:enumeration value="String"/>
-                    <xs:enumeration value="Double"/>
-                    <xs:enumeration value="Float"/>
-                    <xs:enumeration value="Long"/>
-                    <xs:enumeration value="Integer"/>
-                    <xs:enumeration value="Date"/>
-                    <xs:enumeration value="Time"/>
-                    <xs:enumeration value="Timestamp"/>
-                    <xs:enumeration value="Boolean"/>
-                    <xs:enumeration value="Object"/>
-                </xs:restriction>
-            </xs:simpleType>
-        </xs:attribute>
-        <xs:attribute name="format"/>
+        <xs:attribute type="xs:string" name="field" use="required"/>
+        <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
     <xs:element name="regexp">
         <xs:complexType>
@@ -1955,7 +1838,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.regexp">
-        <xs:attribute name="expr" use="required"/>
+        <xs:attribute type="xs:string" name="expr" use="required"/>
     </xs:attributeGroup>
     <xs:element name="not-empty">
         <xs:complexType>
@@ -1972,7 +1855,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.copy">
-        <xs:attribute name="to-field"/>
+        <xs:attribute type="xs:string" name="to-field"/>
         <xs:attribute name="replace" default="true">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -2001,7 +1884,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.convert">
-        <xs:attribute name="to-field"/>
+        <xs:attribute type="xs:string" name="to-field"/>
         <xs:attribute name="type" use="required">
             <xs:simpleType>
                 <xs:restriction base="xs:token">
@@ -2034,7 +1917,7 @@
                 </xs:restriction>
             </xs:simpleType>
         </xs:attribute>
-        <xs:attribute name="format"/>
+        <xs:attribute type="xs:string" name="format"/>
     </xs:attributeGroup>
     <!-- Failure stuff: inline message or from a properties file -->
     <xs:element name="fail-message">
@@ -2043,7 +1926,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.fail-message">
-        <xs:attribute name="message" use="required"/>
+        <xs:attribute type="xs:string" name="message" use="required"/>
     </xs:attributeGroup>
     <xs:element name="fail-property">
         <xs:complexType>
@@ -2051,7 +1934,7 @@
         </xs:complexType>
     </xs:element>
     <xs:attributeGroup name="attlist.fail-property">
-        <xs:attribute name="resource" use="required"/>
-        <xs:attribute name="property" use="required"/>
+        <xs:attribute type="xs:string" name="resource" use="required"/>
+        <xs:attribute type="xs:string" name="property" use="required"/>
     </xs:attributeGroup>
 </xs:schema>
