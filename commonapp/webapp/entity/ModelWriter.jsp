@@ -1,30 +1,39 @@
 <%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><%
 
-if(request.getParameter("savetofile") != null)
-{
+if("true".equals(request.getParameter("savetofile"))) {
   //save to the file specified in the ModelReader config
   String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
-  String filename = delegator.getModelReader().entityFileName;
+  String serverRoorUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+  ModelReader modelReader = delegator.getModelReader();
   
-  java.net.URL url = new java.net.URL(request.getAttribute(SiteDefs.SERVER_ROOT_URL) + controlPath + "/view/ModelWriter");
-  HttpClient httpClient = new HttpClient(url, new HashMap());
-  InputStream in = httpClient.getStream();
-  
-  File newFile = new File(filename);
-  FileWriter newFileWriter = new FileWriter(newFile);
-  
-  BufferedReader post = new BufferedReader(new InputStreamReader(in));
-  String line = null;
-  while((line = post.readLine()) != null) {
-    newFileWriter.write(line);
-    newFileWriter.write("\n");
+  Map fileNameEntities = modelReader.fileNameEntities;
+  Iterator filenameIter = fileNameEntities.keySet().iterator();
+  while(filenameIter.hasNext()) {
+    String filename = (String)filenameIter.next();
+
+    java.net.URL url = new java.net.URL(serverRoorUrl + controlPath + "/view/ModelWriter");
+    HashMap params = new HashMap();
+    params.put("originalFileName", filename);
+    HttpClient httpClient = new HttpClient(url, params);
+    InputStream in = httpClient.getStream();
+
+    File newFile = new File(filename);
+    FileWriter newFileWriter = new FileWriter(newFile);
+
+    BufferedReader post = new BufferedReader(new InputStreamReader(in));
+    String line = null;
+    while((line = post.readLine()) != null) {
+      newFileWriter.write(line);
+      newFileWriter.write("\n");
+    }
+    newFileWriter.close();
+    %>
+    If you aren't seeing any exceptions, XML was written successfully to:
+    <%=filename%>
+    from the URL:
+    <%=url.toString()%>
+    <%
   }
-  newFileWriter.close();
-%>If you aren't seeing any exceptions, XML was written successfully to:
-<%=filename%>
-from the URL:
-<%=url.toString()%>
-<%
 }
 else
 {
@@ -137,6 +146,15 @@ else
 
   //put the entityNames TreeSets in a HashMap by packageName
   Collection ec = reader.getEntityNames();
+
+  String originalFileName = request.getParameter("originalFileName");
+  if(originalFileName != null) {
+    ec = (Collection)reader.fileNameEntities.get(originalFileName);
+  }
+  else {
+    ec = reader.getEntityNames();
+  }
+
   Iterator ecIter = ec.iterator();
   while(ecIter.hasNext())
   {
@@ -164,17 +182,13 @@ else
 
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
-  <!-- The modules in this file are as follows:                  -->
-  <!--   - Common                                               -->
-  <!--   - Content                                              -->
-  <!--   - Party                                                -->
-  <!--   - Product                                              -->
-  <!--   - Order                                                -->
-  <!--   - Shipment                                             -->
-  <!--   - Work Effort                                          -->
-  <!--   - Accounting                                           -->
-  <!--   - Human Resources                                      -->
-  <!--   - Security                                            -->
+  <!-- The modules in this file are as follows:                  --><%
+  Iterator packageNameIter = packageNames.iterator();
+  while(packageNameIter.hasNext())
+  {
+    String pName = (String)packageNameIter.next();%>
+  <!--  - <%=pName%> --><%
+  }%>
   <!-- ========================================================= -->
 <%
   Iterator piter = packageNames.iterator();

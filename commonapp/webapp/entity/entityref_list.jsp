@@ -67,8 +67,8 @@
 
 <a href="<%=response.encodeURL(controlPath + "/main")%>" target='main' class='listtext'>Pop up CommonApp main</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/entityref_main")%>" target="entityFrame" class='listtext'>Entity Reference Main Page</A><BR>
-<a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" target="entityFrame" class='listtext'>Generate Entity Model XML</A><BR>
-<a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target="entityFrame" class='listtext'>Save Entity Model XML to File</A><BR>
+<a href="<%=response.encodeURL(controlPath + "/view/ModelWriter")%>" target='_blank' class='listtext'>Generate Entity Model XML (all in one)</A><BR>
+<a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Model XML to Files</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/checkdb")%>" target="entityFrame" class='listtext'>Check/Update Database</A>
 <HR>
 
@@ -91,7 +91,7 @@
 		if ( search == null || entityName.toLowerCase().indexOf(search.toLowerCase()) != -1 ) {						
 			String url = search == null ? "entityref_main#"+entityName : "entityref_main#"+entityName+"?search="+search;
 %>	
-<a href="<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>" target="entityFrame" class='listtext'>[EditDef]</a>
+<a href="<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName)%>" target="_blank" class='listtext'>[EditDef]</a>
 <a href="<%=response.encodeURL(controlPath + "/view/" + url)%>" target="entityFrame" class='listtext'><%= entityName %></a>
 <br>
 <%
