@@ -25,32 +25,33 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     Olivier.Heintz@nereide.biz (migration to UiLabel) 
  * @version 1.0
  * Created on January 18, 2001
  -->
 <simple-map-processors>
   <simple-map-processor name="person">
-    <process field="firstName"><copy/><not-empty><fail-message message="First Name is missing"/></not-empty></process>
+    <process field="firstName"><copy/><not-empty><fail-property resource="PartyUiLabels" property="PartyFirstNameMissing"/></not-empty></process>
     <process field="middleName"><copy/></process>
-    <process field="lastName"><copy/><not-empty><fail-message message="Last Name is missing"/></not-empty></process>
+    <process field="lastName"><copy/><not-empty><fail-property resource="PartyUiLabels" property="PartyLastNameMissingError"/></not-empty></process>
     <process field="personalTitle"><copy/></process>
     <process field="suffix"><copy/></process>
     <process field="nickname"><copy/></process>
     <process field="gender"><copy/></process>
-    <process field="birthDate"><convert type="Date"><fail-message message="Birth Date is not a valid Date"/></convert></process>
-    <process field="height"><convert type="Double"><fail-message message="Height is not a valid number"/></convert></process>
-    <process field="weight"><convert type="Double"><fail-message message="Weight is not a valid number"/></convert></process>
+    <process field="birthDate"><convert type="Date"><fail-property resource="PartyUiLabels" property="PartyBirthDateMissingError"/></convert></process>
+    <process field="height"><convert type="Double"><fail-property resource="PartyUiLabels" property="PartyHeightNotValidNumber"/></convert></process>
+    <process field="weight"><convert type="Double"><fail-property resource="PartyUiLabels" property="PartyWeightNotValidNumber"/></convert></process>
     <process field="mothersMaidenName"><copy/></process>
     <process field="maritalStatus"><copy/></process>
     <process field="socialSecurityNumber"><copy/></process>
     <process field="passportNumber"><copy/></process>
-    <process field="passportExpireDate"><convert type="Date"><fail-message message="Passport Expire Date is not a valid Date"/></convert></process>
-    <process field="totalYearsWorkExperience"><convert type="Double"><fail-message message="Total Years Work Experience is not a valid number"/></convert></process>
+    <process field="passportExpireDate"><convert type="Date"><fail-property resource="PartyUiLabels" property="PartyPassportExpireDateNotValidDate"/></convert></process>
+    <process field="totalYearsWorkExperience"><convert type="Double"><fail-property resource="PartyUiLabels" property="PartyTotalYearsWorkNotValidNumber"/></convert></process>
     <process field="comments"><copy/></process>
   </simple-map-processor>
 
   <simple-map-processor name="partyGroup">
-    <process field="groupName"><copy/><not-empty><fail-message message="Group Name is missing"/></not-empty></process>
+    <process field="groupName"><copy/><not-empty><fail-property resource="PartyUiLabels" property="PartyGroupNameMissing"/></not-empty></process>
     <process field="partyTypeId"><copy/></process>
     <process field="federalTaxId"><copy/></process>
     <process field="comments"><copy/></process>
