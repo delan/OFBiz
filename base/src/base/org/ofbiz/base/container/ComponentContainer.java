@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.3 2003/08/16 18:56:54 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.4 2003/08/16 23:13:57 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.*;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.3 $
+  *@version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ComponentContainer implements Container {
@@ -171,11 +171,15 @@ public class ComponentContainer implements Container {
                 if ("dir".equals(cp.type)) {
                     classPath.addComponent(configRoot + location);
                 } else if ("jar".equals(cp.type)) {
-                    if (location.endsWith("/*")) {
-                        // load the entire directory
-                        String dirLoc = location.substring(0, location.length() - 1);
-                        File path = new File(dirLoc);
+                    String dirLoc = location;
+                    if (dirLoc.endsWith("/*")) {
+                        // strip off the slash splat                        
+                        dirLoc = location.substring(0, location.length() - 1);
+                    }
+                    File path = new File(dirLoc);
+                    if (path.exists()) {
                         if (path.isDirectory()) {
+                            // load all .jar and .zip files in this directory
                             File files[] = path.listFiles();
                             for (int i = 0; i < files.length; i++) {
                                 String file = files[i].getName();
@@ -184,11 +188,11 @@ public class ComponentContainer implements Container {
                                 }
                             }
                         } else {
-                            Debug.logInfo("Location '" + configRoot + dirLoc + "' is not a directory; not loaded", module);
+                            // add a single file
+                            classPath.addComponent(configRoot + location);    
                         }
-                    } else {
-                        // load a single file
-                        classPath.addComponent(configRoot + location);
+                    } else {                                               
+                        Debug.logWarning("Location '" + configRoot + dirLoc + "' does not exist", module);
                     }
                 } else {
                     Debug.logError("Classpath type '" + cp.type + "' is not supported; '" + location + "' not loaded", module);                    
