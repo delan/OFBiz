@@ -39,7 +39,6 @@
         </#if>
     </div>
     <div class="boxhead" align="right">
-        <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderShoppingCart}</a>
         <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderClearOrder}</a>
         <#if (shoppingCart.size() > 0)>
             <a href="javascript:document.cartform.submit()" class="submenutext">${uiLabelMap.OrderRecalculateOrder}</a>

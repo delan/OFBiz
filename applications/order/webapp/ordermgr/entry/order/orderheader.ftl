@@ -29,26 +29,15 @@
   <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
 
+<#if orderHeader?exists>
+  <div class="boxtop">
+    <div class="boxhead" align="left">
+      &nbsp;${uiLabelMap.OrderOrderConfirmation}&nbsp;#<a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a>
+    </div>
+  </div>
+</#if>
 
-      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>        
-        <tr>
-          <td width='100%'>
-            <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-              <tr>
-                <td valign="middle" align="left">
-                  <div class="boxhead">&nbsp;${uiLabelMap.OrderOrderConfirmation}<#if orderHeader?exists>&nbsp;#<a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class="lightbuttontext">${orderHeader.orderId}</a></#if></div>
-                </td>
-                <#if !orderHeader?exists>
-                <td align="right">
-                  <div class="tabletext">
-                    <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderOrderItems}</a><#if cart?has_content && cart.getOrderType() != "PURCHASE_ORDER"><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">${uiLabelMap.FacilityShipping}</a><a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">${uiLabelMap.CommonOptions}</a><a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">${uiLabelMap.AccountingPayment}</a></#if><a href="<@ofbizUrl>/setAdditionalParty</@ofbizUrl>" class="submenutext">${uiLabelMap.PartyParties}</a><a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderCreateOrder}</a>
-                  </div>
-                </td>   
-                </#if>                             
-              </tr>
-            </table>
-          </td>
-        </tr>
+      <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
         <#-- shipping address -->
         <tr>
           <td width='100%'>

@@ -24,17 +24,13 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if requestAttributes.product?exists>
-  <#assign product = requestAttributes.product>
-  <#assign productContentWrapper = requestAttributes.productContentWrapper>
-  <#assign price = requestAttributes.priceMap>     
-  <td align="left" valign="middle" width="10%">
+<#if product?exists>
+  <td align="left" valign="middle" width="5%">
     <div class="tabletext">
-      <nobr><b>${product.productId}</b></nobr>
+      <b>${product.productId}</b>
     </div>
   </td>
-  <td align="left" valign="middle" width="80%">
+  <td align="left" valign="middle" width="90%">
     <a href="<@ofbizUrl>/product?product_id=${product.productId}</@ofbizUrl>" class="buttontext">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</a>
   </td>
   <td align="left" valign="middle" width="5%">

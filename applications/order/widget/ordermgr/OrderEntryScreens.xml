@@ -64,7 +64,7 @@
                 <set field="requestParameters.statusId" to-scope="screen" default-value="REQ_APPROVED"/>
             </actions>
             <widgets>
-                <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
+                <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
                     <decorator-section name="body">
                         <container>
                             <label style="head1" text="Requirements"/>
@@ -82,19 +82,4 @@
             </widgets>
         </section>
     </screen>
-    <!--
-    <screen name="OrderParty">
-        <section>
-            <actions>
-                <set field="title" value="Receive Offline Payment"/>
-                <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/orderparty.bsh"/>
-            </actions>
-            <widgets>
-                <decorator-screen name="CommonOrderEntryDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
-                    <decorator-section name="body"/>
-                </decorator-screen>
-            </widgets>
-        </section>
-    </screen>
-    -->
 </screens>
