@@ -66,7 +66,7 @@ public class RitaServices {
         }
 
         try {
-            RitaServices.setCreditCardInfo(api, context);
+            RitaServices.setCreditCardInfo(api, dctx.getDelegator(), context);
         } catch (GeneralException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -291,7 +291,7 @@ public class RitaServices {
 
         // set the required cc info
         try {
-            RitaServices.setCreditCardInfo(api, context);
+            RitaServices.setCreditCardInfo(api, dctx.getDelegator(), context);
         } catch (GeneralException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
@@ -386,9 +386,12 @@ public class RitaServices {
         }
     }
 
-    private static void setCreditCardInfo(RitaApi api, Map context) throws GeneralException {
+    private static void setCreditCardInfo(RitaApi api, GenericDelegator delegator, Map context) throws GeneralException {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
         GenericValue creditCard = (GenericValue) context.get("creditCard");
+        if (creditCard == null) {
+            creditCard = delegator.findByPrimaryKey("CreditCard", UtilMisc.toMap("paymentMethodId", orderPaymentPreference.getString("paymentMethodId")));
+        }
         if (creditCard != null) {
             List expDateList = StringUtil.split(creditCard.getString("expireDate"), "/");
             String month = (String) expDateList.get(0);
