@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -207,12 +207,12 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <#assign orderHeader = orderHeaderInfo.orderHeader>
             <#assign orderItemInfoList = orderHeaderInfo.orderItemInfoList>
             <#list orderItemInfoList as orderItemInfo>
-              <#assign orderItem = orderItemInfo.orderItem>
+              <#assign orderItemAndShipGroupAssoc = orderItemInfo.orderItemAndShipGroupAssoc>
               <#assign product = orderItemInfo.product>
               <#assign orderItemShipGrpInvResList = orderItemInfo.orderItemShipGrpInvResList>
               <tr class="${rowClass}">
                 <td valign="top">
-                  <div class="tabletext"><b>${orderHeaderInfo_index+1}</b>-${orderItem.orderId}:${orderItem.orderItemSeqId}</div>
+                  <div class="tabletext"><b>${orderHeaderInfo_index+1}</b>-${orderItemAndShipGroupAssoc.orderId}:${orderItemAndShipGroupAssoc.orderItemSeqId}</div>
                 </td>
                 <td valign="top">
                   <#if product?has_content>
@@ -222,7 +222,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                   </#if>
                 </td>
                 <td valign="top">
-                  <div class="tabletext">${orderItem.quantity}</div>
+                  <div class="tabletext">${orderItemAndShipGroupAssoc.quantity}</div>
                 </td>
                 <td valign="top">
                   <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
@@ -260,7 +260,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         </tr>
       </table>
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
-    	<#-- wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem -->
+    	<#-- wrongQuantityReservedList: List of Maps with reservedQuantity and orderItemAndShipGroupAssoc -->
     	<#-- insufficientQohList: List of Maps with inventoryItem and quantityNeeded -->
         <#assign rowClass = "viewManyTR2">
           <#list insufficientQohList?if_exists as insufficientQoh>
@@ -279,13 +279,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
               </#if>        
           </#list>          
           <#list wrongQuantityReservedList?if_exists as wrongQuantityReserved>
-            <#assign orderItem = wrongQuantityReserved.orderItem>
+            <#assign orderItemAndShipGroupAssoc = wrongQuantityReserved.orderItemAndShipGroupAssoc>
             <#assign reservedQuantity = wrongQuantityReserved.reservedQuantity>
             <#assign issuedQuantity = wrongQuantityReserved.issuedQuantity>
             <#assign reservedIssuedQuantity = wrongQuantityReserved.reservedIssuedQuantity>
               <tr class="${rowClass}">
                 <td>
-                  <div class="tabletext">Order Item ${orderItem.orderId}:${orderItem.orderItemSeqId} is for ${orderItem.quantity} of product ID [${orderItem.productId}] but ${reservedQuantity} was reserved and ${issuedQuantity} has been issued. The total reserved and issued is ${reservedIssuedQuantity} which does not equal: ${orderItem.quantity} the order item quantity.</div>
+                  <div class="tabletext">Order Item ${orderItemAndShipGroupAssoc.orderId}:${orderItemAndShipGroupAssoc.orderItemSeqId} is for ${orderItemAndShipGroupAssoc.quantity} of product ID [${orderItemAndShipGroupAssoc.productId}] but ${reservedQuantity} was reserved and ${issuedQuantity} has been issued. The total reserved and issued is ${reservedIssuedQuantity} which does not equal: ${orderItemAndShipGroupAssoc.quantity} the order item quantity.</div>
                 </td>
               </tr>
               <#-- toggle the row color -->

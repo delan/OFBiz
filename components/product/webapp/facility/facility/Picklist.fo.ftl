@@ -2,7 +2,7 @@
 <fo:root xmlns:fo="http://www.w3.org/1999/XSL/Format">
 
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -193,12 +193,12 @@
                 </fo:table-header>
                 <fo:table-body>
                     <#list orderItemInfoList as orderItemInfo>
-                        <#assign orderItem = orderItemInfo.orderItem>
+                        <#assign orderItemAndShipGroupAssoc = orderItemInfo.orderItemAndShipGroupAssoc>
                         <#assign product = orderItemInfo.product>
                         <#assign orderItemShipGrpInvResList = orderItemInfo.orderItemShipGrpInvResList>
                         <fo:table-row>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderItem.orderItemSeqId}</fo:block>
+                                <fo:block>${orderItemAndShipGroupAssoc.orderItemSeqId}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#if product?has_content>
@@ -208,7 +208,7 @@
                                 </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
-                                <fo:block>${orderItem.quantity}</fo:block>
+                                <fo:block>${orderItemAndShipGroupAssoc.quantity}</fo:block>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
                                 <#list orderItemShipGrpInvResList as orderItemShipGrpInvRes>
@@ -235,7 +235,7 @@
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
         <fo:block font-size="14pt">${uiLabelMap.ProductPickPackWarnings}</fo:block>
-        <#-- wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem -->
+        <#-- wrongQuantityReservedList: List of Maps with reservedQuantity and orderItemAndShipGroupAssoc -->
         <#-- insufficientQohList: List of Maps with inventoryItem and quantityNeeded -->
         <#assign rowColor = "white">
         <#list insufficientQohList?if_exists as insufficientQoh>
@@ -252,12 +252,12 @@
             </#if>        
         </#list>          
         <#list wrongQuantityReservedList?if_exists as wrongQuantityReserved>
-            <#assign orderItem = wrongQuantityReserved.orderItem>
+            <#assign orderItemAndShipGroupAssoc = wrongQuantityReserved.orderItemAndShipGroupAssoc>
             <#assign reservedQuantity = wrongQuantityReserved.reservedQuantity>
             <#assign issuedQuantity = wrongQuantityReserved.issuedQuantity>
             <#assign reservedIssuedQuantity = wrongQuantityReserved.reservedIssuedQuantity>
             <fo:block font-size="10pt">
-                Order Item ${orderItem.orderId}:${orderItem.orderItemSeqId} is for ${orderItem.quantity} of product ID [${orderItem.productId}] but ${reservedQuantity} was reserved and ${issuedQuantity} has been issued. The total reserved and issued is ${reservedIssuedQuantity} which does not equal: ${orderItem.quantity} the order item quantity.
+                Order Item ${orderItemAndShipGroupAssoc.orderId}:${orderItemAndShipGroupAssoc.orderItemSeqId} is for ${orderItemAndShipGroupAssoc.quantity} of product ID [${orderItemAndShipGroupAssoc.productId}] but ${reservedQuantity} was reserved and ${issuedQuantity} has been issued. The total reserved and issued is ${reservedIssuedQuantity} which does not equal: ${orderItemAndShipGroupAssoc.quantity} the order item quantity.
             </fo:block>
             <#-- toggle the row color -->
             <#if rowColor == "white">
