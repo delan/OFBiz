@@ -83,6 +83,7 @@
         <copy file="lib/common/mm.mysql-2.0.8-bin.jar" toDir="${catalina.dir}/common/lib"/> 
         <copy file="lib/common/poolman.jar" toDir="${catalina.dir}/common/lib"/> 
         
+        <copy file="lib/common/ots-jts_1.0.jar" toDir="${catalina.dir}/common/lib"/> 
         <copy file="lib/common/tyrex-0.9.8.5.jar" toDir="${catalina.dir}/common/lib"/> 
 
         <copy file="lib/share/axis.jar" toDir="${catalina.dir}/lib"/>
