@@ -49,7 +49,7 @@ if (productId != null) {
     if (product != null) {
         request.setAttribute("product", product);  
         var content = context.get("page");
-        content.setTitle(product.getString("productName"));
+        content.setProperty("title", product.getString("productName"));
         context.put("metaDescription", product.getString("productName"));
         var keywords = new ArrayList();
         keywords.add(product.getString("productName"));

@@ -35,7 +35,7 @@ var productCategoryId = requestParameters.get("category_id");
 var category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 var catalogName = CatalogWorker.getCatalogName(request);
 var content = context.get("page");
-content.setTitle(category.getString("description"));
+content.setProperty("title", category.getString("description"));
 context.put("metaDescription", category.getString("description"));
 context.put("metaKeywords", category.getString("description") + ", " + catalogName);
 

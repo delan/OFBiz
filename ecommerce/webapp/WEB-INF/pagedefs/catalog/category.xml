@@ -2,5 +2,5 @@
 <page>
     <template>main_lr</template>
     <property name="title">Category Page</property>
-    <content-action name="/catalog/category.js"/>
+    <page-action name="/catalog/category.js"/>
 </page>
