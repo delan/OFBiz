@@ -187,9 +187,7 @@ public class EntitySyncContext {
         try {
             Map initialHistoryRes = dispatcher.runSync("createEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "beginningSynchTime", this.currentRunStartTime, "lastCandidateEndTime", this.currentRunEndTime, "userLogin", userLogin));
             if (ServiceUtil.isError(initialHistoryRes)) {
-                List errorList = new LinkedList();
-                saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
-                throw new GeneralServiceException(errorMsg, errorList, null, initialHistoryRes, null);
+                throw new GeneralServiceException(errorMsg, null, null, initialHistoryRes, null);
             }
             this.startDate = (Timestamp) initialHistoryRes.get("startDate");
         } catch (GenericServiceException e) {
@@ -371,16 +369,12 @@ public class EntitySyncContext {
             // now we have updated EntitySync and EntitySyncHistory, check both ops for errors...
             if (ServiceUtil.isError(updateEsRunResult)) {
                 String errorMsg = "Error running EntitySync [" + entitySyncId + "], update of EntitySync record with lastSuccessfulSynchTime failed.";
-                List errorList = new LinkedList();
-                saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
-                throw new GeneralServiceException(errorMsg, errorList, null, updateEsRunResult, null);
+                throw new GeneralServiceException(errorMsg, null, null, updateEsRunResult, null);
             }
             
             if (ServiceUtil.isError(updateEsHistRunResult)) {
                 String errorMsg = "Error running EntitySync [" + entitySyncId + "], update of EntitySyncHistory (startDate:[" + startDate + "]) record with lastSuccessfulSynchTime and result stats failed.";
-                List errorList = new LinkedList();
-                saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher, userLogin);
-                throw new GeneralServiceException(errorMsg, errorList, null, updateEsHistRunResult, null);
+                throw new GeneralServiceException(errorMsg, null, null, updateEsHistRunResult, null);
             }
         } catch (GenericServiceException e) {
             throw new GeneralServiceException("Error saving results reported from data store", e);
@@ -526,7 +520,7 @@ public class EntitySyncContext {
         }
     }
 
-    protected static void saveSyncErrorInfo(String entitySyncId, Timestamp startDate, String runStatusId, List errorMessages, LocalDispatcher dispatcher, GenericValue userLogin) {
+    public void saveSyncErrorInfo(String runStatusId, List errorMessages) {
         // set error statuses on the EntitySync and EntitySyncHistory entities
         try {
             Map errorEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", runStatusId, "userLogin", userLogin));
@@ -593,9 +587,7 @@ public class EntitySyncContext {
             try {
                 Map remoteStoreResult = dispatcher.runSync(targetServiceName, targetServiceMap);
                 if (ServiceUtil.isError(remoteStoreResult)) {
-                    List errorList = new LinkedList();
-                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher, userLogin);
-                    throw new GeneralServiceException(serviceErrorMsg, errorList, null, remoteStoreResult, null);
+                    throw new GeneralServiceException(serviceErrorMsg, null, null, remoteStoreResult, null);
                 }
                 
                 this.totalStoreCalls++;
