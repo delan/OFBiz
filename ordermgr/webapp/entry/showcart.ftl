@@ -72,7 +72,7 @@ function addToList() {
 //-->
 </script>
 
-<#if !sessionAttributes.orderMode?exists || requestParameters.updateParty?exists>
+<#if !sessionAttributes.orderMode?exists || updateParty?exists>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -121,7 +121,12 @@ function addToList() {
           <td width='6%'>&nbsp;</td>
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
-              <input type='text' class='inputBox' name='partyId' value='${requestParameters.partyId?if_exists}'>
+              <#if partyId?exists>
+                <#assign thisPartyId = partyId>
+              <#else>
+                <#assign thisPartyId = requestParameters.partyId?if_exists>
+              </#if>              
+              <input type='text' class='inputBox' name='partyId' value='${thisPartyId?if_exists}'>
             </div>
           </td>
         </tr>         
@@ -165,7 +170,7 @@ function addToList() {
                     <#else>
                       <span class='tabletext'>[Party not defined]</span>
                     </#if>
-                    - <span class='tabletext'><a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[Change]</a></span>
+                    - <span class='tabletext'><a href="<@ofbizUrl>/orderentry?updateParty=Y</@ofbizUrl>" class="buttontext">[Change]</a><#if partyId?default("_NA_") == "_NA_"> - <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">[Find Party]</a></#if></span>
                   </td>
                   <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
                   <td align="right" valign="middle">
