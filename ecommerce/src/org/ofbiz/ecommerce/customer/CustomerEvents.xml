@@ -92,6 +92,8 @@
                 <process field="USER_LAST_NAME"><copy to-field="lastName"/><not-empty><fail-message message="Last Name is missing"/></not-empty></process>
                 <process field="USER_TITLE"><copy to-field="personalTitle"/></process>
                 <process field="USER_SUFFIX"><copy to-field="suffix"/></process>
+                <process field="USER_BIRTHDATE"><convert type="Date" to-field="birthDate"><fail-message message="Birthdate is not formatted correctly: must be yyyy-mm-dd, like 1982-07-21"/></convert></process>
+                <process field="USER_GENDER"><copy to-field="gender"/></process>
             </simple-map-processor>
         </call-map-processor>
 
