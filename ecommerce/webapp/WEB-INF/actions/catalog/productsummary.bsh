@@ -42,6 +42,8 @@ catalogId = CatalogWorker.getCurrentCatalogId(request);
 autoUserLogin = session.getAttribute("autoUserLogin");
 userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 
+context.put("nowTimestamp", UtilDateTime.nowTimestamp());
+
 if (product != null) {
     productId = product.get("productId");
 }

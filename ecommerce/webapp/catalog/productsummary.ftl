@@ -60,10 +60,10 @@
       </td>
       <td valign=center align=right>
           <#-- check to see if introductionDate hasn't passed yet -->
-          <#if product.introductionDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(product.introductionDate)>
+          <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
             <div class='tabletext' style='color: red;'>Not Yet Available</div>
           <#-- check to see if salesDiscontinuationDate has passed -->
-          <#elseif product.salesDiscontinuationDate?exists && Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().before(product.salesDiscontinuationDate)>
+          <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.before(product.salesDiscontinuationDate)>
             <div class='tabletext' style='color: red;'>No Longer Available</div>          
           <#-- check to see if the product is a virtual product -->
           <#elseif product.isVirtual?exists && product.isVirtual == "Y">
