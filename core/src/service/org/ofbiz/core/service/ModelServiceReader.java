@@ -326,8 +326,9 @@ public class ModelServiceReader {
             param.name = UtilXml.checkEmpty(attribute.getAttribute("name"));
             param.type = UtilXml.checkEmpty(attribute.getAttribute("type"));
             param.mode = UtilXml.checkEmpty(attribute.getAttribute("mode"));
-            // defaults to false, if anything but true will be false
-            param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional"));
+            param.formLabel = UtilXml.checkEmpty(attribute.getAttribute("form-label"));            
+            param.optional = "true".equalsIgnoreCase(attribute.getAttribute("optional")); // default to true
+            param.formDisplay = !"false".equalsIgnoreCase(attribute.getAttribute("form-display")); // default to false
             service.addParam(param);
         }
 

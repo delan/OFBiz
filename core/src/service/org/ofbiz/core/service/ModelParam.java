@@ -41,9 +41,15 @@ public class ModelParam {
 
     /** Parameter mode (IN/OUT/INOUT) */
     public String mode;
+    
+    /** The form label */
+    public String formLabel;
 
     /** Is this Parameter required or optional? Default to false, or required. */
     public boolean optional = false;
+    
+    /** Is this parameter to be displayed via the form tool? */
+    public boolean formDisplay = true;
     
     /** Is this Parameter set internally? */
     public boolean internal = false;
