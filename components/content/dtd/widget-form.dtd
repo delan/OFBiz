@@ -43,7 +43,7 @@
 		a list form is a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element;
 		a multi form is like a list/tabular form, but it creates a single form to submit all list item forms at once; the field names in the resulting form have an appendage attached to make them unique according to the pattern used for the multi-service event handler that will call one service for each list element
 -->
-<!ELEMENT form ( alt-target*, auto-fields-service*, auto-fields-entity*, field*, sort-order? )>
+<!ELEMENT form ( actions?, alt-target*, auto-fields-service*, auto-fields-entity*, field*, sort-order? )>
 <!ATTLIST form
     name CDATA #REQUIRED
     type ( single | list | multi | upload ) #REQUIRED
