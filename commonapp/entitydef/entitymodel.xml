@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Thu Sep 13 10:33:04 MDT 2001
+ *@created    Thu Sep 13 10:39:03 MDT 2001
  *@version    1.0
  */
 -->
@@ -1085,6 +1085,16 @@
         <type>many</type>
         <rel-table-name>PAYMENT_APPLICATION</rel-table-name>
         <key-map><col-name>BILLING_ACCOUNT_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>CONTACT_MECH</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
+      </relation>
+      <relation>
+        <type>one</type>
+        <rel-table-name>POSTAL_ADDRESS</rel-table-name>
+        <key-map><col-name>CONTACT_MECH_ID</col-name></key-map>
       </relation>
     </entity>	
     <entity>
