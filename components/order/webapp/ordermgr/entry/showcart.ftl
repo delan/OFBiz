@@ -324,6 +324,13 @@ ${pages.get("/entry/OrderEntryTabBar.ftl")}
 		  		  
                 </div>
 	        </td></tr>
+	        <#if cartLine.getRequirementId()?has_content>
+	          <tr>
+                    <td colspan="2" align="left">
+                      <div class="tabletext"><b>${uiLabelMap.OrderRequirementId}</b>: ${cartLine.getRequirementId()?if_exists}</div>
+                    </td>
+                  </tr>
+	        </#if>
 	        <#if cartLine.getItemComment()?has_content>
 	          <tr><td align="left"><div class="tableheadtext">${uiLabelMap.CommonComment} : </div></td>
 	              <td align="left"><div class="tabletext">${cartLine.getItemComment()?if_exists}</div>
