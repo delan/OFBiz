@@ -23,6 +23,7 @@
  */
 package org.ofbiz.core.widget.form;
 
+import java.sql.Timestamp;
 import java.util.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.entity.GenericDelegator;
@@ -30,6 +31,9 @@ import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.util.*;
+
+import bsh.EvalError;
+import bsh.Interpreter;
 
 /**
  * Widget Library - Form model class
@@ -216,23 +220,42 @@ public class ModelFormField {
         }
     }
 
+    /**
+     * Gets the entry from the context that corresponds to this field; if this
+     * form is being rendered in an error condition (ie isError in the context
+     * is true) then the value will be retreived from the parameters Map in 
+     * the context.
+     * 
+     * @param context
+     * @return
+     */
     public String getEntry(Map context) {
-        Map dataMap = this.getMap(context);
-        if (dataMap == null) {
-            dataMap = context;
-        }
-        Object retVal = null;
-        if (!this.entryAcsr.isEmpty()) {
-            retVal = this.entryAcsr.get(dataMap);
+        Boolean isError = (Boolean) context.get("isError");
+        if (isError != null && isError.booleanValue()) {
+            Map parameters = (Map) context.get("parameters");
+            if (parameters != null) {
+                return (String) parameters.get(this.getParameterName());
+            } else {
+                return "";
+            }
         } else {
-            // if no extry name was specified, use the field's name
-            retVal = dataMap.get(this.name);
-        }
+            Map dataMap = this.getMap(context);
+            if (dataMap == null) {
+                dataMap = context;
+            }
+            Object retVal = null;
+            if (!this.entryAcsr.isEmpty()) {
+                retVal = this.entryAcsr.get(dataMap);
+            } else {
+                // if no extry name was specified, use the field's name
+                retVal = dataMap.get(this.name);
+            }
         
-        if (retVal != null) {
-            return retVal.toString();
-        } else {
-            return "";
+            if (retVal != null) {
+                return retVal.toString();
+            } else {
+                return "";
+            }
         }
     }
 
@@ -313,6 +336,122 @@ public class ModelFormField {
     public String getRedWhen() {
         return redWhen;
     }
+    
+    /**
+     * the widget/interaction part will be red if the date value is
+     *  before-now (for ex. thruDate), after-now (for ex. fromDate), or by-name (if the
+     *  field's name or entry-name or fromDate or thruDate the corresponding 
+     *  action will be done); only applicable when the field is a timestamp
+     * 
+     * @param context
+     * @return
+     */
+    public boolean shouldBeRed(Map context) {
+        // red-when ( never | before-now | after-now | by-name ) "by-name"
+        
+        String redCondition = this.redWhen;
+        
+        if ("never".equals(redCondition)) {
+            return false;
+        }
+        
+        // for performance resaons we check this first, most fields will be eliminated here and the valueOfs will not be necessary
+        if (UtilValidate.isEmpty(redCondition) || "by-name".equals(redCondition)) {
+            if ("fromDate".equals(this.name) || "fromDate".equals(this.entryAcsr.getOriginalName())) {
+                redCondition = "after-now";
+            } else if ("thruDate".equals(this.name) || "thruDate".equals(this.entryAcsr.getOriginalName())) {
+                redCondition = "before-now";
+            } else {
+                return false;
+            }
+        }
+        
+        boolean isBeforeNow = false;
+        if ("before-now".equals(redCondition)) {
+            isBeforeNow = true;
+        } else if ("after-now".equals(redCondition)) {
+            isBeforeNow = false;
+        } else {
+            return false;
+        }
+
+        
+        java.sql.Date dateVal = null;
+        java.sql.Time timeVal = null;
+        java.sql.Timestamp timestampVal = null;
+        
+        //now before going on, check to see if the current entry is a valid date and/or time and get the value
+        String value = this.getEntry(context);
+        try {
+            timestampVal = java.sql.Timestamp.valueOf(value);
+        } catch (Exception e) {
+            // okay, not a timestamp...
+        }
+        
+        if (timestampVal == null) {
+            try {
+                dateVal = java.sql.Date.valueOf(value);
+            } catch (Exception e) {
+                // okay, not a date...
+            }
+        }
+        
+        if (timestampVal == null && dateVal == null) {
+            try {
+                timeVal = java.sql.Time.valueOf(value);
+            } catch (Exception e) {
+                // okay, not a time...
+            }
+        }
+        
+        if (timestampVal == null && dateVal == null && timeVal == null) {
+            return false;
+        }        
+        
+        long nowMillis = System.currentTimeMillis();
+        if (timestampVal != null) {
+            java.sql.Timestamp nowStamp = new java.sql.Timestamp(nowMillis);
+            if (!timestampVal.equals(nowStamp)) {
+                if (isBeforeNow) {
+                    if (timestampVal.before(nowStamp)) {
+                        return true; 
+                    }
+                } else {
+                    if (timestampVal.after(nowStamp)) {
+                        return true; 
+                    }
+                }
+            }
+        } else if (dateVal != null) {
+            java.sql.Date nowDate = new java.sql.Date(nowMillis);
+            if (!dateVal.equals(nowDate)) {
+                if (isBeforeNow) {
+                    if (dateVal.before(nowDate)) {
+                        return true; 
+                    }
+                } else {
+                    if (dateVal.after(nowDate)) {
+                        return true; 
+                    }
+                }
+            }
+        } else if (timeVal != null) {
+            java.sql.Time nowTime = new java.sql.Time(nowMillis);
+            if (!timeVal.equals(nowTime)) {
+                if (isBeforeNow) {
+                    if (timeVal.before(nowTime)) {
+                        return true; 
+                    }
+                } else {
+                    if (timeVal.after(nowTime)) {
+                        return true; 
+                    }
+                }
+            }
+        }
+        
+        return false;
+    }
 
     /**
      * @return
@@ -379,6 +518,31 @@ public class ModelFormField {
      */
     public String getUseWhen() {
         return useWhen;
+    }
+    
+    public boolean shouldUse(Map context) {
+        if (UtilValidate.isEmpty(useWhen)) {
+            return true;
+        } else {
+            try {
+                Interpreter bsh = this.modelForm.getBshInterpreter(context);
+                Object retVal = bsh.eval(this.useWhen);
+                boolean condTrue = false;
+                // retVal should be a Boolean, if not something weird is up...
+                if (retVal instanceof Boolean) {
+                    Boolean boolVal = (Boolean) retVal;
+                    condTrue = boolVal.booleanValue();
+                } else {
+                    throw new IllegalArgumentException("Return value from use-when condition eval was not a Boolean: " + retVal.getClass().getName() + " [" + retVal + "] on the field " + this.name + " of form " + this.modelForm.name);
+                }
+                
+                return condTrue;
+            } catch (EvalError e) {
+                String errMsg = "Error evaluating BeanShell use-when condition [" + this.useWhen + "] on the field " + this.name + " of form " + this.modelForm.name + ": " + e.toString();
+                Debug.logError(e, errMsg);
+                throw new IllegalArgumentException(errMsg);
+            }
+        }
     }
 
     /**

@@ -144,7 +144,20 @@ public class ModelForm {
         }
     }
     
-    public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    /**
+     * Renders this form to a String, i.e. in a text format, as defined with the 
+     * FormStringRenderer implementation.
+     * 
+     * @param buffer The StringBuffer that the form text will be written to
+     * @param context Map containing the form context; the following are 
+     *   reserved words in this context: parameters (Map), isError (Boolean), 
+     *   itemIndex (Integer, for lists only, otherwise null), bshInterpreter
+     * @param formStringRenderer An implementation of the FormStringRenderer 
+     *   interface that is responsible for the actual text generation for 
+     *   different form elements; implementing you own makes it possible to 
+     *   use the same form definitions for many types of form UIs
+     */
+    public void renderFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
         // TODO: based on the type of form, render form headers/footers/wrappers and call individual field renderers
         // NOTE: for display and hyperlink with also hidden set to true: iterate through field list, find these and hidden fields and render them
         if ("single".equals(this.type)) {
@@ -326,7 +339,7 @@ public class ModelForm {
     public String getTarget(Map context) {
         try {
             // use the same Interpreter (ie with the same context setup) for all evals
-            Interpreter bsh = BshUtil.makeInterpreter(context);
+            Interpreter bsh = this.getBshInterpreter(context);
             Iterator altTargetIter = this.altTargets.iterator();
             while (altTargetIter.hasNext()) {
                 AltTarget altTarget = (AltTarget) altTargetIter.next();
@@ -337,9 +350,7 @@ public class ModelForm {
                     Boolean boolVal = (Boolean) retVal;
                     condTrue = boolVal.booleanValue();
                 } else {
-                    // what to do? fo now nothing...
-                    Debug.logWarning("Return value from target condition eval was not a Boolean: " + retVal.getClass().getName() + " [" + retVal + "]");
-                    condTrue = false;
+                    throw new IllegalArgumentException("Return value from target condition eval was not a Boolean: " + retVal.getClass().getName() + " [" + retVal + "] of form " + this.name);
                 }
                 
                 if (condTrue) {
@@ -347,7 +358,9 @@ public class ModelForm {
                 }
             }
         } catch (EvalError e) {
-            Debug.logError(e, "Error evaluating BeanShell target conditions");
+            String errmsg = "Error evaluating BeanShell target conditions on form " + this.name;
+            Debug.logError(e, errmsg);
+            throw new IllegalArgumentException(errmsg);
         }
         
         return target;
@@ -372,6 +385,15 @@ public class ModelForm {
      */
     public String getType() {
         return type;
+    }
+    
+    public Interpreter getBshInterpreter(Map context) throws EvalError {
+        Interpreter bsh = (Interpreter) context.get("bshInterpreter");
+        if (bsh == null) {
+            bsh = BshUtil.makeInterpreter(context);
+            context.put("bshInterpreter", bsh);
+        }
+        return bsh;
     }
 
     /**

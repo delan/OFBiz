@@ -25,9 +25,6 @@ package org.ofbiz.core.widget.form;
 
 import java.util.Map;
 
-import org.ofbiz.core.entity.GenericDelegator;
-import org.ofbiz.core.service.LocalDispatcher;
-
 /**
  * Widget Library - Form String Renderer interface
  *
@@ -55,7 +52,7 @@ public interface FormStringRenderer {
 
     public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField);
     
-    public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm, Integer itemNumber);
+    public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm);
     public void renderFormClose(StringBuffer buffer, Map context, ModelForm modelForm);
     
     public void renderFormatWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm);

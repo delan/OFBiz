@@ -55,12 +55,20 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderDisplayField(StringBuffer buffer, Map context, DisplayField displayField) {
         ModelFormField modelFormField = displayField.getModelFormField();
+
         buffer.append("<span");
+
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
             buffer.append(" class=\"");
             buffer.append(modelFormField.getWidgetStyle());
             buffer.append("\"");
         }
+
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
         buffer.append(">");
         buffer.append(displayField.getDescription(context));
         buffer.append("</span>");
@@ -78,8 +86,45 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextField)
      */
     public void renderTextField(StringBuffer buffer, Map context, TextField textField) {
-        // TODO Auto-generated method stub
+        ModelFormField modelFormField = textField.getModelFormField();
+        
+        buffer.append("<input type=\"text\"");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName());
+        buffer.append('"');
+        
+        String value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        buffer.append(" size=\"");
+        buffer.append(textField.getSize());
+        buffer.append('"');
+        
+        Integer maxlength = textField.getMaxlength();
+        if (maxlength != null) {
+            buffer.append(" maxlength=\"");
+            buffer.append(maxlength.intValue());
+            buffer.append('"');
+        }
 
+        buffer.append("/>");
     }
 
     /* (non-Javadoc)
@@ -94,8 +139,56 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDateTimeField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DateTimeField)
      */
     public void renderDateTimeField(StringBuffer buffer, Map context, DateTimeField dateTimeField) {
-        // TODO Auto-generated method stub
+        ModelFormField modelFormField = dateTimeField.getModelFormField();
+        
+        buffer.append("<input type=\"text\"");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        // add a style of red if this is a date/time field and redWhen is true
+        if (modelFormField.shouldBeRed(context)) {
+            buffer.append(" style=\"color: red;\"");
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName());
+        buffer.append('"');
+        
+        String value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        // the default values for a timestamp
+        int size = 25;
+        int maxlength = 30;
+        
+        if ("date".equals(dateTimeField.type)) {
+            size = 10;
+            maxlength = 12;
+        } else if ("time".equals(dateTimeField.type)) {
+            size = 12;
+            maxlength = 15;
+        }
+        
+        buffer.append(" size=\"");
+        buffer.append(size);
+        buffer.append('"');
+        
+        buffer.append(" maxlength=\"");
+        buffer.append(maxlength);
+        buffer.append('"');
 
+        buffer.append("/>");
+        
+        // TODO: add calendar pop-up button and seed data
     }
 
     /* (non-Javadoc)
@@ -126,24 +219,91 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderSubmitField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.SubmitField)
      */
     public void renderSubmitField(StringBuffer buffer, Map context, SubmitField submitField) {
-        // TODO Auto-generated method stub
-
+        ModelFormField modelFormField = submitField.getModelFormField();
+        
+        if ("button".equals(submitField.buttonType)) {
+            buffer.append("<input type=\"submit\"");
+        
+            String className = modelFormField.getWidgetStyle();
+            if (UtilValidate.isNotEmpty(className)) {
+                buffer.append(" class=\"");
+                buffer.append(className);
+                buffer.append('"');
+            }
+        
+            buffer.append(" name=\"");
+            buffer.append(modelFormField.getParameterName());
+            buffer.append('"');
+        
+            String title = modelFormField.getTitle(context);
+            if (UtilValidate.isNotEmpty(title)) {
+                buffer.append(" value=\"");
+                buffer.append(title);
+                buffer.append('"');
+            }
+        
+            buffer.append("/>");
+        } else if ("text-link".equals(submitField.buttonType)) {
+            // TODO: implement text-link submit buttons
+            Integer itemIndex = (Integer) context.get("itemIndex");
+            if (itemIndex != null) {
+                buffer.append(itemIndex.intValue());
+            }
+            
+        } else if ("image".equals(submitField.buttonType)) {
+            // TODO: implement image submit buttons
+        }
     }
 
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderResetField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.ResetField)
      */
     public void renderResetField(StringBuffer buffer, Map context, ResetField resetField) {
-        // TODO Auto-generated method stub
+        ModelFormField modelFormField = resetField.getModelFormField();
 
+        buffer.append("<input type=\"reset\"");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName());
+        buffer.append('"');
+        
+        String title = modelFormField.getTitle(context);
+        if (UtilValidate.isNotEmpty(title)) {
+            buffer.append(" value=\"");
+            buffer.append(title);
+            buffer.append('"');
+        }
+        
+        buffer.append("/>");
     }
 
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderHiddenField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HiddenField)
      */
     public void renderHiddenField(StringBuffer buffer, Map context, HiddenField hiddenField) {
-        // TODO Auto-generated method stub
-
+        ModelFormField modelFormField = hiddenField.getModelFormField();
+        
+        buffer.append("<input type=\"hidden\"");
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName());
+        buffer.append('"');
+        
+        String value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(" value=\"");
+            buffer.append(value);
+            buffer.append('"');
+        }
+        
+        buffer.append("/>");
     }
 
     /* (non-Javadoc)
@@ -166,20 +326,20 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(">");
         buffer.append(modelFormField.getTitle(context));
         buffer.append("</span>");
-        
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm, java.lang.Integer)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm)
      */
-    public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm, Integer itemNumber) {
+    public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<form method=\"POST\" action=\"");
         // TODO: call ofbiz URL for target
         buffer.append("/" + modelForm.getTarget(context));
         buffer.append("\" name=\"");
         buffer.append(modelForm.getName());
-        if (itemNumber != null) {
-            buffer.append(itemNumber.intValue());
+        Integer itemIndex = (Integer) context.get("itemIndex");
+        if (itemIndex != null) {
+            buffer.append(itemIndex.intValue());
         }
         buffer.append("\">");
     }
