@@ -105,9 +105,9 @@ public class SurveyWrapper {
         GenericValue survey = this.getSurvey();
         List questions = this.getSurveyQuestions();
         Map results = this.getResults(questions);
-        Map answers = null;
+        Map currentAnswers = null;
         if (responseId != null && canUpdate()) {
-            answers = this.getResponseAnswers(responseId);
+            currentAnswers = this.getResponseAnswers(responseId);
         }
 
         Map templateContext = new HashMap();
@@ -115,7 +115,7 @@ public class SurveyWrapper {
         templateContext.put("survey", survey);
         templateContext.put("surveyResults", results);
         templateContext.put("surveyQuestions", questions);
-        templateContext.put("surveyAnswers", answers);
+        templateContext.put("surveyAnswers", currentAnswers);
         templateContext.put("surveyResponseId", responseId);
         templateContext.put("sequenceSort", UtilMisc.toList("sequenceNum"));
         templateContext.put("additionalFields", passThru);
