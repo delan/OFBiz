@@ -116,8 +116,8 @@ public class IfTag extends BodyTagSupport {
                 } else {
                     // use reflection to find a size() method
                     try {
-                        Method sizeMethod = object.getClass().getMethod("size", null);
-                        int objectSize = ((Integer) sizeMethod.invoke(object, null)).intValue();
+                        Method sizeMethod = object.getClass().getMethod("size", (Class[]) null);
+                        int objectSize = ((Integer) sizeMethod.invoke(object, (Object[]) null)).intValue();
 
                         if (objectSize > localSize)
                             return EVAL_BODY_AGAIN;
