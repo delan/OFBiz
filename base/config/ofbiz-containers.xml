@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.13 2004/03/19 21:48:31 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.14 2004/04/01 18:13:52 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -38,7 +38,7 @@
 
     <!-- RMI Service Dispatcher -->
     <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
-        <property name="lookup-name" value="RMIDispatcher"/>
+        <property name="bound-name" value="RMIDispatcher"/>
         <property name="delegator-name" value="default"/>
         <property name="client-factory" value="org.ofbiz.service.rmi.socket.CompressionClientSocketFactory"/>
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>

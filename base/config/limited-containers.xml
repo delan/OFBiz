@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE ofbiz-containers PUBLIC "-//OFBiz//DTD Containers Config//EN" "http://www.ofbiz.org/dtds/ofbiz-containers.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+ *  OFBiz Containers
+ *  $Id: limited-containers.xml,v 1.1 2004/04/01 18:13:52 ajzeneski Exp $
+-->
+
+<ofbiz-containers>
+    <!-- load the ofbiz components (always first) -->
+    <container name="component-container" class="org.ofbiz.base.container.ComponentContainer">
+        <property name="update-classpath" value="false"/>
+    </container>
+
+    <!-- load the cached classloader container (always second) -->
+    <container name="classloader-container" class="org.ofbiz.base.container.ClassLoaderContainer"/>
+
+    <!-- RMI Service Dispatcher -->
+    <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
+        <property name="bound-host" value="localhost"/>
+        <property name="bound-port" value="1099"/>
+        <property name="bound-name" value="RMIDispatcher"/>
+        <property name="delegator-name" value="default"/>
+        <property name="client-factory" value="org.ofbiz.service.rmi.socket.CompressionClientSocketFactory"/>
+        <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
+    </container>
+
+    <!-- load BeanShell remote telnet server -->
+    <container name="beanshell-container" class="org.ofbiz.base.container.BeanShellContainer">
+        <!-- the port below and port-1 will be opened by beanshell -->
+        <property name="telnet-port" value="9990"/>
+        <property name="app-name" value="OFBiz"/>
+    </container>
+</ofbiz-containers>
