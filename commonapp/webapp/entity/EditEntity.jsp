@@ -68,6 +68,10 @@
 
     String entityGroup = request.getParameter("entityGroup");
     delegator.getModelGroupReader().getGroupCache().put(entityName, entityGroup);
+
+    String filename = request.getParameter("filename");
+    delegator.getModelReader().entityFile.put(entityName, filename);
+    delegator.getModelReader().rebuildFileNameEntities();
   }
   else if("removeField".equals(event))
   {
@@ -284,8 +288,12 @@ Column Name: <%=entity.tableName%><br>
   <BR>
   <INPUT type=text size='60' name='version' value='<%=entity.version%>'> (Version)
   <BR>
+  <BR>
   <INPUT type=text size='60' name='entityGroup' value='<%=UtilFormatOut.checkNull(delegator.getModelGroupReader().getEntityGroupName(entityName))%>'> (Group)
   <BR>(This group is for the "<%=delegator.getDelegatorName()%>" delegator)
+  <BR>
+  <BR>
+  <INPUT type=text size='60' name='filename' value='<%=UtilFormatOut.checkNull((String)delegator.getModelReader().entityFile.get(entityName))%>'> (Filename)
   <BR>
   <INPUT type=submit value='Update Entity'>
 </FORM>
