@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  */
 -->
 
@@ -1061,7 +1061,7 @@
       <field name="physicalInventoryId" type="id-ne"></field>
       <field name="physicalInventoryDate" type="date-time"></field>
       <field name="partyId" type="id"></field>
-      <field name="comments" type="comment"></field>
+      <field name="generalComments" type="comment"></field>
       <prim-key field="physicalInventoryId"/>
       <relation type="many" rel-entity-name="InventoryItemVariance">
         <key-map field-name="physicalInventoryId"/>
@@ -1078,7 +1078,7 @@
       <alias entity-alias="PI" name="physicalInventoryId"/>
       <alias entity-alias="PI" name="physicalInventoryDate"/>
       <alias entity-alias="PI" name="partyId"/>
-      <alias entity-alias="PI" name="globalComments" field="comments"/>
+      <alias entity-alias="PI" name="generalComments"/>
       <alias entity-alias="IIV" name="inventoryItemId"/>
       <alias entity-alias="IIV" name="varianceReasonId"/>
       <alias entity-alias="IIV" name="availableToPromise"/>

@@ -30,7 +30,6 @@
 <simple-methods>
     <!-- InventoryItem methods -->
     <simple-method method-name="createInventoryItem" short-description="Create an InventoryItem">
-    <!-- BIG NOTE and TODO: need some way of easily doing either the CATALOG_* or the FACILITY_* permissions, ie allowing both... -->
         <check-permission permission="CATALOG" action="_CREATE">
         	<alt-permission permission="FACILITY" action="_CREATE"/>
         	<fail-message message="Security Error: to run createInventoryItem you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
@@ -56,7 +55,7 @@
 
         <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -69,8 +68,81 @@
 
         <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="createInventoryItemVariance" short-description="Create an InventoryItemVariance">
+        <check-permission permission="CATALOG" action="_CREATE">
+        	<alt-permission permission="FACILITY" action="_CREATE"/>
+        	<fail-message message="Security Error: to run createInventoryItemVariance you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="InventoryItemVariance"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateInventoryItemVariance" short-description="Update an InventoryItemVariance">
+        <check-permission permission="CATALOG" action="_UPDATE">
+        	<alt-permission permission="FACILITY" action="_UPDATE"/>
+        	<fail-message message="Security Error: to run updateInventoryItemVariance you must have the CATALOG_UPDATE, CATALOG_ADMIN, FACILITY_UPDATE, or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value entity-name="InventoryItemVariance" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="createPhysicalInventory" short-description="Create a PhysicalInventory">
+        <check-permission permission="CATALOG" action="_CREATE">
+        	<alt-permission permission="FACILITY" action="_CREATE"/>
+        	<fail-message message="Security Error: to run createPhysicalInventory you must have the CATALOG_CREATE, CATALOG_ADMIN, FACILITY_CREATE, or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="PhysicalInventory"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <sequenced-id-to-env sequence-name="PhysicalInventory" env-name="physicalInventoryId"/>
+        <to-string field-name="physicalInventoryId"/>
+        <env-to-field env-name="physicalInventoryId" map-name="newEntity"/>
+        <field-to-result field-name="physicalInventoryId" result-name="physicalInventoryId"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updatePhysicalInventory" short-description="Update a PhysicalInventory">
+        <check-permission permission="CATALOG" action="_UPDATE">
+        	<alt-permission permission="FACILITY" action="_UPDATE"/>
+        	<fail-message message="Security Error: to run updatePhysicalInventory you must have the CATALOG_UPDATE, CATALOG_ADMIN, FACILITY_UPDATE, or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value entity-name="PhysicalInventory" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+
+    <simple-method method-name="createPhysicalInventoryAndVariance" short-description="Create a PhysicalInventory and an InventoryItemVariance">
+    	<set-service-fields service-name="createPhysicalInventory" map-name="parameters" to-map-name="createPhysicalInventoryMap"/>
+    	<call-service service-name="createPhysicalInventory" in-map-name="createPhysicalInventoryMap">
+    		<result-to-field result-name="physicalInventoryId" field-name="physicalInventoryId" map-name="parameters"/>
+    	</call-service>
+    	<set-service-fields service-name="createInventoryItemVariance" map-name="parameters" to-map-name="createInventoryItemVarianceMap"/>
+    	<call-service service-name="createInventoryItemVariance" in-map-name="createInventoryItemVarianceMap"/>
+    </simple-method>
+    <simple-method method-name="updatePhysicalInventoryAndVariance" short-description="Update a PhysicalInventory and an InventoryItemVariance">
+    	<set-service-fields service-name="updatePhysicalInventory" map-name="parameters" to-map-name="updatePhysicalInventoryMap"/>
+    	<call-service service-name="updatePhysicalInventory" in-map-name="updatePhysicalInventoryMap"/>
+    	<set-service-fields service-name="updateInventoryItemVariance" map-name="parameters" to-map-name="updateInventoryItemVarianceMap"/>
+    	<call-service service-name="updateInventoryItemVariance" in-map-name="updateInventoryItemVarianceMap"/>
     </simple-method>
 
     <!-- ProductFacility methods -->
