@@ -59,44 +59,42 @@ public class GenericDAO {
     modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
   }
   
-  public Connection getConnection() throws SQLException { return ConnectionFactory.getConnection(helperName); }
+  public Connection getConnection() throws SQLException, GenericEntityException {
+      Connection connection = ConnectionFactory.getConnection(helperName);
+      TransactionUtil.enlistConnection(connection);
+      return connection;
+  }
   
   public void insert(GenericEntity entity) throws GenericEntityException {
     ModelEntity modelEntity = entity.getModelEntity();
     if(modelEntity == null) {
       throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
     }
-/*
-    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("[GenericDAO.insert]: Cannot insert GenericEntity: required primary key field(s) missing.");
-      return false;
-    }
- */
-    boolean useTX = true;
+
+    boolean manualTX = true;
     Connection connection = null;
     try { connection = getConnection(); }
     catch (SQLException sqle) {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
-    
     try { connection.setAutoCommit(false); }
-    catch(SQLException sqle) { useTX = false; }
+    catch(SQLException sqle) { manualTX = false; }
+    if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) { manualTX = false; }
     
     try {
       singleInsert(entity, modelEntity, modelEntity.fields, connection);
       storeAllOther(entity, connection);
-      if(useTX) connection.commit();
-    }
-    catch (SQLException sqle) {
-      //Debug.logWarning("[GenericDAO.insert]: SQL Exception while executing insert. Error was:");
-      //Debug.logWarning(sqle.getMessage());
-      
-      try { if(useTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
+      if(manualTX) connection.commit();
+    }  catch (SQLException sqle) {
+      try { if(manualTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
       throw new GenericDataSourceException("SQL Exception occured on insert or storeAllOther", sqle);
-    }
-    finally {
+    } catch(GenericDataSourceException e) {
+      try { if(manualTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
+      throw new GenericDataSourceException("Exception occured in insert or storeAllOther", e);
+    }  finally {
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
   }
@@ -146,13 +144,7 @@ public class GenericDAO {
   }
   
   private void customUpdate(GenericEntity entity, ModelEntity modelEntity, Vector fieldsToSave) throws GenericEntityException {
-/*
-    if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
-      Debug.logWarning("[GenericDAO.update]: Cannot update GenericEntity: required primary key field(s) missing.");
-      return false;
-    }
- */
-    boolean useTX = true;
+    boolean manualTX = true;
     Connection connection = null;
     try { connection = getConnection(); }
     catch (SQLException sqle) {
@@ -160,23 +152,22 @@ public class GenericDAO {
     }
     
     try { connection.setAutoCommit(false); }
-    catch(SQLException sqle) { useTX = false; }
+    catch(SQLException sqle) { manualTX = false; }
+    if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) { manualTX = false; }
     
     try {
       singleUpdate(entity, modelEntity, fieldsToSave, connection);
       storeAllOther(entity, connection);
-      if(useTX) connection.commit();
-    }
-    catch (SQLException sqle) {
-      //Debug.logWarning("[GenericDAO.update]: SQL Exception while executing update. Error was:");
-      //Debug.logWarning(sqle.getMessage());
-      
-      try { if(useTX) connection.rollback(); }
-      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
-      
+      if(manualTX) connection.commit();
+    } catch (SQLException sqle) {
+      try { if(manualTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
       throw new GenericDataSourceException("SQL Exception occured in update or storeAllOther", sqle);
-    }
-    finally {
+    } catch(GenericDataSourceException e) {
+      try { if(manualTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
+      throw new GenericDataSourceException("Exception occured in update or storeAllOther", e);
+    } finally {
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
   }
@@ -247,7 +238,7 @@ public class GenericDAO {
   public void storeAll(Collection entities) throws GenericEntityException {
     if(entities == null || entities.size() <= 0) { return; }
     
-    boolean useTX = true;
+    boolean manualTX = true;
     Connection connection = null;
     try { connection = getConnection(); }
     catch (SQLException sqle) {
@@ -255,7 +246,8 @@ public class GenericDAO {
     }
     
     try { connection.setAutoCommit(false); }
-    catch(SQLException sqle) { useTX = false; }
+    catch(SQLException sqle) { manualTX = false; }
+    if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) { manualTX = false; }
     
     try {
       Iterator entityIter = entities.iterator();
@@ -263,20 +255,17 @@ public class GenericDAO {
         GenericEntity curEntity = (GenericEntity)entityIter.next();
         singleStore(curEntity, connection);
       }
-      if(useTX) connection.commit();
+      if(manualTX) connection.commit();
     }
     catch(SQLException sqle) {
-      //Debug.logWarning("[GenericDAO.insert]: SQL Exception while executing insert. Error was:");
-      //Debug.logWarning(sqle.getMessage());
-      
-      try { if(useTX) connection.rollback(); }
-      catch(SQLException sqle2) {
-        Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back store. Error was:");
-        Debug.logWarning(sqle2);
-      }
+      try { if(manualTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back store. Error was:"); Debug.logWarning(sqle2); }
       throw new GenericDataSourceException("SQL Exception occured in storeAll", sqle);
-    }
-    finally {
+    } catch(GenericDataSourceException e) {
+      try { if(manualTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.storeAll]: SQL Exception while rolling back store. Error was:"); Debug.logWarning(sqle2); }
+      throw new GenericDataSourceException("Exception occured in storeAll", e);
+    } finally {
       try { if(connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
   }
@@ -966,6 +955,11 @@ public class GenericDAO {
       throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
     }
     
+    boolean manualTX = true;
+    try { connection.setAutoCommit(false); }
+    catch(SQLException sqle) { manualTX = false; }
+    if (TransactionUtil.getStatus() == TransactionUtil.STATUS_ACTIVE) { manualTX = false; }
+
     try {
       Iterator iter = dummyPKs.iterator();
       while (iter.hasNext()) {
@@ -978,6 +972,15 @@ public class GenericDAO {
           deleteByAnd(entity.getModelEntity(), entity.getAllFields(), connection);
         }
       }
+      if(manualTX) connection.commit();
+    } catch(SQLException sqle) {
+      try { if(manualTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.deleteAll]: SQL Exception while rolling back delete. Error was:"); Debug.logWarning(sqle2); }
+      throw new GenericDataSourceException("SQL Exception occured in deleteAll", sqle);
+    } catch(GenericDataSourceException e) {
+      try { if(manualTX) connection.rollback(); }
+      catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.deleteAll]: SQL Exception while rolling back delete. Error was:"); Debug.logWarning(sqle2); }
+      throw new GenericDataSourceException("SQL Exception occured in deleteAll", e);
     } finally {
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
@@ -1220,6 +1223,7 @@ public class GenericDAO {
     Statement stmt = null;
     try { connection = getConnection(); }
     catch (SQLException sqle) { Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
+    catch (GenericEntityException e) { Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(e.getMessage()); }
     
     String sql = "CREATE TABLE " + entity.tableName + " (";
     for(int i=0;i<entity.fields.size();i++) {
@@ -1268,6 +1272,7 @@ public class GenericDAO {
     Statement stmt = null;
     try { connection = getConnection(); }
     catch (SQLException sqle) { Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(sqle.getMessage()); }
+    catch (GenericEntityException e) { Debug.logWarning("[GenericDAO.createTable]: Unable to esablish a connection with the database... Error was:"); Debug.logWarning(e.getMessage()); }
     
     ModelFieldType type = modelFieldTypeReader.getModelFieldType(field.type);
     String sql = "ALTER TABLE " + entity.tableName + " ADD " + field.colName + " " + type.sqlType;
@@ -1320,7 +1325,7 @@ public class GenericDAO {
     //-list all tables that do not have a corresponding entity
     //-display message if number of table columns does not match number of entity fields
     //-list all columns that do not have a corresponding field
-    //make sure each corresponding column is of the correct type
+    //-make sure each corresponding column is of the correct type
     //-list all fields that do not have a corresponding column
     
     timer.timerString("[GenericDAO.checkDb] Before Individual Table/Column Check");
@@ -1538,6 +1543,12 @@ public class GenericDAO {
       if(messages != null) messages.add(message);
       return null;
     }
+    catch (GenericEntityException e) {
+      String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
+      Debug.logError("[GenericDAO.getTableNames] " + message);
+      if(messages != null) messages.add(message);
+      return null;
+    }
     
     DatabaseMetaData dbData = null;
     try { dbData = connection.getMetaData(); }
@@ -1634,6 +1645,12 @@ public class GenericDAO {
     catch(SQLException sqle) {
       String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
       Debug.logError("[GenericDAO.getColumnInfo] " + message);
+      if(messages != null) messages.add(message);
+      return null;
+    }
+    catch (GenericEntityException e) {
+      String message = "Unable to esablish a connection with the database... Error was:" + e.toString();
+      Debug.logError("[GenericDAO.getTableNames] " + message);
       if(messages != null) messages.add(message);
       return null;
     }
