@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
- *@since      2.1
+ *@since      2.2
  */
 
 import java.util.*;
@@ -66,3 +66,20 @@ externalLoginKey = LoginEvents.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "?externalLoginKey=" + externalLoginKey;
 request.setAttribute("externalKeyParam", externalKeyParam);
 request.setAttribute("isWebToolsActive", new Boolean(true));
+
+eventMsgReq = request.getAttribute(SiteDefs.EVENT_MESSAGE);
+errorMsgReq = request.getAttribute(SiteDefs.ERROR_MESSAGE);
+errorMsgSes = session.getAttribute(SiteDefs.ERROR_MESSAGE);
+
+if (eventMsgReq != null) {
+    request.setAttribute("eventMsgReq", UtilFormatOut.replaceString(eventMsgReq, "\n", "<br>"));
+    request.removeAttribute(SiteDefs.EVENT_MESSAGE);
+}
+if (errorMsgReq != null) {
+    request.setAttribute("errorMsgReq", UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>"));
+    request.removeAttribute(SiteDefs.ERROR_MESSAGE);
+}
+if (errorMsgSes != null) {
+    request.setAttribute("errorMsgSes", UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>"));
+    session.removeAttribute(SiteDefs.ERROR_MESSAGE);
+}
