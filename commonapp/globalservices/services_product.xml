@@ -653,6 +653,8 @@
         <description>Update an InventoryItem</description>
         <implements service="interfaceInventoryItem"/>
         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
+        <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>        
     </service>
     <service name="deleteInventoryItem" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="deleteInventoryItem" auth="true">
