@@ -98,7 +98,7 @@ function submitForm(form, mode, value) {
                         <div>
                           <#assign selectedContactMechId = cart.getShippingContactMechId(groupIdx)?default("")>
                           <select name="shippingContactMechId" class="selectBox" onchange="javascript:submitForm(document.editgroupform${groupIdx}, 'SA', null);">
-                            <option>Select Shipping Address</option>
+                            <option value="">Select Shipping Address</option>
                             <#list shippingContactMechList as shippingContactMech>
                               <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
                               <option value="${shippingAddress.contactMechId}" <#if (shippingAddress.contactMechId == selectedContactMechId)>selected</#if>>${shippingAddress.address1}</option>
@@ -111,7 +111,7 @@ function submitForm(form, mode, value) {
                           <#assign selectedShippingMethod = "">
                         </#if>
                         <select name="shipmentMethodString" class="selectBox">
-                          <option>Select Shipping Method</option>
+                          <option value="">Select Shipping Method</option>
                           <#list carrierShipmentMethods as carrierShipmentMethod>
                             <#assign shippingEst = shipEstimateWrapper.getShippingEstimate(carrierShipmentMethod)?default(-1)>
                             <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
