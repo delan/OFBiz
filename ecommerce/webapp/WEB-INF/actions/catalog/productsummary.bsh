@@ -39,10 +39,13 @@ productId = request.getAttribute("productId");
 
 webSiteId = CatalogWorker.getWebSiteId(request);
 catalogId = CatalogWorker.getCurrentCatalogId(request);
+prodCatalog = CatalogWorker.getProdCatalog(request);
+facilityId = prodCatalog.getString("inventoryFacilityId");
 autoUserLogin = session.getAttribute("autoUserLogin");
 userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 
 context.put("nowTimestamp", UtilDateTime.nowTimestamp());
+context.remove("daysToShip");
 
 if (product != null) {
     productId = product.get("productId");
@@ -56,7 +59,11 @@ if (product == null && productId != null) {
     product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
 }
 if (product != null) {
-    request.setAttribute("product", product);   
+    request.setAttribute("product", product);
+    productFacility = delegator.findByPrimaryKeyCache("ProductFacility", UtilMisc.toMap("productId", product.get("productId"), "facilityId", facilityId));
+    if (productFacility != null && productFacility.get("daysToShip") != null) {
+        context.put("daysToShip", productFacility.get("daysToShip"));
+    }  
 }
 
 categoryId = null;

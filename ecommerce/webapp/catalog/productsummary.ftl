@@ -42,7 +42,7 @@
           <div class="tabletext">
             <a href='<@ofbizUrl>/product/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>' class='buttontext'>${product.productName?if_exists}</a>
           </div>
-          <div class="tabletext">${product.description?if_exists}</div>
+          <div class="tabletext">${product.description?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;Usually ships in <b>${daysToShip}</b> days!</#if></div>
           <div class="tabletext">
             <nobr>
               <b>${product.productId?if_exists}</b>,
