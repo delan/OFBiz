@@ -144,6 +144,10 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
 
     public void refresh(boolean updateOutput) {
         PosTransaction trans = PosTransaction.getCurrentTx(this.getSession());
+        if (trans == null) {
+            updateOutput = false;
+        }
+        
         this.requestFocus();
         if (!isLocked) {
             this.setEnabled(true);

@@ -796,7 +796,9 @@ public class PosTransaction implements Serializable {
 
     public static synchronized PosTransaction getCurrentTx(XuiSession session) {
         if (currentTx == null) {
-            currentTx = new PosTransaction(session);
+            if (session.getUserLogin() != null) {
+                currentTx = new PosTransaction(session);
+            }
         }
         return currentTx;
     }
