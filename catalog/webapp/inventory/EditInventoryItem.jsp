@@ -173,7 +173,11 @@
         <td width="74%">
             Select a Facility:
             <select name="facilityId">
+              <%if (inventoryItem == null && UtilValidate.isNotEmpty(request.getParameter("facilityId"))) {%>
+                  <option value='<%=request.getParameter("facilityId")%>'>[<%=request.getParameter("facilityId")%>]</option>
+              <%} else {%>
               <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> <ofbiz:entityfield attribute="inventoryItem" field="facilityId" prefix="[" suffix="]"/></option>
+              <%}%>
               <option value='<ofbiz:inputvalue entityAttr="inventoryItem" field="facilityId"/>'>----</option>
               <ofbiz:iterator name="nextFacility" property="facilities">
                 <option value='<ofbiz:inputvalue entityAttr="nextFacility" field="facilityId"/>'><ofbiz:inputvalue entityAttr="nextFacility" field="facilityName"/> <ofbiz:entityfield attribute="nextFacility" field="facilityId" prefix="[" suffix="]"/></option>
