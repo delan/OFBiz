@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 */
 
@@ -37,10 +37,10 @@ paymentTypes = delegator.findAll("PaymentType", UtilMisc.toList("description"));
 context.put("paymentTypes", paymentTypes);
 
 // get the payment statuses
-paymentStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "PAYMENT_STATUS"), UtilMisc.toList("sequenceId", "description"));
+paymentStatuses = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "PMNT_STATUS"), UtilMisc.toList("sequenceId", "description"));
 context.put("paymentStatuses", paymentStatuses);
 
-// payment method types
+// get the payment method types
 paymentMethodTypes = delegator.findAll("PaymentMethodType", UtilMisc.toList("description"));
 context.put("paymentMethodTypes", paymentMethodTypes);
 
@@ -57,7 +57,6 @@ if (currentMethodId != null && currentMethodId.length() > 0) {
     currentMethod = delegator.findByPrimaryKey("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", currentMethodId));
     context.put("currentMethod", currentMethod);
 }
-
 
 
 // create the fromDate for calendar

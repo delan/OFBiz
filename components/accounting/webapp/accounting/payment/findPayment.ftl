@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 
@@ -51,11 +51,12 @@ function lookupPayment() {
           <td align='right'>
             <div class="tabletext">
               <#if requestParameters.hideFields?default("N") == "Y">
-                <a href="<@ofbizUrl>/findPayment?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Lookup Fields</a>
+                <a href="<@ofbizUrl>/findPayment?hideFields=N${paramList}</@ofbizUrl>" class="submenutext">Show Lookup Fields</a>
               <#else>
                 <#if invoiceList?exists><a href="<@ofbizUrl>/findPayment?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
-                <a href="javascript:lookupPayment();" class="submenutextright">Lookup Payment(s)</a>                
+                <a href="javascript:lookupPayment();" class="submenutext">Lookup Payment(s)</a>
               </#if>
+              <a href="<@ofbizUrl>/editPayment</@ofbizUrl>" class="submenutextright">New Payment</a>
             </div>
           </td>
         </tr>
