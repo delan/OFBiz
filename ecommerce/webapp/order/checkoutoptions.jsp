@@ -64,7 +64,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign=middle align=left>
-            <div class="boxhead" nowrap>1) How shall we ship it?</div>
+            <div class="boxhead">1)&nbsp;How&nbsp;shall&nbsp;we&nbsp;ship&nbsp;it?</div>
           </td>
         </tr>
       </table>
@@ -183,7 +183,7 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign=middle align=left>
-            <div class="boxhead" nowrap><b>2) Where&nbsp;shall&nbsp;we&nbsp;ship&nbsp;it?</b></div>
+            <div class="boxhead">2)&nbsp;Where&nbsp;shall&nbsp;we&nbsp;ship&nbsp;it?</div>
           </td>
         </tr>
       </table>
@@ -246,13 +246,13 @@
       <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign=middle align=left>
-            <div class="boxhead" nowrap><b>3) How shall you pay?</b></div>
+            <div class="boxhead">3)&nbsp;How&nbsp;shall&nbsp;you&nbsp;pay?</div>
           </td>
         </tr>
       </table>
     </TD>
   </TR>
-  <TR style='height: 100%;'
+  <TR style='height: 100%;'>
     <TD width='100%' valign=top>
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>' style='height: 100%;'>
         <tr>
