@@ -22,29 +22,25 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     David E. Jones (jonesde@ofbiz.org)
+ * @author     Johan Isacsson
  * @version    $Revision$
- * @since      2.0
+ * @since      2.2
 -->
 
 <simple-map-processors>
   <!-- ContactMech map procs -->
   <simple-map-processor name="contactMech">
     <process field="contactMechTypeId"><copy/><not-empty><fail-message message="Contact Mech Type ID is missing"/></not-empty></process>
-    <process field="infoString"><copy/><not-empty><fail-message message="Info String is missing"/></not-empty></process>
-    <process field="allowSolicitation"><copy/></process>
+    <process field="infoString"><copy/></process>
   </simple-map-processor>
   <simple-map-processor name="updateContactMech">
     <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
-    <process field="partyId"><copy/></process>
-  </simple-map-processor>
-  <simple-map-processor name="deleteContactMech">
-    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mechanism ID is missing"/></not-empty></process>
-    <process field="partyId"><copy/></process>
+	<process field="contactMechTypeId"><copy/><not-empty><fail-message message="Contact Mech Type ID is missing"/></not-empty></process>
+    <process field="infoString"><copy/></process> 
   </simple-map-processor>
 
   <simple-map-processor name="postalAddress">
-    <process field="partyId"><copy/></process>
+  	<process field="contactMechId"><copy set-if-null="false"/></process>	
     <process field="toName"><copy/></process>
     <process field="attnName"><copy/></process>
     <process field="address1"><copy/><not-empty><fail-message message="Address Line 1 is missing"/></not-empty></process>
@@ -55,39 +51,20 @@
     <process field="postalCode"><copy/><not-empty><fail-message message="Zip/Postal Code is missing"/></not-empty></process>
     <process field="countryGeoId"><copy/></process>
     <process field="postalCodeGeoId"><copy/></process>
-    <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
 
   <simple-map-processor name="telecomNumber">
-    <process field="partyId"><copy/></process>
+  	<process field="contactMechId"><copy set-if-null="false"/></process>	  	
     <process field="countryCode"><copy/></process>
     <process field="areaCode"><copy/></process>
     <process field="contactNumber"><copy/><not-empty><fail-message message="Contact Number is missing"/></not-empty></process>
-    <process field="extension"><copy/></process>
-    <process field="allowSolicitation"><copy/></process>
   </simple-map-processor>
 
   <simple-map-processor name="emailAddress">
-    <process field="partyId"><copy/></process>
+  	<process field="contactMechId"><copy set-if-null="false"/></process>
     <process field="emailAddress">
-        <copy/>
+        <copy to-field="infoString"/>
         <not-empty><fail-message message="Email Address is missing"/></not-empty>
         <validate-method method="isEmail"><fail-message message="Email Address is not formatted correctly, must be like foo@bar.com"/></validate-method></process>
-    <process field="allowSolicitation"><copy/></process>
-  </simple-map-processor>
-
-  <!-- PartyContactMechPurpose map procs -->
-  <simple-map-processor name="createPartyContactMechPurpose">
-    <process field="partyId"><copy/></process>
-    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
-    <process field="contactMechPurposeTypeId"><copy/><not-empty><fail-message message="Purpose type not specified, cannot add purpose to contact mechanism"/></not-empty></process>
-  </simple-map-processor>
-  <simple-map-processor name="deletePartyContactMechPurpose">
-    <process field="partyId"><copy/></process>
-    <process field="contactMechId"><copy/><not-empty><fail-message message="Contact Mech ID is missing"/></not-empty></process>
-    <process field="contactMechPurposeTypeId"><copy/><not-empty><fail-message message="Purpose type not specified, cannot remove purpose from contact mechanism"/></not-empty></process>
-    <process field="fromDate">
-        <not-empty><fail-message message="From Date is missing"/></not-empty>
-        <convert type="Timestamp"><fail-message message="From Date is not a valid Date-Time."/></convert></process>
   </simple-map-processor>
 </simple-map-processors>
