@@ -11,6 +11,7 @@ corresponding to the various components of the overall system.&nbsp; Some parts
 are much more complete and thought out than others. Please send me feed back on
 any omissions or errors.</p>
 <h3>Table of Contents</h3>
+
 <ul>
   <li><a href="#Common"><b>Common</b></a>
   <ul>
@@ -51,15 +52,21 @@ any omissions or errors.</p>
   </ul>
   <li><a href="#Product"><b>Product</b></a>
   <ul>
+    <li><b><i><a href="#product.product">product.product</a></i></b>
+  
     <li><b><i><a href="#product.category">product.category</a></i></b>
   
     <li><b><i><a href="#product.feature">product.feature</a></i></b>
   
+    <li><b><i><a href="#product.cost">product.cost</a></i></b>
+  
+    <li><b><i><a href="#product.price">product.price</a></i></b>
+  
     <li><b><i><a href="#product.inventory">product.inventory</a></i></b>
   
-    <li><b><i><a href="#product.marketing">product.marketing</a></i></b>
+    <li><b><i><a href="#product.storage">product.storage</a></i></b>
   
-    <li><b><i><a href="#product.product">product.product</a></i></b>
+    <li><b><i><a href="#product.supplier">product.supplier</a></i></b>
   
   </ul>
   <li><a href="#Order"><b>Order</b></a>
@@ -118,7 +125,11 @@ any omissions or errors.</p>
     <li><b><i><a href="#security.securitygroup">security.securitygroup</a></i></b>
   
 </ul>
+  </ul>
+</ul>
+
 <p>NOTE: Entries in italics are directories, and normal text entries are entities (Entity EJBs).</p>
+
 
 <hr>
 <H3><a name="Common">Common</a></H3>
@@ -126,9 +137,10 @@ any omissions or errors.</p>
 <ul>
   <li><b><i><a name="common.geo">common.geo</a></i></b>
   <ul>
-    <li>GeoBoundary
-    <li>GeoBoundaryType
-    <li>GeographicBoundaryAssociation
+    <li>Geo
+    <li>GeoType
+    <li>GeoAssoc
+    <li>GeoAssocType
   </ul>
   <li><b><i><a name="common.period">common.period</a></i></b>
   <ul>
@@ -137,14 +149,14 @@ any omissions or errors.</p>
   </ul>
   <li><b><i><a name="common.status">common.status</a></i></b>
   <ul>
+    <li>Status
     <li>StatusType
-    <li>StatusTypeType
   </ul>
   <li><b><i><a name="common.uom">common.uom</a></i></b>
   <ul>
-    <li>UnitOfMeasure
-    <li>UnitOfMeasureType
-    <li>UnitOfMeasureConversion
+    <li>Uom
+    <li>UomType
+    <li>UomConversion
   </ul>
 </ul>
 <hr>
@@ -168,7 +180,7 @@ any omissions or errors.</p>
     <li>ContentAttribute
     <li>ContentTypeAttr
     <li>ContentCategory
-    <li>ContentCategoryClassification
+    <li>ContentCategoryClass
     <li>ContentAssociation
     <li>FunctionType
     <li>ContentRole
@@ -277,19 +289,30 @@ any omissions or errors.</p>
     <li>PartyRelationshipType
     <li>Customer
     <li>PartyDataObject
-    <li>InternalOrganization
     <li>Person
-    <li>PersonClassification
   </ul>
 </ul>
 <hr>
 <H3><a name="Product">Product</a></H3>
 <hr>
 <ul>
+  <li><b><i><a name="product.product">product.product</a></i></b>
+  <ul>
+    <li>Product
+    <li>ProductClass
+    <li>ProductType
+    <li>ProductAttribute
+    <li>ProductTypeAttr
+    <li>GoodIdentification
+    <li>GoodIdentificationType
+    <li>ProductAssoc
+    <li>ProductAssocType
+    <li>ProductDataObject
+  </ul>
   <li><b><i><a name="product.category">product.category</a></i></b>
   <ul>
     <li>ProductCategory
-    <li>ProductCategoryClassification
+    <li>ProductCategoryClass
     <li>ProductCategoryType
     <li>ProductCategoryAttribute
     <li>ProductCategoryTypeAttr
@@ -299,31 +322,44 @@ any omissions or errors.</p>
   <li><b><i><a name="product.feature">product.feature</a></i></b>
   <ul>
     <li>ProductFeature
-    <li>ProductFeatureClassification
     <li>ProductFeatureType
-    <li>ProductFeatureAttribute
-    <li>ProductFeatureTypeAttr
     <li>ProductFeatureCategory
-    <li>ProductFeatureApplicability
+    <li>ProductFeatureAppl
     <li>ProductFeatureApplType
-    <li>ProductFeatureInteraction
+    <li>ProductFeatureIactn
     <li>ProductFeatureIactnType
-    <li>Dimension
     <li>FeatureDataObject
-    <li>PriceComponent
-    <li>PriceComponentType
-    <li>PriceComponentAttribute
-    <li>PriceComponentTypeAttr
+  </ul>
+  <li><b><i><a name="product.cost">product.cost</a></i></b>
+  <ul>
     <li>CostComponent
     <li>CostComponentType
     <li>CostComponentAttribute
     <li>CostComponentTypeAttr
-    <li>UtilizationCharge
+  </ul>
+  <li><b><i><a name="product.price">product.price</a></i></b>
+  <ul>
+    <li>PriceComponent
+    <li>PriceComponentType
+    <li>PriceComponentAttribute
+    <li>PriceComponentTypeAttr
     <li>QuantityBreak
     <li>OrderValueBreak
     <li>SaleType
   </ul>
   <li><b><i><a name="product.inventory">product.inventory</a></i></b>
+  <ul>
+    <li>InventoryItem
+    <li>InventoryItemType
+    <li>InventoryItemAttribute
+    <li>InventoryItemTypeAttr
+    <li>PhysicalInventory
+    <li>InventoryItemVariance
+    <li>VarianceReason
+    <li>ItemVarianceAcctgTrans
+    <li>Lot
+  </ul>
+  <li><b><i><a name="product.storage">product.storage</a></i></b>
   <ul>
     <li>Container
     <li>ContainerType
@@ -331,48 +367,17 @@ any omissions or errors.</p>
     <li>FacilityType
     <li>FacilityAttribute
     <li>FacilityTypeAttr
-    <li>FacilityRoleType
     <li>FacilityContactMechanism
-    <li>InventoryItem
-    <li>InventoryItemType
-    <li>InventoryItemAttribute
-    <li>InventoryItemTypeAttr
-    <li>InventoryItemVariance
-    <li>Reason
-    <li>ItemVarianceAcctgTrans
-    <li>Lot
     <li>PartyFacility
+    <li>FacilityRoleType
+  </ul>
+  <li><b><i><a name="product.supplier">product.supplier</a></i></b>
+  <ul>
     <li>ReorderGuideline
-  </ul>
-  <li><b><i><a name="product.marketing">product.marketing</a></i></b>
-  <ul>
-    <li>MarketInterest
-    <li>MarketingPackage
-  </ul>
-  <li><b><i><a name="product.product">product.product</a></i></b>
-  <ul>
-    <li>Product
-    <li>ProductClassification
-    <li>ProductType
-    <li>ProductAttribute
-    <li>ProductTypeAttr
-    <li>ProductDataObject
-    <li>Good
-    <li>GoodIdentification
-    <li>GoodIdentificationType
-    <li>Part
-    <li>PartClassification
-    <li>PartType
-    <li>PartAttribute
-    <li>PartTypeAttr
-    <li>ProductAssociation
-    <li>ProductComplement
-    <li>ProductComponent
-    <li>ProductIncompatability
-    <li>ProductObsolescence
-    <li>ProductSubstitute
     <li>SupplierProduct
-    <li>PreferenceType
+    <li>SupplierRatingType
+    <li>SupplierPrefOrder
+    <li>MarketInterest
   </ul>
 </ul>
 <hr>
@@ -567,7 +572,7 @@ any omissions or errors.</p>
     <li>SalesAcctgTrans
     <li>ExternalAcctgTrans
     <li>InternalAcctgTrans
-    <li>TransactionDetail
+    <li>AcctgTransDetail
     <li>AccoutingPeriod
     <li>GeneralLedgerAccount
     <li>GeneralLedgerAccountType
@@ -633,7 +638,7 @@ any omissions or errors.</p>
     <li>PerfReviewItemType
     <li>PerformanceNote
     <li>PerformanceReviewItem
-    <li>RatingType
+    <li>PerfRatingType
     <li>ResponsibilityType
     <li>Resume
     <li>SkillType
@@ -659,7 +664,7 @@ any omissions or errors.</p>
   <li><b><i><a name="humanres.position">humanres.position</a></i></b>
   <ul>
     <li>Position
-    <li>PositionClassificationType
+    <li>PositionClassType
     <li>PositionFulfillment
     <li>PositionReportingStructure
     <li>PositionResponsibility
