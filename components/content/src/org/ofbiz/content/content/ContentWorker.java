@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.27 2004/06/06 07:43:02 byersa Exp $
+ * $Id: ContentWorker.java,v 1.28 2004/06/08 19:53:09 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.27 $
+ * @version $Revision: 1.28 $
  * @since 2.2
  * 
  *  
@@ -831,7 +831,6 @@ public class ContentWorker {
     public static Map renderSubContentAsText(GenericDelegator delegator, String contentId, Writer out, String mapKey, String subContentId, GenericValue subContentDataResourceView, 
             Map templateContext, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
 
-        //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
         Map results = new HashMap();
         //GenericValue content = null;
         if (subContentDataResourceView == null) {
@@ -863,6 +862,8 @@ public class ContentWorker {
             templateRoot, locale, mimeTypeId, userLogin, fromDate, nullThruDatesOnly);
     }
 
+    /** 
+     */
     public static Map renderSubContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, String mapKey, String subContentId, GenericValue subContentDataResourceView, 
             Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate, Boolean nullThruDatesOnly) throws GeneralException, IOException {
 
@@ -892,13 +893,16 @@ public class ContentWorker {
         if (templateRoot == null) {
             templateRoot = new HashMap();
         }
-        Map context = (Map) templateRoot.get( "context");
-        if (context == null) {
-            context = new HashMap();
-        }
-        context.put("contentId", contentIdSub);
-        context.put("subContentId", null);
-        templateRoot.put("context", context);
+//        Map context = (Map) templateRoot.get( "context");
+//        if (context == null) {
+//            context = new HashMap();
+//        }
+//        context.put("contentId", contentIdSub);
+//        context.put("subContentId", null);
+//        templateRoot.put("context", context);
+
+        templateRoot.put("contentId", contentIdSub);
+        templateRoot.put("subContentId", null);
 
         renderContentAsTextCache(delegator, contentIdSub, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
 
@@ -974,7 +978,7 @@ public class ContentWorker {
         Map results = new HashMap();
         //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
  
-        Map ctx = (Map)templateContext.get("context");
+        //Map ctx = (Map)templateContext.get("context");
         GenericValue content = null;
 
         if (view == null) {

@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.16 2004/06/02 17:50:10 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.17 2004/06/08 19:53:11 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -54,41 +54,28 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
     public static final String module = RenderSubContentCacheTransform.class.getName();
     public static final String [] upSaveKeyNames = {"globalNodeTrail"};
     public static final String [] saveKeyNames = {"contentId", "subContentId", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
-    
-    /**
-     * Does a conditional search to return a value for a parameter with the passed name. Looks first to see if it was passed as an argument to the transform.
-     * Secondly, it looks to see if it is passed as a parameter in the template context object.
-     * <p>
-     * Note that this is different from the getArg method of EditRenderDataResourceTransform, which checks the request object instead of the template context
-     * object.
-     */
-    public static String getArg(Map args, String key, Environment env) {
-        return FreeMarkerWorker.getArg(args, key, env);
-    }
-
-    public static String getArg(Map args, String key, Map ctx) {
-        return FreeMarkerWorker.getArg(args, key, ctx);
-    }
 
     public Writer getWriter(final Writer out, Map args) {
         final StringBuffer buf = new StringBuffer();
         final Environment env = Environment.getCurrentEnvironment();
-        final Map templateCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
+        //final Map templateCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
+        //final Map templateCtx = new HashMap();
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
-        FreeMarkerWorker.getSiteParameters(request, templateCtx);
+        final Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+        FreeMarkerWorker.getSiteParameters(request, templateRoot);
         final Map savedValuesUp = new HashMap();
-        FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
-        FreeMarkerWorker.overrideWithArgs(templateCtx, args);
+        FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
+        FreeMarkerWorker.overrideWithArgs(templateRoot, args);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
-        List trail = (List)templateCtx.get("globalNodeTrail");
+        List trail = (List)templateRoot.get( "globalNodeTrail");
         //if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
-        String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
-        String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
+        String contentAssocPredicateId = (String)templateRoot.get( "contentAssocPredicateId");
+        String strNullThruDatesOnly = (String)templateRoot.get( "nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
         GenericValue val = null;
         try {
-            val = FreeMarkerWorker.getCurrentContent(delegator, trail, userLogin, templateCtx, nullThruDatesOnly, contentAssocPredicateId);
+            val = FreeMarkerWorker.getCurrentContent(delegator, trail, userLogin, templateRoot, nullThruDatesOnly, contentAssocPredicateId);
         } catch(GeneralException e) {
             throw new RuntimeException("Error getting current content. " + e.toString());
         }
@@ -105,7 +92,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             subContentIdSub = (String) view.get("contentId");
         }
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
-        String subDataResourceTypeId = (String)templateCtx.get("subDataResourceTypeId");
+        String subDataResourceTypeId = (String)templateRoot.get( "subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
             try {
                 subDataResourceTypeId = (String) view.get("drDataResourceTypeId");
@@ -116,12 +103,12 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             // the parent context. But it will already have one and it is the same context that is
             // being passed.
         }
-        String mimeTypeId = FreeMarkerWorker.getMimeTypeId(delegator, view, templateCtx);
-        templateCtx.put("drDataResourceId", dataResourceId);
-        templateCtx.put("mimeTypeId", mimeTypeId);
-        templateCtx.put("dataResourceId", dataResourceId);
-        templateCtx.put("subContentIdSub", subContentIdSub);
-        templateCtx.put("subDataResourceTypeId", subDataResourceTypeId);
+        String mimeTypeId = FreeMarkerWorker.getMimeTypeId(delegator, view, templateRoot);
+        templateRoot.put( "drDataResourceId", dataResourceId);
+        templateRoot.put( "mimeTypeId", mimeTypeId);
+        templateRoot.put( "dataResourceId", dataResourceId);
+        templateRoot.put( "subContentIdSub", subContentIdSub);
+        templateRoot.put( "subDataResourceTypeId", subDataResourceTypeId);
 
         //final Map savedValues = new HashMap();
         //FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
@@ -136,12 +123,12 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public void close() throws IOException {
-                List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
+                List globalNodeTrail = (List)templateRoot.get( "globalNodeTrail");
                 //if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
                 try {
                     renderSubContent();
-                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
-                 //if (Debug.infoOn()) Debug.logInfo("in Render(2), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
+                FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp);
+                 //if (Debug.infoOn()) Debug.logInfo("in Render(2), globalNodeTrail ." + getWrapped(env, "globalNodeTrail") , module);
                 } catch (IOException e) {
                     throw new IOException(e.getMessage());
                 }
@@ -150,7 +137,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             public void renderSubContent() throws IOException {
                 //TemplateHashModel dataRoot = env.getDataModel();
                 Timestamp fromDate = UtilDateTime.nowTimestamp();
-                List passedGlobalNodeTrail = (List)templateCtx.get("globalNodeTrail");
+                List passedGlobalNodeTrail = (List)templateRoot.get( "globalNodeTrail");
                  //if (Debug.infoOn()) Debug.logInfo("in Render(3), passedGlobalNodeTrail ." + passedGlobalNodeTrail , module);
                 GenericValue thisView = null;
                 if (passedGlobalNodeTrail.size() > 0) {
@@ -159,40 +146,32 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                     if (map != null)
                         thisView = (GenericValue)map.get("value");
                 }
-                ServletContext servletContext = request.getSession().getServletContext();
-                String rootDir = servletContext.getRealPath("/");
-                String webSiteId = (String) servletContext.getAttribute("webSiteId");
-                String https = (String) servletContext.getAttribute("https");
-                //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, rootDir:" + rootDir, module);
-                templateCtx.put("webSiteId", webSiteId);
-                templateCtx.put("https", https);
-                templateCtx.put("rootDir", rootDir);
-                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, subContentId:" + templateCtx.get("subContentId"), module);
-                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId:" + templateCtx.get("contentId"), module);
+                //ServletContext servletContext = request.getSession().getServletContext();
+                //String rootDir = servletContext.getRealPath("/");
+                //String webSiteId = (String) servletContext.getAttribute("webSiteId");
+                //String https = (String) servletContext.getAttribute("https");
+                ////if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, rootDir:" + rootDir, module);
+                //wrap(env, "webSiteId", webSiteId);
+                //wrap(env, "https", https);
+                //wrap(env, "rootDir", rootDir);
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, subContentId:" + templateRoot.get( "subContentId"), module);
+                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, contentId:" + templateRoot.get( "contentId"), module);
 
 
-                    //Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
-                    Map templateRootTemplate = (Map)templateCtx.get("templateRootTemplate");
-                    Map templateRoot = null;
-                    if (templateRootTemplate == null) {
-                        Map templateRootTmp = FreeMarkerWorker.createEnvironmentMap(env);
-                        templateRoot = new HashMap(templateRootTmp);
-                        //templateCtx.put("templateRootTemplate", templateRootTmp);
-                    } else {
-                        templateRoot = new HashMap(templateRootTemplate);
-                    }
-                templateRoot.put("context", templateCtx);
-        if (Debug.verboseOn()) {
-            Set kySet = templateCtx.keySet();
-            Iterator it = kySet.iterator();
-            while (it.hasNext()) {
-                Object ky = it.next();
-                Object val = templateCtx.get(ky);
-            }
-        }
+                //Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+                //Map templateRootTemplate = (Map)getWrapped(env, "templateRootTemplate");
+                //Map templateRoot = null;
+                //if (templateRootTemplate == null) {
+                    //Map templateRootTmp = FreeMarkerWorker.createEnvironmentMap(env);
+                    //templateRoot = new HashMap(templateRootTmp);
+                    ////wrap(env, "templateRootTemplate", templateRootTmp);
+                //} else {
+                    //templateRoot = new HashMap(templateRootTemplate);
+                //}
+                //templateRoot.put("context", templateCtx);
 
-                String mimeTypeId = (String) templateCtx.get("mimeTypeId");
-                Locale locale = (Locale) templateCtx.get("locale");
+                String mimeTypeId = (String) templateRoot.get( "mimeTypeId");
+                Locale locale = (Locale) templateRoot.get( "locale");
                 if (locale == null)
                     locale = Locale.getDefault();
                 try {
@@ -201,7 +180,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                     Debug.logError(e, "Error rendering content", module);
                     throw new IOException("Error rendering thisView:" + thisView + " msg:" + e.toString());
                 }
-                //if (Debug.infoOn()) Debug.logInfo("in Render(4), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
+                //if (Debug.infoOn()) Debug.logInfo("in Render(4), globalNodeTrail ." + getWrapped(env, "globalNodeTrail") , module);
                 return;
             }
         };

@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.21 2004/06/06 07:43:03 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.22 2004/06/08 19:53:11 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -154,22 +154,22 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         }
     }
 
-    public static boolean getNextMatchingEntity(Map templateCtx, GenericDelegator delegator) throws IOException {
+    public static boolean getNextMatchingEntity(Map templateRoot, GenericDelegator delegator) throws IOException {
 
-                int lowIndex = ((Integer)templateCtx.get("lowIndex")).intValue(); 
-                int entityIndex = ((Integer)templateCtx.get("entityIndex")).intValue(); 
-                int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
-                int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
+                int lowIndex = ((Integer)templateRoot.get("lowIndex")).intValue(); 
+                int entityIndex = ((Integer)templateRoot.get("entityIndex")).intValue(); 
+                int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
+                int listSize = ((Integer)templateRoot.get("listSize")).intValue(); 
                 boolean matchFound = false;
  
                 while (!matchFound && entityIndex < listSize) {
                     try {
-                        matchFound = prepCtx(delegator, templateCtx);
+                        matchFound = prepCtx(delegator, templateRoot);
                     } catch(GeneralException e) {
                         throw new IOException(e.getMessage());
                     }
                     entityIndex++;
-                    templateCtx.put("entityIndex", new Integer(entityIndex));
+                    templateRoot.put("entityIndex", new Integer(entityIndex));
                     if (matchFound) {
                         outputIndex++;
                         if (outputIndex >= lowIndex) {
@@ -180,7 +180,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                     }
                 }
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, getNextMatchingEntity, outputIndex :" + outputIndex, module);
-                templateCtx.put("outputIndex", new Integer(outputIndex));
+                templateRoot.put("outputIndex", new Integer(outputIndex));
                 return matchFound;
     }
 
@@ -188,39 +188,40 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //Profiler.begin("Loop");
         final StringBuffer buf = new StringBuffer();
         final Environment env = Environment.getCurrentEnvironment();
-        final Map templateCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
-        //FreeMarkerWorker.convertContext(templateCtx);
+        //final Map templateRoot = (Map) FreeMarkerWorker.getWrappedObject("context", env);
+        final Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+        //FreeMarkerWorker.convertContext(templateRoot);
         final GenericDelegator delegator = (GenericDelegator) FreeMarkerWorker.getWrappedObject("delegator", env);
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
-        FreeMarkerWorker.getSiteParameters(request, templateCtx);
-        //templateCtx.put("buf", buf);
+        FreeMarkerWorker.getSiteParameters(request, templateRoot);
+        //templateRoot.put("buf", buf);
         final Map savedValuesUp = new HashMap();
-        FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
+        FreeMarkerWorker.saveContextValues(templateRoot, upSaveKeyNames, savedValuesUp);
         final Map savedValues = new HashMap();
-        FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        String contentAssocTypeId = (String)templateCtx.get("contentAssocTypeId");
+        FreeMarkerWorker.overrideWithArgs(templateRoot, args);
+        String contentAssocTypeId = (String)templateRoot.get("contentAssocTypeId");
         //if (UtilValidate.isEmpty(contentAssocTypeId)) {
             //throw new RuntimeException("contentAssocTypeId is empty");
         //}
         List assocTypes = StringUtil.split(contentAssocTypeId, "|");
 
-        String contentPurposeTypeId = (String)templateCtx.get("contentPurposeTypeId");
+        String contentPurposeTypeId = (String)templateRoot.get("contentPurposeTypeId");
         List purposeTypes = StringUtil.split(contentPurposeTypeId, "|");
-        templateCtx.put("purposeTypes", purposeTypes);
-        Locale locale = (Locale) templateCtx.get("locale");
+        templateRoot.put("purposeTypes", purposeTypes);
+        Locale locale = (Locale) templateRoot.get("locale");
         if (locale == null) {
             locale = Locale.getDefault();
-            templateCtx.put("locale", locale);
+            templateRoot.put("locale", locale);
         }
 
         Map whenMap = new HashMap();
-        whenMap.put("followWhen", (String)templateCtx.get( "followWhen"));
-        whenMap.put("pickWhen", (String)templateCtx.get( "pickWhen"));
-        whenMap.put("returnBeforePickWhen", (String)templateCtx.get( "returnBeforePickWhen"));
-        whenMap.put("returnAfterPickWhen", (String)templateCtx.get( "returnAfterPickWhen"));
-        templateCtx.put("whenMap", whenMap);
+        whenMap.put("followWhen", (String)templateRoot.get( "followWhen"));
+        whenMap.put("pickWhen", (String)templateRoot.get( "pickWhen"));
+        whenMap.put("returnBeforePickWhen", (String)templateRoot.get( "returnBeforePickWhen"));
+        whenMap.put("returnAfterPickWhen", (String)templateRoot.get( "returnAfterPickWhen"));
+        templateRoot.put("whenMap", whenMap);
 
-        String fromDateStr = (String)templateCtx.get("fromDateStr");
+        String fromDateStr = (String)templateRoot.get("fromDateStr");
         Timestamp fromDate = null;
         if (UtilValidate.isNotEmpty(fromDateStr)) {
             fromDate = UtilDateTime.toTimestamp(fromDateStr);
@@ -229,32 +230,32 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             fromDate = UtilDateTime.nowTimestamp();
        
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
-        List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
+        List globalNodeTrail = (List)templateRoot.get("globalNodeTrail");
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), nodeTrailCsv ." + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), module);
-        String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
-        String orderBy = (String)templateCtx.get("orderBy");
+        String strNullThruDatesOnly = (String)templateRoot.get("nullThruDatesOnly");
+        String orderBy = (String)templateRoot.get("orderBy");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
         GenericValue val = null;
         try {
-            val = FreeMarkerWorker.getCurrentContent(delegator, globalNodeTrail, userLogin, templateCtx, nullThruDatesOnly, null);
+            val = FreeMarkerWorker.getCurrentContent(delegator, globalNodeTrail, userLogin, templateRoot, nullThruDatesOnly, null);
         } catch(GeneralException e) {
             Debug.logError(e, module);
         }
         final GenericValue view = val;
 
         if (view != null) {
-            templateCtx.put("contentId", null);
-            templateCtx.put("subContentId", null);
+            templateRoot.put("contentId", null);
+            templateRoot.put("subContentId", null);
     
             String contentId = (String)view.get("contentId");
             //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
             final String contentIdTo = contentId;
     
-            String thisMapKey = (String)templateCtx.get("mapKey");
+            String thisMapKey = (String)templateRoot.get("mapKey");
             //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), thisMapKey ." + thisMapKey, module);
             Map results = null;
             //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
-            String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
+            String contentAssocPredicateId = (String)templateRoot.get("contentAssocPredicateId");
             try {
                 results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId, orderBy);
             } catch(MiniLangException e2) {
@@ -264,13 +265,13 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             }
             List longList = (List) results.get("entityList");
             //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
-            String viewSizeStr = (String)templateCtx.get("viewSize");
+            String viewSizeStr = (String)templateRoot.get("viewSize");
             if (UtilValidate.isEmpty(viewSizeStr))
                 viewSizeStr = UtilProperties.getPropertyValue("content", "viewSize");
             if (UtilValidate.isEmpty(viewSizeStr))
                 viewSizeStr = "10";
             int viewSize = Integer.parseInt(viewSizeStr); 
-            String viewIndexStr = (String)templateCtx.get("viewIndex");
+            String viewIndexStr = (String)templateRoot.get("viewIndex");
             if (UtilValidate.isEmpty(viewIndexStr))
                 viewIndexStr = "0";
             int viewIndex = Integer.parseInt(viewIndexStr); 
@@ -287,19 +288,19 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             Iterator it = longList.iterator();
             //List entityList = longList.subList(lowIndex, highIndex);
             List entityList = longList;
-            templateCtx.put("entityList", entityList);
-            templateCtx.put("viewIndex", new Integer(viewIndex));
-            templateCtx.put("viewSize", new Integer(viewSize));
-            templateCtx.put("lowIndex", new Integer(lowIndex));
-            templateCtx.put("highIndex", new Integer(highIndex));
-            templateCtx.put("listSize", new Integer(listSize));
+            templateRoot.put("entityList", entityList);
+            templateRoot.put("viewIndex", new Integer(viewIndex));
+            templateRoot.put("viewSize", new Integer(viewSize));
+            templateRoot.put("lowIndex", new Integer(lowIndex));
+            templateRoot.put("highIndex", new Integer(highIndex));
+            templateRoot.put("listSize", new Integer(listSize));
         }
 
         return new LoopWriter(out) {
 
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
-                //StringBuffer ctxBuf = (StringBuffer) templateCtx.get("buf");
+                //StringBuffer ctxBuf = (StringBuffer) templateRoot.get("buf");
                 //ctxBuf.append(cbuf, off, len);
             }
 
@@ -313,12 +314,12 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                     return TransformControl.SKIP_BODY;
                 }
 
-                List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
+                List globalNodeTrail = (List)templateRoot.get("globalNodeTrail");
                 String trailCsv = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
                 //if (Debug.infoOn()) Debug.logInfo("in Loop, onStart, trailCsv:" + trailCsv, "");
-                int viewIndex = ((Integer)templateCtx.get("viewIndex")).intValue(); 
-                int viewSize = ((Integer)templateCtx.get("viewSize")).intValue(); 
-                int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
+                int viewIndex = ((Integer)templateRoot.get("viewIndex")).intValue(); 
+                int viewSize = ((Integer)templateRoot.get("viewSize")).intValue(); 
+                int listSize = ((Integer)templateRoot.get("listSize")).intValue(); 
                 int lowIndex = viewIndex * viewSize;
                 int highIndex = (viewIndex + 1) * viewSize;
                 if (highIndex > listSize)
@@ -329,15 +330,15 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //if (Debug.infoOn()) Debug.logInfo("listSize(1):" + listSize , "");
         //if (Debug.infoOn()) Debug.logInfo("highIndex(1):" + highIndex , "");
         //if (Debug.infoOn()) Debug.logInfo("lowIndex(1):" + lowIndex , "");
-                templateCtx.put("lowIndex", new Integer(lowIndex));
-                templateCtx.put("highIndex", new Integer(highIndex));
-                templateCtx.put("outputIndex", new Integer(outputIndex));
-                templateCtx.put("entityIndex", new Integer(0));
+                templateRoot.put("lowIndex", new Integer(lowIndex));
+                templateRoot.put("highIndex", new Integer(highIndex));
+                templateRoot.put("outputIndex", new Integer(outputIndex));
+                templateRoot.put("entityIndex", new Integer(0));
                 boolean inProgress = false;
                 if (outputIndex < highIndex) {
-                    inProgress = getNextMatchingEntity(templateCtx, delegator);
+                    inProgress = getNextMatchingEntity(templateRoot, delegator);
                 }
-                FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
+                FreeMarkerWorker.saveContextValues(templateRoot, saveKeyNames, savedValues);
                 if (inProgress) {
                     return TransformControl.EVALUATE_BODY;
                 } else {
@@ -346,19 +347,19 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public int afterBody() throws TemplateModelException, IOException {
-                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                List list = (List)templateCtx.get("globalNodeTrail");
+                FreeMarkerWorker.reloadValues(templateRoot, savedValues);
+                List list = (List)templateRoot.get("globalNodeTrail");
                 List subList = list.subList(0, list.size() - 1 );
-                templateCtx.put("globalNodeTrail", subList);
+                templateRoot.put("globalNodeTrail", subList);
                 
-                int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
-                int highIndex = ((Integer)templateCtx.get("highIndex")).intValue(); 
+                int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
+                int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 
                 boolean inProgress = false;
                 if (outputIndex < highIndex) {
-                    inProgress = getNextMatchingEntity(templateCtx, delegator);
+                    inProgress = getNextMatchingEntity(templateRoot, delegator);
                 }
 
-                FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
+                FreeMarkerWorker.saveContextValues(templateRoot, saveKeyNames, savedValues);
                 if (inProgress) {
                     return TransformControl.REPEAT_EVALUATION;
                 } else {
@@ -370,14 +371,14 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 if (view == null) {
                     return;
                 }
-                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
-                int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
+                FreeMarkerWorker.reloadValues(templateRoot, savedValuesUp);
+                int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
                 //if (Debug.infoOn()) Debug.logInfo("outputIndex(2):" + outputIndex , "");
-                int highIndex = ((Integer)templateCtx.get("highIndex")).intValue(); 
+                int highIndex = ((Integer)templateRoot.get("highIndex")).intValue(); 
                 //if (Debug.infoOn()) Debug.logInfo("highIndex(2):" + highIndex , "");
                 if (outputIndex < highIndex) {
-                    templateCtx.put("highIndex", new Integer(outputIndex));
-                    templateCtx.put("listSize", new Integer(outputIndex));
+                    templateRoot.put("highIndex", new Integer(outputIndex));
+                    templateRoot.put("listSize", new Integer(outputIndex));
                 }
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
