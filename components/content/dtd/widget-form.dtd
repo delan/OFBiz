@@ -441,6 +441,7 @@
             env-name CDATA #IMPLIED
             value CDATA #IMPLIED
             ignore-if-null ( true | false ) "false"
+            ignore-if-empty ( true | false ) "false"
         >
         <!ELEMENT select-field EMPTY>
         <!ATTLIST select-field
