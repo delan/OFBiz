@@ -987,6 +987,7 @@
             title="Work Effort Entity">
       <field name="workEffortId" type="id-ne"></field>
       <field name="workEffortTypeId" type="id"></field>
+	  <field name="workEffortParentId" type="id"></field>
       <field name="workflowPackageId" type="id"></field>
       <field name="workflowProcessId" type="id"></field>
       <field name="workflowActivityId" type="id"></field>
@@ -1027,6 +1028,9 @@
       <relation type="one" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId" />
       </relation>
+	  <relation type="one" title="Parent" rel-entity-name="WorkEffort">
+	    <key-map field-name="workEffortParentId" rel-field-name="workEffortId" />
+	  </relation>
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
         <key-map field-name="workEffortTypeId" />
       </relation>
