@@ -125,9 +125,14 @@
             package-name="org.ofbiz.shipment.picklist"
             title="Picklist Entity">
       <field name="picklistId" type="id-ne"></field>
-      <field name="createdDate" type="date-time"></field>
       <field name="description" type="description"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
       <prim-key field="picklistId"/>
+      <relation type="one" fk-name="PICKLST_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
     </entity>
     <entity entity-name="PicklistBin"
             package-name="org.ofbiz.shipment.picklist"
@@ -178,6 +183,53 @@
         <key-map field-name="orderItemSeqId"/>
         <key-map field-name="shipGroupSeqId"/>
         <key-map field-name="inventoryItemId"/>
+      </relation>
+    </entity>
+    <entity entity-name="PicklistRole"
+            package-name="org.ofbiz.shipment.picklist"
+            title="Picklist Role Entity">
+      <field name="picklistId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="createdByUserLogin" type="id-vlong"></field>
+      <field name="lastModifiedByUserLogin" type="id-vlong"></field>
+      <prim-key field="picklistId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PCKLST_RLE_PKLT" rel-entity-name="Picklist">
+        <key-map field-name="picklistId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_RLE_PRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="PicklistStatusHistory"
+            package-name="org.ofbiz.shipment.picklist"
+            title="Picklist Status History Entity">
+      <field name="picklistId" type="id-ne"></field>
+      <field name="changeDate" type="date-time"></field>
+      <field name="statusId" type="id-ne"></field>
+      <field name="statusIdTo" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <prim-key field="picklistId"/>
+      <prim-key field="changeDate"/>
+      <relation type="one" fk-name="PCKLST_STHST_PKLT" rel-entity-name="Picklist">
+        <key-map field-name="picklistId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_STHST_FSI" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_STHST_TSI" title="To" rel-entity-name="StatusItem">
+        <key-map field-name="statusIdTo" rel-field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="PCKLST_STHST_SVC" rel-entity-name="StatusValidChange">
+        <!-- NOTE: may want to consider removing this foreign key to allow for some sort of administrative over-ride, but in the mean-time this is a good constraint to keep data in-line -->
+        <key-map field-name="statusId"/>
+        <key-map field-name="statusIdTo"/>
       </relation>
     </entity>
 

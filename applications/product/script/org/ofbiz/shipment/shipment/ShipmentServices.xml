@@ -38,15 +38,14 @@
         <make-value value-name="newEntity" entity-name="Shipment"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
-        <sequenced-id-to-env sequence-name="Shipment" env-name="sequencedId"/>
-        <env-to-field env-name="sequencedId" field-name="shipmentId" map-name="newEntity"/>
-        <field-to-result field-name="sequencedId" result-name="shipmentId"/>
+        <sequenced-id-to-env sequence-name="Shipment" env-name="newEntity.shipmentId"/>
+        <field-to-result field-name="newEntity.shipmentId" result-name="shipmentId"/>
 
         <!-- set the created and lastModified info -->
         <now-timestamp-to-env env-name="newEntity.createdDate"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="createdByUserLogin" to-map-name="newEntity"/>
+        <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.createdByUserLogin"/>
         <now-timestamp-to-env env-name="newEntity.lastModifiedDate"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
+        <field-to-field field-name="userLogin.userLoginId" to-field-name="newEntity.lastModifiedByUserLogin"/>
 
         <!-- if needed create some WorkEfforts and remember their IDs:
             estimatedShipDate: estimatedShipWorkEffId
@@ -55,40 +54,40 @@
         <!-- always create the WorkEfforts, even if dates aren't specified yet; when they are they will be set in the update service... -->
 
         <!-- the Ship WorkEffort entity -->
-        <string-to-field string="Shipment #${sequencedId} Ship" field-name="workEffortName" map-name="shipWorkEffortMap"/>
-        <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="shipWorkEffortMap"/>
-        <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="shipWorkEffortMap"/>
-        <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedStartDate" to-map-name="shipWorkEffortMap"/>
-        <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedCompletionDate" to-map-name="shipWorkEffortMap"/>
-        <field-to-field map-name="parameters" field-name="originFacilityId" to-field-name="facilityId" to-map-name="shipWorkEffortMap"/>
+        <string-to-field string="Shipment #${sequencedId} Ship" field-name="shipWorkEffortMap.workEffortName"/>
+        <string-to-field string="EVENT" field-name="shipWorkEffortMap.workEffortTypeId"/>
+        <string-to-field string="CAL_TENTATIVE" field-name="shipWorkEffortMap.currentStatusId" map-name=""/>
+        <field-to-field field-name="parameters.estimatedShipDate" to-field-name="shipWorkEffortMap.estimatedStartDate"/>
+        <field-to-field field-name="parameters.estimatedShipDate" to-field-name="shipWorkEffortMap.estimatedCompletionDate"/>
+        <field-to-field field-name="parameters.originFacilityId" to-field-name="shipWorkEffortMap.facilityId"/>
         <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="shipWorkEffortMap"/>
         <call-service service-name="createWorkEffort" in-map-name="shipWorkEffortMap">
             <result-to-field result-name="workEffortId" map-name="newEntity" field-name="estimatedShipWorkEffId"/>
         </call-service>
         <if-not-empty field-name="partyIdFrom" map-name="newEntity">
-            <field-to-field field-name="estimatedShipWorkEffId" map-name="newEntity" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortShip"/>
-            <field-to-field field-name="partyIdFrom" map-name="newEntity" to-field-name="partyId" to-map-name="assignPartyToWorkEffortShip"/>
-            <string-to-field string="CAL_ATTENDEE" field-name="roleTypeId" map-name="assignPartyToWorkEffortShip"/>
-            <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortShip"/>
+            <field-to-field field-name="newEntity.estimatedShipWorkEffId" to-field-name="assignPartyToWorkEffortShip.workEffortId"/>
+            <field-to-field field-name="newEntity.partyIdFrom" to-field-name="assignPartyToWorkEffortShip.partyId"/>
+            <string-to-field string="CAL_ATTENDEE" field-name="assignPartyToWorkEffortShip.roleTypeId"/>
+            <string-to-field string="CAL_SENT" field-name="assignPartyToWorkEffortShip.statusId"/>
             <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortShip"/>
         </if-not-empty>
 
         <!-- the Arrival WorkEffort entity -->
-        <string-to-field string="Shipment #${sequencedId} Arrival" field-name="workEffortName" map-name="arrivalWorkEffortMap"/>
-        <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="arrivalWorkEffortMap"/>
-        <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="arrivalWorkEffortMap"/>
-        <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="arrivalWorkEffortMap"/>
-        <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="arrivalWorkEffortMap"/>
-        <field-to-field map-name="parameters" field-name="destinationFacilityId" to-field-name="facilityId" to-map-name="arrivalWorkEffortMap"/>
-        <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="arrivalWorkEffortMap"/>
+        <string-to-field string="Shipment #${sequencedId} Arrival" field-name="arrivalWorkEffortMap.workEffortName"/>
+        <string-to-field string="EVENT" field-name="arrivalWorkEffortMap.workEffortTypeId"/>
+        <string-to-field string="CAL_TENTATIVE" field-name="arrivalWorkEffortMap.currentStatusId"/>
+        <field-to-field field-name="parameters.estimatedArrivalDate" to-field-name="arrivalWorkEffortMap.estimatedStartDate"/>
+        <field-to-field field-name="parameters.estimatedArrivalDate" to-field-name="arrivalWorkEffortMap.estimatedCompletionDate"/>
+        <field-to-field field-name="parameters.destinationFacilityId" to-field-name="arrivalWorkEffortMap.facilityId"/>
+        <env-to-env env-name="userLogin.partyId" to-env-name="arrivalWorkEffortMap.quickAssignPartyId"/>
         <call-service service-name="createWorkEffort" in-map-name="arrivalWorkEffortMap">
-            <result-to-field result-name="workEffortId" map-name="newEntity" field-name="estimatedArrivalWorkEffId"/>
+            <result-to-field result-name="workEffortId" field-name="newEntity.estimatedArrivalWorkEffId"/>
         </call-service>
         <if-not-empty field-name="partyIdTo" map-name="newEntity">
-            <field-to-field field-name="estimatedArrivalWorkEffId" map-name="newEntity" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortArrival"/>
-            <field-to-field field-name="partyIdTo" map-name="newEntity" to-field-name="partyId" to-map-name="assignPartyToWorkEffortArrival"/>
-            <string-to-field string="CAL_ATTENDEE" field-name="roleTypeId" map-name="assignPartyToWorkEffortArrival"/>
-            <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortArrival"/>
+            <field-to-field field-name="newEntity.estimatedArrivalWorkEffId" to-field-name="assignPartyToWorkEffortArrival.workEffortId"/>
+            <field-to-field field-name="newEntity.partyIdTo" to-field-name="assignPartyToWorkEffortArrival.partyId"/>
+            <string-to-field string="CAL_ATTENDEE" field-name="assignPartyToWorkEffortArrival.roleTypeId"/>
+            <string-to-field string="CAL_SENT" field-name="assignPartyToWorkEffortArrival.statusId"/>
             <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortArrival"/>
         </if-not-empty>
 
@@ -225,15 +224,15 @@
         </if>
 
         <!-- finally before setting nonpk fields, set the oldStatusId, oldPrimaryOrderId, oldOriginFacilityId, oldDestinationFacilityId -->
-        <field-to-result field-name="statusId" map-name="lookedUpValue" result-name="oldStatusId"/>
-        <field-to-result field-name="primaryOrderId" map-name="lookedUpValue" result-name="oldPrimaryOrderId"/>
-        <field-to-result field-name="originFacilityId" map-name="lookedUpValue" result-name="oldOriginFacilityId"/>
-        <field-to-result field-name="destinationFacilityId" map-name="lookedUpValue" result-name="oldDestinationFacilityId"/>
+        <field-to-result field-name="lookedUpValue.statusId" result-name="oldStatusId"/>
+        <field-to-result field-name="lookedUpValue.primaryOrderId" result-name="oldPrimaryOrderId"/>
+        <field-to-result field-name="lookedUpValue.originFacilityId" result-name="oldOriginFacilityId"/>
+        <field-to-result field-name="lookedUpValue.destinationFacilityId" result-name="oldDestinationFacilityId"/>
 
         <!-- now that all changes have been checked, set the nonpks -->
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <now-timestamp-to-env env-name="lookedUpValue.lastModifiedDate"/>
-        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="lookedUpValue"/>
+        <field-to-field field-name="userLogin.userLoginId" to-field-name="lookedUpValue.lastModifiedByUserLogin"/>
 
         <store-value value-name="lookedUpValue"/>
     </simple-method>
