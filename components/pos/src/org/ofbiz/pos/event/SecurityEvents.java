@@ -35,7 +35,7 @@ import org.ofbiz.content.xui.XuiSession;
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Rev$
- * @since      Jul 13, 2004
+ * @since      3.2
  */
 public class SecurityEvents {
 
