@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.8 2003/12/11 05:09:47 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.9 2003/12/12 03:42:55 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,8 @@
  */
 package org.ofbiz.entity.datasource;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -66,6 +68,8 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
 import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelViewEntity;
+import org.ofbiz.entity.serialize.SerializeException;
+import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -79,7 +83,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -94,8 +98,7 @@ public class GenericDAO {
     public static GenericDAO getGenericDAO(String helperName) {
         GenericDAO newGenericDAO = (GenericDAO) genericDAOs.get(helperName);
 
-        if (newGenericDAO == null)// don't want to block here
-        {
+        if (newGenericDAO == null) { // don't want to block here
             synchronized (GenericDAO.class) {
                 newGenericDAO = (GenericDAO) genericDAOs.get(helperName);
                 if (newGenericDAO == null) {

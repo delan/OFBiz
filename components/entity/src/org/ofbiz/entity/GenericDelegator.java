@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.9 2003/11/14 22:17:48 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.10 2003/12/12 03:42:54 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,8 @@
  */
 package org.ofbiz.entity;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,6 +59,8 @@ import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.model.ModelReader;
 import org.ofbiz.entity.model.ModelRelation;
 import org.ofbiz.entity.model.ModelViewEntity;
+import org.ofbiz.entity.serialize.SerializeException;
+import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityFindOptions;
@@ -74,7 +78,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -351,9 +355,7 @@ public class GenericDelegator implements DelegatorInterface {
      *@return String with the helper name that corresponds to this delegator and the specified entityName
      */
     public String getGroupHelperName(String groupName) {
-        EntityConfigUtil.DelegatorInfo delegatorInfo = this.getDelegatorInfo();
-
-        return (String) delegatorInfo.groupMap.get(groupName);
+        return (String) this.getDelegatorInfo().groupMap.get(groupName);
     }
 
     /** Gets the helper name that corresponds to this delegator and the specified entityName
@@ -1070,12 +1072,37 @@ public class GenericDelegator implements DelegatorInterface {
         return count;
     }
 
+    protected void saveEntitySyncRemoveInfo(GenericEntity dummyPK) throws GenericEntityException {
+        if (dummyPK.getModelEntity().getNoAutoStamp()) {
+            return;
+        }
+        
+        String serializedPK = null;
+        try {
+            serializedPK = XmlSerializer.serialize(dummyPK);
+        } catch (SerializeException e) {
+            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
+        } catch (FileNotFoundException e) {
+            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
+        } catch (IOException e) {
+            Debug.logError(e, "Could not serialize primary key to save EntitySyncRemove", module);
+        }
+        
+        if (serializedPK != null) {
+            GenericValue entitySyncRemove = this.makeValue("EntitySyncRemove", null);
+            entitySyncRemove.set("entitySyncRemoveId", this.getNextSeqId("EntitySyncRemove"));
+            entitySyncRemove.set("primaryKeyRemoved", dummyPK);
+            entitySyncRemove.create();
+        }
+    }
+    
     /** Remove a Generic Entity corresponding to the primaryKey
      *@param primaryKey  The primary key of the entity to remove.
      *@return int representing number of rows effected by this operation
      */
     public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
-        return this.removeByPrimaryKey(primaryKey, true);
+        int retVal = this.removeByPrimaryKey(primaryKey, true);
+        return retVal;
     }
 
     /** Remove a Generic Entity corresponding to the primaryKey
@@ -1097,7 +1124,8 @@ public class GenericDelegator implements DelegatorInterface {
 
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
         int num = helper.removeByPrimaryKey(primaryKey);
-
+        this.saveEntitySyncRemoveInfo(primaryKey);
+        
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, primaryKey, ecaEventMap, (ecaEventMap == null), false);
         return num;
     }
@@ -1128,7 +1156,8 @@ public class GenericDelegator implements DelegatorInterface {
 
         this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
         int num = helper.removeByPrimaryKey(value.getPrimaryKey());
-
+        this.saveEntitySyncRemoveInfo(value.getPrimaryKey());
+        
         this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, value, ecaEventMap, (ecaEventMap == null), false);
         return num;
     }
@@ -1149,24 +1178,26 @@ public class GenericDelegator implements DelegatorInterface {
      *@return int representing number of rows effected by this operation
      */
     public int removeByAnd(String entityName, Map fields, boolean doCacheClear) throws GenericEntityException {
-        GenericValue dummyValue = makeValue(entityName, fields);
+        GenericValue dummyPK = makeValue(entityName, null);
+        dummyPK.setFields(fields);
 
         Map ecaEventMap = this.getEcaEntityEventMap(entityName);
-        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+        this.evalEcaRules(EntityEcaHandler.EV_VALIDATE, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
 
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         GenericHelper helper = getEntityHelper(entityName);
 
         if (doCacheClear) {
             // always clear cache before the operation
-            this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+            this.evalEcaRules(EntityEcaHandler.EV_CACHE_CLEAR, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
             this.clearCacheLine(entityName, fields);
         }
 
-        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        int num = helper.removeByAnd(modelEntity, dummyValue.getAllFields());
-
-        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+        this.evalEcaRules(EntityEcaHandler.EV_RUN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
+        int num = helper.removeByAnd(modelEntity, dummyPK.getAllFields());
+        this.saveEntitySyncRemoveInfo(dummyPK);
+        
+        this.evalEcaRules(EntityEcaHandler.EV_RETURN, EntityEcaHandler.OP_REMOVE, dummyPK, ecaEventMap, (ecaEventMap == null), false);
         return num;
     }
 
@@ -1621,7 +1652,6 @@ public class GenericDelegator implements DelegatorInterface {
             }
 
             Iterator helperIter = valuesPerHelper.entrySet().iterator();
-
             while (helperIter.hasNext()) {
                 Map.Entry curEntry = (Map.Entry) helperIter.next();
                 String helperName = (String) curEntry.getKey();
@@ -1630,7 +1660,16 @@ public class GenericDelegator implements DelegatorInterface {
                 if (doCacheClear) {
                     this.clearAllCacheLinesByDummyPK((List) curEntry.getValue());
                 }
-                numRemoved += helper.removeAll((List) curEntry.getValue());
+                
+                List helperDummyPKs = (List) curEntry.getValue();
+                numRemoved += helper.removeAll(helperDummyPKs);
+                
+                // TODO: iterate through and store fact that it was removed
+                Iterator helperDummyPKIter = helperDummyPKs.iterator();
+                while (helperDummyPKIter.hasNext()) {
+                    GenericEntity dummyPK = (GenericEntity) helperDummyPKIter.next();
+                    this.saveEntitySyncRemoveInfo(dummyPK);
+                }
             }
 
             // only commit the transaction if we started one...
