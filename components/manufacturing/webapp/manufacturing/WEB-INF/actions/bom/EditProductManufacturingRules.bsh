@@ -51,19 +51,16 @@ context.put("allManufacturingRules", allRules);
 String ruleId = request.getParameter("ruleId");
 if (ruleId == null)  ruleId = request.getAttribute("ruleId");
 if (ruleId != null) {
-	rule = delegator.findByPrimaryKey("ProductManufacturingRule", UtilMisc.toMap("ruleId", ruleId));
-	if (rule != null) { 
-            HtmlFormWrapper updateManufacturingRuleWrapper = new HtmlFormWrapper("/bom/BomForms.xml", "UpdateProductManufacturingRule", request, response);
-            updateManufacturingRuleWrapper.putInContext("manufacturingRule", rule);
-            updateManufacturingRuleWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
-            context.put("productManufacturingRule", rule);
-            context.put("updateManufacturingRuleWrapper", updateManufacturingRuleWrapper);
-	}
+    rule = delegator.findByPrimaryKey("ProductManufacturingRule", UtilMisc.toMap("ruleId", ruleId));
+    if (rule != null) { 
+        HtmlFormWrapper updateManufacturingRuleWrapper = new HtmlFormWrapper("/bom/BomForms.xml", "UpdateProductManufacturingRule", request, response);
+        updateManufacturingRuleWrapper.putInContext("manufacturingRule", rule);
+        updateManufacturingRuleWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+        context.put("productManufacturingRule", rule);
+        context.put("updateManufacturingRuleWrapper", updateManufacturingRuleWrapper);
+    }
 }
 
 HtmlFormWrapper addProductManufacturingRuleWrapper = new HtmlFormWrapper("/bom/BomForms.xml", "AddProductManufacturingRule", request, response);
 addProductManufacturingRuleWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 context.put("addProductManufacturingRuleWrapper", addProductManufacturingRuleWrapper);
-
-
-
