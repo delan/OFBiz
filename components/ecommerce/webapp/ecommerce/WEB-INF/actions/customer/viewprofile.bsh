@@ -43,6 +43,7 @@ if (userLogin != null) {
     party = delegator.findByPrimaryKey("Party", partyIdMap);
     person = delegator.findByPrimaryKey("Person", partyIdMap);
     partyGroup = delegator.findByPrimaryKey("PartyGroup", partyIdMap);
+    profiledefs = delegator.findByPrimaryKey("PartyProfileDefault", partyIdMap);
     
     showOld = "true".equals(request.getParameter("SHOW_OLD"));
      
@@ -52,6 +53,7 @@ if (userLogin != null) {
     context.put("party", party);
     context.put("person", person);
     context.put("partyGroup", partyGroup);
+    context.put("profiledefs", profiledefs);
     
     context.put("showOld", showOld);
     
