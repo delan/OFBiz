@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.1 2004/01/07 19:30:11 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.2 2004/01/09 23:35:27 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Iterator;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 
@@ -48,14 +49,14 @@ import freemarker.template.TemplateModelException;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
     public static final String module = LoopSubContentCacheTransform.class.getName();
 
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeTypeId", "subContentDataResourceView", "wrapTemplateId", "contentTemplateId", "globalNodeTrail"};
+    public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeTypeId", "subContentDataResourceView", "wrapTemplateId", "contentTemplateId", "globalNodeTrail", "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize"};
     public static final String [] removeKeyNames = {"wrapTemplateId", "entityList", "entityIndex", "textData", "dataResourceId","drDataResourceId", "subContentIdSub", "parentContent", "wrappedFTL"};
 
     /**
@@ -162,10 +163,10 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         //templateCtx.put("buf", buf);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before save", templateCtx, 0),module);
-        FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after overrride", templateCtx, 0),module);
         final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
         if (Debug.verboseOn()) Debug.logVerbose("(L-0)savedValues: " + savedValues,module);
+        FreeMarkerWorker.overrideWithArgs(templateCtx, args);
+        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after overrride", templateCtx, 0),module);
         String contentAssocTypeId = (String)templateCtx.get("contentAssocTypeId");
         if (UtilValidate.isEmpty(contentAssocTypeId)) {
             contentAssocTypeId = "SUB_CONTENT";
@@ -189,6 +190,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         GenericValue view = null;
        
         String contentId = (String)templateCtx.get("contentId");
+        final String contentIdTo = contentId;
         String subContentId = (String)templateCtx.get("subContentId");
         String thisContentId = (String)templateCtx.get("contentId");
         if (UtilValidate.isEmpty(thisContentId)) {
@@ -228,8 +230,34 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         } catch(GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
         }
-        List entityList = (List) results.get("entityList");
+        List longList = (List) results.get("entityList");
+        String viewSizeStr = (String)templateCtx.get("viewSize");
+        if (UtilValidate.isEmpty(viewSizeStr))
+            viewSizeStr = "10";
+        int viewSize = Integer.parseInt(viewSizeStr); 
+Debug.logInfo("viewSize:" + viewSize, "");
+        String viewIndexStr = (String)templateCtx.get("viewIndex");
+Debug.logInfo("viewIndexStr:" + viewIndexStr, "");
+        if (UtilValidate.isEmpty(viewIndexStr))
+            viewIndexStr = "0";
+        int viewIndex = Integer.parseInt(viewIndexStr); 
+Debug.logInfo("viewIndex:" + viewIndex, "");
+        int lowIndex = viewIndex * viewSize;
+Debug.logInfo("lowIndex:" + lowIndex, "");
+        int listSize = longList.size();
+Debug.logInfo("listSize:" + listSize, "");
+        int highIndex = (viewIndex + 1) * viewSize;
+        if (highIndex > listSize)
+            highIndex = listSize;
+Debug.logInfo("highIndex:" + highIndex, "");
+        Iterator it = longList.iterator();
+        List entityList = longList.subList(lowIndex, highIndex);
         templateCtx.put("entityList", entityList);
+        templateCtx.put("viewIndex", Integer.toString(viewIndex));
+        templateCtx.put("viewSize", Integer.toString(viewSize));
+        templateCtx.put("lowIndex", Integer.toString(lowIndex));
+        templateCtx.put("highIndex", Integer.toString(highIndex));
+        templateCtx.put("listSize", Integer.toString(listSize));
 
         return new LoopWriter(out) {
 
@@ -258,6 +286,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
             public int afterBody() throws TemplateModelException, IOException {
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, afterBody, start", module);
+                if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after body", templateCtx, 0),module);
                 Integer idx = (Integer) templateCtx.get("entityIndex");
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, prepCtx, idx :" + idx, module);
                 int i = idx.intValue();
@@ -278,12 +307,6 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
                 String wrappedFTL = buf.toString();
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrappedFTL:"+wrappedFTL,module);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before remove", templateCtx, 0),module);
-                    FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after remove", templateCtx, 0),module);
-        if (Debug.verboseOn()) Debug.logVerbose("(L-1)savedValues: " + savedValues,module);
-                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after reload", templateCtx, 0),module);
                 String encloseWrappedText = (String)templateCtx.get("encloseWrappedText");
                 if (UtilValidate.isEmpty(encloseWrappedText) || encloseWrappedText.equalsIgnoreCase("false")) {
                     out.write(wrappedFTL);
@@ -293,44 +316,38 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                     if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrapTemplateId:" + wrapTemplateId, module);
                 if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                     templateCtx.put("wrappedFTL", wrappedFTL);
+                    templateCtx.put("contentIdTo", contentIdTo);
                     //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, rootDir:" + rootDir, module);
                     
                     Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
                     
-/*
-                    templateRoot.put("viewSize", viewSize);
-                    templateRoot.put("viewIndex", viewIndex);
-                    templateRoot.put("listSize", listSize);
-                    templateRoot.put("highIndex", highIndex);
-                    templateRoot.put("lowIndex", lowIndex);
-                    templateRoot.put("queryString", queryString);
-                    templateRoot.put("wrapMapKey", mapKey);
-*/
                     templateRoot.put("wrapDataResourceTypeId", templateCtx.get("subDataResourceTypeId"));
                     templateRoot.put("wrapContentIdTo", templateCtx.get("contentId"));
                     templateRoot.put("wrapMimeTypeId", templateCtx.get("mimeTypeId"));
                     templateRoot.put("context", templateCtx);
                     
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrapDataResourceTypeId:" + subDataResourceTypeId, module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrapContentIdTo:" + contentId, module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrapMimeTypeId:" + mimeTypeId, module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrapMapKey:" + mapKey,module);
-                    //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, calling renderContentAsText, wrapTemplateId:" + wrapTemplateId, module);
-
                     Locale locale = (Locale) templateCtx.get("locale");
                     if (locale == null)
                         locale = Locale.getDefault();
                     String mimeTypeId = (String) templateCtx.get("mimeTypeId");
+                if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)close middle", templateCtx, 0),module);
                     try {
                         ContentWorker.renderContentAsTextCache(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);
                     } catch (GeneralException e) {
                         Debug.logError(e, "Error rendering content", module);
                         throw new IOException("Error rendering content" + e.toString());
                     }
+                if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)close middle(2)", templateCtx, 0),module);
                 } else {
                     if (UtilValidate.isNotEmpty(wrappedFTL))
                         out.write(wrappedFTL);
                 }
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before remove", templateCtx, 0),module);
+                    FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after remove", templateCtx, 0),module);
+        if (Debug.verboseOn()) Debug.logVerbose("(L-1)savedValues: " + savedValues,module);
+                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after reload", templateCtx, 0),module);
             }
         };
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.1 2004/01/08 22:10:13 byersa Exp $
+ * $Id: CheckPermissionTransform.java,v 1.2 2004/01/09 23:35:26 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -51,7 +51,7 @@ import freemarker.template.TemplateModelException;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
@@ -86,11 +86,11 @@ public class CheckPermissionTransform implements TemplateTransformModel {
         final HttpServletRequest request = (HttpServletRequest) FreeMarkerWorker.getWrappedObject("request", env);
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         //templateCtx.put("buf", buf);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before save", templateCtx, 0),module);
+        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)before save", templateCtx, 0),module);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after overrride", templateCtx, 0),module);
+        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after overrride", templateCtx, 0),module);
         final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
-        if (Debug.verboseOn()) Debug.logVerbose("(L-0)savedValues: " + savedValues,module);
+        if (Debug.verboseOn()) Debug.logVerbose("(C-0)savedValues: " + savedValues,module);
 
         return new LoopWriter(out) {
 
@@ -190,6 +190,11 @@ public class CheckPermissionTransform implements TemplateTransformModel {
                 String wrappedFTL = buf.toString();
                 if (Debug.verboseOn()) Debug.logVerbose("in CheckPerm, wrappedFTL:"+wrappedFTL,module);
                 out.write(wrappedFTL);
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)before remove", templateCtx, 0),module);
+                    FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after remove", templateCtx, 0),module);
+                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after reload", templateCtx, 0),module);
             }
         };
     }
