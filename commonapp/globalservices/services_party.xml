@@ -152,6 +152,7 @@
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createContactMech" auth="true">
         <description>Create a ContactMech</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="infoString" type="String" mode="IN" optional="false"/>
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
@@ -161,6 +162,7 @@
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateContactMech" auth="true">
         <description>Update a ContactMech</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="contactMechTypeId" type="String" mode="IN" optional="false"/>
         <attribute name="infoString" type="String" mode="IN" optional="false"/>
@@ -178,6 +180,7 @@
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createPostalAddress" auth="true">
         <description>Create a Postal Address</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="toName" type="String" mode="IN" optional="true"/>
         <attribute name="attnName" type="String" mode="IN" optional="true"/>
         <attribute name="address1" type="String" mode="IN" optional="false"/>
@@ -195,6 +198,7 @@
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updatePostalAddress" auth="true">
         <description>Update a Postal Address</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="toName" type="String" mode="IN" optional="true"/>
         <attribute name="attnName" type="String" mode="IN" optional="true"/>
@@ -214,6 +218,7 @@
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createTelecomNumber" auth="true">
         <description>Create a Telecommunications Number</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="countryCode" type="String" mode="IN" optional="true"/>
         <attribute name="areaCode" type="String" mode="IN" optional="true"/>
         <attribute name="contactNumber" type="String" mode="IN" optional="false"/>
@@ -225,6 +230,7 @@
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateTelecomNumber" auth="true">
         <description>Update a Telecommunications Number</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="countryCode" type="String" mode="IN" optional="true"/>
         <attribute name="areaCode" type="String" mode="IN" optional="true"/>
@@ -238,6 +244,7 @@
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createEmailAddress" auth="true">
         <description>Create an Email Address</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
@@ -246,6 +253,7 @@
             location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateEmailAddress" auth="true">
         <description>Update an Email Address</description>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
         <attribute name="emailAddress" type="String" mode="IN" optional="false"/>
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>

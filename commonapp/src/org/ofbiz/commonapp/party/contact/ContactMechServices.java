@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2002/01/24 05:13:03  jonesde
+ * Fixed little bug with not setting the partyId on the credit card info update
+ *
  * Revision 1.5  2002/01/23 11:28:12  jonesde
  * Slimmed down a little with some useful new functions in ServiceUtil
  *
@@ -86,7 +89,7 @@ public class ContactMechServices {
         toBeStored.add(tempContactMech);
 
         toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), 
-                "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
+                "fromDate", now, "roleTypeId", context.get("roleTypeId"), "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
 
         if("POSTAL_ADDRESS".equals(contactMechTypeId)) {
             return ServiceUtil.returnError("This service (createContactMech) should not be used for POSTAL_ADDRESS type ContactMechs, use the createPostalAddress service");
@@ -168,6 +171,7 @@ public class ContactMechServices {
             newContactMech.set("infoString", context.get("infoString"));
         }
 
+        newPartyContactMech.set("roleTypeId", context.get("roleTypeId"));
         newPartyContactMech.set("allowSolicitation", context.get("allowSolicitation"));
 
         if(!newContactMech.equals(contactMech)) isModified = true;
@@ -292,7 +296,7 @@ public class ContactMechServices {
         toBeStored.add(tempContactMech);
 
         toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), 
-                "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
+                "fromDate", now, "roleTypeId", context.get("roleTypeId"), "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
 
         GenericValue newAddr = delegator.makeValue("PostalAddress", null);
         newAddr.set("contactMechId", newCmId.toString());
@@ -397,6 +401,7 @@ public class ContactMechServices {
             return ServiceUtil.returnError("Could not update this contact mech as a POSTAL_ADDRESS the specified contact mech is a " + contactMech.getString("contactMechTypeId"));
         }
 
+        newPartyContactMech.set("roleTypeId", context.get("roleTypeId"));
         newPartyContactMech.set("allowSolicitation", context.get("allowSolicitation"));
 
         if(!newContactMech.equals(contactMech)) isModified = true;
@@ -475,7 +480,7 @@ public class ContactMechServices {
         toBeStored.add(tempContactMech);
 
         toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(), 
-                "fromDate", now, "roleTypeId", "CUSTOMER", "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
+                "fromDate", now, "roleTypeId", context.get("roleTypeId"), "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
 
         toBeStored.add(delegator.makeValue("TelecomNumber", UtilMisc.toMap("contactMechId", newCmId.toString(), 
                 "countryCode", context.get("countryCode"), "areaCode", context.get("areaCode"), "contactNumber", context.get("contactNumber"))));
@@ -564,6 +569,7 @@ public class ContactMechServices {
             return ServiceUtil.returnError("Could not update this contact mech as a TELECOM_NUMBER the specified contact mech is a " + contactMech.getString("contactMechTypeId"));
         }
 
+        newPartyContactMech.set("roleTypeId", context.get("roleTypeId"));
         newPartyContactMech.set("allowSolicitation", context.get("allowSolicitation"));
 
         if(!newContactMech.equals(contactMech)) isModified = true;
