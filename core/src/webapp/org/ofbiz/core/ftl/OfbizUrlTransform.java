@@ -34,6 +34,7 @@ import org.ofbiz.core.util.*;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.template.Environment;
+import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateTransformModel;
@@ -47,8 +48,25 @@ import freemarker.template.TemplateTransformModel;
  */
 public class OfbizUrlTransform implements TemplateTransformModel {
     
-    public Writer getWriter(final Writer out, Map args) {              
+    public boolean checkArg(Map args, String key) {
+        if (!args.containsKey(key)) {        
+            return false;
+        } else {
+            Object o = args.get(key);
+            if (o instanceof SimpleScalar) {
+                SimpleScalar s = (SimpleScalar) o;
+                return "true".equalsIgnoreCase(s.getAsString());
+            }
+            return false;                        
+        }       
+    }
+    
+    public Writer getWriter(final Writer out, Map args) {                      
         final StringBuffer buf = new StringBuffer();
+        final boolean fullPath = checkArg(args, "fullPath");
+        final boolean secure = checkArg(args, "secure");
+        final boolean encode = checkArg(args, "encode");
+        
         return new Writer(out) {
             public void write(char cbuf[], int off, int len) {
                 buf.append(cbuf, off, len);
@@ -61,17 +79,20 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             public void close() throws IOException {  
                 try {                              
                     Environment env = Environment.getCurrentEnvironment();
-                    BeanModel req = (BeanModel)env.getVariable("request");
+                    BeanModel req = (BeanModel) env.getVariable("request");
                     BeanModel res = (BeanModel) env.getVariable("response");
                     Object prefix = env.getVariable("urlPrefix");
-                    if (req != null && res != null) {                    
+                    if (req != null) {                    
                         HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
-                        HttpServletResponse response = (HttpServletResponse) res.getWrappedObject();
                         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
-                    
+                        HttpServletResponse response = null;
+                        if (res != null) {
+                            response = (HttpServletResponse) res.getWrappedObject();
+                        }
+                                            
                         // make the link
                         RequestHandler rh = (RequestHandler) ctx.getAttribute(SiteDefs.REQUEST_HANDLER);                                        
-                        out.write(rh.makeLink(request, response, buf.toString()));
+                        out.write(rh.makeLink(request, response, buf.toString(), fullPath, secure, encode));
                     } else if (prefix != null) {
                         if (prefix instanceof TemplateScalarModel) {
                             TemplateScalarModel s = (TemplateScalarModel) prefix;
