@@ -55,19 +55,21 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         super(valueObject,dataObject,process.runtimeKey());
         this.process = process;        
         assignments = new ArrayList();
-        GenericValue performer = null;
-        try {
-            performer = valueObject.getRelatedOne("PerformerWorkflowParticipant");
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
+        GenericValue performer = null;     
+        if ( valueObject.get("performerParticipantId") != null ) {
+            try {
+                performer = valueObject.getRelatedOne("PerformerWorkflowParticipant");
+            }
+            catch ( GenericEntityException e ) {
+                throw new WfException(e.getMessage(),e);
+            }
         }
         
         if ( performer != null ) {
             WfResource resource = WfFactory.newWfResource(performer);
             WfAssignment assign = WfFactory.newWfAssignment(this,resource);
             assignments.add(assign);
-        }         
+        }          
     }
     
     /**
