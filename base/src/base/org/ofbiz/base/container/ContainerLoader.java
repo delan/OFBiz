@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.5 2003/08/20 02:33:13 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.6 2003/08/20 05:55:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.5 $
+  *@version    $Revision: 1.6 $
  * @since      3.0
  */
 public class ContainerLoader implements StartupLoader {
@@ -77,6 +77,7 @@ public class ContainerLoader implements StartupLoader {
      * @see org.ofbiz.base.start.StartupLoader#unload()
      */
     public void unload() throws StartupException {
+        Debug.logInfo("Shutting down containers", module);
         Iterator i = loadedContainers.iterator();
         while (i.hasNext()) {
             Container container = (Container) i.next();

@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.5 2003/08/18 00:38:30 ajzeneski Exp $
+ * $Id: Start.java,v 1.6 2003/08/20 05:55:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.5 $
+  *@version    $Revision: 1.6 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -76,9 +76,7 @@ public class Start implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();                              
             }
-        }
-        shutdownServer(); 
-        System.exit(0);                       
+        }                                      
     }
     
     private void processClientRequest(Socket client) throws IOException {         
@@ -175,8 +173,7 @@ public class Start implements Runnable {
             Thread hook = new Thread() {
                 public void run() {                
                     setName("OFBiz_Shutdown_Hook");
-                    serverRunning = false;                 
-                    
+                    shutdownServer();                    
                     // Try to avoid JVM crash
                     try {
                         Thread.sleep(1000);
@@ -203,7 +200,8 @@ public class Start implements Runnable {
                     e.printStackTrace();
                 }
             }
-        }        
+        }
+        serverRunning = false;               
     }
     
 
