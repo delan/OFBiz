@@ -411,6 +411,9 @@
       <field name="runtimeDataId" type="id"></field>
       <field name="noteId" type="id"></field>
       <field name="serviceLoaderName" type="name"></field>
+      <field name="quantityToProduce" type="numeric"></field>
+      <field name="quantityProduced" type="numeric"></field>
+      <field name="quantityRejected" type="numeric"></field>
       <prim-key field="workEffortId"/>
       <relation type="one" fk-name="WK_EFFRT_TYPE" rel-entity-name="WorkEffortType">
         <key-map field-name="workEffortTypeId"/>

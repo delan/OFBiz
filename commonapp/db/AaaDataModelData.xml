@@ -709,10 +709,6 @@
   <WorkEffortType description="Event" hasTable="N" parentTypeId="" workEffortTypeId="EVENT"/>
   <WorkEffortType description="Program" hasTable="N" parentTypeId="" workEffortTypeId="PROGRAM"/>
 
-  <WorkEffortTypeAttr attrName="QUANTITY_PRODUCED" workEffortTypeId="PRODUCTION_RUN"/>
-  <WorkEffortTypeAttr attrName="QUANTITY_REJECTED" workEffortTypeId="PRODUCTION_RUN"/>
-  <WorkEffortTypeAttr attrName="QUANTITY_TO_PRODUCE" workEffortTypeId="PRODUCTION_RUN"/>
-
   <WorkflowSpecification specificationId="XPDL" currentVersion="0.03"/>
 
   <WorkReqFulfType description="Implements" workReqFulfTypeId="WRF_IMPLEMENTS"/>
