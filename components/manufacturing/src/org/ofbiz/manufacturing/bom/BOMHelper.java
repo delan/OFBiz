@@ -135,7 +135,7 @@ public class BOMHelper {
         //String orderItemSeqId = request.getParameter("orderItemSeqId");
 
         try {
-        List shipmentPlans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("shipmentId", shipmentId));
+        List shipmentPlans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("shipmentId", shipmentId));
         Iterator shipmentPlansIt = shipmentPlans.iterator();
         while (shipmentPlansIt.hasNext()) {
             GenericValue shipmentPlan = (GenericValue)shipmentPlansIt.next();
