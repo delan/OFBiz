@@ -1,5 +1,5 @@
 /*
- * $Id: OrderLookupParams.java,v 1.1 2004/07/30 16:01:45 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import javax.servlet.http.HttpSession;
  * Party Information Related Events
  *
  * @author     <a href="mailto:peter.goron@nereide.biz">Peter Goron</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class OrderLookupParams {

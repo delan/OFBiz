@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.13 2004/07/27 18:21:29 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.13 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class OrderChangeHelper {

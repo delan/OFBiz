@@ -1,5 +1,5 @@
 /*
- * $Id: ZipSalesServices.java,v 1.18 2004/04/11 08:28:22 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceUtil;
  * Zip-Sales Database Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.18 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ZipSalesServices {

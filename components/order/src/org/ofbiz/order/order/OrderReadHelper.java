@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.30 2004/08/16 19:56:36 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.30 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class OrderReadHelper {

@@ -1,5 +1,5 @@
 /*
- * $Id: TaxwareServices.java,v 1.1 2003/08/18 19:38:58 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.service.ModelService;
  * TaxwareServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class TaxwareServices {

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.29 2004/08/09 23:52:25 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.29 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class CheckOutHelper {

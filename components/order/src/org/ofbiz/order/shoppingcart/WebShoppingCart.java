@@ -1,5 +1,5 @@
 /*
- * $Id: WebShoppingCart.java,v 1.9 2004/07/19 15:47:33 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.content.website.WebSiteWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.9 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class WebShoppingCart extends ShoppingCart {

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.50 2004/08/17 19:51:24 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -78,7 +78,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.50 $
+ * @version    $Rev:$
  * @since      2.0
  */
 
