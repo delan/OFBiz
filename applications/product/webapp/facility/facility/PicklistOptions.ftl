@@ -43,6 +43,31 @@
                 <td><div class="tableheadtext">${uiLabelMap.ProductNeedStockMove}</div></td>
                 <td><div class="tableheadtext">&nbsp;</div></td>
             </tr>
+            <#if rushOrderInfo?has_content>
+                <#assign orderReadyToPickInfoList = rushOrderInfo.orderReadyToPickInfoList?if_exists>
+                <#assign orderNeedsStockMoveInfoList = rushOrderInfo.orderNeedsStockMoveInfoList?if_exists>
+                <#assign orderReadyToPickInfoListSize = (orderReadyToPickInfoList.size())?default(0)>
+                <#assign orderNeedsStockMoveInfoListSize = (orderNeedsStockMoveInfoList.size())?default(0)>
+                <tr>
+                    <td><div class="tabletext">[Rush Orders, all Methods]</div></td>
+                    <td><div class="tabletext">${orderReadyToPickInfoListSize}</div></td>
+                    <td><div class="tabletext">${orderNeedsStockMoveInfoListSize}</div></td>
+                    <td>
+                        <div class="tabletext">
+                            <#if orderReadyToPickInfoList?has_content>
+                                <form method="POST" action="<@ofbizUrl>createPicklistFromOrders</@ofbizUrl>">
+                                    <input type="hidden" name="facilityId" value="${facilityId}"/>
+                                    <input type="hidden" name="isRushOrder" value="Y"/>
+                                    ${uiLabelMap.ProductPickFirst}:<input type="text" size="4" name="maxNumberOfOrders" value="20" class="inputBox"/>
+                                    <input type="submit" value="${uiLabelMap.ProductCreatePicklist}" class="smallSubmit"/>
+                                </form>
+                            <#else>
+                                &nbsp;
+                            </#if>
+                        </div>
+                    </td>
+                </tr>
+            </#if>
             <#if pickMoveByShipmentMethodInfoList?has_content>
                 <#assign orderReadyToPickInfoListSizeTotal = 0>
                 <#assign orderNeedsStockMoveInfoListSizeTotal = 0>

@@ -31,6 +31,7 @@
         <!-- filter on:
          + OrderHeader.orderType = SALES_ORDER
          + OrderHeader.statusId = ORDER_APPROVED
+         + OrderHeader.isRushOrder = if Y then add to rush list, still leave in other lists
          + OrderItem.statusId = ITEM_APPROVED
          + total number of orders to pick: limit to X
          + OrderItemShipGroup.shipmentMethodTypeId = group by
@@ -59,6 +60,9 @@
          + orderItemShipGrpInvRes
          + inventoryItem
          + facilityLocation (may be null)
+         Also a Map called rushOrderInfo containing lists just as defined above, but containing only data for Orders where OrderHeader.isRushOrder = Y
+         + orderReadyToPickInfoList
+         + orderNeedsStockMoveInfoList
         -->
 
         <check-permission permission="FACILITY" action="_VIEW">
@@ -70,6 +74,7 @@
 
         <string-to-field string="SALES_ORDER" field-name="orderTypeId" map-name="orderHeaderLkpMp"/>
         <string-to-field string="ORDER_APPROVED" field-name="statusId" map-name="orderHeaderLkpMp"/>
+        <if-not-empty field-name="parameters.isRushOrder"><env-to-env env-name="parameters.isRushOrder" to-env-name="orderHeaderLkpMp.isRushOrder"/></if-not-empty>
         <string-to-list string="+orderDate" list-name="orderHeaderOrdLst"/><!-- oldest first -->
         <find-by-and list-name="orderHeaderList" entity-name="OrderHeader" map-name="orderHeaderLkpMp" order-by-list-name="orderHeaderOrdLst"/>
 
@@ -194,8 +199,14 @@
                                 </if-empty>
                                 <if-compare field-name="needsStockMove" operator="equals" value="Y">
                                     <field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderNeedsStockMoveInfoList"/>
+                                    <if-compare field-name="orderHeader.isRushOrder" operator="equals" value="Y">
+                                        <field-to-list field-name="orderHeaderInfo" list-name="rushOrderInfo.orderNeedsStockMoveInfoList"/>
+                                    </if-compare>
                                 <else>
                                     <field-to-list field-name="orderHeaderInfo" list-name="pickMoveByShipmentMethodInfoMap.${shipmentMethodTypeId}.orderReadyToPickInfoList"/>
+                                    <if-compare field-name="orderHeader.isRushOrder" operator="equals" value="Y">
+                                        <field-to-list field-name="orderHeaderInfo" list-name="rushOrderInfo.orderReadyToPickInfoList"/>
+                                    </if-compare>
                                 </else>
                                 </if-compare>
                                 <clear-field field-name="orderHeaderInfo"/>
@@ -222,6 +233,7 @@
         </iterate>
 
         <field-to-result field-name="pickMoveByShipmentMethodInfoList"/>
+        <field-to-result field-name="rushOrderInfo"/>
     </simple-method>
 
     <simple-method method-name="assembleOrderHeaderInfoInline" short-description="assembleOrderHeaderInfoInline">
