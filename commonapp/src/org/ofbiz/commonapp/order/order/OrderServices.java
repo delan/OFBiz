@@ -237,6 +237,22 @@ public class OrderServices {
         String partyId = (String) context.get("partyId");
         String roleTypeId = (String) context.get("roleTypeId");
         Map fields = UtilMisc.toMap("orderId",orderId,"partyId",partyId,"roleTypeId",roleTypeId);
+        
+        GenericValue testValue = null;
+        try {
+            testValue = delegator.findByPrimaryKey("OrderRole",fields);
+        }
+        catch ( GenericEntityException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not add role to order (" + e.getMessage() + ").");
+            return result;
+        }
+        
+        if ( testValue != null && testValue.get("orderId").equals(orderId) ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            return result;
+        }
+
         try {
             GenericValue value = delegator.makeValue("OrderRole",fields);
             delegator.create(value);
@@ -258,6 +274,22 @@ public class OrderServices {
         String partyId = (String) context.get("partyId");
         String roleTypeId = (String) context.get("roleTypeId");
         Map fields = UtilMisc.toMap("orderId",orderId,"partyId",partyId,"roleTypeId",roleTypeId);
+        
+        GenericValue testValue = null;
+        try {
+            testValue = delegator.findByPrimaryKey("OrderRole",fields);
+        }
+        catch ( GenericEntityException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not add role to order (" + e.getMessage() + ").");
+            return result;
+        }
+        
+        if ( testValue == null ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            return result;        
+        }
+        
         try {
             GenericValue value = delegator.findByPrimaryKey("OrderRole",fields);
             value.remove();
