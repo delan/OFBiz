@@ -141,18 +141,18 @@
     <td colspan="<%=partyId == null ? 8 : 7%>"><hr class="sepbar"></td>
   </tr>
   
-  <ofbiz:iterator name="visit" property="visitList" limit="<%=viewSize%>">
+  <ofbiz:iterator name="visitObj" property="visitList" limit="<%=viewSize%>">
   <tr class="<%=rowClass = rowClass.equals("viewManyTR1") ? "viewManyTR2" : "viewManyTR1"%>">
-    <td><a href="<ofbiz:url>/visitdetail?visitId=<%=UtilFormatOut.checkNull(visit.getString("visitId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("visitId"))%></a></td>
+    <td><a href="<ofbiz:url>/visitdetail?visitId=<%=UtilFormatOut.checkNull(visitObj.getString("visitId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visitObj.getString("visitId"))%></a></td>
     <% if (partyId == null) { %>
-    <td><a href="<ofbiz:url>/viewprofile?party_id=<%=UtilFormatOut.checkNull(visit.getString("partyId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("partyId"))%></a></td>
+    <td><a href="<ofbiz:url>/viewprofile?party_id=<%=UtilFormatOut.checkNull(visitObj.getString("partyId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visitObj.getString("partyId"))%></a></td>
     <% } %>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("userLoginId"))%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("userCreated"))%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("webappName"))%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("clientIpAddress"))%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("fromDate"))%></div></td>
-    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("thruDate"))%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("userLoginId"))%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("userCreated"))%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("webappName"))%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("clientIpAddress"))%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("fromDate"))%></div></td>
+    <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("thruDate"))%></div></td>
   </tr>
   </ofbiz:iterator>
 </table>

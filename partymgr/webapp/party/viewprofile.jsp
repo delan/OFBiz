@@ -581,15 +581,15 @@
               <tr>
                 <td colspan="7"><hr class="sepbar"></td>
               </tr>            
-              <ofbiz:iterator name="visit" property="visits" limit="5">
+              <ofbiz:iterator name="visitObj" property="visits" limit="5">
               <tr>
-                <td><a href="<ofbiz:url>/visitdetail?visitId=<%=UtilFormatOut.checkNull(visit.getString("visitId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("visitId"))%></a></td>
-                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("userLoginId"))%></div></td>
-                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("userCreated"))%></div></td>
-                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("webappName"))%></div></td>
-                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("clientIpAddress"))%></div></td>
-                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("fromDate"))%></div></td>
-                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visit.getString("thruDate"))%></div></td>                
+                <td><a href="<ofbiz:url>/visitdetail?visitId=<%=UtilFormatOut.checkNull(visitObj.getString("visitId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visitObj.getString("visitId"))%></a></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("userLoginId"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("userCreated"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("webappName"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("clientIpAddress"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("fromDate"))%></div></td>
+                <td><div class="tabletext"><%=UtilFormatOut.checkNull(visitObj.getString("thruDate"))%></div></td>                
               </tr>
               </ofbiz:iterator>                                         
             </table>
