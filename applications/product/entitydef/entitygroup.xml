@@ -237,6 +237,8 @@
     <entity-group group="org.ofbiz" entity="Picklist" />
     <entity-group group="org.ofbiz" entity="PicklistBin" />
     <entity-group group="org.ofbiz" entity="PicklistItem" />
+    <entity-group group="org.ofbiz" entity="PicklistRole" />
+    <entity-group group="org.ofbiz" entity="PicklistStatusHistory" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.shipment.receipt -->

@@ -66,4 +66,92 @@
         <attribute name="maxNumberOfOrders" type="Long" mode="IN" optional="true"/>
         <attribute name="picklistId" type="String" mode="OUT" optional="false"/>
     </service>
+    
+    <!-- Picklist -->
+    <service name="createPicklist" default-entity-name="Picklist" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="createPicklist" auth="true">
+        <description>Create Picklist</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+    </service>
+    <service name="updatePicklist" default-entity-name="Picklist" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="updatePicklist" auth="true">
+        <description>Update Picklist</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+    </service>
+    <service name="deletePicklist" default-entity-name="Picklist" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="deletePicklist" auth="true">
+        <description>Delete Picklist</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- PicklistBin -->
+    <service name="createPicklistBin" default-entity-name="PicklistBin" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="createPicklistBin" auth="true">
+        <description>Create PicklistBin</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+    </service>
+    <service name="updatePicklistBin" default-entity-name="PicklistBin" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="updatePicklistBin" auth="true">
+        <description>Update PicklistBin</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="deletePicklistBin" default-entity-name="PicklistBin" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="deletePicklistBin" auth="true">
+        <description>Delete PicklistBin</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- PicklistItem -->
+    <service name="createPicklistItem" default-entity-name="PicklistItem" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="createPicklistItem" auth="true">
+        <description>Create PicklistItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+    </service>
+    <service name="updatePicklistItem" default-entity-name="PicklistItem" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="updatePicklistItem" auth="true">
+        <description>Update PicklistItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+    </service>
+    <service name="deletePicklistItem" default-entity-name="PicklistItem" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="deletePicklistItem" auth="true">
+        <description>Delete PicklistItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- PicklistRole -->
+    <service name="createPicklistRole" default-entity-name="PicklistRole" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="createPicklistRole" auth="true">
+        <description>Create PicklistRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+    </service>
+    <service name="updatePicklistRole" default-entity-name="PicklistRole" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="updatePicklistRole" auth="true">
+        <description>Update PicklistRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="createdByUserLogin"/>
+            <exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
+    </service>
+    <service name="deletePicklistRole" default-entity-name="PicklistRole" engine="simple"
+            location="org/ofbiz/shipment/picklist/PicklistServices.xml" invoke="deletePicklistRole" auth="true">
+        <description>Delete PicklistRole</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>

@@ -523,6 +523,9 @@
         </iterate>
     </simple-method>
 
+    <!-- ========================================================= -->
+    <!-- =========== Persisted Picklist Services ================= -->
+    <!-- ========================================================= -->
     <simple-method method-name="createPicklistFromOrders" short-description="Create Picklist From Orders">
         <check-permission permission="FACILITY" action="_CREATE">
             <fail-message message="Security Error: to run createPicklistFromOrders you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
@@ -535,16 +538,30 @@
             <attribute name="picklistId" type="String" mode="OUT" optional="false"/>
         -->
 
-        <set-service-fields service-name="getPicklistData" map-name="parameters" to-map-name="getPicklistDataInMap"/>
-        <call-service service-name="getPicklistData" in-map-name="getPicklistDataInMap">
-            <result-to-field result-name="facilityLocationInfoList"/>
-            <result-to-field result-name="inventoryItemInfoList"/>
-            <result-to-field result-name="orderHeaderInfoList"/>
-            <result-to-field result-name="wrongQuantityReservedList"/>
-            <result-to-field result-name="insufficientQohList"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+
+        <set-service-fields map-name="parameters" service-name="findOrdersToPickMove" to-map-name="findOrdersToPickMoveMap"/>
+        <call-service service-name="findOrdersToPickMove" in-map-name="findOrdersToPickMoveMap">
+            <result-to-field result-name="pickMoveByShipmentMethodInfoList"/>
         </call-service>
 
-        <!-- TODO: implement this -->
-        <iterate entry-name="" list-name=""></iterate>
+        <!-- This creates orderHeaderInfoList, wrongQuantityReservedList, insufficientQohList and inventoryItems, inventoryItemOrderItems, inventoryItemQuantities -->
+        <call-simple-method method-name="assembleOrderHeaderInfoInline"/>
+
+        <!-- TODO: if the orderHeaderInfoList is not empty, create a Picklist -->
+        <if-not-empty field-name="orderHeaderInfoList">
+            
+            
+            <!-- TODO: iterate over the orderHeaderInfoList and create a PicklistBin for each order and a PicklistItem for each item -->
+            <iterate entry-name="orderHeaderInfo" list-name="orderHeaderInfoList">
+                
+            </iterate>
+        <else>
+            <!-- return error messages saying no orders ready to pick, not creating picklist -->
+            <add-error><fail-message message="No orders ready to pick, not creating picklist."/></add-error>
+            <check-errors/>
+        </else>
+        </if-not-empty>
     </simple-method>
+
 </simple-methods>

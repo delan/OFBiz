@@ -22,7 +22,7 @@
     <ShipmentType description="Drop Shipment" hasTable="N" parentTypeId="" shipmentTypeId="DROP_SHIPMENT"/>
     <ShipmentType description="Transfer" hasTable="N" parentTypeId="" shipmentTypeId="TRANSFER"/>
 
-    <!-- shipment status -->
+    <!-- Shipment status -->
     <StatusType description="Shipment" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
     <StatusItem description="Input" sequenceId="01" statusCode="INPUT" statusId="SHIPMENT_INPUT" statusTypeId="SHIPMENT_STATUS"/>
     <StatusItem description="Scheduled" sequenceId="02" statusCode="SCHEDULED" statusId="SHIPMENT_SCHEDULED" statusTypeId="SHIPMENT_STATUS"/>
@@ -68,4 +68,16 @@
     <RejectionReason rejectionId="SRJ_DAMAGED" description="Damaged"/>
     <RejectionReason rejectionId="SRJ_NOT_ORDERED" description="Not Ordered"/>
     <RejectionReason rejectionId="SRJ_OVER_SHIPPED" description="Over Shipped"/>
+
+    <!-- Picklist status -->
+    <StatusType description="Picklist" hasTable="N" parentTypeId="" statusTypeId="PICKLIST_STATUS"/>
+    <StatusItem description="Input" sequenceId="01" statusCode="INPUT" statusId="PICKLIST_INPUT" statusTypeId="PICKLIST_STATUS"/>
+    <StatusItem description="Assigned" sequenceId="02" statusCode="ASSIGNED" statusId="PICKLIST_ASSIGNED" statusTypeId="PICKLIST_STATUS"/>
+    <StatusItem description="Picked" sequenceId="03" statusCode="PICKED" statusId="PICKLIST_PICKED" statusTypeId="PICKLIST_STATUS"/>
+    <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="PICKLIST_CANCELLED" statusTypeId="PICKLIST_STATUS"/>
+    <StatusValidChange condition="" statusId="PICKLIST_INPUT" statusIdTo="PICKLIST_ASSIGNED" transitionName="Assign"/>
+    <StatusValidChange condition="" statusId="PICKLIST_INPUT" statusIdTo="PICKLIST_PICKED" transitionName="Pick"/>
+    <StatusValidChange condition="" statusId="PICKLIST_INPUT" statusIdTo="PICKLIST_CANCELLED" transitionName="Cancel"/>
+    <StatusValidChange condition="" statusId="PICKLIST_ASSIGNED" statusIdTo="PICKLIST_PICKED" transitionName="Pick"/>
+    <StatusValidChange condition="" statusId="PICKLIST_ASSIGNED" statusIdTo="PICKLIST_CANCELLED" transitionName="Cancel"/>
 </entity-engine-xml>
