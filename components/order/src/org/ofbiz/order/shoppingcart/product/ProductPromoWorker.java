@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.16 2003/11/23 01:17:04 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.17 2003/11/23 02:22:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -359,7 +359,8 @@ public class ProductPromoWorker {
             Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
             while (quantityNeeded > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
-                if (productIds.contains(cartItem.getProductId())) {
+                // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                if (!cartItem.getIsPromo() && productIds.contains(cartItem.getProductId())) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     quantityNeeded -= cartItem.addPromoQuantityCandidateUse(quantityNeeded, productPromoCond);
                 }
@@ -551,7 +552,8 @@ public class ProductPromoWorker {
             Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
-                if (productIds.contains(cartItem.getProductId())) {
+                // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                if (!cartItem.getIsPromo() && productIds.contains(cartItem.getProductId())) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     quantityDesired -= quantityUsed;
@@ -579,7 +581,8 @@ public class ProductPromoWorker {
             Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
-                if (productIds.contains(cartItem.getProductId())) {
+                // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                if (!cartItem.getIsPromo() && productIds.contains(cartItem.getProductId())) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     quantityDesired -= quantityUsed;
@@ -615,7 +618,8 @@ public class ProductPromoWorker {
             Iterator lineOrderedByBasePriceIter = lineOrderedByBasePriceList.iterator();
             while (quantityDesired > 0 && lineOrderedByBasePriceIter.hasNext()) {
                 ShoppingCartItem cartItem = (ShoppingCartItem) lineOrderedByBasePriceIter.next();
-                if (productIds.contains(cartItem.getProductId())) {
+                // only include if it is in the productId Set for this check and if it is not a Promo (GWP) item
+                if (!cartItem.getIsPromo() && productIds.contains(cartItem.getProductId())) {
                     // reduce quantity still needed to qualify for promo (quantityNeeded)
                     double quantityUsed = cartItem.addPromoQuantityCandidateUse(quantityDesired, productPromoAction);
                     if (quantityUsed > 0) {

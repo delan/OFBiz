@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.15 2003/11/23 01:17:04 jonesde Exp $
+ * $Id: ShoppingCartItem.java,v 1.16 2003/11/23 02:22:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -413,15 +413,23 @@ public class ShoppingCartItem implements java.io.Serializable {
 
     /** Returns the quantity. */
     public double getQuantity() {
-        return quantity;
+        return this.quantity;
     }
 
     public double getPromoQuantityUsed() {
-        return this.promoQuantityUsed;
+        if (this.getIsPromo()) {
+            return this.quantity;
+        } else {
+            return this.promoQuantityUsed;
+        }
     }
 
     public double getPromoQuantityAvailable() {
-        return this.quantity - this.promoQuantityUsed;
+        if (this.getIsPromo()) {
+            return 0;
+        } else {
+            return this.quantity - this.promoQuantityUsed;
+        }
     }
 
     public Iterator getQuantityUsedPerPromoActualIter() {
@@ -504,7 +512,7 @@ public class ShoppingCartItem implements java.io.Serializable {
         this.quantityUsedPerPromoActual.clear();
         this.quantityUsedPerPromoCandidate.clear();
         this.quantityUsedPerPromoFailed.clear();
-        this.promoQuantityUsed = 0;
+        this.promoQuantityUsed = this.getIsPromo() ? this.quantity : 0;
     }
 
     /** Sets the item comment. */
