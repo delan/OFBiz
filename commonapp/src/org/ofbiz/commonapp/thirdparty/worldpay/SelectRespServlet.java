@@ -57,6 +57,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
     protected void doRequest(SelectServletRequest request, SelectServletResponse response) throws ServletException, IOException {
         Debug.logInfo("Request receive from worldpay..", module);
         
+        String orderPropertiesString = request.getParameter("M_orderProperties");
         String webSiteId = request.getParameter("M_webSiteId");
         String delegatorName = request.getParameter("M_delegatorName");
         String dispatchName = request.getParameter("M_dispatchName");
@@ -99,7 +100,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         
         // load the order.properties file.        
         try {
-            orderPropertiesUrl = sctx.getResource("/WEB-INF/order.properties");
+            orderPropertiesUrl = new URL(orderPropertiesString);
         } catch (MalformedURLException e) {
             Debug.logWarning(e, "Problems loading order.properties", module);
         }    
@@ -126,7 +127,9 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         ServletOutputStream out = response.getOutputStream();
         String content = (String) request.getAttribute("confirmorder");
         if (content != null)
-            out.println(content);                                           
+            out.println(content); 
+        else
+            out.println("Error getting content");                                         
     }
         
     private void approveOrder(String orderId) {        

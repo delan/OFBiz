@@ -25,7 +25,10 @@
 package org.ofbiz.commonapp.thirdparty.worldpay;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.*;
+import javax.servlet.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
@@ -52,10 +55,21 @@ public class WorldPayEvents {
     public static final String module = WorldPayEvents.class.getName();
     
     public static String worldPayRequest(HttpServletRequest request, HttpServletResponse response) {
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
+        // get order.properties
+        // Load the order.properties file.
+        URL orderPropertiesUrl = null;
+        try {
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, module);
+        }
+        String orderPropertiesString = orderPropertiesUrl.toExternalForm();
+                
         // we need the websiteId for the correct properties file
         String webSiteId = CatalogWorker.getWebSiteId(request);
         
@@ -281,6 +295,7 @@ public class WorldPayEvents {
         }
         
         // now set some send-back parameters
+        linkParms.setValue("M_orderProperties", orderPropertiesString);
         linkParms.setValue("M_dispatchName", dispatcher.getName());
         linkParms.setValue("M_delegatorName", delegator.getDelegatorName());
         linkParms.setValue("M_webSiteId", webSiteId);
