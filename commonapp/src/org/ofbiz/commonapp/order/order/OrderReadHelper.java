@@ -181,6 +181,7 @@ public class OrderReadHelper {
     }
 
     public GenericValue getBillingAddress() {
+        // TODO: if null; get address from payment
         GenericDelegator delegator = orderHeader.getDelegator();
 
         try {

@@ -2,6 +2,9 @@
 <!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
 
 <service-eca>
+	<eca service="createPaymentApplication" event="commit">
+	    <action service="checkInvoicePaymentApplications" mode="sync"/>
+	</eca>
     <eca service="createPostalAddress" event="commit">
         <condition field-name="paymentMethodId" operator="is-not-empty"/>
         <action service="setPaymentMethodAddress" mode="sync"/>

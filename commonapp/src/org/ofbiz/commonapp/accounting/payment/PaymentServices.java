@@ -31,6 +31,8 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.service.*;
 
+import org.ofbiz.commonapp.accounting.invoice.*;
+
 /**
  * Services for Payment maintenance
  *
@@ -39,6 +41,8 @@ import org.ofbiz.core.service.*;
  * @since      2.0
  */
 public class PaymentServices {
+    
+    public final static String module = PaymentServices.class.getName();
 
     /**
      * Deletes a PaymentMethod entity according to the parameters passed in the context
@@ -716,6 +720,7 @@ public class PaymentServices {
         payment.set("paymentTypeId", context.get("paymentTypeId"));
         payment.set("paymentMethodTypeId", context.get("paymentMethodTypeId"));
         payment.set("paymentMethodId", context.get("paymentMethodId"));
+        payment.set("paymentPreferenceId", context.get("paymentPreferenceId"));
         payment.set("partyIdFrom", context.get("partyIdFrom"));
         payment.set("partyIdTo", context.get("partyIdTo"));
         payment.set("effectiveDate", context.get("effectiveDate") != null ? context.get("effectiveDate") : now);
@@ -733,5 +738,5 @@ public class PaymentServices {
         result.put("paymentId", payment.getString("paymentId"));
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
-    }
+    }    
 }

@@ -69,26 +69,30 @@
     	
     	<field-to-field field-name="statusId" map-name="invoice" to-map-name="changeLookup" to-field-name="statusId"/>
     	<field-to-field field-name="statusId" map-name="parameters" to-map-name="changeLookup" to-field-name="statusIdTo"/>
-    	<find-by-primary-key entity-name="Invoice" map-name="changeLookup" value-name="statusChange"/>
     	
-    	<if-empty map-name="statusChange">
-            <add-error><fail-message message="Status is not a valid change"/></add-error>
-            <check-errors/>
-        </if-empty>
-        
-        <field-to-field field-name="statusId" map-name="parameters" to-field-name="statusId" to-map-name="invoice"/>
-        <store-value value-name="invoice"/>
+    	<if-compare-field field-name="statusId" map-name="invoice" operator="not-equals" to-field-name="statusId" to-map-name="parameters">
+    	    <find-by-primary-key entity-name="StatusValidChange" map-name="changeLookup" value-name="statusChange"/>
     	
-        <make-value value-name="newEntity" entity-name="InvoiceStatus"/>
-        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+    	    <if-empty field-name="statusChange">
+                <add-error><fail-message message="Status is not a valid change"/></add-error>
+                <log level="error" message="Cannot change from ${invoice.statusId} to ${parameters.statusId}"/>
+                <check-errors/>
+            </if-empty>
         
-        <if-empty field-name="statusDate" map-name="newEntity">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="statusDate" map-name="newEntity"/>
-        </if-empty>        
+            <field-to-field field-name="statusId" map-name="parameters" to-field-name="statusId" to-map-name="invoice"/>
+            <store-value value-name="invoice"/>
+    	
+            <make-value value-name="newEntity" entity-name="InvoiceStatus"/>
+            <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+            <set-pk-fields map-name="parameters" value-name="newEntity"/>
         
-        <create-value value-name="newEntity"/>
+            <if-empty field-name="statusDate" map-name="newEntity">
+                <now-timestamp-to-env env-name="nowTimestamp"/>
+                <env-to-field env-name="nowTimestamp" field-name="statusDate" map-name="newEntity"/>
+            </if-empty>        
+        
+            <create-value value-name="newEntity"/>
+        </if-compare-field>
     </simple-method>
     
     <simple-method method-name="createInvoiceTerm" short-description="Create a Invoice Term">

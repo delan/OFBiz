@@ -23,6 +23,7 @@
  */
 package org.ofbiz.commonapp.accounting.invoice;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
@@ -38,6 +39,30 @@ import org.ofbiz.core.util.*;
 public class InvoiceWorker {
     
     public static String module = InvoiceWorker.class.getName();
+    
+    /**
+     * Method to return the total amount of an invoice
+     * @param invoice GenericValue object of the Invoice
+     * @return the invoice total as double
+     */
+    public static double getInvoiceTotal(GenericDelegator delegator, String invoiceId) {
+        if (delegator == null) {
+            throw new IllegalArgumentException("Null delegator is not allowed in this method");
+        }
+        
+        GenericValue invoice = null;
+        try {
+            invoice = delegator.findByPrimaryKey("Invoice", UtilMisc.toMap("invoiceId", invoiceId));    
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting Invoice", module);
+        }
+        
+        if (invoice == null) {
+            throw new IllegalArgumentException("The invoiceId passed does not match an existing invoice");
+        }
+        
+        return getInvoiceTotal(invoice);
+    }
     
     /**
      * Method to return the total amount of an invoice
@@ -65,7 +90,11 @@ public class InvoiceWorker {
                 invoiceTotal += amount.doubleValue() * quantity.doubleValue();
             }
         }
-        return invoiceTotal;        
+
+        DecimalFormat formatter = new DecimalFormat("##0.00");
+        String invoiceTotalString = formatter.format(invoiceTotal);
+        Double formattedTotal = new Double(invoiceTotalString);
+        return formattedTotal.doubleValue();        
     }
     
     /**
@@ -152,8 +181,8 @@ public class InvoiceWorker {
         }
         
         GenericValue postalAddress = null;
-        if (locations != null) {
-            GenericValue purpose = EntityUtil.getFirst(locations);           
+        if (locations != null && locations.size() > 0) {
+            GenericValue purpose = EntityUtil.getFirst(locations);                      
             try {
                 postalAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", purpose.getString("contactMechId")));
             } catch (GenericEntityException e) {

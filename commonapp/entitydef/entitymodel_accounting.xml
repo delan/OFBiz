@@ -615,6 +615,9 @@
       <relation type="many" rel-entity-name="InvoiceAttribute">
         <key-map field-name="invoiceId"/>
       </relation>
+      <relation type="many" rel-entity-name="InvoiceContactMech">
+      	<key-map field-name="invoiceId"/>
+      </relation>
       <relation type="one" fk-name="INVOICE_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>

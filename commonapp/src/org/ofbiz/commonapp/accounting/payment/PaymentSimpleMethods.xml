@@ -256,4 +256,30 @@
             <call-service service-name="updateEftAccount" in-map-name="ueaMap" break-on-error="false"/>
         </iterate>
     </simple-method>
+    
+    <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
+    	<if-empty field-name="invoiceId" map-name="parameters">
+    		<if-empty field-name="billingAccountId" map-name="parameters">
+    			<add-error><fail-message message="Both invoiceId and billingAccountId cannot be empty"/></add-error>
+    			<check-errors/>
+    		</if-empty>
+    	</if-empty>
+    	
+    	<field-to-field field-name="invoiceId" map-name="parameters" to-map-name="invoiceLookup"/>
+    	<find-by-primary-key entity-name="Invoice" map-name="invoiceLookup" value-name="invoice"/>
+    	
+    	<make-value entity-name="PaymentApplication" value-name="paymentAppl"/>
+    	<set-nonpk-fields map-name="parameters" value-name="paymentAppl"/>
+    	
+    	<if-not-empty field-name="billingAccountId" map-name="invoice">
+    		<field-to-field field-name="billingAccountId" map-name="invoice" to-map-name="paymentAppl"/>
+    	</if-not-empty>
+    	
+    	<sequenced-id-to-env sequence-name="PaymentApplication" env-name="paymentApplicationId"/>
+    	<to-string field-name="paymentApplicationId"/>
+    	<env-to-field env-name="paymentApplicationId" field-name="paymentApplicationId" map-name="paymentAppl"/>
+    	
+    	<create-value value-name="paymentAppl"/>
+    	<field-to-result field-name="paymentApplicationId" map-name="paymentAppl"/>
+    </simple-method>
 </simple-methods>
