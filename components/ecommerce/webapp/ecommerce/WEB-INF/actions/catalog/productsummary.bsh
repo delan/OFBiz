@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
  */
 
@@ -96,7 +96,7 @@ if (product != null) {
 }
 
     // get the product review(s)
-    reviews = product.getRelated("ProductReview", null, UtilMisc.toList("-postedDateTime"));
+    reviews = product.getRelatedCache("ProductReview", null, UtilMisc.toList("-postedDateTime"));
     context.put("productReviews", reviews);
     // get the average rating
     if (reviews != null && reviews.size() > 0) {
@@ -116,3 +116,9 @@ if (product != null) {
             context.put("numRatings", numRatings);
         }
     }
+
+    // an example of getting features of a certain type to show
+    sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", "SIZE"), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
+    context.put("sizeProductFeatureAndAppls", sizeProductFeatureAndAppls);
+
+    
