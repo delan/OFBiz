@@ -21,11 +21,12 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#assign locale = requestAttributes.locale>
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 <#-- Main Heading -->
 <table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -85,9 +86,9 @@
       </#if>
       <tr>
         <td><div class="tabletext">${event.communicationEventId?if_exists}</div></td>
-        <td><div class="tabletext">${eventType.description?default(uiLabelMap.CommonNA)}</div></td>
-        <td><div class="tabletext">${contactMechType.description?default(uiLabelMap.CommonNA)}</div></td>
-        <td><div class="tabletext">${(statusItem.description)?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${eventType.get("description",locale)?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${contactMechType.get("description",locale)?default(uiLabelMap.CommonNA)}</div></td>
+        <td><div class="tabletext">${(statusItem.get("description", locale))?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${event.partyIdFrom?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${event.partyIdTo?default(uiLabelMap.CommonNA)}</div></td>
         <td><div class="tabletext">${(event.entryDate?string)?if_exists}</div></td>
@@ -101,5 +102,5 @@
   </#if>
 </table>
 <#else>
-  <h3>${uiLabelMap.MsgErr0002}</h3>
+  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
 </#if>

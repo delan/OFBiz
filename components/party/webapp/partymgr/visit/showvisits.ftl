@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
@@ -115,5 +115,5 @@
     </table> 
   </#if>  
 <#else>
-  <h3>${uiLabelMap.MsgErr0002}</h3>
+  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
 </#if>

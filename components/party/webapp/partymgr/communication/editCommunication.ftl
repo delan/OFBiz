@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz) 
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 
@@ -350,5 +350,5 @@
 
 
 <#else>
-  <h3>${Uilabel.MsgErr0002}</h3>
+  <h3>${uiLabelMap.PartyMgrViewPermissionError}</h3>
 </#if>

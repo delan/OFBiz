@@ -97,7 +97,7 @@
                         <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
                       </#if>
                       (${uiLabelMap.CommonSince}:${partyContactMechPurpose.fromDate.toString()})
-                      <#if partyContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpires}: ${partyContactMechPurpose.thruDate.toString()}</#if>
+                      <#if partyContactMechPurpose.thruDate?has_content>(${uiLabelMap.CommonExpire}: ${partyContactMechPurpose.thruDate.toString()}</#if>
                     &nbsp;</div></td>
                   <td bgcolor='white'><div><a href='<@ofbizUrl>/deletePartyContactMechPurpose?partyId=${partyId}&contactMechId=${contactMechId}&contactMechPurposeTypeId=${partyContactMechPurpose.contactMechPurposeTypeId}&fromDate=${partyContactMechPurpose.fromDate.toString()}&DONE_PAGE=${donePage?replace("=","%3d")}&useValues=true</@ofbizUrl>' class='buttontext'>&nbsp;${uiLabelMap.CommonDelete}&nbsp;</a></div></td>
                 </tr>
