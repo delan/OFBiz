@@ -50,6 +50,7 @@ public class PaymentGatewayServices {
      */
     public static Map authOrderPayments(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         String orderId = (String) context.get("orderId");        
         Map result = new HashMap();
 
@@ -57,181 +58,210 @@ public class PaymentGatewayServices {
         GenericValue orderHeader = null;
         List paymentPrefs = null;
 
-        try {                       
+        try {    
+            // get the OrderHeader                   
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
             
+            // get the payments to auth
             Map lookupMap = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_AUTH");
             List orderList = UtilMisc.toList("maxAmount");
             paymentPrefs = delegator.findByAnd("OrderPaymentPreference", lookupMap, orderList);
         } catch (GenericEntityException gee) {
-            gee.printStackTrace();
+            Debug.logError(gee, "Problems getting the order information", module);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order information (" + gee.getMessage() + ").");
             return result;
         }
 
+        // make sure we have a OrderHeader
         if (orderHeader == null) {
             return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
         }
-        
-        // get the webSiteId from the OrderHeader
-        String webSiteId = orderHeader.getString("webSiteId");
-        
-        // get the currency from the OrderHeader
-        String currency = orderHeader.getString("currencyUom");
-                     
+                 
+        // get the order amounts                                 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        double amountToBill = orh.getOrderGrandTotal();
-
-        if (Debug.verboseOn())
-            Debug.logVerbose("Amount to charge is: " + amountToBill, module);
-
-        List responseMessages = new ArrayList();
+        DecimalFormat formatter = new DecimalFormat("###.##");
+        String grandTotalString = formatter.format(orh.getOrderGrandTotal());
+        Double grandTotal = new Double(grandTotalString);
+        double amountToBill = grandTotal.doubleValue();        
+                      
+        // loop through and auth each payment   
+        List finished = new ArrayList();     
         Iterator payments = paymentPrefs.iterator();
-
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
-            GenericValue paymentMethod = null;
-            GenericValue creditCard = null;
-            GenericValue eftAccount = null;
-            GenericValue billingAddress = null;
-            Double processAmount = null;            
+            Map processorResult = authPayment(dispatcher, orh, paymentPref, amountToBill);
+            if (processorResult != null) {
+                GenericValue paymentSettings = (GenericValue) processorResult.get("paymentSettings");
+                Double thisAmount = (Double) processorResult.get("processAmount");
+                finished.add(processorResult);
 
-            // gather the payment related objects.
-            try {
-                paymentMethod = paymentPref.getRelatedOne("PaymentMethod");
-                if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
-                    // type credit card
-                    creditCard = paymentMethod.getRelatedOne("CreditCard");
-                    billingAddress = creditCard.getRelatedOne("PostalAddress");
-                } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
-                    // type eft
-                    eftAccount = paymentMethod.getRelatedOne("EFT_ACCOUNT");
-                    billingAddress.getRelatedOne("PostalAddress");
-                } else {
-                    // add other payment types here; i.e. gift cards, etc.
-                    // unknown payment type; ignoring.
-                    continue;
-                }
-            } catch (GenericEntityException gee) {
-                gee.printStackTrace();
-                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get order payment information (" + gee.getMessage() + ").");
-                return result;
-            }
-
-            // get the process amount.
-            double thisAmount = amountToBill;
-
-            if (paymentPref.get("maxAmount") != null)
-                thisAmount = paymentPref.getDouble("maxAmount").doubleValue();
-            NumberFormat nf = NumberFormat.getCurrencyInstance();
-
-            processAmount = new Double(thisAmount);
-            if (Debug.verboseOn())
-                Debug.logVerbose("Charging amount: " + processAmount, module);
-
-            // get some contact info.
-            GenericValue contactPerson = orh.getBillToPerson();
-            GenericValue contactEmail = null;
-            Collection emails = null;
-
-            try {
-                emails = ContactHelper.getContactMech(contactPerson.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
-            } catch (GenericEntityException gee) {
-                Debug.logError("Problems getting contact information: " + gee.getMessage(), module);
-            }
-            if (emails != null && emails.size() > 0)
-                contactEmail = (GenericValue) emails.iterator().next();
-
-            GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethod.getString("paymentMethodTypeId"));
-            String serviceName = paymentSettings != null && paymentSettings.get("paymentAuthService") != null ? paymentSettings.getString("paymentAuthService") : null;
-            String paymentConfig = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
-            Map processContext = new HashMap();
-            
-            if (serviceName == null) {
-                Debug.logError("Invalid payment processor set for [" + paymentMethod.getString("paymentMethodTypeId") + "] on website [" + webSiteId + "]", module);
-                continue;
-            }
-
-            processContext.put("orderId", orderId);
-            processContext.put("orderItems", orh.getOrderItems());
-            processContext.put("paymentConfig", paymentConfig);
-            processContext.put("processAmount", processAmount);
-            processContext.put("contactPerson", contactPerson);
-            processContext.put("contactEmail", contactEmail);
-            processContext.put("billingAddress", billingAddress);
-            processContext.put("shippingAddress", orh.getShippingAddress());
-            processContext.put("currency", currency);
-            
-            // use pre-defined names for the services; just override the service in the definition file.
-            if (creditCard != null) {
-                processContext.put("creditCard", creditCard);               
-            } else if (eftAccount != null) {
-                processContext.put("eftAccount", eftAccount);                
-            } // Add additional processed payment types here.
-
-            // invoke the processor.
-            Map processorResult = null;
-
-            try {
-                LocalDispatcher dispatcher = dctx.getDispatcher();
-                processorResult = dispatcher.runSync(serviceName, processContext);
-            } catch (GenericServiceException gse) {
-                Debug.logError(gse, "Problems invoking payment processor!" + "(" + orderId + ")", module);
-                Debug.logError("Error occurred on: " + serviceName + " => " + processContext, module);
-                continue;
-            }
-            
-            // add the response message to the list
-            if (processorResult != null && processorResult.containsKey(ModelService.RESPONSE_MESSAGE))
-                responseMessages.add(processorResult.get(ModelService.RESPONSE_MESSAGE));
-            else if (processorResult != null)
-                responseMessages.add(ModelService.RESPOND_SUCCESS);
-
-            try {
-                // pass the payTo partyId to the result processor; we just add it to the result context.
-                String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
-                processorResult.put("payToPartyId", payToPartyId);
-                if (processResult(dctx, processorResult, paymentPref, paymentSettings))
-                    amountToBill -= thisAmount;
-            } catch (GeneralException ge) {
-                Debug.logError(ge, "Problem processing the result: " + processorResult, module);
-                continue;
+                // process the auth results             
+                boolean processResult = false;
+                try {
+                    processResult = processResult(dctx, processorResult, paymentPref, paymentSettings);
+                    if (processResult)
+                        amountToBill -= thisAmount.doubleValue();
+                } catch (GeneralException e) {
+                    Debug.logError(e, "Trouble processing the result; processorResult: " + processorResult, module);
+                    ServiceUtil.returnError("Trouble processing the auth results");                     
+                }                                                                                                                                              
+            } else {
+                Debug.logError("Payment not authorized", module);
+                continue;             
             }
         }
 
-        // if all attempts failed then there is a processor problem.
-        boolean somePassed = false;
-        Iterator messageIterator = responseMessages.iterator();
-        while (!somePassed && messageIterator.hasNext()) {
-            String message = (String) messageIterator.next();
-            if (!message.equals(ModelService.RESPOND_ERROR))
-                somePassed = true;
-        }
-        if (!somePassed) {
-            Debug.logWarning("All payment attempts faild due to a processor error.", module);
-            return ServiceUtil.returnError("All payment attempts failed due to a processor error.");
-        } else {        
-            // we can determine if all was good if amountToBill is now zero.
-            if (amountToBill > 0) {
-                Debug.logError("Problem! Could not authorize funds for entire amount to bill. If multiple payment methods were used a partial payment may have been authorized. (" + orderId + ")", module);                
-                result.put("processResult", "FAILED");
-            }
-    
-            if (amountToBill == 0) {
-                if (Debug.verboseOn()) Debug.logVerbose("All payment methods were processed successfully. (" + orderId + ")", module);
-                result.put("processResult", "APPROVED");
-            }
-    
-            if (amountToBill < 0) {
-                Debug.logError("Something really weird happened. We processed more then expected! (" + orderId + ")", module);
-                result.put("processResult", "ERROR");
-            }            
-        }
-        return result;
+        if (finished.size() == paymentPrefs.size()) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put("processResult", "APPROVED");
+            return result;
+        } else {                            
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put("processResult", "FAILED");
+            return result;        
+        }         
     }
     
+    private static Map authPayment(LocalDispatcher dispatcher, OrderReadHelper orh, GenericValue paymentPref, double orderTotal) {
+        String paymentConfig = null;
+        String serviceName = null;        
+            
+        // get the payment settings i.e. serviceName and config properties file name
+        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref);            
+        if (paymentSettings != null) {
+            serviceName = paymentSettings.getString("paymentAuthService");
+            paymentConfig = paymentSettings.getString("paymentConfiguration");                                
+        } else {
+            Debug.logError("Invalid payment settings entity, no payment settings found", module);
+            return null;                
+        }
+            
+        // make sure the service name is not null                           
+        if (serviceName == null) {
+            Debug.logError("Invalid payment processor: + " + paymentSettings, module);
+            return null;
+        }
+            
+        // get the process context
+        Map processContext = null;
+        try {
+            processContext = makeAuthContext(orh, paymentPref, paymentConfig, orderTotal);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems creating the context for the auth service", module);
+            return null;                
+        }
+            
+        // the amount of this transaction
+        Double thisAmount = (Double) processContext.get("processAmount");
+                                    
+        // invoke the processor.
+        Map processorResult = null;
+        try {            
+            processorResult = dispatcher.runSync(serviceName, processContext);
+        } catch (GenericServiceException gse) {
+            Debug.logError("Error occurred on: " + serviceName + " => " + processContext, module);
+            Debug.logError(gse, "Problems invoking payment processor!" + "(" + orh.getOrderId() + ")", module);                
+            return null;
+        } 
+        
+        if (processorResult != null) {
+            // pass the payTo partyId to the result processor; we just add it to the result context.
+            String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+            processorResult.put("payToPartyId", payToPartyId);  
+        
+            // add paymentSettings to result; for use by later processors
+            processorResult.put("paymentSettings", paymentSettings);         
+        }
+        
+        return processorResult;              
+    }
+    
+    private static GenericValue getPaymentSettings(GenericValue orderHeader, GenericValue paymentPreference) {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        GenericValue paymentSettings = null;
+        GenericValue paymentMethod = null;
+        try {
+            paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");                
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting PaymentMethod from OrderPaymentPreference", module);
+        }
+        if (paymentMethod != null) {
+            String webSiteId = orderHeader.getString("webSiteId");
+            String paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
+            if (webSiteId != null && paymentMethodTypeId != null) {
+                paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
+            }            
+        }
+        return paymentSettings;        
+    }
+            
+    private static Map makeAuthContext(OrderReadHelper orh, GenericValue paymentPreference, String paymentConfig, double amountToBill) throws GenericEntityException {
+        Map processContext = new HashMap();        
+                
+        processContext.put("orderId", orh.getOrderId());
+        processContext.put("orderItems", orh.getOrderItems());
+        processContext.put("shippingAddress", orh.getShippingAddress());
+        processContext.put("paymentConfig", paymentConfig);
+        processContext.put("currency", orh.getCurrency());
+        
+        GenericValue paymentMethod = null;
+        GenericValue creditCard = null;
+        GenericValue eftAccount = null;
+        GenericValue billingAddress = null;
+                    
+        // gather the payment related objects.        
+        paymentMethod = paymentPreference.getRelatedOne("PaymentMethod");
+        if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("CREDIT_CARD")) {
+            // type credit card
+            creditCard = paymentMethod.getRelatedOne("CreditCard");
+            billingAddress = creditCard.getRelatedOne("PostalAddress");
+            processContext.put("creditCard", creditCard);
+        } else if (paymentMethod != null && paymentMethod.getString("paymentMethodTypeId").equals("EFT_ACCOUNT")) {
+            // type eft
+            eftAccount = paymentMethod.getRelatedOne("EFT_ACCOUNT");
+            billingAddress.getRelatedOne("PostalAddress");
+        } else {
+            // add other payment types here; i.e. gift cards, etc.
+            // unknown payment type; ignoring.
+            return null;
+        }
+        processContext.put("billingAddress", billingAddress);
+                       
+        // get some contact info.
+        GenericValue contactPerson = orh.getBillToPerson();
+        GenericValue contactEmail = null;
+        Collection emails = null;
+
+        try {
+            emails = ContactHelper.getContactMech(contactPerson.getRelatedOne("Party"), "PRIMARY_EMAIL", "EMAIL_ADDRESS", false);
+        } catch (GenericEntityException gee) {
+            Debug.logError("Problems getting contact information: " + gee.getMessage(), module);
+        }
+        if (emails != null && emails.size() > 0)
+            contactEmail = (GenericValue) emails.iterator().next();        
+                                      
+        processContext.put("contactPerson", contactPerson);
+        processContext.put("contactEmail", contactEmail); 
+
+        // get the process amount.
+        double thisAmount = amountToBill;
+
+        if (paymentPreference.get("maxAmount") != null)
+            thisAmount = paymentPreference.getDouble("maxAmount").doubleValue();
+        
+        // format the decimal
+        DecimalFormat formatter = new DecimalFormat("###.##");
+        String amountString = formatter.format(thisAmount);        
+        Double processAmount = new Double(amountString);
+        
+        if (Debug.verboseOn())
+            Debug.logVerbose("Charging amount: " + processAmount, module);                  
+        processContext.put("processAmount", processAmount);    
+                                
+        return processContext;
+    }
+           
     /**
      * Captures payments through service calls to the defined processing service for the website/paymentMethodType
      * @returns COMPLETE|FAILED|ERROR for complete processing of ALL payment methods.
@@ -264,17 +294,14 @@ public class PaymentGatewayServices {
         if (orderHeader == null) {
             return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
         }  
-        
-        // get the webSiteId from the OrderHeader
-        String webSiteId = orderHeader.getString("webSiteId");
-        
-        // get the currency from the OrderHeader
-        String currency = orderHeader.getString("currencyUom");
-        
-        // get the order total
+                      
+        // get the order amounts                                 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
-        double captureTotal = orh.getOrderGrandTotal();
-        
+        DecimalFormat formatter = new DecimalFormat("###.##");
+        String grandTotalString = formatter.format(orh.getOrderGrandTotal());
+        Double grandTotal = new Double(grandTotalString);
+        double captureTotal = grandTotal.doubleValue();    
+                                      
         // return complete if no payment prefs were found
         if (paymentPrefs == null || paymentPrefs.size() == 0) {
             Debug.logWarning("No orderPaymentPreferences available to capture", module);
@@ -283,75 +310,34 @@ public class PaymentGatewayServices {
             return result;   
         }
         
-        // iterate over the prefs and capture each one; log all failed attempts so we can re-auth
-        List failedAttempts = new ArrayList();
+        // iterate over the prefs and capture each one
+        List finished = new ArrayList();
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
-            
-            // get the payment method type so we can lookup the capture service
-            String paymentMethodTypeId = null;
-            if (paymentPref.get("paymentMethodTypeId") != null) {
-                paymentMethodTypeId = paymentPref.getString("paymentMethodTypeId");
-            } else {
-                try {                
-                    GenericValue paymentMethod = paymentPref.getRelatedOne("PaymentMethod");
-                    paymentMethodTypeId = paymentMethod.getString("paymentMethodTypeId");
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Trouble getting PaymentMethod from the OrderPaymentPreference", module);
-                    return ServiceUtil.returnError("Trouble getting PaymentMethod entity from OrderPaymentPreference");
+            Map captureResult = capturePayment(dispatcher, orh, paymentPref, captureTotal);
+            if (captureResult != null) {                           
+                GenericValue paymentSettings = (GenericValue) captureResult.get("paymentSettings");
+                Double captureAmount = (Double) captureResult.get("captureAmount");                                       
+                finished.add(captureResult);
+                
+                // process the capture's results             
+                boolean processResult = false;
+                try {
+                    processResult = processResult(dctx, captureResult, paymentPref, paymentSettings);
+                    if (processResult)
+                        captureTotal -= captureAmount.doubleValue();
+                } catch (GeneralException e) {
+                    Debug.logError(e, "Trouble processing the result; captureResult: " + captureResult, module);
+                    ServiceUtil.returnError("Trouble processing the capture results");                     
                 }
-            }
-            
-            // get the capture amount.
-            Double captureAmount = new Double(captureTotal);
-            if (paymentPref.get("maxAmount") != null && paymentPref.getDouble("maxAmount").doubleValue() > 0.00)
-                captureAmount = paymentPref.getDouble("maxAmount");                                        
-            if (Debug.verboseOn())
-                Debug.logVerbose("Charging amount: " + captureAmount, module);
-                            
-            // look up the payment configuration settings
-            GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethodTypeId);
-            Map captureContext = new HashMap();
-            String serviceName = null;
-            String paymentConfig = null;
-            if (paymentSettings != null) {
-                serviceName = paymentSettings.getString("paymentCaptureService");
-                paymentConfig = paymentSettings.getString("paymentConfiguration");
-            }            
-            
-            // prepare the context for the capture service (must follow the ccCaptureInterface
-            captureContext.put("orderPaymentPreference", paymentPref);
-            captureContext.put("paymentConfig", paymentConfig);
-            captureContext.put("captureAmount", captureAmount);
-            captureContext.put("currency", currency);
-            
-            // now invoke the capture service
-            Map captureResult = null;
-            try {
-                captureResult = dispatcher.runSync(serviceName, captureContext);                               
-            } catch (GenericServiceException e) {
-                Debug.logError(e, "Could not capture payment ... serviceName: " + serviceName + " ... context: " + captureContext, module);
-                failedAttempts.add(paymentPref);                
-            } 
-            
-            // pass the payTo partyId to the result processor; we just add it to the result context.
-            String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
-            captureResult.put("payToPartyId", payToPartyId);
-            
-            // process the capture's results
-            boolean processResult = false;
-            try {
-                processResult = PaymentGatewayServices.processResult(dctx, captureResult, paymentPref, paymentSettings);
-                if (processResult)
-                    captureTotal -= captureAmount.doubleValue();
-            } catch (GeneralException e) {
-                Debug.logError(e, "Trouble processing the result; captureResult: " + captureResult, module);
-                ServiceUtil.returnError("Trouble processing the capture results");                     
+            } else {
+                Debug.logError("Payment not captured", module);
+                continue;
             }
         }
         
-        if (failedAttempts.size() == 0) {
+        if (finished.size() == paymentPrefs.size()) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
             result.put("processResult", "COMPLETE");
             return result;
@@ -360,6 +346,54 @@ public class PaymentGatewayServices {
             result.put("processResult", "FAILED");
             return result;        
         } 
+    }
+    
+    private static Map capturePayment(LocalDispatcher dispatcher, OrderReadHelper orh, GenericValue paymentPref, double captureTotal) {
+        // get the capture amount.
+        Double captureAmount = new Double(captureTotal);
+        if (paymentPref.get("maxAmount") != null && paymentPref.getDouble("maxAmount").doubleValue() > 0.00)
+            captureAmount = paymentPref.getDouble("maxAmount");                                        
+        if (Debug.verboseOn())
+            Debug.logVerbose("Charging amount: " + captureAmount, module);
+                            
+        // look up the payment configuration settings                                   
+        String serviceName = null;
+        String paymentConfig = null;
+            
+        // get the payment settings i.e. serviceName and config properties file name
+        GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref);            
+        if (paymentSettings != null) {
+            serviceName = paymentSettings.getString("paymentCaptureService");
+            paymentConfig = paymentSettings.getString("paymentConfiguration");                                
+        } else {
+            Debug.logError("Invalid payment settings entity, no payment settings found", module);
+            return null;             
+        }
+            
+        // prepare the context for the capture service (must follow the ccCaptureInterface
+        Map captureContext = new HashMap();
+        captureContext.put("orderPaymentPreference", paymentPref);
+        captureContext.put("paymentConfig", paymentConfig);
+        captureContext.put("captureAmount", captureAmount);
+        captureContext.put("currency", orh.getCurrency());
+            
+        // now invoke the capture service
+        Map captureResult = null;
+        try {
+            captureResult = dispatcher.runSync(serviceName, captureContext);                               
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Could not capture payment ... serviceName: " + serviceName + " ... context: " + captureContext, module);
+            return null;     
+        } 
+            
+        // pass the payTo partyId to the result processor; we just add it to the result context.
+        String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+        captureResult.put("payToPartyId", payToPartyId);  
+        
+        // add paymentSettings to result; for use by later processors
+        captureResult.put("paymentSettings", paymentSettings);
+         
+        return captureResult;     
     }
 
     private static boolean processResult(DispatchContext dctx, Map result, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {
