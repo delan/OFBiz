@@ -1,5 +1,5 @@
 /*
- * $Id: PartyHelper.java,v 1.2 2004/01/22 15:36:12 ajzeneski Exp $
+ * $Id: PartyHelper.java,v 1.3 2004/06/11 16:39:20 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.GenericValue;
  * PartyHelper
  *
  * @author     <a href="mailto:epabst@bigfoot.com">Eric Pabst</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class PartyHelper {
@@ -71,6 +71,27 @@ public class PartyHelper {
 
     public static String getPartyName(GenericValue partyObject) {
         return getPartyName(partyObject, false);
+    }
+
+    public static String getPartyName(GenericDelegator delegator, String partyId, boolean lastNameFirst) {
+        GenericValue partyObject = null;
+        try {
+            partyObject = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, module);
+        }
+        if (partyObject == null) {
+            try {
+                partyObject = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, module);
+            }
+        }
+        if (partyObject == null) {
+            return null;
+        } else {
+            return getPartyName(partyObject, lastNameFirst);
+        }        
     }
 
     public static String getPartyName(GenericValue partyObject, boolean lastNameFirst) {
