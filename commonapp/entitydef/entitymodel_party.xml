@@ -1015,7 +1015,6 @@
             title="Party Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="partyTypeId" type="id-ne"></field>
-      <field name="originalDataSourceId" type="id"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PARTY_PTY_TYP" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId"/>
@@ -1454,6 +1453,7 @@
       <field name="fromDate" type="date-time"></field>
       <field name="visitId" type="id"></field>
       <field name="comments" type="comment"></field>
+      <field name="isCreate" type="indicator"></field>
       <prim-key field="partyId"/>
       <prim-key field="dataSourceId"/>
       <prim-key field="fromDate"/>
@@ -1462,6 +1462,9 @@
       </relation>
       <relation type="one" fk-name="PARTY_DATSRC_DSC" rel-entity-name="DataSource">
         <key-map field-name="dataSourceId"/>
+      </relation>
+      <relation type="one" fk-name="PARTY_DATSRC_VST" rel-entity-name="Visit">
+        <key-map field-name="visitId"/>
       </relation>
     </entity>
     <entity entity-name="PartyGroup"
