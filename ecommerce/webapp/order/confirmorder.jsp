@@ -11,7 +11,7 @@
  
  
 
-<%@ page import="com.relmsoft.commerce.utils.SendMailSMTP" %>
+<%@ page import="org.ofbiz.ecommerce.utils.SendMailSMTP" %>
 <%@ page import="javax.servlet.jsp.tagext.BodyContent" %>
 
 

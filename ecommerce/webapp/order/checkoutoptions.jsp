@@ -1,8 +1,7 @@
 <%-- Copyright (c) 2001 by RelmSoft, Inc. All Rights Reserved. --%>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.entity.*" %>
-
 <%@ page import="org.ofbiz.core.entity.*" %>
 
 
@@ -10,12 +9,12 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 
-<form method="post" name="checkoutInfoForm" action="<ofbiz:url>checkout</ofbiz:url>" style=margin:0;>
+<form method="post" name="checkoutInfoForm" action="<ofbiz:url>/checkout</ofbiz:url>" style=margin:0;>
 <table width="100%" border="0">
 <tr valign="top" align="left">
 <td bgcolor="#FFCCCC">
 <%
-  String defaultShipMethod = CommonConstants.DEFAULT_SHIPPING_METHOD;
+  String defaultShipMethod = "FIXME: US Postal Service (default)";
   Iterator shippingMethodIterator = helper.findAllCache("ShipmentMethodType", null).iterator();
 %>
 
@@ -57,7 +56,7 @@
 <% } // end if shippingMethodIterator %>
     <tr>
       <td colspan="2">
-      Enter account code here, or ship freight collect: <input size="25" type="text" name="<%=HttpRequestConstants.SHIPPING_ACCOUNT%>" value="">
+      Enter account code here, or ship freight collect: <input size="25" type="text" name="SHIPPING_ACCOUNT" value="">
       </td>
     </tr>
 <%--    <tr>
@@ -116,16 +115,15 @@
         <div class="tabletext">Your order will be sent to the following email addresses:</div>
         <div class="tabletext">
           <b>
-          <%userLogin. FIXME %>
-          <%=UtilFormatOut.checkNull(person.getEmail()) FIXME%>,
+<%-- FIXME          <%=UtilFormatOut.checkNull(person.getEmail()) FIXME%>,
           <%=UtilFormatOut.checkNull(customer.getEmail()) FIXME%>,
-          <%=UtilFormatOut.checkNull(customer.getOrderEmail()) FIXME%>
+          <%=UtilFormatOut.checkNull(customer.getOrderEmail()) FIXME%> --%>
           </b>
         </div>
-        <div class="tabletext">Your may update these in your <a href="<%=response.encodeURL(controlPath + "/../user/editprofile.jsp?<%=HttpRequestConstants.DONE_PAGE%>=../order/allcheckoutoptions.jsp" class="buttonlink">profile</a>.</div>
+        <div class="tabletext">Your may update these in your <a href="<ofbiz:url>/editprofile?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">profile</a>.</div>
         <br>
         <div class="tabletext">You may add other comma separated email addresses here that will be used only for the current order:</div>
-        <input type="text" size="38" name="<%=HttpRequestConstants.ORDER_ADDITIONAL_EMAILS%>" value="">
+        <input type="text" size="38" name="ORDER_ADDITIONAL_EMAILS" value="">
       </td>
     </tr>
   </table>
@@ -138,56 +136,48 @@
 <%-- ======================================================================== --%>
 <%-- ======================================================================== --%>
 <td bgcolor="#FFFFCC">
-<%
-  //Customer's shipping addresses list  
-  //Class/method not written yet FIXME
-  Iterator custShipAddressesIterator = PartyHelper.getPostalAddresses(customer);
-%>
+<% pageContext.setAttribute("shippingPartyContactPurposeList", helper.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
+        "partyId", userLogin.getString("partyId"),
+        "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null)); %>  
 
 <div class="head2" nowrap><b>Where shall WE ship it?</b></div>
 
-  <% if (custShipAddressesIterator != null) { %>
-  <a href="<%=response.encodeURL(controlPath + "/../user/profilenewaddress.jsp?<%=HttpRequestConstants.DONE_PAGE%>=../order/allcheckoutoptions.jsp" class="buttonlink">[Add New Address]</a>
+  <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CONTACT_MECH_PURPOSE_TYPE_ID=SHIPPING_ADDRESS&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">[Add New Address]</a>
+ <ofbiz:if name="shippingPartyContactPurposeList" size="0">
   <table width="90%" border="0" cellpadding="0" cellspacing="0">
     <tr>
-      <td width="100%" height="1" bgcolor="888888"></td>
+      <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
     </tr>
-  <%
-    while(custShipAddressesIterator.hasNext())
-    {
-      GenericValue shippingAddress = (GenericValue) custShipAddressesIterator.next();
-  %>
+    <ofbiz:iterator name="shippingPartyContactPurpose" property="shippingPartyContactPurposeList">
+    <%GenericValue shippingAddress = shippingPartyContactPurpose.getRelatedOne("PartyContactMech")
+            .getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
+      pageContext.setAttribute("shippingAddress", shippingAddress);%>
+    <ofbiz:if name="shippingAddress">
     <tr>
-      <td align="left" valign="top" width="100%" nowrap>
+      <td align="left" valign="top" width="1%" nowrap>
+          <input type="radio" name="CONTACT_MECH_ID" value="<%=shippingAddress.get("contactMechId")%>">
+      </td>
+      <td align="left" valign="top" width="99%" nowrap>
         <div class="tabletext">
-  <%=UtilFormatOut.checkNull(shippingAddress.getString("address1"))%><br>
-  <% String address2 = shippingAddress.getString("address2");
-    if(address2 != null && address2.length() != 0) { %> <%=address2%><br> <% } %>
-  <%=UtilFormatOut.checkNull(shippingAddress.getString("city"))%><br>
-  <% String county = shippingAddress.getString("county");
-    if(country != null && country.length() != 0) { %> <%=country%> <% } %>
-  <%=UtilFormatOut.checkNull(shippingAddress.getString("state"))%> &nbsp; <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
-    <%if(!shippingAddress.get("contactMechId").equals(customer.getAddressId().intValue()) { %>
-          <input type="radio" name="<%=HttpRequestConstants.ADDRESS_KEY%>" value="<%=shippingAddress.getAddressId()%>">Use
-          <a href="<%=response.encodeURL(controlPath + "/../user/profileeditaddress.jsp?<%=HttpRequestConstants.DONE_PAGE%>=../order/allcheckoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingAddress.getAddressId()%>" class="buttonlink">[Update]</a>
-          <a href="<%=response.encodeURL(controlPath + "/allcheckoutoptions.jsp?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_ADDRESS%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingAddress.getAddressId()%>" class="buttonlink">[Delete]</a>
-    <% } else { %>
-          <input CHECKED type="radio" name="<%=HttpRequestConstants.ADDRESS_KEY%>" value="<%=shippingAddress.getAddressId()%>">Use
-          <a href="<%=response.encodeURL(controlPath + "/../user/profileeditaddress.jsp?<%=HttpRequestConstants.DONE_PAGE%>=../order/allcheckoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingAddress.getAddressId()%>" class="buttonlink">[Update]</a>
-    <% } %>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
+        <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
+<%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingAddress.getAddressId()%></ofbiz:url>" class="buttonlink">[Update]</a>
+          <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_ADDRESS%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=shippingAddress.getAddressId()%></ofbiz:url>" class="buttonlink">[Delete]</a>--%>
         </div>
       </td>
     </tr>
     <tr>
-      <td width="100%" height="1" bgcolor="888888"></td>
+      <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
     </tr>
-  <%}%>
+    </ofbiz:if>
+  </ofbiz:iterator>
   </table>
-  <%
-  }
-  %>
-<a href="<%=response.encodeURL(controlPath + "/../user/profilenewaddress.jsp?<%=HttpRequestConstants.DONE_PAGE%>=../order/allcheckoutoptions.jsp" class="buttonlink">[Add New Address]</a>
-
+ </ofbiz:if>
 </td>
 <td bgcolor="#888888" width="1">
 </td>
@@ -197,59 +187,90 @@
 <%-- ======================================================================== --%>
 <td bgcolor="#CCFFCC">
 
-<%
-  Iterator paymentIterator = null;
-  if(CommonConstants.CREDITCARD_MANAGE_INFO)
-  {
-    Collection paymentCollection = CustomerPaymentHelper.findByCustomerId(customer.getCustomerId());
-    if(paymentCollection != null)	paymentIterator = paymentCollection.iterator();
-  }
+<% pageContext.setAttribute("creditCardInfoList", userLogin.getRelatedOne("Party").getRelated("CreditCardInfo")); %>
 
-  boolean isLynx = UtilFormatOut.isLynx(request);
-%>
 
 <div class="head2" nowrap><b>How shall YOU pay?</b></div>
-    <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here:</div>
-    <input type="text" name="<%=HttpRequestConstants.CUSTOMER_PO_NUMBER%>" size="20">
-    <nobr><input CHECKED type="radio" name="<%=HttpRequestConstants.CUSTOMER_PAYMENT_ID%>" value="store_credit_purchase_order">
-    Pay with Store Credit<nobr>
-<br>
-<a href="<%=response.encodeURL(controlPath + "/../user/profilenewcc.jsp?<%=HttpRequestConstants.DONE_PAGE%>=../order/allcheckoutoptions.jsp" class="buttonlink">[Add Credit Card]</a>
+<%-- the add new credit card buttons --%>
+<a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">[Add Credit Card]</a>
 
-<% if(paymentIterator != null) { %>
+<ofbiz:if name="creditCardInfoList" size="0"> 
 <table width="90%" cellpadding="1" cellspacing="0" border="0">
   <tr>
     <td colspan="3"><hr size="1"></td>
   </tr>
-<%
-    while(paymentIterator.hasNext())
-    {
-      CustomerPayment customerPayment = (CustomerPayment)paymentIterator.next();
-%>
+    <ofbiz:iterator name="creditCardInfo" property="creditCardInfoList">
   <tr>
-    <td width="50%">
-      <div class="tabletext">
-        <%=customerPayment.getCardType()%>
-        <%if(customerPayment.getCardNumber() != null && customerPayment.getCardNumber().length() > 4) {%>
-          <%=customerPayment.getCardNumber().substring(customerPayment.getCardNumber().length()-4)%>
-        <% } %>
-        <%=customerPayment.getExpireDate()%>
-      </div>
-      <input type="radio" name="<%=HttpRequestConstants.CUSTOMER_PAYMENT_ID%>" value="<%=customerPayment.getPaymentId()%>">Use
-      <a href="<%=response.encodeURL(controlPath + "/../user/profileeditcc.jsp?<%=HttpRequestConstants.DONE_PAGE%>=../order/allcheckoutoptions.jsp&<%=HttpRequestConstants.CUSTOMER_PAYMENT_ID%>=<%=customerPayment.getPaymentId()%>" class="buttonlink">[Update]</a>
+    <td width="1%" nowrap>
+      <input type="radio" name="credit_card_id" value="<%=creditCardInfo.getString("creditCardId")%>">
+    </td>
+    <td width="50%" nowrap>
+      <span class="tabletext">
+        <%=creditCardInfo.getString("cardType")%>
+        <%String cardNumber = creditCardInfo.getString("cardNumber");
+          if(cardNumber != null && cardNumber.length() > 4) {%> <%=cardNumber.substring(cardNumber.length()-4)%>  <% } %>
+        <%=creditCardInfo.getString("expireDate")%>
+      </span>
+        <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions&CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="buttonlink">[Update]</a>
     </td>
   </tr>
   <tr>
     <td colspan="3" height="1" bgcolor="888888"></td>
   </tr>
-<%  } %>
+</ofbiz:iterator>
 </table>
-<% } else { %>
-<h3>There are no credit cards on file.</h3>
-<% } //end if paymentIterator %>
+</ofbiz:if>
+<ofbiz:unless name="creditCardInfoList" size="0">
+   <h3>There are no credit cards on file.</h3>
+</ofbiz:unless>
 
-<%-- the back and add new credit card buttons --%>
-<a href="<%=response.encodeURL(controlPath + "/../user/profilenewcc.jsp?<%=HttpRequestConstants.DONE_PAGE%>=../order/allcheckoutoptions.jsp" class="buttonlink">[Add Credit Card]</a>
+    <div class="tabletext">To pay with store credit, enter your Purchase Order (PO) number here and select the billing address:</div>
+    <input type="text" name="customer_po_number" size="20">
+<%--    <nobr><input CHECKED type="radio" name="credit_card_id" value="store_credit_purchase_order">
+    Pay with Store Credit<nobr>--%>
+    <br>
+
+<% pageContext.setAttribute("billingPartyContactPurposeList", helper.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
+        "partyId", userLogin.getString("partyId"),
+        "contactMechPurposeTypeId", "BILLING_LOCATION"), null)); %>  
+
+ <ofbiz:if name="billingPartyContactPurposeList" size="0">
+  <table width="90%" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+      <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
+    </tr>
+    <ofbiz:iterator name="billingPartyContactPurpose" property="billingPartyContactPurposeList">
+    <%GenericValue billingAddress = billingPartyContactPurpose.getRelatedOne("PartyContactMech")
+            .getRelatedOne("ContactMech").getRelatedOne("PostalAddress");
+      pageContext.setAttribute("billingAddress", billingAddress);%>
+    <ofbiz:if name="billingAddress">
+    <tr>
+      <td align="left" valign="top" width="1%" nowrap>
+          <input type="radio" name="CONTACT_MECH_ID" value="<%=billingAddress.get("contactMechId")%>">
+      </td>
+      <td align="left" valign="top" width="99%" nowrap>
+        <div class="tabletext">
+        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address1"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("address2"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("city"), "", "<br>")%>
+        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(billingAddress.getString("postalCode"))%><br>
+        <%=UtilFormatOut.ifNotEmpty(billingAddress.getString("countryGeoId"), "", "<br>")%>
+<%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingAddress.getAddressId()%></ofbiz:url>" class="buttonlink">[Update]</a>
+          <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_ADDRESS%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingAddress.getAddressId()%></ofbiz:url>" class="buttonlink">[Delete]</a>--%>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td width="100%" colspan="2" height="1" bgcolor="888888"></td>
+    </tr>
+    </ofbiz:if>
+  </ofbiz:iterator>
+  </table>
+ </ofbiz:if>
+  <a href="<ofbiz:url>/editcontactmech?CONTACT_MECH_TYPE_ID=POSTAL_ADDRESS&CONTACT_MECH_PURPOSE_TYPE_ID=BILLING_ADDRESS&DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttonlink">[Add New Address]</a>
+
 
 </td>
 </tr>
@@ -259,10 +280,10 @@
 <table width="100%">
 <tr valign="top">
 <td align="left">
-&nbsp;<a href="<%=response.encodeURL(controlPath + "/../shoppingcart.jsp" class="buttonlinkbig">[Back to Shopping Cart]</a>
+&nbsp;<a href="<ofbiz:url>/shoppingcart</ofbiz:url>" class="buttonlinkbig">[Back to Shopping Cart]</a>
 </td>
 <td align="right">
-<a href="<%=response.encodeURL(controlPath + "/javascript:document.checkoutInfoForm.submit()" class="buttonlinkbig">[Continue to Final Order Review]</a>
+<a href="javascript:document.checkoutInfoForm.submit()" class="buttonlinkbig">[Continue to Final Order Review]</a>
 </td>
 </tr>
 </table>

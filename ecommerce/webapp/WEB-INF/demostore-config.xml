@@ -94,9 +94,9 @@
     <request-map><uri>checkoutoptions</uri><success>view:checkoutoptions</success></request-map>
     <request-map>
       <uri>checkout</uri>
-      <event-type>java</event-type>
+<!--      <event-type>java</event-type>
       <event-path>org.ofbiz.ecommerce.shoppingcart.ShoppingCartEvents</event-path>
-      <event-invoke>updateCheckOutOptions</event-invoke>
+      <event-invoke>updateCheckOutOptions</event-invoke> -->
       <success>view:checkout</success>
       <error>view:error</error>
     </request-map>		
@@ -177,16 +177,16 @@
 
     <view-map><view>shippingAddress</view><mapped-page>/shipping/shipping.jsp</mapped-page></view-map>
 
-    <view-map><view>checkoutoptions</view><mapped-page>/order/checkoutoptions.jsp</mapped-page></view-map>
-    <view-map><view>checkout</view><mapped-page>/order/checkout.jsp</mapped-page></view-map>
-    <view-map><view>orderhistory</view><mapped-page>/order/orderhistory.jsp</mapped-page></view-map>
-    <view-map><view>orderstatus</view><mapped-page>/order/orderstatus.jsp</mapped-page></view-map>
+    <view-map><view>checkoutoptions</view><secure>true</secure><auth>true</auth><mapped-page>/order/checkoutoptions.jsp</mapped-page></view-map>
+    <view-map><view>checkout</view><secure>true</secure><auth>true</auth><mapped-page>/order/checkout.jsp</mapped-page></view-map>
+    <view-map><view>orderhistory</view><secure>true</secure><auth>true</auth><mapped-page>/order/orderhistory.jsp</mapped-page></view-map>
+    <view-map><view>orderstatus</view><secure>true</secure><auth>true</auth><mapped-page>/order/orderstatus.jsp</mapped-page></view-map>
 
-    <view-map><view>viewprofile</view><mapped-page>/customer/viewprofile.jsp</mapped-page></view-map>
+    <view-map><view>viewprofile</view><secure>true</secure><auth>true</auth><mapped-page>/customer/viewprofile.jsp</mapped-page></view-map>
     <view-map><view>newcustomer</view><mapped-page>/customer/newcustomer.jsp</mapped-page></view-map>
-    <view-map><view>editcontactmech</view><mapped-page>/customer/editcontactmech.jsp</mapped-page></view-map>
-    <view-map><view>editcreditcard</view><mapped-page>/customer/editcreditcard.jsp</mapped-page></view-map>
-    <view-map><view>changepassword</view><mapped-page>/customer/changepassword.jsp</mapped-page></view-map>
+    <view-map><view>editcontactmech</view><secure>true</secure><auth>true</auth><mapped-page>/customer/editcontactmech.jsp</mapped-page></view-map>
+    <view-map><view>editcreditcard</view><secure>true</secure><auth>true</auth><mapped-page>/customer/editcreditcard.jsp</mapped-page></view-map>
+    <view-map><view>changepassword</view><secure>true</secure><auth>true</auth><mapped-page>/customer/changepassword.jsp</mapped-page></view-map>
     <view-map><view>editperson</view><mapped-page>/customer/editperson.jsp</mapped-page></view-map>
     <!-- end of view mappings -->
 </site-conf>
