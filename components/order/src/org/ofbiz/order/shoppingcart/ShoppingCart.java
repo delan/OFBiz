@@ -215,6 +215,10 @@ public class ShoppingCart implements Serializable {
                 }
             }
         }
+
+        public String toString() {
+            return "Pm: " + paymentMethodId + " / PmType: " + paymentMethodTypeId + " / Amt: " + amount + " / Ref: " + refNum;
+        }
     }
 
     /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
@@ -818,7 +822,7 @@ public class ShoppingCart implements Serializable {
             paymentInfo.remove(inf);
         }
         paymentInfo.add(inf);
-        Debug.log("Added Payment Method : Pm: " + inf.paymentMethodId + " / PmType: " + inf.paymentMethodTypeId + " / Amt: " + inf.amount + " / Ref: " + inf.refNum, module);
+        Debug.log("Added Payment Method : " + inf.toString(), module);
     }
 
     /** adds a payment method/payment method type */
@@ -865,6 +869,7 @@ public class ShoppingCart implements Serializable {
         Iterator i = paymentInfo.iterator();
         while (i.hasNext()) {
             CartPaymentInfo inf = (CartPaymentInfo) i.next();
+            Debug.log("Adding Payment Info - " + inf.toString(), module);
             if (inf.amount != null) {
                 total += inf.amount.doubleValue();
             }
@@ -901,12 +906,12 @@ public class ShoppingCart implements Serializable {
             if (inf.paymentMethodId == null || !inf.singleUse) {
                 continue;
             }
-            String paymentMethodId = (String) i.next();
+
             GenericValue paymentMethod = null;
             try {
-                paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", paymentMethodId));
+                paymentMethod = delegator.findByPrimaryKey("PaymentMethod", UtilMisc.toMap("paymentMethodId", inf.paymentMethodId));
             } catch (GenericEntityException e) {
-                Debug.logError(e, "ERROR: Unable to get payment method record to expire : " + paymentMethodId, module);
+                Debug.logError(e, "ERROR: Unable to get payment method record to expire : " + inf.paymentMethodId, module);
             }
             if (paymentMethod != null) {
                 paymentMethod.set("thruDate", now);
@@ -916,7 +921,7 @@ public class ShoppingCart implements Serializable {
                     Debug.logError(e, "Unable to store single use PaymentMethod record : " + paymentMethod, module);
                 }
             } else {
-                Debug.logError("ERROR: Received back a null payment method record for expired ID : " + paymentMethodId, module);
+                Debug.logError("ERROR: Received back a null payment method record for expired ID : " + inf.paymentMethodId, module);
             }
         }
     }
