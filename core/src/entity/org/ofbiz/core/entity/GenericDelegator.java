@@ -163,7 +163,7 @@ public class GenericDelegator {
                 Class dccClass = Class.forName(distributedCacheClearClassName);
 
                 this.distributedCacheClear = (DistributedCacheClear) dccClass.newInstance();
-                this.distributedCacheClear.setDelegator(this);
+                this.distributedCacheClear.setDelegator(this, getDelegatorInfo().distributedCacheClearUserLoginId);
             } catch (ClassNotFoundException e) {
                 Debug.logWarning(e, "DistributedCacheClear class with name " + distributedCacheClearClassName + " was not found, distributed cache clearing will be disabled");
             } catch (InstantiationException e) {

@@ -34,7 +34,7 @@ package org.ofbiz.core.entity;
  */
 public interface DistributedCacheClear {
 
-    public void setDelegator(GenericDelegator delegator);
+    public void setDelegator(GenericDelegator delegator, String userLoginId);
 
     public void distributedClearCacheLine(GenericValue value);
 

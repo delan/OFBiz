@@ -250,6 +250,7 @@ public class EntityConfigUtil {
         public String entityGroupReader;
         public boolean useDistributedCacheClear;
         public String distributedCacheClearClassName;
+        public String distributedCacheClearUserLoginId;
         public Map groupMap = new HashMap();
 
         public DelegatorInfo(Element element) {
@@ -259,6 +260,10 @@ public class EntityConfigUtil {
             // this defaults to false, ie anything but true is false
             this.useDistributedCacheClear = "true".equals(element.getAttribute("distributed-cache-clear-enabled"));
             this.distributedCacheClearClassName = element.getAttribute("distributed-cache-clear-class-name");
+            if (UtilValidate.isEmpty(this.distributedCacheClearClassName)) this.distributedCacheClearClassName = "org.ofbiz.core.extentity.EntityCacheServices";
+            
+            this.distributedCacheClearUserLoginId = element.getAttribute("distributed-cache-clear-user-login-id");
+            if (UtilValidate.isEmpty(this.distributedCacheClearUserLoginId)) this.distributedCacheClearUserLoginId= "admin";
 
             List groupMapList = UtilXml.childElementList(element, "group-map");
             Iterator groupMapIter = groupMapList.iterator();

@@ -62,6 +62,7 @@
     entity-group-reader CDATA #REQUIRED
     distributed-cache-clear-enabled ( true | false ) "false"
     distributed-cache-clear-class-name CDATA "org.ofbiz.core.extentity.EntityCacheServices"
+    distributed-cache-clear-user-login-id CDATA "admin"
 >
     <!ELEMENT group-map EMPTY>
     <!ATTLIST group-map 

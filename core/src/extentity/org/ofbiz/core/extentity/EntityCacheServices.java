@@ -46,12 +46,24 @@ public class EntityCacheServices implements DistributedCacheClear {
 
     protected GenericDelegator delegator = null;
     protected LocalDispatcher dispatcher = null;
+    protected String userLoginId = null;
 
     public EntityCacheServices() {}
 
-    public void setDelegator(GenericDelegator delegator) {
+    public void setDelegator(GenericDelegator delegator, String userLoginId) {
         this.delegator = delegator;
         this.dispatcher = new LocalDispatcher("entity-cache-dispatcher", delegator, null);
+        this.userLoginId = userLoginId;
+    }
+    
+    public GenericValue getAuthUserLogin() {
+        GenericValue userLogin = null;
+        try {
+            userLogin = delegator.findByPrimaryKeyCache("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error finding the userLogin for distributed cache clear");
+        }
+        return userLogin;
     }
 
     public void distributedClearCacheLine(GenericValue value) {
@@ -61,8 +73,14 @@ public class EntityCacheServices implements DistributedCacheClear {
             return;
         }
 
+        GenericValue userLogin = getAuthUserLogin();
+        if (userLogin == null) {
+            Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.");
+            return;
+        }
+        
         try {
-            this.dispatcher.runAsync("distributedClearCacheLineByValue", UtilMisc.toMap("value", value), false);
+            this.dispatcher.runAsync("distributedClearCacheLineByValue", UtilMisc.toMap("value", value, "userLogin", userLogin), false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running the distributedClearCacheLineByValue service");
         }
@@ -75,8 +93,14 @@ public class EntityCacheServices implements DistributedCacheClear {
             return;
         }
 
+        GenericValue userLogin = getAuthUserLogin();
+        if (userLogin == null) {
+            Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.");
+            return;
+        }
+                
         try {
-            this.dispatcher.runAsync("distributedClearCacheLineByDummyPK", UtilMisc.toMap("dummyPK", dummyPK), false);
+            this.dispatcher.runAsync("distributedClearCacheLineByDummyPK", UtilMisc.toMap("dummyPK", dummyPK, "userLogin", userLogin), false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running the distributedClearCacheLineByDummyPK service");
         }
@@ -89,8 +113,14 @@ public class EntityCacheServices implements DistributedCacheClear {
             return;
         }
 
+        GenericValue userLogin = getAuthUserLogin();
+        if (userLogin == null) {
+            Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.");
+            return;
+        }
+        
         try {
-            this.dispatcher.runAsync("distributedClearCacheLineByPrimaryKey", UtilMisc.toMap("primaryKey", primaryKey), false);
+            this.dispatcher.runAsync("distributedClearCacheLineByPrimaryKey", UtilMisc.toMap("primaryKey", primaryKey, "userLogin", userLogin), false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running the distributedClearCacheLineByPrimaryKey service");
         }
@@ -102,8 +132,14 @@ public class EntityCacheServices implements DistributedCacheClear {
             return;
         }
 
+        GenericValue userLogin = getAuthUserLogin();
+        if (userLogin == null) {
+            Debug.logWarning("The userLogin for distributed cache clear was not found with userLoginId [" + userLoginId + "], not clearing remote caches.");
+            return;
+        }
+        
         try {
-            this.dispatcher.runAsync("distributedClearAllEntityCaches", null, false);
+            this.dispatcher.runAsync("distributedClearAllEntityCaches", UtilMisc.toMap("userLogin", userLogin), false);
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error running the distributedClearAllCaches service");
         }
