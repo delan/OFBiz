@@ -43,17 +43,29 @@
 <!ENTITY % CallOperations "call-map-processor | call-service | call-service-asynch | call-bsh | call-simple-method | check-errors">
 <!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field | webapp-property-to-field">
 <!ENTITY % ServiceOperations "field-to-result">
-<!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | property-to-field | to-string | clear-field | iterate | first-from-list | calculate">
+<!ENTITY % EnvOperations "field-to-field | field-to-list | env-to-field | field-to-env | string-to-field | to-string | clear-field | iterate | first-from-list">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | set-current-user-login">
 <!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | filter-list-by-and | filter-list-by-date">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | remove-value | remove-related | remove-by-and | clear-cache-line | set-pk-fields | set-nonpk-fields">
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission | check-permission">
+<!ENTITY % OtherOperations "property-to-field | log | calculate">
 
 <!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; |
         %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityFindOperations; |
-        %EntityValueOperations; | %EntityListOperations; | %IfOperations;">
+        %EntityValueOperations; | %EntityListOperations; | %IfOperations; | %OtherOperations;">
 
+<!ELEMENT field EMPTY>
+<!ATTLIST field
+    field-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+>
+<!ELEMENT string (#PCDATA)>
+<!ATTLIST string
+    value CDATA #IMPLIED
+>
+
+        
 <!ELEMENT simple-methods ( simple-method+ )>
 
 <!--
@@ -304,15 +316,6 @@ Error messages go on the error list and are handled with the check-errors tag.
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
 >
-<!ELEMENT property-to-field EMPTY>
-<!ATTLIST property-to-field
-    resource CDATA #REQUIRED
-    property CDATA #REQUIRED
-    default CDATA #IMPLIED
-    map-name CDATA #IMPLIED
-    field-name CDATA #REQUIRED
->
-
 <!ELEMENT to-string EMPTY>
 <!ATTLIST to-string
     map-name CDATA #IMPLIED
@@ -336,23 +339,6 @@ Error messages go on the error list and are handled with the check-errors tag.
     entry-name CDATA #REQUIRED
     list-name CDATA #REQUIRED
 >
-
-<!ELEMENT calculate ( ( calcop | number )* )>
-<!ATTLIST calculate
-    map-name CDATA #IMPLIED
-    field-name CDATA #REQUIRED
-    type ( Double | Float | Long | Integer ) "Double"
->
-    <!ELEMENT calcop ( ( calcop | number )* )>
-    <!ATTLIST calcop
-        operator ( get | add | subtract | multiply | divide | negative ) #REQUIRED
-        map-name CDATA #IMPLIED
-        field-name CDATA #IMPLIED
-    >
-    <!ELEMENT number EMPTY>
-    <!ATTLIST number
-        value CDATA #REQUIRED
-    >
 
 <!--
 These operations are used to interact with a data source through the entity
@@ -537,6 +523,44 @@ simple-map-processor process operations that validate incoming data
 >
 
 <!ELEMENT else ( (%SimpleMethodOperations;)* )>
+
+<!-- the "Other" Operations -->
+
+<!ELEMENT property-to-field EMPTY>
+<!ATTLIST property-to-field
+    resource CDATA #REQUIRED
+    property CDATA #REQUIRED
+    default CDATA #IMPLIED
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
+>
+
+<!ELEMENT log ( ( field | string )* )>
+<!ATTLIST log
+    level ( verbose | timing | info | important | warning | error | fatal | always ) #REQUIRED
+    message CDATA #IMPLIED
+>
+    <!ELEMENT number EMPTY>
+    <!ATTLIST number
+        value CDATA #REQUIRED
+    >
+
+<!ELEMENT calculate ( ( calcop | number )* )>
+<!ATTLIST calculate
+    map-name CDATA #IMPLIED
+    field-name CDATA #REQUIRED
+    type ( Double | Float | Long | Integer ) "Double"
+>
+    <!ELEMENT calcop ( ( calcop | number )* )>
+    <!ATTLIST calcop
+        operator ( get | add | subtract | multiply | divide | negative ) #REQUIRED
+        map-name CDATA #IMPLIED
+        field-name CDATA #IMPLIED
+    >
+    <!ELEMENT number EMPTY>
+    <!ATTLIST number
+        value CDATA #REQUIRED
+    >
 
 
 <!--
