@@ -76,9 +76,11 @@ public class PosTransaction {
     protected String transactionId = null;
     protected String terminalId = null;
     protected String currency = null;
+    protected String orderId = null;
     protected String partyId = null;
     protected Locale locale = null;
     protected boolean isMgr = false;
+    protected int drawerNo = 0;
 
     private GenericValue shipAddress = null;
 
@@ -116,6 +118,10 @@ public class PosTransaction {
         return null;
     }
 
+    public String getOrderId() {
+        return this.orderId;
+    }
+
     public double getGrandTotal() {
         return new Double(UtilFormatOut.formatPrice(cart.getGrandTotal())).doubleValue();
     }
@@ -140,7 +146,7 @@ public class PosTransaction {
             return 0;
         }
     }
-
+        
     public void addItem(String productId, double quantity) throws CartItemModifyException, ItemNotFoundException {
         trace("add item", productId + "/" + quantity);
         try {
@@ -248,6 +254,8 @@ public class PosTransaction {
 
         if (orderRes != null && ServiceUtil.isError(orderRes)) {
             throw new GeneralException(ServiceUtil.getErrorMessage(orderRes));
+        } else if (orderRes != null) {
+            this.orderId = (String) orderRes.get("orderId");
         }
 
         // process the payment(s)
@@ -268,10 +276,10 @@ public class PosTransaction {
         double change = (grandTotal - paymentAmt);
 
         // open the drawer (only supports 1 drawer for now)
-        DeviceLoader.drawer[0].openDrawer();
+        DeviceLoader.drawer[drawerNo].openDrawer();
 
         // print the receipt
-        DeviceLoader.receipt.print(this);
+        DeviceLoader.receipt.printReceipt(this);
 
         // clear the tx
         cart.clear();

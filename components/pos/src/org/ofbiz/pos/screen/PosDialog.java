@@ -36,7 +36,6 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.reflect.Method;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JRootPane;
@@ -61,7 +60,7 @@ public class PosDialog {
     protected final Frame clientFrame = XResourceManager.getAppFrame();
     protected final Window appWindow = XResourceManager.getAppWindow();
 
-    protected String callbackMethod = null;
+    protected DialogCallback cb = null;
     protected Component parent = null;
 
     protected JDialog dialog = null;
@@ -153,9 +152,9 @@ public class PosDialog {
         });
     }
 
-    public void showDialog(Component parent, String callback) {
+    public void showDialog(Container parent, DialogCallback cb) {
         this.parent = parent;
-        this.callbackMethod = callback;
+        this.cb = cb;
 
         // don't allow the main window to take focus
         appWindow.setFocusable(false);
@@ -182,24 +181,11 @@ public class PosDialog {
         parent.requestFocus();
 
         // callback the parent
-        if (callbackMethod != null) {
-            this.callback(parent, callbackMethod);
+        if (cb != null) {
+            cb.receiveDialogCb(this);
         }
     }
-
-    protected void callback(Component container, String method) {
-        try {
-            Class params[] = new Class[1];
-            params[0] = this.getClass();
-            Method m = parent.getClass().getMethod(method, params);
-            Object args[] = new Object[1];
-            args[0] = this;
-            m.invoke(parent, args);
-        } catch (Exception e) {
-            Debug.logError(e, "Error in callback", module);
-        }
-    }
-
+    
     private void setCloseBtn(Container con) {
         Component[] coms = con.getComponents();
         for (int i = 0; i < coms.length; i++) {
