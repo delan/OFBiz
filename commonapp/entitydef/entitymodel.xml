@@ -1180,14 +1180,15 @@
       <field name="contentId" type="id-vlong-ne"></field>
       <field name="hitStartDateTime" type="date-time"></field>
       <field name="hitTypeId" type="id-ne"></field>
-      <field name="idByIpContactMechId" type="id"></field>
-      <field name="refByWebContactMechId" type="id"></field>
-      <field name="statusId" type="id"></field>
-      <field name="userAgentId" type="id"></field>
-      <field name="userLoginId" type="id-vlong"></field>
-      <field name="partyId" type="id"></field>
       <field name="numOfBytes" type="numeric"></field>
       <field name="runningTimeMillis" type="numeric"></field>
+      <field name="userLoginId" type="id-vlong"></field>
+      <field name="partyId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <field name="requestUrl" type="url"></field>
+      <field name="referrerUrl" type="url"></field>
+      <field name="idByIpContactMechId" type="id"></field>
+      <field name="refByWebContactMechId" type="id"></field>
       <prim-key field="visitId"/>
       <prim-key field="contentId"/>
       <prim-key field="hitStartDateTime"/>
