@@ -157,7 +157,7 @@ public class ManagerEvents {
         reportMap.put("cashTitle", UtilFormatOut.padString("CASH:", 20, false, ' '));
         reportMap.put("checkTitle", UtilFormatOut.padString("CHECK:", 20, false, ' '));
         reportMap.put("giftCardTitle", UtilFormatOut.padString("GIFT CARD:", 20, false, ' '));
-        reportMap.put("creditCardTitel", UtilFormatOut.padString("CREDIT CARD:", 20, false, ' '));
+        reportMap.put("creditCardTitle", UtilFormatOut.padString("CREDIT CARD:", 20, false, ' '));
         reportMap.put("otherTitle", UtilFormatOut.padString("OTHER:", 20, false, ' '));
         reportMap.put("grossSalesTitle", UtilFormatOut.padString("GROSS SALES:", 20, false, ' '));
 
