@@ -114,7 +114,8 @@
     <service name="getProductFeatures" engine="java"
             location="org.ofbiz.commonapp.product.product.ProductServices" invoke="prodGetFeatures">
         <description>Gets a Collection of product features (ProductFeatureAndAppl) for a product.</description>
-        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="type" type="String" mode="IN" optional="true"/>
         <attribute name="productFeatures" type="java.util.Collection" mode="OUT"/>
     </service>
 </services>
