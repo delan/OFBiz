@@ -338,8 +338,8 @@ function doPublish() {
     <td>
         <table border="0" cellpadding="2" cellspacing="0" class="tabletext">
             <tr>
-                <input type="hidden" name="fromDate" value="${nowTimestampString}">
-                <input type="hidden" name="productId" value="${product.productId?if_exists}">
+                <input type="hidden" name="fromDate" value="${nowTimestampString}"/>
+                <input type="hidden" name="productId" value="${product.productId?if_exists}"/>
                 <td align="right">${uiLabelMap.Categories}</td>
                 <td>
                     <select multiple="true" name="categoryId">

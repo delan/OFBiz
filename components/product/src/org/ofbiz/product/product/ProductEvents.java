@@ -764,75 +764,92 @@ public class ProductEvents {
         boolean applyToAll = (request.getParameter("applyToAll") != null);
 
         try {
-            // check for variantProductId - this will mean that we have multiple ship info to update
-            if (variantProductId == null) {
-                // only single product to update
-                String productId = request.getParameter("productId");
-                GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-                product.set("lastModifiedDate", nowTimestamp);
-                product.setString("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
-                try {
-                    product.set("productHeight", UtilParse.parseDoubleForEntity(request.getParameter("productHeight")));
-                    product.set("productWidth", UtilParse.parseDoubleForEntity(request.getParameter("productWidth")));
-                    product.set("productDepth", UtilParse.parseDoubleForEntity(request.getParameter("productDepth")));
-                    product.set("weight", UtilParse.parseDoubleForEntity(request.getParameter("weight")));
-                    Double floz = UtilParse.parseDoubleForEntity(request.getParameter("~floz"));
-                    Double ml = UtilParse.parseDoubleForEntity(request.getParameter("~ml"));
-                    Double ntwt = UtilParse.parseDoubleForEntity(request.getParameter("~ntwt"));
-                    Double grams = UtilParse.parseDoubleForEntity(request.getParameter("~grams"));
-
-                    List prodFeatures = product.getRelatedMulti("ProductFeatureAppl", "ProductFeature");
-                    setOrCreateProdFeature(delegator, productId, prodFeatures, "VLIQ_ozUS", "AMOUNT", floz);
-                    setOrCreateProdFeature(delegator, productId, prodFeatures, "VLIQ_ml", "AMOUNT", ml);
-                    setOrCreateProdFeature(delegator, productId, prodFeatures, "WT_g", "AMOUNT", grams);
-                    setOrCreateProdFeature(delegator, productId, prodFeatures, "WT_oz", "NET_WEIGHT", ntwt);
-                    product.store();
-
-                } catch (NumberFormatException nfe) {
-                    String errMsg = "Shipping Dimensions and Weights must be numbers.";
-                    request.setAttribute("_ERROR_MESSAGE_", errMsg);
-                    Debug.logError(nfe, errMsg, module);
-                    return "error";
-                }
-            } else {
-                // multiple products, so use a numeric suffix to get them all
-                int prodIdx = 0;
-                int attribIdx = 0;
-                String productId = variantProductId;
-                do {
+            boolean beganTransaction = TransactionUtil.begin();
+            try {
+                // check for variantProductId - this will mean that we have multiple ship info to update
+                if (variantProductId == null) {
+                    // only single product to update
+                    String productId = request.getParameter("productId");
                     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+                    product.set("lastModifiedDate", nowTimestamp);
+                    product.setString("lastModifiedByUserLogin", userLogin.getString("userLoginId"));
                     try {
-                        product.set("productHeight", UtilParse.parseDoubleForEntity(request.getParameter("productHeight" + attribIdx)));
-                        product.set("productWidth", UtilParse.parseDoubleForEntity(request.getParameter("productWidth" + attribIdx)));
-                        product.set("productDepth", UtilParse.parseDoubleForEntity(request.getParameter("productDepth" + attribIdx)));
-                        product.set("weight", UtilParse.parseDoubleForEntity(request.getParameter("weight" + attribIdx)));
-                        Double floz = UtilParse.parseDoubleForEntity(request.getParameter("~floz" + attribIdx));
-                        Double ml = UtilParse.parseDoubleForEntity(request.getParameter("~ml" + attribIdx));
-                        Double ntwt = UtilParse.parseDoubleForEntity(request.getParameter("~ntwt" + attribIdx));
-                        Double grams = UtilParse.parseDoubleForEntity(request.getParameter("~grams" + attribIdx));
-
-                        List prodFeatures = product.getRelatedMulti("ProductFeatureAppl", "ProductFeature");
-                        setOrCreateProdFeature(delegator, productId, prodFeatures, "VLIQ_ozUS", "AMOUNT", floz);
-                        setOrCreateProdFeature(delegator, productId, prodFeatures, "VLIQ_ml", "AMOUNT", ml);
-                        setOrCreateProdFeature(delegator, productId, prodFeatures, "WT_g", "AMOUNT", grams);
-                        setOrCreateProdFeature(delegator, productId, prodFeatures, "WT_oz", "NET_WEIGHT", ntwt);
+                        product.set("productHeight", UtilParse.parseDoubleForEntity(request.getParameter("productHeight")));
+                        product.set("productWidth", UtilParse.parseDoubleForEntity(request.getParameter("productWidth")));
+                        product.set("productDepth", UtilParse.parseDoubleForEntity(request.getParameter("productDepth")));
+                        product.set("weight", UtilParse.parseDoubleForEntity(request.getParameter("weight")));
+    
+                        // default unit settings for shipping parameters
+                        product.set("heightUomId", "LEN_in");
+                        product.set("widthUomId", "LEN_in");
+                        product.set("depthUomId", "LEN_in");
+                        product.set("weightUomId", "WT_oz");
+    
+                        Double floz = UtilParse.parseDoubleForEntity(request.getParameter("~floz"));
+                        Double ml = UtilParse.parseDoubleForEntity(request.getParameter("~ml"));
+                        Double ntwt = UtilParse.parseDoubleForEntity(request.getParameter("~ntwt"));
+                        Double grams = UtilParse.parseDoubleForEntity(request.getParameter("~grams"));
+    
+                        List currentProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "STANDARD_FEATURE")), true);
+                        setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "VLIQ_ozUS", "AMOUNT", floz);
+                        setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "VLIQ_ml", "AMOUNT", ml);
+                        setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "WT_g", "AMOUNT", grams);
+                        setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "WT_oz", "AMOUNT", ntwt);
                         product.store();
+    
                     } catch (NumberFormatException nfe) {
                         String errMsg = "Shipping Dimensions and Weights must be numbers.";
                         request.setAttribute("_ERROR_MESSAGE_", errMsg);
                         Debug.logError(nfe, errMsg, module);
                         return "error";
                     }
-                    prodIdx++;
-                    if (!applyToAll) {
-                        attribIdx = prodIdx;
-                    }
-                    productId = request.getParameter("productId" + prodIdx);
-                } while (productId != null);
+                } else {
+                    // multiple products, so use a numeric suffix to get them all
+                    int prodIdx = 0;
+                    int attribIdx = 0;
+                    String productId = variantProductId;
+                    do {
+                        GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+                        try {
+                            product.set("productHeight", UtilParse.parseDoubleForEntity(request.getParameter("productHeight" + attribIdx)));
+                            product.set("productWidth", UtilParse.parseDoubleForEntity(request.getParameter("productWidth" + attribIdx)));
+                            product.set("productDepth", UtilParse.parseDoubleForEntity(request.getParameter("productDepth" + attribIdx)));
+                            product.set("weight", UtilParse.parseDoubleForEntity(request.getParameter("weight" + attribIdx)));
+                            Double floz = UtilParse.parseDoubleForEntity(request.getParameter("~floz" + attribIdx));
+                            Double ml = UtilParse.parseDoubleForEntity(request.getParameter("~ml" + attribIdx));
+                            Double ntwt = UtilParse.parseDoubleForEntity(request.getParameter("~ntwt" + attribIdx));
+                            Double grams = UtilParse.parseDoubleForEntity(request.getParameter("~grams" + attribIdx));
+    
+                                List currentProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "STANDARD_FEATURE")), true);
+                                setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "VLIQ_ozUS", "AMOUNT", floz);
+                                setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "VLIQ_ml", "AMOUNT", ml);
+                                setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "WT_g", "AMOUNT", grams);
+                                setOrCreateProdFeature(delegator, productId, currentProductFeatureAndAppls, "WT_oz", "AMOUNT", ntwt);
+                            product.store();
+                        } catch (NumberFormatException nfe) {
+                            String errMsg = "Shipping Dimensions and Weights must be numbers.";
+                            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                            Debug.logError(nfe, errMsg, module);
+                            return "error";
+                        }
+                        prodIdx++;
+                        if (!applyToAll) {
+                            attribIdx = prodIdx;
+                        }
+                        productId = request.getParameter("productId" + prodIdx);
+                    } while (productId != null);
+                }
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericEntityException e) {
+                    String errMsg = "Error updating quick admin shipping settings: " + e.toString();
+                Debug.logError(e, errMsg, module);
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                    TransactionUtil.rollback(beganTransaction);
+                return "error";
             }
-
-        } catch (GenericEntityException e) {
-            String errMsg = "Error creating new virtual product from variant products: " + e.toString();
+        } catch (GenericTransactionException gte) {
+            String errMsg = "Error updating quick admin shipping settings: " + gte.toString();
+            Debug.logError(gte, errMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
         }
@@ -850,72 +867,63 @@ public class ProductEvents {
      * @return
      * @throws GenericEntityException
      */
-    private static GenericValue setOrCreateProdFeature(GenericDelegator delegator, String productId, List existingFeatures,
+    private static void setOrCreateProdFeature(GenericDelegator delegator, String productId, List currentProductFeatureAndAppls,
                                           String uomId, String productFeatureTypeId, Double numberSpecified) throws GenericEntityException {
+        
+        GenericValue productFeatureType = delegator.findByPrimaryKey("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId));
+        GenericValue uom = delegator.findByPrimaryKey("Uom", UtilMisc.toMap("uomId", uomId));
+        
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        GenericValue prodFeature = null;
-        // filter list of features to the one we'll be editing
-        List prodFeatureList = EntityUtil.filterByAnd(existingFeatures,
-                UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId, "uomId", uomId));
 
-        // no other way to narrow the product feature list, so just use the first one
-        if ((prodFeatureList != null) && (prodFeatureList.size() > 0)) {
-            prodFeature = (GenericValue)prodFeatureList.get(0);
+        // filter list of features to the one we'll be editing
+        List typeUomProductFeatureAndApplList = EntityUtil.filterByAnd(currentProductFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId, "uomId", uomId));
+
+        // go through each; need to remove? do it now
+        Iterator typeUomProductFeatureAndApplIter = typeUomProductFeatureAndApplList.iterator();
+        boolean foundOneEqual = false;
+        while (typeUomProductFeatureAndApplIter.hasNext()) {
+            GenericValue typeUomProductFeatureAndAppl = (GenericValue) typeUomProductFeatureAndApplIter.next();
+            if ((numberSpecified != null) && (numberSpecified.equals(typeUomProductFeatureAndAppl.getDouble("numberSpecified")))) {
+                foundOneEqual = true;
+            } else {
+                // remove the PFA...
+                GenericValue productFeatureAppl = delegator.makeValidValue("ProductFeatureAppl", typeUomProductFeatureAndAppl);
+                productFeatureAppl.remove();
+            }
         }
 
-        if ((numberSpecified == null) && (prodFeature != null)) {
-            // exists, but we want it set to null, so remove it from the product
-            delegator.removeByAnd("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", prodFeature.get("productFeatureId")));
-        } else if (numberSpecified != null) {
-            if (prodFeature == null) {
-                // doesn't exist, so create it and its relation
-                String productFeatureId = delegator.getNextSeqId("ProductFeature");
-                prodFeature = delegator.makeValue("ProductFeature",
-                        UtilMisc.toMap("productFeatureId", productFeatureId,
-                                "productFeatureTypeId", productFeatureTypeId));
+        // NOTE: if numberSpecified is null then foundOneEqual will always be false, so need to check both
+        if (numberSpecified != null && !foundOneEqual) {
+            String productFeatureId = null;
+            List existingProductFeatureList = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", productFeatureTypeId, "numberSpecified", numberSpecified, "uomId", uomId));
+            if (existingProductFeatureList.size() > 0) {
+                GenericValue existingProductFeature = (GenericValue) existingProductFeatureList.get(0);
+                productFeatureId = existingProductFeature.getString("productFeatureId");
+            } else {
+                // doesn't exist, so create it
+                productFeatureId = delegator.getNextSeqId("ProductFeature").toString();
+                GenericValue prodFeature = delegator.makeValue("ProductFeature", UtilMisc.toMap("productFeatureId", productFeatureId, "productFeatureTypeId", productFeatureTypeId));
                 if (uomId != null) {
                     prodFeature.set("uomId", uomId);
                 }
-                if (numberSpecified != null) {
-                    prodFeature.set("numberSpecified", numberSpecified);
-                }
+                prodFeature.set("numberSpecified", numberSpecified);
+                prodFeature.set("description", numberSpecified.toString() + (uom == null ? "" : (" " + uom.getString("description"))));
+                
                 // if there is a productFeatureCategory with the same id as the productFeatureType, use that category.
                 // otherwise, use a default category from the configuration
-                if (delegator.findByPrimaryKey("ProductFeatureCategory",
-                        UtilMisc.toMap("productFeatureCategoryId", productFeatureTypeId)) != null) {
-                    prodFeature.set("productFeatureCategoryId", productFeatureTypeId);
-                } else {
-                    prodFeature.set("productFeatureCategoryId", UtilProperties.getPropertyValue("catalog",
-                            "default.product.feature.category.id"));
+                if (delegator.findByPrimaryKey("ProductFeatureCategory", UtilMisc.toMap("productFeatureCategoryId", productFeatureTypeId)) == null) {
+                    GenericValue productFeatureCategory = delegator.makeValue("ProductFeatureCategory", null);
+                    productFeatureCategory.set("productFeatureCategoryId", productFeatureTypeId);
+                    productFeatureCategory.set("description", productFeatureType.get("description"));
+                    productFeatureCategory.create();
                 }
+                prodFeature.set("productFeatureCategoryId", productFeatureTypeId);
                 prodFeature.create();
-
-                delegator.create("ProductFeatureAppl",
-                        UtilMisc.toMap("productId", productId,
-                                "productFeatureId", productFeatureId,
-                                "productFeatureApplTypeId", "DISTINGUISHING_FEATURE",
-                                "fromDate", nowTimestamp));
-            } else {
-                // exists, so just set it
-                if (numberSpecified != null) {
-                    prodFeature.set("numberSpecified", numberSpecified);
-                }
-                prodFeature.store();
-
-                // check that the application that we want exists
-                List featureAppls = prodFeature.getRelatedByAnd("ProductFeatureAppl", UtilMisc.toMap("productId", productId,
-                        "productFeatureApplTypeId", "DISTINGUISHING_FEATURE"));
-                if (featureAppls.size() < 1) {
-                    delegator.create("ProductFeatureAppl",
-                            UtilMisc.toMap("productId", productId,
-                                    "productFeatureId", prodFeature.getString("productFeatureId"),
-                                    "productFeatureApplTypeId", "DISTINGUISHING_FEATURE",
-                                    "fromDate", nowTimestamp));
-                }
             }
-            // missing case is where value doesn't already exist, and we want it null.
+
+            delegator.create("ProductFeatureAppl", UtilMisc.toMap("productId", productId, "productFeatureId", productFeatureId,
+                    "productFeatureApplTypeId", "STANDARD_FEATURE", "fromDate", nowTimestamp));
         }
-        return prodFeature;
     }
 
     public static String updateProductQuickAdminSelFeat(HttpServletRequest request, HttpServletResponse response) {
@@ -975,14 +983,14 @@ public class ProductEvents {
     
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                String errMsg = "Error creating new virtual product from variant products: " + e.toString();
+                String errMsg = "Error updating quick admin selectable feature settings: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 request.setAttribute("_ERROR_MESSAGE_", errMsg);
                 TransactionUtil.rollback(beganTransaction);
                 return "error";
             }
         } catch (GenericTransactionException gte) {
-            String errMsg = "Error creating new virtual product from variant products: " + gte.toString();
+            String errMsg = "Error updating quick admin selectable feature settings: " + gte.toString();
             Debug.logError(gte, errMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", errMsg);
             return "error";
@@ -1059,7 +1067,7 @@ public class ProductEvents {
                 GenericValue existingProductFeature = (GenericValue) existingProductFeatureList.get(0);
                 productFeatureId = existingProductFeature.getString("productFeatureId");
             } else {
-                // doesn't exist, so create it and its relation
+                // doesn't exist, so create it
                 productFeatureId = delegator.getNextSeqId("ProductFeature").toString();
                 GenericValue newProductFeature = delegator.makeValue("ProductFeature",
                         UtilMisc.toMap("productFeatureId", productFeatureId,
