@@ -27,6 +27,7 @@
 <!ELEMENT services (description?, vendor?, version?, created?, service+)>
 <!ELEMENT description ANY>
 <!ELEMENT vendor (#PCDATA)>
+<!ELEMENT version (#PCDATA)>
 <!ELEMENT created (#PCDATA)>
 <!ELEMENT service (attribute*)>
 <!ATTLIST service
