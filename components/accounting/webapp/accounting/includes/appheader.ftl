@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -41,12 +41,15 @@
   <div class="col"><a href="<@ofbizUrl>/findInvoices</@ofbizUrl>" class="${selectedLeftClassMap.featurecats?default(unselectedLeftClassName)}">${uiLabelMap.AccountingInvoicesMenu}</a></div>
   <div class="col"><a href="<@ofbizUrl>/findPayment</@ofbizUrl>" class="${selectedLeftClassMap.promos?default(unselectedLeftClassName)}">${uiLabelMap.AccountingPaymentsMenu}</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindGlobalGlAccount</@ofbizUrl>" class="${selectedLeftClassMap.pricerules?default(unselectedLeftClassName)}">${uiLabelMap.AccountingChartOfAcctsMenu}</a></div>
-  <div class="col"><a href="<@ofbizUrl>/manualETx</@ofbizUrl>" class="${selectedLeftClassMap.store?default(unselectedLeftClassName)}">${uiLabelMap.AccountingManualTxMenu}</a></div>
+  <div class="col"><a href="<@ofbizUrl>/ListFixedAssets</@ofbizUrl>" class="${selectedLeftClassMap.ListFixedAssets?default(unselectedLeftClassName)}">${uiLabelMap.AccountingFixedAssets}</a></div>
 
+  <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
+    <div class="col"><a href="<@ofbizUrl>/manualETx</@ofbizUrl>" class="${selectedLeftClassMap.manualTx?default(unselectedLeftClassName)}">Manual Tx</a></div>
+  </#if>
   <#if userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
   <#else>
-    <div class="col-right"><a href="<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">${uiLabelMap.CommonLogin}</a></div>
+    <div class="col-right"><a href='<@ofbizUrl>${checkLoginUrl?if_exists}</@ofbizUrl>' class='${selectedRightClassMap.login?default(unselectedRightClassName)}'>${uiLabelMap.CommonLogin}</a></div>
   </#if>
   <div class="col-fill">&nbsp;</div>
 </div>
