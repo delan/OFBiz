@@ -1081,6 +1081,7 @@
       <field name="supportDiscontinuationDate" type="date-time"></field>
       <field name="productName" type="name"></field>
       <field name="internalName" type="name"></field>
+      <field name="brandName" type="name"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
       <field name="longDescription" type="very-long"></field>
