@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.21 2003/11/25 12:41:26 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.22 2003/11/26 10:07:23 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -123,11 +123,13 @@ public class ProductPromoWorker {
         return productPromos;
     }
 
-    public static void doPromotions(ShoppingCart cart, GenericDelegator delegator, LocalDispatcher dispatcher) {
-        // TODO: make sure this is called when a user logs in so that per customer limits are honored
+    public static void doPromotions(ShoppingCart cart, LocalDispatcher dispatcher) {
+        // this is called when a user logs in so that per customer limits are honored, called by cart when new userlogin is set
         // TODO: add code to store ProductPromoUse information when an order is placed
         // TODO: add code to remove ProductPromoUse if an order is cancelled
         // TODO: add code to check ProductPromoUse limits per promo (customer, promo), and per code (customer, code) to avoid use of promos or codes getting through due to multiple carts getting promos applied at the same time, possibly on totally different servers
+        // TODO: add code to limit sub total for promos to not use gift cards, also should exclude gift cards from all other promotion considerations
+        GenericDelegator delegator = cart.getDelegator();
         String partyId = cart.getPartyId();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
@@ -139,7 +141,6 @@ public class ProductPromoWorker {
 
         String productStoreId = cart.getProductStoreId();
         GenericValue productStore = null;
-
         try {
             productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
         } catch (GenericEntityException e) {
@@ -283,7 +284,7 @@ public class ProductPromoWorker {
         return codeUseLimit;
     }
     
-    public static String checkCanUsePromoCode(String productPromoCodeId, GenericValue userLogin, GenericDelegator delegator) {
+    public static String checkCanUsePromoCode(String productPromoCodeId, String partyId, GenericDelegator delegator) {
         try {
             GenericValue productPromoCode = delegator.findByPrimaryKey("ProductPromoCode", UtilMisc.toMap("productPromoCodeId", productPromoCodeId));
             if (productPromoCode == null) {
@@ -293,35 +294,38 @@ public class ProductPromoWorker {
             if ("Y".equals(productPromoCode.getString("requireEmailOrParty"))) {
                 boolean hasEmailOrParty = false;
                 
-                if (userLogin != null) {
-                    // check partyId
-                    String partyId = userLogin.getString("partyId");
-                    if (UtilValidate.isNotEmpty(partyId)) {
-                        if (delegator.findByPrimaryKey("ProductPromoCodeParty", UtilMisc.toMap("productPromoCodeId", productPromoCodeId, "partyId", partyId)) != null) {
-                            // found party associated with the code, looks good...
-                            return null;
-                        }
-                        
-                        // check email address in ProductPromoCodeEmail
-                        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-                        List validEmailCondList = new ArrayList();
-                        validEmailCondList.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
-                        validEmailCondList.add(new EntityExpr("productPromoCodeId", EntityOperator.EQUALS, productPromoCodeId));
-                        validEmailCondList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
-                        validEmailCondList.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp), 
-                                EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.EQUALS, null)));
-                        EntityCondition validEmailCondition = new EntityConditionList(validEmailCondList, EntityOperator.AND);
-                        long validEmailCount = delegator.findCountByCondition("ProductPromoCodeEmailParty", validEmailCondition, null);
-                        if (validEmailCount > 0) {
-                            // there was an email in the list, looks good... 
-                            return null;
-                        }
+                // check partyId
+                if (UtilValidate.isNotEmpty(partyId)) {
+                    if (delegator.findByPrimaryKey("ProductPromoCodeParty", UtilMisc.toMap("productPromoCodeId", productPromoCodeId, "partyId", partyId)) != null) {
+                        // found party associated with the code, looks good...
+                        return null;
+                    }
+                    
+                    // check email address in ProductPromoCodeEmail
+                    Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+                    List validEmailCondList = new ArrayList();
+                    validEmailCondList.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+                    validEmailCondList.add(new EntityExpr("productPromoCodeId", EntityOperator.EQUALS, productPromoCodeId));
+                    validEmailCondList.add(new EntityExpr("fromDate", EntityOperator.LESS_THAN_EQUAL_TO, nowTimestamp));
+                    validEmailCondList.add(new EntityExpr(new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp), 
+                            EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.EQUALS, null)));
+                    EntityCondition validEmailCondition = new EntityConditionList(validEmailCondList, EntityOperator.AND);
+                    long validEmailCount = delegator.findCountByCondition("ProductPromoCodeEmailParty", validEmailCondition, null);
+                    if (validEmailCount > 0) {
+                        // there was an email in the list, looks good... 
+                        return null;
                     }
                 }
                 
                 if (!hasEmailOrParty) {
                     return "This promotion code [" + productPromoCodeId + "] requires you to be associated with it by account or email address and you are not associated with it.";
                 }
+            }
+            
+            // check per customer and per promotion code use limits
+            Long useLimit = getProductPromoCodeUseLimit(productPromoCode, partyId, delegator);
+            if (useLimit != null && useLimit.longValue() <= 0) {
+                return "This promotion code [" + productPromoCodeId + "] has reached it's maximum use limit for you and can no longer be used.";
             }
             
             return null;
