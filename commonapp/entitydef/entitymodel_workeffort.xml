@@ -361,8 +361,8 @@
     <view-entity entity-name="WorkEffortAndPartyAssign" 
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment Entity">	
-      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
+      <member-entity entity-alias="WE" entity-name="WorkEffort" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
       <alias entity-alias="WE" name="currentStatusId" />
@@ -635,8 +635,8 @@
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment By Group Entity">
       <description>Also includes PartyRelationship Link so that a groupPartyId can be specified to find all PartyAssignments for all groups a party is in</description>	
-      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
       <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
+      <member-entity entity-alias="WE" entity-name="WorkEffort" />	
       <member-entity entity-alias="PREL" entity-name="PartyRelationship" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
@@ -716,9 +716,9 @@
             package-name="org.ofbiz.commonapp.workeffort.workeffort"
             title="Work Effort And Party Assignment By Role Entity">
       <description>Also includes PartyRole Link so that if a partyId is specified it will find all PartyAssignments for all roles a party is in; does not link on the partyId of the PartyAssignment</description>	
-      <member-entity entity-alias="PR" entity-name="PartyRole" />	
+      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />	
       <member-entity entity-alias="WE" entity-name="WorkEffort" />	
-      <member-entity entity-alias="WEPA" entity-name="WorkEffortPartyAssignment" />
+      <member-entity entity-alias="PR" entity-name="PartyRole" />
       <alias entity-alias="WE" name="workEffortId" prim-key="true" />
       <alias entity-alias="WE" name="workEffortTypeId" />
       <alias entity-alias="WE" name="currentStatusId" />

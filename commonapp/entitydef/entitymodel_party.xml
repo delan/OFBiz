@@ -869,9 +869,9 @@
       <field name="yearEstablished" type="very-short"></field>
       <field name="siteType" type="comment"></field>
       <field name="sitePageViews" type="comment"></field>
-      <field name="siteVisitors" type="comment"></field>	
-	  <field name="dateTimeCreated" type="date-time"></field>
-	  <field name="dateTimeApproved" type="date-time"></field>
+      <field name="siteVisitors" type="comment"></field>
+      <field name="dateTimeCreated" type="date-time"></field>
+      <field name="dateTimeApproved" type="date-time"></field>	
       <prim-key field="partyId" />
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId" />
@@ -1132,8 +1132,7 @@
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Role Entity">
       <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <field name="partyRoleId" type="id"></field>	
+      <field name="roleTypeId" type="id-ne"></field>	
       <prim-key field="partyId" />	
       <prim-key field="roleTypeId" />
       <relation type="one" rel-entity-name="Party">

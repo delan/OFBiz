@@ -333,8 +333,8 @@
     <view-entity entity-name="StatusValidChangeToDetail" 
             package-name="org.ofbiz.commonapp.common.status"
             title="Status Valid Change To Detail View Entity">	
-      <member-entity entity-alias="SVC" entity-name="StatusValidChange" />	
-      <member-entity entity-alias="SI" entity-name="StatusItem" />
+      <member-entity entity-alias="SI" entity-name="StatusItem" />	
+      <member-entity entity-alias="SVC" entity-name="StatusValidChange" />
       <alias entity-alias="SVC" name="statusId" prim-key="true" />
       <alias entity-alias="SVC" name="statusIdTo" prim-key="true" />
       <alias entity-alias="SVC" name="conditionExpression" />
