@@ -36,13 +36,7 @@
                 <#if !orderHeader?exists>
                 <td align="right">
                   <div class="tabletext">
-                    <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="lightbuttontext">[Items]</a>
-                    <#if cart?has_content && cart.getOrderType() != "PURCHASE_ORDER">
-                    <a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="lightbuttontext">[Shipping]</a>
-                    <a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="lightbuttontext">[Options]</a>
-                    <a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="lightbuttontext">[Payment]</a>
-                    </#if>
-                    <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="lightbuttontext">[Create Order]</a>
+                    <a href="<@ofbizUrl>/orderentry</@ofbizUrl>" class="submenutext">Items</a><#if cart?has_content && cart.getOrderType() != "PURCHASE_ORDER"><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="submenutext">Shipping</a><a href="<@ofbizUrl>/setOptions</@ofbizUrl>" class="submenutext">Options</a><a href="<@ofbizUrl>/setBilling</@ofbizUrl>" class="submenutext">Payment</a></#if><a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="submenutextright">Create Order</a>
                   </div>
                 </td>   
                 </#if>                             
