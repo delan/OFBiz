@@ -131,8 +131,10 @@
                     <li><a href="<ofbiz:url>/EditCustomTimePeriod</ofbiz:url>" class='buttontext'>Edit Custom Time Periods</a>
                   <%}%>
                   <%if(security.hasPermission("ENUM_STATUS_MAINT", session)){%>
+                  <!--
                     <li><a href="<ofbiz:url>/EditEnumerationTypes</ofbiz:url>" class='buttontext'>Edit Enumerations</a>
                     <li><a href="<ofbiz:url>/EditStatusTypes</ofbiz:url>" class='buttontext'>Edit Status Options</a>
+                  -->
                   <%}%>
                 </ul>
                 <li><div class='tabletext'>Performance Tests</div>
