@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseUtil.java,v 1.9 2003/10/27 11:06:03 jonesde Exp $
+ * $Id: DatabaseUtil.java,v 1.10 2003/11/21 18:44:39 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,8 +34,8 @@ import org.ofbiz.entity.model.*;
 /**
  * Utilities for Entity Database Maintenance
  *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.9 $
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class DatabaseUtil {
@@ -643,7 +643,7 @@ public class DatabaseUtil {
             if (messages != null) messages.add(message);
             return null;
         }
-        
+
         if (connection == null) {
             String message = "Unable to esablish a connection with the database, no additional information available.";
             Debug.logError(message, module);
@@ -662,7 +662,7 @@ public class DatabaseUtil {
                 messages.add(message);
             return null;
         }
-        
+
         if (dbData == null) {
             Debug.logWarning("Unable to get database meta data; method returned null", module);
         }
@@ -676,7 +676,7 @@ public class DatabaseUtil {
 
         String lookupSchemaName = null;
         try {
-            String[] types = {"TABLE", "VIEW", "ALIAS", "SYNONYM"};            
+            String[] types = {"TABLE", "VIEW", "ALIAS", "SYNONYM"};
             if (dbData.supportsSchemasInTableDefinitions()) {
                 if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
                     lookupSchemaName = this.datasourceInfo.schemaName;
@@ -719,14 +719,14 @@ public class DatabaseUtil {
                     // for those databases which do not return the schema name with the table name (pgsql 7.3)
                     boolean appendSchemaName = false;
                     if (tableName != null && lookupSchemaName != null && !tableName.startsWith(lookupSchemaName)) {
-                        appendSchemaName = true;                        
-                    }                    
+                        appendSchemaName = true;
+                    }
                     if (needsUpperCase && tableName != null) {
                         tableName = tableName.toUpperCase();
-                    }                    
+                    }
                     if (appendSchemaName) {
                         tableName = lookupSchemaName + "." + tableName;
-                    }                    
+                    }
 
                     // NOTE: this may need a toUpperCase in some cases, keep an eye on it, okay for now just do a compare with equalsIgnoreCase
                     String tableType = tableSet.getString("TABLE_TYPE");
@@ -812,7 +812,7 @@ public class DatabaseUtil {
 
         Map colInfo = new HashMap();
         String lookupSchemaName = null;
-        try {            
+        try {
             if (dbData.supportsSchemasInTableDefinitions()) {
                 if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
                     lookupSchemaName = this.datasourceInfo.schemaName;
@@ -820,7 +820,7 @@ public class DatabaseUtil {
                     lookupSchemaName = dbData.getUserName();
                 }
             }
-            
+
             boolean needsUpperCase = false;
             try {
                 needsUpperCase = dbData.storesLowerCaseIdentifiers() || dbData.storesMixedCaseIdentifiers();
@@ -829,7 +829,7 @@ public class DatabaseUtil {
                 Debug.logError(message, module);
                 if (messages != null) messages.add(message);
             }
-            
+
             ResultSet rsCols = dbData.getColumns(null, lookupSchemaName, null, null);
             while (rsCols.next()) {
                 try {
@@ -839,7 +839,7 @@ public class DatabaseUtil {
                     // for those databases which do not return the schema name with the table name (pgsql 7.3)
                     boolean appendSchemaName = false;
                     if (ccInfo.tableName != null && lookupSchemaName != null && !ccInfo.tableName.startsWith(lookupSchemaName)) {
-                        appendSchemaName = true;                        
+                        appendSchemaName = true;
                     }
                     if (needsUpperCase && ccInfo.tableName != null) {
                         ccInfo.tableName = ccInfo.tableName.toUpperCase();
@@ -965,7 +965,7 @@ public class DatabaseUtil {
                     lookupSchemaName = dbData.getUserName();
                 }
             }
-            
+
             boolean needsUpperCase = false;
             try {
                 needsUpperCase = dbData.storesLowerCaseIdentifiers() || dbData.storesMixedCaseIdentifiers();
@@ -974,7 +974,7 @@ public class DatabaseUtil {
                 Debug.logError(message, module);
                 if (messages != null) messages.add(message);
             }
-            
+
             ResultSet rsCols = dbData.getImportedKeys(null, lookupSchemaName, null);
             int totalFkRefs = 0;
 
@@ -1274,8 +1274,13 @@ public class DatabaseUtil {
                         continue;
                     }
 
-                    sqlBuf.append(", ");
-                    sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle, useFkInitiallyDeferred));
+                    String fkConstraintClause = makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle, useFkInitiallyDeferred);
+                    if (UtilValidate.isNotEmpty(fkConstraintClause)) {
+                        sqlBuf.append(", ");
+                        sqlBuf.append(fkConstraintClause);
+                    } else {
+                        continue;
+                    }
                 }
             }
         }
@@ -1450,7 +1455,11 @@ public class DatabaseUtil {
         StringBuffer sqlBuf = new StringBuffer("ALTER TABLE ");
         sqlBuf.append(entity.getTableName(datasourceInfo));
         sqlBuf.append(" ADD ");
-        sqlBuf.append(makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle, useFkInitiallyDeferred));
+        String fkConstraintClause = makeFkConstraintClause(entity, modelRelation, relModelEntity, constraintNameClipLength, fkStyle, useFkInitiallyDeferred);
+        if (UtilValidate.isEmpty(fkConstraintClause)) {
+            return "Error creating foreign key constraint clause, see log for details";
+        }
+        sqlBuf.append(fkConstraintClause);
 
         if (Debug.verboseOn()) Debug.logVerbose("[createForeignKey] sql=" + sqlBuf.toString(), module);
         try {
@@ -1487,6 +1496,10 @@ public class DatabaseUtil {
             ModelKeyMap keyMap = (ModelKeyMap) keyMapsIter.next();
 
             ModelField mainField = entity.getField(keyMap.getFieldName());
+            if (mainField == null) {
+                Debug.logError("Bad key-map in entity [" + entity.getEntityName() + "] relation to [" + modelRelation.getTitle() + modelRelation.getRelEntityName() + "] for field [" + keyMap.getFieldName() + "]", module);
+                return null;
+            }
 
             if (mainCols.length() > 0) {
                 mainCols.append(", ");
@@ -1750,7 +1763,7 @@ public class DatabaseUtil {
                 retMsgsBuffer.append(retMsg);
             }
         }
-        
+
         if (retMsgsBuffer.length() > 0) {
             return retMsgsBuffer.toString();
         } else {
@@ -1850,6 +1863,9 @@ public class DatabaseUtil {
         }
 
         String createIndexSql = makeFkIndexClause(entity, modelRelation, constraintNameClipLength);
+        if (UtilValidate.isEmpty(createIndexSql)) {
+            return "Error creating foreign key index clause, see log for details";
+        }
 
         if (Debug.verboseOn()) Debug.logVerbose("[createForeignKeyIndex] index sql=" + createIndexSql, module);
 
@@ -1882,6 +1898,12 @@ public class DatabaseUtil {
         while (keyMapsIter.hasNext()) {
             ModelKeyMap keyMap = (ModelKeyMap) keyMapsIter.next();
             ModelField mainField = entity.getField(keyMap.getFieldName());
+
+            if (mainField == null) {
+                Debug.logError("Bad key-map in entity [" + entity.getEntityName() + "] relation to [" + modelRelation.getTitle() + modelRelation.getRelEntityName() + "] for field [" + keyMap.getFieldName() + "]", module);
+                return null;
+            }
+
             if (mainCols.length() > 0) {
                 mainCols.append(", ");
             }
