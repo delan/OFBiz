@@ -96,6 +96,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="AcctgTransTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccount" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountClass" />
+    <entity-group group="org.ofbiz.commonapp" entity="GlAccountOrganization" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountRole" />
     <entity-group group="org.ofbiz.commonapp" entity="GlAccountType" />
     <entity-group group="org.ofbiz.commonapp" entity="GlBudgetXref" />

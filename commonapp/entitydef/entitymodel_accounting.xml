@@ -1049,7 +1049,8 @@
       <field name="theirPartyId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="theirProductId" type="id"></field>
-      <field name="glAccountId" type="id"></field>
+      <field name="glAccountId" type="id-ne"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
       <field name="amount" type="currency-amount"></field>
       <field name="origAmount" type="currency-amount"></field>
       <field name="debitCreditFlag" type="indicator"></field>
@@ -1079,6 +1080,10 @@
       </relation>
       <relation type="one" fk-name="ACCTTXENT_GLACT" rel-entity-name="GlAccount">
         <key-map field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="ACCTTXENT_GLACOG" rel-entity-name="GlAccountOrganization">
+        <key-map field-name="glAccountId"/>
+        <key-map field-name="organizationPartyId"/>
       </relation>
       <relation type="one" fk-name="ACCTTXENT_RCSTS" rel-entity-name="StatusItem">
         <key-map field-name="reconcileStatusId" rel-field-name="statusId"/>
@@ -1203,38 +1208,54 @@
         <key-map field-name="glAccountClassId"/>
       </relation>
     </entity>
+    <entity entity-name="GlAccountOrganization"
+            package-name="org.ofbiz.commonapp.accounting.ledger"
+            title="GL Account Organization Entity">
+      <field name="glAccountId" type="id-ne"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <prim-key field="glAccountId"/>
+      <prim-key field="organizationPartyId"/>
+      <relation type="one" fk-name="GLACCT_ORG_GLA" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+      <relation type="one" fk-name="GLACCT_ORG_PARTY" rel-entity-name="Party">
+        <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyRole">
+        <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="GlAccountRole"
             package-name="org.ofbiz.commonapp.accounting.ledger"
             title="GL Account Role Entity">
       <field name="glAccountId" type="id-ne"></field>
       <field name="partyId" type="id-ne"></field>
       <field name="roleTypeId" type="id-ne"></field>
-      <field name="productId" type="id"></field>
-      <field name="productCategoryId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="glAccountId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="PTY_GLACCT_GLA" rel-entity-name="GlAccount">
+      <relation type="one" fk-name="GLACCT_RL_GLA" rel-entity-name="GlAccount">
         <key-map field-name="glAccountId"/>
       </relation>
-      <relation type="one" fk-name="PTY_GLACCT_PARTY" rel-entity-name="Party">
+      <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId"/>
       </relation>
-      <relation type="one" fk-name="PTY_GLACCT_PTRLE" rel-entity-name="PartyRole">
+      <relation type="one" fk-name="GLACCT_RL_PTRLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="one" fk-name="PTY_GLACCT_PROD" rel-entity-name="Product">
-        <key-map field-name="productId"/>
-      </relation>
-      <relation type="one" fk-name="PTY_GLACCT_PRCAT" rel-entity-name="ProductCategory">
-        <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
     <entity entity-name="GlAccountType"
@@ -1282,7 +1303,11 @@
             title="General Ledger Journal Entity">
       <field name="glJournalId" type="id-ne"></field>
       <field name="glJournalName" type="name"></field>
+      <field name="organizationPartyId" type="id-ne"></field>
       <prim-key field="glJournalId"/>
+      <relation type="one" fk-name="GLJOURN_PARTY" rel-entity-name="Party">
+        <key-map field-name="organizationPartyId" rel-field-name="partyId"/>
+      </relation>
       <relation type="many" rel-entity-name="AcctgTrans">
         <key-map field-name="glJournalId"/>
       </relation>
