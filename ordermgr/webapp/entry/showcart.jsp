@@ -117,8 +117,13 @@
                 <%}%>
               </div>
             </td>
-            <%--<td nowrap align="right"><div class='tabletext'><ofbiz:format type="currency"><%=item.getBasePrice()%></ofbiz:format></div></TD>--%>
-            <td nowrap align="right"><input size="6" type="text" name="price_<%=cart.getItemIndex(item)%>" value="<%=UtilFormatOut.formatPrice(item.getBasePrice())%>" style="font-size: x-small;">
+            <td nowrap align="right">
+            <%if (ite,.getIsPromo()) {%>
+                <input size="6" type="text" name="price_<%=cart.getItemIndex(item)%>" value="<%=UtilFormatOut.formatPrice(item.getBasePrice())%>" style="font-size: x-small;">
+            <%} else {%>
+                <div class="tabletext"><%=UtilFormatOut.formatPrice(item.getBasePrice())%></div>
+            <%}%>
+            </td>
             <td nowrap align="right"><div class='tabletext'><ofbiz:format type="currency"><%=item.getOtherAdjustments()%></ofbiz:format></div></TD>
             <td nowrap align="right"><div class='tabletext'><ofbiz:format type="currency"><%=item.getItemSubTotal()%></ofbiz:format></div></TD>
             <td nowrap align="center"><div class='tabletext'><%if (!item.getIsPromo()) {%><input type="checkbox" name="delete_<%= cart.getItemIndex(item) %>" value="0"><%} else {%>&nbsp;<%}%></div></TD>
