@@ -138,24 +138,24 @@ public class ProductHelper {
      * <li>return true if the product is build</li>
      * <li>return false if the product is bought</li></ul>
      */
-    public static boolean isBuild(GenericValue product) {
-        Debug.logInfo("isBuild called", module);
-                /*
-                 * TODO : we should ameliorate this. For the moment a component which has no subcomponent
-                 * is always bought. In the real life, this is not always true (for example coal, gold, wood, and raw materials
-                 * in general).
-                 */
-        //look for the list of subcomponents of the product
-        try{
-            List listBom = product.getRelatedByAndCache("MainProductAssoc",UtilMisc.toMap("productAssocTypeId","MANUF_COMPONENT"));
-            if (listBom.size()>0) listBom = EntityUtil.filterByDate(listBom);
-            if (listBom.size()>0) return true;
-            else return false;
-        } catch (GenericEntityException e) {
-            Debug.logError("Error : listBomComponent", module);
-            return false;
-        }
-    }
+//    public static boolean isBuild(GenericValue product) {
+//        Debug.logInfo("isBuild called", module);
+//                /*
+//                 * TODO : we should ameliorate this. For the moment a component which has no subcomponent
+//                 * is always bought. In the real life, this is not always true (for example coal, gold, wood, and raw materials
+//                 * in general).
+//                 */
+//        //look for the list of subcomponents of the product
+//        try{
+//            List listBom = product.getRelatedByAndCache("MainProductAssoc",UtilMisc.toMap("productAssocTypeId","MANUF_COMPONENT"));
+//            if (listBom.size()>0) listBom = EntityUtil.filterByDate(listBom);
+//            if (listBom.size()>0) return true;
+//            else return false;
+//        } catch (GenericEntityException e) {
+//            Debug.logError("Error : listBomComponent", module);
+//            return false;
+//        }
+//    }
     
     /**
      * Calcul the ATP Date of a list d'objet inventoryEventPlan
