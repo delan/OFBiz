@@ -36,21 +36,24 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <BR>
-<TABLE width='100%' cellpadding='4' cellspacing='1' border='0' bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
-    <TD bgcolor='#678475'>
-      <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
-        <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+        <tr>
           <TD align=left width='90%' >
             <div class='boxhead'>&nbsp;Commonapp Main Page</div>
           </TD>
           <TD align=right width='10%'>&nbsp;</TD>
-        </TR>
-      </TABLE>
+        </tr>
+      </table>
     </TD>
   </TR>
   <TR>
-    <TD bgcolor='white'>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <tr>
+          <td>
 <%if(userLogin == null) {%>
 <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
 <BR>
@@ -83,6 +86,9 @@ definitions, checking them with the current database, and generating text based 
 
 <DIV class='tabletext'>NOTE: If you have not already run the installation data loading script, <a href="<%=response.encodeURL(controlPath + "/install")%>" class='buttontext'>click here</a> to run it.</DIV>
 <DIV class='tabletext'>DOUBLE NOTE: If you are deploying this version of commonapp on a public server, remove the install.jsp page and these two paragraphs about it.</DIV>
+          </td>
+        </tr>
+      </table>
     </TD>
   </TR>
 </TABLE>

@@ -17,18 +17,18 @@
 --%>  
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='#cccc99'>
+      <table width='100%' border=0 cellpadding='<%=headerBoxBottomPadding%>' cellspacing=0 bgcolor='<%=headerBoxBottomColor%>'>
         <tr>
-          <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:5px;padding-left:5px;"><a href="javascript:document.commonappform.submit()" class="buttontext">CommonApp</a></td>
-          <TD bgcolor="#cccc99" width="90%" align=center><div class='tabletext'><b>&nbsp;App Links&nbsp;</b></div></TD>
+          <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="javascript:document.commonappform.submit()" class="buttontext">CommonApp</a></td>
+          <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>App Links</TD>
           <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
-            <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:5px;padding-left:5px;"><a href="javascript:document.catalogform.submit()" class="buttontext">Catalog</a></td>
+            <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="javascript:document.catalogform.submit()" class="buttontext">Catalog</a></td>
           <%}%>
           <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
-            <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:5px;padding-left:5px;"><a href="javascript:document.partyform.submit()" class="buttontext">Party</a></td>
+            <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="javascript:document.partyform.submit()" class="buttontext">Party</a></td>
           <%}%>
           <%if(security.hasEntityPermission("ORDERMGR", "_VIEW", session)) {%>
-            <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-left:solid white 2px;padding-right:5px;padding-left:5px;"><a href="javascript:document.orderform.submit()" class="buttontext">Order</a></td>
+            <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonRight"><a href="javascript:document.orderform.submit()" class="buttontext">Order</a></td>
           <%}%>
         </tr>
       </table>

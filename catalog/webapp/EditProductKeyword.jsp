@@ -48,51 +48,62 @@
 <%if(productId!=null&&product!=null){%>
 <br>
 <div class='tabletext'>NOTE: Keywords are automatically created when product information is changed, but you may manually CREATE or DELETE keywords here as well.</div>
-<TABLE width='100%' cellpadding='4' cellspacing='1' border='0' bgcolor='black'>
+
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
-    <TD bgcolor='#678475'>
-      <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
-        <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+        <tr>
           <TD align=left>
             <DIV class='boxhead'>Add product-keyword (enter keyword):</DIV>
           </TD>
           <TD align=right>
             <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
           </TD>
-        </TR>
-      </TABLE>
+        </tr>
+      </table>
     </TD>
   </TR>
   <TR>
-    <TD bgcolor='#FFFFFF'>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <tr>
+          <td>
       <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
         <input type="hidden" name="UPDATE_MODE" value="CREATE">
         <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
         <input type="text" size="20" name="KEYWORD" value="">
         <input type="submit" value="Add">
       </form>
+          </td>
+        </tr>
+      </table>
     </TD>
   </TR>
 </TABLE>
 <BR>
-<TABLE width='100%' cellpadding='4' cellspacing='1' border='0' bgcolor='black'>
+
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
-    <TD bgcolor='#678475' colspan='3'>
-      <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
-        <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+        <tr>
           <TD align=left>
             <DIV class='boxhead'>Keywords</DIV>
           </TD>
           <TD align=right>
             <a href="<ofbiz:url>/UpdateProductKeywords?UPDATE_MODE=CREATE&PRODUCT_ID=<%=productId%></ofbiz:url>" class="lightbuttontext">[Re-induce Keywords]</a>
             <a href="<ofbiz:url>/UpdateProductKeywords?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%></ofbiz:url>" class="lightbuttontext">[Delete All Keywords]</a>
-          </TD>
-        </TR>
-      </TABLE>
+          </td>
+        </tr>
+      </table>
     </TD>
   </TR>
   <TR>
-    <TD bgcolor='#FFFFFF' valign=top>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <tr>
+          <td valign=top>
       <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
 <%Collection pkCol = product.getRelated("ProductKeyword");%>
 <%Iterator pkIterator = UtilMisc.toIterator(pkCol);%>
@@ -124,33 +135,43 @@
     </tr>
 <%}%>
       </TABLE>
+          </td>
+        </tr>
+      </table>
     </TD>
   </TR>
 </TABLE>
 <BR>
-<TABLE width='100%' cellpadding='4' cellspacing='1' border='0' bgcolor='black'>
+
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
-    <TD bgcolor='#678475'>
-      <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
-        <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+        <tr>
           <TD align=left>
             <DIV class='boxhead'>Add product-keyword (enter keyword):</DIV>
           </TD>
           <TD align=right>
             <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="lightbuttontext">[Edit Product]</a>
-          </TD>
-        </TR>
-      </TABLE>
+          </td>
+        </tr>
+      </table>
     </TD>
   </TR>
   <TR>
-    <TD bgcolor='#FFFFFF'>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <tr>
+          <td>
       <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
         <input type="hidden" name="UPDATE_MODE" value="CREATE">
         <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
         <input type="text" size="20" name="KEYWORD" value="">
         <input type="submit" value="Add">
       </form>
+          </td>
+        </tr>
+      </table>
     </TD>
   </TR>
 </TABLE>

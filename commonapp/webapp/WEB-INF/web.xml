@@ -97,6 +97,11 @@
     <location>/error/error.jsp</location>
   </error-page>
 
+  <taglib> 
+     <taglib-uri>ofbizTags</taglib-uri>
+     <taglib-location>/WEB-INF/taglib.tld</taglib-location> 
+  </taglib> 
+
 <!-- HTTP Response Code definitions:
 | "400"   ; Bad Request
 | "401"   ; Unauthorized

@@ -28,7 +28,7 @@
  */
 %>
 
-<%pageContext.setAttribute("PageName", "newuser");%>
+<%pageContext.setAttribute("PageName", "Log In");%>
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 <%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
@@ -41,41 +41,61 @@
   <tr>
     <%-- <td width='50%' valign=top> --%>
     <td width='300' valign=top>
-<table width='100%' border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor='#678475' align=center valign=center width='100%'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+        <tr>
+          <td valign=middle align=center>
       <div class="boxhead">Registered&nbsp;User</div>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="center" bgcolor='white' width='100%'>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <tr>
+          <td align="center" valign="center" width='100%'>
       <form method="POST" action="<%=response.encodeURL(loginFormUrl)%>" name="loginform" style='margin: 0;'>
         <div align=center>Username:&nbsp;<input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20"></div>
         <div align=center>Password:&nbsp;<input type="password" name="PASSWORD" value="" size="20"></div>
         <div align=center><input type="submit" value="Login"></div>
       </form>
-    </td>
-  </tr>
-</table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
     </td>
     <td>&nbsp;&nbsp;&nbsp;</td>
     <td width='10%' valign=top>
 <%-- 
     <td width='50%' valign=top>
-<table width='100%' border="0" bgcolor="black" cellpadding="4" cellspacing="1">
-  <tr>
-    <td bgcolor='#678475' align=center valign=center width='100%'>
-      <div class="boxhead">New&nbsp;User</div>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" valign="center" bgcolor='white' width='100%'>
-      <table border="0" cellpadding="0" cellspacing="0" width='100%'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
+          <td valign=middle align=center>
+      <div class="boxhead">New&nbsp;User</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+        <tr>
+          <td>
           <form method="POST" action="<%=response.encodeURL(controlPath + "/newcustomer")%>" style='margin: 0;'>
             <div align=center>You may create a new account here:</div>
             <div align=center><input type="submit" value="Create"></div>
           </form>
+          </td>
         </tr>
       </table>
     </td>

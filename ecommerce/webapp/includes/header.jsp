@@ -17,7 +17,6 @@
 <%String companySubtitle = UtilProperties.getPropertyValue("ecommerce", "company.subtitle");%>
 <%String headerImageUrl = UtilProperties.getPropertyValue("ecommerce", "header.image.url");%>
 
-
 <%String headerBoxBorderColor = UtilProperties.getPropertyValue("ecommerce", "header.box.border.color", "black");%>
 <%String headerBoxBorderWidth = UtilProperties.getPropertyValue("ecommerce", "header.box.border.width", "1");%>
 <%String headerBoxTopColor = UtilProperties.getPropertyValue("ecommerce", "header.box.top.color", "#678475");%>
