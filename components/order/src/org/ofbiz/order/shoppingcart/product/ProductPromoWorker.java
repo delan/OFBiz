@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.17 2003/11/23 02:22:26 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.18 2003/11/23 09:16:06 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -181,36 +181,8 @@ public class ProductPromoWorker {
 
                     List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
                     if (productPromoRules != null && productPromoRules.size() > 0) {
-                        // calculate low use limit for this "order", check per order, customer, promo
                         // always have a useLimit to avoid unlimited looping, default to 1 if no other is specified
-                        Long candidateUseLimit = null;
-
-                        Long useLimitPerOrder = productPromo.getLong("useLimitPerOrder");
-                        if (useLimitPerOrder != null) {
-                            if (candidateUseLimit == null || candidateUseLimit.longValue() > useLimitPerOrder.longValue()) {
-                                candidateUseLimit = useLimitPerOrder;
-                            }
-                        }
-
-                        Long useLimitPerCustomer = productPromo.getLong("useLimitPerCustomer");
-                        if (useLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
-                            // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-                            long productPromoCustomerUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId, "partyId", partyId));
-                            long perCustomerThisOrder = useLimitPerCustomer.longValue() - productPromoCustomerUseSize;
-                            if (candidateUseLimit == null || candidateUseLimit.longValue() > perCustomerThisOrder) {
-                                candidateUseLimit = new Long(perCustomerThisOrder);
-                            }
-                        }
-
-                        Long useLimitPerPromotion = productPromo.getLong("useLimitPerPromotion");
-                        if (useLimitPerPromotion != null) {
-                            // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-                            long productPromoUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId));
-                            long perPromotionThisOrder = useLimitPerPromotion.longValue() - productPromoUseSize;
-                            if (candidateUseLimit == null || candidateUseLimit.longValue() > perPromotionThisOrder) {
-                                candidateUseLimit = new Long(perPromotionThisOrder);
-                            }
-                        }
+                        Long candidateUseLimit = getProductPromoUseLimit(productPromo, partyId, delegator);
 
                         long useLimit = candidateUseLimit == null ? 1 : candidateUseLimit.longValue();
                         if (Debug.infoOn()) Debug.logInfo("Running promotion [" + productPromoId + "], useLimit=" + useLimit + ", # of rules=" + productPromoRules.size(), module);
@@ -230,29 +202,7 @@ public class ProductPromoWorker {
                                 while ((useLimit > cart.getProductPromoUseCount(productPromoId)) && productPromoCodeIter.hasNext()) {
                                     GenericValue productPromoCode = (GenericValue) productPromoCodeIter.next();
                                     String productPromoCodeId = productPromoCode.getString("productPromoCode");
-                                    Long codeUseLimit = null;
-
-                                    // check promo code use limits, per customer, code
-                                    Long codeUseLimitPerCustomer = productPromoCode.getLong("useLimitPerCustomer");
-                                    if (codeUseLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
-                                        // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-                                        long productPromoCustomerUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoCodeId", productPromoCodeId, "partyId", partyId));
-                                        long perCustomerThisOrder = codeUseLimitPerCustomer.longValue() - productPromoCustomerUseSize;
-                                        if (codeUseLimit == null || codeUseLimit.longValue() > perCustomerThisOrder) {
-                                            codeUseLimit = new Long(perCustomerThisOrder);
-                                        }
-                                    }
-
-                                    Long codeUseLimitPerCode = productPromo.getLong("useLimitPerCode");
-                                    if (codeUseLimitPerCode != null) {
-                                        // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
-                                        long productPromoCodeUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoCodeId", productPromoCodeId));
-                                        long perCodeThisOrder = codeUseLimitPerCode.longValue() - productPromoCodeUseSize;
-                                        if (codeUseLimit == null || codeUseLimit.longValue() > perCodeThisOrder) {
-                                            codeUseLimit = new Long(perCodeThisOrder);
-                                        }
-                                    }
-
+                                    Long codeUseLimit = getProductPromoCodeUseLimit(productPromoCode, partyId, delegator);
                                     cartChanged = runProductPromoRules(cart, cartChanged, useLimit, true, productPromoCodeId, codeUseLimit, productPromo, productPromoRules, dispatcher, delegator, nowTimestamp);
                                 }
                             }
@@ -267,6 +217,69 @@ public class ProductPromoWorker {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error looking up promotion data while doing promotions", module);
         }
+    }
+
+    /** calculate low use limit for this promo for the current "order", check per order, customer, promo */
+    public static Long getProductPromoUseLimit(GenericValue productPromo, String partyId, GenericDelegator delegator) throws GenericEntityException {
+        String productPromoId = productPromo.getString("productPromoId");
+        Long candidateUseLimit = null;
+
+        Long useLimitPerOrder = productPromo.getLong("useLimitPerOrder");
+        if (useLimitPerOrder != null) {
+            if (candidateUseLimit == null || candidateUseLimit.longValue() > useLimitPerOrder.longValue()) {
+                candidateUseLimit = useLimitPerOrder;
+            }
+        }
+
+        Long useLimitPerCustomer = productPromo.getLong("useLimitPerCustomer");
+        if (useLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
+            // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
+            long productPromoCustomerUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId, "partyId", partyId));
+            long perCustomerThisOrder = useLimitPerCustomer.longValue() - productPromoCustomerUseSize;
+            if (candidateUseLimit == null || candidateUseLimit.longValue() > perCustomerThisOrder) {
+                candidateUseLimit = new Long(perCustomerThisOrder);
+            }
+        }
+
+        Long useLimitPerPromotion = productPromo.getLong("useLimitPerPromotion");
+        if (useLimitPerPromotion != null) {
+            // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
+            long productPromoUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoId", productPromoId));
+            long perPromotionThisOrder = useLimitPerPromotion.longValue() - productPromoUseSize;
+            if (candidateUseLimit == null || candidateUseLimit.longValue() > perPromotionThisOrder) {
+                candidateUseLimit = new Long(perPromotionThisOrder);
+            }
+        }
+
+        return candidateUseLimit;
+    }
+
+    public static Long getProductPromoCodeUseLimit(GenericValue productPromoCode, String partyId, GenericDelegator delegator) throws GenericEntityException {
+        String productPromoCodeId = productPromoCode.getString("productPromoCodeId");
+        Long codeUseLimit = null;
+
+        // check promo code use limits, per customer, code
+        Long codeUseLimitPerCustomer = productPromoCode.getLong("useLimitPerCustomer");
+        if (codeUseLimitPerCustomer != null && UtilValidate.isNotEmpty(partyId)) {
+            // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
+            long productPromoCustomerUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoCodeId", productPromoCodeId, "partyId", partyId));
+            long perCustomerThisOrder = codeUseLimitPerCustomer.longValue() - productPromoCustomerUseSize;
+            if (codeUseLimit == null || codeUseLimit.longValue() > perCustomerThisOrder) {
+                codeUseLimit = new Long(perCustomerThisOrder);
+            }
+        }
+
+        Long codeUseLimitPerCode = productPromoCode.getLong("useLimitPerCode");
+        if (codeUseLimitPerCode != null) {
+            // check to see how many times this has been used for other orders for this customer, the remainder is the limit for this order
+            long productPromoCodeUseSize = delegator.findCountByAnd("ProductPromoUse", UtilMisc.toMap("productPromoCodeId", productPromoCodeId));
+            long perCodeThisOrder = codeUseLimitPerCode.longValue() - productPromoCodeUseSize;
+            if (codeUseLimit == null || codeUseLimit.longValue() > perCodeThisOrder) {
+                codeUseLimit = new Long(perCodeThisOrder);
+            }
+        }
+
+        return codeUseLimit;
     }
 
     protected static boolean runProductPromoRules(ShoppingCart cart, boolean cartChanged, long useLimit, boolean requireCode, String productPromoCodeId, Long codeUseLimit,
