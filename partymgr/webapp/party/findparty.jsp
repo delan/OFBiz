@@ -6,44 +6,67 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
-
+<%try {%>
 <%if(security.hasEntityPermission("PARTYMGR", "_VIEW", session)) {%>
-  <%String searchString = "";%>
+<%
+    String searchString = "";
+    if (UtilValidate.isNotEmpty(request.getParameter("first_name")) || UtilValidate.isNotEmpty(request.getParameter("last_name"))) {
+        searchString = "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");
+    } else if (UtilValidate.isNotEmpty(request.getParameter("email"))) {
+        searchString = "email=" + request.getParameter("email");
+    } else if (UtilValidate.isNotEmpty(request.getParameter("userlogin_id"))) {
+        searchString = "userlogin_id=" + request.getParameter("userlogin_id");
+    }
 
-<ofbiz:if name="first_name">
-  <%searchString = "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");%>
-  <ofbiz:service name="getPartyFromName">
-    <ofbiz:param name="firstName" attribute="first_name"/>
-    <ofbiz:param name="lastName" attribute="last_name"/>
-  </ofbiz:service> 
-</ofbiz:if>
-<ofbiz:unless name="first_name">
-  <ofbiz:if name="last_name">
-    <%searchString = "first_name=" + request.getParameter("first_name") + "&last_name=" + request.getParameter("last_name");%>
-    <ofbiz:service name="getPartyFromName">
-      <ofbiz:param name="firstName" attribute="first_name"/>
-      <ofbiz:param name="lastName" attribute="last_name"/>
-    </ofbiz:service>
-  </ofbiz:if>
-</ofbiz:unless>
+    Collection parties = null;
 
-<ofbiz:if name="email">
-  <%searchString = "email=" + request.getParameter("email");%>
-  <ofbiz:service name="getPartyFromEmail">
-    <ofbiz:param name="email" attribute="email"/>
-  </ofbiz:service>
-</ofbiz:if>
+    //cache by the search string
+    
+    String lastSearchString = (String) session.getAttribute("LAST_SEARCH_STRING");
+    Collection lastParties = (Collection) session.getAttribute("LAST_SEARCH_VALUES");
+    if (lastParties != null && lastSearchString != null && lastSearchString.equals(searchString)) {
+        parties = lastParties;
+        pageContext.setAttribute("parties", parties);
+        Debug.logInfo("Got parties from cache, size is " + parties.size());
+    } else {
+%>
+        <ofbiz:if name="first_name">
+          <ofbiz:service name="getPartyFromName">
+            <ofbiz:param name="firstName" attribute="first_name"/>
+            <ofbiz:param name="lastName" attribute="last_name"/>
+          </ofbiz:service> 
+        </ofbiz:if>
+        <ofbiz:unless name="first_name">
+          <ofbiz:if name="last_name">
+            <ofbiz:service name="getPartyFromName">
+              <ofbiz:param name="firstName" attribute="first_name"/>
+              <ofbiz:param name="lastName" attribute="last_name"/>
+            </ofbiz:service>
+          </ofbiz:if>
+        </ofbiz:unless>
 
-<ofbiz:if name="userlogin_id">
-  <%searchString = "userlogin_id=" + request.getParameter("userlogin_id");%>
-  <ofbiz:service name="getPartyFromUserLogin">
-    <ofbiz:param name="userLoginId" attribute="userlogin_id"/>
-  </ofbiz:service>
-</ofbiz:if>
+        <ofbiz:if name="email">
+          <ofbiz:service name="getPartyFromEmail">
+            <ofbiz:param name="email" attribute="email"/>
+          </ofbiz:service>
+        </ofbiz:if>
+
+        <ofbiz:if name="userlogin_id">
+          <ofbiz:service name="getPartyFromUserLogin">
+            <ofbiz:param name="userLoginId" attribute="userlogin_id"/>
+          </ofbiz:service>
+        </ofbiz:if>
+<%
+        parties = (Collection) pageContext.getAttribute("parties");
+        if (parties != null) {
+            session.setAttribute("LAST_SEARCH_STRING", searchString);
+            session.setAttribute("LAST_SEARCH_VALUES", parties);
+            Debug.logInfo("Got parties from QUERY, size is " + parties.size());
+        }
+    }
+%>
 
 <%
-    Collection parties = (Collection) pageContext.getAttribute("parties");
-
     int viewIndex = 0;
     int viewSize = 10;
     int highIndex = 0;
@@ -168,39 +191,73 @@
           <td colspan='6'><hr class='sepbar'></td>
         </tr>
         <ofbiz:if name="parties">
-            <ofbiz:iterator name="party" property="parties" offset="<%=lowIndex%>" limit="<%=viewSize%>">
+            <ofbiz:iterator name="partyMap" property="parties" expandMap="true" type="java.util.Map" offset="<%=lowIndex%>" limit="<%=viewSize%>">
+              <%
+                GenericValue party = (GenericValue) pageContext.getAttribute("party");
+                if (party != null && pageContext.getAttribute("person") == null && pageContext.getAttribute("partyGroup") == null) {
+                    //this is a bit complicated, many inherited types, so use special method
+                    GenericValue curPartyType = party.getRelatedOneCache("PartyType");
+                    GenericValue partyPersonType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PERSON"));
+                    if (EntityTypeUtil.isType(curPartyType, partyPersonType)) {
+                        GenericValue person = party.getRelatedOne("Person");
+                        if (person != null) {
+                            partyMap.put("person", person);
+                            pageContext.setAttribute("person", person);
+                        }
+                    } else {
+                        GenericValue partyGroupType = delegator.findByPrimaryKeyCache("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"));
+                        if (EntityTypeUtil.isType(curPartyType, partyGroupType)) {
+                            GenericValue partyGroup = party.getRelatedOne("PartyGroup");
+                            if (partyGroup != null) {
+                                partyMap.put("partyGroup", partyGroup);
+                                pageContext.setAttribute("partyGroup", partyGroup);
+                            }
+                        }
+                    }
+                }
+              %>
               <tr>
                 <td><a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext"><ofbiz:entityfield attribute="party" field="partyId"/></a></td>
-                <ofbiz:service name="getPerson">
-                  <ofbiz:param name="partyId" map="party" attribute="partyId"/>
-                </ofbiz:service>
-                <%
-                    List userLogins = (List) delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", party.getString("partyId")));
-                    StringBuffer sb = new StringBuffer();
-                    Iterator uli = userLogins.iterator();
-                    while (uli.hasNext()) {
-                        GenericValue v = (GenericValue) uli.next();
-                        sb.append(v.getString("userLoginId"));
-                        if (uli.hasNext())
-                            sb.append(", ");
-                    }
-                    String userLoginString = sb.toString();
-                %>
-                <ofbiz:unless name="person">
-                  <td><div class="tabletext">&nbsp;</div></td>
-                  <td><div class="tabletext">&nbsp;</div></td>
-                </ofbiz:unless>
                 <ofbiz:if name="person">
-                  <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="lastName"/></div></td>
-                  <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="firstName"/></div></td>
+                    <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="lastName"/></div></td>
+                    <td><div class="tabletext"><ofbiz:entityfield attribute="person" field="firstName"/></div></td>
                 </ofbiz:if>
-                <td><div class="tabletext"><%=userLoginString%></div></td>
+                <ofbiz:unless name="person">
+                    <ofbiz:if name="partyGroup">
+                        <td colspan='2'><div class="tabletext"><ofbiz:entityfield attribute="partyGroup" field="groupName"/></div></td>
+                    </ofbiz:if>
+                    <ofbiz:unless name="partyGroup">
+                        <td><div class="tabletext">&nbsp;</div></td>
+                        <td><div class="tabletext">&nbsp;</div></td>
+                    </ofbiz:unless>
+                </ofbiz:unless>
+                <td>
+                    <%
+                        List userLogins = null;
+                        if (party != null) {
+                            userLogins = (List) delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", party.getString("partyId")));
+                        }
+                        StringBuffer sb = new StringBuffer();
+                        Iterator uli = UtilMisc.toIterator(userLogins);
+                        while (uli != null && uli.hasNext()) {
+                            GenericValue curUserLogin = (GenericValue) uli.next();
+                            sb.append(curUserLogin.getString("userLoginId"));
+                            if (uli.hasNext()) {
+                                sb.append(", ");
+                            }
+                        }
+                        String userLoginString = sb.toString();
+                    %>
+                    <div class="tabletext"><%=userLoginString%></div>
+                </td>
                 <td><div class="tabletext"><ofbiz:entityfield attribute="party" field="partyTypeId"/></div></td>
                 <td align="right">
                   <a href='<ofbiz:url>/viewprofile?party_id=<ofbiz:entityfield attribute="party" field="partyId"/></ofbiz:url>' class="buttontext">[View Profile]</a>&nbsp;&nbsp;
                   <a href='/ordermgr/control/orderlist?partyId=<ofbiz:entityfield attribute="party" field="partyId"/>' class="buttontext">[Orders]</a>&nbsp;&nbsp;
                 </td>
               </tr>
+              <%pageContext.removeAttribute("person");%>
+              <%pageContext.removeAttribute("partyGroup");%>
             </ofbiz:iterator>
         </ofbiz:if>
         <ofbiz:unless name="parties">
@@ -215,3 +272,4 @@
 <%}else{%>
   <h3>You do not have permission to view this page. ("PARTYMGR_VIEW" or "PARTYMGR_ADMIN" needed)</h3>
 <%}%>
+<%} catch (Exception e) { Debug.logError(e); throw e; }%>
