@@ -11,6 +11,8 @@
     <property name="currentEntityPropertyName">parentEntityName</property>    
     <property name="parentEntityName">Content</property>    
     <property name="permissionType">simple</property>    
+    <property name="permission">CONTENTMGR</property>    
+    <property name="entityOperation">_CREATE</property>    
     <page-action name="/includes/permprep.bsh"/>
     <content-action name="/includes/currentvalprep.bsh"/>
     <content-action name="/includes/relatedprep.bsh" />
