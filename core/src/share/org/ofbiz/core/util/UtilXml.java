@@ -54,9 +54,8 @@ public class UtilXml {
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-
         writeXmlDocument(bos, document);
-        String outString = bos.toString();
+        String outString = bos.toString("UTF-8");
 
         if (bos != null) bos.close();
         return outString;
@@ -75,7 +74,6 @@ public class UtilXml {
 
         File outFile = new File(filename);
         FileOutputStream fos = null;
-
         fos = new FileOutputStream(outFile);
 
         try {
@@ -103,10 +101,9 @@ public class UtilXml {
         // else {
         // Xerces writer
         OutputFormat format = new OutputFormat(document);
-
         format.setIndent(2);
+        
         XMLSerializer serializer = new XMLSerializer(os, format);
-
         serializer.asDOMSerializer();
         serializer.serialize(document.getDocumentElement());
         // }
@@ -123,8 +120,7 @@ public class UtilXml {
             Debug.logWarning("[UtilXml.readXmlDocument] content was null, doing nothing", module);
             return null;
         }
-        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
-
+        ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes("UTF-8"));
         return readXmlDocument(bis, validate, "Internal Content");
     }
 
@@ -160,7 +156,6 @@ public class UtilXml {
         factory.setValidating(validate);
         // factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
-
         if (validate) {
             LocalResolver lr = new LocalResolver(new DefaultHandler());
             ErrorHandler eh = new LocalErrorHandler(docDescription, lr);
@@ -170,7 +165,6 @@ public class UtilXml {
         }
 
         document = builder.parse(is);
-
         return document;
     }
 
