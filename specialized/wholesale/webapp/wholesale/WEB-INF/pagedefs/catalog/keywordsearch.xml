@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template>
+    <property name="title">Search Results</property>
+    <property name="title.property">PageTitleSearchResults</property>
+    <content-action name="/catalog/keywordsearch.bsh"/>
+</page>

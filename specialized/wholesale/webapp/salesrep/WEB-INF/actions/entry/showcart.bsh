@@ -1,0 +1,209 @@
+/*
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     David E. Jones
+ *@version    1.0
+ */
+
+import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.util.*;
+import org.ofbiz.base.util.*;
+import org.ofbiz.order.shoppingcart.*;
+import org.ofbiz.party.party.PartyWorker;
+import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.service.*;
+import org.ofbiz.order.shoppingcart.product.ProductDisplayWorker;
+import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
+
+delegator = request.getAttribute("delegator");
+userLogin = session.getAttribute("userLogin");
+    
+// Get and set affil -- do we really need this??
+// session.setAttribute("_AFFILIATE_ID_", userLogin.getString("partyId")) ;
+
+// Get the Cart and Prepare Size
+shoppingCart = ShoppingCartEvents.getCartObject(request);
+context.put("shoppingCartSize", shoppingCart.size());
+context.put("shoppingCart", shoppingCart);
+
+updateParty = request.getParameter("updateParty");
+if (updateParty != null) {
+    context.put("updateParty", updateParty);
+}
+
+productStores = delegator.findAllCache("ProductStore", UtilMisc.toList("storeName"));
+context.put("productStores", productStores);
+
+// check the selected product store
+productStoreId = request.getParameter("productStoreId");
+if (productStoreId == null)
+	productStoreId = session.getAttribute("productStoreId");
+if (productStoreId != null) {
+    if (productStoreId.length() > 0) {
+	    // check security on the store
+	    storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStoreId, "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
+	    storeReps = EntityUtil.filterByDate(storeReps);
+	    if (storeReps != null && storeReps.size() > 0) {
+	        shoppingCart.setProductStoreId(productStoreId);
+	        session.setAttribute("productStoreId", productStoreId);
+	    } else {
+	        request.setAttribute("_ERROR_MESSAGE_", "<li>You do not have permission to take orders for this store.");
+	        shoppingCart.clear();
+	        session.removeAttribute("orderMode");
+	        session.removeAttribute("productStoreId");
+	        return;
+	    }    
+    } else {
+        shoppingCart.setProductStoreId(null);
+    }
+}
+
+// Get the order mode
+mode = request.getParameter("orderMode");
+if (mode == null && session.getAttribute("orderMode") == null)
+	mode = "SALES_ORDER";
+	
+if (mode != null) {
+    session.setAttribute("orderMode", mode);
+    shoppingCart.setOrderType(mode);
+} 
+mode = shoppingCart.getOrderType();
+if ("SALES_ORDER".equals(mode)) context.put("modeStr", "Sales");
+if ("PURCHASE_ORDER".equals(mode)) context.put("modeStr", "Purchase");
+
+if (session.getAttribute("orderMode") != null && updateParty == null) {
+    page.setProperty("leftbar", "/includes/entry_left.ftl");    
+}     
+
+if (session.getAttribute("orderMode") == null && request.getParameter("finalizeMode") != null) {
+    request.setAttribute("_ERROR_MESSAGE_", "<li>Please select either sale or purchase order.");
+    return;
+} else if (session.getAttribute("orderMode") == null) {
+    return;
+}
+
+if ("SALES_ORDER".equals(mode) && UtilValidate.isEmpty(shoppingCart.getProductStoreId())) {
+    request.setAttribute("_ERROR_MESSAGE_", "<li>A Product Store MUST be selected for a Sales Order.");
+    shoppingCart.clear();
+    session.removeAttribute("orderMode");
+    session.removeAttribute("productStoreId");
+    return;
+}
+    
+if (mode != null && mode.equals("SALES_ORDER")) {
+    // Get Cart Associated Products Data
+    associatedProducts = ProductDisplayWorker.getRandomCartProductAssoc(request, true);
+    if (associatedProducts != null) 
+        context.put("associatedProducts", associatedProducts);
+
+    //Get Promo Text Data
+    productPromos = ProductPromoWorker.getStoreProductPromos(delegator, request);
+    //Make sure that at least one promo has non-empty promoText
+    showPromoText = false;
+    productPromoIterator = productPromos.iterator(); 
+    while (productPromoIterator.hasNext()) {
+        productPromo = productPromoIterator.next(); 
+        promoText = productPromo.get("promoText"); 
+        if (promoText != null && promoText.length() > 0) showPromoText = true;
+    }
+    context.put("productPromos", productPromos);
+    context.put("showPromoText", showPromoText);
+} else {
+    context.put("showPromoText", false);
+}
+context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
+
+// get productCategory list
+productCategoryList = delegator.findAll("ProductCategory", UtilMisc.toList("description", "productCategoryId"));
+context.put("productCategoryList", productCategoryList);
+
+// set party info
+partyId = request.getParameter("partyId");
+if (partyId == null && session.getAttribute("orderPartyId") == null)
+	mode = session.getAttribute("rep_cust");
+	
+userLoginId = request.getParameter("userLoginId");
+if (partyId != null || userLoginId != null) {
+    if ((partyId == null || partyId.length() == 0) && userLoginId != null && userLoginId.length() > 0) {
+        thisUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+        if (thisUserLogin != null) {        
+            partyId = thisUserLogin.getString("partyId");
+        } else {
+            partyId = userLoginId;
+        }
+    }
+    Debug.log("1st PartyID - " + partyId);  
+    if (partyId != null && partyId.length() > 0) {
+        thisParty = thisParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+        Debug.log("This party : " + thisParty);
+        if (thisParty == null) {
+            request.setAttribute("_ERROR_MESSAGE_", "<li>Could not locate the selected party.");
+            context.put("updateParty", "Y");
+            return;        
+        } else {
+            session.setAttribute("orderPartyId", partyId);    
+        }
+    } else if (partyId != null && partyId.length() == 0) {
+        session.setAttribute("orderPartyId", "_NA_");
+        partyId = null;
+    } 
+} else {
+    partyId = session.getAttribute("orderPartyId");
+    if (partyId != null && partyId.equals("_NA_")) partyId = null;
+}
+
+context.put("partyId", partyId);  
+
+if (partyId != null) {
+    partyMap = PartyWorker.getPartyOtherValues(request, partyId, "party", "person", "partyGroup");
+    if (partyMap != null) {
+        iter = partyMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            entry = iter.next();
+            context.put(entry.getKey(), entry.getValue());
+        }
+    }
+}
+
+/* Code to map availableToPromise for each shopping cart item */
+  
+dispatcher = request.getAttribute("dispatcher");
+
+productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+if (productStore != null)
+  inventoryFacilityId = productStore.getString("inventoryFacilityId");
+  
+shoppingCartIter = shoppingCart.iterator();
+availableToPromiseMap = new HashMap();
+while (shoppingCartIter.hasNext()) {
+	shoppingCartItem = shoppingCartIter.next();
+	productId	=	shoppingCartItem.getProductId();
+	Map result = dispatcher.runSync("getInventoryAvailableByFacility",
+                        UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
+	
+	availableToPromise	= (Double) result.get("availableToPromise");
+	availableToPromiseMap.put(productId, availableToPromise);
+}
+context.put("availableToPromiseMap", availableToPromiseMap);
+/***************************************************************/
+
+request.setAttribute("DONE_PAGE", "orderentry");

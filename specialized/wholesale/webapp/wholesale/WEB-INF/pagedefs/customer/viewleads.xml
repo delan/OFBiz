@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template>    
+    <property name="title">View Leads</property>
+     <property name="title.property">PageTitleViewLeads</property>
+</page>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_lr</template>    
+    <property name="title">Main Page</property>
+    <property name="title.property">PageTitleMain</property>
+    <property name="headerItem">main</property>
+    <page-action name="main.bsh"/>
+    <page-action name="/catalog/category.bsh"/>
+</page>
+

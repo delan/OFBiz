@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">View Shipment</property>
+    <property name="titleProperty">PageTitleViewShipment</property>
+    <property name="headerItem">shipment</property>
+    <property name="tabButtonItem">ViewShipment</property>
+    <page-action name="/order/ViewShipment.bsh"/> 
+    <page-action name="/order/EditShipmentItems.bsh"/> 
+    <page-action name="/order/EditShipmentPackages.bsh"/> 
+    <page-action name="/order/EditShipmentRouteSegments.bsh"/> 
+</page>
