@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -220,15 +220,17 @@ public class SequenceUtil {
                     if (rs.next()) {
                         val1 = rs.getInt(parentUtil.idColName);
                     } else {
-                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] first select failed: trying to add " +
-                            "row, result set was empty for sequence: " + seqName, module);
+                        Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] first select failed: will try to add new row, result set was empty for sequence [" + seqName + "] \nUsed SQL: " + sql, module);
                         try {
                             if (rs != null) rs.close();
                         } catch (SQLException sqle) {
                             Debug.logWarning(sqle, "Error closing result set in sequence util", module);
                         }
                         sql = "INSERT INTO " + parentUtil.tableName + " (" + parentUtil.nameColName + ", " + parentUtil.idColName + ") VALUES ('" + this.seqName + "', " + startSeqId + ")";
-                        if (stmt.executeUpdate(sql) <= 0) return;
+                        if (stmt.executeUpdate(sql) <= 0) {
+                            Debug.logWarning("No rows changed when trying insert new sequence row with this SQL: " + sql, module);
+                            return;
+                        }
                         continue;
                     }
                     try {
@@ -291,8 +293,7 @@ public class SequenceUtil {
                         this.seqName + "; curSeqId=" + curSeqId + ", maxSeqId=" + maxSeqId + ", bankSize=" + bankSize, module);
             } catch (SQLException sqle) {
                 Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] SQL Exception while executing the following:\n" +
-                    sql + "\nError was:", module);
-                Debug.logWarning(sqle.getMessage(), module);
+                    sql + "\nError was:" + sqle.getMessage(), module);
                 return;
             } finally {
                 try {
