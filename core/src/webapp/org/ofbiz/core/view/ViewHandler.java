@@ -54,6 +54,6 @@ public interface ViewHandler {
      * @param response The HttpServletResponse object to be used to present the page.
      * @throws ViewHandlerException
      */
-    public void render(String name, String page, String info, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException;
+    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException;
 
 }

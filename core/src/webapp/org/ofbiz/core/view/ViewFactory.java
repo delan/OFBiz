@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.view;
-
 
 import java.util.*;
 import javax.servlet.*;
@@ -32,13 +30,12 @@ import javax.servlet.*;
 import org.ofbiz.core.control.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * ViewFactory - View Handler Factory
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created    Feb 26, 2002
- *@version    1.0
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ViewFactory {
 

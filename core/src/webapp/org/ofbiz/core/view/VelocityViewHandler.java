@@ -103,8 +103,7 @@ public class VelocityViewHandler implements ViewHandler {
         }
     }
 
-    public void render(String name, String page, String info, HttpServletRequest request,
-        HttpServletResponse response) throws ViewHandlerException {
+    public void render(String name, String page, String info, String contentType, String encoding, HttpServletRequest request, HttpServletResponse response) throws ViewHandlerException {
         if (ve == null) {
             throw new ViewHandlerException("Velocity Template Engine has not been initialized");
         }

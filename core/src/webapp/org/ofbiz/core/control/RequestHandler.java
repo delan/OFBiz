@@ -401,6 +401,8 @@ public class RequestHandler implements Serializable {
 
         String viewType = rm.getViewType(view);
         String tempView = rm.getViewPage(view);
+        String contentType = rm.getViewContentType(view);
+        String encoding = rm.getViewEncoding(view);
         String nextPage = null;
 
         if (tempView == null) {
@@ -421,7 +423,7 @@ public class RequestHandler implements Serializable {
             if (Debug.verboseOn()) Debug.logVerbose("Rendering view [" + nextPage + "] of type [" + viewType + "]");
             ViewHandler vh = ViewFactory.getViewHandler(this, viewType);
 
-            vh.render(view, nextPage, rm.getViewInfo(view), req, resp);
+            vh.render(view, nextPage, contentType, encoding, rm.getViewInfo(view), req, resp);
         } catch (ViewHandlerException e) {
             Throwable throwable = e.getNested() != null ? e.getNested() : e;
 

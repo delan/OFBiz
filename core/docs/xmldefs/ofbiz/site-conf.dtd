@@ -72,4 +72,6 @@
     page CDATA #IMPLIED
     type CDATA "default"
     info CDATA #IMPLIED
+    content-type CDATA #IMPLIED
+    encoding CDATA #IMPLIED
 >

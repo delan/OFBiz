@@ -185,6 +185,30 @@ public class RequestManager implements Serializable {
             return null;
         }
     }
+    
+    /** Gets the content-type of this view */
+    public String getViewContentType(String viewStr) {
+        Map view = (Map) ConfigXMLReader.getViewMap(configFileUrl).get(viewStr);
+
+        if (view != null) {
+            return (String) view.get(ConfigXMLReader.VIEW_CONTENT_TYPE);
+        } else {
+            Debug.logWarning("[RequestManager.getViewInfo] View with name \"" + viewStr + "\" not found", module);
+            return null;
+        }
+    }    
+    
+    /** Gets the content-type of this view */
+    public String getViewEncoding(String viewStr) {
+        Map view = (Map) ConfigXMLReader.getViewMap(configFileUrl).get(viewStr);
+
+        if (view != null) {
+            return (String) view.get(ConfigXMLReader.VIEW_ENCODING);
+        } else {
+            Debug.logWarning("[RequestManager.getViewInfo] View with name \"" + viewStr + "\" not found", module);
+            return null;
+        }
+    }        
 
     /** Gets the error page from the requestMap, if none uses the default */
     public String getErrorPage(String uriStr) {
