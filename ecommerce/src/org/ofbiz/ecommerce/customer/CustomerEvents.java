@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.39  2002/01/27 08:35:33  jonesde
+ * Small change to use new checkPassword method in LoginServices
+ *
  * Revision 1.38  2002/01/02 04:46:19  jonesde
  * Simplified message stuff
  *
@@ -173,6 +176,8 @@ public class CustomerEvents {
             if (errorMessageList.size() > 0) {
                 errMsg += ServiceUtil.makeMessageList(errorMessageList, "<li>", "</li>");
             }
+            tempUserLogin.set("currentPassword", password);
+            tempUserLogin.set("passwordHint", passwordHint);
         }
 
 
