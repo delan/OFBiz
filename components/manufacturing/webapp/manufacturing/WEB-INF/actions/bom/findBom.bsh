@@ -59,7 +59,6 @@ if (currentTreeType == null || currentTreeType.length() == 0) {
 }
 
 // create the fromDate for calendar
-
 fromTs = UtilDateTime.getDayStart(UtilDateTime.nowTimestamp());
 fromStr = fromTs.toString();
 fromStr = fromStr.substring(0, fromStr.indexOf('.'));
