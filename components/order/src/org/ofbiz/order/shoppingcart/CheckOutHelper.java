@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.11 2003/11/04 23:08:33 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.12 2003/11/06 22:11:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -547,7 +547,7 @@ public class CheckOutHelper {
             Map paymentResult = null;
             try {
                 // invoke the payment gateway service.
-                paymentResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId));
+                paymentResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, module);
             }

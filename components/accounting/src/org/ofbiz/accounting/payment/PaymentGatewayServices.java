@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.17 2003/11/04 23:08:33 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.18 2003/11/06 22:11:35 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -883,13 +883,15 @@ public class PaymentGatewayServices {
         Boolean authResult = (Boolean) result.get("authResult");
         Boolean captureResult = (Boolean) result.get("captureResult");
         boolean resultPassed = false;
+        boolean fromAuth = false;
 
         if (authResult != null) {
             processAuthResult(dctx, result, userLogin, paymentPreference, paymentSettings);
             resultPassed = authResult.booleanValue();
+            fromAuth = true;
         }
         if (captureResult != null) {
-            processCaptureResult(dctx, result, userLogin, paymentPreference, paymentSettings);
+            processCaptureResult(dctx, result, userLogin, paymentPreference, paymentSettings, fromAuth);
             if (!resultPassed)
                 resultPassed = captureResult.booleanValue();
         }
@@ -941,33 +943,51 @@ public class PaymentGatewayServices {
     }
 
     private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {
+        processCaptureResult(dctx, result, userLogin, paymentPreference, paymentSettings, false);
+    }
+
+    private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference, GenericValue paymentSettings, boolean fromAuth) throws GeneralException {
         Boolean captureResult = (Boolean) result.get("captureResult");
         String invoiceId = (String) result.get("invoiceId");
         String payTo = (String) result.get("payToPartyId");
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        double amount = ((Double) result.get("captureAmount")).doubleValue();
+        Double amount = null;
+        if (result.get("captureAmount") != null) {
+            amount = (Double) result.get("captureAmount");
+        } else if (result.get("processAmount") != null) {
+            amount = (Double) result.get("processAmount");
+        }
+
+        if (amount == null) {
+            throw new GeneralException("Unable to process null capture amount");
+        }
 
         Debug.log("Invoice ID: " + invoiceId, module);
 
         if (payTo == null)
             payTo = "Company";
 
+        String serviceType = fromAuth ? "AUTH" : CAPTURE_SERVICE_TYPE;
+        if (serviceType.equals("AUTH")) {
+            serviceType = paymentPreference.getString("statusId").equals("PAYMENT_NOT_AUTH") ? AUTH_SERVICE_TYPE : REAUTH_SERVICE_TYPE;
+        }
+
         if (result != null && captureResult.booleanValue()) {
             // create the PaymentGatewayResponse record
             String responseId = delegator.getNextSeqId("PaymentGatewayResponse").toString();
             GenericValue response = delegator.makeValue("PaymentGatewayResponse", null);
             response.set("paymentGatewayResponseId", responseId);
-            response.set("paymentServiceTypeEnumId", CAPTURE_SERVICE_TYPE);
+            response.set("paymentServiceTypeEnumId", serviceType);
             response.set("orderPaymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
             response.set("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
             response.set("paymentMethodId", paymentPreference.get("paymentMethodId"));
             if (result.get("authRefNum") != null) {
-                response.set("referenceSub", result.get("authRefNum"));
+                response.set("subReference", result.get("authRefNum"));
             }
 
             // set the capture info
-            response.set("amount", result.get("captureAmount"));
+            response.set("amount", amount);
             response.set("referenceNum", result.get("captureRefNum"));
             response.set("gatewayCode", result.get("captureCode"));
             response.set("gatewayFlag", result.get("captureFlag"));
@@ -987,7 +1007,7 @@ public class PaymentGatewayServices {
             paymentCtx.put("partyIdFrom", orderRole.get("partyId"));
             paymentCtx.put("statusId", "PMNT_RECEIVED");
             paymentCtx.put("paymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
-            paymentCtx.put("amount", result.get("captureAmount"));
+            paymentCtx.put("amount", amount);
             paymentCtx.put("userLogin", userLogin);
             paymentCtx.put("paymentRefNum", result.get("captureRefNum"));
 
@@ -1018,7 +1038,7 @@ public class PaymentGatewayServices {
 
             if (orh != null) {
                 // first lets re-auth the card
-                Map authPayRes = authPayment(dispatcher, orh, paymentPreference, amount, true);
+                Map authPayRes = authPayment(dispatcher, orh, paymentPreference, amount.doubleValue(), true);
                 if (authPayRes != null) {
                     Boolean authResp = (Boolean) result.get("authResult");
                     Boolean capResp = (Boolean) result.get("captureResult");
@@ -1030,7 +1050,7 @@ public class PaymentGatewayServices {
                                 processCaptureResult(dctx, result, userLogin, paymentPreference, paymentSettings);
                             } else {
                                 // lets try to capture the funds now
-                                Map capPayRes = capturePayment(dispatcher, orh, paymentPreference, amount);
+                                Map capPayRes = capturePayment(dispatcher, orh, paymentPreference, amount.doubleValue());
                                 if (capPayRes != null) {
                                     Boolean capPayResp = (Boolean) result.get("captureResult");
                                     if (capPayResp != null && capPayResp.booleanValue()) {
@@ -1250,11 +1270,30 @@ public class PaymentGatewayServices {
         Map result = new HashMap();
         Double processAmount = (Double) context.get("processAmount");
         long nowTime = new Date().getTime();
-        Debug.logInfo("Test Processor Approving Credit Cart", module);
+        Debug.logInfo("Test Processor Approving Credit Card", module);
 
         result.put("authResult", new Boolean(true));
         result.put("processAmount", context.get("processAmount"));
         result.put("authRefNum", new Long(nowTime).toString());
+        result.put("authCode", "100");
+        result.put("authFlag", "A");
+        result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
+        return result;
+    }
+
+    public static Map alwaysApproveWithCapture(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        long nowTime = new Date().getTime();
+        String refNum = new Long(nowTime).toString();
+        Debug.logInfo("Test Processor Approving Credit Card with Capture", module);
+
+        result.put("authResult", new Boolean(true));
+        result.put("captureResult", new Boolean(true));
+        result.put("processAmount", context.get("processAmount"));
+        result.put("authRefNum", refNum);
+        result.put("captureRefNum", refNum);
+        result.put("authCode", "100");
+        result.put("captureCode", "200");
         result.put("authFlag", "A");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
         return result;
@@ -1267,7 +1306,7 @@ public class PaymentGatewayServices {
         Map result = new HashMap();
         Double processAmount = (Double) context.get("processAmount");
         long nowTime = new Date().getTime();
-        Debug.logInfo("Test Processor Declining Credit Cart", module);
+        Debug.logInfo("Test Processor Declining Credit Card", module);
 
         result.put("authResult", new Boolean(false));
         result.put("processAmount", context.get("processAmount"));
