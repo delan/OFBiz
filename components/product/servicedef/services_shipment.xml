@@ -334,13 +334,13 @@
         <description>Prepare Receipt Form for Inventory Item</description>
         <attribute name="quantityAccepted" type="Double" mode="IN" optional="false"/>
         <attribute name="inventoryItemTypeId" type="String" mode="IN" optional="false"/>
-        <attribute name="quantityOnHand" type="Double" mode="OUT" optional="true"/>
-        <attribute name="availableToPromise" type="Double" mode="OUT" optional="true"/>
+        <attribute name="quantityOnHandDiff" type="Double" mode="OUT" optional="true"/>
+        <attribute name="availableToPromiseDiff" type="Double" mode="OUT" optional="true"/>
     </service>
     <service name="receiveInventoryProduct" engine="group" location="receiveInventoryProduct" invoke="" auth="true">
         <attribute name="inventoryItemId" type="String" mode="INOUT" optional="true"/>
-        <attribute name="availableToPromise" type="Double" mode="INOUT" optional="true"/>
-        <attribute name="quantityOnHand" type="Double" mode="INOUT" optional="true"/>
+        <attribute name="availableToPromiseDiff" type="Double" mode="INOUT" optional="true"/>
+        <attribute name="quantityOnHandDiff" type="Double" mode="INOUT" optional="true"/>
     </service>
     
     <service name="interfaceShipmentReceiptRole" engine="interface" location="" invoke="">

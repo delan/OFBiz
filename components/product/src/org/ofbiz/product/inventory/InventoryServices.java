@@ -51,7 +51,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class InventoryServices {
@@ -75,84 +75,104 @@ public class InventoryServices {
             return ServiceUtil.returnError("Cannot locate inventory item.");
         }
 
-        String inventoryType = inventoryItem.getString("inventoryItemTypeId");
-        if (inventoryType.equals("NON_SERIAL_INV_ITEM")) {
-            Double atp = inventoryItem.getDouble("availableToPromise");
-            Double qoh = inventoryItem.getDouble("quantityOnHand");
-            
-            if (atp == null) {
-                return ServiceUtil.returnError("The request transfer amount is not available, there is no available to promise on the Inventory Item with ID " + inventoryItem.getString("inventoryItemId"));
-            }
-            if (qoh == null) {
-                qoh = atp;
-            }
-            
-            // first make sure we have enough to cover the request transfer amount
-            if (xferQty.doubleValue() > atp.doubleValue()) {
-                return ServiceUtil.returnError("The request transfer amount is not available, the available to promise [" + atp + "] is not sufficient for the desired transfer quantity [" + xferQty + "] on the Inventory Item with ID " + inventoryItem.getString("inventoryItemId"));
-            }
-                        
-            /*
-             * atp < qoh - split and save the qoh - atp
-             * xferQty < atp - split and save atp - xferQty
-             * atp < qoh && xferQty < atp - split and save qoh - atp + atp - xferQty
-             */
-
-            // at this point we have already made sure that the xferQty is less than or equals to the atp, so if less that just create a new inventory record for the quantity to be moved
-            // NOTE: atp should always be <= qoh, so if xfer < atp, then xfer < qoh, so no need to check/handle that
-            // however, if atp < qoh && atp == xferQty, then we still need to split; oh, but no need to check atp == xferQty in the second part because if it isn't greater and isn't less, then it is equal
-            if (xferQty.doubleValue() < atp.doubleValue() || atp.doubleValue() < qoh.doubleValue()) {
-
-                newItem = new GenericValue(inventoryItem);
-                newItem.set("availableToPromise", xferQty);
-                newItem.set("quantityOnHand", xferQty);
-                
-                inventoryItem.set("availableToPromise", new Double(atp.doubleValue() - xferQty.doubleValue()));
-                inventoryItem.set("quantityOnHand", new Double(qoh.doubleValue() - xferQty.doubleValue()));
-            }
-        } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
-            if (!"INV_AVAILABLE".equals(inventoryItem.getString("statusId"))) {
-                return ServiceUtil.returnError("Serialized inventory is not available for transfer.");
-            }
-        }       
-                
-        // setup values so that no one will grab the inventory during the move
-        // if newItem is not null, it is the item to be moved, otherwise the original inventoryItem is the one to be moved
-        if (inventoryType.equals("NON_SERIAL_INV_ITEM")) {
-            // set the transfered inventory item's atp to 0 and the qoh to the xferQty; at this point atp and qoh will always be the same, so we can safely zero the atp for now
-        	if (newItem != null) {
-	        	newItem.set("availableToPromise", new Double(0.0));
-        	} else {
-	        	inventoryItem.set("availableToPromise", new Double(0.0));
-        	}
-        } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
-            // set the status to avoid re-moving or something
-        	if (newItem != null) {
-        		newItem.set("statusId", "INV_BEING_TRANSFERED");
-        	} else {
-        		inventoryItem.set("statusId", "INV_BEING_TRANSFERED");
-        	}
-        }
-                                    
         try {
-        	Map results = ServiceUtil.returnSuccess();
-        	
-            inventoryItem.store();
-            if (newItem != null) {
-                String newSeqId = null;
-                try {
-                    newSeqId = delegator.getNextSeqId("InventoryItem");
-                } catch (IllegalArgumentException e) {
-                    return ServiceUtil.returnError("ERROR: Could not get next sequence id for InventoryItem, cannot create item.");
+            Map results = ServiceUtil.returnSuccess();
+            
+            String inventoryType = inventoryItem.getString("inventoryItemTypeId");
+            if (inventoryType.equals("NON_SERIAL_INV_ITEM")) {
+                Double atp = inventoryItem.getDouble("availableToPromiseTotal");
+                Double qoh = inventoryItem.getDouble("quantityOnHandTotal");
+                
+                if (atp == null) {
+                    return ServiceUtil.returnError("The request transfer amount is not available, there is no available to promise on the Inventory Item with ID " + inventoryItem.getString("inventoryItemId"));
+                }
+                if (qoh == null) {
+                    qoh = atp;
                 }
                 
-                newItem.set("inventoryItemId", newSeqId);
-                newItem.create();
-
-                results.put("inventoryItemId", newItem.get("inventoryItemId"));
-            } else {
-            	results.put("inventoryItemId", inventoryItem.get("inventoryItemId"));
+                // first make sure we have enough to cover the request transfer amount
+                if (xferQty.doubleValue() > atp.doubleValue()) {
+                    return ServiceUtil.returnError("The request transfer amount is not available, the available to promise [" + atp + "] is not sufficient for the desired transfer quantity [" + xferQty + "] on the Inventory Item with ID " + inventoryItem.getString("inventoryItemId"));
+                }
+                            
+                /*
+                 * atp < qoh - split and save the qoh - atp
+                 * xferQty < atp - split and save atp - xferQty
+                 * atp < qoh && xferQty < atp - split and save qoh - atp + atp - xferQty
+                 */
+    
+                // at this point we have already made sure that the xferQty is less than or equals to the atp, so if less that just create a new inventory record for the quantity to be moved
+                // NOTE: atp should always be <= qoh, so if xfer < atp, then xfer < qoh, so no need to check/handle that
+                // however, if atp < qoh && atp == xferQty, then we still need to split; oh, but no need to check atp == xferQty in the second part because if it isn't greater and isn't less, then it is equal
+                if (xferQty.doubleValue() < atp.doubleValue() || atp.doubleValue() < qoh.doubleValue()) {
+                    Double negXferQty = new Double(-xferQty.doubleValue());
+                    newItem = new GenericValue(inventoryItem);
+                    String newSeqId = null;
+                    try {
+                        newSeqId = delegator.getNextSeqId("InventoryItem");
+                    } catch (IllegalArgumentException e) {
+                        return ServiceUtil.returnError("ERROR: Could not get next sequence id for InventoryItem, cannot create item.");
+                    }
+                    
+                    newItem.set("inventoryItemId", newSeqId);
+                    newItem.create();
+                    results.put("inventoryItemId", newItem.get("inventoryItemId"));
+    
+                    // TODO: how do we get this here: "inventoryTransferId", inventoryTransferId
+                    Map createNewDetailMap = UtilMisc.toMap("availableToPromiseDiff", xferQty, "quantityOnHandDiff", xferQty,
+                            "inventoryItemId", newItem.get("inventoryItemId"));
+                    Map createUpdateDetailMap = UtilMisc.toMap("availableToPromiseDiff", negXferQty, "quantityOnHandDiff", negXferQty,
+                            "inventoryItemId", inventoryItem.get("inventoryItemId"));
+                    
+                    try {
+                        Map resultNew = dctx.getDispatcher().runSync("createInventoryItemDetail", createNewDetailMap);
+                        if (ServiceUtil.isError(resultNew)) {
+                            return ServiceUtil.returnError("Inventory Item Detail create problem in prepare inventory transfer", null, null, resultNew);
+                        }
+                        Map resultUpdate = dctx.getDispatcher().runSync("createInventoryItemDetail", createUpdateDetailMap);
+                        if (ServiceUtil.isError(resultNew)) {
+                            return ServiceUtil.returnError("Inventory Item Detail create problem in prepare inventory transfer", null, null, resultUpdate);
+                        }
+                    } catch (GenericServiceException e1) {
+                        return ServiceUtil.returnError("Inventory Item Detail create problem in prepare inventory transfer: [" + e1.getMessage() + "]");
+                    }
+                } else {
+                    results.put("inventoryItemId", inventoryItem.get("inventoryItemId"));
+                }
+            } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
+                if (!"INV_AVAILABLE".equals(inventoryItem.getString("statusId"))) {
+                    return ServiceUtil.returnError("Serialized inventory is not available for transfer.");
+                }
+            }       
+                    
+            // setup values so that no one will grab the inventory during the move
+            // if newItem is not null, it is the item to be moved, otherwise the original inventoryItem is the one to be moved
+            if (inventoryType.equals("NON_SERIAL_INV_ITEM")) {
+                // set the transfered inventory item's atp to 0 and the qoh to the xferQty; at this point atp and qoh will always be the same, so we can safely zero the atp for now
+                GenericValue inventoryItemToClear = newItem == null ? inventoryItem : newItem;
+                double atp = inventoryItemToClear.get("availableToPromiseTotal") == null ? 0 : inventoryItemToClear.getDouble("availableToPromiseTotal").doubleValue();
+                if (atp != 0) { 
+                    Map createDetailMap = UtilMisc.toMap("availableToPromiseDiff", new Double(-atp), 
+                            "inventoryItemId", inventoryItemToClear.get("inventoryItemId"));
+                    try {
+                        Map result = dctx.getDispatcher().runSync("createInventoryItemDetail", createDetailMap);
+                        if (ServiceUtil.isError(result)) {
+                            return ServiceUtil.returnError("Inventory Item Detail create problem in complete inventory transfer", null, null, result);
+                        }
+                    } catch (GenericServiceException e1) {
+                        return ServiceUtil.returnError("Inventory Item Detail create problem in complete inventory transfer: [" + e1.getMessage() + "]");
+                    }
+                }
+            } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
+                // set the status to avoid re-moving or something
+            	if (newItem != null) {
+            		newItem.set("statusId", "INV_BEING_TRANSFERED");
+            	} else {
+            		inventoryItem.set("statusId", "INV_BEING_TRANSFERED");
+            	}
             }
+                                    
+            inventoryItem.store();
             return results;     
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Inventory store/create problem [" + e.getMessage() + "]");
@@ -173,24 +193,39 @@ public class InventoryServices {
             return ServiceUtil.returnError("Inventory Item/Transfer lookup problem [" + e.getMessage() + "]");
         }
         
-        if (inventoryTransfer == null || inventoryItem == null)
+        if (inventoryTransfer == null || inventoryItem == null) {
             return ServiceUtil.returnError("ERROR: Lookup of InventoryTransfer and/or InventoryItem failed!");
+        }
             
         String inventoryType = inventoryItem.getString("inventoryItemTypeId");
         
         // set the fields on the transfer record            
-        if (inventoryTransfer.get("receiveDate") == null)
+        if (inventoryTransfer.get("receiveDate") == null) {
             inventoryTransfer.set("receiveDate", UtilDateTime.nowTimestamp());
+        }
             
         // set the fields on the item
         inventoryItem.set("facilityId", inventoryTransfer.get("facilityIdTo"));
         inventoryItem.set("containerId", inventoryTransfer.get("containerIdTo"));
         inventoryItem.set("locationSeqId", inventoryTransfer.get("locationSeqIdTo"));
         
-        if (inventoryType.equals("NON_SERIAL_INV_ITEM")) 
-            inventoryItem.set("availableToPromise", inventoryItem.get("quantityOnHand"));
-        else if (inventoryType.equals("SERIALIZED_INV_ITEM"))
+        if (inventoryType.equals("NON_SERIAL_INV_ITEM")) { 
+            // add an adjusting InventoryItemDetail so set ATP back to QOH: ATP = ATP + (QOH - ATP), diff = QOH - ATP
+            double atp = inventoryItem.get("availableToPromiseTotal") == null ? 0 : inventoryItem.getDouble("availableToPromiseTotal").doubleValue();
+            double qoh = inventoryItem.get("quantityOnHandTotal") == null ? 0 : inventoryItem.getDouble("quantityOnHandTotal").doubleValue();
+            Map createDetailMap = UtilMisc.toMap("availableToPromiseDiff", new Double(qoh - atp), 
+                    "inventoryTransferId", inventoryTransferId, "inventoryItemId", inventoryItem.get("inventoryItemId"));
+            try {
+                Map result = dctx.getDispatcher().runSync("createInventoryItemDetail", createDetailMap);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError("Inventory Item Detail create problem in complete inventory transfer", null, null, result);
+                }
+            } catch (GenericServiceException e1) {
+                return ServiceUtil.returnError("Inventory Item Detail create problem in complete inventory transfer: [" + e1.getMessage() + "]");
+            }
+        } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
             inventoryItem.set("statusId", "INV_AVAILABLE");
+        }
         
         // store the entities
         try {
@@ -217,24 +252,37 @@ public class InventoryServices {
             return ServiceUtil.returnError("Inventory Item/Transfer lookup problem [" + e.getMessage() + "]");
         }
 
-        if (inventoryTransfer == null || inventoryItem == null)
+        if (inventoryTransfer == null || inventoryItem == null) {
             return ServiceUtil.returnError("ERROR: Lookup of InventoryTransfer and/or InventoryItem failed!");
+        }
             
         String inventoryType = inventoryItem.getString("inventoryItemTypeId");
         
         // re-set the fields on the item
-        if (inventoryType.equals("NON_SERIAL_INV_ITEM"))
-            inventoryItem.set("availableToPromise", inventoryItem.get("quantityOnHand"));
-        else if (inventoryType.equals("SERIALIZED_INV_ITEM"))
-                    inventoryItem.set("statusId", "INV_AVAILABLE");
-                                
-        // store the entity
-        try {
-            inventoryItem.store();
-        } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Inventory item store problem [" + e.getMessage() + "]");
+        if (inventoryType.equals("NON_SERIAL_INV_ITEM")) {
+            // add an adjusting InventoryItemDetail so set ATP back to QOH: ATP = ATP + (QOH - ATP), diff = QOH - ATP
+            double atp = inventoryItem.get("availableToPromiseTotal") == null ? 0 : inventoryItem.getDouble("availableToPromiseTotal").doubleValue();
+            double qoh = inventoryItem.get("quantityOnHandTotal") == null ? 0 : inventoryItem.getDouble("quantityOnHandTotal").doubleValue();
+            Map createDetailMap = UtilMisc.toMap("availableToPromiseDiff", new Double(qoh - atp), 
+                    "inventoryTransferId", inventoryTransferId, "inventoryItemId", inventoryItem.get("inventoryItemId"));
+            try {
+                Map result = dctx.getDispatcher().runSync("createInventoryItemDetail", createDetailMap);
+                if (ServiceUtil.isError(result)) {
+                    return ServiceUtil.returnError("Inventory Item Detail create problem in cancel inventory transfer", null, null, result);
+                }
+            } catch (GenericServiceException e1) {
+                return ServiceUtil.returnError("Inventory Item Detail create problem in cancel inventory transfer: [" + e1.getMessage() + "]");
+            }
+        } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
+            inventoryItem.set("statusId", "INV_AVAILABLE");
+            // store the entity
+            try {
+                inventoryItem.store();
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("Inventory item store problem in cancel inventory transfer: [" + e.getMessage() + "]");
+            }
         }
-        
+                                
         return ServiceUtil.returnSuccess();
     }
 
@@ -250,7 +298,7 @@ public class InventoryServices {
         // find all inventory items w/ a negative ATP
         List inventoryItems = null;
         try {
-            List exprs = UtilMisc.toList(new EntityExpr("availableToPromise", EntityOperator.LESS_THAN, new Double(0)));
+            List exprs = UtilMisc.toList(new EntityExpr("availableToPromiseTotal", EntityOperator.LESS_THAN, new Double(0)));
             inventoryItems = delegator.findByAnd("InventoryItem", exprs);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Trouble getting inventory items", module);
@@ -299,7 +347,7 @@ public class InventoryServices {
             Debug.log("Reservations for item: " + reservations.size(), module);
             
             // available at the time of order
-            double availableBeforeReserved = inventoryItem.getDouble("availableToPromise").doubleValue();
+            double availableBeforeReserved = inventoryItem.getDouble("availableToPromiseTotal").doubleValue();
             
             // go through all the reservations in order
             Iterator ri = reservations.iterator();

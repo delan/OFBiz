@@ -37,6 +37,7 @@
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="InventoryItem"/>
+        <!-- TODO: make sure availableToPromiseTotal and quantityOnHandTotal are not changed -->
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <sequenced-id-to-env sequence-name="InventoryItem" env-name="newEntity.inventoryItemId"/>
@@ -44,6 +45,24 @@
 
         <create-value value-name="newEntity"/>
     </simple-method>
+    <simple-method method-name="createInventoryItemCheckSetAtpQoh" short-description="createInventoryItemCheckSetAtpQoh" login-required="false">
+        <if>
+            <condition>
+                <or>
+                    <not><if-empty field-name="availableToPromiseTotal"/></not>
+                    <not><if-empty field-name="quantityOnHandTotal"/></not>
+                </or>
+            </condition>
+            <then>
+                <log level="info" message="Got an InventoryItem with ATP/QOH Total with ID ${parameters.inventoryItemId}, creating InventoryItemDetail"/>
+                <env-to-env env-name="parameters.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+                <env-to-env env-name="parameters.availableToPromiseTotal" to-env-name="createDetailMap.availableToPromiseDiff"/>
+                <env-to-env env-name="parameters.quantityOnHandTotal" to-env-name="createDetailMap.quantityOnHandDiff"/>
+                <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+            </then>
+        </if>
+    </simple-method>
+    
     <simple-method method-name="updateInventoryItem" short-description="Update an InventoryItem">
         <check-permission permission="CATALOG" action="_UPDATE">
             <alt-permission permission="FACILITY" action="_UPDATE"/>
@@ -57,18 +76,33 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="deleteInventoryItem" short-description="Delete an InventoryItem">
-        <check-permission permission="CATALOG" action="_DELETE">
-            <alt-permission permission="FACILITY" action="_DELETE"/>
-            <fail-message message="Security Error: to run deleteInventoryItem you must have the CATALOG_DELETE, CATALOG_ADMIN, FACILITY_DELETE, or FACILITY_ADMIN permission"/>
-        </check-permission>
-        <check-errors/>
+    <simple-method method-name="createInventoryItemDetail" short-description="Create an InventoryItemDetail">
+        <make-value value-name="newEntity" entity-name="InventoryItemDetail"/>
 
-        <make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <remove-value value-name="lookedUpValue"/>
+        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="newEntity"/>
+        <make-next-seq-id seq-field-name="inventoryItemDetailSeqId" value-name="newEntity" increment-by="1" numeric-padding="4"/>
+        <field-to-result field-name="newEntity.inventoryItemDetailSeqId" result-name="inventoryItemDetailSeqId"/>
+
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
     </simple-method>
+    <simple-method method-name="updateInventoryItemFromDetail" short-description="Update an InventoryItem From the Associated Detail Records" login-required="false">
+        <entity-one entity-name="InventoryItem" value-name="inventoryItem"/>
+        <entity-one entity-name="InventoryItemDetailSummary" value-name="inventoryItemDetailSummary"/>
+        <!-- the above entity-one should work, though not totally sure with this view-entity...
+        <entity-and entity-name="InventoryItemDetailSummary" list-name="summaryList">
+            <field-map env-name="inventoryItemId"/>
+        </entity-and>
+        <!- - should just be one record, so grab it - ->
+        <first-from-list list-name="summaryList" entry-name="inventoryItemDetailSummary"/>
+        -->
+        
+        <env-to-env to-env-name="inventoryItemDetailSummary.availableToPromiseTotal" env-name="inventoryItem.availableToPromiseTotal"/>
+        <env-to-env to-env-name="inventoryItemDetailSummary.quantityOnHandTotal" env-name="inventoryItem.quantityOnHandTotal"/>
+        <store-value value-name="inventoryItem"/>
+    </simple-method>
+
     <simple-method method-name="checkProductInventoryDiscontinuation" short-description="Check Product Inventory Discontinuation" login-required="false">
         <field-to-field field-name="productId" map-name="parameters" to-map-name="productIdMap"/>
         <find-by-primary-key entity-name="Product" map-name="productIdMap" value-name="product"/>
@@ -87,9 +121,9 @@
             <then>
                 <!-- now for the real fun, get the inventory available if is less-equal to zero discontinue product -->
                 <call-service service-name="getProductInventoryAvailable" in-map-name="productIdMap">
-                    <result-to-field result-name="availableToPromise"/>
+                    <result-to-field result-name="availableToPromiseTotal"/>
                 </call-service>
-                <if-compare field-name="availableToPromise" operator="less-equals" value="0" type="Double">
+                <if-compare field-name="availableToPromiseTotal" operator="less-equals" value="0" type="Double">
                     <field-to-field field-name="productId" map-name="parameters" to-map-name="discontinueProductSalesMap"/>
                     <call-service service-name="discontinueProductSales" in-map-name="discontinueProductSalesMap"/>
                 </if-compare>
@@ -114,17 +148,12 @@
         </if-compare>
         <check-errors/>
 
-        <calculate field-name="availableToPromise" map-name="inventoryItem">
-            <calcop field-name="availableToPromise" map-name="inventoryItem" operator="add">
-                <calcop field-name="availableToPromise" map-name="parameters" operator="get"/>
-            </calcop>
-        </calculate>
-        <calculate field-name="quantityOnHand" map-name="inventoryItem">
-            <calcop field-name="quantityOnHand" map-name="inventoryItem" operator="add">
-                <calcop field-name="quantityOnHand" map-name="parameters" operator="get"/>
-            </calcop>
-        </calculate>
-        <store-value value-name="inventoryItem"/>
+        <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+        <env-to-env env-name="parameters.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+        <env-to-env env-name="parameters.physicalInventoryId" to-env-name="createDetailMap.physicalInventoryId"/>
+        <env-to-env env-name="parameters.availableToPromiseTotal" to-env-name="createDetailMap.availableToPromiseDiff"/>
+        <env-to-env env-name="parameters.quantityOnHandTotal" to-env-name="createDetailMap.quantityOnHandDiff"/>
+        <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
 
         <make-value value-name="newEntity" entity-name="InventoryItemVariance"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
@@ -271,37 +300,37 @@
         <!-- we might get away with a cache here since real serious errors will occur during the reservation service... but only if we need the speed -->
         <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems"/> <!-- use-cache="true" -->
 
-        <calculate field-name="parameters.availableToPromise" type="Double"><number value="0"/></calculate>
-        <calculate field-name="parameters.quantityOnHand" type="Double"><number value="0"/></calculate>
+        <calculate field-name="parameters.availableToPromiseTotal" type="Double"><number value="0"/></calculate>
+        <calculate field-name="parameters.quantityOnHandTotal" type="Double"><number value="0"/></calculate>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="SERIALIZED_INV_ITEM">
-                <calculate field-name="parameters.quantityOnHand" type="Double">
-                    <calcop field-name="parameters.quantityOnHand" operator="add"><number value="1.0"/></calcop>
+                <calculate field-name="parameters.quantityOnHandTotal" type="Double">
+                    <calcop field-name="parameters.quantityOnHandTotal" operator="add"><number value="1.0"/></calcop>
                 </calculate>
                 <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
-                    <calculate field-name="parameters.availableToPromise" type="Double">
-                        <calcop field-name="parameters.availableToPromise" operator="add"><number value="1.0"/></calcop>
+                    <calculate field-name="parameters.availableToPromiseTotal" type="Double">
+                        <calcop field-name="parameters.availableToPromiseTotal" operator="add"><number value="1.0"/></calcop>
                     </calculate>
                 </if-compare>
             </if-compare>
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
-                <if-not-empty field-name="inventoryItem.quantityOnHand">
-                    <calculate field-name="parameters.quantityOnHand" type="Double">
-                        <calcop operator="get" field-name="parameters.quantityOnHand"/>
-                        <calcop operator="get" field-name="inventoryItem.quantityOnHand"/>
+                <if-not-empty field-name="inventoryItem.quantityOnHandTotal">
+                    <calculate field-name="parameters.quantityOnHandTotal" type="Double">
+                        <calcop operator="get" field-name="parameters.quantityOnHandTotal"/>
+                        <calcop operator="get" field-name="inventoryItem.quantityOnHandTotal"/>
                     </calculate>
                 </if-not-empty>
-                <if-not-empty field-name="inventoryItem.availableToPromise">
-                    <calculate field-name="parameters.availableToPromise" type="Double">
-                        <calcop operator="get" field-name="parameters.availableToPromise"/>
-                        <calcop operator="get" field-name="inventoryItem.availableToPromise"/>
+                <if-not-empty field-name="inventoryItem.availableToPromiseTotal">
+                    <calculate field-name="parameters.availableToPromiseTotal" type="Double">
+                        <calcop operator="get" field-name="parameters.availableToPromiseTotal"/>
+                        <calcop operator="get" field-name="inventoryItem.availableToPromiseTotal"/>
                     </calculate>
                 </if-not-empty>
             </if-compare>
         </iterate>
 
-        <field-to-result field-name="availableToPromise" map-name="parameters"/>
-        <field-to-result field-name="quantityOnHand" map-name="parameters"/>
+        <field-to-result field-name="availableToPromiseTotal" map-name="parameters"/>
+        <field-to-result field-name="quantityOnHandTotal" map-name="parameters"/>
     </simple-method>
 
     <simple-method method-name="getInventoryAlerts" short-description="getInventoryAlerts" login-required="false">
@@ -310,11 +339,11 @@
         <iterate entry-name="inventoryAlert" list-name="inventoryAlerts">
             <field-to-field map-name="inventoryAlert" field-name="productId" to-map-name="inventoryLookup" />
             <call-service service-name="getProductInventoryAvailable" in-map-name="inventoryLookup">
-                <result-to-field result-name="availableToPromise" map-name="getInventoryResults" />
+                <result-to-field result-name="availableToPromiseTotal" map-name="getInventoryResults" />
             </call-service>
-            <if-compare-field field-name="availableToPromise" map-name="getInventoryResults" operator="less" to-map-name="inventoryAlert" to-field-name="inventoryLevel" type="Double" >
+            <if-compare-field field-name="availableToPromiseTotal" map-name="getInventoryResults" operator="less" to-map-name="inventoryAlert" to-field-name="inventoryLevel" type="Double" >
                 <field-to-field map-name="inventoryAlert" field-name="productId" to-map-name="alertResult" />
-                <field-to-field map-name="getInventoryResults" field-name="availableToPromise" to-map-name="alertResult" />
+                <field-to-field map-name="getInventoryResults" field-name="availableToPromiseTotal" to-map-name="alertResult" />
                 <field-to-list field-name="alertResult" list-name="alertResults" />
             </if-compare-field>
         </iterate>
@@ -427,14 +456,17 @@
             <else>
                 <if-not-empty field-name="lastNonSerInventoryItem">
                     <!-- subtract from quantityNotReserved from the availableToPromise of existing inventory item -->
-                    <calculate field-name="lastNonSerInventoryItem.availableToPromise">
-                        <calcop field-name="lastNonSerInventoryItem.availableToPromise" operator="subtract">
-                            <calcop field-name="parameters.quantityNotReserved" operator="get"/>
-                        </calcop>
+                    <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+                    <env-to-env env-name="lastNonSerInventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+                    <env-to-env env-name="parameters.orderId" to-env-name="createDetailMap.orderId"/>
+                    <env-to-env env-name="parameters.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+                    <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
+                        <calcop field-name="parameters.quantityNotReserved" operator="negative"/>
                     </calculate>
-                    <store-value value-name="lastNonSerInventoryItem"/>
+                    <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+                    <clear-field field-name="createDetailMap"/>
 
-                       <!-- get the promiseDatetime -->
+                    <!-- get the promiseDatetime -->
                     <get-related-one value-name="lastNonSerInventoryItem" relation-name="ProductFacility" to-value-name="productFacility"/>
                     <field-to-env env-name="daysToShip" field-name="daysToShip" map-name="productFacility"/>
                     <if-empty field-name="daysToShip">
@@ -469,7 +501,7 @@
                     <field-to-field field-name="facilityId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                     <field-to-field field-name="containerId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                     <string-to-field string="NON_SERIAL_INV_ITEM" field-name="inventoryItemTypeId" map-name="newNonSerInventoryItem"/>
-                    <calculate field-name="newNonSerInventoryItem.availableToPromise">
+                    <calculate field-name="newNonSerInventoryItem.availableToPromiseTotal">
                         <calcop field-name="parameters.quantityNotReserved" operator="negative"/>
                     </calculate>
                     <create-value value-name="newNonSerInventoryItem"/>
@@ -550,22 +582,26 @@
                 </if-compare>
             </if-compare>
             <if-compare field-name="inventoryItem.inventoryItemTypeId" operator="equals" value="NON_SERIAL_INV_ITEM">
-                <if-not-empty field-name="inventoryItem.availableToPromise">
+                <if-not-empty field-name="inventoryItem.availableToPromiseTotal">
                     <!-- reduce atp on inventoryItem if availableToPromise greater than 0, if not the code at the end of this method will handle it -->
-                    <if-compare field-name="inventoryItem.availableToPromise" operator="greater" value="0" type="Double">
-                        <if-compare-field field-name="parameters.quantityNotReserved" operator="greater" to-field-name="inventoryItem.availableToPromise" type="Double">
-                            <field-to-field field-name="availableToPromise" map-name="inventoryItem" to-field-name="deductAmount" to-map-name="parameters"/>
+                    <if-compare field-name="inventoryItem.availableToPromiseTotal" operator="greater" value="0" type="Double">
+                        <if-compare-field field-name="parameters.quantityNotReserved" operator="greater" to-field-name="inventoryItem.availableToPromiseTotal" type="Double">
+                            <field-to-field field-name="availableToPromiseTotal" map-name="inventoryItem" to-field-name="deductAmount" to-map-name="parameters"/>
                         <else>
                             <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="deductAmount" to-map-name="parameters"/>
                         </else>
                         </if-compare-field>
-                        <calculate field-name="inventoryItem.availableToPromise" type="Double">
-                            <calcop field-name="inventoryItem.availableToPromise" operator="subtract">
-                                <calcop field-name="parameters.deductAmount" operator="get"/>
-                            </calcop>
+                        
+                        <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+                        <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+                        <env-to-env env-name="parameters.orderId" to-env-name="createDetailMap.orderId"/>
+                        <env-to-env env-name="parameters.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+                        <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
+                            <calcop field-name="parameters.deductAmount" operator="negative"/>
                         </calculate>
-                        <store-value value-name="inventoryItem"/>
-
+                        <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+                        <clear-field field-name="createDetailMap"/>
+                        
                         <!-- create OrderItemInventoryRes record -->
                         <field-to-field field-name="orderId" map-name="parameters" to-map-name="reserveOiiMap"/>
                         <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="reserveOiiMap"/>
@@ -697,27 +733,30 @@
         </if-compare>
         <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
             <log level="verbose" message="Non-Serialized inventory item incrementing availableToPromise."/>
-            <field-to-env field-name="cancelQuantity" map-name="parameters" env-name="cancelQuantity"/>
+            <env-to-env env-name="parameters.cancelQuantity" to-env-name="cancelQuantity"/>
             <if-empty field-name="cancelQuantity">
-                <field-to-env field-name="quantity" map-name="orderItemInventoryRes" env-name="cancelQuantity"/>
+                <env-to-env env-name="orderItemInventoryRes.quantity" to-env-name="cancelQuantity"/>
             </if-empty>
-            <calculate field-name="availableToPromise" map-name="inventoryItem">
-                <calcop operator="add" field-name="availableToPromise" map-name="inventoryItem">
-                    <calcop operator="get" field-name="cancelQuantity"/>
-                </calcop>
-            </calculate>
+
+            <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+            <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+            <env-to-env env-name="parameters.orderId" to-env-name="createDetailMap.orderId"/>
+            <env-to-env env-name="parameters.orderItemSeqId" to-env-name="createDetailMap.orderItemSeqId"/>
+            <env-to-env env-name="cancelQuantity" to-env-name="createDetailMap.availableToPromiseDiff"/>
+            <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+            <clear-field field-name="createDetailMap"/>
+
             <if-compare-field field-name="cancelQuantity" operator="less" to-field-name="quantity" to-map-name="orderItemInventoryRes" type="Double">
-                <calculate field-name="quantity" map-name="orderItemInventoryRes">
-                    <calcop operator="subtract" field-name="quantity" map-name="orderItemInventoryRes">
+                <calculate field-name="orderItemInventoryRes.quantity">
+                    <calcop operator="subtract" field-name="orderItemInventoryRes.quantity">
                         <calcop operator="get" field-name="cancelQuantity"/>
                     </calcop>
                 </calculate>
                 <store-value value-name="orderItemInventoryRes"/>
-                <else>
-                  <remove-value value-name="orderItemInventoryRes"/>
-                </else>
+            <else>
+                <remove-value value-name="orderItemInventoryRes"/>
+            </else>
             </if-compare-field>
-            <store-value value-name="inventoryItem"/>
         </if-compare>
     </simple-method>
 
@@ -737,8 +776,8 @@
                 <if>
                     <condition>
                         <or>
-                            <if-empty field-name="availableToPromise"/>
-                            <if-compare field-name="availableToPromise" map-name="item" operator="less" value="0" type="Double"/>
+                            <if-empty field-name="availableToPromiseTotal"/>
+                            <if-compare field-name="availableToPromiseTotal" map-name="item" operator="less" value="0" type="Double"/>
                         </or>
                     </condition>
                     <then>

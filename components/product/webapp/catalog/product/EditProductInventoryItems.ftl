@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -103,7 +103,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         </tr>
         <#list productInventoryItems as inventoryItem>
            <#if showEmpty || (inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM" && inventoryItem.statusId?if_exists != "INV_DELIVERED")
-                           || (inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromise?exists && inventoryItem.availableToPromise > 0) || (inventoryItem.quantityOnHand?exists && inventoryItem.quantityOnHand > 0)))>
+                           || (inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM" && ((inventoryItem.availableToPromiseTotal?exists && inventoryItem.availableToPromiseTotal > 0) || (inventoryItem.quantityOnHandTotal?exists && inventoryItem.quantityOnHandTotal > 0)))>
                 <#assign curInventoryItemType = inventoryItem.getRelatedOne("InventoryItemType")>
                 <#if inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                     <#assign curStatusItem = inventoryItem.getRelatedOneCache("StatusItem")?if_exists>
@@ -148,14 +148,14 @@ ${pages.get("/product/ProductTabBar.ftl")}
                         <td><div class="tabletext">&nbsp;${(inventoryItem.binNumber)?if_exists}</div></td>
                         <#if inventoryItem.inventoryItemTypeId?if_exists == "NON_SERIAL_INV_ITEM">
                             <td>
-                                <div class="tabletext">${(inventoryItem.availableToPromise)?default("NA")}
-                                / ${(inventoryItem.quantityOnHand)?default("NA")}</div>
+                                <div class="tabletext">${(inventoryItem.availableToPromiseTotal)?default("NA")}
+                                / ${(inventoryItem.quantityOnHandTotal)?default("NA")}</div>
                             </td>
                         <#elseif inventoryItem.inventoryItemTypeId?if_exists == "SERIALIZED_INV_ITEM">
                             <td><div class="tabletext">&nbsp;${(inventoryItem.serialNumber)?if_exists}</div></td>
                         <#else>
                             <td><div class="tabletext" style="color: red;">${uiLabelMap.ProductErrorType} ${(inventoryItem.inventoryItemTypeId)?if_exists} ${uiLabelMap.ProductUnknownSerialNumber} (${(inventoryItem.serialNumber)?if_exists})
-                                ${uiLabelMap.ProductAndQuantityOnHand} (${(inventoryItem.quantityOnHand)?if_exists} ${uiLabelMap.CommonSpecified}</div></td>
+                                ${uiLabelMap.ProductAndQuantityOnHand} (${(inventoryItem.quantityOnHandTotal)?if_exists} ${uiLabelMap.CommonSpecified}</div></td>
                             <td>&nbsp;</td>
                         </#if>
                         <td>

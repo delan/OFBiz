@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  -->
 <simple-methods>
@@ -371,8 +371,8 @@
                             <and>
                                 <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItem.inventoryItemTypeId"/>
                                 <or>
-                                    <if-empty field-name="inventoryItem.quantityOnHand"/>
-                                    <if-compare-field field-name="quantityNeeded" operator="greater" to-field-name="inventoryItem.quantityOnHand" type="Double"/>
+                                    <if-empty field-name="inventoryItem.quantityOnHandTotal"/>
+                                    <if-compare-field field-name="quantityNeeded" operator="greater" to-field-name="inventoryItem.quantityOnHandTotal" type="Double"/>
                                 </or>
                             </and>
                         </or>
@@ -573,7 +573,7 @@
                     <calculate field-name="totalQuantityOnHand" type="Double"><number value="0"/></calculate>
                     <iterate entry-name="inventoryItem" list-name="inventoryItemList">
                         <calculate field-name="totalQuantityOnHand" type="Double">
-                            <calcop field-name="totalQuantityOnHand" operator="add"><calcop field-name="inventoryItem.quantityOnHand" operator="get"/></calcop>
+                            <calcop field-name="totalQuantityOnHand" operator="add"><calcop field-name="inventoryItem.quantityOnHandTotal" operator="get"/></calcop>
                         </calculate>
                     </iterate>
                     <if-compare-field field-name="totalQuantityOnHand" operator="less" to-field-name="moveInfo.totalQuantity" type="Double">
@@ -588,7 +588,7 @@
                         <calculate field-name="targetTotalAvailableToPromise" type="Double"><number value="0"/></calculate>
                         <iterate entry-name="inventoryItem" list-name="targetInventoryItemList">
                             <calculate field-name="targetTotalAvailableToPromise" type="Double">
-                                <calcop field-name="targetTotalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromise" operator="get"/></calcop>
+                                <calcop field-name="targetTotalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromiseTotal" operator="get"/></calcop>
                             </calculate>
                         </iterate>
 
@@ -673,7 +673,7 @@
                     <and>
                         <not><if-empty field-name="productFacilityLocationQuantityTest.moveQuantity"/></not>
                         <if-compare field-name="productFacilityLocationQuantityTest.moveQuantity" operator="greater" value="0" type="Double"/>
-                        <if-compare-field field-name="productFacilityLocationQuantityTest.availableToPromise" operator="less" to-field-name="productFacilityLocationQuantityTest.minimumStock" type="Double"/>
+                        <if-compare-field field-name="productFacilityLocationQuantityTest.availableToPromiseTotal" operator="less" to-field-name="productFacilityLocationQuantityTest.minimumStock" type="Double"/>
                     </and>
                 </condition>
                 <then>
@@ -710,7 +710,7 @@
                                         <calculate field-name="totalAvailableToPromise" type="Double"><number value="0"/></calculate>
                                         <iterate entry-name="inventoryItem" list-name="perLocationInventoryItemAndLocList">
                                             <calculate field-name="totalAvailableToPromise" type="Double">
-                                                <calcop field-name="totalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromise" operator="get"/></calcop>
+                                                <calcop field-name="totalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromiseTotal" operator="get"/></calcop>
                                             </calculate>
                                         </iterate>
                                     <else>
@@ -801,9 +801,9 @@
             <iterate entry-name="inventoryItem" list-name="inventoryItemList">
                 <!-- for each inventoryItem only process if quantityLeftToProcess > 0 and inventoryItem.availableToPromise > 0 -->
                 <if-compare field-name="quantityLeftToProcess" operator="greater" value="0" type="Double">
-                    <if-compare field-name="inventoryItem.availableToPromise" operator="greater" value="0" type="Double">
-                        <if-compare-field field-name="quantityLeftToProcess" operator="greater" to-field-name="inventoryItem.availableToPromise" type="Double">
-                            <env-to-env env-name="inventoryItem.availableToPromise" to-env-name="currentQuantityToMove"/>
+                    <if-compare field-name="inventoryItem.availableToPromiseTotal" operator="greater" value="0" type="Double">
+                        <if-compare-field field-name="quantityLeftToProcess" operator="greater" to-field-name="inventoryItem.availableToPromiseTotal" type="Double">
+                            <env-to-env env-name="inventoryItem.availableToPromiseTotal" to-env-name="currentQuantityToMove"/>
                         <else>
                             <env-to-env env-name="quantityLeftToProcess" to-env-name="currentQuantityToMove"/>
                         </else>
@@ -812,26 +812,29 @@
                         <!-- create a new InventoryItem for the targetInventoryItem -->
                         <make-value entity-name="InventoryItem" map-name="inventoryItem" value-name="targetInventoryItem"/>
                         <field-to-field field-name="targetLocationSeqId" map-name="parameters" to-field-name="locationSeqId" to-map-name="targetInventoryItem"/>
-                        <calculate field-name="targetInventoryItem.availableToPromise" type="Double"><calcop field-name="currentQuantityToMove" operator="get"/></calculate>
-                        <calculate field-name="targetInventoryItem.quantityOnHand" type="Double"><calcop field-name="currentQuantityToMove" operator="get"/></calculate>
-
-                        <!-- okay, move it over, calculate new ATP, QOH -->
-                        <calculate field-name="inventoryItem.availableToPromise" type="Double">
-                            <calcop field-name="inventoryItem.availableToPromise" operator="subtract"><calcop field-name="currentQuantityToMove" operator="get"/></calcop>
-                        </calculate>
-                        <calculate field-name="inventoryItem.quantityOnHand" type="Double">
-                            <calcop field-name="inventoryItem.quantityOnHand" operator="subtract"><calcop field-name="currentQuantityToMove" operator="get"/></calcop>
-                        </calculate>
-
                         <!-- now that targetInventoryItem is populated with quantities, etc, call createInventoryItem service -->
                         <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
                         <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
-                            <!-- for now do nothing with the new inventoryItemId <result-to-result result-name="inventoryItemId" service-result-name="targetInventoryItemId"/> -->
+                            <result-to-field result-name="inventoryItemId" field-name="createTargetDetailMap.inventoryItemId"/>
                         </call-service>
 
-                        <!-- also need to store the origin inventoryItem, so do that now and do it through a service since there is one -->
-                        <set-service-fields map-name="inventoryItem" service-name="updateInventoryItem" to-map-name="updateInventoryItemMap"/>
-                        <call-service service-name="updateInventoryItem" in-map-name="updateInventoryItemMap"/>
+                        <!-- instead of updating InventoryItem, add an InventoryItemDetail for new Target InventoryItem -->
+                        <env-to-env env-name="currentQuantityToMove" to-env-name="createTargetDetailMap.availableToPromiseDiff"/>
+                        <env-to-env env-name="currentQuantityToMove" to-env-name="createTargetDetailMap.quantityOnHandDiff"/>
+                        <call-service service-name="createInventoryItemDetail" in-map-name="createTargetDetailMap"/>
+                        <clear-field field-name="createTargetDetailMap"/>
+
+                        <!-- okay, move it over, calculate new ATP, QOH -->
+                        <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+                        <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+                        <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
+                            <calcop field-name="currentQuantityToMove" operator="negative"/>
+                        </calculate>
+                        <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
+                            <calcop field-name="currentQuantityToMove" operator="negative"/>
+                        </calculate>
+                        <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+                        <clear-field field-name="createDetailMap"/>
                     </if-compare>
                 </if-compare>
             </iterate>
@@ -875,10 +878,7 @@
                 <!-- create a new InventoryItem for the targetInventoryItem -->
                 <make-value entity-name="InventoryItem" map-name="inventoryItem" value-name="targetInventoryItem"/>
                 <field-to-field field-name="targetLocationSeqId" map-name="parameters" to-field-name="locationSeqId" to-map-name="targetInventoryItem"/>
-                <calculate field-name="targetInventoryItem.availableToPromise" type="Double"><number value="0"/></calculate>
-                <calculate field-name="targetInventoryItem.quantityOnHand" type="Double"><number value="0"/></calculate>
-
-                <!-- now that targetInventoryItem is populated with initial quantities, etc, call createInventoryItem service -->
+                <!-- now that targetInventoryItem is populated with initial values, call createInventoryItem service -->
                 <set-service-fields map-name="targetInventoryItem" service-name="createInventoryItem" to-map-name="createInventoryItemMap"/>
                 <call-service service-name="createInventoryItem" in-map-name="createInventoryItemMap">
                     <result-to-field result-name="inventoryItemId" map-name="targetInventoryItem"/>
@@ -890,6 +890,7 @@
                     go through OrderItemInventoryRes and move each one over, starting with the older making
                     sure to stay within quantityOnHand
                 -->
+                <env-to-env env-name="inventoryItem.quantityOnHandTotal" to-env-name="remainingQuantityOnHand"/>
                 <iterate entry-name="orderItemInventoryResAndItemLocation" list-name="orderItemInventoryResAndItemLocationList">
                     <!-- see if there is enough physically moved over to move this reservation -->
                     <if-compare-field field-name="quantityLeftToProcess" operator="greater-equals" to-field-name="orderItemInventoryResAndItemLocation.quantity" type="Double">
@@ -899,25 +900,30 @@
                         <if>
                             <condition>
                                 <or>
-                                    <if-empty field-name="inventoryItem.quantityOnHand"/>
-                                    <if-compare-field field-name="orderItemInventoryRes.quantity" operator="greater" to-field-name="inventoryItem.quantityOnHand" type="Double"/>
+                                    <if-empty field-name="remainingQuantityOnHand"/>
+                                    <if-compare-field field-name="orderItemInventoryRes.quantity" operator="greater" to-field-name="remainingQuantityOnHand" type="Double"/>
                                 </or>
                             </condition>
                             <then>
                                 <field-to-list field-name="orderItemInventoryRes" list-name="insufficientQuantityOiirList"/>
                             </then>
                             <else>
-                                <!-- okay, move it over, start by calculating new QOHs -->
-                                <calculate field-name="inventoryItem.quantityOnHand" type="Double">
-                                    <calcop field-name="inventoryItem.quantityOnHand" operator="subtract"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
-                                </calculate>
-                                <calculate field-name="targetInventoryItem.quantityOnHand" type="Double">
-                                    <calcop field-name="targetInventoryItem.quantityOnHand" operator="add"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
-                                </calculate>
-
                                 <!-- make a new OIIR value object -->
                                 <make-value entity-name="OrderItemInventoryRes" map-name="orderItemInventoryRes" value-name="targetOrderItemInventoryRes"/>
                                 <field-to-field field-name="inventoryItemId" map-name="targetInventoryItem" to-map-name="targetOrderItemInventoryRes"/>
+
+                                <!-- okay, move it over, start by calculating new QOHs -->
+                                <!-- instead of updating InventoryItem, add an InventoryItemDetail -->
+                                <env-to-env env-name="inventoryItem.inventoryItemId" to-env-name="createDetailMap.inventoryItemId"/>
+                                <env-to-env env-name="targetInventoryItem.inventoryItemId" to-env-name="createTargetDetailMap.inventoryItemId"/>
+                                <calculate field-name="createDetailMap.quantityOnHandDiff" type="Double">
+                                    <calcop field-name="orderItemInventoryRes.quantity" operator="negative"/>
+                                </calculate>
+                                <calculate field-name="createTargetDetailMap.quantityOnHandDiff" type="Double">
+                                    <calcop field-name="orderItemInventoryRes.quantity" operator="get"/>
+                                </calculate>
+
+
 
                                 <!--
                                     note that nothing needs to be done with the OIIR.quantity because if all is
@@ -927,14 +933,19 @@
                                 <!-- if the OIIR has a quantityNotAvailable, move that over by adding it to the origin, and subtracting it from the target -->
                                 <if-not-empty field-name="orderItemInventoryRes.quantityNotAvailable">
                                     <if-compare field-name="orderItemInventoryRes.quantityNotAvailable" operator="greater" value="0" type="Double">
-                                        <calculate field-name="inventoryItem.availableToPromise" type="Double">
-                                            <calcop field-name="inventoryItem.availableToPromise" operator="add"><calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/></calcop>
+                                        <calculate field-name="createDetailMap.availableToPromiseDiff" type="Double">
+                                            <calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/>
                                         </calculate>
-                                        <calculate field-name="targetInventoryItem.availableToPromise" type="Double">
-                                            <calcop field-name="targetInventoryItem.availableToPromise" operator="subtract"><calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="get"/></calcop>
+                                        <calculate field-name="createTargetDetailMap.availableToPromiseDiff" type="Double">
+                                            <calcop field-name="orderItemInventoryRes.quantityNotAvailable" operator="negative"/>
                                         </calculate>
                                     </if-compare>
                                 </if-not-empty>
+
+                                <call-service service-name="createInventoryItemDetail" in-map-name="createDetailMap"/>
+                                <call-service service-name="createInventoryItemDetail" in-map-name="createTargetDetailMap"/>
+                                <clear-field field-name="createDetailMap"/>
+                                <clear-field field-name="createTargetDetailMap"/>
 
                                 <!-- create the new and remove the old OIIRs -->
                                 <create-value value-name="targetOrderItemInventoryRes"/>
@@ -944,18 +955,13 @@
                                 <calculate field-name="quantityLeftToProcess" type="Double">
                                     <calcop field-name="quantityLeftToProcess" operator="subtract"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
                                 </calculate>
+                                <calculate field-name="remainingQuantityOnHand" type="Double">
+                                    <calcop field-name="remainingQuantityOnHand" operator="subtract"><calcop field-name="orderItemInventoryRes.quantity" operator="get"/></calcop>
+                                </calculate>
                             </else>
                         </if>
                     </if-compare-field>
                 </iterate>
-
-                <!-- since we have changed the quantities on the new target inventory item (hopefully), store, it now... -->
-                <set-service-fields map-name="targetInventoryItem" service-name="updateInventoryItem" to-map-name="updateTargetInventoryItemMap"/>
-                <call-service service-name="updateInventoryItem" in-map-name="updateTargetInventoryItemMap"/>
-
-                <!-- also need to store the origin inventoryItem, so do that now and do it through a service since there is one -->
-                <set-service-fields map-name="inventoryItem" service-name="updateInventoryItem" to-map-name="updateInventoryItemMap"/>
-                <call-service service-name="updateInventoryItem" in-map-name="updateInventoryItemMap"/>
 
                 <!-- TODO: something with the insufficientQuantityOiirList, add to warningMessageList -->
                 <!-- <field-to-result field-name="insufficientQuantityOiirList"/> -->
