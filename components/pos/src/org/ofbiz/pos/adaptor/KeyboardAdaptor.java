@@ -1,5 +1,5 @@
 /*
- * $Id: KeyboardAdaptor.java,v 1.1 2004/08/06 20:55:09 ajzeneski Exp $
+ * $Id: KeyboardAdaptor.java,v 1.2 2004/08/07 01:23:07 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.pos.component.Input;
  * KeyboardAdaptor - Handles reading keyboard input
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.2
  */
 public class KeyboardAdaptor {
@@ -105,41 +105,47 @@ public class KeyboardAdaptor {
             keyCodeData.add(new Integer(keycode));
         }
 
-        private int checkDataType(int[] code, char[] chars) {
+        private int checkDataType(char[] chars) {            
             // test for scanner data
-            if (chars[0] == 2 && chars[chars.length - 1] == '\n') {
+            if (((int) chars[0]) == 2 && ((int) chars[chars.length - 1]) == 10) {
                 return SCANNER_DATA;
-            } else if (chars[0] == '%' && chars[chars.length -1] == '\n') {
+            // test for MSR data
+            } else if (((int) chars[0]) == 37 && ((int) chars[chars.length - 1]) == 10) {
                 return MSR_DATA;
             } else {
+            // otherwise it's keyboard data
                 return KEYBOARD_DATA;
             }
         }
 
-        private synchronized void sendData() {
-            if (KeyboardAdaptor.receivers.size() > 0 && keyCodeData.size() > 0) {
-                char[] chars = new char[keyCharData.size()];
-                int[] codes = new int[keyCodeData.size()];
-                for (int i = 0; i < keyCodeData.size(); i++) {
-                    Character ch = (Character) keyCharData.get(i);
-                    Integer itg = (Integer) keyCodeData.get(i);
-                    codes[i] = itg.intValue();
-                    chars[i] = ch.charValue();
-                }
-
-                Iterator ri = KeyboardAdaptor.receivers.keySet().iterator();
-                while (ri.hasNext()) {
-                    KeyboardReceiver receiver = (KeyboardReceiver) ri.next();
-                    int receiverType = ((Integer) receivers.get(receiver)).intValue();
-                    int thisDataType = this.checkDataType(codes, chars);
-                    if (receiverType == ALL_DATA || receiverType == thisDataType) {
-                        receiver.receiveData(codes, chars);
+        protected synchronized void sendData() {
+            if (KeyboardAdaptor.receivers.size() > 0) {
+                if (keyCharData.size() > 0) {
+                    char[] chars = new char[keyCharData.size()];
+                    int[] codes = new int[keyCodeData.size()];
+                    for (int i = 0; i < keyCodeData.size(); i++) {
+                        Character ch = (Character) keyCharData.get(i);
+                        Integer itg = (Integer) keyCodeData.get(i);
+                        codes[i] = itg.intValue();
+                        chars[i] = ch.charValue();
                     }
-                }
 
-                keyCharData = new LinkedList();
-                keyCodeData = new LinkedList();
-                lastKey = -1;
+                    Iterator ri = KeyboardAdaptor.receivers.keySet().iterator();
+                    while (ri.hasNext()) {
+                        KeyboardReceiver receiver = (KeyboardReceiver) ri.next();
+                        int receiverType = ((Integer) receivers.get(receiver)).intValue();
+                        int thisDataType = this.checkDataType(chars);
+                        if (receiverType == ALL_DATA || receiverType == thisDataType) {
+                            receiver.receiveData(codes, chars);
+                        }
+                    }
+
+                    keyCharData = new LinkedList();
+                    keyCodeData = new LinkedList();
+                    lastKey = -1;
+                }
+            } else {
+                Debug.logWarning("No receivers configured for key input", module);
             }
         }
 
@@ -183,18 +189,18 @@ public class KeyboardAdaptor {
         }
 
         public void keyTyped(KeyEvent e) {
-            Debug.log("Key Typed : " + e.getKeyChar(), module);
+            //Debug.log("Key Typed : " + e.getKeyChar(), module);
             char keyChar = e.getKeyChar();
             int keyCode = e.getKeyCode();
             k.receiveKey(keyCode, keyChar);
         }
 
         public void keyPressed(KeyEvent e) {            
-            Debug.log("Key Pressed : " + e.getKeyCode(), module);
+            //Debug.log("Key Pressed : " + e.getKeyCode(), module);
         }
 
         public void keyReleased(KeyEvent e) {
-            Debug.log("Key Released : " + e.getKeyCode(), module);
+            //Debug.log("Key Released : " + e.getKeyCode(), module);
         }
     }
 }

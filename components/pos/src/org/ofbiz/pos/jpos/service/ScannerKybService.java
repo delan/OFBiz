@@ -1,5 +1,5 @@
 /*
- * $Id: ScannerKybService.java,v 1.2 2004/08/06 23:45:32 ajzeneski Exp $
+ * $Id: ScannerKybService.java,v 1.3 2004/08/07 01:23:08 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.2
  */
 public class ScannerKybService extends BaseKybService implements jpos.services.ScannerService18, KeyboardReceiver {
@@ -106,18 +106,6 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
         this.autoDisable = b;
     }
 
-    public int getDataCount() throws JposException {
-        return this.scannedData.length;
-    }
-
-    public boolean getDataEventEnabled() throws JposException {
-        return this.eventEnabled;
-    }
-
-    public void setDataEventEnabled(boolean b) throws JposException {
-        this.eventEnabled = b;
-    }
-
     public boolean getDecodeData() throws JposException {
         return this.decodeData;
     }
@@ -167,10 +155,16 @@ public class ScannerKybService extends BaseKybService implements jpos.services.S
         }
 
         // parse the scanned data
-        this.scannedData = str.trim().getBytes();
-        if (this.decodeData) {
-            this.codeId = str.substring(0, 1).toUpperCase();
-            this.scannedDataLabel = str.substring(1).getBytes();
+        if (str != null) {
+            str = str.trim();        
+            this.scannedData = str.getBytes();
+            if (this.decodeData) {
+                this.codeId = str.substring(0, 1).toUpperCase();
+                this.scannedDataLabel = str.substring(1).getBytes();
+            }
         }
+        System.out.println("Data 1 : " + new String(this.scannedDataLabel));
+        System.out.println("Data 2 : " + new String(this.scannedData));
+        System.out.println("CodeID : " + new String(this.codeId));
     }
 }
