@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreSurveyWrapper.java,v 1.1 2003/11/19 06:52:16 ajzeneski Exp $
+ * $Id: ProductStoreSurveyWrapper.java,v 1.2 2003/12/05 22:56:28 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Map;
  * Product Store Survey Wrapper
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class ProductStoreSurveyWrapper extends SurveyWrapper {
@@ -43,16 +43,17 @@ public class ProductStoreSurveyWrapper extends SurveyWrapper {
 
     protected ProductStoreSurveyWrapper() {}
 
-    public ProductStoreSurveyWrapper(GenericValue productStoreSurveyAppl, Map passThru) {
+    public ProductStoreSurveyWrapper(GenericValue productStoreSurveyAppl, String partyId, Map passThru) {
         this.productStoreSurveyAppl = productStoreSurveyAppl;
 
         this.passThru = passThru;
         if (this.productStoreSurveyAppl != null) {
+            this.partyId = partyId;
             this.delegator = productStoreSurveyAppl.getDelegator();
             this.surveyId = productStoreSurveyAppl.getString("surveyId");
             this.templatePath = productStoreSurveyAppl.getString("templatePath");
         } else {
-            throw new org.ofbiz.base.util.GeneralRuntimeException("Required field productStoreSurveyAppl missing");
+            throw new IllegalArgumentException("Required parameter productStoreSurveyAppl missing");
         }
     }
 }
