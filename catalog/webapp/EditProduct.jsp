@@ -50,6 +50,8 @@
     primaryProductCategory = product.getRelatedOne("PrimaryProductCategory");
   else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0)
     primaryProductCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
+
+  if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 %>
 
 <div class="head1">Edit Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
@@ -261,7 +263,7 @@
     <td><%if(category!=null){%><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%></ofbiz:url>" class="buttontext"><%=category.getString("description")%></a><%}%>&nbsp;</td>
     <td><div class='tabletext'><%=productCategoryMember.getTimestamp("fromDate")%></div></td>
     <td>
-      <a href="<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId") + "&FROM_DATE=" + UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%></ofbiz:url>" class="buttontext">
+      <a href="<ofbiz:url>/UpdateProductCategoryMember?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_CATEGORY_ID=<%=productCategoryMember.getString("productCategoryId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(productCategoryMember.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
       [Delete]</a>
     </td>
   </tr>
@@ -271,6 +273,7 @@
 <form method="POST" action="<ofbiz:url>/UpdateProductCategoryMember</ofbiz:url>">
   <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
   <input type="hidden" name="UPDATE_MODE" value="CREATE">
+  <input type="hidden" name="useValues" value="true">
   Add ProductCategoryMember (enter Category ID):
     <select name="PRODUCT_CATEGORY_ID">
     <%Iterator it = UtilMisc.toIterator(categoryCol);%>
