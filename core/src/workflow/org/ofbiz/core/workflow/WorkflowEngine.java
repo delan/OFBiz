@@ -230,7 +230,8 @@ class WorkflowRunner extends AbstractJob {
         } catch (Exception e) {
             e.printStackTrace();
             Debug.logError(e);
-            requester.receiveResult(null);
+            if (requester != null)
+                requester.receiveResult(null);
         }
         finish();
     }
