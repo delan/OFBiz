@@ -108,16 +108,6 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         if (activityId != null)
             dataMap.put("workflowActivityId", activityId);
 
-        /*
-        TransactionManager tm = TransactionFactory.getTransactionManager();
-        Transaction parentTrans = null;
-        try {
-            parentTrans = tm.suspend();
-        } catch (SystemException se) {
-            Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
-        }
-        */
-
         try {
             Collection c = new ArrayList();
             dataObject = getDelegator().makeValue("WorkEffort", dataMap);
@@ -127,16 +117,6 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
-
-        /*
-        try {
-            tm.resume(parentTrans);
-        } catch (InvalidTransactionException ite) {
-            Debug.logError(ite, module);
-        } catch (SystemException se) {
-            Debug.logError(se, module);
-        }
-        */
     }
 
     /**
