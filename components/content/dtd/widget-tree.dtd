@@ -94,6 +94,10 @@
         service-name CDATA #REQUIRED
         result-map-name CDATA #IMPLIED
         auto-field-map ( true | false ) "true"
+        result-map-list-name CDATA #IMPLIED
+        result-map-list-iterator-name CDATA #IMPLIED
+        result-map-value-name CDATA #IMPLIED
+        value-name CDATA #IMPLIED
     >
     
     <!ELEMENT entity-one ( field-map*, select-field* )>
@@ -102,6 +106,7 @@
         value-name CDATA #REQUIRED
         use-cache ( true | false ) "false"
         auto-field-map ( true | false ) "true"
+        value-name CDATA #IMPLIED
     >
     
     <!ELEMENT entity-and ( field-map+, select-field*, order-by*  )>
@@ -109,7 +114,6 @@
         entity-name CDATA #REQUIRED
         use-cache ( true | false ) "false"
         filter-by-date ( true | false | by-name ) "false"
-        list-name CDATA #REQUIRED
     >
 
     <!ELEMENT order-by EMPTY>
@@ -151,7 +155,6 @@
         filter-by-date ( true | false | by-name ) "false"
         distinct ( true | false ) "false"
         delegator-name CDATA #IMPLIED
-        list-name CDATA #REQUIRED
     >
         <!ELEMENT condition-list ( ( condition-expr | condition-list )+ )>
         <!ATTLIST condition-list
