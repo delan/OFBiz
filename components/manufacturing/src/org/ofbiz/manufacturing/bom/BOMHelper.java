@@ -8,6 +8,7 @@ package org.ofbiz.manufacturing.bom;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Iterator;
 import java.util.ArrayList;
 
@@ -17,7 +18,8 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.service.LocalDispatcher;
-
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.security.Security;
 
 /** Helper class containing static method useful when dealing
  * with product's bills of materials.
@@ -25,6 +27,8 @@ import org.ofbiz.service.LocalDispatcher;
  * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
  */
 public class BOMHelper {
+    
+    public static final String module = BOMHelper.class.getName();
     
     /** Creates a new instance of BOMHelper */
     public BOMHelper() {
@@ -117,6 +121,39 @@ public class BOMHelper {
             }
         }
         return duplicatedNode;
+    }
+
+    public static String createProductionRunsForOrders(javax.servlet.http.HttpServletRequest request, javax.servlet.http.HttpServletResponse response) {
+        String errMsg = "";
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        Security security = (Security) request.getAttribute("security");
+        GenericValue userLogin = (GenericValue)request.getSession().getAttribute("userLogin");
+
+        String shipmentId = request.getParameter("shipmentId");
+        //String orderId = request.getParameter("orderId");
+        //String orderItemSeqId = request.getParameter("orderItemSeqId");
+
+        try {
+        List shipmentPlans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("shipmentId", shipmentId));
+        Iterator shipmentPlansIt = shipmentPlans.iterator();
+        while (shipmentPlansIt.hasNext()) {
+            GenericValue shipmentPlan = (GenericValue)shipmentPlansIt.next();
+            GenericValue orderItem = shipmentPlan.getRelatedOne("OrderItem");
+    
+            List productionRuns = delegator.findByAndCache("WorkOrderItemFulfillment", UtilMisc.toMap("orderId", shipmentPlan.getString("orderId"), "orderItemSeqId", shipmentPlan.getString("orderItemSeqId")));
+            if (productionRuns != null && productionRuns.size() > 0) {
+                Debug.logError("Production Run for order item (" + orderItem.getString("orderId") + "/" + orderItem.getString("orderItemSeqId") + ") not created.", module);
+                continue;
+            }
+            Map result = dispatcher.runSync("createProductionRunsForOrder", UtilMisc.toMap("productId", orderItem.getString("productId"), "quantity", shipmentPlan.getDouble("quantity"), "orderId", shipmentPlan.getString("orderId"), "orderItemSeqId", shipmentPlan.getString("orderItemSeqId"), "userLogin", userLogin));
+        }
+        } catch (Exception e) {
+            // if there is an exception for either, the other probably wont work
+            Debug.logWarning(e, module);
+        }
+
+        return "success";
     }
 
 }
