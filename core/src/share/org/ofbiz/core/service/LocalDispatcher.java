@@ -55,7 +55,7 @@ public class LocalDispatcher {
                 loader = this.getClass().getClassLoader();
             }
         }
-        ctx = new DispatchContext(name,readerURLs,loader);
+        ctx = new DispatchContext(name,readerURLs,loader,this);
         init(name, delegator, ctx);        
     }
     

@@ -6,6 +6,7 @@ package org.ofbiz.core.service;
 
 import java.net.*;
 import java.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -42,15 +43,17 @@ public class DispatchContext {
     protected Map attributes;
     protected Collection readers;
     protected ClassLoader loader;
+    protected LocalDispatcher dispatcher;
     
     /** Creates new DispatchContext
      *@param readers a collection of reader URLs
      *@param loader the classloader to use for dispatched services
      */
-    public DispatchContext(String name, Collection readers, ClassLoader loader) {
+    public DispatchContext(String name, Collection readers, ClassLoader loader, LocalDispatcher dispatcher) {
         this.name = name;
         this.readers = readers;
         this.loader = loader;
+        this.dispatcher = dispatcher;
         this.modelServices = new HashMap();
         this.attributes = new HashMap();
         this.addReaders(readers);
@@ -96,6 +99,20 @@ public class DispatchContext {
         if ( !modelServices.containsKey(serviceName) )
             throw new GenericServiceException("Illegal service name.");
         return (ModelService)modelServices.get(serviceName);
+    }
+    
+    /** Gets the LocalDispatcher used to create this context 
+     *@return LocalDispatcher that was used to create this context
+     */
+    public LocalDispatcher getLocalDispatcher() {
+        return this.dispatcher;
+    }
+    
+    /** Gets the GenericDelegator associated with this context/dispatcher
+     *@return GenericDelegator associated with this context
+     */
+    public GenericDelegator getDelegator() {
+        return dispatcher.getDelegator();
     }
     
     private void addReaders(Collection readerURLs) {

@@ -68,6 +68,15 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             WfAssignment assign = WfFactory.newWfAssignment(this,resource);
             assignments.add(assign);
         }
+        
+        // Set the Parent Workeffort ID for this activity
+        try {
+            dataObject.set("workEffortParentId",process.getRuntimeObject().get("workEffortId"));
+            dataObject.store();
+        }
+        catch ( GenericEntityException e ) {
+            throw new WfException(e.getMessage(),e);
+        }
     }
     
     /**
