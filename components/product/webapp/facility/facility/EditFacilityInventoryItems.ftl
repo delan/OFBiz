@@ -22,7 +22,7 @@
  *@author     David E. Jones
  *@author     Brad Steiner
  *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 
@@ -103,11 +103,11 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <td>&nbsp;</td>
             </#if>
             <td>
-            <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}&facilityId=${facilityId}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">
             [Edit]</a>
             </td>
             <td>
-            <a href="<@ofbizUrl>/TransferInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}&facilityId=${facilityId}</@ofbizUrl>" class="buttontext">
+            <a href="<@ofbizUrl>/TransferInventoryItem?facilityId=${facilityId}&inventoryItemId=${(inventoryItem.inventoryItemId)?if_exists}</@ofbizUrl>" class="buttontext">
             [Transfer]</a>
             </td>
             <#-- <td>
