@@ -437,6 +437,7 @@ public class PaymentGatewayServices {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
             // get the valid payment prefs
             List othExpr = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.EQUALS, "EFT_ACCOUNT"));
+            othExpr.add(new EntityExpr("paymentMethodTypeId", EntityOperator.EQUALS, "CREDIT_CARD"));
             othExpr.add(new EntityExpr("paymentMethodTypeId", EntityOperator.EQUALS, "GIFT_CARD"));
             EntityCondition con1 = new EntityConditionList(othExpr, EntityJoinOperator.OR);
 
@@ -489,10 +490,11 @@ public class PaymentGatewayServices {
                 paymentConfig = paymentSettings.getString("paymentPropertiesPath");
                 serviceName = paymentSettings.getString("paymentService");
                 if (serviceName == null) {
-                    Debug.logError("Service name is null for payment setting; cannot process for : " + paymentPref, module);
+                    Debug.logWarning("No payment release service for - " + paymentPref.getString("paymentMethodTypeId"), module);
+                    continue; // no release service available -- has been logged
                 }
             } else {
-                Debug.logError("Invalid payment settings entity, no payment release settings found for : " + paymentPref, module);
+                Debug.logWarning("No payment release settings found for - " + paymentPref.getString("paymentMethodTypeId"), module);
                 continue; // no release service available -- has been logged
             }
 
