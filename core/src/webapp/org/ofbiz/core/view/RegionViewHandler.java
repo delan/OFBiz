@@ -68,13 +68,16 @@ public class RegionViewHandler implements ViewHandler {
         // so let it know that it came from the control servlet
 
         if (request == null)
-            throw new ViewHandlerException("Null HttpServletRequest object");
+            throw new ViewHandlerException("The HttpServletRequest object was null, how did that happen?");
         if (viewSource == null || viewSource.length() == 0)
-            throw new ViewHandlerException("Null or empty source");
+            throw new ViewHandlerException("View source name was null or empty, but must be specified");
 
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
         
         Region region = RegionManager.getRegion(regionFile, viewSource);
+        if (region == null) {
+            throw new ViewHandlerException("Error: could not find region with name " + viewSource);
+        }
         
         try {
             region.render(request, response);
