@@ -51,8 +51,8 @@
   <!ATTLIST field
     name CDATA #REQUIRED
     position CDATA #REQUIRED
-    length CDATA #REQUIRED
-    type CDATA #IMPLIED
+    length CDATA #IMPLIED
+    type CDATA #REQUIRED
     format CDATA #IMPLIED
     valid-exp CDATA #IMPLIED
     description CDATA #IMPLIED
