@@ -24,10 +24,13 @@
 package org.ofbiz.product.product;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.jsp.PageContext;
@@ -40,11 +43,11 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.product.config.ProductConfigWrapper;
+import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
-import org.ofbiz.product.config.ProductConfigWrapper;
-import org.ofbiz.product.config.ProductConfigWrapper.ConfigOption;
 
 /**
  * Product Worker class to reduce code in JSPs.
@@ -285,6 +288,106 @@ public class ProductWorker {
         } catch (GenericEntityException e) {
             Debug.logWarning(e, module);
         }
+    }
+    
+    /**
+     * Gets ProductFeature GenericValue for all distinguishing features of a variant product. 
+     * Distinguishing means all features that are selectable on the corresponding virtual product and standard on the variant plus all DISTINGUISHING_FEAT assoc type features on the variant. 
+     */
+    public static Set getVariantDistinguishingFeatures(GenericValue variantProduct) throws GenericEntityException {
+        if (variantProduct == null) {
+            return new HashSet();
+        }
+        
+        if (!"Y".equals(variantProduct.getString("isVariant"))) {
+            throw new IllegalArgumentException("Cannot get distinguishing features for a product that is not a variant (ie isVariant!=Y).");
+        }
+        GenericDelegator delegator = variantProduct.getDelegator();
+        String virtualProductId = getVariantVirtualId(variantProduct);
+        
+        // find all selectable features on the virtual product that are also standard features on the variant
+        Set distFeatures = new HashSet();
+        
+        List variantDistinguishingFeatures = delegator.findByAndCache("ProductFeatureAndAppl", UtilMisc.toMap("productId", variantProduct.get("productId"), "productFeatureApplTypeId", "DISTINGUISHING_FEAT"));
+        // Debug.logInfo("Found variantDistinguishingFeatures: " + variantDistinguishingFeatures, module);
+
+        Iterator variantDistinguishingFeatureIter = UtilMisc.toIterator(EntityUtil.filterByDate(variantDistinguishingFeatures));
+        while (variantDistinguishingFeatureIter != null && variantDistinguishingFeatureIter.hasNext()) {
+            GenericValue variantDistinguishingFeature = (GenericValue) variantDistinguishingFeatureIter.next();
+            GenericValue dummyFeature = delegator.makeValue("ProductFeature", null);
+            dummyFeature.setAllFields(variantDistinguishingFeature, true, null, null);
+            distFeatures.add(dummyFeature);
+        }
+
+        List virtualSelectableFeatures = delegator.findByAndCache("ProductFeatureAndAppl", UtilMisc.toMap("productId", virtualProductId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"));
+        // Debug.logInfo("Found virtualSelectableFeatures: " + virtualSelectableFeatures, module);
+
+        Iterator virtualSelectableFeatureIter = UtilMisc.toIterator(EntityUtil.filterByDate(virtualSelectableFeatures));
+        Set virtualSelectableFeatureIds = new HashSet();
+        while (virtualSelectableFeatureIter != null && virtualSelectableFeatureIter.hasNext()) {
+            GenericValue virtualSelectableFeature = (GenericValue) virtualSelectableFeatureIter.next();
+            virtualSelectableFeatureIds.add(virtualSelectableFeature.get("productFeatureId"));
+        }
+        
+        List variantStandardFeatures = delegator.findByAndCache("ProductFeatureAndAppl", UtilMisc.toMap("productId", variantProduct.get("productId"), "productFeatureApplTypeId", "STANDARD_FEATURE"));
+        // Debug.logInfo("Found variantStandardFeatures: " + variantStandardFeatures, module);
+
+        Iterator variantStandardFeatureIter = UtilMisc.toIterator(EntityUtil.filterByDate(variantStandardFeatures));
+        while (variantStandardFeatureIter != null && variantStandardFeatureIter.hasNext()) {
+            GenericValue variantStandardFeature = (GenericValue) variantStandardFeatureIter.next();
+            if (virtualSelectableFeatureIds.contains(variantStandardFeature.get("productFeatureId"))) {
+                GenericValue dummyFeature = delegator.makeValue("ProductFeature", null);
+                dummyFeature.setAllFields(variantStandardFeature, true, null, null);
+                distFeatures.add(dummyFeature);
+            }
+        }
+        
+        return distFeatures;
+    }
+
+    /** 
+     *  Get the name to show to the customer for GWP alternative options.
+     *  If the alternative is a variant, find the distinguishing features and show those instead of the name; if it is not a variant then show the PRODUCT_NAME content.
+     */
+    public static String getGwpAlternativeOptionName(GenericDelegator delegator, String alternativeOptionProductId, Locale locale) {
+        try {
+            GenericValue alternativeOptionProduct = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", alternativeOptionProductId));
+            if (alternativeOptionProduct != null) {
+                if ("Y".equals(alternativeOptionProduct.getString("isVariant"))) {
+                    Set distFeatures = getVariantDistinguishingFeatures(alternativeOptionProduct);
+                    if (distFeatures != null && distFeatures.size() > 0) {
+                        // Debug.logInfo("Found distinguishing features: " + distFeatures, module);
+                        
+                        StringBuffer nameBuf = new StringBuffer();
+                        Iterator distFeatIter = distFeatures.iterator();
+                        while (distFeatIter.hasNext()) {
+                            GenericValue productFeature = (GenericValue) distFeatIter.next();
+                            GenericValue productFeatureType = productFeature.getRelatedOneCache("ProductFeatureType");
+                            if (productFeatureType != null) {
+                                nameBuf.append(productFeatureType.get("description", locale));
+                                nameBuf.append(":");
+                            }
+                            nameBuf.append(productFeature.get("description", locale));
+                            if (distFeatIter.hasNext()) {
+                                nameBuf.append(", ");
+                            }
+                        }
+                        return nameBuf.toString();
+                    }
+                }
+
+                // got to here, default to PRODUCT_NAME
+                String alternativeProductName = ProductContentWrapper.getProductContentAsText(alternativeOptionProduct, "PRODUCT_NAME", locale);
+                // Debug.logInfo("Using PRODUCT_NAME: " + alternativeProductName, module);
+                return alternativeProductName;
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        } catch (Exception e) {
+            Debug.logError(e, module);
+        }
+        // finally fall back to the ID in square braces
+        return "[" + alternativeOptionProductId + "]";
     }
 
     public static Map getOptionalProductFeatures(GenericDelegator delegator, String productId) {

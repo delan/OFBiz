@@ -181,6 +181,7 @@
     <ProductFeatureType description="Gift Wrap" hasTable="N" parentTypeId="" productFeatureTypeId="GIFT_WRAP"/>
     <ProductFeatureType description="Hardware Feature" hasTable="N" parentTypeId="" productFeatureTypeId="HARDWARE_FEATURE"/>
     <ProductFeatureType description="Hazmat" hasTable="N" parentTypeId="" productFeatureTypeId="HAZMAT"/>
+    <ProductFeatureType description="License" hasTable="N" parentTypeId="" productFeatureTypeId="LICENSE"/>
     <ProductFeatureType description="Origin" hasTable="N" parentTypeId="" productFeatureTypeId="ORIGIN"/>
     <ProductFeatureType description="Other Feature" hasTable="N" parentTypeId="" productFeatureTypeId="OTHER_FEATURE"/>
     <ProductFeatureType description="Product Quality" hasTable="N" parentTypeId="" productFeatureTypeId="PRODUCT_QUALITY"/>
