@@ -58,7 +58,7 @@ public class CallSimpleMapProcessor extends MethodOperation {
 
         errorListName = element.getAttribute("error-list-name");
         if (errorListName == null || errorListName.length() == 0)
-            errorListName = "_error_list_";
+            errorListName = "error_list";
         
         Element simpleMapProcessorElement = UtilXml.firstChildElement(element, "simple-map-processor");
         if (simpleMapProcessorElement != null) {

@@ -57,7 +57,7 @@ public class CheckErrors extends MethodOperation {
             errorCode = "error";
         errorListName = element.getAttribute("error-list-name");
         if (errorListName == null || errorListName.length() == 0)
-            errorListName = "_error_list_";
+            errorListName = "error_list";
 
         errorPrefix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-prefix"), "check.error.prefix");
         errorSuffix = new FlexibleMessage(UtilXml.firstChildElement(element, "error-suffix"), "check.error.suffix");

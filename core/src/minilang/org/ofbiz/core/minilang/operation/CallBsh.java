@@ -57,7 +57,7 @@ public class CallBsh extends MethodOperation {
         
         errorListName = element.getAttribute("error-list-name");
         if (errorListName == null || errorListName.length() == 0) {
-            errorListName = "_error_list_";
+            errorListName = "error_list";
         }
         
         if (inline != null && inline.length() > 0) {
