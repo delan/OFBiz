@@ -119,6 +119,7 @@
             <input type="hidden" name="contentIdTo_o_${rowCount}" value="${subContentId}" />
             <input type="hidden" name="contentId_o_${rowCount}" value="${contentId}" />
             <input type="hidden" name="contentAssocTypeId_o_${rowCount}" value="PUBLISH_LINK" />
+            <input type="hidden" name="statusId_o_${rowCount}" value="BLOG_SUBMITTED" />
        </tr>
        <#assign rowCount = rowCount + 1 />
        <@publishContent forumId=subContentId contentId=contentId indentIndex=(indentIndex + 1)/>

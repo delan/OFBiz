@@ -20,15 +20,15 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
 <#include "publishlib.ftl" />
 <#--
 <#import "publishlib.ftl" as publish/>
-${menuAuxWrapper.renderMenuString()}
 -->
+${menuWrapper.renderMenuString()}
 <#-- Main Heading -->
 <table width='100%' cellpadding='0' cellspacing='0' border='0'>
   <tr>
