@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -305,10 +305,7 @@ public class RequestHandler implements Serializable {
             doRequest(request, response, nextView, userLogin, delegator);
             return; // this just to be safe; not really needed
 
-        }
-
-        // handle views
-        else {
+        } else { // handle views
             // first invoke the post-processor events.
             Collection postProcEvents = requestManager.getPostProcessor();
             if (postProcEvents != null) {
@@ -331,40 +328,30 @@ public class RequestHandler implements Serializable {
                 }
             }
 
-            // check for a url for redirection
             if (nextView != null && nextView.startsWith("url:")) {
+                // check for a url for redirection
                 Debug.logInfo("[RequestHandler.doRequest]: Response is a URL redirect.", module);
                 nextView = nextView.substring(4);
                 callRedirect(nextView, response);
-            }
-
-            // check for a Request redirect
-            else if (nextView != null && nextView.startsWith("request-redirect:")) {
+            } else if (nextView != null && nextView.startsWith("request-redirect:")) {
+                // check for a Request redirect
                 Debug.logInfo("[RequestHandler.doRequest]: Response is a Request redirect.", module);
                 nextView = nextView.substring(17);
                 callRedirect(makeLinkWithQueryString(request, response, "/" + nextView), response);
-            }
-
-            // check for a View
-            else if (nextView != null && nextView.startsWith("view:")) {
+            } else if (nextView != null && nextView.startsWith("view:")) {
+                // check for a View
                 Debug.logInfo("[RequestHandler.doRequest]: Response is a view.", module);
                 nextView = nextView.substring(5);
                 renderView(nextView, requestManager.allowExtView(requestUri), request, response);
-            }
-
-            // check for a no dispatch return (meaning the return was processed by the event
-            else if (nextView != null && nextView.startsWith("none:")) {
+            } else if (nextView != null && nextView.startsWith("none:")) {
+                // check for a no dispatch return (meaning the return was processed by the event
                 Debug.logInfo("[RequestHandler.doRequest]: Response is handled by the event.", module);
-            }
-
-            // a page request
-            else if (nextView != null) {
+            } else if (nextView != null) {
+                // a page request
                 Debug.logInfo("[RequestHandler.doRequest]: Response is a page [" + nextView + "]", module);
                 renderView(nextView, requestManager.allowExtView(requestUri), request, response);
-            }
-
-            // unknown request
-            else {
+            } else {
+                // unknown request
                 throw new RequestHandlerException("Illegal response; handler could not process [" + eventReturnString + "].");
             }
         }
@@ -688,9 +675,14 @@ public class RequestHandler implements Serializable {
             if (response != null && !forceManualJsessionid) {
                 encodedUrl = response.encodeURL(newURL.toString());
             } else {
-                String sessionId = request.getSession().getId();
-                newURL.append(";jsessionid=");
-                newURL.append(sessionId);
+                String sessionId = ";jsessionid=" + request.getSession().getId();
+                // this should be inserted just after the "?" for the parameters, if there is one, or at the end of the string
+                int questionIndex = newURL.indexOf("?");
+                if (questionIndex == -1) {
+                    newURL.append(sessionId);
+                } else {
+                    newURL.insert(questionIndex, sessionId);
+                }
                 encodedUrl = newURL.toString();
             }
         } else {
