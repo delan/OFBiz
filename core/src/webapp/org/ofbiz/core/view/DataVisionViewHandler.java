@@ -74,16 +74,20 @@ public class DataVisionViewHandler implements ViewHandler {
             String datasourceName = delegator.getEntityHelperName(info);
 
             Report report = new Report();
+            report.setDatabaseConnection(ConnectionFactory.getConnection(datasourceName));
 
+            /* NOTE: this is the old code that is no londer needed because of the new setDatabaseConnection method
             report.setDatabasePassword(""); // password can be bogus because we are using an OFBiz connection...
             Debug.logInfo("before creating database");
             DataVisionDatabase dvDb = new DataVisionDatabase(datasourceName, report);
 
             report.setDatabase(dvDb);
+            */
+
             Debug.logInfo("before reading file");
             report.readFile(context.getRealPath(page)); // Must be after password
 
-            /* NO support for param file yet...
+            /* NO support for param file yet... need to pull in page params or something
              if (there_are_params_in_report) {
              // This must come after reading the report file
              report.setParameterXMLFile(param_xml_file_name);
@@ -98,8 +102,8 @@ public class DataVisionViewHandler implements ViewHandler {
             throw new ViewHandlerException("User cancelled report", e);
         } catch (FileNotFoundException e) {
             throw new ViewHandlerException("Report file not found [" + page + "]", e);
-        } catch (ClassNotFoundException e) {
-            throw new ViewHandlerException("Class not found in report", e);
+        //} catch (ClassNotFoundException e) {
+        //    throw new ViewHandlerException("Class not found in report", e);
         } catch (IOException ie) {
             throw new ViewHandlerException("IO Error in region", ie);
         } catch (java.sql.SQLException e) {
