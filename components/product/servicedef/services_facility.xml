@@ -116,7 +116,7 @@
     </service>
 
     <service name="reserveProductInventory" engine="simple"
-            location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
+            location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="reserveProductInventory" auth="true">
         <description>Reserve Inventory for a Product.
             If requireInventory is Y the quantity not reserved is returned, if N then a negative
             availableToPromise will be used to track quantity ordered beyond what is in stock.
@@ -131,7 +131,7 @@
         <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="reserveProductInventoryByFacility" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
+                location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="reserveProductInventory" auth="true">
         <description>Reserve Inventory for a Product By Facility
             If requireInventory is Y the quantity not reserved is returned, if N then a negative
             availableToPromise will be used to track quantity ordered beyond what is in stock.
@@ -147,7 +147,7 @@
         <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="reserveProductInventoryByContainer" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="reserveProductInventory" auth="true">
+                location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="reserveProductInventory" auth="true">
         <description>Reserve Inventory for a Product By Container
             If requireInventory is Y the quantity not reserved is returned, if N then a negative
             availableToPromise will be used to track quantity ordered beyond what is in stock.
@@ -163,7 +163,7 @@
         <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="reserveOrderItemInventory" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="reserveOrderItemInventory" auth="true">
+                location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="reserveOrderItemInventory" auth="true">
         <description>Create OrderItemInventoryRes or increment existing reserved quantity.</description>
         <auto-attributes mode="IN" entity-name="OrderItemInventoryRes" include="pk" optional="false"/>
         <auto-attributes mode="IN" entity-name="OrderItemInventoryRes" include="nonpk" optional="true">
@@ -172,7 +172,7 @@
         <override name="quantity" optional="false"/>
     </service>
     <service name="cancelOrderInventoryReservation" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="cancelOrderInventoryReservation" auth="true">
+                location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="cancelOrderInventoryReservation" auth="true">
         <description>
             Iterates through each OrderItemInventoryRes on each OrderItem for the order
             with the given orderId and cancels the reservation by changing the status
@@ -184,14 +184,14 @@
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="true"/>
     </service>
     <service name="cancelOrderItemInvResQty" engine="simple"
-            location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="cancelOrderItemInvResQty" auth="true">
+            location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="cancelOrderItemInvResQty" auth="true">
         <description>Cancel a specific quantity for an order item</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="cancelQuantity" type="Double" mode="IN" optional="true"/>
     </service>
     <service name="cancelOrderItemInventoryRes" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="cancelOrderItemInventoryRes" auth="true">
+                location="org/ofbiz/product/inventory/InventoryReserveServices.xml" invoke="cancelOrderItemInventoryRes" auth="true">
         <description>Cancels an inventory reservation</description>
         <auto-attributes entity-name="OrderItemInventoryRes" include="pk" mode="IN" optional="false"/>
         <attribute name="cancelQuantity" type="Double" mode="IN" optional="true"/>
@@ -243,7 +243,7 @@
     </service>
 
     <service name="issueImmediatelyFulfilledOrder" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="issueImmediatelyFulfilledOrder" auth="true">
+                location="org/ofbiz/product/inventory/InventoryIssueServices.xml" invoke="issueImmediatelyFulfilledOrder" auth="true">
         <description>
             Issues the Inventory for an Order that was Immediately Fulfilled, like in a POS environment.
             Note that this skips the normal inventory reservation process, and the shipment process (no shipment is created).
@@ -251,7 +251,7 @@
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="issueImmediatelyFulfilledOrderItem" engine="simple"
-                location="org/ofbiz/product/inventory/InventoryServices.xml" invoke="issueImmediatelyFulfilledOrderItem" auth="true">
+                location="org/ofbiz/product/inventory/InventoryIssueServices.xml" invoke="issueImmediatelyFulfilledOrderItem" auth="true">
         <description>
             Issues the Inventory for an Order Item that was Immediately Fulfilled for more info see the issueImmediatelyFulfilledOrder service.
         </description>
@@ -259,6 +259,7 @@
         <attribute name="orderItemSeqId" type="String" mode="IN" optional="false"/>
         <attribute name="orderHeader" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="orderItem" type="GenericValue" mode="IN" optional="true"/>
+        <attribute name="productStore" type="GenericValue" mode="IN" optional="true"/>
     </service>
 
     <service name="createProductFacility" default-entity-name="ProductFacility" engine="simple"
