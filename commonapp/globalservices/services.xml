@@ -63,6 +63,7 @@
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="completeActivity">
         <description>Attempt to complete a workflow activity</description>
         <attribute name="workEffortId" type="String" mode="IN"/> 
+        <attribute name="result" type="Map" mode="IN" optional="true"/>
     </service>
     <service name="changeActivityState" engine="java"
     location="org.ofbiz.core.workflow.WorkflowClient" invoke="changeActivityState">
@@ -84,6 +85,7 @@
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN"/>	  
+        <attribute name="result" type="Map" mode="IN" optional="true"/>
     </service>  
     <service name="assignApprover" engine="java" 
     location="ServiceTest" invoke="testOne" validate="false"/>    
@@ -115,5 +117,19 @@
 	    <description>Change the status of an existing order</description>
 		<attribute name="orderId" type="String" mode="IN"/>
 		<attribute name="statusId" type="String" mode="IN"/>
+    </service>
+    <service name="addOrderRole" engine="java"
+    location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">
+        <description>Adds a RoleType to an order</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="roleTypeId" type="String" mode="IN"/>
+    </service>
+    <service name="removeOrderRole" engine="java"
+    location="org.ofbiz.commonapp.order.order.OrderServices" invoke="removeRoleType">
+        <description>Removes a RoleType from an order</description>
+        <attribute name="orderId" type="String" mode="IN"/>
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="roleTypeId" type="String" mode="IN"/>
     </service>
 </services>
