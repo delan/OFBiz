@@ -28,7 +28,6 @@
 -->
 <#if security.hasEntityPermission("PARTYMGR", "_VIEW", session)>
 
-
 <script language='JavaScript'>
     function setNowFromDate(formName) { eval('document.' + formName + '.fromDate.value="${nowStr}"'); }
 </script>

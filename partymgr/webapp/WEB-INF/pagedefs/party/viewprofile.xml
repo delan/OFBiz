@@ -3,5 +3,5 @@
     <template>main</template>
     <property name="title">Find party</property>
     <property name="headerItem">view</property>
-    <page-action name="/party/viewprofile.bsh"/>
+    <content-action name="/party/viewprofile.bsh"/>
 </page>
