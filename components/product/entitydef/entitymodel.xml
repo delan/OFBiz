@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.52 $
+ * @version    $Revision: 1.53 $
  */
 -->
 
@@ -2296,7 +2296,26 @@
       <relation type="one" fk-name="PROD_PRUSE_PTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+      <index name="PRODPRUSE_PRMPTY" unique="false">
+      	<index-field name="productPromoId"/>
+      	<index-field name="partyId"/>
+      </index>
+      <index name="PRODPRUSE_PCDPTY" unique="false">
+      	<index-field name="productPromoCodeId"/>
+      	<index-field name="partyId"/>
+      </index>
     </entity>
+    <view-entity entity-name="ProductPromoUseCheck"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Use Check View Entity">
+      <member-entity entity-alias="PPU" entity-name="ProductPromoUse"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
+      <alias-all entity-alias="PPU"/>
+      <alias entity-alias="OH" name="statusId"/>
+      <view-link entity-alias="PPU" rel-entity-alias="OH">
+      	<key-map field-name="orderId"/>
+      </view-link>
+    </view-entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.storage -->
