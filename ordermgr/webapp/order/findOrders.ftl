@@ -26,14 +26,18 @@
 
 <script language="JavaScript">
 <!-- //
-function lookupOrders() {     
-    orderIdValue = document.lookuporder.order_id.value;   
+function lookupOrders() {
+    orderIdValue = document.lookuporder.order_id.value;
     if (orderIdValue.length > 1) {
-        document.lookuporder.action = "<@ofbizUrl>/orderview</@ofbizUrl>";     
+        document.lookuporder.action = "<@ofbizUrl>/orderview</@ofbizUrl>";
     } else {
-    	document.lookuporder.action = "<@ofbizUrl>/view/findorders</@ofbizUrl>";
-    }   
-   document.lookuporder.submit();
+        document.lookuporder.action = "<@ofbizUrl>/view/findorders</@ofbizUrl>";
+    }
+    document.lookuporder.submit();
+}
+function createPickList() {     
+    document.lookuporder.action = "<@ofbizUrl>/picklist</@ofbizUrl>";     
+    document.lookuporder.submit();
 }
 // -->
 </script>
@@ -52,7 +56,10 @@ function lookupOrders() {
               <#if requestParameters.hideFields?default("N") == "Y">
                 <a href="<@ofbizUrl>/findorders?hideFields=N${paramList}</@ofbizUrl>" class="submenutextright">Show Fields</a>
               <#else>
-                <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if><a href="javascript:lookupOrders();" class="submenutext">Lookup Order(s)</a><a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">Lookup Party</a>
+                <#if orderHeaderList?exists><a href="<@ofbizUrl>/findorders?hideFields=Y${paramList}</@ofbizUrl>" class="submenutext">Hide Fields</a></#if>
+                <a href="javascript:createPickList();" class="submenutext">Create Pick List</a>
+                <a href="javascript:lookupOrders();" class="submenutext">Lookup Order(s)</a>
+                <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class="submenutextright">Lookup Party</a>
               </#if>
             </div>
           </td>
@@ -280,14 +287,15 @@ function lookupOrders() {
               </td>
               <td align='right'>
                 <a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>View</a>
-              </td>              
+              </td>
+            </tr>
+            <#-- toggle the row color -->
+            <#if rowClass == "viewManyTR2">
+              <#assign rowClass = "viewManyTR1">
+            <#else>
+              <#assign rowClass = "viewManyTR2">
+            </#if>
           </#list>          
-          <#-- toggle the row color -->
-          <#if rowClass == "viewManyTR2">
-            <#assign rowClass = "viewManyTR1">
-          <#else>
-            <#assign rowClass = "viewManyTR2">
-          </#if>        
         <#else>
           <tr>
             <td colspan='4'><div class='head3'>No orders found.</div></td>
