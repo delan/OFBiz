@@ -253,6 +253,7 @@
     </request-map>
 
     <!-- BOM request mappings -->
+    
     <request-map uri="findParts">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findParts"/>
@@ -272,6 +273,36 @@
         <response name="error" type="view" value="EditProductBom"/>
     </request-map>
 
+    <request-map uri="EditProductManufacturingRules">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductManufacturingRules"/>
+    </request-map>
+    <request-map uri="AddProductManufacturingRule">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="addProductManufacturingRule"/>
+        <response name="success" type="view" value="EditProductManufacturingRules"/>
+        <response name="error" type="view" value="EditProductManufacturingRules"/>
+    </request-map>
+    <request-map uri="UpdateProductManufacturingRule">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateProductManufacturingRule"/>
+        <response name="success" type="view" value="EditProductManufacturingRules"/>
+        <response name="error" type="view" value="EditProductManufacturingRules"/>
+    </request-map>
+    <request-map uri="DeleteProductManufacturingRule">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deleteProductManufacturingRule"/>
+        <response name="success" type="view" value="EditProductManufacturingRules"/>
+        <response name="error" type="view" value="EditProductManufacturingRules"/>
+    </request-map>
+ 
+    <request-map uri="LookupVirtualProduct">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupVirtualProduct"/>
+        <response name="error" type="view" value="LookupVirtualProduct"/>
+    </request-map>
+
+    
     
     <!-- end of request mappings -->
 
@@ -291,9 +322,11 @@
     <view-map name="EditMachineGroup" type="jpublish" page="/routing/EditMachineGroup.ftl"/>
     <view-map name="FindRoutingTask" type="jpublish" page="/routing/FindRoutingTask.ftl"/>
     <!-- BOM view mappings -->
+    <view-map name="LookupVirtualProduct" page="/bom/LookupVirtualProduct.ftl" type="jpublish"/>
     <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>
     <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>
     <view-map name="EditProductBom" type="jpublish" page="/bom/EditProductBom.ftl"/>
+    <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
 
     <!-- end of view mappings -->
 </site-conf>
