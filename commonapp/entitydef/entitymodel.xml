@@ -1327,7 +1327,7 @@
       <field name="partyId" type="id"></field>
       <field name="referrerUrl" type="url"></field>
       <field name="passwordUsed" type="short-varchar"></field>
-      <field name="successful" type="indicator"></field>
+      <field name="successfulLogin" type="indicator"></field>
       <prim-key field="userLoginId"/>
       <prim-key field="fromDate"/>
       <relation type="one" rel-entity-name="UserLogin">
