@@ -19,53 +19,50 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
  *@since      2.1
  */
 
-import org.ofbiz.core.util.*;
+import java.util.*;
 import org.ofbiz.core.entity.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.pseudotag.*;
-import org.ofbiz.commonapp.security.login.LoginEvents;
-import org.ofbiz.commonapp.common.CommonWorkers;
+import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.security.login.*;
+import org.ofbiz.commonapp.common.*;
 
-
-
-GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
-GenericValue person = (GenericValue) session.getAttribute(SiteDefs.PERSON);
+person = session.getAttribute(SiteDefs.PERSON);
+partyGroup = session.getAttribute(SiteDefs.PARTY_GROUP);
 if (person == null) {
     person = userLogin == null ? null : userLogin.getRelatedOne("Person");
     if (person != null) session.setAttribute(SiteDefs.PERSON, person);
 }
-if (person != null) context.put("person", person);
+if (person != null) {
+    request.setAttribute("person", person);
+} else if (partyGroup == null) {
+    person = userLogin == null ? null : userLogin.getRelatedOne("PartyGroup");
+    if (partyGroup != null) session.setAttribute(SiteDefs.PARTY_GROUP, partyGroup);
+}
+if (partyGroup != null) request.setAttribute("partyGroup", partyGroup);
 
-String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
-String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
-String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+controlPath = request.getAttribute(SiteDefs.CONTROL_PATH);
+contextRoot = request.getAttribute(SiteDefs.CONTEXT_ROOT);
+serverRoot = request.getAttribute(SiteDefs.SERVER_ROOT_URL);
 
-context.put("nowTimestamp",UtilDateTime.nowTimestamp());
-
-Map layoutSettings = new HashMap();
-
-context.put("layoutSettings", layoutSettings);
-
+layoutSettings = new HashMap();
+request.setAttribute("layoutSettings", layoutSettings);
+    
 layoutSettings.put("companyName", "OFBiz: Work Effort Manager");
 layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
 layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
 layoutSettings.put("headerMiddleBackgroundUrl", null);
 layoutSettings.put("headerRightBackgroundUrl", null);
 
-String loginUrl = CommonWorkers.makeLoginUrl(context.getRequest());
-context.put("loginUrl",loginUrl);
+request.setAttribute("checkLoginUrl", CommonWorkers.makeLoginUrl(request, "checkLogin"));
 
-/*
-externalLoginKey = LoginEvents.getExternalLoginKey(context.getRequest());
+externalLoginKey = LoginEvents.getExternalLoginKey(request);
 externalKeyParam = externalLoginKey == null ? "" : "?externalLoginKey=" + externalLoginKey;
-
-context.put("externalKeyParam",externalKeyParam);
-*/
-
+request.setAttribute("externalKeyParam", externalKeyParam);
+request.setAttribute("isWorkEffortMgrActive", new Boolean(true));

@@ -78,7 +78,7 @@
     </request-map>
 
     <request-map uri="main">
-    	<security https="false" auth="false"/>
+    	<security https="false" auth="true"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
 
@@ -422,7 +422,7 @@
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="jpublish" page="/main.ftl"/>
-    <view-map name="login" type="region"/>
+    <view-map name="login" type="jpublish" page="/login.ftl"/>
 
     <view-map name="requestlist" type="jpublish" page="/request/requestlist.ftl"/>
     <view-map name="request" type="region"/>
