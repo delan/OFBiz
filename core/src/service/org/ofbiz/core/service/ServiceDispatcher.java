@@ -609,9 +609,7 @@ public class ServiceDispatcher {
         // shutdown JMS listeners
         jlf.closeListeners();
         // shutdown the job scheduler
-        jm.finalize();
-        // shutdown the TM
-        TransactionFactory.shutdown();
+        jm.finalize();        
     }
     
     // checks if parameters were passed for authentication
