@@ -1,5 +1,5 @@
 /*
- * $Id: lookupParams.java,v 1.2 2004/01/05 10:25:18 holivier Exp $
+ * $Id: lookupParams.java,v 1.3 2004/02/16 11:16:04 jacopo Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.base.util.UtilMisc;
  * Product Information Related Events
  *
  * @author     <a href="mailto:holivier@nereide.biz">Olivier Heintz</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class lookupParams {
@@ -142,7 +142,7 @@ public class lookupParams {
 				paramLookup = new HashMap();
 				session.setAttribute("paramLookup",paramLookup);
 			} else paramLookup.clear();
-			paramLookup.put("lookupName","LookupVirtualVirtualProduct");
+			paramLookup.put("lookupName","LookupVirtualProduct");
 			paramLookup.put("titleProperty","PageTitleLookupVirtualProducts");
 			paramLookup.put("formDefFile","/bom/BomForms.xml");    
 			paramLookup.put("singleFormName","lookupVirtualProduct");    
