@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.66 $
+ * @version    $Revision: 1.67 $
  */
 -->
 
@@ -2611,10 +2611,10 @@
       <prim-key field="facilityId"/>
       <prim-key field="facilityGroupId"/>
       <prim-key field="fromDate"/>
-      <relation type="one" fk-name="FACILITY_MEM_FACILITY" rel-entity-name="Facility">
+      <relation type="one" fk-name="FACILITY_MEM_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" fk-name="FACILITY_MEM_FGROUP" rel-entity-name="FacilityGroup">
+      <relation type="one" fk-name="FACILITY_MEM_FGRP" rel-entity-name="FacilityGroup">
         <key-map field-name="facilityGroupId"/>
       </relation>
     </entity>

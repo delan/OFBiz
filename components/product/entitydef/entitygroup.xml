@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.21 $
+ *@version    $Revision: 1.22 $
  */
 -->
 
@@ -79,6 +79,7 @@
     <entity-group group="org.ofbiz" entity="ProductFeatureCatGrpAppl" />
     <entity-group group="org.ofbiz" entity="ProductFeatureContent" />
     <entity-group group="org.ofbiz" entity="ProductFeatureGroup" />
+    <entity-group group="org.ofbiz" entity="ProductFeatureGroupAndAppl" />
     <entity-group group="org.ofbiz" entity="ProductFeatureGroupAppl" />
     <entity-group group="org.ofbiz" entity="ProductFeatureIactn" />
     <entity-group group="org.ofbiz" entity="ProductFeatureIactnType" />

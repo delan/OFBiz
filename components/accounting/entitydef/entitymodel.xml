@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  */
 -->
 
@@ -1557,7 +1557,7 @@
       <relation type="one" fk-name="BILLACCT_TRM_TRM" rel-entity-name="TermType">
         <key-map field-name="termTypeId"/>
       </relation>
-      <relation type="one" fk-name="BILLACCT_TRM_BILLACCT" rel-entity-name="BillingAccount">
+      <relation type="one" fk-name="BILLACCT_TRM_BACT" rel-entity-name="BillingAccount">
         <key-map field-name="billingAccountId"/>
       </relation>
     </entity>
