@@ -25,7 +25,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org) 
- *@author Andy Zeneski (jaz@zsolv.com)
+ *@author Andy Zeneski (jaz@jflow.net)
  *@version    1.0
  */
 -->
@@ -278,8 +278,8 @@
     <view-entity entity-name="OrderHeaderAndPaymentPref"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Header And Payment Preference View Entity">
-      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="PF" entity-name="OrderPaymentPreference"/>
+      <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <alias entity-alias="OH" name="orderId"/>
       <alias entity-alias="PF" name="orderPaymentPreferenceId"/>
       <alias entity-alias="PF" name="paymentMethodTypeId"/>
@@ -312,9 +312,9 @@
     <view-entity entity-name="OrderHeaderNoteView"
             package-name="org.ofbiz.commonapp.order.order"
             title="Order Header Note View Entity">
-      <member-entity entity-alias="ND" entity-name="NoteData"/>
-      <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
       <member-entity entity-alias="PR" entity-name="Person"/>
+      <member-entity entity-alias="OD" entity-name="OrderHeaderNote"/>
+      <member-entity entity-alias="ND" entity-name="NoteData"/>
       <alias entity-alias="OD" name="orderId"/>
       <alias entity-alias="ND" name="noteId"/>
       <alias entity-alias="ND" name="noteName"/>
@@ -1564,11 +1564,22 @@
         <key-map field-name="contactMechId"/>
       </relation>
     </entity>
+    <entity entity-name="WorkReqFulfType"
+            package-name="org.ofbiz.commonapp.order.request"
+            title="Work Requirement Fulfillment Type Entity">
+      <field name="workReqFulfTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="workReqFulfTypeId"/>
+      <relation type="many" rel-entity-name="WorkRequirementFulfillment">
+        <key-map field-name="workReqFulfTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="WorkRequirementFulfillment"
             package-name="org.ofbiz.commonapp.order.request"
             title="Work Requirement Fulfillment Entity">
       <field name="requirementId" type="id-ne"></field>
       <field name="workEffortId" type="id-ne"></field>
+      <field name="workReqFulfTypeId" type="id-ne"></field>
       <prim-key field="requirementId"/>
       <prim-key field="workEffortId"/>
       <relation type="one" fk-name="WORK_REQFL_REQ" rel-entity-name="Requirement">

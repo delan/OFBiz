@@ -25,7 +25,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org) 
- *@author Andy Zeneski (jaz@zsolv.com)
+ *@author Andy Zeneski (jaz@jflow.net)
  *@version    1.0
  */
 -->
@@ -1292,9 +1292,9 @@
     <view-entity entity-name="PartyAndContactMech"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
-      <member-entity entity-alias="CM" entity-name="ContactMech"/>
-      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="PTY" entity-name="Party"/>
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
+      <member-entity entity-alias="CM" entity-name="ContactMech"/>
       <alias entity-alias="CM" name="contactMechId"/>
       <alias entity-alias="PTY" name="partyId"/>
       <alias entity-alias="PCM" name="fromDate"/>
@@ -1328,8 +1328,8 @@
     <view-entity entity-name="PartyAndUserLogin"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
-      <member-entity entity-alias="ULN" entity-name="UserLogin"/>
       <member-entity entity-alias="PTY" entity-name="Party"/>
+      <member-entity entity-alias="ULN" entity-name="UserLogin"/>
       <alias entity-alias="PTY" name="partyId"/>
       <alias entity-alias="PTY" name="partyTypeId"/>
       <alias entity-alias="ULN" name="userLoginId"/>
@@ -1426,10 +1426,10 @@
     <view-entity entity-name="PartyContactWithPurpose"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Contact Purpose View Entity">
-      <member-entity entity-alias="CM" entity-name="ContactMech"/>
-      <member-entity entity-alias="PT" entity-name="ContactMechPurposeType"/>
-      <member-entity entity-alias="PC" entity-name="PartyContactMech"/>
       <member-entity entity-alias="PR" entity-name="PartyContactMechPurpose"/>
+      <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PC" entity-name="PartyContactMech"/>
+      <member-entity entity-alias="PT" entity-name="ContactMechPurposeType"/>
       <alias entity-alias="CM" name="contactMechId"/>
       <alias entity-alias="PC" name="partyId"/>
       <alias entity-alias="PR" name="contactMechPurposeTypeId"/>
@@ -1512,9 +1512,9 @@
     <view-entity entity-name="PartyNoteView"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Note View Entity">
+      <member-entity entity-alias="PR" entity-name="Person"/>
       <member-entity entity-alias="PN" entity-name="PartyNote"/>
       <member-entity entity-alias="ND" entity-name="NoteData"/>
-      <member-entity entity-alias="PR" entity-name="Person"/>
       <alias entity-alias="PN" name="targetPartyId" field="partyId"/>
       <alias entity-alias="ND" name="noteId"/>
       <alias entity-alias="ND" name="noteName"/>
@@ -1894,8 +1894,8 @@
     <view-entity entity-name="PersonRoleView"
             package-name="org.ofbiz.commonapp.party.party"
             title="Person Role View Entity">
-      <member-entity entity-alias="PS" entity-name="Person"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <member-entity entity-alias="PS" entity-name="Person"/>
       <alias entity-alias="PS" name="partyId"/>
       <alias entity-alias="PS" name="lastName"/>
       <alias entity-alias="PS" name="firstName"/>
