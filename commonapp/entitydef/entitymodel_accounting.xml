@@ -1392,8 +1392,7 @@
             title="Billing Account Entity">
       <description>A BillingAccount Payment Method</description>
       <field name="billingAccountId" type="id-ne"></field>
-      <field name="accountLimit" type="currency"></field>
-      <field name="settlementTermId" type="id"></field>
+      <field name="accountLimit" type="currency-amount"></field>
       <field name="contactMechId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
@@ -1417,9 +1416,6 @@
       <relation type="one" fk-name="BILLACCT_PADDR" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" fk-name="BILLACCT_STLEN" rel-entity-name="SettlementTerm">
-        <key-map field-name="settlementTermId"/>
-      </relation>      
     </entity>
     <entity entity-name="BillingAccountRole"
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -1447,6 +1443,37 @@
         <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="BillingAccountTerm"
+            package-name="org.ofbiz.commonapp.accounting.payment"
+            title="Billing Account Term Entity">
+      <field name="billingAccountTermId" type="id-ne"></field>
+      <field name="billingAccountId" type="id-ne"></field>
+      <field name="termTypeId" type="id"></field>
+      <field name="termValue" type="numeric"></field>
+      <field name="uomId" type="id"></field>
+      <prim-key field="billingAccountTermId"/>
+      <relation type="one" fk-name="BILLACCT_TRM_TRM" rel-entity-name="TermType">
+        <key-map field-name="termTypeId"/>
+      </relation>
+      <relation type="one" fk-name="BILLACCT_TRM_BILLACCT" rel-entity-name="BillingAccount">
+        <key-map field-name="billingAccountId"/>
+      </relation>     
+    </entity>
+    <entity entity-name="BillingAccountTermAttr"
+            package-name="org.ofbiz.commonapp.accounting.payment"
+            title="Billing Account Term Attribute Entity">
+      <field name="billingAccountTermId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>
+      <prim-key field="billingAccountTermId"/>
+      <prim-key field="attrName"/>      
+      <relation type="one" fk-name="BILLACCT_TRM_ATTR" rel-entity-name="BillingAccountTerm">
+        <key-map field-name="billingAccountTermId"/>
+      </relation>
+      <relation type="many" rel-entity-name="TermTypeAttr">
+        <key-map field-name="attrName"/>
+      </relation>
+    </entity>    
     <entity entity-name="CreditCard"
             package-name="org.ofbiz.commonapp.accounting.payment"
             title="Credit Card Information Entity">

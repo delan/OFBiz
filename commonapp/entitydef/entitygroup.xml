@@ -114,6 +114,8 @@
 
     <entity-group group="org.ofbiz.commonapp" entity="BillingAccount" />
     <entity-group group="org.ofbiz.commonapp" entity="BillingAccountRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="BillingAccountTerm" />
+    <entity-group group="org.ofbiz.commonapp" entity="BillingAccountTermAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="CreditCard" />
     <entity-group group="org.ofbiz.commonapp" entity="Deduction" />
     <entity-group group="org.ofbiz.commonapp" entity="DeductionType" />
