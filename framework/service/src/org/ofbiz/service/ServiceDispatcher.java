@@ -164,7 +164,7 @@ public class ServiceDispatcher {
      * @param context the context of the local dispatcher
      */
     public void register(String name, DispatchContext context) {
-        if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " + context.getName(), module);
+        if (Debug.infoOn()) Debug.logInfo("Registered dispatcher: " + context.getName(), module);
         this.localContext.put(name, context);
     }
 
@@ -173,7 +173,7 @@ public class ServiceDispatcher {
      * @param local the LocalDispatcher to de-register
      */
     public void deregister(LocalDispatcher local) {
-        if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher.deregister] : De-Registering dispatcher: " + local.getName(), module);
+        if (Debug.infoOn()) Debug.logInfo("De-Registering dispatcher: " + local.getName(), module);
         localContext.remove(local.getName());
          if (localContext.size() == 1) { // 1 == the JMSDispatcher
              try {
