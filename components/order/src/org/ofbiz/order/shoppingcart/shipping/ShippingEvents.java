@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.2 2003/08/25 20:16:12 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.3 2003/08/26 14:06:30 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceUtil;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -127,9 +127,11 @@ public class ShippingEvents {
             return ServiceUtil.returnError(errorMessageList);
         }
         
-        Debug.log("Shippable Weight : " + shippableWeight, module);
-        Debug.log("Shippable Qty : " + shippableQuantity, module);
-        Debug.log("Shippable Total : " + shippableTotal, module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Shippable Weight : " + shippableWeight, module);
+            Debug.logVerbose("Shippable Qty : " + shippableQuantity, module);
+            Debug.logVerbose("Shippable Total : " + shippableTotal, module);
+        }
         
         // Get the ShipmentCostEstimate(s)
         Collection estimates = null;
@@ -137,11 +139,9 @@ public class ShippingEvents {
         try {
             Map fields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId, "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER");
 
-            estimates = delegator.findByAnd("ShipmentCostEstimate", fields);
-            Debug.set(Debug.VERBOSE, true);
+            estimates = delegator.findByAnd("ShipmentCostEstimate", fields);            
             if (Debug.verboseOn()) Debug.logVerbose("Estimate fields: " + fields, module);
-            if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);
-            Debug.set(Debug.VERBOSE, false);
+            if (Debug.verboseOn()) Debug.logVerbose("Estimate(s): " + estimates, module);            
         } catch (GenericEntityException e) {
             Debug.logError("[ShippingEvents.getShipEstimate] Cannot get shipping estimates.", module);            
             return ServiceUtil.returnSuccess(standardMessage);                 
@@ -151,7 +151,7 @@ public class ShippingEvents {
             return ServiceUtil.returnSuccess(standardMessage);            
         }
 
-        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates begin size: " + estimates.size(), module);
 
         // Get the PostalAddress
         GenericValue shipAddress = null;
@@ -242,7 +242,7 @@ public class ShippingEvents {
             }
         }
 
-        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Estimates left after GEO filter: " + estimateList.size(), module);
 
         if (estimateList.size() < 1) {
             Debug.logInfo("[ShippingEvents.getShipEstimate] No shipping estimate found.", module);
@@ -285,7 +285,7 @@ public class ShippingEvents {
         // Grab the estimate and work with it.
         GenericValue estimate = (GenericValue) estimateList.get(estimateIndex);
 
-        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Working with estimate: " + estimateIndex, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Working with estimate: " + estimateIndex, module);
 
         double orderFlat = 0.00;
 
@@ -322,7 +322,7 @@ public class ShippingEvents {
 
         double shippingTotal = weightAmount + quantityAmount + priceAmount + orderFlat + itemFlatAmount + orderPercentage;
 
-        if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[ShippingEvents.getShipEstimate] Setting shipping amount : " + shippingTotal, module);
         
         Map responseResult = ServiceUtil.returnSuccess();
         responseResult.put("shippingTotal", new Double(shippingTotal));
