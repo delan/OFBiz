@@ -1,5 +1,5 @@
 /*
- * $Id: IcsPaymentServices.java,v 1.1 2003/10/28 20:41:08 ajzeneski Exp $
+ * $Id: IcsPaymentServices.java,v 1.2 2003/10/29 22:46:10 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,7 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.accounting.payment.PaymentGatewayServices;
 
 import com.cybersource.ws.client.axis.basic.Client;
 import com.cybersource.ws.client.axis.basic.BasicClientException;
@@ -43,7 +44,7 @@ import com.cybersource.ws.client.axis.AxisFaultException;
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class IcsPaymentServices {
@@ -52,11 +53,9 @@ public class IcsPaymentServices {
 
     public static Map ccAuth(DispatchContext dctx, Map context) {
         // generate the request/properties
-        String orderId = (String) context.get("orderId");
         Properties props = buildCsProperties(context);
         Map request = buildAuthRequest(context);
         request.put("merchantID", props.get("merchantID"));
-        request.put("merchantReferenceCode", orderId);
 
         // transmit the request
         Map reply = null;
@@ -81,11 +80,63 @@ public class IcsPaymentServices {
     }
 
     public static Map ccCapture(DispatchContext dctx, Map context) {
-        return ServiceUtil.returnSuccess();
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
+        GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        if (authTransaction == null) {
+            return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot capture");
+        }
+
+        // generate the request/properties
+        Properties props = buildCsProperties(context);
+        Map request = buildCaptureRequest(context, authTransaction);
+        request.put("merchantID", props.get("merchantID"));
+
+        // transmit the request
+        Map reply = null;
+        try {
+            reply = Client.runTransaction(request, props);
+        } catch (AxisFaultException e) {
+            Debug.logError(e, "ERROR: Exception from Axis to CyberSource", module);
+            return ServiceUtil.returnError("Unable to communicate with CyberSource");
+        } catch (BasicClientException e) {
+            Debug.logError(e, "ERROR: CyberSource Client exception", module);
+            return ServiceUtil.returnError("Unable to communicate with CyberSource");
+        }
+
+        // process the reply
+        Map result = ServiceUtil.returnSuccess();
+        processCaptureResult(reply, result);
+        return result;
     }
 
     public static Map ccRelease(DispatchContext dctx, Map context) {
-        return ServiceUtil.returnSuccess();
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
+        GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        if (authTransaction == null) {
+            return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot release");
+        }
+
+        // generate the request/properties
+        Properties props = buildCsProperties(context);
+        Map request = buildReleaseRequest(context, authTransaction);
+        request.put("merchantID", props.get("merchantID"));
+
+        // transmit the request
+        Map reply = null;
+        try {
+            reply = Client.runTransaction(request, props);
+        } catch (AxisFaultException e) {
+            Debug.logError(e, "ERROR: Exception from Axis to CyberSource", module);
+            return ServiceUtil.returnError("Unable to communicate with CyberSource");
+        } catch (BasicClientException e) {
+            Debug.logError(e, "ERROR: CyberSource Client exception", module);
+            return ServiceUtil.returnError("Unable to communicate with CyberSource");
+        }
+
+        // process the reply
+        Map result = ServiceUtil.returnSuccess();
+        //processReleaseResult(reply, result);
+        return result;
     }
 
     public static Map ccRefund(DispatchContext dctx, Map context) {
@@ -125,10 +176,12 @@ public class IcsPaymentServices {
 
     private static Map buildAuthRequest(Map context) {
         // make the request map
+        String orderId = (String) context.get("orderId");
         Map request = new HashMap();
-        request.put("ccAuthService_run", "true"); // run auth service
-        appendFullBillingInfo(request, context);  // add in all address info
-        appendItemLineInfo(request, context);     // add in the item info
+        request.put("ccAuthService_run", "true");      // run auth service
+        request.put("merchantReferenceCode", orderId); // set the order ref number
+        appendFullBillingInfo(request, context);       // add in all address info
+        appendItemLineInfo(request, context);          // add in the item info
         return request;
     }
 
@@ -236,6 +289,49 @@ public class IcsPaymentServices {
         }
     }
 
+    private static Map buildCaptureRequest(Map context, GenericValue authTransaction) {
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
+        String configString = (String) context.get("paymentConfig");
+        String currency = (String) context.get("currency");
+        if (configString == null) {
+            configString = "payment.properties";
+        }
+        String merchantDesc = UtilProperties.getPropertyValue(configString, "payment.cybersource.merchantDescr", null);
+        String merchantCont = UtilProperties.getPropertyValue(configString, "payment.cybersource.merchantContact", null);
+
+        Map request = new HashMap();
+        request.put("ccCaptureService_run", "true");
+        request.put("ccCaptureService_authRequestID", authTransaction.getString("referenceNum"));
+        request.put("item_0_unitPrice", context.get("captureAmount"));
+        request.put("merchantReferenceCode", orderPaymentPreference.getString("orderId"));
+        request.put("purchaseTotals_currency", currency);
+
+        // TODO: add support for verbal authorizations
+        //request.put("ccCaptureService_authType", null);   -- should be 'verbal'
+        //request.put("ccCaptureService_verbalAuthCode", null); -- code from verbal auth
+
+        if (merchantDesc != null) {
+            request.put("invoiceHeader_merchantDescriptor", merchantDesc);        // merchant description
+        }
+        if (merchantCont != null) {
+            request.put("invoiceHeader_merchantDescriptorContact", merchantCont); // merchant contact info
+        }
+
+        return request;
+    }
+
+    private static Map buildReleaseRequest(Map context, GenericValue authTransaction) {
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
+        String currency = (String) context.get("currency");
+        Map request = new HashMap();
+        request.put("ccAuthReversalService_run", "true");
+        request.put("ccAuthReversalService_authRequestID", authTransaction.getString("referenceNum"));
+        request.put("item_0_unitPrice", context.get("releaseAmount"));
+        request.put("merchantReferenceCode", orderPaymentPreference.getString("orderId"));
+        request.put("purchaseTotals_currency", currency);
+        return request;
+    }
+
     private static void processAuthResult(Map reply, Map result) {
         String decision = (String) reply.get("decision");
         if ("ACCEPTED".equalsIgnoreCase(decision)) {
@@ -257,5 +353,33 @@ public class IcsPaymentServices {
         result.put("authMessage", reply.get("ccAuthReply_processorResponse"));
         result.put("avsCode", reply.get("ccAuthReply_avsCode"));
         result.put("scoreCode", reply.get("ccAuthReply_authFactorCode"));
+    }
+
+    private static void processCaptureResult(Map reply, Map result) {
+        String decision = (String) reply.get("decision");
+        if ("ACCEPTED".equalsIgnoreCase(decision)) {
+            result.put("captureResult", new Boolean(true));
+        } else {
+            result.put("captureResult", new Boolean(false));
+        }
+        result.put("captureAmount", reply.get("ccCaptureReply_amount"));
+        result.put("captureRefNum", reply.get("requestID"));
+        result.put("captureCode", reply.get("ccCaptureReply_reconciliationID"));
+        result.put("captureFlag", reply.get("ccCaptureReply_reasonCode"));
+        result.put("captureMessage", reply.get("decision"));
+    }
+
+    private static void processReleaseResult(Map reply, Map result) {
+        String decision = (String) reply.get("decision");
+        if ("ACCEPTED".equalsIgnoreCase(decision)) {
+            result.put("releaseResult", new Boolean(true));
+        } else {
+            result.put("releaseResult", new Boolean(false));
+        }
+        result.put("releaseAmount", reply.get("ccAuthReversalReply_amount"));
+        result.put("releaseRefNum", reply.get("requestID"));
+        result.put("releaseCode", reply.get("ccAuthReversalReply_authorizationCode"));
+        result.put("releaseFlag", reply.get("ccAuthReversalReply_reasonCode"));
+        result.put("releaseMessage", reply.get("decision"));
     }
 }

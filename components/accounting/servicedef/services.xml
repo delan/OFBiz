@@ -350,7 +350,7 @@
     </service>
 
     <!-- Payment Gateway Interfaces -->
-        <service name="ccAuthInterface" engine="interface" location="" invoke="">
+    <service name="ccAuthInterface" engine="interface" location="" invoke="">
         <description>Credit Card Authorization Interface</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
@@ -373,49 +373,50 @@
         <attribute name="avsCode" type="String" mode="OUT" optional="true"/>
         <attribute name="scoreCode" type="String" mode="OUT" optional="true"/>
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
-        </service>
+    </service>
 
-        <service name="ccCaptureInterface" engine="interface" location="" invoke="">
-            <description>Credit Card Capture Interface</description>
-            <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
-            <attribute name="captureAmount" type="Double" mode="INOUT" optional="false"/>
-            <attribute name="currency" type="String" mode="IN" optional="true"/>
-            <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
-            <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
-            <attribute name="captureRefNum" type="String" mode="OUT" optional="false"/>
-            <attribute name="captureCode" type="String" mode="OUT" optional="true"/>
-            <attribute name="captureFlag" type="String" mode="OUT" optional="true"/>
-            <attribute name="captureMessage" type="String" mode="OUT" optional="true"/>
-        </service>
+    <service name="ccCaptureInterface" engine="interface" location="" invoke="">
+        <description>Credit Card Capture Interface</description>
+        <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="captureAmount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
+        <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="captureRefNum" type="String" mode="OUT" optional="false"/>
+        <attribute name="captureCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="captureFlag" type="String" mode="OUT" optional="true"/>
+        <attribute name="captureMessage" type="String" mode="OUT" optional="true"/>
+    </service>
 
-        <service name="ccReleaseInterface" engine="interface" location="" invoke="">
-            <description>Credit Card Release Interface</description>
-            <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
-            <attribute name="currency" type="String" mode="IN" optional="true"/>
-            <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
-            <attribute name="releaseResult" type="Boolean" mode="OUT" optional="true"/>
-            <attribute name="releaseRefNum" type="String" mode="OUT" optional="false"/>
-            <attribute name="releaseCode" type="String" mode="OUT" optional="true"/>
-            <attribute name="releaseFlag" type="String" mode="OUT" optional="true"/>
-            <attribute name="releaseMessage" type="String" mode="OUT" optional="true"/>
-        </service>
+    <service name="ccReleaseInterface" engine="interface" location="" invoke="">
+        <description>Credit Card Release Interface</description>
+        <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="releaseAmount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
+        <attribute name="releaseResult" type="Boolean" mode="OUT" optional="true"/>
+        <attribute name="releaseRefNum" type="String" mode="OUT" optional="false"/>
+        <attribute name="releaseCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="releaseFlag" type="String" mode="OUT" optional="true"/>
+        <attribute name="releaseMessage" type="String" mode="OUT" optional="true"/>
+    </service>
 
-        <service name="ccRefundInterface" engine="interface" location="" invoke="">
-            <description>Credit Card Refund (Credit) Inteface</description>
-            <attribute name="refundAmount" type="Double" mode="INOUT" optional="false"/>
-            <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
-            <attribute name="contactEmail" type="GenericValue" mode="IN" optional="false"/>
-            <attribute name="billingAddress" type="GenericValue" mode="IN" optional="false"/>
-            <attribute name="creditCard" type="GenericValue" mode="IN" optional="false"/>
-            <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
-            <attribute name="currency" type="String" mode="IN" optional="true"/>
-            <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
-            <attribute name="refundResult" type="Boolean" mode="OUT" optional="false"/>
-            <attribute name="refundRefNum" type="String" mode="OUT" optional="false"/>
-            <attribute name="refundCode" type="String" mode="OUT" optional="true"/>
-            <attribute name="refundFlag" type="String" mode="OUT" optional="true"/>
-            <attribute name="refundMessage" type="String" mode="OUT" optional="true"/>
-        </service>
+    <service name="ccRefundInterface" engine="interface" location="" invoke="">
+        <description>Credit Card Refund (Credit) Inteface</description>
+        <attribute name="refundAmount" type="Double" mode="INOUT" optional="false"/>
+        <attribute name="contactPerson" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="contactEmail" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="billingAddress" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="creditCard" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
+        <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
+        <attribute name="refundResult" type="Boolean" mode="OUT" optional="false"/>
+        <attribute name="refundRefNum" type="String" mode="OUT" optional="false"/>
+        <attribute name="refundCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="refundFlag" type="String" mode="OUT" optional="true"/>
+        <attribute name="refundMessage" type="String" mode="OUT" optional="true"/>
+    </service>
 
     <service name="eftProcessInterface" engine="interface" location="" invoke="">
         <description>EFT Account Processing Interface</description>
@@ -470,7 +471,7 @@
     </service>
 
     <service name="cyberSourceCCProcessor" engine="java"
-            location="org.ofbiz.accounting.thirdparty.cybersource.CSPaymentServices" invoke="ccProcessor">
+            location="org.ofbiz.accounting.thirdparty.cybersource.IcsPaymentServices" invoke="ccAuth">
         <description>Credit Card Processing</description>
         <implements service="ccAuthInterface"/>
     </service>

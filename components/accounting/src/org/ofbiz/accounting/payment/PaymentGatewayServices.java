@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.15 2003/10/25 20:52:35 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.16 2003/10/29 22:46:10 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -698,18 +698,8 @@ public class PaymentGatewayServices {
         Iterator payments = paymentPrefs.iterator();
         while (payments.hasNext()) {
             GenericValue paymentPref = (GenericValue) payments.next();
-            GenericValue authTrans = null;
-            try {
-                List order = UtilMisc.toList("transactionDate");
-                List transactions = paymentPref.getRelated("PaymentGatewayResponse", null, order);
-
-                List exprs = UtilMisc.toList(new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_AUTH"),
-                        new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_REAUTH"));
-
-                List authTransactions = EntityUtil.filterByOr(transactions, exprs);
-                authTrans = EntityUtil.getFirst(authTransactions);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "ERROR: Problem getting authorization information from PaymentGatewayResponse", module);
+            GenericValue authTrans = getAuthTransaction(paymentPref);
+            if (authTrans == null) {
                 continue;
             }
 
@@ -1202,6 +1192,23 @@ public class PaymentGatewayServices {
 
     public static Map retryFailedAuths(DispatchContext dctx, Map context) {
         return ServiceUtil.returnSuccess();
+    }
+
+    public static GenericValue getAuthTransaction(GenericValue orderPaymentPreference) {
+        GenericValue authTrans = null;
+        try {
+            List order = UtilMisc.toList("transactionDate");
+            List transactions = orderPaymentPreference.getRelated("PaymentGatewayResponse", null, order);
+
+            List exprs = UtilMisc.toList(new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_AUTH"),
+                    new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_REAUTH"));
+
+            List authTransactions = EntityUtil.filterByOr(transactions, exprs);
+            authTrans = EntityUtil.getFirst(authTransactions);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "ERROR: Problem getting authorization information from PaymentGatewayResponse", module);
+        }
+        return authTrans;
     }
 
     // ****************************************************
