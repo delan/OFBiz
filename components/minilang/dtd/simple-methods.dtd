@@ -46,7 +46,7 @@
 <!ENTITY % ServiceOperations "field-to-result">
 <!ENTITY % EnvOperations "map-to-map | field-to-field | field-to-list | list-to-list | env-to-env | env-to-field | field-to-env | string-append | string-to-field | string-to-list | to-string | clear-field | iterate | iterate-map | first-from-list">
 <!ENTITY % EntityMiscOperations "now-timestamp-to-env | now-date-to-env | sequenced-id-to-env | make-next-seq-id | set-current-user-login">
-<!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | entity-one | entity-and | entity-condition | get-related-one | get-related | filter-list-by-and | filter-list-by-date | order-value-list">
+<!ENTITY % EntityFindOperations "find-by-primary-key | find-by-and | entity-one | entity-and | entity-condition | entity-count | get-related-one | get-related | filter-list-by-and | filter-list-by-date | order-value-list">
 <!ENTITY % EntityValueOperations "make-value | clone-value | create-value | store-value | refresh-value | remove-value | remove-related | remove-by-and | clear-cache-line | clear-entity-caches | set-pk-fields | set-nonpk-fields">
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % EntityTxOperations "transaction-begin | transaction-commit | transaction-rollback">
@@ -567,6 +567,13 @@ engine and facilitate related operations.
 		env-name CDATA #REQUIRED
 		field-name CDATA #IMPLIED
 	>
+
+<!ELEMENT entity-count ( ( condition-expr | condition-list ), having-condition-list?  )>
+<!ATTLIST entity-count
+    entity-name CDATA #REQUIRED
+    delegator-name CDATA #IMPLIED
+    count-name CDATA #REQUIRED
+>
 
 <!ELEMENT get-related-one EMPTY>
 <!ATTLIST get-related-one

@@ -788,6 +788,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.EntityAnd(curOperElem, simpleMethod));
                 } else if ("entity-condition".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.EntityCondition(curOperElem, simpleMethod));
+                } else if ("entity-count".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.entityops.EntityCount(curOperElem, simpleMethod));
                 } else if ("get-related-one".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.entityops.GetRelatedOne(curOperElem, simpleMethod));
                 } else if ("get-related".equals(nodeName)) {
