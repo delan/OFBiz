@@ -105,7 +105,7 @@
           <a href="<ofbiz:url><%="/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
-          <div class="tabletext"><%=lowIndex%> - <%=highIndex%> of <%=listSize%></div>
+          <span class="tabletext"><%=lowIndex%> - <%=highIndex%> of <%=listSize%></span>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
           | <a href="<ofbiz:url><%="/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="buttontext">[Next]</a>
@@ -142,7 +142,7 @@
           <a href="<ofbiz:url><%="/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
-          <div class="tabletext"><%=lowIndex%> - <%=highIndex%> of <%=listSize%></div>
+          <span class="tabletext"><%=lowIndex%> - <%=highIndex%> of <%=listSize%></span>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
           | <a href="<ofbiz:url><%="/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="buttontext">[Next]</a>
