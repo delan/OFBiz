@@ -154,7 +154,11 @@
     		<src path="${src.dir}/service" /></javac>
         <copy todir="${build.dir}/service"><fileset dir="${src.dir}/service" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
-    	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service:${build.dir}/extutil">
+    	<javac debug="on" destdir="${build.dir}/minilang" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service">
+            <src path="${src.dir}/minilang" /></javac>
+        <copy todir="${build.dir}/minilang"><fileset dir="${src.dir}/minilang" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
+
+    	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service:${build.dir}/extutil:${build.dir}/minilang">
     		<src path="${src.dir}/webapp" /></javac>
         <copy todir="${build.dir}/webapp"><fileset dir="${src.dir}/webapp" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
     	
@@ -169,10 +173,6 @@
     	<javac debug="on" destdir="${build.dir}/datafile" classpath="${classpath}:${build.dir}/share">
             <src path="${src.dir}/datafile" /></javac>
         <copy todir="${build.dir}/datafile"><fileset dir="${src.dir}/datafile" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
-
-    	<javac debug="on" destdir="${build.dir}/minilang" classpath="${classpath}:${build.dir}/share:${build.dir}/entity:${build.dir}/service:${build.dir}/webapp">
-            <src path="${src.dir}/minilang" /></javac>
-        <copy todir="${build.dir}/minilang"><fileset dir="${src.dir}/minilang" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" /></copy>
 
 <!--
   	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
