@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 -->
 
@@ -80,13 +80,12 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
       </tr>
       <tr class='viewOneTR2'>
         <td><div class="tabletext">&nbsp;</div></td>
-        <td><div class="tabletext">&nbsp;</div></td>
         <td><div class="tabletext"><b>${uiLabelMap.ProductApplType}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonFromDate}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonThruDate}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.ProductAmount}</b></div></td>
         <td><div class="tabletext"><b>${uiLabelMap.CommonSequence}</b></div></td>
-        <td colspan='3'><div class="tabletext">&nbsp;</div></td>
+        <td colspan="5"><div class="tabletext">&nbsp;</div></td>
     </#if>
   </tr>
 <#if (listSize > 0)>
@@ -143,7 +142,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
         <td><input type=text size='25' name='thruDate' class='inputBox'><a href="javascript:call_cal(document.lineForm${productFeature_index}.thruDate, '${nowTimestampString}');"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Calendar'></a></td>
         <td><input type=text size='6' name='amount' class='inputBox' value='${productFeature.defaultAmount?if_exists}'></td>
         <td><input type=text size='5' name='sequenceNum' class='inputBox' value='${productFeature.defaultSequenceNum?if_exists}'></td>
-      <td colspan='3' align=left><input type=submit value='Apply'></td>
+        <td colspan="5" align="left"><input type=submit value='Apply'></td>
       </form>
     </#if>
   </tr>
