@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "http://www.ofbiz.org/dtds/widget-menu.dtd">
+<!--
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "http://localhost:8443/ageps/images/widget-menu.dtd">
+<!DOCTYPE menus PUBLIC "-//OFBiz//DTD OFBiz Menu Widget//EN" "file:///usr/local/agi/ofbiz/hot-deploy/ageps/webapp/ageps/images/widget-menu.dtd">
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<menus>
+
+    <menu name="content" default-title-style="tabButton"
+        default-selected-style="tabButtonSelected"
+        default-menu-item-name="content"
+        orientation="horizontal"
+        menu-width="100%"
+        default-tooltip-style="tabletext" default-widget-style="tabButton"
+        default-permission-operation="HAS_AUTHOR_ROLE|CONTENT_ADMIN"
+        default-permission-entity-action="_ADMIN"
+        default-associated-content-id="${userLogin.userLoginId}"
+        selected-menuitem-context-field-name="currentMenuItemName"
+        title="" type="simple">
+
+
+        <menu-item name="FindContent" title="Find" >
+            <link target="FindContent"/>
+        </menu-item>
+
+        <menu-item name="EditContent" title="Content" >
+          <condition>
+            <not>
+                <if-empty field-name="contentId" />
+            </not>
+          </condition>
+            <link target="EditContent?contentId=${contentId}"/>
+        </menu-item>
+
+        <menu-item name="AddContent" title="Content" >
+          <condition>
+                <if-empty field-name="contentId" />
+          </condition>
+            <link target="AddContent"/>
+        </menu-item>
+
+        <menu-item name="contentassoc" title="Association" >
+          <condition disabled-style="buttontextdisabled">
+            <not>
+                <if-empty field-name="contentId" />
+            </not>
+          </condition>
+            <link target="EditContentAssoc?contentId=${contentId}"/>
+        </menu-item>
+
+        <menu-item name="role" title="Role" >
+          <condition disabled-style="buttontextdisabled">
+            <not>
+                <if-empty field-name="contentId" />
+            </not>
+          </condition>
+          <link target="EditContentRole?contentId=${contentId}"/>
+        </menu-item>
+
+        <menu-item name="purpose" title="Purpose" >
+          <condition disabled-style="buttontextdisabled">
+            <not>
+                <if-empty field-name="contentId" />
+            </not>
+          </condition>
+            <link target="EditContentPurpose?contentId=${contentId}"/>
+        </menu-item>
+
+        <menu-item name="attribute" title="Attribute" >
+          <condition disabled-style="buttontextdisabled">
+            <not>
+                <if-empty field-name="contentId" />
+            </not>
+          </condition>
+            <link target="EditContentAttribute?contentId=${contentId}"/>
+        </menu-item>
+
+        <menu-item name="metadata" title="Metadata" >
+          <condition disabled-style="buttontextdisabled">
+            <not>
+                <if-empty field-name="contentId" />
+            </not>
+          </condition>
+            <link target="EditContentMetaData?contentId=${contentId}"/>
+        </menu-item>
+
+
+    </menu>
+
+
+</menus>
