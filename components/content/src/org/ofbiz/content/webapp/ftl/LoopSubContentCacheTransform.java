@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.25 2004/06/16 18:54:45 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.26 2004/07/13 17:22:48 ajzeneski Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -49,7 +49,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -164,35 +164,34 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
     }
 
     public static boolean getNextMatchingEntity(Map templateRoot, GenericDelegator delegator, Environment env) throws IOException {
+        int lowIndex = ((Integer) templateRoot.get("lowIndex")).intValue();
+        int entityIndex = ((Integer) templateRoot.get("entityIndex")).intValue();
+        int outputIndex = ((Integer) templateRoot.get("outputIndex")).intValue();
+        int listSize = ((Integer) templateRoot.get("listSize")).intValue();
+        boolean matchFound = false;
 
-                int lowIndex = ((Integer)templateRoot.get("lowIndex")).intValue(); 
-                int entityIndex = ((Integer)templateRoot.get("entityIndex")).intValue(); 
-                int outputIndex = ((Integer)templateRoot.get("outputIndex")).intValue(); 
-                int listSize = ((Integer)templateRoot.get("listSize")).intValue(); 
-                boolean matchFound = false;
- 
-                while (!matchFound && entityIndex < listSize) {
-                    try {
-                        matchFound = prepCtx(delegator, templateRoot, env);
-                    } catch(GeneralException e) {
-                        throw new IOException(e.getMessage());
-                    }
-                    entityIndex++;
-                    templateRoot.put("entityIndex", new Integer(entityIndex));
-                    if (matchFound) {
-                        outputIndex++;
-                        if (outputIndex >= lowIndex) {
-                            break;
-                        } else {
-                            matchFound = false;
-                        }
-                    }
+        while (!matchFound && entityIndex < listSize) {
+            try {
+                matchFound = prepCtx(delegator, templateRoot, env);
+            } catch (GeneralException e) {
+                throw new IOException(e.getMessage());
+            }
+            entityIndex++;
+            templateRoot.put("entityIndex", new Integer(entityIndex));
+            if (matchFound) {
+                outputIndex++;
+                if (outputIndex >= lowIndex) {
+                    break;
+                } else {
+                    matchFound = false;
                 }
+            }
+        }
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, getNextMatchingEntity, outputIndex :" + outputIndex, module);
-                templateRoot.put("outputIndex", new Integer(outputIndex));
-                env.setVariable("outputIndex", FreeMarkerWorker.autoWrap(new Integer(outputIndex), env));
-                env.setVariable("entityIndex", FreeMarkerWorker.autoWrap(new Integer(entityIndex), env));
-                return matchFound;
+        templateRoot.put("outputIndex", new Integer(outputIndex));
+        env.setVariable("outputIndex", FreeMarkerWorker.autoWrap(new Integer(outputIndex), env));
+        env.setVariable("entityIndex", FreeMarkerWorker.autoWrap(new Integer(entityIndex), env));
+        return matchFound;
     }
 
     public Writer getWriter(final Writer out, Map args) {

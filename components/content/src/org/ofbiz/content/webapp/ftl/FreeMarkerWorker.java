@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.32 2004/07/10 16:24:09 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.33 2004/07/13 17:22:48 ajzeneski Exp $
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -732,7 +732,7 @@ public class FreeMarkerWorker {
         return trail;
     }
 
-    public static GenericValue getCurrentContent( GenericDelegator delegator, List trail,  GenericValue userLogin, Map ctx, Boolean nullThruDatesOnly, String contentAssocPredicateId)  throws GeneralException {
+    public static GenericValue getCurrentContent( GenericDelegator delegator, List trail, GenericValue userLogin, Map ctx, Boolean nullThruDatesOnly, String contentAssocPredicateId)  throws GeneralException {
 
         String contentId = (String)ctx.get("contentId");
         String subContentId = (String)ctx.get("subContentId");
@@ -775,16 +775,15 @@ public class FreeMarkerWorker {
         }
         //if (Debug.infoOn()) Debug.logInfo("getCurrentContent(2), contentId:" + contentId + " viewContentId:" + viewContentId + " subContentId:" + subContentId, "");
         if (UtilValidate.isNotEmpty(contentId) || UtilValidate.isNotEmpty(subContentId)) {
-            
-                try {
-                    currentContent = ContentWorker.getSubContentCache(delegator, contentId, mapKey, subContentId, userLogin, assocTypes, fromDate, nullThruDatesOnly, contentAssocPredicateId);
-                    Map node = FreeMarkerWorker.makeNode(currentContent);
-                    passedGlobalNodeTrail.add(node);
-                } catch (GenericEntityException e) {
-                    throw new GeneralException(e.getMessage());
-                } catch (MiniLangException e2) {
-                    throw new GeneralException(e2.getMessage());
-                }
+            try {
+                currentContent = ContentWorker.getSubContentCache(delegator, contentId, mapKey, subContentId, userLogin, assocTypes, fromDate, nullThruDatesOnly, contentAssocPredicateId);
+                Map node = FreeMarkerWorker.makeNode(currentContent);
+                passedGlobalNodeTrail.add(node);
+            } catch (GenericEntityException e) {
+                throw new GeneralException(e.getMessage());
+            } catch (MiniLangException e2) {
+                throw new GeneralException(e2.getMessage());
+            }
         }
         ctx.put("globalNodeTrail", passedGlobalNodeTrail);
         ctx.put("indent", new Integer(sz));
