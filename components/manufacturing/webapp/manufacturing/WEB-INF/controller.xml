@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE site-conf PUBLIC "-//OFBiz//DTD Request Config//EN" "http://www.ofbiz.org/dtds/site-conf.dtd">
+
+<site-conf>
+    <description>Manufacturing Component Site Configuration File</description>
+    <owner>The Open For Business Project Copyright (c) 2003</owner>
+    <errorpage>/error/error.jsp</errorpage>
+    
+    <!-- event handlers -->
+    <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.content.webapp.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
+
+    <!-- view handlers -->
+    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
+    <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>    
+
+    <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
+    <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.JspViewHandler"/>
+    
+    <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
+    <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
+    <handler name="jasperpdf" type="view" class="org.ofbiz.content.webapp.view.JasperReportsPdfViewHandler"/>
+    <handler name="jasperxml" type="view" class="org.ofbiz.content.webapp.view.JasperReportsXmlViewHandler"/>
+        
+    <preprocessor>
+    	<!-- Events to run on every request before security (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
+    	<event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkExternalLoginKey"/>
+    </preprocessor>
+    <postprocessor>
+    	<!-- Events to run on every request after all other processing (chains exempt) -->
+    	<!-- <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/> -->
+    </postprocessor>
+
+    <!-- Security Mappings -->
+    <request-map uri="checkLogin" edit="false">
+        <description>Verify a user is logged in.</description>
+        <security https="false" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="checkLogin" />
+        <response name="success" type="view" value="main" />
+        <response name="error" type="view" value="login" />
+    </request-map>
+
+    <request-map uri="login">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="login"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="login"/>
+    </request-map>
+
+    <request-map uri="logout">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.securityext.login.LoginEvents" invoke="logout"/>
+        <response name="success" type="request" value="checkLogin"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+    <!-- End of Security Mappings -->
+
+    <!-- Request Mappings -->
+    <request-map uri="view">
+        <security https="false" auth="false"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    
+    <request-map uri="authview">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    
+    <request-map uri="changeDelegator">
+        <event type="java" path="org.ofbiz.content.webapp.event.CoreEvents" invoke="changeDelegator"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="error"/>
+    </request-map>
+    <request-map uri="setSessionLocale">
+        <event type="java" path="org.ofbiz.base.util.UtilHttp" invoke="setSessionLocale"/>
+        <response name="success" type="view" value="main"/>
+        <response name="error" type="view" value="main"/>
+    </request-map>
+
+    <request-map uri="main">
+        <security https="true" auth="true"/>
+    	<response name="success" type="view" value="main"/>
+    </request-map>
+
+    <!-- Routing requests -->
+    <request-map uri="FindMachineGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindMachineGroup"/>
+    </request-map>
+    <request-map uri="EditMachineGroup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditMachineGroup"/>
+    </request-map>
+    <request-map uri="CreateMachineGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createMachineGroup"/>
+        <response name="success" type="view" value="EditMachineGroup"/>
+        <response name="error" type="view" value="EditMachineGroup"/>
+    </request-map>
+    <request-map uri="UpdateMachineGroup">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateMachineGroup"/>
+        <response name="success" type="view" value="EditMachineGroup"/>
+        <response name="error" type="view" value="EditMachineGroup"/>
+    </request-map>
+
+    <request-map uri="FindCalendar">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindCalendar"/>
+    </request-map>
+    <request-map uri="EditCalendar">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCalendar"/>
+    </request-map>
+    <request-map uri="CreateCalendar">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCalendar"/>
+        <response name="success" type="view" value="EditCalendar"/>
+        <response name="error" type="view" value="EditCalendar"/>
+    </request-map>
+    <request-map uri="UpdateCalendar">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCalendar"/>
+        <response name="success" type="view" value="EditCalendar"/>
+        <response name="error" type="view" value="EditCalendar"/>
+    </request-map>
+
+    <request-map uri="SelectCalendarExceptionDay">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCalendarExceptionDay"/>
+    </request-map>
+    <request-map uri="EditCalendarExceptionDay">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCalendarExceptionDay"/>
+    </request-map>
+    <request-map uri="CreateCalendarExceptionDay">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCalendarExceptionDay"/>
+        <response name="success" type="view" value="EditCalendarExceptionDay"/>
+        <response name="error" type="view" value="EditCalendarExceptionDay"/>
+    </request-map>
+    <request-map uri="UpdateCalendarExceptionDay">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCalendarExceptionDay"/>
+        <response name="success" type="view" value="EditCalendarExceptionDay"/>
+        <response name="error" type="view" value="EditCalendarExceptionDay"/>
+    </request-map>
+    <request-map uri="RemoveCalendarExceptionDay">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCalendarExceptionDay"/>
+        <response name="success" type="view" value="EditCalendarExceptionDay"/>
+        <response name="error" type="view" value="EditCalendarExceptionDay"/>
+    </request-map>
+
+    <request-map uri="EditCalendarExceptionWeek">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCalendarExceptionWeek"/>
+    </request-map>
+    <request-map uri="SelectCalendarExceptionWeek">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditCalendarExceptionWeek"/>
+    </request-map>
+    <request-map uri="CreateCalendarExceptionWeek">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createCalendarExceptionWeek"/>
+        <response name="success" type="view" value="EditCalendarExceptionWeek"/>
+        <response name="error" type="view" value="EditCalendarExceptionWeek"/>
+    </request-map>
+    <request-map uri="UpdateCalendarExceptionWeek">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateCalendarExceptionWeek"/>
+        <response name="success" type="view" value="EditCalendarExceptionWeek"/>
+        <response name="error" type="view" value="EditCalendarExceptionWeek"/>
+    </request-map>
+    <request-map uri="RemoveCalendarExceptionWeek">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeCalendarExceptionWeek"/>
+        <response name="success" type="view" value="EditCalendarExceptionWeek"/>
+        <response name="error" type="view" value="EditCalendarExceptionWeek"/>
+    </request-map>
+
+    <!-- BOM request mappings -->
+    <request-map uri="findParts">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findParts"/>
+    </request-map>
+    <request-map uri="findBom">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="findBom"/>
+    </request-map>
+    
+    <!-- end of request mappings -->
+
+
+    <!-- View Mappings -->
+    <view-map name="error" page="/error/error.jsp"/>
+    <view-map name="main" type="jpublish" page="/main.ftl"/>
+    <view-map name="login" type="jpublish" page="/login.ftl"/>       
+
+    <view-map name="FindCalendar" type="jpublish" page="/routing/FindCalendar.ftl"/>
+    <view-map name="EditCalendar" type="jpublish" page="/routing/EditCalendar.ftl"/>
+    <view-map name="EditCalendarExceptionDay" type="jpublish" page="/routing/EditCalendarExceptionDay.ftl"/>
+    <view-map name="EditCalendarExceptionWeek" type="jpublish" page="/routing/EditCalendarExceptionWeek.ftl"/>
+    <view-map name="FindMachineGroup" type="jpublish" page="/routing/FindMachineGroup.ftl"/>
+    <view-map name="EditMachineGroup" type="jpublish" page="/routing/EditMachineGroup.ftl"/>
+    <!-- BOM view mappings -->
+    <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>
+    <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>
+
+    <!-- end of view mappings -->
+</site-conf>

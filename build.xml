@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.28 2003/10/26 21:10:47 ajzeneski Exp $
+ *  $Id: build.xml,v 1.29 2003/10/30 10:15:02 jonesde Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -177,6 +177,12 @@
 
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
+        <echo message="[clean] ======= Cleaning manufacturing component ========"/>
+        <echo message="[clean] ================================================="/>
+        <ant dir="components/manufacturing" target="clean" inheritAll="false"/>
+
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
         <echo message="[clean] ========== Cleaning accounting component ========"/>
         <echo message="[clean] ==========-======================================"/>
         <ant dir="components/accounting" target="clean" inheritAll="false"/>
@@ -321,6 +327,12 @@
         <ant dir="components/order" inheritAll="false"/>
 
         <echo message="[build]" />
+        <echo message="[build] ================================================"/>
+        <echo message="[build] ======= Building manufacturing component ======="/>
+        <echo message="[build] ================================================"/>
+        <ant dir="components/manufacturing" inheritAll="false"/>
+
+        <echo message="[build]" />
         <echo message="[build] ==================================================="/>
         <echo message="[build] ========== Building accounting component =========="/>
         <echo message="[build] ==================================================="/>
@@ -455,6 +467,12 @@
         <echo message="[docs] ========== Building order component =========="/>
         <echo message="[docs] ==============================================="/>
         <ant dir="components/order" target="docs" inheritAll="false"/>
+
+        <echo message="[docs]"/>
+        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ======= Building manufacturing component ======"/>
+        <echo message="[docs] ==============================================="/>
+        <ant dir="components/manufacturing" target="docs" inheritAll="false"/>
 
         <echo message="[docs]"/>
         <echo message="[docs] ==================================================="/>

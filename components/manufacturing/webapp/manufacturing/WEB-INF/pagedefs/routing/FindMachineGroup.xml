@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="titleProperty">PageTitleFindMachineGroup</property>
+    <property name="headerItem">machineGroup</property>   
+    <page-action name="/routing/FindMachineGroup.bsh"/> 
+</page>
