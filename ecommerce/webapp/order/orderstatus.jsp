@@ -28,13 +28,15 @@
  *@version    1.0
  */
 %>
+<%-- FIXME add status and status history --%>
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
 
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.util.*" %>
 
-<%@ page import="org.ofbiz.ecommerce.order.OrderHelper" %>
+<%@ page import="org.ofbiz.ecommerce.order.*" %>
+<%@ page import="org.ofbiz.commonapp.order.order.*" %>
 
 <% pageContext.setAttribute("PageName", "orderstatus"); %>
 <%@ include file="/includes/header.jsp" %>
@@ -54,12 +56,14 @@
   GenericValue shippingAddress = null;
   GenericValue billingAddress = null;
   int numberLines = 0;
+  OrderReadHelper order = null;
 
   if(orderId != null && orderId.length() > 0) {
     orderHeader = helper.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
 
     if(orderHeader != null)
     {
+      order = new OrderReadHelper(orderHeader);
       //XXX should we look in the OrderItemContactMech's here, too?
       Collection shippingLocationList = helper.findByAnd("OrderContactMech", UtilMisc.toMap(
               "orderId", orderId, "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null);
@@ -110,7 +114,7 @@
     </tr>
     <tr valign="top" bgcolor="<%=bColorA2%>">
       <td><div class="tabletext"><b>Order Status</b></div></td>
-      <td><div class="tabletext"><%=OrderHelper.getOrderStatusString(orderHeader)%></div></td>
+      <td><div class="tabletext"><%=order.getStatusString()%></div></td>
     </tr>
     <tr valign="top" bgcolor="<%=bColorA1%>">
       <td><div class="tabletext"><b>Date Created</b></div></td>
@@ -184,7 +188,7 @@
       <td valign="top"><div class="tabletext"><b>Payment Info</b></div></td>
       <td valign="top">
         <div class="tabletext">
-          <% GenericValue billToPerson = OrderHelper.getBillToPerson(orderHeader);
+          <% GenericValue billToPerson = order.getBillToPerson();
   
             String billToPersonName = OrderHelper.getPersonName(billToPerson);
             if(billToPersonName != null && billToPersonName.length() > 0) { %>
@@ -330,7 +334,7 @@
     <tr bgcolor="<%=bColorA1%>">
       <td align="right" colspan="3"><div class="tabletext"><b>Shipping & handling</b></div></td>
       <td align="right" nowrap>
-        <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderHelper.getOrderShippingTotal(orderHeader))%></div>
+        <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getShippingTotal())%></div>
       </td>
     </tr>
     <tr bgcolor="<%=bColorA2%>">
@@ -342,7 +346,7 @@
     <tr bgcolor="<%=bColorA1%>">
       <td align="right" colspan="3"><div class="tabletext"><b>Total due</b></div></td>
       <td align="right" nowrap>
-        <div class="tabletext"><%=UtilFormatOut.formatPrice(OrderHelper.getOrderTotalPrice(orderHeader))%></div>
+        <div class="tabletext"><%=UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
       </td>
     </tr>
 <%-- } else { %>

@@ -30,95 +30,237 @@
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.ecommerce.utils.SendMailSMTP" %>
 <%@ page import="javax.servlet.jsp.tagext.BodyContent" %>
+<%@ page import="org.ofbiz.ecommerce.order.*" %>
 
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%-- Insert the same formatting code here as exists in orderstatus.jsp --%>
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.security.*" %>
+<%@ page import="org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 
-
-<%-- SendMailSMTP Code --%>
-<%  String userEMail = person.getEmail();  %>
-<% System.out.println("userEMail: " + userEMail); %>
-<%  String customerEMail = customer.getEmail();  %>
-<% System.out.println("customerEMail: " + customerEMail); %>
-<%  String userOrderEMails = customer.getOrderEmail();  %>
-<% System.out.println("userOrderEMails: " + userOrderEMails); %>
-<%  String OrderEMailsCC = CommonConstants.CONFIRMATION_ORDER_EMAIL_CC;  %>
-<%-- System.out.println("OrderEMailsCC: " + OrderEMailsCC); --%>
-<%  String OrderEMailsBCC = CommonConstants.CONFIRMATION_ORDER_EMAIL_BCC;  %>
-<% System.out.println("OrderEMailsBCC: " + OrderEMailsBCC); %>
-<%--  String OrderEMailRetAddr = "orders@abclumber.com";  --%>
-<%  String OrderEMailRetAddr = CommonConstants.CONFIRMATION_ORDER_EMAIL;  %>
-<% System.out.println("OrderEMailRetAddr: " + OrderEMailRetAddr); %>
-<% String additionalEmails = (String)session.getAttribute(HttpRequestConstants.ORDER_ADDITIONAL_EMAILS); %>
-
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
+<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+<%GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);%>
+<%GenericValue person = userLogin==null?null:userLogin.getRelatedOne("Person");%>
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%
-  String addrTO = new String("");
-  if(userEMail != null && userEMail.length() > 0) addrTO = addrTO + userEMail;
-  if(customerEMail != null && customerEMail.length() > 0)
-  {
-    if(addrTO.length() != 0) addrTO = addrTO + ", ";
-    addrTO = addrTO + customerEMail;
-  }
-  if(userOrderEMails != null && userOrderEMails.length() != 0)
-  {
-    if(addrTO.length() != 0) addrTO = addrTO + ", ";
-    addrTO = addrTO + userOrderEMails;
+  String orderId = request.getParameter("orderId");
+  GenericValue orderHeader = helper.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+  GenericValue shipmentPreference = null;
+  String shippingMethod =  null; 
+  GenericValue paymentPreference = null;
+  OrderReadHelper order = null;
+  if (orderHeader != null) {
+      pageContext.setAttribute("orderHeader", orderHeader);   
+
+      order = new OrderReadHelper(orderHeader);
+      shipmentPreference = orderHeader.getRelatedOne("OrderShipmentPreference");
+      shippingMethod = shipmentPreference.getString("carrierPartyId") + " " 
+            + shipmentPreference.getRelatedOne("CarrierShipmentMethod").getRelatedOne("ShipmentMethodType").getString("description");
+      paymentPreference = orderHeader.getRelatedOne("OrderPaymentPreference");
+
+      pageContext.setAttribute("orderItems", orderHeader.getRelated("OrderItem"));
+     
+    /*  Address shippingAddress = null;
+      if(orderHeader!=null) shippingAddress = AddressHelper.findByPrimaryKey(orderHeader.getShippingAddr());
+
+      Integer paymentAddressId = null;
+      if(orderHeader!=null) paymentAddressId = orderHeader.getPaymentAddress();
+      Address billingAddress = null;
+      if(paymentAddressId != null && paymentAddressId.intValue() > 0)
+      {
+        billingAddress = AddressHelper.findByPrimaryKey(paymentAddressId);
+      }
+*/
+
   }
 
-  if(additionalEmails != null && additionalEmails.length() != 0)
-  {
-    if(OrderEMailsCC.length() != 0) OrderEMailsCC = addrTO + ", ";
-    OrderEMailsCC = OrderEMailsCC + additionalEmails;
-  }
+
+  String siteName = SiteDefs.SITE_NAME;
 %>
-<% System.out.println("addrTO: " + addrTO); %>
 
-<h3>This page will be sent to the following addresses:</h3>
-<p>TO:<%=UtilFormatOut.checkNull(addrTO)%>
-<p>CC:<%=UtilFormatOut.checkNull(OrderEMailsCC)%>
+<% pageContext.setAttribute("PageName", "confirmorder");%>
 
-<%-- Send the mail message now... --%>
-<%
- String contentString = new String(outString); //headerString + mainBodyString;
- //System.out.println("------------------About to output string...----------------------");
- //System.out.println(contentString);
- //System.out.println("------------------Done to output string...----------------------");
- //System.out.println(OrderEMailRetAddr);
- if(orderHeader != null && OrderEMailRetAddr != null && contentString != null &&
-    OrderEMailRetAddr.length() > 0 && contentString.length() > 0)
- {
-   SendMailSMTP sendMail = new SendMailSMTP();
-   sendMail.setSender(OrderEMailRetAddr);
+<html>
+  <head>
+  <title>Confirmation Page</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  
+  <style>
+      p {
+          MARGIN: 0.2em;
+          FONT-FAMILY: Helvetica,sans-serif;
+          FONT-SIZE: 10pt;
+      }
+      .head1 {
+          FONT-FAMILY: Helvetica,sans-serif;
+          MARGIN: 0;
+          FONT-SIZE: 15pt;
+          FONT-WEIGHT: bold;
+          COLOR: #3A4C37;
+      }
+      .head2 {
+          FONT-FAMILY: Helvetica,sans-serif;
+          MARGIN: 0;
+          FONT-SIZE: 12pt;
+          FONT-WEIGHT: bold;
+          COLOR: #000000;
+      }
+      .tabletext {
+          FONT-FAMILY: Verdana,sans-serif;
+          FONT-SIZE: 9pt;
+      }
+      .commentary {
+          FONT-FAMILY: Helvetica,sans-serif;
+          FONT-SIZE: 8pt;
+          FONT-WEIGHT: bold;
+      }
+      ul {
+          FONT-FAMILY: Helvetica,sans-serif;
+          FONT-SIZE: 9pt;
+          }
+      ol {
+          FONT-FAMILY: Helvetica,sans-serif;
+          FONT-SIZE: 9pt;
+      }
+  
+  A.buttonlinkbig {
+          FONT-FAMILY: Helvetica,sans-serif;
+          FONT-SIZE: 14pt;
+          FONT-WEIGHT: bold;
+      text-decoration: none;
+          color: blue;
+          }
+          A.buttonlinkbig:hover { color: red; }
+  
+      A.headerlink {
+          FONT-FAMILY: Helvetica,sans-serif;
+          FONT-SIZE: 8pt;
+          FONT-WEIGHT: bold;
+      text-decoration: none;
+          color: blue;
+          }
+          A.headerlink:hover { color: red; }
+  
+          .headertext {
+          FONT-FAMILY: Helvetica,sans-serif;
+          FONT-SIZE: 8pt;
+          FONT-WEIGHT: bold;
+                  text-decoration: none;
+                  color: #567856;
+      }
+  </style>
+  </head>
+  <body bgcolor="white">
+  <a name="top"></a>
 
-   sendMail.setRecipientTO(addrTO);
-   if(OrderEMailsCC != null) sendMail.setRecipientCC(OrderEMailsCC);
-   if(OrderEMailsBCC != null) sendMail.setRecipientBCC(OrderEMailsBCC);
-   sendMail.setSubject(companyName + " Order Confirmation #" + orderHeader.getString("orderId"));
-   sendMail.setMessage(contentString);
-   sendMail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
-   //This messes things up (what would work here?): Content-Transfer-Encoding: quoted-printable
-   // sendMail.setLocalMachine("ivanhoe.relmsoft.com");
-   // sendMail.setDestinationSMTPServer("www.relmsoft.com");
-   sendMail.setLocalMachine(CommonConstants.SMTP_LOCAL_MACHINE);
-   sendMail.setDestinationSMTPServer(CommonConstants.RELAY_SMTP_HOST);
-   sendMail.setLogging(false);
-
-   try
-   {
-      //System.out.println("About to do the Mail send...");
-      sendMail.send();
-   }
-   catch(java.io.IOException ioe)
-   {
-      System.out.println("Mail send failed from IOException!");
-      ioe.printStackTrace();
-   }
-   catch(RuntimeException rte)
-   {
-      System.out.println("Mail send failed from RuntimeException!");
-      rte.printStackTrace();
-   }
- }
-%>
+<ofbiz:if name="orderHeader">
+  <table width="90%" cellpadding="2" cellspacing="0" border="0">
+      <tr>
+        <td colspan="2">
+      <h1><div class="head1">Order Confirmation</div></h1>
+      <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
+      <div class="tabletext">Thank you for shopping at <%= siteName %> online. Don't forget to stop back for more great deals, contests, new store openings and specials.<br></div>
+      <br>
+        </td>
+      </tr>
+      <tr>
+        <td align="left" colspan="2"><div class="head2"><b>Order &#35;<%= orderHeader.getString("orderId")%></b></div></td>
+      </tr>
+      <tr>
+          <td width="50%" align="left" valign="top"><div class="tabletext"><b>Will be shipped to:</b></div></td>
+          <td width="50%" align="left" valign="top"><div class="tabletext"><b>Preferences:</b></div></td>
+      </tr>
+      <tr>
+          <td align="left" valign="top"><div class="tabletext">
+        <%= OrderHelper.getPersonName(person) %><br>
+        FIXME Address goes here <br>
+        FIXME Payment type FIXME Payment number (last 4 digits) FIXME expires date
+        </div></td>
+        <td align="left" valign="top">
+        <div class="tabletext"><b>Special Instructions</b><br>
+        <%=shipmentPreference.getString("shippingInstructions")%></div><br>
+        <div class="tabletext"><b>Shipping Method</b><br>
+          <%= shipmentPreference.get("carrierPartyId")%> <%=shipmentPreference.getRelatedOne("ShipmentMethodType").get("description")%>
+        </div><br>
+      </td>
+  </tr>
+  <tr>
+      <td colspan="2" valign="top">
+  
+  <table border="1" width="100%" cellpadding="4" cellspacing="0">
+      <tr bgcolor="#99BBAA">
+        <td bgcolor="#99BBAA" width="15%" valign="bottom"><div class="tabletext"><b>ID</b></div></td>
+        <td bgcolor="#99BBAA" width="55%" valign="bottom"><div class="tabletext"><b>Description</b></div></td>
+        <td bgcolor="#99BBAA" width="5%" valign="bottom" align="center"><div class="tabletext"><b>Quantity</b></div></td>
+        <td bgcolor="#99BBAA" width="15%" valign="bottom" align="center"><div class="tabletext"><b>Unit Price</b></div></td>
+        <td bgcolor="#99BBAA" width="15%" valign="bottom" align="center"><div class="tabletext"><b>Total</b></div></td>
+      </tr>
+  
+  
+  <ofbiz:iterator name="orderItem" property="orderItems"> 
+   <ofbiz:if name="orderItem" value="shoppingcart.CommentLine">
+    <tr>
+        <td valign="top" align="left" colspan="5">
+          <div class="tabletext"><b> >><%= orderItem.getString("itemDescription")%></b></div>
+        </td>
+  
+    </tr>
+   </ofbiz:if>
+   <ofbiz:unless name="orderItem" value="shoppingcart.CommentLine">
+    <tr>
+        <td valign="top" align="left">
+          <div class="tabletext"><%= orderItem.getString("productId")%></div>
+        </td>
+        <td valign="top" align="left">
+          <div class="tabletext"><%= orderItem.getString("itemDescription")%></div>
+        </td>
+        <td align="center" valign="top">
+          <div class="tabletext"><%= UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%></div>
+        </td>
+        <td align="right" valign="top">
+          <div class="tabletext"><%= UtilFormatOut.formatPrice(orderItem.getDouble("unitPrice"))%>
+          <%-- ofbiz:iter name="orderItemAdjustment" property="orderItemAdjustmentIterator">
+            <br><table border='0'><tr><td><%=orderItemAdjustment.get("
+          --%>
+          </div>
+        </td>
+        <td align="right" valign="top" nowrap>
+          <div class="tabletext"><%= UtilFormatOut.formatPrice(orderItem.getDouble("unitPrice").doubleValue()*orderItem.getDouble("quantity").doubleValue())%></div>
+        </td>
+  
+    </tr>
+   </ofbiz:unless>
+  </ofbiz:iterator>
+    <tr>
+        <td colspan="2" rowspan="3" valign="middle" align="center" bgcolor="#99BBAA"><div class="commentary">Print this page for your records.</div></td>
+    </tr>
+    <% pageContext.setAttribute("orderAdjustmentIterator", order.getAdjustmentIterator()); %>
+    <ofbiz:iterator name="orderAdjustment" type="org.ofbiz.commonapp.order.order.OrderReadHelper.Adjustment" property="orderAdjustmentIterator">
+    <tr>
+        <td align="right" colspan="2"><div class="tabletext"><b><%=orderAdjustment.getDescription()%></b></div></td>
+        <td align="right" nowrap><div class="tabletext"><%= UtilFormatOut.formatPrice(orderAdjustment.getAmount())%></div></td>
+  
+    </tr>
+    </ofbiz:iterator>
+    <tr>
+        <td align="right" colspan="2"><div class="tabletext"><b>Total Due</b></div></td>
+       <td align="right" nowrap>
+      <div class="tabletext"><%= UtilFormatOut.formatPrice(order.getTotalPrice())%></div>
+        </td>
+    </tr>
+  </table>
+  
+       </td>
+      </tr>
+     </table>
+  <a href="<ofbiz:url>orderstatus?order_id=<%=orderId%></ofbiz:url>" class="buttonlinkbig">[View Order]</a>&nbsp;&nbsp;
+</ofbiz:if>
+<ofbiz:unless name="orderHeader">
+    <p> No order found. </p>
+</ofbiz:unless>
+  <a href="<ofbiz:url>main</ofbiz:url>" class="buttonlinkbig">[Continue Shopping]</a>
+  </body>
+  </html>

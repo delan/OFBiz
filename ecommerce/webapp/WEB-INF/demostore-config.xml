@@ -101,11 +101,28 @@
       <error>view:error</error>
     </request-map>		
     <request-map>
-      <uri>submitorder</uri><secure>true</secure><auth>true</auth>
+      <uri>createorder</uri><secure>true</secure><auth>true</auth>
       <event-type>java</event-type>
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
-      <event-invoke>submitOrder</event-invoke> 
-      <success>view:confirmorder</success>
+      <event-invoke>createOrder</event-invoke> 
+      <success>request:renderconfirmorder</success>
+      <error>view:error</error>
+    </request-map>		
+    <request-map>
+      <uri>renderconfirmorder</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
+      <event-invoke>renderConfirmOrder</event-invoke> 
+      <success>request:emailorder</success>
+      <error>view:error</error>
+    </request-map>		
+    <request-map><uri>confirmorder</uri><success>view:confirmorder</success></request-map>		
+    <request-map>
+      <uri>emailorder</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type>
+      <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
+      <event-invoke>emailOrder</event-invoke> 
+      <success>view:showconfirmorder</success>
       <error>view:error</error>
     </request-map>		
     <request-map><uri>catalog</uri><success>view:catalog</success></request-map>
@@ -177,6 +194,7 @@
     <view-map><view>checkoutoptions</view><secure>true</secure><auth>true</auth><mapped-page>/order/checkoutoptions.jsp</mapped-page></view-map>
     <view-map><view>checkout</view><secure>true</secure><auth>true</auth><mapped-page>/order/checkout.jsp</mapped-page></view-map>
     <view-map><view>confirmorder</view><mapped-page>/order/confirmorder.jsp</mapped-page></view-map>
+    <view-map><view>showconfirmorder</view><secure>true</secure><auth>true</auth><mapped-page>/order/showconfirmorder.jsp</mapped-page></view-map>
     <view-map><view>orderhistory</view><secure>true</secure><auth>true</auth><mapped-page>/order/orderhistory.jsp</mapped-page></view-map>
     <view-map><view>orderstatus</view><secure>true</secure><auth>true</auth><mapped-page>/order/orderstatus.jsp</mapped-page></view-map>
 

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2001/09/07 21:59:50  epabst
+ * checkout process improved
+ *
  * Revision 1.4  2001/09/05 21:51:13  epabst
  * added more data that is used for staging the Order in the shopping cart
  *
@@ -58,7 +61,7 @@ public class ShoppingCart {
     private String poNumber;
     
     private String shippingContactMechId;
-    private String billingContactMechId;
+    private String billingAccountId;
     private String shippingInstructions;
     
     /** stored in the format of <shipment method type id>@<carrier party id> */
@@ -192,8 +195,8 @@ public class ShoppingCart {
     }
     
     /** Sets the billing message string. */
-    public void setBillingContactMechId(String billingContactMechId) {
-        this.billingContactMechId = billingContactMechId;
+    public void setBillingAccountId(String billingAccountId) {
+        this.billingAccountId = billingAccountId;
     }
     
     /** Sets the shipping message string. */
@@ -256,8 +259,8 @@ public class ShoppingCart {
     }
     
     /** Returns the billing message string. */
-    public String getBillingContactMechId() {
-        return billingContactMechId;
+    public String getBillingAccountId() {
+        return billingAccountId;
     }
     
     /** Returns the shipping instructions. */
@@ -293,9 +296,9 @@ public class ShoppingCart {
     }
     
     public GenericValue getBillingAddress(GenericHelper helper) {
-        if (this.billingContactMechId != null) {
+        if (this.billingAccountId != null) {
             return helper.findByPrimaryKey("PostalAddress", UtilMisc.toMap(
-                    "contactMechId", billingContactMechId));
+                    "contactMechId", billingAccountId));
         } else {
             return null;
         }

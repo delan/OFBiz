@@ -285,7 +285,7 @@
       <td colspan="4" align="left">
       <a href="<ofbiz:url><%=prevPage%></ofbiz:url>" class="buttonlinkbig">&nbsp;[Back]</a></td>
       <td align="right">
-        <a href="<ofbiz:url>/confirmorder?event=CREATE</ofbiz:url>" class="buttonlinkbig">[Submit&nbsp;Order]&nbsp;</a>
+        <a href="<ofbiz:url>/createorder</ofbiz:url>" class="buttonlinkbig">[Submit&nbsp;Order]&nbsp;</a>
       </td>
     </tr>
   </table>
