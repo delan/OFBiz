@@ -23,13 +23,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Components
- *  $Id: component-load.xml,v 1.6 2003/10/26 21:09:29 ajzeneski Exp $
+ *  $Id: component-load.xml,v 1.7 2003/10/26 21:27:27 ajzeneski Exp $
 -->
 
 <component-loader>
     <!-- <load-components parent-directory="${ofbiz.home}/components"/> -->
 
-    <load-component component-location="${ofbiz.home}/components/entity"/>
+    <load-component component-location="${ofbiz.home}/components/minerva"/>
     <load-component component-location="${ofbiz.home}/components/entity"/>
     <load-component component-location="${ofbiz.home}/components/security"/>
     <load-component component-location="${ofbiz.home}/components/service"/>
