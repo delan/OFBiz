@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="CONTENT-TYPE"
  content="text/html; charset=windows-1252">
-  <title>Open Source for Business Seminar Outline</title>
+  <title>Configuration, Deployment and Maintenance</title>
   <style>
         DIV,LI {
         font-size: 11px;
@@ -19,503 +19,492 @@
 <div>Written By: David E. Jones</div>
 <div>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a></div>
 <div>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a></div>
-<div><a href="http://sf.net/projects/ofbiz"><img
- src="http://sourceforge.net/sflogo.php?group_id=27173" width="88"
- height="31" border="0" alt="SourceForge Logo"></a></div>
 <div>Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 </div>
 <div>Last Updated: 4 April 2004<br>
 </div>
 <hr>
-<br>
+Target Audience
 <ol>
-  <li>Target Audience
+  <li>System Administrators </li>
+  <li>Database Administrators </li>
+  <li>Application Server Administrators</li>
+  <li>Application Support Personnel</li>
+</ol>
+Topics Covered
+<ol>
+  <li>Building Blocks
     <ol>
-      <li>System Administrators </li>
-      <li>Database Administrators </li>
-      <li>Application Server Administrators</li>
-      <li>Application Support Personnel<br>
-      </li>
+      <li>Operating System Recommendations</li>
+      <ol>
+        <li>Linux</li>
+        <li>OS X</li>
+        <li>Unix Varieties</li>
+        <li>Windows Server<br>
+        </li>
+      </ol>
+      <li>Database Server Recommendations</li>
+      <ol>
+        <li>MySQL MaxDB (was SAP DB)</li>
+        <li>Postgres</li>
+        <li>Oracle, Sybase, MS SQLServer, DB2, other commercial
+databases<br>
+        </li>
+      </ol>
+      <li>Application Server Recommendations</li>
+      <ol>
+        <li>Servlet &amp; JSP Container</li>
+        <ol>
+          <li>Jetty</li>
+          <li>Tomcat</li>
+          <li>Orion, Weblogic &amp; other commercial containers<br>
+          </li>
+        </ol>
+        <li>Transaction Manager</li>
+        <ol>
+          <li>JOTM</li>
+          <li>Orion, Weblogic &amp; other commercial containers</li>
+        </ol>
+        <li>Connection Pool</li>
+        <ol>
+          <li>Minerva</li>
+          <li>XAPool</li>
+          <li>Orion, Weblogic &amp; other commercial containers</li>
+        </ol>
+      </ol>
+      <li>Server Farm &amp; Network Layout Recommendations</li>
+      <ol>
+        <li>Single Server - all in one</li>
+        <li>Separate Application &amp; Database Servers</li>
+        <li>Independent Static Content Server Option</li>
+        <li>Load Balanced Application Server Farm Options</li>
+        <ol>
+          <li>IP Based Load Balancer</li>
+          <li>Session Aware Load Balancer</li>
+          <li>Application Server Specific Load Balancers<br>
+          </li>
+        </ol>
+        <li>Load Balanced Database Options<br>
+        </li>
+      </ol>
     </ol>
   </li>
-  <li>Covers
+  <li>Setting Up a Database</li>
+  <li>Downloading and Installing Java - <a href="http://java.sun.com">java.sun.com<br>
+    </a> </li>
+  <li>OFBiz</li>
+  <ol>
+    <li>Getting OFBiz<br>
+    </li>
     <ol>
-      <li>Building Blocks
-        <ol>
-          <li>Operating System Recommendations</li>
-          <ol>
-            <li>Linux</li>
-            <li>OS X</li>
-            <li>Unix Varieties</li>
-            <li>Windows Server<br>
-            </li>
-          </ol>
-          <li>Database Server Recommendations</li>
-          <ol>
-            <li>MySQL MaxDB (was SAP DB)</li>
-            <li>Postgres</li>
-            <li>Oracle, Sybase, MS SQLServer, DB2, other commercial
-databases<br>
-            </li>
-          </ol>
-          <li>Application Server Recommendations</li>
-          <ol>
-            <li>Servlet &amp; JSP Container</li>
-            <ol>
-              <li>Jetty</li>
-              <li>Tomcat</li>
-              <li>Orion, Weblogic &amp; other commercial containers<br>
-              </li>
-            </ol>
-            <li>Transaction Manager</li>
-            <ol>
-              <li>JOTM</li>
-              <li>Orion, Weblogic &amp; other commercial containers</li>
-            </ol>
-            <li>Connection Pool</li>
-            <ol>
-              <li>Minerva</li>
-              <li>XAPool</li>
-              <li>Orion, Weblogic &amp; other commercial containers</li>
-            </ol>
-          </ol>
-          <li>Server Farm &amp; Network Layout Recommendations</li>
-          <ol>
-            <li>Single Server - all in one</li>
-            <li>Separate Application &amp; Database Servers</li>
-            <li>Independent Static Content Server Option</li>
-            <li>Load Balanced Application Server Farm Options</li>
-            <ol>
-              <li>IP Based Load Balancer</li>
-              <li>Session Aware Load Balancer</li>
-              <li>Application Server Specific Load Balancers<br>
-              </li>
-            </ol>
-            <li>Load Balanced Database Options<br>
-            </li>
-          </ol>
-        </ol>
-      </li>
-      <li>Setting Up a Database</li>
-      <li>Downloading and Installing Java - <a
- href="http://java.sun.com">java.sun.com<br>
-        </a> </li>
-      <li>OFBiz</li>
+      <li>Doanload a Release</li>
       <ol>
-        <li>Getting OFBiz<br>
+        <li>Best for demonstration, evaluation, low profile
+deployments</li>
+      </ol>
+      <li>Getting from CVS</li>
+      <ol>
+        <li>Best for larger projects or where any real
+customization is done</li>
+        <li>CVS Client - OS Dependent, or in IDE</li>
+        <li>CVS Server Location &amp; Login Account<br>
+        </li>
+      </ol>
+      <li>Building</li>
+    </ol>
+    <ol>
+      <ol>
+        <li>Download and Install Ant - <a href="http://ant.apache.org">ant.apache.org</a><br>
+        </li>
+        <li>Build Files<br>
+        </li>
+      </ol>
+    </ol>
+    <li>Deploying &amp; Configuring OFBiz
+      <ol>
+        <li>Database Configuration</li>
+        <ol>
+          <li>jndiservers.xml</li>
+          <li>entityengine.xml</li>
+        </ol>
+        <li>J2EE Application Server Configuration<br>
         </li>
         <ol>
-          <li>Doanload a Release</li>
-          <ol>
-            <li>Best for demonstration, evaluation, low profile
-deployments</li>
-          </ol>
-          <li>Getting from CVS</li>
-          <ol>
-            <li>Best for larger projects or where any real
-customization is done</li>
-            <li>CVS Client - OS Dependent, or in IDE</li>
-            <li>CVS Server Location &amp; Login Account<br>
-            </li>
-          </ol>
-          <li>Building</li>
+          <li>Servlet &amp; JSP Container </li>
+          <li>Transaction Manager</li>
+          <li>Connection Pool</li>
+          <li>JMS Configuration</li>
         </ol>
+        <li>Production Oriented Settings</li>
         <ol>
+          <li>URL Settings</li>
           <ol>
-            <li>Download and Install Ant - <a
- href="http://ant.apache.org">ant.apache.org</a><br>
-            </li>
-            <li>Build Files<br>
-            </li>
+            <li>HTTP &amp; HTTPS Setup and cross-forwarding</li>
+            <li>Static Content Server Location Setup</li>
+            <li>url.properties</li>
           </ol>
-        </ol>
-        <li>Deploying &amp; Configuring OFBiz
+          <li>Cache Settings &amp; Analysis<br>
+          </li>
           <ol>
-            <li>Database Configuration</li>
+            <li>cache.properties</li>
             <ol>
-              <li>jndiservers.xml</li>
-              <li>entityengine.xml</li>
-            </ol>
-            <li>J2EE Application Server Configuration<br>
-            </li>
-            <ol>
-              <li>Servlet &amp; JSP Container </li>
-              <li>Transaction Manager</li>
-              <li>Connection Pool</li>
-              <li>JMS Configuration</li>
-            </ol>
-            <li>Production Oriented Settings</li>
-            <ol>
-              <li>URL Settings</li>
-              <ol>
-                <li>HTTP &amp; HTTPS Setup and cross-forwarding</li>
-                <li>Static Content Server Location Setup</li>
-                <li>url.properties</li>
-              </ol>
-              <li>Cache Settings &amp; Analysis<br>
-              </li>
-              <ol>
-                <li>cache.properties</li>
-                <ol>
-                  <li>Persistent Cache Settings (used when server
+              <li>Persistent Cache Settings (used when server
 starts
 up)<br>
-                  </li>
-                </ol>
-                <li>WebTools Cache UI</li>
-                <ol>
-                  <li>See Cache Statistics</li>
-                  <li>Change Cache Parameters on-the-fly (cleared on
+              </li>
+            </ol>
+            <li>WebTools Cache UI</li>
+            <ol>
+              <li>See Cache Statistics</li>
+              <li>Change Cache Parameters on-the-fly (cleared on
 server restart)<br>
-                  </li>
-                </ol>
-              </ol>
-              <li>Debug &amp; Logging Settings</li>
-              <ol>
-                <li>Log4J</li>
-                <li>debug.properties</li>
-              </ol>
+              </li>
             </ol>
           </ol>
-        </li>
-        <li>Keeping Up With OFBiz</li>
-        <ol>
-          <li>Benefits of Staying Up-To-Date with The Project</li>
-          <li>Open Source versus Proprietary</li>
+          <li>Debug &amp; Logging Settings</li>
           <ol>
-            <li>Benefits of Putting as Much as Possible in the Open
+            <li>Log4J</li>
+            <li>debug.properties</li>
+          </ol>
+        </ol>
+      </ol>
+    </li>
+    <li>Keeping Up With OFBiz</li>
+    <ol>
+      <li>Benefits of Staying Up-To-Date with The Project</li>
+      <li>Open Source versus Proprietary</li>
+      <ol>
+        <li>Benefits of Putting as Much as Possible in the Open
 Source Project</li>
-            <li>What to Keep Proprietary</li>
-          </ol>
-          <li>Code Design for Easier Maintenance</li>
-          <li>Managing Your Own Code Repository</li>
-          <ol>
-            <li>Separate CVS Modules</li>
-            <li>Single CVS Modules with Proprietary Branch and Vendor
+        <li>What to Keep Proprietary</li>
+      </ol>
+      <li>Code Design for Easier Maintenance</li>
+      <li>Managing Your Own Code Repository</li>
+      <ol>
+        <li>Separate CVS Modules</li>
+        <li>Single CVS Modules with Proprietary Branch and Vendor
 Branch</li>
-            <ol>
-              <li>Branched Tagging</li>
-              <li>Importing Vendor Branch</li>
-              <li>Merging Branches<br>
-              </li>
-            </ol>
-          </ol>
+        <ol>
+          <li>Branched Tagging</li>
+          <li>Importing Vendor Branch</li>
+          <li>Merging Branches<br>
+          </li>
         </ol>
       </ol>
-      <li>Restarting versus Run-time Changable<br>
-      </li>
-      <li>The OFBiz WebTools</li>
+    </ol>
+  </ol>
+  <li>Restarting versus Run-time Changable<br>
+  </li>
+  <li>The OFBiz WebTools</li>
+  <ol>
+    <li>General Tools</li>
+    <li>Entity Engine Tools</li>
+    <li>Service Engine Tools</li>
+    <li>Workflow Engine Tools</li>
+    <li>Performance Tools</li>
+  </ol>
+  <li>Performance &amp; Reliability</li>
+  <ol>
+    <li>Monitoring</li>
+    <ol>
+      <li>Network Load Monitoring</li>
       <ol>
-        <li>General Tools</li>
-        <li>Entity Engine Tools</li>
-        <li>Service Engine Tools</li>
-        <li>Workflow Engine Tools</li>
-        <li>Performance Tools</li>
+        <li>Internal Network</li>
+        <li>Internet Bandwidth Used</li>
       </ol>
-      <li>Performance &amp; Reliability</li>
+      <li>Server Resource Monitoring</li>
       <ol>
-        <li>Monitoring</li>
+        <li>Memory (RAM) Usage</li>
         <ol>
-          <li>Network Load Monitoring</li>
-          <ol>
-            <li>Internal Network</li>
-            <li>Internet Bandwidth Used</li>
-          </ol>
-          <li>Server Resource Monitoring</li>
-          <ol>
-            <li>Memory (RAM) Usage</li>
-            <ol>
-              <li>Amount Used/Available Over Time (tends to go up and
+          <li>Amount Used/Available Over Time (tends to go up and
 down)<br>
-              </li>
-              <li>Read/Write Volume<br>
-              </li>
-            </ol>
-            <li>Virtual Memory Usage (watch closely...)<br>
-            </li>
-            <li>Disk Usage</li>
-            <ol>
-              <li>Amount Used/Available (tends to steadily increase)<br>
-              </li>
-              <li>Read/Write Volume</li>
-              <li>Data Warehousing</li>
-              <ol>
-                <li>Active versus Warehoused Data</li>
-                <li>Separate Databases with Different Performance and
+          </li>
+          <li>Read/Write Volume<br>
+          </li>
+        </ol>
+        <li>Virtual Memory Usage (watch closely...)<br>
+        </li>
+        <li>Disk Usage</li>
+        <ol>
+          <li>Amount Used/Available (tends to steadily increase)<br>
+          </li>
+          <li>Read/Write Volume</li>
+          <li>Data Warehousing</li>
+          <ol>
+            <li>Active versus Warehoused Data</li>
+            <li>Separate Databases with Different Performance and
 Volume Needs</li>
-              </ol>
-            </ol>
-            <li>Different Needs for Different Server Roles</li>
-            <ol>
-              <li>Static Content Servers</li>
-              <li>Application Servers</li>
-              <li>Database Servers</li>
-              <li>Special Purpose Boxes</li>
-              <li>Developing, Testing and Production Servers</li>
-            </ol>
-          </ol>
-          <li>Load Testing</li>
-          <ol>
-            <li>Tests Different Activities (browes, search, small &amp;
-large transactions, ...)</li>
-            <li>Test on Production Servers, preferably with little or
-no real customer load</li>
-            <li>Should denerally be done before launch, and before
-known busy seasons</li>
-            <li>Load Testing Tools</li>
-            <ol>
-              <li>Commercial (like LoadRunner, others)</li>
-              <li>Open Source: Apache Jakarta JMeter -
-                <a href="http://jakarta.apache.org">jakarta.apache.org</a><br>
-              </li>
-            </ol>
-          </ol>
-          <li>Production Monitoring</li>
-          <ol>
-            <li>Client Response Time on a Remote Network<br>
-            </li>
-            <li>Resource Availability</li>
-            <ol>
-              <li>Secure and Non-secure Ports for Web Servers (Static
-Content &amp; App Servers)</li>
-              <li>Database Availability</li>
-            </ol>
-            <li>Automated Notifications (email, pager, etc)</li>
-            <li>Internal versus Remote Monitoring</li>
-            <ol>
-              <li>Monitoring and Management Software</li>
-              <ol>
-                <li>Commercial<br>
-                </li>
-              </ol>
-              <ol>
-                <ol>
-                  <li>HP OpenView</li>
-                  <li>Patrol</li>
-                  <li>Netcool/Omnibus<br>
-                  </li>
-                </ol>
-                <li>Open Source</li>
-                <ol>
-                  <li>*NOCOL - www.netplex-tech.com/software/nocol<br>
-                  </li>
-                  <li>*Netsaint - www.netsaint.org<br>
-                  </li>
-                  <li>*Big Brother (fee for commercial use) -
-maclawran.ca/sean/bb-dnld<br>
-                  </li>
-                  <li>Mon - www.kernel.org/software/mon<br>
-                  </li>
-                  <li>Angel Network Monitor -
-www.ism.com.br/paganini/angel<br>
-                  </li>
-                  <li>Autostatus - www.angio.net/consult/autostatus<br>
-                  </li>
-                  <li>The Event Monitor Project -
-www.gsyc.inf.ec3m.es/~assman/em/<br>
-                  </li>
-                  <li>MARS - www.altara.com/mars.html<br>
-                  </li>
-                  <li>Netup - www.pasteur.fr/units/sys/netup<br>
-                  </li>
-                  <li>OverCR - www.monitor.org/overcr<br>
-                  </li>
-                  <li>Spong - monsters.org/pub/spong<br>
-                  </li>
-                  <li>PIKT - pikt.uchicago.edu/pikt<br>
-                  </li>
-                  <li>JMon - www.dsp.sun.ac.za/jjb/jmon<br>
-                  </li>
-                  <li>Sysmon - www.sysmon.org<br>
-                  </li>
-                  <li>NocMonitor - www.nocmonitor.net<br>
-                  </li>
-                </ol>
-              </ol>
-              <li>Outsourced Monitoring Services</li>
-            </ol>
           </ol>
         </ol>
-        <li>Improving Performance</li>
+        <li>Different Needs for Different Server Roles</li>
         <ol>
-          <li>Load Balancing with a Server Farm<br>
-          </li>
-          <ol>
-            <li>Also Good for Reliability</li>
-            <li>More Difficult and Expensive to Setup and Maintain than
-a Single Server per Function <br>
-            </li>
-            <li>Easiest for the Application Server and Static Content
-Server </li>
-            <li>Possible with Database, Depends a Lot on the Database
-Used</li>
-          </ol>
-          <li>Separate Static Content to Independent Server, or on a
-Content Service like Akamai</li>
-          <li>Caching</li>
-          <ol>
-            <li>Easiest Scaling on Application Server Level, Cache
-Dynamic Content There<br>
-            </li>
-            <li>Database Data on the Application Server</li>
-            <li>Full or Partial Rendered Content on Application Server<br>
-            </li>
-            <li>Issues with Caching</li>
-            <ol>
-              <li>Large Content</li>
-              <li>Infrequently Viewed Content</li>
-              <li>Frequenctly Changed Content</li>
-            </ol>
-          </ol>
-          <li>Query Analysis and Optimization</li>
-          <ol>
-            <li>Analysis Tools, Common Parameters (records searched,
-time, temp space used, etc)<br>
-            </li>
-            <li>Indexes</li>
-            <li>Changing Queries</li>
-            <li>Server Hardware</li>
-            <ol>
-              <li>Memory</li>
-              <ol>
-                <li>Watch RAM versus Virtual Memory (disk based)
-Activity</li>
-                <li>Putting Commonly Used Tables in Memory for Queries
-Requiring Full Table Scans<br>
-                </li>
-                <li>Consider More Memory<br>
-                </li>
-              </ol>
-              <li>Hard Disks &amp; Storage Volumes: Indexes, Data, etc</li>
-            </ol>
-          </ol>
-          <li>Code Analysis and Optimization</li>
-          <ol>
-            <li>Optimization Technique</li>
-            <ol>
-              <li>It is almost always hard to know what will be slowest
-for a given piece of code<br>
-              </li>
-              <li>First write the code to do what is required, don't
-worry too much about performance</li>
-              <li>Analyize the the execution of the code with a
-profiling tool to find where most of the time is being used</li>
-              <li>Concentrate only on the places where a lot of time is
-used, ie bang for the buck</li>
-            </ol>
-            <li>Code Profiling Tools</li>
-            <li>Analysing Results</li>
-            <ol>
-              <li>Calls to Methods<br>
-              </li>
-              <li>Time Spent in Methods</li>
-              <li>Allocated Object Counts</li>
-              <li>Browsing Hierarchies of Calls and Objects</li>
-            </ol>
-            <li>Common Slow Spots<br>
-            </li>
-            <ol>
-              <li>Watch Java Classpath Searching, Very Expensive (and
-mostly eliminated)<br>
-              </li>
-              <li>Watch the Inner Loop, ie the code that is run the
-largest number of times</li>
-              <li>Communication with other external resources and
-serialization/deserialization</li>
-              <ol>
-                <li>Databases</li>
-                <li>Browsers</li>
-                <li>Peer Application Servers<br>
-                </li>
-                <li>File Systems</li>
-                <li>Local versus Wide Area Networks<br>
-                </li>
-              </ol>
-              <li>Expensive Object Creation/Initialization, Object
-Reuse Concept</li>
-            </ol>
-          </ol>
-        </ol>
-        <li>Improving Reliability</li>
-        <ol>
-          <li>Load Balancing (see comments under Improving Performance)</li>
-          <li>Hot, Warm and Cold Fail-over</li>
-          <li>Redundant Internet Connections<br>
-          </li>
-          <li>Reliability Inside the Box</li>
-          <ol>
-            <li>Redundant Disk Arrays</li>
-            <li>Redundant Power Supplies</li>
-            <li>Redundant Network Connections<br>
-            </li>
-            <li>Other Redundancies (less common): CPUs, Memory, etc</li>
-          </ol>
-          <li>The Importance of Security</li>
-          <ol>
-            <li>Firewalls</li>
-            <li>Internal Only versus Internet Accessable Servers</li>
-            <ol>
-              <li>Keep Database Servers on local network only</li>
-              <li>Put Application Servers and Content Servers on Local
-and Public Networks</li>
-            </ol>
-          </ol>
+          <li>Static Content Servers</li>
+          <li>Application Servers</li>
+          <li>Database Servers</li>
+          <li>Special Purpose Boxes</li>
+          <li>Developing, Testing and Production Servers</li>
         </ol>
       </ol>
-      <li>eCommerce Specific</li>
+      <li>Load Testing</li>
       <ol>
-        <li>Web Sites, Stores and Catalogs</li>
-        <li>Payment Processing</li>
+        <li>Tests Different Activities (browes, search, small &amp;
+large transactions, ...)</li>
+        <li>Test on Production Servers, preferably with little or
+no real customer load</li>
+        <li>Should denerally be done before launch, and before
+known busy seasons</li>
+        <li>Load Testing Tools</li>
         <ol>
-          <li>Service Providers</li>
+          <li>Commercial (like LoadRunner, others)</li>
+          <li>Open Source: Apache Jakarta JMeter - <a
+ href="http://jakarta.apache.org">jakarta.apache.org</a><br>
+          </li>
+        </ol>
+      </ol>
+      <li>Production Monitoring</li>
+      <ol>
+        <li>Client Response Time on a Remote Network<br>
+        </li>
+        <li>Resource Availability</li>
+        <ol>
+          <li>Secure and Non-secure Ports for Web Servers (Static
+Content &amp; App Servers)</li>
+          <li>Database Availability</li>
+        </ol>
+        <li>Automated Notifications (email, pager, etc)</li>
+        <li>Internal versus Remote Monitoring</li>
+        <ol>
+          <li>Monitoring and Management Software</li>
           <ol>
-            <li>Cybersource</li>
-            <li>ClearCommerce</li>
-            <li>Verisign PayflowPro<br>
-            </li>
-            <li>PayPal</li>
-            <li>WorldPay</li>
-            <li>ValueLink (gift cards)</li>
-            <li>Offline Payment<br>
+            <li>Commercial<br>
             </li>
           </ol>
-          <li>Payment Properties File</li>
-          <li>Payment Services</li>
-          <li>Store Payment Settings<br>
-          </li>
-        </ol>
-        <li>Tax Calculation</li>
-        <ol>
-          <li>OFBiz Internal<br>
-          </li>
-          <li>ZipSales Data Subscription, with OFBiz code to use it</li>
-          <li>TaxWare Integration</li>
-          <li>Other<br>
-          </li>
-        </ol>
-        <li>Shipping Calculation</li>
-        <ol>
-          <li>OFBiz Internal</li>
-          <li>Other<br>
-          </li>
-        </ol>
-        <li>Inventory Settings</li>
-        <ol>
-          <li>Check Inventory</li>
-          <li>Require Inventory for Purchase (or allow back-orders)</li>
-          <li>Reserve Iventory</li>
-          <li>Inventory Warehouse (a type of Facility)</li>
           <ol>
-            <li>Single Facility</li>
-            <li>Multiple Facilities<br>
+            <ol>
+              <li>HP OpenView</li>
+              <li>Patrol</li>
+              <li>Netcool/Omnibus<br>
+              </li>
+            </ol>
+            <li>Open Source</li>
+            <ol>
+              <li>*NOCOL - www.netplex-tech.com/software/nocol<br>
+              </li>
+              <li>*Netsaint - www.netsaint.org<br>
+              </li>
+              <li>*Big Brother (fee for commercial use) -
+maclawran.ca/sean/bb-dnld<br>
+              </li>
+              <li>Mon - www.kernel.org/software/mon<br>
+              </li>
+              <li>Angel Network Monitor -
+www.ism.com.br/paganini/angel<br>
+              </li>
+              <li>Autostatus - www.angio.net/consult/autostatus<br>
+              </li>
+              <li>The Event Monitor Project -
+www.gsyc.inf.ec3m.es/~assman/em/<br>
+              </li>
+              <li>MARS - www.altara.com/mars.html<br>
+              </li>
+              <li>Netup - www.pasteur.fr/units/sys/netup<br>
+              </li>
+              <li>OverCR - www.monitor.org/overcr<br>
+              </li>
+              <li>Spong - monsters.org/pub/spong<br>
+              </li>
+              <li>PIKT - pikt.uchicago.edu/pikt<br>
+              </li>
+              <li>JMon - www.dsp.sun.ac.za/jjb/jmon<br>
+              </li>
+              <li>Sysmon - www.sysmon.org<br>
+              </li>
+              <li>NocMonitor - www.nocmonitor.net<br>
+              </li>
+            </ol>
+          </ol>
+          <li>Outsourced Monitoring Services</li>
+        </ol>
+      </ol>
+    </ol>
+    <li>Improving Performance</li>
+    <ol>
+      <li>Load Balancing with a Server Farm<br>
+      </li>
+      <ol>
+        <li>Also Good for Reliability</li>
+        <li>More Difficult and Expensive to Setup and Maintain than
+a Single Server per Function <br>
+        </li>
+        <li>Easiest for the Application Server and Static Content
+Server </li>
+        <li>Possible with Database, Depends a Lot on the Database
+Used</li>
+      </ol>
+      <li>Separate Static Content to Independent Server, or on a
+Content Service like Akamai</li>
+      <li>Caching</li>
+      <ol>
+        <li>Easiest Scaling on Application Server Level, Cache
+Dynamic Content There<br>
+        </li>
+        <li>Database Data on the Application Server</li>
+        <li>Full or Partial Rendered Content on Application Server<br>
+        </li>
+        <li>Issues with Caching</li>
+        <ol>
+          <li>Large Content</li>
+          <li>Infrequently Viewed Content</li>
+          <li>Frequenctly Changed Content</li>
+        </ol>
+      </ol>
+      <li>Query Analysis and Optimization</li>
+      <ol>
+        <li>Analysis Tools, Common Parameters (records searched,
+time, temp space used, etc)<br>
+        </li>
+        <li>Indexes</li>
+        <li>Changing Queries</li>
+        <li>Server Hardware</li>
+        <ol>
+          <li>Memory</li>
+          <ol>
+            <li>Watch RAM versus Virtual Memory (disk based)
+Activity</li>
+            <li>Putting Commonly Used Tables in Memory for Queries
+Requiring Full Table Scans<br>
+            </li>
+            <li>Consider More Memory<br>
             </li>
           </ol>
+          <li>Hard Disks &amp; Storage Volumes: Indexes, Data, etc</li>
         </ol>
-        <li>TODO: Fill-in all store related settings, etc<br>
+      </ol>
+      <li>Code Analysis and Optimization</li>
+      <ol>
+        <li>Optimization Technique</li>
+        <ol>
+          <li>It is almost always hard to know what will be slowest
+for a given piece of code<br>
+          </li>
+          <li>First write the code to do what is required, don't
+worry too much about performance</li>
+          <li>Analyize the the execution of the code with a
+profiling tool to find where most of the time is being used</li>
+          <li>Concentrate only on the places where a lot of time is
+used, ie bang for the buck</li>
+        </ol>
+        <li>Code Profiling Tools</li>
+        <li>Analysing Results</li>
+        <ol>
+          <li>Calls to Methods<br>
+          </li>
+          <li>Time Spent in Methods</li>
+          <li>Allocated Object Counts</li>
+          <li>Browsing Hierarchies of Calls and Objects</li>
+        </ol>
+        <li>Common Slow Spots<br>
+        </li>
+        <ol>
+          <li>Watch Java Classpath Searching, Very Expensive (and
+mostly eliminated)<br>
+          </li>
+          <li>Watch the Inner Loop, ie the code that is run the
+largest number of times</li>
+          <li>Communication with other external resources and
+serialization/deserialization</li>
+          <ol>
+            <li>Databases</li>
+            <li>Browsers</li>
+            <li>Peer Application Servers<br>
+            </li>
+            <li>File Systems</li>
+            <li>Local versus Wide Area Networks<br>
+            </li>
+          </ol>
+          <li>Expensive Object Creation/Initialization, Object
+Reuse Concept</li>
+        </ol>
+      </ol>
+    </ol>
+    <li>Improving Reliability</li>
+    <ol>
+      <li>Load Balancing (see comments under Improving Performance)</li>
+      <li>Hot, Warm and Cold Fail-over</li>
+      <li>Redundant Internet Connections<br>
+      </li>
+      <li>Reliability Inside the Box</li>
+      <ol>
+        <li>Redundant Disk Arrays</li>
+        <li>Redundant Power Supplies</li>
+        <li>Redundant Network Connections<br>
+        </li>
+        <li>Other Redundancies (less common): CPUs, Memory, etc</li>
+      </ol>
+      <li>The Importance of Security</li>
+      <ol>
+        <li>Firewalls</li>
+        <li>Internal Only versus Internet Accessable Servers</li>
+        <ol>
+          <li>Keep Database Servers on local network only</li>
+          <li>Put Application Servers and Content Servers on Local
+and Public Networks</li>
+        </ol>
+      </ol>
+    </ol>
+  </ol>
+  <li>eCommerce Specific</li>
+  <ol>
+    <li>Web Sites, Stores and Catalogs</li>
+    <li>Payment Processing</li>
+    <ol>
+      <li>Service Providers</li>
+      <ol>
+        <li>Cybersource</li>
+        <li>ClearCommerce</li>
+        <li>Verisign PayflowPro<br>
+        </li>
+        <li>PayPal</li>
+        <li>WorldPay</li>
+        <li>ValueLink (gift cards)</li>
+        <li>Offline Payment<br>
+        </li>
+      </ol>
+      <li>Payment Properties File</li>
+      <li>Payment Services</li>
+      <li>Store Payment Settings<br>
+      </li>
+    </ol>
+    <li>Tax Calculation</li>
+    <ol>
+      <li>OFBiz Internal<br>
+      </li>
+      <li>ZipSales Data Subscription, with OFBiz code to use it</li>
+      <li>TaxWare Integration</li>
+      <li>Other<br>
+      </li>
+    </ol>
+    <li>Shipping Calculation</li>
+    <ol>
+      <li>OFBiz Internal</li>
+      <li>Other<br>
+      </li>
+    </ol>
+    <li>Inventory Settings</li>
+    <ol>
+      <li>Check Inventory</li>
+      <li>Require Inventory for Purchase (or allow back-orders)</li>
+      <li>Reserve Iventory</li>
+      <li>Inventory Warehouse (a type of Facility)</li>
+      <ol>
+        <li>Single Facility</li>
+        <li>Multiple Facilities<br>
         </li>
       </ol>
     </ol>
-  </li>
+    <li>TODO: Fill-in all store related settings, etc<br>
+    </li>
+  </ol>
 </ol>
 <br>
 <br>
