@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>/templates/main.ftl</template>
+    <generator name="ofbiz-freemarker"/>
+    <property name="title">Order Summary - Thank you for your order!</property>
+    <page-action>/order/orderstatus.js</page-action>
+    <pageEditor>OfbizOrderEditor</pageEditor>
+</page>

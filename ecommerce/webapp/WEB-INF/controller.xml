@@ -251,8 +251,8 @@
     <request-map uri="emailorder">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="emailOrder"/>
-        <response name="success" type="view" value="showconfirmorder"/>
-        <response name="error" type="view" value="showconfirmorder"/>
+        <response name="success" type="view" value="ordercomplete"/>
+        <response name="error" type="view" value="ordercomplete"/>
     </request-map>
     
     <request-map uri="callWorldPay">
@@ -535,6 +535,7 @@
 
     <view-map name="checkoutoptions" type="wsp" page="/order/checkoutoptions.ftl"/>
     <view-map name="checkout" type="wsp" page="/order/checkoutreview.ftl"/>
+    <view-map name="ordercomplete" type="wsp" page="/order/ordercomplete.ftl"/>
     <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
     <view-map name="showconfirmorder" type="region"/>
     <view-map name="orderhistory" type="wsp" page="/order/orderhistory.ftl"/>
