@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/12/09 12:44:20  jonesde
+ * Added status filtering for all non wanted status
+ *
  * Revision 1.9  2001/12/09 12:18:12  jonesde
  * Added some task/activity workers
  *
@@ -307,9 +310,9 @@ public class WorkEffortWorker {
                 List constraints = new LinkedList();
                 constraints.add(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")));
                 constraints.add(new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "ACTIVITY"));
-                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_DECLINED"));
-                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_DELEGATED"));
-                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+                constraints.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED"));
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_TERMINATED"));
                 constraints.add(new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "WF_ABORTED"));
@@ -334,9 +337,9 @@ public class WorkEffortWorker {
                 validWorkEfforts = delegator.findByAnd("WorkEffortAndPartyAssign", 
                         UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, userLogin.get("partyId")),
                         new EntityExpr("workEffortTypeId", EntityOperator.EQUALS, "TASK"),
-                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_DECLINED"),
-                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_DELEGATED"),
-                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "WF_COMPLETED")),
+                        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"),
+                        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"),
+                        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED")),
                         UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
