@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  -->
 <simple-methods>
@@ -651,6 +651,7 @@
         <check-errors/>
 
         <field-to-env field-name="stockMoveHandled" map-name="parameters"/>
+        <string-to-field string="null" field-name="productId" map-name="productSave"/>
 
         <!--
             The will involve finding all stock moves for ProductFacilityLocation based pre-emptive moves.
@@ -662,7 +663,9 @@
         -->
         <!-- start by finding all Xxx where locationTypeEnumId=FLT_PICKLOC and total of InventoryItems in the loc are less than minimumStock (ProductFacilityLocation, FacilityLocation, InventoryItem) -->
         <string-to-field string="FLT_PICKLOC" field-name="locationTypeEnumId" map-name="productFacilityLocationQuantityTestMap"/>
-        <find-by-and entity-name="ProductFacilityLocationQuantityTest" map-name="productFacilityLocationQuantityTestMap" list-name="productFacilityLocationQuantityTestList"/>
+        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="productFacilityLocationQuantityTestMap"/>
+        <string-to-list string="productId" list-name="productFacilityLocationQuantityTestOrderList"/>
+        <find-by-and entity-name="ProductFacilityLocationQuantityTest" map-name="productFacilityLocationQuantityTestMap" list-name="productFacilityLocationQuantityTestList" order-by-list-name="productFacilityLocationQuantityTestOrderList"/>
         <iterate entry-name="productFacilityLocationQuantityTest" list-name="productFacilityLocationQuantityTestList">
             <!-- TODO: this comparison could be done by the database and be more efficient, but since we don't have field to field comparisons in the entity engine or EntityCondition operations in simple-methods, some work needs to be done before that can happen -->
             <if>
@@ -682,63 +685,76 @@
                             </or>
                         </condition>
                         <then>
-                            <get-related-one value-name="productFacilityLocationQuantityTest" relation-name="Product" to-value-name="productSave"/>
+                            <if-compare-field map-name="productFacilityLocationQuantityTest" field-name="productId" operator="not-equals" to-map-name="productSave">
+                            	<get-related-one value-name="productFacilityLocationQuantityTest" relation-name="Product" to-value-name="productSave"/>
+ 								<clear-field field-name="fromLocationTotalAvailableToPromise"/>
+                            </if-compare-field>
                             <get-related-one value-name="productFacilityLocationQuantityTest" relation-name="FacilityLocation" to-value-name="targetFacilityLocationSave"/>
 
                             <!-- create a moveInfo for each from location with a corresponding quantity -->
-                            <field-to-field field-name="productId" map-name="productFacilityLocationQuantityTest" to-map-name="findProductFacilityLocationViewMap"/>
-                            <field-to-field field-name="facilityId" map-name="productFacilityLocationQuantityTest" to-map-name="findProductFacilityLocationViewMap"/>
-                            <string-to-field string="FLT_BULK" field-name="locationTypeEnumId" map-name="findProductFacilityLocationViewMap"/>
-                            <find-by-and entity-name="ProductFacilityLocationView" map-name="findProductFacilityLocationViewMap" list-name="productFacilityLocationViewList"/>
+                            <field-to-field field-name="productId" map-name="productFacilityLocationQuantityTest" to-map-name="findInventoryItemAndLocationMap"/>
+                            <field-to-field field-name="facilityId" map-name="productFacilityLocationQuantityTest" to-map-name="findInventoryItemAndLocationMap"/>
+                            <string-to-field string="FLT_BULK" field-name="locationTypeEnumId" map-name="findInventoryItemAndLocationMap"/>
+                            <find-by-and entity-name="InventoryItemAndLocation" map-name="findInventoryItemAndLocationMap" list-name="InventoryItemAndLocationList"/>
 
-                            <if-empty field-name="productFacilityLocationViewList">
+                            <if-empty field-name="InventoryItemAndLocationList">
                                 <string-to-list string="Error in stock move, could not find a bulk location for facility [${productFacilityLocationQuantityTest.facilityId}] and product [${productFacilityLocationQuantityTest.productId}]" list-name="warningMessageList"/>
                             <else>
-                                <iterate entry-name="productFacilityLocationView" list-name="productFacilityLocationViewList">
-                                    <get-related value-name="productFacilityLocationView" relation-name="InventoryItem" list-name="inventoryItemList"/>
-                                    <calculate field-name="totalAvailableToPromise" type="Double"><number value="0"/></calculate>
-                                    <iterate entry-name="inventoryItem" list-name="inventoryItemList">
-                                        <calculate field-name="totalAvailableToPromise" type="Double">
-                                            <calcop field-name="totalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromise" operator="get"/></calcop>
-                                        </calculate>
-                                    </iterate>
+                                 <field-to-env field-name="moveQuantity" map-name="productFacilityLocationQuantityTest" env-name="targetLocationMoveQuantity"/>
+						        <!-- start by making a Map where the locationSeqId is the key and the value is a List of InventoryItemAndLocation -->
+						        <iterate entry-name="InventoryItemAndLocation" list-name="InventoryItemAndLocationList">
+						            <field-to-list field-name="InventoryItemAndLocation" list-name="InventoryItemAndLocationByLocMap.${InventoryItemAndLocation.locationSeqId}"/>
+						        </iterate>
+                                <iterate-map key-name="locationSeqId" value-name="perLocationInventoryItemAndLocList" map-name="InventoryItemAndLocationByLocMap">
+                                    <if-empty field-name="fromLocationTotalAvailableToPromise.${locationSeqId}">
+                                        <calculate field-name="totalAvailableToPromise" type="Double"><number value="0"/></calculate>
+	                                    <iterate entry-name="inventoryItem" list-name="perLocationInventoryItemAndLocList">
+	                                        <calculate field-name="totalAvailableToPromise" type="Double">
+	                                            <calcop field-name="totalAvailableToPromise" operator="add"><calcop field-name="inventoryItem.availableToPromise" operator="get"/></calcop>
+	                                        </calculate>
+                                        </iterate>
+                                    <else>
+                                    	<env-to-env env-name="fromLocationTotalAvailableToPromise.${locationSeqId}" to-env-name="totalAvailableToPromise"  />
+                                    </else>
+                                    </if-empty>
 
-                                    <if-compare field-name="totalAvailableToPromise" operator="greater" value="0" type="Double">
+                                    <if>
+                                       <condition>
+                                          <and>
+		                                        <if-compare field-name="totalAvailableToPromise" operator="greater" value="0" type="Double"/>
+		                                        <if-compare field-name="targetLocationMoveQuantity" operator="greater" value="0" type="Double"/>
+                                          </and>
+                                        </condition>
+                                    <then>   
                                         <env-to-env env-name="productSave" to-env-name="moveInfo.product"/>
                                         <env-to-env env-name="targetFacilityLocationSave" to-env-name="moveInfo.facilityLocationTo"/>
-                                        <get-related-one value-name="productFacilityLocationView" relation-name="FacilityLocation" to-value-name="moveInfo.facilityLocationFrom"/>
+                                        <first-from-list entry-name="InventoryItemAndLocation" list-name="perLocationInventoryItemAndLocList"/>
+                                        <get-related-one value-name="InventoryItemAndLocation" relation-name="FacilityLocation" to-value-name="moveInfo.facilityLocationFrom"/>
 
-                                        <!-- move over the productFacilityLocationQuantityTest.moveQuantity -->
-                                        <if-empty field-name="targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId}">
-
-                                            <!-- if trying to move more from the location than is there, find the difference and put it in targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId} -->
-                                            <calculate field-name="moveInfo.totalQuantity" type="Double">
-                                                <calcop field-name="moveInfo.totalQuantity" operator="add"><calcop field-name="productFacilityLocationQuantityTest.moveQuantity" operator="get"/></calcop>
-                                            </calculate>
-                                        <else>
-                                            <!--
-                                                see if there is enough left for the full amount in
-                                                targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId},
-                                                if not do whatever is available and put difference back in
-                                                targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId}
-                                            -->
-                                            <calculate field-name="moveInfo.totalQuantity" type="Double">
-                                                <calcop field-name="moveInfo.totalQuantity" operator="add"><calcop field-name="targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId}" operator="get"/></calcop>
-                                            </calculate>
-                                        </else>
-                                        </if-empty>
-                                        <if-compare-field field-name="totalAvailableToPromise" operator="less" to-field-name="moveInfo.totalQuantity" type="Double">
-                                            <calculate field-name="targetLocationSimpleMoveQuantity.${moveInfo.facilityLocationTo.locationSeqId}" type="Double">
-                                                <calcop field-name="moveInfo.totalQuantity" operator="subtract"><calcop field-name="totalAvailableToPromise" operator="get"/></calcop>
+                                        <!--   see if there is enough left for the full amount in targetLocationMoveQuantity,
+                                                 if not do whatever is available and put difference back in targetLocationMoveQuantity,
+                                                 trying to move more from the location than is there, find the difference and put it in targetLocationMoveQuantity     -->
+                                        <if-compare-field field-name="totalAvailableToPromise" operator="less" to-field-name="targetLocationMoveQuantity" type="Double">
+                                            <calculate field-name="targetLocationMoveQuantity" type="Double">
+                                                <calcop field-name="targetLocationMoveQuantity" operator="subtract"><calcop field-name="totalAvailableToPromise" operator="get"/></calcop>
                                             </calculate>
                                             <env-to-env env-name="totalAvailableToPromise" to-env-name="moveInfo.totalQuantity"/>
+                                            <calculate field-name="fromLocationTotalAvailableToPromise.${locationSeqId}" type="Double"><number value="0"/></calculate>
+                                        <else>
+                                            <env-to-env env-name="targetLocationMoveQuantity" to-env-name="moveInfo.totalQuantity"/>
+                                            <calculate map-name="fromLocationTotalAvailableToPromise" field-name="${locationSeqId}" type="Double">
+                                                <calcop field-name="totalAvailableToPromise" operator="subtract"><calcop field-name="targetLocationMoveQuantity" operator="get"/></calcop>
+                                            </calculate>
+                                            <calculate field-name="targetLocationMoveQuantity" type="Double"><number value="0"/></calculate>
+                                        </else>
                                         </if-compare-field>
-
+                                    
                                         <!-- add the moveInfo to the master list -->
                                         <field-to-list field-name="moveInfo" list-name="moveByPflInfoList"/>
                                         <clear-field field-name="moveInfo"/>
-                                    </if-compare>
-                                </iterate>
+                                    </then>    
+                                    </if>
+                                </iterate-map>
                                 <!-- TODO: add a warning message if there are not BULK location(s) with sufficient quantity -->
                             </else>
                             </if-empty>
