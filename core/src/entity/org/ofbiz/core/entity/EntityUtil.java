@@ -134,14 +134,26 @@ public class EntityUtil {
             boolean include = true;
             while (exprIter.hasNext()) {
                 EntityExpr expr = (EntityExpr) exprIter.next();
+                Object lhs = value.get((String) expr.getLhs());
+                Object rhs = expr.getRhs();
                 if (EntityOperator.EQUALS.equals(expr.getOperator())) {
                     //if the field named by lhs is not equal to rhs value, constraint fails
-                    if (!value.get((String) expr.getLhs()).equals(expr.getRhs())) {
+                    if (lhs == null) {
+                        if (rhs != null) {
+                            include = false;
+                            break;
+                        }
+                    } else if (!lhs.equals(rhs)) {
                         include = false;
                         break;
                     }
                 } else if (EntityOperator.NOT_EQUAL.equals(expr.getOperator())) {
-                    if (value.get((String) expr.getLhs()).equals(expr.getRhs())) {
+                    if (lhs == null) {
+                        if (rhs == null) {
+                            include = false;
+                            break;
+                        }
+                    } else if (lhs.equals(rhs)) {
                         include = false;
                         break;
                     }
