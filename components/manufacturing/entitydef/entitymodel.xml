@@ -70,7 +70,21 @@
       <field name="description" type="description"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="ruleId"/>
-      <!-- FIXME: relations are missing -->
+      <relation type="one" fk-name="PRODUCT_PARENT" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PRODUCT_FOR" title="ProductFor" rel-entity-name="Product">
+        <key-map field-name="productIdFor" rel-field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PRODUCT_IN" title="ProductIn" rel-entity-name="Product">
+        <key-map field-name="productIdIn" rel-field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PRODUCT_SUBST" title="ProductSubst" rel-entity-name="Product">
+        <key-map field-name="productIdInSubst" rel-field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PRODUCT_FEAT" rel-entity-name="ProductFeature">
+        <key-map field-name="productFeature" rel-field-name="productFeatureId"/>
+      </relation>
     </entity>
 
   <!-- ========================================================= -->
@@ -266,6 +280,7 @@
       <alias entity-alias="OI" name="itemDescription"/>
       <alias entity-alias="OI" name="itemStatusId" field="statusId"/>
       <alias entity-alias="OI" name="estimatedShipDate"/>
+      <alias entity-alias="OI" name="orderItemTypeId"/>
       <view-link entity-alias="OH" rel-entity-alias="OI">
         <key-map field-name="orderId"/>
       </view-link>
