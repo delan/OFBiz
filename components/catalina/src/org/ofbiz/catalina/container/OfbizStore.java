@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizStore.java,v 1.2 2004/07/04 05:58:18 ajzeneski Exp $
+ * $Id$
  *
  */
 package org.ofbiz.catalina.container;
@@ -31,7 +31,7 @@ import org.apache.catalina.util.CustomObjectInputStream;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      Jul 4, 2004
  */
 public class OfbizStore extends StoreBase implements Store {
