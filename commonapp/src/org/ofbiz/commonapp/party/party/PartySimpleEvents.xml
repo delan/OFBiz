@@ -44,15 +44,16 @@
 
     <!-- Person events -->
     <simple-method method-name="createPerson" short-description="Create Person">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml"
                 processor-name="person" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createPerson" in-map-name="context">
             <default-message>Person successfully created.</default-message>
-            <result-to-request result-name="contactMechId"/></call-service>
+            <result-to-request result-name="partyId"/>
+        </call-service>
     </simple-method>
     <simple-method method-name="updatePerson" short-description="Update Person">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml"
                 processor-name="person" in-map-name="parameters" out-map-name="context"/>
         <call-map-processor in-map-name="parameters" out-map-name="context">
             <simple-map-processor name="updateParty">
@@ -68,7 +69,7 @@
 
     <!-- PartyGroup events -->
     <simple-method method-name="createPartyGroup" short-description="Create Party Group">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml"
                 processor-name="partyGroup" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createPartyGroup" in-map-name="context">
@@ -77,9 +78,9 @@
         </call-service>
     </simple-method>
     <simple-method method-name="updatePartyGroup" short-description="Update Party Group">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml"
                 processor-name="partyGroup" in-map-name="parameters" out-map-name="context"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/party/PartyMapProcs.xml"
                 processor-name="updateParty" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updatePartyGroup" in-map-name="context">
