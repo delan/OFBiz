@@ -183,7 +183,7 @@ public class JPublishViewHandler implements ViewHandler {
         HttpSession session = request.getSession();
         ActionManager actionManager = siteContext.getActionManager();
         //String path = servletContext.getRealPath(pagePath);
-        Debug.logError("Path:" + path);
+        //Debug.logError("Path:" + path);
         
         // get the character encoding map
         CharacterEncodingMap characterEncodingMap = siteContext.getCharacterEncodingManager().getMap(path);

@@ -89,7 +89,7 @@ public class FreeMarkerViewRenderer implements ViewRenderer {
                     config = freemarker.template.Configuration.getDefaultConfiguration();
                     config.setDirectoryForTemplateLoading(siteContext.getContextRoot());
                     config.setObjectWrapper(wrapper);
-                    Debug.logInfo("Set directory for template (includes) loading: " + siteContext.getContextRoot(), module);
+                    //Debug.logInfo("Set directory for template (includes) loading: " + siteContext.getContextRoot(), module);
                 }
             }        
         }

@@ -9,7 +9,7 @@
     <action-root>WEB-INF/actions</action-root>
 	    
     <!-- Define the view renderer as the OFBiz GenericViewRenderer -->
-    <view-renderer classname="org.ofbiz.core.view.GenericViewRenderer"/>
+    <view-renderer classname="org.ofbiz.core.ftl.FreeMarkerViewRenderer"/>
     	
     <!-- Define the default filesystem repository as the Extended repo -->			
     <repository name="fs_repository" classname="org.jpublish.repository.filesystem.ExtendedFileSystemRepository">        
