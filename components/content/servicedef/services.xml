@@ -1617,9 +1617,10 @@
         location="org.ofbiz.content.content.ContentServices" invoke="foToPdf">
         <attribute name="foFileIn" mode="IN" type="String" optional="false"/>
         <attribute name="pdfFileOut" mode="IN" type="String" optional="true"/>
-        <attribute name="dataResourceTypeId" mode="IN" type="String" optional="true"/>
-        <attribute name="contentId" mode="INOUT" type="String" optional="true"/>
-        <attribute name="foContentId" mode="IN" type="String" optional="true"/>
+        <attribute name="inputDataResourceTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="outputDataResourceTypeId" mode="IN" type="String" optional="true"/>
+        <attribute name="outputContentId" mode="INOUT" type="String" optional="true"/>
+        <attribute name="foContentId" mode="INOUT" type="String" optional="true"/>
         <attribute name="templateDataResourceId" mode="IN" type="String" optional="true"/>
         <attribute name="fmContext" type="java.util.Map" mode="IN" optional="true"/>
         <attribute name="fmPrefixMap" type="java.util.Map" mode="IN" optional="true" string-map-prefix="CTX_"/>
