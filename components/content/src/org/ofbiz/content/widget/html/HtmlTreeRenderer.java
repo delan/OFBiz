@@ -121,6 +121,8 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
             //String currentNodeTrailCsv = (String)context.get("currentNodeTrailCsv");
             String currentNodeTrailPiped = null;
             List currentNodeTrail = node.getModelTree().getCurrentNodeTrail();
+            String staticNodeTrailPiped = StringUtil.join(currentNodeTrail, "|");
+            context.put("staticNodeTrailPiped", staticNodeTrailPiped);
     
             int openDepth = node.getModelTree().getOpenDepth();
             if (targetEntityId == null || !targetEntityId.equals(entityId)) {
@@ -134,6 +136,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
                 	String target = node.getModelTree().getExpandCollapseRequest(context);
                 	String trailName = node.getModelTree().getTrailName(context);
                 	target += "?" + trailName + "=" + currentNodeTrailPiped;
+                    target += "#" + staticNodeTrailPiped;
                 	//expandCollapseLink.setTarget("/ViewOutline?docRootContentId=${docRootContentId}&targetNodeTrailCsv=${currentNodeTrailCsv}");
                 	expandCollapseLink.setTarget(target);
                 }
@@ -150,6 +153,7 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
                 String target = node.getModelTree().getExpandCollapseRequest(context);
                 String trailName = node.getModelTree().getTrailName(context);
                 target += "?" + trailName + "=" + currentNodeTrailPiped;
+                target += "#" + staticNodeTrailPiped;
                 expandCollapseLink.setTarget(target);
                 // add it so it can be remove in renderNodeEnd
                 currentNodeTrail.add(lastContentId);

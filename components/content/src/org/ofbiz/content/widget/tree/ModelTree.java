@@ -444,6 +444,7 @@ public class ModelTree {
 							}
 							if ((targetEntityId != null && targetEntityId .equals(thisEntityId)) || this.showPeers(newDepth)) {
 								boolean lastNode = !nodeIter.hasNext();
+								newContext.put("lastNode", new Boolean(lastNode));
 								node.renderNodeString(writer, newContext, treeStringRenderer, newDepth, lastNode);
 							}
 						}
