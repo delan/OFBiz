@@ -116,6 +116,7 @@
     <form name="listShipmentPlan" type="list" 
             target="" title="" list-name="shipmentPlan"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="shipmentItemSeqId" title="${uiLabelMap.ProductShipmentItemSeqId}"><display/></field>
         <field name="orderId" title="${uiLabelMap.ProductOrderId}"><display/></field>
         <field name="orderItemSeqId" title="${uiLabelMap.ProductOrderItem}"><display/></field>
         <field name="productId" title="${uiLabelMap.ProductProductId}"><display/></field>
@@ -138,7 +139,7 @@
         <field name="volume" title="${uiLabelMap.CommonVolume}"><display/></field>
         <field name="volumeUom" title="${uiLabelMap.CommonUom}"><display/></field>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink target="deleteShipmentPlan?shipmentId=${shipmentId}&amp;orderId=${orderId}&amp;orderItemSeqId=${orderItemSeqId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+            <hyperlink target="removeOrderShipmentFromShipment?shipmentId=${shipmentId}&amp;shipmentItemSeqId=${shipmentItemSeqId}&amp;orderId=${orderId}&amp;orderItemSeqId=${orderItemSeqId}" description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
         </field>
     </form>
     <!-- Add entries to Shipment Plan -->

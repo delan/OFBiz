@@ -1007,26 +1007,5 @@
         <key-map field-name="shipmentPackageSeqId"/>
       </relation>
     </entity>
-    <entity entity-name="ShipmentPlan"
-            package-name="org.ofbiz.shipment.shipment"
-            title="Order item quantities planned to be issued to shipment">
-      <field name="shipmentId" type="id-ne"></field>
-      <field name="orderId" type="id-ne"></field>
-      <field name="orderItemSeqId" type="id-ne"></field>
-      <field name="quantity" type="floating-point"></field>
-      <prim-key field="shipmentId"/>
-      <prim-key field="orderId"/>
-      <prim-key field="orderItemSeqId"/>
-      <relation type="one" fk-name="SHIP_PLA_SHIP" rel-entity-name="Shipment">
-        <key-map field-name="shipmentId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="OrderHeader">
-        <key-map field-name="orderId"/>
-      </relation>
-      <relation type="one" fk-name="SHIP_PLA_ORITM" rel-entity-name="OrderItem">
-        <key-map field-name="orderId"/>
-        <key-map field-name="orderItemSeqId"/>
-      </relation>
-    </entity>
 </entitymodel>
 

@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -39,6 +39,7 @@
     <#list shipmentItemDatas as shipmentItemData>
 	  <#assign shipmentItem = shipmentItemData.shipmentItem>
 	  <#assign itemIssuances = shipmentItemData.itemIssuances>
+          <#assign orderShipments = shipmentItemData.orderShipments>
 	  <#assign shipmentPackageContents = shipmentItemData.shipmentPackageContents>
 	  <#assign product = shipmentItemData.product?if_exists>
 	  <tr>
@@ -47,6 +48,16 @@
 		<td><div class="tabletext">${shipmentItem.quantity?default("&nbsp;")}</div></td>
 		<td colspan="2"><div class="tabletext">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</div></td>
 	  </tr>
+	  <#list orderShipments as orderShipment>
+		<tr>
+		  <td><div class="tabletext">&nbsp;</div></td>
+		  <td><div class="tabletext">${uiLabelMap.ProductOrderItem} :<a href="/ordermgr/control/orderview?order_id=${orderShipment.orderId?if_exists}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${orderShipment.orderId?if_exists}</a>:${orderShipment.orderItemSeqId?if_exists}</div></td>
+		  <td><div class="tabletext">&nbsp;</div></td>
+		  <td><div class="tabletext">${orderShipment.quantity?if_exists}</div></td>
+		  <td><div class="tabletext">&nbsp;</div></td>
+		  <td><div class="tabletext">&nbsp;</div></td>
+		</tr>
+  	  </#list>
 	  <#list itemIssuances as itemIssuance>
 		<tr>
 		  <td><div class="tabletext">&nbsp;</div></td>

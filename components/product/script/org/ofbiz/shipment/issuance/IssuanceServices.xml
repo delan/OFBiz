@@ -189,8 +189,53 @@
         <make-value entity-name="Shipment" value-name="shipmentLookupPk"/>
         <set-pk-fields value-name="shipmentLookupPk" map-name="parameters"/>
         <find-by-primary-key map-name="shipmentLookupPk" value-name="shipment"/>
+        <!-- get orderShipment -->
+        <make-value entity-name="OrderShipment" value-name="orderShipmentLookupPk"/>
+        <set-pk-fields value-name="orderShipmentLookupPk" map-name="parameters"/>
+        <find-by-and entity-name="OrderShipment" map-name="orderShipmentLookupPk" list-name="orderShipments"/>
+        <first-from-list entry-name="orderShipment" list-name="orderShipments"/>
+        <!-- qtyForShipmentItem is the quantity we will add to the ShipmentItem -->
+        <!-- OrderShipment.quantity stores the OrderItem.quantity planned in the shipment -->
+        <calculate field-name="qtyForShipmentItem">
+            <calcop field-name="parameters.quantity" operator="subtract">
+                <calcop operator="get" field-name="orderShipment.quantity"/>
+            </calcop>
+        </calculate>
+
+        <if-compare value="0" operator="greater-equals" field-name="qtyForShipmentItem" type="Double">
+            <!-- remove the orderShipment.quantity -->
+            <if-not-empty field-name="orderShipment">
+                <field-to-result field-name="orderShipment.shipmentItemSeqId" result-name="shipmentItemSeqId"/>
+                <make-value entity-name="ShipmentItem" value-name="shipmentItemLookupPk"/>
+                <set-pk-fields value-name="shipmentItemLookupPk" map-name="parameters"/>
+                <field-to-field field-name="orderShipment.shipmentItemSeqId" to-field-name="shipmentItemLookupPk.shipmentItemSeqId"/>
+                <find-by-primary-key map-name="shipmentItemLookupPk" value-name="shipmentItem"/>
+                <remove-value value-name="orderShipment"/>
+            </if-not-empty>
+            <if-compare value="0" operator="not-equals" field-name="qtyForShipmentItem" type="Double">
+                <!-- add the qtyForShipmentItem to the shipmentItem -->
+                <field-to-field field-name="paremeters.quantity" to-field-name="originalQuantity"/>
+                <field-to-field field-name="qtyForShipmentItem" to-field-name="paremeters.quantity"/>
+                <call-simple-method method-name="findCreateIssueShipmentItem"/>
+                <field-to-field field-name="originalQuantity" to-field-name="paremeters.quantity"/>
+            </if-compare>
+        <else>
+            <!-- decrement the orderShipment.quantity -->
+            <calculate field-name="orderShipment.quantity">
+                <calcop field-name="orderShipment.quantity" operator="subtract">
+                    <calcop operator="get" field-name="parameters.quantity"/>
+                </calcop>
+            </calculate>
+            <store-value value-name="orderShipment"/>
+            <field-to-result field-name="orderShipment.shipmentItemSeqId" result-name="shipmentItemSeqId"/>
+            <make-value entity-name="ShipmentItem" value-name="shipmentItemLookupPk"/>
+            <set-pk-fields value-name="shipmentItemLookupPk" map-name="parameters"/>
+            <field-to-field field-name="orderShipment.shipmentItemSeqId" to-field-name="shipmentItemLookupPk.shipmentItemSeqId"/>
+            <find-by-primary-key map-name="shipmentItemLookupPk" value-name="shipmentItem"/>
+        </else>
+        </if-compare>
         
-        <call-simple-method method-name="findCreateIssueShipmentItem"/>
+        <!--<call-simple-method method-name="findCreateIssueShipmentItem"/>-->
         <call-simple-method method-name="callCreateItemIssuance"/>
         <call-simple-method method-name="associateIssueRoles"/>
         
@@ -240,6 +285,9 @@
         <if-not-empty field-name="productId" map-name="orderItem">
             <field-to-field field-name="productId" map-name="orderItem" to-map-name="shipmentItemLookup"/>
             <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="shipmentItemLookup"/>
+            <if-not-empty field-name="paremeters.shipmentItemSeqId">
+                <field-to-field field-name="shipmentItemSeqId" map-name="parameters" to-map-name="shipmentItemLookup"/>
+            </if-not-empty>
             <string-to-list string="shipmentItemSeqId" list-name="shipmentItemOrder"/>
             <find-by-and entity-name="ShipmentItem" list-name="shipmentItems" map-name="shipmentItemLookup" order-by-list-name="shipmentItemOrder"/>
             <first-from-list entry-name="shipmentItem" list-name="shipmentItems"/>

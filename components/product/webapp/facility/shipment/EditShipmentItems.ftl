@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -42,6 +42,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <#list shipmentItemDatas as shipmentItemData>
 	<#assign shipmentItem = shipmentItemData.shipmentItem>
 	<#assign itemIssuances = shipmentItemData.itemIssuances>
+        <#assign orderShipments = shipmentItemData.orderShipments>
 	<#assign shipmentPackageContents = shipmentItemData.shipmentPackageContents>
 	<#assign product = shipmentItemData.product?if_exists>
 	<#assign totalQuantityPackaged = shipmentItemData.totalQuantityPackaged>
@@ -53,6 +54,17 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 		<td colspan="2"><div class="tabletext">${shipmentItem.shipmentContentDescription?default("&nbsp;")}</div></td>
 		<td><div class="tabletext"><a href="<@ofbizUrl>/deleteShipmentItem?shipmentId=${shipmentId}&shipmentItemSeqId=${shipmentItem.shipmentItemSeqId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a></div></td>
 	</tr>
+	<#list orderShipments as orderShipment>
+		<tr>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">${uiLabelMap.ProductOrderItem} :<a href="/ordermgr/control/orderview?order_id=${orderShipment.orderId?if_exists}" class="buttontext">${orderShipment.orderId?if_exists}</a>:${orderShipment.orderItemSeqId?if_exists}</div></td>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">${orderShipment.quantity?if_exists}</div></td>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">&nbsp;</div></td>
+			<td><div class="tabletext">&nbsp;<#-- don't allow a delete, need to implement a cancel issuance <a href="<@ofbizUrl>/deleteShipmentItemIssuance?shipmentId=${shipmentId}&itemIssuanceId=${itemIssuance.itemIssuanceId}</@ofbizUrl>" class="buttontext">${uiLabelMap.CommonDelete}</a> --></div></td>
+		</tr>
+	</#list>
 	<#list itemIssuances as itemIssuance>
 		<tr>
 			<td><div class="tabletext">&nbsp;</div></td>

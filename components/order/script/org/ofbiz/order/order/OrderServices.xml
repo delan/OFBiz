@@ -94,5 +94,30 @@
         </else>
         </if-empty>
     </simple-method>
+    <simple-method method-name="createOrderShipment" short-description="Create OrderShipment">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run createOrderShipment you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <string-to-field string="Create OrderShipment" field-name="operationName"/>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="OrderShipment"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="deleteOrderShipment" short-description="Delete OrderShipment">
+        <check-permission permission="ORDERMGR" action="_DELETE">
+            <fail-message message="Security Error: to run deleteOrderShipment you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <string-to-field string="Delete OrderShipment" field-name="operationName"/>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="OrderShipment"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="OrderShipment" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
 </simple-methods>
 

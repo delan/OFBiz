@@ -300,17 +300,24 @@
         <attribute name="shipmentItemSeqId" type="String" mode="OUT" optional="false"/>
         <attribute name="itemIssuanceId" type="String" mode="OUT" optional="false"/>
     </service>
-    <!-- ShipmentPlan Services -->
-    <service name="deleteShipmentPlan" engine="simple"
-            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="deleteShipmentPlan" auth="true">
-        <description>Delete a ShipmentPlan - only for sales orders</description>
-        <auto-attributes entity-name="ShipmentPlan" include="pk" mode="IN" optional="false"/>
+    <!-- Shipment Plan Services -->
+    <service name="addOrderShipmentToShipment" engine="simple" default-entity-name="OrderShipment"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="addOrderShipmentToShipment" auth="true">
+        <description>Add an OrderShipment and a ShipmentItem - only for sales orders</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="false"/>
+        <override name="shipmentItemSeqId" mode="IN" optional="true"/>
     </service>
-    <service name="addOrderedQuantityToShipmentPlan" engine="simple"
-            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="addOrderedQuantityToShipmentPlan" auth="true">
-        <description>Add a ShipmentPlan - only for sales orders</description>
-        <auto-attributes entity-name="ShipmentPlan" include="pk" mode="IN" optional="false"/>
-        <auto-attributes entity-name="ShipmentPlan" include="nonpk" mode="IN" optional="false"/>
+    <service name="removeOrderShipmentFromShipment" engine="simple"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="removeOrderShipmentFromShipment" auth="true">
+        <description>Delete an OrderShipment and updates the ShipmentItem</description>
+        <auto-attributes entity-name="OrderShipment" include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="getQuantityForShipment" engine="simple" default-entity-name="OrderItem"
+            location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="getQuantityForShipment" auth="true">
+        <description>get the order item quantity still not put in shipments</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <attribute name="remainingQuantity" type="Double" mode="OUT" optional="false"/>
     </service>
     <!-- ============================================================== -->
     <!-- Receipt Services -->

@@ -26,6 +26,7 @@
 
 import java.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.*;
 import org.ofbiz.base.util.*;
 
 delegator = request.getAttribute("delegator");
@@ -45,7 +46,7 @@ if (shipment != null) {
 if (UtilValidate.isEmpty(orderId) && shipment != null && selectFromShipmentPlan == null) {
     orderId = shipment.get("primaryOrderId");
 }
-if (UtilValidate.isEmpty(shipGroupSeqId) && shipment != null && selectFromShipmentPlan == null) {
+if (UtilValidate.isEmpty(shipGroupSeqId) && shipment != null) {
     shipGroupSeqId = shipment.get("primaryShipGroupSeqId");
 }
 
@@ -125,20 +126,37 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
         context.put("orderItemDatas", orderItemDatas);
     }
 }
+if (shipment != null && selectFromShipmentPlan != null) {
 
-if (selectFromShipmentPlan != null && shipment != null) {
-    orderHeaders = new HashMap();
-    shipmentPlans = delegator.findByAnd("ShipmentPlan", UtilMisc.toMap("shipmentId", shipment.getString("shipmentId")), UtilMisc.toList("orderId", "orderItemSeqId"));
+    shipmentPlans = delegator.findByAnd("OrderShipment", UtilMisc.toMap("shipmentId", shipment.getString("shipmentId")), UtilMisc.toList("orderId", "orderItemSeqId"));
     orderItemDatas = new LinkedList();
 
     context.put("isSalesOrder", true);
 
     shipmentPlansIt = shipmentPlans.iterator();
+
     while (shipmentPlansIt.hasNext()) {
         orderItemData = new HashMap();
 
         shipmentPlan = shipmentPlansIt.next();
         orderItem = shipmentPlan.getRelatedOne("OrderItem");
+
+        orderItemShipGroup = null;
+        if (UtilValidate.isNotEmpty(shipGroupSeqId)) {
+            orderItemShipGroup = delegator.findByPrimaryKey("OrderItemShipGroup", UtilMisc.toMap("orderId", orderItem.getString("orderId"), "shipGroupSeqId", shipGroupSeqId));
+            context.put("orderItemShipGroup", orderItemShipGroup);
+        }
+
+        oiasgaLimitMap = null;
+        if (orderItemShipGroup != null) {
+            oiasgaLimitMap = UtilMisc.toMap("shipGroupSeqId", shipGroupSeqId);
+        }
+
+        orderItemShipGroupAssoc = null;
+        orderItemShipGroupAssocs = orderItem.getRelatedByAnd("OrderItemShipGroupAssoc", oiasgaLimitMap);
+        if (UtilValidate.isNotEmpty(orderItemShipGroupAssocs)) {
+            orderItemShipGroupAssoc = EntityUtil.getFirst(orderItemShipGroupAssocs);
+        }
         plannedQuantity = shipmentPlan.getDouble("quantity");
         totalProposedQuantity = 0.0;
             
@@ -157,14 +175,12 @@ if (selectFromShipmentPlan != null && shipment != null) {
                 totalQuantityIssuedInShipment += itemIssuance.getDouble("quantity");
             }
         }
-        plannedQuantity -= totalQuantityIssuedInShipment;
-        if (plannedQuantity < 0) {
-            plannedQuantity = 0;
-        }
+
         orderItemShipGrpInvResList = orderItem.getRelated("OrderItemShipGrpInvRes", null, UtilMisc.toList("reservedDatetime"));
         orderItemShipGrpInvResDatas = new LinkedList();
         totalQuantityReserved = 0;
         orderItemShipGrpInvResIter = orderItemShipGrpInvResList.iterator();
+
         while (orderItemShipGrpInvResIter.hasNext()) {
             orderItemShipGrpInvRes = orderItemShipGrpInvResIter.next();
             inventoryItem = orderItemShipGrpInvRes.getRelatedOne("InventoryItem");
@@ -195,6 +211,9 @@ if (selectFromShipmentPlan != null && shipment != null) {
             orderItemShipGrpInvResData.put("shipmentPlanQuantity", proposedQuantity);
         }
 
+        Map orderItemShipGroupAssocMap = new HashMap(orderItemShipGroupAssoc);
+        orderItemShipGroupAssocMap.put("shipGroupQuantity", orderItemShipGroupAssoc.getDouble("quantity"));
+        orderItemData.put("orderItemAndShipGroupAssoc", orderItemShipGroupAssocMap);
         orderItemData.put("orderItemShipGrpInvResDatas", orderItemShipGrpInvResDatas);
         orderItemData.put("totalQuantityReserved", totalQuantityReserved);
         orderItemData.put("totalQuantityIssuedAndReserved", totalQuantityReserved + totalQuantityIssued);
@@ -204,10 +223,10 @@ if (selectFromShipmentPlan != null && shipment != null) {
         orderItemData.put("itemIssuances", itemIssuances);
         orderItemData.put("totalQuantityIssued", totalQuantityIssued);
         orderItemDatas.add(orderItemData);
+
     }
     context.put("orderItemDatas", orderItemDatas);
 }
-
 context.put("shipmentId", shipmentId);
 context.put("shipment", shipment);
 context.put("orderId", orderId);
