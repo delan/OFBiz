@@ -46,7 +46,7 @@
     Collection userLogins = delegator.findByAnd("UserLogin", UtilMisc.toMap("partyId", partyId));
     if (userLogins != null) pageContext.setAttribute("userLogins", userLogins);
 
-    Collection partyRoles = delegator.findByAnd("PartyRole", UtilMisc.toMap("partyId", partyId));
+    Collection partyRoles = delegator.findByAnd("RoleTypeAndParty", UtilMisc.toMap("partyId", partyId));
     if (partyRoles != null) pageContext.setAttribute("partyRoles", partyRoles);
 
     Collection roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
@@ -84,6 +84,7 @@
       <ofbiz:unless name="showOld">
         <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">[Show Old]</a>&nbsp;&nbsp;
       </ofbiz:unless>
+      <a href="/ordermgr/control/orderlist?partyId=<%=partyId%>" class="buttontext">[Lookup Orders]</a>&nbsp;&nbsp;
     </td>
   </tr>
 </table>
@@ -450,7 +451,7 @@
               <tr>
                 <td align="right" valign="top" width="10%" nowrap><div class="tabletext"><b>Role</b></div></td>
                 <td width="5">&nbsp;</td>
-                <td align="left" valign="top" width="70%"><div class="tabletext"><%entityField.run("userRole", "roleTypeId");%></div></td>
+                <td align="left" valign="top" width="70%"><div class="tabletext"><ofbiz:entityfield attribute="userRole" field="description"/> [<ofbiz:entityfield attribute="userRole" field="roleTypeId"/>]</div></td>
                 <td align="right" valign="top" width="20%">
                   <a href="<ofbiz:url>/deleterole?partyId=<%=partyId%>&roleTypeId=<ofbiz:entityfield attribute="userRole" field="roleTypeId"/></ofbiz:url>" class="buttontext">[Delete]</a>&nbsp;
                 </td>
