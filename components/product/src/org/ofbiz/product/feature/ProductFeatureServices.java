@@ -34,6 +34,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityExpr;
@@ -69,7 +70,6 @@ public class ProductFeatureServices {
      */
     public static Map getProductFeaturesByType(DispatchContext dctx, Map context) {
         Map results = new HashMap();
-        Map featuresByType = new LinkedHashMap();        // a LinkedHashMap preserves order of keys and hence sequence of featureTypeIds
         GenericDelegator delegator = dctx.getDelegator();
 
         /* because we might need to search either for product features or for product features of a product, the search code has to be generic.
@@ -105,27 +105,24 @@ public class ProductFeatureServices {
             if (entityToSearch.equals("ProductFeatureAndAppl") && productFeatureApplTypeId != null)
                 allFeatures = EntityUtil.filterByAnd(allFeatures, UtilMisc.toMap("productFeatureApplTypeId", productFeatureApplTypeId));
                 
-            /* Returns an iterator for distinct productFeaturetypeIds.  Find from ProductFeature where productFeatureCategoryId = <productFeatureCategoryId
-             * The List specifies field to retrieve.  The first null is for "having condition," the second one for "order by."  The EntityFindOptions's
-             * last parameter is for distinct.
-             */
-            EntityListIterator featureTypesIterator = delegator.findListIteratorByCondition(entityToSearch, 
-                    new EntityExpr(fieldToSearch, EntityOperator.EQUALS, valueToSearch),
-                    null, UtilMisc.toList("productFeatureTypeId"), UtilMisc.toList("productFeatureTypeId"),
-                    new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
-            
-            // loop through each product feature type and get those features which are of this type.  Put it into the map with this feature type id.
-            // only do this for feature types which have some features (this checking is only meaningful for productId and productFeatureApplTypeId parameters)
-            
-            while (featureTypesIterator.hasNext()) {
-                String nextFeatureType = ((GenericEntity) featureTypesIterator.next()).getString("productFeatureTypeId");
-                List possibleFeatures = EntityUtil.filterByAnd(allFeatures, UtilMisc.toMap("productFeatureTypeId", nextFeatureType));
-                if (possibleFeatures != null && possibleFeatures.size() > 0)
-                    featuresByType.put(nextFeatureType, possibleFeatures);
+            List featureTypes = new ArrayList();  // or LinkedList?
+            Map featuresByType = new LinkedHashMap();
+            GenericValue feature = null;
+            for (Iterator featuresIter = allFeatures.iterator(); featuresIter.hasNext(); ) {
+                feature = (GenericValue) featuresIter.next();
+                String featureType = feature.getString("productFeatureTypeId");
+                if (!featureTypes.contains(featureType)) {
+                    featureTypes.add(featureType);
+                }
+                if (!featuresByType.containsKey(featureType)) {
+                    featuresByType.put(featureType, new ArrayList());
+                }
+                List features = (List)featuresByType.get(featureType);
+                features.add(feature);
             }
-            
-            featureTypesIterator.close();     // it has a database connection which should be closed when done
+
             results = ServiceUtil.returnSuccess();
+            results.put("productFeatureTypes", featureTypes);
             results.put("productFeaturesByType", featuresByType);
         } catch (GenericEntityException ex) {
             Debug.logError(ex, ex.getMessage(), module);
@@ -165,12 +162,12 @@ public class ProductFeatureServices {
                     while (curProductFeatureAndApplIter.hasNext()) {
                         GenericEntity productFeatureAndAppl = (GenericEntity) curProductFeatureAndApplIter.next();
                         Map findByMap = UtilMisc.toMap("productId", productAssoc.getString("productIdTo"), 
-                                "productFeatureTypeId", productFeatureAndAppl.get("productFeatureTypeId"),
-                                "description", productFeatureAndAppl.get("description"),
+                                "productFeatureId", productFeatureAndAppl.get("productFeatureId"),
                                 "productFeatureApplTypeId", "STANDARD_FEATURE");
+
                         //Debug.log("Using findByMap: " + findByMap);
 
-                        List standardProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", findByMap), true);
+                        List standardProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAppl", findByMap), true);
                         if (standardProductFeatureAndAppls == null || standardProductFeatureAndAppls.size() == 0) {
                             // Debug.log("Does NOT have this standard feature");
                             hasAllFeatures = false;
