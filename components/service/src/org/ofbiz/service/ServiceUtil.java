@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.7 2003/12/04 02:15:30 ajzeneski Exp $
+ * $Id: ServiceUtil.java,v 1.8 2003/12/06 00:47:01 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ServiceUtil {
@@ -56,19 +56,51 @@ public class ServiceUtil {
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(String errorMessage) {
-        Map result = new HashMap();
-
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-        if (errorMessage != null) result.put(ModelService.ERROR_MESSAGE, errorMessage);
-        return result;
+        return returnError(errorMessage, null, null, null);
     }
 
     /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code */
     public static Map returnError(List errorMessageList) {
+        return returnError(null, errorMessageList, null, null);
+    }
+
+    /** A small routine used all over to improve code efficiency, make a result map with the message and the error response code, also forwards any error messages from the nestedResult */
+    public static Map returnError(String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
         Map result = new HashMap();
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-        if (errorMessageList != null) result.put(ModelService.ERROR_MESSAGE_LIST, errorMessageList);
+        if (errorMessage != null) {
+            result.put(ModelService.ERROR_MESSAGE, errorMessage);
+        }
+
+        List errorList = new LinkedList();
+        if (errorMessageList != null) {
+            errorList.addAll(errorMessageList);
+        }
+        
+        Map errorMap = new HashMap();
+        if (errorMessageMap != null) {
+            errorMap.putAll(errorMessageMap);
+        }
+        
+        if (nestedResult != null) {
+            if (nestedResult.get(ModelService.ERROR_MESSAGE) != null) {
+                errorList.add(nestedResult.get(ModelService.ERROR_MESSAGE));
+            }
+            if (nestedResult.get(ModelService.ERROR_MESSAGE_LIST) != null) {
+                errorList.addAll((List) nestedResult.get(ModelService.ERROR_MESSAGE_LIST));
+            }
+            if (nestedResult.get(ModelService.ERROR_MESSAGE_MAP) != null) {
+                errorMap.putAll((Map) nestedResult.get(ModelService.ERROR_MESSAGE_MAP));
+            }
+        }
+        
+        if (errorList.size() > 0) {
+            result.put(ModelService.ERROR_MESSAGE_LIST, errorList);
+        }
+        if (errorMap.size() > 0) {
+            result.put(ModelService.ERROR_MESSAGE_MAP, errorMap);
+        }
         return result;
     }
 
