@@ -381,20 +381,22 @@
             location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateProductManufacturingRule">
         <description>Update a Product Manufacturing Rule</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="ruleSeqId"/>
+            <exclude field-name="description"/>
+        </auto-attributes>
         <override name="productIdIn" optional="false"/>
-        <exclude field-name="ruleSeqId"/>
-        <exclude field-name="description"/>
     </service>
 
     <service name="addProductManufacturingRule" engine="simple" default-entity-name="ProductManufacturingRule"
             location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="addProductManufacturingRule">
         <description>Create a Product Manufacturing Rule</description>
         <auto-attributes include="pk" mode="IN" optional="true"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+            <exclude field-name="ruleSeqId"/>
+            <exclude field-name="description"/>
+        </auto-attributes>
         <override name="productIdIn" optional="false"/>
-        <exclude field-name="ruleSeqId"/>
-        <exclude field-name="description"/>
     </service>
 
     <service name="deleteProductManufacturingRule" engine="simple"
