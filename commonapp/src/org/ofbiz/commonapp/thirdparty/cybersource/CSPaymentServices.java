@@ -324,7 +324,8 @@ public class CSPaymentServices {
         if (billingAddress.get("address2") != null)
             request.setBillAddress2(billingAddress.getString("address2"));
         request.setBillCity(billingAddress.getString("city"));
-        request.setBillCountry(billingAddress.getString("countryGeoId"));
+        String bCountry = billingAddress.get("countryGeoId") != null ? billingAddress.getString("countryGeoId") : "USA";
+        request.setBillCountry(bCountry);
         request.setBillZip(billingAddress.getString("postalCode"));
         if (billingAddress.get("stateProvinceGeoId") != null)
             request.setBillState(billingAddress.getString("stateProvinceGeoId"));
@@ -335,8 +336,8 @@ public class CSPaymentServices {
         if (shippingAddress.get("address2") != null)
             request.setShipToAddress2(shippingAddress.getString("address2"));
         request.setShipToCity(shippingAddress.getString("city"));
-        String country = shippingAddress.get("countryGeoId") != null ? shippingAddress.getString("countryGeoId") : "USA";
-        request.setShipToCountry(country);
+        String sCountry = shippingAddress.get("countryGeoId") != null ? shippingAddress.getString("countryGeoId") : "USA";
+        request.setShipToCountry(sCountry);
         request.setShipToZip(shippingAddress.getString("postalCode"));
         if (shippingAddress.get("stateProvinceGeoId") != null)
             request.setShipToState(shippingAddress.getString("stateProvinceGeoId"));
