@@ -129,6 +129,7 @@
         <attribute name="billingAddress" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="shippingAddress" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="creditCard" type="GenericValue" mode="IN" optional="false"/>
+        <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="authResult" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
