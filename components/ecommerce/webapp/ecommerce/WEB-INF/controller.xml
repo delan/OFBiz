@@ -783,6 +783,17 @@
         <response name="error" type="view" value="tellafriend"/>
     </request-map>
 
+    <request-map uri="giftcardbalance">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="giftcardbalance"/>
+    </request-map>
+    <request-map uri="querybalance">
+        <security https="true" auth="false"/>
+        <event type="service" invoke="balanceInquireGiftCard"/>
+        <response name="success" type="view" value="giftcardbalance"/>
+        <response name="error" type="view" value="giftcardbalance"/>
+    </request-map>
+
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
@@ -834,5 +845,6 @@
     <view-map name="editgiftcard" type="jpublish" page="/customer/editgiftcard.ftl"/>
     <view-map name="changepassword" type="jpublish" page="/customer/changepassword.ftl"/>
     <view-map name="editperson" type="jpublish" page="/customer/editperson.ftl"/>
+    <view-map name="giftcardbalance" type="jpublish" page="/customer/giftcardbalance.ftl"/>
     <!-- End of View Mappings -->
 </site-conf>
