@@ -75,6 +75,8 @@ public class ServiceEventHandler implements EventHandler {
         if ( model == null )
             throw new EventHandlerException("Problems getting the service model");
         
+        Debug.logInfo("[EventHandler] : Processing SERVICE event");
+        
         // we have a service and the model; build the context
         Map serviceContext = new HashMap();
         Iterator ci = model.contextInfo.keySet().iterator();
@@ -113,6 +115,8 @@ public class ServiceEventHandler implements EventHandler {
             if ( !resultKey.equals("response") && !resultKey.equals("errorMessage") )
                 request.setAttribute(resultKey,resultValue);
         }
+        
+        Debug.logInfo("[EventHandler] : Returned - " + responseString);
         
         return responseString;
         

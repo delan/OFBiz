@@ -66,7 +66,7 @@ public class JavaEventHandler implements EventHandler {
         if ( eventPath == null || eventMethod == null )
             throw new EventHandlerException("Invalid event method or path; call initialize()");
         
-        Debug.logInfo("[EventHandler] : Processing JAVA event.");
+        Debug.logInfo("[EventHandler] : Processing JAVA event");
         try {
             Class c = Class.forName(eventPath);
             Method m = c.getMethod(eventMethod,paramTypes);
@@ -74,7 +74,7 @@ public class JavaEventHandler implements EventHandler {
             Debug.logInfo("[EventHandler] : Returned -  " + eventReturnString);
         }
         catch ( Exception e ) {
-            Debug.logError(e,"[EventHandler] : Problems Processing Event.");
+            Debug.logError(e,"[EventHandler] : Problems Processing Event");
             throw new EventHandlerException("Problems processing event: " + e.getMessage());
         }
         
