@@ -209,7 +209,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
 </table>
 
 <#-- Upgrades/Up-Sell/Cross-Sell -->
-<#macro associated(assocProducts, beforeName, showName, afterName)>
+<#macro associated assocProducts beforeName showName afterName)>
   <#if assocProducts?exists && 0 < assocProducts?size>
     <tr><td>&nbsp;</td></tr> 
     <tr><td colspan="2"><div class="head2">${beforeName?if_exists}<#if showName == "Y">${productValue.productName}</#if>${afterName?if_exists}</div></td></tr>
@@ -243,12 +243,12 @@ ${setRequestAttribute("productValue", productValue)}
 
 <table width='100%'>
   <#-- obsolete -->
-  <#call associated(requestAttributes.obsoleteProducts, "", "Y", " is made obsolete by these products:")>
+  <@associated assocProducts=requestAttributes.obsoleteProducts beforeName="" showName="Y" afterName=" is made obsolete by these products:"/>
   <#-- cross sell -->
-  <#call associated(requestAttributes.crossSellProducts, "", "N", "You might be interested in these as well:")>
+  <@associated assocProducts=requestAttributes.crossSellProducts beforeName="" showName="N" afterName="You might be interested in these as well:"/>
   <#-- up sell -->
-  <#call associated(requestAttributes.upSellProducts, "Try these instead of ", "Y", ":")>
+  <@associated assocProducts=requestAttributes.upSellProducts beforeName="Try these instead of " showName="Y" afterName=":"/>
   <#-- obsolescence -->
-  <#call associated(requestAttributes.obsolenscenseProducts, "", "Y", " makes these products obsolete:")>
+  <@associated assocProducts=requestAttributes.obsolenscenseProducts beforeName="" showName="Y" afterName=" makes these products obsolete:"/>
 </table>
 
