@@ -357,7 +357,7 @@
     	<response name="success" type="view" value="EditProductAssoc"/>
     </request-map>
     <request-map uri="UpdateProductAssoc"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProductAssoc"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateProductAssoc"/>
     	<response name="success" type="view" value="EditProductAssoc"/>
         <response name="error" type="view" value="EditProductAssoc"/>
     </request-map>
@@ -367,7 +367,7 @@
     	<response name="success" type="view" value="EditProductAttributes"/>
     </request-map>
     <request-map uri="UpdateProductAttribute"><security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateAttribute"/>
+        <event type="java" path="org.ofbiz.product.product.ProductEvents" invoke="updateAttribute"/>
     	<response name="success" type="view" value="EditProductAttributes"/>
         <response name="error" type="view" value="EditProductAttributes"/>
     </request-map>
