@@ -416,49 +416,5 @@
     <entity-group group="org.ofbiz" entity="ShoppingList" />
     <entity-group group="org.ofbiz" entity="ShoppingListItem" />
     <entity-group group="org.ofbiz" entity="ShoppingListType" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.shipment.issuance -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz" entity="ItemIssuance" />
-    <entity-group group="org.ofbiz" entity="ItemIssuanceRole" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.shipment.receipt -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz" entity="RejectionReason" />
-    <entity-group group="org.ofbiz" entity="ShipmentReceipt" />
-    <entity-group group="org.ofbiz" entity="ShipmentReceiptRole" />
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.shipment.shipment -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz" entity="Delivery" />
-    <entity-group group="org.ofbiz" entity="CarrierAndShipmentMethod" />
-    <entity-group group="org.ofbiz" entity="CarrierShipmentMethod" />
-    <entity-group group="org.ofbiz" entity="CarrierShipmentBoxType" />
-    <entity-group group="org.ofbiz" entity="Shipment" />
-    <entity-group group="org.ofbiz" entity="ShipmentAndItem" />
-    <entity-group group="org.ofbiz" entity="ShipmentAttribute" />
-    <entity-group group="org.ofbiz" entity="ShipmentBoxType" />
-    <entity-group group="org.ofbiz" entity="ShipmentContactMech" />
-    <entity-group group="org.ofbiz" entity="ShipmentContactMechType" />
-    <entity-group group="org.ofbiz" entity="ShipmentCostEstimate" />
-    <entity-group group="org.ofbiz" entity="ShipmentItem" />
-    <entity-group group="org.ofbiz" entity="ShipmentItemBilling" />
-    <entity-group group="org.ofbiz" entity="ShipmentItemFeature" />
-    <entity-group group="org.ofbiz" entity="ShipmentManifestView" />
-    <entity-group group="org.ofbiz" entity="ShipmentMethodType" />
-    <entity-group group="org.ofbiz" entity="ShipmentPackage" />
-    <entity-group group="org.ofbiz" entity="ShipmentPackageContent" />
-    <entity-group group="org.ofbiz" entity="ShipmentPackageRouteSeg" />
-    <entity-group group="org.ofbiz" entity="ShipmentRouteSegment" />
-    <entity-group group="org.ofbiz" entity="ShipmentStatus" />
-    <entity-group group="org.ofbiz" entity="ShipmentType" />
-    <entity-group group="org.ofbiz" entity="ShipmentTypeAttr" />
-    <entity-group group="org.ofbiz" entity="ShippingDocument" />
 </entitygroup>
 
