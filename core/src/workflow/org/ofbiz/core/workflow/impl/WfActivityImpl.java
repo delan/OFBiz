@@ -692,8 +692,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             while (i.hasNext()) {
                 Object key = i.next();
                 String keyStr = (String) key;
-                if (keyStr.toLowerCase().startsWith("expr:"))
-                   eval(keyStr.substring(2).trim(), context);
+                if (keyStr != null && keyStr.trim().toLowerCase().startsWith("expr:"))
+                   eval(keyStr.trim().substring(5).trim(), context);
                 else if (context.containsKey(key))
                     actualContext.put(key, context.get(key));
                 else if (((String) key).equals("workEffortId"))

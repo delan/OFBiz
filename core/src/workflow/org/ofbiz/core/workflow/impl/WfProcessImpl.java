@@ -368,7 +368,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
                 continue;
             }
             // evaluate the condition expression
-            transitionOk = evalCondition(transition.getString("conditionExpr"));
+            transitionOk = evalCondition(transition.getString("conditionExpr").trim());
             if (transitionOk) {
                 transList.add(transition);
                 if (split.equals("WST_XOR"))

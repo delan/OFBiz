@@ -180,8 +180,12 @@
 		  <Implementation>
 		    <Tool Id="testScv" Type="PROCEDURE">
               <ActualParameters>
-                <ActualParameter>expr:message=orderId</ActualParameter>
+                <ActualParameter>
+                    expr:expressionTest = orderId.equals("10000") ? "OrderId is 10000" : "OrderId is NOT 10000"
+                </ActualParameter>
+                <ActualParameter>expr: message=orderId</ActualParameter>
                 <ActualParameter>message</ActualParameter>
+                <ActualParameter>expressionTest</ActualParameter>
               </ActualParameters>
             </Tool>
 		  </Implementation>
