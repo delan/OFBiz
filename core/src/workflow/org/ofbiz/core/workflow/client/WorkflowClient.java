@@ -135,7 +135,8 @@ public class WorkflowClient {
                         "assignment for this activity.");
         }
 
-        fromAssign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, fromPartyId, fromRoleTypeId, fromFromDate);                    
+        if (fromAssign == null)
+            fromAssign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, fromPartyId, fromRoleTypeId, fromFromDate);                    
         fromAssign.delegate();   
         
         // check for a restartOnDelegate

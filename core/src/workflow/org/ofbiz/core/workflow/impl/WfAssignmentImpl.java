@@ -126,7 +126,7 @@ public class WfAssignmentImpl implements WfAssignment {
 
                 while (ai.hasNext() && allDelegated) {
                     WfAssignment a = (WfAssignment) ai.next();
-                    if (!a.status().equals("CAL_DELEGATED"))
+                    if (!a.equals(this) && !a.status().equals("CAL_DELEGATED"))
                         allDelegated = false;
                 }
                 // we cannot accept if the activity is running, with active assignments
