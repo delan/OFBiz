@@ -66,6 +66,25 @@
                 </#if>
               </tr>
               <#list orderItems as orderItem>
+                <#-- get info from workeffort and calculate rental quantity, if it was a rental item -->
+                <#assign rentalQuantity = 1> <#-- no change if no rental item -->
+                <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM" && workEfforts?exists>
+                    <#list workEfforts as workEffort>
+                        <#if workEffort.workEffortId == orderItem.orderItemSeqId>
+                            <#assign rentalQuantity = localOrderReadHelper.getWorkEffortRentalQuantity(workEffort)>
+                            <#assign workEffortSave = workEffort>
+                          <#break>
+                          </#if>
+                      </#list>
+                  <#else> 
+                      <#assign WorkOrderItemFulfillments = orderItem.getRelatedCache("WorkOrderItemFulfillment")?if_exists>
+                      <#if WorkOrderItemFulfillments?has_content>
+                        <#list WorkOrderItemFulfillments as WorkOrderItemFulfillment>
+                          <#assign workEffortSave = WorkOrderItemFulfillment.getRelatedOneCache("WorkEffort")?if_exists>
+                          <#break>
+                         </#list>
+                      </#if>
+                </#if>
                 <tr><td colspan="10"><hr class='sepbar'></td></tr>
                 <tr>
                   <#if orderItem.productId == "_?_">
@@ -118,7 +137,11 @@
                       <div class="tabletext" nowrap><@ofbizCurrency amount=localOrderReadHelper.getOrderItemAdjustmentsTotal(orderItem) isoCode=currencyUomId/></div>
                     </td>
                     <td align="right" valign="top" nowrap>
+                    <#if workEfforts?exists>
+                       <div class="tabletext"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem)*rentalQuantity isoCode=currencyUomId/></div>
+                    <#else>                                          
                       <div class="tabletext"><@ofbizCurrency amount=localOrderReadHelper.getOrderItemTotal(orderItem) isoCode=currencyUomId/></div>
+                      </#if>
                     </td>                    
                     <#if maySelectItems?default(false)>
                       <td>&nbsp;</td>
@@ -133,7 +156,12 @@
                     </#if>
                   </#if>
                 </tr>
-
+                <#-- show info from workeffort if it was a rental item -->
+                <#if orderItem.orderItemTypeId == "RENTAL_ORDER_ITEM">
+                    <#if workEffortSave?exists>
+                          <tr><td>&nbsp;</td><td colspan="8"><div class="tabletext">From: ${workEffortSave.estimatedStartDate?string("yyyy-MM-dd")} unitil ${workEffortSave.estimatedCompletionDate?string("yyyy-MM-dd")} for ${workEffortSave.reservPersons} person(s).</div></td></tr>
+                      </#if>
+                </#if>
                 <#-- now show adjustment details per line item -->
                 <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
                 <#list itemAdjustments as orderItemAdjustment>

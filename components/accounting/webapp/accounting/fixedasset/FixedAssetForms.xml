@@ -46,8 +46,8 @@
             target="updateFixedAsset" title="" default-map-name="fixedAsset"
             default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
         <actions>
-			<set field="partyId1" from-field="partyId"></set>
-	        </actions>
+            <set field="partyId1" from-field="partyId"></set>
+            </actions>
         <alt-target use-when="fixedAsset==null" target="createFixedAsset"/>
 
          <auto-fields-service service-name="updateFixedAsset" map-name="fixedAsset"/>
@@ -81,7 +81,8 @@
                 </entity-options> 
             </drop-down>
         </field>
-
+            
+        <field name="calendarId"><hidden/></field>  <!-- not show, can better be maintained by the system -->
     
         <field name="parentFixedAssetId" title="${uiLabelMap.AccountingFixedAssetParent}" ><lookup target-form-name="LookupFixedAsset"/></field>
         
@@ -130,5 +131,39 @@
         
         <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
+
+    <!-- list availability/occupation period on a fixed asset -->
+    <form name="listFixedAssetCalendar" type="list"  default-required-field-style="calendar" list-name="weeks"  target="updateFixedAssetProductCalendar"
+            default-title-style="calendarHeader" default-widget-style="calendarContent" default-tooltip-style="tabletext">
+
+        <field name="week" title="${uiLabelMap.Common${month}} ${year}" title-style="calendarHeader" widget-style="calendarWeek"><display description="Week ${week}"/></field>
+        <field name="Monday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/></field>
+        <field name="MondayData" title="${uiLabelMap.CommonMonday}" ><display/></field>
+        <field name="Tuesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
+        <field name="TuesdayData" title="${uiLabelMap.CommonTuesday}" > <display/></field>
+        <field name="Wendesday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
+        <field name="WendesdayData" title="${uiLabelMap.CommonWendesday}" > <display/></field>
+        <field name="Thursday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
+        <field name="ThursdayData" title="${uiLabelMap.CommonThursday}" > <display/></field>
+        <field name="Friday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
+        <field name="FridayData" title="${uiLabelMap.CommonFriday}" > <display/></field>
+        <field name="Saturday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
+        <field name="SaterdayData" title="${uiLabelMap.CommonSaturday}" > <display/></field>
+        <field name="Sunday" title="&amp;nbsp;" widget-style="calendarDayNumber"><display/> </field>
+        <field name="SundayData" title="${uiLabelMap.CommonSunday}" > <display/></field>
+    </form>
+
+    <!-- update the availability on a date basis of a fixed asset -->
+    <form name="updateFixedAssetCalendar" type="single" 
+            target="updateFixedAssetCalendar" title="Update the fixed Asset calendar" default-map-name="fixedAssetCalendar"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        
+        <auto-fields-service service-name="updateFixedAssetCalendar" map-name="parameters"/>
+
+        <field name="fixedAssetId"><hidden/></field>
+        
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
     
 </forms>

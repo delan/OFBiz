@@ -49,6 +49,9 @@ context.put("orderAdjustments", orderAdjustments);
 orderItems = cart.makeOrderItems();
 context.put("orderItems", orderItems);
 
+workEfforts = cart.makeWorkEfforts();
+context.put("workEfforts", workEfforts);
+
 orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments, null);
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 context.put("headerAdjustmentsToShow", OrderReadHelper.filterOrderAdjustments(orderHeaderAdjustments, true, false, false, false, false));

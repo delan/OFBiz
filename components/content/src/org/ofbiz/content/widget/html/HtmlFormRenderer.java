@@ -60,7 +60,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
     protected String lastFieldGroupId = "";
 
     public static final String module = HtmlFormRenderer.class.getName();
-
+    private boolean tdOpen = false;
+    
     protected HtmlFormRenderer() {}
 
     public HtmlFormRenderer(HttpServletRequest request, HttpServletResponse response) {
@@ -122,7 +123,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
     public void renderDisplayField(StringBuffer buffer, Map context, DisplayField displayField) {
         ModelFormField modelFormField = displayField.getModelFormField();
 
-        buffer.append("<span");
+        if (tdOpen == false)    
+            buffer.append("<span");
 
         if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
             buffer.append(" class=\"");
@@ -137,7 +139,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append(">");
         buffer.append(displayField.getDescription(context));
-        buffer.append("</span>");
+
+        if (tdOpen == false)            
+            buffer.append("</span>");
 
         this.appendTooltip(buffer, context, modelFormField);
 
@@ -469,7 +473,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ModelFormField modelFormField = checkField.getModelFormField();
         // never used: ModelForm modelForm = modelFormField.getModelForm();
         String currentValue = modelFormField.getEntry(context);
-
+if (tdOpen == false)
         buffer.append("<span");
         String className = modelFormField.getWidgetStyle();
         if (UtilValidate.isNotEmpty(className)) {
@@ -492,6 +496,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append('"');
         buffer.append(" value=\"Y\"/>");
         // any description by it?
+if (tdOpen == false)        
         buffer.append("</span>");
 
         this.appendTooltip(buffer, context, modelFormField);
@@ -700,7 +705,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        buffer.append("<span");
+        if (tdOpen == false)        buffer.append("<span");
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
             buffer.append(" class=\"");
             buffer.append(modelFormField.getTitleStyle());
@@ -708,7 +713,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         buffer.append(">");
         buffer.append(modelFormField.getTitle(context));
-        buffer.append("</span>");
+        if (tdOpen == false)        buffer.append("</span>");
 
         this.appendWhitespace(buffer);
     }
@@ -720,7 +725,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         boolean requiredField = modelFormField.getRequiredField();
         if (requiredField) {
             
-            buffer.append("<span");
+            if (tdOpen == false)            buffer.append("<span");
             String requiredStyle = modelFormField.getRequiredFieldStyle();
             if (UtilValidate.isEmpty(requiredStyle)) {
                 requiredStyle = modelFormField.getTitleStyle();
@@ -793,11 +798,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
             rowCount = Integer.toString(rCount);
         }
         if (UtilValidate.isNotEmpty(rowCount)) {
-        	buffer.append("<input type=\"hidden\" name=\"_rowCount\" value=\"" + rowCount + "\"/>");
+            buffer.append("<input type=\"hidden\" name=\"_rowCount\" value=\"" + rowCount + "\"/>");
         }
         boolean useRowSubmit = modelForm.getUseRowSubmit();
         if (useRowSubmit) {
-        	buffer.append("<input type=\"hidden\" name=\"_useRowSubmit\" value=\"Y\"/>");
+            buffer.append("<input type=\"hidden\" name=\"_useRowSubmit\" value=\"Y\"/>");
         }
         
         ModelFormField submitField = modelForm.getMultiSubmitField();
@@ -808,7 +813,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             submitField.renderFieldString(buffer, context, this);
 
             this.renderFormatItemRowCellClose(buffer, context, modelForm, submitField);
-        	
+            
         }
         buffer.append("</form>");
 
@@ -816,7 +821,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatListWrapperOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\">");
+        buffer.append("<table border=\"1\" cellpadding=\"2\" cellspacing=\"0\" width=\"100%\" class=\"calendarTable\">");
 
         this.appendWhitespace(buffer);
     }
@@ -854,8 +859,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatHeaderRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        buffer.append("<td>");
-
+        buffer.append("<td "); tdOpen = true;
+        
         this.appendWhitespace(buffer);
     }
 
@@ -863,13 +868,13 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatHeaderRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        buffer.append("</td>");
+        buffer.append("</td>"); tdOpen = false;
 
         this.appendWhitespace(buffer);
     }
 
     public void renderFormatHeaderRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<td align=\"center\">");
+        buffer.append("<td align=\"center\" "); tdOpen=true;
 
         this.appendWhitespace(buffer);
     }
@@ -878,7 +883,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatHeaderRowFormCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatHeaderRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("</td>");
+        buffer.append("</td>"); tdOpen = false;
 
         this.appendWhitespace(buffer);
     }
@@ -892,7 +897,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ModelForm modelForm,
         ModelFormField modelFormField,
         boolean isLast) {
-        buffer.append("<span");
+        if (tdOpen == false)        buffer.append("<span");
         if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
             buffer.append(" class=\"");
             buffer.append(modelFormField.getTitleStyle());
@@ -929,7 +934,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatItemRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        buffer.append("<td>");
+        buffer.append("<td "); tdOpen = true;
 
         this.appendWhitespace(buffer);
     }
@@ -938,7 +943,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatItemRowCellClose(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        buffer.append("</td>");
+        buffer.append("</td>"); tdOpen = false;
 
         this.appendWhitespace(buffer);
     }
@@ -947,7 +952,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowFormCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("<td align=\"center\">");
+        buffer.append("<td align=\"center\" " ); tdOpen = true;
 
         this.appendWhitespace(buffer);
     }
@@ -956,7 +961,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatItemRowFormCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelForm)
      */
     public void renderFormatItemRowFormCellClose(StringBuffer buffer, Map context, ModelForm modelForm) {
-        buffer.append("</td>");
+        buffer.append("</td>"); tdOpen = false;
 
         this.appendWhitespace(buffer);
     }
@@ -995,7 +1000,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowTitleCellOpen(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        buffer.append("<td width=\"20%\" align=\"right\">");
+        buffer.append("<td width=\"20%\" align=\"right\"  "); tdOpen = true;
 
         this.appendWhitespace(buffer);
     }
@@ -1004,7 +1009,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.content.widget.form.FormStringRenderer#renderFormatFieldRowTitleCellClose(java.lang.StringBuffer, java.util.Map, org.ofbiz.content.widget.form.ModelFormField)
      */
     public void renderFormatFieldRowTitleCellClose(StringBuffer buffer, Map context, ModelFormField modelFormField) {
-        buffer.append("</td>");
+        buffer.append("</td>"); tdOpen=false;
 
         this.appendWhitespace(buffer);
     }
@@ -1057,7 +1062,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         int positions,
         int positionSpan,
         Integer nextPositionInRow) {
-        buffer.append("</td>");
+        buffer.append("</td>"); tdOpen=false;
 
         this.appendWhitespace(buffer);
     }
@@ -1617,7 +1622,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         }
         buffer.append("      </b>\n");
-        buffer.append("    </td>\n");
+        buffer.append("    </td>\n"); tdOpen=false;
         buffer.append("  </tr>\n");
         buffer.append("</table>\n");
 

@@ -410,14 +410,21 @@ public class ShoppingListServices {
                     GenericValue shoppingListItem = (GenericValue) i.next();
                     String productId = shoppingListItem.getString("productId");
                     Double quantity = shoppingListItem.getDouble("quantity");
+                    Timestamp reservStart = shoppingListItem.getTimestamp("reservStart");
+                    double reservLength = 0.00;
+                    if (shoppingListItem.get("reservLength") != null)
+                        reservLength = shoppingListItem.getDouble("reservLength").doubleValue();
+                    double reservPersons = 0.00;
+                    if (shoppingListItem.get("reservPersons") != null)
+                        reservPersons = shoppingListItem.getDouble("reservPersons").doubleValue();
                     if (UtilValidate.isNotEmpty(productId) && quantity != null) {
                         // list items are noted in the shopping cart
                         String listId = shoppingListItem.getString("shoppingListId");
                         String itemId = shoppingListItem.getString("shoppingListItemSeqId");
                         Map attributes = UtilMisc.toMap("shoppingListId", listId, "shoppingListItemSeqId", itemId);
 
-                        try {
-                            listCart.addOrIncreaseItem(productId, quantity.doubleValue(), null, attributes, null, dispatcher);
+                        try { 
+                            listCart.addOrIncreaseItem(productId, quantity.doubleValue(), reservStart, reservLength, reservPersons, null, attributes, null, dispatcher);
                         } catch (CartItemModifyException e) {
                             Debug.logError(e, "Unable to add product to List Cart - " + productId, module);
                         } catch (ItemNotFoundException e) {

@@ -40,6 +40,12 @@ if (shoppingCart != null) {
 }
 context.put("shoppingCart", shoppingCart);
 
+if (request.getAttribute("add_product_id") != "") { // check if a parameter is apssed
+	add_product_id = request.getParameter("add_product_id");
+	product = delegator.findByPrimaryKeyCache("Product",UtilMisc.toMap("productId",add_product_id));
+	context.put("product",product);
+}
+
 // get all the possible gift wrap options
 allgiftWraps = delegator.findByAnd("ProductFeature", UtilMisc.toMap("productFeatureTypeId", "GIFT_WRAP"), UtilMisc.toList("defaultSequenceNum"));
 context.put("allgiftWraps", allgiftWraps);

@@ -91,11 +91,12 @@ function toggleBillingAccount(box) {
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign cart = context.shoppingCart?if_exists>
+<#assign shipping = !cart.containAllWorkEffortCartItems()> <#-- contains items which need shipping? -->
 <form method="post" name="checkoutInfoForm" style='margin:0;'>
   <input type="hidden" name="checkoutpage" value="quick">
   <input type="hidden" name="DONE_PAGE" value="quickcheckout">
   <input type="hidden" name="BACK_PAGE" value="quickcheckout">
-  <table width="100%" border="0" cellpadding='0' cellspacing='0'>
+  <table width="100%" border="1" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
         <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
@@ -104,7 +105,11 @@ function toggleBillingAccount(box) {
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
                   <td valign=middle align=left nowrap>
-                    <div class="boxhead">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
+                    <#if shipping == true>
+                        <div class="boxhead">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
+                    <#else>
+                        <div class="boxhead">1)&nbsp;${uiLabelMap.OrderInformationAboutYou}</div>
+                    </#if>
                   </td>
                 </tr>
               </table>
@@ -122,7 +127,7 @@ function toggleBillingAccount(box) {
                           <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
                         </td>
                       </tr>
-                      <#if (cart.getTotalQuantity() > 1)>
+                      <#if (cart.getTotalQuantity() > 1) && !cart.containAllWorkEffortCartItems()> <#-- no splitting when only rental items -->
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
                         <tr>
                           <td colspan="2" align="center">
@@ -176,7 +181,11 @@ function toggleBillingAccount(box) {
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
                   <td valign=middle align=left nowrap>
-                    <div class="boxhead">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
+                    <#if shipping == true>
+                        <div class="boxhead">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
+                    <#else>
+                        <div class="boxhead">2)&nbsp;${uiLabelMap.OrderOptions}?</div>
+                    </#if>
                   </td>
                 </tr>
               </table>
@@ -188,6 +197,7 @@ function toggleBillingAccount(box) {
                 <tr>
                   <td>
                     <table width='100%' cellpadding='1' border='0' cellpadding='0' cellspacing='0'>
+                     <#if shipping == true>
                       <#list context.carrierShipmentMethodList as carrierShipmentMethod>
                         <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                         <tr>
@@ -238,6 +248,11 @@ function toggleBillingAccount(box) {
                         </td>
                       </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                     <#else>
+                        <input type="hidden" name="shipping_method" value="NO_SHIPPING@_NA_">
+                        <input type="hidden" name="may_split" value="false">
+                        <input type="hidden" name="is_gift" value="false">
+                     </#if>
                       <tr>
                         <td colspan="2">
                           <div class="head2"><b>${uiLabelMap.OrderSpecialInstructions}</b></div>
@@ -259,6 +274,7 @@ function toggleBillingAccount(box) {
                         </td>
                       </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                     <#if shipping == true>
                       <tr>
                         <td colspan="2">
                           <div>
@@ -280,6 +296,7 @@ function toggleBillingAccount(box) {
                         </td>
                       </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                     </#if>
                       <tr>
                         <td colspan="2">
                           <div class="head2"><b>${uiLabelMap.PartyEmailAddresses}</b></div>

@@ -39,7 +39,7 @@
                                 <platform-specific>
                                     <html><html-template location="component://accounting/webapp/accounting/fixedasset/FixedAssetTabBar.ftl"/></html>
                                 </platform-specific>
-             
+
                                 <decorator-section-include name="body"/>
 
                             </widgets>
@@ -67,7 +67,7 @@
                                     </condition-list>
                 </entity-condition>
             </actions>
-            <widgets>
+                    <widgets>
                 <decorator-screen name="CommonFixedAssetDecorator">
                     <decorator-section name="body">
                         <container>
@@ -83,9 +83,9 @@
                     </decorator-section>
                 </decorator-screen>
             </widgets>
-        </section>
+         </section>
     </screen>
-    
+        
     <!-- create and/or update a fixed asset -->
     <screen name="EditFixedAsset">
         <section>
@@ -101,10 +101,10 @@
                     <decorator-section name="body">
                         <container>
                             <label style="head1">${uiLabelMap.AccountingFixedAssetEdit}</label>
-                             </container>
-                                <container>
-                                    <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
-                                </container>
+                        </container>
+                         <container>
+                            <link target="EditFixedAsset" text="[${uiLabelMap.AccountingNewFixedAsset}]" style="buttontext"/>
+                         </container>
                         <include-form name="EditFixedAsset" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
@@ -151,6 +151,48 @@
         </section>
     </screen>
  
+    <!-- provide a calendar to show occupation-->
+    <screen name="ListFixedAssetCalendar">
+        <section>
+            <actions>
+                <set field="layoutSettings.extraHead" value="&lt;link rel='stylesheet' href='/images/calendarTable.css' type='text/css'&gt;"/>
+                <set field="title" value="Edit Fixed Asset Calendar"/>
+                <set field="titleProperty" value="PageTitleListFixedAssetCalendar"/>
+                <set field="page.headerItem" value="ListFixedAssets"/>
+                <set field="page.tabButtonItem" value="ListFixedAssetCalendar"/>
+                <set field="labelTitleProperty" value="Calendar"/>
+                <set field="nowTimestamp" value="UtilDateTime.nowTimestamp()"/>
+                <set field="fixedAssetId" from-field="parameters.fixedAssetId"/>
+                <entity-one entity-name="FixedAsset" value-name="fixedAsset"/>
+                <script location="component://accounting/webapp/accounting/fixedasset/month.bsh"/>
+            </actions>
+            <widgets>
+                <decorator-screen name="CommonFixedAssetDecorator">
+                    <decorator-section name="body">
+                                <container>
+                                   <label style="head1">${uiLabelMap.AccountingFixedAsset}: ${fixedAsset.fixedAssetName} [${uiLabelMap.CommonId}:${fixedAssetId}]</label>
+                                </container>
+                                <container>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=-3" text="[${uiLabelMap.CommonPrevious} ${uiLabelMap.CommonQuarter}]" style="buttontext"/>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=-1" text="[${uiLabelMap.CommonPrevious} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}" text="[${uiLabelMap.CommonThis} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=1" text="[${uiLabelMap.CommonNext} ${uiLabelMap.CommonMonth}]" style="buttontext"/>
+                                    <link target="ListFixedAssetCalendar?fixedAssetId=${fixedAssetId}&amp;month=3" text="[${uiLabelMap.CommonNext} ${uiLabelMap.CommonQuarter}]" style="buttontext"/>
+                                    <include-form name="listFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                    <label style="tabletext" text="*) empty, but maximum from fixed Asset capacity shown"></label>
+                                </container>
+<!--                                 <container>
+                                    <label style="tabletext" text="&amp;nbsp;"></label>
+                                </container>
+                                <container>
+                                   <label style="head1">${uiLabelMap.AccountingUpdateAvailability}</label>
+                                   <include-form name="updateFixedAssetCalendar" location="component://accounting/webapp/accounting/fixedasset/FixedAssetForms.xml"/>
+                                </container>
+ -->                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
 
 </screens>
 

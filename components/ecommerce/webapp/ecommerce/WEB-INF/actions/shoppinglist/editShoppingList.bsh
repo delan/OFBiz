@@ -103,13 +103,41 @@ if (shoppingListId != null) {
                 calcPriceOutMap = dispatcher.runSync("calculateProductPrice", calcPriceInMap);
                 price = calcPriceOutMap.get("price");
                 totalPrice = price * shoppingListItem.getDouble("quantity");
+                // similar code at ShoppingCartItem.java getRentalAdjustment
+                if ("ASSET_USAGE".equals(product.getString("productTypeId")))     {
+                    persons = shoppingListItem.getDouble("reservPersons");
+                    reservNthPPPerc = product.get("reservNthPPPerc").doubleValue();
+                    reserv2ndPPPerc = product.get("reserv2ndPPPerc").doubleValue();
+                    if (persons == null) persons = 0;
+                    rentalValue = 0;
+                    if (persons > 1)    {
+                        if (persons > 2 ) {
+                            persons -= 2; 
+                            if(reservNthPPPerc != null && reservNthPPPerc > 0) 
+                                rentalValue = persons * reservNthPPPerc;
+                            else if (reserv2ndPPPerc != null && reserv2ndPPPerc > 0)
+                                rentalValue = persons * reserv2ndPPPerc;
+                            persons = 2;
+                        }
+                        if (persons == 2) {
+                            if (reserv2ndPPPerc != null && reserv2ndPPPerc > 0)
+                                rentalValue += reserv2ndPPPerc;
+                            else  if(reservNthPPPerc != null && reservNthPPPerc > 0) 
+                                rentalValue = persons * reservNthPPPerc;
+                        }
+                    }
+                    rentalValue += 100;    // add final 100 percent for first person
+                    reservLength = 0;
+                    if (shoppingListItem.get("reservLength") != null)
+                        reservLength = shoppingListItem.getDouble("reservLength").doubleValue();
+                    totalPrice *= (rentalValue/100 * reservLength);
+                }
                 shoppingListItemTotal += totalPrice;
                 
                 productVariantAssocs = null;
                 if ("Y".equals(product.getString("isVirtual"))) {
                     productVariantAssocs = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("sequenceNum"));
                 }
-                
                 shoppingListItemData.put("shoppingListItem", shoppingListItem);
                 shoppingListItemData.put("product", product);
                 shoppingListItemData.put("unitPrice", price);

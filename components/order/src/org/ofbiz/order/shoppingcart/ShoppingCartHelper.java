@@ -23,6 +23,7 @@
  */
 package org.ofbiz.order.shoppingcart;
 
+import java.sql.Timestamp;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -97,12 +98,11 @@ public class ShoppingCartHelper {
 
     /** Event to add an item to the shopping cart. */
     public Map addToCart(String catalogId, String shoppingListId, String shoppingListItemSeqId, String productId,
-            String productCategoryId, String itemType, String itemDescription, double price,
-            double amount, double quantity, ProductConfigWrapper configWrapper, Map context) {
+            String productCategoryId, String itemType, String itemDescription, double price, double amount, double quantity, java.sql.Timestamp reservStart, double reservLength, double reservPersons, ProductConfigWrapper configWrapper, Map context) {
         Map result = null;
         Map attributes = null;
         String errMsg = null;
-	
+    
         // price sanity check
         if (productId == null && price < 0) {
             errMsg = UtilProperties.getMessage(resource, "cart.price_not_positive_number", this.cart.getLocale());
@@ -182,7 +182,7 @@ public class ShoppingCartHelper {
         try {
             int itemId = -1;
             if (productId != null) {
-                itemId = cart.addOrIncreaseItem(productId, amount, quantity, null, attributes, catalogId, configWrapper, dispatcher);
+                itemId = cart.addOrIncreaseItem(productId, amount, quantity, reservStart, reservLength, reservPersons, null, attributes, catalogId, configWrapper, dispatcher);
             } else {
                 itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
             }
@@ -232,14 +232,15 @@ public class ShoppingCartHelper {
                 while (itemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) itemIter.next();
                     // never read: int itemId = -1;
-                    if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
+                    if (orderItem.get("productId") != null && orderItem.get("quantity") != null && ("RENTAL_ORDER_ITEM").compareTo(orderItem.get("orderItemTypeId")) != 0 ) { // do not store rental itrems
                         double amount = 0.00;
                         if (orderItem.get("selectedAmount") != null) {
                             amount = orderItem.getDouble("selectedAmount").doubleValue();
                         }
                         try {
                             this.cart.addOrIncreaseItem(orderItem.getString("productId"),
-                                    amount, orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, dispatcher);
+                                    amount, orderItem.getDouble("quantity").doubleValue(),
+                                    null, null, catalogId, dispatcher);
                             noItems = false;
                         } catch (CartItemModifyException e) {
                             errorMsgs.add(e.getMessage());
@@ -404,7 +405,8 @@ public class ShoppingCartHelper {
 
             if (quantity != null && quantity.doubleValue() > 0.0) {
                 try {
-                    this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), 0.00, quantity.doubleValue(), null, null, catalogId, dispatcher);
+                    this.cart.addOrIncreaseItem(productCategoryMember.getString("productId"), 
+                            0.00, quantity.doubleValue(), null, null, catalogId, dispatcher);
                     totalQuantity += quantity.doubleValue();
                 } catch (CartItemModifyException e) {
                     errorMsgs.add(e.getMessage());
@@ -496,6 +498,30 @@ public class ShoppingCartHelper {
                                 item.putAdditionalProductFeatureAndAppl(featureAppl);
                             }
                         }
+                    }
+                    
+                    if (o.startsWith("reservStart")) {
+                        // should have format: yyyy-mm-dd hh:mm:ss.fffffffff
+                        quantString += " 00:00:00.000000000"; 
+                        if (item != null) {
+                                Timestamp reservStart = Timestamp.valueOf((String) quantString);
+                                item.setReservStart(reservStart);
+                        }
+                    }
+                    
+                    if (o.startsWith("reservLength")) {
+                        if (item != null) {
+                                double reservLength = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                                item.setReservLength(reservLength);
+                        }
+                    }                    
+                                        
+                    if (o.startsWith("reservPersons")) {
+                        if (item != null) {
+                                double reservPersons = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                                item.setReservPersons(reservPersons);
+                        }
+
                     } else {
                         quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
                         if (quantity < 0) {

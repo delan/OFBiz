@@ -32,6 +32,7 @@
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoMerchant.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoProduct.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoSurvey.xml"/>
+    <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoRentalShipping.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoShipping.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoWebSitePublishPointData.xml"/>
     <entity-resource type="data" reader-name="demo" loader="main" location="data/DemoContentPermissionsData.xml"/>

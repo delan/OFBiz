@@ -34,6 +34,7 @@
     <OrderItemType description="Bulk Item" hasTable="N" orderItemTypeId="BULK_ORDER_ITEM" parentTypeId=""/>
     <OrderItemType description="Product Item" hasTable="N" orderItemTypeId="PRODUCT_ORDER_ITEM" parentTypeId=""/>
     <OrderItemType description="Work Item" hasTable="N" orderItemTypeId="WORK_ORDER_ITEM" parentTypeId=""/>
+    <OrderItemType description="Rental Item" hasTable="N" orderItemTypeId="RENTAL_ORDER_ITEM" parentTypeId=""/>
 
     <OrderType description="Purchase" hasTable="N" orderTypeId="PURCHASE_ORDER" parentTypeId=""/>
     <OrderType description="Sales" hasTable="N" orderTypeId="SALES_ORDER" parentTypeId=""/>

@@ -58,6 +58,7 @@
     <WorkEffortType description="For ProductionRun" hasTable="N" parentTypeId="" workEffortTypeId="PRODUCTION_RUN"/>
     <WorkEffortType description="Production Run Order" hasTable="N" parentTypeId="PRODUCTION_RUN" workEffortTypeId="PROD_ORDER_HEADER"/>
     <WorkEffortType description="Production Run Task" hasTable="N" parentTypeId="PRODUCTION_RUN" workEffortTypeId="PROD_ORDER_TASK"/>
+    <WorkEffortType description="Fixed Asset Usage(rental)" hasTable="N" parentTypeId="" workEffortTypeId="ASSET_USAGE"/>
 
     <WorkEffortAssocType description="Routing is composed with routingTask" hasTable="N" parentTypeId="" workEffortAssocTypeId="ROUTING_COMPONENT"/>
 
