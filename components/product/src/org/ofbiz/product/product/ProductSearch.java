@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.27 2004/02/10 03:41:08 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.28 2004/02/26 09:10:50 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -59,12 +59,13 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  * @since      3.0
  */
 public class ProductSearch {
 
     public static final String module = ProductSearch.class.getName();
+    public static final String resource = "ProductUiLabels";
 
     public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         Set featureIdSet = new HashSet();
