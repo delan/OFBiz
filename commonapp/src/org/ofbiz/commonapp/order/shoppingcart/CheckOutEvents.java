@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -34,7 +34,6 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.commonapp.product.catalog.*;
@@ -871,5 +870,59 @@ public class CheckOutEvents {
         cart.clear();
         session.invalidate();
         return "success";
-    }            
+    }      
+    
+    public static String finalizeOrderEntry(HttpServletRequest request, HttpServletResponse response) {        
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        String requireShipping = request.getParameter("finalizeReqShipInfo");
+        String requirePayment = request.getParameter("finalizeReqPayInfo");
+        
+        // set some fields
+        String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+        String checkOutPaymentId = request.getParameter("checkOutPaymentId");
+        
+        if (shippingContactMechId == null)
+            shippingContactMechId = (String) request.getAttribute("contactMechId");
+        if (checkOutPaymentId == null)  
+            checkOutPaymentId = (String) request.getAttribute("paymentMethodId");
+        
+        // set the shipping method if we have one
+        if (UtilValidate.isNotEmpty(shippingContactMechId)) 
+            cart.setShippingContactMechId(shippingContactMechId);
+            
+        // set the payment method(s) if we have some -- change this to accept multiple
+        if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
+            // clear out the old payments
+            cart.clearPaymentMethodTypeIds();
+            cart.clearPaymentMethodIds();
+            // all payment method ids will be numeric, type ids will start with letter
+            if (Character.isLetter(checkOutPaymentId.charAt(0))) {
+                cart.addPaymentMethodTypeId(checkOutPaymentId);
+            } else {
+                cart.addPaymentMethodId(checkOutPaymentId);
+            }
+        }            
+                                
+        if (requireShipping == null)
+            requireShipping = "true";
+        if (requirePayment == null)
+            requirePayment = "true";
+
+        String shipContactMechId = cart.getShippingContactMechId();
+        String shipmentMethodTypeId = cart.getShipmentMethodTypeId();
+        List paymentMethodIds = cart.getPaymentMethodIds();
+        
+        if (shipContactMechId == null && requireShipping.equalsIgnoreCase("true"))
+            return "shipping";
+         
+        if (shipmentMethodTypeId == null)   
+            return "options";
+            
+        if (requirePayment.equalsIgnoreCase("true") && (paymentMethodIds == null || paymentMethodIds.size() == 0))
+            return "payment";
+                
+        return "success";
+    }
+            
+          
 }

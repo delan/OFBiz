@@ -454,6 +454,7 @@ public class ShoppingCartEvents {
         HttpSession session = request.getSession();
         clearCart(request, response);
         session.removeAttribute(SiteDefs.SHOPPING_CART);
+        session.removeAttribute("orderPartyId");
         return "success";
     }
 
