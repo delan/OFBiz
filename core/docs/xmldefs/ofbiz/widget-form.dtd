@@ -142,6 +142,9 @@
 	entry box and some sort of widget to make date entry/selection easier
 -->
 <!ELEMENT date-time EMPTY>
+<!ATTLIST date-time
+    type ( timestamp | date | time ) "timestamp"
+>
 
 <!-- this will look up options for the field in the given entity
     key-field-name: the value of the key-field-name will be the value passed 
