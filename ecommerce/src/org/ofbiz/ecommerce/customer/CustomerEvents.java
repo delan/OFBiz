@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/08/31 22:45:18  jonesde
+ * Added final touches to contact mech maint, including some validators
+ *
  * Revision 1.8  2001/08/31 19:07:33  jonesde
  * Added create & delete of party contact mech purpose
  *
@@ -65,6 +68,12 @@ import org.ofbiz.core.entity.*;
  */
 public class CustomerEvents
 {
+  /** Creates the necessary database entries for a new customer account based on
+   *  the form inputs of the corresponding JSP customer/newcustomer.jsp.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
   public static String createCustomer(HttpServletRequest request, HttpServletResponse response)
   {
     GenericValue newUserLogin = null;
@@ -233,6 +242,16 @@ public class CustomerEvents
     return "success";
   }
   
+  /** Updates a ContactMech entity according to the parameters passed in the 
+   *  request object; will do a CREATE, UPDATE, or DELETE depending on the
+   *  value of the UPDATE_MODE parameter. May modify the ContactMech entity
+   *  corresponding to the CONTACT_MECH_ID in the request object and
+   *  the PartyContactMech entity corresponding to the CONTACT_MECH_ID and the
+   *  current UserLogin value object in the session.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
   public static String updateContactMech(HttpServletRequest request, HttpServletResponse response)
   {
     String errMsg = "";
@@ -440,6 +459,11 @@ public class CustomerEvents
     return "success";
   }
 
+  /** Creates a PartyContactMechPurpose given the parameters in the request object
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
   public static String createPartyContactMechPurpose(HttpServletRequest request, HttpServletResponse response)
   {
     String errMsg = "";
@@ -474,6 +498,11 @@ public class CustomerEvents
     return "success";
   }
 
+  /** Deletes the PartyContactMechPurpose corresponding to the parameters in the request object
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
   public static String deletePartyContactMechPurpose(HttpServletRequest request, HttpServletResponse response)
   {
     String errMsg = "";
@@ -499,79 +528,65 @@ public class CustomerEvents
     return "success";
   }
   
-/*  
-  public static boolean changePassword(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
+  /** Updates a CreditCardInfo entity according to the parameters passed in the 
+   *  request object; will do a CREATE, UPDATE, or DELETE depending on the
+   *  value of the UPDATE_MODE parameter.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String updateCreditCardInfo(HttpServletRequest request, HttpServletResponse response)
   {
-    String errorMsg = (String)request.getAttribute(HttpRequestConstants.ERROR_MESSAGE);
-    if(errorMsg == null || errorMsg.length() <= 0)
-    {
-      Person person = null;
-      person = (Person)request.getSession().getAttribute(HttpSessionConstants.LOGIN_PERSON);
-
-      boolean hasPermission = Security.hasPermission(Security.USER_ADMIN, request.getSession());
-      if(hasPermission)
-      {
-        Person tempPerson = (Person)request.getSession().getAttribute(HttpSessionConstants.ACTING_AS_PERSON);
-        if(tempPerson != null)
-        {
-          person = tempPerson;
-        }
-      }
-
-      String password = request.getParameter(HttpRequestConstants.LOGIN_PASSWORD);
-      if(hasPermission)
-      {
-        password = person.getPassword();
-      }
-
-      String newPassword = request.getParameter(HttpRequestConstants.LOGIN_NEW_PASSWORD);
-      String confirmPassword = request.getParameter(HttpRequestConstants.LOGIN_CONFIRM_PASSWORD);
-
-      if(person == null)
-      {
-        //person not found, return error
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Person not found: critical error.  Please login.");
-        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
-        rd.forward(request, response);
-        return false;
-      }
-
-      if(password == null || password.length() <= 0 ||
-        newPassword == null || newPassword.length() <= 0 ||
-        confirmPassword == null || confirmPassword.length() <= 0)
-      {
-        //one or more of the passwords was incomplete
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "One or more of the passwords was empty, please re-enter.");
-        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
-        rd.forward(request, response);
-        return false;
-      }
-
-      if(person.getPassword().compareTo(password) != 0)
-      {
-        //password was NOT correct, send back to changepassword page with an error
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Old Password was not correct, please re-enter.");
-        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
-        rd.forward(request, response);
-        return false;
-      }
-
-      //password was correct, check new password
-      if(newPassword.compareTo(confirmPassword) != 0)
-      {
-        //passwords did not match
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "New Passwords did not match, please re-enter.");
-        RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/changepassword.jsp");
-        rd.forward(request, response);
-        return false;
-      }
-
-      //all is well, update password
-      person.setPassword(newPassword);
-    }
-    return true;
+    return "success";
   }
 
+  /** Change the password for the current UserLogin in the session to the
+   *  password specified in the request object.
+   *@param request The HTTPRequest object for the current request
+   *@param response The HTTPResponse object for the current request
+   *@return String specifying the exit status of this event
+   */
+  public static String changePassword(HttpServletRequest request, HttpServletResponse response)
+  {
+    GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    GenericHelper helper = (GenericHelper)request.getAttribute("helper");
+
+    String password = request.getParameter("OLD_PASSWORD");
+    String newPassword = request.getParameter("NEW_PASSWORD");
+    String confirmPassword = request.getParameter("NEW_PASSWORD_CONFIRM");
+
+    if(password == null || password.length() <= 0 ||
+      newPassword == null || newPassword.length() <= 0 ||
+      confirmPassword == null || confirmPassword.length() <= 0)
+    {
+      //one or more of the passwords was incomplete
+      request.setAttribute("ERROR_MESSAGE", "<li>One or more of the passwords was empty, please re-enter.");
+      return "error";
+    }
+
+    if(!password.equals(userLogin.getString("currentPassword")))
+    {
+      //password was NOT correct, send back to changepassword page with an error
+      request.setAttribute("ERROR_MESSAGE", "<li>Old Password was not correct, please re-enter.");
+      return "error";
+    }
+
+    //password was correct, check new password
+    if(!newPassword.equals(confirmPassword))
+    {
+      //passwords did not match
+      request.setAttribute("ERROR_MESSAGE", "<li>New Passwords did not match, please re-enter.");
+      return "error";
+    }
+
+    //all is well, update password
+    userLogin.set("currentPassword", newPassword);
+    try { userLogin.store(); }
+    catch(Exception e) { request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change password (write failure). Please contact customer service."); return "error"; }
+    return "success";
+  }
+
+/*
   public static boolean handleUpdateCustomer(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
   {
     // a little check to avoid an endless loop in error cases...
@@ -703,7 +718,7 @@ public class CustomerEvents
     if(errMsg.length() > 0)
     {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      request.setAttribute("ERROR_MESSAGE", errMsg);
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/editcustomer.jsp");
       rd.forward(request, response);
       return false;
@@ -746,7 +761,7 @@ public class CustomerEvents
   public static boolean handleUpdateProfile(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
   {
     // a little check to avoid an endless loop in error cases...
-    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    if(request.getAttribute("ERROR_MESSAGE") != null)
     {
       return true;
     }
@@ -833,7 +848,7 @@ public class CustomerEvents
     if(errMsg.length() > 0)
     {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      request.setAttribute("ERROR_MESSAGE", errMsg);
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/editprofile.jsp");
       rd.forward(request, response);
       return false;
@@ -870,7 +885,7 @@ public class CustomerEvents
       if(address == null)
       {
         //uh oh, failed...
-        request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create address.");
+        request.setAttribute("ERROR_MESSAGE", "Could not create address.");
         RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/editprofile.jsp");
         rd.forward(request, response);
         return false;
@@ -894,7 +909,7 @@ public class CustomerEvents
 
     if(addressIdString == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address id was not specified, cannot remove.");
+      request.setAttribute("ERROR_MESSAGE", "The address id was not specified, cannot remove.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -912,7 +927,7 @@ public class CustomerEvents
 
     if(addressId == 0)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address id specified was not valid, cannot remove.");
+      request.setAttribute("ERROR_MESSAGE", "The address id specified was not valid, cannot remove.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -923,7 +938,7 @@ public class CustomerEvents
     Address address = AddressHelper.findByPrimaryKey(new Integer(addressId));
     if(address == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address specified was not found, cannot remove.");
+      request.setAttribute("ERROR_MESSAGE", "The address specified was not found, cannot remove.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -933,7 +948,7 @@ public class CustomerEvents
       customer.getAddressId().intValue() != addressId &&
       customerShipAddress == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address specified does not belong to your account, you may not delete it.");
+      request.setAttribute("ERROR_MESSAGE", "The address specified does not belong to your account, you may not delete it.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -954,7 +969,7 @@ public class CustomerEvents
   public static boolean handleSaveNewAddress(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
   {
     // a little check to avoid an endless loop in error cases...
-    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    if(request.getAttribute("ERROR_MESSAGE") != null)
     {
       return true;
     }
@@ -1007,7 +1022,7 @@ public class CustomerEvents
     if(errMsg.length() > 0)
     {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      request.setAttribute("ERROR_MESSAGE", errMsg);
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewaddress.jsp");
       rd.forward(request, response);
       return false;
@@ -1016,7 +1031,7 @@ public class CustomerEvents
     Address newShippingAddress = AddressHelper.create(address1, address2, city, county, state, postalCode, directions, geoCode, mapUrl);
     if(newShippingAddress == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create address record.");
+      request.setAttribute("ERROR_MESSAGE", "Could not create address record.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewaddress.jsp");
       rd.forward(request, response);
       return false;
@@ -1037,7 +1052,7 @@ public class CustomerEvents
       {
       }
       //this isn't good, but what to do? Probably not something the user can resolve...
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create customer shipping address record.");
+      request.setAttribute("ERROR_MESSAGE", "Could not create customer shipping address record.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewaddress.jsp");
       rd.forward(request, response);
       return false;
@@ -1048,7 +1063,7 @@ public class CustomerEvents
   public static boolean handleUpdateShippingAddress(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, javax.ejb.RemoveException, java.io.IOException, javax.servlet.ServletException
   {
     // a little check to avoid an endless loop in error cases...
-    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    if(request.getAttribute("ERROR_MESSAGE") != null)
     {
       return true;
     }
@@ -1062,7 +1077,7 @@ public class CustomerEvents
 
     if(addressIdString == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address id was not specified, cannot update.");
+      request.setAttribute("ERROR_MESSAGE", "The address id was not specified, cannot update.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1080,7 +1095,7 @@ public class CustomerEvents
 
     if(addressId == 0)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address id specified was not valid, cannot update.");
+      request.setAttribute("ERROR_MESSAGE", "The address id specified was not valid, cannot update.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1090,7 +1105,7 @@ public class CustomerEvents
     Address address = AddressHelper.findByPrimaryKey(new Integer(addressId));
     if(address == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address specified was not found, cannot change.");
+      request.setAttribute("ERROR_MESSAGE", "The address specified was not found, cannot change.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1100,7 +1115,7 @@ public class CustomerEvents
       customer.getAddressId().intValue() != addressId &&
       customerShipAddress == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address specified does not belong to your account, you may not change it.");
+      request.setAttribute("ERROR_MESSAGE", "The address specified does not belong to your account, you may not change it.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1140,7 +1155,7 @@ public class CustomerEvents
     if(errMsg.length() > 0)
     {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      request.setAttribute("ERROR_MESSAGE", errMsg);
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profileeditaddress.jsp");
       rd.forward(request, response);
       return false;
@@ -1173,7 +1188,7 @@ public class CustomerEvents
   public static boolean handleCreateCustomerPayment(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
   {
     // a little check to avoid an endless loop in error cases...
-    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    if(request.getAttribute("ERROR_MESSAGE") != null)
     {
       return true;
     }
@@ -1296,7 +1311,7 @@ public class CustomerEvents
     if(errMsg.length() > 0)
     {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      request.setAttribute("ERROR_MESSAGE", errMsg);
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewcc.jsp");
       rd.forward(request, response);
       return false;
@@ -1305,7 +1320,7 @@ public class CustomerEvents
     Address newCCAddress = AddressHelper.create(address1, address2, city, county, state, postalCode, directions, geoCode, mapUrl);
     if(newCCAddress == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create address record.");
+      request.setAttribute("ERROR_MESSAGE", "Could not create address record.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewcc.jsp");
       rd.forward(request, response);
       return false;
@@ -1323,7 +1338,7 @@ public class CustomerEvents
       {
       }
       //this isn't good, but what to do? Probably not something the user can resolve...
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "Could not create payment record.");
+      request.setAttribute("ERROR_MESSAGE", "Could not create payment record.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profilenewcc.jsp");
       rd.forward(request, response);
       return false;
@@ -1354,7 +1369,7 @@ public class CustomerEvents
 
     if(paymentIdString == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id was not specified, cannot delete.");
+      request.setAttribute("ERROR_MESSAGE", "The payment id was not specified, cannot delete.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1369,7 +1384,7 @@ public class CustomerEvents
     }
     if(paymentId == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id specified (" + paymentIdString + ") was not a valid id, cannot delete.");
+      request.setAttribute("ERROR_MESSAGE", "The payment id specified (" + paymentIdString + ") was not a valid id, cannot delete.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1378,7 +1393,7 @@ public class CustomerEvents
     CustomerPayment customerPayment = CustomerPaymentHelper.findByPaymentId(paymentId);
     if(customerPayment == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id specified (" + paymentId.intValue() + ") was not found, cannot delete.");
+      request.setAttribute("ERROR_MESSAGE", "The payment id specified (" + paymentId.intValue() + ") was not found, cannot delete.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1387,7 +1402,7 @@ public class CustomerEvents
     if(customerPayment.getCustomerId().compareTo(customer.getCustomerId()) != 0 && !Security.hasPermission(Security.USER_ADMIN, request.getSession()))
     {
       //customer id's do not match, do not allow view or edit...
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The credit card specified does not belong to your account, you may not delete it.");
+      request.setAttribute("ERROR_MESSAGE", "The credit card specified does not belong to your account, you may not delete it.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1411,7 +1426,7 @@ public class CustomerEvents
   public static boolean handleUpdateCustomerPayment(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException
   {
     // a little check to avoid an endless loop in error cases...
-    if(request.getAttribute(HttpRequestConstants.ERROR_MESSAGE) != null)
+    if(request.getAttribute("ERROR_MESSAGE") != null)
     {
       return true;
     }
@@ -1426,7 +1441,7 @@ public class CustomerEvents
 
     if(paymentIdString == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id was not specified, cannot update.");
+      request.setAttribute("ERROR_MESSAGE", "The payment id was not specified, cannot update.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1435,7 +1450,7 @@ public class CustomerEvents
     paymentId = Integer.valueOf(paymentIdString);
     if(paymentId == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id specified was not a valid id, cannot update.");
+      request.setAttribute("ERROR_MESSAGE", "The payment id specified was not a valid id, cannot update.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1444,7 +1459,7 @@ public class CustomerEvents
     CustomerPayment customerPayment = CustomerPaymentHelper.findByPaymentId(paymentId);
     if(customerPayment == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The payment id specified was not found, cannot update.");
+      request.setAttribute("ERROR_MESSAGE", "The payment id specified was not found, cannot update.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1453,7 +1468,7 @@ public class CustomerEvents
     if(customerPayment.getCustomerId().compareTo(customer.getCustomerId()) != 0 && !hasPermission)
     {
       //customer id's do not match, do not allow view or edit...
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The credit card specified does not belong to your account, you may not change it.");
+      request.setAttribute("ERROR_MESSAGE", "The credit card specified does not belong to your account, you may not change it.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/generalerror.jsp");
       rd.forward(request, response);
       return false;
@@ -1563,7 +1578,7 @@ public class CustomerEvents
     if(errMsg.length() > 0)
     {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, errMsg);
+      request.setAttribute("ERROR_MESSAGE", errMsg);
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/user/profileeditcc.jsp");
       rd.forward(request, response);
       return false;
@@ -1584,7 +1599,7 @@ public class CustomerEvents
     Address address = AddressHelper.findByPrimaryKey(customerPayment.getBillingAddress());
     if(address == null)
     {
-      request.setAttribute(HttpRequestConstants.ERROR_MESSAGE, "The address record associated with the payment information could not be found and was not updated, but the rest of the information has been updated.");
+      request.setAttribute("ERROR_MESSAGE", "The address record associated with the payment information could not be found and was not updated, but the rest of the information has been updated.");
       RequestDispatcher rd = request.getRequestDispatcher("/commerce/profileeditcc.jsp");
       rd.forward(request, response);
       return false;

@@ -1,6 +1,6 @@
 <%
 /**
- *  Title: Login Page
+ *  Title: Edit Contact Mechanism Page
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    May 22 2001
+ *@created    Aug 22 2001
  *@version    1.0
  */
 %>
@@ -234,7 +234,7 @@
   </form>
   </table>
 
-    &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Back]</a>
+    &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Done]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
     <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
   <%}else{%>

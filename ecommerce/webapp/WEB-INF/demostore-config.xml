@@ -49,6 +49,7 @@
         <success>request:/view</success>
         <error>view:error</error>
     </request-map>
+    <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
 
     <request-map>
       <uri>additem</uri>
@@ -116,35 +117,44 @@
     <request-map><uri>orderhistory</uri><secure>true</secure><auth>true</auth><success>view:orderhistory</success></request-map>
     <request-map><uri>orderstatus</uri><secure>true</secure><auth>true</auth><success>view:orderstatus</success></request-map>
 
-
-    <request-map><uri>main</uri><secure>false</secure><auth>false</auth><success>view:main</success></request-map>
-
     <request-map><uri>newcustomer</uri><secure>true</secure><auth>false</auth><success>view:newcustomer</success></request-map>
     <request-map>
-        <uri>createcustomer</uri><secure>true</secure><auth>false</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>createCustomer</event-invoke>
-        <success>view:main</success><error>view:newcustomer</error>
+      <uri>createcustomer</uri><secure>true</secure><auth>false</auth>
+      <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>createCustomer</event-invoke>
+      <success>view:main</success><error>view:newcustomer</error>
     </request-map>
 
     <request-map><uri>viewprofile</uri><secure>true</secure><auth>true</auth><success>view:viewprofile</success></request-map>
     <request-map><uri>editcontactmech</uri><secure>true</secure><auth>true</auth><success>view:editcontactmech</success></request-map>
     <request-map>
-        <uri>updatecontactmech</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>updateContactMech</event-invoke>
-        <success>view:editcontactmech</success><error>view:editcontactmech</error>
-    </request-map>
-
-    <request-map>
-        <uri>createpartycontactmechpurpose</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>createPartyContactMechPurpose</event-invoke>
-        <success>view:editcontactmech</success><error>view:editcontactmech</error>
+      <uri>updatecontactmech</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>updateContactMech</event-invoke>
+      <success>view:editcontactmech</success><error>view:editcontactmech</error>
     </request-map>
     <request-map>
-        <uri>deletepartycontactmechpurpose</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>deletePartyContactMechPurpose</event-invoke>
-        <success>view:editcontactmech</success><error>view:editcontactmech</error>
+      <uri>createpartycontactmechpurpose</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>createPartyContactMechPurpose</event-invoke>
+      <success>view:editcontactmech</success><error>view:editcontactmech</error>
+    </request-map>
+    <request-map>
+      <uri>deletepartycontactmechpurpose</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>deletePartyContactMechPurpose</event-invoke>
+      <success>view:editcontactmech</success><error>view:editcontactmech</error>
     </request-map>
 
+    <request-map><uri>editcreditcard</uri><secure>true</secure><auth>true</auth><success>view:editcreditcard</success></request-map>
+    <request-map>
+      <uri>updatecreditcard</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>updateCreditCardInfo</event-invoke>
+      <success>view:editcreditcard</success><error>view:editcreditcard</error>
+    </request-map>
+
+    <request-map><uri>changepassword</uri><secure>true</secure><auth>true</auth><success>view:changepassword</success></request-map>
+    <request-map>
+      <uri>updatepassword</uri><secure>true</secure><auth>true</auth>
+      <event-type>java</event-type><event-path>org.ofbiz.ecommerce.customer.CustomerEvents</event-path><event-invoke>changePassword</event-invoke>
+      <success>view:changepassword</success><error>view:changepassword</error>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -165,5 +175,7 @@
     <view-map><view>viewprofile</view><mapped-page>/customer/viewprofile.jsp</mapped-page></view-map>
     <view-map><view>newcustomer</view><mapped-page>/customer/newcustomer.jsp</mapped-page></view-map>
     <view-map><view>editcontactmech</view><mapped-page>/customer/editcontactmech.jsp</mapped-page></view-map>
+    <view-map><view>editcreditcard</view><mapped-page>/customer/editcreditcard.jsp</mapped-page></view-map>
+    <view-map><view>changepassword</view><mapped-page>/customer/changepassword.jsp</mapped-page></view-map>
     <!-- end of view mappings -->
 </site-conf>

@@ -67,19 +67,19 @@
   <tr>
     <td bgcolor='white' colspan='2'>
 <table width="80%" border="0" cellpadding="1">
-    <tr>
-        <td align="right" width="5%"><div class="tabletext"><b>Name</b></div></td>
-        <td width="5">&nbsp;</td>
-        <td align="left">
-          <div class="tabletext">
-            <%=UtilFormatOut.checkNull(person.getString("personalTitle"))%>
-            <%=UtilFormatOut.checkNull(person.getString("firstName"))%>
-            <%=UtilFormatOut.checkNull(person.getString("middleName"))%>
-            <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
-            <%=UtilFormatOut.checkNull(person.getString("suffix"))%>
-          </div>
-        </td>
-    </tr>
+  <tr>
+    <td align="right" width="15%"><div class="tabletext"><b>Name</b></div></td>
+    <td width="5">&nbsp;</td>
+    <td align="left">
+      <div class="tabletext">
+        <%=UtilFormatOut.checkNull(person.getString("personalTitle"))%>
+        <%=UtilFormatOut.checkNull(person.getString("firstName"))%>
+        <%=UtilFormatOut.checkNull(person.getString("middleName"))%>
+        <%=UtilFormatOut.checkNull(person.getString("lastName"))%>
+        <%=UtilFormatOut.checkNull(person.getString("suffix"))%>
+      </div>
+    </td>
+  </tr>
 </table>
     </td>
   </tr>
@@ -111,86 +111,86 @@
   </tr>
   <tr>
     <td bgcolor='white' colspan='2'>
-        <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
-          <table width="100%" border="0" cellpadding="1">
-            <tr align=left valign=bottom>
-              <th>Contact Type</th>
-              <th width="5">&nbsp;</th>
-              <th>Information</th>
-              <th colspan='2'>Soliciting&nbsp;OK?</th>
-              <th>&nbsp;</th>
-            </tr>
-            <%while(partyContactMechIterator.hasNext())
-              {
-                GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();
-                GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
-                GenericValue contactMechType = contactMech.getRelatedOne("ContactMechType");
-                Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
-                if(showOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date()))
-                {%>
-                <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
-                <tr>
-                  <td align="right" valign="top" width="5%">
-                    <div class="tabletext">&nbsp;<b><%if(contactMechType!=null){%><%=UtilFormatOut.checkNull(contactMechType.getString("description"))%><%}%></b></div>
-                  </td>
-                  <td width="5">&nbsp;</td>
-                  <td align="left" valign="top" width="90%">
-                    <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
-                      <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
-                      <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
-                      <%if(showOld || partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
-                        <div class="tabletext">
-                          <b><%=contactMechPurposeType.getString("description")%></b>
-                          <%if(showOld && partyContactMechPurpose.get("thruDate") != null){%>
-                            (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
-                          <%}%>
-                        </div>
-                      <%}%>
+      <%if(partyContactMechIterator != null && partyContactMechIterator.hasNext()){%>
+        <table width="100%" border="0" cellpadding="1">
+          <tr align=left valign=bottom>
+            <th>Contact Type</th>
+            <th width="5">&nbsp;</th>
+            <th>Information</th>
+            <th colspan='2'>Soliciting&nbsp;OK?</th>
+            <th>&nbsp;</th>
+          </tr>
+          <%while(partyContactMechIterator.hasNext())
+            {
+              GenericValue partyContactMech = (GenericValue)partyContactMechIterator.next();
+              GenericValue contactMech = partyContactMech.getRelatedOne("ContactMech");
+              GenericValue contactMechType = contactMech.getRelatedOne("ContactMechType");
+              Iterator partyContactMechPurposesIter = UtilMisc.toIterator(partyContactMech.getRelated("PartyContactMechPurpose"));
+              if(showOld || partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date()))
+              {%>
+              <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
+              <tr>
+                <td align="right" valign="top" width="5%">
+                  <div class="tabletext">&nbsp;<b><%if(contactMechType!=null){%><%=UtilFormatOut.checkNull(contactMechType.getString("description"))%><%}%></b></div>
+                </td>
+                <td width="5">&nbsp;</td>
+                <td align="left" valign="top" width="90%">
+                  <%while(partyContactMechPurposesIter != null && partyContactMechPurposesIter.hasNext()){%>
+                    <%GenericValue partyContactMechPurpose = (GenericValue)partyContactMechPurposesIter.next();%>
+                    <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
+                    <%if(showOld || partyContactMechPurpose.get("thruDate") == null || partyContactMechPurpose.getTimestamp("thruDate").after(new java.util.Date())){%>
+                      <div class="tabletext">
+                        <b><%=contactMechPurposeType.getString("description")%></b>
+                        <%if(showOld && partyContactMechPurpose.get("thruDate") != null){%>
+                          (Expire:<%=UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate"))%>)
+                        <%}%>
+                      </div>
                     <%}%>
-                <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
-                  <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
-                    <div class="tabletext">
-                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("address1"))%><br>
-                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("address2"), "", "<br>")%>
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>, 
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%> 
-                      <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%>
-                      <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("countryGeoId"),"<br>","")%>
-                    </div>
+                  <%}%>
+              <%if("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
+                <%GenericValue postalAddress = contactMech.getRelatedOne("PostalAddress");%>
+                  <div class="tabletext">
+                    <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+                    <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+                    <%=UtilFormatOut.checkNull(postalAddress.getString("address1"))%><br>
+                    <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("address2"), "", "<br>")%>
+                    <%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>, 
+                    <%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%> 
+                    <%=UtilFormatOut.checkNull(postalAddress.getString("postalCode"))%>
+                    <%=UtilFormatOut.ifNotEmpty(postalAddress.getString("countryGeoId"),"<br>","")%>
+                  </div>
               <%}else if("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))){%>
-                  <%GenericValue telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
-                    <div class="tabletext">
-                      <%=UtilFormatOut.checkNull(telecomNumber.getString("countryCode"))%>
-                      <%=UtilFormatOut.ifNotEmpty(telecomNumber.getString("areaCode"), "", "-")%><%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>
-                      <%=UtilFormatOut.ifNotEmpty(partyContactMech.getString("extension"), "ext&nbsp;", "")%>
-                    </div>
+                <%GenericValue telecomNumber = contactMech.getRelatedOne("TelecomNumber");%>
+                  <div class="tabletext">
+                    <%=UtilFormatOut.checkNull(telecomNumber.getString("countryCode"))%>
+                    <%=UtilFormatOut.ifNotEmpty(telecomNumber.getString("areaCode"), "", "-")%><%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>
+                    <%=UtilFormatOut.ifNotEmpty(partyContactMech.getString("extension"), "ext&nbsp;", "")%>
+                  </div>
               <%}else if("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))){%>
-                    <div class="tabletext">
-                      <%=UtilFormatOut.checkNull(contactMech.getString("infoString"))%>
-                    </div>
+                  <div class="tabletext">
+                    <%=UtilFormatOut.checkNull(contactMech.getString("infoString"))%>
+                  </div>
               <%}%>
-                    <div class="tabletext">(Created:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%>)</div>
-                    <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>Expires/Expired on:&nbsp;", "</b></div>")%>
-                  </td>
-                  <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%=UtilFormatOut.checkNull(partyContactMech.getString("allowSolicitation"))%>)</b></div></td>
-                  <td width="5">&nbsp;</td>
-                  <td align="right" valign="top" nowrap width="1%">
-                    <div><a href="<%=response.encodeURL(controlPath + "/editcontactmech?CONTACT_MECH_ID=" + contactMech.getString("contactMechId"))%>" class="buttontext">
-                    [Update]</a></div>&nbsp;
-                  </td>
-                  <td align="right" valign="top" width="1%">
-                    <div><a href="<%=response.encodeURL(controlPath + "/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&CONTACT_MECH_ID=" + contactMech.getString("contactMechId"))%>" class="buttontext">
-                    [Delete]</a></div>
-                  </td>
-                </tr>
-              <%}%>
+                  <div class="tabletext">(Created:&nbsp;<%=UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("fromDate"))%>)</div>
+                  <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMech.getTimestamp("thruDate")), "<div class=\"tabletext\"><b>Expires/Expired on:&nbsp;", "</b></div>")%>
+                </td>
+                <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%=UtilFormatOut.checkNull(partyContactMech.getString("allowSolicitation"))%>)</b></div></td>
+                <td width="5">&nbsp;</td>
+                <td align="right" valign="top" nowrap width="1%">
+                  <div><a href="<%=response.encodeURL(controlPath + "/editcontactmech?CONTACT_MECH_ID=" + contactMech.getString("contactMechId"))%>" class="buttontext">
+                  [Update]</a></div>&nbsp;
+                </td>
+                <td align="right" valign="top" width="1%">
+                  <div><a href="<%=response.encodeURL(controlPath + "/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&CONTACT_MECH_ID=" + contactMech.getString("contactMechId"))%>" class="buttontext">
+                  [Delete]</a></div>
+                </td>
+              </tr>
             <%}%>
-          </table>
-        <%}else{%>
-          <p>No contact information on file.</p><br>
-        <%}%>
+          <%}%>
+        </table>
+      <%}else{%>
+        <p>No contact information on file.</p><br>
+      <%}%>
     </td>
   </tr>
 </table>
@@ -205,7 +205,7 @@
       <p class="head2"><font color="white">&nbsp;Credit Card Information</font>
     </td>
     <td valign="middle" align="right">
-      <a href="profilenewcc.jsp" class="lightbuttontext">
+      <a href="<%=response.encodeURL(controlPath + "/editcreditcard")%>" class="lightbuttontext">
       [Create New]</a>&nbsp;&nbsp;
     </td>
   </tr>
@@ -214,44 +214,43 @@
   </tr>
   <tr>
     <td bgcolor='white' colspan='2'>
-<table width="80%" border="0" cellpadding="1">
-    <tr>
-      <td align="left">
-        <%if(creditCardInfoIterator != null && creditCardInfoIterator.hasNext()){%>
-          <p>Select an account on file to update or delete.</p>
-          <table width="100%" cellpadding="2" cellspacing="0" border="0">
-            <%while(creditCardInfoIterator.hasNext()){%>
-              <%GenericValue creditCardInfo = (GenericValue)creditCardInfoIterator.next();%>
-              <tr>
-                <td width="55%">
-                  <div class="tabletext">
-                    <b>
-                      <%=creditCardInfo.getString("nameOnCard")%> <%=creditCardInfo.getString("cardType")%>
-                      <%if(creditCardInfo.getString("cardNumber") != null && creditCardInfo.getString("cardNumber").length() > 4) {%>
-                        <%=creditCardInfo.getString("cardNumber").substring(creditCardInfo.getString("cardNumber").length()-4)%>
-                      <%}%>
-                      <%=creditCardInfo.getString("expireDate")%>
-                    </b>
-                  </div>
-                <td>
-                <td align="center">
-                  <a href="editcc.jsp?CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%>" class="buttontext">
-                  [Update Card]</a>
-                </td>
-                <td align="right">
-                  <a href="/delete_credit_card_info/viewprofile?CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%>" class="buttontext">
-                  [Delete]</a>
-                </td>
-              </tr>
-            <%}//end while loop%>
-          </table>
-        <%}else{//if paymentIterator%>
-          <p>No credit card information on file.</p>
-        <%}//if paymentIterator%>
-      </td>
-    </tr>
-<%-- ============================================================= --%>
-</table>
+      <table width="80%" border="0" cellpadding="1">
+          <tr>
+            <td align="left">
+              <%if(creditCardInfoIterator != null && creditCardInfoIterator.hasNext()){%>
+                <p>Select an account on file to update or delete.</p>
+                <table width="100%" cellpadding="2" cellspacing="0" border="0">
+                  <%while(creditCardInfoIterator.hasNext()){%>
+                    <%GenericValue creditCardInfo = (GenericValue)creditCardInfoIterator.next();%>
+                    <tr>
+                      <td width="55%">
+                        <div class="tabletext">
+                          <b>
+                            <%=creditCardInfo.getString("nameOnCard")%> <%=creditCardInfo.getString("cardType")%>
+                            <%if(creditCardInfo.getString("cardNumber") != null && creditCardInfo.getString("cardNumber").length() > 4) {%>
+                              <%=creditCardInfo.getString("cardNumber").substring(creditCardInfo.getString("cardNumber").length()-4)%>
+                            <%}%>
+                            <%=creditCardInfo.getString("expireDate")%>
+                          </b>
+                        </div>
+                      <td>
+                      <td align="center">
+                        <a href="editcc.jsp?CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%>" class="buttontext">
+                        [Update Card]</a>
+                      </td>
+                      <td align="right">
+                        <a href="/delete_credit_card_info/viewprofile?CREDIT_CARD_ID=<%=creditCardInfo.getString("creditCardId")%>" class="buttontext">
+                        [Delete]</a>
+                      </td>
+                    </tr>
+                  <%}//end while loop%>
+                </table>
+              <%}else{//if paymentIterator%>
+                <p>No credit card information on file.</p>
+              <%}//if paymentIterator%>
+            </td>
+          </tr>
+      </table>
     </td>
   </tr>
 </table>
@@ -266,7 +265,7 @@
       <p class="head2"><font color="white">&nbsp;User Name & Password</font>
     </td>
     <td valign="middle" align="right">
-      <a href="changepassword.jsp" class="lightbuttontext">
+      <a href="<%=response.encodeURL(controlPath + "/changepassword")%>" class="lightbuttontext">
       [Change Password]</a>&nbsp;&nbsp;
     </td>
   </tr>
@@ -277,7 +276,7 @@
     <td bgcolor='white' colspan='2'>
 <table width="80%" border="0" cellpadding="1">
   <tr>
-    <td align="left" valign="top" width="15%" nowrap><div class="tabletext"><b>User Name</b></div></td>
+    <td align="right" valign="top" width="15%" nowrap><div class="tabletext"><b>User Name</b></div></td>
     <td width="5">&nbsp;</td>
     <td align="left" valign="top"><div class="tabletext"><%=userLogin.getString("userLoginId")%></div></td>
   </tr>
