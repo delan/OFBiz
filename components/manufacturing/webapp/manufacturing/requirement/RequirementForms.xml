@@ -75,14 +75,14 @@
             <display-entity also-hidden="false" entity-name="StatusItem"/>
         </field>
 
-        <field name="requirementTypeId" also-hidden="true">
-            <display-entity entity-name="RequirementType"/>
+        <field name="requirementTypeId">
+            <display-entity entity-name="RequirementType" also-hidden="true"/>
         </field>
         <field name="productId">
             <display-entity entity-name="Product" key-field-name="productId" description="${productId} - ${internalName}"/>
         </field>
         <field name="requirementStartDate"><display/></field>
-        <field name="requirementByDate" also-hidden="false"><display/></field>
+        <field name="requirementByDate"><display/></field>
         <field name="quantity" title="${uiLabelMap.CommonQuantity}"><display/></field>
         <field name="_rowSubmit" title="${uiLabelMap.CommonSelect}"><check/></field>
         <field name="submitButton" widget-style="smallSubmit">
