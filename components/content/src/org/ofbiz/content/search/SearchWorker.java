@@ -1,5 +1,5 @@
 /*
- * $Id: SearchWorker.java,v 1.4 2004/06/16 22:16:04 byersa Exp $
+ * $Id: SearchWorker.java,v 1.5 2004/06/17 22:12:16 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.base.util.Debug;
  * SearchWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 3.1
  * 
  *  
@@ -71,7 +71,7 @@ public class SearchWorker {
 		IndexReader reader = null;
 	  	try {
 		    reader = IndexReader.open(indexAllPath);
-	        } catch(FileNotFoundException e) {
+	        } catch(Exception e) {
                   // ignore
                 }
 		if (Debug.infoOn()) Debug.logInfo("in indexContent, reader:" + reader, module);
@@ -101,7 +101,7 @@ public class SearchWorker {
 	  	IndexWriter writer =  null;
 	  	try {
 	  	    writer =  new IndexWriter(indexAllPath, new StandardAnalyzer(), false);
-	        } catch(FileNotFoundException e) {
+	        } catch(Exception e) {
 		    writer = new IndexWriter(indexAllPath, new StandardAnalyzer(), true);
 		}
 	  	if (Debug.infoOn()) Debug.logInfo("in indexContent, writer:" + writer, module);
@@ -164,13 +164,15 @@ public class SearchWorker {
 	}
 	
 	public static void indexContent(GenericDelegator delegator, Map context, GenericValue content, IndexWriter writer) throws Exception {
-	    Document doc = ContentDocument.Document(content);
+	    Document doc = ContentDocument.Document(content, context);
 	    if (Debug.infoOn()) Debug.logInfo("in indexContent, content:" + content, module);
             writer.addDocument(doc);
+            /*
             String dataResourceId = content.getString("dataResourceId");
             if (UtilValidate.isNotEmpty(dataResourceId)) {
                 indexDataResource(delegator, context, dataResourceId, writer);
             }
+            */
         
             return;
 	}

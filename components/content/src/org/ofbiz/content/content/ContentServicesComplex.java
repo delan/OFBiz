@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServicesComplex.java,v 1.14 2004/06/02 17:50:07 byersa Exp $
+ * $Id: ContentServicesComplex.java,v 1.15 2004/06/17 22:12:15 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentServicesComplex Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.2
  *
  * 
@@ -326,7 +326,9 @@ public class ContentServicesComplex {
             SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocOut", contentAssoc, contentAssocDataResourceView, new ArrayList(), locale);
             //if (Debug.infoOn()) Debug.logInfo("contentAssoc:" + contentAssoc, module);
             //contentAssocDataResourceView.setAllFields(contentAssoc, false, null, null);
-            dataResource = content.getRelatedOneCache("DataResource");
+            String dataResourceId = content.getString("dataResourceId");
+            if (UtilValidate.isNotEmpty(dataResourceId))
+                dataResource = content.getRelatedOneCache("DataResource");
             //if (Debug.infoOn()) Debug.logInfo("dataResource:" + dataResource, module);
             //if (Debug.infoOn()) Debug.logInfo("contentAssocDataResourceView:" + contentAssocDataResourceView, module);
             if (dataResource != null) {

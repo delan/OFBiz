@@ -19,7 +19,7 @@
     <property name="menuDefFile">/cms/CMSMenus.xml</property>    
     <property name="menuName">cms</property>
     <property name="menuItemName">content</property>
-    <property name="rootForumId">WebStore_FORUM</property>
+    <property name="rootForumId">WebStoreFORUM</property>
 
 
     <page-action name="/includes/currentvalprep.bsh"/>
