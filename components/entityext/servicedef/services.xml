@@ -81,7 +81,7 @@
     </service>
 
     <!-- Entity Delimited File Import Service -->
-    <service name="importEntityFileDirectory" engine="java" auth="true" transaction-timout="7200" require-new-transaction="true"
+    <service name="importEntityFileDirectory" engine="java" auth="true" transaction-timout="14400" require-new-transaction="true"
             location="org.ofbiz.entityext.data.EntityDataServices" invoke="importDelimitedFromDirectory">
         <description>Read a directory for .txt files with entity names; read each line as a record</description>
         <attribute name="rootDirectory" type="String" mode="IN" optional="false"/>
