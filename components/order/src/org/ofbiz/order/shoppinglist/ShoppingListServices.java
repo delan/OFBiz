@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.List;
 import java.util.Locale;
 import java.util.Iterator;
+import java.util.HashMap;
 import java.sql.Timestamp;
 
 import org.ofbiz.service.DispatchContext;
@@ -40,6 +41,7 @@ import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.CheckOutHelper;
+import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
@@ -48,6 +50,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -239,6 +242,138 @@ public class ShoppingListServices {
                 result.put("carrierPartyId", carrierPartyId);
             }
         }
+        return result;
+    }
+
+    public static Map makeListFromOrder(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+
+        String shoppingListTypeId = (String) context.get("shoppingListTypeId");
+        String shoppingListId = (String) context.get("shoppingListId");
+        String orderId = (String) context.get("orderId");
+        String partyId = (String) context.get("partyId");
+
+        Timestamp startDate = (Timestamp) context.get("startDateTime");
+        Timestamp endDate = (Timestamp) context.get("endDateTime");
+        Integer frequency = (Integer) context.get("frequency");
+        Integer interval = (Integer) context.get("intervalNumber");
+
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (orderHeader == null) {
+            return ServiceUtil.returnError("Unable to locate order - " + orderId);
+        }
+        String productStoreId = orderHeader.getString("productStoreId");
+
+        if (UtilValidate.isEmpty(shoppingListId)) {
+            // create a new shopping list
+            if (partyId == null) {
+                partyId = userLogin.getString("partyId");
+            }
+
+            Map serviceCtx = UtilMisc.toMap("userLogin", userLogin, "partyId", partyId,
+                    "productStoreId", productStoreId, "listName", "List Created From Order #" + orderId);
+
+            if (UtilValidate.isNotEmpty(shoppingListTypeId)) {
+                serviceCtx.put("shoppingListTypeId", shoppingListTypeId);
+            }
+
+            Map newListResult = null;
+            try {
+
+                newListResult = dispatcher.runSync("createShoppingList", serviceCtx);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problems creating new ShoppingList", module);
+                return ServiceUtil.returnError("Unable to create new shopping list");
+            }
+
+            // check for errors
+            if (ServiceUtil.isError(newListResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(newListResult));
+            }
+
+            // get the new list id
+            if (newListResult != null) {
+                shoppingListId = (String) newListResult.get("shoppingListId");
+            }
+        }
+
+        GenericValue shoppingList = null;
+        try {
+            shoppingList = delegator.findByPrimaryKey("ShoppingList", UtilMisc.toMap("shoppingListId", shoppingListId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, module);
+        }
+
+        if (shoppingList == null) {
+            return ServiceUtil.returnError("No shopping list available");
+        }
+        shoppingListTypeId = shoppingList.getString("shoppingListTypeId");
+
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        if (orh == null) {
+            return ServiceUtil.returnError("Unable to load order read helper - " + orderId);
+        }
+
+        List orderItems = orh.getOrderItems();
+        Iterator i = orderItems.iterator();
+        while (i.hasNext()) {
+            GenericValue orderItem = (GenericValue) i.next();
+            if (orderItem.get("productId") != null) {
+                Map ctx = UtilMisc.toMap("userLogin", userLogin, "shoppingListId", shoppingListId, "productId",
+                        orderItem.get("productId"), "quantity", orderItem.get("quantity"));
+                Map serviceResult = null;
+                try {
+                    serviceResult = dispatcher.runSync("createShoppingListItem", ctx);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, module);
+                }
+                if (serviceResult == null || ServiceUtil.isError(serviceResult)) {
+                    return ServiceUtil.returnError("Unable to add item to shopping list - " + shoppingListId);
+                }
+            }
+        }
+
+        if ("SLT_AUTO_REODR".equals(shoppingListTypeId)) {
+            GenericValue paymentPref = EntityUtil.getFirst(orh.getPaymentPreferences());
+            GenericValue shipGroup = EntityUtil.getFirst(orh.getOrderItemShipGroups());
+
+            Map slCtx = new HashMap();
+            slCtx.put("shipmentMethodTypeId", shipGroup.get("shipmentMethodTypeId"));
+            slCtx.put("carrierRoleTypeId", shipGroup.get("carrierRoleTypeId"));
+            slCtx.put("carrierPartyId", shipGroup.get("carrierPartyId"));
+            slCtx.put("contactMechId", shipGroup.get("contactMechId"));
+            slCtx.put("paymentMethodId", paymentPref.get("paymentMethodId"));
+            slCtx.put("currencyUom", orh.getCurrency());
+            slCtx.put("startDateTime", startDate);
+            slCtx.put("endDateTime", endDate);
+            slCtx.put("frequency", frequency);
+            slCtx.put("intervalNumber", interval);
+            slCtx.put("isActive", "Y");
+            slCtx.put("shoppingListId", shoppingListId);
+            slCtx.put("userLogin", userLogin);
+
+            Map slUpResp = null;
+            try {
+                slUpResp = dispatcher.runSync("updateShoppingList", slCtx);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+            }
+
+            if (slUpResp == null || ServiceUtil.isError(slUpResp)) {
+                return ServiceUtil.returnError("Unable to update shopping list information - " + shoppingListId);
+            }
+        }
+
+        Map result = ServiceUtil.returnSuccess();
+        result.put("shoppingListId", shoppingListId);
         return result;
     }
 

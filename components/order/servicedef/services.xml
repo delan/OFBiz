@@ -712,6 +712,15 @@
         <attribute name="shipmentMethodTypeId" type="String" mode="OUT" optional="true"/>
         <attribute name="carrierPartyId" type="String" mode="OUT" optional="true"/>
     </service>
+    <service name="makeShoppingListFromOrder" engine="java" auth="true"
+            location="org.ofbiz.order.shoppinglist.ShoppingListServices" invoke="makeListFromOrder">
+        <description>Create/Update a shopping list from an order</description>
+        <implements service="createShoppingListRecurrence"/>
+        <attribute name="shoppingListTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="shoppingListId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+    </service>
 
     <service name="shoppingListItemInterface" engine="interface" location="" invoke="">
         <description>Interface of shopping list items</description>

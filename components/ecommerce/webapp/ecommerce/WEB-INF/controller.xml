@@ -121,6 +121,13 @@
         <response name="error" type="view" value="editShoppingList"/>
     </request-map>
 
+    <request-map uri="createShoppingListFromOrder">
+        <security auth="true"/>
+        <event type="service" path="" invoke="makeShoppingListFromOrder"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="orderstatus"/>
+    </request-map>
+
     <request-map uri="updateShoppingList">
         <security auth="true"/>
         <event type="service" path="" invoke="updateShoppingList"/>

@@ -147,7 +147,7 @@ public class OrderReadHelper {
     public List getPaymentPreferences() {
         if (paymentPrefs == null) {
             try {
-                paymentPrefs = orderHeader.getRelated("OrderPaymentPreference");
+                paymentPrefs = orderHeader.getRelated("OrderPaymentPreference", UtilMisc.toList("orderPaymentPreferenceId"));
             } catch (GenericEntityException e) {
                 Debug.logError(e, module);
             }
