@@ -148,7 +148,7 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
             author="<%=entity.author%>"<%}%><%if(!version.equals(entity.version)){%>
             version="<%=entity.version%>"<%}%>><%if(!description.equals(entity.description)){%>
       <description><%=entity.description%></description><%}%><%
-  Iterator meIter = viewEntity.memberEntities.entrySet().iterator();
+  Iterator meIter = viewEntity.getMemberEntityNames().entrySet().iterator();
   while(meIter.hasNext()) {
     Map.Entry entry = (Map.Entry)meIter.next();%>	
       <member-entity entity-alias="<%=(String)entry.getKey()%>" entity-name="<%=(String)entry.getValue()%>" /><%
