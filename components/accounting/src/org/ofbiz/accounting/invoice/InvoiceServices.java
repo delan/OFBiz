@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.6 2003/10/26 18:20:58 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.7 2003/12/13 23:50:59 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.product.product.ProductWorker;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -149,7 +149,11 @@ public class InvoiceServices {
         
         // get some price totals
         double shippableAmount = orh.getShippableTotal();
+        double orderSubTotal = orh.getOrderItemsSubTotal();
+
         double invoiceShipProRateAmount = 0.00;
+        double invoiceSubTotal = 0.00;
+        double invoiceQuantity = 0.00;
 
         // create the invoice record
         String invoiceId = delegator.getNextSeqId("Invoice").toString();               
@@ -354,6 +358,12 @@ public class InvoiceServices {
                     invoiceShipProRateAmount += thisAmount;
                 }
 
+                // increment the invoice subtotal
+                invoiceSubTotal += thisAmount;
+
+                // increment the invoice quantity
+                invoiceQuantity += billingQuantity.doubleValue();
+
                 // create the OrderItemBilling record
                 GenericValue orderItemBill = delegator.makeValue("OrderItemBilling", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
                 orderItemBill.set("orderId", orderItem.get("orderId"));
@@ -388,9 +398,16 @@ public class InvoiceServices {
                         // this adjustment amount
                         double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
 
-                        // add to the ship amount only if it applies to this item
-                        if (shippingApplies) {
-                            invoiceShipProRateAmount += thisAdjAmount;
+                        // adjustments only apply to totals when they are not tax or shipping adjustments
+                        if (!"SALES_TAX".equals(adj.getString("orderAdjustmentTypeId")) &&
+                                !"SHIPPING_ADJUSTMENT".equals(adj.getString("orderAdjustmentTypeId"))) {
+                            // increment the invoice subtotal
+                            invoiceSubTotal += thisAdjAmount;
+
+                            // add to the ship amount only if it applies to this item
+                            if (shippingApplies) {
+                                invoiceShipProRateAmount += thisAdjAmount;
+                            }
                         }
 
                         // increment the counter
@@ -419,9 +436,16 @@ public class InvoiceServices {
                         // this adjustment amount
                         double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
 
-                        // add to the ship amount only if it applies to this item
-                        if (shippingApplies) {
-                            invoiceShipProRateAmount += thisAdjAmount;
+                        // adjustments only apply to totals when they are not tax or shipping adjustments
+                        if (!"SALES_TAX".equals(adj.getString("orderAdjustmentTypeId")) &&
+                                !"SHIPPING_ADJUSTMENT".equals(adj.getString("orderAdjustmentTypeId"))) {
+                            // increment the invoice subtotal
+                            invoiceSubTotal += thisAdjAmount;
+
+                            // add to the ship amount only if it applies to this item
+                            if (shippingApplies) {
+                                invoiceShipProRateAmount += thisAdjAmount;
+                            }
                         }
 
                         // increment the counter
@@ -437,60 +461,74 @@ public class InvoiceServices {
             prorateShipping = "Y"; 
         }
         
-        // create header adjustments as line items
+        // create header adjustments as line items -- always to tax/shipping last
+        List shipAdjustments = new ArrayList();
+        List taxAdjustments = new ArrayList();
+
         List headerAdjustments = orh.getOrderHeaderAdjustments();
         Iterator headerAdjIter = headerAdjustments.iterator();
         while (headerAdjIter.hasNext()) {
             GenericValue adj = (GenericValue) headerAdjIter.next();
             if ("SHIPPING_CHARGES".equals(adj.getString("orderAdjustmentTypeId"))) {
-                if ("N".equalsIgnoreCase(prorateShipping)) {
-                    if (previousInvoiceFound) {
-                        Debug.logInfo("Previous invoice found for this order [" + orderId + "]; shipping already billed", module);
-                        continue;
-                    } else {
-                        // this is the first invoice; bill it all now
-                        if (adj.get("amount") != null) {
-                            GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                            invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ADJ"));
-                            invoiceItem.set("quantity", new Double(1));
-                            invoiceItem.set("amount", adj.getDouble("amount"));
-                            invoiceItem.set("description", adj.get("description"));
-                            toStore.add(invoiceItem);
-                            
-                            // increment the counter
-                            itemSeqId++;   
-                        }
-                        continue;
-                    }
-                }
+                shipAdjustments.add(adj);
+            } else if ("SALES_TAX".equals(adj.getString("orderAdjustmentTypeId"))) {
+                taxAdjustments.add(adj);
+            } else {
+                // other adjustment type
+                double adjAmount = calcHeaderAdj(delegator, adj, invoiceId, itemSeqId, toStore, orderSubTotal, invoiceSubTotal, invoiceQuantity);
+                // these will effect the shipping pro-rate (unless commented)
+                // invoiceShipProRateAmount += adjAmount;
+                // do adjustments compound or are they based off subtotal? Here we will (unless commented)
+                // invoiceSubTotal += adjAmount;
+
+                // increment the counter
+                itemSeqId++;
             }
-            if (adj.get("amount") != null) {
-                // pro-rate the amount
-                double amount = ((adj.getDouble("amount").doubleValue() / shippableAmount) * invoiceShipProRateAmount);
-                if (amount > 0) {
-                    GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
-                    invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ADJ"));
-                    //invoiceItem.set("productId", orderItem.get("productId"));
-                    //invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
-                    //invoiceItem.set("uomId", "");
-                    //invoiceItem.set("taxableFlag", product.get("taxable"));
-                    invoiceItem.set("quantity", new Double(1));
-                    invoiceItem.set("amount", new Double(amount));
-                    invoiceItem.set("description", adj.get("description"));
-                    toStore.add(invoiceItem);
+        }
+
+        // next do the shipping adjustments
+        Iterator shipAdjIter = shipAdjustments.iterator();
+        while (shipAdjIter.hasNext()) {
+            GenericValue adj = (GenericValue) shipAdjIter.next();
+            if ("N".equalsIgnoreCase(prorateShipping)) {
+                if (previousInvoiceFound) {
+                    Debug.logInfo("Previous invoice found for this order [" + orderId + "]; shipping already billed", module);
+                    continue;
+                } else {
+                    // this is the first invoice; bill it all now
+                    double adjAmount = calcHeaderAdj(delegator, adj, invoiceId, itemSeqId, toStore, 1, 1, totalItemsInOrder);
+                    // should shipping effect the tax pro-rate?
+                    invoiceSubTotal += adjAmount; // here we do
 
                     // increment the counter
                     itemSeqId++;
                 }
+            } else {
+                // pro-rate the shipping amount based on shippable information
+                double adjAmount = calcHeaderAdj(delegator, adj, invoiceId, itemSeqId, toStore, shippableAmount, invoiceShipProRateAmount, invoiceQuantity);
+                // should shipping effect the tax pro-rate?
+                invoiceSubTotal += adjAmount; // here we do
+
+                // increment the counter
+                itemSeqId++;
             }
         }
-        
+
+        // last do the tax adjustments
+        Iterator taxAdjIter = taxAdjustments.iterator();
+        while (taxAdjIter.hasNext()) {
+            GenericValue adj = (GenericValue) taxAdjIter.next();
+            double adjAmount = calcHeaderAdj(delegator, adj, invoiceId, itemSeqId, toStore, orderSubTotal, invoiceSubTotal, invoiceQuantity);
+            // this doesn't really effect anything; but just for our totals
+            invoiceSubTotal += adjAmount;
+        }
+
         // invoice status object
-        GenericValue invStatus = delegator.makeValue("InvoiceStatus", 
+        GenericValue invStatus = delegator.makeValue("InvoiceStatus",
             UtilMisc.toMap("invoiceId", invoiceId, "statusId", "INVOICE_IN_PROCESS", "statusDate", UtilDateTime.nowTimestamp()));
         toStore.add(invStatus);
-        
-        // check for previous order payments        
+
+        // check for previous order payments
         List orderPaymentPrefs = null;
         try {
             orderPaymentPrefs = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toMap("orderId", orderId));
@@ -503,7 +541,7 @@ public class InvoiceServices {
             Iterator opi = orderPaymentPrefs.iterator();
             while (opi.hasNext()) {
                 GenericValue paymentPref = (GenericValue) opi.next();
-                try {                
+                try {
                     List payments = paymentPref.getRelated("Payment");
                     currentPayments.addAll(payments);
                 } catch (GenericEntityException e) {
@@ -518,7 +556,7 @@ public class InvoiceServices {
                     GenericValue payment = (GenericValue) cpi.next();
                     List currentApplications = null;
                     try {
-                        currentApplications = payment.getRelated("PaymentApplication");                        
+                        currentApplications = payment.getRelated("PaymentApplication");
                     } catch (GenericEntityException e) {
                         Debug.logError(e, "Problem getting application(s) for payment", module);
                         return ServiceUtil.returnError("Problem getting application(s) for payment");
@@ -528,23 +566,24 @@ public class InvoiceServices {
                         String applId = delegator.getNextSeqId("PaymentApplication").toString();
                         GenericValue appl = delegator.makeValue("PaymentApplication", UtilMisc.toMap("paymentApplicationId", applId));
                         appl.set("paymentId", payment.get("paymentId"));
-                        appl.set("invoiceId", invoice.get("invoiceId"));                        
+                        appl.set("invoiceId", invoice.get("invoiceId"));
                         appl.set("billingAccountId", invoice.get("billingAccountId"));
                         appl.set("amountApplied", payment.get("amount"));
                         toStore.add(appl);
                     }
-                }                
+                }
             }
         }
-                       
+
         // store value objects
         try {
+            Debug.log("Storing : " + toStore, module);
             delegator.storeAll(toStore);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems storing invoice items", module);
             return ServiceUtil.returnError("Cannot create invoice; problem storing items");
         }
-        
+
         // check to see if we are all paid up
         Map checkResp = null;
         try {
@@ -558,14 +597,14 @@ public class InvoiceServices {
         resp.put("invoiceId", invoiceId);
         return resp;
     }
-    
+
     public static Map createInvoicesFromShipment(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
-        LocalDispatcher dispatcher = dctx.getDispatcher();   
+        LocalDispatcher dispatcher = dctx.getDispatcher();
         String shipmentId = (String) context.get("shipmentId");
-        
+
         List invoicesCreated = new ArrayList();
-        
+
         GenericValue shipment = null;
         try {
             shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
@@ -573,10 +612,10 @@ public class InvoiceServices {
             Debug.logError(e, "Trouble getting Shipment entity", module);
             return ServiceUtil.returnError("Trouble getting Shipment entity");
         }
-        
+
         // check the status of the shipment
-        
-        // get the issued items                
+
+        // get the issued items
         List itemsIssued = null;
         try {
             itemsIssued = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("shipmentId", shipmentId));
@@ -588,7 +627,7 @@ public class InvoiceServices {
             Debug.logInfo("No items issued for shipment", module);
             return ServiceUtil.returnSuccess();
         }
-        
+
         // group items by order
         Map shippedOrderItems = new HashMap();
         Iterator itemsIter = itemsIssued.iterator();
@@ -596,7 +635,7 @@ public class InvoiceServices {
             GenericValue itemIssuance = (GenericValue) itemsIter.next();
             String itemIssuanceId = itemIssuance.getString("itemIssuanceId");
             String orderId = itemIssuance.getString("orderId");
-            String orderItemSeqId = (String) itemIssuance.getString("orderItemSeqId");
+            String orderItemSeqId = itemIssuance.getString("orderItemSeqId");
             List itemsByOrder = (List) shippedOrderItems.get(orderId);
             if (itemsByOrder == null) {
                 itemsByOrder = new ArrayList();
@@ -605,13 +644,13 @@ public class InvoiceServices {
             // check and make sure we haven't already billed for this issuance
             Map billFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "itemIssuanceId", itemIssuanceId);
             List itemBillings = null;
-            try {                
+            try {
                 itemBillings = delegator.findByAnd("OrderItemBilling", billFields);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Problem looking up OrderItemBilling records for : " + billFields, module);
                 return ServiceUtil.returnError("Problem getting OrderItemBilling records");
             }
-            
+
             // if none found, then okay to bill
             if (itemBillings == null || itemBillings.size() == 0) {
                 itemsByOrder.add(itemIssuance);
@@ -701,15 +740,15 @@ public class InvoiceServices {
                 invoicesCreated.add(result.get("invoiceId"));
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Trouble calling createInvoiceForOrder service; invoice not created for shipment", module);
-                return ServiceUtil.returnError("Trouble calling createInvoiceForOrder service; invoice not created for shipment");                
+                return ServiceUtil.returnError("Trouble calling createInvoiceForOrder service; invoice not created for shipment");
             }
         }
-        
+
         Map response = ServiceUtil.returnSuccess();
-        response.put("invoicesCreated", invoicesCreated);                
+        response.put("invoicesCreated", invoicesCreated);
         return response;
     }
-    
+
     private static String getInvoiceItemType(GenericDelegator delegator, String key, String defaultValue) {
         GenericValue itemMap = null;
         try {
@@ -722,9 +761,9 @@ public class InvoiceServices {
             return itemMap.getString("invoiceItemTypeId");
         } else {
             return defaultValue;
-        }        
+        }
     }
-    
+
     public static Map checkInvoicePaymentApplications(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
@@ -737,26 +776,26 @@ public class InvoiceServices {
             Debug.logError(e, "Problem getting PaymentApplication(s) for Invoice #" + invoiceId, module);
             return ServiceUtil.returnError("Problem getting PaymentApplication(s) for Invoice #" + invoiceId);
         }
-        
+
         Map payments = new HashMap();
         if (paymentAppl != null) {
             Iterator pai = paymentAppl.iterator();
             while (pai.hasNext()) {
                 GenericValue payAppl = (GenericValue) pai.next();
-                payments.put(payAppl.getString("paymentId"), payAppl.getDouble("amountApplied"));                
+                payments.put(payAppl.getString("paymentId"), payAppl.getDouble("amountApplied"));
             }
         }
-        
+
         double totalPayments = 0.00;
         Iterator pi = payments.keySet().iterator();
         while (pi.hasNext()) {
             String paymentId = (String) pi.next();
             Double amount = (Double) payments.get(paymentId);
             if (amount == null) amount = new Double(0.00);
-            totalPayments += amount.doubleValue();                                
+            totalPayments += amount.doubleValue();
         }
-        
-        if (totalPayments > 0.00) {            
+
+        if (totalPayments > 0.00) {
             double invoiceTotal = InvoiceWorker.getInvoiceTotal(delegator, invoiceId);
             Debug.log("Invoice #" + invoiceId + " total: " + invoiceTotal, module);
             Debug.log("Total payments : " + totalPayments, module);
@@ -773,7 +812,53 @@ public class InvoiceServices {
         } else {
             Debug.log("No payments found for Invoice #" + invoiceId, module);
         }
-        
+
         return ServiceUtil.returnSuccess();
-    }    
+    }
+
+    private static double calcHeaderAdj(GenericDelegator delegator, GenericValue adj, String invoiceId, int itemSeqId, List toStore, double divisor, double multiplier, double invoiceQuantity) {
+        Debug.log("Divisor : " + divisor + " / Multiplier: " + multiplier, module);
+        double adjAmount = 0.00;
+        if (adj.get("amount") != null) {
+            // pro-rate the amount
+            double amount = ((adj.getDouble("amount").doubleValue() / divisor) * multiplier);
+            if (amount != 0) {
+                GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
+                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ADJ"));
+                //invoiceItem.set("productId", orderItem.get("productId"));
+                //invoiceItem.set("productFeatureId", orderItem.get("productFeatureId"));
+                //invoiceItem.set("uomId", "");
+                //invoiceItem.set("taxableFlag", product.get("taxable"));
+                invoiceItem.set("quantity", new Double(1));
+                invoiceItem.set("amount", new Double(amount));
+                invoiceItem.set("description", adj.get("description"));
+                toStore.add(invoiceItem);
+            }
+            adjAmount = amount;
+        } else if (adj.get("percentage") != null || adj.get("amountPerQuantity") != null) {
+            Double amountPerQty = adj.getDouble("amount");
+            Double percent = adj.getDouble("percentage");
+            double totalAmount = 0.00;
+            if (percent != null)
+                totalAmount += percent.doubleValue() * multiplier;
+            if (amountPerQty != null)
+                totalAmount += amountPerQty.doubleValue() * invoiceQuantity;
+
+            if (totalAmount != 0) {
+                GenericValue adjInvItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
+                adjInvItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ITM_ADJ"));
+                //adjInvItem.set("productId", orderItem.get("productId"));
+                //adjInvItem.set("productFeatureId", orderItem.get("productFeatureId"));
+                //adjInvItem.set("uomId", "");
+                //adjInvItem.set("taxableFlag", product.get("taxable"));
+                adjInvItem.set("quantity", new Double(1));
+                adjInvItem.set("amount", new Double(totalAmount));
+                adjInvItem.set("description", adj.get("description"));
+                toStore.add(adjInvItem);
+            }
+            adjAmount = totalAmount;
+        }
+
+        return adjAmount;
+    }
 }
