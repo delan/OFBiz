@@ -2,7 +2,7 @@
 <!-- Created with iReport - A designer for JasperReports -->
 <!DOCTYPE jasperReport PUBLIC "//JasperReports//DTD Report Design//EN" "http://jasperreports.sourceforge.net/dtds/jasperreport.dtd">
 <jasperReport
-		 name="Untitled_report_2"
+		 name="OFBiz_Order_Item_Report"
 		 columnCount="1"
 		 printOrder="Vertical"
 		 orientation="Portrait"
@@ -30,29 +30,17 @@
 	<field name="itemStatus" class="java.lang.String"/>
 	<field name="quantity" class="java.lang.Double"/>
 	<field name="unitPrice" class="java.lang.Double"/>
-	<field name="purchaseAmount" class="java.lang.Double"/>
-	<field name="adjustment" class="java.lang.String"/>
-	<field name="adjustmentAmount" class="java.lang.Double"/>
-	<variable name="test" class="java.lang.String" resetType="None" calculation="Nothing">
-		<variableExpression>"test"</variableExpression>
-		<initialValueExpression>"test"		</initialValueExpression>
-	</variable>
 	<variable name="groupQuantity" class="java.lang.Double" resetType="Group" resetGroup="groupName" calculation="Sum">
-		<variableExpression>$F{quantity}</variableExpression>
-	</variable>
+		<variableExpression><![CDATA[$F{quantity}]]></variableExpression>	</variable>
 	<variable name="groupTotal" class="java.lang.Double" resetType="Group" resetGroup="groupName" calculation="Sum">
-		<variableExpression>$F{purchaseAmount}</variableExpression>
-	</variable>
-	<variable name="groupTax" class="java.lang.Double" resetType="Group" resetGroup="groupName" calculation="Sum">
-		<variableExpression>$F{adjustmentAmount}</variableExpression>
-	</variable>
+		<variableExpression><![CDATA[$V{purchaseAmount}]]></variableExpression>	</variable>
+	<variable name="purchaseAmount" class="java.lang.Double" resetType="None" calculation="Nothing">
+		<variableExpression><![CDATA[new Double($F{quantity}.doubleValue() * $F{unitPrice}.doubleValue())]]></variableExpression>	</variable>
 		<group  name="groupName" isStartNewColumn="false" isStartNewPage="false" isResetPageNumber="false" isReprintHeaderOnEachPage="false" minHeightToStartNewPage="0" >
-			<groupExpression>
-			$F{groupName}
-			</groupExpression>
+			<groupExpression><![CDATA[$F{groupName}]]></groupExpression>
 			<groupHeader>
 			<band height="25">
-				<rectangle>
+				<rectangle radius="0" >
 					<reportElement
 						mode="Opaque"
 						x="0"
@@ -81,10 +69,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica" size="18" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="" pdfFontName="Helvetica" size="18" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String">$F{groupName}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{groupName}]]></textFieldExpression>
 				</textField>
 			</band>
 			</groupHeader>
@@ -109,9 +97,9 @@
 				<textField isStretchWithOverflow="false" pattern="###,###,###,###" isBlankWhenNull="false" evaluationTime="Group" evaluationGroup="groupName"  hyperlinkType="None" >					<reportElement
 						mode="Transparent"
 						x="454"
-						y="25"
+						y="19"
 						width="55"
-						height="11"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -119,17 +107,17 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="true" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Double">$V{groupQuantity}</textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{groupQuantity}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="$###,###,###,###.##" isBlankWhenNull="false" evaluationTime="Group" evaluationGroup="groupName"  hyperlinkType="None" >					<reportElement
 						mode="Transparent"
-						x="585"
-						y="25"
+						x="584"
+						y="19"
 						width="55"
-						height="11"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -137,10 +125,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="true" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Double">$V{groupTotal}</textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{groupTotal}]]></textFieldExpression>
 				</textField>
 				<line direction="BottomUp">
 					<reportElement
@@ -158,31 +146,13 @@
 						isPrintWhenDetailOverflows="false"/>
 					<graphicElement stretchType="NoStretch" pen="Thin" fill="Solid" />
 				</line>
-				<textField isStretchWithOverflow="false" pattern="$###,###,###.##" isBlankWhenNull="false" evaluationTime="Group" evaluationGroup="groupName"  hyperlinkType="None" >					<reportElement
-						mode="Transparent"
-						x="715"
-						y="25"
-						width="55"
-						height="11"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica-Bold" size="10" isBold="true" isItalic="false" isUnderline="true" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.Double">$V{groupTax}</textFieldExpression>
-				</textField>
 				<staticText>
 					<reportElement
 						mode="Transparent"
-						x="367"
-						y="25"
-						width="49"
-						height="15"
+						x="342"
+						y="17"
+						width="75"
+						height="14"
 						forecolor="#000000"
 						backcolor="#FFFFFF"
 						positionType="FixRelativeToTop"
@@ -190,7 +160,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="16" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Total:]]></text>
@@ -198,6 +168,10 @@
 			</band>
 			</groupFooter>
 		</group>
+		<background>
+			<band height="0">
+			</band>
+		</background>
 		<title>
 			<band height="50">
 				<staticText>
@@ -214,7 +188,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Center" lineSpacing="Single">
+					<textElement textAlignment="Center" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica-Bold" size="30" isBold="true" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Order Item Report]]></text>
@@ -264,10 +238,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String">$P{dateRange}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$P{dateRange}]]></textFieldExpression>
 				</textField>
 				<staticText>
 					<reportElement
@@ -283,7 +257,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Date Range:]]></text>
@@ -342,7 +316,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Order Date]]></text>
@@ -361,7 +335,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Payment]]></text>
@@ -380,10 +354,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-                    <text><![CDATA[Carrier]]></text>
+				<text><![CDATA[Carrier]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -399,10 +373,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-                    <text><![CDATA[Shipping Method]]></text>
+				<text><![CDATA[Shipping Method]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -418,7 +392,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Product]]></text>
@@ -437,7 +411,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Description]]></text>
@@ -456,7 +430,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Item Status]]></text>
@@ -475,7 +449,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Quantity]]></text>
@@ -494,7 +468,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Unit Price]]></text>
@@ -513,48 +487,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Purchase]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="650"
-						y="1"
-						width="65"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Adjustment]]></text>
-				</staticText>
-				<staticText>
-					<reportElement
-						mode="Transparent"
-						x="715"
-						y="1"
-						width="59"
-						height="17"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
-					</textElement>
-				<text><![CDATA[Amount]]></text>
 				</staticText>
 				<staticText>
 					<reportElement
@@ -570,7 +506,7 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="12" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
 				<text><![CDATA[Order]]></text>
@@ -592,10 +528,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.sql.Timestamp">$F{orderDate}</textFieldExpression>
+				<textFieldExpression   class="java.sql.Timestamp"><![CDATA[$F{orderDate}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -610,10 +546,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-                    <textFieldExpression   class="java.lang.String">$F{paymentMethod}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{paymentMethod}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -628,10 +564,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-                    <textFieldExpression   class="java.lang.String">$F{shipCarrier}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{shipCarrier}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -646,10 +582,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-                    <textFieldExpression   class="java.lang.String">$F{shipMethod}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{shipMethod}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -664,10 +600,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String">$F{productId}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{productId}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="true" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -682,10 +618,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String">$F{itemDescription}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{itemDescription}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -700,10 +636,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String">$F{itemStatus}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{itemStatus}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="###,###,###" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -718,10 +654,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Double">$F{quantity}</textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{quantity}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -736,10 +672,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Double">$F{unitPrice}</textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$F{unitPrice}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="$###,###,###.##" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -754,46 +690,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" lineSpacing="Single">
+					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.Double">$F{purchaseAmount}</textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
-						mode="Transparent"
-						x="650"
-						y="2"
-						width="65"
-						height="16"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.String">$F{adjustment}</textFieldExpression>
-				</textField>
-				<textField isStretchWithOverflow="false" pattern="$###,###,###.##" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
-						mode="Transparent"
-						x="715"
-						y="2"
-						width="55"
-						height="16"
-						forecolor="#000000"
-						backcolor="#FFFFFF"
-						positionType="FixRelativeToTop"
-						isPrintRepeatedValues="true"
-						isRemoveLineWhenBlank="false"
-						isPrintInFirstWholeBand="false"
-						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" lineSpacing="Single">
-						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
-					</textElement>
-				<textFieldExpression   class="java.lang.Double">$F{adjustmentAmount}</textFieldExpression>
+				<textFieldExpression   class="java.lang.Double"><![CDATA[$V{purchaseAmount}]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="true" evaluationTime="Now" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -808,10 +708,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
 						<font fontName="" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="Cp1250" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String">$F{orderId}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA[$F{orderId}]]></textFieldExpression>
 				</textField>
 			</band>
 		</detail>
@@ -834,10 +734,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Right" lineSpacing="Single">
-						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<textElement textAlignment="Right" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String">"Page " + $V{PAGE_NUMBER} + " of "</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["Page " + $V{PAGE_NUMBER} + " of "]]></textFieldExpression>
 				</textField>
 				<textField isStretchWithOverflow="false" pattern="" isBlankWhenNull="false" evaluationTime="Report" hyperlinkType="None" >					<reportElement
 						mode="Transparent"
@@ -852,10 +752,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
-						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.lang.String">"" + $V{PAGE_NUMBER}</textFieldExpression>
+				<textFieldExpression   class="java.lang.String"><![CDATA["" + $V{PAGE_NUMBER}]]></textFieldExpression>
 				</textField>
 				<line direction="TopDown">
 					<reportElement
@@ -886,10 +786,10 @@
 						isRemoveLineWhenBlank="false"
 						isPrintInFirstWholeBand="false"
 						isPrintWhenDetailOverflows="false"/>
-					<textElement textAlignment="Left" lineSpacing="Single">
-						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" isStrikeThrough="false" />
+					<textElement textAlignment="Left" verticalAlignment="Top" lineSpacing="Single">
+						<font fontName="Helvetica" pdfFontName="Helvetica" size="10" isBold="false" isItalic="false" isUnderline="false" isPdfEmbedded ="false" pdfEncoding ="CP1252" isStrikeThrough="false" />
 					</textElement>
-				<textFieldExpression   class="java.util.Date">new Date()</textFieldExpression>
+				<textFieldExpression   class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
 				</textField>
 			</band>
 		</pageFooter>

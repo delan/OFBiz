@@ -95,7 +95,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             use-foreign-keys="true"
             use-foreign-key-indices="true"
             use-fk-initially-deferred="false"
-            join-style="theta-oracle">
+            join-style="ansi-no-parenthesis">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc

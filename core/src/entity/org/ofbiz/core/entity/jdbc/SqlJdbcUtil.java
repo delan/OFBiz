@@ -53,7 +53,11 @@ public class SqlJdbcUtil {
         if (modelEntity instanceof ModelViewEntity) {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
 
-            if ("ansi".equals(datasourceInfo.joinStyle)) {
+            if ("ansi".equals(datasourceInfo.joinStyle) || "ansi-no-parenthesis".equals(datasourceInfo.joinStyle)) {
+                boolean useParenthesis = true;
+                if ("ansi-no-parenthesis".equals(datasourceInfo.joinStyle)) {
+                    useParenthesis = false;
+                }
                 String firstMemberAlias = null;
 
                 // FROM clause: in this case will be a bunch of joins that correspond with the view-links
@@ -72,12 +76,13 @@ public class SqlJdbcUtil {
                 // TODO: at view-link read time make sure they are ordered properly so that each
                 // left hand alias after the first view-link has already been linked before
 
-                StringBuffer openParens = new StringBuffer();
+                StringBuffer openParens = null;
+                if (useParenthesis) openParens = new StringBuffer();
                 StringBuffer restOfStatement = new StringBuffer();
 
                 for (int i = 0; i < modelViewEntity.getViewLinksSize(); i++) {
                     // don't put starting parenthesis
-                    if (i > 0) openParens.append('(');
+                    if (i > 0 && useParenthesis) openParens.append('(');
 
                     ModelViewEntity.ModelViewLink viewLink = modelViewEntity.getViewLink(i);
 
@@ -90,6 +95,7 @@ public class SqlJdbcUtil {
                     if (i == 0) {
                         // this is the first referenced member alias, so keep track of it for future use...
                         restOfStatement.append(makeViewTable(linkEntity, datasourceInfo));
+                        //another possible one that some dbs might need, but not sure of any yet: restOfStatement.append(" AS ");
                         restOfStatement.append(" ");
                         restOfStatement.append(viewLink.getEntityAlias());
 
@@ -104,12 +110,13 @@ public class SqlJdbcUtil {
                     joinedAliasSet.add(viewLink.getRelEntityAlias());
 
                     if (viewLink.isRelOptional()) {
-                        restOfStatement.append(" LEFT JOIN ");
+                        restOfStatement.append(" LEFT OUTER JOIN ");
                     } else {
-                        restOfStatement.append(" JOIN ");
+                        restOfStatement.append(" INNER JOIN ");
                     }
 
                     restOfStatement.append(makeViewTable(relLinkEntity, datasourceInfo));
+                    //another possible one that some dbs might need, but not sure of any yet: restOfStatement.append(" AS ");
                     restOfStatement.append(" ");
                     restOfStatement.append(viewLink.getRelEntityAlias());
                     restOfStatement.append(" ON ");
@@ -140,10 +147,10 @@ public class SqlJdbcUtil {
                     restOfStatement.append(condBuffer.toString());
 
                     // don't put ending parenthesis
-                    if (i < (modelViewEntity.getViewLinksSize() - 1)) restOfStatement.append(')');
+                    if (i < (modelViewEntity.getViewLinksSize() - 1) && useParenthesis) restOfStatement.append(')');
                 }
 
-                sql.append(openParens.toString());
+                if (useParenthesis) sql.append(openParens.toString());
                 sql.append(restOfStatement.toString());
                 
                 // handle tables not included in view-link
@@ -259,7 +266,8 @@ public class SqlJdbcUtil {
             StringBuffer whereString = new StringBuffer("");
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
 
-            if ("ansi".equals(joinStyle)) {// nothing to do here, all done in the JOIN clauses
+            if ("ansi".equals(joinStyle) || "ansi-no-parenthesis".equals(joinStyle)) {
+                // nothing to do here, all done in the JOIN clauses
             } else if ("theta-oracle".equals(joinStyle) || "theta-mssql".equals(joinStyle)) {
                 boolean isOracleStyle = "theta-oracle".equals(joinStyle);
                 boolean isMssqlStyle = "theta-mssql".equals(joinStyle);

@@ -120,7 +120,7 @@
     use-fk-initially-deferred ( true | false ) "true"
     use-indices ( true | false ) "true"
     check-indices-on-start ( true | false ) "false"
-    join-style ( ansi | theta-oracle | theta-mssql ) "ansi"
+    join-style ( ansi | ansi-no-parenthesis | theta-oracle | theta-mssql ) "ansi"
 >
     <!ELEMENT sql-load-path EMPTY>
     <!ATTLIST sql-load-path

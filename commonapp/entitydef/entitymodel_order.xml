@@ -1091,8 +1091,6 @@
       <member-entity entity-alias="OS" entity-name="StatusItem"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="OIS" entity-name="StatusItem"/>
-      <member-entity entity-alias="OA" entity-name="OrderAdjustment"/>
-      <member-entity entity-alias="OAT" entity-name="OrderAdjustmentType"/>
       <alias entity-alias="OS" name="groupName" field="description"/>
       <alias entity-alias="OH" name="orderId"/>
       <alias entity-alias="OH" name="orderTypeId"/>
@@ -1111,9 +1109,6 @@
       <alias entity-alias="OIS" name="itemStatus" field="description"/>
       <alias entity-alias="OI" name="quantity"/>
       <alias entity-alias="OI" name="unitPrice"/>
-      <alias entity-alias="OI" name="purchaseAmount" field="unitPrice"/>
-      <alias entity-alias="OA" name="adjustmentAmount" field="amount"/>
-      <alias entity-alias="OAT" name="adjustment" field="description"/>
       <view-link entity-alias="OH" rel-entity-alias="OI">
       	<key-map field-name="orderId"/>
       </view-link>
@@ -1134,13 +1129,6 @@
       </view-link>
       <view-link entity-alias="OI" rel-entity-alias="OIS">
       	<key-map field-name="statusId"/>
-      </view-link>
-      <view-link entity-alias="OI" rel-entity-alias="OA" rel-optional="false">
-      	<key-map field-name="orderId"/>
-      	<key-map field-name="orderItemSeqId"/>
-      </view-link>
-      <view-link entity-alias="OA" rel-entity-alias="OAT">
-      	<key-map field-name="orderAdjustmentTypeId"/>
       </view-link>
     </view-entity>          
     <entity entity-name="OrderRole"
