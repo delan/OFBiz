@@ -77,6 +77,6 @@ public class ModelViewEntity extends ModelEntity {
   public class ModelViewLink {
     public String entityAlias = "";
     public String relEntityAlias = "";
-    Vector keyMaps = new Vector();
+    public Vector keyMaps = new Vector();
   }
 }
