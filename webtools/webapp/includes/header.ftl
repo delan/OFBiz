@@ -25,7 +25,7 @@
 -->
 
 <#assign security = requestAttributes.security>
-<div class="apptitle">&nbsp;Web Tools Application&nbsp;</div>
+<div class="apptitle">&nbsp;Core Application WebTools&nbsp;</div>
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="headerButtonLeft">Main</a></div>  
 

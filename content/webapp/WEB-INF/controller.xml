@@ -53,7 +53,7 @@
     <request-map uri="logout">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout"/>
-        <response name="success" type="view" value="main"/>
+        <response name="success" type="request" value="checkLogin"/>
         <response name="error" type="view" value="main"/>
     </request-map>
     <!-- End of Security Mappings -->
@@ -71,7 +71,8 @@
         <response name="error" type="view" value="error"/>
     </request-map>
 
-    <request-map uri="main"><security https="false" auth="false"/>
+    <request-map uri="main">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="main"/>
     </request-map>
     
@@ -85,6 +86,6 @@
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
     <view-map name="main" type="region"/>
-    <view-map name="login" type="region"/>
+    <view-map name="login" type="jpublish" page="/login.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
