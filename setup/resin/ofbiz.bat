@@ -14,7 +14,7 @@ set OFBIZ_HOME=..\ofbiz
 if "%RESIN_HOME%" == "" goto setresinhome
 goto doneresinhome
 :setresinhome
-set RESIN_HOME=..
+set RESIN_HOME=.
 :doneresinhome
 
 rem ----- Set the CLASSPATH ----------------------------------------------------
@@ -52,7 +52,8 @@ set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\commonapp\etc
 
 rem ----- Set RESIN_OPTS and Start Resin ----------------------------------------
 
-set RESIN_OPTS=%RESIN_OPTS% -Dofbiz.home=%OFBIZ_HOME% -Desuite.home=%ESUITE_HOME% 
+set _RESIN_OPTS=%RESIN_OPTS%
+set RESIN_OPTS=%RESIN_OPTS% -Dofbiz.home=%OFBIZ_HOME%
 rem #export RESIN_OPTS="$RESIN_OPTS -Dofbiz.home=$OFBIZ_HOME -classpath $CP" 
 
 echo Running Resin with the following options:
@@ -62,8 +63,10 @@ echo.
 echo CLASSPATH=%CLASSPATH%
 echo.
 echo RESIN_OPTS=%RESIN_OPTS%
+echo RESIN_HOME=%RESIN_HOME%
 echo.
 
 %RESIN_HOME%\bin\httpd %RESIN_OPTS% %1 %2 %3 %4 %5
 
 set CLASSPATH=%_CLASSPATH%
+set RESIN_OPTS=%_RESIN_OPTS%
