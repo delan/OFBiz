@@ -273,6 +273,12 @@ public class OrderServices {
         }
         GenericValue orderHeader = delegator.makeValue("OrderHeader", orderHeaderMap);
 
+        if (context.get("salesChannelEnumId") == null) {
+            orderHeader.set("salesChannelEnumId", "UNKNWN_SALES_CHANNEL");
+        } else {
+            orderHeader.set("salesChannelEnumId", context.get("salesChannelEnumId"));
+        }
+
         if (context.get("currencyUom") != null) {
             orderHeader.set("currencyUom", context.get("currencyUom"));
         }

@@ -69,6 +69,8 @@ public class ShoppingCart implements Serializable {
     public static final String module = ShoppingCart.class.getName();
 
     private String orderType = "SALES_ORDER"; // default orderType
+    private String channel = "UNKNWN_SALES_CHANNEL"; // default channel enum
+
     private String poNumber = null;
     private String orderId = null;
     private String firstAttemptOrderId = null;
@@ -927,6 +929,14 @@ public class ShoppingCart implements Serializable {
     /** Returns the order type. */
     public String getOrderType() {
         return this.orderType;
+    }
+
+    public void setChannelType(String channelType) {
+        this.channel = channelType;
+    }
+
+    public String getChannelType() {
+        return this.channel;
     }
 
     public boolean isPurchaseOrder() {
@@ -2584,6 +2594,7 @@ public class ShoppingCart implements Serializable {
         Map result = new HashMap();
 
         result.put("orderTypeId", this.getOrderType());
+        result.put("salesChannelEnumId", this.getChannelType());
         result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
         result.put("orderAdjustments", this.makeAllAdjustments());
         result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());

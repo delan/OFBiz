@@ -93,6 +93,7 @@
         <attribute name="webSiteId" type="String" mode="IN" optional="true"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>
         <attribute name="orderTypeId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="salesChannelEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="orderItems" type="java.util.List" mode="IN" optional="false"/>
         <attribute name="orderAdjustments" type="java.util.List" mode="IN" optional="false"/>
         <attribute name="billingAccountId" type="String" mode="IN" optional="true"/>
