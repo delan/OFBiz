@@ -77,7 +77,7 @@
 <%if(productCategory == null){%>
   <%if(productCategoryId != null){%>
     <h3>Could not find Product Category with ID "<%=UtilFormatOut.checkNull(productCategoryId)%>".</h3>
-    <form action="<ofbiz:url>/createProductCategory</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createProductCategory</ofbiz:url>" method=POST style='margin: 0;' name='productCategoryForm'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext">Product Category ID</div></td>
@@ -87,7 +87,7 @@
       </td>
     </tr>
   <%}else{%>
-    <form action="<ofbiz:url>/createProductCategory</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createProductCategory</ofbiz:url>" method=POST style='margin: 0;' name='productCategoryForm'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext">Product Category ID</div></td>
@@ -98,7 +98,7 @@
     </tr>
   <%}%>
 <%}else{%>
-  <form action="<ofbiz:url>/updateProductCategory</ofbiz:url>" method=POST style='margin: 0;'>
+  <form action="<ofbiz:url>/updateProductCategory</ofbiz:url>" method=POST style='margin: 0;' name='productCategoryForm'>
   <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="productCategoryId" value="<%=productCategoryId%>">
   <tr>
@@ -124,26 +124,67 @@
         </td>
       </tr>
 
-  <%String fieldName; String paramName;%>
   <tr>
-    <%fieldName = "description";%><%paramName = "description";%>    
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productCategory.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="60"></td>
+    <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='description' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="60"></td>
   </tr>
   <tr>
-    <%fieldName = "longDescription";%><%paramName = "longDescription";%>    
     <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="3" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?productCategory.getString(fieldName):request.getParameter(paramName))%></textarea></td>
+    <td width="74%"><textarea cols="60" rows="3" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='productCategory' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
+
+<%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
+    <SCRIPT language='JavaScript'>
+    function insertImageName(type,ext) {
+      eval('document.forms.productCategoryForm.' + type + 'ImageUrl.value="/images/catalog/category.<%=productCategoryId%>.' + type + '.' + ext + '";');
+    };
+    </SCRIPT>
+<%}%>
   <tr>
-    <%fieldName = "categoryImageUrl";%><%paramName = "categoryImageUrl";%>    
     <td width="26%" align=right><div class="tabletext">Category Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%">
-      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?productCategory.getString(fieldName):request.getParameter(paramName))%>" size="60" maxlength="250">
-      <%if(productCategoryId != null && productCategoryId.length() > 0) {%><p><a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%></ofbiz:url>" class="buttontext">[Upload Image]</a><%}%>
+      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='categoryImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
+      <%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
+        <div>
+          <a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%>&upload_file_type=category</ofbiz:url>" class="buttontext">[Upload Category Image]</a>
+          <span class='tabletext'>Insert Default Image URL: </span>
+          <a href="javascript:insertImageName('category', 'jpg');" class="buttontext">[.jpg]</a>
+          <a href="javascript:insertImageName('category', 'gif');" class="buttontext">[.gif]</a>
+        </div>
+      <%}%>
+    </td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Link One Image URL</div></td>
+    <td>&nbsp;</td>
+    <td width="74%">
+      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='linkOneImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
+      <%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
+        <div>
+          <a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%>&upload_file_type=linkOne</ofbiz:url>" class="buttontext">[Upload Link One Image]</a>
+          <span class='tabletext'>Insert Default Image URL: </span>
+          <a href="javascript:insertImageName('linkOne', 'jpg');" class="buttontext">[.jpg]</a>
+          <a href="javascript:insertImageName('linkOne', 'gif');" class="buttontext">[.gif]</a>
+        </div>
+      <%}%>
+    </td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Link Two Image URL</div></td>
+    <td>&nbsp;</td>
+    <td width="74%">
+      <input type="text" <ofbiz:inputvalue entityAttr='productCategory' field='linkTwoImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
+      <%if (UtilValidate.isNotEmpty(productCategoryId)) {%>
+        <div>
+          <a href="<ofbiz:url>/UploadCategoryImage?productCategoryId=<%=productCategoryId%>&upload_file_type=linkTwo</ofbiz:url>" class="buttontext">[Upload Link Two Image]</a>
+          <span class='tabletext'>Insert Default Image URL: </span>
+          <a href="javascript:insertImageName('linkTwo', 'jpg');" class="buttontext">[.jpg]</a>
+          <a href="javascript:insertImageName('linkTwo', 'gif');" class="buttontext">[.gif]</a>
+        </div>
+      <%}%>
     </td>
   </tr>
 

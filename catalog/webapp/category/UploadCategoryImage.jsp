@@ -44,7 +44,7 @@
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
   String fileType = request.getParameter("upload_file_type");
-  if(fileType == null || fileType.length() <= 0) fileType="small";
+  if(fileType == null || fileType.length() <= 0) fileType="category";
 
   String productCategoryId = request.getParameter("productCategoryId");
   GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
@@ -53,7 +53,7 @@
     <%
       String contentType = request.getContentType();
       if(contentType != null && contentType.indexOf("boundary=") > 0) {
-        String fileName = "/images/catalog/category/" + productCategoryId + "." + fileType + ".";
+        String fileName = "/images/catalog/category." + productCategoryId + "." + fileType + ".";
         String imageUrl = null;
     %>
       <p>Filename: <%=fileName%>
@@ -123,10 +123,10 @@
         }
 
         if (imageUrl != null && imageUrl.length() > 0) {
-          out.print("<p>Setting category image url to <b>\"" + imageUrl + "\"</b>");
-          productCategory.set("categoryImageUrl", imageUrl);
-          productCategory.store();
-          //refresh cache value if necessary HERE
+            out.print("<p>Setting field <b>" + fileType + "ImageUrl</b> to <b>\"" + imageUrl + "\"</b>");
+            productCategory.set(fileType + "ImageUrl", imageUrl);
+            productCategory.store();
+            //refresh cache value if necessary HERE
         }
     %>
     <hr>
