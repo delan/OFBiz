@@ -53,7 +53,7 @@
 
 		  <%if(security.hasEntityPermission("ORDERMGR", "_CREATE", session)) {%>
 		  <td class="headerButtonLeft"><a href="<ofbiz:url>/salesentry</ofbiz:url>" class="headerbuttontext">Sale&nbsp;Entry</a></td>
-		  <td class="headerButtonLeft"><a href="#" class="headerbuttontext">Purchase&nbsp;Entry</a></td>
+		  <!--<td class="headerButtonLeft"><a href="#" class="headerbuttontext">Purchase&nbsp;Entry</a></td>-->
           <%}%>
 
           <%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>

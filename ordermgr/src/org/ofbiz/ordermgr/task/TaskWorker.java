@@ -56,7 +56,7 @@ public class TaskWorker {
         }
     } 
     
-    static Map statusMapping = UtilMisc.toMap("WF_NOT_STARTED", "Waiting", "WF_RUNNING", "Active", "WF_COMPLETE", "Complete");
+    static Map statusMapping = UtilMisc.toMap("WF_NOT_STARTED", "Waiting", "WF_RUNNING", "Active", "WF_COMPLETE", "Complete", "WF_SUSPENDED", "Hold");
     
     public static String getPrettyStatus(GenericValue orderTaskList) {
         String statusId = orderTaskList.getString("currentStatusId");        

@@ -143,7 +143,7 @@
                     <ofbiz:iterator name="task" property="partyTasks" type="org.ofbiz.core.entity.GenericValue" expandMap="true">
                       <TR>
                         <td>               
-                          <% String orderStr = "order_id=" + task.getString("orderId") + "&partyId=" + userLogin.getString("partyId") + "&roleTypeId=" + task.getString("roleTypeId") + "&workEffortId=" + task.getString("workEffortId") + "&fromDate=" + task.getString("fromDate"); %>           
+                          <% String orderStr = "order_id=" + task.getString("orderId") + "&partyId=" + userLogin.getString("partyId") + "&roleTypeId=" + task.getString("roleTypeId") + "&workEffortId=" + task.getString("workEffortId") + "&fromFromDate=" + task.getString("fromDate"); %>           
                           <a href="<ofbiz:url>/orderview?<%=orderStr%></ofbiz:url>" class="buttontext">
                             <ofbiz:print attribute="orderId"/>
                           </a>
@@ -160,7 +160,7 @@
                         <TD><DIV class='tabletext'><ofbiz:print attribute="actualStartDate" default="N/A"/></DIV></TD>
                         <TD><DIV class='tabletext'><ofbiz:print attribute="priority"/></DIV></TD>
                         <td>
-                          <a href="/workeffort/control/activity?workEffortId=<ofbiz:print attribute="workEffortId"/>" target="workeffort" class="buttontext">
+                          <a href="/workeffort/control/activity?workEffortId=<ofbiz:print attribute="workEffortId"/>" target="workeffort" class="buttontext">                         
                           <%=TaskWorker.getPrettyStatus(task)%>
                         </a>
                       </td>
