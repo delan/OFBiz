@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.11 2003/08/27 18:12:56 jonesde Exp $
+ * $Id: ComponentConfig.java,v 1.12 2003/09/02 01:32:46 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -499,6 +499,7 @@ public class ComponentConfig {
 
     public static class WebappInfo {
         public ComponentConfig componentConfig;
+        public List virtualHosts;
         public String name;
         public String title;
         public String server;
@@ -507,6 +508,7 @@ public class ComponentConfig {
         public boolean appBarDisplay;
 
         public WebappInfo(ComponentConfig componentConfig, Element element) {
+        	this.virtualHosts = new LinkedList();
             this.componentConfig = componentConfig;
             this.name = element.getAttribute("name");
             this.title = element.getAttribute("title");
@@ -535,6 +537,16 @@ public class ComponentConfig {
                 }
                 this.mountPoint = this.mountPoint + "*";   
             }
+            
+            // load the virtual hosts
+            List virtHostList = UtilXml.childElementList(element, "virtual-host");
+            if (virtHostList != null && virtHostList.size() > 0) {
+            	Iterator elementIter = virtHostList.iterator();
+            	while (elementIter.hasNext()) {
+            		Element e = (Element) elementIter.next();
+            		virtualHosts.add(e.getAttribute("host-name"));
+            	}
+            }
         } 
         
         public String getContextRoot() {
@@ -546,6 +558,10 @@ public class ComponentConfig {
         
         public String getTitle() {
             return title;
+        }
+        
+        public List getVirtualHosts() {
+        	return virtualHosts;
         }
     }
 }
