@@ -36,12 +36,19 @@ import org.ofbiz.core.entity.*;
  */
 public class Security
 {
-  GenericHelper helper;
+  GenericHelper helper = null;
 
+  public Security()
+  {
+    this.helper = GenericHelperFactory.getDefaultHelper();
+  }
   public Security(GenericHelper helper)
   {
     this.helper = helper;
   }
+  
+  public GenericHelper getHelper() { return helper; }
+  public void setHelper(GenericHelper helper) { this.helper = helper; }
   
   /** Hashtable to cache a Collection of UserLoginSecurityGroup entities for each UserLogin, by userLoginId.
    */  
@@ -98,7 +105,7 @@ public class Security
    */  
   public boolean hasPermission(String permission, HttpSession session) throws java.rmi.RemoteException
   {
-    GenericValue userLogin = (GenericValue)session.getAttribute("USER_LOGIN");
+    GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);
     if(userLogin == null) return false;
 
     Iterator iterator = findUserLoginSecurityGroupByUserLoginId(userLogin.getString("userLoginId"));
@@ -122,7 +129,7 @@ public class Security
   */ 
   public boolean hasEntityPermission(String entity, String action, HttpSession session) throws java.rmi.RemoteException
   {
-    GenericValue userLogin = (GenericValue)session.getAttribute("USER_LOGIN");
+    GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);
     if(userLogin == null) return false;
 
     //Debug.logInfo("hasEntityPermission: entity=" + entity + ", action=" + action);

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/07/23 18:04:57  azeneski
+ * Fixed runaway thread in the job scheduler.
+ *
  * Revision 1.5  2001/07/19 20:50:22  azeneski
  * Added the job scheduler to 'core' module.
  *
@@ -33,6 +36,8 @@ import javax.servlet.http.*;
 import org.ofbiz.core.scheduler.JobManager;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.security.*;
 
 /**
  * <p><b>Title:</b> ControlServlet.java
@@ -70,9 +75,18 @@ public class ControlServlet extends HttpServlet {
     }
     
     public void init(ServletConfig config) throws ServletException {
-        super.init(config);
-        getRequestHandler();
-       jm = new JobManager(getServletContext());
+      super.init(config);
+      getRequestHandler();
+      jm = new JobManager(getServletContext());
+      
+      //initialize the entity & security stuff
+      String serverName = config.getServletContext().getInitParameter(SiteDefs.ENTITY_SERVER_NAME);
+      if(serverName == null || serverName.length() <= 0) serverName = "default";
+      GenericHelper helper = GenericHelperFactory.getDefaultHelper(serverName);
+      Security security = new Security(helper);
+      //put these two in the "application" scope
+      getServletContext().setAttribute("helper", helper);
+      getServletContext().setAttribute("security", security);
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -90,6 +104,20 @@ public class ControlServlet extends HttpServlet {
         /** Setup the SERVLET_CONTEXT for events. */
         request.setAttribute(SiteDefs.SERVLET_CONTEXT,getServletContext());
         request.setAttribute(SiteDefs.JOB_MANAGER,jm);
+        
+        // for convenience, and necessity with event handlers, make security and helper available in the session:
+        GenericHelper helper = (GenericHelper)session.getAttribute("helper");
+        Security security = (Security)session.getAttribute("security");
+        if(helper == null)
+        {
+          helper = (GenericHelper)getServletContext().getAttribute("helper");
+          session.setAttribute("helper", helper);
+        }
+        if(security == null)
+        {
+          security = (Security)getServletContext().getAttribute("security");
+          session.setAttribute("security", security);
+        }
         
         try {
             nextPage = getRequestHandler().doRequest(request,response, null);

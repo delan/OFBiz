@@ -35,10 +35,15 @@ public class GenericHelperFactory
   public static GenericHelper getDefaultHelper()
   {
     String defaultName = UtilProperties.getPropertyValue("servers", "server.default.name", "default");
+    return getDefaultHelper(defaultName);
+  }
+
+  public static GenericHelper getDefaultHelper(String serverName)
+  {
     if(UtilProperties.propertyValueEqualsIgnoreCase("servers", "server.default.type", "ejb"))
-      return getEJBHelper(defaultName);
+      return getEJBHelper(serverName);
     //if no default type is specified, go with jdbc
-    return getJDBCHelper(defaultName);
+    return getJDBCHelper(serverName);
   }
 
   public static GenericHelper getJDBCHelper() 

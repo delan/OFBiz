@@ -27,9 +27,11 @@
 <%@ page import="org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.core.entity.model.*" %>
 
+<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
+
 <% 
 	String search = null;
-	GenericHelper helper = GenericHelperFactory.getDefaultHelper();
+	//GenericHelper helper = GenericHelperFactory.getDefaultHelper();
 	ModelReader reader = helper.getModelReader();
 	Collection ec = reader.getEntityNames();
 	TreeSet entities = new TreeSet(ec);

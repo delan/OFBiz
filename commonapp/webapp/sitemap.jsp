@@ -29,7 +29,7 @@
 %> 
 
 <%@ page import="org.ofbiz.core.util.*" %>
-<%@ page import="org.ofbiz.commonapp.security.*" %>
+<%@ page import="org.ofbiz.core.security.*" %>
 
 <% pageContext.setAttribute("PageName", "sitemap"); %> 
 
@@ -41,10 +41,10 @@
 <h2 style='margin:0;'>Site Map</h2>
 <ul>
   <li><a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttontext">Main</a>
-  <%if(Security.hasPermission("ENTITY_MAINT", session)){%>
+  <%if(security.hasPermission("ENTITY_MAINT", session)){%>
     <li><a href="<%=response.encodeURL(controlPath + "/entitymaint")%>" class='buttontext'>Entity Maintenance</A>
   <%}%>
-  <%if(Security.hasPermission("UTIL_CACHE_VIEW", session)){%>
+  <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
     <li><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Cache Maintenance</A>
   <%}%>
 </ul>

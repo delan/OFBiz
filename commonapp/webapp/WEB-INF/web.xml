@@ -40,6 +40,11 @@
   </servlet-mapping>
 
   <context-param>
+    <description>The Name of the Entity Server to use, defined in servers.properties</description>
+    <param-name>entityServerName</param-name>
+    <param-value>default</param-value>
+  </context-param>
+  <context-param>
     <description>Request/View Mapping And Site Configuration File</description>
     <param-name>siteConfigurationFile</param-name>
     <param-value>/WEB-INF/commonapp-config.xml</param-value>

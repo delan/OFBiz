@@ -1,5 +1,9 @@
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.commonapp.security.login.*" %>
+<%@ page import="org.ofbiz.core.security.*" %>
+<%@ page import="org.ofbiz.core.entity.*" %>
+
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
+<jsp:useBean id="helper" type="org.ofbiz.core.entity.GenericHelper" scope="application" />
 
 <%String pageName = (String)pageContext.getAttribute("PageName"); %>
 <html>
@@ -12,13 +16,13 @@
 </head>
 
 <body>
-<%UserLogin headerUserLogin = (UserLogin)session.getAttribute("USER_LOGIN");%>
+<%GenericValue headerUserLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);%>
 <%String headerControlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
 <TABLE width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='CCCCCC'>
   <TR>
     <TD>
-      <H1 style=margin:0;>&nbsp;The Open For Business Project</H1>
+      <H1 style="margin:0;">&nbsp;The Open For Business Project</H1>
     </TD>
   </TR>
 </TABLE>

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/07/29 01:57:31  azeneski
+ * *** empty log message ***
+ *
  * Revision 1.7  2001/07/23 18:05:00  azeneski
  * Fixed runaway thread in the job scheduler.
  *
@@ -65,6 +68,9 @@ public final class SiteDefs {
     public static final String LOGIN_REQUEST_URI = "login";
     public static final String LOGOUT_REQUEST_URI = "logout";
  
+    /** Required context init parameter to specify the entity server name as defined in servers.properties */
+    public static final String ENTITY_SERVER_NAME = "entityServerName";
+
     /** Required context init parameter to locate site specific configuration */
     public static final String SITE_CONFIG = "siteConfigurationFile";
     
@@ -98,4 +104,8 @@ public final class SiteDefs {
     
     /** Used session object to locate the shopping cart */
     public static final String SHOPPING_CART = "_SHOPPING_CART_";
+
+    /** Session attribute name for UserLogin entity of current logged in user, if one is logged in */
+    public static final String USER_LOGIN = "_USER_LOGIN_";
+    
 }

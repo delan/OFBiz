@@ -47,7 +47,7 @@ public class WebEventSecurity
    */  
   public static String checkLogin(HttpServletRequest request, HttpServletResponse response) throws java.rmi.RemoteException, java.io.IOException, javax.servlet.ServletException 
   {
-    GenericValue userLogin = (GenericValue)request.getSession().getAttribute("USER_LOGIN");
+    GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
     if(userLogin == null)
     {
@@ -95,7 +95,7 @@ public class WebEventSecurity
     String username = request.getParameter("USERNAME");
     String password = request.getParameter("PASSWORD");
 
-    GenericHelper helper = (GenericHelper)request.getSession().getAttribute("DEFAULT_HELPER");
+    GenericHelper helper = (GenericHelper)request.getSession().getAttribute("helper");
 
     if(username == null || username.length() <= 0)
     {
@@ -112,7 +112,7 @@ public class WebEventSecurity
       {
         if(password.compareTo(userLogin.getString("currentPassword")) == 0)
         {
-          request.getSession().setAttribute("USER_LOGIN", userLogin);
+          request.getSession().setAttribute(SiteDefs.USER_LOGIN, userLogin);
         }
         else
         {
@@ -158,8 +158,8 @@ public class WebEventSecurity
   public static String logout(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException 
   {
     //invalidate the security group list cache
-    GenericValue userLogin = (GenericValue) request.getSession().getAttribute("USER_LOGIN");
-    Security sec = (Security)request.getSession().getAttribute("SECURITY");
+    GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+    Security sec = (Security)request.getSession().getAttribute("security");
     if(sec != null && userLogin != null) sec.userLoginSecurityGroupByUserLoginId.remove(userLogin.getString("userLoginId"));
     
     //invalidate doesn't work because it requires a new request to rebuild for some reason
