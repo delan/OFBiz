@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.9 2003/11/17 06:21:27 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.10 2003/11/18 23:20:48 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -612,6 +612,73 @@ public class OrderReadHelper {
                 new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"),
                 new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"));
         return EntityUtil.filterByAnd(getOrderItems(), exprs);
+    }
+
+    public List getValidDigitalItems() {
+        List digitalItems = new ArrayList();
+        // only approved or complete items apply
+        List exprs = UtilMisc.toList(
+                new EntityExpr("statusId", EntityOperator.EQUALS, "ITEM_APPROVED"),
+                new EntityExpr("statusId", EntityOperator.EQUALS, "ITEM_COMPLETED"));
+        List items = EntityUtil.filterByOr(getOrderItems(), exprs);
+        Iterator i = items.iterator();
+        while (i.hasNext()) {
+            GenericValue item = (GenericValue) i.next();
+            if (item.get("productId") != null) {
+                GenericValue product = null;
+                try {
+                    product = item.getRelatedOne("Product");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to get Product from OrderItem", module);
+                }
+                if (product != null) {
+                    String productType = product.getString("productTypeId");
+                    if ("DIGITAL_GOOD".equals(productType) || "FINDIG_GOOD".equals(productType)) {
+                        // make sure we have an OrderItemBilling record
+                        List orderItemBillings = null;
+                        try {
+                            orderItemBillings = item.getRelated("OrderItemBilling");
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Unable to get OrderItemBilling from OrderItem");
+                        }
+
+                        if (orderItemBillings != null && orderItemBillings.size() > 0) {
+                            // get the ProductContent records
+                            List productContents = null;
+                            try {
+                                productContents = product.getRelated("ProductContent");
+                            } catch (GenericEntityException e) {
+                                Debug.logError("Unable to get ProductContent from Product", module);
+                            }
+                            List cExprs = UtilMisc.toList(
+                                    new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "DIGITAL_DOWNLOAD"),
+                                    new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "FULFILLMENT_EMAIL"),
+                                    new EntityExpr("productContentTypeId", EntityOperator.EQUALS, "FULFILLMENT_EXTERNAL"));
+                            // add more as needed
+                            productContents = EntityUtil.filterByDate(productContents);
+                            productContents = EntityUtil.filterByOr(productContents, cExprs);
+
+                            if (productContents != null && productContents.size() > 0) {
+                                // make sure we are still within the allowed timeframe and use limits
+                                Iterator pci = productContents.iterator();
+                                while (pci.hasNext()) {
+                                    GenericValue productContent = (GenericValue) pci.next();
+                                    Timestamp fromDate = productContent.getTimestamp("purchaseFromDate");
+                                    Timestamp thruDate = productContent.getTimestamp("purchaseThruDate");
+                                    if (fromDate == null || item.getTimestamp("orderDate").after(fromDate)) {
+                                        if (thruDate == null || item.getTimestamp("orderDate").before(thruDate)) {
+                                            // TODO: Implement use count and days
+                                            digitalItems.add(item);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return digitalItems;
     }
 
     public List getOrderItemAdjustments(GenericValue orderItem) {
