@@ -24,8 +24,6 @@
  */
 package org.ofbiz.pos.event;
 
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.screen.PosScreen;
 
 /**
