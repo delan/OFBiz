@@ -35,8 +35,6 @@ public class ModelRelation {
   public String title = "";
   /** the type: either "one" or "many" */
   public String type = "";
-  /** the name of the related table */
-  public String relTableName = "";
   /** the name of the related EJB/entity */
   public String relEntityName = "";
   /** keyMaps defining how to lookup the relatedTable using columns from this table */

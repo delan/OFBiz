@@ -322,7 +322,6 @@ public class ModelReader {
     relation.type = checkEmpty(relationElement.getAttribute("type"));
     relation.title = checkEmpty(relationElement.getAttribute("title"));
     relation.relEntityName = checkEmpty(relationElement.getAttribute("rel-entity-name"));
-    relation.relTableName = checkEmpty(relationElement.getAttribute("rel-table-name"),ModelUtil.javaNameToDbName(checkEmpty(relation.relEntityName)));
     
     NodeList keyMapList = relationElement.getElementsByTagName("key-map");
     for(int i=0; i<keyMapList.getLength(); i++) {
