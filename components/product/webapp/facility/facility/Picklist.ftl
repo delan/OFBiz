@@ -20,9 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
+
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
@@ -33,17 +37,17 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <td width="50%"><div class="boxhead">Inventory Items to Pick</div></td>
+          <td width="50%"><div class="boxhead">${uiLabelMap.ProductInventoryItemsToPick}</div></td>
           <td width="50%"><div class="boxhead" align=right>&nbsp;</div></td>
         </tr>
       </table>
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
-          <td width="10%" align="left"><div class="tableheadtext">Location</div></td>
-          <td width="30%" align="left"><div class="tableheadtext">Product [ID]</div></td>
-          <td width="10%" align="left"><div class="tableheadtext">To Pick</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">OrderItems</div></td>
-          <td width="10%" align="left"><div class="tableheadtext">InventoryItems</div></td>
+          <td width="10%" align="left"><div class="tableheadtext">${uiLabelMap.ProductLocation}</div></td>
+          <td width="30%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>
+          <td width="10%" align="left"><div class="tableheadtext">${uiLabelMap.ProductToPick}</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderItems}</div></td>
+          <td width="10%" align="left"><div class="tableheadtext">${uiLabelMap.ProductInventoryItems}</div></td>
           <#--
           <td width="10%" align="left"><div class="tableheadtext">On Hand</div></td>
           <td width="10%" align="left"><div class="tableheadtext">Available</div></td>
@@ -169,7 +173,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
           </#list>
         <#else>
           <tr>
-            <td colspan="4"><div class="head3">No inventory found to pick.</div></td>
+            <td colspan="4"><div class="head3">${uiLabelMap.ProductNoInventoryFoundToPick}.</div></td>
           </tr>        
         </#if>
       </table>
@@ -182,16 +186,16 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <td width="50%"><div class="boxhead">Orders to Pack</div></td>
+          <td width="50%"><div class="boxhead">${uiLabelMap.OrderOrdersToPack}</div></td>
           <td width="50%"><div class="boxhead" align=right>&nbsp;</div></td>
         </tr>
       </table>
       <table width="100%" border="0" cellspacing="0" cellpadding="2" class="boxbottom">
         <tr>
-          <td width="10%" align="left"><div class="tableheadtext">OrderItem</div></td>
-          <td width="40%" align="left"><div class="tableheadtext">Product [ID]</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Quantity</div></td>
-          <td width="20%" align="left"><div class="tableheadtext">Inventory:Avail:NotAvail</div></td>
+          <td width="10%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderItem}</div></td>
+          <td width="40%" align="left"><div class="tableheadtext">${uiLabelMap.ProductProductId}</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.ProductQuantity}</div></td>
+          <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.ProductInventoryAvailNotAvail}</div></td>
         </tr>
         <tr>
           <td colspan="10"><hr class="sepbar"></td>
@@ -236,7 +240,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
           </#list>          
         <#else>
           <tr>
-            <td colspan="4"><div class="head3">No inventory found to pick.</div></td>
+            <td colspan="4"><div class="head3">${uiLabelMap.ProductNoInventoryFoundToPick}.</div></td>
           </tr>        
         </#if>
       </table>
@@ -251,7 +255,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <td width="100%">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
-          <td width="50%"><div class="boxhead">Pick Pack Warnings</div></td>
+          <td width="50%"><div class="boxhead">${uiLabelMap.ProductPickPackWarnings}</div></td>
           <td width="50%"><div class="boxhead" align=right>&nbsp;</div></td>
         </tr>
       </table>
@@ -298,5 +302,5 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 </#if>
 
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

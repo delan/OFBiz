@@ -21,34 +21,37 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.1 $
+ *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if hasPermission>
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
     
-    <div class="head1">Inventory Transfers <span class="head2">for&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
+    <div class="head1">${uiLabelMap.ProductInventoryTransfersFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
+    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <#if activeOnly>
-        <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}&activeOnly=false</@ofbizUrl>" class="buttontext">[Active and Inactive]</a>
+        <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}&activeOnly=false</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveAndInactive}]</a>
     <#else>
-        <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}&activeOnly=true</@ofbizUrl>" class="buttontext">[Active Only]</a>
+        <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}&activeOnly=true</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductActiveOnly}]</a>
     </#if>
-    <a href="<@ofbizUrl>/TransferInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[Inventory Transfer]</a>
+    <a href="<@ofbizUrl>/TransferInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductInventoryTransfer}]</a>
     
     <br>
     <#if (toTransfers.size() > 0)>
         <br>
-        <div class="head1">To:<span class="head2">&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
+        <div class="head1">${uiLabelMap.CommonTo}:<span class="head2">&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
             <tr>
-            <td><div class="tabletext"><b>Transfer ID</b></div></td>
-            <td><div class="tabletext"><b>Item</b></div></td>      
-            <td><div class="tabletext"><b>From</b></div></td>
-            <td><div class="tabletext"><b>Send Date</b></div></td>
-            <td><div class="tabletext"><b>Status</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductTransferId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.EcommerceItem}</b></div></td>      
+            <td><div class="tabletext"><b>${uiLabelMap.CommonFrom}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonSendDate}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonStatus}</b></div></td>
             <td>&nbsp;</td>
             </tr>
         
@@ -65,7 +68,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", UtilMisc.toMap("statusId", transfer.statusId))>
                 <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
             </td>
-            <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[Edit]</a></div></td>
+            <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div></td>
             </tr>
             </#list>
         </table>
@@ -73,14 +76,14 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     
     <#if (fromTransfers.size() > 0)>
         <br>
-        <div class="head1">From:<span class="head2">&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
+        <div class="head1">${uiLabelMap.CommonFrom}:<span class="head2">&nbsp;<#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
             <tr>
-            <td><div class="tabletext"><b>Transfer ID</b></div></td>
-            <td><div class="tabletext"><b>Item</b></div></td>      
-            <td><div class="tabletext"><b>To</b></div></td>
-            <td><div class="tabletext"><b>Send Date</b></div></td>
-            <td><div class="tabletext"><b>Status</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductTransferId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.EcommerceItem}</b></div></td>      
+            <td><div class="tabletext"><b>${uiLabelMap.CommonTo}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonSendDate}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonStatus}</b></div></td>
             <td>&nbsp;</td>
             </tr>
         
@@ -97,12 +100,12 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                 <#assign transferStatus = delegator.findByPrimaryKey("StatusItem", UtilMisc.toMap("statusId", transfer.statusId))>
                 <div class="tabletext">&nbsp;${(transferStatus.description)?if_exists}</div>
             </td>
-            <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[Edit]</a></div></td>
+            <td align="center"><div class="tabletext"><a href="<@ofbizUrl>/TransferInventoryItem?inventoryTransferId=${(transfer.inventoryTransferId)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></div></td>
             </tr>
             </#list>
         </table>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>
 

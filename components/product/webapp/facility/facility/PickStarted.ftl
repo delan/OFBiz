@@ -21,9 +21,12 @@
  *
  *@author         David E. Jones (jonesde@ofbiz.org)
  *@author         Andy Zeneski (jaz@ofbiz.org)
- *@version        $Revision: 1.1 $
+ *@author   	  thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version        $Revision: 1.2 $
  *@since            2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
@@ -34,7 +37,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td width="100%">
             <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
                 <tr>
-                    <td><div class="boxhead">Picks Started/In Progress</div></td>
+                    <td><div class="boxhead">${uiLabelMap.ProductPicksStartedInProgress}</div></td>
                     <td align="right">&nbsp;</td>
                 </tr>
             </table>
@@ -43,12 +46,12 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                     <td align="left" width="100%">
                         <table border="1" cellspacing="0" cellpadding="2">
                             <tr>
-                                <td><div class="tableheadtext">Pick Started</div></td>
-                                <td><div class="tableheadtext">Order</div></td>
-                                <td><div class="tableheadtext">Order Item</div></td>
-                                <td><div class="tableheadtext">Inventory Item</div></td>
-                                <td><div class="tableheadtext">Available</div></td>
-                                <td><div class="tableheadtext">Not Available</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductPickStarted}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.OrderOrders}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.OrderOrderItem}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductInventoryItems}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductAvailable}</div></td>
+                                <td><div class="tableheadtext">${uiLabelMap.ProductNotAvailable}</div></td>
                             </tr>
                             <#if orderItemInventoryResAndItemList?has_content>
                                 <#list orderItemInventoryResAndItemList as orderItemInventoryResAndItem>
@@ -57,7 +60,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                             <div class="tabletext">
                                                 <#if !lastPickStartDate?exists || orderItemInventoryResAndItem.pickStartDate != lastPickStartDate>
                                                     ${orderItemInventoryResAndItem.pickStartDate.toString()}
-                                                    <a href="<@ofbizUrl>/clearPickStarted?facilityId=${facilityId?if_exists}&pickStartDate=${orderItemInventoryResAndItem.pickStartDate.toString()}</@ofbizUrl>" class="buttontext">[Reset&nbsp;Date]</a>
+                                                    <a href="<@ofbizUrl>/clearPickStarted?facilityId=${facilityId?if_exists}&pickStartDate=${orderItemInventoryResAndItem.pickStartDate.toString()}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductResetDate}]</a>
                                                 <#else>
                                                     &nbsp;
                                                 </#if>
@@ -84,7 +87,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
                                     <#assign lastOrderId = orderItemInventoryResAndItem.orderId>
                                 </#list>
                             <#else>
-                                <tr><td colspan="7"><div class="head3">No picks are started right now.</div></td></tr>
+                                <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductNoPicksStarted}.</div></td></tr>
                             </#if>
                         </table>
                     </td>
@@ -95,5 +98,5 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 </table>
 
 <#else>
-    <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+    <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>

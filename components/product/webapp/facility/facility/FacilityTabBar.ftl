@@ -20,25 +20,27 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign unselectedClassName = "tabButton">
 <#assign selectedClassMap = {page.tabButtonItem?default("void") : "tabButtonSelected"}>
 
 <#if facilityId?has_content>
   <div class='tabContainer'>
-    <a href="<@ofbizUrl>/EditFacility?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacility?default(unselectedClassName)}">Facility</a>
-    <a href="<@ofbizUrl>/ViewContactMechs?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ViewContactMechs?default(unselectedClassName)}">Contact Mechs</a>
-    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroups?default(unselectedClassName)}">Groups</a>
-    <a href="<@ofbizUrl>/FindFacilityLocation?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityLocation?default(unselectedClassName)}">Locations</a>
-    <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityRoles?default(unselectedClassName)}">Roles</a>
-    <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityInventoryItems?default(unselectedClassName)}">Inventory&nbsp;Items</a>
-    <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveInventory?default(unselectedClassName)}">Inventory&nbsp;Receive</a>
-    <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityTransfers?default(unselectedClassName)}">Inventory&nbsp;Xfers</a>
-    <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveReturn?default(unselectedClassName)}">Receive Return</a>
-    <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PicklistOptions?default(unselectedClassName)}">Picking</a>
-    <a href="<@ofbizUrl>/FindShipment?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindShipment?default(unselectedClassName)}">Shipments</a>
+    <a href="<@ofbizUrl>/EditFacility?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacility?default(unselectedClassName)}">${uiLabelMap.ProductFacility}</a>
+    <a href="<@ofbizUrl>/ViewContactMechs?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ViewContactMechs?default(unselectedClassName)}">${uiLabelMap.PartyContactMechs}</a>
+    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityGroups?default(unselectedClassName)}">${uiLabelMap.ProductGroups}</a>
+    <a href="<@ofbizUrl>/FindFacilityLocation?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityLocation?default(unselectedClassName)}">${uiLabelMap.ProductLocations}</a>
+    <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityRoles?default(unselectedClassName)}">${uiLabelMap.ProductRoles}</a>
+    <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.EditFacilityInventoryItems?default(unselectedClassName)}">${uiLabelMap.ProductInventoryItems}</a>
+    <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveInventory?default(unselectedClassName)}">${uiLabelMap.ProductInventoryReceive}</a>
+    <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindFacilityTransfers?default(unselectedClassName)}">${uiLabelMap.ProductInventoryXfers}</a>
+    <a href="<@ofbizUrl>/ReceiveReturn?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.ReceiveReturn?default(unselectedClassName)}">${uiLabelMap.ProductReceiveReturn}</a>
+    <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.PicklistOptions?default(unselectedClassName)}">${uiLabelMap.ProductPicking}</a>
+    <a href="<@ofbizUrl>/FindShipment?facilityId=${facilityId}</@ofbizUrl>" class="${selectedClassMap.FindShipment?default(unselectedClassName)}">${uiLabelMap.ProductShipments}</a>
   </div>
 </#if>

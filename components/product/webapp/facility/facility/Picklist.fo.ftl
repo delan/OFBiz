@@ -23,9 +23,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <fo:layout-master-set>
     <fo:simple-page-master master-name="main" page-height="11in" page-width="8.5in"
@@ -51,11 +54,11 @@
         <fo:table-column column-width="80pt"/>
         <fo:table-header>
             <fo:table-row font-weight="bold">
-                <fo:table-cell border-bottom="thin solid grey"><fo:block>Location</fo:block></fo:table-cell>
-                <fo:table-cell border-bottom="thin solid grey"><fo:block>Product [ID]</fo:block></fo:table-cell>
-                <fo:table-cell border-bottom="thin solid grey"><fo:block>To Pick</fo:block></fo:table-cell>
-                <fo:table-cell border-bottom="thin solid grey"><fo:block>Order Items</fo:block></fo:table-cell>
-                <fo:table-cell border-bottom="thin solid grey"><fo:block>Inventory Items</fo:block></fo:table-cell>
+                <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductLocation}</fo:block></fo:table-cell>
+                <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductProductId}</fo:block></fo:table-cell>
+                <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductToPick}</fo:block></fo:table-cell>
+                <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.OrderOrderItems}</fo:block></fo:table-cell>
+                <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductInventoryItems}</fo:block></fo:table-cell>
             </fo:table-row>
         </fo:table-header>
         <fo:table-body>
@@ -120,7 +123,7 @@
                                 <#if facilityLocation?has_content>
                                     <fo:block>${facilityLocation.areaId?if_exists}-${facilityLocation.aisleId?if_exists}-${facilityLocation.sectionId?if_exists}-${facilityLocation.levelId?if_exists}-${facilityLocation.positionId?if_exists}</fo:block>
                                 <#else>
-                                    <fo:block>[No Location]</fo:block>
+                                    <fo:block>[${uiLabelMap.ProductNoLocation}]</fo:block>
                                 </#if>
                             </fo:table-cell>
                             <fo:table-cell padding="2pt" background-color="${rowColor}">
@@ -152,7 +155,7 @@
                 </#list>
             <#else>
                 <fo:table-row font-weight="bold">
-                    <fo:table-cell><fo:block>No inventory found to pick.</fo:block></fo:table-cell>
+                    <fo:table-cell><fo:block>${uiLabelMap.ProductNoInventoryFoundToPick}.</fo:block></fo:table-cell>
                 </fo:table-row>
             </#if>
         </fo:table-body>
@@ -178,10 +181,10 @@
                 <fo:table-column column-width="150pt"/>
                 <fo:table-header>
                     <fo:table-row font-weight="bold">
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Order Item</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Product [ID]</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>To Pack</fo:block></fo:table-cell>
-                        <fo:table-cell border-bottom="thin solid grey"><fo:block>Inventory: Avail: NotAvail</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.OrderOrderItem}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductProductId}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductToPack}</fo:block></fo:table-cell>
+                        <fo:table-cell border-bottom="thin solid grey"><fo:block>${uiLabelMap.ProductInventoryAvailNotAvail}</fo:block></fo:table-cell>
                     </fo:table-row>
                 </fo:table-header>
                 <fo:table-body>
@@ -227,7 +230,7 @@
     <#if insufficientQohList?has_content || wrongQuantityReservedList?has_content>
         <fo:page-sequence master-reference="main">
         <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-        <fo:block font-size="14pt">Pick Pack Warnings</fo:block>
+        <fo:block font-size="14pt">${uiLabelMap.ProductPickPackWarnings}</fo:block>
         <#-- wrongQuantityReservedList: List of Maps with reservedQuantity and orderItem -->
         <#-- insufficientQohList: List of Maps with inventoryItem and quantityNeeded -->
         <#assign rowColor = "white">
@@ -265,7 +268,7 @@
 
     <#else>
         <fo:block font-size="14pt">
-            You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)
+            ${uiLabelMap.ProductFacilityViewPermissionError}
         </fo:block>
     </#if>
 

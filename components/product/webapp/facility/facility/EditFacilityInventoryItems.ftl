@@ -21,19 +21,22 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@author     thierry.grauss@etu.univ-tours.fr (migration to uiLabelMap)
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#if hasPermission>
 
 ${pages.get("/facility/FacilityTabBar.ftl")}
     
-    <div class="head1">Inventory Items <span class="head2">for <#if facility?exists>${(facility.facilityName)?if_exists}</#if> [ID:${facilityId?if_exists}]</span></div>
+    <div class="head1">${uiLabelMap.ProductInventoryItemsFor} <span class="head2"><#if facility?exists>${(facility.facilityName)?if_exists}</#if> [${uiLabelMap.CommonId}:${facilityId?if_exists}]</span></div>
     
-    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[New Facility]</a>
+    <a href="<@ofbizUrl>/EditFacility</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewFacility}]</a>
     <a href="<@ofbizUrl>/EditInventoryItem?facilityId=${facilityId}</@ofbizUrl>" class="buttontext">
-    [Create New Inventory Item for this Facility]</a>
+    [${uiLabelMap.ProductCreateNewInventoryItemFacility}]</a>
     
     <#if facilityInventoryItems?exists && (facilityInventoryItems.size() > 0)>
         <table border="0" width="100%" cellpadding="2">
@@ -41,13 +44,13 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
             <td align=right>
                 <b>
                 <#if (viewIndex > 0)>
-                <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+                <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
                 </#if>
                 <#if (listSize > 0)>
                     ${lowIndex+1} - ${highIndex} of ${listSize}
                 </#if>
                 <#if (listSize > highIndex)>
-                | <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[Next]</a>
+                | <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
                 </#if>
                 </b>
             </td>
@@ -57,16 +60,16 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
     <#if facilityId?exists>
         <table border="1" cellpadding="2" cellspacing="0" width="100%">
         <tr>
-            <td><div class="tabletext"><b>Item&nbsp;ID</b></div></td>
-            <td><div class="tabletext"><b>Item&nbsp;Type</b></div></td>
-            <td><div class="tabletext"><b>Status</b></div></td>
-            <td><div class="tabletext"><b>Received</b></div></td>
-            <td><div class="tabletext"><b>Expire</b></div></td>
-            <td><div class="tabletext"><b>Product ID</b></div></td>
-            <td><div class="tabletext"><b>Location</b></div></td>
-            <td><div class="tabletext"><b>Lot&nbsp;ID</b></div></td>
-            <td><div class="tabletext"><b>BinNum</b></div></td>
-            <td><div class="tabletext"><b>ATP/QOH or Serial#</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductItemId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductItemType}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductStatus}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonReceived}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.CommonExpire}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductLocation}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductProductId}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductBinNum}</b></div></td>
+            <td><div class="tabletext"><b>${uiLabelMap.ProductAtpQohSerial}#</b></div></td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td>&nbsp;</td>
@@ -136,5 +139,5 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <br>
     </#if>
 <#else>
-  <h3>You do not have permission to view this page. ("FACILITY_VIEW" or "FACILITY_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.ProductFacilityViewPermissionError}</h3>
 </#if>
