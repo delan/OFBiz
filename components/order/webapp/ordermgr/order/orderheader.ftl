@@ -26,7 +26,9 @@
  *@since      2.2
 -->
 
-<#if requestAttributes.uiLabelMap?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
+<#if requestAttributes.uiLabelMap?exists>
+  <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
@@ -189,10 +191,6 @@
                       <#else>
                         <#if paymentMethod.paymentMethodTypeId?if_exists == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")?if_exists>
-                          <#assign payments = orderPaymentPreference.getRelated("Payment")>
-                          <#if payments?has_content>
-                            <#assign payment = payments[0]>
-                          </#if>
                           <#if creditCard?has_content>
                             <#assign pmBillingAddress = creditCard.getRelatedOne("PostalAddress")?if_exists>
                           </#if>
@@ -226,20 +224,21 @@
                                   ${uiLabelMap.CommonInformationNotAvailable}
                                 </#if>
                               </div>
-                              <#-- TODO: add transaction history
-                              <#if orderPaymentPreference.authDate?exists>
+                              <#assign gatewayResponses = orderPaymentPreference.getRelated("PaymentGatewayResponse")>
+                              <#if gatewayResponses?has_content>
                                 <div class="tabletext">
-                                  ${uiLabelMap.CommonAuth}&nbsp;:&nbsp;${orderPaymentPreference.authDate.toString()}
-                                  &nbsp;&nbsp;(<b>${uiLabelMap.CommonRef}:</b>&nbsp;${orderPaymentPreference.authRefNum?if_exists})
+                                  <hr />
+                                  <#list gatewayResponses as gatewayResponse>
+                                    <#assign transactionCode = gatewayResponse.getRelatedOne("TranCodeEnumeration")>
+                                    ${(transactionCode.description)?default("Unknown")}:
+                                    ${gatewayResponse.transactionDate.toString()}<br />
+                                    (<b>Ref:</b> ${gatewayResponse.referenceNum?if_exists}
+                                    <b>AVS:</b> ${gatewayResponse.gatewayAvsResult?default("N/A")}
+                                    <b>Score:</b> ${gatewayResponse.gatewayScoreResult?default("N/A")})
+                                    <#if gatewayResponse_has_next><hr /></#if>
+                                  </#list>
                                 </div>
-                              </#if>
-                              -->
-                              <#if payment?exists && payment.effectiveDate?exists>
-                                <div class="tabletext">
-                                  ${uiLabelMap.OrderBilled}&nbsp;:&nbsp;${payment.effectiveDate.toString()}
-                                  &nbsp;&nbsp;(<b>${uiLabelMap.CommonRef}:</b>&nbsp;${payment.paymentRefNum?if_exists})
-                                </div>
-                              </#if>
+                              </#if>                              
                             </td>
                           </tr>
                         <#elseif paymentMethod.paymentMethodTypeId?if_exists == "EFT_ACCOUNT">
