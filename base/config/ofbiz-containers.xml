@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.14 2004/04/01 18:13:52 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.15 2004/04/22 15:39:51 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -36,9 +36,21 @@
     <!-- load JNDI/JOTM -->
     <container name="jotm-container" class="org.ofbiz.jotm.container.JotmContainer"/>
 
+    <!-- load Shark Workflow Engine -->
+    <container name="shark-container" class="org.ofbiz.shark.container.SharkContainer">
+        <property name="engine-name" value="Shark"/>
+        <property name="delegator-name" value="default"/>
+        <property name="dispatcher-name" value="WFDispatcher"/>
+        <property name="admin-user" value="admin"/>
+        <property name="iiop-host" value="127.0.0.1"/>
+        <property name="iiop-port" value="2000"/>
+    </container>
+    
     <!-- RMI Service Dispatcher -->
     <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
         <property name="bound-name" value="RMIDispatcher"/>
+        <property name="bound-host" value="127.0.0.1"/>
+        <property name="bound-port" value="1099"/>
         <property name="delegator-name" value="default"/>
         <property name="client-factory" value="org.ofbiz.service.rmi.socket.CompressionClientSocketFactory"/>
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
