@@ -101,12 +101,18 @@
     <tr valign="middle">
         <FORM method=POST action='<ofbiz:url>/QuickAddChosenVariant</ofbiz:url>'>
             <input type=hidden name='productId' value='<%=productId%>'>
+            <input type=hidden name='featureTypeSize' value='<%=featureTypeSize%>'>
+            
             <%for (int featureTypeIndex = 0; featureTypeIndex < featureTypeSize; featureTypeIndex++) {%>
                 <%List featureValues = (List) featureTypeValues.get(featureTypeIndex);%>
                 <%GenericValue productFeatureAndAppl = (GenericValue) featureValues.get(indices[featureTypeIndex]);%>
-                <td><div class='tabletext'><%=UtilFormatOut.checkNull(productFeatureAndAppl.getString("description"))%></div></td>
+                <td>
+                    <div class='tabletext'><%=UtilFormatOut.checkNull(productFeatureAndAppl.getString("description"))%></div>
+                    <input type=hidden name='feature_<%=featureTypeIndex%>' value='<%=UtilFormatOut.checkNull(productFeatureAndAppl.getString("productFeatureId"))%>'>
+                </td>
                 <%
-                //here's the fun part: go through the types backward to increment and overflow
+                //Use the cascading index method for recursion to iteration conversion
+                //here's the fun part: go through the types to increment and overflow
                 if (featureTypeIndex == 0) {
                     //always increment the 0 position
                     indices[featureTypeIndex]++;
