@@ -103,7 +103,7 @@ from the DTD.</p>
 </ul>
 <hr>
 
-<h4><a name='MapOverview'>Simple Map Processor Overview</a></h4>
+<h3><a name='MapOverview'>Simple Map Processor Overview</a></h3>
 
 <p>The Simple Map Processor Mini-Language performes two primary tasks: validation
 and conversion. It does this in a context of moving values from one Map to another. The
@@ -111,7 +111,7 @@ input map will commonly contain Strings, but can contain other object types like
 Float, Double, java.sql.Date, Time, and Timestamp.</p>
 
 <hr>
-<h4><a name='MakeInString'>Make In String Operations</a></h4>
+<h3><a name='MakeInString'>Make In String Operations</a></h3>
 
 <p><b><u>make-in-string</u></b></p>
 <p>In addition to dealing with the fields already in the incoming Map you can build 
@@ -122,7 +122,7 @@ Each snippet can be another field in the in-Map (in-field element), a value from
 file (property element), or a constant (constant element).</p>
 
 <hr>
-<h4><a name='Process'>Process Field Operations</a></h4>
+<h3><a name='Process'>Process Field Operations</a></h3>
 
 <p><b><u>process</u></b></p>
 <p>The process tag is used to contain the operations to be done on the specified 
@@ -191,7 +191,7 @@ can be used to specify the format for date/time fields. These two tags are
 in addition to all of the the attributes in the copy tag.</p>
 
 <hr>
-<h4><a name='MapExample'>Simple Map Processors Example</a></h4>
+<h3><a name='MapExample'>Simple Map Processors Example</a></h3>
 <pre>
 &lt;!DOCTYPE simple-map-processors PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
 
@@ -246,7 +246,7 @@ in addition to all of the the attributes in the copy tag.</p>
 </ul>
 <hr>
 
-<h4><a name='MethodOverview'>Simple Method Overview</a></h4>
+<h3><a name='MethodOverview'>Simple Method Overview</a></h3>
 
 <p>The Simple Method Mini-Language is a simple way to implement an event
 that is invoked by the Control Servlet or a service that is invoked by the Service Engine.
@@ -387,7 +387,7 @@ available operations.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='Call'>Call Operations</a></h4>
+<h3><a name='Call'>Call Operations</a></h3>
 
 <p><b><u>call-map-processor</u></b></p>
 
@@ -627,7 +627,7 @@ either the event or service objects that the calling simple-method was called wi
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='JavaCall'>Java Call Operations</a></h4>
+<h3><a name='JavaCall'>Java Call Operations</a></h3>
 
 <p><b><u>create-object</u></b></p>
 
@@ -775,7 +775,7 @@ either the event or service objects that the calling simple-method was called wi
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='ControlError'>Control and Error Handling Operations</a></h4>
+<h3><a name='ControlError'>Control and Error Handling Operations</a></h3>
 
 <p><b><u>check-errors</u></b></p>
 
@@ -875,7 +875,7 @@ the control servlet.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='Event'>Event Specific Operations</a></h4>
+<h3><a name='Event'>Event Specific Operations</a></h3>
 
 <p><b><u>field-to-request</u></b></p>
 
@@ -1038,7 +1038,7 @@ map in the method environment.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='Service'>Service Specific Operations</a></h4>
+<h3><a name='Service'>Service Specific Operations</a></h3>
 
 <p><b><u>field-to-result</u></b></p>
 
@@ -1070,7 +1070,7 @@ map in the method environment.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='Environment'>Method Environment Operations</a></h4>
+<h3><a name='Environment'>Method Environment Operations</a></h3>
 
 <p><b><u>map-to-map</u></b></p>
 
@@ -1330,7 +1330,7 @@ operations, including the conditional/if operations.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='EntityMisc'>Entity Engine Misc. Operations</a></h4>
+<h3><a name='EntityMisc'>Entity Engine Misc. Operations</a></h3>
 
 <p><b><u>now-timestamp-to-env</u></b></p>
 
@@ -1411,7 +1411,7 @@ calling services, etc.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='EntityFind'>Entity Engine Find Operations</a></h4>
+<h3><a name='EntityFind'>Entity Engine Find Operations</a></h3>
 
 <p><b><u>find-by-primary-key</u></b></p>
 
@@ -1557,7 +1557,7 @@ placed in the method environment using the specified list-name.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='EntityValue'>Entity Engine Value Operations</a></h4>
+<h3><a name='EntityValue'>Entity Engine Value Operations</a></h3>
 
 <p><b><u>make-value</u></b></p>
 
@@ -1712,6 +1712,10 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 </tr>
 </table>
 
+<p><b><u>clear-entity-caches</u></b></p>
+
+<p>This is a very simple tag that should be used sparingly because of the performance impact. It clears all lines from all Entity Engine caches. It has no attributes or sub-elements.</p>
+
 <p><b><u>set-pk-fields</u></b></p>
 
 <p>Looks for each PK field in the named map and if it exists there it will copy it into the named value object.</p>
@@ -1765,7 +1769,7 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='EntityList'>Entity Engine List Operations</a></h4>
+<h3><a name='EntityList'>Entity Engine List Operations</a></h3>
 
 <p><b><u>store-list</u></b></p>
 
@@ -1807,12 +1811,71 @@ removed from the datasource that match the constraint of the field map.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='EntityTx'>Entity Engine Transaction Operations</a></h4>
+<h3><a name='EntityTx'>Entity Engine Transaction Operations</a></h3>
+
+<p><b><u>transaction-begin</u></b></p>
+
+<p>The transaction-begin tag will begin a transaction if one is not already in place. If a transaction is 
+begun the environment field named as the began-transaction-name will be set to true, otherwise it will be set to false.</p>
+
+<p>Note that unless the simple-method is flagged to not use a transaction all simple-methods will be inside a transaction. 
+The same is true for service calls through the Service Engine.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>began-transaction-name</td><td>N</td>
+    <td>The name of the method environment field that contains a Boolean specifying whether or not a transaction was begun in the current transaction demarcation. Defaults to "beganTransaction".</td>
+</tr>
+</table>
+
+<p><b><u>transaction-commit</u></b></p>
+
+<p>The transaction-commit tag will commit a transaction if a transaction was begun in the current demarcation 
+context as represented by the environment field named as the began-transaction-name. If the Boolean in that 
+field is false no commit will be done.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>began-transaction-name</td><td>N</td>
+    <td>The name of the method environment field that contains a Boolean specifying whether or not a transaction was begun in the current transaction demarcation. Defaults to "beganTransaction".</td>
+</tr>
+</table>
+
+<p><b><u>transaction-rollback</u></b></p>
+
+<p>The transaction-rollback tag will rollback a transaction if a transaction was begun in the current demarcation 
+context as represented by the environment field named as the began-transaction-name. If the Boolean in that field 
+is false a set rollback only will operation will be done instead of rollback which will force the transaction to 
+rollback regardless of which method or object is responsible for beginning and ending the transaction.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>began-transaction-name</td><td>N</td>
+    <td>The name of the method environment field that contains a Boolean specifying whether or not a transaction was begun in the current transaction demarcation. Defaults to "beganTransaction".</td>
+</tr>
+</table>
+
+
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='Conditional'>Conditional (If) Operations</a></h4>
+<h3><a name='Conditional'>Conditional (If) Operations</a></h3>
 
 <p><b><u>if-validate-method</u></b></p>
 
@@ -2225,11 +2288,54 @@ file-property will be added to the specified error list.</p>
 </tr>
 </table>
 
+<p><b><u>check-id</u></b></p>
+
+<p>The check-id tag checks to see if the ID value in the given field is a valid ID string. 
+Valid IDs can be any sequence of characters or digits but must not containt the following characters: 
+space [ ], doublequote ["], single quote ['], ampersand [&amp;], question mark [?], less-than sign [&lt;], greater-than sign [&gt;].</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>field-name</td><td>Y</td>
+    <td>The name of the field that contains the ID value to check.</td>
+</tr>
+<tr>
+    <td>map-name</td><td>N</td>
+    <td>The name of the Map that contains the field. If not specified the environment will be used to find the field.</td>
+</tr>
+<tr>
+    <td>error-list-name</td><td>N</td>
+    <td>The name of a list in the method environment that the error messages will
+    be added to. Will be created if does not exist. Defaults to "error_list".</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>fail-message</td><td>one</td>
+    <td>An inline failure message.</td>
+</tr>
+<tr>
+    <td>fail-property</td><td>one</td>
+    <td>A failure message from a properties file.</td>
+</tr>
+</table>
+
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='Other'>Other Operations</a></h4>
+<h3><a name='Other'>Other Operations</a></h3>
 
 <p><b><u>property-to-field</u></b></p>
 
@@ -2261,6 +2367,49 @@ file-property will be added to the specified error list.</p>
 <tr>
     <td>field-name</td><td>Y</td>
     <td>The name (key) of the map field to use.</td>
+</tr>
+</table>
+
+<!ELEMENT log ( ( field | string )* )>
+<!ATTLIST log
+    level ( verbose | timing | info | important | warning | error | fatal | always ) #REQUIRED
+    message CDATA #IMPLIED
+>
+
+<p><b><u>log</u></b></p>
+
+<p>The log tag logs a message used the OFBiz Debug class, which uses Log4J to log to the console, a file, or some other location.
+The message is a concatenation of the message attribute and then all of the field and string sub-element values in the order they are specified.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>level</td><td>Y</td>
+    <td>The logging/debug level to use. Must be one of the following: verbose | timing | info | important | warning | error | fatal | always. These are the standard OFBiz logging levels.</td>
+</tr>
+<tr>
+    <td>message</td><td>N</td>
+    <td>A shortcut for simple messages. If used along with field and/or string sub-elements the inline string in the message will come first.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>field</td><td>0 to many</td>
+    <td>Inserts the value of the field into the message where specified.</td>
+</tr>
+<tr>
+    <td>string</td><td>0 to many</td>
+    <td>Inserts the value of the inline string into the message where specified.</td>
 </tr>
 </table>
 
@@ -2361,7 +2510,7 @@ bit closer to the resulting XML, and the notation used in the Rule Engine)
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='MethodExample'>Simple Methods Example</a></h4>
+<h3><a name='MethodExample'>Simple Methods Example</a></h3>
 <pre>
 &lt;!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd"&gt;
 
