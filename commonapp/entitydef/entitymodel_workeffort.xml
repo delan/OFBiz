@@ -453,6 +453,7 @@
             title="Job Scheduler Sandbox Entity">
       <field name="jobName" type="name"></field>
       <field name="serviceName" type="name"></field>
+	  <field name="loaderName" type="name"></field>
       <field name="recurrenceInfoId" type="id"></field>
       <field name="runtimeDataId" type="id"></field>
       <field name="lastRuntime" type="date-time"></field>
