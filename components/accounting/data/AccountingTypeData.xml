@@ -96,11 +96,16 @@
   <InvoiceItemType description="Invoice Item Additional Feature" hasTable="N" invoiceItemTypeId="ITM_ADD_FEATURE" parentTypeId="INVOICE_ITM_ADJ"/>
   <InvoiceItemType description="Invoice Item Warranty" hasTable="N" invoiceItemTypeId="ITM_WARRANTY_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
 
-  <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="INV_PROD_ITEM" parentTypeId=""/>
+  <InvoiceItemType description="Invoice Finished Product Item" hasTable="N" invoiceItemTypeId="INV_FPROD_ITEM" parentTypeId=""/>
+  <InvoiceItemType description="Invoice Digital Product Item" hasTable="N" invoiceItemTypeId="INV_DPROD_ITEM" parentTypeId=""/>
+  <InvoiceItemType description="Invoice Finished/Digital Product Item" hasTable="N" invoiceItemTypeId="INV_FDPROD_ITEM" parentTypeId=""/>
   <InvoiceItemType description="Invoice Product-Feature Item" hasTable="N" invoiceItemTypeId="INV_PROD_FEATR_ITEM" parentTypeId=""/>
   <InvoiceItemType description="Invoice Work-Effort Item" hasTable="N" invoiceItemTypeId="INV_WE_ITEM" parentTypeId=""/>
   <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="INV_TE_ITEM" parentTypeId=""/>
 
+  <InvoiceItemTypeMap invoiceItemMapKey="FINISHED_GOOD" invoiceItemTypeId="INV_FPROD_ITEM"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="DIGITAL_GOOD" invoiceItemTypeId="INV_DPROD_ITEM"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="FINDIG_GOOD" invoiceItemTypeId="INV_FDPROD_ITEM"/>
   <InvoiceItemTypeMap invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="ITM_PROMOTION_ADJ"/>
   <InvoiceItemTypeMap invoiceItemMapKey="REPLACE_ADJUSTMENT" invoiceItemTypeId="ITM_REPLACE_ADJ"/>
   <InvoiceItemTypeMap invoiceItemMapKey="DISCOUNT_ADJUSTMENT" invoiceItemTypeId="ITM_DISCOUNT_ADJ"/>

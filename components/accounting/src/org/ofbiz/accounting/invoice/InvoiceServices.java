@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.5 2003/10/26 05:44:02 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.6 2003/10/26 18:20:58 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,12 +43,13 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.product.product.ProductWorker;
 
 /**
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -91,7 +92,29 @@ public class InvoiceServices {
             return ServiceUtil.returnError("Unable to looked previous billed items");
         }
         if (billedItems != null && billedItems.size() > 0) {
-            previousInvoiceFound = true;   
+            boolean nonDigitalInvoice = false;
+            Iterator bii = billedItems.iterator();
+            while (bii.hasNext() && !nonDigitalInvoice) {
+                GenericValue orderItemBilling = (GenericValue) bii.next();
+                GenericValue invoiceItem = null;
+                try {
+                    invoiceItem = orderItemBilling.getRelatedOne("InvoiceItem");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot get InvoiceItem from billing record; assuming non-digital.", module);
+                    nonDigitalInvoice = true;
+                }
+                if (invoiceItem != null) {
+                    String invoiceItemType = invoiceItem.getString("invoiceItemTypeId");
+                    if (invoiceItemType != null) {
+                        if ("INV_FPROD_ITEM".equals(invoiceItemType) || "INV_PROD_FEATR_ITEM".equals(invoiceItemType)) {
+                            nonDigitalInvoice = true;
+                        }
+                    }
+                }
+            }
+            if (nonDigitalInvoice) {
+                previousInvoiceFound = true;
+            }
         }
 
         // figure out the invoice type   
@@ -122,12 +145,10 @@ public class InvoiceServices {
         }
         
         // get some quantity totals
-        double totalItemsInOrder = orh.getTotalOrderItemsQuantity();        
-        double totalItemsToBill = 0.00;
+        double totalItemsInOrder = orh.getTotalOrderItemsQuantity();
         
         // get some price totals
-        double totalOrderAmt = orh.getOrderItemsTotal();
-        double totalInvoiceAmt = 0.00;
+        double shippableAmount = orh.getShippableTotal();
         double invoiceShipProRateAmount = 0.00;
 
         // create the invoice record
@@ -291,10 +312,23 @@ public class InvoiceServices {
                     billingQuantity = orderedQuantity;
                 }
                 if (orderedQuantity == null) orderedQuantity = new Double(0.00);
-                if (billingQuantity == null) billingQuantity = new Double(0.00);                
-                                
-                GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));                
-                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, orderItem.getString("orderItemTypeId"), "INV_PROD_ITEM"));
+                if (billingQuantity == null) billingQuantity = new Double(0.00);
+
+                String lookupType = "FINISHED_GOOD"; // the default product type
+                if (product != null) {
+                    lookupType = product.getString("productTypeId");
+                } else if (orderItem != null) {
+                    lookupType = orderItem.getString("orderItemTypeId");
+                }
+
+                // check if shipping applies to this item
+                boolean shippingApplies = false;
+                if (product != null && ProductWorker.shippingApplies(product)) {
+                    shippingApplies = true;
+                }
+
+                GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
+                invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, lookupType, "INV_FPROD_ITEM"));
                 invoiceItem.set("description", orderItem.get("itemDescription"));
                 invoiceItem.set("quantity", billingQuantity);
                 invoiceItem.set("amount", orderItem.get("unitPrice"));
@@ -311,14 +345,12 @@ public class InvoiceServices {
                     invoiceItem.set("taxableFlag", product.get("taxable"));
                 }                                
                 toStore.add(invoiceItem);
-                
-                // add to the total invoice amount
-                double thisAmount = invoiceItem.getDouble("amount").doubleValue() * invoiceItem.getDouble("quantity").doubleValue();
-                totalInvoiceAmt += thisAmount;
-                totalItemsToBill += billingQuantity.doubleValue();
 
-                String productType = product.getString("productTypeId");
-                if (!"SERVICE".equals(productType) && !"DIGITAL_GOOD".equals(productType)) {
+                // this item total
+                double thisAmount = invoiceItem.getDouble("amount").doubleValue() * invoiceItem.getDouble("quantity").doubleValue();
+
+                // add to the ship amount only if it applies to this item
+                if (shippingApplies) {
                     invoiceShipProRateAmount += thisAmount;
                 }
 
@@ -353,12 +385,11 @@ public class InvoiceServices {
                         adjInvItem.set("description", adj.get("description"));
                         toStore.add(adjInvItem);
                         
-                        // add to the total invoice amount
+                        // this adjustment amount
                         double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
-                        totalInvoiceAmt += thisAdjAmount;
 
-                        // add to the ship amount if we are not SERVICE or DIGITAL_GOOD
-                        if (!"SERVICE".equals(productType) && !"DIGITAL_GOOD".equals(productType)) {
+                        // add to the ship amount only if it applies to this item
+                        if (shippingApplies) {
                             invoiceShipProRateAmount += thisAdjAmount;
                         }
 
@@ -385,12 +416,11 @@ public class InvoiceServices {
                         adjInvItem.set("description", adj.get("description"));
                         toStore.add(adjInvItem);
                         
-                        // add to the total invoice amount
+                        // this adjustment amount
                         double thisAdjAmount = adjInvItem.getDouble("amount").doubleValue() * adjInvItem.getDouble("quantity").doubleValue();
-                        totalInvoiceAmt += thisAdjAmount;
 
-                        // add to the ship amount if we are not SERVICE or DIGITAL_GOOD
-                        if (!"SERVICE".equals(productType) && !"DIGITAL_GOOD".equals(productType)) {
+                        // add to the ship amount only if it applies to this item
+                        if (shippingApplies) {
                             invoiceShipProRateAmount += thisAdjAmount;
                         }
 
@@ -436,7 +466,7 @@ public class InvoiceServices {
             }
             if (adj.get("amount") != null) {
                 // pro-rate the amount
-                double amount = ((adj.getDouble("amount").doubleValue() / totalOrderAmt) * invoiceShipProRateAmount);
+                double amount = ((adj.getDouble("amount").doubleValue() / shippableAmount) * invoiceShipProRateAmount);
                 if (amount > 0) {
                     GenericValue invoiceItem = delegator.makeValue("InvoiceItem", UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", new Integer(itemSeqId).toString()));
                     invoiceItem.set("invoiceItemTypeId", getInvoiceItemType(delegator, adj.getString("orderAdjustmentTypeId"), "INVOICE_ADJ"));
