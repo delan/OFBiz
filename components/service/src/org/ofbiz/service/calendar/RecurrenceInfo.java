@@ -1,5 +1,5 @@
 /*
- * $Id: RecurrenceInfo.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: RecurrenceInfo.java,v 1.2 2003/12/14 02:16:47 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.GenericValue;
  * Recurrence Info Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class RecurrenceInfo {
@@ -161,12 +161,19 @@ public class RecurrenceInfo {
         return 0;
     }
 
-    /** Increments the current count of this recurrence. */
+    /** Increments the current count of this recurrence and updates the record. */
     public void incrementCurrentCount() throws GenericEntityException {
+        incrementCurrentCount(true);
+    }
+
+    /** Increments the current count of this recurrence. */
+    public void incrementCurrentCount(boolean store) throws GenericEntityException {
         Long count = new Long(getCurrentCount() + 1);
 
-        info.set("recurrenceCount", count);
-        info.store();
+        if (store) {
+            info.set("recurrenceCount", count);
+            info.store();
+        }
     }
 
     /** Removes the recurrence from persistant store. */

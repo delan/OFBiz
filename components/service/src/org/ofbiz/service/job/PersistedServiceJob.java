@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedServiceJob.java,v 1.6 2003/12/13 23:50:35 ajzeneski Exp $
+ * $Id: PersistedServiceJob.java,v 1.7 2003/12/14 02:16:47 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,29 +46,28 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.calendar.RecurrenceInfo;
-import org.ofbiz.service.calendar.RecurrenceInfoException;
 import org.xml.sax.SAXException;
 
 /**
  * Entity Service Job - Store => Schedule => Run
  *
- * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.6 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
 
     public static final String module = PersistedServiceJob.class.getName();
-        
+
     private transient GenericDelegator delegator = null;
     private Timestamp storedDate = null;
     private long nextRecurrence = -1;
 
     /**
      * Creates a new PersistedServiceJob
-     * @param dctx 
+     * @param dctx
      * @param jobValue
-     * @param req 
+     * @param req
      */
     public PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req) {
         super(jobValue.getString("jobName"));
@@ -77,16 +76,17 @@ public class PersistedServiceJob extends GenericServiceJob {
         this.dctx = dctx;
         this.storedDate = jobValue.getTimestamp("runTime");
         this.runtime = storedDate.getTime();
-        
+
         // set the start time to now
-        jobValue.set("runByInstanceId", UtilProperties.getPropertyValue("general.properties", "unique.instanceId"));
+        String instanceId = UtilProperties.getPropertyValue("general.properties", "unique.instanceId", "ofbiz0");
         jobValue.set("startDateTime", UtilDateTime.nowTimestamp());
+        jobValue.set("runByInstanceId", instanceId);
         try {
             jobValue.store();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Unable to set the startDateTime on the current job; not running!");
-            runtime = -1;            
-        }        
+            runtime = -1;
+        }
     }
 
     /**
@@ -96,8 +96,8 @@ public class PersistedServiceJob extends GenericServiceJob {
         super.init();
 
         // configure any addition recurrences
-        GenericValue job = getJob();
-        RecurrenceInfo recurrence = getRecurrence();
+        GenericValue job = this.getJob();
+        RecurrenceInfo recurrence = JobManager.getRecurrenceInfo(job);
 
         try {
             if (recurrence != null) {
@@ -184,11 +184,11 @@ public class PersistedServiceJob extends GenericServiceJob {
             if (contextObj != null) {
                 context = (Map) XmlSerializer.deserialize(contextObj.getString("runtimeInfo"), delegator);
             }
-            
+
             if (context == null) {
                 context = new HashMap();
             }
-            
+
             // check the runAsUser
             GenericValue runAsUser = jobObj.getRelatedOne("RunAsUserLogin");
             if (runAsUser != null) {
@@ -222,31 +222,6 @@ public class PersistedServiceJob extends GenericServiceJob {
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get job definition from entity", module);
             e.printStackTrace();
-        }
-        return null;
-    }
-
-    // gets the recurrence info value object
-    private RecurrenceInfo getRecurrence() {
-        try {
-            GenericValue job = getJob();
-
-            if (job != null) {
-                GenericValue ri = job.getRelatedOne("RecurrenceInfo");
-
-                if (ri != null)
-                    return new RecurrenceInfo(ri);
-                else
-                    return null;
-            } else {
-                return null;
-            }
-        } catch (GenericEntityException e) {
-            e.printStackTrace();
-            Debug.logError(e, "Problem getting RecurrenceInfo entity from JobSandbox", module);
-        } catch (RecurrenceInfoException re) {
-            re.printStackTrace();
-            Debug.logError(re, "Problem creating RecurrenceInfo instance: " + re.getMessage(), module);
         }
         return null;
     }

@@ -1,5 +1,5 @@
 /*
- * $Id: RecurrenceRule.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: RecurrenceRule.java,v 1.2 2003/12/14 02:16:47 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Recurrence Rule Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class RecurrenceRule {
@@ -304,7 +304,7 @@ public class RecurrenceRule {
 
     /** 
      * Tests the date to see if it falls within the rules
-     *@param The date object to test
+     *@param startDate date object to test
      *@return True if the date is within the rules
      */
     public boolean isValid(Date startDate, Date date) {
@@ -313,7 +313,7 @@ public class RecurrenceRule {
 
     /** 
      * Tests the date to see if it falls within the rules
-     *@param The date object to test
+     *@param startTime date object to test
      *@return True if the date is within the rules
      */
     public boolean isValid(long startTime, long dateTime) {

@@ -1,5 +1,5 @@
 /*
- * $Id: JobPoller.java,v 1.1 2003/08/17 05:12:38 ajzeneski Exp $
+ * $Id: JobPoller.java,v 1.2 2003/12/14 02:16:47 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.Debug;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:">Magnus Rosenquist</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class JobPoller implements Runnable {
@@ -65,7 +65,10 @@ public class JobPoller implements Runnable {
         
         // create the thread pool
         this.pool = createThreadPool();
-               
+
+        // re-load crashed jobs
+        this.jm.reloadCrashedJobs();
+
         // start the thread only if polling is enabled
         if (pollEnabled()) {
                         
@@ -160,7 +163,7 @@ public class JobPoller implements Runnable {
 
     /**
      * Removes a thread from the pool.
-     * @param JobInvoker The invoker to remove.
+     * @param invoker The invoker to remove.
      */
     public synchronized void removeThread(JobInvoker invoker) {
         pool.remove(invoker);
