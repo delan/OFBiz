@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.11 2004/06/16 11:57:00 jonesde Exp $
+ * $Id: EntitySaxReader.java,v 1.12 2004/06/17 00:10:50 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,6 +45,7 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
 import org.w3c.dom.Document;
@@ -66,7 +67,7 @@ import freemarker.template.TemplateHashModel;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -299,6 +300,20 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 }
                 currentFieldName = null;
             } else {
+                // before we write currentValue check to see if PK is there, if not and it is one field, generate it from a sequence using the entity name
+                if (!currentValue.containsPrimaryKey()) {
+                    if (currentValue.getModelEntity().getPksSize() == 1) {
+                        ModelField modelField = currentValue.getModelEntity().getPk(0);
+                        Long newSeqLong = delegator.getNextSeqId(currentValue.getEntityName());
+                        if (newSeqLong == null) {
+                            throw new SAXException("Could not get next sequenced primary key for value with 1 primary key field: " + currentValue);
+                        }
+                        currentValue.setString(modelField.getName(), newSeqLong.toString());
+                    } else {
+                        throw new SAXException("Cannot store value with incomplete primary key with more than 1 primary key field: " + currentValue);
+                    }
+                }
+                
                 try {
                     if (useTryInsertMethod) {
                         // this technique is faster for data sets where most, if not all, values do not already exist in the database
