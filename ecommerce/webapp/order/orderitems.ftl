@@ -48,16 +48,22 @@
           <td>
             <table width="100%" border="0" cellpadding="0">
               <tr align='left' valign='bottom'>
-                <td width="35%" align="left"><span class="tableheadtext"><b>Product</b></span></td>
-                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Ordered</b></span></td>
+                <td width="35%" align="left"><span class="tableheadtext"><b>Product</b></span></td>               
                 <#if maySelectItems?default(false)>
+                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Ordered</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Qty Shipped</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Qty Canceled</b></span></td>
+                <#else>
+                <td width="10%" align="right">&nbsp;</td>
+                <td width="10%" align="right">&nbsp;</td>
+                <td width="10%" align="right"><span class="tableheadtext"><b>Qty Ordered</b></span></td>
                 </#if>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Unit Price</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Adjustments</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Subtotal</b></span></td>
+                <#if maySelectItems?default(false)>
                 <td width="5%" align="right">&nbsp;</td>
+                </#if>
               </tr>
               <#list orderItems as orderItem>
                 <tr><td colspan="9"><hr class='sepbar'></td></tr>
@@ -72,6 +78,10 @@
                         <a href="<@ofbizUrl>/product?product_id=${orderItem.productId}</@ofbizUrl>" class="buttontext">${orderItem.productId} - ${orderItem.itemDescription}</a>
                       </div>
                     </td>
+                    <#if !maySelectItems?default(false)>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    </#if>
                     <td align="right" valign="top">
                       <div class="tabletext" nowrap>${orderItem.quantity?string.number}</div>
                     </td>
@@ -93,9 +103,9 @@
                     </td>
                     <td align="right" valign="top" nowrap>
                       <div class="tabletext">${localOrderReadHelper.getOrderItemTotal(orderItem)?string.currency}</div>
-                    </td>
-                    <td>&nbsp;</td>
+                    </td>                    
                     <#if maySelectItems?default(false)>
+                      <td>&nbsp;</td>
                       <td>
                         <input name="item_id" value="${orderItem.orderItemSeqId}" type="checkbox">
                       </td>
@@ -107,14 +117,12 @@
                 <#assign itemAdjustments = localOrderReadHelper.getOrderItemAdjustments(orderItem)>
                 <#list itemAdjustments as orderItemAdjustment>
                   <tr>
-                    <td align="right">
+                    <td align="right" colspan="4">
                       <div class="tabletext" style='font-size: xx-small;'>
                         <b><i>Adjustment</i>:</b> <b>${localOrderReadHelper.getAdjustmentType(orderItemAdjustment)}</b>&nbsp;
                         <#if orderItemAdjustment.description?has_content>: ${orderItemAdjustment.description}</#if>
                       </div>
-                    </td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
+                    </td>                    
                     <td align="right">
                       <div class="tabletext" style='font-size: xx-small;'>${localOrderReadHelper.getOrderItemAdjustmentTotal(orderItem, orderItemAdjustment)?string.currency}</div>
                     </td>
