@@ -56,15 +56,17 @@
   <StatusType description="Order" hasTable="N" parentTypeId="" statusTypeId="ORDER_STATUS"/>
   <StatusType description="Order Item" hasTable="N" parentTypeId="ORDER_STATUS" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDER_ORDERED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ORDER_APPROVED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ORDER_COMPLETED" statusTypeId="ORDER_STATUS"/>
-  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ORDER_BACKORDERED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Processing" sequenceId="02" statusCode="PROCESSING" statusId="ORDER_PROCESSING" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Approved" sequenceId="05" statusCode="APPROVED" statusId="ORDER_APPROVED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Completed" sequenceId="10" statusCode="COMPLETED" statusId="ORDER_COMPLETED" statusTypeId="ORDER_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="15" statusCode="BACKORDERED" statusId="ORDER_BACKORDERED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ORDER_REJECTED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ORDER_CANCELLED" statusTypeId="ORDER_STATUS"/>
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ITEM_ORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Approved" sequenceId="03" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Completed" sequenceId="05" statusCode="COMPLETED" statusId="ITEM_COMPLETED" statusTypeId="ORDER_ITEM_STATUS"/>
-  <StatusItem description="Back-Ordered" sequenceId="10" statusCode="BACKORDERED" statusId="ITEM_BACKORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Processing" sequenceId="02" statusCode="PROCESSING" statusId="ITEM_PROCESSING" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Approved" sequenceId="05" statusCode="APPROVED" statusId="ITEM_APPROVED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Completed" sequenceId="10" statusCode="COMPLETED" statusId="ITEM_COMPLETED" statusTypeId="ORDER_ITEM_STATUS"/>
+  <StatusItem description="Back-Ordered" sequenceId="15" statusCode="BACKORDERED" statusId="ITEM_BACKORDERED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="ITEM_REJECTED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="ITEM_CANCELLED" statusTypeId="ORDER_ITEM_STATUS"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_APPROVED" transitionName="Approve Order"/>
@@ -74,6 +76,8 @@
   <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_BACKORDERED" transitionName="Back Order"/>
   <StatusValidChange condition="" statusId="ORDER_ORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
   <StatusValidChange condition="" statusId="ORDER_APPROVED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Order"/>
+  <StatusValidChange condition="" statusId="ORDER_BACKORDERED" statusIdTo="ORDER_PROCESSING" transitionName="Process Back Order"/>
+  <StatusValidChange condition="" statusId="ORDER_BACKORDERED" statusIdTo="ORDER_APPROVED" transitionName="Approve Back Order"/>
   <StatusValidChange condition="" statusId="ORDER_BACKORDERED" statusIdTo="ORDER_CANCELLED" transitionName="Cancel Back Order"/>
   <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item"/>
   <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_REJECTED" transitionName="Reject Item"/>
@@ -82,6 +86,8 @@
   <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_BACKORDERED" transitionName="Back Order Item"/>
   <StatusValidChange condition="" statusId="ITEM_ORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
   <StatusValidChange condition="" statusId="ITEM_APPROVED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item"/>
+  <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_PROCESSING" transitionName="Process Item Back Order"/>
+  <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item Back Order"/>
   <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item Back Order"/>
 
   <WorkReqFulfType description="Implements" workReqFulfTypeId="WRF_IMPLEMENTS"/>
