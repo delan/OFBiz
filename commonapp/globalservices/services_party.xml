@@ -163,6 +163,17 @@
         <attribute name="roleTypeIdTo" type="String" mode="IN" optional="true"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
+    <service name="createPartyRelationshipType" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyRelationshipServices" invoke="createPartyRelationshipType" auth="true">
+        <description>Create a new Party Relationship type</description>
+        <attribute name="partyRelationshipTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentTypeId" type="String" mode="IN" optional="true"/>
+        <attribute name="hasTable" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdValidFrom" type="String" mode="IN" optional="true"/>
+        <attribute name="roleTypeIdValidTo" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="partyRelationshipName" type="String" mode="IN" optional="true"/>
+    </service>
 
     <!-- ContactMech services -->
     <service name="createContactMech" engine="java"
