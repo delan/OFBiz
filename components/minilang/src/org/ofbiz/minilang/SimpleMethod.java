@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleMethod.java,v 1.9 2004/07/08 09:27:36 jonesde Exp $
+ * $Id: SimpleMethod.java,v 1.10 2004/07/09 17:23:33 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +38,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.transaction.GenericTransactionException;
@@ -53,12 +56,17 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class SimpleMethod {
     
     public static final String module = SimpleMethod.class.getName();
+    /**
+     * Contains the property file name for translation of error
+     * messages.
+     */
+    public static final String RESOURCE = "MiniLangErrorUiLabels";
 
     protected static UtilCache simpleMethodsDirectCache = new UtilCache("minilang.SimpleMethodsDirect", 0, 0);
     protected static UtilCache simpleMethodsResourceCache = new UtilCache("minilang.SimpleMethodsResource", 0, 0);
@@ -496,16 +504,22 @@ public class SimpleMethod {
         }
 
         GenericValue userLogin = methodContext.getUserLogin();
-
+        Locale locale = methodContext.getLocale();
+                
         if (userLogin != null) {
             methodContext.putEnv(userLoginName, userLogin);
         }
         if (loginRequired) {
             if (userLogin == null) {
-                String errMsg = "You must be logged in to complete the " + shortDescription + " process.";
+                Map messageMap = UtilMisc.toMap("shortDescription", shortDescription);
+                String errMsg = UtilProperties.getMessage(
+                SimpleMethod.RESOURCE,
+                        "simpleMethod.must_logged_process", messageMap, (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ".";
 
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
-                    methodContext.getRequest().setAttribute("_ERROR_MESSAGE_", errMsg);
+                     methodContext.getRequest().setAttribute("_ERROR_MESSAGE_", errMsg);
                     return defaultErrorCode;
                 } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
                     methodContext.putResult(ModelService.ERROR_MESSAGE, errMsg);
@@ -522,7 +536,11 @@ public class SimpleMethod {
             try {
                 beganTransaction = TransactionUtil.begin();
             } catch (GenericTransactionException e) {
-                String errMsg = "Error trying to begin transaction, could not process method: " + e.getMessage();
+                String errMsg = UtilProperties.getMessage(
+                SimpleMethod.RESOURCE,
+                        "simpleMethod.error_begin_transaction", (locale != null
+                                ? locale
+                                    : Locale.getDefault())) + ": " + e.getMessage();
 
                 Debug.logWarning(errMsg, module);
                 Debug.logWarning(e, module);
@@ -545,7 +563,11 @@ public class SimpleMethod {
             finished = runSubOps(methodOperations, methodContext);
         } catch (Throwable t) {
             // make SURE nothing gets thrown through
-            String errMsg = "Error running the simple-method: " + t.toString();
+            String errMsg = UtilProperties.getMessage(
+            SimpleMethod.RESOURCE,
+                    "simpleMethod.error_running", (locale != null
+                            ? locale
+                                : Locale.getDefault())) + ": " + t.getMessage();
             Debug.log(t, errMsg, module);
             finished = false;
             errorMsg += errMsg + "<br>";

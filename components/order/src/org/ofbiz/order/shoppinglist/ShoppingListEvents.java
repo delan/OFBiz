@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingListEvents.java,v 1.3 2004/06/29 19:03:47 ajzeneski Exp $
+ * $Id: ShoppingListEvents.java,v 1.4 2004/07/09 17:19:11 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -23,22 +23,23 @@
  */
 package org.ofbiz.order.shoppinglist;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -58,7 +59,7 @@ import org.ofbiz.service.ServiceUtil;
  * Shopping cart events.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  */
 public class ShoppingListEvents {
@@ -66,6 +67,8 @@ public class ShoppingListEvents {
     public static final String module = ShoppingListEvents.class.getName();
     public static final String resource = "OrderUiLabels";
     public static final String PERSISTANT_LIST_NAME = "auto-save";
+    /** Contains the property file name for translation of error messages. */
+    public static final String ERR_RESOURCE = "OrderErrorUiLabel";
 
     public static String addBulkFromCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -292,7 +295,8 @@ public class ShoppingListEvents {
         // just call the updateShoppingListItem service
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
-        
+        Locale locale = UtilHttp.getLocale(request);
+                
         Double quantity = null;
         try {
             quantity = Double.valueOf(quantityStr);
@@ -310,9 +314,11 @@ public class ShoppingListEvents {
         try {
             result = dispatcher.runSync("updateShoppingListItem", serviceInMap);
         } catch (GenericServiceException e) {
-            String errMsg = "Error calling the updateShoppingListItem in handleShoppingListItemVariant: " + e.toString();
-            Debug.logError(e, errMsg, module);
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
+            String errMsg = UtilProperties.getMessage(ShoppingListEvents.ERR_RESOURCE,
+                    "shoppingListEvents.error_calling_update", (locale != null ? locale : Locale.getDefault())) + ": "  + e.toString();            
+            request.setAttribute("_ERROR_MESSAGE_", errMsg);            
+            String errorMsg = "Error calling the updateShoppingListItem in handleShoppingListItemVariant: " + e.toString();
+            Debug.logError(e, errorMsg, module);
             return "error";
         }
         
@@ -329,8 +335,6 @@ public class ShoppingListEvents {
      */
     public static String getAutoSaveListId(GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException, GenericServiceException {
         String autoSaveListId = null;
-
-
         List persistantLists = delegator.findByAnd("ShoppingList", UtilMisc.toMap("partyId", userLogin.get("partyId"),
                 "shoppingListTypeId", "SLT_SPEC_PURP", "listName", PERSISTANT_LIST_NAME));
 
