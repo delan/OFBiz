@@ -17,4 +17,7 @@
     <attribute name="orderId" type="String" mode="IN"/>
     <attribute name="orderStatusId" type="String" mode="OUT"/>
   </service>
+  
+  <service name="storeOrder" engine="staticJava" location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder" validate="false"/>
+  
 </services>

@@ -42,7 +42,16 @@ public class OrderServices {
     
     /** Service for creating a new order */
     public static Map createOrder(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
+        
+        // check to make sure we have something to order
+        List orderItems = (List) context.get("orderItems");
+        if ( orderItems.size() < 1 ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"ERROR: There are no items to order");
+            return result;
+        }
         
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
@@ -95,9 +104,26 @@ public class OrderServices {
         order.preStoreOther(orderShipmentPreference);
         
         // set the order items
-        Collection orderItems = (Collection) context.get("orderItems");
-        order.preStoreOthers(orderItems);
-        
+        // productId|productName|price|quantity|comment|poNumber        
+        Iterator oi = orderItems.iterator();
+        int seqId = 1;
+        while ( oi.hasNext() ) {
+            List element = StringUtil.split((String)oi.next(),"|");
+            String orderItemSeqId = String.valueOf(seqId++);            
+            GenericValue orderItem = delegator.makeValue("OrderItem",
+            UtilMisc.toMap("orderId", orderId,
+            "orderItemSeqId", orderItemSeqId,
+            "orderItemTypeId", "SALES_ORDER_ITEM",            
+            "productId", element.get(0),
+            "quantity", new Double((String)element.get(3)),
+            "unitPrice", new Double((String)element.get(2))));
+            orderItem.set("itemDescription", element.get(1));
+            orderItem.set("comments", element.get(4));
+            orderItem.set("correspondingPoId", element.get(5));
+            orderItem.set("statusId", "Ordered");
+            order.preStoreOther(orderItem);
+        }
+                        
         // set the roles
         String partyId = (String) context.get("partyId");
         final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER",
@@ -119,6 +145,7 @@ public class OrderServices {
             "roleTypeId", "DISTRIBUTOR")));
         }
         
+        // ------- TODO Make this so if we pass credit card info a new ID is created -------
         // set the order status
         order.preStoreOther(delegator.makeValue("OrderStatus",
         UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
@@ -139,14 +166,14 @@ public class OrderServices {
         
         try {
             delegator.create(order);
-            context.put("orderId",orderId);
-            context.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put("orderId",orderId);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         }
         catch(GenericEntityException e) {
-            context.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            context.put(ModelService.ERROR_MESSAGE,"ERROR: Could not create order (write error: " + e.getMessage() + ").");
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not create order (write error: " + e.getMessage() + ").");
         }
-        return context;
+        return result;
     }
     
 }
