@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -441,10 +441,11 @@ public class ObjectType {
      * @param type Name of type to convert to
      * @param format Optional (can be null) format string for Date, Time, Timestamp
      * @param locale Optional (can be null) Locale for formatting and parsing Double, Float, Long, Integer
+     * @param noTypeFail Fail (Exception) when no type conversion is available, false will return the primary object
      * @return
      * @throws GeneralException
      */
-    public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
+    public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale, boolean noTypeFail) throws GeneralException {
         if (obj == null)
             return null;
 
@@ -843,8 +844,17 @@ public class ObjectType {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");            
             }
         } else {
-            throw new GeneralException("Conversion from " + obj.getClass().getName() + " to " + type + " not currently supported");
+            if (noTypeFail) {
+                throw new GeneralException("Conversion from " + obj.getClass().getName() + " to " + type + " not currently supported");
+            } else {
+                Debug.logWarning("No type conversion available for " + obj.getClass().getName() + " to " + type, module);
+                return obj;
+            }
         }
+    }
+
+    public static Object simpleTypeConvert(Object obj, String type, String format, Locale locale) throws GeneralException {
+        return simpleTypeConvert(obj, type, format, locale, true);
     }
 
     public static Boolean doRealCompare(Object value1, Object value2, String operator, String type, String format,
@@ -854,13 +864,15 @@ public class ObjectType {
         if (verboseOn) Debug.logVerbose("Comparing value1: \"" + value1 + "\" " + operator + " value2:\"" + value2 + "\"", module);
 
         try {
-            Class clz = ObjectType.loadClass(type, loader);
-            type = clz.getName();
+            if (!"PlainString".equals(type)) {
+                Class clz = ObjectType.loadClass(type, loader);
+                type = clz.getName();
+            }
         } catch (ClassNotFoundException e) {
-            messages.add("Could not convert type(" + type + ") for comparison: " + e.getMessage());
-            return null;
+            Debug.logWarning("The specified type [" + type + "] is not a valid class or a known special type, may see more errors later because of this: " + e.getMessage(), module);
         }
 
+        // some default behavior for null values, results in a bit cleaner operation
         if ("is-null".equals(operator) && value1 == null) {
             return Boolean.TRUE;
         } else if ("is-not-null".equals(operator) && value1 == null) {
@@ -869,18 +881,11 @@ public class ObjectType {
             return Boolean.TRUE;
         } else if ("is-not-empty".equals(operator) && value1 == null) {
             return Boolean.FALSE;
+        } else if ("contains".equals(operator) && value1 == null) {
+            return Boolean.FALSE;
         }
-
+        
         int result = 0;
-
-        Object convertedValue1 = null;
-        try {
-            convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
-        } catch (GeneralException e) {
-            Debug.logError(e, module);
-            messages.add("Could not convert value1 for comparison: " + e.getMessage());
-            return null;
-        }
 
         Object convertedValue2 = null;
         if (value2 != null) {
@@ -891,6 +896,25 @@ public class ObjectType {
                 messages.add("Could not convert value2 for comparison: " + e.getMessage());
                 return null;
             }
+        }
+
+        // have converted value 2, now before converting value 1 see if it is a Collection and we are doing a contains comparison
+        if ("contains".equals(operator) && value1 instanceof Collection) {
+            Collection col1 = (Collection) value1;
+            if (col1.contains(convertedValue2)) {
+                return Boolean.TRUE;
+            } else {
+                return Boolean.FALSE;
+            }
+        }
+
+        Object convertedValue1 = null;
+        try {
+            convertedValue1 = ObjectType.simpleTypeConvert(value1, type, format, locale);
+        } catch (GeneralException e) {
+            Debug.logError(e, module);
+            messages.add("Could not convert value1 for comparison: " + e.getMessage());
+            return null;
         }
 
         // handle null values...
@@ -922,18 +946,18 @@ public class ObjectType {
         }
 
         if ("contains".equals(operator)) {
-            if (!"String".equals(type) && !"PlainString".equals(type)) {
-                messages.add("Error in XML file: cannot do a contains compare with a non-String type");
-                return null;
-            }
+            if ("java.lang.String".equals(type) || "PlainString".equals(type)) {
+                String str1 = (String) convertedValue1;
+                String str2 = (String) convertedValue2;
 
-            String str1 = (String) convertedValue1;
-            String str2 = (String) convertedValue2;
-
-            if (str1.indexOf(str2) < 0) {
-                return Boolean.FALSE;
+                if (str1.indexOf(str2) < 0) {
+                    return Boolean.FALSE;
+                } else {
+                    return Boolean.TRUE;
+                }
             } else {
-                return Boolean.TRUE;
+                messages.add("Error in XML file: cannot do a contains compare between a String and a non-String type");
+                return null;
             }
         } else if ("is-empty".equals(operator)) {
             if (convertedValue1 == null)
