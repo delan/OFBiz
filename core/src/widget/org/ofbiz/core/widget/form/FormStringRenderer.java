@@ -53,7 +53,7 @@ public interface FormStringRenderer {
     public void renderHiddenField(StringBuffer buffer, Map context, ModelFormField.HiddenField hiddenField, GenericDelegator delegator, LocalDispatcher dispatcher);
     public void renderIgnoredField(StringBuffer buffer, Map context, ModelFormField.IgnoredField ignoredField, GenericDelegator delegator, LocalDispatcher dispatcher);
 
-    public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField.IgnoredField ignoredField, GenericDelegator delegator, LocalDispatcher dispatcher);
+    public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField, GenericDelegator delegator, LocalDispatcher dispatcher);
     
     public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm, Integer itemNumber);
     public void renderFormClose(StringBuffer buffer, Map context, ModelForm modelForm);

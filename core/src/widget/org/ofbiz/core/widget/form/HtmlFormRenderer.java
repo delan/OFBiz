@@ -141,14 +141,13 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderIgnoredField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.IgnoredField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
      */
     public void renderIgnoredField(StringBuffer buffer, Map context, IgnoredField ignoredField, GenericDelegator delegator, LocalDispatcher dispatcher) {
-        // TODO Auto-generated method stub
-
+        // do nothing, it's an ignored field; could add a comment or something if we wanted to
     }
 
     /* (non-Javadoc)
-     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.IgnoredField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
+     * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
      */
-    public void renderFieldTitle(StringBuffer buffer, Map context, IgnoredField ignoredField, GenericDelegator delegator, LocalDispatcher dispatcher) {
+    public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField, GenericDelegator delegator, LocalDispatcher dispatcher) {
         // TODO Auto-generated method stub
 
     }
