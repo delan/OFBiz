@@ -100,6 +100,8 @@ public class XmlSerializer {
             return makeElement("std-Double", object, document);
         } else if (object instanceof Boolean) {
             return makeElement("std-Boolean", object, document);
+        } else if (object instanceof Locale) {
+            return makeElement("std-Locale", object, document);
             // - SQL Objects -
         } else if (object instanceof java.sql.Timestamp) {
             return makeElement("sql-Timestamp", object, document);
@@ -228,24 +230,22 @@ public class XmlSerializer {
                 return element.getAttribute("value");
             } else if ("std-Integer".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-
                 return Integer.valueOf(valStr);
             } else if ("std-Long".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-
                 return Long.valueOf(valStr);
             } else if ("std-Float".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-
                 return Float.valueOf(valStr);
             } else if ("std-Double".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-
                 return Double.valueOf(valStr);
             } else if ("std-Boolean".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-
                 return Boolean.valueOf(valStr);
+            } else if ("std-Locale".equals(tagName)) {
+                String valStr = element.getAttribute("value");
+                return UtilMisc.parseLocale(valStr);
             } else if ("std-Date".equals(tagName)) {
                 String valStr = element.getAttribute("value");
                 DateFormat formatter = getDateFormat();
@@ -264,15 +264,12 @@ public class XmlSerializer {
             // - SQL Objects -
             if ("sql-Timestamp".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-
                 return java.sql.Timestamp.valueOf(valStr);
             } else if ("sql-Date".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-
                 return java.sql.Date.valueOf(valStr);
             } else if ("sql-Time".equals(tagName)) {
                 String valStr = element.getAttribute("value");
-
                 return java.sql.Time.valueOf(valStr);
             }
         } else if (tagName.startsWith("col-")) {
