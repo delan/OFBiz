@@ -318,6 +318,7 @@
         <attribute name="captureCode" type="String" mode="IN" optional="true"/>
         <attribute name="captureFlag" type="String" mode="IN" optional="true"/>
         <attribute name="captureMessage" type="String" mode="IN" optional="true"/>
+        <attribute name="internalRespMsgs" type="List" mode="IN" optional="true"/>
     </service>
 
     <!-- Payment Gateway Interfaces -->
