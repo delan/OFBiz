@@ -1353,15 +1353,9 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
 		String partyId = (String)context.get("partyId");
-		String webPubPt = (String)context.get("webPubPt");
+		String webPubPt = (String)context.get("contentId");
+		String roleTypeId = (String)context.get("useRoleTypeId");
         GenericValue userLogin = (GenericValue)context.get("userLogin");
-		if (UtilValidate.isEmpty(webPubPt)) {
-            webPubPt = "UNDERSUNROOT";         
-        }
-		String roleTypeId = (String)context.get("roleTypeId");
-		if (UtilValidate.isEmpty(roleTypeId)) {
-            roleTypeId = "BLOG_USER";         
-        }
 		Integer useTime = (Integer)context.get("useTime");
 		String useTimeUomId = (String)context.get("useTimeUomId");
 		boolean hasExistingContentRole = false;
@@ -1457,6 +1451,8 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         Integer newUseTime = new Integer(useTime.intValue() * qty.intValue());
         context.put("useTime", newUseTime);
         context.put("useTimeUomId", productContent.get("useTimeUomId"));
+        context.put("useRoleTypeId", productContent.get("useRoleTypeId"));
+        context.put("contentId", productContent.get("contentId"));
     	ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscription");
     	Map ctx = subscriptionModel.makeValid(context, "IN");
     	result = dispatcher.runSync("updateSubscription", ctx);
