@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.4  2002/02/02 19:50:30  azeneski
+ * formatting changes (120cols)
+ *
  * Revision 1.3  2001/12/07 07:16:38  jonesde
  * Small improvement to make some parameters optional, and add username/password options
  *
@@ -52,26 +55,25 @@ import org.ofbiz.core.util.*;
  * Created on Sep 21, 2001
  */
 public final class JNDIContextFactory {
-
     static Map contexts = new Hashtable();
 
     /** Return the initial context according to the entityengine.properties parameters that correspond to the given helper name
      * @return the JNDI initial context
      */
-    public static InitialContext getInitialContext(String helperName) {
-        InitialContext ic = (InitialContext) contexts.get(helperName);
+    public static InitialContext getInitialContext(String prefix) {
+        InitialContext ic = (InitialContext) contexts.get(prefix);
 
         if (ic == null) {
             String providerUrl;
             String contextFactory;
             String pkgPrefix;
 
-            providerUrl = UtilProperties.getPropertyValue("entityengine", helperName + ".context.provider.url", "127.0.0.1:1099");
-            contextFactory = UtilProperties.getPropertyValue("entityengine", helperName + ".initial.context.factory", "com.sun.jndi.rmi.registry.RegistryContextFactory");
-            pkgPrefix = UtilProperties.getPropertyValue("entityengine", helperName + ".url.pkg.prefixes");
+            providerUrl = UtilProperties.getPropertyValue("entityengine", prefix + ".context.provider.url", "127.0.0.1:1099");
+            contextFactory = UtilProperties.getPropertyValue("entityengine", prefix + ".initial.context.factory", "com.sun.jndi.rmi.registry.RegistryContextFactory");
+            pkgPrefix = UtilProperties.getPropertyValue("entityengine", prefix + ".url.pkg.prefixes");
 
-            String secPrincipal = UtilProperties.getPropertyValue("entityengine", helperName + ".security.principal");
-            String secCred = UtilProperties.getPropertyValue("entityengine", helperName + ".security.credentials");
+            String secPrincipal = UtilProperties.getPropertyValue("entityengine", prefix + ".security.principal");
+            String secCred = UtilProperties.getPropertyValue("entityengine", prefix + ".security.credentials");
 
             try {
                 Hashtable h = new Hashtable();
@@ -90,10 +92,9 @@ public final class JNDIContextFactory {
                 Debug.logWarning(e);
             }
             if (ic != null)
-                contexts.put(helperName, ic);
+                contexts.put(prefix, ic);
         }
 
         return ic;
     }
 }
-
