@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/RoleDomain.dtd">
+<!DOCTYPE NetworkDesign SYSTEM "file:///f:/ofbiz/work/ofbiz/designer/dtd/RoleDomain.dtd">
 
 <RoleDomain id="test5">
   <Name>test5</Name>

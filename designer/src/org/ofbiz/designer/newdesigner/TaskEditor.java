@@ -62,13 +62,20 @@ public class TaskEditor extends TaskEditorView {
         String taskName = args[1];
 
         // david
+/*
         URL url = fileName.getClass().getResource("/" + fileName);
         if (url == null) {
-         System.out.println("Cannot finde file" + fileName);
+         System.out.println("Cannot finde file " + fileName);
          return;
         }                   
-        
         XmlWrapper taskXml = XmlWrapper.openDocument(new File(url.getFile()));
+*/        
+        String taskFilePath = XmlWrapper.XMLDIR + "\\task\\" + fileName;
+        //String domainEnvFilePath = XmlWrapper.XMLDIR + "\\domainenv\\" + domainEnvFile;
+        
+        XmlWrapper taskXml = XmlWrapper.openDocument(new File(taskFilePath));
+        //XmlWrapper domainXml = XmlWrapper.openDocument(new File(domainEnvFilePath));
+        
         ConsoleSpacer.init();
         launchTaskEditor(taskXml, taskName);
     }

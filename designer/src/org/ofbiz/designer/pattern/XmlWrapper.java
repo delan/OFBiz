@@ -129,15 +129,9 @@ public class XmlWrapper {
 
 	try{
 
-        // OW: Dtd unberührt lassen!
-
-        if (true) return;
-
 	    String fileName = url.getFile();
 
 	    if (fileName == null)
-
-
 
 		throw new RuntimeException("URL is NOT a file");
 

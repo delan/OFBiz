@@ -11,8 +11,7 @@ Please use command: build.bat dist
 that you will need to change is the Variable DESIGNER_ROOT_DIR
 
 3) The Main Class and the Parameter, that I used are:
-org.ofbiz.designer.newdesigner.TaskEditor DEMO2level.xml TargetAnalysis
-  You can give also another Task names, that defined in DEMO2level.xml files.
+org.ofbiz.designer.newdesigner.NetworkEditor DEMO2level DEMO2level DefaultDomain
 
 4) The Stuff that I tested and that hopefully will function also on your
 computer:

@@ -20,7 +20,7 @@ class ORBWorkRTGenerator extends BaseRTGenerator {
         workflowName = _workflowName;
         rootTaskName = _rootTaskName;
         targetDir = _targetDir + "\\" + workflowName;
-        xmlFile = xmlDir + "\\org.ofbiz.designer.task\\" + _workflowName + ".xml";
+        xmlFile = xmlDir + "\\task\\" + _workflowName + ".xml";
     }
 
     public static void generate(String workflowName, String rootTaskName, String targetDir){

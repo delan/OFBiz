@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE DomainEnv SYSTEM "C:\workflow\LatticeEditor\Data\DomainEnv.dtd">
+<!DOCTYPE NetworkDesign SYSTEM "file:///f:/ofbiz/work/ofbiz/designer/dtd/DomainEnv.dtd">
 
 <DomainEnv id="test1">
   <Name>test1</Name>

@@ -6,7 +6,7 @@
      Mon Apr 10 13:31:09 PDT 2000
 -->
 
-<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/RoleDomain.dtd">
+<!DOCTYPE NetworkDesign SYSTEM "file:///f:/ofbiz/work/ofbiz/designer/dtd/RoleDomain.dtd">
 
 <RoleDomain id="RoleDomain_Demo">
   <Name>Demo</Name>

@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<!--
-<!DOCTYPE NetworkDesign SYSTEM "file:///c:/workflow/newdesigner/dtd/domainEnv.dtd">
--->
+<!DOCTYPE NetworkDesign SYSTEM "file:///f:/ofbiz/work/ofbiz/designer/dtd/domainEnv.dtd">
 
 <!-- 
      DefaultDomain

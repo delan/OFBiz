@@ -60,7 +60,8 @@ class WorkflowTranslator extends BaseTranslator {
             String domainID = domain.getIdAttribute();
             if(!containsChild(domainID)) {
                 INetworkEditorComponentModelWrapper newModel = (INetworkEditorComponentModelWrapper)model().createChildContainer(domainID, INetworkEditorComponentModel.DOMAINTYPE);
-                IDomainInfoWrapper domainInfo = (IDomainInfoWrapper)workflow().getXml().getHref(System.getProperty("WF_XMLDIR") + "\\org.ofbiz.designer.domainenv" +  domainURL);
+                IDomainInfoWrapper domainInfo = (IDomainInfoWrapper)workflow().getXml().getHref(System.getProperty("WF_XMLDIR") + 
+                "\\domainenv" +  domainURL);
                 Vector vec = new Vector();
                 vec.addElement(domain);
                 vec.addElement(domainInfo);
@@ -85,7 +86,8 @@ class WorkflowTranslator extends BaseTranslator {
                 IDomainWrapper domain = (IDomainWrapper)workflow().createDomain(domainID);
                 //new DomainTranslator(newModel, domain, BaseTranslator.UPDATE_DATA);
                 //IDomainInfoWrapper domainInfo = (IDomainInfoWrapper)workflow().getXml().getHref(domainURL);
-                IDomainInfoWrapper domainInfo = (IDomainInfoWrapper)workflow().getXml().getHref(System.getProperty("WF_XMLDIR") + "\\org.ofbiz.designer.domainenv" +  domainURL);
+                IDomainInfoWrapper domainInfo = (IDomainInfoWrapper)workflow().getXml().getHref(System.getProperty("WF_XMLDIR") + 
+                "\\domainenv" +  domainURL);
                 Vector vec = new Vector();
                 vec.addElement(domain);
                 vec.addElement(domainInfo);

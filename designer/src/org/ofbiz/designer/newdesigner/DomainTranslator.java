@@ -61,8 +61,9 @@ class DomainTranslator extends BaseTranslator {
         java.awt.Color modelColor = model().getColor();
         java.awt.Color dataColor = null;
         try {
-            dataColor = domainInfo().getAWTColor();
-            if (!dataColor.equals(modelColor)) model().setColor(dataColor);
+            // David: crash here ...
+            //dataColor = domainInfo().getAWTColor();
+            //if (!dataColor.equals(modelColor)) model().setColor(dataColor);
         } catch (NullPointerException e) {}
 
 
@@ -254,7 +255,7 @@ class DomainTranslator extends BaseTranslator {
         String url = domain().getUrlAttribute();
         if(url == null) 
             return null;
-        url = XmlWrapper.XMLDIR + "\\org.ofbiz.designer.domainenv" + url;
+        url = XmlWrapper.XMLDIR + "\\domainenv" + url;
         return(IDomainInfoWrapper)domain().getXml().getHref(url);
     }
     //PL_STOPSKIP

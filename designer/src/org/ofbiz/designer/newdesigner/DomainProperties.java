@@ -57,7 +57,7 @@ public class DomainProperties extends JPanel {
         href = href.substring(0, poundIndex);
         XmlWrapper securitydomainXml = null;
         try {
-            href = xmlDir + "\\org.ofbiz.designer.domainenv\\" + href;
+            href = xmlDir + "\\domainenv\\" + href;
             href = XmlWrapper.fixURL(href);
             securitydomainXml = XmlWrapper.openDocument(new URL(href));
         } catch(MalformedURLException e) {
