@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.3 2003/10/27 19:52:31 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.4 2003/11/08 22:58:55 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -120,7 +120,7 @@ public class ContentPermissionServices {
                 passedRoles.add("_OWNER_");
             }
         }
-        String entityAction = (String) context.get("entityActioneration");
+        String entityAction = (String) context.get("entityOperation");
         if (entityAction == null) entityAction = "_ADMIN";
 
 //Debug.logInfo("targetOperations(0):" + targetOperations, null);
