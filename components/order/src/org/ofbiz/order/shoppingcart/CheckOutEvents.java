@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.17 2003/11/04 23:08:33 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.18 2003/11/24 20:39:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -514,6 +514,7 @@ public class CheckOutEvents {
     public static String finalizeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map paramMap = UtilHttp.getParameterMap(request);
         Boolean offlinePayments;
         String shippingContactMechId = null;
@@ -586,7 +587,7 @@ public class CheckOutEvents {
         boolean isSingleUsePayment = singleUsePayment != null && "Y".equalsIgnoreCase(singleUsePayment) ? true : false;
         boolean doAppendPayment = appendPayment != null && "Y".equalsIgnoreCase(appendPayment) ? true : false;
 
-        CheckOutHelper checkOutHelper = new CheckOutHelper(null, delegator, cart);
+        CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
         Map callResult = checkOutHelper.finalizeOrderEntry(mode, shippingContactMechId, shippingMethod, shippingInstructions,
             maySplit, giftMessage, isGift, methodType, checkOutPaymentId, isSingleUsePayment, doAppendPayment, paramMap);
 

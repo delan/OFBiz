@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.12 2003/11/06 22:11:34 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.13 2003/11/24 20:39:50 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -881,19 +881,21 @@ public class CheckOutHelper {
      * containing a <code>Boolean</code> indicating whether it's an offline
      * payment or not.
      */
-    public Map finalizeOrderEntryPayment(String checkOutPaymentId, boolean singleUse, boolean append) {
+    public Map finalizeOrderEntryPayment(String checkOutPaymentId, Double amount, boolean singleUse, boolean append) {
         Map result = ServiceUtil.returnSuccess();
 
         if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
             if (!checkOutPaymentId.equals("OFFLINE_PAYMENT")) {
                 // clear out the old payments
-                this.cart.clearPaymentMethodTypeIds();
-                this.cart.clearPaymentMethodIds();
+                if (!append) {
+                    this.cart.clearPaymentMethodTypeIds();
+                    this.cart.clearPaymentMethodIds();
+                }
                 // all payment method ids will be numeric, type ids will start with letter
                 if (Character.isLetter(checkOutPaymentId.charAt(0))) {
                     this.cart.addPaymentMethodTypeId(checkOutPaymentId);
                 } else {
-                    this.cart.setPaymentMethodAmount(checkOutPaymentId, null, singleUse);
+                    this.cart.setPaymentMethodAmount(checkOutPaymentId, amount, singleUse);
                 }
             } else {
                 this.cart.clearPaymentMethodIds();
@@ -989,7 +991,7 @@ public class CheckOutHelper {
      * @see CheckOutHelper#finalizeOrderEntryMethodType(String)
      * @see CheckOutHelper#finalizeOrderEntryOfflinePayments(Map)
      * @see CheckOutHelper#finalizeOrderEntryOptions(String, String, String, String, String)
-     * @see CheckOutHelper#finalizeOrderEntryPayment(String, boolean, boolean)
+     * @see CheckOutHelper#finalizeOrderEntryPayment(String, Double, boolean, boolean)
      * @see CheckOutHelper#finalizeOrderEntryShip(String)
      */
     public Map finalizeOrderEntry(String finalizeMode, String shippingContactMechId, String shippingMethod,
@@ -1020,8 +1022,73 @@ public class CheckOutHelper {
 
         // set the payment
         if (finalizeMode != null && finalizeMode.equals("payment")) {
-            callResult = this.finalizeOrderEntryPayment(checkOutPaymentId, isSingleUsePayment, appendPayment);
-            this.addErrors(errorMessages, errorMaps, callResult);
+            if (checkOutPaymentId != null) {
+                callResult = this.finalizeOrderEntryPayment(checkOutPaymentId, null, isSingleUsePayment, appendPayment);
+                this.addErrors(errorMessages, errorMaps, callResult);
+            }
+
+            // handle gift card payment
+            if (params.get("addGiftCard") != null) {
+                String gcNum = (String) params.get("giftCardNumber");
+                String gcPin = (String) params.get("giftCardPin");
+                String gcAmt = (String) params.get("giftCardAmount");
+                double gcAmount = -1;
+
+                boolean gcFieldsOkay = true;
+                if (gcNum == null || gcNum.length() == 0) {
+                    errorMessages.add("Please enter your gift card number");
+                    gcFieldsOkay = false;
+                }
+                if (gcPin == null || gcPin.length() == 0) {
+                    errorMessages.add("Please enter your gift card pin number");
+                    gcFieldsOkay = false;
+                }
+                if (checkOutPaymentId == null) {
+                    if (gcAmt == null || gcAmt.length() == 0) {
+                        errorMessages.add("Please enter the amount to place on your gift card");
+                        gcFieldsOkay = false;
+                    }
+                }
+                if (gcAmt != null && gcAmt.length() > 0) {
+                    try {
+                        gcAmount = Double.parseDouble(gcAmt);
+                    } catch (NumberFormatException e) {
+                        Debug.logError(e, module);
+                        errorMessages.add("Invalid amount for gift card entered");
+                        gcFieldsOkay = false;
+                    }
+                }
+
+                if (gcFieldsOkay) {
+                    // store the gift card
+                    Map gcCtx = new HashMap();
+                    gcCtx.put("partyId", params.get("partyId"));
+                    gcCtx.put("cardNumber", gcNum);
+                    gcCtx.put("pinNumber", gcPin);
+                    gcCtx.put("userLogin", cart.getUserLogin());
+                    Map gcResult = null;
+                    try {
+                        gcResult = dispatcher.runSync("createGiftCard", gcCtx);
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, module);
+                        errorMessages.add(e.getMessage());
+                    }
+                    if (gcResult != null) {
+                        this.addErrors(errorMessages, errorMaps, gcResult);
+
+                        if (errorMessages.size() == 0 && errorMaps.size() == 0) {
+                            // set the GC payment method
+                            Double giftCardAmount = null;
+                            if (gcAmount > 0) {
+                                giftCardAmount = new Double(gcAmount);
+                            }
+                            String gcPaymentMethodId = (String) gcResult.get("paymentMethodId");
+                            Map gcCallRes = this.finalizeOrderEntryPayment(gcPaymentMethodId, giftCardAmount, true, true);
+                            this.addErrors(errorMessages, errorMaps, gcCallRes);
+                        }
+                    }
+                }
+            }
         }
 
         // create offline payments
