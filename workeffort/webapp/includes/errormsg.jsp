@@ -4,6 +4,6 @@ String errorMsgReq = (String)request.getAttribute(SiteDefs.ERROR_MESSAGE);
 String errorMsgSes = (String)session.getAttribute(SiteDefs.ERROR_MESSAGE);
 if(errorMsgSes != null) session.removeAttribute(SiteDefs.ERROR_MESSAGE);
 if(errorMsgReq != null){ %>
-<br><div class='errorMessage'><%=errorMsgReq%></div><br><%} if(errorMsgSes != null) {%>
-<br><div class='errorMessage'><%=errorMsgSes%></div><br><%} if(eventMsgReq != null) {%>
-<br><div class='eventMessage'><%=eventMsgReq%></div><br><%}%>
+<br><div class='errorMessage'><%=UtilFormatOut.replaceString(errorMsgReq, "\n", "<br>")%></div><br><%} if(errorMsgSes != null) {%>
+<br><div class='errorMessage'><%=UtilFormatOut.replaceString(errorMsgSes, "\n", "<br>")%></div><br><%} if(eventMsgReq != null) {%>
+<br><div class='eventMessage'><%=UtilFormatOut.replaceString(eventMsgReq, "\n", "<br>")%></div><br><%}%>
