@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
  
@@ -100,6 +100,7 @@ if (purchaseOrder != null) {
     }
 }
 receivedQuantities = new HashMap();
+salesOrderItems = new HashMap();
 if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
     context.put("firstOrderItem", EntityUtil.getFirst(purchaseOrderItems));
     context.put("purchaseOrderItemsSize", purchaseOrderItems.size());
@@ -126,7 +127,13 @@ if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
                     totalReceived += rejected.doubleValue();                                            
             }            
         }
-        receivedQuantities.put(thisItem.getString("orderItemSeqId"), new Double(totalReceived));        
+        receivedQuantities.put(thisItem.getString("orderItemSeqId"), new Double(totalReceived));
+        //----------------------
+        salesOrderItemAssocs = thisItem.getRelated("PurchaseOrderItemAssociation");
+        if (salesOrderItemAssocs != null && salesOrderItemAssocs.size() > 0) {
+            salesOrderItem = EntityUtil.getFirst(salesOrderItemAssocs);
+            salesOrderItems.put(thisItem.getString("orderItemSeqId"), salesOrderItem);        
+        }
     }
 }
 
@@ -160,6 +167,7 @@ context.put("shipment", shipment);
 context.put("shippedQuantities", shippedQuantities);
 context.put("purchaseOrderItems", purchaseOrderItems);
 context.put("receivedQuantities", receivedQuantities);
+context.put("salesOrderItems", salesOrderItems);
 context.put("rejectReasons", rejectReasons);
 context.put("inventoryItemTypes", inventoryItemTypes);
 context.put("facilities", facilities);
