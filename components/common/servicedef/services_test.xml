@@ -23,11 +23,11 @@
     </service>
     <!-- see serviceengin.xml to configure the rmi location alias -->
     <service name="testRmi" engine="rmi" validate="false"
-            location="rmi" invoke="testScv">
+            location="main-rmi" invoke="testScv">
         <implements service="testScv"/>
     </service>
     <service name="testRmiFail" engine="rmi" validate="false"
-            location="rmi" invoke="testBsh">
+            location="main-rmi" invoke="testBsh">
         <implements service="testScv"/>
     </service>
 
