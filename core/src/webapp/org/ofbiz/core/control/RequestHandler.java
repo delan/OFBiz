@@ -36,10 +36,10 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @author David E. Jones
- * @version 1.0
- * Created on June 28, 2001, 10:12 PM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@created    June 28, 2001
+ *@version    1.0
  */
 public class RequestHandler implements Serializable {
     
@@ -63,6 +63,7 @@ public class RequestHandler implements Serializable {
         String nextPage = null;
         boolean chainRequest = false;
         boolean noDispatch = false;
+        boolean redirect = false;
         
         /** Grab data from request object to process. */
         requestUri = getRequestUri(request.getPathInfo());
@@ -157,16 +158,22 @@ public class RequestHandler implements Serializable {
         
         // check for a chain request. 
         if ( nextView != null && nextView.startsWith("request:") ) {
-            nextView = (String) (StringUtil.split(nextView,":").get(1));
+            nextView = nextView.substring(8);
             chainRequest = true;
         }
-                            
+        
+        // check for a url for redirection
+        if ( nextView != null && nextView.startsWith("url:") ) {
+            nextView = nextView.substring(4);
+            redirect = true;
+        }
+        
         // check for a no dispatch return (meaning the return was processed by the event
         if ( nextView != null && nextView.startsWith("none:") )
             noDispatch = true;
-        
+                
         // get the next view. 
-        if ( !chainRequest && !noDispatch ) {
+        if ( !chainRequest && !redirect && !noDispatch ) {
             String tempView = nextView;
             if(tempView != null && tempView.length() > 0 && tempView.charAt(0) == '/') tempView = tempView.substring(1);
             Debug.logInfo("Getting View Map: " + tempView);
@@ -180,9 +187,13 @@ public class RequestHandler implements Serializable {
         }
         
         // handle errors
-        if ( eventPath == null && nextPage == null && eventReturn == null && !chainRequest )
+        boolean normalReturn = true;
+        if ( chainRequest || redirect || noDispatch )
+            normalReturn = false;
+        
+        if ( eventPath == null && nextPage == null && eventReturn == null && normalReturn )
             throw new RequestHandlerException("RequestHandler: Unknown Request.");
-        if ( nextPage == null && eventReturn == null && !chainRequest )
+        if ( nextPage == null && eventReturn == null && normalReturn )
             throw new RequestHandlerException("RequestHandler: No Next Page To Display");
         
         // invoke chained requests
@@ -201,11 +212,26 @@ public class RequestHandler implements Serializable {
                 nextPage = doRequest(request, response, previousRequest);
             }
         }
-        
+                
         // if noDispatch return null to the control servlet
         if ( noDispatch )
             return null;
-                
+        
+        // if redirect - redirect to the url and return null to the control servlet
+        if ( redirect ) {
+            Debug.logInfo("Sending redirect: " + nextView);
+            try {
+                response.sendRedirect(nextView);
+            }
+            catch ( IOException ioe ) {
+                throw new RequestHandlerException(ioe.getMessage(),ioe);
+            }
+            catch ( IllegalStateException ise ) {
+                throw new RequestHandlerException(ise.getMessage(),ise);
+            }
+            return null;
+        }
+                            
         return nextPage;
     }
     

@@ -35,9 +35,9 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on June 28, 2001, 10:12 PM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@created    June 28, 2001
+ *@version    1.0
  */
 public class RequestManager implements Serializable {
     

@@ -1,37 +1,14 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.4  2001/07/23 19:16:15  azeneski
- * Fixed up finalize() method to not debug everytime.
- *
- * Revision 1.3  2001/07/23 18:38:14  azeneski
- * Added in new HttpClient. Makes behind the scenes HTTP request (GET/POST)
- * and returns the output as a string.
- *
- * Revision 1.2  2001/07/23 18:05:00  azeneski
- * Fixed runaway thread in the job scheduler.
- *
- * Revision 1.1  2001/07/16 14:45:48  azeneski
- * Added the missing 'core' directory into the module.
- *
- * Revision 1.1  2001/07/15 16:36:42  azeneski
- * Initial Import
- *
  */
 
 package org.ofbiz.core.event;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.ofbiz.core.service.scheduler.*;
+import org.ofbiz.core.util.*;
 
-import org.ofbiz.core.service.scheduler.JobManager;
-import org.ofbiz.core.util.HttpClient;
-import org.ofbiz.core.util.SiteDefs;
-import org.ofbiz.core.util.Debug;
 
 /**
  * <p><b>Title:</b> TestEvent.java
@@ -55,9 +32,9 @@ import org.ofbiz.core.util.Debug;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on July 14, 2001, 6:41 PM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@created    July 14, 2001
+ *@version    1.0
  */
 public class TestEvent {
 

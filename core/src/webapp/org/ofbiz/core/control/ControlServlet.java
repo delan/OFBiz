@@ -38,10 +38,10 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version 1.0
- * Created on June 28, 2001, 10:12 PM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@created    June 28, 2001
+ *@version    1.0
  */
 public class ControlServlet extends HttpServlet {
     

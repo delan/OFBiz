@@ -1,18 +1,5 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.3  2001/11/14 03:47:55  azeneski
- * Updated filter to use StringUtil.split
- *
- * Revision 1.2  2001/11/14 03:11:59  azeneski
- * Filter now allows for /path or /path/subdir/file.jsp or /path/subdir/*
- *
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.1  2001/09/23 20:01:18  azeneski
- * Added new servlet filter to secure raw JSPs.
- * 
  */
 
 package org.ofbiz.core.control;
@@ -45,9 +32,9 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on September 23, 2001, 10:37 AM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@created    September 23, 2001
+ *@version    1.0
  */
 public class ContextSecurityFilter implements Filter {
     

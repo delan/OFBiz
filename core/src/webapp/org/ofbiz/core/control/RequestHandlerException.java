@@ -1,12 +1,5 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.1  2001/07/16 14:45:48  azeneski
- * Added the missing 'core' directory into the module.
- *
- * Revision 1.1  2001/07/15 16:36:42  azeneski
- * Initial Import
- *
  */
 
 package org.ofbiz.core.control;
@@ -32,13 +25,17 @@ package org.ofbiz.core.control;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on June 28, 2001, 10:12 PM
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ *@created    June 28, 2001
+ *@version    1.0
  */
-public class RequestHandlerException extends Exception {
+public class RequestHandlerException extends org.ofbiz.core.util.GeneralException {
 
-    public RequestHandlerException( String str ) {
+    public RequestHandlerException(String str, Throwable t) {
+        super(str,t);
+    }
+    
+    public RequestHandlerException(String str) {
         super(str);
     }
 
