@@ -42,12 +42,12 @@ import org.ofbiz.core.entity.*;
 public abstract class Security {
 
     /**
-     * Hashtable to cache a Collection of UserLoginSecurityGroup entities for each UserLogin, by userLoginId.
+     * UtilCache to cache a Collection of UserLoginSecurityGroup entities for each UserLogin, by userLoginId.
      */
     public static UtilCache userLoginSecurityGroupByUserLoginId = new UtilCache("security.UserLoginSecurityGroupByUserLoginId");
 
     /**
-     * Hashtable to cache whether or not a certain SecurityGroupPermission row exists or not.
+     * UtilCache to cache whether or not a certain SecurityGroupPermission row exists or not.
      * For each SecurityGroupPermissionPK there is a Boolean in the cache specifying whether or not it exists.
      * In this way the cache speeds things up whether or not the user has a permission.
      */
