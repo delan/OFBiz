@@ -695,6 +695,7 @@
     <xs:attributeGroup name="attlist.transaction-rollback">
         <xs:attribute type="xs:string" name="began-transaction-name" default="beganTransaction"/>
     </xs:attributeGroup>
+
     <xs:element name="sequenced-id-to-env" substitutionGroup="EntityMiscOperations">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.sequenced-id-to-env"/>
@@ -724,6 +725,27 @@
         <xs:attribute type="xs:string" name="numeric-padding" default="5"/>
         <xs:attribute type="xs:string" name="increment-by" default="1"/>
     </xs:attributeGroup>
+
+    <xs:element name="entity-data" substitutionGroup="EntityMiscOperations">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.entity-data"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.entity-data">
+        <xs:attribute type="xs:string" name="location" use="required"/>
+        <xs:attribute type="xs:string" name="delegator-name" use="optional"/>
+        <xs:attribute type="xs:integer" name="timeout" default="-1"/>
+        <xs:attribute type="xs:string" name="error-list-name" default="error_list"/>
+        <xs:attribute name="mode" default="load">
+            <xs:simpleType>
+                <xs:restriction base="xs:token">
+                    <xs:enumeration value="load"/>
+                    <xs:enumeration value="assert"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+    </xs:attributeGroup>
+
     <xs:element name="find-by-primary-key" substitutionGroup="EntityFindOperations">
         <xs:complexType>
             <xs:attributeGroup ref="attlist.find-by-primary-key"/>

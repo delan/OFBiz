@@ -45,11 +45,13 @@ import org.w3c.dom.Element;
  */
 public class Assert extends MethodOperation {
 
-    ContextAccessor errorListAcsr;
-    FlexibleStringExpander titleExdr;
+    public static final String module = Assert.class.getName();
+
+    protected ContextAccessor errorListAcsr;
+    protected FlexibleStringExpander titleExdr;
 
     /** List of Conditional objects */
-    List conditionalList = new LinkedList(); 
+    protected List conditionalList = new LinkedList(); 
 
     public Assert(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
