@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.33 2004/01/29 05:31:06 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.34 2004/02/09 08:46:30 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -676,6 +676,7 @@ while (allCatIter.hasNext()) {
                 }
                 productFeatureIdSet.add(productFeatureId);
             }
+            productFeatureAndApplEli.close();
         }
         
         Iterator productFeatureIdByTypeIdSetIter = productFeatureIdByTypeIdSetMap.entrySet().iterator();
@@ -744,8 +745,8 @@ while (allCatIter.hasNext()) {
                     GenericValue productFeatureGroupAppl = delegator.makeValue("ProductFeatureCatGrpAppl", UtilMisc.toMap("productFeatureGroupId", productFeatureGroupId, "productCategoryId", productCategoryId, "fromDate", nowTimestamp));
                     productFeatureGroupAppl.create();
                 }
-                
             }
+            productFeatureCatGrpApplEli.close();
         }
     }
 
