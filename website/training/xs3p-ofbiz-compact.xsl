@@ -683,7 +683,7 @@ Alternatively, the contents of this file may be used under the terms of the ____
       -->
 
       <!-- Hierarchy table (for types and elements) -->
-      <!--DEJ <xsl:apply-templates select="." mode="hierarchy"/> -->
+      <xsl:apply-templates select="." mode="hierarchy"/>
 
       <!-- Properties table -->
       <!--DEJ <xsl:apply-templates select="." mode="properties"/> -->
@@ -1409,6 +1409,10 @@ div.sample div.contents, div.sample div.contents a {
    color: #039; /* Blue */
    font-weight: bold;
 }
+.subElementTag {
+   color: #039; /* Blue */
+   font-weight: normal;
+}
 
    /* Group Headers */
 div.sample div.contents .group, div.sample div.contents .group a {
@@ -1957,12 +1961,13 @@ div#legend div.hint {
          </xsl:if>
       </xsl:variable>
       <!-- Print hierarchy table -->
+      <!--DEJ
       <xsl:if test="@substitutionGroup or normalize-space($hasMembers)='true'">
          <table class="hierarchy">
             <tr>
                <td>
                   <ul>
-                     <!-- Print substitution group that this element belongs to -->
+                     <!- - Print substitution group that this element belongs to - ->
                      <xsl:if test="@substitutionGroup">
                         <li>
                            <em>This element can be used wherever the following element is referenced:</em>
@@ -1975,6 +1980,24 @@ div#legend div.hint {
                            </ul>
                         </li>
                      </xsl:if>
+                     <!- - Print substitution group that this element heads - ->
+                     <xsl:if test="normalize-space($hasMembers)='true'">
+                        <li>
+                           <em>The following elements can be used wherever this element is referenced:</em>
+                           <xsl:copy-of select="$members"/>
+                        </li>
+                     </xsl:if>
+                  </ul>
+               </td>
+            </tr>
+         </table>
+      </xsl:if>
+      -->
+      <xsl:if test="normalize-space($hasMembers)='true'">
+         <table class="hierarchy">
+            <tr>
+               <td>
+                  <ul>
                      <!-- Print substitution group that this element heads -->
                      <xsl:if test="normalize-space($hasMembers)='true'">
                         <li>
@@ -4630,12 +4653,21 @@ A local schema component contains two dashes in
          <xsl:choose>
             <!-- Element reference -->
             <xsl:when test="$element/@ref">
-               <!-- Note: Prefix will be automatically written out
-                    in call to 'PrintElementRef'. -->
+               <xsl:variable name="refName">
+                  <xsl:call-template name="GetRefName">
+                     <xsl:with-param name="ref" select="@ref"/>
+                  </xsl:call-template>
+               </xsl:variable>
+             
+              <span class="subElementTag"><xsl:copy-of select="$refName"/></span>
+              <!--DEJ
+               <!- - Note: Prefix will be automatically written out
+                    in call to 'PrintElementRef'. - ->
                <xsl:call-template name="PrintElementRef">
                   <xsl:with-param name="ref" select="@ref"/>
                   <xsl:with-param name="schemaLoc" select="$schemaLoc"/>
                </xsl:call-template>
+              -->
             </xsl:when>
             <!-- Element declaration -->
             <xsl:otherwise>
@@ -4655,6 +4687,8 @@ A local schema component contains two dashes in
       </xsl:variable>
 
       <div style="margin-left: {$margin}em">
+         <xsl:text>  </xsl:text>
+         
          <xsl:choose>
             <xsl:when test="$isNewField!='false'">
                <xsl:attribute name="class">newFields</xsl:attribute>
@@ -4664,51 +4698,62 @@ A local schema component contains two dashes in
             </xsl:when>
          </xsl:choose>
 
-         <!-- Start Tag -->
-         <xsl:text>&lt;</xsl:text>
-         <xsl:copy-of select="$elemTag"/>
-         <xsl:text>></xsl:text>
+         <!--DEJ Changed this quite a bit, adding startTagText and endTagText variables to be used when there is something inside, otherwise just displays a closed tag -->
+         <xsl:variable name="startTagText">
+             <!-- Start Tag -->
+             <xsl:text>&lt;</xsl:text>
+             <xsl:copy-of select="$elemTag"/>
+             <xsl:text>&gt; </xsl:text>
+         </xsl:variable>
+
+         <xsl:variable name="endTagText">
+             <!-- Identity Constraints -->
+             <xsl:if test="$element/xsd:unique or $element/xsd:key or $element/xsd:keyref">
+                <xsl:apply-templates select="$element/xsd:unique | $element/xsd:key | $element/xsd:keyref" mode="sample">
+                   <xsl:with-param name="margin" select="$ELEM_INDENT"/>
+                   <xsl:with-param name="schemaLoc" select="$schemaLoc"/>
+                </xsl:apply-templates>
+             </xsl:if>
+    
+             <!-- End Tag -->
+             <xsl:text> &lt;/</xsl:text>
+             <xsl:copy-of select="$elemTag"/>
+             <xsl:text>&gt;</xsl:text>
+         </xsl:variable>
 
          <!-- Contents -->
-         <xsl:text> </xsl:text>
          <xsl:choose>
             <!-- Fixed value is provided -->
             <xsl:when test="$element/@fixed">
+             <xsl:copy-of select="$startTagText"/>
                <span class="fixed">
                   <xsl:value-of select="$element/@fixed"/>
                </span>
+             <xsl:copy-of select="$endTagText"/>
             </xsl:when>
             <!-- Type reference is provided -->
             <xsl:when test="$element/@name and $element/@type">
+             <xsl:copy-of select="$startTagText"/>
                <xsl:call-template name="PrintTypeRef">
                   <xsl:with-param name="ref" select="$element/@type"/>
                   <xsl:with-param name="schemaLoc" select="$schemaLoc"/>
                </xsl:call-template>
+             <xsl:copy-of select="$endTagText"/>
             </xsl:when>
             <!-- Local simple type definition is provided -->
             <xsl:when test="$element/@name and $element/xsd:simpleType">
+             <xsl:copy-of select="$startTagText"/>
                <xsl:apply-templates select="$element/xsd:simpleType" mode="sample">
                   <xsl:with-param name="schemaLoc" select="$schemaLoc"/>
                </xsl:apply-templates>
+             <xsl:copy-of select="$endTagText"/>
             </xsl:when>
             <xsl:otherwise>
-               <xsl:text>...</xsl:text>
+               <xsl:text>&lt;</xsl:text>
+               <xsl:copy-of select="$elemTag"/>
+               <xsl:text>/&gt;</xsl:text>
             </xsl:otherwise>
          </xsl:choose>
-         <xsl:text> </xsl:text>
-
-         <!-- Identity Constraints -->
-         <xsl:if test="$element/xsd:unique or $element/xsd:key or $element/xsd:keyref">
-            <xsl:apply-templates select="$element/xsd:unique | $element/xsd:key | $element/xsd:keyref" mode="sample">
-               <xsl:with-param name="margin" select="$ELEM_INDENT"/>
-               <xsl:with-param name="schemaLoc" select="$schemaLoc"/>
-            </xsl:apply-templates>
-         </xsl:if>
-
-         <!-- End Tag -->
-         <xsl:text>&lt;/</xsl:text>
-         <xsl:copy-of select="$elemTag"/>
-         <xsl:text>></xsl:text>
 
          <xsl:if test="local-name($element/..)!='schema'">
             <!-- Min/max occurs information -->
@@ -4806,6 +4851,19 @@ A local schema component contains two dashes in
                <!--DEJ <xsl:copy-of select="$tag"/> -->
                <span class="elementTag"><xsl:copy-of select="$tag"/></span>
 
+                <!--DEJ start added this -->               
+                 <!-- Print substitution group that this element belongs to -->
+                 <xsl:if test="@substitutionGroup">
+                      <xsl:variable name="refName">
+                         <xsl:call-template name="GetRefName">
+                            <xsl:with-param name="ref" select="@substitutionGroup"/>
+                         </xsl:call-template>
+                      </xsl:variable>
+                     
+                     <span class="type"><xsl:text> used in </xsl:text><xsl:copy-of select="$refName"/></span>
+                 </xsl:if>
+                <!--DEJ end added this -->               
+
                <!-- Print attributes -->
                <xsl:call-template name="PrintSampleTypeAttrs">
                   <xsl:with-param name="type" select="$type"/>
@@ -4857,7 +4915,7 @@ A local schema component contains two dashes in
                   <!-- Empty content -->
                   <xsl:when test="$hasIdConstraints!='true' and normalize-space($content)=''">
                      <!-- Close start tag -->
-                     <xsl:text>/> </xsl:text>
+                     <xsl:text>/&gt; </xsl:text>
 
                      <xsl:if test="$element and local-name($element/..)!='schema'">
                         <!-- Occurrence info -->
@@ -4874,7 +4932,7 @@ A local schema component contains two dashes in
                   </xsl:when>
                   <xsl:otherwise>
                      <!-- Close start tag -->
-                     <xsl:text>> </xsl:text>
+                     <xsl:text>&gt; </xsl:text>
 
                      <xsl:if test="$element and local-name($element/..)!='schema'">
                         <!-- Occurrence info -->
@@ -4936,7 +4994,7 @@ A local schema component contains two dashes in
                      <!-- End Tag -->
                      <xsl:text>&lt;/</xsl:text>
                      <span class="elementTag"><xsl:copy-of select="$tag"/></span>
-                     <xsl:text>></xsl:text>
+                     <xsl:text>&gt;</xsl:text>
                   </xsl:otherwise>
                </xsl:choose>
             </div>
