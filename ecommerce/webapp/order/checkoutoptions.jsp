@@ -303,7 +303,7 @@
  </ofbiz:if>
 </table>
 <ofbiz:unless name="paymentMethodList" size="0">
-   <h3>There are no credit cards on file.</h3>
+   <h4>There are no payment methods on file.</h4>
 </ofbiz:unless>
 
  <ofbiz:if name="billingAccountRoleList" size="0">
