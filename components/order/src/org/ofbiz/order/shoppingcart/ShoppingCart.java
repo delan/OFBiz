@@ -1,7 +1,7 @@
 /*
- * $Id: ShoppingCart.java,v 1.46 2004/06/30 19:24:07 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.47 2004/06/30 21:24:53 jonesde Exp $
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,21 +23,36 @@
  */
 package org.ofbiz.order.shoppingcart;
 
-import java.text.NumberFormat;
-import java.util.*;
-import java.sql.Timestamp;
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilFormatOut;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.product.store.ProductStoreWorker;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  * <p><b>Title:</b> ShoppingCart.java
@@ -46,7 +61,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.46 $
+ * @version    $Revision: 1.47 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -538,6 +553,14 @@ public class ShoppingCart implements Serializable {
     /** Returns the order type. */
     public String getOrderType() {
         return this.orderType;
+    }
+
+    public boolean isPurchaseOrder() {
+        return "PURCHASE_ORDER".equals(this.orderType);
+    }
+
+    public boolean isSalesOrder() {
+        return "SALES_ORDER".equals(this.orderType);
     }
 
     /** Sets the PO Number in the cart. */
