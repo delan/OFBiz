@@ -629,6 +629,9 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProductAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductContent" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductFacility" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductGlAccount" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductGlAccountType" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeyword" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeywordResult" />
     <entity-group group="org.ofbiz.commonapp" entity="ProductType" />

@@ -1373,6 +1373,50 @@
         <key-map field-name="contentId"/>
       </relation>
     </entity>
+    <entity entity-name="ProductFacility"
+            package-name="org.ofbiz.commonapp.product.product"
+            title="Product Facility Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="minimumStock" type="floating-point"></field>
+      <field name="reorderQuantity" type="floating-point"></field>
+      <prim-key field="productId"/>
+      <prim-key field="facilityId"/>
+      <relation type="one" fk-name="PROD_FAC_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_FAC_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductGlAccount"
+            package-name="org.ofbiz.commonapp.product.product"
+            title="Product GlAccount Entity">
+      <field name="productId" type="id-ne"></field>
+      <field name="productGlAccountTypeId" type="id-ne"></field>
+      <field name="glAccountId" type="id-ne"></field>
+      <prim-key field="productId"/>
+      <prim-key field="productGlAccountTypeId"/>
+      <relation type="one" fk-name="PROD_GLACT_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_GLACT_TYPE" rel-entity-name="ProductGlAccountType">
+        <key-map field-name="productGlAccountTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_GLACT_GLACT" rel-entity-name="GlAccount">
+        <key-map field-name="glAccountId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductGlAccountType"
+            package-name="org.ofbiz.commonapp.product.product"
+            title="Product GlAccount Type Entity">
+      <field name="productGlAccountTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="productGlAccountTypeId"/>
+      <relation type="many" rel-entity-name="ProductGlAccount">
+        <key-map field-name="productGlAccountTypeId"/>
+      </relation>
+    </entity>
     <entity entity-name="ProductKeyword"
             package-name="org.ofbiz.commonapp.product.product"
             never-cache="true"

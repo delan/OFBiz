@@ -128,6 +128,10 @@
   <ProductFeatureType description="Dimension" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
   <ProductFeatureType description="Warranty" hasTable="N" parentTypeId="" productFeatureTypeId="WARRANTY"/>
 
+  <ProductGlAccountType description="Sales" productGlAccountTypeId="SALES"/>
+  <ProductGlAccountType description="Cost of Goods Sold" productGlAccountTypeId="COGS"/>
+  <ProductGlAccountType description="Inventory" productGlAccountTypeId="INVENTORY"/>
+
   <ProductPromoActionType description="Gift With Purchase" productPromoActionTypeId="PROMO_GWP"/>
   <ProductPromoActionType description="Free Shipping" productPromoActionTypeId="PROMO_FREE_SHIPPING"/>
   <ProductPromoActionType description="Item Percent Discount" productPromoActionTypeId="PROMO_ITEM_PERCENT"/>
