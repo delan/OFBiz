@@ -553,7 +553,7 @@ public class ShoppingCart implements java.io.Serializable {
                 orderItem.set("itemDescription", item.getName());
                 orderItem.set("comments", item.getItemComment());
                 orderItem.set("correspondingPoId", this.getPoNumber());
-                orderItem.set("statusId", "ORDER_ORDERED");
+                orderItem.set("statusId", "ITEM_ORDERED");
                 result.add(orderItem);
                 //don't do anything with adjustments here, those will be added below in makeAllAdjustments
             }
