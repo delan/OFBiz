@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -84,7 +87,7 @@ public class WFSplit extends WFActivityImpl  implements Serializable  {
 	/**
 	 * Setter for attribute 'splitType'
 	 * 
-	 * @param pSplitType Neuer Wert des Attributes splitType
+	 * @param pSplitType new value for attribute splitType
 	 */
 	public void setSplitType(WFSplitType pSplitType)  {
 		if (splitType == pSplitType) return;		

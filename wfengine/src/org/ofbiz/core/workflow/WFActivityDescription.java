@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -90,7 +93,7 @@ public class WFActivityDescription extends WFMetaObject  implements Serializable
 	/**
 	 * Setter for attribute 'isInitial'
 	 * 
-	 * @param pIsInitial Neuer Wert des Attributes isInitial
+	 * @param pIsInitial new value for attribute isInitial
 	 */
 	public void setIsInitial(boolean pIsInitial)  {
 		if (isInitial == pIsInitial) return;		
@@ -121,7 +124,7 @@ public class WFActivityDescription extends WFMetaObject  implements Serializable
 	/**
 	 * Setter for attribute 'isFinish'
 	 * 
-	 * @param pIsFinish Neuer Wert des Attributes isFinish
+	 * @param pIsFinish new value for attribute isFinish
 	 */
 	public void setIsFinish(boolean pIsFinish)  {
 		if (isFinish == pIsFinish) return;		
@@ -224,7 +227,7 @@ public class WFActivityDescription extends WFMetaObject  implements Serializable
 	}
 
 	/**
-	 * Removes all elements from assoziation 'In'
+	 * Removes all elements from association 'In'
 	 */
 	public void removeAllIn() {
 		if (in == null) return; // nothing to do
@@ -237,7 +240,7 @@ public class WFActivityDescription extends WFMetaObject  implements Serializable
 	}
 
 	/**
-	 * Removes pIn from assoziation 'In'
+	 * Removes pIn from association 'In'
 	 * @param pIn element to remove
 	 */
 	public void removeIn(WFTransitionDescription pIn) {
@@ -349,7 +352,7 @@ public class WFActivityDescription extends WFMetaObject  implements Serializable
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Out'
+	 * Removes all elements from association 'Out'
 	 */
 	public void removeAllOut() {
 		if (out == null) return; // nothing to do
@@ -362,7 +365,7 @@ public class WFActivityDescription extends WFMetaObject  implements Serializable
 	}
 
 	/**
-	 * Removes pOut from assoziation 'Out'
+	 * Removes pOut from association 'Out'
 	 * @param pOut element to remove
 	 */
 	public void removeOut(WFTransitionDescription pOut) {

@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -102,7 +105,7 @@ public class WFProcessDescription extends WFMetaObject  implements Serializable 
 	/**
 	 * Setter for attribute 'autoStart'
 	 * 
-	 * @param pAutoStart Neuer Wert des Attributes autoStart
+	 * @param pAutoStart new value for attribute autoStart
 	 */
 	public void setAutoStart(boolean pAutoStart)  {
 		if (autoStart == pAutoStart) return;		
@@ -133,7 +136,7 @@ public class WFProcessDescription extends WFMetaObject  implements Serializable 
 	/**
 	 * Setter for attribute 'autoFinish'
 	 * 
-	 * @param pAutoFinish Neuer Wert des Attributes autoFinish
+	 * @param pAutoFinish new value for attribute autoFinish
 	 */
 	public void setAutoFinish(boolean pAutoFinish)  {
 		if (autoFinish == pAutoFinish) return;		
@@ -164,7 +167,7 @@ public class WFProcessDescription extends WFMetaObject  implements Serializable 
 	/**
 	 * Setter for attribute 'validFrom'
 	 * 
-	 * @param pValidFrom Neuer Wert des Attributes validFrom
+	 * @param pValidFrom new value for attribute validFrom
 	 */
 	public void setValidFrom(long pValidFrom)  {
 		if (validFrom == pValidFrom) return;		
@@ -195,7 +198,7 @@ public class WFProcessDescription extends WFMetaObject  implements Serializable 
 	/**
 	 * Setter for attribute 'validTo'
 	 * 
-	 * @param pValidTo Neuer Wert des Attributes validTo
+	 * @param pValidTo new value for attribute validTo
 	 */
 	public void setValidTo(long pValidTo)  {
 		if (validTo == pValidTo) return;		
@@ -239,7 +242,7 @@ public class WFProcessDescription extends WFMetaObject  implements Serializable 
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Steps'
+	 * Removes all elements from association 'Steps'
 	 */
 	public void removeAllSteps() {
 		if (steps == null) return; // nothing to do
@@ -252,7 +255,7 @@ public class WFProcessDescription extends WFMetaObject  implements Serializable 
 	}
 
 	/**
-	 * Removes pSteps from assoziation 'Steps'
+	 * Removes pSteps from association 'Steps'
 	 * @param pSteps element to remove
 	 */
 	public void removeSteps(WFActivityDescription pSteps) {

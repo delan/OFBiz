@@ -28,7 +28,10 @@
 
 /*
  * $Log$
- *//*
+ * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
+ * Initial import
+ *
+ *
  * (#)WFException.java 
  * Exception
  */
@@ -40,7 +43,7 @@ package org.ofbiz.service.workflow;
 
 
 /**
- * Fachliche Ausnahme der Workflowengine
+ * Base class for all exceptions of the workflow engine
  * @author Oliver Wieland
  * @version 1.0
  */

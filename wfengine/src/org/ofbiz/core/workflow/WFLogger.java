@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -83,7 +86,7 @@ public class WFLogger implements Serializable  {
 	/**
 	 * Setter for attribute 'level'
 	 * Threshold for output messages. With 
-	 * @param pLevel Neuer Wert des Attributes level
+	 * @param pLevel new value for attribute level
 	 */
 	public void setLevel(WFMessageType pLevel)  {
 		if (level == pLevel) return;		

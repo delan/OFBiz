@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -318,7 +321,7 @@ public class WFActivityImpl extends WFExecutionObject  implements WFActivity, WF
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Worklists'
+	 * Removes all elements from association 'Worklists'
 	 */
 	public void removeAllWorklists() {
 		if (worklists == null) return; // nothing to do
@@ -331,7 +334,7 @@ public class WFActivityImpl extends WFExecutionObject  implements WFActivity, WF
 	}
 
 	/**
-	 * Removes pWorklists from assoziation 'Worklists'
+	 * Removes pWorklists from association 'Worklists'
 	 * @param pWorklists element to remove
 	 */
 	public void removeWorklists(Worklist pWorklists) {
@@ -443,7 +446,7 @@ public class WFActivityImpl extends WFExecutionObject  implements WFActivity, WF
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Next'
+	 * Removes all elements from association 'Next'
 	 */
 	public void removeAllNext() {
 		if (next == null) return; // nothing to do
@@ -456,7 +459,7 @@ public class WFActivityImpl extends WFExecutionObject  implements WFActivity, WF
 	}
 
 	/**
-	 * Removes pNext from assoziation 'Next'
+	 * Removes pNext from association 'Next'
 	 * @param pNext element to remove
 	 */
 	public void removeNext(WFTransition pNext) {
@@ -568,7 +571,7 @@ public class WFActivityImpl extends WFExecutionObject  implements WFActivity, WF
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Previous'
+	 * Removes all elements from association 'Previous'
 	 */
 	public void removeAllPrevious() {
 		if (previous == null) return; // nothing to do
@@ -581,7 +584,7 @@ public class WFActivityImpl extends WFExecutionObject  implements WFActivity, WF
 	}
 
 	/**
-	 * Removes pPrevious from assoziation 'Previous'
+	 * Removes pPrevious from association 'Previous'
 	 * @param pPrevious element to remove
 	 */
 	public void removePrevious(WFTransition pPrevious) {

@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -95,7 +98,7 @@ public class Storage implements Serializable  {
 	/**
 	 * Setter for attribute 'user'
 	 * 
-	 * @param pUser Neuer Wert des Attributes user
+	 * @param pUser new value for attribute user
 	 */
 	public void setUser(String pUser)  {
 		if (user == pUser) return;		
@@ -126,7 +129,7 @@ public class Storage implements Serializable  {
 	/**
 	 * Setter for attribute 'password'
 	 * 
-	 * @param pPassword Neuer Wert des Attributes password
+	 * @param pPassword new value for attribute password
 	 */
 	public void setPassword(String pPassword)  {
 		if (password == pPassword) return;		
@@ -157,7 +160,7 @@ public class Storage implements Serializable  {
 	/**
 	 * Setter for attribute 'driver'
 	 * 
-	 * @param pDriver Neuer Wert des Attributes driver
+	 * @param pDriver new value for attribute driver
 	 */
 	public void setDriver(String pDriver)  {
 		if (driver == pDriver) return;		

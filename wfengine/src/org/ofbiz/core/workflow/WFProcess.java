@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -124,7 +127,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	/**
 	 * Setter for attribute 'started'
 	 * Timestamp of process start
-	 * @param pStarted Neuer Wert des Attributes started
+	 * @param pStarted new value for attribute started
 	 */
 	public void setStarted(long pStarted)  {
 		if (started == pStarted) return;		
@@ -155,7 +158,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	/**
 	 * Setter for attribute 'completed'
 	 * Timestamp of process completion
-	 * @param pCompleted Neuer Wert des Attributes completed
+	 * @param pCompleted new value for attribute completed
 	 */
 	public void setCompleted(long pCompleted)  {
 		if (completed == pCompleted) return;		
@@ -186,7 +189,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	/**
 	 * Setter for attribute 'lastModified'
 	 * Timestamp of last change
-	 * @param pLastModified Neuer Wert des Attributes lastModified
+	 * @param pLastModified new value for attribute lastModified
 	 */
 	public void setLastModified(long pLastModified)  {
 		if (lastModified == pLastModified) return;		
@@ -217,7 +220,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	/**
 	 * Setter for attribute 'initiator'
 	 * Initiator (resource) which started the process
-	 * @param pInitiator Neuer Wert des Attributes initiator
+	 * @param pInitiator new value for attribute initiator
 	 */
 	public void setInitiator(WFPrincipal pInitiator)  {
 		if (initiator == pInitiator) return;		
@@ -248,7 +251,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	/**
 	 * Setter for attribute 'processId'
 	 * Session id of process
-	 * @param pProcessId Neuer Wert des Attributes processId
+	 * @param pProcessId new value for attribute processId
 	 */
 	public void setProcessId(WFProcessID pProcessId)  {
 		if (processId == pProcessId) return;		
@@ -279,7 +282,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	/**
 	 * Setter for attribute 'finalContext'
 	 * Process data after finishing the process
-	 * @param pFinalContext Neuer Wert des Attributes finalContext
+	 * @param pFinalContext new value for attribute finalContext
 	 */
 	public void setFinalContext(WFContext pFinalContext)  {
 		if (finalContext == pFinalContext) return;		
@@ -310,7 +313,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	/**
 	 * Setter for attribute 'duration'
 	 * 
-	 * @param pDuration Neuer Wert des Attributes duration
+	 * @param pDuration new value for attribute duration
 	 */
 	public void setDuration(long pDuration)  {
 		if (duration == pDuration) return;		
@@ -373,7 +376,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Steps'
+	 * Removes all elements from association 'Steps'
 	 */
 	public void removeAllSteps() {
 		if (steps == null) return; // nothing to do
@@ -386,7 +389,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	}
 
 	/**
-	 * Removes pSteps from assoziation 'Steps'
+	 * Removes pSteps from association 'Steps'
 	 * @param pSteps element to remove
 	 */
 	public void removeSteps(WFActivityImpl pSteps) {
@@ -610,7 +613,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'OpenActivities'
+	 * Removes all elements from association 'OpenActivities'
 	 */
 	public void removeAllOpenActivities() {
 		if (openActivities == null) return; // nothing to do
@@ -623,7 +626,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	}
 
 	/**
-	 * Removes pOpenActivities from assoziation 'OpenActivities'
+	 * Removes pOpenActivities from association 'OpenActivities'
 	 * @param pOpenActivities element to remove
 	 */
 	public void removeOpenActivities(WFActivity pOpenActivities) {
@@ -732,7 +735,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'CompletedActivities'
+	 * Removes all elements from association 'CompletedActivities'
 	 */
 	public void removeAllCompletedActivities() {
 		if (completedActivities == null) return; // nothing to do
@@ -745,7 +748,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	}
 
 	/**
-	 * Removes pCompletedActivities from assoziation 'CompletedActivities'
+	 * Removes pCompletedActivities from association 'CompletedActivities'
 	 * @param pCompletedActivities element to remove
 	 */
 	public void removeCompletedActivities(WFActivity pCompletedActivities) {
@@ -854,7 +857,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'SuspendedActivities'
+	 * Removes all elements from association 'SuspendedActivities'
 	 */
 	public void removeAllSuspendedActivities() {
 		if (suspendedActivities == null) return; // nothing to do
@@ -867,7 +870,7 @@ public class WFProcess extends WFExecutionObject  implements Serializable  {
 	}
 
 	/**
-	 * Removes pSuspendedActivities from assoziation 'SuspendedActivities'
+	 * Removes pSuspendedActivities from association 'SuspendedActivities'
 	 * @param pSuspendedActivities element to remove
 	 */
 	public void removeSuspendedActivities(WFActivity pSuspendedActivities) {

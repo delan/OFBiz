@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -84,7 +87,7 @@ public class WFExpression implements Serializable  {
 	/**
 	 * Setter for attribute 'expression'
 	 * 
-	 * @param pExpression Neuer Wert des Attributes expression
+	 * @param pExpression new value for attribute expression
 	 */
 	public void setExpression(String pExpression)  {
 		if (expression == pExpression) return;		

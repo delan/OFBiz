@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 11:00:31  owieland
+ * Import correction
+ *
  */
 package org.ofbiz.core.workflow.datatypes;
 
@@ -83,7 +86,7 @@ public class WFDataType implements Serializable  {
 	/**
 	 * Setter for attribute 'name'
 	 * 
-	 * @param pName Neuer Wert des Attributes name
+	 * @param pName new value for attribute name
 	 */
 	public void setName(String pName)  {
 		if (name == pName) return;		

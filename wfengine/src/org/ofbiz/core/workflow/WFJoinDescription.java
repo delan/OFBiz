@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -84,7 +87,7 @@ public class WFJoinDescription extends WFActivityDescription  implements Seriali
 	/**
 	 * Setter for attribute 'joinType'
 	 * 
-	 * @param pJoinType Neuer Wert des Attributes joinType
+	 * @param pJoinType new value for attribute joinType
 	 */
 	public void setJoinType(WFJoinType pJoinType)  {
 		if (joinType == pJoinType) return;		

@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -84,7 +87,7 @@ public class WFSplitDescription extends WFActivityDescription  implements Serial
 	/**
 	 * Setter for attribute 'spltType'
 	 * 
-	 * @param pSpltType Neuer Wert des Attributes spltType
+	 * @param pSpltType new value for attribute spltType
 	 */
 	public void setSpltType(WFSplitType pSpltType)  {
 		if (spltType == pSpltType) return;		

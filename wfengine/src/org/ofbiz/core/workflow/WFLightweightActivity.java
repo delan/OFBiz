@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.2  2001/08/10 11:07:36  owieland
+ * Change comments DE -> US
+ *
  * Revision 1.1  2001/08/10 10:43:15  owieland
  * Add missing files from import
  *
@@ -151,7 +154,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'name'
 	 * 
-	 * @param pName Neuer Wert des Attributes name
+	 * @param pName new value for attribute name
 	 */
 	public void setName(String pName)  {
 		if (name == pName) return;		
@@ -182,7 +185,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'id'
 	 * 
-	 * @param pId Neuer Wert des Attributes id
+	 * @param pId new value for attribute id
 	 */
 	public void setId(String pId)  {
 		if (id == pId) return;		
@@ -213,7 +216,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'initiator'
 	 * 
-	 * @param pInitiator Neuer Wert des Attributes initiator
+	 * @param pInitiator new value for attribute initiator
 	 */
 	public void setInitiator(String pInitiator)  {
 		if (initiator == pInitiator) return;		
@@ -244,7 +247,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'context'
 	 * 
-	 * @param pContext Neuer Wert des Attributes context
+	 * @param pContext new value for attribute context
 	 */
 	public void setContext(WFContext pContext)  {
 		if (context == pContext) return;		
@@ -275,7 +278,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'state'
 	 * 
-	 * @param pState Neuer Wert des Attributes state
+	 * @param pState new value for attribute state
 	 */
 	public void setState(WFState pState)  {
 		if (state == pState) return;		
@@ -306,7 +309,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'creationTime'
 	 * 
-	 * @param pCreationTime Neuer Wert des Attributes creationTime
+	 * @param pCreationTime new value for attribute creationTime
 	 */
 	public void setCreationTime(long pCreationTime)  {
 		if (creationTime == pCreationTime) return;		
@@ -337,7 +340,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'lastModified'
 	 * 
-	 * @param pLastModified Neuer Wert des Attributes lastModified
+	 * @param pLastModified new value for attribute lastModified
 	 */
 	public void setLastModified(long pLastModified)  {
 		if (lastModified == pLastModified) return;		
@@ -368,7 +371,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'completionTime'
 	 * 
-	 * @param pCompletionTime Neuer Wert des Attributes completionTime
+	 * @param pCompletionTime new value for attribute completionTime
 	 */
 	public void setCompletionTime(long pCompletionTime)  {
 		if (completionTime == pCompletionTime) return;		
@@ -399,7 +402,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'startTime'
 	 * Timestamp of activity start (resource accepted and started this activity)
-	 * @param pStartTime Neuer Wert des Attributes startTime
+	 * @param pStartTime new value for attribute startTime
 	 */
 	public void setStartTime(long pStartTime)  {
 		if (startTime == pStartTime) return;		
@@ -430,7 +433,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'durationUnit'
 	 * 
-	 * @param pDurationUnit Neuer Wert des Attributes durationUnit
+	 * @param pDurationUnit new value for attribute durationUnit
 	 */
 	public void setDurationUnit(WFDurationUnit pDurationUnit)  {
 		if (durationUnit == pDurationUnit) return;		
@@ -461,7 +464,7 @@ public class WFLightweightActivity implements WFActivity {
 	/**
 	 * Setter for attribute 'duration'
 	 * 
-	 * @param pDuration Neuer Wert des Attributes duration
+	 * @param pDuration new value for attribute duration
 	 */
 	public void setDuration(long pDuration)  {
 		if (duration == pDuration) return;		

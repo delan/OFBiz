@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -83,7 +86,7 @@ public class Scheduler implements Serializable  {
 	/**
 	 * Setter for attribute 'refreshInterval'
 	 * 
-	 * @param pRefreshInterval Neuer Wert des Attributes refreshInterval
+	 * @param pRefreshInterval new value for attribute refreshInterval
 	 */
 	public void setRefreshInterval(long pRefreshInterval)  {
 		if (refreshInterval == pRefreshInterval) return;		
@@ -127,7 +130,7 @@ public class Scheduler implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Queue'
+	 * Removes all elements from association 'Queue'
 	 */
 	public void removeAllQueue() {
 		if (queue == null) return; // nothing to do
@@ -140,7 +143,7 @@ public class Scheduler implements Serializable  {
 	}
 
 	/**
-	 * Removes pQueue from assoziation 'Queue'
+	 * Removes pQueue from association 'Queue'
 	 * @param pQueue element to remove
 	 */
 	public void removeQueue(WFExecutionObject pQueue) {

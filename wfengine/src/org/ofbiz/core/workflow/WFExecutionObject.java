@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -128,7 +131,7 @@ public class WFExecutionObject implements Serializable  {
 	/**
 	 * Setter for attribute 'iD'
 	 * 
-	 * @param pID Neuer Wert des Attributes iD
+	 * @param pID new value for attribute iD
 	 */
 	public void setID(String pID)  {
 		if (iD == pID) return;		
@@ -159,7 +162,7 @@ public class WFExecutionObject implements Serializable  {
 	/**
 	 * Setter for attribute 'name'
 	 * 
-	 * @param pName Neuer Wert des Attributes name
+	 * @param pName new value for attribute name
 	 */
 	public void setName(String pName)  {
 		if (name == pName) return;		
@@ -190,7 +193,7 @@ public class WFExecutionObject implements Serializable  {
 	/**
 	 * Setter for attribute 'priority'
 	 * 
-	 * @param pPriority Neuer Wert des Attributes priority
+	 * @param pPriority new value for attribute priority
 	 */
 	public void setPriority(int pPriority)  {
 		if (priority == pPriority) return;		
@@ -221,7 +224,7 @@ public class WFExecutionObject implements Serializable  {
 	/**
 	 * Setter for attribute 'state'
 	 * 
-	 * @param pState Neuer Wert des Attributes state
+	 * @param pState new value for attribute state
 	 */
 	public void setState(WFState pState)  {
 		if (state == pState) return;		
@@ -252,7 +255,7 @@ public class WFExecutionObject implements Serializable  {
 	/**
 	 * Setter for attribute 'context'
 	 * 
-	 * @param pContext Neuer Wert des Attributes context
+	 * @param pContext new value for attribute context
 	 */
 	public void setContext(WFContext pContext)  {
 		if (context == pContext) return;		
@@ -283,7 +286,7 @@ public class WFExecutionObject implements Serializable  {
 	/**
 	 * Setter for attribute 'lastModified'
 	 * Timestamp of last change
-	 * @param pLastModified Neuer Wert des Attributes lastModified
+	 * @param pLastModified new value for attribute lastModified
 	 */
 	public void setLastModified(long pLastModified)  {
 		if (lastModified == pLastModified) return;		
@@ -314,7 +317,7 @@ public class WFExecutionObject implements Serializable  {
 	/**
 	 * Setter for attribute 'creationTime'
 	 * Creation timestamp
-	 * @param pCreationTime Neuer Wert des Attributes creationTime
+	 * @param pCreationTime new value for attribute creationTime
 	 */
 	public void setCreationTime(long pCreationTime)  {
 		if (creationTime == pCreationTime) return;		
@@ -345,7 +348,7 @@ public class WFExecutionObject implements Serializable  {
 	/**
 	 * Setter for attribute 'completionTime'
 	 * Completion timestamp
-	 * @param pCompletionTime Neuer Wert des Attributes completionTime
+	 * @param pCompletionTime new value for attribute completionTime
 	 */
 	public void setCompletionTime(long pCompletionTime)  {
 		if (completionTime == pCompletionTime) return;		
@@ -448,7 +451,7 @@ public class WFExecutionObject implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Participants'
+	 * Removes all elements from association 'Participants'
 	 */
 	public void removeAllParticipants() {
 		if (participants == null) return; // nothing to do
@@ -461,7 +464,7 @@ public class WFExecutionObject implements Serializable  {
 	}
 
 	/**
-	 * Removes pParticipants from assoziation 'Participants'
+	 * Removes pParticipants from association 'Participants'
 	 * @param pParticipants element to remove
 	 */
 	public void removeParticipants(WFResource pParticipants) {
@@ -570,7 +573,7 @@ public class WFExecutionObject implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'History'
+	 * Removes all elements from association 'History'
 	 */
 	public void removeAllHistory() {
 		if (history == null) return; // nothing to do
@@ -583,7 +586,7 @@ public class WFExecutionObject implements Serializable  {
 	}
 
 	/**
-	 * Removes pHistory from assoziation 'History'
+	 * Removes pHistory from association 'History'
 	 * @param pHistory element to remove
 	 */
 	public void removeHistory(WFEventAudit pHistory) {

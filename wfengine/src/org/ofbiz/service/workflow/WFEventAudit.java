@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1.1.1  2001/08/10 10:33:40  owieland
+ * Initial import
+ *
  */
 package org.ofbiz.service.workflow;
 
@@ -113,7 +116,7 @@ public class WFEventAudit implements Serializable  {
 	/**
 	 * Setter for attribute 'timestamp'
 	 * 
-	 * @param pTimestamp Neuer Wert des Attributes timestamp
+	 * @param pTimestamp new value for attribute timestamp
 	 */
 	public void setTimestamp(long pTimestamp)  {
 		if (timestamp == pTimestamp) return;		
@@ -144,7 +147,7 @@ public class WFEventAudit implements Serializable  {
 	/**
 	 * Setter for attribute 'event'
 	 * 
-	 * @param pEvent Neuer Wert des Attributes event
+	 * @param pEvent new value for attribute event
 	 */
 	public void setEvent(WFEvent pEvent)  {
 		if (event == pEvent) return;		
@@ -175,7 +178,7 @@ public class WFEventAudit implements Serializable  {
 	/**
 	 * Setter for attribute 'activityID'
 	 * 
-	 * @param pActivityID Neuer Wert des Attributes activityID
+	 * @param pActivityID new value for attribute activityID
 	 */
 	public void setActivityID(String pActivityID)  {
 		if (activityID == pActivityID) return;		
@@ -206,7 +209,7 @@ public class WFEventAudit implements Serializable  {
 	/**
 	 * Setter for attribute 'activityName'
 	 * 
-	 * @param pActivityName Neuer Wert des Attributes activityName
+	 * @param pActivityName new value for attribute activityName
 	 */
 	public void setActivityName(String pActivityName)  {
 		if (activityName == pActivityName) return;		
@@ -237,7 +240,7 @@ public class WFEventAudit implements Serializable  {
 	/**
 	 * Setter for attribute 'processID'
 	 * 
-	 * @param pProcessID Neuer Wert des Attributes processID
+	 * @param pProcessID new value for attribute processID
 	 */
 	public void setProcessID(String pProcessID)  {
 		if (processID == pProcessID) return;		
@@ -268,7 +271,7 @@ public class WFEventAudit implements Serializable  {
 	/**
 	 * Setter for attribute 'processName'
 	 * 
-	 * @param pProcessName Neuer Wert des Attributes processName
+	 * @param pProcessName new value for attribute processName
 	 */
 	public void setProcessName(String pProcessName)  {
 		if (processName == pProcessName) return;		

@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -84,7 +87,7 @@ public class WFGroup extends WFResource  implements Serializable  {
 	/**
 	 * Setter for attribute 'name'
 	 * 
-	 * @param pName Neuer Wert des Attributes name
+	 * @param pName new value for attribute name
 	 */
 	public void setName(String pName)  {
 		if (name == pName) return;		
@@ -128,7 +131,7 @@ public class WFGroup extends WFResource  implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Members'
+	 * Removes all elements from association 'Members'
 	 */
 	public void removeAllMembers() {
 		if (members == null) return; // nothing to do
@@ -141,7 +144,7 @@ public class WFGroup extends WFResource  implements Serializable  {
 	}
 
 	/**
-	 * Removes pMembers from assoziation 'Members'
+	 * Removes pMembers from association 'Members'
 	 * @param pMembers element to remove
 	 */
 	public void removeMembers(WFResource pMembers) {

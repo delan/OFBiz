@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -84,7 +87,7 @@ public class ProcessIDImpl implements WFProcessID {
 	/**
 	 * Setter for attribute 'leaseTime'
 	 * Dauer der Session in ms. Wenn der Wert abgelaufen ist, wird die Session automatisch ungültig. Wenn -1, ist die Session unbegrenzt gültig.
-	 * @param pLeaseTime Neuer Wert des Attributes leaseTime
+	 * @param pLeaseTime new value for attribute leaseTime
 	 */
 	public void setLeaseTime(long pLeaseTime)  {
 		if (leaseTime == pLeaseTime) return;		

@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -84,7 +87,7 @@ public class WFTool extends WFActivityImpl  implements Serializable  {
 	/**
 	 * Setter for attribute 'parameter'
 	 * 
-	 * @param pParameter Neuer Wert des Attributes parameter
+	 * @param pParameter new value for attribute parameter
 	 */
 	public void setParameter(String pParameter)  {
 		if (parameter == pParameter) return;		

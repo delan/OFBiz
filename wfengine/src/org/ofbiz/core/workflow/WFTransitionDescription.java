@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -89,7 +92,7 @@ public class WFTransitionDescription implements Serializable  {
 	/**
 	 * Setter for attribute 'id'
 	 * 
-	 * @param pId Neuer Wert des Attributes id
+	 * @param pId new value for attribute id
 	 */
 	public void setId(String pId)  {
 		if (id == pId) return;		
@@ -120,7 +123,7 @@ public class WFTransitionDescription implements Serializable  {
 	/**
 	 * Setter for attribute 'condition'
 	 * 
-	 * @param pCondition Neuer Wert des Attributes condition
+	 * @param pCondition new value for attribute condition
 	 */
 	public void setCondition(String pCondition)  {
 		if (condition == pCondition) return;		

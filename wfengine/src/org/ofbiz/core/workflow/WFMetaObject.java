@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -101,7 +104,7 @@ public class WFMetaObject implements Serializable  {
 	/**
 	 * Setter for attribute 'id'
 	 * 
-	 * @param pId Neuer Wert des Attributes id
+	 * @param pId new value for attribute id
 	 */
 	public void setId(String pId)  {
 		if (id == pId) return;		
@@ -132,7 +135,7 @@ public class WFMetaObject implements Serializable  {
 	/**
 	 * Setter for attribute 'name'
 	 * 
-	 * @param pName Neuer Wert des Attributes name
+	 * @param pName new value for attribute name
 	 */
 	public void setName(String pName)  {
 		if (name == pName) return;		
@@ -163,7 +166,7 @@ public class WFMetaObject implements Serializable  {
 	/**
 	 * Setter for attribute 'description'
 	 * 
-	 * @param pDescription Neuer Wert des Attributes description
+	 * @param pDescription new value for attribute description
 	 */
 	public void setDescription(String pDescription)  {
 		if (description == pDescription) return;		
@@ -194,7 +197,7 @@ public class WFMetaObject implements Serializable  {
 	/**
 	 * Setter for attribute 'priority'
 	 * 
-	 * @param pPriority Neuer Wert des Attributes priority
+	 * @param pPriority new value for attribute priority
 	 */
 	public void setPriority(int pPriority)  {
 		if (priority == pPriority) return;		
@@ -248,7 +251,7 @@ public class WFMetaObject implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Participants'
+	 * Removes all elements from association 'Participants'
 	 */
 	public void removeAllParticipants() {
 		if (participants == null) return; // nothing to do
@@ -261,7 +264,7 @@ public class WFMetaObject implements Serializable  {
 	}
 
 	/**
-	 * Removes pParticipants from assoziation 'Participants'
+	 * Removes pParticipants from association 'Participants'
 	 * @param pParticipants element to remove
 	 */
 	public void removeParticipants(WFResource pParticipants) {

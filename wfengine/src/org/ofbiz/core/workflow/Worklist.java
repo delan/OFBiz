@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -84,7 +87,7 @@ public class Worklist implements Serializable  {
 	/**
 	 * Setter for attribute 'filter'
 	 * 
-	 * @param pFilter Neuer Wert des Attributes filter
+	 * @param pFilter new value for attribute filter
 	 */
 	public void setFilter(WFActivity pFilter)  {
 		if (filter == pFilter) return;		
@@ -128,7 +131,7 @@ public class Worklist implements Serializable  {
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Contents'
+	 * Removes all elements from association 'Contents'
 	 */
 	public void removeAllContents() {
 		if (contents == null) return; // nothing to do
@@ -141,7 +144,7 @@ public class Worklist implements Serializable  {
 	}
 
 	/**
-	 * Removes pContents from assoziation 'Contents'
+	 * Removes pContents from association 'Contents'
 	 * @param pContents element to remove
 	 */
 	public void removeContents(WFActivityImpl pContents) {

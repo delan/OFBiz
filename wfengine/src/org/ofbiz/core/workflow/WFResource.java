@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -96,7 +99,7 @@ public class WFResource implements Serializable  {
 	/**
 	 * Setter for attribute 'id'
 	 * 
-	 * @param pId Neuer Wert des Attributes id
+	 * @param pId new value for attribute id
 	 */
 	public void setId(long pId)  {
 		if (id == pId) return;		
@@ -127,7 +130,7 @@ public class WFResource implements Serializable  {
 	/**
 	 * Setter for attribute 'name'
 	 * 
-	 * @param pName Neuer Wert des Attributes name
+	 * @param pName new value for attribute name
 	 */
 	public void setName(String pName)  {
 		if (name == pName) return;		
@@ -158,7 +161,7 @@ public class WFResource implements Serializable  {
 	/**
 	 * Setter for attribute 'password'
 	 * 
-	 * @param pPassword Neuer Wert des Attributes password
+	 * @param pPassword new value for attribute password
 	 */
 	public void setPassword(String pPassword)  {
 		if (password == pPassword) return;		

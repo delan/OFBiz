@@ -28,6 +28,9 @@
 
 /*
  * $Log$
+ * Revision 1.1  2001/08/10 10:43:15  owieland
+ * Add missing files from import
+ *
  */
 package org.ofbiz.core.workflow;
 
@@ -73,7 +76,7 @@ public class WFEngine implements Workflow {
 	 * Empty constructor
 	 */
 	WFEngine() {
-			}
+	}
 
 	/**
 	 * Constructor with all attributes 
@@ -100,7 +103,7 @@ public class WFEngine implements Workflow {
 	/**
 	 * Setter for attribute 'properties'
 	 * 
-	 * @param pProperties Neuer Wert des Attributes properties
+	 * @param pProperties new value for attribute properties
 	 */
 	public void setProperties(Properties pProperties)  {
 		if (properties == pProperties) return;		
@@ -131,7 +134,7 @@ public class WFEngine implements Workflow {
 	/**
 	 * Setter for attribute 'processDescriptions'
 	 * 
-	 * @param pProcessDescriptions Neuer Wert des Attributes processDescriptions
+	 * @param pProcessDescriptions new value for attribute processDescriptions
 	 */
 	public void setProcessDescriptions(HashMap pProcessDescriptions)  {
 		if (processDescriptions == pProcessDescriptions) return;		
@@ -481,7 +484,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Resources'
+	 * Removes all elements from association 'Resources'
 	 */
 	public void removeAllResources() {
 		if (resources == null) return; // nothing to do
@@ -494,7 +497,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes pResources from assoziation 'Resources'
+	 * Removes pResources from association 'Resources'
 	 * @param pResources element to remove
 	 */
 	public void removeResources(WFResource pResources) {
@@ -603,7 +606,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes all elements from assoziation 'ActiveProcesses'
+	 * Removes all elements from association 'ActiveProcesses'
 	 */
 	public void removeAllActiveProcesses() {
 		if (activeProcesses == null) return; // nothing to do
@@ -616,7 +619,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes pActiveProcesses from assoziation 'ActiveProcesses'
+	 * Removes pActiveProcesses from association 'ActiveProcesses'
 	 * @param pActiveProcesses element to remove
 	 */
 	public void removeActiveProcesses(WFProcess pActiveProcesses) {
@@ -728,7 +731,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes all elements from assoziation 'Processes'
+	 * Removes all elements from association 'Processes'
 	 */
 	public void removeAllProcesses() {
 		if (processes == null) return; // nothing to do
@@ -741,7 +744,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes pProcesses from assoziation 'Processes'
+	 * Removes pProcesses from association 'Processes'
 	 * @param pProcesses element to remove
 	 */
 	public void removeProcesses(WFProcessDescription pProcesses) {
@@ -906,7 +909,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes all elements from assoziation 'CompletedProcesses'
+	 * Removes all elements from association 'CompletedProcesses'
 	 */
 	public void removeAllCompletedProcesses() {
 		if (completedProcesses == null) return; // nothing to do
@@ -919,7 +922,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes pCompletedProcesses from assoziation 'CompletedProcesses'
+	 * Removes pCompletedProcesses from association 'CompletedProcesses'
 	 * @param pCompletedProcesses element to remove
 	 */
 	public void removeCompletedProcesses(WFProcess pCompletedProcesses) {
@@ -1028,7 +1031,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes all elements from assoziation 'SuspendedProcesses'
+	 * Removes all elements from association 'SuspendedProcesses'
 	 */
 	public void removeAllSuspendedProcesses() {
 		if (suspendedProcesses == null) return; // nothing to do
@@ -1041,7 +1044,7 @@ Zusätzlich kann hier die Aktivität vorgegeben werden (notwendig bei Verzweigunge
 	}
 
 	/**
-	 * Removes pSuspendedProcesses from assoziation 'SuspendedProcesses'
+	 * Removes pSuspendedProcesses from association 'SuspendedProcesses'
 	 * @param pSuspendedProcesses element to remove
 	 */
 	public void removeSuspendedProcesses(WFProcess pSuspendedProcesses) {
