@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.19 2004/01/27 23:10:47 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.20 2004/01/27 23:33:07 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -250,12 +250,15 @@ public class ProductUtilServices {
                     ), EntityOperator.AND);
             EntityCondition havingCond = new EntityExpr("productIdToCount", EntityOperator.EQUALS, new Long(1));
             EntityListIterator eliOne = delegator.findListIteratorByCondition(dve, condition, havingCond, UtilMisc.toList("productId", "productIdToCount"), null, null);
-
-            GenericValue value = null;
+            List valueList = eliOne.getCompleteList();
+            eliOne.close();
+            
             int numWithOneOnly = 0;
-            while ((value = (GenericValue) eliOne.next()) != null) {
+            Iterator valueIter = valueList.iterator();
+            while (valueIter.hasNext()) {
                 // has only one variant period, is it valid? should already be discontinued if not
-
+                GenericValue value = (GenericValue) valueIter.next();
+                
                 String productId = value.getString("productId");
                 List paList = delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT"));
                 // verify the query; tested on a bunch, looks good
@@ -271,7 +274,6 @@ public class ProductUtilServices {
                     }
                 }
             }
-            eliOne.close();
             
             EntityCondition conditionWithDates = new EntityConditionList(UtilMisc.toList(
                     new EntityExpr("productAssocTypeId", EntityOperator.EQUALS, "PRODUCT_VARIANT"),
@@ -279,8 +281,13 @@ public class ProductUtilServices {
                     new EntityExpr(new EntityExpr("thruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("thruDate", EntityOperator.GREATER_THAN_EQUAL_TO, nowTimestamp))
                     ), EntityOperator.AND);
             EntityListIterator eliMulti = delegator.findListIteratorByCondition(dve, conditionWithDates, havingCond, UtilMisc.toList("productId", "productIdToCount"), null, null);
+            List valueMultiList = eliMulti.getCompleteList();
+            eliMulti.close();
+            
             int numWithOneValid = 0;
-            while ((value = (GenericValue) eliMulti.next()) != null) {
+            Iterator valueMultiIter = valueMultiList.iterator();
+            while (valueMultiIter.hasNext()) {
+                GenericValue value = (GenericValue) valueMultiIter.next();
                 // has only one valid variant
                 String productId = value.getString("productId");
                 
@@ -298,7 +305,6 @@ public class ProductUtilServices {
                     }
                 }
             }
-            eliMulti.close();
             
             Debug.logInfo("Found virtual products with one valid variant: " + numWithOneValid + ", with one variant only: " + numWithOneOnly, module);
         } catch (GenericEntityException e) {
