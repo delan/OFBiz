@@ -143,6 +143,10 @@
     	<security https="true" auth="true"/><response name="success" type="view" value="viewdatafile"/>
     </request-map>
 
+    <request-map uri="logikus">
+    	<security https="true" auth="true"/><response name="success" type="view" value="logikus"/>
+    </request-map>
+
     <request-map uri="readxpdl">
     	<security https="true" auth="true"/><response name="success" type="view" value="readxpdl"/>
     </request-map>
@@ -179,6 +183,7 @@
     <view-map name="FindUtilCacheElements" page="/cache/FindUtilCacheElements.jsp"/>
 
     <view-map name="viewdatafile" page="/datafile/viewdatafile.jsp"/>
+    <view-map name="logikus" page="/rules/logikus.jsp"/>
     <view-map name="readxpdl" page="/workflow/readxpdl.jsp"/>
     <!-- end of view mappings -->
     

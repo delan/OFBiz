@@ -102,6 +102,12 @@ definitions, checking them with the current database, and generating text based 
       <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class='buttontext'>View Data File</A>
     </ul>
   <%}%>
+  <%if(security.hasPermission("RULES_MAINT", session)){%>
+    <li><div class='tabletext'>Rules Utilities</div>
+    <ul>
+      <li><a href="<ofbiz:url>/logikus</ofbiz:url>" class='buttontext'>Logikus - Run Rulesets</A>
+    </ul>
+  <%}%>
   <%if(security.hasPermission("WORKFLOW_MAINT", session)){%>
     <li><div class='tabletext'>Workflow Utilities</div>
     <ul>
