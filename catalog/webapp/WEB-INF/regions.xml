@@ -97,7 +97,7 @@
         <put section='title'>Edit Product Feature Categories Page</put>
         <put section='content' content='/EditFeatureCategories.jsp'/>
     </define>
-    <define id='EditFeatureCategoryFeatures' region='LEFT_ONLY_REGION'>
+    <define id='EditFeatureCategoryFeatures' region='MAIN_REGION'>
         <put section='title'>Edit Product Feature Category Features Page</put>
         <put section='content' content='/EditFeatureCategoryFeatures.jsp'/>
     </define>

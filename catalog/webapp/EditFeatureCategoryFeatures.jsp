@@ -63,32 +63,39 @@
 
 <div class="head1">Edit Features for Feature Category "<%=curProductFeatureCategory.getString("description")%>"</div>
 <%if (productId != null && productId.length() > 0) {%>
-<div class="head1">And Apply Features to Product with ID "<%=productId%>"</div>
+<div class="head2">And Apply Features to Product with ID "<%=productId%>"</div>
+<div>
+  <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product]</a>
+  <a href="<ofbiz:url>/EditProductFeatures?productId=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product Features]</a>
+</div>
 <%}%>
 <br>
 <p class="head2">Product Feature Maintenance</p>
 <table border="1" cellpadding='2' cellspacing='0'>
-  <tr>
+  <tr class='viewOneTR1'>
     <td><div class="tabletext"><b>Description</b></div></td>
     <td><div class="tabletext"><b>Feature&nbsp;Type</b></div></td>
     <td><div class="tabletext"><b>Feature&nbsp;Category</b></div></td>
     <td><div class="tabletext"><b>Unit of Measure ID</b></div></td>
-    <td><div class="tabletext"><b>Number/Quantity</b></div></td>
+    <td><div class="tabletext"><b>Num/Quant</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
-<%--
-    <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
-    <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-    <td><div class="tabletext"><b>Sequence&nbsp;Num</b></div></td>
-    <td><div class="tabletext"><b>Appl&nbsp;Type</b></div></td>
-    <td><div class="tabletext">&nbsp;</div></td>
---%>
+    <%if (productId != null && productId.length() > 0) {%>
+      </tr>
+      <tr class='viewOneTR2'>
+        <td><div class="tabletext">&nbsp;</div></td>
+        <td><div class="tabletext"><b>Appl&nbsp;Type</b></div></td>
+        <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
+        <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
+        <td><div class="tabletext"><b>Sequence</b></div></td>
+        <td><div class="tabletext">&nbsp;</div></td>
+    <%}%>
   </tr>
 <ofbiz:iterator name="productFeature" property="productFeatures">
-  <tr valign="middle">
+  <tr valign="middle" class='viewOneTR1'>
     <FORM method=POST action='<ofbiz:url>/UpdateProductFeature</ofbiz:url>'>
         <%if (productId != null && productId.length() > 0) {%><input type="hidden" name="productId" value="<%=productId%>"><%}%>
         <input type=hidden <ofbiz:inputvalue entityAttr="productFeature" field="productFeatureId" fullattrs="true"/>>
-      <td><input type=text size='30' <ofbiz:inputvalue entityAttr="productFeature" field="description" fullattrs="true"/>></td>
+      <td><input type=text size='20' <ofbiz:inputvalue entityAttr="productFeature" field="description" fullattrs="true"/>></td>
       <td><select name='productFeatureTypeId' size=1>
         <%if (productFeature.get("productFeatureTypeId") != null) {%>
           <option value='<%=productFeature.getString("productFeatureTypeId")%>'> [<%=productFeature.getString("productFeatureTypeId")%>]</option>
@@ -109,27 +116,29 @@
         </ofbiz:iterator>
       </select></td>
       <td><input type=text size='10' <ofbiz:inputvalue entityAttr="productFeature" field="uomId" fullattrs="true"/>></td>
-      <td><input type=text size='10' <ofbiz:inputvalue entityAttr="productFeature" field="numberSpecified" fullattrs="true"/>></td>
+      <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="numberSpecified" fullattrs="true"/>></td>
       <td><INPUT type=submit value='Update'></td>
     </FORM>
-<%--
-        <input type=hidden <ofbiz:inputvalue entityAttr="productAttribute" field="productId" fullattrs="true"/>>
-        <input type=hidden <ofbiz:inputvalue entityAttr="productAttribute" field="fromDate" fullattrs="true"/>>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></div></td>
-    <td><input type=text size='20' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/>></td>
-    <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/>></td>
-    <td>
-      <select name='productFeatureApplTypeId' size=1>
-        <%if (productFeatureAndAppl.get("productFeatureApplTypeId") != null) {%>
-          <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'> [<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>]</option>
-          <option value='<%=productFeatureAndAppl.getString("productFeatureApplTypeId")%>'></option>
-        <%}%>
-        <ofbiz:iterator name="productFeatureApplType" property="productFeatureApplTypes">
-          <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> [<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]</option>
-        </ofbiz:iterator>
-      </select>
-    </td>
---%>
+    <%if (productId != null && productId.length() > 0) {%>
+      </tr>
+      <tr class='viewOneTR2'>
+      <FORM method=POST action='<ofbiz:url>/ApplyFeatureToProduct</ofbiz:url>'>
+        <input type=hidden name='productId' value='<%=productId%>'>
+        <input type=hidden <ofbiz:inputvalue entityAttr="productFeature" field="productFeatureId" fullattrs="true"/>>
+        <td><div class="tabletext">&nbsp;</div></td>
+        <td>
+          <select name='productFeatureApplTypeId' size=1>
+            <ofbiz:iterator name="productFeatureApplType" property="productFeatureApplTypes">
+              <option value='<%=productFeatureApplType.getString("productFeatureApplTypeId")%>'><%=productFeatureApplType.getString("description")%> [<%=productFeatureApplType.getString("productFeatureApplTypeId")%>]</option>
+            </ofbiz:iterator>
+          </select>
+        </td>
+        <td><input type=text size='18' name='fromDate'></td>
+        <td><input type=text size='18' name='thruDate'></td>
+        <td><input type=text size='5' name='sequenceNum'></td>
+      <td><INPUT type=submit value='Apply'></td>
+      </FORM>
+    <%}%>
   </tr>
 </ofbiz:iterator>
 </table>
@@ -148,7 +157,7 @@
         </ofbiz:iterator>
       </select></td>
     </tr>
-<%--
+<%-- This will always be the same, ie we will use the productFeatureCategoryId for this page
     <tr>
       <td><div class='tabletext'>Feature Category:</div></td>
       <td><select name='productFeatureCategoryId' size=1>

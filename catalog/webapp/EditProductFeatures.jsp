@@ -73,8 +73,8 @@
     <td><div class="tabletext"><b>Feature&nbsp;Category</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date</b></div></td>
     <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
-    <td><div class="tabletext"><b>Sequence&nbsp;Num</b></div></td>
-    <td><div class="tabletext"><b>Appl&nbsp;Type</b></div></td>
+    <td><div class="tabletext"><b>Sequence</b></div></td>
+    <td><div class="tabletext"><b>Application&nbsp;Type</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
@@ -90,7 +90,7 @@
     <td><div class='tabletext'><ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureTypeId"/></div></td>
     <td><div class='tabletext'><ofbiz:entityfield attribute="curProductFeatureCategory" field="description"/> [<ofbiz:entityfield attribute="productFeatureAndAppl" field="productFeatureCategoryId"/>]</div></td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="fromDate"/></div></td>
-    <td><input type=text size='20' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/>></td>
+    <td><input type=text size='18' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="thruDate" fullattrs="true"/>></td>
     <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeatureAndAppl" field="sequenceNum" fullattrs="true"/>></td>
     <td>
       <select name='productFeatureApplTypeId' size=1>
