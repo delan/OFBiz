@@ -4,8 +4,7 @@ String description = "None";
 String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
 String author = "David E. Jones";
 String version = "1.0";
-%>
-<?xml version="1.0"?>
+%><?xml version="1.0"?>
 <!--
 /**
  *  $Id$
