@@ -49,6 +49,7 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
     orderItemIter = orderItems.iterator();
     while (orderItemIter.hasNext()) {
     	orderItem = orderItemIter.next();
+    	product = orderItem.getRelatedOne("Product");
     	orderItemInventoryResList = orderItem.getRelated("OrderItemInventoryRes", UtilMisc.toMap("facilityId", shipment.get("originFacilityId")), UtilMisc.toList("quantity"));
     	
     	orderItemInventoryResDatas = new LinkedList();
@@ -65,6 +66,7 @@ if (UtilValidate.isNotEmpty(orderId) && shipment != null) {
     	
     	orderItemData = new HashMap();
     	orderItemData.put("orderItem", orderItem);
+    	orderItemData.put("product", product);
     	orderItemData.put("orderItemInventoryResDatas", orderItemInventoryResDatas);
     	orderItemDatas.add(orderItemData);
     }
