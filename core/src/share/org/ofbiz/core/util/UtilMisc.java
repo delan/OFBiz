@@ -391,6 +391,26 @@ public class UtilMisc {
                 return realMapIfNeeded.values();
             }
         }
-		
+
+        public String toString() {
+            StringBuffer outString = new StringBuffer("{");
+            if (name1 != null) {
+                outString.append('{'); outString.append(name1); outString.append(','); outString.append(value1); outString.append('}');
+            }
+            if (name2 != null) {
+                if (outString.length() > 1) outString.append(',');
+                outString.append('{'); outString.append(name2); outString.append(','); outString.append(value2); outString.append('}');
+            }
+            if (name3 != null) {
+                if (outString.length() > 1) outString.append(',');
+                outString.append('{'); outString.append(name3); outString.append(','); outString.append(value3); outString.append('}');
+            }
+            if (name4 != null) {
+                if (outString.length() > 1) outString.append(',');
+                outString.append('{'); outString.append(name4); outString.append(','); outString.append(value4); outString.append('}');
+            }
+            outString.append('}');
+            return outString.toString();
+        }
     }
 }
