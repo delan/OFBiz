@@ -42,6 +42,7 @@
   <ContentType contentTypeId="STRUCTURE_LEAF" description="Structure Leaf" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="STRUCTURE_DEF" description="Structure Definition (like DTD)" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="TXFORM_DEF" description="Transformation Definition (like XSLT)" hasTable="N" parentTypeId=""/>
+  <ContentType contentTypeId="TEMPLATE" description="Template" hasTable="N" parentTypeId=""/>
 
   <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
   <DataResourceType dataResourceTypeId="URL_RESOURCE" description="URL Resource" hasTable="N" parentTypeId=""/>
