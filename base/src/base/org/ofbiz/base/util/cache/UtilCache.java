@@ -525,6 +525,11 @@ public class UtilCache implements Serializable {
         }
     }
 
+    /** 
+     * NOTE: this returns an unmodifiable copy of the keySet, so removing from here won't have an effect, 
+     * and calling a remove while iterating through the set will not cause a concurrent modification exception.
+     * This behavior is necessary for now for the persisted cache feature. 
+     */
     public Set getCacheLineKeys() {
         return cacheLineTable.keySet();
     }

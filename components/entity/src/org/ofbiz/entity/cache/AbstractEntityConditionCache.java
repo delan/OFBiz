@@ -29,6 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericEntity;
@@ -106,29 +107,30 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
         return conditionCache;
     }
 
-    public void storeHook(GenericEntity newEntity) {
-        storeHook(null, newEntity);
-    }
-
     protected static final boolean isNull(Map value) {
         return value == null || value == GenericEntity.NULL_ENTITY || value == GenericValue.NULL_VALUE;
     }
 
-    protected ModelEntity validateStoreHookArgs(GenericEntity oldEntity, GenericEntity newEntity) {
+    protected ModelEntity getModelCheckValid(GenericEntity oldEntity, GenericEntity newEntity) {
         ModelEntity model;
-        String entityName;
         if (!isNull(newEntity)) {
             model = newEntity.getModelEntity();
-            entityName = model.getEntityName();
-            if (oldEntity != null && !entityName.equals(oldEntity.getEntityName()))
+            String entityName = model.getEntityName();
+            if (oldEntity != null && !entityName.equals(oldEntity.getEntityName())) {
                 throw new IllegalArgumentException("internal error: storeHook called with 2 different entities(old=" + oldEntity.getEntityName() + ", new=" + entityName + ")");
+            }
         } else {
-            if (oldEntity != null)
+            if (!isNull(oldEntity)) {
                 model = oldEntity.getModelEntity();
-            else
+            } else {
                 throw new IllegalArgumentException("internal error: storeHook called with 2 null arguments");
+            }
         }
         return model;
+    }
+
+    public void storeHook(GenericEntity newEntity) {
+        storeHook(null, newEntity);
     }
 
     // if oldValue == null, then this is a new entity
@@ -144,7 +146,7 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
     }
 
     protected List convert(boolean isPK, String targetEntityName, GenericEntity entity) {
-        if (entity == null || entity == GenericEntity.NULL_ENTITY || entity == GenericValue.NULL_VALUE) return null;
+        if (isNull(entity)) return null;
         if (isPK) {
             return entity.getModelEntity().convertToViewValues(targetEntityName, (GenericPK) entity);
         } else {
@@ -153,8 +155,12 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
     }
 
     public synchronized void storeHook(boolean isPK, GenericEntity oldEntity, GenericEntity newEntity) {
-        ModelEntity model = validateStoreHookArgs(oldEntity, newEntity);
+        ModelEntity model = getModelCheckValid(oldEntity, newEntity);
         String entityName = model.getEntityName();
+        // for info about cache clearing
+        if (newEntity == null) {
+            //Debug.logInfo("In storeHook calling sub-storeHook for entity name [" + entityName + "] for the oldEntity: " + oldEntity, module);
+        }
         storeHook(entityName, isPK, UtilMisc.toList(oldEntity), UtilMisc.toList(newEntity));
         Iterator it = model.getViewConvertorsIterator();
         while (it.hasNext()) {
@@ -165,43 +171,58 @@ public abstract class AbstractEntityConditionCache extends AbstractCache {
     }
 
     protected void storeHook(String entityName, boolean isPK, List oldValues, List newValues) {
-        UtilCache entityCache;
+        UtilCache entityCache = null;
         synchronized (UtilCache.utilCacheTable) {
             entityCache = (UtilCache) UtilCache.utilCacheTable.get(getCacheName(entityName));
         }
-        if (entityCache == null) return;
-        Iterator it = entityCache.getCacheLineKeys().iterator();
-        while (it.hasNext()) {
-            EntityCondition condition = (EntityCondition) it.next();
+        // for info about cache clearing
+        if (newValues == null || newValues.size() == 0 || newValues.get(0) == null) {
+            //Debug.logInfo("In storeHook (cache clear) for entity name [" + entityName + "], got entity cache with name: " + (entityCache == null ? "[No cache found to remove from]" : entityCache.getName()), module);
+        }
+        if (entityCache == null) {
+            return;
+        }
+        Iterator cacheKeyIter = entityCache.getCacheLineKeys().iterator();
+        while (cacheKeyIter.hasNext()) {
+            EntityCondition condition = (EntityCondition) cacheKeyIter.next();
+            //Debug.logInfo("In storeHook entityName [" + entityName + "] checking against condition: " + condition, module);
             boolean shouldRemove = false;
             if (condition == null) {
                 shouldRemove = true;
             } else if (oldValues == null) {
-                Iterator it2 = newValues.iterator();
-                while (it2.hasNext() && !shouldRemove) {
-                    Map newValue = (Map) it2.next();
+                Iterator newValueIter = newValues.iterator();
+                while (newValueIter.hasNext() && !shouldRemove) {
+                    Map newValue = (Map) newValueIter.next();
                     shouldRemove |= condition.mapMatches(getDelegator(), newValue);
                 }
             } else {
                 boolean oldMatched = false;
-                Iterator it2 = oldValues.iterator();
-                while (it2.hasNext() && !shouldRemove) {
-                    Map oldValue = (Map) it2.next();
+                Iterator oldValueIter = oldValues.iterator();
+                while (oldValueIter.hasNext() && !shouldRemove) {
+                    Map oldValue = (Map) oldValueIter.next();
                     if (condition.mapMatches(getDelegator(), oldValue)) {
                         oldMatched = true;
+                        //Debug.logInfo("In storeHook, oldMatched for entityName [" + entityName + "]; shouldRemove is false", module);
                         if (newValues != null) {
-                            Iterator it3 = newValues.iterator();
-                            while (it3.hasNext() && !shouldRemove) {
-                                Map newValue = (Map) it3.next();
+                            Iterator newValueIter = newValues.iterator();
+                            while (newValueIter.hasNext() && !shouldRemove) {
+                                Map newValue = (Map) newValueIter.next();
                                 shouldRemove |= isNull(newValue) || condition.mapMatches(getDelegator(), newValue);
+                                //Debug.logInfo("In storeHook, for entityName [" + entityName + "] shouldRemove is now " + shouldRemove, module);
                             }
                         }
                     }
                 }
-                if (!oldMatched && isPK) shouldRemove = true;
+                // QUESTION: what is this? why would we do this?
+                if (!oldMatched && isPK) {
+                    //Debug.logInfo("In storeHook, for entityName [" + entityName + "] oldMatched is false and isPK is true, so setting shouldRemove to true (will remove from cache)", module);
+                    shouldRemove = true;
+                }
             }
             if (shouldRemove) {
-                it.remove();
+                if (Debug.verboseOn()) Debug.logVerbose("In storeHook, matched condition, removing from cache for entityName [" + entityName + "] in cache with name [" + entityCache.getName() + "] entry with condition: " + condition, module);
+                // doesn't work anymore since this is a copy of the cache keySet, can call remove directly though with a concurrent mod exception: cacheKeyIter.remove();
+                entityCache.remove(condition);
             }
         }
     }
