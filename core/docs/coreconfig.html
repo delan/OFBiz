@@ -26,9 +26,11 @@ $Id$ <br>
   <li><a href="#Properties">Properties File Extensions</a>
   <li><a href="#cache">cache.properties</a>
   <li><a href="#debug">debug.properties</a>
+  <li><a href="#jndiservers">jndiservers.xml</a>
   <li><a href="#localdtds">localdtds.properties</a>
   <li><a href="#security">security.properties</a>
   <li><a href="#serverstats">serverstats.properties</a>
+  <li><a href="#url">url.properties</a>
 </ul>
 
 <hr>
@@ -80,6 +82,13 @@ instead of in the current properties file.</p>
 property is added using the -D parameter on the java command line and is used
 in the entityengine.xml and other properties files with <b><code>${env.ofbiz.home}</code></b>.</p>
 
+<p>Note that these extensions are only currently available for properties files
+used in configuration. The internationalization and localization related message
+properties files use the standard Java <CODE>MessageBundle</CODE> class which does not use
+these conventions. They do, however support parameters inserted into the
+messages using the Java <CODE>MessageFormat</CODE> class and related
+conventions.</p>
+
 <hr>
 <h3><a name="cache">cache.properties</a></h3>
 <hr>
@@ -119,6 +128,54 @@ documentation on Log4J).</p>
 levels on and off. These are formatted like <b><code>print.{level-name}</code></b> where level-name
 is <b><code>verbose</code></b>, <b><code>timing</code></b>, <b><code>info</code></b>,
 <b><code>important</code></b>, <b><code>warning</code></b>, <b><code>error</code></b>, or <b><code>fatal</code></b>.</p>
+
+<hr>
+<h3><a name="jndiservers">jndiservers.xml</a></h3>
+<hr>
+
+<p>This is a simple XML file that contains a number <b><code>jndi-server</code></b>
+tags inside a single <b><code>jndi-config</code></b> tag. Each jndi-server tag
+corresponds to a named JNDI Server configuration that will be used in various
+places in the OFBiz Framework, especially in the Entity and Service Engines.</p>
+
+<p>The <b><code>jndi-server</code></b> tag is used to configure JNDI servers
+that will be used for JTA objects, JDBC objects, JMS objects, and other JNDI resources used
+by the Entity Engine, the Service Engine, and other framework or application
+components.</p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td>
+    <td>The name of the JNDI Server. Used in other tags in the 'jndi-server-name' 
+    attribute. This is the only required attribute. The others can be left out
+    to use the default constructor of the InitialContext class, which will
+    load the JNDI parameters from the jndi.properties file, which most app servers include.</td>
+</tr>
+<tr>
+    <td>context-provider-url</td><td>N</td>
+    <td>Example: rmi://127.0.0.1:1099</td>
+</tr>
+<tr>
+    <td>initial-context-factory</td><td>N</td>
+    <td>Example: com.sun.jndi.rmi.registry.RegistryContextFactory</td>
+</tr>
+<tr>
+    <td>url-pkg-prefixes</td><td>N</td>
+    <td>Example: java.naming.rmi.security.manager</td>
+</tr>
+<tr>
+    <td>security-principal</td><td>N</td>
+    <td>JNDI Username</td>
+</tr>
+<tr>
+    <td>security-credentials</td><td>N</td>
+    <td>JNDI Password</td>
+</tr>
+</table>
 
 <hr>
 <h3><a name="localdtds">localdtds.properties</a></h3>
@@ -173,43 +230,51 @@ resource-name is <b><code>REQUEST</code></b> for Control Servlet requests,
 <b><code>EVENT</code></b> for Control Servlet Events, or <b><code>VIEW</code></b> 
 for Control Servlet Views (JSPs mostly).</p>
 
-<!-- 
-  - Just commenting this out for now, this is now in an XML file and is much
-  - more complex, so a separate document should probably be used to describe that 
-
 <hr>
-<h3><a name="servicesengine">servicesengine.properties</a></h3>
+<h3><a name="url">url.properties</a></h3>
 <hr>
-<p>The servicesengine.properties file contains some global settings for 
-the Service Engine.</p>
 
-<p>The Service Engine allows services to be attached to different contexts where
-each context has its own class loader. In addition to these local contexts there
-is a single global context that also has its own class loader and the service
-definition files for the global context are specified using the 
-<b><code>global.paths</code></b> property. The value of this property should be
-a semicolon separated list of full path and filenames for the service
-definition XML files.</p>
+<p>The url.properties file is used to configure special server URLs for the
+cases where the URL of the current server is not sufficient. Examples of this
+include settings for automatically jumping to secure or non-secure areas of a
+site and referring to content that is on a different server or in a different
+server farm.</p>
 
-<p>The Service Engine also allows either a username/password combination or a 
-UserLogin GenericValue object to be passed in for authentication. When a 
-UserLogin GenericValue object is passed in the user is assumed to be authenticated,
-but when a username/password is specified the user will be authenticated and a 
-UserLogin GenericValue object will be created and place in the context for the
-service to be called. To specify the name of the service which will be called
-to authenticate users when a username/password is specified use the 
-<b><code>auth.service</code></b> property where the value is simply the name
-of the desired service.</p>
+<P>The first set of properties deals with creating links or redirecting to
+secure and non-secure areas of the site. This is primarily used by the
+&lt;ofbiz:url&gt; JSP tag and the ControlServlet to make sure that each request
+comes in how it should, either secure or not. Requests in the controller.xml
+file are marked as secure with an <CODE>https="true"</CODE> attribute on the
+<CODE>security</CODE> tag under a given <CODE>request-map</CODE> tag.</P>
 
-<p>One of the more important uses of this properties file is to specify the class
-names for the engine wrappers for various type of services. The format of these
-properties is <b><code>{engine-name}.engine={class-name}</code></b> where engine-name
-is the value of the 'engine' attribute of the 'service' tag in a service definition 
-XML file and class-name is the fully-qualified class name for a class that 
-implements the <b><code>org.ofbiz.core.service.GenericEngine</code></b> interface.
-Valid entity-names include: <b><code>java</code></b>, <b><code>workflow</code></b>,
-<b><code>bsh</code></b>, and <b><code>soap</code></b>.</p>
--->
+<P>When requests are marked as secure they should go through the secure port. The
+ofbiz:url tag helps with this by creating an extended URL when necessary to go
+through the secure port. The ControlServlet also makes sure that when a secure
+request is required the request comes through a secure port, if not it will send
+a redirect to the same request through the secure port. The requests that are
+marked as not secure with <CODE>https="false"</CODE> behave just the opposite.
+This is done because it is more efficient and lighter on the server when the
+encryption and decryption do not have to be done.</P>
+
+<P>This option of automatically going between the secure and non-secure ports
+can be turned on and off with the <B><CODE>port.https.enabled</CODE></B>
+property which should be either a <B><CODE>Y or N</CODE></B>.</P>
+
+<P>To specify the secure (HTTPS) and non-secure (HTTP) ports and optionally host
+names to use with the ports, use the following properties: <B><CODE>port.https</CODE></B>,
+<B><CODE>force.https.host</CODE></B>, <B><CODE>port.http</CODE></B>, and 
+<B><CODE>force.http.host</CODE></B>.
+
+<P>The next set of properties in the file are for static content URLs. This
+includes images and other resources that can be moved to another server or farm to
+lighten the load of the application servers and the load balancers in front of
+the application servers. This is an inexpensive and easy way to handle more load
+on a site.</P>
+
+<P>There is one property for secure content:
+<B><CODE>content.url.prefix.secure</CODE></B>,
+and one for standard or non-servuce content:
+<B><CODE>content.url.prefix.standard</CODE></B>.</P>
 
 </body>
 </html>
