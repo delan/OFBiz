@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.43 $
+ * @version    $Revision: 1.44 $
  */
 -->
 
@@ -75,6 +75,8 @@
       <field name="localeString" type="very-short"></field>
       <field name="mimeTypeId" type="id-long"></field>
       <field name="characterSetId" type="id-long"></field>
+      <field name="childLeafCount" type="numeric"/>
+      <field name="childBranchCount" type="numeric"/>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
       <field name="lastModifiedDate" type="date-time"></field>
