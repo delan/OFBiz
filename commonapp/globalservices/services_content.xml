@@ -7,17 +7,11 @@
     <version>1.0</version>
 
     <!-- WebSite Services -->
-    <service name="webSiteInterface" engine="interface" location="" invoke="">
+    <service name="webSiteInterface" engine="interface" default-entity-name="WebSite" location="" invoke="">
         <description>WebSite Interface</description>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
-        <attribute name="siteName" type="String" mode="IN" optional="false"/>
-        <attribute name="httpHost" type="String" mode="IN" optional="true"/>
-        <attribute name="httpPort" type="String" mode="IN" optional="true"/>
-        <attribute name="httpsHost" type="String" mode="IN" optional="true"/>
-        <attribute name="httpsPort" type="String" mode="IN" optional="true"/>
-        <attribute name="enableHttps" type="String" mode="IN" optional="true"/>
-        <attribute name="standardContentPrefix" type="String" mode="IN" optional="true"/>
-        <attribute name="secureContentPrefix" type="String" mode="IN" optional="true"/>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="siteName" optional="false"/> 
     </service>
     <service name="createWebSite" engine="simple"
                 location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="createWebSite" auth="true">
