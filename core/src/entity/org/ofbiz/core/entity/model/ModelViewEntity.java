@@ -47,6 +47,11 @@ public class ModelViewEntity extends ModelEntity {
     /** Contains member-entity alias name definitions: key is alias, value is ModelMemberEntity */
     protected Map memberModelMemberEntities = new HashMap();
 
+    /** A list of ModelMemberEntity entries that are <b>required</b> for the join; there MUST be at least ONE of these (ie full joins not supported) */
+    protected List requiredModelMemberEntities = new LinkedList();
+    /** A list of ModelMemberEntity entries that are <b>optional</b> for the join */
+    protected List optionalModelMemberEntities = new LinkedList();
+    
     /** Contains member-entity ModelEntities: key is alias, value is ModelEntity; populated with fields */
     protected Map memberModelEntities = null;
 
@@ -76,11 +81,20 @@ public class ModelViewEntity extends ModelEntity {
             boolean optional = "true".equals(membEnt.getAttribute("optional"));
 
             if (name.length() <= 0 || alias.length() <= 0) {
-                Debug.logWarning("[ModelReader.createModelViewEntity] Warning: entity-alias or " +
-                    "entity-name missing on member-entity element", module);
+                Debug.logError("[new ModelViewEntity] entity-alias or entity-name missing on member-entity element of the view-entity " + this.entityName, module);
             } else {
-                this.addMemberModelMemberEntity(alias, name, optional);
+                ModelMemberEntity modelMemberEntity = new ModelMemberEntity(alias, name, optional);
+                this.addMemberModelMemberEntity(modelMemberEntity);
+                if (optional) {
+                    this.optionalModelMemberEntities.add(modelMemberEntity);
+                } else {
+                    this.requiredModelMemberEntities.add(modelMemberEntity);
+                }
             }
+        }
+        
+        if (this.requiredModelMemberEntities.size() == 0) {
+            Debug.logError("[new ModelViewEntity] there are no required member entities for the view-entity " + this.entityName + "; full joins are not supported so at least one required (non-optional) entity must be used");
         }
 
         //when reading aliases, just read them into the alias list, there will be a pass
@@ -112,6 +126,13 @@ public class ModelViewEntity extends ModelEntity {
     public Map getMemberModelMemberEntities() {
         return this.memberModelMemberEntities;
     }
+    
+    public List getRequiredModelMemberEntities() {
+        return this.requiredModelMemberEntities;
+    }
+    public List getOptionalModelMemberEntities() {
+        return this.optionalModelMemberEntities;
+    }
 
     public ModelEntity getMemberModelEntity(String alias) {
         if (this.memberModelEntities == null) {
@@ -121,8 +142,8 @@ public class ModelViewEntity extends ModelEntity {
         return (ModelEntity) this.memberModelEntities.get(alias);
     }
 
-    public void addMemberModelMemberEntity(String alias, String aliasedEntityName, boolean optional) {
-        this.memberModelMemberEntities.put(alias, new ModelMemberEntity(alias, aliasedEntityName, optional));
+    public void addMemberModelMemberEntity(ModelMemberEntity modelMemberEntity) {
+        this.memberModelMemberEntities.put(modelMemberEntity.getEntityAlias(), modelMemberEntity);
     }
 
     public void removeMemberModelMemberEntity(String alias) {

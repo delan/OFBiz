@@ -433,23 +433,28 @@ public class GenericDAO {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         
-        if (modelEntity.getPksSize() <= 0)
+        if (modelEntity.getPksSize() <= 0) {
             throw new GenericEntityException("Entity has no primary keys, cannot select by primary key");
+        }
         
-        String sql = "SELECT ";
+        //get for query-time config options
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
         
-        if (modelEntity.getNopksSize() > 0)
-            sql += modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", "");
-        else
-            sql += "*";
+        StringBuffer sqlBuffer = new StringBuffer("SELECT ");
         
-        sql += SqlJdbcUtil.makeFromClause(modelEntity);
-        sql += SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND");
+        if (modelEntity.getNopksSize() > 0) {
+            sqlBuffer.append(modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", ""));
+        } else {
+            sqlBuffer.append("*");
+        }
+        
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo.joinStyle));
+        sqlBuffer.append(SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND", datasourceInfo.joinStyle));
         
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
         try {
-            sqlP.prepareStatement(sql, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            sqlP.prepareStatement(sqlBuffer.toString(), true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             sqlP.executeQuery();
             
@@ -481,6 +486,9 @@ public class GenericDAO {
             throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation partialSelect not supported yet for view entities");
         }
         
+        //get for query-time config options
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        
         /*
          if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
          Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
@@ -504,20 +512,20 @@ public class GenericDAO {
             throw new GenericModelException("In partialSelect invalid field names specified: " + tempKeys.toString());
         }
         
-        String sql = "SELECT ";
+        StringBuffer sqlBuffer = new StringBuffer("SELECT ");
         
         if (partialFields.size() > 0) {
-            sql += modelEntity.colNameString(partialFields, ", ", "");
+            sqlBuffer.append(modelEntity.colNameString(partialFields, ", ", ""));
         } else {
-            sql += "*";
+            sqlBuffer.append("*");
         }
-        sql += SqlJdbcUtil.makeFromClause(modelEntity);
-        sql += SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND");
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo.joinStyle));
+        sqlBuffer.append(SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND", datasourceInfo.joinStyle));
         
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
-            sqlP.prepareStatement(sql, true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
+            sqlP.prepareStatement(sqlBuffer.toString(), true, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
             SqlJdbcUtil.setPkValues(sqlP, modelEntity, entity, modelFieldTypeReader);
             sqlP.executeQuery();
             
@@ -969,6 +977,9 @@ public class GenericDAO {
             return null;
         }
 
+        //get for query-time config options
+        EntityConfigUtil.DatasourceInfo datasourceInfo = EntityConfigUtil.getDatasourceInfo(helperName);
+        
         //if no find options passed, use default
         if (findOptions == null) findOptions = new EntityFindOptions();
         
@@ -1012,9 +1023,9 @@ public class GenericDAO {
             sqlBuffer.append("*");
         }
         
-        //FROM clause
-        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
-        
+        //FROM clause and when necessary the JOIN or LEFT JOIN clause(s) as well
+        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity, datasourceInfo.joinStyle));
+
         //WHERE clause
         StringBuffer whereString = new StringBuffer();
         String entityCondWhereString = "";
@@ -1023,7 +1034,7 @@ public class GenericDAO {
             entityCondWhereString = whereEntityCondition.makeWhereString(modelEntity, whereEntityConditionParams);
         }
         
-        String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
+        String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity, datasourceInfo.joinStyle);
         if (viewClause.length() > 0) {
             if (entityCondWhereString.length() > 0) {
                 whereString.append("(");

@@ -47,8 +47,9 @@ import org.ofbiz.core.entity.*;
  */
 public class SqlJdbcUtil {
     public static final String module = GenericDAO.class.getName();
-    
-    public static String makeFromClause(ModelEntity modelEntity) {
+
+    /** Makes the FROM clause and when necessary the JOIN clause(s) as well */
+    public static String makeFromClause(ModelEntity modelEntity, String joinStyle) {
         StringBuffer sql = new StringBuffer("");
         
         if (modelEntity instanceof ModelViewEntity) {
@@ -110,14 +111,14 @@ public class SqlJdbcUtil {
         return returnString.toString();
     }
 
-    public static String makeWhereClause(ModelEntity modelEntity, List modelFields, Map fields, String operator) {
+    public static String makeWhereClause(ModelEntity modelEntity, List modelFields, Map fields, String operator, String joinStyle) {
         StringBuffer whereString = new StringBuffer("");
 
         if (modelFields != null && modelFields.size() > 0) {
             whereString.append(makeWhereStringFromFields(modelFields, fields, "AND"));
         }
 
-        String viewClause = makeViewWhereClause(modelEntity);
+        String viewClause = makeViewWhereClause(modelEntity, joinStyle);
 
         if (viewClause.length() > 0) {
             if (whereString.length() > 0) {
@@ -136,7 +137,7 @@ public class SqlJdbcUtil {
         return "";
     }
 
-    public static String makeViewWhereClause(ModelEntity modelEntity) {
+    public static String makeViewWhereClause(ModelEntity modelEntity, String joinStyle) {
         if (modelEntity instanceof ModelViewEntity) {
             StringBuffer whereString = new StringBuffer("");
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
