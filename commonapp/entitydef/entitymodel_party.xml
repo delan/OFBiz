@@ -1406,13 +1406,13 @@
       <alias entity-alias="PC" name="extension"/>
       <alias entity-alias="PC" name="allowSolicitation"/>
       <alias entity-alias="PT" name="purposeDescription" field="description"/>
-      <view-link entity-alias="PC" rel-entity-alias="CM">
+      <view-link entity-alias="PR" rel-entity-alias="CM">
         <key-map field-name="contactMechId"/>
       </view-link>
-      <view-link entity-alias="CM" rel-entity-alias="PR">
+      <view-link entity-alias="CM" rel-entity-alias="PC">
         <key-map field-name="contactMechId"/>
       </view-link>
-      <view-link entity-alias="PT" rel-entity-alias="PR">
+      <view-link entity-alias="PR" rel-entity-alias="PT">
         <key-map field-name="contactMechPurposeTypeId"/>
       </view-link>
       <relation type="many" rel-entity-name="PartyContactMech">
