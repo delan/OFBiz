@@ -55,7 +55,7 @@
     if (programText.length() > 0 && programChanged) {
       try {
           program = LogikusFacade.program(programText);
-      } catch (Exception e) { messages.add(e.getMessage()); }
+      } catch (Exception e) { messages.add(e.toString()); Debug.logWarning(e); }
       if (program != null) {
           session.setAttribute("LAST_RULES_PROGRAM", program);
           session.setAttribute("LAST_RULES_PROGRAM_TEXT", programText);
@@ -66,7 +66,7 @@
     if (program != null && queryText.length() > 0 && programChanged || (lastQueryText == null) || (!lastQueryText.equals(queryText))) {
       try {
           query = LogikusFacade.query(queryText, program);
-      } catch (Exception e) { messages.add(e.getMessage()); }
+      } catch (Exception e) { messages.add(e.toString()); Debug.logWarning(e); }
       if (query != null) {
           session.setAttribute("LAST_RULES_QUERY", query);
           session.setAttribute("LAST_RULES_QUERY_TEXT", queryText);
@@ -117,7 +117,7 @@
     <%boolean moreProofs = true;%>
     <%boolean cont = true;%>
     <%while (cont && (moreProofs = query.canFindNextProof())) {%>
-      <%if (vars.size() == 0) {%>
+      <%if (vars == null || vars.size() == 0) {%>
         <div>yes, result found</div>
         <%cont = false;%>
       <%} else {%>
