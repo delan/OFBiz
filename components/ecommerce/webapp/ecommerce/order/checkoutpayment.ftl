@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      3.0
 -->
 
@@ -204,7 +204,7 @@ function toggleBillingAccount(box) {
                               <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="1%" nowrap>
-                              <span class="tabletext">Gift:&nbsp;${giftCardNumber}</span>
+                              <span class="tabletext">${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
                               <span class="tabletext" align="right">
                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                               </span>
@@ -292,9 +292,9 @@ function toggleBillingAccount(box) {
                       <tr>
                         <td colspan="3">
                           <div class='tabletext' valign='middle'>
-                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[Single Use Credit Card]</a>&nbsp;
-                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[Single Use Gift Card]</a>&nbsp;
-                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[Single Use EFT Account]</a>&nbsp;
+                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=CC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseCreditCard}]</a>&nbsp;
+                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=GC&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseGiftCard}]</a>&nbsp;
+                            <a href="<@ofbizUrl>/setBilling?paymentMethodType=EFT&singleUsePayment=Y</@ofbizUrl>" class="buttontext">[${uiLabelMap.AccountingSingleUseEFTAccount}]</a>&nbsp;
                           </div>
                         </td>
                       </tr>

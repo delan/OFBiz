@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
@@ -30,7 +32,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td align='left'>
-            <div class='boxhead'>&nbsp;Shipping Options</div>
+            <div class='boxhead'>&nbsp;${uiLabelMap.OrderShippingInformation}</div>
           </td>
           <td nowrap align="right">
             <div class="tabletext">
@@ -74,14 +76,14 @@
                     <input type='radio' name='shipping_method' value="Default" checked>
                   </td>
                   <td valign="top">
-                    <div class='tabletext'>Use Default: No other shipping methods available.</div>
+                    <div class='tabletext'>${uiLabelMap.OrderUseDefault}.</div>
                   </td>
                 </tr>
                 </#if>
                 <tr><td colspan='2'><hr class='sepbar'></td></tr>
                 <tr>
                   <td colspan='2'>
-                    <div class="head2"><b>Ship all at once, or 'as available'?</b></div>
+                    <div class="head2"><b>${uiLabelMap.OrderShipAllAtOnce}?</b></div>
                   </td>
                 </tr>
                 <tr>
@@ -89,7 +91,7 @@
                     <input type='radio' <#if !cart.getMaySplit()?default(false)>checked</#if> name='may_split' value='false'>
                   </td>
                   <td valign="top">
-                    <div class="tabletext">Please wait until the entire order is ready before shipping.</div>
+                    <div class="tabletext">${uiLabelMap.OrderPleaseWaitUntilBeforeShipping}.</div>
                   </td>
                 </tr>
                 <tr>
@@ -97,13 +99,13 @@
                     <input <#if cart.getMaySplit()?default(false)>checked</#if> type='radio' name='may_split' value='true'>
                   </td>
                   <td valign="top">
-                    <div class="tabletext">Please ship items I ordered as they become available (you may incur additional shipping charges).</div>
+                    <div class="tabletext">${uiLabelMap.OrderPleaseShipItemsBecomeAvailable}.</div>
                   </td>
                 </tr>
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
                 <tr>
                   <td colspan="2">
-                    <div class="head2"><b>Special Instructions</b></div>
+                    <div class="head2"><b>${uiLabelMap.OrderSpecialInstructions}</b></div>
                   </td>
                 </tr>
                 <tr>
@@ -114,7 +116,7 @@
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
                 <tr>
                   <td colspan="2">
-                    <span class="head2"><b>PO Number</b></span>&nbsp;
+                    <span class="head2"><b>${uiLabelMap.OrderPoNumber}</b></span>&nbsp;
                     <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${cart.getPoNumber()?if_exists}'>
                   </td>
                 </tr>
@@ -122,16 +124,16 @@
                 <tr>
                   <td colspan="2">
                     <div>
-                      <span class="head2"><b>Is This a Gift?</b></span>
-                      <input type='radio' <#if cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='true'><span class='tabletext'>Yes</span>
-                      <input type='radio' <#if !cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='false'><span class='tabletext'>No</span>
+                      <span class="head2"><b>${uiLabelMap.OrderIsThisGift}?</b></span>
+                      <input type='radio' <#if cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='true'><span class='tabletext'>${uiLabelMap.CommonYes}</span>
+                      <input type='radio' <#if !cart.getIsGift()?default(false)>checked</#if> name='is_gift' value='false'><span class='tabletext'>${uiLabelMap.CommonNo}</span>
                     </div>
                   </td>
                 </tr>
                 <tr><td colspan="2"><hr class='sepbar'></td></tr>
                 <tr>
                   <td colspan="2">
-                    <div class="head2"><b>Gift Message</b></div>
+                    <div class="head2"><b>${uiLabelMap.OrderGiftMessage}</b></div>
                   </td>
                 </tr>
                 <tr>
@@ -141,7 +143,7 @@
                 </tr>
                 <tr>
                   <td align="center" colspan="2">
-                    <input type="submit" class="smallsubmit" value="Continue">
+                    <input type="submit" class="smallsubmit" value="${uiLabelMap.CommonContinue}">
                   </td>
                 </tr>
               </table>

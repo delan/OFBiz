@@ -20,7 +20,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
-<#if shipAddr?exists><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">Change Shipping Address</a><#if shipOptions?exists><a href="<@ofbizUrl>/setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">Change Shipping Options</a><#if billing?exists><a href="<@ofbizUrl>/setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">Change Payment Info</a></#if></#if></#if>
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
+<#if shipAddr?exists><a href="<@ofbizUrl>/setShipping</@ofbizUrl>" class="${trailClass.shipAddr}">${uiLabelMap.OrderChangeShippingAddress}</a><#if shipOptions?exists><a href="<@ofbizUrl>/setShipOptions</@ofbizUrl>" class="${trailClass.shipOptions}">Change Shipping Options</a><#if billing?exists><a href="<@ofbizUrl>/setBilling?resetType=Y</@ofbizUrl>" class="${trailClass.paymentType}">${uiLabelMap.OrderChangePaymentInfo}</a></#if></#if></#if>

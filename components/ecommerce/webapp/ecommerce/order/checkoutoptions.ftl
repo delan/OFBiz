@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.1
 -->
 
@@ -278,7 +278,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td colspan="2">
-                          <div class="tabletext">${uiLabelMap. OrderEmailSentToFollowingAddresses}:</div>
+                          <div class="tabletext">${uiLabelMap.OrderEmailSentToFollowingAddresses}:</div>
                           <div class="tabletext">
                             <b>
                               <#list context.emailList as email>
@@ -409,7 +409,7 @@ function toggleBillingAccount(box) {
                               <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
-                              <span class="tabletext">Gift:&nbsp;${giftCardNumber}</span>
+                              <span class="tabletext">${uiLabelMap.AccountingGift}:&nbsp;${giftCardNumber}</span>
                               <a href="javascript:submitForm(document.checkoutInfoForm, 'EG', '${paymentMethod.paymentMethodId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
                             </td>
                           </tr>
@@ -460,12 +460,12 @@ function toggleBillingAccount(box) {
                           <input type="checkbox" name="addGiftCard" value="Y">
                         </td>
                         <td width="50%" nowrap>
-                          <span class="tabletext">Use Gift Card Not On File</span>
+                          <span class="tabletext">${uiLabelMap.AccountingUseGiftCardNotOnFile}</span>
                         </td>
                       </tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <div class="tabletext">Number</div>
+                          <div class="tabletext">${uiLabelMap.AccountingNumber}</div>
                         </td>
                         <td width="50%" nowrap>
                           <input type="text" size="15" class="inputBox" name="giftCardNumber" value="${(requestParameters.giftCardNumber)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
@@ -473,7 +473,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <div class="tabletext">PIN</div>
+                          <div class="tabletext">${uiLabelMap.AccountingPIN}</div>
                         </td>
                         <td width="50%" nowrap>
                           <input type="text" size="10" class="inputBox" name="giftCardPin" value="${(requestParameters.giftCardPin)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
@@ -481,7 +481,7 @@ function toggleBillingAccount(box) {
                       </tr>
                       <tr>
                         <td width="1%" nowrap>
-                          <div class="tabletext">Amount</div>
+                          <div class="tabletext">${uiLabelMap.AccountingAmount}</div>
                         </td>
                         <td width="50%" nowrap>
                           <input type="text" size="6" class="inputBox" name="giftCardAmount" value="${(requestParameters.giftCardAmount)?if_exists}" onFocus="document.checkoutInfoForm.addGiftCard.checked=true;">
@@ -497,7 +497,7 @@ function toggleBillingAccount(box) {
                 <tr>
                   <td colspan="2" align="center" valign="top">
                     <div class="tabletext" valign="top">
-                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">[Split Payment]</a>
+                      <a href="javascript:submitForm(document.checkoutInfoForm, 'SP', '');" class="buttontext">[${uiLabelMap.AccountingSplitPayment}]</a>
                     </div>
                   </td>
               </table>

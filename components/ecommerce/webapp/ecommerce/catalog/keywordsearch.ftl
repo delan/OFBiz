@@ -20,17 +20,17 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<div class="head1">Product Search, <span class="head2">you searched for:</span></div>
+<div class="head1">${uiLabelMap.ProductProductSearch}, <span class="head2">${uiLabelMap.ProductYouSearchedFor}:</span></div>
 <#list searchConstraintStrings as searchConstraintString>
     <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>
 </#list>
-<div class="tabletext">Sorted by: ${searchSortOrderString}</div>
-<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[Refine Search]</a></div>
+<div class="tabletext">${uiLabelMap.ProductSortedBy}: ${searchSortOrderString}</div>
+<div class="tabletext"><a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${(reqeustParameters.SEARCH_CATEGORY_ID)?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductRefineSearch}]</a></div>
 
 <#if !productIds?has_content>
   <br><div class="head2">&nbsp;${uiLabelMap.ProductNoResultsFound}.</div>

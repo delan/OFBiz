@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -45,7 +45,7 @@
     </#if>
 
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">Card Number</div></td>
+      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingCardNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#if giftCardData?has_content && giftCardData.cardNumber?has_content>
@@ -67,14 +67,14 @@
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">PIN Number</div></td>
+      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingPINNumber}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <input type="password" class="inputBox" size="10" maxlength="60" name="pinNumber" value="${giftCardData.pinNumber?if_exists}">
       </td>
     </tr>
     <tr>
-      <td width="26%" align=right valign='top'><div class="tabletext">Expiration Date</div></td>
+      <td width="26%" align=right valign='top'><div class="tabletext">${uiLabelMap.AccountingExpirationDate}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%">
         <#assign expMonth = "">
