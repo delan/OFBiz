@@ -14,7 +14,7 @@
 <A href="http://sf.net/projects/ofbiz"><IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
 <br>
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
-Last Updated: July 18, 2002<br>
+Last Updated: December 12, 2002<br>
 $Id$ <br>
 <hr>
 <br>
@@ -38,7 +38,11 @@ $Id$ <br>
     <li><a href='#Event'>Event Specific Operations</a>
     <li><a href='#Service'>Service Specific Operations</a>
     <li><a href='#Environment'>Method Environment Operations</a>
-    <li><a href='#Entity'>Entity Engine Operations</a>
+    <li><a href='#EntityMisc'>Entity Engine Misc. Operations</a>
+    <li><a href='#EntityFind'>Entity Engine Find Operations</a>
+    <li><a href='#EntityValue'>Entity Engine Value Operations</a>
+    <li><a href='#EntityList'>Entity Engine List Operations</a>
+    <li><a href='#EntityTx'>Entity Engine Transaction Operations</a>
     <li><a href='#Conditional'>Conditional (If) Operations</a>
     <li><a href='#Other'>Other Operations</a>
     <li><a href='#MethodExample'>Simple Methods Example</a>
@@ -231,7 +235,11 @@ in addition to all of the the attributes in the copy tag.</p>
 <li><a href='#Event'>Event Specific Operations</a>
 <li><a href='#Service'>Service Specific Operations</a>
 <li><a href='#Environment'>Method Environment Operations</a>
-<li><a href='#Entity'>Entity Engine Operations</a>
+<li><a href='#EntityMisc'>Entity Engine Misc. Operations</a>
+<li><a href='#EntityFind'>Entity Engine Find Operations</a>
+<li><a href='#EntityValue'>Entity Engine Value Operations</a>
+<li><a href='#EntityList'>Entity Engine List Operations</a>
+<li><a href='#EntityTx'>Entity Engine Transaction Operations</a>
 <li><a href='#Conditional'>Conditional (If) Operations</a>
 <li><a href='#Other'>Other Operations</a>
 <li><a href='#MethodExample'>Simple Methods Example</a>
@@ -1322,7 +1330,7 @@ operations, including the conditional/if operations.</p>
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
-<h4><a name='Entity'>Entity Engine Operations</a></h4>
+<h4><a name='EntityMisc'>Entity Engine Misc. Operations</a></h4>
 
 <p><b><u>now-timestamp-to-env</u></b></p>
 
@@ -1399,6 +1407,11 @@ calling services, etc.</p>
     <td>The name of the method environment field that contains the UserLogin GenericValue object.</td>
 </tr>
 </table>
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+<hr>
+<h4><a name='EntityFind'>Entity Engine Find Operations</a></h4>
 
 <p><b><u>find-by-primary-key</u></b></p>
 
@@ -1540,6 +1553,11 @@ placed in the method environment using the specified list-name.</p>
     same entity. Defaults to <b>true</b>.</td>
 </tr>
 </table>
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+<hr>
+<h4><a name='EntityValue'>Entity Engine Value Operations</a></h4>
 
 <p><b><u>make-value</u></b></p>
 
@@ -1744,6 +1762,11 @@ the map passed to see if it is a byPrimaryKey, and byAnd, or an all.</p>
 </tr>
 </table>
 
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+<hr>
+<h4><a name='EntityList'>Entity Engine List Operations</a></h4>
+
 <p><b><u>store-list</u></b></p>
 
 <p>The store-list tag uses the delegator to store all entity values in the list.
@@ -1780,6 +1803,11 @@ removed from the datasource that match the constraint of the field map.</p>
     <td>The name of the method environment field that contains the list of GenericValue objects.</td>
 </tr>
 </table>
+
+<!-- ======================================================================= -->
+<!-- ======================================================================= -->
+<hr>
+<h4><a name='EntityTx'>Entity Engine Transaction Operations</a></h4>
 
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
