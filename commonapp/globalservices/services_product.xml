@@ -896,14 +896,14 @@
         <description>Add Party To Facility</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="Timestamp" mode="IN" optional="false"/>        
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
     </service>
     <service name="addPartyToFacilityGroup" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="addPartyToFacilityGroup" auth="true">
         <description>Add Party To FacilityGroup</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="Timestamp" mode="IN" optional="false"/>        
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
     </service>    
     
     <service name="removePartyFromFacility" engine="simple"
@@ -911,14 +911,14 @@
         <description>Remove Party From Facility</description>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="Timestamp" mode="IN" optional="false"/>        
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
     </service>
     <service name="removePartyFromFacilityGroup" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="removePartyFromFacilityGroup" auth="true">
         <description>Remove Party From FacilityGroup</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="roleTypeId" type="Timestamp" mode="IN" optional="false"/>        
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>        
     </service>        
 
     <!-- Product View Services -->
