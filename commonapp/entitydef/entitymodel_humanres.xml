@@ -538,13 +538,6 @@
         <key-map field-name="periodTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="RejectionReason"
-            package-name="org.ofbiz.commonapp.humanres.employment"
-            title="Rejection Reason Entity">
-      <field name="rejectionId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="rejectionId"/>
-    </entity>
     <entity entity-name="SalaryStep"
             package-name="org.ofbiz.commonapp.humanres.employment"
             title="Salary Step Entity">

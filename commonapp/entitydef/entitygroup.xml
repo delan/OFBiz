@@ -297,7 +297,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="PayGrade" />	
     <entity-group group="org.ofbiz.commonapp" entity="PayHistory" />	
     <entity-group group="org.ofbiz.commonapp" entity="PayrollPreference" />	
-    <entity-group group="org.ofbiz.commonapp" entity="RejectionReason" />	
     <entity-group group="org.ofbiz.commonapp" entity="SalaryStep" />	
     <entity-group group="org.ofbiz.commonapp" entity="TerminationReason" />	
     <entity-group group="org.ofbiz.commonapp" entity="TerminationType" />	
@@ -648,6 +647,7 @@
   <!-- org.ofbiz.commonapp.shipment.receipt -->
   <!-- ========================================================= -->
 	
+    <entity-group group="org.ofbiz.commonapp" entity="RejectionReason" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentReceipt" />	
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentReceiptRole" />
 

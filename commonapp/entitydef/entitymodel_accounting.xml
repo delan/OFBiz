@@ -1261,6 +1261,12 @@
       <field name="paymentId" type="id"></field>
       <field name="amount" type="currency-amount"></field>
       <prim-key field="deductionId"/>
+      <relation type="one" fk-name="DEDCTN_DEDTYP" rel-entity-name="DeductionType">
+        <key-map field-name="deductionTypeId"/>
+      </relation>
+      <relation type="one" fk-name="DEDCTN_PMNT" rel-entity-name="Payment">
+        <key-map field-name="paymentId"/>
+      </relation>
     </entity>
     <entity entity-name="DeductionType"
             package-name="org.ofbiz.commonapp.accounting.payment"
@@ -1269,6 +1275,9 @@
       <field name="description" type="description"></field>
       <prim-key field="deductionTypeId"/>
       <relation type="many" rel-entity-name="PayrollPreference">
+        <key-map field-name="deductionTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Deduction">
         <key-map field-name="deductionTypeId"/>
       </relation>
     </entity>
@@ -1552,6 +1561,9 @@
         <key-map field-name="paymentId"/>
       </relation>
       <relation type="many" rel-entity-name="PerfReview">
+        <key-map field-name="paymentId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Deduction">
         <key-map field-name="paymentId"/>
       </relation>
     </entity>

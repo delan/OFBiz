@@ -142,6 +142,9 @@
       <relation type="many" rel-entity-name="AgreementTerm">
         <key-map field-name="agreementId"/>
       </relation>
+      <relation type="many" rel-entity-name="AgreementGeographicalApplic">
+        <key-map field-name="agreementId"/>
+      </relation>
     </entity>
     <entity entity-name="AgreementAttribute"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -167,6 +170,16 @@
       <prim-key field="agreementId"/>
       <prim-key field="agreementItemSeqId"/>
       <prim-key field="geoId"/>
+      <relation type="one" fk-name="AGRMNT_GEOAP_AGR" rel-entity-name="Agreement">
+        <key-map field-name="agreementId"/>
+      </relation>
+      <relation type="one" rel-entity-name="AgreementItem">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="AGRMNT_GEOAP_GEO" rel-entity-name="Geo">
+        <key-map field-name="geoId"/>
+      </relation>
     </entity>
     <entity entity-name="AgreementItem"
             package-name="org.ofbiz.commonapp.party.agreement"
@@ -200,6 +213,10 @@
         <key-map field-name="agreementItemSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="AgreementTerm">
+        <key-map field-name="agreementId"/>
+        <key-map field-name="agreementItemSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="AgreementGeographicalApplic">
         <key-map field-name="agreementId"/>
         <key-map field-name="agreementItemSeqId"/>
       </relation>
@@ -1265,12 +1282,15 @@
       <relation type="many" rel-entity-name="EmplPositionType">
         <key-map field-name="partyId"/>
       </relation>
+      <relation type="many" rel-entity-name="ContentRole">
+        <key-map field-name="partyId"/>
+      </relation>
     </entity>
     <view-entity entity-name="PartyAndContactMech"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party and Contact Mech View Entity">
-      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
       <member-entity entity-alias="PTY" entity-name="Party"/>
       <alias entity-alias="CM" name="contactMechId" prim-key="true"/>
       <alias entity-alias="PTY" name="partyId" prim-key="true"/>
@@ -1774,6 +1794,10 @@
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
       </relation>
+      <relation type="many" rel-entity-name="ContentRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="PartySurveyResponse"
             package-name="org.ofbiz.commonapp.party.party"
@@ -1936,8 +1960,8 @@
     <view-entity entity-name="RoleTypeAndParty"
             package-name="org.ofbiz.commonapp.party.party"
             title="Party Role View Entity">
-      <member-entity entity-alias="RT" entity-name="RoleType"/>
       <member-entity entity-alias="PR" entity-name="PartyRole"/>
+      <member-entity entity-alias="RT" entity-name="RoleType"/>
       <alias entity-alias="PR" name="partyId" prim-key="true"/>
       <alias entity-alias="RT" name="roleTypeId" prim-key="true"/>
       <alias entity-alias="RT" name="description"/>

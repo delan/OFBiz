@@ -104,6 +104,16 @@
   <!-- org.ofbiz.commonapp.shipment.receipt -->
   <!-- ========================================================= -->
 
+    <entity entity-name="RejectionReason"
+            package-name="org.ofbiz.commonapp.shipment.receipt"
+            title="Rejection Reason Entity">
+      <field name="rejectionId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="rejectionId"/>
+      <relation type="many" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="rejectionId"/>
+      </relation>
+    </entity>
     <entity entity-name="ShipmentReceipt"
             package-name="org.ofbiz.commonapp.shipment.receipt"
             title="Shipment Receipt Entity">
@@ -134,6 +144,9 @@
       <relation type="one" fk-name="SHP_RCPT_ORDITM" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
+      </relation>
+      <relation type="one" fk-name="SHP_RCPT_REJRSN" rel-entity-name="RejectionReason">
+        <key-map field-name="rejectionId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentReceiptRole">
         <key-map field-name="receiptId"/>

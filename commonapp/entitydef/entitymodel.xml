@@ -518,6 +518,9 @@
       <relation type="many" rel-entity-name="WebPage">
         <key-map field-name="contentId"/>
       </relation>
+      <relation type="many" rel-entity-name="ContentRole">
+        <key-map field-name="contentId"/>
+      </relation>
     </entity>
     <entity entity-name="ContentAssociation"
             package-name="org.ofbiz.commonapp.content.content"
@@ -614,6 +617,16 @@
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
       <prim-key field="fromDate"/>
+      <relation type="one" fk-name="CNTNT_RL_CNTNT" rel-entity-name="Content">
+        <key-map field-name="contentId"/>
+      </relation>
+      <relation type="one" fk-name="CNTNT_RL_PTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="CNTNT_RL_PTRL" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
     </entity>
     <entity entity-name="ContentType"
             package-name="org.ofbiz.commonapp.content.content"
