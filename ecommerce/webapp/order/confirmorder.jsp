@@ -206,7 +206,7 @@ StringBuffer outString = new StringBuffer();
   outString.append(":");
   outString.append(myServerPort);
   outString.append("/commerce/order/orderstatus.jsp?");
-  if(orderHeader != null) outString.append("order_identifier" + "=" + orderHeader.getString("orderId"));
+  if(orderHeader != null) outString.append("order_id" + "=" + orderHeader.getString("orderId"));
   outString.append("\" class=\"buttonlinkbig\">[View Order]</a>&nbsp;&nbsp;\r\n");
   outString.append("<a href=\"" + myServerProtocol + "://");
   outString.append(myServerName);

@@ -74,7 +74,7 @@
         <div class="tabletext"><%=orderStatusString%></div>
       </td>
       <td>
-        <a href="<%=response.encodeURL(controlPath + "/orderstatus?order_identifier=" + orderHeader.getString("orderId"))%>">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/orderstatus?order_id=" + orderHeader.getString("orderId"))%>">[View]</a>
       </td>
     </tr>
 <%

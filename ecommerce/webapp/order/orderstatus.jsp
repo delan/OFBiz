@@ -20,7 +20,7 @@
   String bColorB2 = "#CCFFCC";
   String bColorB = "";
 
-  String orderId = request.getParameter("order_identifier");
+  String orderId = request.getParameter("order_id");
   GenericValue orderHeader = null;
   Iterator orderItemIter = null;
   GenericValue shippingAddress = null;
@@ -260,7 +260,7 @@
         <td>
         <form method="POST" action="<%=response.encodeURL(controlPath + "/additemsfromorder/orderstatus")%>" vspace="0" hspace="0" name="the<%=orderItem.getTransLineId().intValue()%>form" style=margin:0;>
           <input type="hidden" name="<%="event"%>" value="<%="add_to_cart"%>">
-          <input type="hidden" name="<%="order_identifier"%>" value="<%=orderId%>">
+          <input type="hidden" name="<%="order_id"%>" value="<%=orderId%>">
           <input type="hidden" name="<%=HttpRequestConstants.PRODUCT_ID%>" value="<%=orderItem.getString("productId")%>">
           <%
             if(orderItem.getString("itemDescription").indexOf("[[RandomLength:") >= 0)
@@ -289,7 +289,7 @@
       </td>
 --%>
       <td>
-      <input name="itemId" value="<%=orderItem.getString("orderItemSeqId")%>" type="checkbox">
+      <input name="item_id" value="<%=orderItem.getString("orderItemSeqId")%>" type="checkbox">
       </td>
     </tr>
   <%}//end while%>
