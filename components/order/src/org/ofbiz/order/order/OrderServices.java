@@ -626,6 +626,17 @@ public class OrderServices {
             }
         }
 
+        // set the item associations
+        List orderItemAssociations = (List) context.get("orderItemAssociations");
+        if (orderItemAssociations != null && orderItemAssociations.size() > 0) {
+            Iterator oia = orderItemAssociations.iterator();
+            while (oia.hasNext()) {
+                GenericValue orderItemAssociation = (GenericValue) oia.next();
+                orderItemAssociation.set("purchaseOrderId", orderId);
+                toBeStored.add(orderItemAssociation);
+            }
+        }
+
         // store the orderProductPromoUseInfos
         List orderProductPromoUses = (List) context.get("orderProductPromoUses");
         if (orderProductPromoUses != null && orderProductPromoUses.size() > 0) {

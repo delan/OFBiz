@@ -565,6 +565,29 @@ public class CheckOutHelper {
         }
         // ----------
 
+        // ----------
+        // The status of the requirement associated to the shopping cart lines is set to "ordered".
+        //
+        Iterator shoppingCartItems = this.cart.items().iterator();
+        while (shoppingCartItems.hasNext()) {
+            ShoppingCartItem shoppingCartItem = (ShoppingCartItem)shoppingCartItems.next();
+            String requirementId = shoppingCartItem.getRequirementId();
+            if (requirementId != null) {
+                try {
+                    Map inputMap = UtilMisc.toMap("requirementId", requirementId, "statusId", "REQ_ORDERED");
+                    inputMap.put("userLogin", userLogin);
+                    Map outMap = dispatcher.runSync("updateRequirement", inputMap);
+                } catch (Exception e) {
+                    String service = e.getMessage();
+                    Map messageMap = UtilMisc.toMap("service", service);
+                    String errMsg = UtilProperties.getMessage(resource, "checkhelper.could_not_create_order_invoking_service", messageMap, (cart != null ? cart.getLocale() : Locale.getDefault()));
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            }
+        }
+        // ----------
+
         // set the orderId for use by chained events
         Map result = ServiceUtil.returnSuccess();
         result.put("order_id", orderId);

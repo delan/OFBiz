@@ -366,9 +366,7 @@ public class ShoppingCartHelper {
     }
 
     /** 
-     * Adds all products in a category according to quantity request parameter
-     * for each; if no parameter for a certain product in the category, or if
-     * quantity is 0, do not add
+     * Adds a set of requirements to the cart.
      */
     public Map addToCartBulkRequirements(String catalogId, Map context) {
         // check if we are using per row submit
@@ -417,7 +415,9 @@ public class ShoppingCartHelper {
                     if (quantity > 0.0) {
                         try {
                             if (Debug.verboseOn()) Debug.logVerbose("Bulk Adding to cart requirement [" + quantity + "] of [" + productId + "]", module);
-                            this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, dispatcher);
+                            int index = this.cart.addOrIncreaseItem(productId, 0.00, quantity, null, null, catalogId, dispatcher);
+                            ShoppingCartItem sci = (ShoppingCartItem)this.cart.items().get(index);
+                            sci.setRequirementId(requirementId);
                         } catch (CartItemModifyException e) {
                             return ServiceUtil.returnError(e.getMessage());
                         } catch (ItemNotFoundException e) {
@@ -805,6 +805,8 @@ public class ShoppingCartHelper {
         if (agreement == null) {
             result = ServiceUtil.returnError("Could not get agreement " + agreementId);
         } else {
+            // set the agreement id in the cart
+            cart.setAgreementId(agreementId);
             try {
                  // set the currency based on the pricing agreement
                  List agreementItems = agreement.getRelated("AgreementItem", UtilMisc.toMap("agreementItemTypeId", "AGREEMENT_PRICING_PR"), null);
@@ -825,6 +827,8 @@ public class ShoppingCartHelper {
             }
 
             try {
+                 // clear the existing order terms
+                 cart.removeOrderTerms();
                  // set order terms based on agreement terms
                  List agreementTerms = agreement.getRelated("AgreementTerm");
                  if (agreementTerms.size() > 0) {

@@ -380,9 +380,7 @@ public class ShoppingCartEvents {
         }
     }
 
-    /** Adds all products in a category according to quantity request parameter
-     * for each; if no parameter for a certain product in the category, or if
-     * quantity is 0, do not add
+    /** Adds a set of requirements to the cart
      */
     public static String addToCartBulkRequirements(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = getCartObject(request);

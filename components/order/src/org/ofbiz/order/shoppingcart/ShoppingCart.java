@@ -49,6 +49,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderReadHelper;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 import org.ofbiz.product.config.ProductConfigWrapper;
@@ -76,6 +77,7 @@ public class ShoppingCart implements Serializable {
     private String billingAccountId = null;
     private double billingAccountAmt = 0.00;
     private String currencyUom = null;
+    private String agreementId = null;
 
     private String defaultItemDeliveryDate = null;
     private String defaultItemComment = null;
@@ -493,6 +495,7 @@ public class ShoppingCart implements Serializable {
         this.orderId = cart.getOrderId();
         this.firstAttemptOrderId = cart.getFirstAttemptOrderId();
         this.billingAccountId = cart.getBillingAccountId();
+        this.agreementId = cart.getAgreementId();
         this.orderAdditionalEmails = cart.getOrderAdditionalEmails();
         this.adjustments = new LinkedList(cart.getAdjustments());
         this.contactMechIdsMap = new HashMap(cart.getOrderContactMechIds());
@@ -1102,6 +1105,14 @@ public class ShoppingCart implements Serializable {
 
     public String getDefaultItemComment() {
         return this.defaultItemComment;
+    }
+
+    public void setAgreementId(String agreementId) {
+        this.agreementId = agreementId;
+    }
+
+    public String getAgreementId() {
+        return this.agreementId;
     }
 
     // =======================================================================
@@ -1954,6 +1965,10 @@ public class ShoppingCart implements Serializable {
         orderTerms.remove(index);
     }
 
+    public void removeOrderTerms() {
+        orderTerms.clear();
+    }
+
     public boolean isOrderTermSet(){
        return orderTermSet;
     }
@@ -2803,6 +2818,37 @@ public class ShoppingCart implements Serializable {
         return groups;
     }
 
+    public List makeAllOrderItemAssociations() {
+        List allOrderItemAssociations = new LinkedList();
+
+        if (getOrderType().equals("PURCHASE_ORDER")) {
+            Iterator itemIter = cartLines.iterator();
+
+            while (itemIter.hasNext()) {
+                ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
+                String requirementId = item.getRequirementId();
+
+                if (requirementId != null) {
+                    try {
+                        List commitments = getDelegator().findByAnd("OrderRequirementCommitment", UtilMisc.toMap("requirementId", requirementId));
+                        // TODO: multiple commitments for the same requirement are still not supported
+                        GenericValue commitment = EntityUtil.getFirst(commitments);
+                        if (commitment != null) {
+                            GenericValue orderItemAssociation = getDelegator().makeValue("OrderItemAssociation", null);
+                            orderItemAssociation.set("salesOrderId", commitment.getString("orderId"));
+                            orderItemAssociation.set("soItemSeqId", commitment.getString("orderItemSeqId"));
+                            orderItemAssociation.set("poItemSeqId", item.getOrderItemSeqId());
+                            allOrderItemAssociations.add(orderItemAssociation);
+                        }
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to load OrderRequirementCommitment records for requirement ID : " + requirementId, module);
+                    }
+                }
+            }
+        }
+        return allOrderItemAssociations;
+    }
+
     /** Returns a Map of cart values to pass to the storeOrder service */
     public Map makeCartMap(LocalDispatcher dispatcher, boolean explodeItems) {
         Map result = new HashMap();
@@ -2822,7 +2868,8 @@ public class ShoppingCart implements Serializable {
         result.put("orderItemShipGroupInfo", this.makeAllShipGroupInfos());
         result.put("orderItemSurveyResponses", this.makeAllOrderItemSurveyResponses());
         result.put("orderAdditionalPartyRoleMap", this.getAdditionalPartyRoleMap());
-
+        result.put("orderItemAssociations", this.makeAllOrderItemAssociations());
+        
         result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
         result.put("currencyUom", this.getCurrency());
         result.put("billingAccountId", this.getBillingAccountId());
