@@ -269,10 +269,12 @@ public class PriceServices {
                         
                         //add condsDescription string entry
                         condsDescription.append("[");
-                        condsDescription.append(productPriceCond.getString("inputParamEnumId"));
-                        condsDescription.append("::");
-                        condsDescription.append(productPriceCond.getString("operatorEnumId"));
-                        condsDescription.append("::");
+                        GenericValue inputParamEnum = productPriceCond.getRelatedOneCache("InputParamEnumeration");
+                        condsDescription.append(inputParamEnum.getString("enumCode"));
+                        condsDescription.append(":");
+                        GenericValue operatorEnum = productPriceCond.getRelatedOneCache("OperatorEnumeration");
+                        condsDescription.append(operatorEnum.getString("enumCode"));
+                        condsDescription.append(":");
                         condsDescription.append(productPriceCond.getString("condValue"));
                         condsDescription.append("] ");
                     }
@@ -340,7 +342,12 @@ public class PriceServices {
                             orderItemPriceInfo.set("productPriceRuleId", productPriceAction.get("productPriceRuleId"));
                             orderItemPriceInfo.set("productPriceActionSeqId", productPriceAction.get("productPriceActionSeqId"));
                             orderItemPriceInfo.set("modifyAmount", new Double(modifyAmount));
-                            orderItemPriceInfo.set("description", priceInfoDescription.toString());
+                            //make sure description is <= than 250 chars
+                            String priceInfoDescriptionString = priceInfoDescription.toString();
+                            if (priceInfoDescriptionString.length() > 250) {
+                                priceInfoDescriptionString = priceInfoDescriptionString.substring(0, 250);
+                            }
+                            orderItemPriceInfo.set("description", priceInfoDescriptionString);
                             orderItemPriceInfos.add(orderItemPriceInfo);
 
                             if (foundFlatOverride) {
