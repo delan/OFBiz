@@ -374,7 +374,7 @@ public class ModelViewEntity extends ModelEntity {
                 if (UtilValidate.isNotEmpty("prefix")) {
                     StringBuffer newAliasBuffer = new StringBuffer(prefix);
                     //make sure the first letter is uppercase to delineate the field name
-                    newAliasBuffer.append(aliasName.charAt(0));
+                    newAliasBuffer.append(Character.toUpperCase(aliasName.charAt(0)));
                     newAliasBuffer.append(aliasName.substring(1));
                     aliasName = newAliasBuffer.toString();
                 }
