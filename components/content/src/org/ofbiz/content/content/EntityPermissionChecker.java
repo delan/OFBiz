@@ -134,7 +134,7 @@ public class EntityPermissionChecker {
         }
     	try {
             permissionConditionGetter.init(delegator);
-    		passed = ContentPermissionServices.checkPermissionMethod(delegator, partyId,  entityName, entityIdList, auxiliaryValueGetter, relatedRoleGetter, permissionConditionGetter, userLogin);
+    		passed = ContentPermissionServices.checkPermissionMethod(delegator, partyId,  entityName, entityIdList, auxiliaryValueGetter, relatedRoleGetter, permissionConditionGetter);
     	} catch(GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
     	}
