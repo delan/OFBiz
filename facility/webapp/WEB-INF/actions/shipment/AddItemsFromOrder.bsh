@@ -36,6 +36,7 @@ shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", s
 
 if (shipment != null) {
     context.put("originFacility", shipment.getRelatedOne("OriginFacility"));
+    context.put("destinationFacility", shipment.getRelatedOne("DestinationFacility"));
 }
 
 if (UtilValidate.isEmpty(orderId) && shipment != null) {

@@ -38,9 +38,8 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 </form>
 
 <div class="head2">Add Items to Shipment [${shipmentId?if_exists}] from Order [${orderId?if_exists}]</div>
-<div class="head3">Origin Facility is: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">Not Set</span></#if></div>
 <#if orderId?has_content && !orderHeader?exists>
-    <div class="head3" style="color: red;">ERROR: Order with ID [${orderId}] not found.</div>
+	<div class="head3" style="color: red;">ERROR: Order with ID [${orderId}] not found.</div>
 </#if>
 <#if orderHeader?exists>
     <#if orderHeader.orderTypeId == "SALES_ORDER" && shipment.shipmentTypeId != "SALES_SHIPMENT">
@@ -49,6 +48,11 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
         <div class="head3" style="color: red;">WARNING: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}, but this is NOT a Purchase Shipment.</div>
     <#else>
         <div class="head3">NOTE: Order Type is ${(orderType.description)?default(orderHeader.orderTypeId?if_exists)}.</div>
+    </#if>
+    <#if shipment.shipmentTypeId == "SALES_SHIPMENT">
+		<div class="head3">Origin Facility is: <#if originFacility?exists>${originFacility.facilityName?if_exists} [${originFacility.facilityId}]<#else><span style="color: red;">Not Set</span></#if></div>
+    <#elseif shipment.shipmentTypeId == "PURCHASE_SHIPMENT">
+		<div class="head3">Destination Facility is: <#if destinationFacility?exists>${destinationFacility.facilityName?if_exists} [${destinationFacility.facilityId}]<#else><span style="color: red;">Not Set</span></#if></div>
     </#if>
     <#if "ORDER_APPROVED" == orderHeader.statusId || "ORDER_BACKORDERED" == orderHeader.statusId>
         <div class="head3">NOTE: Order Status is ${(orderHeaderStatus.description)?default(orderHeader.statusId?if_exists)}.</div>
