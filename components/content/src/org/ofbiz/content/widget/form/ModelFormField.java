@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.6 2003/11/05 15:12:06 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.7 2003/11/13 14:14:52 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -1108,9 +1108,9 @@ public class ModelFormField {
             fieldTypeByName.put("reset", new Integer(10));
             fieldTypeByName.put("hidden", new Integer(11));
             fieldTypeByName.put("ignored", new Integer(12));
-            fieldTypeByName.put("text-qbe", new Integer(13));
-            fieldTypeByName.put("date-qbe", new Integer(14));
-            fieldTypeByName.put("range-qbe", new Integer(15));
+            fieldTypeByName.put("text-find", new Integer(13));
+            fieldTypeByName.put("date-find", new Integer(14));
+            fieldTypeByName.put("range-find", new Integer(15));
             fieldTypeByName.put("lookup", new Integer(16));
             fieldTypeByName.put("file", new Integer(17));
         }
