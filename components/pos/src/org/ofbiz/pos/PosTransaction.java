@@ -51,6 +51,7 @@ import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.device.DeviceLoader;
+import org.ofbiz.pos.adaptor.SyncCallbackAdaptor;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericDelegator;
@@ -119,7 +120,7 @@ public class PosTransaction implements Serializable {
         if (session.getUserLogin() != null) {
             cart.addAdditionalPartyRole(session.getUserLogin().getString("partyId"), "SALES_REP");
         }
-        
+                
         currentTx = this;
         trace("transaction created");
     }

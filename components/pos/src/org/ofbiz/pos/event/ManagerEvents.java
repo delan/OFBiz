@@ -41,6 +41,7 @@ import org.ofbiz.pos.device.DeviceLoader;
 import org.ofbiz.pos.device.impl.Receipt;
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.PosTransaction;
+import org.ofbiz.pos.adaptor.SyncCallbackAdaptor;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Output;
 import org.ofbiz.entity.GenericDelegator;
@@ -210,6 +211,7 @@ public class ManagerEvents {
                     Debug.log("Updated State - " + state, module);
                     try {
                         state.store();
+                        state.refresh();
                     } catch (GenericEntityException e) {
                         Debug.logError(e, module);
                         pos.showDialog("main/dialog/error/exception", e.getMessage());
@@ -219,7 +221,7 @@ public class ManagerEvents {
                     printTotals(pos, state, true);
 
                     // lock the terminal for the moment
-                    output.print("Transmitting final sales data...");
+                    output.print("Waiting for final sales data transmission...");
                     pos.getInput().setLock(true);
                     pos.getButtons().setLock(true);
                     pos.refresh(false);
@@ -234,13 +236,16 @@ public class ManagerEvents {
                     }
                     if (terminal != null && terminal.get("pushEntitySyncId") != null) {
                         String syncId = terminal.getString("pushEntitySyncId");
-                        // TODO add service call to push the final data
+                        SyncCallbackAdaptor cb = new SyncCallbackAdaptor(pos, syncId, state.getTimestamp("lastUpdatedTxStamp"));
+                        pos.getSession().getDispatcher().registerCallback("runEntitySync", cb);
+                    } else {
+                        // no sync setting; just logout
+                        pos.showDialog("main/dialog/error/terminalclosed");
+                        SecurityEvents.logout(pos);
                     }
-
-                    // logout
-                    SecurityEvents.logout(pos);
             }
         } else {
+            trans.popDrawer();
             input.clear();
             input.setFunction("CLOSE");
             output.print(Output.ENTCAS);
