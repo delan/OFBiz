@@ -173,7 +173,7 @@ public class ScannerKybService extends BaseService implements jpos.services.Scan
                 } else {
                     this.codeId = "";
                     this.scannedDataLabel = str.getBytes();
-                }
+                }                
             }
         }
     }
@@ -182,40 +182,39 @@ public class ScannerKybService extends BaseService implements jpos.services.Scan
         if (barcodeIdMap == null) {
             barcodeIdMap = new HashMap();
         }
-        if (barcodeIdMap.size() == 0) {
+        if (barcodeIdMap.size() > 0) {
             return;
         }
 
         Enumeration names = entry.getPropertyNames();
         if (names != null) {
             while (names.hasMoreElements()) {
-                String name = (String) names.nextElement();
-                if (name.startsWith("CodeType:")) {
-                    String codeType = name.substring(name.indexOf(":"));
-                    String codeValue = entry.getProp(name).getValueAsString();
-                    if ("CODE11".equals(codeType)) {
+                String codeType = (String) names.nextElement();
+                if (codeType.startsWith("CodeType:")) {
+                    String codeValue = entry.getProp(codeType).getValueAsString();
+                    if ("CodeType:CODE11".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_OTHER));
-                    } else if ("CODE39".equals(codeType)) {
+                    } else if ("CodeType:CODE39".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_Code39));
-                    } else if ("CODE93".equals(codeType)) {
+                    } else if ("CodeType:CODE93".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_Code93));
-                    } else if ("CODE128".equals(codeType)) {
+                    } else if ("CodeType:CODE128".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_Code128));
-                    } else if ("CODABAR".equals(codeType)) {
+                    } else if ("CodeType:CODABAR".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_Codabar));
-                    } else if ("I2OF5".equals(codeType)) {
+                    } else if ("CodeType:I2OF5".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_OTHER));
-                    } else if ("ID2OF5".equals(codeType)) {
+                    } else if ("CodeType:ID2OF5".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_OTHER));
-                    } else if ("MSI".equals(codeType)) {
+                    } else if ("CodeType:MSI".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_OTHER));
-                    } else if ("UPCA".equals(codeType)) {
+                    } else if ("CodeType:UPCA".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_UPCA));
-                    } else if ("UPCE".equals(codeType)) {
+                    } else if ("CodeType:UPCE".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_UPCE));
-                    } else if ("EAN13".equals(codeType)) {
+                    } else if ("CodeType:EAN13".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_EAN13));
-                    } else if ("EAN8".equals(codeType)) {
+                    } else if ("CodeType:EAN8".equals(codeType)) {
                         barcodeIdMap.put(codeValue.toUpperCase(), new Integer(ScannerConst.SCAN_SDT_EAN8));
                     }
                 }
