@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -52,6 +52,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
         <#assign line = 0>
         <#list productFeatureAndAppls as productFeatureAndAppl>
             <#assign line = line + 1>
+            <#assign curProductFeatureType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureType")>
             <#assign curProductFeatureApplType = productFeatureAndAppl.getRelatedOneCache("ProductFeatureApplType")>
             <#assign curProductFeatureCategory = productFeatureAndAppl.getRelatedOneCache("ProductFeatureCategory")>
 <!--            <#if curProductFeatureCategory?exists> pageContext.setAttribute("curProductFeatureCategory", curProductFeatureCategory)</#if>	-->
@@ -61,7 +62,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 <input type=hidden name="productFeatureId" value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
                 <input type=hidden name="fromDate" value="${(productFeatureAndAppl.fromDate)?if_exists}">
                 <td><div class='tabletext'>${(productFeatureAndAppl.description)?if_exists}</div></td>
-                <td><div class='tabletext'>${(productFeatureAndAppl.productFeatureTypeId)?if_exists}</div></td>                
+                <td><div class='tabletext'>${(curProductFeatureType.description)?default((productFeatureAndAppl.productFeatureTypeId)?if_exists)}</div></td>
                 <td><a href='<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}&productId=${(productFeatureAndAppl.productId)?if_exists}</@ofbizUrl>' class='buttontext'>
                     ${(curProductFeatureCategory.description)?if_exists}
                     [${(productFeatureAndAppl.productFeatureCategoryId)?if_exists}]</a></td>
