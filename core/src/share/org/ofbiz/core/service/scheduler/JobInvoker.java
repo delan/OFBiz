@@ -57,7 +57,7 @@ public class JobInvoker implements Runnable {
         Debug.logInfo("JobInvoker: Thread (" + thread.getName() + ") Running...");
         Map result = null;
         try {
-            ServiceContext ctx = dispatcher.getLocalContext(job.getLoader());
+            DispatchContext ctx = dispatcher.getLocalContext(job.getLoader());
             ModelService service = ctx.getModelService(job.getService());
             result = dispatcher.runSync(job.getLoader(),service,job.getContext());
         }
