@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -79,6 +79,21 @@
     </#list>
     <tr>
       <td align="right" valign="middle">
+        <div class="tabletext">Supplier:</div>
+      </td>
+      <td valign="middle">
+        <div class="tabletext">
+          <select name="SEARCH_SUPPLIER_ID" class="selectBox">
+            <option value="">- ${uiLabelMap.CommonAny} -</option>
+            <#list supplerPartyRoleAndPartyDetails as supplerPartyRoleAndPartyDetail>
+              <option value="${supplerPartyRoleAndPartyDetail.partyId}">${supplerPartyRoleAndPartyDetail.groupName?if_exists} ${supplerPartyRoleAndPartyDetail.firstName?if_exists} ${supplerPartyRoleAndPartyDetail.lastName?if_exists} [${supplerPartyRoleAndPartyDetail.partyId}]</option>
+            </#list>
+          </select>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td align="right" valign="middle">
         <div class="tabletext">Sort Order:</div>
       </td>
       <td valign="middle">
@@ -86,11 +101,13 @@
           <select name="sortOrder" class="selectBox">
             <option value="SortKeywordRelevancy">${uiLabelMap.ProductKeywordRelevency}</option>
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
+            <option value="SortProductField:internalName">Internal Name</option>
             <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
             <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
             <option value="SortProductField:averageCustomerRating">Customer Rating</option>
             <option value="SortProductPrice:LIST_PRICE">List Price</option>
             <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
+            <option value="SortProductPrice:AVERAGE_COST">Average Cost</option>
           </select>
           Low to High<input type="RADIO" name="sortAscending" value="Y" checked>
           High to Low<input type="RADIO" name="sortAscending" value="N">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-	<Party partyId="Company" partyTypeId="PARTY_GROUP"/>
+    <Party partyId="Company" partyTypeId="PARTY_GROUP"/>
     <PartyGroup partyId="Company" groupName="Your Company Name Here"/>
     <PartyRole partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
     <ContactMech contactMechId="9000" contactMechTypeId="POSTAL_ADDRESS"/>
@@ -9,4 +9,8 @@
     <PartyContactMechPurpose partyId="Company" contactMechId="9000" contactMechPurposeTypeId="BILLING_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
     <PartyContactMechPurpose partyId="Company" contactMechId="9000" contactMechPurposeTypeId="GENERAL_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
     <PartyContactMechPurpose partyId="Company" contactMechId="9000" contactMechPurposeTypeId="PAYMENT_LOCATION" fromDate="2000-01-01 00:00:00.000"/>
+
+    <Party partyId="DemoSupplier" partyTypeId="PARTY_GROUP"/>
+    <PartyGroup partyId="DemoSupplier" groupName="Demo Supplier"/>
+    <PartyRole partyId="DemoSupplier" roleTypeId="SUPPLIER"/>
 </entity-engine-xml>

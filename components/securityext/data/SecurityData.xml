@@ -25,6 +25,7 @@
 
   <Party partyId="externaluser" partyTypeId="PERSON"/>
   <Person firstName="External" lastName="User" middleName="" partyId="externaluser" personalTitle="Mr."/>
+  <PartyRole partyId="externaluser" roleTypeId="SUPPLIER"/>
   <PartyContactMech partyId="externaluser" contactMechId="5000" fromDate="2003-01-01 00:00:00.0" allowSolicitation="Y"/>
 
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
