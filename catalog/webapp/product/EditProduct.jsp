@@ -88,7 +88,7 @@
 <%if(product == null){%>
   <%if(productId != null){%>
     <h3>Could not find product with ID "<%=productId%>".</h3>
-    <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;' name="productForm">
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext"><b>Product ID</b></div></td>
@@ -98,7 +98,7 @@
       </td>
     </tr>
   <%}else{%>
-    <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;'>
+    <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;' name="productForm">
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext"><b>Product ID</b></div></td>
@@ -109,7 +109,7 @@
     </tr>
   <%}%>
 <%}else{%>
-  <form action="<ofbiz:url>/updateProduct</ofbiz:url>" method=POST style='margin: 0;'>
+  <form action="<ofbiz:url>/updateProduct</ofbiz:url>" method=POST style='margin: 0;' name="productForm">
   <table border='0' cellpadding='2' cellspacing='0'>
   <input type=hidden name="productId" value="<%=productId%>">
   <tr>
@@ -125,7 +125,7 @@
     <td width="26%" align=right><div class="tabletext"><b>Is VIRTUAL Product?</b></div></td>
     <td>&nbsp;</td>
     <td width="24%">
-      <SELECT name='autoCreateKeywords'>
+      <SELECT name='isVirtual'>
         <OPTION><ofbiz:inputvalue entityAttr='product' field='isVirtual' tryEntityAttr="tryEntity" default="N"/></OPTION>
         <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
@@ -133,7 +133,7 @@
     <td width="26%" align=right><div class="tabletext"><b>Is VARIANT Product?</b></div></td>
     <td>&nbsp;</td>
     <td width="24%">
-      <SELECT name='autoCreateKeywords'>
+      <SELECT name='isVariant'>
         <OPTION><ofbiz:inputvalue entityAttr='product' field='isVariant' tryEntityAttr="tryEntity" default="N"/></OPTION>
         <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
@@ -222,12 +222,24 @@
     <td width="74%" colspan='5'><textarea cols="60" rows="5" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='product' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
 
+<SCRIPT language='JavaScript'>
+function insertImageName(size,ext) {
+  eval('document.forms.productForm.' + size + 'ImageUrl.value="/images/catalog/product.<%=productId%>.' + size + '.' + ext + '";');
+};
+</SCRIPT>
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Small Image URL</div></td>
     <td>&nbsp;</td>
     <td width="74%" colspan='5'>
       <input type="text" <ofbiz:inputvalue entityAttr='product' field='smallImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
-      <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%>
+      <%if(productId != null && productId.length() > 0) {%>
+        <div>
+          <a href="<ofbiz:url>/UploadImage?upload_file_type=small&productId=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a>
+          <span class='tabletext'>Insert Default Image URL: </span>
+          <a href="javascript:insertImageName('small', 'jpg');" class="buttontext">[.jpg]</a>
+          <a href="javascript:insertImageName('small', 'gif');" class="buttontext">[.gif]</a>
+        </div>
+      <%}%>
     </td>
   </tr>
   <tr>
@@ -235,7 +247,14 @@
     <td>&nbsp;</td>
     <td width="74%" colspan='5'>
       <input type="text" <ofbiz:inputvalue entityAttr='product' field='mediumImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
-      <%-- <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%> --%>
+      <%if(productId != null && productId.length() > 0) {%>
+        <div>
+          <a href="<ofbiz:url>/UploadImage?upload_file_type=medium&productId=<%=productId%></ofbiz:url>" class="buttontext">[Upload Medium Image]</a>
+          <span class='tabletext'>Insert Default Image URL: </span>
+          <a href="javascript:insertImageName('medium', 'jpg');" class="buttontext">[.jpg]</a>
+          <a href="javascript:insertImageName('medium', 'gif');" class="buttontext">[.gif]</a>
+        </div>
+      <%}%>
     </td>
   </tr>
   <tr>
@@ -243,7 +262,14 @@
     <td>&nbsp;</td>
     <td width="74%" colspan='5'>
       <input type="text" <ofbiz:inputvalue entityAttr='product' field='largeImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
-      <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=large&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Large Image]</a><%}%>
+      <%if(productId != null && productId.length() > 0) {%>
+        <div>
+          <a href="<ofbiz:url>/UploadImage?upload_file_type=large&productId=<%=productId%></ofbiz:url>" class="buttontext">[Upload Large Image]</a>
+          <span class='tabletext'>Insert Default Image URL: </span>
+          <a href="javascript:insertImageName('large', 'jpg');" class="buttontext">[.jpg]</a>
+          <a href="javascript:insertImageName('large', 'gif');" class="buttontext">[.gif]</a>
+        </div>
+      <%}%>
     </td>
   </tr>
   <tr>
@@ -251,7 +277,14 @@
     <td>&nbsp;</td>
     <td width="74%" colspan='5'>
       <input type="text" <ofbiz:inputvalue entityAttr='product' field='detailImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
-      <%-- <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%> --%>
+      <%if(productId != null && productId.length() > 0) {%>
+        <div>
+          <a href="<ofbiz:url>/UploadImage?upload_file_type=detail&productId=<%=productId%></ofbiz:url>" class="buttontext">[Upload Detail Image]</a>
+          <span class='tabletext'>Insert Default Image URL: </span>
+          <a href="javascript:insertImageName('detail', 'jpg');" class="buttontext">[.jpg]</a>
+          <a href="javascript:insertImageName('detail', 'gif');" class="buttontext">[.gif]</a>
+        </div>
+      <%}%>
     </td>
   </tr>
 
@@ -260,6 +293,51 @@
     <td>&nbsp;</td>
     <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='listPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
     
+    <td width="26%" align=right><div class="tabletext"><b>List Price Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='listPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Default Price</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='defaultPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+    
+    <td width="26%" align=right><div class="tabletext"><b>Default Price Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='defaultPriceUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Weight</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='weight' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Weight Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='weightUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Quantity Included</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='quantityIncluded' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Quantity Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='quantityUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Pieces Included</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='piecesIncluded' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext">&nbsp;</div></td>
+    <td>&nbsp;</td>
+    <td width="24%">&nbsp;</td>
+  </tr>
+
+  <tr>
     <td width="26%" align=right><div class="tabletext"><b>Taxable?</b></div></td>
     <td>&nbsp;</td>
     <td width="24%">
@@ -268,12 +346,23 @@
         <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
     </td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext"><b>Default Price</b></div></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Tax Category</b></div></td>
     <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='defaultPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-    
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='taxCategory' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Tax VAT Code</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='taxVatCode' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Tax Duty Code</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='taxDutyCode' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+
+  <tr>
     <td width="26%" align=right><div class="tabletext"><b>Charge Shipping?</b></div></td>
     <td>&nbsp;</td>
     <td width="24%">
@@ -282,11 +371,6 @@
         <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
     </td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">&nbsp;</div></td>
-    <td>&nbsp;</td>
-    <td width="24%">&nbsp;</td>
 
     <td width="26%" align=right><div class="tabletext"><b>Allow Auto Create Keywords?</b></div></td>
     <td>&nbsp;</td>
@@ -297,27 +381,7 @@
       </SELECT>
     </td>
   </tr>
-
-  <tr>
-    <td width="26%" align=right><div class="tabletext"><b>Quantity Uom Id</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='quantityUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-
-    <td width="26%" align=right><div class="tabletext"><b>Quantity Included</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='quantityIncluded' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-  </tr>
-
-  <tr>
-    <td width="26%" align=right><div class="tabletext"><b>Weight Uom Id</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='weightUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-
-    <td width="26%" align=right><div class="tabletext"><b>Weight</b></div></td>
-    <td>&nbsp;</td>
-    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='weight' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
-  </tr>
-
+  
   <tr>
     <td colspan='1' align=right><input type="submit" name="Update" value="Update"></td>
     <td colspan='2'>&nbsp;</td>
@@ -335,33 +399,40 @@
         <%if (product != null) {%>
             <form action="<ofbiz:url>/EditProduct</ofbiz:url>" method=POST style='margin: 0;'>
                 <%-- <INPUT type=hidden name='productId' value='<%=productId%>'> --%>
-                <INPUT type=hidden name='productTypeId' value='<%=UtilFormatOut.checkNull(product.getString("productTypeId"))%>'>
-                <INPUT type=hidden name='isVirtual' value='<%=UtilFormatOut.checkNull(product.getString("isVirtual"))%>'>
-                <INPUT type=hidden name='isVariant' value='<%=UtilFormatOut.checkNull(product.getString("isVariant"))%>'>
-                <INPUT type=hidden name='primaryProductCategoryId' value='<%=UtilFormatOut.checkNull(product.getString("primaryProductCategoryId"))%>'>
-                <INPUT type=hidden name='manufacturerPartyId' value='<%=UtilFormatOut.checkNull(product.getString("manufacturerPartyId"))%>'>
-                <INPUT type=hidden name='introductionDate' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("introductionDate")))%>'>
-                <INPUT type=hidden name='salesDiscontinuationDate' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("salesDiscontinuationDate")))%>'>
-                <INPUT type=hidden name='supportDiscontinuationDate' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("supportDiscontinuationDate")))%>'>
-                <INPUT type=hidden name='comments' value='<%=UtilFormatOut.checkNull(product.getString("comments"))%>'>
-                <INPUT type=hidden name='productName' value='<%=UtilFormatOut.checkNull(product.getString("productName"))%>'>
-                <INPUT type=hidden name='internalName' value='<%=UtilFormatOut.checkNull(product.getString("internalName"))%>'>
-                <INPUT type=hidden name='description' value='<%=UtilFormatOut.checkNull(product.getString("description"))%>'>
-                <INPUT type=hidden name='longDescription' value='<%=UtilFormatOut.checkNull(product.getString("longDescription"))%>'>
-                <INPUT type=hidden name='smallImageUrl' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
-                <INPUT type=hidden name='mediumImageUrl' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
-                <INPUT type=hidden name='largeImageUrl' value='<%=UtilFormatOut.checkNull(product.getString("largeImageUrl"))%>'>
-                <INPUT type=hidden name='detailImageUrl' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
-                <INPUT type=hidden name='listPrice' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("listPrice")))%>'>
-                <INPUT type=hidden name='defaultPrice' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("defaultPrice")))%>'>
-                <INPUT type=hidden name='quantityUomId' value='<%=UtilFormatOut.checkNull(product.getString("quantityUomId"))%>'>
-                <INPUT type=hidden name='quantityIncluded' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("quantityIncluded")))%>'>
-                <INPUT type=hidden name='weightUomId' value='<%=UtilFormatOut.checkNull(product.getString("weightUomId"))%>'>
-                <INPUT type=hidden name='weight' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("weight")))%>'>
-                <INPUT type=hidden name='taxable' value='<%=UtilFormatOut.checkNull(product.getString("taxable"))%>'>
-                <INPUT type=hidden name='autoCreateKeywords' value='<%=UtilFormatOut.checkNull(product.getString("autoCreateKeywords"))%>'>
-                <SPAN class='tabletext'>In New Create Form:</SPAN>&nbsp;
-                <INPUT type=submit value='FormDuplicate'>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='productTypeId' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='isVirtual' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='isVariant' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='primaryProductCategoryId' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='manufacturerPartyId' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='introductionDate' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='salesDiscontinuationDate' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='comments' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='productName' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='internalName' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='description' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='longDescription' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='smallImageUrl' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='mediumImageUrl' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='largeImageUrl' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='detailImageUrl' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='listPrice' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='listPriceUomId' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='defaultPrice' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='defaultPriceUomId' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='quantityUomId' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='quantityIncluded' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='piecesIncluded' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='weightUomId' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='weight' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='taxable' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='taxCategory' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='taxVatCode' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='taxDutyCode' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='chargeShipping' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='autoCreateKeywords' fullattrs="true"/>>
+                <SPAN class='tabletext'>Populate New Form:</SPAN>&nbsp;
+                <INPUT type=submit value='Duplicate'>
             </form>
         <%}%>
     <%}%>

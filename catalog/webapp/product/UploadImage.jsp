@@ -48,14 +48,14 @@
   String fileType = request.getParameter("upload_file_type");
   if (fileType == null || fileType.length() <= 0) fileType="small";
 
-  String productId = request.getParameter("PRODUCT_ID");
+  String productId = request.getParameter("productId");
   GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
   if (product != null) {
 %>
     <%
       String contentType = request.getContentType();
       if (contentType != null && contentType.indexOf("boundary=") > 0) {
-        String fileName = "/images/catalog/" + productId + "." + fileType + ".";
+        String fileName = "/images/catalog/product." + productId + "." + fileType + ".";
         String imageUrl = null;
     %>
       <p>Filename: <%=fileName%>
@@ -126,19 +126,14 @@
         }
 
         if (imageUrl != null && imageUrl.length() > 0) {
-          if (fileType.compareTo("large") == 0) {
-            out.print("<p>Setting <b>large</b> image url to <b>\"" + imageUrl + "\"</b>");
-            product.set("largeImageUrl", imageUrl);
-          } else {
-            out.print("<p>Setting <b>small</b> image url to <b>\"" + imageUrl + "\"</b>");
-            product.set("smallImageUrl", imageUrl);
-          }
-          product.store();
-          //refresh cache value if necessary HERE
+            out.print("<p>Setting field <b>" + fileType + "ImageUrl</b> to <b>\"" + imageUrl + "\"</b>");
+            product.set(fileType + "ImageUrl", imageUrl);
+            product.store();
+            //refresh cache value if necessary HERE
         }
     %>
     <hr>
-    <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product]</a>
+    <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontext">[Return to Edit Product]</a>
   <%}%>
     <form method="POST" enctype="multipart/form-data" action="<ofbiz:url>/UploadImage?PRODUCT_ID=<%=productId%>&upload_file_type=<%=fileType%></ofbiz:url>">
     Upload a <b><%=fileType%></b> image for the product with the ID: "<b><%=productId%></b>" and Name "<b><%=product.getString("productName")%></b>".
