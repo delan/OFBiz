@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.19  2001/09/26 01:35:49  azeneski
  * Modification to set context root in request object.
  *
@@ -149,8 +152,8 @@ public class ControlServlet extends HttpServlet {
     getServletContext().setAttribute("delegator", delegator);
     getServletContext().setAttribute("security", security);
 
-    // initialize the job scheduler
-    jm = new JobManager(getServletContext(),delegator);
+    // initialize the job scheduler - disabled 2001-11-01
+    //jm = new JobManager(getServletContext(),delegator); 
     if(jm == null)
       Debug.logError("[ControlServlet.init] ERROR: job scheduler init failed.");
   }
