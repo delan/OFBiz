@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentLoaderConfig.java,v 1.3 2003/08/17 01:44:14 ajzeneski Exp $
+ * $Id: ComponentLoaderConfig.java,v 1.4 2003/08/20 05:55:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,8 +48,8 @@ import org.xml.sax.SAXException;
  * ComponentLoaderConfig - Component Loader configuration
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
- * @since      2.2
+ * @version    $Revision: 1.4 $
+ * @since      3.0
  */
 public class ComponentLoaderConfig {
     
