@@ -90,8 +90,8 @@ public class LoginServices {
 
         String userLoginId = (String) context.get("userLoginId");
         String partyId = (String) context.get("partyId");
-        String newPassword = (String) context.get("currentPassword");
-        String newPasswordVerify = (String) context.get("currentPasswordVerify");
+        String currentPassword = (String) context.get("currentPassword");
+        String currentPasswordVerify = (String) context.get("currentPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
         
         //security: don't create a user login if the specified partyId (if not empty) already exists
@@ -118,12 +118,12 @@ public class LoginServices {
             }
         }
         
-        checkNewPassword(null, null, newPassword, newPasswordVerify, passwordHint, errorMessageList);
+        checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList);
 
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         userLoginToCreate.set("passwordHint", passwordHint);
         userLoginToCreate.set("partyId", partyId);
-        userLoginToCreate.set("currentPassword", newPassword);
+        userLoginToCreate.set("currentPassword", currentPassword);
         
         try { 
             if (delegator.findByPrimaryKey(userLoginToCreate.getPrimaryKey()) != null) {
