@@ -477,6 +477,11 @@
         <description>Credit Card Test Capture</description>
         <implements service="ccCaptureInterface"/>
     </service>
+    <service name="testCCCaptureWithReAuth" engine="java"
+            location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="testCaptureWithReAuth">
+        <description>Credit Card Test Capture</description>
+        <implements service="ccCaptureInterface"/>
+    </service>
     <service name="testCCRelease" engine="java"
             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="testRelease">
         <description>Credit Card Test Release</description>

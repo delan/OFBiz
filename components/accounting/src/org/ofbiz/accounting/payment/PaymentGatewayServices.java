@@ -32,6 +32,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Calendar;
+import java.sql.Timestamp;
 
 import org.ofbiz.accounting.invoice.InvoiceWorker;
 import org.ofbiz.base.util.Debug;
@@ -671,7 +673,7 @@ public class PaymentGatewayServices {
 
         // get the invoice amount (amount to bill)
         double invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice);
-        //Debug.logInfo("Invoice total: " + invoiceTotal, module);
+        if (Debug.infoOn()) Debug.logInfo("(Capture) Invoice [#" + invoiceId + "] total: " + invoiceTotal, module);
 
         // now capture the order
         Map serviceContext = UtilMisc.toMap("userLogin", userLogin, "orderId", testOrderId, "invoiceId", invoiceId, "captureAmount", new Double(invoiceTotal));
@@ -736,7 +738,7 @@ public class PaymentGatewayServices {
         double orderTotal = orh.getOrderGrandTotal();
         double totalPayments = PaymentWorker.getPaymentsTotal(orh.getOrderPayments());
         double remainingTotal = orderTotal - totalPayments;
-        Debug.logInfo("Remaining Total: " + remainingTotal, module);
+        if (Debug.infoOn()) Debug.logInfo("Capture Remaining Total: " + remainingTotal, module);
 
         // re-format the remaining total
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
@@ -751,14 +753,13 @@ public class PaymentGatewayServices {
             Debug.logError(e, "Problem getting parsed remaining total", module);
             return ServiceUtil.returnError("ERROR: Cannot parse grand total from formatted string; see logs");
         }
+        //Debug.logInfo("Formatted Remaining total : " + remainingTotal, module);
 
         if (captureAmount == null) {
             captureAmount = new Double(remainingTotal);
         }
-        //Debug.logInfo("Formatted Remaining total : " + remainingTotal, module);
-
         double amountToCapture = captureAmount.doubleValue();
-        //Debug.logInfo("Expected Capture Amount : " + amountToCapture, module);
+        if (Debug.infoOn()) Debug.logInfo("Actual Expected Capture Amount : " + amountToCapture, module);
 
         // if we have a billing account get balance/limit and available
         GenericValue billingAccount = null;
@@ -1828,13 +1829,13 @@ public class PaymentGatewayServices {
      * Always decline processor.
      */
     public static Map alwaysDeclineProcessor(DispatchContext dctx, Map context) {
-        Map result = new HashMap();
+        Map result = ServiceUtil.returnSuccess();
         Double processAmount = (Double) context.get("processAmount");
         long nowTime = new Date().getTime();
         Debug.logInfo("Test Processor Declining Credit Card", module);
 
         result.put("authResult", new Boolean(false));
-        result.put("processAmount", context.get("processAmount"));
+        result.put("processAmount", processAmount);
         result.put("authRefNum", new Long(nowTime).toString());
         result.put("authFlag", "D");
         result.put("authMessage", "This is a test processor; no payments were captured or authorized");
@@ -1849,7 +1850,7 @@ public class PaymentGatewayServices {
     }
 
     public static Map testRelease(DispatchContext dctx, Map context) {
-        Map result = new HashMap();
+        Map result = ServiceUtil.returnSuccess();
         long nowTime = new Date().getTime();
 
         result.put("releaseResult", new Boolean(true));
@@ -1864,8 +1865,9 @@ public class PaymentGatewayServices {
      * Test capture service (returns true)
      */
      public static Map testCapture(DispatchContext dctx, Map context) {
-         Map result = new HashMap();
+         Map result = ServiceUtil.returnSuccess();
          long nowTime = new Date().getTime();
+            Debug.logInfo("Test Capture Process", module);
 
          result.put("captureResult", new Boolean(true));
          result.put("captureAmount", context.get("captureAmount"));
@@ -1875,12 +1877,51 @@ public class PaymentGatewayServices {
          return result;
      }
 
+    public static Map testCaptureWithReAuth(DispatchContext dctx, Map context) {
+        GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
+        GenericValue authTransaction = (GenericValue) context.get("authTrans");
+        Debug.logInfo("Test Capture with 2 minute delay failure/re-auth process", module);
+
+        if (authTransaction == null){
+        	authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        }
+
+        if (authTransaction == null) {
+            return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot capture");
+        }
+        Timestamp txStamp = authTransaction.getTimestamp("transactionDate");
+        Timestamp nowStamp = UtilDateTime.nowTimestamp();
+
+        Map result = ServiceUtil.returnSuccess();
+        long nowTime = new Date().getTime();
+        result.put("captureAmount", context.get("captureAmount"));
+        result.put("captureRefNum", new Long(nowTime).toString());
+
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(txStamp.getTime());
+        cal.add(Calendar.MINUTE, 2);
+        Timestamp twoMinAfter = new Timestamp(cal.getTimeInMillis());
+        Debug.log("Re-Auth Capture Test : Tx Date - " + txStamp + " : 2 Min - " + twoMinAfter + " : Now - " + nowStamp, module);
+
+        if (nowStamp.after(twoMinAfter)) {
+            result.put("captureResult", new Boolean(false));
+        } else {
+            result.put("captureResult", new Boolean(true));
+            result.put("captureFlag", "C");
+            result.put("captureMessage", "This is a test capture; no money was transferred");
+        }
+
+        return result;
+    }
+
      /**
       * Test refund service (returns true)
       */
      public static Map testRefund(DispatchContext dctx, Map context) {
-         Map result = new HashMap();
+         Map result = ServiceUtil.returnSuccess();
          long nowTime = new Date().getTime();
+         Debug.logInfo("Test Refund Process", module);
 
          result.put("refundResult", new Boolean(true));
          result.put("refundAmount", context.get("refundAmount"));
