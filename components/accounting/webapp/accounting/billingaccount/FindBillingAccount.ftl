@@ -37,7 +37,6 @@
   <tr>
     <td><div class="tableheadtext">${uiLabelMap.AccountingAccountId}</div></td>
     <td><div class="tableheadtext">${uiLabelMap.AccountingAccountLimit}</div></td>
-    <td><div class="tableheadtext">Account Currency</div></td>
     <#if billingAccountRolesByParty?has_content>
       <#assign colSpan = "4">
       <td><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
@@ -53,8 +52,7 @@
       <#assign roleType = role.getRelatedOne("RoleType")>
       <tr>
         <td><div class="tabletext">${billingAccount.billingAccountId}</div></td>
-        <td><div class="tabletext">${billingAccount.accountLimit?default(0)?string}</div></td>
-        <td><div class="tabletext">${billingAccount.accountCurrencyUomId?if_exists}</div></td>
+        <td><div class="tabletext"><@ofbizCurrency amount=billingAccount.accountLimit isoCode=billingAccount.accountCurrencyUomId/></div></td>
         <td><div class="tabletext">${roleType.description}</div></td>
         <td align="right">
           <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
@@ -67,7 +65,7 @@
         <td><div class="tabletext">${billingAccount.billingAccountId}</div></td>
         <td><div class="tabletext"><@ofbizCurrency amount=billingAccount.accountLimit isoCode=billingAccount.accountCurrencyUomId/></div></td>
         <td align="right">
-          <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[Edit]</a>
+          <a href="<@ofbizUrl>/EditBillingAccount?billingAccountId=${billingAccount.billingAccountId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a>
         </td>        
       </tr>
     </#list>
