@@ -342,7 +342,7 @@ public class RequestHandler implements Serializable {
             else if (nextView != null && nextView.startsWith("request-redirect:")) {
                 Debug.logInfo("[RequestHandler.doRequest]: Response is a Request redirect.", module);
                 nextView = nextView.substring(17);
-                callRedirect(makeLink(request, response, "/" + nextView), response);
+                callRedirect(makeLinkWithQueryString(request, response, "/" + nextView), response);
             }
 
             // check for a View
@@ -382,6 +382,28 @@ public class RequestHandler implements Serializable {
         //String requestUri = RequestHandler.getRequestUri(request.getPathInfo());
         //return requestManager.getErrorPage(requestUri);
         return requestManager.getDefaultErrorPage();
+    }
+
+    public String makeQueryString(HttpServletRequest request) {
+        Map paramMap = UtilHttp.getParameterMap(request);
+        StringBuffer queryString = new StringBuffer();
+        if (paramMap != null && paramMap.size() > 0) {
+            queryString.append("?");
+            Iterator i = paramMap.keySet().iterator();
+            while (i.hasNext()) {
+                String name = (String) i.next();
+                Object value = paramMap.get(name);
+                if (value instanceof String) {
+                    if (queryString.length() > 1) {
+                        queryString.append("&");
+                    }
+                    queryString.append(name);
+                    queryString.append("=");
+                    queryString.append(value);
+                }
+            }
+        }
+        return queryString.toString();
     }
 
     /** Returns the RequestManager Object. */
@@ -547,7 +569,13 @@ public class RequestHandler implements Serializable {
                 System.currentTimeMillis() - viewStartTime, userLogin, delegator);
         }
     }
-    
+
+    public String makeLinkWithQueryString(HttpServletRequest request, HttpServletResponse response, String url) {
+        String initialLink = this.makeLink(request, response, url);
+        String queryString = this.makeQueryString(request);
+        return initialLink + queryString;
+    }
+
     public String makeLink(HttpServletRequest request, HttpServletResponse response, String url) {
         return makeLink(request, response, url, false, false, false);
     }
