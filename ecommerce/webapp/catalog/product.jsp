@@ -8,8 +8,8 @@
 <%List featureOrder = UtilMisc.toList("COLOR", "SIZE");%>
 <%pageContext.setAttribute("featureOrder", featureOrder);%>
 <ofbiz:service name="getProductVariantTree">
-    <ofbiz:param name="productId" value="<%=request.getParameter("product_id")%>"/>
-    <ofbiz:param name="featureOrder" attribute="featureOrder"/>
+    <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
+    <ofbiz:param name='featureOrder' attribute='featureOrder'/>
 </ofbiz:service>
 
 <%
@@ -22,11 +22,9 @@
         int ct = 0;
         Iterator i = keySet.iterator();
         StringBuffer buf = new StringBuffer();
-        Debug.logInfo("KeySet: " +keySet);
         buf.append("function list" + current + prefix + "() { ");
         buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options.length = 1;");
         buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[0] = new Option(\"" + current + "\",\"\",true,true);");
-        Debug.logInfo("Buffer: " + buf.toString());
         while (i.hasNext()) {
             Object key = i.next();
             Object value = map.get(key);
@@ -63,32 +61,48 @@ var OPT = new Array(<%=featureOrder.size()%>);
 <% } %>
 
 <%-- Build the top level --%>
-<% Set topLevelKeys = variantTree.keySet();%>
 <% String topLevelName = (String) featureOrder.get(0);%>
 function list<%=topLevelName%>() {
      document.forms["addform"].elements["<%=topLevelName%>"].options.length = 1;
      document.forms["addform"].elements["<%=topLevelName%>"].options[0] = new Option("<%=topLevelName%>","",true,true);
   <%
-    Set vTreeKeySet = variantTree.keySet();
-    Iterator vti = vTreeKeySet.iterator();
-    int counter = 0;
-    while (vti.hasNext()) {
+    if (variantTree != null) {
+        Set vTreeKeySet = variantTree.keySet();
+        Iterator vti = vTreeKeySet.iterator();
+        int counter = 0;
+        while (vti.hasNext()) {
+            Object key = vti.next();
+            Object value = variantTree.get(key);
+            String opt = null;
+            if (featureOrder.size() == 1)
+                opt = ((String) ((List)value).iterator().next());
+            else
+                opt = "" + counter;
+
   %>
-     document.forms["addform"].elements["<%=topLevelName%>"].options[<%=counter+1%>] = new Option("<%=vti.next()%>","<%=counter%>");
+     document.forms["addform"].elements["<%=topLevelName%>"].options[<%=counter+1%>] = new Option("<%=key%>","<%=opt%>");
   <%
-     counter++;
+            counter++;
+        }
     }
   %>
 }
 
 <%-- Start of Dyno-Gen --%>
-<%Iterator tli = topLevelKeys.iterator();%>
-<%int topLevelKeysCt=0;%>
-<%while (tli.hasNext()){%>
-<%String cnt = "" + topLevelKeysCt;%>
+<%
+  if (variantTree != null) {
+    Set topLevelKeys = variantTree.keySet();
+    Iterator tli = topLevelKeys.iterator();
+    int topLevelKeysCt=0;
+    while (tli.hasNext()) {
+        String cnt = "" + topLevelKeysCt;
+%>
 <%=buildNext((Map)variantTree.get(tli.next()), featureOrder, (String)featureOrder.get(1), cnt)%>
-<%topLevelKeysCt++;%>
-<%}%>
+<%
+        topLevelKeysCt++;
+    }
+  }
+%>
 <%-- End of Dynamic Gen --%>
 
 function findIndex(name) {
