@@ -34,7 +34,6 @@ delegator = request.getAttribute("delegator");
 shipmentId = request.getParameter("shipmentId");
 if (UtilValidate.isEmpty(shipmentId)) shipmentId = request.getAttribute("shipmentId");
 shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
-primaryOrderId = null;
 
 HtmlFormWrapper editShipmentWrapper = new HtmlFormWrapper("/shipment/ShipmentForms.xml", "EditShipment", request, response);
 editShipmentWrapper.putInContext("shipmentId", shipmentId);
@@ -45,6 +44,10 @@ context.put("shipment", shipment);
 context.put("editShipmentWrapper", editShipmentWrapper);
 
 if (shipment != null) {
+    orderHeader = null;
+    if (shipment.get("primaryOrderId") != null) {
+        orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", shipment.get("primaryOrderId")));
+    }    
     currentStatus = shipment.getRelatedOne("StatusItem");
     originPostalAddress = shipment.getRelatedOne("OriginPostalAddress");
     destinationPostalAddress = shipment.getRelatedOne("DestinationPostalAddress");
@@ -65,7 +68,7 @@ if (shipment != null) {
     editShipmentWrapper.putInContext("toPartyGroup", toPartyGroup);
     editShipmentWrapper.putInContext("fromPerson", fromPerson);
     editShipmentWrapper.putInContext("fromPartyGroup", fromPartyGroup);
-    editShipmentWrapper.putInContext("primaryOrderId", shipment.getString("primaryOrderId"));
+    editShipmentWrapper.putInContext("orderHeader", orderHeader);  
     
     context.put("currentStatus", currentStatus);
     context.put("originPostalAddress", originPostalAddress);
@@ -86,5 +89,4 @@ if (shipment != null) {
         Debug.log("" + fac);
     }
 }
-editShipmentWrapper.putInContext("primaryOrderId", primaryOrderId);
 
