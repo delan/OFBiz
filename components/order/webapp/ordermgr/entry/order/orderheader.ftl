@@ -107,8 +107,8 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          <#if !maySplit?default(false)>Please wait until the entire order is ready before shipping.</#if>
-                          <#if maySplit?default(false)>Please ship items I ordered as they become available (may incur additional shipping charges).</#if>
+                          <#if maySplit?default("N") == "N">Please wait until the entire order is ready before shipping.</#if>
+                          <#if maySplit?default("Y") == "Y">Please ship items I ordered as they become available (may incur additional shipping charges).</#if>
                         </div>
                       </td>
                     </tr>
@@ -134,8 +134,8 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <div class="tabletext">
-                          <#if !isGift?default(false)>This order is not a gift.</#if>
-                          <#if isGift?default(false)>This order is a gift.</#if>
+                          <#if isGift?default("N") == "N">This order is not a gift.</#if>
+                          <#if isGift?default("N") == "Y">This order is a gift.</#if>
                         </div>
                       </td>
                     </tr>
