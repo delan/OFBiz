@@ -31,21 +31,23 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.Set;
+import java.util.TreeSet;
+import javax.wsdl.WSDLException;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.MainResourceHandler;
 import org.ofbiz.base.config.ResourceHandler;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.eca.ServiceEcaUtil;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.cache.UtilCache;
-import org.ofbiz.base.util.UtilXml;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 /**
@@ -388,5 +390,10 @@ public class DispatchContext implements Serializable {
             serviceNames.addAll(localServices.keySet());
         }
         return serviceNames;
+    }
+
+    public Document getWSDL(String serviceName, String locationURI) throws GenericServiceException, WSDLException {
+        ModelService model = this.getModelService(serviceName);
+        return model.toWSDL(locationURI);
     }
 }
