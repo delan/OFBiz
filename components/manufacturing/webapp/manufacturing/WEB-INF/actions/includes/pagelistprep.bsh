@@ -32,7 +32,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 
  * This script breaks out the generic list pagination code so that it can be
@@ -69,9 +69,9 @@ import javax.servlet.http.*;
 if (UtilValidate.isEmpty(context.get("showList")) || context.get("showList").equals("Y")) {
 
     delegator = (GenericDelegator) request.getAttribute("delegator");
-    formDefFile    	= page.getProperty("formDefFile");
-    listFormName    	= page.getProperty("listFormName");
-    entityName    	= page.getProperty("entityName");
+    formDefFile    	= page.get("formDefFile");
+    listFormName    	= page.get("listFormName");
+    entityName    	= page.get("entityName");
     
     inputFields    	= UtilHttp.getParameterMap(request);
     // Can override the listName of "entityList" in the pagedef config file.
@@ -95,7 +95,7 @@ if (UtilValidate.isEmpty(context.get("showList")) || context.get("showList").equ
     } catch (Exception e) {
         try {
         	// If view size is not in page, get it from pagedef .xml file
-        	String viewSizePage	= page.getProperty("viewSize");
+        	String viewSizePage	= page.get("viewSize");
            	viewSize = Integer.valueOf(viewSizePage).intValue();
         } catch (Exception e2){
         	viewSize	= 10; // Not good to have a magic number here

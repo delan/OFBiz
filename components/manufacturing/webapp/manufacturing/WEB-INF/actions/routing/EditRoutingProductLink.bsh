@@ -51,6 +51,9 @@ if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
 
 // 
 String workEffortId  = request.getParameter("workEffortId");
+if (workEffortId == null) {
+    workEffortId = request.getParameter("routingId");
+}
 // 
 String byProduct = request.getParameter("byProduct");
 if (byProduct == null) {

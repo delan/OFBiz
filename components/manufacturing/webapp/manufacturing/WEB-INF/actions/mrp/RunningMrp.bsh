@@ -21,17 +21,6 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * copy from content component  actions/includes/findprep.bsh 1.8 
- * @author     Olivier.Heintz@nereide.biz
- * @author     Nicolas.Malin@librenberry.net	
- * @version    $Rev: 3103 $
- * @since      3.0
- *
- * This script is a special version of includes/pagelistprep that
- * gets the ElectronicText associated with a DataResource and puts it in
- * a Map (electronicTextMap) in the context so that a custom .ftl 
- * (does not use widget-form like pagelistprep) can render it.
  */
 
 import java.util.ArrayList;
