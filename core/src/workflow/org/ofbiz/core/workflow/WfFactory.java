@@ -42,6 +42,8 @@ import org.ofbiz.core.workflow.client.*;
  */
 public class WfFactory {
         
+    public static final String module = WfFactory.class.getName();
+    
     protected static UtilCache wfProcessMgrCache = new UtilCache("workflow.processmgr");
     protected static UtilCache wfClientCache = new UtilCache("workflow.client");
   
@@ -98,7 +100,28 @@ public class WfFactory {
     public static WfProcess getWfProcess(GenericDelegator delegator, String workEffortId) throws WfException {
         if (delegator == null) throw new WfException("The delegator object cannot be null");
         if (workEffortId == null) throw new WfException("The WorkEffort key cannot be null");
-        return new WfProcessImpl(delegator, workEffortId);        
+        WfProcess process = null;
+        try {
+            process = new WfProcessImpl(delegator, workEffortId);
+        } catch (WfException e) {           
+            try {
+                WfActivity act = WfFactory.getWfActivity(delegator, workEffortId);
+                if (act != null) {
+                    process = act.container();
+                } else {                    
+                    throw e;
+                }
+            } catch (WfException e2) {
+                throw e;
+            }
+            if (process == null) {
+                throw e;
+            }
+        }
+        if (process == null) {
+            throw new WfException("No process object found");
+        }
+        return process;        
     }
 
     /** 
