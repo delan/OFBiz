@@ -63,21 +63,20 @@ public class WebEventSecurity
         }
       }
 
-      //String eventName = WebEventDispatch.getEventName(request.getPathInfo());
-      //String nextPage = WebEventDispatch.getNextPageUri(request.getPathInfo());
-      
-      String requestURI = request.getRequestURI();
-      String servletPath = request.getServletPath();
-      String curPageURL = requestURI;
-      if(queryString != null) curPageURL = curPageURL + "?" + queryString;
-      request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, curPageURL);
+      //String requestURI = request.getRequestURI();
+      //String servletPath = request.getServletPath();
+      //String curPageURL = requestURI;
+      //if(queryString != null) curPageURL = curPageURL + "?" + queryString;
+      request.getSession().setAttribute(SiteDefs.PREVIOUS_REQUEST, request.getPathInfo());
+      if(queryString != null) request.getSession().setAttribute(SiteDefs.PREVIOUS_PARAMS, queryString);
 
       if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true"))
       {
-        System.out.println("WebEventSecurity.check: queryString=" + queryString);
-        System.out.println("WebEventSecurity.check: requestURI=" + requestURI);
-        System.out.println("WebEventSecurity.check: servletPath=" + servletPath);
-        System.out.println("WebEventSecurity.check: curPageURL=" + curPageURL);
+        System.out.println("WebEventSecurity.checkLogin: queryString=" + queryString);
+        System.out.println("WebEventSecurity.checkLogin: PathInfo=" + request.getPathInfo());
+        //System.out.println("WebEventSecurity.check: requestURI=" + requestURI);
+        //System.out.println("WebEventSecurity.check: servletPath=" + servletPath);
+        //System.out.println("WebEventSecurity.check: curPageURL=" + curPageURL);
       }
 
       return "error";

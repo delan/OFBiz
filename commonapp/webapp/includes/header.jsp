@@ -42,28 +42,25 @@ function mClk(src){
 </script>
 <TABLE width='100%' cellpadding='0' cellspacing='0' border='0' bgcolor='CCCCCC'>
   <TR>
-    <%--
+    <%
       String queryString = null;
       Enumeration parameterNames = request.getParameterNames();
       while(parameterNames != null && parameterNames.hasMoreElements())
       {
         String paramName = (String)parameterNames.nextElement();
-        if(paramName != null && paramName.compareTo("WEBEVENT") != 0)
+        if(paramName != null)
         {
-          if(queryString == null)
-            queryString = paramName + "=" + request.getParameter(paramName);
-          else
-            queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
+          if(queryString == null) queryString = paramName + "=" + request.getParameter(paramName);
+          else queryString = queryString + "&" + paramName + "=" + request.getParameter(paramName);
         }
       }
-      if(queryString == null) queryString = "WEBEVENT=forceLogin";
-      else queryString = queryString + "&WEBEVENT=forceLogin";
-
-      String loginUrl = request.getRequestURI() + "?" + queryString;
-    --%>
+      
+      String loginUrl = headerControlPath + "/checkLogin/" + UtilFormatOut.checkNull((String)session.getAttribute(SiteDefs.CURRENT_VIEW));
+      if(queryString != null) loginUrl = loginUrl  + "?" + UtilFormatOut.checkNull(queryString);
+    %>
     <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(headerControlPath + "/main")%>" class="buttontext">Main</a></td>
     <%if(headerUserLogin==null){%>
-      <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(headerControlPath + "/checkLogin/main")%>" class="buttontext">Login</a></td>
+      <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(loginUrl)%>" class="buttontext">Login</a></td>
     <%}else{%>
       <td bgcolor="#cccc99" onmouseover='mOvr(this,"#eeeecc");' onmouseout='mOut(this,"#cccc99");' onclick="mClk(this);" style="border-right:solid white 2px;padding-right:10px;padding-left:10px;"><a href="<%=response.encodeURL(headerControlPath + "/logout/main")%>" class="buttontext">Logout</a></td>
     <%}%>

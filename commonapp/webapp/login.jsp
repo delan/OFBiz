@@ -32,6 +32,7 @@
 
 <% pageContext.setAttribute("PageName", "login"); %>
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<%String previousParams=(String)session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
@@ -41,7 +42,8 @@
 
 <table border="1" cellpadding="3" cellspacing="0">
   <tr>
-    <form method="POST" action="<%=response.encodeURL(controlPath + "/login")%>" name="loginform">
+    <%String loginFormUrl=controlPath + "/login"; if(previousParams != null) loginUrl=loginUrl + "?" + previousParams;%>
+    <form method="POST" action="<%=response.encodeURL(loginFormUrl)%>" name="loginform">
       <td><b>Registered&nbsp;User</b></td>
       <td> 
         Username: <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20">
@@ -55,7 +57,7 @@
     <form method="POST" action="<%=response.encodeURL("person/RequestPerson.jsp")%>">
       <td><b>New&nbsp;User</b></td>
       <td>You may create a new account here:</td>
-      <td><input type="submit" value="Create"></td>
+      <td><input type="submit" value="Create" disabled></td>
     </form>
   </tr>
 </table>

@@ -34,7 +34,7 @@
 <% pageContext.setAttribute("PageName", "sitemap"); %> 
 
 <%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/onecolumn.jsp" %> 
+<%@ include file="/includes/onecolumn.jsp" %>
 
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 
