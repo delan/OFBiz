@@ -154,21 +154,23 @@ public class CheckOutEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
-        URL ecommercePropertiesUrl = null;
+        URL orderPropertiesUrl = null;
         try {
-            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
             Debug.logWarning(e, module);
         }
 
         // Default Payment Info.
-        final String PAYMENT_SERVICE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.payment.service", "NONE");
-        final String HEADER_STATUS = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.header.payment.status", "ORDER_APPROVED");
-        final String ITEM_STATUS = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.item.payment.status", "ITEM_APPROVED");
-        final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.payment.declined", "Error!");
+        final String PAYMENT_SERVICE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.service", "NONE");
+        final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
+        final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
+        final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
+        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
+        final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.declined.message", "Error!");
 
-        final String CANCEL_HEADER_STATUS = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.header.cancel.status", "ORDER_CANCELLED");
-        final String CANCEL_ITEM_STATUS = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.item.cancel.status", "ITEM_CANCELLED");
+        final String HEADER_CANCEL_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_CANCELLED");
+        final String ITEM_CANCEL_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_CANCELLED");
 
         // remove this whenever creating an order so quick reorder cache will refresh/recalc
         request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
@@ -177,7 +179,7 @@ public class CheckOutEvents {
 
         // if the order is already stored cancel the order and create a new one.
         if (!UtilValidate.isEmpty(orderId)) {
-            Map cancelOrderContext = UtilMisc.toMap("orderId", orderId, "statusId", CANCEL_HEADER_STATUS);
+            Map cancelOrderContext = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_CANCEL_STATUS);
             Map cancelResult = null;
             try {
                 cancelResult = dispatcher.runSync("changeOrderStatus", cancelOrderContext);
@@ -193,7 +195,7 @@ public class CheckOutEvents {
                         Iterator i = orderItems.iterator();
                         while (i.hasNext()) {
                             GenericValue v = (GenericValue) i.next();
-                            v.set("statusId", CANCEL_ITEM_STATUS);
+                            v.set("statusId", ITEM_CANCEL_STATUS);
                             v.store();
                         }
                     }
@@ -272,20 +274,16 @@ public class CheckOutEvents {
             if (paymentResult != null && paymentResult.containsKey("authResponse")) {
                 String authResp = (String) paymentResult.get("authResponse");
                 if (!authResp.equals("SUCCESS")) {
+                    // order was NOT approved
                     Debug.logVerbose("Payment auth was NOT a success!", module);
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);
-                    return "error";
-                } else {
-                    // order is now approved
-                    Debug.logVerbose("Payment auth was a success!", module);
                     Map statusRes = null;
                     try {
                         statusRes = dispatcher.runSync("changeOrderStatus",
-                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_STATUS));
-                        if (statusRes.containsKey("errorMessage")) {
-                            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status please contact customer service: " + statusRes.get("errorMessage"));
-                            return "error";
-                        }
+                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
+                        if (statusRes.containsKey("errorMessage"))
+                            Debug.logError("Order status service failed: (" + orderId + ") " + statusRes.get("errorMessage"), module);
+
                         GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
                         if (orderHeader != null) {
                             Collection orderItems = orderHeader.getRelated("OrderItem");
@@ -293,17 +291,43 @@ public class CheckOutEvents {
                                 Iterator i = orderItems.iterator();
                                 while (i.hasNext()) {
                                     GenericValue v = (GenericValue) i.next();
-                                    v.set("statusId", ITEM_STATUS);
+                                    v.set("statusId", ITEM_DECLINE_STATUS);
                                     v.store();
                                 }
                             }
                         }
                     } catch (GenericEntityException ee) {
-                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status, please contact customer service: " + ee.getMessage());
-                        return "error";
+                        Debug.logError(ee, "Problems adjusting order status. (" + orderId + ")", module);
                     } catch (GenericServiceException e) {
-                        request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting order status, please contact customer service: " + e.getMessage());
-                        return "error";
+                        Debug.logError(e, "Problems adjusting order item status. (" + orderId + ")", module);
+                    }
+                    return "error";
+                } else {
+                    // order WAS approved
+                    Debug.logVerbose("Payment auth was a success!", module);
+                    Map statusRes = null;
+                    try {
+                        statusRes = dispatcher.runSync("changeOrderStatus",
+                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS));
+                        if (statusRes.containsKey("errorMessage"))
+                            Debug.logError("Order status service failed: (" + orderId + ") " + statusRes.get("errorMessage"), module);
+
+                        GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                        if (orderHeader != null) {
+                            Collection orderItems = orderHeader.getRelated("OrderItem");
+                            if (orderItems != null && orderItems.size() > 0) {
+                                Iterator i = orderItems.iterator();
+                                while (i.hasNext()) {
+                                    GenericValue v = (GenericValue) i.next();
+                                    v.set("statusId", ITEM_APPROVE_STATUS);
+                                    v.store();
+                                }
+                            }
+                        }
+                    } catch (GenericEntityException ee) {
+                        Debug.logError(ee, "Problems adjusting order status. (" + orderId + ")", module);
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Problems adjusting order item status. (" + orderId + ")", module);
                     }
                 }
             } else {
@@ -314,23 +338,21 @@ public class CheckOutEvents {
 
         // only clear the cart if we are finished w/ the customer
         cart.clear();
-
         return "success";
-
     }
 
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        URL ecommercePropertiesUrl = null;
+        URL orderPropertiesUrl = null;
         try {
-            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
             Debug.logWarning(e, module);
         }
 
-        final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.securityCode");
+        final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.securityCode");
 
         String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
         if (controlPath == null) {
@@ -370,17 +392,19 @@ public class CheckOutEvents {
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
+        URL orderPropertiesUrl = null;
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
             Debug.logWarning(e, module);
         }
         try {
             final String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
             final String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
-            final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email");
-            final String ORDER_BCC = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email.bcc");
-            final String ORDER_CC = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email.cc");
+            final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email");
+            final String ORDER_BCC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.bcc");
+            final String ORDER_CC = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.cc");
             GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
             String orderAdditionalEmails = (String) request.getAttribute("orderAdditionalEmails");
             StringBuffer emails = new StringBuffer();

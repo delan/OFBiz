@@ -52,7 +52,7 @@ public class ShippingEvents {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         try {
-            ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
+            ecommercePropertiesUrl = application.getResource("/WEB-INF/order.properties");
         } catch (MalformedURLException e) {
             Debug.logWarning(e);
         }
