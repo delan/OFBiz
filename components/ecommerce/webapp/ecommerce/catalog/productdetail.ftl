@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.21 $
+ *@version    $Revision: 1.22 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -55,7 +55,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             alert("No detail image available to display.");
             return;
         }
-        popUp(detailImageUrl, 'detailImage', '400', '550');
+        popUp("<@ofbizUrl>/detailImage?detail=" + detailImageUrl + "</@ofbizUrl>", 'detailImage', '400', '550');
     }
  //-->
  </script>

@@ -492,6 +492,9 @@
     <request-map uri="product">
         <response name="success" type="view" value="product"/>
     </request-map>
+    <request-map uri="detailImage">
+        <response name="success" type="view" value="detailImage"/>
+    </request-map>
     <request-map uri="crosssell">
         <response name="success" type="view" value="product"/>
     </request-map>
@@ -837,6 +840,7 @@
     <view-map name="quickadd" type="jpublish" page="/catalog/quickadd.ftl"/>
     <view-map name="category" type="jpublish" page="/catalog/category.ftl"/>
     <view-map name="product" type="jpublish" page="/catalog/product.ftl"/>
+    <view-map name="detailImage" type="jpublish" page="/catalog/detailImage.ftl"/>
     <view-map name="lastviewedproducts" type="jpublish" page="/catalog/lastviewedproducts.ftl"/>
     <view-map name="productReview" type="jpublish" page="/catalog/productreview.ftl"/>
 
