@@ -108,6 +108,7 @@ public class ProductWorker {
        
     public static void getKeywordSearchProducts(ServletRequest request, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
+        Map requestParameters = UtilHttp.getParameterMap(httpRequest);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
         if (intraKeywordOperator == null || (!"AND".equalsIgnoreCase(intraKeywordOperator) && !"OR".equalsIgnoreCase(intraKeywordOperator))) {
@@ -118,7 +119,7 @@ public class ProductWorker {
         int viewIndex = 0;
 
         try {
-            viewIndex = Integer.valueOf((String) request.getParameter("VIEW_INDEX")).intValue();
+            viewIndex = Integer.valueOf((String) requestParameters.get("VIEW_INDEX")).intValue();
         } catch (Exception e) {
             viewIndex = 0;
         }
@@ -126,13 +127,13 @@ public class ProductWorker {
         int viewSize = 10;
 
         try {
-            viewSize = Integer.valueOf((String) request.getParameter("VIEW_SIZE")).intValue();
+            viewSize = Integer.valueOf((String) requestParameters.get("VIEW_SIZE")).intValue();
         } catch (Exception e) {
             viewSize = 10;
         }
 
         if (categoryId == null) categoryId = "";
-        String keywordString = request.getParameter("SEARCH_STRING");
+        String keywordString = (String) requestParameters.get("SEARCH_STRING");
         String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + intraKeywordOperator;
 
         ArrayList productIds = (ArrayList) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS");
