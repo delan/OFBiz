@@ -57,6 +57,7 @@ import org.ofbiz.core.util.UtilHttp;
 import org.ofbiz.core.util.UtilJ2eeCompat;
 import org.ofbiz.core.util.UtilTimer;
 import org.ofbiz.core.util.UtilValidate;
+import org.ofbiz.core.view.JPublishWrapper;
 
 import com.ibm.bsf.BSFManager;
 
@@ -69,28 +70,30 @@ import com.ibm.bsf.BSFManager;
  * @since      2.0
  */
 public class ControlServlet extends HttpServlet {
-
-    // Debug module name
+    
     public static final String module = ControlServlet.class.getName();
 
     protected ClassLoader localCachedClassLoader = null;
-    
-    /** Creates new ControlServlet  */
+       
     public ControlServlet() {
         super();
     }
 
+    /**
+     * @see javax.servlet.Servlet#init(javax.servlet.ServletConfig)
+     */
     public void init(ServletConfig config) throws ServletException {
         super.init(config);        
-        if (Debug.infoOn()) Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " +
-                config.getServletContext().getRealPath("/"), module);
-
-        //initialize the cached class loader for this application
+        if (Debug.infoOn()) {
+            Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " + config.getServletContext().getRealPath("/"), module);
+        }
+                
+        // initialize the cached class loader for this application
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         localCachedClassLoader = new CachedClassLoader(loader, getWebSiteId());
 
-        // configure BSF
-        configureBSF();
+        // configure custom BSF engines
+        configureBsf();
 
         // initialize the delegator
         getDelegator();
@@ -102,17 +105,20 @@ public class ControlServlet extends HttpServlet {
         getRequestHandler();
         // initialize the JPublish wrapper
         getJPublishWrapper();
-
-        // this will speed up the initial sessionId generation
-        new java.security.SecureRandom().nextLong();
     }
 
+    /**
+     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
+    /**
+     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        //first thing's first: set the cached class loader for more speedy running in this thread
+        // first thing's first: set the cached class loader for more speedy running in this thread
         Thread.currentThread().setContextClassLoader(localCachedClassLoader);
         
         // setup DEFAULT chararcter encoding and content type, this will be overridden in the RequestHandler for view rendering
@@ -122,6 +128,7 @@ public class ControlServlet extends HttpServlet {
         if (!"none".equals(charset)) {
             request.setCharacterEncoding(charset);
         }
+
         // setup content type
         String contentType = "text/html";
         if (charset.length() > 0 && !"none".equals(charset)) {
@@ -134,7 +141,7 @@ public class ControlServlet extends HttpServlet {
         HttpSession session = request.getSession();
         session.setAttribute("webSiteId", getWebSiteId());
         
-        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
 
         // workaraound if we are in the root webapp
         String webappName = UtilHttp.getApplicationName(request);
@@ -143,41 +150,17 @@ public class ControlServlet extends HttpServlet {
         if (request.getPathInfo() != null) {
             rname = request.getPathInfo().substring(1);
         }
-
         if (rname.indexOf('/') > 0) {
             rname = rname.substring(0, rname.indexOf('/'));
         }
 
         UtilTimer timer = null;
-
         if (Debug.timingOn()) {
             timer = new UtilTimer();
             timer.setLog(true);
             timer.timerString("[" + rname + "] Servlet Starting, doing setup", module);
         }
-
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("--- Start Request Headers: ---", module);
-            Enumeration headerNames = request.getHeaderNames();
-
-            while (headerNames.hasMoreElements()) {
-                String headerName = (String) headerNames.nextElement();
-                Debug.logVerbose(headerName + ":" + request.getHeader(headerName), module);
-            }
-            Debug.logVerbose("--- End Request Headers: ---", module);
-        }
-
-        // NOTE: This is not within an if block for verboseOn because it fixes a problem
-        // with funny characters in the parameters that can seriously mess things up, weird but true...
-        Debug.logVerbose("--- Start Request Parameters: ---", module);
-        Enumeration paramNames = request.getParameterNames();
-
-        while (paramNames.hasMoreElements()) {
-            String paramName = (String) paramNames.nextElement();
-            if (Debug.verboseOn()) Debug.logVerbose(paramName + ":" + request.getParameter(paramName), module);
-        }
-        Debug.logVerbose("--- End Request Parameters: ---", module);
-
+        
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
         if (Debug.verboseOn()) 
@@ -229,6 +212,11 @@ public class ControlServlet extends HttpServlet {
 
         StringBuffer serverRootUrl = UtilHttp.getServerRootUrl(request);
         request.setAttribute(SiteDefs.SERVER_ROOT_URL, serverRootUrl.toString());
+        
+        // display details on the servlet objects
+        if (Debug.verboseOn()) {
+            logRequestInfo(request);
+        }
 
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s) and View(s)", module);
 
@@ -273,40 +261,18 @@ public class ControlServlet extends HttpServlet {
         }
 
         ServerHitBin.countRequest(webappName + "." + rname, request, requestStartTime, System.currentTimeMillis() - requestStartTime, userLogin, delegator);
-        if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
-        
-        // Print out some useful application/session/request information
-        if (Debug.verboseOn()) {
-            Enumeration appNames = servletContext.getAttributeNames();
-            Debug.logVerbose("--- Start ServletContext Attributes: ---", module);
-            while (appNames != null && appNames.hasMoreElements()) {
-                String attName = (String) appNames.nextElement();
-                Debug.logVerbose(attName + ":" + servletContext.getAttribute(attName), module);
-            }
-            Debug.logVerbose("--- End ServletContext Attributes ---", module);
-            Enumeration sesNames = null;
-            try {
-                sesNames = session.getAttributeNames();                
-            } catch (IllegalStateException e) {
-                Debug.logVerbose("Cannot get session attributes : " + e.getMessage(), module);
-            }
-            Debug.logVerbose("--- Start Session Attributes: ---", module);
-            while (sesNames != null && sesNames.hasMoreElements()) {
-                String attName = (String) sesNames.nextElement();
-                Debug.logVerbose(attName + ":" + session.getAttribute(attName), module);
-            }
-            Debug.logVerbose("--- End Session Attributes ---", module);
-            Enumeration reqNames = request.getAttributeNames();
-            Debug.logVerbose("--- Start Request Attributes: ---", module);
-            while (reqNames != null && reqNames.hasMoreElements()) {
-                String attName = (String) reqNames.nextElement();
-                Debug.logVerbose(attName + ":" + request.getAttribute(attName), module);
-            }
-            Debug.logVerbose("--- End Request Attributes ---", module);
-        }
+        if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);                
     }
-
-    private RequestHandler getRequestHandler() {
+    
+    /**
+     * @see javax.servlet.Servlet#destroy()
+     */
+    public void destroy() {
+        super.destroy();
+        getDispatcher().deregister();        
+    }    
+    
+    protected RequestHandler getRequestHandler() {
         RequestHandler rh = (RequestHandler) getServletContext().getAttribute(SiteDefs.REQUEST_HANDLER);
         if (rh == null) {
             rh = new RequestHandler();
@@ -315,8 +281,8 @@ public class ControlServlet extends HttpServlet {
         }
         return rh;
     }
-    
-    private JPublishWrapper getJPublishWrapper() {
+
+    protected JPublishWrapper getJPublishWrapper() {
         JPublishWrapper jp = (JPublishWrapper) getServletContext().getAttribute("jpublishWrapper");
         if ( jp == null) {
             jp = new JPublishWrapper(getServletContext());
@@ -325,7 +291,7 @@ public class ControlServlet extends HttpServlet {
         return jp;
     }    
 
-    private LocalDispatcher getDispatcher() {
+    protected LocalDispatcher getDispatcher() {
         LocalDispatcher dispatcher = (LocalDispatcher) getServletContext().getAttribute("dispatcher");
         if (dispatcher == null) {
             GenericDelegator delegator = getDelegator();
@@ -369,7 +335,7 @@ public class ControlServlet extends HttpServlet {
         return dispatcher;
     }
 
-    private GenericDelegator getDelegator() {
+    protected GenericDelegator getDelegator() {
         GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
         if (delegator == null) {
             String delegatorName = getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
@@ -387,7 +353,7 @@ public class ControlServlet extends HttpServlet {
         return delegator;
     }
 
-    private Security getSecurity() {
+    protected Security getSecurity() {
         Security security = (Security) getServletContext().getAttribute("security");
         if (security == null) {
             GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
@@ -406,19 +372,13 @@ public class ControlServlet extends HttpServlet {
         return security;
     }
     
-    private String getWebSiteId() {
+    protected String getWebSiteId() {
         return getServletContext().getInitParameter("webSiteId");
     }    
-    
-    public void destroy() {
-        super.destroy();
-        getDispatcher().deregister();        
-    }
-    
-    protected void configureBSF() {
+        
+    protected void configureBsf() {
         String[] bshExtensions = {"bsh"};
-        BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.core.util.OfbizBshBsfEngine", bshExtensions);
-        //BSFManager.registerScriptingEngine("beanshell", "bsh.util.BeanShellBSFEngine", extensions);
+        BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.core.util.OfbizBshBsfEngine", bshExtensions);        
 
         String[] jsExtensions = {"js"};
         BSFManager.registerScriptingEngine("javascript", "org.ofbiz.core.util.OfbizJsBsfEngine", jsExtensions);
@@ -426,4 +386,54 @@ public class ControlServlet extends HttpServlet {
         String[] smExtensions = {"sm"};
         BSFManager.registerScriptingEngine("simplemethod", "org.ofbiz.core.minilang.SimpleMethodBsfEngine", smExtensions);
     }
+    
+    protected void logRequestInfo(HttpServletRequest request) {
+        ServletContext servletContext = this.getServletContext();
+        HttpSession session = request.getSession();
+              
+        Debug.logVerbose("--- Start Request Headers: ---", module);
+        Enumeration headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = (String) headerNames.nextElement();
+            Debug.logVerbose(headerName + ":" + request.getHeader(headerName), module);
+        }
+        Debug.logVerbose("--- End Request Headers: ---", module);        
+       
+        Debug.logVerbose("--- Start Request Parameters: ---", module);
+        Enumeration paramNames = request.getParameterNames();
+        while (paramNames.hasMoreElements()) {
+            String paramName = (String) paramNames.nextElement();
+            Debug.logVerbose(paramName + ":" + request.getParameter(paramName), module);
+        }
+        Debug.logVerbose("--- End Request Parameters: ---", module);
+                
+        Debug.logVerbose("--- Start Request Attributes: ---", module);
+        Enumeration reqNames = request.getAttributeNames();
+        while (reqNames != null && reqNames.hasMoreElements()) {
+            String attName = (String) reqNames.nextElement();
+            Debug.logVerbose(attName + ":" + request.getAttribute(attName), module);
+        }
+        Debug.logVerbose("--- End Request Attributes ---", module);
+
+        Debug.logVerbose("--- Start Session Attributes: ---", module);
+        Enumeration sesNames = null;
+        try {
+            sesNames = session.getAttributeNames();                
+        } catch (IllegalStateException e) {
+            Debug.logVerbose("Cannot get session attributes : " + e.getMessage(), module);
+        }        
+        while (sesNames != null && sesNames.hasMoreElements()) {
+            String attName = (String) sesNames.nextElement();
+            Debug.logVerbose(attName + ":" + session.getAttribute(attName), module);
+        }
+        Debug.logVerbose("--- End Session Attributes ---", module);
+        
+        Enumeration appNames = servletContext.getAttributeNames();
+        Debug.logVerbose("--- Start ServletContext Attributes: ---", module);
+        while (appNames != null && appNames.hasMoreElements()) {
+            String attName = (String) appNames.nextElement();
+            Debug.logVerbose(attName + ":" + servletContext.getAttribute(attName), module);
+        }
+        Debug.logVerbose("--- End ServletContext Attributes ---", module);             
+    }    
 }

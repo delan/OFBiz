@@ -32,12 +32,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
-import org.ofbiz.core.control.JPublishWrapper;
 import org.ofbiz.core.control.RequestHandler;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.GeneralException;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilJ2eeCompat;
+import org.ofbiz.core.view.JPublishWrapper;
 import org.ofbiz.core.view.ViewHandler;
 import org.ofbiz.core.view.ViewHandlerException;
 

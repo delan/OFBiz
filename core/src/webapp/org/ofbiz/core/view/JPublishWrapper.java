@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.core.control;
+package org.ofbiz.core.view;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

@@ -42,28 +42,23 @@ import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.StringUtil;
 
 /**
- * ContextSecurityFilter - Security Filter to restrict access to raw JSP pages.
+ * ContextSecurityFilter - Security Filter to restrict access to raw files.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @version    $Revision$
  * @since      2.0
  */
-public class ContextSecurityFilter implements Filter {
+public class ContextSecurityFilter extends ControlServlet implements Filter {
 
     public static final String module = ContextSecurityFilter.class.getName();
 
-    public FilterConfig config;
+    public FilterConfig config = null;
 
     public void init(FilterConfig config) {
         this.config = config;
-    }
-
-    public void setFilterConfig(FilterConfig config) {
-        this.config = config;
-    }
-
-    public FilterConfig getFilterConfig() {
-        return config;
+        
+        // this will speed up the initial sessionId generation
+        new java.security.SecureRandom().nextLong();
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {        
@@ -73,19 +68,28 @@ public class ContextSecurityFilter implements Filter {
         // set the ServletContext in the request for future use
         request.setAttribute("servletContext", config.getServletContext());
         
+        // check if we are disabled
+        String disableFilter = config.getInitParameter("disabled");
+        if (disableFilter != null && "Y".equals(disableFilter)) {
+            chain.doFilter(request, response);
+            return;
+        }
+        
         // check if we are told to redirect everthing
-        String redirectAllTo = config.getInitParameter("forceRedirectAll");
-
-        if (Debug.verboseOn())
-            Debug.logVerbose("RedirectAllForce Set To: " + redirectAllTo, module);
-        if (redirectAllTo != null && redirectAllTo.length() > 0) {
-            if (request.getAttribute("_FORCE_REDIRECT_") == null) {
-                request.setAttribute("_FORCE_REDIRECT_", "true");
-                Debug.logWarning("Redirecting user to: " + redirectAllTo, module);
-                // wrapper.sendRedirect(httpRequest.getContextPath() + redirectAllTo);
-                request.getRequestDispatcher(redirectAllTo).forward(request, response);
+        String redirectAllTo = config.getInitParameter("forceRedirectAll");                        
+        if (redirectAllTo != null && redirectAllTo.length() > 0) {            
+            // little trick here so we don't loop on ourself
+            if (httpRequest.getSession().getAttribute("_FORCE_REDIRECT_") == null) {
+                httpRequest.getSession().setAttribute("_FORCE_REDIRECT_", "true");
+                Debug.logWarning("Redirecting user to: " + redirectAllTo, module);                  
+                
+                if (!redirectAllTo.toLowerCase().startsWith("http")) {
+                    redirectAllTo = httpRequest.getContextPath() + redirectAllTo;
+                }
+                wrapper.sendRedirect(redirectAllTo);
                 return;
-            } else {
+            } else {                
+                httpRequest.getSession().removeAttribute("_FORCE_REDIRECT_");
                 chain.doFilter(request, response);
                 return;
             }
@@ -98,43 +102,41 @@ public class ContextSecurityFilter implements Filter {
             String errorCode = config.getInitParameter("errorCode");
 
             List allowList = StringUtil.split(allowedPath, ":");
-
-            allowList.add("/");    // No path is allowed.
-            allowList.add("");      // No path is allowed.
+            allowList.add("/");  // No path is allowed.
+            allowList.add("");   // No path is allowed.
 
             if (Debug.verboseOn()) Debug.logVerbose("[Request]: " + httpRequest.getRequestURI(), module);
 
             String requestPath = httpRequest.getServletPath();
-
             if (requestPath == null) requestPath = "";
-
             if (requestPath.lastIndexOf("/") > 0) {
-                if (requestPath.indexOf("/") == 0)
+                if (requestPath.indexOf("/") == 0) {
                     requestPath = "/" + requestPath.substring(1, requestPath.indexOf("/", 1));
-                else
+                } else {
                     requestPath = requestPath.substring(1, requestPath.indexOf("/"));
+                }
             }
 
             String requestInfo = httpRequest.getServletPath();
-
             if (requestInfo == null) requestInfo = "";
-
             if (requestInfo.lastIndexOf("/") >= 0) {
                 requestInfo = requestInfo.substring(0, requestInfo.lastIndexOf("/")) + "/*";
             }
 
             StringBuffer contextUriBuffer = new StringBuffer();
-
-            if (httpRequest.getContextPath() != null)
+            if (httpRequest.getContextPath() != null) {
                 contextUriBuffer.append(httpRequest.getContextPath());
-            if (httpRequest.getServletPath() != null)
+            }
+            if (httpRequest.getServletPath() != null) {
                 contextUriBuffer.append(httpRequest.getServletPath());
-            if (httpRequest.getPathInfo() != null)
+            }
+            if (httpRequest.getPathInfo() != null) {
                 contextUriBuffer.append(httpRequest.getPathInfo());
+            }
             String contextUri = contextUriBuffer.toString();
 
-            // Debugging
-            if (Debug.isOn(Debug.VERBOSE)) {
+            // Verbose Debugging
+            if (Debug.verboseOn()) {
                 for (int i = 0; i < allowList.size(); i++) {
                     Debug.logVerbose("[Allow]: " + ((String) allowList.get(i)), module);
                 }
@@ -143,30 +145,33 @@ public class ContextSecurityFilter implements Filter {
                 Debug.logVerbose("[Servlet path]: " + httpRequest.getServletPath(), module);
             }
 
-            if (!allowList.contains(requestPath) && !allowList.contains(requestInfo) &&
-                !allowList.contains(httpRequest.getServletPath())) {
+            // check to make sure the requested url is allowed
+            if (!allowList.contains(requestPath) && !allowList.contains(requestInfo) && !allowList.contains(httpRequest.getServletPath())) {
                 String filterMessage = "[Filtered request]: " + contextUri;
 
                 if (redirectPath == null) {
-                    int error;
-
+                    int error = 404;
                     try {
                         error = Integer.parseInt(errorCode);
                     } catch (NumberFormatException nfe) {
+                        Debug.logWarning(nfe, "Error code specified would not parse to Integer : " + errorCode, module);
                         error = 404;
                     }
                     filterMessage = filterMessage + " (" + error + ")";
                     wrapper.sendError(error, contextUri);
                 } else {
                     filterMessage = filterMessage + " (" + redirectPath + ")";
-                    wrapper.sendRedirect(httpRequest.getContextPath() + redirectPath);
-                    // request.getRequestDispatcher(redirectPath).forward(request, response);
+                    if (!redirectPath.toLowerCase().startsWith("http")) {
+                        redirectPath = httpRequest.getContextPath() + redirectPath;
+                    }
+                    wrapper.sendRedirect(redirectPath);                    
                 }
                 Debug.logWarning(filterMessage, module);
                 return;
             }
         }
 
+        // we're done checking; continue on
         chain.doFilter(request, response);
     }
 
