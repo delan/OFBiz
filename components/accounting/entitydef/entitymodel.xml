@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  */
 -->
 
@@ -1919,6 +1919,7 @@
       <member-entity entity-alias="PA" entity-name="PaymentApplication"/>
       <alias entity-alias="PY" name="paymentId"/>
       <alias entity-alias="PY" name="paymentTypeId"/>
+      <alias entity-alias="PY" name="statusId"/>
       <alias entity-alias="PY" name="paymentMethodTypeId"/>
       <alias entity-alias="PY" name="paymentMethodId"/>
       <alias entity-alias="PY" name="paymentPreferenceId"/>
@@ -1937,6 +1938,9 @@
       <view-link entity-alias="PY" rel-entity-alias="PA">
         <key-map field-name="paymentId"/>
       </view-link> 
+      <relation type="one-nofk" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
       <relation type="one-nofk" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>      

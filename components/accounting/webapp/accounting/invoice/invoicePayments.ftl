@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -31,18 +31,21 @@
   <tr>
     <td><div class="tableheadtext">Payment #</div></td>
     <td><div class="tableheadtext">Type</div></td>
+    <td><div class="tableheadtext">Status</div></td>
     <td><div class="tableheadtext">Invoice #</div></td>
     <td><div class="tableheadtext">Invoice Item</div></td>   
     <td><div class="tableheadtext">Billing Acct</div></td>
     <td><div class="tableheadtext">Payment Date</div></td>
     <td align="right"><div class="tableheadtext">Amount</div></td>
   </tr> 
-  <tr><td colspan="7"><hr class="sepbar"></td></tr>
+  <tr><td colspan="8"><hr class="sepbar"></td></tr>
   <#list payments as payment>
   <#assign paymentMethodType = payment.getRelatedOne("PaymentMethodType")>
+  <#assign statusItem = payment.getRelatedOne("StatusItem")?if_exists>
   <tr>
-    <td><div class="tabletext">${payment.paymentId?if_exists}</div></td>
+    <td><div class="tabletext">${payment.paymentId?if_exists}</div></td>    
     <td><div class="tabletext">${paymentMethodType.description?default("N/A")}</div></td>
+    <td><div class="tabletext">${(statusItem.description)?if_exists}</div></td>
     <td><div class="tabletext">${payment.invoiceId}</div></td>
     <td><div class="tabletext">${payment.invoiceItemSeqId?default("N/A")}</div></td>
     <td><div class="tabletext">${payment.billingAccountId?default("N/A")}</div></td>
