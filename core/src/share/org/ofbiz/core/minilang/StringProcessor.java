@@ -40,11 +40,15 @@ public class StringProcessor {
     protected static UtilCache stringProcessors = new UtilCache("StringProcessors", 0, 0);
     
     public static void runStringProcessor(String xmlResource, Map strings, Map results, List messages) throws MiniLangException {
-        runStringProcessor(xmlResource, strings, results, messages, StringProcessor.class);
+        runStringProcessor(xmlResource, strings, results, messages, null);
     }
 
     public static void runStringProcessor(String xmlResource, Map strings, Map results, List messages, Class contextClass) throws MiniLangException {
         URL xmlURL = UtilURL.fromResource(contextClass, xmlResource);
+        if (xmlURL == null) {
+            throw new MiniLangException("Could not find StringProcessor XML document in resource: " + xmlResource);
+        }
+                    
         runStringProcessor(xmlURL, strings, results, messages, contextClass);
     }
 
@@ -79,6 +83,10 @@ public class StringProcessor {
                         throw new MiniLangException("XML parser not setup correctly", e);
                     }
                     
+                    if (document == null) {
+                        throw new MiniLangException("Could not find StringProcessor XML document: " + xmlURL.toString());
+                    }
+                    
                     Element rootElement = document.getDocumentElement();
                     List stringProcessElements = UtilXml.childElementList(rootElement, "string-process");
                     
@@ -108,8 +116,12 @@ public class StringProcessor {
             readOperations(stringProcessElement);
         }
         
+        public String getFieldName() {
+            return field;
+        }
+        
         public void exec(Map strings, Map results, List messages, Class contextClass) {
-            String fieldValue = (String) strings.get(field);
+            String fieldValue = (java.lang.String) strings.get(field);
             
             Iterator strOpsIter = stringOperations.iterator();
             while (strOpsIter.hasNext()) {
@@ -126,17 +138,17 @@ public class StringProcessor {
                     Element curOperElem = (Element) operElemIter.next();
                     String nodeName = curOperElem.getNodeName();
                     if ("validate-method".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.ValidateMethod(curOperElem));
+                        stringOperations.add(new StringProcessor.ValidateMethod(curOperElem, this));
                     } else if ("compare".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.Compare(curOperElem));
+                        stringOperations.add(new StringProcessor.Compare(curOperElem, this));
                     } else if ("regexp".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.Regexp(curOperElem));
+                        stringOperations.add(new StringProcessor.Regexp(curOperElem, this));
                     } else if ("not-empty".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.NotEmpty(curOperElem));
+                        stringOperations.add(new StringProcessor.NotEmpty(curOperElem, this));
                     } else if ("copy".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.Copy(curOperElem));
+                        stringOperations.add(new StringProcessor.Copy(curOperElem, this));
                     } else if ("convert".equals(nodeName)) {
-                        stringOperations.add(new StringProcessor.Convert(curOperElem));
+                        stringOperations.add(new StringProcessor.Convert(curOperElem, this));
                     } else {
                         Debug.logWarning("[StringProcessor.StringProcess.readOperations] Operation element \"" + nodeName + "\" no recognized");
                     }
@@ -151,21 +163,10 @@ public class StringProcessor {
         String message = null;
         String propertyResource = null;
         boolean isProperty = false;
+        StringProcess stringProcess;
+        String fieldName;
         
-        public StringOperation() { }
-        
-        public StringOperation(String message) {
-            this.message = message;
-            this.isProperty = false;
-        }
-        
-        public StringOperation(String propertyResource, String propertyName) {
-            this.propertyResource = propertyResource;
-            this.message = propertyName;
-            this.isProperty = true;
-        }
-        
-        public StringOperation(Element element) {
+        public StringOperation(Element element, StringProcess stringProcess) {
             Element failMessage = UtilXml.firstChildElement(element, "fail-message");
             Element failProperty = UtilXml.firstChildElement(element, "fail-property");
             if (failMessage != null) {
@@ -176,6 +177,9 @@ public class StringProcessor {
                 this.message = failProperty.getAttribute("property");
                 this.isProperty = true;
             }
+            
+            this.stringProcess = stringProcess;
+            this.fieldName = stringProcess.getFieldName();
         }
         
         public abstract void exec(String fieldValue, Map results, List messages, Class contextClass);
@@ -198,12 +202,8 @@ public class StringProcessor {
         String methodName;
         String className;
         
-        public ValidateMethod(String methodName, String className) {
-            this.methodName = methodName;
-            this.className = className;
-        }
-        
-        public ValidateMethod(Element element) {
+        public ValidateMethod(Element element, StringProcess stringProcess) {
+            super(element, stringProcess);
             this.methodName = element.getAttribute("method");
             this.className = element.getAttribute("class");
         }
@@ -254,8 +254,8 @@ public class StringProcessor {
         String type;
         String format;
         
-        public Compare(Element element) {
-            super(element);
+        public Compare(Element element, StringProcess stringProcess) {
+            super(element, stringProcess);
             this.value = element.getAttribute("value");
             this.operator = element.getAttribute("operator");
             this.type = element.getAttribute("type");
@@ -365,8 +365,8 @@ public class StringProcessor {
         Pattern pattern = null;
         String expr;
         
-        public Regexp(Element element) {
-            super(element);
+        public Regexp(Element element, StringProcess stringProcess) {
+            super(element, stringProcess);
             expr = element.getAttribute("expr");
             try {
                 pattern = compiler.compile(expr);
@@ -388,8 +388,8 @@ public class StringProcessor {
     }
 
     public static class NotEmpty extends StringOperation {
-        public NotEmpty(Element element) {
-            super(element);
+        public NotEmpty(Element element, StringProcess stringProcess) {
+            super(element, stringProcess);
         }
         
         public void exec(String fieldValue, Map results, List messages, Class contextClass) {
@@ -403,20 +403,29 @@ public class StringProcessor {
         boolean replace = true;
         String toField;
         
-        public Copy(Element element) {
-            super(element);
+        public Copy(Element element, StringProcess stringProcess) {
+            super(element, stringProcess);
             toField = element.getAttribute("to-field");
+            if (this.toField == null || this.toField.length() == 0) {
+                this.toField = this.fieldName;
+            }
+            
             replace = "true".equals(element.getAttribute("replace"));
         }
         
         public void exec(String fieldValue, Map results, List messages, Class contextClass) {
+            if (fieldValue == null)
+                return;
+            
             if (replace) {
                 results.put(toField, fieldValue);
+                //Debug.logInfo("[StringProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
             } else {
                 if (results.containsKey(toField)) {
                     //do nothing
                 } else {
                     results.put(toField, fieldValue);
+                    //Debug.logInfo("[StringProcessor.Copy.exec] Copied \"" + fieldValue + "\" to field \"" + toField + "\"");
                 }
             }
         }
@@ -428,9 +437,13 @@ public class StringProcessor {
         boolean replace = true;
         String format;
         
-        public Convert(Element element) {
-            super(element);
+        public Convert(Element element, StringProcess stringProcess) {
+            super(element, stringProcess);
             this.toField = element.getAttribute("to-field");
+            if (this.toField == null || this.toField.length() == 0) {
+                this.toField = this.fieldName;
+            }
+            
             this.type = element.getAttribute("type");
             this.replace = "true".equals(element.getAttribute("replace"));
 
@@ -448,7 +461,11 @@ public class StringProcessor {
         
         public void exec(String fieldValue, Map results, List messages, Class contextClass) {
             Object fieldObject = null;
-                        
+            
+            if (fieldValue == null || fieldValue.length() == 0) {
+                return;
+            }
+            
             if ("String".equals(type)) {
                 fieldObject = fieldValue;
             } else if ("Double".equals(type)) {
@@ -520,13 +537,18 @@ public class StringProcessor {
                 messages.add("Specified type \"" + type + "\" not known in conversion operation.");
             }
             
+            if (fieldObject == null)
+                return;
+            
             if (replace) {
                 results.put(toField, fieldObject);
+                //Debug.logInfo("[StringProcessor.Converted.exec] Put converted value \"" + fieldObject + "\" in field \"" + toField + "\"");
             } else {
                 if (results.containsKey(toField)) {
                     //do nothing
                 } else {
                     results.put(toField, fieldObject);
+                    //Debug.logInfo("[StringProcessor.Converted.exec] Put converted value \"" + fieldObject + "\" in field \"" + toField + "\"");
                 }
             }
         }
