@@ -212,7 +212,9 @@
 		context, otherwise each list entry must be a Map that will be expanded 
 		into the local context
     key-name: the value of the key-name will be the value passed 
-    	to the server
+    	to the server; this should be the full name of the location of the
+    	key value in the context, given the list-entry-name or expanded
+    	list-entry Map as the options you would most likely use
     description: will be presented to the user with field values
     	substituted using the ${} syntax
 -->
