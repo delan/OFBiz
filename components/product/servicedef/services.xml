@@ -1505,10 +1505,10 @@
     </service>
     <service name="getProductVariant" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="prodFindSelectedVariant">
-        <description>Gets a variant product value object.</description>
+        <description>Gets a list of variant product value objects.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="selectedFeatures" type="java.util.Map" mode="IN"/>
-        <attribute name="product" type="org.ofbiz.entity.GenericValue" mode="OUT"/>
+        <attribute name="products" type="java.util.List" mode="OUT"/>
     </service>
     <service name="getProductFeatureSet" engine="java"
             location="org.ofbiz.product.product.ProductServices" invoke="prodFindFeatureTypes">

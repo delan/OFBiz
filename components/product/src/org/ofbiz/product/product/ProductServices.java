@@ -1,5 +1,5 @@
 /*
- * $Id: ProductServices.java,v 1.7 2004/02/26 09:10:50 jonesde Exp $
+ * $Id: ProductServices.java,v 1.8 2004/04/18 00:45:22 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -54,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ProductServices {
@@ -78,10 +78,58 @@ public class ProductServices {
         // * String productId      -- Parent (virtual) product ID
         // * Map selectedFeatures  -- Selected features
         GenericDelegator delegator = dctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
         String productId = (String) context.get("productId");
         Map selectedFeatures = (Map) context.get("selectedFeatures");
+        ArrayList products = new ArrayList();
+        // All the variants for this products are retrieved
+        Map resVariants = prodFindAllVariants(dctx, context);
+        List variants = (List)resVariants.get("assocProducts");
+        GenericValue oneVariant = null;
+        Iterator variantsIt = variants.iterator();
+        while (variantsIt.hasNext()) {
+            // For every variant, all the standard features are retrieved
+            oneVariant = (GenericValue)variantsIt.next();
+            Map feaContext = new HashMap();
+            feaContext.put("productId", oneVariant.get("productIdTo"));
+            feaContext.put("type", "STANDARD_FEATURE");
+            Map resFeatures = prodGetFeatures(dctx, feaContext);
+            List features = (List)resFeatures.get("productFeatures");
+            Iterator featuresIt = features.iterator();
+            GenericValue oneFeature = null;
+            boolean variantFound = true;
+            // The variant is discarded if at least one of its standard features 
+            // has the same type of one of the selected features but a different feature id.
+            // Example:
+            // Input: (COLOR, Black), (SIZE, Small)
+            // Variant1: (COLOR, Black), (SIZE, Large) --> nok
+            // Variant2: (COLOR, Black), (SIZE, Small) --> ok
+            // Variant3: (COLOR, Black), (SIZE, Small), (IMAGE, SkyLine) --> ok
+            // Variant4: (COLOR, Black), (IMAGE, SkyLine) --> ok
+            while (featuresIt.hasNext()) {
+                oneFeature = (GenericValue)featuresIt.next();
+                if (selectedFeatures.containsKey(oneFeature.getString("productFeatureTypeId"))) {
+                    if (!selectedFeatures.containsValue(oneFeature.getString("productFeatureId"))) {
+                        variantFound = false;
+                        break;
+                    }
+                }
+            }
+            if (variantFound) {
+                try {
+                    products.add(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", oneVariant.getString("productIdTo"))));
+                } catch (GenericEntityException e) {
+                    Map messageMap = UtilMisc.toMap("errProductFeatures", e.toString());
+                    String errMsg = UtilProperties.getMessage(resource,"productservices.problem_reading_product_features_errors", messageMap, locale);
+                    Debug.logError(e, errMsg, module);
+                    return ServiceUtil.returnError(errMsg);
+                }
+            }
+        }
 
-        return ServiceUtil.returnError("This service has not yet been implemented.");
+        Map result = ServiceUtil.returnSuccess();
+        result.put("products", products);
+        return result;
     }
 
     /**
