@@ -23,7 +23,7 @@
 <h2 align="center">The Open For Business Project: Service Engine Guide</h2>
  
 <div class='contenttext'>Written By: Andy Zeneski, <a href="mailto:jaz@ofbiz.org">jaz@ofbiz.org</a></div>
-<div class='contenttext'>Last Updated: January 16, 2003</div>
+<div class='contenttext'>Last Updated: March 27, 2003</div>
 <!-- $Id$ -->
 
 <hr class='sepbar'><br>
@@ -221,13 +221,10 @@
 <p class='contenttext'>Internal Usage of the Services Framework is quite simple. In a Web Application
   the LocalDispatcher is stored in the ServletContext which can be accessed via
   the Session object in an Event. For non-web based applications you simply create
-  a delegator object (see the Entity Engine docs) define a Collection of URLs
-  where service definitions can be found and then create a new instance of the
-  LocalDispatcher: </p>
+  a GenericDispatcher: </p>
 <pre>
 GenericDelegator delegator = GenericDelegator.getGenericDelegator("default");
-Collection definitionFiles = null; // We will use only the global here
-LocalDispatcher dispatcher = new LocalDispatcher(&quot;UniqueName&quot;,delegator,definitionFiles);
+LocalDispatcher dispatcher = new GenericDispatcher(&quot;UniqueName&quot;,delegator);
 </pre>
 <p class='contenttext'><b>Now we have a dispatcher which we can use to invoke services. To invoke the
   test service create a Map for the context which contains the IN parameter <i>message</i>
