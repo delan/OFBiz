@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.2
 -->
 
@@ -41,6 +41,25 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
 
 <br>
 <p class="head2">${uiLabelMap.ProductProductFeatureMaintenance}</p>
+<#if (listSize > 0)>
+    <table border="0" width="100%" cellpadding="2">
+        <tr>
+        <td align=right>
+            <span class="tabletext">
+            <b>
+            <#if (viewIndex > 0)>
+            <a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex-1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
+            </#if>
+            ${lowIndex+1} - ${highIndex} of ${listSize}
+            <#if (listSize > highIndex)>
+            | <a href="<@ofbizUrl>/EditFeatureCategoryFeatures?productFeatureCategoryId=${productFeatureCategoryId?if_exists}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex+1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonNext}]</a>
+            </#if>
+            </b>
+            </span>
+        </td>
+        </tr>
+    </table>
+</#if>
 <table border="1" cellpadding='2' cellspacing='0'>
   <tr class='viewOneTR1'>
     <td><div class="tabletext"><b>${uiLabelMap.CommonId}</b></div></td>
@@ -67,6 +86,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
         <td colspan='3'><div class="tabletext">&nbsp;</div></td>
     </#if>
   </tr>
+<#if (listSize > 0)>
 <#list productFeatures as productFeature>
   <#assign curProductFeatureType = productFeature.getRelatedOneCache("ProductFeatureType")>
   <tr valign="middle" class='viewOneTR1'>
@@ -125,6 +145,7 @@ ${pages.get("/feature/FeatureTabBar.ftl")}
     </#if>
   </tr>
 </#list>
+</#if>
 </table>
 <br>
 <#else>

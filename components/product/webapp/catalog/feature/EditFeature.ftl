@@ -21,15 +21,15 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 
-${pages.get("/feature/FeatureTabBar.ftl")}
-<div class="head1">Edit Feature ${(productFeature.description)?if_exists}</div>
+<#-- ${pages.get("/feature/FeatureTabBar.ftl")} -->
+<div class="head1">Edit Feature: ${(productFeature.description)?if_exists}</div>
 
 ${editProductFeatureWrapper.renderFormString()}
 

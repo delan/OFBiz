@@ -46,7 +46,7 @@ import org.ofbiz.entity.model.ModelFieldTypeReader;
  * Generic Entity Cursor List Iterator for Handling Cursored DB Results
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
  */
 public class EntityListIterator implements ListIterator {
@@ -297,7 +297,9 @@ public class EntityListIterator implements ListIterator {
 
             // if can't reposition to desired index, throw exception
             if (!resultSet.absolute(start)) {
-                throw new GenericEntityException("Could not move to the start position of " + start + ", there are probably not that many results for this find.");
+                // maybe better to just return an empty list here...
+                return list;
+                //throw new GenericEntityException("Could not move to the start position of " + start + ", there are probably not that many results for this find.");
             }
 
             // get the first as the current one
