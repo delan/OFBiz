@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.5 2003/11/17 01:38:31 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.6 2003/11/17 03:17:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -623,8 +623,8 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.additionalProductFeatureAndAppls;
     }
 
-    public Set getFeatureIdSet() {
-        Set featureIdList = new HashSet();
+    public Map getFeatureIdQtyMap() {
+        Map featureMap = new HashMap();
         GenericValue product = this.getProduct();
         if (product != null) {
             List featureAppls = null;
@@ -637,7 +637,12 @@ public class ShoppingCartItem implements java.io.Serializable {
                 Iterator fai = featureAppls.iterator();
                 while (fai.hasNext()) {
                     GenericValue appl = (GenericValue) fai.next();
-                    featureIdList.add(appl.getString("productFeatureId"));
+                    Double lastQuantity = (Double) featureMap.get(appl.getString("productFeatureId"));
+                    if (lastQuantity == null) {
+                        lastQuantity = new Double(0);
+                    }
+                    Double newQuantity = new Double(lastQuantity.doubleValue() + this.getQuantity());
+                    featureMap.put(appl.getString("productFeatureId"), newQuantity);
                 }
             }
         }
@@ -645,10 +650,15 @@ public class ShoppingCartItem implements java.io.Serializable {
             Iterator aapi = this.additionalProductFeatureAndAppls.values().iterator();
             while (aapi.hasNext()) {
                 GenericValue appl = (GenericValue) aapi.next();
-                featureIdList.add(appl.getString("productFeatureId"));
+                Double lastQuantity = (Double) featureMap.get(appl.getString("productFeatureId"));
+                if (lastQuantity == null) {
+                    lastQuantity = new Double(0);
+                }
+                Double newQuantity = new Double(lastQuantity.doubleValue() + this.getQuantity());
+                featureMap.put(appl.getString("productFeatureId"), newQuantity);
             }
         }
-        return featureIdList;
+        return featureMap;
     }
 
     /** Removes an item attribute. */

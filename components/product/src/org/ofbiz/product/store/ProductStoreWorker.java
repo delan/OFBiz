@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.7 2003/11/17 01:38:32 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.8 2003/11/17 03:17:12 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,11 +45,11 @@ import org.ofbiz.service.ModelService;
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ProductStoreWorker {
-    
+
     public static final String module = ProductStoreWorker.class.getName();
 
     public static GenericValue getProductStore(String productStoreId, GenericDelegator delegator) {
@@ -61,35 +61,35 @@ public class ProductStoreWorker {
         }
         return productStore;
     }
-            
+
     public static GenericValue getProductStore(ServletRequest request) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         String productStoreId = ProductStoreWorker.getProductStoreId(request);
-        return ProductStoreWorker.getProductStore(productStoreId, delegator);               
+        return ProductStoreWorker.getProductStore(productStoreId, delegator);
     }
-    
+
     public static String getProductStoreId(ServletRequest request) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpSession session = httpRequest.getSession();
         if (session.getAttribute("productStoreId") != null) {
-            return (String) session.getAttribute("productStoreId");        
+            return (String) session.getAttribute("productStoreId");
         } else {
             GenericValue webSite = CatalogWorker.getWebSite(request);
             if (webSite != null) {
                 return webSite.getString("productStoreId");
             }
         }
-        return null;        
+        return null;
     }
-    
+
     public static GenericValue getProductStorePaymentSetting(GenericDelegator delegator, String productStoreId, String paymentMethodTypeId, String paymentServiceTypeEnumId, boolean anyServiceType) {
         GenericValue storePayment = null;
         try {
-            storePayment = delegator.findByPrimaryKeyCache("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId, "paymentServiceTypeEnumId", paymentServiceTypeEnumId));    
+            storePayment = delegator.findByPrimaryKeyCache("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId, "paymentMethodTypeId", paymentMethodTypeId, "paymentServiceTypeEnumId", paymentServiceTypeEnumId));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems looking up store payment settings", module);
         }
-        
+
         if (anyServiceType) {
             if (storePayment == null) {
                 try {
@@ -99,7 +99,7 @@ public class ProductStoreWorker {
                     Debug.logError(e, "Problems looking up store payment settings", module);
                 }
             }
-            
+
             if (storePayment == null) {
                 try {
                     List storePayments = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", productStoreId));
@@ -109,13 +109,13 @@ public class ProductStoreWorker {
                 }
             }
         }
-           
-        return storePayment;                          
+
+        return storePayment;
     }
 
-    public static List getAvailableStoreShippingMethods(GenericDelegator delegator, String productStoreId, Set featureIdSet, double weight) {
-        if (featureIdSet == null) {
-            featureIdSet = new HashSet();
+    public static List getAvailableStoreShippingMethods(GenericDelegator delegator, String productStoreId, Map featureIdMap, double weight) {
+        if (featureIdMap == null) {
+            featureIdMap = new HashMap();
         }
         List shippingMethods = null;
         try {
@@ -159,7 +159,7 @@ public class ProductStoreWorker {
                         Iterator ifet = includedFeatures.iterator();
                         while (ifet.hasNext()) {
                             GenericValue appl = (GenericValue) ifet.next();
-                            if (!featureIdSet.contains(appl.getString("productFeatureId"))) {
+                            if (!featureIdMap.containsKey(appl.getString("productFeatureId"))) {
                                 returnShippingMethods.remove(method);
                                 continue;
                             }
@@ -177,7 +177,7 @@ public class ProductStoreWorker {
                         Iterator ifet = excludedFeatures.iterator();
                         while (ifet.hasNext()) {
                             GenericValue appl = (GenericValue) ifet.next();
-                            if (featureIdSet.contains(appl.getString("productFeatureId"))) {
+                            if (featureIdMap.containsKey(appl.getString("productFeatureId"))) {
                                 returnShippingMethods.remove(method);
                                 continue;
                             }
@@ -206,7 +206,7 @@ public class ProductStoreWorker {
 
     public static boolean isStoreInventoryRequired(String productStoreId, GenericValue product, GenericDelegator delegator) {
         // look at the product first since it over-rides the ProductStore setting; if empty or null use the ProductStore setting
-        
+
         if (product != null && UtilValidate.isNotEmpty(product.getString("requireInventory"))) {
             if ("Y".equals(product.getString("requireInventory"))) {
                 return true;
@@ -224,21 +224,21 @@ public class ProductStoreWorker {
         }
 
         // default to false, so if anything but Y, return false
-        return "Y".equals(productStore.getString("requireInventory"));        
+        return "Y".equals(productStore.getString("requireInventory"));
     }
-    
+
     public static boolean isStoreInventoryRequired(ServletRequest request, GenericValue product) {
-        GenericValue productStore = getProductStore(request);        
+        GenericValue productStore = getProductStore(request);
 
         if (productStore == null) {
             Debug.logWarning("No ProductStore found, return false for inventory check", module);
             return false;
         }
-        
+
         String productStoreId = productStore.getString("productStoreId");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         return isStoreInventoryRequired(productStore.getString("productStoreId"), product, delegator);
-    }    
+    }
 
     /** check inventory availability for the given catalog, product, quantity, etc */
     public static boolean isStoreInventoryAvailable(String productStoreId, String productId, double quantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
@@ -301,27 +301,27 @@ public class ProductStoreWorker {
             // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
         }
     }
-    
+
     public static boolean isStoreInventoryAvailable(ServletRequest request, String productId, double quantity) {
-        GenericValue productStore = getProductStore(request);       
+        GenericValue productStore = getProductStore(request);
 
         if (productStore == null) {
             Debug.logWarning("No ProductStore found, return false for inventory check", module);
             return false;
         }
-        
+
         String productStoreId = productStore.getString("productStoreId");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         return isStoreInventoryAvailable(productStoreId, productId, quantity, delegator, dispatcher);
-    }    
+    }
 
     /** tries to reserve the specified quantity, if fails returns quantity that it could not reserve or zero if there was an error, otherwise returns null */
     public static Double reserveStoreInventory(String productStoreId, String productId, Double quantity,
             String orderId, String orderItemSeqId, GenericValue userLogin, GenericDelegator delegator, LocalDispatcher dispatcher) {
 
         GenericValue productStore = getProductStore(productStoreId, delegator);
-        
+
         if (productStore == null) {
             Debug.logWarning("No ProductStore found with id " + productStoreId + ", not reserving inventory", module);
             return new Double(0.0);
@@ -402,5 +402,5 @@ public class ProductStoreWorker {
 
             // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
         }
-    }    
+    }
 }

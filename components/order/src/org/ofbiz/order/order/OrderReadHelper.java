@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.7 2003/10/11 05:57:41 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.8 2003/11/17 03:17:11 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,10 +24,7 @@
 package org.ofbiz.order.order;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
@@ -54,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -413,6 +410,38 @@ public class OrderReadHelper {
 
     public double getShippingTotal() {
         return OrderReadHelper.calcOrderAdjustments(getOrderHeaderAdjustments(), getOrderItemsSubTotal(), false, false, true);
+    }
+
+    public Map getFeatureIdQtyMap() {
+        Map featureMap = new HashMap();
+        List validItems = getValidOrderItems();
+        if (validItems != null) {
+            Iterator i = validItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+                List featureAppls = null;
+                if (item.get("productId") != null) {
+                    try {
+                        featureAppls = item.getDelegator().findByAndCache("ProductFeatureAppl", UtilMisc.toMap("productId", item.getString("productId")));
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to get ProductFeatureAppl for item : " + item, module);
+                    }
+                    if (featureAppls != null) {
+                        Iterator fai = featureAppls.iterator();
+                        while (fai.hasNext()) {
+                            GenericValue appl = (GenericValue) fai.next();
+                            Double lastQuantity = (Double) featureMap.get(appl.getString("productFeatureId"));
+                            if (lastQuantity == null) {
+                                lastQuantity = new Double(0);
+                            }
+                            Double newQuantity = new Double(lastQuantity.doubleValue() + item.getDouble("quantity").doubleValue());
+                            featureMap.put(appl.getString("productFeatureId"), newQuantity);
+                        }
+                    }
+                }
+            }
+        }
+        return featureMap;
     }
 
     public double getShippableTotal() {
