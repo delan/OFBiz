@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceXaWrapper.java,v 1.2 2003/11/13 22:36:08 ajzeneski Exp $
+ * $Id: ServiceXaWrapper.java,v 1.3 2003/11/14 20:54:50 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import java.util.Map;
  * ServiceXaWrapper - XA Resource wrapper for running services on commit() or rollback()
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ServiceXaWrapper extends GenericXaResource {
@@ -165,6 +165,8 @@ public class ServiceXaWrapper extends GenericXaResource {
             if (serviceError) {
                 throw new XAException(XAException.XA_RBOTHER);
             }
+        } else {
+            Debug.log("No commit service defined; nothing to do", module);
         }
 
         this.xid = null;
@@ -191,6 +193,8 @@ public class ServiceXaWrapper extends GenericXaResource {
             } catch (GenericServiceException e) {
                 Debug.logError(e, "Problem calling async service : " + this.rollbackService + " / " + this.rollbackContext, module);
             }
+        } else {
+            Debug.log("No rollback service defined; nothing to do", module);
         }
 
         this.xid = null;
