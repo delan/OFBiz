@@ -46,6 +46,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
@@ -330,21 +331,35 @@ public class SurveyWrapper {
     }
 
     public List getQuestionResponses(GenericValue question, int startIndex, int number) throws SurveyWrapperException {
-        EntityListIterator eli = this.getEli(question);
         List resp = null;
+        boolean beganTransaction = false;
         try {
+            beganTransaction = TransactionUtil.begin();
+            
+            EntityListIterator eli = this.getEli(question);
             if (startIndex > 0 && number > 0) {
                 resp = eli.getPartialList(startIndex, number);
             } else {
                 resp = eli.getCompleteList();
             }
+
+            eli.close();
         } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
+            }
+
             throw new SurveyWrapperException(e);
         } finally {
             try {
-                eli.close();
+                // only commit the transaction if we started one...
+                TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                Debug.logError(e, module);
+                throw new SurveyWrapperException(e);
+                //Debug.logError(e, "Could not commit transaction: " + e.toString(), module);
             }
         }
         return resp;
@@ -450,32 +465,50 @@ public class SurveyWrapper {
     }
 
     private long[] getBooleanResult(GenericValue question) throws SurveyWrapperException {
-        long[] result = { 0, 0, 0 };
-        // index 0 = total responses
-        // index 1 = total yes
-        // index 2 = total no
-
-        EntityListIterator eli = this.getEli(question);
-
-        if (eli != null) {
-            GenericValue value;
-            while (((value = (GenericValue) eli.next()) != null)) {
-                if ("Y".equalsIgnoreCase(value.getString("booleanResponse"))) {
-                    result[1]++;
-                } else {
-                    result[2]++;
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+            
+            long[] result = { 0, 0, 0 };
+            // index 0 = total responses
+            // index 1 = total yes
+            // index 2 = total no
+    
+            EntityListIterator eli = this.getEli(question);
+    
+            if (eli != null) {
+                GenericValue value;
+                while (((value = (GenericValue) eli.next()) != null)) {
+                    if ("Y".equalsIgnoreCase(value.getString("booleanResponse"))) {
+                        result[1]++;
+                    } else {
+                        result[2]++;
+                    }
+                    result[0]++; // increment the count
                 }
-                result[0]++; // increment the count
+    
+                eli.close();
+            }
+    
+            return result;
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
 
+            throw new SurveyWrapperException(e);
+        } finally {
             try {
-                eli.close();
+                // only commit the transaction if we started one...
+                TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e, module);
+                throw new SurveyWrapperException(e);
+                //Debug.logError(e, "Could not commit transaction: " + e.toString(), module);
             }
         }
-
-        return result;
     }
 
     private double[] getNumberResult(GenericValue question, int type) throws SurveyWrapperException {
@@ -484,32 +517,50 @@ public class SurveyWrapper {
         // index 1 = tally
         // index 2 = average
 
-        EntityListIterator eli = this.getEli(question);
-
-        if (eli != null) {
-            GenericValue value;
-            while (((value = (GenericValue) eli.next()) != null)) {
-                switch (type) {
-                    case 1:
-                        Long n = value.getLong("numericResponse");
-                        result[1] += n.longValue();
-                        break;
-                    case 2:
-                        Double c = value.getDouble("currencyResponse");
-                        result[1] += (((double) Math.round((c.doubleValue() - c.doubleValue()) * 100)) / 100);
-                        break;
-                    case 3:
-                        Double f = value.getDouble("floatResponse");
-                        result[1] += f.doubleValue();
-                        break;
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+            
+            EntityListIterator eli = this.getEli(question);
+    
+            if (eli != null) {
+                GenericValue value;
+                while (((value = (GenericValue) eli.next()) != null)) {
+                    switch (type) {
+                        case 1:
+                            Long n = value.getLong("numericResponse");
+                            result[1] += n.longValue();
+                            break;
+                        case 2:
+                            Double c = value.getDouble("currencyResponse");
+                            result[1] += (((double) Math.round((c.doubleValue() - c.doubleValue()) * 100)) / 100);
+                            break;
+                        case 3:
+                            Double f = value.getDouble("floatResponse");
+                            result[1] += f.doubleValue();
+                            break;
+                    }
+                    result[0]++; // increment the count
                 }
-                result[0]++; // increment the count
+    
+                eli.close();
+            }
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
 
+            throw new SurveyWrapperException(e);
+        } finally {
             try {
-                eli.close();
+                // only commit the transaction if we started one...
+                TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e, module);
+                throw new SurveyWrapperException(e);
+                //Debug.logError(e, "Could not commit transaction: " + e.toString(), module);
             }
         }
 
@@ -547,27 +598,45 @@ public class SurveyWrapper {
 
     private Map getOptionResult(GenericValue question) throws SurveyWrapperException {
         Map result = new HashMap();
-        EntityListIterator eli = this.getEli(question);
-
         long total = 0;
-        if (eli != null) {
-            GenericValue value;
-            while (((value = (GenericValue) eli.next()) != null)) {
-                String optionId = value.getString("surveyOptionSeqId");
-                Long optCount = (Long) result.remove(optionId);
-                if (optCount == null) {
-                    optCount = new Long(1);
-                } else {
-                    optCount = new Long(1 + optCount.longValue());
+
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+            
+            EntityListIterator eli = this.getEli(question);
+            if (eli != null) {
+                GenericValue value;
+                while (((value = (GenericValue) eli.next()) != null)) {
+                    String optionId = value.getString("surveyOptionSeqId");
+                    Long optCount = (Long) result.remove(optionId);
+                    if (optCount == null) {
+                        optCount = new Long(1);
+                    } else {
+                        optCount = new Long(1 + optCount.longValue());
+                    }
+                    result.put(optionId, optCount);
+                    total++; // increment the count
                 }
-                result.put(optionId, optCount);
-                total++; // increment the count
+    
+                eli.close();
+            }
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "Could not rollback transaction: " + e2.toString(), module);
             }
 
+            throw new SurveyWrapperException(e);
+        } finally {
             try {
-                eli.close();
+                // only commit the transaction if we started one...
+                TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
-                Debug.logWarning(e, module);
+                throw new SurveyWrapperException(e);
+                //Debug.logError(e, "Could not commit transaction: " + e.toString(), module);
             }
         }
 
@@ -581,7 +650,7 @@ public class SurveyWrapper {
                 new EntityExpr("surveyId", EntityOperator.EQUALS, surveyId)), EntityOperator.AND);
     }
 
-    private EntityListIterator getEli(GenericValue question) throws SurveyWrapperException {
+    private EntityListIterator getEli(GenericValue question) throws GenericEntityException {
         EntityFindOptions efo = new EntityFindOptions();
         efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
         efo.setResultSetConcurrency(EntityFindOptions.CONCUR_READ_ONLY);
@@ -589,12 +658,7 @@ public class SurveyWrapper {
         efo.setDistinct(false);
 
         EntityListIterator eli = null;
-        try {
-            eli = delegator.findListIteratorByCondition("SurveyResponseAndAnswer", makeEliCondition(question), null, null, null, efo);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-            throw new SurveyWrapperException("Unable to get responses", e);
-        }
+        eli = delegator.findListIteratorByCondition("SurveyResponseAndAnswer", makeEliCondition(question), null, null, null, efo);
 
         return eli;
     }

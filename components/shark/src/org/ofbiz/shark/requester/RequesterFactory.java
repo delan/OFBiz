@@ -35,6 +35,7 @@ import java.sql.Timestamp;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.shark.container.SharkContainer;
 import org.ofbiz.base.util.Debug;
@@ -53,7 +54,7 @@ import org.enhydra.shark.api.client.wfmodel.WfProcessIterator;
  * OFBiz -> Shark Requester Factory
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class RequesterFactory {
@@ -93,96 +94,111 @@ public class RequesterFactory {
     }
 
     public static int restoreRequesters(GenericValue userLogin) {
-        GenericDelegator delegator = SharkContainer.getDelegator();
-        EntityListIterator eli = null;
-        try {
-            eli = delegator.findListIteratorByCondition("WfRequester", null, null, null);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        }
-
-        // need an ExecutionAdministration reference
-        ExecutionAdministration exAdmin = SharkContainer.getAdminInterface().getExecutionAdministration();
-
-        // connect to the engine
-        try {
-            exAdmin.connect(userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), null, null);
-        } catch (BaseException e) {
-            Debug.logError(e, module);
-        } catch (ConnectFailed e) {
-            Debug.logError(e, module);
-        }
-
         int restored = 0;
-        if (eli != null) {
-            GenericValue requesterValue;
-            while (((requesterValue = (GenericValue) eli.next()) != null)) {
-                // field values
-                String requesterId = requesterValue.getString("requesterId");
-                Timestamp fromDate = requesterValue.getTimestamp("fromDate");
-                String className = requesterValue.getString("className");
-                String classData = requesterValue.getString("classData");
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
 
-                // restore the WfRequester object
-                PersistentRequester req = RequesterFactory.getLoadedRequester(requesterId);
-                if (req == null) {
-                    req = RequesterFactory.getNewRequester(className, requesterId, fromDate);
-                }
-
-                if (req != null) {
-                    // restore the requester data
-                    try {
-                        req.restoreData(classData);
-                    } catch (PersistentRequesterException e) {
-                        Debug.logError(e, "Cannot restore requester; problem with data map", module);
-                        req = null; // null out the requester
-                        continue;   // continue on to the next
+            GenericDelegator delegator = SharkContainer.getDelegator();
+            EntityListIterator eli = null;
+            eli = delegator.findListIteratorByCondition("WfRequester", null, null, null);
+    
+            // need an ExecutionAdministration reference
+            ExecutionAdministration exAdmin = SharkContainer.getAdminInterface().getExecutionAdministration();
+    
+            // connect to the engine
+            try {
+                exAdmin.connect(userLogin.getString("userLoginId"), userLogin.getString("currentPassword"), null, null);
+            } catch (BaseException e) {
+                Debug.logError(e, module);
+            } catch (ConnectFailed e) {
+                Debug.logError(e, module);
+            }
+    
+            if (eli != null) {
+                GenericValue requesterValue;
+                while (((requesterValue = (GenericValue) eli.next()) != null)) {
+                    // field values
+                    String requesterId = requesterValue.getString("requesterId");
+                    Timestamp fromDate = requesterValue.getTimestamp("fromDate");
+                    String className = requesterValue.getString("className");
+                    String classData = requesterValue.getString("classData");
+    
+                    // restore the WfRequester object
+                    PersistentRequester req = RequesterFactory.getLoadedRequester(requesterId);
+                    if (req == null) {
+                        req = RequesterFactory.getNewRequester(className, requesterId, fromDate);
                     }
-
-                    // locate the WfProcess object to attach
-                    WfProcess proc = null;
-                    try {
-                        proc = exAdmin.getProcess(requesterValue.getString("processId"));
-                    } catch (NotConnected e) {
-                        Debug.logError(e, module);
-                    } catch (BaseException e) {
-                        Debug.logError(e, module);
-                    }
-
-                    if (proc != null) {
+    
+                    if (req != null) {
+                        // restore the requester data
                         try {
-                            // set the requester w/ the process
-                            proc.set_requester(req);
-                            // set the process w/ the requester
-                            req.addPerformer(proc);
-                            // save the requester
-                            loadedRequesters.put(req.getRequesterId(), req);
-                        } catch (CannotChangeRequester e) {
+                            req.restoreData(classData);
+                        } catch (PersistentRequesterException e) {
+                            Debug.logError(e, "Cannot restore requester; problem with data map", module);
+                            req = null; // null out the requester
+                            continue;   // continue on to the next
+                        }
+    
+                        // locate the WfProcess object to attach
+                        WfProcess proc = null;
+                        try {
+                            proc = exAdmin.getProcess(requesterValue.getString("processId"));
+                        } catch (NotConnected e) {
                             Debug.logError(e, module);
                         } catch (BaseException e) {
                             Debug.logError(e, module);
                         }
-                        restored++;
+    
+                        if (proc != null) {
+                            try {
+                                // set the requester w/ the process
+                                proc.set_requester(req);
+                                // set the process w/ the requester
+                                req.addPerformer(proc);
+                                // save the requester
+                                loadedRequesters.put(req.getRequesterId(), req);
+                            } catch (CannotChangeRequester e) {
+                                Debug.logError(e, module);
+                            } catch (BaseException e) {
+                                Debug.logError(e, module);
+                            }
+                            restored++;
+                        }
                     }
                 }
-            }
-
-            try {
+    
                 eli.close();
-            } catch (GenericEntityException e) {
+            }
+    
+            // disconnect from the engine
+            try {
+                exAdmin.disconnect();
+            } catch (NotConnected e) {
                 Debug.logError(e, module);
+            } catch (BaseException e) {
+               Debug.logError(e, module);
+            }
+            
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+
+            Debug.logError(e, module);
+            
+        } finally {
+            try {
+                // only commit the transaction if we started one...
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "[GenericDelegator] Could not commit transaction: " + e.toString(), module);
             }
         }
 
-        // disconnect from the engine
-        try {
-            exAdmin.disconnect();
-        } catch (NotConnected e) {
-            Debug.logError(e, module);
-        } catch (BaseException e) {
-           Debug.logError(e, module);
-        }
-        
         return restored;
     }
 
