@@ -110,6 +110,10 @@ public class PosTransaction implements Serializable {
         this.ch = new CheckOutHelper(session.getDispatcher(), session.getDelegator(), cart);
         cart.setFacilityId(facilityId);
         cart.setTerminalId(terminalId);
+        if (session.getUserLogin() != null) {
+            cart.addAdditionalPartyRole(session.getUserLogin().getString("partyId"), "SALES_REP");
+        }
+        
         currentTx = this;
         trace("transaction created");
     }
