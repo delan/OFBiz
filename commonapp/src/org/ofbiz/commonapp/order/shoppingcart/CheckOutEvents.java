@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -216,8 +217,15 @@ public class CheckOutEvents {
         
         // format the grandTotal
         DecimalFormat formatter = new DecimalFormat("###.##");
-        String grandTotalString = formatter.format(cart.getGrandTotal());               
-        Double grandTotal = new Double(grandTotalString);
+        double grandTotalPrimitive = cart.getGrandTotal();
+		String grandTotalString = formatter.format(grandTotalPrimitive);               
+        Double grandTotal = new Double(grandTotalPrimitive);
+		try {
+			grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
+		} catch (ParseException e1) {
+			// If this happends something is probably wrong but it should still be possible to proceed
+			e1.printStackTrace();
+		}
 
         // store the order - build the context
         Map context = cart.makeCartMap(dispatcher, explodeOrderItems(request));
