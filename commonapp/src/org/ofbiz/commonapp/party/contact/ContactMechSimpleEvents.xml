@@ -34,6 +34,7 @@
         <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
+        <field-to-field field-name="partyId" map-name="parameters" to-map-name="context"/>
         <call-service service-name="createContactMech" in-map-name="context">
             <default-message>Contact Mechanism successfully created.</default-message>
             <result-to-request result-name="contactMechId"/></call-service>
