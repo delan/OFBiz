@@ -151,24 +151,13 @@
                 <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="jobshop"/>
 
-                <set field="formDefFile" value="/jobshopmgt/ProductionRunForms.xml"/>
-                <set field="singleFormName" value="findProductionRun"/>
-                <set field="listFormName" value="listFindProductionRun"/>
-                <set field="entityName" value="WorkEffort"/>
-                <set field="showListIfSelection" value="N"/>
-                <set field="listName" value="requirementList"/>
-                <set field="viewSize" value="20"/>
-                
-                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/includes/formprep.bsh"/>
-                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/jobshopmgt/findProductionRun.bsh"/>
-                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/includes/pagelistprep.bsh"/>
+                <set field="requestParameters.workEffortTypeId" to-scope="screen" default-value="PROD_ORDER_HEADER"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonJobshopDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://manufacturing/webapp/manufacturing/jobshopmgt/FindProductionRun.ftl"/></html>
-                        </platform-specific>
+                        <include-form name="findProductionRun" location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunForms.xml"/>
+                        <include-form name="listFindProductionRun" location="component://manufacturing/webapp/manufacturing/jobshopmgt/ProductionRunForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
