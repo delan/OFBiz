@@ -394,10 +394,14 @@
   <GeoAssoc geoId="WV" geoIdTo="USCN" geoAssocTypeId="GROUP_MEMBER"/>
   <GeoAssoc geoId="WY" geoIdTo="USCN" geoAssocTypeId="GROUP_MEMBER"/>
 
-  <Geo abbreviation="USALL" geoCode="USALL" geoId="USALL" geoName="US All" geoTypeId="GROUP"/>
+  <Geo abbreviation="USALL" geoCode="USALL" geoId="USALL" geoName="US All (w/ APO/FPO)" geoTypeId="GROUP"/>
   <GeoAssoc geoId="USCN" geoIdTo="USALL" geoAssocTypeId="GROUP_MEMBER"/>
   <GeoAssoc geoId="USAF" geoIdTo="USALL" geoAssocTypeId="GROUP_MEMBER"/>
   <GeoAssoc geoId="AHUST" geoIdTo="USALL" geoAssocTypeId="GROUP_MEMBER"/>
+
+  <Geo abbreviation="US50" geoCode="US50" geoId="US50" geoName="US 50 (no APO/FPO)" geoTypeId="GROUP"/>
+  <GeoAssoc geoId="USCN" geoIdTo="US50" geoAssocTypeId="GROUP_MEMBER"/>
+  <GeoAssoc geoId="AHUST" geoIdTo="US50" geoAssocTypeId="GROUP_MEMBER"/>
 
   <!-- Associations -->
   <GeoAssoc geoId="USA" geoIdTo="AK" geoAssocTypeId="REGIONS" />
