@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.19 2004/07/31 22:13:07 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.20 2004/08/02 03:32:00 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,9 @@ import java.io.IOException;
 import java.io.File;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.naming.Reference;
 
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerException;
@@ -55,6 +58,11 @@ import org.apache.catalina.Context;
 import org.apache.catalina.Connector;
 import org.apache.catalina.Cluster;
 import org.apache.catalina.Manager;
+import org.apache.catalina.ServerFactory;
+import org.apache.catalina.UserDatabase;
+import org.apache.catalina.users.MemoryUserDatabase;
+import org.apache.catalina.realm.UserDatabaseRealm;
+import org.apache.catalina.realm.MemoryRealm;
 import org.apache.catalina.session.PersistentManager;
 import org.apache.catalina.session.StandardManager;
 import org.apache.catalina.cluster.tcp.SimpleTcpCluster;
@@ -68,13 +76,14 @@ import org.apache.catalina.valves.RequestDumperValve;
 import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardWrapper;
 import org.apache.catalina.core.StandardEngine;
+import org.apache.catalina.core.StandardServer;
 import org.apache.coyote.tomcat5.CoyoteServerSocketFactory;
 import org.apache.coyote.tomcat5.CoyoteConnector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-/**
+/*
  * --- Access Log Pattern Information - From Tomcat 5 AccessLogValve.java
  * <p>Patterns for the logged message may include constant text or any of the
  * following replacement strings, for which the corresponding information
@@ -121,10 +130,13 @@ import org.xml.sax.SAXException;
  * <li><code>%{xxx}s</code> xxx is an attribute in the HttpSession
  * </ul>
  * </p>
+ */
+
+/**
+ * CatalinaContainer -  Tomcat 5
  *
- * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      3.1
  */
 public class CatalinaContainer implements Container {
@@ -169,7 +181,15 @@ public class CatalinaContainer implements Container {
         this.usePersistentManager = ContainerConfig.getPropertyValue(cc, "apps-db-persistent-mgr", false);
         this.contextReloadable = ContainerConfig.getPropertyValue(cc, "apps-context-reloadable", false);
         this.crossContext = ContainerConfig.getPropertyValue(cc, "apps-cross-context", true);
-        this.distribute = ContainerConfig.getPropertyValue(cc, "apps-distributable", true);        
+        this.distribute = ContainerConfig.getPropertyValue(cc, "apps-distributable", true);
+
+        // configure JNDI in the StandardServer
+        StandardServer server = (StandardServer) ServerFactory.getServer();
+        try {
+            server.setGlobalNamingContext(new InitialContext());
+        } catch (NamingException e) {
+            throw new ContainerException(e);
+        }
 
         // create the instance of Embedded
         embedded = new Embedded();
@@ -242,6 +262,12 @@ public class CatalinaContainer implements Container {
         if (jvmRoute != null) {
             engine.setJvmRoute(jvmRoute);
         }
+
+        // create the default realm -- TODO: make this configurable
+        String dbConfigPath = "config/catalina-users.xml";
+        MemoryRealm realm = new MemoryRealm();
+        realm.setPathname(dbConfigPath);
+        engine.setRealm(realm);
 
         // cache the engine
         engines.put(engine.getName(), engine);
@@ -321,6 +347,7 @@ public class CatalinaContainer implements Container {
         Host host = embedded.createHost(hostName, CATALINA_HOSTS_HOME);
         host.setDeployOnStartup(true);
         host.setAutoDeploy(true);
+        host.setRealm(engine.getRealm());
         engine.addChild(host);
         hosts.put(engine.getName() + hostName, host);
 
@@ -613,6 +640,7 @@ public class CatalinaContainer implements Container {
 
         if (virtualHosts == null || virtualHosts.size() == 0) {
             Host host = (Host) hosts.get(engine.getName() + "._DEFAULT");
+            context.setRealm(host.getRealm());
             host.addChild(context);
             context.getMapper().setDefaultHostName(host.getName());
         } else {
@@ -623,6 +651,7 @@ public class CatalinaContainer implements Container {
                 Host host = (Host) hosts.get(engine.getName() + "." + hostName);
                 if (host == null) {
                     host = createHost(engine, hostName);
+                    context.setRealm(host.getRealm());
                     host.addChild(context);
                     if (isFirst) {
                         context.getMapper().setDefaultHostName(host.getName());
