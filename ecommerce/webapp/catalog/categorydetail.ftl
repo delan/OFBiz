@@ -41,6 +41,7 @@
             <a href="javascript:document.thecategoryform.submit()" class="buttontext"><nobr>[Add Products in this Category to the Cart using Default Quantities]</nobr></a>
           </form>
         </#if>
+        <a href="<@ofbizUrl>/advancedsearch?SEARCH_CATEGORY_ID=${productCategory.productCategoryId}</@ofbizUrl>" class="buttontext">Search in Category</a>
       </div>
     </td>
   </tr>

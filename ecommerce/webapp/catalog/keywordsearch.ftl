@@ -26,7 +26,23 @@
 
 <div class='head1'>
     Search Results for "${requestAttributes.keywordString?if_exists}"
-    where <#if searchOperator?default("or")?upper_case == "OR">any keyword<#else>all keywords</#if> matched.     
+    where <#if searchOperator?default("OR") == "OR">any keyword<#else>all keywords</#if> matched
+
+  <#assign featureIdByType = requestAttributes.featureIdByType>
+  <#if requestAttributes.featureIdByType?has_content>
+  	and where 
+    <#list featureIdByType.keySet() as productFeatureTypeId>
+      <#assign findPftMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
+      <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
+      <#assign findProdFeatMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureId", featureIdByType[productFeatureTypeId])>
+      <#assign productFeature = delegator.findByPrimaryKeyCache("ProductFeature", findProdFeatMap)>
+      ${productFeatureType.description} = ${productFeature.description}
+      <#if productFeatureTypeId_has_next>, and </#if>
+    </#list>
+  </#if>
+  <#if searchCategory?exists>
+    in the ${searchCategory.description} category
+  </#if>
 </div>
 
 <#if !requestAttributes.searchProductList?has_content>

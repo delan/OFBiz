@@ -28,6 +28,8 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.product.catalog.*;
 import org.ofbiz.commonapp.product.product.*;
 
+delegator = request.getAttribute("delegator");
+
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 requestParams = UtilHttp.getParameterMap(request);
 searchCategoryId = requestParams.get("SEARCH_CATEGORY_ID");
@@ -48,9 +50,13 @@ baseSearchStr = "~SEARCH_STRING="+keywordString+"/~SEARCH_OPERATOR="+searchOpera
 nextStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()+1);
 prevStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()-1);
 
+searchCategory = (searchCategoryId == null || searchCategoryId.length() == 0) ? null : 
+	delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", searchCategoryId));
+
 session.setAttribute("searchOperator", searchOperator);
 context.put("searchOperator", searchOperator);
 context.put("baseSearchStr", baseSearchStr);
 context.put("nextStr", nextStr);
 context.put("prevStr", prevStr);
+context.put("searchCategory", searchCategory);
 

@@ -36,12 +36,12 @@
   </div>
   <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
     <#assign findPftMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
-    <#assign productFeatureType = delegator.findByPrimaryKey("ProductFeatureType", findPftMap)>
+    <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
     <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
     <div class='tabletext'>
       ${productFeatureType.description}:
       <select name="pft_${productFeatureTypeId}">
-        <option value="">&nbsp;</option>
+        <option value="">- any -</option>
         <#list productFeatures as productFeature>
           <option value="${productFeature.productFeatureId}">${productFeature.description}</option>
         </#list>
