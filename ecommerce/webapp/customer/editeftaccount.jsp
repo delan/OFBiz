@@ -52,7 +52,7 @@
 
 <%ContactMechWorker.getPartyPostalAddresses(pageContext, userLogin.getString("partyId"), (String) pageContext.getAttribute("curContactMechId"), "postalAddressInfos");%>
 
-<%if (!security.hasPermission("USER_ADMIN", session) && pageContext.getAttribute("eftAccount") != null && pageContext.getAttribute("paymentMethod") != null && 
+<%if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && pageContext.getAttribute("eftAccount") != null && pageContext.getAttribute("paymentMethod") != null && 
       !userLogin.getString("partyId").equals(((GenericValue) pageContext.getAttribute("paymentMethod")).getString("partyId"))) {%>
   <p><h3>The EFT Account specified does not belong to you, you may not view or edit it.</h3></p>
 &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Back]</a>
