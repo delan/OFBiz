@@ -39,7 +39,7 @@ var donePage = request.getParameter("DONE_PAGE");
 if (donePage == null || donePage.length() == 0) donePage = "viewprofile";
 
 var userLoginData = userLogin;
-if (!tryEntity) userLoginData = UtilHttp.getParameterMap(request);
+if (!tryEntity.booleanValue()) userLoginData = UtilHttp.getParameterMap(request);
 if (userLoginData == null) userLoginData = new HashMap();
 
 context.put("donePage", donePage);

@@ -57,12 +57,12 @@ var parameterMap = UtilHttp.getParameterMap(request);
 var tryEntity = paymentResults.get("tryEntity");
 
 var creditCardData = paymentResults.get("creditCard");
-if (!tryEntity) creditCardData = parameterMap;
+if (!tryEntity.booleanValue()) creditCardData = parameterMap;
 if (creditCardData == null) creditCardData = new HashMap();
 context.put("creditCardData", creditCardData);
 
 var eftAccountData = paymentResults.get("eftAccount");
-if (!tryEntity) eftAccountData = parameterMap;
+if (!tryEntity.booleanValue()) eftAccountData = parameterMap;
 if (eftAccountData == null) eftAccountData = new HashMap();
 context.put("eftAccountData", eftAccountData);
 
