@@ -660,10 +660,10 @@
             <find-by-and entity-name="OrderItemInventoryRes" map-name="oiirListLookupMap" list-name="oiirList" use-cache="false"/>
             <iterate entry-name="oiir" list-name="oiirList">
                 <if-compare field-name="toCancelAmount" operator="greater" value="0" type="Double">
-                    <if-compare-field field-name="quantity" map-name="oiir" operator="greater-equals" to-field-name="toCancelAmount">
+                    <if-compare-field field-name="quantity" map-name="oiir" operator="greater-equals" to-field-name="toCancelAmount" type="Double">
                         <field-to-field field-name="toCancelAmount" to-field-name="cancelQuantity" to-map-name="cancelOiirMap"/>
                     </if-compare-field>
-                    <if-compare-field field-name="quantity" map-name="oiir" operator="less" to-field-name="toCancelAmount">
+                    <if-compare-field field-name="quantity" map-name="oiir" operator="less" to-field-name="toCancelAmount" type="Double">
                         <field-to-field field-name="quantity" map-name="oiir" to-field-name="cancelQuantity" to-map-name="cancelOiirMap"/>
                     </if-compare-field>
 
@@ -706,7 +706,7 @@
                     <calcop operator="get" field-name="cancelQuantity"/>
                 </calcop>
             </calculate>
-            <if-compare-field field-name="cancelQuantity" operator="less" to-field-name="quantity" to-map-name="orderItemInventoryRes">
+            <if-compare-field field-name="cancelQuantity" operator="less" to-field-name="quantity" to-map-name="orderItemInventoryRes" type="Double">
                 <calculate field-name="quantity" map-name="orderItemInventoryRes">
                     <calcop operator="subtract" field-name="quantity" map-name="orderItemInventoryRes">
                         <calcop operator="get" field-name="cancelQuantity"/>
@@ -738,7 +738,7 @@
                     <condition>
                         <or>
                             <if-empty field-name="availableToPromise"/>
-                            <if-compare field-name="availableToPromise" map-name="item" operator="less" value="0"/>
+                            <if-compare field-name="availableToPromise" map-name="item" operator="less" value="0" type="Double"/>
                         </or>
                     </condition>
                     <then>
