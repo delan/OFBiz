@@ -71,7 +71,7 @@
   </div>
 <%}%>
 
-<div class="head1">Rollups <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(facilityGroup==null?null:facilityGroup.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityGroupId)%>]</span></div>
+<div class="head1">Rollups <span class='head2'>for&nbsp;<%=UtilFormatOut.ifNotEmpty(facilityGroup==null?null:facilityGroup.getString("facilityGroupName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityGroupId)%>]</span></div>
 <a href="<ofbiz:url>/EditFacilityGroup</ofbiz:url>" class="buttontext">[New Group]</a>
 <br>
 <br>

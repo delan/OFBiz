@@ -91,7 +91,7 @@
   </div>
 <%}%>
 
-<div class="head1">Facilities <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(facilityGroup==null?null:facilityGroup.getString("description"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityGroupId)%>]</span></div>
+<div class="head1">Facilities <span class='head2'>for&nbsp;<%=UtilFormatOut.ifNotEmpty(facilityGroup==null?null:facilityGroup.getString("facilityGroupName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityGroupId)%>]</span></div>
 <a href="<ofbiz:url>/EditFacilityGroup</ofbiz:url>" class="buttontext">[New Group]</a>
 <%if (activeOnly) {%>
   <a href="<ofbiz:url>/EditFacilityGroupMembers?facilityGroupId=<%=facilityGroupId%>&activeOnly=false</ofbiz:url>" class="buttontext">[Active and Inactive]</a>
