@@ -57,10 +57,14 @@
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
   <FacilityType description="Office" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Call Center" facilityTypeId="CALL_CENTER" hasTable="N" parentTypeId=""/>
   <FacilityType description="Plant" facilityTypeId="PLANT" hasTable="N" parentTypeId=""/>
-  <FacilityType description="Retail Store" facilityTypeId="RETAIL_STORE" hasTable="N" parentTypeId=""/>
   <FacilityType description="Room" facilityTypeId="ROOM" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Retail Store" facilityTypeId="RETAIL_STORE" hasTable="N" parentTypeId=""/>
   <FacilityType description="Warehouse" facilityTypeId="WAREHOUSE" hasTable="N" parentTypeId=""/>
+
+  <FacilityGroupType description="Management Structure" facilityGroupTypeId="MGMT_STRUCTURE"/>
+  <FacilityGroupType description="Pricing Group" facilityGroupTypeId="PRICING_GROUP"/>
 
   <FacilityGroup facilityGroupName="Not Applicable" description="Not Applicable" facilityGroupId="_NA_" facilityGroupTypeId="" primaryParentGroupId=""/>
 
