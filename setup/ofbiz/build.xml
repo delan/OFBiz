@@ -142,7 +142,7 @@
         <delete file="${lib.dir}/ofbcore-share.jar" />
         <delete file="${lib.dir}/ofbcore-rules.jar" />
         <delete file="${lib.dir}/ofbcore-workflow.jar" />
-        <delete file="${lib.dir}/ofbcommonapp.jar" />
+        <delete file="${lib.dir}/commonapp.jar" />
 
         <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
@@ -314,7 +314,7 @@
         <copy file="core/lib/ofbcore-rules.jar" toFile="${lib.dir}/ofbcore-rules.jar" />
         <copy file="core/lib/ofbcore-workflow.jar" toFile="${lib.dir}/ofbcore-workflow.jar" />
     
-        <copy file="commonapp/lib/ofbcommonapp.jar" toFile="${lib.dir}/ofbcommonapp.jar" />
+        <copy file="commonapp/lib/commonapp.jar" toFile="${lib.dir}/commonapp.jar" />
     </target>
 
     <target name="ejbdeploy" depends="deploy">
@@ -353,17 +353,18 @@
         <copy file="commonapp/earetc/application.xml"
             toFile="${eartemp.dir}/META-INF/application.xml" />
     
-        <copy file="webtools/lib/ofbwebtools.war" toFile="${eartemp.dir}/ofbwebtools.war" />
-        <copy file="commonapp/lib/ofbcommonapp.war" toFile="${eartemp.dir}/ofbcommonapp.war" />
+        <copy file="webtools/lib/webtools.war" toFile="${eartemp.dir}/webtools.war" />
+        <copy file="commonapp/lib/commonapp.war" toFile="${eartemp.dir}/commonapp.war" />
             
-        <copy file="ecommerce/lib/ofbecom.war" toFile="${eartemp.dir}/ofbecom.war" />
+        <copy file="ecommerce/lib/ecommerce.war" toFile="${eartemp.dir}/ecommerce.war" />
     
-        <copy file="catalog/lib/ofbcatalog.war" toFile="${eartemp.dir}/ofbcatalog.war" />
-        <copy file="partymgr/lib/ofbpartymgr.war" toFile="${eartemp.dir}/ofbpartymgr.war" />
-        <copy file="ordermgr/lib/ofbordermgr.war" toFile="${eartemp.dir}/ofbordermgr.war" />
-        <copy file="workeffort/lib/ofbworkeffort.war" toFile="${eartemp.dir}/ofbworkeffort.war" />
+        <copy file="catalog/lib/catalog.war" toFile="${eartemp.dir}/catalog.war" />
+        <copy file="partymgr/lib/partymgr.war" toFile="${eartemp.dir}/partymgr.war" />
+        <copy file="ordermgr/lib/ordermgr.war" toFile="${eartemp.dir}/ordermgr.war" />
+        <copy file="workeffort/lib/workeffort.war" toFile="${eartemp.dir}/workeffort.war" />
             
         <jar jarfile="./ofbiz.ear" basedir="${eartemp.dir}" />
+        <delete dir="${eartemp.dir}" />        
     </target>
     
     	

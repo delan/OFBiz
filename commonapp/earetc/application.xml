@@ -9,11 +9,11 @@
 
     <!-- <module><java>ofbcore-share.jar</java></module> -->
 
-    <module><web><web-uri>ofbwebtools.war</web-uri><context-root>/webtools</context-root></web></module>
-    <module><web><web-uri>ofbcommonapp.war</web-uri><context-root>/commonapp</context-root></web></module>
-    <module><web><web-uri>ofbecom.war</web-uri><context-root>/ecommerce</context-root></web></module>
-    <module><web><web-uri>ofbcatalog.war</web-uri><context-root>/catalog</context-root></web></module>
-    <module><web><web-uri>ofbpartymgr.war</web-uri><context-root>/partymgr</context-root></web></module>
-    <module><web><web-uri>ofbordermgr.war</web-uri><context-root>/ordermgr</context-root></web></module>
-    <module><web><web-uri>ofbworkeffort.war</web-uri><context-root>/workeffort</context-root></web></module>
+    <module><web><web-uri>webtools.war</web-uri><context-root>/webtools</context-root></web></module>
+    <module><web><web-uri>commonapp.war</web-uri><context-root>/commonapp</context-root></web></module>
+    <module><web><web-uri>ecommerce.war</web-uri><context-root>/ecommerce</context-root></web></module>
+    <module><web><web-uri>catalog.war</web-uri><context-root>/catalog</context-root></web></module>
+    <module><web><web-uri>partymgr.war</web-uri><context-root>/partymgr</context-root></web></module>
+    <module><web><web-uri>ordermgr.war</web-uri><context-root>/ordermgr</context-root></web></module>
+    <module><web><web-uri>workeffort.war</web-uri><context-root>/workeffort</context-root></web></module>
 </application>

@@ -34,7 +34,7 @@
 
     <target name="init">
 	<property environment="env" />
-        <property name="name"           value="ofbcommonapp" />
+        <property name="name"           value="commonapp" />
         <property name="src.dir"        value="src" />
         <property name="etc.dir"        value="etc" />
         <property name="lib.dir"        value="lib" />

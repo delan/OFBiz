@@ -34,7 +34,7 @@
 
     <target name="init">
         <property environment="env" />
-        <property name="name"           value="ofbcatalog" />
+        <property name="name"           value="catalog" />
         <property name="src.dir"        value="src" />
         <property name="etc.dir"        value="etc" />
         <property name="lib.dir"        value="lib" />
@@ -56,7 +56,7 @@
         <property name="ofbcore-webapp.jar"   value="${corelib.dir}/ofbcore-webapp.jar" />
         <property name="ofbcore-rules.jar"    value="${corelib.dir}/ofbcore-rules.jar" />
         <property name="ofbcore-workflow.jar" value="${corelib.dir}/ofbcore-workflow.jar" />
-        <property name="ofbcommonapp.jar"     value="${commonapplib.dir}/ofbcommonapp.jar" />
+        <property name="commonapp.jar"     value="${commonapplib.dir}/commonapp.jar" />
         
         <property name="j2ee.jar"      value="${extlib.dir}/compile/jboss-j2ee.jar" />
         <property name="jdbc.jar"      value="${extlib.dir}/compile/jdbc2_0-stdext.jar" />
@@ -78,7 +78,7 @@
         <property name="api-jars3"     value="${bsh.jar}:${axis.jar}:${clutil.jar}:${wsdl4j.jar}" />
 	<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
         
-        <property name="ofb-jars"    value="${ofbcore-share.jar}:${ofbcore-webapp.jar}:${ofbcore-rules.jar}:${ofbcore-workflow.jar}:${ofbcommonapp.jar}" />
+        <property name="ofb-jars"    value="${ofbcore-share.jar}:${ofbcore-webapp.jar}:${ofbcore-rules.jar}:${ofbcore-workflow.jar}:${commonapp.jar}" />
         <property name="classpath"   value="${env.CLASSPATH}:${ofb-jars}:${api-jars}" />
 	<echo message="classpath: ${classpath}" />
     </target>
