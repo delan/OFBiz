@@ -1655,15 +1655,18 @@ public class GenericDelegator implements DelegatorInterface {
                     while (nonPksIter.hasNext()) {
                         ModelField modelField = (ModelField) nonPksIter.next();
                         String fieldName = modelField.getName();
-                        Object fieldValue = value.get(fieldName);
-                        Object oldValue = existing.get(fieldName);
-                        if ((fieldValue == null && oldValue != null) || (fieldValue != null && !fieldValue.equals(oldValue))) {
-                            toStore.put(fieldName, fieldValue);
-                            atLeastOneField = true;
+                        if (value.containsKey(fieldName)) {
+                            Object fieldValue = value.get(fieldName);
+                            Object oldValue = existing.get(fieldName);
+                            if ((fieldValue == null && oldValue != null) || (fieldValue != null && !fieldValue.equals(oldValue))) {
+                                toStore.put(fieldName, fieldValue);
+                                atLeastOneField = true;
+                            }
                         }
-                        if (atLeastOneField) {
-                            numberChanged += this.store(toStore, doCacheClear);
-                        }
+                    }
+
+                    if (atLeastOneField) {
+                        numberChanged += this.store(toStore, doCacheClear);
                     }
                 }
             }
