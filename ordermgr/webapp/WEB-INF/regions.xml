@@ -109,10 +109,14 @@
     <!-- shipping/tax configuration screens -->
     <define id='shipsetup' region='MAIN_REGION'>
         <put section='title'>Shipping Estimate Setup</put>
-        <put section='content' content='/shipment/shipsetup.jsp'/>
+        <put section='content' content='/setup/shipsetup.jsp'/>
     </define>
     <define id='taxsetup' region='MAIN_REGION'>
         <put section='title'>Tax Rate Setup</put>
-        <put section='content' content='/tax/taxsetup.jsp'/>
+        <put section='content' content='/setup/taxsetup.jsp'/>
+    </define>
+    <define id='paysetup' region='MAIN_REGION'>
+        <put section='title'>Payment Processor Setup</put>
+        <put section='content' content='/setup/paysetup.jsp'/>
     </define>
 </regions>

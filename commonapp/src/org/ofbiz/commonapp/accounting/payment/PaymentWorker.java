@@ -20,9 +20,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.accounting.payment;
-
 
 import java.util.*;
 import javax.servlet.*;
@@ -31,15 +29,18 @@ import javax.servlet.jsp.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Worker methods for Payments
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version 1.0
- *@created January 22, 2002
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class PaymentWorker {
+    
+    public static final String module = PaymentWorker.class.getName();
+    
     public static void getPartyPaymentMethodValueMaps(PageContext pageContext, String partyId, boolean showOld, String paymentMethodValueMapsAttr) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
 
@@ -137,5 +138,24 @@ public class PaymentWorker {
         }
 
         pageContext.setAttribute(tryEntityAttr, new Boolean(tryEntity));
+    }
+    
+    public static GenericValue getPaymentSetting(GenericDelegator delegator, String webSiteId, String paymentMethodTypeId) {
+        GenericValue webSitePayment = null;
+        try {
+            webSitePayment = delegator.findByPrimaryKeyCache("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", paymentMethodTypeId));    
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems looking up payment method type by website.", module);
+        }
+        
+        if (webSitePayment == null) {
+            try {
+                webSitePayment = delegator.findByPrimaryKeyCache("WebSitePaymentSetting", UtilMisc.toMap("webSiteId", webSiteId, "paymentMethodTypeId", "_NA_"));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems looking up payment method type by website.", module);
+            }
+        }
+                
+        return webSitePayment;                          
     }
 }

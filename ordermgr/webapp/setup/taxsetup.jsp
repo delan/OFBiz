@@ -9,14 +9,22 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <% pageContext.setAttribute("PageName", "Main Page"); %>
-<%if(security.hasEntityPermission("TAXRATE", "_VIEW", session)) {%>
 
 <BR>
 
 <div class='tabContainer'>
+  <%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>
   <a href="<ofbiz:url>/shipsetup</ofbiz:url>" class='tabButton'>Ship&nbsp;Rate&nbsp;Setup</a>
+  <%}%>
+  <%if(security.hasEntityPermission("TAXRATE", "_VIEW", session)) {%>
   <a href="<ofbiz:url>/taxsetup</ofbiz:url>" class='tabButtonSelected'>Tax&nbsp;Rate&nbsp;Setup</a>
+  <%}%>
+  <%if(security.hasEntityPermission("PAYPROC", "_VIEW", session)) {%>
+  <a href="<ofbiz:url>/paysetup</ofbiz:url>" class='tabButton'>Payment&nbsp;Setup</a>
+  <%}%>
 </div>
+
+<%if(security.hasEntityPermission("TAXRATE", "_VIEW", session)) {%>
 
 <TABLE border=0 width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
   <TR>

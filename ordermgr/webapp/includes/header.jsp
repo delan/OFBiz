@@ -55,17 +55,10 @@
 		  <td class="headerButtonLeft"><a href="<ofbiz:url>/salesentry</ofbiz:url>" class="headerbuttontext">Sale&nbsp;Entry</a></td>
 		  <!--<td class="headerButtonLeft"><a href="#" class="headerbuttontext">Purchase&nbsp;Entry</a></td>-->
           <%}%>
+         
+          <td width="90%" align='center' class='headerCenter'>&nbsp;</td>
 
-          <%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/shipsetup</ofbiz:url>" class="headerbuttontext">Ship&nbsp;Rates</a></td>
-          <%}%>
-
-          <%if(security.hasEntityPermission("TAXRATE", "_VIEW", session)) {%>
-          <td class="headerButtonLeft"><a href="<ofbiz:url>/taxsetup</ofbiz:url>" class="headerbuttontext">Tax&nbsp;Rates</a></td>
-          <%}%>
-
-          <td width="90%" align=center class='headerCenter'>&nbsp;</td>
-
+          <td class="headerButtonRight"><a href='<ofbiz:url>/shipsetup</ofbiz:url>' class="headerbuttontext">Setup</a></td>
           <ofbiz:unless name="userLogin">
             <td class="headerButtonRight"><a href='<ofbiz:url><%=CommonWorkers.makeLoginUrl(pageContext)%></ofbiz:url>' class='headerbuttontext'>Login</a></td>
           </ofbiz:unless>

@@ -15,7 +15,10 @@
   <WebSiteCatalog webSiteId="WebStore" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
   <WebSiteCatalog webSiteId="OrderEntry" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
   <WebSiteCatalog webSiteId="OrderEntry" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
-
+  
+  <WebSitePaymentSetting webSiteId="WebStore" paymentMethodTypeId="CREDIT_CARD" paymentService="ccProcessor"/> 
+  <WebSitePaymentSetting webSiteId="WebStore" paymentMethodTypeId="EFT_ACCOUNT" paymentService="eftProcessor"/>
+   
   <ProductCategory description="Demo Browse Root"
     longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Gizmos"

@@ -1102,6 +1102,46 @@
       <relation type="many" rel-entity-name="WebPage">
         <key-map field-name="webSiteId"/>
       </relation>
+      <relation type="many" rel-entity-name="WebSitePaymentSetting">
+      	<key-map field-name="webSiteId"/>
+      </relation>
     </entity>
+    <entity entity-name="WebSitePaymentSetting"
+            package-name="org.ofbiz.commonapp.content.website"
+            title="Web Site Payment Settings Entity">
+      <field name="webSiteId" type="id-ne"></field>
+      <field name="paymentMethodTypeId" type="id-ne"></field>
+      <field name="paymentService" type="name"></field>
+      <field name="paymentConfiguration" type="url"></field>
+      <prim-key field="webSiteId"/>
+      <prim-key field="paymentMethodTypeId"/>
+      <relation type="one" fk-name="WSP_WEB_SITE"  rel-entity-name="WebSite">
+        <key-map field-name="webSiteId"/>
+      </relation>
+      <relation type="one" fk-name="WSP_PAYMENT_TYPE"  rel-entity-name="PaymentMethodType">
+        <key-map field-name="paymentMethodTypeId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="WebSitePaymentSettingView"
+    		package-name="org.ofbiz.commonapp.content.website"
+    		never-cache="true"
+    		title="Web Site Payment Settings View Entity">
+    	<member-entity entity-alias="WS" entity-name="WebSite"/>
+    	<member-entity entity-alias="PS" entity-name="WebSitePaymentSetting"/>
+    	<member-entity entity-alias="PT" entity-name="PaymentMethodType"/>
+    	<alias entity-alias="WS" name="webSiteId"/>
+    	<alias entity-alias="WS" name="siteName"/>
+    	<alias entity-alias="PS" name="paymentService"/>
+    	<alias entity-alias="PS" name="paymentConfiguration"/>
+    	<alias entity-alias="PT" name="paymentMethodTypeId"/>
+    	<alias entity-alias="PT" name="description"/>
+    	<view-link entity-alias="WS" rel-entity-alias="PS">
+    		<key-map field-name="webSiteId"/>
+    	</view-link>    	
+    	<view-link entity-alias="PS" rel-entity-alias="PT">
+    		<key-map field-name="paymentMethodTypeId"/>
+    	</view-link>
+    </view-entity>    
+    
 </entitymodel>
 

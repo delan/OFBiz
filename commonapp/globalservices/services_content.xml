@@ -19,5 +19,28 @@
         <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="siteName" type="String" mode="IN" optional="false"/>
     </service>
-
+    
+    <!-- WebSite Payment Setting Services -->
+    <service name="createWebSitePaymentSetting" engine="simple"
+                location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="createWebSitePaymentSetting" auth="true">
+        <description>Create an WebSite</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentService" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentConfiguration" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateWebSitePaymentSetting" engine="simple"
+                location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="updateWebSitePaymentSetting" auth="true">
+        <description>Update an WebSite</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentService" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentConfiguration" type="String" mode="IN" optional="true"/>
+    </service>    
+    <service name="removeWebSitePaymentSetting" engine="simple"
+                location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="removeWebSitePaymentSetting" auth="true">
+        <description>Update an WebSite</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="paymentMethodTypeId" type="String" mode="IN" optional="false"/>
+    </service>    
 </services>

@@ -45,4 +45,35 @@
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
+    
+    <simple-method method-name="createWebSitePaymentSetting" short-description="Create an WebSite Payment Setting">
+        <check-permission permission="PAYPROC" action="_CREATE"><fail-message message="Security Error: to run createWebSitePaymentSetting you must have the PAYPROC_CREATE or PROC_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="WebSitePaymentSetting"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateWebSitePaymentSetting" short-description="Update an WebSite Payment Setting">
+        <check-permission permission="PAYPROC" action="_UPDATE"><fail-message message="Security Error: to run updateWebSitePaymentSetting you must have the PAYPROC_UPDATE or PAYPROC_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="paymentMethodTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WebSitePaymentSetting" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeWebSitePaymentSetting" short-description="Remove a WebSite Payment Setting">
+        <check-permission permission="PAYPROC" action="_DELETE"><fail-message message="Security Error: to run removeWebSitePaymentSetting you must have the PAYPROC_DELETE or PAYPROC_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="paymentMethodTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="WebSitePaymentSetting" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>    
+    
 </simple-methods>

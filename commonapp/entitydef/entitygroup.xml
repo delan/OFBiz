@@ -289,6 +289,8 @@
 
     <entity-group group="org.ofbiz.commonapp" entity="WebPage" />
     <entity-group group="org.ofbiz.commonapp" entity="WebSite" />
+    <entity-group group="org.ofbiz.commonapp" entity="WebSitePaymentSetting" />
+    <entity-group group="org.ofbiz.commonapp" entity="WebSitePaymentSettingView" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.humanres.ability -->

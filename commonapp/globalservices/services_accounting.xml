@@ -141,17 +141,12 @@
         <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
         <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>
     </service>
 
-    <service name="ccProcessor" engine="java"
-            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
-            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor"> -->
-            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor"> -->
-            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysDeclineProcessor"> -->
-            <!-- location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="ccProcessor"> -->
-            <!-- location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="ccProcessor"> -->
-        <description>Credit Card Processing</description>
+	<service name="ccProcessInterface" engine="interface" location="" invoke="">
+        <description>Credit Card Processing Interface</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
         <attribute name="orderItems" type="List" mode="IN" optional="false"/>
@@ -162,6 +157,7 @@
         <attribute name="creditCard" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="cardSecurityCode" type="String" mode="IN" optional="true"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="configUrl" type="String" mode="IN" optional="true"/>
         <attribute name="authResult" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="authCode" type="String" mode="OUT" optional="true"/>
@@ -169,13 +165,12 @@
         <attribute name="authFlag" type="String" mode="OUT" optional="false"/>        
         <attribute name="authMessage" type="String" mode="OUT" optional="false"/>
         <attribute name="avsCode" type="String" mode="OUT" optional="true"/>
-        <attribute name="scoreCode" type="String" mode="OUT" optional="true"/>
+        <attribute name="scoreCode" type="String" mode="OUT" optional="true"/>        
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
-    </service>
-
-    <service name="eftProcessor" engine="java"
-            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor" auth="false">
-        <description>EFT Account Processing</description>
+	</service>
+	
+    <service name="eftProcessInterface" engine="interface" location="" invoke="">
+        <description>EFT Account Processing Interface</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
         <attribute name="orderItems" type="List" mode="IN" optional="false"/>
@@ -185,6 +180,7 @@
         <attribute name="shippingAddress" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="eftAccount" type="GenericValue" mode="IN" optional="false"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
+        <attribute name="configUrl" type="String" mode="IN" optional="true"/>
         <attribute name="authResult" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="authCode" type="String" mode="OUT" optional="false"/>
@@ -192,6 +188,23 @@
         <attribute name="authFlag" type="String" mode="OUT" optional="false"/>
         <attribute name="authMessage" type="String" mode="OUT" optional="false"/>
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
+    </service>	
+    
+    	<service name="ccProcessor" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
+            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor"> -->
+            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor"> -->
+            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysDeclineProcessor"> -->
+            <!-- location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="ccProcessor"> -->
+            <!-- location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="ccProcessor"> -->
+        <description>Credit Card Processing</description>
+        <implements service="ccProcessInterface"/>
+    </service>
+
+    <service name="eftProcessor" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor" auth="false">
+        <description>EFT Account Processing</description>
+        <implements service="eftProcessInterface"/>
     </service>
 
     <service name="authorizePayment" engine="java"

@@ -51,6 +51,7 @@ public class PaymentGatewayServices {
     public static Map processPayments(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         String orderId = (String) context.get("orderId");
+        String webSiteId = (String) context.get("webSiteId");
         Map result = new HashMap();
 
         // get the order header and payment preferences
@@ -89,7 +90,7 @@ public class PaymentGatewayServices {
             GenericValue creditCard = null;
             GenericValue eftAccount = null;
             GenericValue billingAddress = null;
-            Double processAmount = null;
+            Double processAmount = null;            
 
             // gather the payment related objects.
             try {
@@ -138,26 +139,32 @@ public class PaymentGatewayServices {
             if (emails != null && emails.size() > 0)
                 contactEmail = (GenericValue) emails.iterator().next();
 
-            String serviceName = null;
+            GenericValue paymentSettings = PaymentWorker.getPaymentSetting(delegator, webSiteId, paymentMethod.getString("paymentMethodTypeId"));
+            String serviceName = paymentSettings != null && paymentSettings.get("paymentService") != null ? paymentSettings.getString("paymentService") : null;
+            String configUrl = paymentSettings != null && paymentSettings.get("paymentConfiguration") != null ? paymentSettings.getString("paymentConfiguration") : null;
             Map processContext = new HashMap();
+            
+            if (serviceName == null) {
+                Debug.logError("Invalid payment processor set for [" + paymentMethod.getString("paymentMethodTypeId") + "] on website [" + webSiteId + "]", module);
+                continue;
+            }
 
             processContext.put("orderId", orderId);
             processContext.put("orderItems", orh.getOrderItems());
+            processContext.put("configUrl", configUrl);
             processContext.put("processAmount", processAmount);
             processContext.put("contactPerson", contactPerson);
             processContext.put("contactEmail", contactEmail);
             processContext.put("billingAddress", billingAddress);
             processContext.put("shippingAddress", orh.getShippingAddress());
             processContext.put("currency", context.get("currency"));
-
+            
             // use pre-defined names for the services; just override the service in the definition file.
             if (creditCard != null) {
-                processContext.put("creditCard", creditCard);
-                serviceName = "ccProcessor";
+                processContext.put("creditCard", creditCard);               
             } else if (eftAccount != null) {
-                processContext.put("eftAccount", eftAccount);
-                serviceName = "eftProcessor";
-            } // Add additional processor services here.
+                processContext.put("eftAccount", eftAccount);                
+            } // Add additional processed payment types here.
 
             // invoke the processor.
             Map processorResult = null;
@@ -202,8 +209,7 @@ public class PaymentGatewayServices {
         } else {        
             // we can determine if all was good if amountToBill is now zero.
             if (amountToBill > 0) {
-                Debug.logError("Problem! Could not authorize funds for entire amount to bill. If multiple payment methods were used a partial payment may have been authorized. (" + orderId + ")", module);
-                //This error message doesn't make sense, ie it isn't really true: Debug.logError("Problem! Not all payment methods were approved. However, some where and partial payment as been accepted." + "(" + orderId + ")", module);
+                Debug.logError("Problem! Could not authorize funds for entire amount to bill. If multiple payment methods were used a partial payment may have been authorized. (" + orderId + ")", module);                
                 result.put("processResult", "FAILED");
             }
     
@@ -213,7 +219,7 @@ public class PaymentGatewayServices {
             }
     
             if (amountToBill < 0) {
-                Debug.logError("Something really wierd happened. We processed more then expected! (" + orderId + ")", module);
+                Debug.logError("Something really weird happened. We processed more then expected! (" + orderId + ")", module);
                 result.put("processResult", "ERROR");
             }
             result.put("orderId", orderId);

@@ -59,6 +59,11 @@
   <SecurityPermission description="Delete operations in the Tax Rate Editor." permissionId="TAXRATE_DELETE"/>
   <SecurityPermission description="ALL operations in the Tax Rate Editor." permissionId="TAXRATE_ADMIN"/>
 
+  <SecurityPermission description="View operations in the Payment Processors Setup." permissionId="PAYPROC_VIEW"/>
+  <SecurityPermission description="Create operations in the Payment Processors Setup." permissionId="PAYPROC_CREATE"/>
+  <SecurityPermission description="Delete operations in the Payment Processors Setup." permissionId="PAYPROC_DELETE"/>
+  <SecurityPermission description="ALL operations in the Payment Processors Setup." permissionId="PAYPROC_ADMIN"/>
+
   <SecurityPermission description="View Payment Information." permissionId="PAY_INFO_VIEW"/>
   <SecurityPermission description="Create Payment Information." permissionId="PAY_INFO_CREATE"/>
   <SecurityPermission description="Update Payment Information." permissionId="PAY_INFO_UPDATE"/>
@@ -164,6 +169,11 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="TAXRATE_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="TAXRATE_ADMIN"/>
+  
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAYPROC_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="PAYPROC_ADMIN"/>  
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PAY_INFO_DELETE"/>

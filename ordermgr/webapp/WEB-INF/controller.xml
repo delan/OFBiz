@@ -275,8 +275,31 @@
         <response name="error" type="view" value="confirm"/>
     </request-map>    
     
-
-	<!-- Shipping Editor Requests -->
+    <!-- Payment Processor Setup Requests -->
+    <request-map uri="paysetup">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="paysetup"/>
+    </request-map>
+    <request-map uri="createWebSitePaymentSetting">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWebSitePaymentSetting"/>
+        <response name="success" type="view" value="paysetup"/>
+        <response name="error" type="view" value="paysetup"/>
+    </request-map>    
+    <request-map uri="updateWebSitePaymentSetting">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWebSitePaymentSetting"/>
+        <response name="success" type="view" value="paysetup"/>
+        <response name="error" type="view" value="paysetup"/>
+    </request-map>    	
+    <request-map uri="removeWebSitePaymentSetting">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWebSitePaymentSetting"/>
+        <response name="success" type="view" value="paysetup"/>
+        <response name="error" type="view" value="paysetup"/>
+    </request-map>    
+	
+    <!-- Shipping Editor Requests -->
     <request-map uri="shipsetup">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="shipsetup"/>
@@ -336,6 +359,7 @@
     
     <view-map name="shipsetup" type="region"/>
     <view-map name="taxsetup" type="region"/>
+    <view-map name="paysetup" type="region"/>
     
     <view-map name="wfOrderNotify" page="/notifications/pendingOrderNotify.jsp"/>
     <!-- end of view mappings -->
