@@ -35,10 +35,12 @@
     <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
 
     <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>        
+    <handler name="screen" type="view" class="org.ofbiz.content.webapp.view.ScreenWidgetViewHandler"/>
 
     <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
     <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
     <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
+    <handler name="screenfop" type="view" class="org.ofbiz.content.webapp.view.ScreenFopPdfViewHandler"/>
 
     <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
     <handler name="datavision" type="view" class="org.ofbiz.content.webapp.view.DataVisionViewHandler"/>
@@ -788,10 +790,10 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="facility/FindFacility.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>
+    <view-map name="main" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
+    <view-map name="login" type="screen" page="component://product/widget/facility/CommonScreens.xml#login"/>
 
-    <view-map name="FindFacility" type="jpublish" page="facility/FindFacility.ftl"/>
+    <view-map name="FindFacility" type="screen" page="component://product/widget/facility/FacilityScreens.xml#FindFacility"/>
     <view-map name="EditFacility" type="jpublish" page="facility/EditFacility.ftl"/>
     <view-map name="FindFacilityTransfers" type="jpublish" page="/facility/FindFacilityTransfers.ftl"/>
     <view-map name="FindFacilityLocation" type="jpublish" page="/facility/FindFacilityLocation.ftl"/>
