@@ -86,12 +86,18 @@
       <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
       <#if purchaseOrder?has_content>
       <input type="hidden" name="orderId" value="${purchaseOrder.orderId}">
+      <input type="hidden" name="orderItemSeqId" value="${firstOrderItem.orderItemSeqId}">
       <tr>
         <td width='14%'>&nbsp;</td>
         <td width='6%' align='right' nowrap><div class="tabletext">Purchase Order</div></td>
         <td width='6%'>&nbsp;</td>
         <td width='74%'>
-          <b>${purchaseOrder.orderId}</b>
+          <b>${purchaseOrder.orderId}</b>&nbsp;/&nbsp;<b>${firstOrderItem.orderItemSeqId}</b>
+          <#if 1 < purchaseOrderItemsSize>
+            <span class='tabletext'>(Multiple order items for this product - ${purchaseOrderItemsSize}:1 Item:Product)</span>
+          <#else>
+            <span class='tabletext'>(Single order item for this product - 1:1 Item:Product)<span>
+          </#if>
         </td>                
       </tr>
       </#if>

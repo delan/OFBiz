@@ -46,23 +46,21 @@ context.put("purchaseOrder", purchaseOrder);
 
 product = null;
 if (productId != null) {  
-    product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));  
-    if (purchaseOrder != null) {
-        defaultQuantity = 0.0;
-        items = delegator.findByAnd("OrderItem", UtilMisc.toMap("productId", productId, "orderId", purchaseOrderId));   
-        itemsIter = items.iterator();
-        while (itemsIter.hasNext()) {
-            item = itemsIter.next();
-            defaultQuantity += item.getDouble("quantity").doubleValue();                        
-        }
-        context.put("defaultQuantity", defaultQuantity);
-    }    
+    product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));      
 }
 context.put("product", product);
 
 purchaseOrderItems = null;
 if (purchaseOrder != null) {
-    purchaseOrderItems = purchaseOrder.getRelated("OrderItem");
+    if (product != null) {
+        purchaseOrderItems = purchaseOrder.getRelated("OrderItem", UtilMisc.toMap("productId", productId), null);        
+    } else {    
+        purchaseOrderItems = purchaseOrder.getRelated("OrderItem");
+    }
+}
+if (purchaseOrderItems != null && purchaseOrderItems.size() > 0) {
+    context.put("firstOrderItem", EntityUtil.getFirst(purchaseOrderItems));
+    context.put("purchaseOrderItemsSize", purchaseOrderItems.size());
 }
 context.put("purchaseOrderItems", purchaseOrderItems);
 
