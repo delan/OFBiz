@@ -486,6 +486,8 @@ public class ContentPermissionServices {
                         //roles.put(ownedEntityId, roleList);
                            ownedEntityId = ownedEntity.getString("owner" + entityName + "Id");
                            ownedEntity = delegator.findByPrimaryKeyCache(entityName,UtilMisc.toMap(pkFieldName, ownedEntityId));
+                       } else {
+                          ownedEntity = null;
                        }
                    }
                    if (passed)
