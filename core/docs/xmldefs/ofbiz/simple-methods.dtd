@@ -175,18 +175,22 @@
         service-result-name CDATA #IMPLIED
     >
 
-<!-- TODO: handle call-bsh operation -->
-
 <!-- 
 Runs an external bsh script from the classpath if resource is specified and 
 then runs the inlined bsh script if any is specified.
 
 The bsh context is the current simple-method environment including maps, lists
 and special objects whose names are defined in the simple-method attributes.
+
+The current env cannot be modified, but if a Map is returned by the bsh block
+the entries in the map will be put into the current env.
+
+Error messages go on the error list and are handled with the check-errors tag.
 -->
 <!ELEMENT call-bsh (#PCDATA)>
 <!ATTLIST call-bsh
     resource CDATA #IMPLIED
+    error-list-name CDATA "_error_list_"
 >
 
 <!-- Operations to copy map fields in the current env to context specific containers -->
