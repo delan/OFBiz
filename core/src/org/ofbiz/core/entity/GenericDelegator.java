@@ -165,6 +165,7 @@ public class GenericDelegator {
    *@return String with the helper name that corresponds to this delegator and the specified entity
    */
   public String getEntityHelperName(ModelEntity entity) {
+    if(entity == null) return null;
     return getEntityHelperName(entity.entityName);
   }
   
@@ -193,6 +194,7 @@ public class GenericDelegator {
    */
   public ModelFieldType getEntityFieldType(ModelEntity entity, String type) throws GenericEntityException {
     String helperName = getEntityHelperName(entity);
+    if(helperName == null || helperName.length() <= 0) return null;
     ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
     if(modelFieldTypeReader == null) throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.entityName + " with helper name " + helperName);
     return modelFieldTypeReader.getModelFieldType(type);
@@ -204,6 +206,7 @@ public class GenericDelegator {
    */
   public Collection getEntityFieldTypeNames(ModelEntity entity) throws GenericEntityException {
     String helperName = getEntityHelperName(entity);
+    if(helperName == null || helperName.length() <= 0) return null;
     ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
     if(modelFieldTypeReader == null) throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.entityName + " with helper name " + helperName);
     return modelFieldTypeReader.getFieldTypeNames();
