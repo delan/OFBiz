@@ -53,7 +53,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @param manager The WfProcessMgr invoking this process.
      */
     public WfProcessImpl(GenericValue valueObject, GenericValue dataObject, WfProcessMgr manager) throws WfException {
-        super(valueObject,dataObject);
+        super(valueObject,dataObject,null);
         this.manager = manager;
         this.requester = null;
         this.result = new HashMap();

@@ -111,7 +111,7 @@ public class WorkflowClientServices {
             Iterator i = mgr.getIteratorProcess();
             while ( i.hasNext() && process == null ) {
                 WfProcess p = (WfProcess) i.next();
-                if ( p.getRuntimeObject().getString("workEffortId").equals(workEffortId) )
+                if ( p.runtimeKey().equals(workEffortId) )
                     process = p;
             }
         }
@@ -129,7 +129,7 @@ public class WorkflowClientServices {
             Iterator i = process.getIteratorStep();
             while ( i.hasNext() && activity == null ) {
                 WfActivity a = (WfActivity) i.next();
-                if ( a.getRuntimeObject().getString("workEffortId").equals(workEffortId) )
+                if ( a.runtimeKey().equals(workEffortId) )
                     activity = a;
             }
         }

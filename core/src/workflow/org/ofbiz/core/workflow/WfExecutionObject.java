@@ -103,10 +103,16 @@ public interface WfExecutionObject  {
      */
     public void setName(String newValue) throws WfException;
     
+    /** Getter for the runtime key 
+     * @throws WfException
+     * @return Key of the runtime object
+     */
+    public String runtimeKey() throws WfException;
+    
     /**
-     * Getter for attribute 'key'.
+     * Getter for definition key
      * @throws WfException General workflow exception.
-     * @return Key of the object.
+     * @return Key of the definition object.
      */
     public String key() throws WfException;
     

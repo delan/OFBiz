@@ -49,8 +49,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     
     // Runtime Attributes of this object
     protected Map context;
-    protected List history;
-    protected String serviceLoader;
+    protected List history;    
+    protected String serviceLoader;    
     protected ServiceDispatcher dispatcher;
     
     /**
@@ -58,18 +58,18 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @param valueObject The GenericValue object for the definition entity.
      * @param dataObject The GenericValue object for the runtime entity.
      */
-    public WfExecutionObjectImpl(GenericValue valueObject, GenericValue dataObject) throws WfException {
+    public WfExecutionObjectImpl(GenericValue valueObject, GenericValue dataObject, String parentId) throws WfException {
         this.valueObject = valueObject;
-        this.dataObject = dataObject;
+        this.dataObject = dataObject;        
         this.context = new HashMap();
         this.dispatcher = null;
         this.serviceLoader = null;
         this.history = null;        
-        loadRuntime();
+        loadRuntime(parentId);
     }
     
     // Loads or creates the stored runtime workeffort data.
-    private void loadRuntime() throws WfException {
+    private void loadRuntime(String parentId) throws WfException {
         // If no dataObject create one
         if ( this.dataObject == null ) {
             // Create a new dataObject
@@ -79,6 +79,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
                 String weType = valueObject.getEntityName().equals("WorkflowActivity") ? "ACTIVITY" : "WORK_FLOW";
                 dataMap.put("workEffortId",weId);
                 dataMap.put("workEffortTypeId",weType);
+                dataMap.put("workEffortParentId",parentId);
                 dataMap.put("workflowPackageId",valueObject.getString("packageId"));
                 dataMap.put("workflowProcessId",valueObject.getString("processId"));
                 dataMap.put("workEffortName",valueObject.getString("objectName"));
@@ -282,10 +283,18 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         return Arrays.asList(list);
     }
     
+    /** Getter for the runtime key 
+     * @throws WfException
+     * @return Key of the runtime object
+     */
+    public String runtimeKey() throws WfException {
+        return dataObject.getString("workEffortId");
+    }
+    
     /**
-     * Getter for attribute 'key'.
+     * Getter for definition key
      * @throws WfException General workflow exception.
-     * @return Key of the object.
+     * @return Key of the definition object.
      */
     public String key() throws WfException {
         if ( valueObject.getEntityName().equals("WorkflowProcess") )

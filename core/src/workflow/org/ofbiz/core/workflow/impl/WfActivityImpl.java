@@ -46,13 +46,13 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     private List assignments;    
     
     /**
-     * Creates new WfProcessImpl
+     * Creates new WfActivityImpl
      * @param valueObject The GenericValue object of this WfActivity.
      * @param dataObject The GenericValue object of the stored runtime data.
      * @param process The WfProcess object which created this WfActivity.
      */
     public WfActivityImpl(GenericValue valueObject, GenericValue dataObject, WfProcess process) throws WfException {
-        super(valueObject,dataObject);
+        super(valueObject,dataObject,process.runtimeKey());
         this.process = process;        
         assignments = new ArrayList();
         GenericValue performer = null;
@@ -67,16 +67,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             WfResource resource = WfFactory.newWfResource(performer);
             WfAssignment assign = WfFactory.newWfAssignment(this,resource);
             assignments.add(assign);
-        }
-        
-        // Set the Parent Workeffort ID for this activity
-        try {
-            dataObject.set("workEffortParentId",process.getRuntimeObject().get("workEffortId"));
-            dataObject.store();
-        }
-        catch ( GenericEntityException e ) {
-            throw new WfException(e.getMessage(),e);
-        }
+        }         
     }
     
     /**
