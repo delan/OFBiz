@@ -1,5 +1,5 @@
 /*
- * $Id: EntityCondition.java,v 1.8 2004/07/07 05:48:23 doogie Exp $
+ * $Id: EntityCondition.java,v 1.9 2004/07/07 17:37:40 ajzeneski Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -21,7 +21,6 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.entity.condition;
 
 import java.util.ArrayList;
@@ -32,7 +31,6 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.model.ModelEntity;
-
 
 /**
  * Represents the conditions to be used to constrain a query
@@ -45,10 +43,11 @@ import org.ofbiz.entity.model.ModelEntity;
  * These can be used in various combinations using the EntityConditionList and EntityExpr objects.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public abstract class EntityCondition extends EntityConditionBase {
+
     public String toString() {
         return makeWhereString(null, new ArrayList());
     }

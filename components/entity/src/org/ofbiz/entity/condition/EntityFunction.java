@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFunction.java,v 1.6 2004/07/07 05:48:23 doogie Exp $
+ * $Id: EntityFunction.java,v 1.7 2004/07/07 17:37:40 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,6 @@ package org.ofbiz.entity.condition;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericModelException;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.model.ModelEntity;
@@ -38,11 +37,12 @@ import org.ofbiz.entity.model.ModelField;
  *
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@created    Nov 5, 2001
- *@version    1.0
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ *@since      1.0
+ *@version    $Revision: 1.7 $
  */
 public abstract class EntityFunction extends EntityConditionValue {
+
     public static interface Fetcher {
         Object getValue(Object value);
     }
@@ -59,6 +59,7 @@ public abstract class EntityFunction extends EntityConditionValue {
         public LENGTH(EntityConditionValue nested) { super(FETCHER, ID_LENGTH, "LENGTH", nested); }
         public LENGTH(Object value) { super(FETCHER, ID_LENGTH, "LENGTH", value); }
     };
+
     public static class TRIM extends EntityFunction {
         public static Fetcher FETCHER = new Fetcher() {
             public Object getValue(Object value) { return value.toString().trim(); }
@@ -66,6 +67,7 @@ public abstract class EntityFunction extends EntityConditionValue {
         public TRIM(EntityConditionValue nested) { super(FETCHER, ID_TRIM, "TRIM", nested); }
         public TRIM(Object value) { super(FETCHER, ID_TRIM, "TRIM", value); }
     };
+
     public static class UPPER extends EntityFunction {
         public static Fetcher FETCHER = new Fetcher() {
             public Object getValue(Object value) { return value.toString().toUpperCase(); }
@@ -73,6 +75,7 @@ public abstract class EntityFunction extends EntityConditionValue {
         public UPPER(EntityConditionValue nested) { super(FETCHER, ID_UPPER, "UPPER", nested); }
         public UPPER(Object value) { super(FETCHER, ID_UPPER, "UPPER", value); }
     };
+
     public static class LOWER extends EntityFunction {
         public static Fetcher FETCHER = new Fetcher() {
             public Object getValue(Object value) { return value.toString().toLowerCase(); }
