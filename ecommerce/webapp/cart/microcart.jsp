@@ -4,7 +4,7 @@
 <%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
 
 <%ShoppingCart microCart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART);%>
-<div class='microCartText'>
+<div class='insideHeaderText'>
 <%if(microCart != null && microCart.size() > 0){%>
   Cart has <b><%=(int)microCart.getTotalQuantity()%></b> items, <b>$<%=UtilFormatOut.formatPrice(microCart.getGrandTotal())%></b>
 <%}else{%>
@@ -12,10 +12,10 @@
 <%}%>
   &nbsp;&nbsp;
 </div>
-<div class='microCartDisabled'>
-  <a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="microCartLink">[View&nbsp;Cart]</a>
+<div class='insideHeaderDisabled'>
+  <a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="insideHeaderLink">[View&nbsp;Cart]</a>
   <%if(microCart != null && microCart.size() > 0){%>
-    <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="microCartLink">[Checkout]</a>
+    <a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="insideHeaderLink">[Checkout]</a>
   <%}else{%>
     [Checkout]
   <%}%>

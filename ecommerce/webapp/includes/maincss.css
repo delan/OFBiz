@@ -37,12 +37,28 @@
   .headerCompanyName {margin: 0px; font-size: x-large; font-weight: bold; color: white; white-space: nowrap;}
   .headerCompanySubtitle {margin: 0px; font-size: xx-small; color: white; white-space: nowrap; }
 
-  .microCartText {FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: white;}
-  A.microCartLink {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: yellow;}
-  A.microCartLink:hover {color: red;}
-  .microCartDisabled {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: #CCCCCC;}
+  .insideHeaderText {FONT-SIZE: small; FONT-FAMILY: Arial, Helvetica, sans-serif; COLOR: white;}
+  A.insideHeaderLink {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: yellow;}
+  A.insideHeaderLink:hover {color: red;}
+  .insideHeaderDisabled {font-family: Helvetica,sans-serif; font-size: x-small; font-weight: bold; text-decoration: none; color: #CCCCCC;}
 
   HR.sepbar {width: 100%; height: 1px; background-color: #999999; border-width: 0px;}
 
   .errorMessage {font-family: Helvetica,sans-serif; margin: 0px; font-size: small; font-weight: bold; COLOR: red;}
   .eventMEssage {font-family: Helvetica,sans-serif; margin: 0px; font-size: small; font-weight: bold; COLOR: blue;}
+
+  .ontab {FONT-SIZE: small; background-color: black; padding: 2px; border-style: inset; border-width: 3px;}
+  a.onlnk {FONT-SIZE: small; font-weight: bold; COLOR: white; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2px;}
+  .offtab {FONT-SIZE: x-small; background-color: #CCCCCC; padding: 2px; border-style: outset; border-width: 3px;}
+  a.offlnk {FONT-SIZE: x-small; font-weight: bold; COLOR: blue; FONT-FAMILY: Arial, Helvetica, sans-serif; TEXT-DECORATION: none; padding: 2px;}
+  a.offlnk:hover {COLOR: red;}
+  .areaheader {FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif; font-weight: bold; color: white; width: 100%; background-color: black; padding: 2px;}
+
+  .edittable {border-color: #000000 #000000 #003333; border-style: solid; border-top-width: thin; border-right-width: thin; border-bottom-width: thin; border-left-width: thin}
+  .viewOneTR1 {background-color: #99CCFF; FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+  .viewOneTR2 {background-color: #CCFFFF; FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+  .viewManyHeaderTR {background-color: #99CCFF; FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+  .viewManyTR1 {background-color: #99FFCC; FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+  .viewManyTR2 {background-color: #CCFFCC; FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif;}
+
+  .editInputBox {background-color: white; FONT-SIZE: x-small; FONT-FAMILY: Arial, Helvetica, sans-serif;}
