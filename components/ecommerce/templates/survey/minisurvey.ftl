@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.1
 -->
 
@@ -123,6 +123,6 @@
     </tr>
   </#list>
   <tr>
-    <td align="center"><input type="submit" value="Submit"></td>
+    <td align="center"><input type="submit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>"></td>
   </tr>
 </table>

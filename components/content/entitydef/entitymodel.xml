@@ -1055,6 +1055,7 @@
       <field name="surveyName" type="name"/>
       <field name="description" type="description"/>
       <field name="comments" type="comment"/>
+      <field name="submitCaption" type="short-varchar"/>
       <field name="responseService" type="long-varchar"/>
       <field name="isAnonymous" type="indicator"/>
       <field name="allowMultiple" type="indicator"/>

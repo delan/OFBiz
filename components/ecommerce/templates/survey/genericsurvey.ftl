@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
 -->
 
@@ -45,6 +45,9 @@
 
 <div class="head1">${survey.description?if_exists}</div>
 <br>
+<#if survey.comments?has_content>
+<p class="tabletext">${survey.comments}</p>
+</#if>
 
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <#list surveyQuestions as question>
@@ -146,6 +149,6 @@
   <tr>
     <td>&nbsp;</td>
     <td>&nbsp;</td>
-    <td colspan="2"><input type="submit" value="Submit"></td>
+    <td colspan="2"><input type="submit" value="<#if survey.submitCaption?has_content>${survey.submitCaption}<#else>Submit</#if>"></td>
   </tr>
 </table>
