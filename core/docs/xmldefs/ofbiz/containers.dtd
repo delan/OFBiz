@@ -59,6 +59,5 @@
 <!ELEMENT component EMPTY>
 <!ATTLIST component
 	name CDATA #REQUIRED
-	server CDATA #REQUIRED
 	config CDATA #REQUIRED
 >

@@ -33,15 +33,15 @@ import java.io.File;
   *@version    $Revision$
  * @since      2.2
  */
-public interface StartupLoader {
+public interface StartupContainer {
     
     /**
      * Start the server thread(s)
      * 
-     * @param configFile OFBiz configuration file
+     * @param configFileLocation Location of master OFBiz configuration file
      * @return true if server started
      * @throws StartupException
      */
-    public boolean start(File configFile) throws StartupException;
+    public boolean start(String configFileLocation) throws StartupException;
 
 }
