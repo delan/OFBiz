@@ -95,9 +95,14 @@ public class StringAppend extends MethodOperation {
             if (oldValue == null || oldValue.length() == 0) {
                 newValue.append(value);
             } else {
+                newValue.append(oldValue);
                 if (prefixValue != null) newValue.append(prefixValue);
                 newValue.append(value);
                 if (suffixValue != null) newValue.append(suffixValue);
+            }
+        } else {
+            if (oldValue == null || oldValue.length() == 0) {
+                newValue.append(oldValue);
             }
         }
         
