@@ -294,7 +294,7 @@ padding-right: 5px;
 border-right: 1px solid #5886C6
 }
 
-.submenutext, A.submenutext, A.submenutext:visited, A.submenutext:selected {
+.submenutext, A.submenutext, A.submenutext:visited, A.submenutext:checked {
 font-family: Verdana, Arial, Helvetica, sans-serif;
 font-size: 10px;
 font-weight: bold;
