@@ -30,6 +30,9 @@
 	<form name="lookupFixedAsset" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupFixedAsset" title="" type="single">
+        <actions>
+            <property-map resource="AccountingUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-entity entity-name="FixedAsset" default-field-type="hidden" />
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}"><text-find default-value="equals"/></field>
         <field name="fixedAssetName" title="${uiLabelMap.AccountingFixedAssetName}"><text-find default-value="equals"/></field>
@@ -47,8 +50,14 @@
 
     <form name="listLookupFixedAsset" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/GenericLookup" 
-	    title="" type="list">
+        list-name="entityList" paginate-target="LookupFixedAsset" 
+        title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         <field name="fixedAssetId" title="${uiLabelMap.AccountingFixedAssetId}" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${fixedAssetId}" target="javascript:set_value('${fixedAssetId}')"/>
         </field>

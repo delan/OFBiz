@@ -34,7 +34,7 @@
                 <set field="layoutSettings.headerImageUrl" value="/images/ofbiz_logo.jpg" global="true"/>
                 <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
                 <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
-                <set field="activeApp" value="accountingmgr" global="true"/>
+                <set field="activeApp" value="accounting" global="true"/>
             </actions>
             <widgets>
                 <!-- render header -->

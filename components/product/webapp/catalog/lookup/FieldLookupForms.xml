@@ -29,6 +29,9 @@
     <form name="lookupProduct" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
         target="LookupProduct" title="" type="single">
+        <actions>
+            <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+        </actions>
         <auto-fields-entity entity-name="Product" default-field-type="hidden" />
         <field name="productId" title="${uiLabelMap.ProductProductId}"><text-find default-value="equals"/></field>
         <field name="productName" title="${uiLabelMap.ProductProductName}"><text-find default-value="equals"/></field>
@@ -47,17 +50,45 @@
             <submit button-type="button"/>
         </field>
     </form>
-
     <form name="listLookupProduct" 
         default-title-style="tableheadtext"  default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/GenericLookup" 
-	    title="" type="list">
+        list-iterator-name="listIt" paginate-target="LookupProduct" 
+        title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
         <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
         </field>
-        <field name="internalName" title="Internal Name"><display/></field>
-        <field name="productTypeId" title="${uiLabelMap.ProductProductType}"><display/></field>
-    </form>    
+        <field name="internalName"><display/></field>
+        <field name="productTypeId"><display/></field>
+    </form>
+    <form name="lookupVirtualProduct" extends="lookupProduct"
+        default-map-name= "inputFields" default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="LookupVirtualProduct" title="" type="single">
+        <actions>
+            <property-map resource="ProductUiLabels" map-name="uiLabelMap"/>
+        </actions>
+    </form>
+    <form name="listLookupVirtualProduct" extends="listLookupProduct"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        list-name="entityList" paginate-target="LookupVirtualProduct" 
+        title="" type="list">
+        <actions>
+            <service service-name="performFind" result-map-name="result" result-map-list-iterator-name="listIt">
+                <field-map field-name="inputFields" env-name="requestParameters"/>
+                <field-map field-name="entityName" env-name="entityName"/>
+            </service>
+        </actions>
+        <field name="productId" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" target-type="plain" description="${productId}" target="javascript:set_value('${productId}')"/>
+        </field>
+    </form>
 		
 	<form name="lookupFixedAsset" 
         default-title-style="tableheadtext" default-tooltip-style="tabletext" default-widget-style="inputBox"
