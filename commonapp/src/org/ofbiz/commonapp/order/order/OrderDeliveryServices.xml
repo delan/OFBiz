@@ -2,18 +2,19 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- * Copyright (c) 2001 The Open For Business Project and repective authors.
- * Permission is hereby granted, free of charge, to any person obtaining a
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * The above copyright notice and this permission notice shall be included
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
  *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
  *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
  *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
@@ -21,94 +22,94 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
+ * @author     Tristan Austin (tristana@twibble.org)
  * @version    $Revision$
- * @since 2.1
+ * @since      2.2
  -->
 <simple-methods>
-	<simple-method method-name="createSchedule"
-			short-description="Creates a new Purchase Order Schedule">
+    <simple-method method-name="createSchedule"
+            short-description="Creates a new Purchase Order Schedule">
 
-    	<make-value entity-name="OrderDeliverySchedule" value-name="schedule"/>
-    	<set-pk-fields map-name="parameters" value-name="schedule"/>
-    	<set-nonpk-fields map-name="parameters" value-name="schedule"/>
-    	
-    	<if-empty field-name="orderItemSeqId" map-name="schedule">
-	    	<string-to-field string="_NA_" field-name="orderItemSeqId" map-name="schedule"/>
-    	</if-empty>
-    	
-    	<!-- always create the WorkEfforts, even if dates aren't specified yet; when they are they will be set in the update service... -->
-    	
-    	<!-- Define the fields and values of the WorkEffort entity -->
-    	<string-to-field string="Purchase Order Delivery" field-name="workEffortName" map-name="deliveryWorkEffortMap"/>
+        <make-value entity-name="OrderDeliverySchedule" value-name="schedule"/>
+        <set-pk-fields map-name="parameters" value-name="schedule"/>
+        <set-nonpk-fields map-name="parameters" value-name="schedule"/>
+        
+        <if-empty field-name="orderItemSeqId" map-name="schedule">
+            <string-to-field string="_NA_" field-name="orderItemSeqId" map-name="schedule"/>
+        </if-empty>
+        
+        <!-- always create the WorkEfforts, even if dates aren't specified yet; when they are they will be set in the update service... -->
+        
+        <!-- Define the fields and values of the WorkEffort entity -->
+        <string-to-field string="Purchase Order Delivery" field-name="workEffortName" map-name="deliveryWorkEffortMap"/>
         <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="deliveryWorkEffortMap"/>
         <string-to-field string="CAL_CONFIRMED" field-name="currentStatusId" map-name="deliveryWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="deliveryDate" to-field-name="estimatedStartDate" to-map-name="deliveryWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="deliveryDate" to-field-name="estimatedCompletionDate" to-map-name="deliveryWorkEffortMap"/>
-		<env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="deliveryWorkEffortMap"/>
+        <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="deliveryWorkEffortMap"/>
         
-		<!-- Create and obtain the delivery WorkEffort ID-->
-		<call-service service-name="createWorkEffort" in-map-name="deliveryWorkEffortMap">
-			<result-to-field result-name="workEffortId" map-name="schedule" field-name="deliveryWorkEffortId"/>
-		</call-service>
-		
-    	<!-- Define the fields and values of the WorkEffort entity -->
-    	<string-to-field string="Purchase Order Pickup" field-name="workEffortName" map-name="pickupWorkEffortMap"/>
+        <!-- Create and obtain the delivery WorkEffort ID-->
+        <call-service service-name="createWorkEffort" in-map-name="deliveryWorkEffortMap">
+            <result-to-field result-name="workEffortId" map-name="schedule" field-name="deliveryWorkEffortId"/>
+        </call-service>
+        
+        <!-- Define the fields and values of the WorkEffort entity -->
+        <string-to-field string="Purchase Order Pickup" field-name="workEffortName" map-name="pickupWorkEffortMap"/>
         <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="pickupWorkEffortMap"/>
         <string-to-field string="CAL_CONFIRMED" field-name="currentStatusId" map-name="pickupWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="pickupDate" to-field-name="estimatedStartDate" to-map-name="pickupWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="pickupDate" to-field-name="estimatedCompletionDate" to-map-name="pickupWorkEffortMap"/>
-		<env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="pickupWorkEffortMap"/>
+        <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="pickupWorkEffortMap"/>
 
-		<!-- Create and obtain the pickup WorkEffort ID-->
-		<call-service service-name="createWorkEffort" in-map-name="pickupWorkEffortMap">
-			<result-to-field result-name="workEffortId" map-name="schedule" field-name="pickupWorkEffortId"/>
-		</call-service>
-		
-		<!-- Create the actul schedule -->
-		<log level="info" message="Delivery ID is: ${schedule.deliveryWorkEffortId}"/>
-		<log level="info" message="Pickup ID is: ${schedule.pickupWorkEffortId}"/>
-		<create-value value-name="schedule"/>
-	</simple-method>
-	
-	<simple-method method-name="updateSchedule"
-			short-description="Updates an existing Purchase Order Schedule">
+        <!-- Create and obtain the pickup WorkEffort ID-->
+        <call-service service-name="createWorkEffort" in-map-name="pickupWorkEffortMap">
+            <result-to-field result-name="workEffortId" map-name="schedule" field-name="pickupWorkEffortId"/>
+        </call-service>
+        
+        <!-- Create the actul schedule -->
+        <log level="info" message="Delivery ID is: ${schedule.deliveryWorkEffortId}"/>
+        <log level="info" message="Pickup ID is: ${schedule.pickupWorkEffortId}"/>
+        <create-value value-name="schedule"/>
+    </simple-method>
+    
+    <simple-method method-name="updateSchedule"
+            short-description="Updates an existing Purchase Order Schedule">
 
-    	<make-value entity-name="OrderDeliverySchedule" value-name="lookupPkMap"/>
-    	<set-pk-fields map-name="parameters" value-name="lookupPkMap"/>
-    	<find-by-primary-key entity-name="OrderDeliverySchedule" map-name="lookupPkMap" value-name="schedule"/>
+        <make-value entity-name="OrderDeliverySchedule" value-name="lookupPkMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPkMap"/>
+        <find-by-primary-key entity-name="OrderDeliverySchedule" map-name="lookupPkMap" value-name="schedule"/>
 
-		<!-- Update the existing WorkEfforts -->
-		<if>
-			<condition>
-				<not><if-empty field-name="deliveryDate" map-name="parameters"/></not>
-				<if-compare-field field-name="parameters.deliveryDate" operator="not-equals" to-field-name="schedule.deliveryDate"/>
-			</condition>
-			<then>
-				<field-to-field map-name="schedule" field-name="deliveryWorkEffortId" to-map-name="deliveryWorkEffortMap" to-field-name="workEffortId"/>
-				<find-by-primary-key entity-name="WorkEffort" map-name="deliveryWorkEffortMap" value-name="deliveryWorkEffort"/>
-				<field-to-field map-name="schedule" field-name="deliveryDate" to-field-name="estimatedStartDate" to-map-name="deliveryWorkEffort"/>
-				<field-to-field map-name="schedule" field-name="deliveryDate" to-field-name="estimatedCompletionDate" to-map-name="deliveryWorkEffort"/>
-				<store-value value-name="deliveryWorkEffort"/>
-			</then>
-		</if>
-		<if>
-			<condition>
-				<not><if-empty field-name="pickupDate" map-name="parameters"/></not>
-				<if-compare-field field-name="parameters.pickupDate" operator="not-equals" to-field-name="schedule.pickupDate"/>
-			</condition>
-			<then>
-				<field-to-field map-name="schedule" field-name="pickupWorkEffortId" to-map-name="pickupWorkEffortMap" to-field-name="workEffortId"/>
-				<find-by-primary-key entity-name="WorkEffort" map-name="pickupWorkEffortMap" value-name="pickupWorkEffort"/>
-				<field-to-field map-name="schedule" field-name="pickupDate" to-field-name="estimatedStartDate" to-map-name="pickupWorkEffort"/>
-				<field-to-field map-name="schedule" field-name="pickupDate" to-field-name="estimatedCompletionDate" to-map-name="pickupWorkEffort"/>
-				<store-value value-name="pickupWorkEffort"/>
-			</then>
-		</if>
-		
-		<!-- Update the actul schedule -->
-    	<set-nonpk-fields map-name="parameters" value-name="schedule"/>
-		<store-value value-name="schedule"/>
-	</simple-method>
+        <!-- Update the existing WorkEfforts -->
+        <if>
+            <condition>
+                <not><if-empty field-name="deliveryDate" map-name="parameters"/></not>
+                <if-compare-field field-name="parameters.deliveryDate" operator="not-equals" to-field-name="schedule.deliveryDate"/>
+            </condition>
+            <then>
+                <field-to-field map-name="schedule" field-name="deliveryWorkEffortId" to-map-name="deliveryWorkEffortMap" to-field-name="workEffortId"/>
+                <find-by-primary-key entity-name="WorkEffort" map-name="deliveryWorkEffortMap" value-name="deliveryWorkEffort"/>
+                <field-to-field map-name="schedule" field-name="deliveryDate" to-field-name="estimatedStartDate" to-map-name="deliveryWorkEffort"/>
+                <field-to-field map-name="schedule" field-name="deliveryDate" to-field-name="estimatedCompletionDate" to-map-name="deliveryWorkEffort"/>
+                <store-value value-name="deliveryWorkEffort"/>
+            </then>
+        </if>
+        <if>
+            <condition>
+                <not><if-empty field-name="pickupDate" map-name="parameters"/></not>
+                <if-compare-field field-name="parameters.pickupDate" operator="not-equals" to-field-name="schedule.pickupDate"/>
+            </condition>
+            <then>
+                <field-to-field map-name="schedule" field-name="pickupWorkEffortId" to-map-name="pickupWorkEffortMap" to-field-name="workEffortId"/>
+                <find-by-primary-key entity-name="WorkEffort" map-name="pickupWorkEffortMap" value-name="pickupWorkEffort"/>
+                <field-to-field map-name="schedule" field-name="pickupDate" to-field-name="estimatedStartDate" to-map-name="pickupWorkEffort"/>
+                <field-to-field map-name="schedule" field-name="pickupDate" to-field-name="estimatedCompletionDate" to-map-name="pickupWorkEffort"/>
+                <store-value value-name="pickupWorkEffort"/>
+            </then>
+        </if>
+        
+        <!-- Update the actul schedule -->
+        <set-nonpk-fields map-name="parameters" value-name="schedule"/>
+        <store-value value-name="schedule"/>
+    </simple-method>
 </simple-methods>
      

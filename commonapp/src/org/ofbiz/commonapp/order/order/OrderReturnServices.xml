@@ -59,7 +59,7 @@
         <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
         
         <set-nonpk-fields map-name="parameters" value-name="returnHeader"/>
-        <store-value value-name="returnHeader"/>    	
+        <store-value value-name="returnHeader"/>        
     </simple-method>
     
     <simple-method method-name="createReturnItem" short-description="Create Return Item">
@@ -98,7 +98,7 @@
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
         
         <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
-        <store-value value-name="returnItem"/>       	
+        <store-value value-name="returnItem"/>          
     </simple-method>
     <simple-method method-name="removeReturnItem" short-description="Remove Return Item">
         <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Security Error: to run removeReturnItem you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/></check-permission>
@@ -115,7 +115,7 @@
         <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
                 
-        <remove-value value-name="returnItem"/>       	
+        <remove-value value-name="returnItem"/>         
     </simple-method>
     
     <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
@@ -127,9 +127,9 @@
         <find-by-and entity-name="ShipmentReceipt" map-name="lookupPKMap" list-name="shipmentReceipts"/>
         <iterate list-name="shipmentReceipts" entry-name="receipt">
           <if-empty field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
-          	<calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
-          	  <number value="0"/>
-          	</calculate>
+            <calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
+              <number value="0"/>
+            </calculate>
           </if-empty>
           <calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap" type="Double">
             <calcop field-name="${receipt.returnItemSeqId}" map-name="totalsMap" operator="add">
