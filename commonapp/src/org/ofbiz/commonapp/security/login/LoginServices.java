@@ -185,8 +185,6 @@ public class LoginServices {
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
         List errorMessageList = new LinkedList();
 
-        boolean adminUser = false;
-
         String userLoginId = (String) context.get("userLoginId");
         String partyId = (String) context.get("partyId");
         String currentPassword = (String) context.get("currentPassword");
@@ -209,8 +207,6 @@ public class LoginServices {
                     if (!partyId.equals(loggedInUserLogin.getString("partyId"))) {
                         if (!security.hasEntityPermission("PARTYMGR", "_CREATE", loggedInUserLogin)) {
                             errorMessageList.add("Party with specified party ID exists and you do not have permission to create a user login with this party ID");
-                        } else {
-                            adminUser = true;
                         }
                     }
                 } else {
@@ -271,7 +267,7 @@ public class LoginServices {
         //<b>security check</b>: userLogin userLoginId must equal userLoginId, or must have PARTYMGR_UPDATE permission
         if (!userLoginId.equals(loggedInUserLogin.getString("userLoginId"))) {
             if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin)) {
-                return ServiceUtil.returnError("You do not have permission to update the password for this party");
+                return ServiceUtil.returnError("You do not have permission to update the password for this user login");
             } else {
                 adminUser = true;
             }
@@ -292,7 +288,6 @@ public class LoginServices {
         String newPassword = (String) context.get("newPassword");
         String newPasswordVerify = (String) context.get("newPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
-        Boolean enabled = (Boolean) context.get("enabled");
 
         List errorMessageList = new LinkedList();
 
@@ -305,14 +300,59 @@ public class LoginServices {
             return ServiceUtil.returnError(errorMessageList);
         }
 
-        if (newPassword != null)
-            userLoginToUpdate.set("currentPassword", newPassword);
-        if (passwordHint != null)
-            userLoginToUpdate.set("passwordHint", passwordHint);
-        if (enabled != null) {
-            userLoginToUpdate.set("enabled", enabled);
-            if (!enabled.booleanValue() && userLoginToUpdate.getBoolean("enabled").booleanValue())
-                userLoginToUpdate.set("disabledDateTime", UtilDateTime.nowTimestamp());
+        userLoginToUpdate.set("currentPassword", newPassword, false);
+        userLoginToUpdate.set("passwordHint", passwordHint, false);
+
+        try {
+            userLoginToUpdate.store();
+        } catch(GenericEntityException e) {
+            return ServiceUtil.returnError("Could not change password (write failure): " + e.getMessage());
+        }
+
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+
+    /** Updates UserLogin Security info
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map updateUserLoginSecurity(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        Security security = ctx.getSecurity();
+        GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
+
+        String userLoginId = (String) context.get("userLoginId");
+        if (userLoginId == null || userLoginId.length() == 0) {
+            userLoginId = loggedInUserLogin.getString("userLoginId");
+        }
+
+        //<b>security check</b>: must have PARTYMGR_UPDATE permission
+        if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin) && !security.hasEntityPermission("SECURITY", "_UPDATE", loggedInUserLogin)) {
+            return ServiceUtil.returnError("You do not have permission to update the security info for this user login");
+        }
+
+        GenericValue userLoginToUpdate = null;
+        try {
+            userLoginToUpdate = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+        } catch(GenericEntityException e) {
+            return ServiceUtil.returnError("Could not change password (read failure): " + e.getMessage());
+        }
+
+        if (userLoginToUpdate == null) {
+            return ServiceUtil.returnError("Could not change password, UserLogin with ID \"" + userLoginId + "\" does not exist");
+        }
+
+        boolean wasEnabled = !"N".equals((String) userLoginToUpdate.get("enabled"));
+        userLoginToUpdate.set("enabled", context.get("enabled"), false);
+        userLoginToUpdate.set("disabledDateTime", context.get("disabledDateTime"), false);
+        userLoginToUpdate.set("successiveFailedLogins", context.get("successiveFailedLogins"), false);
+        
+        //if was enabled and we are disabling it, and no disabledDateTime was passed, set it to now
+        if (wasEnabled && "N".equals((String) context.get("enabled")) && context.get("disabledDateTime") == null) {
+            userLoginToUpdate.set("disabledDateTime", UtilDateTime.nowTimestamp());
         }
 
         try {

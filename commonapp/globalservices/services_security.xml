@@ -33,9 +33,17 @@
         <attribute name="newPassword" type="String" mode="IN" optional="true"/>
         <attribute name="newPasswordVerify" type="String" mode="IN" optional="true"/>
         <attribute name="passwordHint" type="String" mode="IN" optional="true"/>
-        <attribute name="enabled" type="Boolean" mode="IN" optional="true"/>
     </service>
 
+    <service name="updateUserLoginSecurity" engine="java"
+            location="org.ofbiz.commonapp.security.login.LoginServices" invoke="updateUserLoginSecurity" auth="true">
+        <description>Update UserLogin Security Settings</description>
+        <attribute name="userLoginId" type="String" mode="IN" optional="false"/>
+        <attribute name="enabled" type="String" mode="IN" optional="false"/>
+        <attribute name="disabledDateTime" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="successiveFailedLogins" type="Long" mode="IN" optional="true"/>
+    </service>
+    
     <!-- SecurityGroup services -->
     <service name="createSecurityGroup" engine="simple"
                 location="org/ofbiz/commonapp/security/securitygroup/SecurityGroupServices.xml" invoke="createSecurityGroup" auth="true">
