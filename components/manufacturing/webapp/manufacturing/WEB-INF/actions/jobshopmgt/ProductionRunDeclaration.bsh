@@ -85,7 +85,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
         }
 
         GenericValue lastTask = productionRun.getLastProductionRunRoutingTask();
-        Double quantityDeclared = lastTask.getDouble("quantityProduced");
+        Double quantityDeclared = (lastTask != null? lastTask.getDouble("quantityProduced"): null);
         if (quantityDeclared == null) {
             quantityDeclared = new Double(0);
         }
