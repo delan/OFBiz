@@ -34,14 +34,6 @@
         <auto-fields-service service-name="createSchedule"/>
         <field name="orderId"><hidden/></field>
         <field name="orderItemSeqId"><hidden/></field>
-        <field name="deliveryWorkEffortId"><hidden/></field>
-        <field name="pickupWorkEffortId"><hidden/></field>
-        <field name="shipmentMethodTypeId" title="Shipment Method" widget-style="selectBox">
-            <drop-down>
-                <entity-options entity-name="ShipmentMethodType" description="${description}">
-                </entity-options>
-            </drop-down>
-        </field>
         <field name="totalWeightUomId" title="Weight Measurement" widget-style="selectBox">
             <drop-down>
                 <entity-options key-field-name="uomId" entity-name="Uom" description="${description}">

@@ -233,7 +233,7 @@
                           <td width="5">&nbsp;</td>
                           <td align="left" valign="top" width="80%">
                             <div class="tabletext">
-                              ${eftAccount.nameOnAcction}<br>
+                              ${eftAccount.nameOnAccount}<br>
                               <#if eftAccount.companyNameOnAccount?has_content>${eftAccount.companyNameOnAccount}<br></#if>
                               Bank: ${eftAccount.bankName}, ${eftAccount.routingNumber}<br>
                               Account #: ${eftAccount.accountNumber}

@@ -647,8 +647,6 @@
         <description>Creates a delivery schedule for the specified purchase order</description>
         <auto-attributes entity-name="OrderDeliverySchedule" include="pk" mode="IN" optional="false"/>
         <auto-attributes entity-name="OrderDeliverySchedule" include="nonpk" mode="IN" optional="true"/>
-        <attribute name="deliveryWorkEffortId" type="String" mode="IN" optional="true"/>
-        <attribute name="pickupWorkEffortId" type="String" mode="IN" optional="true"/>
         <override name="orderItemSeqId" optional="true"/>
     </service>
     <service name="updateSchedule" engine="simple"
