@@ -24,17 +24,15 @@
  */
 package org.ofbiz.shark.instance;
 
-import java.io.IOException;
-
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.base.util.UtilMisc;
+import org.enhydra.shark.api.internal.instancepersistence.PersistenceException;
+import org.enhydra.shark.api.internal.instancepersistence.ProcessVariablePersistenceInterface;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilObject;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.shark.container.SharkContainer;
-
-import org.enhydra.shark.api.internal.instancepersistence.*;
 
 /**
  * Persistance Object
