@@ -132,4 +132,11 @@ public class LocalDispatcher {
     public String getName() {
         return this.name;
     }
+    
+    /** Returns the DispatchContext created by this dispatcher
+     *@return DispatchContext created by this dispatcher
+     */
+    public DispatchContext getDispatchContext() {
+        return ctx;
+    }
 }

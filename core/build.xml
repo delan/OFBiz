@@ -66,10 +66,14 @@
 
         <property name="log4j.jar"     value="../lib/log4j.jar"/>
 		<property name="bsh.jar"       value="../lib/bsh-1.2b3.jar"/>
+        <property name="axis.jar"      value="../lib/axis.jar"/>
+        <property name="clutil.jar"    value="../lib/clutil.jar" />
+        <property name="wsdl4j.jar"    value="../lib/wsdl4j.jar" />
 
         <property name="api-jars1"     value="${servlet.jar}:${jdbc.jar}:${mail.jar}:${log4j.jar}" />
         <property name="api-jars2"     value="${jaxp.jar}:${xerces.jar}:${bsh.jar}" />
-		<property name="api-jars"      value="${api-jars1}:${api-jars2}" />
+        <property name="api-jars3"     value="${axis.jar}:${clutil.jar}:${wsdl4j.jar}" />
+		<property name="api-jars"      value="${api-jars1}:${api-jars2}:${api-jars3}" />
         <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}" />
         <echo message="classpath: ${classpath}" />                
     </target>
