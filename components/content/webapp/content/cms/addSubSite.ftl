@@ -8,7 +8,7 @@ function win_cancel() {
 }
 </script>
 
-<form name="addSubSite" method="POST" target=window.opener action="<@ofbizUrl>/postNewSubSite?rootForumId=${requestParameters.rootForumId}</@ofbizUrl>">
+<form name="addSubSite" method="POST" target=window.opener.name action="<@ofbizUrl>/postNewSubSite?rootForumId=${requestParameters.rootForumId}</@ofbizUrl>">
 <table cellspacing="8">
   <tr>
     <td align="right">Site Name:</td>
