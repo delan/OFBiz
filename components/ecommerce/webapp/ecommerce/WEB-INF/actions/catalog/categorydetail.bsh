@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
  */
 
@@ -67,6 +67,23 @@ if (catResult != null) {
     context.put("lowIndex", catResult.get("lowIndex"));
     context.put("highIndex", catResult.get("highIndex"));
     context.put("listSize", catResult.get("listSize"));
+}
+
+// set this as a last viewed
+categoryId = request.getAttribute("productCategoryId");
+lastViewedCategories = session.getAttribute("lastViewedCategories");
+if (lastViewedCategories == null) {
+    lastViewedCategories = new ArrayList();
+}
+if (lastViewedCategories.contains(categoryId)) {
+    lastViewedCategories.remove(categoryId);
+}
+lastViewedCategories.add(0, categoryId);
+session.setAttribute("lastViewedCategories", lastViewedCategories);
+if (lastViewedCategories.size() > 10) {
+    while (lastViewedCategories.size() > 10) {
+        lastViewedCategories.remove(lastViewedCategories.size() - 1);
+    }
 }
 
 // set the content path prefix
