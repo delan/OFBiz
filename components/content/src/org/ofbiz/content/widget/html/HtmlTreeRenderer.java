@@ -53,9 +53,22 @@ public class HtmlTreeRenderer implements TreeStringRenderer {
     public static final String module = HtmlTreeRenderer.class.getName(); 
 
     public HtmlTreeRenderer() {}
+    
+    public static String buildPathString(ModelTree modelTree, int depth) {
+    	StringBuffer buf = new StringBuffer();
+        for (int i=0; i < depth; i++) {
+            int idx = modelTree.getNodeIndexAtDepth(i);
+       		buf.append(".");
+        	buf.append(Integer.toString(idx + 1));
+        }
+        return buf.toString();
+    }
 
     public void renderNodeBegin(Writer writer, Map context, ModelTree.ModelNode node, int depth, boolean isLast) throws IOException {
 
+    	String pathString = buildPathString(node.getModelTree(), depth);
+        context.put("nodePathString", pathString);
+        //int idx = node.getModelTree().getNodeIndexAtDepth(depth);
         context.put("depth", Integer.toString(depth));
         /*
         StringBuffer sb = new StringBuffer();

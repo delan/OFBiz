@@ -83,6 +83,7 @@ public class ModelTree {
     protected List trail = new ArrayList();
     protected List currentNodeTrail;
     protected int openDepth;
+    protected int [] nodeIndices = new int[20];
     
 // ===== CONSTRUCTORS =====
     /** Default Constructor */
@@ -134,6 +135,14 @@ public class ModelTree {
     
     public int getOpenDepth() {
     	return openDepth;
+    }
+    
+    public int getNodeIndexAtDepth(int i) {
+    	return nodeIndices[i];
+    }
+    
+    public void setNodeIndexAtDepth(int i, int val) {
+    	nodeIndices[i] = val;
     }
     
     public String getExpandCollapseRequest(Map context) {
@@ -341,7 +350,10 @@ public class ModelTree {
                 if (processChildren.booleanValue()) {
                     List vals = getChildren(context);
                     Iterator nodeIter = vals.iterator();
+                    int nodeIndex = -1;
                     while (nodeIter.hasNext()) {
+                        nodeIndex++;	
+                    	modelTree.setNodeIndexAtDepth(depth, nodeIndex);
                         Object [] arr = (Object [])nodeIter.next();
                         ModelNode node = (ModelNode)arr[0];
                         GenericValue val = (GenericValue)arr[1];
