@@ -184,10 +184,20 @@ public class EntitySyncContext {
     }
     
     protected void setCurrentRunEndTime() {
-        this.currentRunEndTime = new Timestamp(this.currentRunStartTime.getTime() + splitMillis);
-        if (this.currentRunEndTime.after(this.syncEndStamp)) {
-            this.currentRunEndTime = this.syncEndStamp;
+        this.currentRunEndTime = getNextRunEndTime();
+    }
+    
+    protected Timestamp getNextRunEndTime() {
+        Timestamp nextRunEndTime = new Timestamp(this.currentRunStartTime.getTime() + splitMillis);
+        if (nextRunEndTime.after(this.syncEndStamp)) {
+            nextRunEndTime = this.syncEndStamp;
         }
+        return nextRunEndTime;
+    }
+    
+    public void advanceRunTimes() {
+        this.currentRunStartTime = this.currentRunEndTime;
+        this.setCurrentRunEndTime();
     }
 
     public void setSplitStartTime() {
@@ -226,7 +236,7 @@ public class EntitySyncContext {
             return valuesToCreate;
         }
 
-        Debug.logInfo("Getting values to create; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
+        //Debug.logInfo("Getting values to create; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
         
         // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
         Iterator entityModelToUseCreateIter = entityModelToUseList.iterator();
@@ -263,9 +273,9 @@ public class EntitySyncContext {
                 eli.close();
                 
                 // definately remove this message and related data gathering
-                long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
-                long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
-                if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
+                //long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
+                //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
+                //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
                 
                 // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
                 if (valuesPerEntity == 0) {
@@ -319,7 +329,7 @@ public class EntitySyncContext {
             return valuesToStore;
         }
 
-        Debug.logInfo("Getting values to store; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
+        // Debug.logInfo("Getting values to store; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
         
         // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
         Iterator entityModelToUseUpdateIter = entityModelToUseList.iterator();
@@ -362,9 +372,9 @@ public class EntitySyncContext {
                 eli.close();
                 
                 // definately remove this message and related data gathering
-                long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
-                long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
-                if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
+                //long preCount = delegator.findCountByCondition(modelEntity.getEntityName(), findValCondition, null);
+                //long entityTotalCount = delegator.findCountByCondition(modelEntity.getEntityName(), null, null);
+                //if (entityTotalCount > 0 || preCount > 0 || valuesPerEntity > 0) Debug.logInfo("Got " + valuesPerEntity + "/" + preCount + "/" + entityTotalCount + " values for entity " + modelEntity.getEntityName(), module);
 
                 // if we didn't find anything for this entity, find the next value's Timestamp and keep track of it
                 if (valuesPerEntity == 0) {
@@ -421,7 +431,7 @@ public class EntitySyncContext {
             return keysToRemove;
         }
 
-        Debug.logInfo("Getting keys to remove; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
+        //Debug.logInfo("Getting keys to remove; currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
         
         try {
             // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
@@ -508,9 +518,6 @@ public class EntitySyncContext {
         try {
             long runningTimeMillis = System.currentTimeMillis() - startDate.getTime();
 
-            this.currentRunStartTime = this.currentRunEndTime;
-            this.setCurrentRunEndTime();
-
             // get the total for this split
             long splitTotalTime = System.currentTimeMillis() - this.splitStartTime;
             if (splitTotalTime < this.perSplitMinMillis) {
@@ -538,11 +545,11 @@ public class EntitySyncContext {
             this.totalRowsToRemove += this.toRemoveAlreadyDeleted + this.toRemoveDeleted;
 
             // store latest result on EntitySync, ie update lastSuccessfulSynchTime, should run in own tx
-            Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", this.currentRunStartTime, "userLogin", userLogin));
+            Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", this.currentRunEndTime, "userLogin", userLogin));
 
             // store result of service call on history with results so far, should run in own tx
             Map updateHistoryMap = UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, 
-                    "lastSuccessfulSynchTime", this.currentRunStartTime, "lastCandidateEndTime", this.currentRunEndTime, 
+                    "lastSuccessfulSynchTime", this.currentRunEndTime, "lastCandidateEndTime", this.getNextRunEndTime(), 
                     "lastSplitStartTime", new Long(this.splitStartTime));
             updateHistoryMap.put("toCreateInserted", new Long(toCreateInserted));
             updateHistoryMap.put("toCreateUpdated", new Long(toCreateUpdated));
@@ -894,6 +901,8 @@ public class EntitySyncContext {
             this.toRemoveAlreadyDeleted += UtilMisc.toLong(this.context.get("toRemoveAlreadyDeleted"));
             
             this.totalStoreCalls++;
+
+            this.saveResultsReportedFromDataStore();
         }
     }
 
