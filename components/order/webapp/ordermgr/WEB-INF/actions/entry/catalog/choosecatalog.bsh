@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 */
 
@@ -40,7 +40,10 @@ if ("SALES_ORDER".equals(cart.getOrderType())) {
     currentCatalogName = CatalogWorker.getCatalogName(request, currentCatalogId);
 } else {
     catalogCol = CatalogWorker.getAllCatalogIds(request);
-    currentCatalogId = (String) catalogCol.get(0);
+    currentCatalogId = CatalogWorker.getCurrentCatalogId(request);
+    if (UtilValidate.isEmpty(currentCatalogId)) {
+        currentCatalogId = (String) catalogCol.get(0);
+    }
     currentCatalogName = CatalogWorker.getCatalogName(request, currentCatalogId);
     session.setAttribute("CURRENT_CATALOG_ID", currentCatalogId);
 }
@@ -48,7 +51,3 @@ if ("SALES_ORDER".equals(cart.getOrderType())) {
 context.put("catalogCol", catalogCol);
 context.put("currentCatalogId", currentCatalogId);
 context.put("currentCatalogName", currentCatalogName);
-
-
-
-
