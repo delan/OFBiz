@@ -60,6 +60,7 @@
                 <if-compare value="Y" field-name="isInventoryInfoAvailable" operator="equals">
                     <iterate list-name="orderItemList" entry-name="orderItem">
                         <if-not-empty field-name="orderItem.productId">
+                            <clear-field field-name="callSvcMap"/>
                             <set-service-fields to-map-name="callSvcMap" service-name="issueImmediatelyFulfilledOrderItem" map-name="orderItem"/>
                             <env-to-env env-name="orderHeader" to-env-name="callSvcMap.orderHeader"/>
                             <env-to-env env-name="orderItem" to-env-name="callSvcMap.orderItem"/>
@@ -109,18 +110,17 @@
             </if-empty>
             
             <!-- before we do the find, put together the orderBy list based on which reserveOrderEnumId is specified -->
-            <if-compare value="INVRO_FIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
+            <if-compare value="INVRO_FIFO_EXP" operator="equals" field-name="productStore.reserveOrderEnumId">
                 <string-to-field string="+expireDate" field-name="orderByString"/>
             <else>
-                <if-compare value="INVRO_LIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
+                <if-compare value="INVRO_LIFO_EXP" operator="equals" field-name="productStore.reserveOrderEnumId">
                     <string-to-field string="-expireDate" field-name="orderByString"/>
                 <else>
-                    <if-compare value="INVRO_LIFO_REC" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
+                    <if-compare value="INVRO_LIFO_REC" operator="equals" field-name="productStore.reserveOrderEnumId">
                         <string-to-field string="+datetimeReceived" field-name="orderByString"/>
                     <else>
                         <!-- the default reserveOrderEnumId is INVRO_FIFO_REC, ie FIFO based on date received -->
                         <string-to-field string="-datetimeReceived" field-name="orderByString"/>
-                        <string-to-field string="INVRO_FIFO_REC" field-name="reserveOrderEnumId" map-name="parameters"/>
                     </else>
                     </if-compare>
                 </else>

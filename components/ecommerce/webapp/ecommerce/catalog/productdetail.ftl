@@ -262,7 +262,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#assign inStock = true>
         <#-- Variant Selection -->
         <#if product.isVirtual?exists && product.isVirtual?upper_case == "Y">
-          <#if requestAttributes.variantTree?exists && 0 < requestAttributes.variantTree.size()>
+          <#if requestAttributes.variantTree?exists && (requestAttributes.variantTree.size() > 0)>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
                 <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
