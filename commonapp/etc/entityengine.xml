@@ -148,6 +148,14 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             join-style="ansi">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
+        <jotm-jdbc
+                jdbc-driver="org.hsqldb.jdbcDriver"
+                jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
+                isolation-level="ReadCommitted"
+                pool-minsize="2"
+                pool-maxsize="20"/>                
         <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
