@@ -282,7 +282,7 @@
 
         <!-- If password encryption is enabled, encrpyt it now -->
         <call-bsh><![CDATA[
-            boolean useEncryption = "true".equals(org.ofbiz.core.util.UtilProperties.getPropertyValue("security", "password.encrypt"));
+            boolean useEncryption = "true".equals(org.ofbiz.core.util.UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
             if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.commonapp.security.login.HashEncrypt.getHash((String) newUserLogin.get("currentPassword"))); }
         ]]></call-bsh>
 
