@@ -25,7 +25,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
  -->
 <simple-methods>
@@ -51,6 +51,7 @@
         <call-map-processor xml-resource="org/ofbiz/manufacturing/techdata/RoutingMapProcs.xml"
                 processor-name="routingTaskAssoc" in-map-name="parameters" out-map-name="context1"/>
          <check-errors/>
+         <string-to-field string="Y" field-name="create" map-name="context1"/>
         <call-service service-name="checkRoutingTaskAssoc" in-map-name="context1">
 	            <result-to-field result-name="sequenceNumNotOk"  field-name="sequenceNumNotOk"/>
         </call-service>
