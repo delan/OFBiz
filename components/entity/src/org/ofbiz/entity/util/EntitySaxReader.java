@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -340,7 +340,9 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                     }
                     currentValue = null;
                 } catch (GenericEntityException e) {
-                    throw new SAXException("Error storing value", e);
+                    String errMsg = "Error storing value";
+                    Debug.logError(e, errMsg, module);
+                    throw new SAXException(errMsg, e);
                 }
             }
         }
