@@ -1,7 +1,7 @@
 /*
- * $Id: CartItemModifyException.java,v 1.2 2004/08/17 19:51:24 ajzeneski Exp $
+ * $Id: ItemNotFoundException.java,v 1.1 2004/08/17 19:51:24 ajzeneski Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -20,33 +20,33 @@
  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
  */
 package org.ofbiz.order.shoppingcart;
 
 import org.ofbiz.base.util.GeneralException;
 
 /**
- * Exception
- *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
- * @since      2.0
+ * 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.1 $
+ * @since      3.2
  */
-public class CartItemModifyException extends GeneralException {
+public class ItemNotFoundException extends GeneralException {
 
-    public CartItemModifyException() {
+    public ItemNotFoundException() {
         super();
     }
 
-    public CartItemModifyException(String str) {
+    public ItemNotFoundException(String str) {
         super(str);
     }
 
-    public CartItemModifyException(Throwable nested) {
+    public ItemNotFoundException(Throwable nested) {
         super(nested);
     }
-    
-    public CartItemModifyException(String str, Throwable nested) {
+
+    public ItemNotFoundException(String str, Throwable nested) {
         super(str, nested);
     }
 }

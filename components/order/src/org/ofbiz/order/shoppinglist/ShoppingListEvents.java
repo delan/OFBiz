@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingListEvents.java,v 1.6 2004/08/01 02:22:35 ajzeneski Exp $
+ * $Id: ShoppingListEvents.java,v 1.7 2004/08/17 19:51:25 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,6 +50,7 @@ import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartEvents;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;
+import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.service.GenericServiceException;
@@ -61,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * Shopping cart events.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.2
  */
 public class ShoppingListEvents {
@@ -279,7 +280,12 @@ public class ShoppingListEvents {
                 Map messageMap = UtilMisc.toMap("productId", productId);
                 errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.problem_adding_product_to_cart", messageMap, cart.getLocale());
                 eventMessage.append(errMsg + "\n");
-            }            
+            } catch (ItemNotFoundException e) {
+                Debug.logWarning(e, "Product not found!", module);
+                Map messageMap = UtilMisc.toMap("productId", productId);
+                errMsg = UtilProperties.getMessage(resource,"shoppinglistevents.problem_adding_product_to_cart", messageMap, cart.getLocale());
+                eventMessage.append(errMsg + "\n");
+            }
         }
         
         if (eventMessage.length() > 0) {

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.49 2004/08/16 19:14:17 jonesde Exp $
+ * $Id: OrderServices.java,v 1.50 2004/08/17 19:51:24 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -60,6 +60,7 @@ import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
+import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -77,7 +78,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.49 $
+ * @version    $Revision: 1.50 $
  * @since      2.0
  */
 
@@ -3254,6 +3255,8 @@ public class OrderServices {
         try {
             cart.addOrIncreaseItem("GZ-1005", 1, null, null, "DemoCatalog", dctx.getDispatcher());
         } catch (CartItemModifyException e) {
+            Debug.logError(e, module);
+        } catch (ItemNotFoundException e) {
             Debug.logError(e, module);
         }
 

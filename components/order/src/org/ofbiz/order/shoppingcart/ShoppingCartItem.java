@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.33 2004/08/13 18:57:02 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.34 2004/08/17 19:51:25 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
@@ -121,7 +121,7 @@ public class ShoppingCartItem implements java.io.Serializable {
      * @return a new ShoppingCartItem object
      * @throws CartItemModifyException
      */
-    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
+    public static ShoppingCartItem makeItem(Integer cartLocation, String productId, double selectedAmount, double quantity, Map additionalProductFeatureAndAppls, Map attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException, ItemNotFoundException {
         GenericDelegator delegator = cart.getDelegator();
         GenericValue product = null;
 
@@ -148,7 +148,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                                           messageMap , cart.getLocale() );
 
             Debug.logWarning(excMsg, module);
-            throw new CartItemModifyException(excMsg);
+            throw new ItemNotFoundException(excMsg);
         }
 
         return makeItem(cartLocation, product, selectedAmount, quantity, additionalProductFeatureAndAppls, attributes, prodCatalogId, dispatcher, cart, true);

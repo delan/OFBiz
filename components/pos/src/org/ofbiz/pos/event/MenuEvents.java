@@ -1,5 +1,5 @@
 /*
- * $Id: MenuEvents.java,v 1.2 2004/08/15 21:26:42 ajzeneski Exp $
+ * $Id: MenuEvents.java,v 1.3 2004/08/17 19:51:26 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ package org.ofbiz.pos.event;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
+import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Journal;
@@ -35,7 +36,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class MenuEvents {
@@ -69,6 +70,8 @@ public class MenuEvents {
         } catch (CartItemModifyException e) {
             Debug.logError(e, module);
             pos.showDialog("main/dialog/error/producterror");
+        } catch (ItemNotFoundException e) {
+            pos.showDialog("main/dialog/error/productnotfound");
         }
 
         // re-calc tax

@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.58 2004/08/13 18:57:02 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.59 2004/08/17 19:51:24 ajzeneski Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.58 $
+ * @version    $Revision: 1.59 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -243,7 +243,7 @@ public class ShoppingCart implements Serializable {
      * @return the new/increased item index
      * @throws CartItemModifyException
      */
-    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public int addOrIncreaseItem(String productId, double selectedAmount, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         // public int addOrIncreaseItem(GenericValue product, double quantity, HashMap features) {
 
         // Check for existing cart item.
@@ -262,10 +262,10 @@ public class ShoppingCart implements Serializable {
         // Add the new item to the shopping cart if it wasn't found.
         return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), productId, selectedAmount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
-    public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public int addOrIncreaseItem(String productId, double quantity, Map features, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addOrIncreaseItem(productId, 0.00, quantity, features, attributes, prodCatalogId, dispatcher);
     }
-    public int addOrIncreaseItem(String productId, double quantity, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public int addOrIncreaseItem(String productId, double quantity, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addOrIncreaseItem(productId, quantity, null, null, null, dispatcher);
     }
 
@@ -288,7 +288,7 @@ public class ShoppingCart implements Serializable {
     }
 
     /** Add an item to the shopping cart. */
-    public int addItemToEnd(String productId, double amount, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+    public int addItemToEnd(String productId, double amount, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException, ItemNotFoundException {
         return addItemToEnd(ShoppingCartItem.makeItem(null, productId, amount, quantity, features, attributes, prodCatalogId, dispatcher, this));
     }
 

@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentEvents.java,v 1.2 2004/08/15 21:26:42 ajzeneski Exp $
+ * $Id: PaymentEvents.java,v 1.3 2004/08/17 19:51:26 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,12 +32,13 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.component.Input;
+import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.screen.PosScreen;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class PaymentEvents {
@@ -68,21 +69,27 @@ public class PaymentEvents {
             // make sure we have all necessary data
             int allInfo = validateCreditInfo(func[1]);
             if (allInfo == 1) {
-                // missing expiration date
+                // card number set; exp should be in input
+                input.setFunction("MSRINFO", func[1] + "|" + input.value());
+                Debug.log("Got all info : " + input.getFunction("MSRINFO"), module);                
+
             } else if (allInfo == 0) {
                 // missing card number (??)
+                input.clearFunction("MSRINFO");
+                pos.getOutput().print(Output.CREDNO);
             } else {
                 // all info available add the payment
             }
         } else if ("CREDIT".equals(func[0])) {
             // amount is already set
-            //String[] func = input.clearLastFunction(); // will be the last function
-
+            pos.getOutput().print(Output.CREDEX);
+            input.setFunction("MSRINFO");
         } else {
             // first call; set the amount
             try {
                 double amount = processAmount(pos, trans.getGrandTotal());
                 Debug.log("Processing [Credit] Amount : " + amount, module);
+                pos.getOutput().print(Output.CREDNO);
 
                 // set the CREDIT function
                 input.setFunction("CREDIT");
