@@ -115,8 +115,7 @@
       </td>
     </tr>
   </ofbiz:if>
-  <%-- XXX use distributorId from order if an order is available --%>
-  <%String distributorId = DistributorEvents.getDistributorId(request);%>
+  <%String distributorId = localOrder != null ? localOrder.getDistributorId() : DistributorEvents.getDistributorId(request);%>
   <%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
   <ofbiz:if name="distributorId">
     <tr><td colspan="7" height="1" bgcolor="#899ABC"></td></tr>
@@ -126,7 +125,7 @@
       </td>
       <td width="5">&nbsp;</td>
       <td align="left" valign="top" width="80%">
-          <div class="tabletext"><%=distributorId%></div><%-- XXX use name if available --%>
+          <div class="tabletext"><%=PartyHelper.formatPartyId(distributorId, delegator)%></div>
       </td>
     </tr>
   </ofbiz:if>
