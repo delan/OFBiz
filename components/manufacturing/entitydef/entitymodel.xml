@@ -26,7 +26,7 @@
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  */
 -->
 
@@ -98,7 +98,6 @@
       <field name="saturdayCapacity" type="floating-point"></field>
       <field name="sundayStartTime" type="time"></field>
       <field name="sundayCapacity" type="floating-point"></field>
-      <field name="weekCapacity" type="floating-point"></field>
       <prim-key field="calendarWeekId"/>
       <relation type="many"  rel-entity-name="TechDataCalendar">
         <key-map field-name="calendarWeekId"/>
@@ -171,38 +170,58 @@
   <!-- org.ofbiz.manufacturing.mrp -->
   <!-- ========================================================= -->
 
-    <entity entity-name="MrpInventoryEventPlanned"
+    <entity entity-name="InventoryEventPlanned"
             package-name="org.ofbiz.manufacturing.mrp"
             title="Inventory event planned"
             author="Olivier Heintz">
-      <description>Contain all the planned IventoryEvent by ProductId to be able to check the product availability 
+      <description>Contain all the planned InventoryEvent by ProductId to be able to check the product availability 
       					and if necessary generate some requirements</description>
       <field name="productId" type="id-ne"></field>
       <field name="eventDate" type="date-time"></field>
+      <field name="inventoryEventPlanTypeId" type="id-ne"></field>
       <field name="eventQuantity" type="floating-point"></field>
-      <field name="inventoryEventTypeId" type="id-ne"></field>
       <prim-key field="productId"/>
       <prim-key field="eventDate"/>
+      <prim-key field="inventoryEventPlanTypeId"/>
       <relation type="one" fk-name="INV_EVNT_PLN_PRDT" rel-entity-name="Product">
-        <key-map field-name="productId"/>
+      <key-map field-name="productId"/>
       </relation>
-      <relation type="one" fk-name="INV_EVNT_PLN_TYP" rel-entity-name="MrpInventoryEventType">
-        <key-map field-name="inventoryEventTypeId"/>
+	  <relation type="one" fk-name="INV_EVNT_PLN_TYP" rel-entity-name="InventoryEventPlannedType">
+      <key-map field-name="inventoryEventPlanTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="MrpInventoryEventType"
+    <entity entity-name="InventoryEventPlannedType"
             package-name="org.ofbiz.manufacturing.mrp"
-            title="Inventory  event type"
+            title="Inventory  event Planned type"
             author="Olivier Heintz">
-      <description>Used to describe the InventoryEvent and give the information if it's an in or out event</description>
-      <field name="inventoryEventTypeId" type="id-ne"></field>
+      <description>Used to describe the InventoryEventPlanned and give the information if it's an in or out event</description>
+      <field name="inventoryEventPlanTypeId" type="id-ne"></field>
       <field name="description" type="description"></field>
       <field name="inOut" type="indicator"></field>
-      <prim-key field="inventoryEventTypeId"/>
-      <relation type="many"  rel-entity-name="MrpInventoryEventPlanned">
-        <key-map field-name="inventoryEventTypeId"/>
+      <prim-key field="inventoryEventPlanTypeId"/>
+      <relation type="many"  rel-entity-name="InventoryEventPlanned">
+        <key-map field-name="inventoryEventPlanTypeId"/>
       </relation>
     </entity>
+	<view-entity entity-name="MrpInventoryEventPlanned" package-name="org.ofbiz.manufacturing.mrp" 
+	    title="Inventory Event Planned view for MRP process" author="Olivier Heintz">
+	 <description>Uses for the MRP process to be able to read the InventoryEventPlanned By billOfMaterialLevel and by eventDate</description>
+	 <member-entity entity-alias="IEP" entity-name="InventoryEventPlanned"></member-entity>
+	 <member-entity entity-alias="IEPT" entity-name="InventoryEventPlannedType"></member-entity>
+	 <member-entity entity-alias="PR" entity-name="Product"></member-entity>
+	 <alias-all entity-alias="IEP"></alias-all>
+	 <alias entity-alias="PR" name="billOfMaterialLevel"></alias>
+	 <alias entity-alias="IEPT" name="inOut"></alias>
+	 <view-link entity-alias="IEP" rel-entity-alias="PR">
+	     <key-map field-name="productId"></key-map>
+	 </view-link>
+	 <view-link entity-alias="IEP" rel-entity-alias="IEPT">
+	     <key-map field-name="inventoryEventPlanTypeId"></key-map>
+	 </view-link>
+	 <relation rel-entity-name="Product" type="one-nofk">
+	     <key-map field-name="productId"/>
+	 </relation>
+	</view-entity>
 
 </entitymodel>
 
