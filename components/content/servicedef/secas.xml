@@ -2,6 +2,11 @@
 <!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
 
 <service-eca>
+    <eca service="createFile" event="in-validate">
+        <condition field-name="dataResource" operator="is-empty"/>
+        <action service="createDataResource" mode="sync"/>
+    </eca>
+
     <eca service="createSurveyQuestion" event="commit">
         <condition field-name="surveyId" operator="is-not-empty"/>
         <action service="createSurveyQuestionAppl" mode="sync"/>

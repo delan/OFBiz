@@ -29,6 +29,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
+import java.io.RandomAccessFile;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,9 +56,10 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * DataServices Class
  * 
- * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev:$
- * @since 3.0
+ * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Rev$
+ * @since      3.0
  * 
  *  
  */
@@ -69,22 +71,25 @@ public class DataServices {
      * A top-level service for creating a DataResource and ElectronicText together.
      */
     public static Map createDataResourceAndText(DispatchContext dctx, Map context) {
-        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        context.put("entityOperation", "_CREATE");
+        Map result = new HashMap();
+
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
+        context.put("entityOperation", "_CREATE");
+
         Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
-        String permissionStatus = (String)permResults.get("permissionStatus");
+        String permissionStatus = (String) permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             context.put("skipPermissionCheck", "granted");
             Map thisResult = createDataResourceMethod(dctx, context);
             if (thisResult.get(ModelService.RESPONSE_MESSAGE) != null) {
                 return ServiceUtil.returnError((String) thisResult.get(ModelService.ERROR_MESSAGE));
             }
+
             result.put("dataResourceId", thisResult.get("dataResourceId"));
             context.put("dataResourceId", thisResult.get("dataResourceId"));
 
@@ -207,74 +212,105 @@ public class DataServices {
      * A service wrapper for the createFileMethod method. Forces permissions to be checked.
      */
     public static Map createFile(DispatchContext dctx, Map context) {
-        context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
         targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
-        Map result = null;
-        try {
-            result = createFileMethod(dctx, context);
-        } catch (GenericServiceException e) {
-            return ServiceUtil.returnError(e.getMessage());
-        }
-        return result;
+        context.put("entityOperation", "_CREATE");
+
+        return createFileMethod(dctx, context);
     }
 
-    public static Map createFileMethod(DispatchContext dctx, Map context) throws GenericServiceException {
-        HashMap result = new HashMap();
+    public static Map createFileMethod(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         Map permResults = DataResourceWorker.callDataResourcePermissionCheckResult(delegator, dispatcher, context);
+
         String permissionStatus = (String)permResults.get("permissionStatus");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue dataResource = (GenericValue) context.get("dataResource");
-            //String dataResourceId = (String) dataResource.get("dataResourceId");
             String dataResourceTypeId = (String) dataResource.get("dataResourceTypeId");
             String objectInfo = (String) dataResource.get("objectInfo");
+            ByteWrapper binData = (ByteWrapper) context.get("binData");
             String textData = (String) context.get("textData");
-            String prefix = "";
-            File file = null;
-            if (textData != null && textData.length() > 0) {
-                //String fileName = "";
-                String sep = "";
+
+            // no object info; use the dataResource ID (unique)
+            if (UtilValidate.isEmpty(objectInfo)) {
+                objectInfo = dataResource.getString("dataResourceId");
+                dataResource.set("objectInfo", objectInfo);
                 try {
-                    if (UtilValidate.isEmpty(dataResourceTypeId) || dataResourceTypeId.equals("LOCAL_FILE")) {
-                        file = new File(objectInfo);
-                        if (!file.isAbsolute()) {
-                            throw new GenericServiceException("File: " + file + " is not absolute");
-                        }
-                    } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
-                        prefix = System.getProperty("ofbiz.home");
-                        if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
-                            sep = "/";
-                        }
-                        file = new File(prefix + sep + objectInfo);
-                    } else if (dataResourceTypeId.equals("CONTEXT_FILE")) {
-                        prefix = (String) context.get("rootDir");
-                        if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
-                            sep = "/";
-                        }
-                        file = new File(prefix + sep + objectInfo);
-                    }
-                    if (file == null) {
-                        throw new IOException("File: " + file + " is null");
-                    }
+                    dataResource.store();
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError("Unable to update the DataResource record");
+                }
+            }
+
+            // a few place holders
+            String prefix = "";
+            String sep = "";
+
+            // extended validation for binary/character data
+            if (UtilValidate.isNotEmpty(textData) && binData != null) {
+                return ServiceUtil.returnError("Cannot process both character and binary data in the same file");
+            }
+
+            // obtain a reference to the file
+            File file = null;
+            if (UtilValidate.isEmpty(dataResourceTypeId) || dataResourceTypeId.equals("LOCAL_FILE")) {
+                file = new File(objectInfo);
+                if (!file.isAbsolute()) {
+                    return ServiceUtil.returnError("DataResource LOCAL_FILE does not point to an absolute location");
+                }
+            } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
+                prefix = System.getProperty("ofbiz.home");
+                if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
+                    sep = "/";
+                }
+                file = new File(prefix + sep + objectInfo);
+            } else if (dataResourceTypeId.equals("CONTEXT_FILE")) {
+                prefix = (String) context.get("rootDir");
+                if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
+                    sep = "/";
+                }
+                file = new File(prefix + sep + objectInfo);
+            }
+            if (file == null) {
+                return ServiceUtil.returnError("Unable to obtain a reference to file - " + objectInfo);
+            }
+
+            // write the data to the file
+            if (UtilValidate.isNotEmpty(textData)) {
+                try {
                     FileWriter out = new FileWriter(file);
                     out.write(textData);
                     out.close();
                 } catch (IOException e) {
                     Debug.logWarning(e, module);
-                    throw new GenericServiceException(e.getMessage());
+                    return ServiceUtil.returnError("Unable to write character data to: " + file.getAbsolutePath());
                 }
+            } else if (binData != null) {
+                try {
+                    RandomAccessFile out = new RandomAccessFile(file, "rw");
+                    out.write(binData.getBytes());
+                } catch (FileNotFoundException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError("Unable to open file for writing: " + file.getAbsolutePath());
+                } catch (IOException e) {
+                    Debug.logError(e, module);
+                    return ServiceUtil.returnError("Unable to write binary data to: " + file.getAbsolutePath());
+                }
+            } else {
+                return ServiceUtil.returnError("No file content passed for: " + file.getAbsolutePath());
             }
+
+            Map result = ServiceUtil.returnSuccess();
+            result.put("dataResource", dataResource);
+            return result;
         } else {
             String errorMsg = ContentWorker.prepPermissionErrorMsg(permResults);
             return ServiceUtil.returnError(errorMsg);
         }
-        
-
-        return result;
     }
 
     /**

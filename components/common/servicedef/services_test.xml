@@ -125,4 +125,12 @@
         <attribute name="byteWrapper2" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="false"/>
         <attribute name="saveAsFileName2" type="String" mode="IN" optional="false"/>
     </service>
+
+    <service name="uploadContentTest" engine="java" auth="true"
+            location="org.ofbiz.common.CommonServices" invoke="uploadTest">
+        <description>Upload Content Test Service</description>
+        <attribute name="uploadFile" type="org.ofbiz.entity.util.ByteWrapper" mode="IN" optional="false"/>
+        <attribute name="_uploadFile_contentType" type="String" mode="IN" optional="false"/>
+        <attribute name="_uploadFile_fileName" type="String" mode="IN" optional="false"/>
+    </service>
 </services>
