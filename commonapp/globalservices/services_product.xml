@@ -524,6 +524,7 @@
         <attribute name="productFeatureId" type="String" mode="OUT" optional="false"/>
         <attribute name="defaultSequenceNum" type="Long" mode="IN" optional="true"/>
         <attribute name="idCode" type="String" mode="IN" optional="true"/>
+        <attribute name="abbrev" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateProductFeature" engine="simple"
                 location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="updateProductFeature" auth="true">
@@ -536,6 +537,7 @@
         <attribute name="numberSpecified" type="Double" mode="IN" optional="true"/>
         <attribute name="defaultSequenceNum" type="Long" mode="IN" optional="true"/>
         <attribute name="idCode" type="String" mode="IN" optional="true"/>
+        <attribute name="abbrev" type="String" mode="IN" optional="true"/>
     </service>
 
     <service name="applyFeatureToProduct" engine="simple"

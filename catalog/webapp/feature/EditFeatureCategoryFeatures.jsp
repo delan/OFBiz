@@ -78,6 +78,7 @@
     <td><div class="tabletext"><b>Quantity</b></div></td>
     <td><div class="tabletext"><b>DSeqNum</b></div></td>
     <td><div class="tabletext"><b>ID Code</b></div></td>
+    <td><div class="tabletext"><b>Abbrev</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
     <%if (productId != null && productId.length() > 0) {%>
       </tr>
@@ -88,7 +89,7 @@
         <td><div class="tabletext"><b>Thru&nbsp;Date</b></div></td>
         <td><div class="tabletext">&nbsp;</div></td>
         <td><div class="tabletext"><b>Sequence</b></div></td>
-        <td colspan='2'><div class="tabletext">&nbsp;</div></td>
+        <td colspan='3'><div class="tabletext">&nbsp;</div></td>
     <%}%>
   </tr>
 <ofbiz:iterator name="productFeature" property="productFeatures">
@@ -120,6 +121,7 @@
       <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="numberSpecified" fullattrs="true"/>></td>
       <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum" fullattrs="true"/>></td>
       <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="idCode" fullattrs="true"/>></td>
+      <td><input type=text size='5' <ofbiz:inputvalue entityAttr="productFeature" field="abbrev" fullattrs="true"/>></td>
       <td><INPUT type=submit value='Update'></td>
     </FORM>
     <%if (productId != null && productId.length() > 0) {%>
@@ -140,7 +142,7 @@
         <td><input type=text size='18' name='thruDate'></td>
         <td>&nbsp;</td>
         <td><input type=text size='5' name='sequenceNum' value='<ofbiz:inputvalue entityAttr="productFeature" field="defaultSequenceNum"/>'></td>
-      <td colspan='2' align=left><INPUT type=submit value='Apply'></td>
+      <td colspan='3' align=left><INPUT type=submit value='Apply'></td>
       </FORM>
     <%}%>
   </tr>
@@ -192,6 +194,10 @@
     <tr>
       <td><div class='tabletext'>ID Code:</div></td>
       <td><input type=text size='10' name='idCode' value=''></td>
+    </tr>
+    <tr>
+      <td><div class='tabletext'>Abbreviation:</div></td>
+      <td><input type=text size='10' name='abbrev' value=''></td>
     </tr>
     <tr>
       <td colspan='2'><input type="submit" value="Create"></td>
