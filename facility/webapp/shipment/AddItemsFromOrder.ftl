@@ -32,7 +32,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
 <form action="<@ofbizUrl>/AddItemsFromOrder</@ofbizUrl>">
 	<input type="hidden" name="shipmentId" value="${shipmentId}"/>
 	<div class="tabletext">
-        Order ID: <input type="text" size="20" name="orderId" value="${orderId?if_exists}"/>
+        Order ID: <input type="text" class='inputBox' size="20" name="orderId" value="${orderId?if_exists}"/>
         <input type="submit" value="Select" class="standardButton"/>
     </div>
 </form>
@@ -127,7 +127,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                                 <input type="hidden" name="shipmentId" value="${shipmentId}"/>
                                 <input type="hidden" name="orderId" value="${orderItem.orderId}"/>
                                 <input type="hidden" name="orderItemSeqId" value="${orderItem.orderItemSeqId}"/>
-                                <input type="text" size="5" name="quantity" value="${quantityNotIssued}"/>
+                                <input type="text" class='inputBox' size="5" name="quantity" value="${quantityNotIssued}"/>
                                 <a href="javascript:document.issueOrderItemToShipmentForm${orderItemData_index}.submit();" class="buttontext">Issue</a>
                             </form>
                         </td>
@@ -163,7 +163,7 @@ ${pages.get("/shipment/ShipmentTabBar.ftl")}
                                     <input type="hidden" name="orderId" value="${orderItemInventoryRes.orderId}"/>
                                     <input type="hidden" name="orderItemSeqId" value="${orderItemInventoryRes.orderItemSeqId}"/>
                                     <input type="hidden" name="inventoryItemId" value="${orderItemInventoryRes.inventoryItemId}"/>
-                                    <input type="text" size="5" name="quantity" value="${orderItemInventoryRes.quantity}"/>
+                                    <input type="text" class='inputBox' size="5" name="quantity" value="${orderItemInventoryRes.quantity}"/>
                                     <a href="javascript:document.addOrderItemToShipmentForm${orderItemData_index}${orderItemInventoryResData_index}.submit();" class="buttontext">Issue</a>
                                 </form>
                             <#else>
