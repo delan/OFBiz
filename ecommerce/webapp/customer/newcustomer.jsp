@@ -35,6 +35,7 @@
 <%String previousParams = (String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 <%String fontColor = "Black";%>
 
+<br>
 <p class="head1">Request a New Account</p>
 <br>
 <p class='tabletext'>If you already have an account, <a href='<ofbiz:url>/checkLogin/main</ofbiz:url>' class='buttontext'>log in here</a>.</p>
