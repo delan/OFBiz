@@ -8,20 +8,20 @@
     <!-- ================================================================== -->
 
     <target name="init">
-	 	<property environment="env"                                 />
+		<property environment="env"                                 />
         <property name="name"           value="core"                />
         <property name="src.dir"        value="src"                 />
         <property name="etc.dir"        value="etc"                 />
         <property name="lib.dir"        value="lib"                 />
-		<property name="doc.dir"        value="docs"                />
+        <property name="doc.dir"        value="docs"                />
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
         <property name="pkg-dist.name"  value="${name}-pkg"         />
 		
 		<!-- Classpath setting -->
-		<property name="servlet.jar"    value="${env.TOMCAT_HOME}/lib/servlet.jar" />
-		<property name="classpath"      value="${env.CLASSPATH}:${servlet.jar}"    />		
-		<echo message="classpath: ${classpath}" />
+        <property name="servlet.jar"    value="${env.TOMCAT_HOME}/lib/servlet.jar" />
+        <property name="classpath"      value="${env.CLASSPATH}:${servlet.jar}"    />		
+        <echo message="classpath: ${classpath}" />
     </target>
 
 
@@ -57,6 +57,7 @@
 
     <target name="classes" depends="prepare">
         <javac srcdir="${src.dir}"
+		       classpath="${classpath}"
                destdir="${lib.dir}" />               
     </target>
 
