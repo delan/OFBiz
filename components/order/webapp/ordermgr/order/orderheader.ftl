@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -134,7 +134,7 @@
                   <td>
                     <table width="100%" border="0" cellpadding="1" cellspacing='0'>
                     <#list orderPaymentPreferences as orderPaymentPreference>
-                      <#if outputted?exists>
+                      <#if outputted?default("false") == "true">
                         <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       </#if>
                       <#assign outputted = "true">                  
@@ -142,21 +142,26 @@
                       <#assign paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod")?if_exists>
                       <#if !paymentMethod?has_content>
                         <#assign paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType")>
-                        <tr>
-                          <td>
-                            <div class="tabletext">&nbsp;<b>${paymentMethodType.description?if_exists}</b></div>
-                          </td>
-                          <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE">
-                            <td align="right">
-                              <div class="tabletext">${orderPaymentPreference.maxAmount?default(0.00)?string.currency}&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())?if_exists}</div>
-                              <div class="tabletext">&nbsp;<#if orderPaymentPreference.authRefNum?exists>(Ref: ${orderPaymentPreference.authRefNum})</#if></div>
-                           </td>
-                          <#else>
-                            <td align="right">                            
-                              <a valign="top" href="<@ofbizUrl>/receivepayment?${paramString}</@ofbizUrl>" class="buttontext">Receive Payment</a>
+                        <#if paymentMethodType.paymentMethodTypeId == "EXT_BILLACT">
+                          <#assign outputted = "false">
+                        <#else>
+                          <tr>
+                            <td align="right" valign="top" width="15%">
+                              <div class="tabletext">&nbsp;<b>${paymentMethodType.description?if_exists}</b></div>
                             </td>
-                          </#if>
-                        </tr>
+                            <td width="5">&nbsp;</td>
+                            <#if paymentMethodType.paymentMethodTypeId != "EXT_OFFLINE">
+                              <td align="left">
+                                <div class="tabletext">${orderPaymentPreference.maxAmount?default(0.00)?string.currency}&nbsp;-&nbsp;${(orderPaymentPreference.authDate.toString())?if_exists}</div>
+                                <div class="tabletext">&nbsp;<#if orderPaymentPreference.authRefNum?exists>(Ref: ${orderPaymentPreference.authRefNum})</#if></div>
+                             </td>
+                            <#else>
+                              <td align="right">                            
+                                <a valign="top" href="<@ofbizUrl>/receivepayment?${paramString}</@ofbizUrl>" class="buttontext">Receive Payment</a>
+                              </td>
+                            </#if>
+                          </tr>
+                        </#if>
                       <#else>
                         <#if paymentMethod.paymentMethodTypeId?if_exists == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
@@ -245,7 +250,7 @@
                 
                     <#-- billing account -->
                     <#if billingAccount?exists>
-                      <#if outputted?exists>
+                      <#if outputted?default("false") == "true">
                         <tr><td colspan="7"><hr class='sepbar'></td></tr>
                       </#if>
                       <tr>
