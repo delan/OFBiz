@@ -27,8 +27,6 @@ package org.ofbiz.core.entity.model;
 
 import java.util.*;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -47,16 +45,16 @@ import org.ofbiz.core.util.*;
 public class ModelRelation {
 
     /** the title, gives a name/description to the relation */
-    protected String title = "";
+    protected String title;
 
     /** the type: either "one" or "many" or "one-nofk" */
-    protected String type = "";
+    protected String type;
 
     /** the name of the related entity */
-    protected String relEntityName = "";
+    protected String relEntityName;
 
     /** the name to use for a database foreign key, if applies */
-    protected String fkName = "";
+    protected String fkName;
 
     /** keyMaps defining how to lookup the relatedTable using columns from this table */
     protected List keyMaps = new ArrayList();
@@ -65,7 +63,12 @@ public class ModelRelation {
     protected ModelEntity mainEntity = null;
 
     /** Default Constructor */
-    public ModelRelation() {}
+    public ModelRelation() {
+        title = "";
+        type = "";
+        relEntityName = "";
+        fkName = "";
+    }
 
     /** XML Constructor */
     public ModelRelation(ModelEntity mainEntity, Element relationElement) {
@@ -77,7 +80,6 @@ public class ModelRelation {
         this.fkName = UtilXml.checkEmpty(relationElement.getAttribute("fk-name"));
 
         NodeList keyMapList = relationElement.getElementsByTagName("key-map");
-
         for (int i = 0; i < keyMapList.getLength(); i++) {
             Element keyMapElement = (Element) keyMapList.item(i);
 
@@ -171,7 +173,8 @@ public class ModelRelation {
         for (int i = 0; i < keyMaps.size(); i++) {
             ModelKeyMap keyMap = (ModelKeyMap) keyMaps.get(i);
 
-            if (keyMap.relFieldName.equals(relFieldName)) return keyMap;
+            if (keyMap.relFieldName.equals(relFieldName))
+                return keyMap;
         }
         return null;
     }
@@ -193,6 +196,7 @@ public class ModelRelation {
     }
 
     public String keyMapUpperString(String separator, String afterLast) {
+/*
         String returnString = "";
 
         if (keyMaps.size() < 1) {
@@ -206,9 +210,30 @@ public class ModelRelation {
         }
         returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).fieldName) + afterLast;
         return returnString;
+*/
+        if (keyMaps.size() < 1)
+            return "";
+
+        StringBuffer returnString = new StringBuffer( keyMaps.size() * 10 );
+        int i=0;
+        while (true) {
+            ModelKeyMap kmap = (ModelKeyMap) keyMaps.get(i);
+            returnString.append( ModelUtil.upperFirstChar( kmap.fieldName));
+
+            i++;
+            if (i >= keyMaps.size()) {
+                returnString.append( afterLast );
+                break;
+            }
+
+            returnString.append( separator );
+        }
+
+        return returnString.toString();
     }
 
     public String keyMapRelatedUpperString(String separator, String afterLast) {
+/*
         String returnString = "";
 
         if (keyMaps.size() < 1) {
@@ -222,6 +247,26 @@ public class ModelRelation {
         }
         returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).relFieldName) + afterLast;
         return returnString;
+*/
+        if (keyMaps.size() < 1)
+            return "";
+
+        StringBuffer returnString = new StringBuffer( keyMaps.size() * 10 );
+        int i=0;
+        while (true) {
+            ModelKeyMap kmap = (ModelKeyMap) keyMaps.get(i);
+            returnString.append( ModelUtil.upperFirstChar( kmap.relFieldName ));
+
+            i++;
+            if (i >= keyMaps.size()) {
+                returnString.append( afterLast );
+                break;
+            }
+
+            returnString.append( separator );
+        }
+
+        return returnString.toString();
     }
 
     /*
