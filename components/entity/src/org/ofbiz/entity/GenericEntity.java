@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.11 2003/11/07 22:30:20 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.12 2003/12/11 05:09:47 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -94,6 +94,9 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     /** Used to specify whether or not this representation of the entity can be changed; generally cleared when this object comes from a cache */
     protected boolean mutable = true;
 
+    /** This is an internal field used to specify that a value has come from a sync process and that the auto-stamps should not be over-written */
+    protected boolean isFromEntitySync = false;
+    
     /** Creates new GenericEntity */
     public GenericEntity() {
         this.entityName = null;
@@ -162,6 +165,20 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         this.mutable = false;
     }
 
+    /**
+     * @return Returns the isFromEntitySync.
+     */
+    public boolean getIsFromEntitySync() {
+        return this.isFromEntitySync;
+    }
+
+    /**
+     * @param isFromEntitySync The isFromEntitySync to set.
+     */
+    public void setIsFromEntitySync(boolean isFromEntitySync) {
+        this.isFromEntitySync = isFromEntitySync;
+    }
+    
     public String getEntityName() {
         return entityName;
     }
@@ -733,10 +750,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         // else element = new ElementImpl(null, this.getEntityName());
         if (element == null) return null;
 
-        ModelEntity modelEntity = this.getModelEntity();
-
-        Iterator modelFields = modelEntity.getFieldsIterator();
-
+        Iterator modelFields = this.getModelEntity().getFieldsIterator();
         while (modelFields.hasNext()) {
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
@@ -762,7 +776,6 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         final int indent = 4;
 
         if (prefix == null) prefix = "";
-        ModelEntity modelEntity = this.getModelEntity();
 
         for (int i = 0; i < indent; i++) writer.print(' ');
         writer.print('<');
@@ -772,8 +785,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         // write attributes immediately and if a CDATA element is needed, put those in a Map for now
         Map cdataMap = new HashMap();
 
-        Iterator modelFields = modelEntity.getFieldsIterator();
-
+        Iterator modelFields = this.getModelEntity().getFieldsIterator();
         while (modelFields.hasNext()) {
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
