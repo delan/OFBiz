@@ -285,19 +285,30 @@
                     <Limit>1</Limit>
                     <Implementation>             
                         <!-- change the order status -->
-                        <Tool Id="suspendOrderChangeStatus" Type="PROCEDURE">
+                        <Tool Id="cancelOrderChangeOrderStatus" Type="PROCEDURE">
                         	<ActualParameters>                        		
                         		<ActualParameter>orderId</ActualParameter>
                         		<ActualParameter>statusId</ActualParameter>
                         	</ActualParameters>
                         	<ExtendedAttributes>                          		
-                                <ExtendedAttribute Name="statusId" Value="ORDER_PROCESSING"/>
+                                <ExtendedAttribute Name="statusId" Value="ORDER_CANCELLED"/>
                                 <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>                              
                                 <ExtendedAttribute Name="runAsUser" Value="admin"/>
                             </ExtendedAttributes>
                         </Tool>
+                        <Tool Id="cancelOrderChangeItemStatus" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>
+                        		<ActualParameter>statusId</ActualParameter>
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                          		
+                                <ExtendedAttribute Name="statusId" Value="ITEM_CANCELLED"/>
+                                <ExtendedAttribute Name="serviceName" Value="changeOrderItemStatus"/>                              
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>
+                        </Tool>                        
                     	<!-- abort the current workflow -->
-                        <Tool Id="suspendOrderCancelWorkflow" Type="PROCEDURE">
+                        <Tool Id="cancelOrderCancelWorkflow" Type="PROCEDURE">
                             <ActualParameters>
                                 <ActualParameter>workEffortId</ActualParameter>  
                             </ActualParameters>          
