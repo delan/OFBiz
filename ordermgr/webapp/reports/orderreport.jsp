@@ -149,7 +149,7 @@ sbSql.append(" order by 1,2,3,4,5 ");
 		}
 	
 		response.setContentType("application/pdf");
-		response.setContentLength(bytes.length);
+		//response.setContentLength(bytes.length);
 
                     ServletOutputStream ouputStream = response.getOutputStream();
                     ouputStream.write(bytes, 0, bytes.length);
