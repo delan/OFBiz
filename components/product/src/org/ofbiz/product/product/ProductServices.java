@@ -792,7 +792,7 @@ public class ProductServices {
         // separate variantProductIdsBag into a Set of variantProductIds
         //note: can be comma, tab, or white-space delimited
         Set prelimVariantProductIds = new HashSet();
-        List splitIds = Arrays.asList(variantProductIdsBag.split("[,\\P{Space}]"));
+        List splitIds = Arrays.asList(variantProductIdsBag.split("[,\\p{Space}]"));
         Debug.logInfo("Variants: bag=" + variantProductIdsBag, module);
         Debug.logInfo("Variants: split=" + splitIds, module);
         prelimVariantProductIds.addAll(splitIds);

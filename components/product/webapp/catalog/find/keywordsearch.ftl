@@ -59,9 +59,22 @@
 <#if productIds?has_content>
 <script language="JavaScript">
 <!--
-    function addProductToBagTextArea(idValue) {
-        document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value+=idValue;
-        document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value+="\n";
+    function checkProductToBagTextArea(field, idValue) {
+        fullValue = idValue + "\n";
+        tempStr = document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value;
+        if (field.checked) {
+            if (tempStr.length > 0 && tempStr.substring(tempStr.length-1, tempStr.length) != "\n") {
+                tempStr = tempStr + "\n";
+            }
+            document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value = tempStr + fullValue;
+        } else {
+            start = document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value.indexOf(fullValue);
+            if (start >= 0) {
+	            end = start + fullValue.length;
+	            document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value = tempStr.substring(0, start) + tempStr.substring(end, tempStr.length);
+	            //document.forms["quickCreateVirtualWithVariants"].elements["variantProductIdsBag"].value += start + ", " + end + "\n";
+            }
+        }
     }
 //-->
 </script>
@@ -72,7 +85,7 @@
       <#assign product = delegator.findByPrimaryKey("Product", Static["org.ofbiz.base.util.UtilMisc"].toMap("productId", productId))>
       <tr>
         <td>
-          <input type="checkbox" name="selectResult${productId_index}" onChange="addProductToBagTextArea('${productId}');"/>
+          <input type="checkbox" name="selectResult${productId_index}" onChange="checkProductToBagTextArea(this, '${productId}');"/>
           <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="buttontext">[${productId}] ${(product.internalName)?if_exists}</a>
         </td>
       </tr>
