@@ -78,6 +78,9 @@
       <relation type="many" rel-entity-name="ProdCatalogCategory">
         <key-map field-name="prodCatalogId"/>
       </relation>
+      <relation type="many" rel-entity-name="WebSiteCatalog">
+        <key-map field-name="prodCatalogId"/>
+      </relation>
     </entity>
     <entity entity-name="ProdCatalogCategory"
             package-name="org.ofbiz.commonapp.product.catalog"
@@ -120,6 +123,7 @@
       <field name="thruDate" type="date-time"></field>
       <field name="sequenceNum" type="numeric"></field>
       <prim-key field="prodCatalogId"/>
+      <prim-key field="productPromoId"/>
       <prim-key field="fromDate"/>
       <relation type="one" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
