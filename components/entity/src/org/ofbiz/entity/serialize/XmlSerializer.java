@@ -1,5 +1,5 @@
 /*
- * $Id: XmlSerializer.java,v 1.3 2004/01/20 15:55:18 ajzeneski Exp $
+ * $Id: XmlSerializer.java,v 1.4 2004/06/17 06:10:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@ package org.ofbiz.entity.serialize;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -50,6 +51,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilObject;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
@@ -63,7 +66,7 @@ import org.xml.sax.SAXException;
  * <p><b>Description:</b> Simple XML serialization/deserialization routines with embedded type information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class XmlSerializer {
@@ -226,8 +229,19 @@ public class XmlSerializer {
     }
 
     public static Element serializeCustom(Object object, Document document) throws SerializeException {
-        // TODO: if nothing else, try looking up a class for the type in the properties file, the class should implement an interface or have a certain static method on it
-        throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
+        if (object instanceof Serializable) {
+            byte[] objBytes = UtilObject.getBytes(object);
+            if (objBytes == null) {
+                throw new SerializeException("Unable to serialize object; null byte array returned");
+            } else {
+                String byteHex = StringUtil.toHexString(objBytes);
+                Element element = document.createElement("cus-obj");
+                element.appendChild(document.createCDATASection(byteHex));
+                return element;
+            }
+        } else {
+            throw new SerializeException("Cannot serialize object of class " + object.getClass().getName());
+        }
     }
 
     public static Element makeElement(String elementName, Object value, Document document) {
@@ -395,7 +409,22 @@ public class XmlSerializer {
     }
 
     public static Object deserializeCustom(Element element) throws SerializeException {
-        throw new SerializeException("Cannot deserialize element named " + element.getTagName());
+        String tagName = element.getTagName();
+        if ("cus-obj".equals(tagName)) {
+            String value = UtilXml.elementValue(element);                        
+            if (value != null) {
+                byte[] valueBytes = StringUtil.fromHexString(value);
+                if (valueBytes != null) {
+                    Object obj = UtilObject.getObject(valueBytes);
+                    if (obj != null) {
+                        return obj;
+                    }
+                }
+            }
+            throw new SerializeException("Problem deserializing object from byte array + " + element.getTagName());
+        } else {
+            throw new SerializeException("Cannot deserialize element named " + element.getTagName());
+        }
     }
 
     /**
