@@ -21,13 +21,14 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.2
  */
 
 import java.util.*;
 import java.io.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.condition.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.content.widget.html.*;
 import org.ofbiz.securityext.login.*;
@@ -49,12 +50,34 @@ productInventoryItems = delegator.findByAnd("InventoryItem",
         UtilMisc.toMap("productId", productId), 
         UtilMisc.toList("facilityId", "-receivedDate", "inventoryItemId"));
 
-// loop through the inventory items and get totals of ATP and QOH
-totalAvailableToPromise = 0;
-totalQuantityOnHand = 0;
+// loop through the inventory items and get totals of ATP and QOH per facility
+quantitySummaryByFacility = new HashMap();
 productInventoryItemIter = productInventoryItems.iterator();
 while (productInventoryItemIter.hasNext()) {
 	productInventoryItem = productInventoryItemIter.next();
+	facilityId = productInventoryItem.getString("facilityId");
+	facility = null;
+	if (UtilValidate.isNotEmpty(facilityId)) {
+		facility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", facilityId));
+	}
+	
+	quantitySummary = quantitySummaryByFacility.get(facilityId);
+	if (quantitySummary == null) {
+		quantitySummary = new HashMap();
+		quantitySummary.put("facilityId", facilityId);
+		quantitySummary.put("facility", facility);
+		quantitySummaryByFacility.put(facilityId, quantitySummary);
+	}
+	
+	totalQuantityOnHand = 0;
+	totalAvailableToPromise = 0;
+	if (quantitySummary.get("totalQuantityOnHand") != null) {
+		totalQuantityOnHand = quantitySummary.get("totalQuantityOnHand").doubleValue();
+	}
+	if (quantitySummary.get("totalAvailableToPromise") != null) {
+		totalAvailableToPromise = quantitySummary.get("totalAvailableToPromise").doubleValue();
+	}
+	
 	if ("SERIALIZED_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
 		if ("INV_AVAILABLE".equals(productInventoryItem.getString("statusId"))) {
 			totalQuantityOnHand += 1;
@@ -69,6 +92,53 @@ while (productInventoryItemIter.hasNext()) {
 			totalQuantityOnHand += productInventoryItem.getDouble("quantityOnHand").doubleValue();
 		}
 	}
+	
+	quantitySummary.put("totalQuantityOnHand", totalQuantityOnHand);
+	quantitySummary.put("totalAvailableToPromise", totalAvailableToPromise);
+}
+
+// TODO: get all incoming shipments not yet arrived coming into each facility that this product is in, use a view entity with ShipmentAndItem
+findIncomingShipmentsConds = new LinkedList();
+
+findIncomingShipmentsConds.add(new EntityExpr("productId", EntityOperator.EQUALS, productId));
+
+findIncomingShipmentsTypeConds = new LinkedList();
+findIncomingShipmentsTypeConds.add(new EntityExpr("shipmentTypeId", EntityOperator.EQUALS, "INCOMING_SHIPMENT"));
+findIncomingShipmentsTypeConds.add(new EntityExpr("shipmentTypeId", EntityOperator.EQUALS, "PURCHASE_SHIPMENT"));
+findIncomingShipmentsTypeConds.add(new EntityExpr("shipmentTypeId", EntityOperator.EQUALS, "SALES_RETURN"));
+findIncomingShipmentsConds.add(new EntityConditionList(findIncomingShipmentsTypeConds, EntityOperator.OR));
+
+findIncomingShipmentsStatusConds = new LinkedList();
+findIncomingShipmentsStatusConds.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_DELIVERED"));
+findIncomingShipmentsStatusConds.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "SHIPMENT_CANCELLED"));
+findIncomingShipmentsConds.add(new EntityConditionList(findIncomingShipmentsStatusConds, EntityOperator.AND));
+
+findIncomingShipmentsStatusCondition = new EntityConditionList(findIncomingShipmentsConds, EntityOperator.AND);
+incomingShipmentAndItems = delegator.findByCondition("ShipmentAndItem", findIncomingShipmentsStatusCondition, null, UtilMisc.toList("-estimatedArrivalDate"));
+incomingShipmentAndItemIter = incomingShipmentAndItems.iterator();
+while (incomingShipmentAndItemIter.hasNext()) {
+	incomingShipmentAndItem = incomingShipmentAndItemIter.next();
+	facilityId = incomingShipmentAndItem.getString("destinationFacilityId");
+	facility = null;
+	if (UtilValidate.isNotEmpty(facilityId)) {
+		facility = delegator.findByPrimaryKeyCache("Facility", UtilMisc.toMap("facilityId", facilityId));
+	}
+
+	quantitySummary = quantitySummaryByFacility.get(facilityId);
+	if (quantitySummary == null) {
+		quantitySummary = new HashMap();
+		quantitySummary.put("facilityId", facilityId);
+		quantitySummary.put("facility", facility);
+		quantitySummaryByFacility.put(facilityId, quantitySummary);
+	}
+	
+	incomingShipmentAndItemList = quantitySummary.get("incomingShipmentAndItemList");
+	if (incomingShipmentAndItemList == null) {
+		incomingShipmentAndItemList = new LinkedList();
+		quantitySummary.put("incomingShipmentAndItemList", incomingShipmentAndItemList);
+	}
+	
+	incomingShipmentAndItemList.add(incomingShipmentAndItem);
 }
 
 showEmpty = "true".equals(request.getParameter("showEmpty"));
@@ -76,7 +146,6 @@ showEmpty = "true".equals(request.getParameter("showEmpty"));
 context.put("productId", productId);
 context.put("product", product);
 context.put("productInventoryItems", productInventoryItems);
-context.put("totalAvailableToPromise", totalAvailableToPromise);
-context.put("totalQuantityOnHand", totalQuantityOnHand);
+context.put("quantitySummaryByFacility", quantitySummaryByFacility);
 context.put("showEmpty", showEmpty);
 

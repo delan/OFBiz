@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -30,11 +30,46 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Inventory Items <span class="head2">for <#if product?exists>${(product.productName)?if_exists} </#if> [ID:${productId?if_exists}]</span></div>
-    
+    <div class="head1">Inventory Summary <span class="head2">for <#if product?exists>${(product.productName)?if_exists} </#if> [ID:${productId?if_exists}]</span></div>
     <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[New Product]</a>
     <#if productId?has_content>
         <a href="/ecommerce/control/product?product_id=${productId}" class="buttontext" target="_blank">[Product Page]</a>
+    </#if>
+    
+    <table border="1" cellpadding="2" cellspacing="0">
+        <tr>
+            <td><div class="tabletext"><b>Facility</b></div></td>
+            <td><div class="tabletext"><b>ATP</b></div></td>
+            <td><div class="tabletext"><b>QOH</b></div></td>
+            <td><div class="tabletext"><b>Incoming Shipments</b></div></td>
+        </tr>
+        <#list quantitySummaryByFacility.values() as quantitySummary>
+        	<#assign facilityId = quantitySummary.facilityId?if_exists>
+        	<#assign facility = quantitySummary.facility?if_exists>
+        	<#assign totalQuantityOnHand = quantitySummary.totalQuantityOnHand?if_exists>
+        	<#assign totalAvailableToPromise = quantitySummary.totalAvailableToPromise?if_exists>
+        	<#assign incomingShipmentAndItemList = quantitySummary.incomingShipmentAndItemList?if_exists>
+	        <tr>
+	            <td><div class="tabletext">${(facility.facilityName)?if_exists} [${facilityId?default("[No Facility]")}]</div></td>
+	            <td><div class="tabletext"><#if totalAvailableToPromise?exists>${totalAvailableToPromise?string.number}<#else>&nbsp;</#if></div></td>
+	            <td><div class="tabletext"><#if totalQuantityOnHand?exists>${totalQuantityOnHand?string.number}<#else>&nbsp;</#if></div></td>
+	            <td>
+	            	<#if incomingShipmentAndItemList?has_content>
+		                <#list incomingShipmentAndItemList as incomingShipmentAndItem>
+		                    <div class="tabletext">${incomingShipmentAndItem.shipmentId}:${incomingShipmentAndItem.shipmentItemSeqId}-${(incomingShipmentAndItem.estimatedArrivalDate.toString())?if_exists}-<#if incomingShipmentAndItem.quantity?exists>${incomingShipmentAndItem.quantity?string.number}<#else>[Quantity Not Set]</#if></div>
+		                </#list>
+		            <#else>
+	                    <div class="tabletext">&nbsp;</div>
+		            </#if>
+	            </td>
+	        </tr>
+        </#list>
+    </table>
+    
+	<hr class="sepbar"/>
+	
+    <div class="head1">Inventory Items <span class="head2">for <#if product?exists>${(product.productName)?if_exists} </#if> [ID:${productId?if_exists}]</span></div>
+    <#if productId?has_content>
         <a href="/facility/control/EditInventoryItem?productId=${productId}${externalKeyParam}" class="buttontext">[Create New Inventory Item for this Product]</a>
         <#if showEmpty>
 		    <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="buttontext">[Hide Empty Items]</a>
