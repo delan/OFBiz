@@ -87,7 +87,7 @@
     </service>
 
     <service name="sendProcessNotification" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="sendNotification">
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="sendProcessNotification">
     	<description>Limit Service for order processing workflow; sends activitiy notifications</description>
     	<attribute name="workEffortId" type="String" mode="IN"/>
     	<attribute name="adminEmailList" type="String" mode="IN"/>

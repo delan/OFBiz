@@ -33,6 +33,7 @@ import org.ofbiz.core.ftl.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.workflow.WfUtil;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.commonapp.product.catalog.*;
@@ -1019,7 +1020,7 @@ public class OrderServices {
     }    
             
     /** Service to email order notifications for pending actions */
-    public static Map sendNotification(DispatchContext ctx, Map context) {
+    public static Map sendProcessNotification(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator(); 
         LocalDispatcher dispatcher = ctx.getDispatcher();            
@@ -1052,25 +1053,25 @@ public class OrderServices {
         }
         if (party != null)  
             assignedToEmails = ContactHelper.getContactMechByPurpose(party, "PRIMARY_EMAIL", false);
-         
-        String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", "localhost");
-        String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+              
+        Map templateData = new HashMap(context);
+        String omgStatusId = WfUtil.getOMGStatus(workEffort.getString("currentStatusId"));
+        templateData.putAll(orderHeader);
+        templateData.putAll(workEffort);        
+        templateData.put("omgStatusId", omgStatusId);
         
-        StringBuffer serverRoot = new StringBuffer();
-        serverRoot.append("http://");
-        serverRoot.append(server);
-        if (!"80".equals(port)) {
-            serverRoot.append(":");
-            serverRoot.append(port);
-        }
-        serverRoot.append("/ordermgr/control/view/wfOrderNotify"); // maybe make this more dynamic
+        // get the assignments       
+        List assignments = null;
+        if (workEffort != null) {            
+            try {
+                assignments = workEffort.getRelated("WorkEffortPartyAssignment");
+            } catch (GenericEntityException e1) {
+                Debug.logError(e1, "Problems getting assignements", module);                
+            }
+        } 
+        templateData.put("assignments", assignments);       
         
-        Map parameters = new HashMap(context);
-        parameters.putAll(orderHeader);
-        parameters.putAll(workEffort);
-        
-        StringBuffer emailList = new StringBuffer();
-        
+        StringBuffer emailList = new StringBuffer();        
         if (assignedToEmails != null) {
             Iterator aei = assignedToEmails.iterator();        
             while (aei.hasNext()) {                            
@@ -1088,16 +1089,19 @@ public class OrderServices {
             emailList.append(adminEmailList);
         }
                             
-        // send the mail
+        // prepare the mail info
+        String ofbizHome = System.getProperty("ofbiz.home");
+        String templateName = ofbizHome + "/commonapp/src/org/ofbiz/commonapp/order/order/emailprocessnotify.ftl";
+        
         Map sendMailContext = new HashMap();
         sendMailContext.put("sendTo", emailList.toString());
         sendMailContext.put("sendFrom", "workflow@ofbiz.org"); // fixme
         sendMailContext.put("subject", "Workflow Notification");
-        sendMailContext.put("bodyUrl", serverRoot.toString());
-        sendMailContext.put("bodyUrlParameters", parameters);
+        sendMailContext.put("templateName", templateName);
+        sendMailContext.put("templateData", templateData);
         
         try {
-            dispatcher.runAsync("sendMailFromUrl", sendMailContext);
+            dispatcher.runAsync("sendGenericNotificationEmail", sendMailContext);
         } catch (GenericServiceException e) {
             ServiceUtil.returnError("SendMail service failed: " + e.getMessage());
         }                    
