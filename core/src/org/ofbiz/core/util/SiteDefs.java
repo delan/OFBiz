@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.12  2001/09/14 19:06:05  epabst
+ * created new session attribute called SiteDefs.SERVER_ROOT_URL that contains something like:
+ * "http://myserver.com:1234"
+ *
  * Revision 1.11  2001/08/25 16:57:14  azeneski
  * *** empty log message ***
  *
@@ -71,7 +75,7 @@ package org.ofbiz.core.util;
 public final class SiteDefs {
     
     /** Default Site Config Variables */
-    public static final String SITE_NAME = "Jaguar E-Business Suite";
+    public static final String SITE_NAME = "Open For Commerce";
     public static final String SITE_CONF = "/WEB-INF/xml/siteconf.properties";
     public static final String ERROR_PAGE = "/error/error.jsp";
     public static final String CHECK_LOGIN_REQUEST_URI = "checkLogin";
