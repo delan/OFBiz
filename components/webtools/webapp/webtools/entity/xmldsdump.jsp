@@ -23,7 +23,8 @@
  * @version 1.0
 --%>
 
-<%@ page import="java.util.*, java.io.*, java.net.*" %>
+<%@ page import="java.util.*, java.io.*, java.net.*,
+                 org.ofbiz.base.util.collections.OrderedSet" %>
 <%@ page import="org.w3c.dom.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.transaction.*, org.ofbiz.entity.condition.*" %>
@@ -35,9 +36,19 @@
 <%
   String outpath = request.getParameter("outpath");
   String filename = request.getParameter("filename");
+  String maxRecStr = request.getParameter("maxrecords");
   String[] entityName = request.getParameterValues("entityName");
 
-  TreeSet passedEntityNames = new TreeSet();
+  // get the max records per file setting and convert to a int
+  int maxRecordsPerFile = 0;
+  if (UtilValidate.isNotEmpty(maxRecStr)) {
+      try {
+          maxRecordsPerFile = Integer.parseInt(maxRecStr);
+      } catch (Exception e) {
+      }
+  }
+
+  Set passedEntityNames = new TreeSet();
   if (entityName != null && entityName.length > 0) {
     for(int inc=0; inc<entityName.length; inc++) {
       passedEntityNames.add(entityName[inc]);
@@ -46,6 +57,7 @@
   
   String preConfiguredSetName = request.getParameter("preConfiguredSetName");
   if ("Product1".equals(preConfiguredSetName)) {
+    passedEntityNames = new OrderedSet();
     passedEntityNames.add("DataResource");
     passedEntityNames.add("Facility");
     passedEntityNames.add("ProdCatalog");
@@ -56,6 +68,7 @@
     passedEntityNames.add("ProductPriceRule");
     passedEntityNames.add("ProductPromo");
   } else if ("Product2".equals(preConfiguredSetName)) {
+    passedEntityNames = new OrderedSet();
     passedEntityNames.add("Content");
     passedEntityNames.add("ElectronicText");
     passedEntityNames.add("FacilityLocation");
@@ -77,6 +90,7 @@
     passedEntityNames.add("ProductPromoProduct");
     passedEntityNames.add("ProductPromoRule");
   } else if ("Product3".equals(preConfiguredSetName)) {
+    passedEntityNames = new OrderedSet();
     passedEntityNames.add("ProdCatalogInvFacility");
     passedEntityNames.add("ProductContent");
     passedEntityNames.add("ProductFacilityLocation");
@@ -89,11 +103,15 @@
     passedEntityNames.add("ProductPromoCodeParty");
     passedEntityNames.add("ProductPromoCond");
   } else if ("Product4".equals(preConfiguredSetName)) {
+    passedEntityNames = new OrderedSet();
     passedEntityNames.add("InventoryItem");
     passedEntityNames.add("ProductFeatureCatGrpAppl");
     passedEntityNames.add("ProductFeatureGroupAppl");
   } else if ("CatalogExport".equals(preConfiguredSetName)) {
+    passedEntityNames = new OrderedSet();
+    passedEntityNames.add("ProdCatalogCategoryType");
     passedEntityNames.add("ProdCatalog");
+    passedEntityNames.add("ProductCategoryType");
     passedEntityNames.add("ProductCategory");
     passedEntityNames.add("ProductCategoryRollup");
     passedEntityNames.add("ProdCatalogCategory");
@@ -104,15 +122,18 @@
     passedEntityNames.add("Content");
     passedEntityNames.add("ElectronicText");
 
+    passedEntityNames.add("ProductType");
     passedEntityNames.add("Product");
     passedEntityNames.add("ProductAttribute");
+    passedEntityNames.add("GoodIdentificationType");
     passedEntityNames.add("GoodIdentification");
+    passedEntityNames.add("ProductPriceType");
     passedEntityNames.add("ProductPrice");
 
     passedEntityNames.add("ProductPriceRule");
     passedEntityNames.add("ProductPriceCond");
     passedEntityNames.add("ProductPriceAction");
-    passedEntityNames.add("ProductPriceChange");
+    //passedEntityNames.add("ProductPriceChange");
 
     passedEntityNames.add("ProductPromo");
     passedEntityNames.add("ProductPromoCode");
@@ -136,7 +157,7 @@
     passedEntityNames.add("ProductFeatureCatGrpAppl");
     passedEntityNames.add("ProductFeatureGroupAppl");
 
-    passedEntityNames.add("ProductKeyword");
+    //passedEntityNames.add("ProductKeyword");
   }
   
   boolean checkAll = "true".equals(request.getParameter("checkAll"));
@@ -175,7 +196,7 @@
         boolean beganTransaction = TransactionUtil.begin(3600);
         try {
             String curEntityName = (String)i.next();
-            EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null, null, efo);
+            EntityListIterator values = delegator.findListIteratorByCondition(curEntityName, null, null, null, UtilMisc.toList("-createdTxStamp"), efo);
 
             GenericValue value = null;
             long curNumberWritten = 0;
@@ -234,11 +255,27 @@
                     PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, fileName +".xml")), "UTF-8")));
                     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
                     writer.println("<entity-engine-xml>");
+                    int fileSplitNumber = 1;
 
                     GenericValue value = null;
                     while ((value = (GenericValue) values.next()) != null) {
                         value.writeXmlText(writer, "");
                         numberWritten++;
+
+                        // split into small files
+                        if ((maxRecordsPerFile > 0) && (numberWritten % maxRecordsPerFile == 0)) {
+                            fileSplitNumber++;
+                            // close the file
+                            writer.println("</entity-engine-xml>");
+                            writer.close();
+
+                            // create a new file
+                            String splitNumStr = UtilFormatOut.formatPaddedNumber((long) fileSplitNumber, 3);
+                            writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outdir, fileName + "_" + splitNumStr +".xml")), "UTF-8")));
+                            writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
+                            writer.println("<entity-engine-xml>");
+                        }
+
                         if (numberWritten % 500 == 0 || numberWritten == 1) {
                            Debug.log("Records written [" + curEntityName + "]: " + numberWritten);
                         }
@@ -294,7 +331,7 @@
     
       <h3>Export:</h3>
       <FORM method=POST action='<ofbiz:url>/xmldsdump</ofbiz:url>'>
-        <div>Output Directory&nbsp;: <INPUT type=text class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'></div>
+        <div>Output Directory&nbsp;: <INPUT type=text class='inputBox' size='60' name='outpath' value='<%=UtilFormatOut.checkNull(outpath)%>'>&nbsp;&nbsp;Max Records Per File&nbsp;: <INPUT type=text class='inputBox' size='10' name='maxrecords'></div>
         <div>Single Filename&nbsp;&nbsp;: <INPUT type=text class='inputBox' size='60' name='filename' value='<%=UtilFormatOut.checkNull(filename)%>'></div>
         <div>OR Out to Browser: <INPUT type=checkbox name='tobrowser' <%=tobrowser?"checked":""%>></div>
         <br>
