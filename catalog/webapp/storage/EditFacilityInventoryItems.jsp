@@ -63,6 +63,7 @@
     <td><div class="tabletext"><b>Status</b></div></td>
     <td><div class="tabletext"><b>Product ID</b></div></td>
     <td><div class="tabletext"><b>Lot&nbsp;ID</b></div></td>
+    <td><div class="tabletext"><b>BinNum</b></div></td>
     <td><div class="tabletext"><b>ATP/QOH or Serial#</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
     <td><div class="tabletext">&nbsp;</div></td>
@@ -78,6 +79,7 @@
     <td><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:entityfield attribute="inventoryItem" field="productId"/></ofbiz:url>' class='buttontext'>
         <ofbiz:entityfield attribute="inventoryItem" field="productId"/></a></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="lotId"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber"/></div></td>
     <%if ("NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
         <td>
         <%-- Don't want to allow this here, manual inventory level adjustments should be logged, etc --%>

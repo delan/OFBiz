@@ -197,6 +197,16 @@
         <td>&nbsp;</td>
         <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="uomId" fullattrs="true"/> size="20" maxlength="20"></td>
       </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Bin Number</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="binNumber" fullattrs="true"/> size="20" maxlength="20"></td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Comments</div></td>
+        <td>&nbsp;</td>
+        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="inventoryItem" field="comments" fullattrs="true"/> size="60" maxlength="250"></td>
+      </tr>
     <%if (inventoryItem != null && "NON_SERIAL_INV_ITEM".equals(inventoryItem.getString("inventoryItemTypeId"))) {%>
       <tr>
         <td width="26%" align=right><div class="tabletext">Available To Promise / Quantity On Hand</div></td>

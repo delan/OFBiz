@@ -442,6 +442,8 @@
         <attribute name="containerId" type="String" mode="IN" optional="true"/>
         <attribute name="lotId" type="String" mode="IN" optional="true"/>
         <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="binNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
         <attribute name="quantityOnHand" type="Double" mode="IN" optional="true"/>
         <attribute name="availableToPromise" type="Double" mode="IN" optional="true"/>
         <attribute name="serialNumber" type="String" mode="IN" optional="true"/>
@@ -459,6 +461,8 @@
         <attribute name="containerId" type="String" mode="IN" optional="true"/>
         <attribute name="lotId" type="String" mode="IN" optional="true"/>
         <attribute name="uomId" type="String" mode="IN" optional="true"/>
+        <attribute name="binNumber" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
         <attribute name="quantityOnHand" type="Double" mode="IN" optional="true"/>
         <attribute name="availableToPromise" type="Double" mode="IN" optional="true"/>
         <attribute name="serialNumber" type="String" mode="IN" optional="true"/>

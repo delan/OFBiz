@@ -648,6 +648,8 @@
       <field name="containerId" type="id"></field>
       <field name="lotId" type="id"></field>
       <field name="uomId" type="id"></field>
+      <field name="binNumber" type="id"></field>
+      <field name="comments" type="comment"></field>
       <field name="quantityOnHand" type="floating-point"></field>
       <field name="availableToPromise" type="floating-point"></field>
       <field name="serialNumber" type="value"></field>
