@@ -42,7 +42,18 @@ $Id$ <br>
 <h3><a name="Introduction">Introduction</a></h3>
 <hr>
 
-<p></p>
+<p>The Open For Business JSP Tag Library consists of a set of custom tags that 
+make it easier to use other components of the OFBiz Core Framework.</p>
+
+<P>While there are some basic conditional, flow control, i18n and other general 
+tags included in the library many of these can be found in other more
+generalized tag library like the Jakarta library. They are mainly included here
+for convenience and have defaults that are more friendly for use in the OFBiz
+framework.</P>
+
+<P>The following table presents a list of the OFBiz tags and some basic
+information about them for reference. The rest of the document explains each tag
+in detail.</P>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -58,17 +69,17 @@ $Id$ <br>
 <tr><td>iterator</td><td>JSP</td><td>IteratorTag</td><td>IteratorTEI</td></tr>
 <tr><td>iteratorNext</td><td>JSP</td><td>IterateNextTag</td><td>IterateNextTEI</td></tr>
 <tr><td>iteratorHasNext</td><td>JSP</td><td>IteratorHasNextTag</td><td>&nbsp;</td></tr>
-<tr><td>format</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>print</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>field</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>entityfield</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>inputvalue</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>i18nBundle</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>i18nMessage</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>i18nMessageArgument</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>format</td><td>JSP</td><td>FormatTag</td><td>&nbsp;</td></tr>
+<tr><td>print</td><td>empty</td><td>PrintTag</td><td>&nbsp;</td></tr>
+<tr><td>field</td><td>empty</td><td>EntityFieldTag</td><td>&nbsp;</td></tr>
+<tr><td>entityfield</td><td>empty</td><td>EntityFieldTag</td><td>&nbsp;</td></tr>
+<tr><td>inputvalue</td><td>empty</td><td>InputValueTag</td><td>&nbsp;</td></tr>
+<tr><td>i18nBundle</td><td>JSP</td><td>I18nBundleTag</td><td>&nbsp;</td></tr>
+<tr><td>i18nMessage</td><td>JSP</td><td>I18nMessageTag</td><td>&nbsp;</td></tr>
+<tr><td>i18nMessageArgument</td><td>empty</td><td>I18nMessageArgumentTag</td><td>&nbsp;</td></tr>
 <tr><td>service</td><td>bdy</td><td>tag</td><td>tei</td></tr>
 <tr><td>param</td><td>bdy</td><td>tag</td><td>tei</td></tr>
-<tr><td>object</td><td>bdy</td><td>tag</td><td>tei</td></tr>
+<tr><td>object</td><td>JSP</td><td>ObjectTag</td><td>ObjectTEI</td></tr>
 </table>
 
 <hr>
@@ -274,13 +285,183 @@ scriptlets.</P>
 
 <P><B><U>ofbiz:format</U></B></P>
 
+<P>Formats dates, numbers and currencies from the value in the body of the
+tag. It has one attribute that specifies how the text should be formatted.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>type</td><td>N</td><td>N</td>
+    <td>Specified how the type of format to apply to the body value. Must be
+    "currency", "number", or "date". If not type is specified the original value
+    is printed.</td>
+</tr>
+</table>
+
 <P><B><U>ofbiz:print</U></B></P>
+
+<P>Prints an attribute from the pageContext. If null prints the default value
+or nothing if no default is specified.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>attribute</td><td>Y</td><td>Y</td>
+    <td>The name of the attribute to print.</td>
+</tr>
+<tr>
+    <td>default</td><td>N</td><td>Y</td>
+    <td>The default value to print if the specified attribute is not found.</td>
+</tr>
+</table>
 
 <P><B><U>ofbiz:field</U></B></P>
 
+<P>Displays a properly formatted string from field in the specified
+attribute.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>attribute</td><td>Y</td><td>N</td>
+    <td>The name of the attribute that contains the field to print.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td><td>N</td>
+    <td>Optionally specifies the type of the field to print. Can be "currency"
+    or any of the Java field types. If not specified the tag will automatically
+    determine the Java type.</td>
+</tr>
+<tr>
+    <td>default</td><td>N</td><td>Y</td>
+    <td>The default value to print if the specified field is not found.</td>
+</tr>
+<tr>
+    <td>prefix</td><td>N</td><td>N</td>
+    <td>If the resulting message is not empty this string will be printed before
+    the field value.</td>
+</tr>
+<tr>
+    <td>suffix</td><td>N</td><td>N</td>
+    <td>If the resulting message is not empty this string will be printed after
+    the field value.</td>
+</tr>
+</table>
+
 <P><B><U>ofbiz:entityfield</U></B></P>
 
+<P>Displays a properly formatted localized string from a field in the entity in 
+the specified attribute. The prefix and suffix attribute contents will print 
+before/after if the field is not null or empty.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>attribute</td><td>Y</td><td>N</td>
+    <td>The name of the attribute that contains the entity that contains the 
+    field to print.</td>
+</tr>
+<tr>
+    <td>field</td><td>Y</td><td>N</td>
+    <td>The name of the field to print in the named entity.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td><td>N</td>
+    <td>Optionally specifies the type of the field to print. Can be "currency"
+    or any of the Java field types. If not specified the tag will automatically
+    determine the Java type AND get additional type information from the Entity
+    Engine field definition for this field. With that information currency will
+    automatically be formatted as currency.</td>
+</tr>
+<tr>
+    <td>default</td><td>N</td><td>Y</td>
+    <td>The default value to print if the specified field is not found.</td>
+</tr>
+<tr>
+    <td>prefix</td><td>N</td><td>N</td>
+    <td>If the resulting message is not empty this string will be printed before
+    the field value.</td>
+</tr>
+<tr>
+    <td>suffix</td><td>N</td><td>N</td>
+    <td>If the resulting message is not empty this string will be printed after
+    the field value.</td>
+</tr>
+</table>
+
 <P><B><U>ofbiz:inputvalue</U></B></P>
+
+<P>Outputs a string for an input box from either an entity field or a request 
+parameter. Decides which to use by checking to see if the entityAttr exists and 
+using the specified field if it does.</P>
+
+<P>If the Boolean object referred to by the tryEntityAttr attribute is false, 
+always tries to use the request parameter and ignores the entity field.</P>
+
+<P>Formatting is done with a very simple toString.</P>
+
+<P>The Object found by looking up the context attribute with the name specified
+by entityAttr can be either a GenericValue object, or any implementation of the
+Map interface.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>field</td><td>Y</td><td>N</td>
+    <td>The name of the field to print in the named entity.</td>
+</tr>
+<tr>
+    <td>param</td><td>N</td><td>N</td>
+    <td>The name of the URL parameter that corresponds to this value. If null or 
+    empty param will be the same as field.</td>
+</tr>
+<tr>
+    <td>entityAttr</td><td>Y</td><td>N</td>
+    <td>The name of the attribute that contains the entity that contains the 
+    field to print.</td>
+</tr>
+<tr>
+    <td>tryEntityAttr</td><td>Y</td><td>N</td>
+    <td>The name of an context attribute that contains a Boolean which specifies
+    whether or not to even try using the named entity. If false the request
+    parameter value will be used, if true the entity field value will be used.</td>
+</tr>
+<tr>
+    <td>default</td><td>N</td><td>Y</td>
+    <td>The default value to print if the specified entity field or parameter is 
+    not found.</td>
+</tr>
+<tr>
+    <td>fullattrs</td><td>N</td><td>N</td>
+    <td>If fullattrs is set to true then [name="{param}" value="{value}"] will be 
+    output instead of just [value]. By default fullattrs is false.</td>
+</tr>
+</table>
 
 <hr>
 <h3><a name="Internationalization">Internationalization Tags</a></h3>
@@ -288,9 +469,73 @@ scriptlets.</P>
 
 <P><B><U>ofbiz:i18nBundle</U></B></P>
 
+<P>Used to specify and load an internationalized message bundle. The bundle will
+be referred to by the id attribute value if specified. By default all messages
+will be retreived from the bundle specified by their parent i18nBundle tag, in
+other words the i18nMessage tags will be nested inside the bundle tag.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>id</td><td>N</td><td>Y</td>
+    <td>An ID that can be used later in the bundleId attribute of the 
+    i18nMessage tag to refer to this bundle.</td>
+</tr>
+<tr>
+    <td>baseName</td><td>Y</td><td>Y</td>
+    <td>The resource base name of the message bundle. Generally the name of a
+    .properties file, but specified without the .properties extension.</td>
+</tr>
+</table>
+
 <P><B><U>ofbiz:i18nMessage</U></B></P>
 
+<P>Prints an internationalized message from the parent or specified bundle
+identified by the given key. Accepts message arguments using nested
+i18nMessageArgument tags.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>key</td><td>Y</td><td>Y</td>
+    <td>The key or ID of the message within the bundle.</td>
+</tr>
+<tr>
+    <td>bundleId</td><td>N</td><td>Y</td>
+    <td>The ID of the bundle to get the message from. If not specified looks for
+    the parent i18nBundle tag and uses that bundle.</td>
+</tr>
+</table>
+
 <P><B><U>ofbiz:i18nMessageArgument</U></B></P>
+
+<P>Specifies an agrument for the parent i18nMessage tag. The arguments will be
+numbered in the order they are specified.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value</td><td>Y</td><td>Y</td>
+    <td>The value of the argument to insert into the message. Can use the
+    <code>&lt;%=...%&gt;</code> syntax to use Java method context variables.</td>
+</tr>
+</table>
+
 
 <hr>
 <h3><a name="Service">Service Tags</a></h3>
@@ -305,6 +550,33 @@ scriptlets.</P>
 <hr>
 
 <P><B><U>ofbiz:object</U></B></P>
+
+<P>Makes an Object in a context attribute (page, request, session or
+application) available in the Java method context of the JSP so it can be used
+in Java scriptlets, etc.</P>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>ExprVal?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>name</td><td>Y</td><td>N</td>
+    <td>The name of the Java method context variable to create.</td>
+</tr>
+<tr>
+    <td>property</td><td>N</td><td>N</td>
+    <td>The name of the context attribute to attach the value to. If not
+    specified will be the same as name.</td>
+</tr>
+<tr>
+    <td>type</td><td>N</td><td>N</td>
+    <td>The Java type of the object. If not specified defaults to
+    org.ofbiz.core.entity.GenericValue.</td>
+</tr>
+</table>
 
 </body>
 </html>
