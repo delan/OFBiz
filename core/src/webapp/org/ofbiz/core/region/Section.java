@@ -81,7 +81,7 @@ public class Section extends Content {
     }
     
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
-        Debug.logVerbose("Rendering " + this.toString());
+        Debug.logInfo("Rendering " + this.toString());
         
         //long viewStartTime = System.currentTimeMillis();
         if (content != null) {
@@ -128,6 +128,6 @@ public class Section extends Content {
     }
     
     public String toString() {
-        return "Section: " + name + ", content=" + content + ", type=" + type;
+        return "Section: " + name + ", info=" + info + ", content=" + content + ", type=" + type;
     }
 }

@@ -298,21 +298,26 @@ public class SqlJdbcUtil {
         String fieldType = mft.getJavaType();
         
         try {
-            //checking to see if the object is null is really only necessary for 
-            //  the numbers, but to keep the code simple we'll just do it here for all...
-            if (rs.getObject(ind) == null) {
-                entity.set(curField.getName(), null);
+            //checking to see if the object is null is really only necessary for the numbers
+            int typeValue = getType(fieldType);
+            if (typeValue <= 4) {
+                switch (typeValue) {
+                    case 1: entity.dangerousSetNoCheckButFast(curField.getName(), rs.getString(ind)); break;
+                    case 2: entity.dangerousSetNoCheckButFast(curField.getName(), rs.getTimestamp(ind)); break;
+                    case 3: entity.dangerousSetNoCheckButFast(curField.getName(), rs.getTime(ind)); break;
+                    case 4: entity.dangerousSetNoCheckButFast(curField.getName(), rs.getDate(ind)); break;
+                }
             } else {
-                switch (getType(fieldType)) {
-                    case 1: entity.set(curField.getName(), rs.getString(ind)); break;
-                    case 2: entity.set(curField.getName(), rs.getTimestamp(ind)); break;
-                    case 3: entity.set(curField.getName(), rs.getTime(ind)); break;
-                    case 4: entity.set(curField.getName(), rs.getDate(ind)); break;
-                    case 5: entity.set(curField.getName(), new Integer(rs.getInt(ind))); break;
-                    case 6: entity.set(curField.getName(), new Long(rs.getLong(ind))); break;
-                    case 7: entity.set(curField.getName(), new Float(rs.getFloat(ind))); break;
-                    case 8: entity.set(curField.getName(), new Double(rs.getDouble(ind))); break;
-                    case 9: entity.set(curField.getName(), new Boolean(rs.getBoolean(ind))); break;
+                if (rs.getObject(ind) == null) {
+                    entity.dangerousSetNoCheckButFast(curField.getName(), null);
+                } else {
+                    switch (typeValue) {
+                        case 5: entity.dangerousSetNoCheckButFast(curField.getName(), new Integer(rs.getInt(ind))); break;
+                        case 6: entity.dangerousSetNoCheckButFast(curField.getName(), new Long(rs.getLong(ind))); break;
+                        case 7: entity.dangerousSetNoCheckButFast(curField.getName(), new Float(rs.getFloat(ind))); break;
+                        case 8: entity.dangerousSetNoCheckButFast(curField.getName(), new Double(rs.getDouble(ind))); break;
+                        case 9: entity.dangerousSetNoCheckButFast(curField.getName(), new Boolean(rs.getBoolean(ind))); break;
+                    }
                 }
             }
         } catch (SQLException sqle) {
@@ -321,7 +326,7 @@ public class SqlJdbcUtil {
     }
     
     public static void setValue(SQLProcessor sqlP, ModelField modelField, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
-        Object fieldValue = entity.get(modelField.getName());
+        Object fieldValue = entity.dangerousGetNoCheckButFast(modelField.getName());
         setValue(sqlP, modelField, entity.getEntityName(), fieldValue, modelFieldTypeReader);
     }
     
@@ -350,7 +355,8 @@ public class SqlJdbcUtil {
         }
         
         try {
-            switch (getType(fieldType)) {
+            int typeValue = getType(fieldType);
+            switch (typeValue) {
                 case 1: sqlP.setValue((String) fieldValue); break;
                 case 2: sqlP.setValue((java.sql.Timestamp) fieldValue); break;
                 case 3: sqlP.setValue((java.sql.Time) fieldValue); break;

@@ -84,10 +84,10 @@ public class Region extends Content {
     }
 
     public void render(PageContext pageContext) throws JspException {
-        Debug.logVerbose("Rendering " + this.toString());
+        Debug.logInfo("Rendering " + this.toString());
 
         try {
-            pageContext.include(content);
+            this.render((HttpServletRequest) pageContext.getRequest(), (HttpServletResponse) pageContext.getResponse());
         } catch (java.io.IOException e) {
             Debug.logError(e, "Error rendering region: ");
             throw new JspException(e);
@@ -99,7 +99,7 @@ public class Region extends Content {
     }
 
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
-        Debug.logVerbose("Rendering " + this.toString());
+        Debug.logInfo("Rendering " + this.toString());
 
         RequestDispatcher rd = request.getRequestDispatcher(content);
         if (rd == null) {
@@ -109,7 +109,8 @@ public class Region extends Content {
     }
 
     public String toString() {
-        String s = "Region: " + content.toString() + "<br/>";
+        String s = "Region: " + content + ", type=" + type;
+        /*
         int indent = 4;
         Iterator iter = sections.values().iterator();
 
@@ -120,6 +121,7 @@ public class Region extends Content {
             }
             s += section.toString() + "<br/>";
         }
+         */
         return s;
     }
 }

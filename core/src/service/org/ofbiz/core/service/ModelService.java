@@ -27,7 +27,6 @@
 package org.ofbiz.core.service;
 
 import java.util.*;
-
 import org.ofbiz.core.util.*;
 
 /**
@@ -135,7 +134,7 @@ public class ModelService {
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
 
-        Debug.logVerbose("[ModelService.validate] : Validating context - " + test, module);
+        if (Debug.verboseOn()) Debug.logVerbose("[ModelService.validate] : Validating context - " + test, module);
 
         // do not validate results with errors
         if (mode.equals(OUT_PARAM) && test != null && test.containsKey(RESPONSE_MESSAGE) &&
@@ -161,8 +160,7 @@ public class ModelService {
         // get the test values
         Map requiredTest = new HashMap();
         Map optionalTest = new HashMap();
-        if (test == null)
-            test = new HashMap();
+        if (test == null) test = new HashMap();
 
         requiredTest.putAll(test);
         if (requiredTest != null) {
@@ -178,10 +176,12 @@ public class ModelService {
             }
         }
 
-        Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
-                         requiredTest.size() + " / " + requiredInfo.size(), module);
-        Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
-                         optionalTest.size() + " / " + optionalInfo.size(), module);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("[ModelService.validate] : (" + mode + ") Required - " +
+                    requiredTest.size() + " / " + requiredInfo.size(), module);
+            Debug.logVerbose("[ModelService.validate] : (" + mode + ") Optional - " +
+                    optionalTest.size() + " / " + optionalInfo.size(), module);
+        }
 
         try {
             validate(requiredInfo, requiredTest, true);
@@ -200,16 +200,16 @@ public class ModelService {
      * @returns true if validation is successful
      */
     public static void validate(Map info, Map test, boolean reverse) throws ServiceValidationException {
-        if (info == null || test == null)
+        if (info == null || test == null) {
             throw new ServiceValidationException("Cannot validate NULL maps");
+        }
 
         // * Validate keys first
         Set testSet = test.keySet();
         Set keySet = info.keySet();
 
         // Quick check for sizes
-        if (info.size() == 0 && test.size() == 0)
-            return;
+        if (info.size() == 0 && test.size() == 0) return;
         // This is to see if the test set contains all from the info set (reverse)
         if (reverse && !testSet.containsAll(keySet)) {
             Set missing = new TreeSet(keySet);

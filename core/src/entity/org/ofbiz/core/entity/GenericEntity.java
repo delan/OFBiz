@@ -221,6 +221,13 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             return fields.get(name);
         }
     }
+    
+    public void dangerousSetNoCheckButFast(String name, Object value) {
+        this.fields.put(name, value);
+    }
+    public Object dangerousGetNoCheckButFast(String name) {
+        return this.fields.get(name);
+    }
 
     /** Sets the named field to the passed value, converting the value from a String to the corrent type using <code>Type.valueOf()</code>
      * @param name The field name to set
@@ -441,7 +448,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         //this could be implement with Map.putAll, but we'll leave it like this for the extra features it has
         while (entries.hasNext()) {
             anEntry = (Map.Entry) entries.next();
-            this.set((String) anEntry.getKey(), anEntry.getValue());
+            this.set((String) anEntry.getKey(), anEntry.getValue(), true);
         }
     }
 
@@ -534,6 +541,15 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
      */
     public boolean equals(Object obj) {
         if (obj == null) return false;
+        
+        //from here, use the compareTo method since it is more efficient:
+        if (this.compareTo(obj) == 0) {
+            return true;
+        } else {
+            return false;
+        }
+        
+        /*
         if (this.getClass().equals(obj.getClass())) {
             GenericEntity that = (GenericEntity) obj;
             if (this.getEntityName() != null && !this.getEntityName().equals(that.getEntityName())) {
@@ -547,6 +563,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
             }
         }
         return false;
+         */
     }
 
     /** Creates a hashCode for the entity, using the default String hashCode and Map hashCode, overrides the default hashCode
@@ -564,17 +581,17 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         StringBuffer theString = new StringBuffer();
         theString.append("[GenericEntity:");
         theString.append(getEntityName());
-        theString.append("]");
+        theString.append(']');
 
         Iterator entries = fields.entrySet().iterator();
         Map.Entry anEntry = null;
         while (entries.hasNext()) {
             anEntry = (Map.Entry) entries.next();
-            theString.append("[");
+            theString.append('[');
             theString.append(anEntry.getKey());
-            theString.append(",");
+            theString.append(',');
             theString.append(anEntry.getValue());
-            theString.append("]");
+            theString.append(']');
         }
         return theString.toString();
     }
@@ -591,23 +608,14 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         // it fails, this will be faster for the expected case (that it IS a GenericEntity)
         //if not a GenericEntity throw ClassCastException, as the spec says
         GenericEntity that = (GenericEntity) obj;
-        return this.compareTo(that);
-    }
-
-    /** Compares this GenericEntity to the passed GenericEntity
-     *@param that GenericEntity to compare this to
-     *@return int representing the result of the comparison (-1,0, or 1)
-     */
-    public int compareTo(GenericEntity that) {
-        //if null, it will push to the beginning
-        if (that == null) return -1;
 
         int tempResult = this.entityName.compareTo(that.entityName);
         //if they did not match, we know the order, otherwise compare the primary keys
         if (tempResult != 0) return tempResult;
 
         //both have same entityName, should be the same so let's compare PKs
-        for (int i = 0; i < modelEntity.getPksSize(); i++) {
+        int pksSize = modelEntity.getPksSize();
+        for (int i = 0; i < pksSize; i++) {
             ModelField curField = modelEntity.getPk(i);
             Comparable thisVal = (Comparable) this.get(curField.getName());
             Comparable thatVal = (Comparable) that.get(curField.getName());
@@ -628,7 +636,8 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
         }
 
         //okay, if we got here it means the primaryKeys are exactly the SAME, so compare the rest of the fields
-        for (int i = 0; i < modelEntity.getNopksSize(); i++) {
+        int nopksSize = modelEntity.getNopksSize();
+        for (int i = 0; i < nopksSize; i++) {
             ModelField curField = modelEntity.getNopk(i);
             Comparable thisVal = (Comparable) this.get(curField.getName());
             Comparable thatVal = (Comparable) that.get(curField.getName());

@@ -85,6 +85,7 @@ public class ModelEntity implements Comparable {
 
     /** A List of the Field objects for the Entity */
     protected List fields = new ArrayList();
+    protected Map fieldsMap = null;
 
     /** A List of the Field objects for the Entity, one for each Primary Key */
     protected List pks = new ArrayList();
@@ -392,22 +393,26 @@ public class ModelEntity implements Comparable {
 
     public ModelField getField(String fieldName) {
         if (fieldName == null) return null;
-        for (int i = 0; i < fields.size(); i++) {
-            ModelField field = (ModelField) fields.get(i);
-
-            if (field.name.equals(fieldName)) return field;
+        if (fieldsMap == null) {
+            fieldsMap = new HashMap(fields.size());
+            
+            for (int i = 0; i < fields.size(); i++) {
+                ModelField field = (ModelField) fields.get(i);
+                fieldsMap.put(field.name, field);
+            }
         }
-        return null;
+        return (ModelField) fieldsMap.get(fieldName);
     }
 
     public void addField(ModelField field) {
         if (field == null) return;
         this.fields.add(field);
 
-        if (field.isPk)
+        if (field.isPk) {
             pks.add(field);
-        else
+        } else {
             nopks.add(field);
+        }
     }
 
     public ModelField removeField(int index) {
@@ -416,10 +421,11 @@ public class ModelEntity implements Comparable {
         field = (ModelField) fields.remove(index);
         if (field == null) return null;
 
-        if (field.isPk)
+        if (field.isPk) {
             pks.remove(field);
-        else
+        } else {
             nopks.remove(field);
+        }
         return field;
     }
 
@@ -431,10 +437,11 @@ public class ModelEntity implements Comparable {
             field = (ModelField) fields.get(i);
             if (field.name.equals(fieldName)) {
                 fields.remove(i);
-                if (field.isPk)
+                if (field.isPk) {
                     pks.remove(field);
-                else
+                } else {
                     nopks.remove(field);
+                }
             }
             field = null;
         }

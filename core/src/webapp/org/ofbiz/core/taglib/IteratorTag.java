@@ -217,12 +217,12 @@ public class IteratorTag extends BodyTagSupport {
         pageContext.removeAttribute(name);
         if (this.iterator.hasNext()) {
             element = this.iterator.next();
-            Debug.logVerbose("iterator has another object: " + element, module);
+            if (Debug.verboseOn()) Debug.logVerbose("iterator has another object: " + element, module);
         } else {
-            Debug.logVerbose("iterator has no more objects", module);
+            if (Debug.verboseOn()) Debug.logVerbose("iterator has no more objects", module);
         }
         if (element != null) {
-            Debug.logVerbose("set attribute " + name + " to be " + element + " as next value from iterator", module);
+            if (Debug.verboseOn()) Debug.logVerbose("set attribute " + name + " to be " + element + " as next value from iterator", module);
             pageContext.setAttribute(name, element);
 
             //expand a map element here if requested
@@ -239,7 +239,7 @@ public class IteratorTag extends BodyTagSupport {
 
             return true;
         }
-        Debug.logVerbose("no more iterations; element = " + element, module);
+        if (Debug.verboseOn()) Debug.logVerbose("no more iterations; element = " + element, module);
         return false;
     }
 }

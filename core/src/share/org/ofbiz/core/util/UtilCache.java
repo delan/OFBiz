@@ -410,8 +410,9 @@ public class UtilCache {
 
     protected boolean hasExpired(UtilCache.CacheLine line) {
         if (line == null) return false;
-        //check this BEFORE checking too see if expireTime <= 0, ie if time expiration is enabled
-        if (line.getValue() == null) return true;
+        //check this BEFORE checking to see if expireTime <= 0, ie if time expiration is enabled
+        // check to see if we are using softReference first, slight performance increase
+        if (this.useSoftReference && line.getValue() == null) return true;
         if (expireTime <= 0) return false;
         
         if (line.loadTime <= 0) return true;
