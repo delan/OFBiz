@@ -1,7 +1,7 @@
 /*
- * $Id: ModelService.java,v 1.11 2004/07/01 07:57:57 jonesde Exp $
+ * $Id: ModelService.java,v 1.12 2004/07/10 04:55:48 jonesde Exp $
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -49,7 +49,7 @@ import org.ofbiz.service.group.ServiceGroupReader;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 public class ModelService {
@@ -492,7 +492,7 @@ public class ModelService {
      * @param mode The mode which to build the new map
      */
     public Map makeValid(Map source, String mode) {
-        return makeValid(source, mode, true);
+        return makeValid(source, mode, true, null);
     }
     
     /**
@@ -502,7 +502,7 @@ public class ModelService {
      * @param mode The mode which to build the new map
      * @param includeInternal When false will exclude internal fields
      */    
-    public Map makeValid(Map source, String mode, boolean includeInternal) {        
+    public Map makeValid(Map source, String mode, boolean includeInternal, List errorMessages) {        
         Map target = new HashMap();
 
         if (source == null) {
@@ -544,8 +544,11 @@ public class ModelService {
                             try {
                                 value = ObjectType.simpleTypeConvert(value, param.type, null, null);
                             } catch (GeneralException e) {
-                                Debug.logWarning("[ModelService.makeValid] : Simple type conversion of param " +
-                                    key + " failed: " + e.toString(), module);
+                                String errMsg = "Type conversion of field [" + key + "] to type [" + param.type + "] failed for value \"" + value + "\": " + e.toString();
+                                Debug.logWarning("[ModelService.makeValid] : " + errMsg, module);
+                                if (errorMessages != null) {
+                                    errorMessages.add(errMsg);
+                                }
                             }
                             target.put(key, value);
                         }

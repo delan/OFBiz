@@ -1,5 +1,5 @@
 /*
- * $Id: DispatchContext.java,v 1.2 2003/08/17 08:42:35 jonesde Exp $
+ * $Id: DispatchContext.java,v 1.3 2004/07/10 04:55:48 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class DispatchContext implements Serializable {
@@ -173,10 +173,10 @@ public class DispatchContext implements Serializable {
         } else {
             switch (modeInt) {
                 case 2:
-                    newContext = model.makeValid(context, ModelService.OUT_PARAM, true);
+                    newContext = model.makeValid(context, ModelService.OUT_PARAM, true, null);
                     break;
                 case 1:
-                    newContext = model.makeValid(context, ModelService.IN_PARAM, true);
+                    newContext = model.makeValid(context, ModelService.IN_PARAM, true, null);
                     break;
                 default:
                     throw new GenericServiceException("Invalid mode, should be either IN or OUT");

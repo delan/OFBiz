@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaAction.java,v 1.2 2003/11/13 21:13:45 ajzeneski Exp $
+ * $Id: ServiceEcaAction.java,v 1.3 2004/07/10 04:55:48 jonesde Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import javax.transaction.xa.XAException;
  * ServiceEcaAction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ServiceEcaAction {
@@ -97,13 +97,13 @@ public class ServiceEcaAction {
             if (resultMap == null) {
                 resultMap = new HashMap();
             }
-            resultMap.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM, false));
+            resultMap.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM, false, null));
             context.put(resultMapName, resultMap);
         }
         
         // use the result to update the context fields.
         if (resultToContext) {            
-            context.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM, false));
+            context.putAll(dctx.getModelService(this.serviceName).makeValid(actionResult, ModelService.OUT_PARAM, false, null));
         }
 
         // if we aren't ignoring errors check it here...
