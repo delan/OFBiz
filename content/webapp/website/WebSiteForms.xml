@@ -47,6 +47,7 @@
 		        <entity-options entity-name="ProductStore" description="${storeName}">
 		        	<entity-order-by field-name="storeName"/>
 		        </entity-options>
+				<sub-hyperlink use-when="&quot;${webSite.productStoreId}&quot;.length()>0" link-style="buttontext" target-type="inter-app" target="/catalog/control/EditProductStore?productStoreId=${webSite.productStoreId}" description="Edit Product Store"/>
 		    </drop-down>
 		</field>
 

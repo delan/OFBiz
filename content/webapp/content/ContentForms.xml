@@ -65,24 +65,17 @@
     <form name="listFindContent" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="FindContent" title="" type="list">
+        list-name="entityList" target="" paginate-target="FindContent" title="" type="list">
         <auto-fields-entity entity-name="Content" default-field-type="display"/>
         <field name="contentId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
         </field>
-<!--
-        <field name="createdDate"><ignored/></field>
-        <field name="createdByUserLogin"><ignored/></field>
-        <field name="lastModifiedDate"><ignored/></field>
-        <field name="lastModifiedByUserLogin"><ignored/></field>
--->
     </form>
     <form 
         name="EditContent" 
         target="UpdateContent" title="" type="single"
-        default-title-style="tableheadtext"
-        default-tooltip-style="tabletext" default-widget-style="inputBox"
-        >
+        default-title-style="tableheadtext" default-map-name="content"
+        default-tooltip-style="tabletext" default-widget-style="inputBox">
         <auto-fields-entity entity-name="Content" />
         <field name="contentId">
             <display/>
@@ -93,20 +86,13 @@
                     entity-name="ContentType" key-field-name="contentTypeId"/>
             </drop-down>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
+        <field name="dataResourceId">
+            <lookup target-form-name="LookupDataResource">
+				<sub-hyperlink use-when="&quot;${content.dataResourceId}&quot;.length()>0" link-style="buttontext" target-type="intra-app" target="gotoDataResource?dataResourceId=${content.dataResourceId}" description="Go to Data Resource"/>
+            </lookup>
         </field>
-        <field name="dataResourceId" title="" >
-                <lookup target-form-name="LookupDataResource" />
-        </field>
-        <field name="ownerContentId" title="" >
-                <lookup target-form-name="LookupContent" />
-        </field>
-        <field name="dataResourceGoTo" title="" 
-                use-when="valueObject!=null &amp;&amp; valueObject.get(&quot;dataResourceId&quot;)!=null"
-        >
-            <hyperlink also-hidden="false" description="Jump to Data Resource"
-                target="gotoDataResource?dataResourceId=${valueObject.dataResourceId}"/>
+        <field name="ownerContentId">
+            <lookup target-form-name="LookupContent" />
         </field>
         <field name="mimeTypeId">
             <drop-down allow-empty="true">
@@ -126,8 +112,8 @@
                 <option key="N" description="No" />
             </drop-down>
         </field>
-        <field name="createLink" title="&amp;nbsp;" widget-style="buttontext">
-            <hyperlink also-hidden="false" description="Create New" target="AddContent"/>
+        <field name="submitButton" title="Update" widget-style="standardSubmit">
+            <submit button-type="button"/>
         </field>
     </form>
     <form 
@@ -188,11 +174,10 @@
         name="listLookupContent"  
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/LookupContent" 
+        list-name="entityList" target="" paginate-target="LookupContent" 
         title="" type="list">
         <auto-fields-entity entity-name="Content" default-field-type="display"/>
         <field name="contentId" title="&amp;nbsp;" widget-style="buttontext">
-                
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
         </field>
 <!--
@@ -208,7 +193,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="lruList" 
-        title="" type="list">
+        target="" title="" type="list">
         <field name="contentId" title="&amp;nbsp;" widget-style="buttontext">
                 
             <hyperlink also-hidden="false" target-type="plain" description="${contentId}" target="javascript:set_value('${contentId}')"/>
@@ -290,7 +275,7 @@
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="toList" 
         target="EditContentAssoc" title="Assoc To this Content" type="list">
-        <auto-fields-entity entity-name="ContentAssoc" field-type="display"/>
+        <auto-fields-entity entity-name="ContentAssoc" default-field-type="display"/>
         <field name="contentId" title="Content Id To" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="gotoContent?contentId=${contentId}"/>
         </field>
@@ -489,7 +474,7 @@
         name="listLookupPerson" 
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
-        list-name="entityList" paginate-target="/LookupPerson" 
+        list-name="entityList" target="" paginate-target="LookupPerson" 
         title="" type="list">
         <auto-fields-entity entity-name="Person" default-field-type="display"/>
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
@@ -502,7 +487,7 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="lruList" 
-        title="" type="list">
+        target="" title="" type="list">
         <field name="partyId" title="&amp;nbsp;" widget-style="buttontext">
                 
             <hyperlink also-hidden="false" target-type="plain" description="${partyId}" target="javascript:set_value('${partyId}')"/>
