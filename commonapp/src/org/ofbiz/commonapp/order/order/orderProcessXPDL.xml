@@ -14,7 +14,7 @@
 
     <RedefinableHeader PublicationStatus="UNDER_REVISION">
         <Author>Andy Zeneski</Author>
-        <Version>1.3</Version>
+        <Version>1.4</Version>
         <Responsibles>
             <Responsible>admin</Responsible>
         </Responsibles>
@@ -50,7 +50,7 @@
     <WorkflowProcesses>
         <WorkflowProcess Id="ProcessOrder" Name="Processes incoming orders">
 
-            <ProcessHeader DurationUnit="s">
+            <ProcessHeader DurationUnit="m">
                 <Created>2002-12-01 12:00:00</Created>
                 <Description>Order Processing Workflow</Description>
                 <Priority>5</Priority>
@@ -66,7 +66,7 @@
             
 			<RedefinableHeader PublicationStatus="UNDER_REVISION">
         		<Author>OFBiz</Author>
-	        	<Version>1.3</Version>
+	        	<Version>1.4</Version>
         		<Responsibles>
 		          <Responsible>admin</Responsible>
         		</Responsibles>
@@ -161,16 +161,7 @@
                     <Description>A clerk accepts and approves/declines the order</Description>
                     <Limit>12</Limit>
                     <Implementation>
-                        <Tool Id="addOrderRole" Type="PROCEDURE">
-                            <ActualParameters>                            	
-                                <ActualParameter>orderId</ActualParameter>
-                                <ActualParameter>name:partyId=assignedPartyId</ActualParameter>
-                                <ActualParameter>roleTypeId</ActualParameter>
-                            </ActualParameters>
-                            <ExtendedAttributes>
-                                <ExtendedAttribute Name="roleTypeId" Value="ORDER_CLERK"/>
-                            </ExtendedAttributes>
-                        </Tool>
+                     	<No/>
                     </Implementation>
                     <Performer>clerk</Performer>
                     <StartMode>
@@ -189,8 +180,7 @@
                     <ExtendedAttributes>
                         <ExtendedAttribute Name="canStart" Value="N"/>
                         <ExtendedAttribute Name="limitAfterStart" Value="N"/>
-                        <ExtendedAttribute Name="limitService" Value="sendProcessNotification"/>
-                        <ExtendedAttribute Name="restartOnDelegate" Value="Y"/>
+                        <ExtendedAttribute Name="limitService" Value="sendProcessNotification"/>                        
                         <ExtendedAttribute Name="inheritPriority" Value="Y"/>
                     </ExtendedAttributes>
                 </Activity>
@@ -293,16 +283,7 @@
                     <Description>A clerk accepts and completes/declines (ships) the order</Description>
                     <Limit>12</Limit>
                     <Implementation>
-                        <Tool Id="addOrderRole" Type="PROCEDURE">
-                            <ActualParameters>                            	
-                                <ActualParameter>orderId</ActualParameter>
-                                <ActualParameter>name:partyId=assignedPartyId</ActualParameter>
-                                <ActualParameter>roleTypeId</ActualParameter>
-                            </ActualParameters>
-                            <ExtendedAttributes>
-                                <ExtendedAttribute Name="roleTypeId" Value="ORDER_CLERK"/>
-                            </ExtendedAttributes>
-                        </Tool>
+                        <No/>
                     </Implementation>
                     <Performer>clerk</Performer>
                     <StartMode>
@@ -321,8 +302,7 @@
                     <ExtendedAttributes>
                         <ExtendedAttribute Name="canStart" Value="N"/>
                         <ExtendedAttribute Name="limitAfterStart" Value="N"/>
-                        <ExtendedAttribute Name="limitService" Value="sendProcessNotification"/>
-                        <ExtendedAttribute Name="restartOnDelegate" Value="Y"/>
+                        <ExtendedAttribute Name="limitService" Value="sendProcessNotification"/>                       
                         <ExtendedAttribute Name="inheritPriority" Value="Y"/>
                     </ExtendedAttributes>
                 </Activity>                
