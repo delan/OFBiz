@@ -505,6 +505,9 @@
                 <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="OPTION">
                     <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="surveyOptionSeqId" to-map-name="responseAnswer"/>
                 </if-compare>
+                <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="CONTENT">
+                    <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="contentId" to-map-name="responseAnswer"/>
+                </if-compare>
 
                 <env-to-field env-name="nowTimestamp" field-name="answeredDate" map-name="responseAnswer"/>
                 <store-value value-name="responseAnswer"/>

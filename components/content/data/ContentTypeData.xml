@@ -106,6 +106,7 @@
     <SurveyApplType surveyApplTypeId="PORDER_PLACE" description="Purchase Order Placement"/>
     <SurveyApplType surveyApplTypeId="PORDITM_PLACE" description="Purchase Order Item Placement"/>
 
+    <SurveyQuestionType surveyQuestionTypeId="CONTENT" description="Content Record"/>
     <SurveyQuestionType surveyQuestionTypeId="BOOLEAN" description="Boolean (Yes/No)"/>
     <SurveyQuestionType surveyQuestionTypeId="CREDIT_CARD" description="Credit Card Number"/>
     <SurveyQuestionType surveyQuestionTypeId="GIFT_CARD" description="Gift Card Number"/>
