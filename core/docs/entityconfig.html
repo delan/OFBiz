@@ -49,39 +49,39 @@ $Id$ <br>
 with an introduction to general ideas and then goes through each part of the
 entityengine.properties file and explains the available properties and their 
 usage. The entityengine.properties file used for the OFBiz applications has
-examples of a number of different options and is located in <b>ofbiz/commonapp/etc/entityengine.properties</b>.</p>
+examples of a number of different options and is located in <b><code>ofbiz/commonapp/etc/entityengine.properties</code></b>.</p>
 
 <p>The configuration of the Entity Engine is done through a simple properties
-file called <b>entityengine.properties</b> that must exist somewhere on the classpath. This
+file called <b><code>entityengine.properties</code></b> that must exist somewhere on the classpath. This
 properties file is used to define parameters for persistence servers such as EJB
 server parameters or JDBC server parameters. It is also used to specify which
 XML entity, entity group, and field type model files will be used for that server.
-The default file for the OFBiz distribution can be found in <b>ofbiz/commonapp/etc/entityengine.properties</b>.</p>
+The default file for the OFBiz distribution can be found in <b><code>ofbiz/commonapp/etc/entityengine.properties</code></b>.</p>
 
-<p>Each application that uses the Entity Engine does so through a <b>GenericDelegator</b>
+<p>Each application that uses the Entity Engine does so through a <b><code>GenericDelegator</code></b>
 instance. The delegator name must be passed to the static factory method which
 is then passed to the constructor if a new instance is needed. This delegator
-name is used to look up settings for that delegator in the <b>entityengine.properties</b>
+name is used to look up settings for that delegator in the <b><code>entityengine.properties</code></b>
 file. Each delegator uses an entity model XML file and an entity group XML file
 which specifies a group name for each named entity in the entity model file. The
-<b>entityengine.properties</b> file contains the settings which map each group name
-to a <b>GenericHelper</b> for that group. <b>GenericHelper</b> is an interface
+<b><code>entityengine.properties</code></b> file contains the settings which map each group name
+to a <b><code>GenericHelper</code></b> for that group. <b><code>GenericHelper</code></b> is an interface
 that must be implemented for each type of data source (ie: JDBC, EJB, SOAP,
 HTTP, et cetera).&nbsp;</p>
 
-<p>The settings for each named <b>GenericHelper</b> are specified in the <b>entityengine.properties</b>
+<p>The settings for each named <b><code>GenericHelper</code></b> are specified in the <b><code>entityengine.properties</code></b>
 file. For a JDBC helper these would include database connection parameters such
 as either the JNDI data source parameters or the JDBC parameters including the driver
 name, the JDBC URI, and the username and password for the database. An EJB
 helper would contain the context provider URL, the initial context factory, and
 the URL package prefixes.</p>
 
-<p>The <b>GenericDelegator</b> is the primary access method for Entity Engine
+<p>The <b><code>GenericDelegator</code></b> is the primary access method for Entity Engine
 services. Each service request is dispatched to the helper that corresponds to
 the entity that the service is requested for according to the group name of the
 entity specified in the entity group XML file and the helper for that group
-specified in the <b>entityengine.properties</b> file. The default entity group XML
-file for the OFBiz entity model can be found in <b>ofbiz/commonapp/entitydef/entitygroup.xml</b>.</p>
+specified in the <b><code>entityengine.properties</code></b> file. The default entity group XML
+file for the OFBiz entity model can be found in <b><code>ofbiz/commonapp/entitydef/entitygroup.xml</code></b>.</p>
 
 <hr>
 <h3><a name="Properties">Properties File Extensions</a></h3>
@@ -98,40 +98,40 @@ instead of in the current properties file.</p>
 
 <p>For example the ofbiz.home system
 property is added using the -D parameter on the java command line and is used
-in the entityengine.properties and other properties files with <b>${env.ofbiz.home}</b>.</p>
+in the entityengine.properties and other properties files with <b><code>${env.ofbiz.home}</code></b>.</p>
 
 <hr>
 <h3><a name="JTA_Properties">JTA Properties</a></h3>
 <hr>
-<p>For JTA support the Entity Engine needs access to the <b>javax.transaction.UserTransaction</b> and 
-optionally the <b>javax.transaction.TransactionManager</b> interface implementations for the TX Manager
-being used. These are retreived through the <b>org.ofbiz.core.entity.TransactionFactory</b> class. 
-This class uses the class specified with the <b>transaction.factory.class</b> property. This
+<p>For JTA support the Entity Engine needs access to the <b><code>javax.transaction.UserTransaction</code></b> and 
+optionally the <b><code>javax.transaction.TransactionManager</code></b> interface implementations for the TX Manager
+being used. These are retreived through the <b><code>org.ofbiz.core.entity.TransactionFactory</code></b> class. 
+This class uses the class specified with the <b><code>transaction.factory.class</code></b> property. This
 class may change depending on which application server or transaction manager is being
 used by OFBiz.</p>
 
 <p>The default TX Manager is Tyrex from Exolab (www.exolab.org) and
-the factory class for Tyrex is <b>org.ofbiz.core.entity.transaction.TyrexFactory</b>.
-There is also a special class for Weblogc: <b>org.ofbiz.core.entity.transaction.WeblogicFactory</b>,
+the factory class for Tyrex is <b><code>org.ofbiz.core.entity.transaction.TyrexFactory</code></b>.
+There is also a special class for Weblogc: <b><code>org.ofbiz.core.entity.transaction.WeblogicFactory</code></b>,
 which must be changed to include the Weblogic specific stuff and then compiled
 with weblogic.jar on the classpath.</p>
 
 <p>The most widely useful transaction factory class is the 
-<b>org.ofbiz.core.entity.transaction.JNDIFactory</b> class. This class uses
+<b><code>org.ofbiz.core.entity.transaction.JNDIFactory</code></b> class. This class uses
 some additional properties from the entityengine.properties file to locate
 the UserTransaction and TransactionManager objects in JNDI.</p>
 
-<p>The <b>transaction.factory.UserTransaction.jndi.name</b> (ex: java:comp/UserTransaction) and
-<b>transaction.factory.TransactionManager.jndi.name</b> (ex: java:comp/TransactionManager) and
+<p>The <b><code>transaction.factory.UserTransaction.jndi.name</code></b> (ex: java:comp/UserTransaction) and
+<b><code>transaction.factory.TransactionManager.jndi.name</code></b> (ex: java:comp/TransactionManager) and
 properties are used to specify the object names in JNDI. The JNDI factory parameters
 follow the pattern used for the JNDI parameters in the JDBC Helper definitions. 
 These include: </p>
 <ul>
-    <li><b>transaction.factory.context.provider.url</b> (ex: rmi://127.0.0.1:1099)
-    <li><b>transaction.factory.initial.context.factory</b> (ex: com.sun.jndi.rmi.registry.RegistryContextFactory)
-    <li><b>transaction.factory.url.pkg.prefixes</b> (ex: java.naming.rmi.security.manager) - optional
-    <li><b>transaction.factory.security.principal</b> (JNDI username) - optional
-    <li><b>transaction.factory.security.credentials</b> (JNDI password) - optional
+    <li><b><code>transaction.factory.context.provider.url</code></b> (ex: rmi://127.0.0.1:1099)
+    <li><b><code>transaction.factory.initial.context.factory</code></b> (ex: com.sun.jndi.rmi.registry.RegistryContextFactory)
+    <li><b><code>transaction.factory.url.pkg.prefixes</code></b> (ex: java.naming.rmi.security.manager) - optional
+    <li><b><code>transaction.factory.security.principal</code></b> (JNDI username) - optional
+    <li><b><code>transaction.factory.security.credentials</code></b> (JNDI password) - optional
 </ul>
 
 <hr>
@@ -141,11 +141,11 @@ These include: </p>
 argument containing the delegator name. This delegator name is used as the prefix
 for a number of properties in the entityengine.properties file.</p>
 
-<p>The first property is <b>{delegator-name}.model.reader={entity-model-xml-prefix}</b> and it specifies the prefix for 
+<p>The first property is <b><code>{delegator-name}.model.reader={entity-model-xml-prefix}</code></b> and it specifies the prefix for 
 the property that contains a list of Entity Model XML files and is the name of
 the ModelReader instance that encapsulates them.</p>
 
-<p>The next property is <b>{delegator-name}.model.group.reader={entity-group-xml-prefix}</b> and it specifies the prefix for 
+<p>The next property is <b><code>{delegator-name}.model.group.reader={entity-group-xml-prefix}</code></b> and it specifies the prefix for 
 the property that the location of the Entity Group XML file for the delegator and is the name of
 the ModelGroupReader instance that encapsulates the file.</p>
 
@@ -158,63 +158,63 @@ technique the application does not have to know at run time which Helper is resp
 for a given entity, and can therefore handle an entity or groups of entities 
 assigned to different Data Sources.</p>
 
-<p>The format for these properties is as follows: <b>{delegator-name}.group.{group-name}={helper-name}</b></p>
+<p>The format for these properties is as follows: <b><code>{delegator-name}.group.{group-name}={helper-name}</code></b></p>
 
 <hr>
 <h3><a name="Entity_Model">Entity Model XML Files</a></h3>
 <hr>
 <p>There is only one property for each list of entity model XML files and the value of the property
 is a semicolon separated list of full paths to XML files containing entity model
-definitions. The property is formatted like this: <b>{entity-model-xml-prefix}.xml.entity=path1/entitymodel1.xml;path2/entitymodel2.xml</b></p>
+definitions. The property is formatted like this: <b><code>{entity-model-xml-prefix}.xml.entity=path1/entitymodel1.xml;path2/entitymodel2.xml</code></b></p>
 
 <hr>
 <h3><a name="Entity_Group">Entity Group XML File</a></h3>
 <hr>
 <p>There is only one property for each entity group XML file and the value of the property
 is the full path to an XML file containing the entity group mappings.
-The property is formatted like this: <b>{entity-group-xml-prefix}.xml.group=path/entitygroup.xml</b></p>
+The property is formatted like this: <b><code>{entity-group-xml-prefix}.xml.group=path/entitygroup.xml</code></b></p>
 
 <hr>
 <h3><a name="Field_Type">Field Type XML File</a></h3>
 <hr>
 <p>There is only one property for each field type XML file and the value of the property
 is the full path to an XML file containing field type definitions.
-The property is formatted like this: <b>{field-type-xml-prefix}.xml.field.type=path/fieldtypexxx.xml</b></p>
+The property is formatted like this: <b><code>{field-type-xml-prefix}.xml.field.type=path/fieldtypexxx.xml</code></b></p>
 
 <hr>
 <h3><a name="JDBC_Helper">JDBC Helper Properties</a></h3>
 <hr>
 <p>While there can be many types of helpers the main one used is the JDBC/DAO 
 helper. You can code you own helpers and use them by implementing the 
-<b>org.ofbiz.core.entity.GenericHelper</b> interface. The class used for a given helper
-is specified with the <b>{helper-name}.helper.class</b> property. For JDBC/DAO 
-helpers the value of this property will be <b>org.ofbiz.core.entity.GenericHelperDAO</b>
+<b><code>org.ofbiz.core.entity.GenericHelper</code></b> interface. The class used for a given helper
+is specified with the <b><code>{helper-name}.helper.class</code></b> property. For JDBC/DAO 
+helpers the value of this property will be <b><code>org.ofbiz.core.entity.GenericHelperDAO</code></b>
 which implements the GenericHelper interface.</p>
 
 <p>There is a group of properties used to configure all JDBC Helpers and then a 
 few optional groups to configure direct or JNDI data sources.</p>
 
-<p>The <b>{helper-name}.field.type.reader={field-type-xml-prefix}</b> property 
+<p>The <b><code>{helper-name}.field.type.reader={field-type-xml-prefix}</code></b> property 
 is used to specify a field-type-xml-prefix which will be looked as described in 
 the Field Type XML File section.</p>
 
-<p>The <b>{helper-name}.datasource.check.on.start</b> property can be either
+<p>The <b><code>{helper-name}.datasource.check.on.start</code></b> property can be either
 'true' or 'false' and specifies whether the data source should be checked when
 the Entity Engine is started. Checking the data source for JDBC Helpers gets
 a list of all tables and columns in the data source for the helper and compares
 them with the defined entities and fields that in the group assigned to the
 helper in the delegator that uses the helper.</p>
 
-<p>If the <b>{helper-name}.datasource.add.missing.on.start</b> property is set to 'true'
+<p>If the <b><code>{helper-name}.datasource.add.missing.on.start</code></b> property is set to 'true'
 then any missing tables or columns will be added automatically to the database.
 Other differences such as tables/columns that do not correspond to any known
 entity/field or column types that differ from the type specified on the 
 corresponding field will cause warnings to be printed. These warning will be
 printed whether or not the add missing feature is enabled.</p>
 
-<p>The <b>{helper-name}.sql.load.paths</b> property is used to specify a list of
+<p>The <b><code>{helper-name}.sql.load.paths</code></b> property is used to specify a list of
 full paths to directories that will be searched for XML and SQL files to import
-into the data source by the <b>install</b> page in the WebTools webapp.</p>
+into the data source by the <b><code>install</code></b> page in the WebTools webapp.</p>
 
 <p>When trying to determine where to get a database connection the Entity Engine
 tries three different options:</p>
@@ -226,12 +226,12 @@ tries three different options:</p>
 
 <p>To use a JNDI data source specify the following properties:</p>
 <ul>
-    <li><b>{helper-name}.jdbc.jndi.name</b> (ex: java:/MyDataSource)
-    <li><b>{helper-name}.context.provider.url</b> (ex: rmi://127.0.0.1:1099)
-    <li><b>{helper-name}.initial.context.factory</b> (ex: com.sun.jndi.rmi.registry.RegistryContextFactory)
-    <li><b>{helper-name}.url.pkg.prefixes</b> (ex: java.naming.rmi.security.manager) - optional
-    <li><b>{helper-name}.security.principal</b> (JNDI username) - optional
-    <li><b>{helper-name}.security.credentials</b> (JNDI password) - optional
+    <li><b><code>{helper-name}.jdbc.jndi.name</code></b> (ex: java:/MyDataSource)
+    <li><b><code>{helper-name}.context.provider.url</code></b> (ex: rmi://127.0.0.1:1099)
+    <li><b><code>{helper-name}.initial.context.factory</code></b> (ex: com.sun.jndi.rmi.registry.RegistryContextFactory)
+    <li><b><code>{helper-name}.url.pkg.prefixes</code></b> (ex: java.naming.rmi.security.manager) - optional
+    <li><b><code>{helper-name}.security.principal</code></b> (JNDI username) - optional
+    <li><b><code>{helper-name}.security.credentials</code></b> (JNDI password) - optional
 </ul>
 
 <p>The data source retreived
@@ -247,13 +247,13 @@ requested. A warning will be printed when this happens.</p>
 <p>The JDBC properties are the standard ones used to create any JDBC connection
 and are named as follows:</p>
 <ul>
-    <li><b>{helper-name}.jdbc.driver</b>
-    <li><b>{helper-name}.jdbc.uri</b>
-    <li><b>{helper-name}.jdbc.username</b>
-    <li><b>{helper-name}.jdbc.password</b>
+    <li><b><code>{helper-name}.jdbc.driver</code></b>
+    <li><b><code>{helper-name}.jdbc.uri</code></b>
+    <li><b><code>{helper-name}.jdbc.username</code></b>
+    <li><b><code>{helper-name}.jdbc.password</code></b>
 </ul>
 
-<p>If Tyrex is being used the <b>{helper-name}.isolation.level</b> property can 
+<p>If Tyrex is being used the <b><code>{helper-name}.isolation.level</code></b> property can 
 be used to specify the transaction isolation level. The standard JDBC transaction
 isolation levels are available:</p>
 <ul>
