@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceBundleMapWrapper.java,v 1.1 2004/05/29 07:48:51 jonesde Exp $
+ * $Id: ResourceBundleMapWrapper.java,v 1.2 2004/05/29 16:22:17 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import java.util.Set;
  * Generic ResourceBundle Map Wrapper, given ResourceBundle allows it to be used as a Map
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class ResourceBundleMapWrapper implements Map {
@@ -103,6 +103,9 @@ public class ResourceBundleMapWrapper implements Map {
         }
         if (value == null) {
             value = this.resourceBundle.getString((String) arg0);
+        }
+        if (value == null) {
+            value = arg0;
         }
         return value;
     }
