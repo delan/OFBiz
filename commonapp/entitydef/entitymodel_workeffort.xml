@@ -332,10 +332,10 @@
       <field name="runtimeDataId" type="id"></field>
       <prim-key field="applicationId"/>
       <relation type="one" rel-entity-name="WorkEffortPartyAssignment">
-	      <key-map field-name="workEffortId"/>
-	      <key-map field-name="partyId" />
-	      <key-map field-name="roleTypeId" />
-	      <key-map field-name="fromDate" />
+        <key-map field-name="workEffortId"/>
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+        <key-map field-name="fromDate"/>
       </relation>
       <relation type="one" fk-name="APP_SNDBX_RNTMDTA" rel-entity-name="RuntimeData">
         <key-map field-name="runtimeDataId"/>

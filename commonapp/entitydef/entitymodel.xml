@@ -526,7 +526,7 @@
         <key-map field-name="contentId"/>
       </relation>
       <relation type="many" title="From" rel-entity-name="ContentAssoc">
-        <key-map field-name="contentId" rel-field-name="contentId"/>
+        <key-map field-name="contentId"/>
       </relation>
       <relation type="many" title="To" rel-entity-name="ContentAssoc">
         <key-map field-name="contentId" rel-field-name="contentIdTo"/>
@@ -556,7 +556,7 @@
       <prim-key field="contentAssocTypeId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="CONTENT_ASSC_FROM" title="From" rel-entity-name="Content">
-        <key-map field-name="contentId" rel-field-name="contentId"/>
+        <key-map field-name="contentId"/>
       </relation>
       <relation type="one" fk-name="CONTENT_ASSC_TO" title="To" rel-entity-name="Content">
         <key-map field-name="contentIdTo" rel-field-name="contentId"/>
