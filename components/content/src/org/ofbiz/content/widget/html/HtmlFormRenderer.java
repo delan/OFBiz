@@ -724,6 +724,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderMultiFormClose(StringBuffer buffer, Map context, ModelForm modelForm) {
         String rowCount = modelForm.getRowCount(context);
+        if (UtilValidate.isEmpty(rowCount)) {
+            Integer itemIdx = (Integer)context.get("itemIndex");   
+            rowCount = Integer.toString(itemIdx.intValue() + 1);
+        }
         if (UtilValidate.isNotEmpty(rowCount)) {
         	buffer.append("<input type=\"hidden\" name=\"_rowCount\" value=\"" + rowCount + "\"/>");
         }
