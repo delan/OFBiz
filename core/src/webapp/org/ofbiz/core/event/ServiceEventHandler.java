@@ -149,6 +149,7 @@ public class ServiceEventHandler implements EventHandler {
               result = dispatcher.runSync(serviceName,serviceContext);
             }
         } catch (GenericServiceException e) {
+            //Debug.logError(e);
             throw new EventHandlerException("Service invocation error", e.getNested());
         }
 
