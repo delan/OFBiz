@@ -37,16 +37,6 @@
         <property name="jndi-config" value="jrmp.properties"/>
     </container>
 
-    <!-- load Shark Workflow Engine -->
-    <container name="shark-container" class="org.ofbiz.shark.container.SharkContainer">
-        <property name="engine-name" value="Shark"/>
-        <property name="delegator-name" value="default"/>
-        <property name="dispatcher-name" value="WFDispatcher"/>
-        <property name="admin-user" value="system"/>
-        <property name="iiop-host" value="127.0.0.1"/>
-        <property name="iiop-port" value="2000"/>
-    </container>
-
     <!-- RMI Service Dispatcher -->
     <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
         <property name="bound-name" value="RMIDispatcher"/>
@@ -56,6 +46,31 @@
         <property name="client-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLClientSocketFactory"/>
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory"/>
         <property name="ssl-client-auth" value="true"/>
+    </container>
+
+    <!-- JavaMail Listener Container -->
+    <container name="javamail-container" class="org.ofbiz.service.mail.JavaMailContainer">
+        <property name="delegator-name" value="default"/>
+        <property name="dispatcher-name" value="JavaMailDispatcher"/>
+        <property name="run-as-user" value="system"/>
+        <property name="poll-delay" value="300000"/>
+        <property name="default-listener" value="store-listener">
+            <property name="mail.store.protocol" value="IMAP"/>
+            <property name="mail.host" value="[host]"/>
+            <property name="mail.user" value="[user]"/>
+            <property name="mail.pass" value="[pass]"/>
+            <property name="mail.debug" value="false"/>
+        </property>
+    </container>
+
+    <!-- load Shark Workflow Engine -->
+    <container name="shark-container" class="org.ofbiz.shark.container.SharkContainer">
+        <property name="engine-name" value="Shark"/>
+        <property name="delegator-name" value="default"/>
+        <property name="dispatcher-name" value="WFDispatcher"/>
+        <property name="admin-user" value="system"/>
+        <property name="iiop-host" value="127.0.0.1"/>
+        <property name="iiop-port" value="2000"/>
     </container>
 
     <!-- load BeanShell remote telnet server -->
