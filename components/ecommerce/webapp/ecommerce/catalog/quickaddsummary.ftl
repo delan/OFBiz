@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -34,7 +34,7 @@
     </div>
   </td>
   <td align="left" valign="middle" width="90%">
-    <a href='<@ofbizUrl>/product?product_id=${product.productId}</@ofbizUrl>' class='buttontext'>${product.productName?if_exists}</a>
+    <a href="<@ofbizUrl>/product?product_id=${product.productId}</@ofbizUrl>" class="buttontext">${product.productName?if_exists}</a>
   </td>
   <td align="left" valign="middle" width="5%">
     <div class="tabletext">
@@ -46,22 +46,22 @@
     </div>
   </td>
   <td align="right" valign="middle" width="5%">
-    <div class='<#if price.isSale>salePrice<#else>normalPrice</#if>'>
+    <div class="<#if price.isSale>salePrice<#else>normalPrice</#if>">
       <b>${price.price?string.currency}</b>
     </div>
   </td>                                 
   <td align="right" valign="middle">
     <#-- check to see if introductionDate hasn't passed yet -->
     <#if product.introductionDate?exists && nowTimestamp.before(product.introductionDate)>
-      <div class='tabletext' style='color: red;'>${uiLabelMap.ProductNotYetAvailable}</div>
+      <div class="tabletext" style="color: red;">${uiLabelMap.ProductNotYetAvailable}</div>
     <#-- check to see if salesDiscontinuationDate has passed -->
     <#elseif product.salesDiscontinuationDate?exists && nowTimestamp.before(product.salesDiscontinuationDate)>
-      <div class='tabletext' style='color: red;'>${uiLabelMap.ProductNoLongerAvailable}</div>          
+      <div class="tabletext" style="color: red;">${uiLabelMap.ProductNoLongerAvailable}</div>          
     <#-- check to see if the product is a virtual product -->
     <#elseif product.isVirtual?default("N") == "Y">
-      <a href='<@ofbizUrl>/product?<#if categoryId?exists>category_id=${categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>' class="buttontext">[${uiLabelMap.EcommerceChooseVariations}...]</a>                                                          
+      <a href="<@ofbizUrl>/product?<#if categoryId?exists>category_id=${categoryId}&</#if>product_id=${product.productId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceChooseVariations}...]</a>                                                          
     <#else>                                  
-      <input type="text" size="5" class="inputBox" name='quantity_${product.productId}' value="">
+      <input type="text" size="5" class="inputBox" name="quantity_${product.productId}" value="">
     </#if>
   </td>
 <#else>
