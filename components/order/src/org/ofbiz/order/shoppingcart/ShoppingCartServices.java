@@ -25,11 +25,19 @@
 package org.ofbiz.order.shoppingcart;
 
 import java.util.Map;
+import java.util.List;
+import java.util.Locale;
+import java.util.Iterator;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.order.order.OrderReadHelper;
 
 /**
  * Shopping Cart Services
@@ -124,5 +132,87 @@ public class ShoppingCartServices {
         }
 
         return ServiceUtil.returnSuccess();
+    }
+
+    public static Map loadCartFromOrder(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericDelegator delegator = dctx.getDelegator();
+
+        GenericValue orderHeader = (GenericValue) context.get("orderHeader");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        String shipGroupSeqId = (String) context.get("shipGroupSeqId");
+        List orderItems = (List) context.get("orderItems");
+        Locale locale = (Locale) context.get("locale");
+
+        // initial require cart info
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        String productStoreId = orh.getProductStoreId();
+        String orderTypeId = orh.getOrderTypeId();
+        String currency = orh.getCurrency();
+        String website = orh.getWebSiteId();
+
+        // create the cart
+        ShoppingCart cart = new ShoppingCart(delegator, productStoreId, website, locale, currency);
+        cart.setOrderType(orderTypeId);
+        try {
+            cart.setUserLogin(userLogin, dispatcher);
+        } catch (CartItemModifyException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        // set the ordering party ID
+        GenericValue placingParty = orh.getPlacingParty();
+        if (placingParty != null) {
+            cart.setOrderPartyId(placingParty.getString("partyId"));
+        }
+
+        // set the shipping info
+        if (shipGroupSeqId == null) {
+            shipGroupSeqId = UtilFormatOut.formatPaddedNumber(1, 5);
+        }
+        GenericValue shipGroup = orh.getOrderItemShipGroup(shipGroupSeqId);
+        if (shipGroup != null) {
+            cart.setShipmentMethodTypeId(shipGroup.getString("shipmentMethodTypeId"));
+            cart.setShippingContactMechId(shipGroup.getString("contactMechId"));
+        }
+
+        if (orderItems != null) {
+            Iterator i = orderItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+                if (item.get("productId") == null) {
+                    // non-product item
+                    String itemType = item.getString("orderItemTypeId");
+                    String desc = item.getString("itemDescription");
+                    Double quantity = item.getDouble("quantity");
+                    if (quantity == null) {
+                        quantity = new Double(0);
+                    }
+                    try {
+                        cart.addNonProductItem(itemType, desc, null, 0.00, quantity.doubleValue(), null, null, dispatcher);
+                    } catch (CartItemModifyException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                } else {
+                    // product item
+                    String productId = item.getString("productId");
+                    try {
+                        cart.addItemToEnd(productId, 0.00, 0, null, null, null, dispatcher);
+                    } catch (ItemNotFoundException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    } catch (CartItemModifyException e) {
+                        Debug.logError(e, module);
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                }
+            }
+        }
+
+        Map result = ServiceUtil.returnSuccess();
+        result.put("shoppingCart", cart);
+        return result;
     }
 }
