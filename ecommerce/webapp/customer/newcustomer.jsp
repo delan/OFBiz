@@ -315,7 +315,7 @@
           <input type="text" name="USERNAME" value="<%=UtilFormatOut.checkNull(request.getParameter("USERNAME"))%>" size="20" maxlength="50">
       * </td>
     </tr>
-    <% if(UtilProperties.propertyValueEqualsIgnoreCase(contextRoot + "/WEB-INF/ecommerce.properties", "create.allow.password", "true")) { pageContext.setAttribute("createAllowPassword", "true"); }%>
+    <% if(UtilProperties.propertyValueEqualsIgnoreCase(application.getResource("/WEB-INF/ecommerce.properties"), "create.allow.password", "true")) { pageContext.setAttribute("createAllowPassword", "true"); }%>
     <ofbiz:if name="createAllowPassword">
       <tr>
         <td width="26%">

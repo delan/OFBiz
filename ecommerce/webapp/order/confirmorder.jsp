@@ -70,7 +70,7 @@
   <a name="top"></a>
 
 <% 
-   final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.securityCode");
+   final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(application.getResource("/WEB-INF/ecommerce.properties"), "order.confirmation.securityCode");
    String securityCode = request.getParameter("security_code");
    if (UtilValidate.isNotEmpty(ORDER_SECURITY_CODE)) {
        if (ORDER_SECURITY_CODE.equals(securityCode)) {

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.32  2001/09/29 05:28:55  jonesde
+ * Increased consistency; made CC code work with new PartyContactMech and PartyContactMechPurpose from dates
+ *
  * Revision 1.31  2001/09/28 21:57:53  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -106,8 +109,10 @@
  */
 package org.ofbiz.ecommerce.customer;
 
-import javax.servlet.http.*;
 import javax.servlet.*;
+import javax.servlet.http.*;
+
+import java.net.*;
 import java.util.*;
 import java.sql.*;
 
@@ -151,6 +156,11 @@ public class CustomerEvents {
   public static String createCustomer(HttpServletRequest request, HttpServletResponse response) {
     GenericValue newUserLogin = null;
     String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
+    //getServletContext appears to be new on the session object for Servlet 2.3
+    ServletContext application = request.getSession().getServletContext();
+    URL ecommercePropertiesUrl = null;
+    try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
+    catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
     
     String errMsg = "";
     GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
@@ -227,7 +237,7 @@ public class CustomerEvents {
     }
     
     GenericValue tempUserLogin = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "partyId", username));
-    if(UtilProperties.propertyValueEqualsIgnoreCase(contextRoot + "/WEB-INF/ecommerce.properties", "create.allow.password", "true")) {
+    if(UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) {
       errMsg += setPassword(tempUserLogin, password, confirmPassword, passwordHint);
     }
     
@@ -239,7 +249,7 @@ public class CustomerEvents {
     }
     
     //UserLogin with username does not exist: create new user...
-    if(!UtilProperties.propertyValueEqualsIgnoreCase(contextRoot + "/WEB-INF/ecommerce.properties", "create.allow.password", "true")) password = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "default.customer.password", "ungssblepswd");
+    if(!UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) password = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "default.customer.password", "ungssblepswd");
     
     Timestamp now = UtilDateTime.nowTimestamp();
     
@@ -318,7 +328,7 @@ public class CustomerEvents {
       return "error";
     }
     
-    if(UtilProperties.propertyValueEqualsIgnoreCase(contextRoot + "/WEB-INF/ecommerce.properties", "create.allow.password", "true")) request.getSession().setAttribute(SiteDefs.USER_LOGIN, newUserLogin);
+    if(UtilProperties.propertyValueEqualsIgnoreCase(ecommercePropertiesUrl, "create.allow.password", "true")) request.getSession().setAttribute(SiteDefs.USER_LOGIN, newUserLogin);
     return "success";
   }
   
@@ -1132,6 +1142,11 @@ public class CustomerEvents {
   public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
     GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
+    //getServletContext appears to be new on the session object for Servlet 2.3
+    ServletContext application = request.getSession().getServletContext();
+    URL ecommercePropertiesUrl = null;
+    try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
+    catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
     
     String userLoginId = request.getParameter("USERNAME");
     
@@ -1170,15 +1185,15 @@ public class CustomerEvents {
       return "error";
     }
     
-    final String SMTP_SERVER = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "smtp.relay.host");
-    final String LOCAL_MACHINE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "smtp.local.machine");
-    final String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "password.send.email");
+    final String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
+    final String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
+    final String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "password.send.email");
     
     String content = "Username: " + userLoginId + "\nPassword: " + UtilFormatOut.checkNull(supposedUserLogin.getString("currentPassword"));
     try {
       SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, PASSWORD_SENDER_EMAIL, emails.toString(), content);
       mail.setLocalMachine(LOCAL_MACHINE);
-      mail.setSubject(UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.name", "") + " Password Reminder");
+      mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Password Reminder");
       //mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
       mail.setMessage(content);
       mail.send();

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.22  2001/10/03 20:22:45  jonesde
+ * Added sorting by metric on occurances and quantity to quick reorder
+ *
  * Revision 1.21  2001/10/03 05:17:32  jonesde
  * Added reorder products and associated products to sidebars
  *
@@ -77,17 +80,11 @@
 
 package org.ofbiz.ecommerce.checkout;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.*;
+import javax.servlet.http.*;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.net.*;
+import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
@@ -279,7 +276,13 @@ public class CheckOutEvents {
   
   public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
     String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
-    final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.securityCode");
+    //getServletContext appears to be new on the session object for Servlet 2.3
+    ServletContext application = request.getSession().getServletContext();
+    URL ecommercePropertiesUrl = null;
+    try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
+    catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
+
+    final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.securityCode");
     
     String controlPath = (String)request.getAttribute(SiteDefs.CONTROL_PATH);
     if(controlPath == null) {
@@ -309,12 +312,17 @@ public class CheckOutEvents {
   
   public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
     String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
+    //getServletContext appears to be new on the session object for Servlet 2.3
+    ServletContext application = request.getSession().getServletContext();
+    URL ecommercePropertiesUrl = null;
+    try { ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties"); }
+    catch(java.net.MalformedURLException e) { Debug.logWarning(e); }
     try {
-      final String SMTP_SERVER = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "smtp.relay.host");
-      final String LOCAL_MACHINE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "smtp.local.machine");
-      final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.email");
-      final String ORDER_BCC = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.email.bcc");
-      final String ORDER_CC = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.email.cc");
+      final String SMTP_SERVER = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.relay.host");
+      final String LOCAL_MACHINE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "smtp.local.machine");
+      final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email");
+      final String ORDER_BCC = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email.bcc");
+      final String ORDER_CC = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email.cc");
       GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
       StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
       GenericValue party = null;
@@ -339,7 +347,7 @@ public class CheckOutEvents {
           mail.setRecipientBCC(ORDER_BCC);
         }
         String orderId = (String) request.getAttribute("order_id");
-        mail.setSubject(UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
+        mail.setSubject(UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
         mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
         mail.setMessage(content);
         mail.send();
