@@ -236,7 +236,7 @@ public class ProductServices {
     private static Map makeGroup(GenericDelegator delegator, List items, List order, int index)
             throws IllegalArgumentException, IllegalStateException {
         List featureKey = new ArrayList();
-        Map group = new HashMap();
+        Map group = new OrderedMap();
         String orderKey = (String) order.get(index);
 
         if (index < 0)
