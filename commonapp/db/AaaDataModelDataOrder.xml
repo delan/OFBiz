@@ -7,6 +7,13 @@
   <CustRequestType custRequestTypeId="RF_QUOTE" description="Request For Quote" hasTable="N" parentTypeId=""/>
   <CustRequestType custRequestTypeId="RF_SUPPORT" description="Request For Support" hasTable="N" parentTypeId=""/>
 
+  <CustRequestResolution custRequestResolutionId="FIXED" custRequestTypeId="RF_BUGFIX" description="Fixed"/>
+  <CustRequestResolution custRequestResolutionId="WORKS" custRequestTypeId="RF_BUGFIX" description="Works For Me"/>
+  <CustRequestResolution custRequestResolutionId="WONTFIX" custRequestTypeId="RF_BUGFIX" description="Won't Fix"/>
+  <CustRequestResolution custRequestResolutionId="DUPLICATE" custRequestTypeId="RF_FEATURE" description="Duplicate"/>
+  <CustRequestResolution custRequestResolutionId="REJECTED" custRequestTypeId="RF_FEATURE" description="Rejected"/>
+  <CustRequestResolution custRequestResolutionId="IMPLEMENTED" custRequestTypeId="RF_FEATURE" description="Implemented"/>
+
   <OrderAdjustmentType description="Promotion" hasTable="N" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" parentTypeId=""/>
   <OrderAdjustmentType description="Discount" hasTable="N" orderAdjustmentTypeId="DISCOUNT_ADJUSTMENT" parentTypeId=""/>
   <OrderAdjustmentType description="Fee" hasTable="N" orderAdjustmentTypeId="FEE" parentTypeId=""/>
@@ -90,6 +97,22 @@
   <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_APPROVED" transitionName="Approve Item Back Order"/>
   <StatusValidChange condition="" statusId="ITEM_BACKORDERED" statusIdTo="ITEM_CANCELLED" transitionName="Cancel Item Back Order"/>
 
+  <!-- CustRequest statuses -->
+  <StatusType description="Custom Request Status" hasTable="N" parentTypeId="" statusTypeId="CUSTREQ_STTS"/>
+  <StatusItem description="Submitted" sequenceId="01" statusCode="SUBMITTED" statusId="CRQ_SUBMITTED" statusTypeId="CUSTREQ_STTS"/>
+  <StatusItem description="Accepted" sequenceId="02" statusCode="ACCEPTED" statusId="CRQ_ACCEPTED" statusTypeId="CUSTREQ_STTS"/>
+  <StatusItem description="Reviewed" sequenceId="03" statusCode="REVIEWED" statusId="CRQ_REVIEWED" statusTypeId="CUSTREQ_STTS"/>
+  <StatusItem description="Completed" sequenceId="04" statusCode="COMPLETED" statusId="CRQ_COMPLETED" statusTypeId="CUSTREQ_STTS"/>
+  <StatusItem description="Rejected" sequenceId="98" statusCode="REJECTED" statusId="CRQ_REJECTED" statusTypeId="CUSTREQ_STTS"/>
+  <StatusItem description="Cancelled" sequenceId="99" statusCode="CANCELLED" statusId="CRQ_CANCELLED" statusTypeId="CUSTREQ_STTS"/>
+  <StatusValidChange condition="" statusId="CRQ_SUBMITTED" statusIdTo="CRQ_ACCEPTED" transitionName="Accept Request"/>
+  <StatusValidChange condition="" statusId="CRQ_SUBMITTED" statusIdTo="CRQ_REJECTED" transitionName="Reject Request"/>
+  <StatusValidChange condition="" statusId="CRQ_SUBMITTED" statusIdTo="CRQ_CANCELLED" transitionName="Cancel Request"/>
+  <StatusValidChange condition="" statusId="CRQ_ACCEPTED" statusIdTo="CRQ_REVIEWED" transitionName="Review Request"/>
+  <StatusValidChange condition="" statusId="CRQ_ACCEPTED" statusIdTo="CRQ_CANCELLED" transitionName="Cancel Request"/>
+  <StatusValidChange condition="" statusId="CRQ_REVIEWED" statusIdTo="CRQ_COMPLETED" transitionName="Complete Request"/>
+  <StatusValidChange condition="" statusId="CRQ_REVIEWED" statusIdTo="CRQ_CANCELLED" transitionName="Cancel Request"/>
+  
   <WorkReqFulfType description="Implements" workReqFulfTypeId="WRF_IMPLEMENTS"/>
   <WorkReqFulfType description="Fixes" workReqFulfTypeId="WRF_FIXES"/>
   <WorkReqFulfType description="Deploys" workReqFulfTypeId="WRF_DEPLOYS"/>

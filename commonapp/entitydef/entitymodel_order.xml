@@ -1343,6 +1343,9 @@
             title="Customer Request Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestTypeId" type="id"></field>
+      <field name="custRequestCategoryId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <field name="priority" type="numeric"></field>
       <field name="custRequestDate" type="date-time"></field>
       <field name="responseRequiredDate" type="date-time"></field>
       <field name="description" type="description"></field>
@@ -1353,6 +1356,12 @@
       <prim-key field="custRequestId"/>
       <relation type="one" fk-name="CUST_REQ_TYPE" rel-entity-name="CustRequestType">
         <key-map field-name="custRequestTypeId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQ_CAT" rel-entity-name="CustRequestCategory">
+        <key-map field-name="custRequestCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQ_STATUS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="CustRequestTypeAttr">
         <key-map field-name="custRequestTypeId"/>
@@ -1380,9 +1389,12 @@
       <member-entity entity-alias="CRR" entity-name="CustRequestRole"/>
       <alias entity-alias="CR" name="custRequestId"/>
       <alias entity-alias="CR" name="custRequestTypeId"/>
+      <alias entity-alias="CR" name="statusId"/>
+      <alias entity-alias="CR" name="priority"/>
       <alias entity-alias="CR" name="custRequestDate"/>
       <alias entity-alias="CR" name="responseRequiredDate"/>
       <alias entity-alias="CR" name="description"/>
+      <alias entity-alias="CR" name="createdDate"/>
       <alias entity-alias="CR" name="lastModifiedDate"/>
       <alias entity-alias="CR" name="lastModifiedByUserLogin"/>
       <alias entity-alias="CRR" name="partyId"/>
@@ -1427,11 +1439,28 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
+    <entity entity-name="CustRequestCategory"
+            package-name="org.ofbiz.commonapp.order.request"
+            title="Customer Category Type Entity">
+      <field name="custRequestCategoryId" type="id-ne"></field>
+      <field name="custRequestTypeId" type="id"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="custRequestCategoryId"/>
+      <relation type="one" fk-name="CUST_RQCT_TYPE" rel-entity-name="CustRequestType">
+        <key-map field-name="custRequestTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestCategoryId"/>
+      </relation>
+    </entity>
     <entity entity-name="CustRequestItem"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Item Entity">
       <field name="custRequestId" type="id-ne"></field>
       <field name="custRequestItemSeqId" type="id-ne"></field>
+      <field name="priority" type="numeric"></field>
+      <field name="statusId" type="id"></field>
+      <field name="custRequestResolutionId" type="id"></field>
       <field name="requiredByDate" type="date-time"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="maximumAmount" type="currency-amount"></field>
@@ -1439,6 +1468,12 @@
       <field name="story" type="very-long"></field>
       <prim-key field="custRequestId"/>
       <prim-key field="custRequestItemSeqId"/>
+      <relation type="one" fk-name="CUST_REQITM_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQITM_RES" rel-entity-name="CustRequestResolution">
+        <key-map field-name="custRequestResolutionId"/>
+      </relation>
       <relation type="many" rel-entity-name="QuoteItem">
         <key-map field-name="custRequestId"/>
         <key-map field-name="custRequestItemSeqId"/>
@@ -1487,6 +1522,20 @@
         <key-map field-name="noteParty" rel-field-name="partyId"/>
       </view-link>
     </view-entity>
+    <entity entity-name="CustRequestResolution"
+            package-name="org.ofbiz.commonapp.order.request"
+            title="Customer Request Resolution Entity">
+      <field name="custRequestResolutionId" type="id-ne"></field>
+      <field name="custRequestTypeId" type="id"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="custRequestResolutionId"/>
+      <relation type="one" fk-name="CUST_RQRS_TYPE" rel-entity-name="CustRequestType">
+        <key-map field-name="custRequestTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CustRequestItem">
+        <key-map field-name="custRequestResolutionId"/>
+      </relation>
+    </entity>
     <entity entity-name="CustRequestRole"
             package-name="org.ofbiz.commonapp.order.request"
             title="Customer Request Role Entity">
@@ -1519,7 +1568,7 @@
       <field name="custRequestItemSeqId" type="id"></field>
       <field name="statusDatetime" type="date-time"></field>
       <prim-key field="custRequestStatusId"/>
-      <relation type="one" fk-name="CUST_REQ_STTS" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="CUST_REQST_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
       <relation type="one" fk-name="CUST_REQ_STRQ" rel-entity-name="CustRequest">
@@ -1548,6 +1597,12 @@
         <key-map field-name="custRequestTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CustRequestCategory">
+        <key-map field-name="custRequestTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CustRequestResolution">
         <key-map field-name="custRequestTypeId"/>
       </relation>
     </entity>

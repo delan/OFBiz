@@ -429,9 +429,11 @@
     <entity-group group="org.ofbiz.commonapp" entity="CustRequest" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestAndRole" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="CustRequestCategory" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestItem" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNote" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNoteView" />
+    <entity-group group="org.ofbiz.commonapp" entity="CustRequestResolution" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestRole" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestStatus" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestType" />
