@@ -41,6 +41,7 @@ import org.ofbiz.core.minilang.operation.*;
  * SimpleMethod Mini Language Core Object
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    December 29, 2001
  *@version    1.0
  */
@@ -51,14 +52,14 @@ public class SimpleMethod {
 
     // ----- Event Context Invokers -----
     
-    public static String runSimpleEvent(String xmlResource, String methodName, HttpServletRequest request) throws MiniLangException {
-        return runSimpleMethod(xmlResource, methodName, new MethodContext(request, null));
+    public static String runSimpleEvent(String xmlResource, String methodName, HttpServletRequest request, HttpServletResponse response) throws MiniLangException {
+        return runSimpleMethod(xmlResource, methodName, new MethodContext(request, response, null));
     }
-    public static String runSimpleEvent(String xmlResource, String methodName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
-        return runSimpleMethod(xmlResource, methodName, new MethodContext(request, loader));
+    public static String runSimpleEvent(String xmlResource, String methodName, HttpServletRequest request, HttpServletResponse response, ClassLoader loader) throws MiniLangException {
+        return runSimpleMethod(xmlResource, methodName, new MethodContext(request, response, loader));
     }
-    public static String runSimpleEvent(URL xmlURL, String methodName, HttpServletRequest request, ClassLoader loader) throws MiniLangException {
-        return runSimpleMethod(xmlURL, methodName, new MethodContext(request, loader));
+    public static String runSimpleEvent(URL xmlURL, String methodName, HttpServletRequest request, HttpServletResponse response, ClassLoader loader) throws MiniLangException {
+        return runSimpleMethod(xmlURL, methodName, new MethodContext(request, response, loader));
     }
     
     // ----- Service Context Invokers -----
@@ -179,6 +180,7 @@ public class SimpleMethod {
 
     // event fields
     String eventRequestName;
+    String eventResponseName;
     String eventResponseCodeName;
     String eventErrorMessageName;
     String eventEventMessageName;
@@ -217,6 +219,9 @@ public class SimpleMethod {
         eventRequestName = simpleMethodElement.getAttribute("event-request-object-name");
         if (eventRequestName == null || eventRequestName.length() == 0)
             eventRequestName = "request";
+        eventResponseName = simpleMethodElement.getAttribute("event-response-object-name");
+        if (eventResponseName == null || eventResponseName.length() == 0)
+            eventResponseName = "response";
         eventResponseCodeName = simpleMethodElement.getAttribute("event-response-code-name");
         if (eventResponseCodeName == null || eventResponseCodeName.length() == 0)
             eventResponseCodeName = "_response_code_";
@@ -307,6 +312,7 @@ public class SimpleMethod {
 
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             methodContext.putEnv(eventRequestName, methodContext.getRequest());
+            methodContext.putEnv(eventResponseName, methodContext.getResponse());
         }
 
         GenericValue userLogin = methodContext.getUserLogin();

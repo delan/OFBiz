@@ -36,6 +36,7 @@ import org.ofbiz.core.util.*;
  * SimpleEventHandler - Simple Event Mini-Lang Handler
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    January 8, 2002
  *@version    1.0
  */
@@ -63,7 +64,7 @@ public class SimpleEventHandler implements EventHandler {
 
         Debug.logVerbose("[Processing]: SIMPLE Event", module);
         try {
-            String eventReturn = SimpleMethod.runSimpleEvent(xmlResource, eventName, request);
+            String eventReturn = SimpleMethod.runSimpleEvent(xmlResource, eventName, request, response);
             if (Debug.verboseOn()) Debug.logVerbose("[Event Return]: " + eventReturn, module);
             return eventReturn;
         } catch (MiniLangException e) {

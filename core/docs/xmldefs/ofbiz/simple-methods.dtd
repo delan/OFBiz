@@ -12,22 +12,22 @@
 <!--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 *This is the DTD for the Open For Business Simple Event definition XML file.
@@ -50,7 +50,7 @@
 <!ENTITY % EntityListOperations "store-list | remove-list">
 <!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty | if-has-permission | check-permission">
 
-<!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; | 
+<!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; |
         %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityFindOperations; |
         %EntityValueOperations; | %EntityListOperations; | %IfOperations;">
 
@@ -61,13 +61,13 @@
     Servlet (or another event) or in a service context through the Service
     Engine, or any other component that has access to a service dispatcher.
 
-    The field-to-request and field-to-session elements will be IGNORED when 
+    The field-to-request and field-to-session elements will be IGNORED when
     called in a service context. So, they are ONLY used when called in an event context.
-    
+
     The field-to-result elements will be ignored in an event context, ie only used in a service.
-    
+
     The parameter-map-name env entry will contain the HttpRequest parameters for
-    running in an event context and and the input context when running in a service.    
+    running in an event context and and the input context when running in a service.
 -->
 <!ELEMENT simple-method ( (%SimpleMethodOperations;)* )>
 <!ATTLIST simple-method
@@ -79,6 +79,7 @@
     default-success-code CDATA "success"
     parameter-map-name CDATA "parameters"
     event-request-object-name CDATA "request"
+    event-response-object-name CDATA "response"
     event-response-code-name CDATA "_response_code_"
     event-error-message-name CDATA "_error_message_"
     event-event-message-name CDATA "_event_message_"
@@ -94,8 +95,8 @@
     user-login-name CDATA "userLogin"
 >
 
-<!-- 
-    If both an external and an inline map-processor are specified, the external 
+<!--
+    If both an external and an inline map-processor are specified, the external
     one will be called first, allowing the inline one to override its behavior
 -->
 <!ELEMENT call-map-processor ( simple-map-processor? )>
@@ -108,10 +109,10 @@
 >
 
 <!--
-    The result-to-request and result-to-session elements will be IGNORED when 
+    The result-to-request and result-to-session elements will be IGNORED when
     called in a service context. So, they are ONLY used when called in an event context.
 -->
-<!ELEMENT call-service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message?, 
+<!ELEMENT call-service ( error-prefix?, error-suffix?, success-prefix?, success-suffix?, message-prefix?, message-suffix?, default-message?,
                          (results-to-map | result-to-field | result-to-request | result-to-session | result-to-result)* )>
 <!ATTLIST call-service
     service-name CDATA #REQUIRED
@@ -183,7 +184,7 @@
     >
 
 <!--
-Calls a service asynchronously and ignores the result, so no return messages 
+Calls a service asynchronously and ignores the result, so no return messages
 are used; that doesn't mean no errors will result, but they would just be
 system errors like database failures, etc which all have system error messages.
 -->
@@ -194,8 +195,8 @@ system errors like database failures, etc which all have system error messages.
     include-user-login ( true | false ) "true"
 >
 
-<!-- 
-Runs an external bsh script from the classpath if resource is specified and 
+<!--
+Runs an external bsh script from the classpath if resource is specified and
 then runs the inlined bsh script if any is specified.
 
 The bsh context is the current simple-method environment including maps, lists
@@ -226,7 +227,7 @@ Error messages go on the error list and are handled with the check-errors tag.
 
 <!-- Operations to copy map fields in the current env to context specific containers -->
 
-<!-- Event specific operations -->    
+<!-- Event specific operations -->
 <!ELEMENT field-to-request EMPTY>
 <!ATTLIST field-to-request
     map-name CDATA #IMPLIED
@@ -262,7 +263,7 @@ Error messages go on the error list and are handled with the check-errors tag.
     session-name CDATA #IMPLIED
 >
 
-<!-- Service specific operations -->    
+<!-- Service specific operations -->
 <!ELEMENT field-to-result EMPTY>
 <!ATTLIST field-to-result
     map-name CDATA #IMPLIED
@@ -270,7 +271,7 @@ Error messages go on the error list and are handled with the check-errors tag.
     result-name CDATA #IMPLIED
 >
 
-<!-- Environment specific operations -->    
+<!-- Environment specific operations -->
 <!ELEMENT field-to-field EMPTY>
 <!ATTLIST field-to-field
     map-name CDATA #IMPLIED
@@ -341,7 +342,7 @@ Error messages go on the error list and are handled with the check-errors tag.
     >
 
 <!--
-These operations are used to interact with a data source through the entity 
+These operations are used to interact with a data source through the entity
 engine and facilitate related operations.
 -->
 
@@ -456,7 +457,7 @@ engine and facilitate related operations.
 >
 
 
-<!-- 
+<!--
 Operations that conditionally execute blocks within them; they mimic the
 simple-map-processor process operations that validate incoming data
 -->
@@ -525,7 +526,7 @@ simple-map-processor process operations that validate incoming data
 <!ELEMENT else ( (%SimpleMethodOperations;)* )>
 
 
-<!-- 
+<!--
     ======================================================
     ========== The Simple Map Processor Section ==========
     ======================================================
@@ -537,8 +538,8 @@ simple-map-processor process operations that validate incoming data
     name CDATA #REQUIRED
 >
 
-<!-- 
-    Make In String & Operations 
+<!--
+    Make In String & Operations
 -->
 <!ELEMENT make-in-string ( ( in-field | property | constant )* )>
 <!ATTLIST make-in-string
@@ -555,8 +556,8 @@ simple-map-processor process operations that validate incoming data
 >
 <!ELEMENT constant (#PCDATA)>
 
-<!-- 
-    Field Process & Operations 
+<!--
+    Field Process & Operations
 -->
 <!ELEMENT process ( ( validate-method | compare | compare-field | regexp | not-empty | copy | convert )* )>
 <!ATTLIST process
@@ -611,8 +612,8 @@ simple-map-processor process operations that validate incoming data
     format CDATA #IMPLIED
 >
 
-<!-- 
-    Failure stuff: inline message or from a properties file 
+<!--
+    Failure stuff: inline message or from a properties file
 -->
 <!ELEMENT fail-message EMPTY>
 <!ATTLIST fail-message

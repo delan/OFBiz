@@ -64,7 +64,7 @@ public class PrintTag extends TagSupport {
     public int doStartTag() throws JspException {
         if (attribute == null)
             return SKIP_BODY;
-        Object obj = pageContext.getAttribute(attribute);
+        Object obj = pageContext.findAttribute(attribute);
         if (obj == null)
             obj = defaultStr;
 

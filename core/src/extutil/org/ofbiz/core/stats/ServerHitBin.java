@@ -454,6 +454,19 @@ public class ServerHitBin {
                 return;
             }
 
+            // check for type data before running.
+            GenericValue serverHitType = null;
+            try {
+                serverHitType = delegator.findByPrimaryKeyCache("ServerHitType", UtilMisc.toMap("hitTypeId", ServerHitBin.typeIds[this.type]));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+            if (serverHitType == null) {
+                // datamodel data not loaded; not storing hit.
+                Debug.logWarning("The datamodel data has not been loaded; cannot find hitTypeId '" + ServerHitBin.typeIds[this.type] + " not storing ServerHit.", module);
+                return;
+            }
+
             String visitId = VisitHandler.getVisitId(request.getSession());
             if (visitId == null || visitId.length() == 0) {
                 //no visit info stored, so don't store the ServerHit

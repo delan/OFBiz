@@ -40,6 +40,7 @@ import org.ofbiz.core.util.*;
  * A single operation, does the specified operation on the given field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    February 15, 2002
  *@version    1.0
  */
@@ -58,15 +59,17 @@ public class MethodContext {
     GenericValue userLogin;
     
     HttpServletRequest request = null;
-    
+    HttpServletResponse response = null;
+
     Map results = null;
     DispatchContext ctx;
-    
-    public MethodContext(HttpServletRequest request, ClassLoader loader) {
+
+    public MethodContext(HttpServletRequest request, HttpServletResponse response, ClassLoader loader) {
         this.methodType = MethodContext.EVENT;
         this.parameters = UtilMisc.getParameterMap(request);
         this.loader = loader;
         this.request = request;
+        this.response = response;
         this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         this.delegator = (GenericDelegator) request.getAttribute("delegator");
         this.security = (Security) request.getAttribute("security");
@@ -106,6 +109,7 @@ public class MethodContext {
     public GenericDelegator getDelegator() { return this.delegator; }
     public Security getSecurity() { return this.security; }
     public HttpServletRequest getRequest() { return this.request; }
+    public HttpServletResponse getResponse() { return this.response; }
 
     public GenericValue getUserLogin() { return this.userLogin; }
     public void setUserLogin(GenericValue userLogin) { this.userLogin = userLogin; }
