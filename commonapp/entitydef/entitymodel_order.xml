@@ -654,6 +654,9 @@
       <relation type="one" fk-name="ORDER_ITEM_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
+      <relation type="mant" rel-entity-name="StatusValidChange">
+        <key-map field-name="statusId"/>
+      </relation>
       <relation type="one" fk-name="ORDER_ITEM_SYST" title="Sync" rel-entity-name="StatusItem">
         <key-map field-name="syncStatusId" rel-field-name="statusId"/>
       </relation>
@@ -925,6 +928,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_PMPRF_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="Payment">
+        <key-map field-name="orderPaymentPreferenceId" rel-field-name="paymentPreferenceId"/>
       </relation>
       <relation type="one-nofk" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId"/>
