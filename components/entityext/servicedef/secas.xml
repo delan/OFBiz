@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
+
+<service-eca>
+
+    <!-- cleanSyncRemoveInfo ECA, should also run on a schedule, like once a day or something -->
+    <eca service="runEntitySync" event="return">  
+        <action service="cleanSyncRemoveInfo" mode="async"/>
+    </eca>
+</service-eca>
