@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.8 2003/09/11 18:27:58 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.9 2003/10/16 03:05:06 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,29 +63,29 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class CheckOutHelper {
 
     public static final String module = CheckOutHelper.class.getName();
-    
+
     private ShoppingCart cart;
     private GenericDelegator delegator;
     private LocalDispatcher dispatcher;
-    
-    public CheckOutHelper (LocalDispatcher dispatcher, GenericDelegator delegator, ShoppingCart cart) {
+
+    public CheckOutHelper(LocalDispatcher dispatcher, GenericDelegator delegator, ShoppingCart cart) {
         this.delegator = delegator;
         this.dispatcher = dispatcher;
         this.cart = cart;
-    }    
-         
-    public Map setCheckOutShippingAddress( String shippingContactMechId ) {
+    }
+
+    public Map setCheckOutShippingAddress(String shippingContactMechId) {
       List errorMessages = new ArrayList();
       Map result;
 
       if (this.cart != null && this.cart.size() > 0) {
-        errorMessages.addAll( setCheckOutShippingAddressInternal( shippingContactMechId ) );
+        errorMessages.addAll(setCheckOutShippingAddressInternal(shippingContactMechId));
       } else {
         errorMessages.add("There are no items in the cart.");
       }
@@ -101,7 +101,7 @@ public class CheckOutHelper {
       return result;
    }
 
-    private List setCheckOutShippingAddressInternal( String shippingContactMechId ) {
+    private List setCheckOutShippingAddressInternal(String shippingContactMechId) {
       List errorMessages = new ArrayList();
 
       // set the shipping address
@@ -113,16 +113,16 @@ public class CheckOutHelper {
 
       return errorMessages;
    }
-   
-    public Map setCheckOutShippingOptions( String shippingMethod, String correspondingPoId, 
-            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage, 
-            String isGift ) {
+
+    public Map setCheckOutShippingOptions(String shippingMethod, String correspondingPoId,
+            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage,
+            String isGift) {
       List errorMessages = new ArrayList();
       Map result;
 
       if (this.cart != null && this.cart.size() > 0) {
-        errorMessages.addAll( setCheckOutShippingOptionsInternal( shippingMethod, correspondingPoId, 
-            shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift ) );
+        errorMessages.addAll(setCheckOutShippingOptionsInternal(shippingMethod, correspondingPoId,
+            shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift));
       } else {
         errorMessages.add("There are no items in the cart.");
       }
@@ -138,9 +138,9 @@ public class CheckOutHelper {
       return result;
    }
 
-    private List setCheckOutShippingOptionsInternal( String shippingMethod, String correspondingPoId, 
-            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage, 
-            String isGift ) {
+    private List setCheckOutShippingOptionsInternal(String shippingMethod, String correspondingPoId,
+            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage,
+            String isGift) {
       List errorMessages = new ArrayList();
 
       // set the general shipping options
@@ -180,16 +180,16 @@ public class CheckOutHelper {
       } else {
           this.cart.setPoNumber("(none)");
       }
-                                              
+
       return errorMessages;
    }
-   
-    public Map setCheckOutPayment( String checkOutPaymentId, String billingAccountId, Double billingAccountAmt ) {
+
+    public Map setCheckOutPayment(Map selectedPaymentMethods, String billingAccountId, Double billingAccountAmt) {
       List errorMessages = new ArrayList();
       Map result;
 
       if (this.cart != null && this.cart.size() > 0) {
-        errorMessages.addAll( setCheckOutPaymentInternal( checkOutPaymentId, billingAccountId, billingAccountAmt ) );
+        errorMessages.addAll(setCheckOutPaymentInternal(selectedPaymentMethods, billingAccountId, billingAccountAmt));
       } else {
         errorMessages.add("There are no items in the cart.");
       }
@@ -205,74 +205,80 @@ public class CheckOutHelper {
       return result;
    }
 
-    private List setCheckOutPaymentInternal( String checkOutPaymentId, String billingAccountId, Double billingAccountAmt ) {
+    private List setCheckOutPaymentInternal(Map selectedPaymentMethods, String billingAccountId, Double billingAccountAmt) {
       List errorMessages = new ArrayList();
 
       // set the billing account amount
-      if (billingAccountId != null && billingAccountAmt != null && !billingAccountId.equals("_NA")) {
+      if (billingAccountId != null && billingAccountAmt != null && !billingAccountId.equals("_NA_")) {
           cart.setBillingAccount(billingAccountId, billingAccountAmt.doubleValue());
       } else {
           cart.setBillingAccount(null, 0.00);
-      }          
+      }
 
       // set the payment method option
-      if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
+      if (selectedPaymentMethods != null && selectedPaymentMethods.size() > 0) {
           // clear out the old payments
           this.cart.clearPaymentMethodTypeIds();
           this.cart.clearPaymentMethodIds();
-           
-          // if we are EXT_BILLACT then we need to make sure we have enough credit
-          if ("EXT_BILLACT".equals(checkOutPaymentId)) {
-              double accountCredit = this.availableAccountBalance(cart.getBillingAccountId());                                                            
-              // make sure we have enough to cover
+
+          // if we are EXT_BILLACT (billing account only) then we need to make sure we have enough credit
+          if (selectedPaymentMethods.containsKey("EXT_BILLACT")) {
+              double accountCredit = this.availableAccountBalance(cart.getBillingAccountId());
+              // make sure we have enough to cover; if this is selected we don't have other payment methods
               if (cart.getGrandTotal() > accountCredit) {
                   errorMessages.add("Insufficient credit available on account.");
               }
           }
-          
-          // all payment method ids will be numeric, type ids will start with letter
-          if (Character.isLetter(checkOutPaymentId.charAt(0))) {
-              this.cart.addPaymentMethodTypeId(checkOutPaymentId);
-          } else {
+
+          Set paymentMethods = selectedPaymentMethods.keySet();
+          Iterator i = paymentMethods.iterator();
+          while (i.hasNext()) {
+              String checkOutPaymentId = (String) i.next();
+
+              // get the selected amount to use
               Double paymentAmount = null;
-              if (billingAccountAmt != null) {
-                  paymentAmount = new Double(cart.getGrandTotal() - billingAccountAmt.doubleValue());
+              if (selectedPaymentMethods.get(checkOutPaymentId) != null) {
+                  paymentAmount = (Double) selectedPaymentMethods.get(checkOutPaymentId);
               }
-              this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount);
-          }                
-                     
-      } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
+
+              // all payment method ids will be numeric, type ids will start with letter
+              if (Character.isLetter(checkOutPaymentId.charAt(0))) {
+                  this.cart.addPaymentMethodTypeId(checkOutPaymentId);
+              } else {
+                  if (paymentAmount == null) {
+                      if (billingAccountAmt != null) {
+                          paymentAmount = new Double(cart.getGrandTotal() - billingAccountAmt.doubleValue());
+                      } else {
+                          paymentAmount = new Double(cart.getGrandTotal());
+                      }
+                  }
+                  this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount);
+              }
+          }
+      } else {
           errorMessages.add("Please select a method of billing.");
       }
 
       return errorMessages;
    }
-   
-    public Map setCheckOutOptions(String shippingMethod, String shippingContactMechId, String checkOutPaymentId,            
-            String billingAccountId, Double billingAccountAmt, String correspondingPoId, String shippingInstructions, 
+
+    public Map setCheckOutOptions(String shippingMethod, String shippingContactMechId, Map selectedPaymentMethods,
+            String billingAccountId, Double billingAccountAmt, String correspondingPoId, String shippingInstructions,
             String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
         List errorMessages = new ArrayList();
         Map result = null;
 
-        if (this.cart != null && this.cart.size() > 0) {            
-            /* no longer needed 
-            String billingAccountId = null;
-            if (checkOutPaymentId != null && checkOutPaymentId.startsWith("EXT_BILLACT")) {
-                billingAccountId = checkOutPaymentId.substring(checkOutPaymentId.indexOf('|')+1);
-                checkOutPaymentId = "EXT_BILLACT"; 
-            } 
-            */
-
+        if (this.cart != null && this.cart.size() > 0) {
             // set the general shipping options and method
-            errorMessages.addAll( setCheckOutShippingOptionsInternal( shippingMethod, correspondingPoId, 
-                shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift ) );
+            errorMessages.addAll(setCheckOutShippingOptionsInternal(shippingMethod, correspondingPoId,
+                shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift));
 
             // set the shipping address
-            errorMessages.addAll( setCheckOutShippingAddressInternal( shippingContactMechId ) );
+            errorMessages.addAll(setCheckOutShippingAddressInternal(shippingContactMechId));
 
-            // set the payment method option
-            errorMessages.addAll( setCheckOutPaymentInternal( checkOutPaymentId, billingAccountId, billingAccountAmt ) );
-          
+            // set the payment method(s) option
+            errorMessages.addAll(setCheckOutPaymentInternal(selectedPaymentMethods, billingAccountId, billingAccountAmt));
+
         } else {
             errorMessages.add("There are no items in the cart.");
         }
@@ -284,7 +290,7 @@ public class CheckOutHelper {
         } else {
             result = ServiceUtil.returnSuccess();
         }
-        
+
         return result;
     }
 
@@ -292,38 +298,38 @@ public class CheckOutHelper {
     public Map createOrder(GenericValue userLogin, String distributorId, String affiliateId,
             List trackingCodeOrders, boolean areOrderItemsExploded, String visitId, String webSiteId) {
         if (this.cart == null) {
-            return null; 
+            return null;
         }
         String orderId = this.cart.getOrderId();
         Map result;
-        
+
         // format the grandTotal
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
         double cartTotal = this.cart.getGrandTotal();
-		String grandTotalString = formatter.format(cartTotal);               
+                String grandTotalString = formatter.format(cartTotal);
         Double grandTotal = null;
-		try {
-			grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
-		} catch (ParseException e) {
+                try {
+                        grandTotal = new Double(formatter.parse(grandTotalString).doubleValue());
+                } catch (ParseException e) {
             Debug.logError(e, "Problem getting parsed currency amount from DecimalFormat", module);
             result = ServiceUtil.returnError("ERROR: Could not create order (problem parsing order totals");
-            return result;			
-		}
+            return result;
+                }
 
         // store the order - build the context
         Map context = this.cart.makeCartMap(this.dispatcher, areOrderItemsExploded);
 
         //get the TrackingCodeOrder List
         context.put("trackingCodeOrders", trackingCodeOrders);
-        
+
         if (distributorId != null) context.put("distributorId", distributorId);
         if (affiliateId != null) context.put("affiliateId", affiliateId);
-        
+
         // need the partyId; don't use userLogin in case of an order via order mgr
         String partyId = this.cart.getPartyId();
-        String productStoreId = cart.getProductStoreId();           
-               
+        String productStoreId = cart.getProductStoreId();
+
         context.put("grandTotal", grandTotal);
         context.put("userLogin", userLogin);
         context.put("partyId", partyId);
@@ -363,10 +369,10 @@ public class CheckOutHelper {
         result.put("order_id", orderId);
         result.put("orderId", orderId);
         result.put("orderAdditionalEmails", this.cart.getOrderAdditionalEmails());
-        
-        // save the emails to the order                              
+
+        // save the emails to the order
         List toBeStored = new LinkedList();
-               
+
         GenericValue party = null;
         try {
             party = this.delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
@@ -374,7 +380,7 @@ public class CheckOutHelper {
             Debug.logWarning(e, "Problems getting Party record", module);
             party = null;
         }
-        
+
         // create order contact mechs for the email address(s)
         if (party != null) {
             Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
@@ -382,27 +388,27 @@ public class CheckOutHelper {
                 GenericValue email = (GenericValue) emailIter.next();
                 GenericValue orderContactMech = this.delegator.makeValue("OrderContactMech",
                         UtilMisc.toMap("orderId", orderId, "contactMechId", email.getString("contactMechId"), "contactMechPurposeTypeId", "ORDER_EMAIL"));
-                toBeStored.add(orderContactMech);                                   
+                toBeStored.add(orderContactMech);
             }
         }
-                                             
-        // create dummy contact mechs and order contact mechs for the additional emails    
-        String additionalEmails = this.cart.getOrderAdditionalEmails();  
+
+        // create dummy contact mechs and order contact mechs for the additional emails
+        String additionalEmails = this.cart.getOrderAdditionalEmails();
         List emailList = StringUtil.split(additionalEmails, ",");
-        if (emailList == null) emailList = new ArrayList();                                       
-        Iterator eli = emailList.iterator();       
+        if (emailList == null) emailList = new ArrayList();
+        Iterator eli = emailList.iterator();
         while (eli.hasNext()) {
             String email = (String) eli.next();
             String contactMechId = this.delegator.getNextSeqId("ContactMech").toString();
-            GenericValue contactMech = this.delegator.makeValue("ContactMech", 
-                    UtilMisc.toMap("contactMechId", contactMechId, "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)); 
-                                                    
-            GenericValue orderContactMech = this.delegator.makeValue("OrderContactMech", 
+            GenericValue contactMech = this.delegator.makeValue("ContactMech",
+                    UtilMisc.toMap("contactMechId", contactMechId, "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email));
+
+            GenericValue orderContactMech = this.delegator.makeValue("OrderContactMech",
                     UtilMisc.toMap("orderId", orderId, "contactMechId", contactMechId, "contactMechPurposeTypeId", "ORDER_EMAIL"));
             toBeStored.add(contactMech);
-            toBeStored.add(orderContactMech);                                                         
+            toBeStored.add(orderContactMech);
         }
-        
+
         if (toBeStored.size() > 0) {
             try {
                 if (Debug.verboseOn()) Debug.logVerbose("To Be Stored: " + toBeStored, module);
@@ -417,7 +423,7 @@ public class CheckOutHelper {
                 Debug.logWarning(e, "Problems storing order email contact information", module);
             }
         }
-        
+
         return result;
     }
 
@@ -470,7 +476,7 @@ public class CheckOutHelper {
 
     // Calc the tax adjustments.
     private List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, String productStoreId,
-    	List orderItems, List allAdjustments, GenericValue shipAddress) throws GeneralException {
+        List orderItems, List allAdjustments, GenericValue shipAddress) throws GeneralException {
         List products = new ArrayList(orderItems.size());
         List amounts = new ArrayList(orderItems.size());
         List shipAmts = new ArrayList(orderItems.size());
@@ -511,7 +517,7 @@ public class CheckOutHelper {
         return UtilMisc.toList(orderAdj, itemAdj);
     }
 
-    public Map processPayment(GenericValue productStore, GenericValue userLogin) throws GeneralException {                
+    public Map processPayment(GenericValue productStore, GenericValue userLogin) throws GeneralException {
         // Get some payment related strings
         String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage");
         String ERROR_MESSAGE = productStore.getString("authErrorMessage");
@@ -522,26 +528,26 @@ public class CheckOutHelper {
 
         // Get the orderId from the cart.
         String orderId = this.cart.getOrderId();
-        
+
         // Get the paymentMethodTypeIds - this will need to change when ecom supports multiple payments
-        List paymentMethodTypeIds = this.cart.getPaymentMethodTypeIds(); 
+        List paymentMethodTypeIds = this.cart.getPaymentMethodTypeIds();
 
         // Check the payment preferences; if we have ANY w/ status PAYMENT_NOT_AUTH invoke payment service.
         boolean requireAuth = false;
         List allPaymentPreferences = null;
-        try {            
+        try {
             allPaymentPreferences = this.delegator.findByAnd("OrderPaymentPreference", UtilMisc.toMap("orderId", orderId));
         } catch (GenericEntityException e) {
             throw new GeneralException("Problems getting payment preferences", e);
         }
-        
+
         Map paymentFields = UtilMisc.toMap("statusId", "PAYMENT_NOT_AUTH");
         List paymentPreferences = EntityUtil.filterByAnd(allPaymentPreferences, paymentFields);
-        
+
         if (paymentPreferences != null && paymentPreferences.size() > 0) {
             requireAuth = true;
         }
-        
+
         // Invoke payment processing.
         if (requireAuth) {
             Map paymentResult = null;
@@ -557,31 +563,31 @@ public class CheckOutHelper {
 
                 if (authResp.equals("FAILED")) {
                     // order was NOT approved
-                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);                                      
-                                       
+                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
+
                     boolean ok = OrderChangeHelper.rejectOrder(dispatcher, userLogin, orderId);
                     if (!ok) {
                         throw new GeneralException("Problem with order change; see above error");
-                    }                                                
-                        
+                    }
+
                     // null out the orderId for next pass.
                     cart.setOrderId(null);
-                    return ServiceUtil.returnError(DECLINE_MESSAGE);                                                               
+                    return ServiceUtil.returnError(DECLINE_MESSAGE);
                 } else if (authResp.equals("APPROVED")) {
                     // order WAS approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
-                                        
-                    // set the order and item status to approved  
+
+                    // set the order and item status to approved
                     boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
                     if (!ok) {
                         throw new GeneralException("Problem with order change; see above error");
-                    }                                                                                         
-                        
-                    return ServiceUtil.returnSuccess();                           
+                    }
+
+                    return ServiceUtil.returnSuccess();
                 } else if (authResp.equals("ERROR")) {
                     // service failed
-                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);               
-                    if ("Y".equalsIgnoreCase(RETRY_ON_ERROR)) {                    
+                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);
+                    if ("Y".equalsIgnoreCase(RETRY_ON_ERROR)) {
                         return ServiceUtil.returnSuccess(ERROR_MESSAGE);
                     } else {
                         boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
@@ -591,15 +597,15 @@ public class CheckOutHelper {
                         // null out orderId for next pass
                         this.cart.setOrderId(null);
                         return ServiceUtil.returnError(ERROR_MESSAGE);
-                    }                    
+                    }
                 } else {
                     // should never happen
                     return ServiceUtil.returnError("Please contact customer service; payment return code unknown.");
                 }
             } else {
                 // result returned null == service failed
-                if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);               
-                if ("Y".equalsIgnoreCase(RETRY_ON_ERROR)) {                    
+                if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);
+                if ("Y".equalsIgnoreCase(RETRY_ON_ERROR)) {
                     return ServiceUtil.returnSuccess(ERROR_MESSAGE);
                 } else {
                     boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
@@ -609,12 +615,12 @@ public class CheckOutHelper {
                     // null out orderId for next pass
                     this.cart.setOrderId(null);
                     return ServiceUtil.returnError(ERROR_MESSAGE);
-                }                                                                                               
+                }
             }
-        } else if (paymentMethodTypeIds.contains("EXT_COD") || paymentMethodTypeIds.contains("EXT_BILLACT")) {                                
+        } else if (paymentMethodTypeIds.contains("EXT_COD") || paymentMethodTypeIds.contains("EXT_BILLACT")) {
             boolean hasOther = false;
             boolean validAmount = false;
-            
+
             Iterator pmti = paymentMethodTypeIds.iterator();
             while (pmti.hasNext()) {
                 String type = (String) pmti.next();
@@ -623,7 +629,7 @@ public class CheckOutHelper {
                     break;
                 }
             }
-                        
+
             if (!hasOther) {
                 if (!paymentMethodTypeIds.contains("EXT_COD")) {
                     // only billing account, make sure we have enough to cover
@@ -635,31 +641,31 @@ public class CheckOutHelper {
                             validAmount = false;
                         } else {
                             validAmount = true;
-                        }                    
+                        }
                     }
                 }
-                
+
                 // approve this as long as there are only COD and Billing Account types
                 boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
                 if (!ok) {
-                    throw new GeneralException("Problem with order change; see above error");   
-                }                    
+                    throw new GeneralException("Problem with order change; see above error");
+                }
             }
-            return ServiceUtil.returnSuccess();                                     
+            return ServiceUtil.returnSuccess();
         } else {
             // Handle NO payment gateway as a success.
-            return ServiceUtil.returnSuccess();            
+            return ServiceUtil.returnSuccess();
         }
     }
-    
+
     public Map checkOrderBlacklist(GenericValue userLogin) {
         Map result;
         GenericValue shippingAddressObj = this.cart.getShippingAddress();
         String shippingAddress = UtilFormatOut.checkNull(shippingAddressObj.getString("address1").toUpperCase());
         List exprs = UtilMisc.toList(new EntityExpr(
-                new EntityExpr("blacklistString", true, EntityOperator.EQUALS, shippingAddress, true), EntityOperator.AND,                
+                new EntityExpr("blacklistString", true, EntityOperator.EQUALS, shippingAddress, true), EntityOperator.AND,
                 new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
-        
+
         List paymentMethods = this.cart.getPaymentMethods();
         Iterator i = paymentMethods.iterator();
         while (i.hasNext()) {
@@ -674,25 +680,25 @@ public class CheckOutHelper {
                 } catch (GenericEntityException e) {
                     Debug.logError(e, "Problems getting credit card from payment method", module);
                     result = ServiceUtil.returnError("Problems reading the database, please try again.");
-                    return result;                    
+                    return result;
                 }
                 if (creditCard != null) {
                     String creditCardNumber = UtilFormatOut.checkNull(creditCard.getString("cardNumber"));
                     exprs.add(new EntityExpr(
-                            new EntityExpr("blacklistString", EntityOperator.EQUALS, creditCardNumber), EntityOperator.AND,                            
+                            new EntityExpr("blacklistString", EntityOperator.EQUALS, creditCardNumber), EntityOperator.AND,
                             new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_CREDITCARD")));
                 }
                 if (billingAddress != null) {
                     String address = UtilFormatOut.checkNull(billingAddress.getString("address1").toUpperCase());
                     exprs.add(new EntityExpr(
-                            new EntityExpr("blacklistString", true, EntityOperator.EQUALS, address, true), EntityOperator.AND,                            
+                            new EntityExpr("blacklistString", true, EntityOperator.EQUALS, address, true), EntityOperator.AND,
                             new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
-                }  
+                }
             }
         }
-        
+
         List blacklistFound = null;
-        if (exprs.size() > 0) {            
+        if (exprs.size() > 0) {
             try {
                 blacklistFound = this.delegator.findByOr("OrderBlacklist", exprs);
             } catch (GenericEntityException e) {
@@ -701,27 +707,27 @@ public class CheckOutHelper {
                 return result;
             }
         }
-        
+
         if (blacklistFound != null && blacklistFound.size() > 0) {
-            result = ServiceUtil.returnError("failed"); 
+            result = ServiceUtil.returnError("failed");
             return result;
         } else {
             result = ServiceUtil.returnSuccess("success");
             return result;
         }
     }
-    
+
     public Map failedBlacklistCheck(GenericValue userLogin, GenericValue productStore) {
         Map result;
-    
-    	String REJECT_MESSAGE = productStore.getString("authFraudMessage");
+
+        String REJECT_MESSAGE = productStore.getString("authFraudMessage");
 
         // Get the orderId from the cart.
         String orderId = this.cart.getOrderId();
-        
+
         // set the order/item status - reverse inv
         OrderChangeHelper.rejectOrder(dispatcher, userLogin, orderId);
-        
+
         // nuke the userlogin
         userLogin.set("enabled", "N");
         try {
@@ -730,22 +736,22 @@ public class CheckOutHelper {
             Debug.logError(e, "Problems de-activating userLogin.", module);
             result = ServiceUtil.returnError("Database error.");
             return result;
-        }  
+        }
         result = ServiceUtil.returnSuccess();
-        result.put(ModelService.ERROR_MESSAGE, REJECT_MESSAGE);      
-        
+        result.put(ModelService.ERROR_MESSAGE, REJECT_MESSAGE);
+
         // wipe the cart and session
         this.cart.clear();
         return result;
-    }   
-        
+    }
+
     public Map checkExternalPayment(String orderId) {
         Map result;
         // warning there can only be ONE payment preference for this to work
         // you cannot accept multiple payment type when using an external gateway
         GenericValue orderHeader = null;
         try {
-            orderHeader = this.delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));  
+            orderHeader = this.delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting order header", module);
             result = ServiceUtil.returnError("Problems getting order header. Cannot check external gateways!");
@@ -771,8 +777,8 @@ public class CheckOutHelper {
                     result = ServiceUtil.returnSuccess();
                     result.put("type", type.toLowerCase());
                     return result;
-                }                
-            } 
+                }
+            }
             result = ServiceUtil.returnSuccess();
             result.put("type", "none");
             return result;
@@ -780,19 +786,19 @@ public class CheckOutHelper {
             result = ServiceUtil.returnError("Error, cannot locate order for processing.");
             result.put("type", "error");
             return result;
-        }        
+        }
     }
-    
+
     /**
      * Sets the shipping contact mechanism on the cart
-     * 
+     *
      * @param shippingContactMechId The identifier of the contact
      * @return A Map conforming to the OFBiz Service conventions containing
      * any error messages
      */
     public Map finalizeOrderEntryShip(String shippingContactMechId) {
         Map result;
-        
+
         //Verify the field is valid
         if (UtilValidate.isNotEmpty(shippingContactMechId)) {
             this.cart.setShippingContactMechId(shippingContactMechId);
@@ -800,17 +806,17 @@ public class CheckOutHelper {
         } else {
             result = ServiceUtil.returnError("Please enter a shipping address");
         }
-        
-        return result;   
+
+        return result;
     }
-    
+
     /**
      * Sets the options associated with the order
-     * 
+     *
      * @param shippingMethod The shipping method indicating the carrier and
      * shipment type to use
      * @param shippingInstructions Any additional handling instructions
-     * @param maySplit "true" or anything else for <code>false</code> 
+     * @param maySplit "true" or anything else for <code>false</code>
      * @param giftMessage A message to have included for the recipient
      * @param isGift "true" or anything else for <code>false</code>
      * @return A Map conforming to the OFBiz Service conventions containing
@@ -819,7 +825,7 @@ public class CheckOutHelper {
     public Map finalizeOrderEntryOptions(String shippingMethod,
             String shippingInstructions, String maySplit, String giftMessage, String isGift) {
         Map result;
-        
+
         //Verify the shipping method is valid
         if (UtilValidate.isNotEmpty(shippingMethod)) {
             int delimiterPos = shippingMethod.indexOf('@');
@@ -835,57 +841,57 @@ public class CheckOutHelper {
             this.cart.setCarrierPartyId(carrierPartyId);
         } else {
             result = ServiceUtil.returnError("Please Select a Shipping Method");
-        }  
-        
+        }
+
         //Set the remaining order options
-        this.cart.setShippingInstructions(shippingInstructions);  
-        this.cart.setGiftMessage(giftMessage);  
-        this.cart.setMaySplit(Boolean.valueOf(maySplit)); 
+        this.cart.setShippingInstructions(shippingInstructions);
+        this.cart.setGiftMessage(giftMessage);
+        this.cart.setMaySplit(Boolean.valueOf(maySplit));
         this.cart.setIsGift(Boolean.valueOf(isGift));
-        
+
         result = ServiceUtil.returnSuccess();
         return result;
     }
-    
+
     /**
      * Indicates whether the payment should be made offline or
      * whether further settings will be given for the electronic
      * payment method.
-     * 
-     * @param paymentMthodType "offline" to indicate that is to be paid 
+     *
+     * @param paymentMthodType "offline" to indicate that is to be paid
      * offline, <code>null</code> or anything else for online.
      * @return A Map conforming to the OFBiz Service conventions containing
      * any error messages
      */
     public Map finalizeOrderEntryMethodType(String paymentMthodType) {
         Map result;
-        
+
         this.cart.clearPaymentMethodTypeIds();
         this.cart.clearPaymentMethodIds();
-        if (paymentMthodType != null && paymentMthodType.equals("offline")) {                                
+        if (paymentMthodType != null && paymentMthodType.equals("offline")) {
             this.cart.addPaymentMethodTypeId("EXT_OFFLINE");
         }
-        
+
         result = ServiceUtil.returnSuccess();
-        return result;            
+        return result;
     }
-    
+
     /**
      * Sets the payment ID to use during the checkout process
-     * 
+     *
      * @param checkOutPaymentId The type of payment to use, should
      * be "OFFLINE_PAYMENT" to indicate offlinem otherwise the payment ID
      * will be associated with the cart
      * @return A Map conforming to the OFBiz Service conventions containing
      * any error messages. Includes the field "OFFLINE_PAYMENT"
      * containing a <code>Boolean</code> indicating whether it's an offline
-     * payment or not. 
+     * payment or not.
      */
     public Map finalizeOrderEntryPayment(String checkOutPaymentId) {
         Map result = ServiceUtil.returnSuccess();
-        
+
         if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
-            if (!checkOutPaymentId.equals("OFFLINE_PAYMENT")) {                
+            if (!checkOutPaymentId.equals("OFFLINE_PAYMENT")) {
                 // clear out the old payments
                 this.cart.clearPaymentMethodTypeIds();
                 this.cart.clearPaymentMethodIds();
@@ -901,63 +907,63 @@ public class CheckOutHelper {
                 result.put("OFFLINE_PAYMENT", new Boolean(true));
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Defines the payment options for an order.
-     *   
+     *
      * @param params Contains the amount associated with
      * each <code>paymentMethodTypeId</code>.
      * @return A Map conforming to the OFBiz Service conventions containing
      * any error messages. Includes the field "OFFLINE_PAYMENTS"
      * containing a <code>Boolean</code> indicating whether it's an offline
-     * payment or not. 
+     * payment or not.
      */
     public Map finalizeOrderEntryOfflinePayments(Map params) {
         Map result = ServiceUtil.returnSuccess();
         List errorMessages = new ArrayList();
-        
+
         // get a list of payment types
         List paymentTypes = null;
         try {
             paymentTypes = delegator.findAll("PaymentMethodType");
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get payment method types from datasource", module);
-        }   
+        }
         if (paymentTypes != null) {
             Map paymentPrefs = new HashMap();
             double paymentTally = 0.00;
             Iterator pi = paymentTypes.iterator();
             while (pi.hasNext()) {
-                GenericValue paymentMethodType = (GenericValue) pi.next();   
+                GenericValue paymentMethodType = (GenericValue) pi.next();
                 String paymentType = null;
                 if (paymentMethodType != null && paymentMethodType.get("paymentMethodTypeId") != null) {
                     paymentType = paymentMethodType.getString("paymentMethodTypeId");
                 }
-                    
+
                 // get the amount by type
                 double paymentAmount = 0.00;
-                if (paymentType != null && !paymentType.equals("OFFLINE")) {                                      
+                if (paymentType != null && !paymentType.equals("OFFLINE")) {
                     String amount = (String)params.get(paymentMethodType.getString("paymentMethodTypeId"));
                     if (amount != null && amount.length() > 0) {
-                        try {                                                                                
-                            paymentAmount = NumberFormat.getNumberInstance().parse(amount).doubleValue();                                                           
+                        try {
+                            paymentAmount = NumberFormat.getNumberInstance().parse(amount).doubleValue();
                         } catch (java.text.ParseException pe) {
                             result = ServiceUtil.returnError("Problems parsing amount.");
                             return result;
                         }
                     }
                 }
-                    
+
                 // only worry about types w/ an amount
                 if (paymentAmount > 0.00) {
                    paymentPrefs.put(paymentType, new Double(paymentAmount));
-                   paymentTally += paymentAmount;                        
-                }                    
+                   paymentTally += paymentAmount;
+                }
             }
-                
+
             double cartTotal = cart.getGrandTotal();
             if (cartTotal != paymentTally) {
                 result = ServiceUtil.returnError("Totals do not match order total.");
@@ -973,19 +979,19 @@ public class CheckOutHelper {
                 result.put("OFFLINE_PAYMENTS", new Boolean(true));
             }
         }
-        
+
         return result;
     }
 
     /**
      * Performs all the finalization settings and combines all the results.
-     * This is a convenience method, primarily to match the original 
+     * This is a convenience method, primarily to match the original
      * code structure of the adapter class <code>CheckOutEvents</code>.
      * <p>
      * I would prefer to remove this altogether and move the method
      * {@link #addErrors(List, Map, Map) addErrors} to the utility
-     * class {@link ServiceUtil ServiceUtil}  
-     * 
+     * class {@link ServiceUtil ServiceUtil}
+     *
      * @see CheckOutHelper#finalizeOrderEntryMethodType(String)
      * @see CheckOutHelper#finalizeOrderEntryOfflinePayments(Map)
      * @see CheckOutHelper#finalizeOrderEntryOptions(String, String, String, String, String)
@@ -993,64 +999,64 @@ public class CheckOutHelper {
      * @see CheckOutHelper#finalizeOrderEntryShip(String)
      */
     public Map finalizeOrderEntry(String finalizeMode, String shippingContactMechId, String shippingMethod,
-            String shippingInstructions, String maySplit, String giftMessage, String isGift, String methodType, 
+            String shippingInstructions, String maySplit, String giftMessage, String isGift, String methodType,
             String checkOutPaymentId, Map params) {
         Map result = ServiceUtil.returnSuccess();
         Map errorMaps = new HashMap();
         Map callResult;
         List errorMessages = new ArrayList();
-                 
+
         // set the shipping method
         if (finalizeMode != null && finalizeMode.equals("ship")) {
             callResult = this.finalizeOrderEntryShip(shippingContactMechId);
-            this.addErrors(errorMessages, errorMaps, callResult);                
+            this.addErrors(errorMessages, errorMaps, callResult);
         }
-            
+
         // set the options
         if (finalizeMode != null && finalizeMode.equals("options")) {
             callResult = this.finalizeOrderEntryOptions(shippingMethod, shippingInstructions, maySplit, giftMessage, isGift);
-            this.addErrors(errorMessages, errorMaps, callResult);                  
+            this.addErrors(errorMessages, errorMaps, callResult);
         }
-        
+
         // payment option; if offline we skip the payment screen
-        if (finalizeMode != null && finalizeMode.equals("payoption")) {   
+        if (finalizeMode != null && finalizeMode.equals("payoption")) {
             callResult = this.finalizeOrderEntryMethodType(methodType);
-            this.addErrors(errorMessages, errorMaps, callResult);                   
+            this.addErrors(errorMessages, errorMaps, callResult);
         }
-        
+
         // set the payment
-        if (finalizeMode != null && finalizeMode.equals("payment")) {   
+        if (finalizeMode != null && finalizeMode.equals("payment")) {
             callResult = this.finalizeOrderEntryPayment(checkOutPaymentId);
-            this.addErrors(errorMessages, errorMaps, callResult);                
-        } 
+            this.addErrors(errorMessages, errorMaps, callResult);
+        }
 
         // create offline payments
-        if (finalizeMode != null && finalizeMode.equals("offline_payments")) {   
+        if (finalizeMode != null && finalizeMode.equals("offline_payments")) {
             callResult = this.finalizeOrderEntryOfflinePayments(params);
             this.addErrors(errorMessages, errorMaps, callResult);
         }
-        
+
         //See whether we need to return an error or not
         if (errorMessages.size() > 0) {
-            result.put(ModelService.ERROR_MESSAGE_LIST, errorMessages);       
+            result.put(ModelService.ERROR_MESSAGE_LIST, errorMessages);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
         }
         if (errorMaps.size() > 0) {
             result.put(ModelService.ERROR_MESSAGE_MAP, errorMaps);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
         }
-        
+
         return result;
     }
-    
+
     /**
      * Takes the result of an invocation and extracts any error messages
      * and adds them to the targetList. This will handle both List and String
      * error messags.
-     * 
+     *
      * @param targetList    The List to add the error messages to
      * @param targetMap The Map to add any Map error messages to
-     * @param callResult The result from an invocation 
+     * @param callResult The result from an invocation
      */
     private void addErrors(List targetList, Map targetMap, Map callResult) {
         List newList;
@@ -1058,7 +1064,7 @@ public class CheckOutHelper {
         Iterator mapIter;
         Map errorMsgMap;
         StringBuffer outMsg;
-        
+
         //See if there is a single message
         if (callResult.containsKey(ModelService.ERROR_MESSAGE)) {
             targetList.add(callResult.get(ModelService.ERROR_MESSAGE));
@@ -1069,19 +1075,19 @@ public class CheckOutHelper {
             newList = (List)callResult.get(ModelService.ERROR_MESSAGE_LIST);
             targetList.addAll(newList);
         }
-        
+
         //See if there are an error message map
         if (callResult.containsKey(ModelService.ERROR_MESSAGE_MAP)) {
             errorMsgMap = (Map)callResult.get(ModelService.ERROR_MESSAGE_MAP);
             targetMap.putAll(errorMsgMap);
         }
     }
-        
+
     public double availableAccountBalance(String billingAccountId) {
         GenericValue billingAccount = null;
         Double accountBalance = new Double(0.00);
         Double accountLimit = new Double(0.00);
-        
+
         if (billingAccountId != null) {
             try {
                 Map res = dispatcher.runSync("calcBillingAccountBalance", UtilMisc.toMap("billingAccountId", billingAccountId));
@@ -1093,7 +1099,7 @@ public class CheckOutHelper {
             if (billingAccount != null) {
                 accountLimit = billingAccount.getDouble("accountLimit");
             }
-                          
+
             if (accountLimit == null) {
                 accountLimit = new Double(0.00);
             }
@@ -1101,21 +1107,21 @@ public class CheckOutHelper {
                 accountBalance = new Double(0.00);
             }
         }
-        
+
         double availableBalance = (accountLimit.doubleValue() - accountBalance.doubleValue());
-        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");        
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
         String availableString = formatter.format(availableBalance);
         Double available = null;
         try {
-            available = new Double(formatter.parse(availableString).doubleValue());            
+            available = new Double(formatter.parse(availableString).doubleValue());
         } catch (ParseException e) {
-            Debug.logError(e, "Problem getting parsed available amount", module);            
-        }        
-        Debug.logInfo("Billing Account : " + billingAccountId + " - " + available, module);     
-        return available.doubleValue();                
+            Debug.logError(e, "Problem getting parsed available amount", module);
+        }
+        Debug.logInfo("Billing Account : " + billingAccountId + " - " + available, module);
+        return available.doubleValue();
     }
-    
+
     public Map makeBillingAccountMap(List paymentPrefs) {
         Map accountMap = new HashMap();
         if (paymentPrefs != null) {

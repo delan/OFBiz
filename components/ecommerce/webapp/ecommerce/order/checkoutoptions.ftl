@@ -1,65 +1,65 @@
 <#--
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 
 <script language="javascript" type="text/javascript">
 <!--
-function submitForm(form, mode, value) {	
-	if (mode == "DN") {	
-		// done action; checkout
-		form.action="<@ofbizUrl>/checkout</@ofbizUrl>";
-		form.submit();
-	} else if (mode == "CS") {	
-		// continue shopping	
-		form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
-		form.submit();
-	} else if (mode == "NA") {
-		// new address
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
-		form.submit();
-	} else if (mode == "EA") {
-		// edit address
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?contactMechId="+value+"</@ofbizUrl>";
-		form.submit();
-	} else if (mode == "NC") {
-		// new credit card
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard</@ofbizUrl>";
-		form.submit();
-	} else if (mode == "EC") {
-		// edit credit card
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?paymentMethodId="+value+"</@ofbizUrl>";
-		form.submit();
-	} else if (mode == "NE") {
-		// new eft account
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount</@ofbizUrl>";
-		form.submit();
-	} else if (mode == "EE") {
-		// edit eft account
-		form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?paymentMethodId="+value+"</@ofbizUrl>";
-		form.submit();
-	} else if (mode == "SA") {
+function submitForm(form, mode, value) {
+        if (mode == "DN") {
+                // done action; checkout
+                form.action="<@ofbizUrl>/checkout</@ofbizUrl>";
+                form.submit();
+        } else if (mode == "CS") {
+                // continue shopping
+                form.action="<@ofbizUrl>/updateCheckoutOptions/showcart</@ofbizUrl>";
+                form.submit();
+        } else if (mode == "NA") {
+                // new address
+                form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?preContactMechTypeId=POSTAL_ADDRESS&contactMechPurposeTypeId=SHIPPING_LOCATION</@ofbizUrl>";
+                form.submit();
+        } else if (mode == "EA") {
+                // edit address
+                form.action="<@ofbizUrl>/updateCheckoutOptions/editcontactmech?contactMechId="+value+"</@ofbizUrl>";
+                form.submit();
+        } else if (mode == "NC") {
+                // new credit card
+                form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard</@ofbizUrl>";
+                form.submit();
+        } else if (mode == "EC") {
+                // edit credit card
+                form.action="<@ofbizUrl>/updateCheckoutOptions/editcreditcard?paymentMethodId="+value+"</@ofbizUrl>";
+                form.submit();
+        } else if (mode == "NE") {
+                // new eft account
+                form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount</@ofbizUrl>";
+                form.submit();
+        } else if (mode == "EE") {
+                // edit eft account
+                form.action="<@ofbizUrl>/updateCheckoutOptions/editeftaccount?paymentMethodId="+value+"</@ofbizUrl>";
+                form.submit();
+        } else if (mode == "SA") {
         // selected shipping address
         form.action="<@ofbizUrl>/updateCheckoutOptions/quickcheckout</@ofbizUrl>";
         form.submit();
@@ -67,17 +67,17 @@ function submitForm(form, mode, value) {
 }
 
 function toggleBillingAccount(box) {
-    var amountName = box.value + "_amount";
-    box.checked = true;   
+    var amountName = "amount_" + box.value;
+    box.checked = true;
     box.form.elements[amountName].disabled = false;
-    
+
     for (var i = 0; i < box.form.elements[box.name].length; i++) {
-        if (!box.form.elements[box.name][i].checked) {           
-            box.form.elements[box.form.elements[box.name][i].value + "_amount"].disabled = true;
+        if (!box.form.elements[box.name][i].checked) {
+            box.form.elements["amount_" + box.form.elements[box.name][i].value].disabled = true;
         }
     }
 }
-        
+
 // -->
 </script>
 
@@ -88,13 +88,73 @@ function toggleBillingAccount(box) {
   <table width="100%" border="0" cellpadding='0' cellspacing='0'>
     <tr valign="top" align="left">
       <td height='100%'>
+        <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
+          <tr>
+            <td width='100%'>
+              <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+                <tr>
+                  <td valign=middle align=left nowrap>
+                    <div class="boxhead">1)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr style='height: 100%;'>
+            <td width='100%' valign=top height='100%'>
+              <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
+                <tr>
+                  <td valign='top'>
+                    <table width="100%" border="0" cellpadding="1" cellspacing="0">
+                      <tr>
+                        <td colspan="2">
+                          <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>&nbsp;<a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
+                        </td>
+                      </tr>
+                       <#if context.shippingContactMechList?has_content>
+                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                         <#list context.shippingContactMechList as shippingContactMech>
+                           <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
+                           <tr>
+                             <td align="left" valign="top" width="1%" nowrap>
+                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"  onclick="javascript:submitForm(document.checkoutInfoForm, 'SA', null);"<#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId> checked</#if>>
+                             </td>
+                             <td align="left" valign="top" width="99%" nowrap>
+                               <div class="tabletext">
+                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
+                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
+                                 <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
+                                 <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
+                                 <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
+                                 <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
+                                 <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
+                                 <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>
+                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
+                               </div>
+                             </td>
+                           </tr>
+                           <#if shippingContactMech_has_next>
+                             <tr><td colspan="2"><hr class='sepbar'></td></tr>
+                           </#if>
+                         </#list>
+                       </#if>
+                     </table>
+                   </td>
+                 </tr>
+               </table>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
+      <td height='100%'>
         <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
           <tr>
             <td width='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left>
-                    <div class="boxhead">1)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
+                  <td valign=middle align=left nowrap>
+                    <div class="boxhead">2)&nbsp;${uiLabelMap.OrderHowShallWeShipIt}?</div>
                   </td>
                 </tr>
               </table>
@@ -109,10 +169,10 @@ function toggleBillingAccount(box) {
                       <#list context.carrierShipmentMethodList as carrierShipmentMethod>
                         <#assign shippingMethod = carrierShipmentMethod.shipmentMethodTypeId + "@" + carrierShipmentMethod.partyId>
                         <tr>
-                          <td width='1%' valign="top" >                            
-                            <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == context.chosenShippingMethod?default("N@A")>checked</#if>>       
+                          <td width='1%' valign="top" >
+                            <input type='radio' name='shipping_method' value='${shippingMethod}' <#if shippingMethod == context.chosenShippingMethod?default("N@A")>checked</#if>>
                           </td>
-                          <td valign="top">                            
+                          <td valign="top">
                             <div class='tabletext'>
                               <#if cart.getShippingContactMechId()?exists>
                                 <#assign shippingEstMap = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
@@ -120,14 +180,14 @@ function toggleBillingAccount(box) {
                                   <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>
                                 <#else>
                                   <#assign shippingEstimate = " - Calculated Offline">
-                                </#if>                              
+                                </#if>
                               </#if>
                               <#if carrierShipmentMethod.partyId != "_NA_">${carrierShipmentMethod.partyId?if_exists}&nbsp;</#if>${carrierShipmentMethod.description?if_exists}${shippingEstimate?if_exists}
-                            </div>                           
+                            </div>
                           </td>
-                        </tr>                        
+                        </tr>
                       </#list>
-                      <#if !carrierShipmentMethodList?exists || carrierShipmentMethodList?size == 0>                     
+                      <#if !carrierShipmentMethodList?exists || carrierShipmentMethodList?size == 0>
                         <tr>
                           <td width='1%' valign="top">
                             <input type='radio' name='shipping_method' value="Default" checked>
@@ -170,7 +230,7 @@ function toggleBillingAccount(box) {
                           <textarea class='textAreaBox' cols="30" rows="3" name="shipping_instructions">${cart.getShippingInstructions()?if_exists}</textarea>
                         </td>
                       </tr>
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>       
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td colspan="2">
                           <span class="head2"><b>${uiLabelMap.OrderPoNumber}</b></span>&nbsp;
@@ -179,8 +239,8 @@ function toggleBillingAccount(box) {
                           </#if>
                           <input type="text" class='inputBox' name="corresponding_po_id" size="15" value='${currentPoNumber?if_exists}'>
                         </td>
-                      </tr>                                                           
-                      <tr><td colspan="2"><hr class='sepbar'></td></tr>                      
+                      </tr>
+                      <tr><td colspan="2"><hr class='sepbar'></td></tr>
                       <tr>
                         <td colspan="2">
                           <div>
@@ -231,64 +291,6 @@ function toggleBillingAccount(box) {
           </tr>
         </table>
       </td>
-      <td bgcolor="white" width="1">&nbsp;&nbsp;</td>   
-      <td height='100%'>
-        <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
-          <tr>
-            <td width='100%'>
-              <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-                <tr>
-                  <td valign=middle align=left>
-                    <div class="boxhead">2)&nbsp;${uiLabelMap.OrderWhereShallWeShipIt}?</div>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr style='height: 100%;'>
-            <td width='100%' valign=top height='100%'>
-              <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
-                <tr>
-                  <td valign='top'>
-                    <table width="100%" border="0" cellpadding="1" cellspacing="0">
-                      <tr>
-                        <td colspan="2">
-                          <a href="javascript:submitForm(document.checkoutInfoForm, 'NA', '');" class="buttontext">[${uiLabelMap.PartyAddNewAddress}]</a>
-                        </td>
-                      </tr>
-                       <#if context.shippingContactMechList?has_content>
-                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                         <#list context.shippingContactMechList as shippingContactMech>
-                           <#assign shippingAddress = shippingContactMech.getRelatedOne("PostalAddress")>
-                           <tr>
-                             <td align="left" valign="top" width="1%" nowrap>
-                               <input type="radio" name="shipping_contact_mech_id" value="${shippingAddress.contactMechId}"  onclick="javascript:submitForm(document.checkoutInfoForm, 'SA', null);"<#if cart.getShippingContactMechId()?default("") == shippingAddress.contactMechId> checked</#if>>        
-                             </td>
-                             <td align="left" valign="top" width="99%" nowrap>
-                               <div class="tabletext">
-                                 <#if shippingAddress.toName?has_content><b>${uiLabelMap.CommonTo}:</b>&nbsp;${shippingAddress.toName}<br></#if>
-                                 <#if shippingAddress.attnName?has_content><b>${uiLabelMap.PartyAddrAttnName}:</b>&nbsp;${shippingAddress.attnName}<br></#if>
-                                 <#if shippingAddress.address1?has_content>${shippingAddress.address1}<br></#if>
-                                 <#if shippingAddress.address2?has_content>${shippingAddress.address2}<br></#if>
-                                 <#if shippingAddress.city?has_content>${shippingAddress.city}</#if>
-                                 <#if shippingAddress.stateProvinceGeoId?has_content><br>${shippingAddress.stateProvinceGeoId}</#if>
-                                 <#if shippingAddress.postalCode?has_content><br>${shippingAddress.postalCode}</#if>
-                                 <#if shippingAddress.countryGeoId?has_content><br>${shippingAddress.countryGeoId}</#if>                                                            
-                                 <a href="javascript:submitForm(document.checkoutInfoForm, 'EA', '${shippingAddress.contactMechId}');" class="buttontext">[${uiLabelMap.CommonUpdate}]</a>
-                               </div>
-                             </td>
-                           </tr>
-                           <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                         </#list>
-                       </#if>
-                     </table>
-                   </td>
-                 </tr>
-               </table>
-            </td>
-          </tr>
-        </table>
-      </td>
       <td bgcolor="white" width="1">&nbsp;&nbsp;</td>
       <td height='100%'>
         <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside' style='height: 100%;'>
@@ -296,20 +298,20 @@ function toggleBillingAccount(box) {
             <td width='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
                 <tr>
-                  <td valign=middle align=left>
+                  <td valign=middle align=left nowrap>
                     <div class="boxhead">3)&nbsp;${uiLabelMap.OrderHowShallYouPay}?</div>
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
-          
+
           <#-- Payment Method Selection -->
           <tr style='height: 100%;'>
             <td width='100%' valign=top height='100%'>
               <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom' style='height: 100%;'>
                 <tr>
-                  <td valign=top>                
+                  <td valign=top>
                     <table width="100%" cellpadding="1" cellspacing="0" border="0">
                       <tr><td colspan="2">
                         <span class='tabletext'>${uiLabelMap.CommonAdd}:</span>
@@ -332,7 +334,7 @@ function toggleBillingAccount(box) {
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.OrderCOD}</span>
                         </td>
-                      </tr>                       
+                      </tr>
                       <tr>
                         <td width="1%" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_WORLDPAY" <#if "EXT_WORLDPAY" == context.checkOutPaymentId>checked</#if>>
@@ -340,7 +342,7 @@ function toggleBillingAccount(box) {
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithWorldPay}</span>
                         </td>
-                      </tr>    
+                      </tr>
                       <tr>
                         <td width="1%" nowrap>
                           <input type="radio" name="checkOutPaymentId" value="EXT_PAYPAL" <#if "EXT_PAYPAL" == context.checkOutPaymentId>checked</#if>>
@@ -348,15 +350,15 @@ function toggleBillingAccount(box) {
                         <td width="50%" nowrap>
                           <span class="tabletext">${uiLabelMap.AccountingPayWithPayPal}</span>
                         </td>
-                      </tr>    
+                      </tr>
                       <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                                            
+
                       <#list context.paymentMethodList as paymentMethod>
                         <#if paymentMethod.paymentMethodTypeId == "CREDIT_CARD">
                           <#assign creditCard = paymentMethod.getRelatedOne("CreditCard")>
-                          <tr>                 
+                          <tr>
                             <td width="1%" nowrap>
-                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
+                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">CC:&nbsp;${Static["org.ofbiz.party.contact.ContactHelper"].formatCreditCard(creditCard)}</span>
@@ -366,8 +368,8 @@ function toggleBillingAccount(box) {
                         <#elseif paymentMethod.paymentMethodTypeId == "EFT_ACCOUNT">
                           <#assign eftAccount = paymentMethod.getRelatedOne("EftAccount")>
                           <tr>
-                            <td width="1%" nowrap>             
-                              <input type="radio" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if paymentMethod.paymentMethodId == checkOutPaymentId>checked</#if>>
+                            <td width="1%" nowrap>
+                              <input type="checkbox" name="checkOutPaymentId" value="${paymentMethod.paymentMethodId}" <#if cart.isPaymentMethodSelected(paymentMethod.paymentMethodId)>checked</#if>>
                             </td>
                             <td width="50%" nowrap>
                               <span class="tabletext">EFT:&nbsp;${eftAccount.bankName?if_exists}: ${eftAccount.accountNumber?if_exists}</span>
@@ -378,46 +380,46 @@ function toggleBillingAccount(box) {
                         </#if>
                       </#list>
 
-                      <#-- special billing account functionality to allow use w/ a payment method -->                     
-                      <#if billingAccountList?has_content>                        
+                      <#-- special billing account functionality to allow use w/ a payment method -->
+                      <#if billingAccountList?has_content>
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
-                        <tr>                          
-                          <td width="1%" nowrap>             
+                        <tr>
+                          <td width="1%" nowrap>
                             <input type="radio" name="checkOutPaymentId" value="EXT_BILLACT" <#if "EXT_BILLACT" == checkOutPaymentId>checked</#if>></hr>
                           </td>
                           <td width="50%" nowrap>
-                            <span class="tabletext">${uiLabelMap.AccountingPayOnlyWithBillingAccount}</span>                             
+                            <span class="tabletext">${uiLabelMap.AccountingPayOnlyWithBillingAccount}</span>
                           </td>
                         </tr>
                         <tr><td colspan="2"><hr class='sepbar'></td></tr>
                         <#list billingAccountList as billingAccount>
-                          <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>                       
+                          <#assign availableAmount = billingAccount.accountLimit?double - billingAccount.accountBalance?double>
                           <tr>
-                            <td align="left" valign="top" width="1%" nowrap>                             
+                            <td align="left" valign="top" width="1%" nowrap>
                               <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="${billingAccount.billingAccountId}" <#if (billingAccount.billingAccountId == selectedBillingAccount?default(""))>checked</#if>>
                             </td>
                             <td align="left" valign="top" width="99%" nowrap>
                               <div class="tabletext">
                                ${billingAccount.description?default("Bill Account")} #<b>${billingAccount.billingAccountId}</b>&nbsp;(${(availableAmount)?string.currency})<br>
-                               <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="${billingAccount.billingAccountId}_amount" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
+                               <b>${uiLabelMap.OrderBillUpTo}:</b> <input type="text" size="5" class="inputBox" name="amount_${billingAccount.billingAccountId}" value="${availableAmount?double?string("##0.00")}" <#if !(billingAccount.billingAccountId == selectedBillingAccount?default(""))>disabled</#if>>
                               </div>
                             </td>
-                          </tr>                          
+                          </tr>
                         </#list>
                         <tr>
-                          <td align="left" valign="top" width="1%" nowrap>                             
+                          <td align="left" valign="top" width="1%" nowrap>
                             <input type="radio" onClick="javascript:toggleBillingAccount(this);" name="billingAccountId" value="_NA" <#if (selectedBillingAccount?default("") == "N")>checked</#if>>
                             <input type="hidden" name="_NA_amount" value="0.00">
                           </td>
                           <td align="left" valign="top" width="99%" nowrap>
                             <div class="tabletext">${uiLabelMap.AccountingNoBillingAccount}</div>
                            </td>
-                        </tr>                        
+                        </tr>
                       </#if>
                       <#-- end of special billing account functionality -->
-                                            
-                    </table>                    
-                    <#if !paymentMethodList?has_content>                 
+
+                    </table>
+                    <#if !paymentMethodList?has_content>
                       <div class='tabletext'><b>${uiLabelMap.AccountingNoPaymentMethodsOnFile}.</b></div>
                     </#if>
                   </td>
@@ -426,7 +428,7 @@ function toggleBillingAccount(box) {
             </td>
           </tr>
           <#-- End Payment Method Selection -->
-          
+
         </table>
       </td>
     </tr>

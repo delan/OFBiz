@@ -1,28 +1,28 @@
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -45,8 +45,8 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccountId}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%" valign="top"><div class="tabletext"><b>${billingAccount.billingAccountId?if_exists}</b> (${uiLabelMap.CommonNotModifRecreat})</td>
-    </tr>  
-    </#if>      
+    </tr>
+    </#if>
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingDescription}</div></td>
       <td width="5">&nbsp;</td>
@@ -56,18 +56,18 @@ ${pages.get("/billingaccount/BillingAccountTabBar.ftl")}
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingBillingContactMechId}</div></td>
       <td width="5">&nbsp;</td>
       <td width="74%"><input type="text" class="inputBox" size="20" name="contactMechId" value="${billingAccountData.contactMechId?if_exists}"></td>
-    </tr>         
+    </tr>
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.AccountingAccountLimit}</div></td>
       <td width="5">&nbsp;</td>
-      <td width="74%"><input type="text" class="inputBox" size="10" name="accountLimit" value="<#if billingAccountData.accountLimit?is_string>${billingAccountData.accountLimit}<#else>${billingAccountData.accountLimit?default(0)?string("##0.00")}</if>"> 
+      <td width="74%"><input type="text" class="inputBox" size="10" name="accountLimit" value="${billingAccountData.accountLimit?default(0)?string("##0.00")}">
       *</td>
-    </tr> 
+    </tr>
     <tr>
       <td width="26%" align="right" valign="top">
         <input type="submit" value="${uiLabelMap.CommonSave}" class="smallSubmit">
       <td width="5">&nbsp;</td>
       <td width="74%">&nbsp;</td>
-    </tr>    
+    </tr>
   </table>
 </form>
