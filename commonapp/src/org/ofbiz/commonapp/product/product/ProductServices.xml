@@ -137,6 +137,14 @@
                 <create-value value-name="newTempValue"/>
             </iterate>
         </if-not-empty>
+        <if-not-empty field-name="duplicateIDs" map-name="parameters">
+            <find-by-and entity-name="GoodIdentification" map-name="productFindContext" list-name="foundValues"/>
+            <iterate entry-name="foundValue" list-name="foundValues">
+                <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                <field-to-field field-name="productId" map-name="parameters" to-map-name="newTempValue"/>
+                <create-value value-name="newTempValue"/>
+            </iterate>
+        </if-not-empty>
         <if-not-empty field-name="duplicateCategoryMembers" map-name="parameters">
             <find-by-and entity-name="ProductCategoryMember" map-name="productFindContext" list-name="foundValues"/>
             <iterate entry-name="foundValue" list-name="foundValues">
@@ -197,6 +205,9 @@
         <if-not-empty field-name="removePrices" map-name="parameters">
             <remove-by-and entity-name="ProductPrice" map-name="productFindContext"/>
         </if-not-empty>
+        <if-not-empty field-name="removeIDs" map-name="parameters">
+            <remove-by-and entity-name="GoodIdentification" map-name="productFindContext"/>
+        </if-not-empty>
         <if-not-empty field-name="removeCategoryMembers" map-name="parameters">
             <remove-by-and entity-name="ProductCategoryMember" map-name="productFindContext"/>
         </if-not-empty>
@@ -215,5 +226,35 @@
         <if-not-empty field-name="removeInventoryItems" map-name="parameters">
             <remove-by-and entity-name="InventoryItem" map-name="productFindContext"/>
         </if-not-empty>
+    </simple-method>
+
+    <!-- GoodIdentification methods -->
+    <simple-method method-name="createGoodIdentification" short-description="Create an GoodIdentification">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createGoodIdentification you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="GoodIdentification"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateGoodIdentification" short-description="Update an GoodIdentification">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateGoodIdentification you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GoodIdentification" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GoodIdentification" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteGoodIdentification" short-description="Delete an GoodIdentification">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteGoodIdentification you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="GoodIdentification" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="GoodIdentification" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
     </simple-method>
 </simple-methods>

@@ -104,6 +104,28 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
     </service>
 
+    <!-- GoodIdentification Services -->
+    <service name="createGoodIdentification" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="createGoodIdentification" auth="true">
+        <description>Create an GoodIdentification</description>
+        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="idValue" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="updateGoodIdentification" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="updateGoodIdentification" auth="true">
+        <description>Update an GoodIdentification</description>
+        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="idValue" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteGoodIdentification" engine="simple"
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="deleteGoodIdentification" auth="true">
+        <description>Delete an GoodIdentification</description>
+        <attribute name="goodIdentificationTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+    </service>    
+
     <!-- Product Catalog Services -->
     <service name="createProdCatalog" engine="simple"
                 location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="createProdCatalog" auth="true">
@@ -813,7 +835,7 @@
     </service>
     <service name="updateFacilityGroup" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="updateFacilityGroup" auth="true">
-        <description>Update an Facility</description>
+        <description>Update an Facility Group</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityGroupName" type="String" mode="IN" optional="false"/>
         <attribute name="facilityGroupTypeId" type="String" mode="IN" optional="false"/>
@@ -822,7 +844,7 @@
     </service>
     <service name="deleteFacilityGroup" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="deleteFacilityGroup" auth="true">
-        <description>Delete an Facility</description>
+        <description>Delete an Facility Group</description>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
     </service>    
 

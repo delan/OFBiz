@@ -227,6 +227,26 @@
     	<response name="success" type="view" value="EditProductContent"/>
     </request-map>
     
+    <!-- ================ Product GoodIdentification Requests ================= -->
+    <request-map uri="EditProductGoodIdentifications"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductGoodIdentifications"/>
+    </request-map>
+    <request-map uri="createGoodIdentification"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createGoodIdentification"/>
+        <response name="success" type="view" value="EditProductGoodIdentifications"/>
+        <response name="error" type="view" value="EditProductGoodIdentifications"/>
+    </request-map>
+    <request-map uri="updateGoodIdentification"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateGoodIdentification"/>
+        <response name="success" type="view" value="EditProductGoodIdentifications"/>
+        <response name="error" type="view" value="EditProductGoodIdentifications"/>
+    </request-map>
+    <request-map uri="deleteGoodIdentification"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteGoodIdentification"/>
+        <response name="success" type="view" value="EditProductGoodIdentifications"/>
+        <response name="error" type="view" value="EditProductGoodIdentifications"/>
+    </request-map>
+
     <!-- ================ Product Categories Requests ================= -->
     <request-map uri="EditProductCategories"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProductCategories"/>
@@ -625,6 +645,7 @@
     <view-map name="EditProduct" type="region"/>
     <view-map name="EditProductPrices" type="region"/>
     <view-map name="EditProductContent" type="region"/>
+    <view-map name="EditProductGoodIdentifications" type="region"/>
     <view-map name="EditProductCategories" type="region"/>
     <view-map name="EditProductKeyword" type="region"/>
     <view-map name="EditProductAssoc" type="region"/>

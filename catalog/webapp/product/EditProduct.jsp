@@ -82,6 +82,7 @@ function insertImageName(size,ext) {
   <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="tabButtonSelected">Product</a>
   <a href="<ofbiz:url>/EditProductPrices?productId=<%=productId%></ofbiz:url>" class="tabButton">Prices</a>
   <a href="<ofbiz:url>/EditProductContent?productId=<%=productId%></ofbiz:url>" class="tabButton">Content</a>
+  <a href="<ofbiz:url>/EditProductGoodIdentifications?productId=<%=productId%></ofbiz:url>" class="tabButton">IDs</a>
   <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="tabButton">Categories</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Keywords</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="tabButton">Associations</a>
@@ -441,6 +442,7 @@ function insertImageName(size,ext) {
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='comments' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='productName' fullattrs="true"/>>
+                <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='brandName' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='internalName' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='description' fullattrs="true"/>>
                 <INPUT type=hidden <ofbiz:inputvalue entityAttr='product' field='longDescription' fullattrs="true"/>>
@@ -472,6 +474,7 @@ function insertImageName(size,ext) {
                 <div class='tabletext'>
                     <b>Duplicate:</b>
                     Prices&nbsp;<input type=CHECKBOX name='duplicatePrices' value='Y' checked/>
+                    IDs&nbsp;<input type=CHECKBOX name='duplicateIDs' value='Y' checked/>
                     CategoryMembers&nbsp;<input type=CHECKBOX name='duplicateCategoryMembers' value='Y' checked/>
                     Assocs&nbsp;<input type=CHECKBOX name='duplicateAssocs' value='Y' checked/>
                     Attributes&nbsp;<input type=CHECKBOX name='duplicateAttributes' value='Y' checked/>
@@ -481,6 +484,7 @@ function insertImageName(size,ext) {
                 <div class='tabletext'>
                     <b>Remove:</b>
                     Prices&nbsp;<input type=CHECKBOX name='removePrices' value='Y'/>
+                    IDs&nbsp;<input type=CHECKBOX name='removeIDs' value='Y'/>
                     CategoryMembers&nbsp;<input type=CHECKBOX name='removeCategoryMembers' value='Y'/>
                     Assocs&nbsp;<input type=CHECKBOX name='removeAssocs' value='Y'/>
                     Attributes&nbsp;<input type=CHECKBOX name='removeAttributes' value='Y'/>
