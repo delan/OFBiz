@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDAO.java,v 1.7 2003/12/04 06:16:05 jonesde Exp $
+ * $Id: GenericDAO.java,v 1.8 2003/12/11 05:09:47 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -79,7 +79,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
  * @author     <a href="mailto:john_nutting@telluridetechnologies.com">John Nutting</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      1.0
  */
 public class GenericDAO {
@@ -138,12 +138,12 @@ public class GenericDAO {
         }
 
         // if we have a STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
-        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD)) {
+        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD) && !entity.getIsFromEntitySync()) {
             entity.set(ModelEntity.STAMP_TX_FIELD, TransactionUtil.getTransactionStartStamp());
         }
 
         // if we have a STAMP_FIELD then set it with NOW.
-        if (modelEntity.isField(ModelEntity.STAMP_FIELD)) {
+        if (modelEntity.isField(ModelEntity.STAMP_FIELD) && !entity.getIsFromEntitySync()) {
             entity.set(ModelEntity.STAMP_FIELD, TransactionUtil.getTransactionUniqueNowStamp());
         }
         
@@ -234,12 +234,12 @@ public class GenericDAO {
         }
 
         // if we have a STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
-        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD)) {
+        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD) && !entity.getIsFromEntitySync()) {
             entity.set(ModelEntity.STAMP_TX_FIELD, TransactionUtil.getTransactionStartStamp());
         }
 
         // if we have a STAMP_FIELD then update it with NOW.
-        if (modelEntity.isField(ModelEntity.STAMP_FIELD)) {
+        if (modelEntity.isField(ModelEntity.STAMP_FIELD) && !entity.getIsFromEntitySync()) {
             entity.set(ModelEntity.STAMP_FIELD, TransactionUtil.getTransactionUniqueNowStamp());
         }
         

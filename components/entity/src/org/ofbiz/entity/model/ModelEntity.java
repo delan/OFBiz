@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.6 2003/12/11 01:58:19 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.7 2003/12/11 05:09:48 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -1008,5 +1008,20 @@ public class ModelEntity implements Comparable {
 
         return this.getEntityName().compareTo(otherModelEntity.getEntityName());
     }
+
+    /**
+     * @return Returns the noAutoStamp.
+     */
+    public boolean getNoAutoStamp() {
+        return this.noAutoStamp;
+    }
+
+    /**
+     * @param noAutoStamp The noAutoStamp to set.
+     */
+    public void setNoAutoStamp(boolean noAutoStamp) {
+        this.noAutoStamp = noAutoStamp;
+    }
+
 }
 
