@@ -252,7 +252,7 @@ public class BOMTree {
      * @param arr The ArrayList used to collect tree info.
      */    
     public void print(ArrayList arr) {
-        print(arr, 0);
+        print(arr, 0, false);
     }
 
     public void print(ArrayList arr, boolean excludeWIPs) {
