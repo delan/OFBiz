@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -29,17 +29,16 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
-import org.ofbiz.base.util.Debug;
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import javolution.util.FastSet;
 
-import org.apache.commons.collections.map.AbstractHashedMap;
 import org.apache.commons.collections.map.LRUMap;
-import org.apache.commons.collections.map.LinkedMap;
-import org.apache.commons.collections.map.HashedMap;
+import org.ofbiz.base.util.Debug;
 
 /**
  * 
@@ -53,7 +52,7 @@ public class CacheLineTable implements Serializable {
     protected static transient jdbm.RecordManager jdbmMgr = null;
 
     protected transient jdbm.htree.HTree fileTable = null;
-    protected AbstractHashedMap memoryTable = null;
+    protected Map memoryTable = null;
     protected String fileStore = null;
     protected String cacheName = null;
     protected int maxInMemory = 0;
@@ -134,7 +133,7 @@ public class CacheLineTable implements Serializable {
     }
 
     public synchronized Collection values() {
-        LinkedList values = new LinkedList();
+        List values = FastList.newInstance();
 
         if (fileTable != null) {
             try {
@@ -148,7 +147,7 @@ public class CacheLineTable implements Serializable {
                 Debug.logError(e, module);
             }
         } else {
-            ((LinkedList) values).addAll(memoryTable.values());
+            values.addAll(memoryTable.values());
         }
 
         return values;
@@ -159,7 +158,7 @@ public class CacheLineTable implements Serializable {
      * @return An unmodifiable Set for the keys for this cache; to remove while iterating call the remove method on this class.
      */
     public synchronized Set keySet() {
-        HashSet keys = new HashSet();
+        Set keys = FastSet.newInstance();
 
         if (fileTable != null) {
             try {
@@ -211,15 +210,16 @@ public class CacheLineTable implements Serializable {
         this.maxInMemory = newSize;
 
         Map oldmap = null;
-        if (memoryTable != null) {
-            // using linked map to preserve the order when using LRU
-            oldmap = new LinkedMap(memoryTable);
+        if (this.memoryTable != null) {
+            // using linked map to preserve the order when using LRU (FastMap is a linked map)
+            oldmap = FastMap.newInstance();
+            oldmap.putAll(this.memoryTable);
         }
 
         if (newSize > 0) {
             this.memoryTable = new LRUMap(newSize);
         } else {
-            this.memoryTable = new HashedMap();
+            this.memoryTable = FastMap.newInstance();
         }
 
         if (oldmap != null) {
@@ -232,7 +232,7 @@ public class CacheLineTable implements Serializable {
         if (memoryTable instanceof LRUMap) {
             i = ((LRUMap) memoryTable).orderedMapIterator();
         } else {
-            i = memoryTable.mapIterator();
+            i = memoryTable.keySet().iterator();
         }
 
         int currentIdx = 0;

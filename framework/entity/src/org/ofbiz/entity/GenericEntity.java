@@ -38,6 +38,8 @@ import java.util.Observable;
 import java.util.ResourceBundle;
 import java.util.TreeSet;
 
+import javolution.util.FastMap;
+
 import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilProperties;
@@ -112,7 +114,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     
     /** Creates new GenericEntity - Should never be used, prefer the other options. */
     public GenericEntity() {
-        this.fields = new HashMap();
+        this.fields = FastMap.newInstance();
     }
 
     /** Creates new GenericEntity */
@@ -122,7 +124,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
         this.modelEntity = modelEntity;
         this.entityName = modelEntity.getEntityName();
-        this.fields = new HashMap();
+        this.fields = FastMap.newInstance();
         
         // check some things
         if (this.entityName == null) {
@@ -137,7 +139,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
         this.modelEntity = modelEntity;
         this.entityName = modelEntity.getEntityName();
-        this.fields = new HashMap();
+        this.fields = FastMap.newInstance();
         setFields(fields);
         
         // check some things
@@ -153,7 +155,8 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
         this.entityName = value.modelEntity.getEntityName();
         this.modelEntity = value.modelEntity;
-        this.fields = (value.fields == null ? new HashMap() : new HashMap(value.fields));
+        this.fields = FastMap.newInstance();
+        if (value.fields != null) this.fields.putAll(value.fields);
         this.delegatorName = value.delegatorName;
         this.internalDelegator = value.internalDelegator;
         
@@ -708,7 +711,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         if (keysofFields == null) return null;
         Iterator keys = keysofFields.iterator();
         Object aKey = null;
-        HashMap aMap = new HashMap();
+        Map aMap = FastMap.newInstance();
 
         while (keys.hasNext()) {
             aKey = keys.next();
@@ -839,7 +842,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         writer.print(this.getEntityName());
 
         // write attributes immediately and if a CDATA element is needed, put those in a Map for now
-        Map cdataMap = new HashMap();
+        Map cdataMap = FastMap.newInstance();
 
         Iterator modelFields = this.getModelEntity().getFieldsIterator();
         while (modelFields.hasNext()) {
