@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" ?>
+﻿<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE entity-config PUBLIC "-//OFBiz//DTD Entity Engine Config//EN" "http://www.ofbiz.org/dtds/entity-config.dtd">
 <!--
  - This file configures the Entity Engine JDBC (or other DataSource) and JTA
@@ -313,18 +313,18 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             check-on-start="true"
             add-missing-on-start="true"
             check-indices-on-start="true"
-            use-foreign-keys="true"
+            use-foreign-keys="false"
             use-foreign-key-indices="true"
-            use-fk-initially-deferred="false"
             join-style="ansi-no-parenthesis"
             alias-view-columns="true"
             always-use-constraint-keyword="true">
         <read-data reader-name="main"/>
+        <!-- NOTE: nothing else can be connected to the database at the same time, including the Advantage Data Architect program; also can run only one app server -->
         <inline-jdbc
                 jdbc-driver="com.extendedsystems.jdbc.advantage.ADSDriver"
                 jdbc-uri="jdbc:extendedsystems:advantage://localhost:6262;catalog=c:\\advantage\\OFBIZ.ADD;TableType=adt"
-                jdbc-username=""
-                jdbc-password=""
+                jdbc-username="ADSSYS"
+                jdbc-password="adssys"
                 isolation-level="ReadCommitted"
                 pool-minsize="2"
                 pool-maxsize="20"/>
