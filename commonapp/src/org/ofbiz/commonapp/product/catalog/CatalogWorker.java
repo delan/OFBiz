@@ -672,16 +672,18 @@ public class CatalogWorker {
     /* ============================= Special Data Retreival Methods ===========================*/
 
     public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
-        getRandomCartProductAssoc(pageContext.getRequest(), assocsAttrName);
+        List returnList = getRandomCartProductAssoc(pageContext.getRequest());
+        pageContext.setAttribute(assocsAttrName, returnList);
     }
                 
-    public static void getRandomCartProductAssoc(ServletRequest request, String assocsAttrName) {
+    public static List getRandomCartProductAssoc(ServletRequest request) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         ShoppingCart cart = (ShoppingCart) httpRequest.getSession().getAttribute("shoppingCart");
 
-        if (cart == null || cart.size() <= 0) return;
+        if (cart == null || cart.size() <= 0) return null;
 
+        ArrayList cartAssocs = null;
         try {
             Map products = new HashMap();
 
@@ -716,19 +718,21 @@ public class CatalogWorker {
                 products.remove(item.getProductId());
             }
 
-            ArrayList cartAssocs = new ArrayList(products.values());
+            cartAssocs = new ArrayList(products.values());
 
             // randomly remove products while there are more than 3
             while (cartAssocs.size() > 3) {
                 int toRemove = (int) (Math.random() * (double) (cartAssocs.size()));
-
                 cartAssocs.remove(toRemove);
-            }
-            if (cartAssocs.size() > 0) {
-                request.setAttribute(assocsAttrName, cartAssocs);
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
+        }
+        
+        if (cartAssocs.size() > 0) {
+            return cartAssocs;
+        } else {
+            return null;
         }
     }
 
