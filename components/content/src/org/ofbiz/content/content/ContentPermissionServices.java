@@ -837,6 +837,7 @@ public class ContentPermissionServices {
             purposes = entity.getRelatedCache(entityName + "Purpose");
         } catch (GenericEntityException e) {
             Debug.logError(e, "No associated purposes found. ", module);
+            return purposeIds;
         }
 
         Iterator purposesIter = purposes.iterator();
