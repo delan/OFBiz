@@ -1,5 +1,5 @@
 /*
- * $Id: StringUtil.java,v 1.4 2003/11/13 04:19:31 ajzeneski Exp $
+ * $Id: StringUtil.java,v 1.5 2003/11/17 21:20:27 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.StringTokenizer;
  * Misc String Utility Functions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class StringUtil {
@@ -231,6 +231,24 @@ public class StringUtil {
             buf.append(encodedValue);
         }
         return buf.toString();
+    }
+
+    /**
+     * Create a Map from a List of keys and a List of values
+     * @param keys List of keys
+     * @param values List of values
+     * @return Map of combined lists
+     * @throws IllegalArgumentException When either List is null or the sizes do not equal
+     */
+    public static Map createMap(List keys, List values) {
+        if (keys == null || values == null || keys.size() != values.size()) {
+            throw new IllegalArgumentException("Keys and Values cannot be null and must be the same size");
+        }
+        Map newMap = new HashMap();
+        for (int i = 0; i < keys.size(); i++) {
+            newMap.put(keys.get(i), values.get(i));
+        }
+        return newMap;
     }
 
     /** Make sure the string starts with a forward slash but does not end with one; converts back-slashes to forward-slashes; if in String is null or empty, returns zero length string. */
