@@ -26,25 +26,8 @@
 -->
 
 <#if hasPermission>
-    <#if productId?has_content>
-        <div class="tabContainer">
-        <a href="<@ofbizUrl>/EditProduct?productId=${productId}</@ofbizUrl>" class="tabButton">Product</a>
-        <a href="<@ofbizUrl>/EditProductPrices?productId=${productId}</@ofbizUrl>" class="tabButton">Prices</a>
-        <a href="<@ofbizUrl>/EditProductContent?productId=${productId}</@ofbizUrl>" class="tabButton">Content</a>
-        <a href="<@ofbizUrl>/EditProductGoodIdentifications?productId=${productId}</@ofbizUrl>" class="tabButton">IDs</a>
-        <a href="<@ofbizUrl>/EditProductCategories?productId=${productId}</@ofbizUrl>" class="tabButton">Categories</a>
-        <a href="<@ofbizUrl>/EditProductKeyword?PRODUCT_ID=${productId}</@ofbizUrl>" class="tabButton">Keywords</a>
-        <a href="<@ofbizUrl>/EditProductAssoc?PRODUCT_ID=${productId}</@ofbizUrl>" class="tabButton">Associations</a>
-        <a href="<@ofbizUrl>/EditProductAttributes?PRODUCT_ID=${productId}</@ofbizUrl>" class="tabButton">Attributes</a>
-        <a href="<@ofbizUrl>/EditProductFeatures?productId=${productId}</@ofbizUrl>" class="tabButton">Features</a>
-        <a href="<@ofbizUrl>/EditProductFacilities?productId=${productId}</@ofbizUrl>" class="tabButton">Facilities</a>
-        <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="tabButton">Inventory</a>
-        <a href="<@ofbizUrl>/EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="tabButton">Accounts</a>
-        <#if product?exists && product.isVirtual?if_exists == "Y">
-            <a href="<@ofbizUrl>/QuickAddVariants?productId=${productId}</@ofbizUrl>" class="tabButtonSelected">Variants</a>
-        </#if>
-        </div>
-    </#if>
+
+${pages.get("/product/ProductTabBar.ftl")}
     
     <div class="head1">Quick Add Variants <span class="head2">for ${(product.productName)?if_exists} [ID:${productId?if_exists}]</span></div>
     
@@ -83,8 +66,8 @@
 			            </td>
 			            <td>
 			                <div class="tabletext">&nbsp;
-			                <#list existingVariantProductIds as productAssoc>
-			                	[<a href="<@ofbizUrl>/EditProduct?productId=${productAssoc.productIdTo}</@ofbizUrl>" class="buttontext">${productAssoc.productIdTo}</a>] &nbsp;
+			                <#list existingVariantProductIds as existingVariantProductId>
+			                	[<a href="<@ofbizUrl>/EditProduct?productId=${existingVariantProductId}</@ofbizUrl>" class="buttontext">${existingVariantProductId}</a>] &nbsp;
 			                </#list>
 			                </div>
 			            </td>

@@ -3,5 +3,6 @@
     <template>main</template> 
     <property name="title">Edit Product GL Accounts</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
-    <content-action name="/product/EditProductGLAccounts.bsh"/>
+    <property name="tabButtonItem">EditProductGlAccounts</property>
+    <content-action name="/product/EditProductGlAccounts.bsh"/>
 </page>

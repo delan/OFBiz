@@ -154,7 +154,7 @@ while (true) {
 
             if (hasAllFeatures) {
             	// add to list of existing variants: productId=productAssoc.productIdTo
-            	existingVariantProductIds.add(productAssoc);
+            	existingVariantProductIds.add(productAssoc.get("productIdTo"));
             }
         }
     }

@@ -3,5 +3,6 @@
     <template>main</template> 
     <property name="title">Quick Add Product Variants</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="tabButtonItem">QuickAddVariants</property>
     <content-action name="/product/QuickAddVariants.bsh"/>
 </page>

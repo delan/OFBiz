@@ -3,5 +3,6 @@
     <template>main</template> 
     <property name="title">Edit Product Content</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
+    <property name="tabButtonItem">EditProductContent</property>
     <content-action name="/product/EditProductContent.bsh"/>
 </page>
