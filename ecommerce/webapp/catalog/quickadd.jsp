@@ -16,7 +16,7 @@
   catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); category = null; }
   if(category != null) pageContext.setAttribute("listingCategory", category);
 %>
-<%CategoryWorker.getRelatedProducts(pageContext,"",categoryId,false);%>
+<%CategoryWorker.getRelatedProducts(pageContext,"",categoryId,false,10);%>
 
 <br>
 
