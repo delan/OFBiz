@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.14  2001/09/06 03:30:27  azeneski
+ * Removed control path debugging output.
+ *
  * Revision 1.13  2001/08/28 02:21:45  azeneski
  * Moved helper and security to the request object rather then session. Added support for PoolMan connection pool.
  *
@@ -140,6 +143,7 @@ public class ControlServlet extends HttpServlet {
             request_url.append("://" + request.getServerName());
             if ( request.getServerPort() != 80 && request.getServerPort() != 443 )
                 request_url.append(":" + request.getServerPort());
+            session.setAttribute(SiteDefs.SERVER_ROOT_URL,request_url.toString());
             request_url.append(request.getRequestURI());
             if ( request.getQueryString() != null )
                 request_url.append("?" + request.getQueryString());

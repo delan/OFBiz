@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.11  2001/08/25 16:57:14  azeneski
+ * *** empty log message ***
+ *
  * Revision 1.10  2001/08/24 17:14:34  azeneski
  * Removed plain text attribute and created a defination in SiteDefs.
  * NOTE: Need to update all pages/events which use the old name!
@@ -90,6 +93,9 @@ public final class SiteDefs {
     public static final String PREVIOUS_REQUEST = "_PREVIOUS_REQUEST_";
     /** Used in session object to store previous parameters */
     public static final String PREVIOUS_PARAMS = "_PREVIOUS_PARAMS_";
+    
+    /** Used in session object to pass around the protocol, server name, and port */
+    public static final String SERVER_ROOT_URL = "_SERVER_ROOT_URL_";
     
     /** Used in request object to pass around the web path */
     public static final String CONTROL_PATH = "_CONTROL_PATH_";

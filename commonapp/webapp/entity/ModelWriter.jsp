@@ -6,7 +6,7 @@ if(request.getParameter("savetofile") != null)
   String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
   String filename = helper.getModelReader().entityFileName;
   
-  java.net.URL url = new java.net.URL("http",request.getServerName(),request.getServerPort(),controlPath + "/view/ModelWriter");
+  java.net.URL url = new java.net.URL(session.getAttribute(SiteDefs.SERVER_ROOT_URL) + controlPath + "/view/ModelWriter");
   HttpClient httpClient = new HttpClient(url, new HashMap());
   InputStream in = httpClient.getStream();
   
