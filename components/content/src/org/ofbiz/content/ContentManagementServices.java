@@ -283,26 +283,26 @@ public class ContentManagementServices {
                 if (UtilValidate.isEmpty(dataResourceId)) {
                     dataResourceExists = false;
                 } else {
-                	try {
-                    	GenericValue val = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
-                    	if (val == null)
-                        	dataResourceExists = false;
-                	} catch(GenericEntityException e) {
-                    	return ServiceUtil.returnError(e.getMessage());
-                	}
-            	}
+                    try {
+                        GenericValue val = delegator.findByPrimaryKey("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
+                        if (val == null)
+                            dataResourceExists = false;
+                    } catch(GenericEntityException e) {
+                        return ServiceUtil.returnError(e.getMessage());
+                    }
+                }
                     Map newDrContext = new HashMap();
-                	ModelService dataResourceModel = dispatcher.getDispatchContext().getModelService("updateDataResource");
-                	Map ctx = dataResourceModel.makeValid(dataResource, "IN");
+                    ModelService dataResourceModel = dispatcher.getDispatchContext().getModelService("updateDataResource");
+                    Map ctx = dataResourceModel.makeValid(dataResource, "IN");
                     newDrContext.putAll(ctx);
                     newDrContext.put("userLogin", userLogin);
                     newDrContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
                     if (byteWrapper != null) {
-                    	String mimeTypeId = (String) context.get("_imageData_contentType");
-						String fileName = (String) context.get("_imageData_fileName");
-                    	newDrContext.put("objectInfo", fileName);
-						newDrContext.put("mimeTypeId", mimeTypeId);
+                        String mimeTypeId = (String) context.get("_imageData_contentType");
+                        String fileName = (String) context.get("_imageData_fileName");
+                        newDrContext.put("objectInfo", fileName);
+                        newDrContext.put("mimeTypeId", mimeTypeId);
                     }
                 if (!dataResourceExists) {
                     Map thisResult = dispatcher.runSync("createDataResource", newDrContext);
@@ -340,10 +340,10 @@ public class ContentManagementServices {
                             fileContext.put("dataResourceId", dataResourceId);
                             fileContext.put("imageData", byteWrapper);
                             thisResult = dispatcher.runSync("createImage", fileContext);
-                        	errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                        	if (UtilValidate.isNotEmpty(errorMsg)) {
-                            	return ServiceUtil.returnError(errorMsg);
-                        	}
+                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                            if (UtilValidate.isNotEmpty(errorMsg)) {
+                                return ServiceUtil.returnError(errorMsg);
+                            }
                         } else {
                             return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
                         }
@@ -351,21 +351,21 @@ public class ContentManagementServices {
                     } else {
                         // assume ELECTRONIC_TEXT
                         if (UtilValidate.isNotEmpty(textData)) {
-    						fileContext.put("dataResourceId", dataResourceId);
-    						fileContext.put("textData", textData);
-    						thisResult = dispatcher.runSync("createElectronicText", fileContext);
-    						errorMsg = ServiceUtil.getErrorMessage(thisResult);
-    						if (UtilValidate.isNotEmpty(errorMsg)) {
-    							return ServiceUtil.returnError(errorMsg);
-    						}
+                            fileContext.put("dataResourceId", dataResourceId);
+                            fileContext.put("textData", textData);
+                            thisResult = dispatcher.runSync("createElectronicText", fileContext);
+                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                            if (UtilValidate.isNotEmpty(errorMsg)) {
+                                return ServiceUtil.returnError(errorMsg);
+                            }
                         }
                     }
                 } else {
                     Map thisResult = dispatcher.runSync("updateDataResource", newDrContext);
                     String errorMsg = ServiceUtil.getErrorMessage(thisResult);
-        			if (UtilValidate.isNotEmpty(errorMsg)) {
-            			return ServiceUtil.returnError(errorMsg);
-        			}
+                    if (UtilValidate.isNotEmpty(errorMsg)) {
+                        return ServiceUtil.returnError(errorMsg);
+                    }
                     //Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
                     if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
                         //thisResult = DataServices.updateElectronicTextMethod(dctx, context);
@@ -397,10 +397,10 @@ public class ContentManagementServices {
                             fileContext.put("dataResourceId", dataResourceId);
                             fileContext.put("imageData", byteWrapper);
                             thisResult = dispatcher.runSync("updateImage", fileContext);
-                        	errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                        	if (UtilValidate.isNotEmpty(errorMsg)) {
-                            	return ServiceUtil.returnError(errorMsg);
-                        	}
+                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                            if (UtilValidate.isNotEmpty(errorMsg)) {
+                                return ServiceUtil.returnError(errorMsg);
+                            }
                         } else {
                             return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
                         }
@@ -411,10 +411,10 @@ public class ContentManagementServices {
                             fileContext.put("textData", textData);
                             thisResult = dispatcher.runSync("updateElectronicText", fileContext);
                             errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                        	if (UtilValidate.isNotEmpty(errorMsg)) {
-                            	return ServiceUtil.returnError(errorMsg);
-                        	}
-                    	}
+                            if (UtilValidate.isNotEmpty(errorMsg)) {
+                                return ServiceUtil.returnError(errorMsg);
+                            }
+                        }
                     }
                 }
 
@@ -446,16 +446,16 @@ public class ContentManagementServices {
             if (contentExists) {
                 //targetOperations.add("CONTENT_UPDATE");
                     Map contentContext = new HashMap();
-                	ModelService contentModel = dispatcher.getDispatchContext().getModelService("updateContent");
-                	Map ctx = contentModel.makeValid(context, "IN");
+                    ModelService contentModel = dispatcher.getDispatchContext().getModelService("updateContent");
+                    Map ctx = contentModel.makeValid(context, "IN");
                     contentContext.putAll(ctx);
                     contentContext.put("userLogin", userLogin);
                     contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     Map thisResult = dispatcher.runSync("updateContent", contentContext);
                     String errMsg = ServiceUtil.getErrorMessage(thisResult);
-        			if (UtilValidate.isNotEmpty(errMsg)) {
-            			return ServiceUtil.returnError(errMsg);
-        			}
+                    if (UtilValidate.isNotEmpty(errMsg)) {
+                        return ServiceUtil.returnError(errMsg);
+                    }
                 //Map thisResult = ContentServices.updateContentMethod(dctx, context);
                 boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) 
@@ -463,16 +463,16 @@ public class ContentManagementServices {
             } else {
                 //targetOperations.add("CONTENT_CREATE");
                     Map contentContext = new HashMap();
-                	ModelService contentModel = dispatcher.getDispatchContext().getModelService("createContent");
-                	Map ctx = contentModel.makeValid(context, "IN");
+                    ModelService contentModel = dispatcher.getDispatchContext().getModelService("createContent");
+                    Map ctx = contentModel.makeValid(context, "IN");
                     contentContext.putAll(ctx);
                     contentContext.put("userLogin", userLogin);
                     contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     Map thisResult = dispatcher.runSync("createContent", contentContext);
                     String errMsg = ServiceUtil.getErrorMessage(thisResult);
-        			if (UtilValidate.isNotEmpty(errMsg)) {
-            			return ServiceUtil.returnError(errMsg);
-        			}
+                    if (UtilValidate.isNotEmpty(errMsg)) {
+                        return ServiceUtil.returnError(errMsg);
+                    }
                 //Map thisResult = ContentServices.createContentMethod(dctx, context);
                 boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) 
@@ -543,8 +543,8 @@ public class ContentManagementServices {
                     contentAssocExisting = delegator.findByPrimaryKeyCache("ContentAssoc", contentAssocPK);
                     
                 if (contentAssocExisting == null) {
-                	ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("createContentAssoc");
-                	Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
+                    ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("createContentAssoc");
+                    Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
                     contentAssocContext.putAll(ctx);
                     thisResult = dispatcher.runSync("createContentAssoc", contentAssocContext);
                     result.put("contentIdTo", thisResult.get("contentIdTo"));
@@ -557,11 +557,11 @@ public class ContentManagementServices {
                     result.put("caContentAssocTypeId", thisResult.get("contentAssocTypeId"));
                     result.put("caFromDate", thisResult.get("fromDate"));
                 } else {
-                	if ("true".equalsIgnoreCase(deactivateExisting)) {
-                		Map deactivateContext = UtilMisc.toMap("contentId", contentId, "contentAssocTypeId", contentAssocTypeId );
+                    if ("true".equalsIgnoreCase(deactivateExisting)) {
+                        Map deactivateContext = UtilMisc.toMap("contentId", contentId, "contentAssocTypeId", contentAssocTypeId );
                     }
-                	ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("updateContentAssoc");
-                	Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
+                    ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("updateContentAssoc");
+                    Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
                     contentAssocContext.putAll(ctx);
                     thisResult = dispatcher.runSync("updateContentAssoc", contentAssocContext);
                 }
@@ -571,9 +571,9 @@ public class ContentManagementServices {
                 throw new GenericServiceException(e2.getMessage());
             }
             String errMsg = ServiceUtil.getErrorMessage(thisResult);
-   			if (UtilValidate.isNotEmpty(errMsg)) {
-       			return ServiceUtil.returnError(errMsg);
-   			}
+               if (UtilValidate.isNotEmpty(errMsg)) {
+                   return ServiceUtil.returnError(errMsg);
+               }
 
        }
        context.remove("skipPermissionCheck");
@@ -898,29 +898,29 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             content.store();
             
             if (UtilValidate.isNotEmpty(dataResourceId)) {
-            	// add previous DataResource as part of new subcontent
-            	GenericValue contentClone = (GenericValue)content.clone();
-            	contentClone.set("dataResourceId", dataResourceId);
-            	content.set("lastModifiedDate", UtilDateTime.nowTimestamp());
-            	content.set("lastModifiedByUserLogin", userLoginId);
-            	content.set("createdDate", UtilDateTime.nowTimestamp());
-            	content.set("createdByUserLogin", userLoginId);
-	            
-            	contentClone.set("contentId", null);
-            	ModelService modelService = dctx.getModelService("persistContentAndAssoc");
-            	Map serviceIn = modelService.makeValid(contentClone, "IN");
-            	serviceIn.put("userLogin", userLogin);
-            	serviceIn.put("contentIdTo", contentId);
-            	serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
-            	serviceIn.put("sequenceNum", new Long(50));
-            	try {
-                	Map thisResult = dispatcher.runSync("persistContentAndAssoc", serviceIn);
-            	} catch(ServiceAuthException e) {
-                	return ServiceUtil.returnError(e.getMessage());             
-            	}
-            	
-            	List typeList = UtilMisc.toList("SUB_CONTENT");
-            	int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, contentId, typeList);
+                // add previous DataResource as part of new subcontent
+                GenericValue contentClone = (GenericValue)content.clone();
+                contentClone.set("dataResourceId", dataResourceId);
+                content.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+                content.set("lastModifiedByUserLogin", userLoginId);
+                content.set("createdDate", UtilDateTime.nowTimestamp());
+                content.set("createdByUserLogin", userLoginId);
+                
+                contentClone.set("contentId", null);
+                ModelService modelService = dctx.getModelService("persistContentAndAssoc");
+                Map serviceIn = modelService.makeValid(contentClone, "IN");
+                serviceIn.put("userLogin", userLogin);
+                serviceIn.put("contentIdTo", contentId);
+                serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
+                serviceIn.put("sequenceNum", new Long(50));
+                try {
+                    Map thisResult = dispatcher.runSync("persistContentAndAssoc", serviceIn);
+                } catch(ServiceAuthException e) {
+                    return ServiceUtil.returnError(e.getMessage());             
+                }
+                
+                List typeList = UtilMisc.toList("SUB_CONTENT");
+                int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, contentId, typeList);
             }
             
         } catch(GenericEntityException e) {
@@ -1028,17 +1028,17 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         
         GenericDelegator delegator = dctx.getDelegator();
         Map results = new HashMap();
-    	Set visitedSet = (Set)context.get("visitedSet");
-    	if (visitedSet == null) {
+        Set visitedSet = (Set)context.get("visitedSet");
+        if (visitedSet == null) {
             visitedSet = new HashSet();
             context.put("visitedSet", visitedSet);
         } 
-    	String pageMode = (String)context.get("pageMode");
-    	String contentId = (String)context.get("contentId");
-    	visitedSet.add(contentId);
+        String pageMode = (String)context.get("pageMode");
+        String contentId = (String)context.get("contentId");
+        visitedSet.add(contentId);
         String contentTypeId = "PAGE_NODE";
         if (pageMode != null && pageMode.toLowerCase().indexOf("outline") >= 0)
-        	contentTypeId = "OUTLINE_NODE";
+            contentTypeId = "OUTLINE_NODE";
         GenericValue thisContent = null;
         try {
             thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
@@ -1049,15 +1049,15 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             List kids = ContentWorker.getAssociatedContent(thisContent, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
-            	GenericValue kidContent = (GenericValue)iter.next();
+                GenericValue kidContent = (GenericValue)iter.next();
                 if (contentTypeId.equals("OUTLINE_NODE")) {
-                	updateOutlineNodeChildren(kidContent, false, context);
+                    updateOutlineNodeChildren(kidContent, false, context);
                 } else {
-                	updatePageNodeChildren(kidContent, context);
+                    updatePageNodeChildren(kidContent, context);
                 }
             }
         } catch(GenericEntityException e) {
-        	Debug.logError(e, module);
+            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
             
@@ -1068,16 +1068,16 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         
         GenericDelegator delegator = dctx.getDelegator();
         Map results = new HashMap();
-    	Set visitedSet = (Set)context.get("visitedSet");
-    	if (visitedSet == null) {
+        Set visitedSet = (Set)context.get("visitedSet");
+        if (visitedSet == null) {
             visitedSet = new HashSet();
             context.put("visitedSet", visitedSet);
         } 
-    	String contentId = (String)context.get("contentId");
-    	String pageMode = (String)context.get("pageMode");
+        String contentId = (String)context.get("contentId");
+        String pageMode = (String)context.get("pageMode");
         String contentTypeId = "OUTLINE_NODE";
         if (pageMode != null && pageMode.toLowerCase().indexOf("page") >= 0)
-        	contentTypeId = "PAGE_NODE";
+            contentTypeId = "PAGE_NODE";
         GenericValue thisContent = null;
         try {
             thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
@@ -1088,22 +1088,22 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             List kids = ContentWorker.getAssociatedContent(thisContent, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
-            	GenericValue kidContent = (GenericValue)iter.next();
-               	if (contentTypeId.equals("OUTLINE_NODE")) {
-              		updateOutlineNodeChildren(kidContent, true, context);
-               	} else {
-               		kidContent.put("contentTypeId", "PAGE_NODE");
-               		kidContent.store();
-               		List kids2 = ContentWorker.getAssociatedContent(kidContent, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
-            		Iterator iter2 = kids.iterator();
-            		while (iter2.hasNext()) {
-            			GenericValue kidContent2 = (GenericValue)iter2.next();
-               		    updatePageNodeChildren(kidContent2, context);
+                GenericValue kidContent = (GenericValue)iter.next();
+                   if (contentTypeId.equals("OUTLINE_NODE")) {
+                      updateOutlineNodeChildren(kidContent, true, context);
+                   } else {
+                       kidContent.put("contentTypeId", "PAGE_NODE");
+                       kidContent.store();
+                       List kids2 = ContentWorker.getAssociatedContent(kidContent, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
+                    Iterator iter2 = kids.iterator();
+                    while (iter2.hasNext()) {
+                        GenericValue kidContent2 = (GenericValue)iter2.next();
+                           updatePageNodeChildren(kidContent2, context);
                     }
-            	}
+                }
             }
         } catch(GenericEntityException e) {
-        	Debug.logError(e, module);
+            Debug.logError(e, module);
             return ServiceUtil.returnError(e.getMessage());
         }
             
@@ -1146,21 +1146,21 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
     
     public static void updatePageNodeChildren(GenericValue content, Map context) throws GenericEntityException {
         
-    	String contentId = content.getString("contentId");
-    	Set visitedSet = (Set)context.get("visitedSet");
-    	if (visitedSet == null) {
+        String contentId = content.getString("contentId");
+        Set visitedSet = (Set)context.get("visitedSet");
+        if (visitedSet == null) {
             visitedSet = new HashSet();
             context.put("visitedSet", visitedSet);
         } else {
-        	if (visitedSet.contains(contentId)) {
-        		Debug.logWarning("visitedSet already contains:" + contentId, module);
-        		return;
+            if (visitedSet.contains(contentId)) {
+                Debug.logWarning("visitedSet already contains:" + contentId, module);
+                return;
             } else {
                 visitedSet.add(contentId);   
             }
         }
-    	String contentTypeId = content.getString("contentTypeId");
-    	String newContentTypeId = "SUBPAGE_NODE";
+        String contentTypeId = content.getString("contentTypeId");
+        String newContentTypeId = "SUBPAGE_NODE";
 //        if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
 //            newContentTypeId = "SUBPAGE_NODE";
 //        } else if (contentTypeId.equals("OUTLINE_NODE")) {
@@ -1174,39 +1174,39 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             List kids = ContentWorker.getAssociatedContent(content, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
-            	GenericValue kidContent = (GenericValue)iter.next();
-            	updatePageNodeChildren(kidContent, context);
+                GenericValue kidContent = (GenericValue)iter.next();
+                updatePageNodeChildren(kidContent, context);
             }
         //}
         return;
     }
 
     public static void updateOutlineNodeChildren(GenericValue content, boolean forceOutline, Map context) throws GenericEntityException {
-    	
-    	String contentId = content.getString("contentId");
-    	Set visitedSet = (Set)context.get("visitedSet");
-    	if (visitedSet == null) {
+        
+        String contentId = content.getString("contentId");
+        Set visitedSet = (Set)context.get("visitedSet");
+        if (visitedSet == null) {
             visitedSet = new HashSet();
             context.put("visitedSet", visitedSet);
         } else {
-        	if (visitedSet.contains(contentId)) {
-        		Debug.logWarning("visitedSet already contains:" + contentId, module);
-        		return;
+            if (visitedSet.contains(contentId)) {
+                Debug.logWarning("visitedSet already contains:" + contentId, module);
+                return;
             } else {
                 visitedSet.add(contentId);   
             }
         }
-    	String contentTypeId = content.getString("contentTypeId");
-    	String newContentTypeId = contentTypeId;
-    	String dataResourceId = content.getString("dataResourceId");
-    	Long branchCount = (Long)content.get("childBranchCount");
-    	if (forceOutline) {
+        String contentTypeId = content.getString("contentTypeId");
+        String newContentTypeId = contentTypeId;
+        String dataResourceId = content.getString("dataResourceId");
+        Long branchCount = (Long)content.get("childBranchCount");
+        if (forceOutline) {
             newContentTypeId = "OUTLINE_NODE";
         } else if (contentTypeId == null || contentTypeId.equals("DOCUMENT")) {
-        	if (UtilValidate.isEmpty(dataResourceId) || (branchCount != null && branchCount.intValue() > 0))
-        		newContentTypeId = "OUTLINE_NODE";
-       		else
-        		newContentTypeId = "PAGE_NODE";
+            if (UtilValidate.isEmpty(dataResourceId) || (branchCount != null && branchCount.intValue() > 0))
+                newContentTypeId = "OUTLINE_NODE";
+               else
+                newContentTypeId = "PAGE_NODE";
         } else if (contentTypeId.equals("SUBPAGE_NODE")) {
             newContentTypeId = "PAGE_NODE";
         }
@@ -1219,18 +1219,18 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             List kids = ContentWorker.getAssociatedContent(content, "from", UtilMisc.toList("SUB_CONTENT"), null, null, null);
             Iterator iter = kids.iterator();
             while (iter.hasNext()) {
-            	GenericValue kidContent = (GenericValue)iter.next();
-            	updateOutlineNodeChildren(kidContent, forceOutline, context);
+                GenericValue kidContent = (GenericValue)iter.next();
+                updateOutlineNodeChildren(kidContent, forceOutline, context);
             }
         }
         return;
     }
 
     public static Map findSubNodes(DispatchContext dctx, Map context) throws GenericServiceException{
-    	Map results = null;
+        Map results = null;
         GenericDelegator delegator = dctx.getDelegator();
-    	String contentIdTo = (String)context.get("contentId");
-    	List condList = new ArrayList();
+        String contentIdTo = (String)context.get("contentId");
+        List condList = new ArrayList();
         EntityExpr expr = new EntityExpr("caContentIdTo", EntityOperator.EQUALS, contentIdTo);
         condList.add(expr);
         expr = new EntityExpr("caContentAssocTypeId", EntityOperator.EQUALS, "SUB_CONTENT");
@@ -1249,58 +1249,58 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
     }
     
     public static String updateTypeAndFile(GenericValue dataResource, Map context) {
-		String retVal = null;
-		String mimeTypeId = (String) context.get("_imageData_contentType");
-		String fileName = (String) context.get("_imageData_fileName");
-		try {
-			if (UtilValidate.isNotEmpty(fileName))
-				dataResource.set("objectInfo", fileName);
-			if (UtilValidate.isNotEmpty(mimeTypeId))
-				dataResource.set("mimeTypeId", mimeTypeId);
-			dataResource.store();
-		} catch (GenericEntityException e) {
-			retVal = "Unable to update the DataResource record";
-		}
-		return retVal;
-	}
+        String retVal = null;
+        String mimeTypeId = (String) context.get("_imageData_contentType");
+        String fileName = (String) context.get("_imageData_fileName");
+        try {
+            if (UtilValidate.isNotEmpty(fileName))
+                dataResource.set("objectInfo", fileName);
+            if (UtilValidate.isNotEmpty(mimeTypeId))
+                dataResource.set("mimeTypeId", mimeTypeId);
+            dataResource.store();
+        } catch (GenericEntityException e) {
+            retVal = "Unable to update the DataResource record";
+        }
+        return retVal;
+    }
 
     public static Map initContentChildCounts(DispatchContext dctx, Map context) throws GenericServiceException{
-		Map result = new HashMap();
+        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-		
-			GenericValue content = (GenericValue)context.get("content");
+        
+            GenericValue content = (GenericValue)context.get("content");
             if (content == null) {
                     return ServiceUtil.returnError("No Content found.");
             }
             Long leafCount = (Long)content.get("childLeafCount");
             if (leafCount == null) {
-            	content.set("childLeafCount", new Long(0)); 
+                content.set("childLeafCount", new Long(0)); 
             }
             Long branchCount = (Long)content.get("childBranchCount");
             if (branchCount == null) {
-            	content.set("childBranchCount", new Long(0)); 
+                content.set("childBranchCount", new Long(0)); 
             }
             
             //content.store();
 
-		return result;
-	}
+        return result;
+    }
 
     public static Map incrementContentChildStats(DispatchContext dctx, Map context) throws GenericServiceException{
-		Map result = new HashMap();
+        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-		
-			String contentId = (String)context.get("contentId");
-			String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        
+            String contentId = (String)context.get("contentId");
+            String contentAssocTypeId = (String)context.get("contentAssocTypeId");
             
             try {
-                	GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+                    GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
                 if (content == null) {
                         return ServiceUtil.returnError("No Content found.");
                 }
                 Long leafCount = (Long)content.get("childLeafCount");
                 if (leafCount == null) {
-                	leafCount = new Long(0);
+                    leafCount = new Long(0);
                 }
                 int changeLeafCount = leafCount.intValue() + 1;
                 int changeBranchCount = 1;
@@ -1309,24 +1309,24 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             } catch(GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
             }
-		return result;
-	}
+        return result;
+    }
     
     public static Map decrementContentChildStats(DispatchContext dctx, Map context) throws GenericServiceException{
-		Map result = new HashMap();
+        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-		
-			String contentId = (String)context.get("contentId");
-			String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        
+            String contentId = (String)context.get("contentId");
+            String contentAssocTypeId = (String)context.get("contentAssocTypeId");
             
             try {
-                	GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+                    GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
                 if (content == null) {
                         return ServiceUtil.returnError("No Content found.");
                 }
                 Long leafCount = (Long)content.get("childLeafCount");
                 if (leafCount == null) {
-                	leafCount = new Long(0);
+                    leafCount = new Long(0);
                 }
                 int changeLeafCount = -1 * leafCount.intValue() - 1;
                 int changeBranchCount = -1;
@@ -1335,15 +1335,15 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             } catch(GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
             }
-		return result;
-	}
+        return result;
+    }
 
     public static Map updateContentChildStats(DispatchContext dctx, Map context) throws GenericServiceException{
-		Map result = new HashMap();
+        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-		
-			String contentId = (String)context.get("contentId");
-			String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        
+            String contentId = (String)context.get("contentId");
+            String contentAssocTypeId = (String)context.get("contentAssocTypeId");
             
             try {
                 
@@ -1351,30 +1351,32 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             } catch(GenericEntityException e) {
                     return ServiceUtil.returnError(e.getMessage());
             }
-		return result;
-	}
+        return result;
+    }
     
     public static Map updateSubscription(DispatchContext dctx, Map context) throws GenericServiceException{
-		Map result = new HashMap();
+        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-		String partyId = (String)context.get("partyId");
-		String webPubPt = (String)context.get("contentId");
-		String roleTypeId = (String)context.get("useRoleTypeId");
-        GenericValue userLogin = (GenericValue)context.get("userLogin");
-		Integer useTime = (Integer)context.get("useTime");
-		String useTimeUomId = (String)context.get("useTimeUomId");
-		boolean hasExistingContentRole = false;
-		GenericValue contentRole = null;
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        
+        String partyId = (String) context.get("partyId");
+        String webPubPt = (String) context.get("contentId");
+        String roleTypeId = (String) context.get("useRoleTypeId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        Integer useTime = (Integer) context.get("useTime");
+        String useTimeUomId = (String) context.get("useTimeUomId");
+        boolean hasExistingContentRole = false;
+        GenericValue contentRole = null;
         try {
             List contentRoleList = delegator.findByAndCache("ContentRole", UtilMisc.toMap("partyId", partyId, "contentId", webPubPt, "roleTypeId", roleTypeId));
             List listFiltered = EntityUtil.filterByDate(contentRoleList);
             List listOrdered = EntityUtil.orderBy(listFiltered, UtilMisc.toList("fromDate DESC"));
             if (listOrdered.size() > 0) {
                 contentRole = (GenericValue)listOrdered.get(0);
-		        hasExistingContentRole = true;
+                hasExistingContentRole = true;
             }
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
         
@@ -1383,73 +1385,85 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             contentRole.set("contentId", webPubPt);
             contentRole.set("partyId", partyId);
             contentRole.set("roleTypeId", roleTypeId);
-            contentRole.set("fromDate", UtilDateTime.nowTimestamp());
+            contentRole.set("fromDate", nowTimestamp);
         }
         
-        Timestamp thruDate = (Timestamp)contentRole.get("thruDate");
+        Timestamp thruDate = (Timestamp) contentRole.get("thruDate");
         if (thruDate == null) {
-            Timestamp fromDate = (Timestamp)contentRole.get("fromDate");
-            thruDate = fromDate;
+            // no thruDate? start with NOW
+            thruDate = nowTimestamp;
+        } else {
+            // there is a thru date... if it is in the past, bring it up to NOW before adding on the time period
+            //don't want to penalize for skipping time, in other words if they had a subscription last year for a month and buy another month, we want that second month to start now and not last year
+            if (thruDate.before(nowTimestamp)) {
+                thruDate = nowTimestamp;
+            }
         }
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(thruDate);
-        int field = -1;
-        if (useTimeUomId.equals("TF_day") ) {
+        int field = Calendar.MONTH;
+        if ("TF_day".equals(useTimeUomId)) {
             field = Calendar.DAY_OF_YEAR;   
-        } else {
+        } else if ("TF_wk".equals(useTimeUomId)) {
+            field = Calendar.WEEK_OF_YEAR;   
+        } else if ("TF_mon".equals(useTimeUomId)) {
             field = Calendar.MONTH;   
+        } else if ("TF_yr".equals(useTimeUomId)) {
+            field = Calendar.YEAR;   
+        } else {
+            Debug.logWarning("Don't know anything about useTimeUomId [" + useTimeUomId + "], defaulting to month", module);
         }
         calendar.add(field, useTime.intValue());
         long date = calendar.getTimeInMillis();
         thruDate = new Timestamp(date);
         contentRole.set("thruDate", thruDate);
         try {
-            if(hasExistingContentRole) {
+            if (hasExistingContentRole) {
                 contentRole.store();
             } else {
                 Map map = new HashMap();
                 map.put("partyId", partyId);
                 map.put("roleTypeId", roleTypeId);
                 map.put("userLogin", userLogin);
-    	        Map thisResult = dispatcher.runSync("createPartyRole", map);
+                Map thisResult = dispatcher.runSync("createPartyRole", map);
                 contentRole.create();
             }
-        } catch(GenericEntityException e) {
+        } catch (GenericEntityException e) {
             return ServiceUtil.returnError(e.getMessage());
         }
-		return result;
-	}
+        return result;
+    }
     
     public static Map updateSubscriptionByProduct(DispatchContext dctx, Map context) throws GenericServiceException{
-		Map result = new HashMap();
+        Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-		String productId = (String)context.get("productId");
-		Integer qty = (Integer)context.get("quantity");
-		if (qty == null)
+        String productId = (String) context.get("productId");
+        Integer qty = (Integer) context.get("quantity");
+        if (qty == null)
             qty = new Integer(1);
         
-		Timestamp orderCreatedDate = (Timestamp)context.get("orderCreatedDate");
+        Timestamp orderCreatedDate = (Timestamp) context.get("orderCreatedDate");
         if (orderCreatedDate == null) {
             orderCreatedDate = UtilDateTime.nowTimestamp();   
         }
-		GenericValue productContent = null;
-       	try {
-        	List lst = delegator.findByAndCache("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", "ONLINE_ACCESS"));
+        GenericValue productContent = null;
+           try {
+            List lst = delegator.findByAndCache("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", "ONLINE_ACCESS"));
             List listFiltered = EntityUtil.filterByDate(lst, orderCreatedDate, "purchaseFromDate", "purchaseThruDate", true);
             List listOrdered = EntityUtil.orderBy(lst, UtilMisc.toList("purchaseFromDate ASC", "purchaseThruDate ASC"));
             List listThrusOnly = EntityUtil.filterOutByCondition(listOrdered, new EntityExpr("purchaseThruDate", EntityOperator.EQUALS, null));
             if (listThrusOnly.size() > 0) {
-                productContent = (GenericValue)listThrusOnly.get(0);   
+                productContent = (GenericValue) listThrusOnly.get(0);   
             } else {
-                productContent = (GenericValue)listOrdered.get(0);   
+                productContent = (GenericValue) listOrdered.get(0);   
             }
-    	} catch(GenericEntityException e) {
+        } catch(GenericEntityException e) {
             Debug.logError(e.getMessage(), module);
-        	return ServiceUtil.returnError(e.getMessage());
-    	}
-    	if (productContent == null) {
-    	    String msg = "No ProductContent found for productId:" + productId;
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        if (productContent == null) {
+            String msg = "No ProductContent found for productId:" + productId;
             Debug.logError(msg, module);
             return ServiceUtil.returnError(msg); 
         }
@@ -1459,23 +1473,23 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         context.put("useTimeUomId", productContent.get("useTimeUomId"));
         context.put("useRoleTypeId", productContent.get("useRoleTypeId"));
         context.put("contentId", productContent.get("contentId"));
-    	ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscription");
-    	Map ctx = subscriptionModel.makeValid(context, "IN");
-    	result = dispatcher.runSync("updateSubscription", ctx);
-		return result;
-	}
+        ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscription");
+        Map ctx = subscriptionModel.makeValid(context, "IN");
+        result = dispatcher.runSync("updateSubscription", ctx);
+        return result;
+    }
     
     public static Map updateSubscriptionByOrder(DispatchContext dctx, Map context) throws GenericServiceException{
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String orderId = (String)context.get("orderId");
+        String orderId = (String) context.get("orderId");
         GenericValue orderHeader = null;
         try {
             List orderRoleList = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "END_USER_CUSTOMER"));
             if (orderRoleList.size() > 0 ) {
                 GenericValue orderRole = (GenericValue)orderRoleList.get(0);
-                String partyId = (String)orderRole.get("partyId");
+                String partyId = (String) orderRole.get("partyId");
                 context.put("partyId", partyId);
             } else {
                 String msg = "No OrderRole found for orderId:" + orderId;
@@ -1489,21 +1503,21 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 Debug.logError(msg, module);
                 return ServiceUtil.returnError(msg); 
             }
-            Timestamp orderCreatedDate = (Timestamp)orderHeader.get("orderDate");
+            Timestamp orderCreatedDate = (Timestamp) orderHeader.get("orderDate");
             context.put("orderCreatedDate", orderCreatedDate);
-            List lst = orderHeader.getRelated("OrderItem");
-            Iterator iter = lst.iterator();
-    	    ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscriptionByProduct");
-            while (iter.hasNext()) {
-                GenericValue orderItem = (GenericValue)iter.next();   
-                Double qty = (Double)orderItem.get("quantity");
-                String productId = (String)orderItem.get("productId");
+            List orderItemList = orderHeader.getRelated("OrderItem");
+            Iterator orderItemIter = orderItemList.iterator();
+                ModelService subscriptionModel = dispatcher.getDispatchContext().getModelService("updateSubscriptionByProduct");
+            while (orderItemIter.hasNext()) {
+                GenericValue orderItem = (GenericValue)orderItemIter.next();   
+                Double qty = (Double) orderItem.get("quantity");
+                String productId = (String) orderItem.get("productId");
                 List productContentList = delegator.findByAnd("ProductContent", UtilMisc.toMap("productId", productId, "productContentTypeId", "ONLINE_ACCESS"));
                 List productContentListFiltered = EntityUtil.filterByDate(productContentList);
                 if (productContentListFiltered.size() > 0) {
                     context.put("productId", productId);
                     context.put("quantity", new Integer(qty.intValue()));
-    	            Map ctx = subscriptionModel.makeValid(context, "IN");
+                    Map ctx = subscriptionModel.makeValid(context, "IN");
                     Map thisResult = dispatcher.runSync("updateSubscriptionByProduct", ctx);   
                 }
             }
@@ -1551,15 +1565,15 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         throws GenericEntityException, GenericServiceException {
         
         Map result = null;
-    	String contentId = content.getString("contentId");
-    	List contentAssocTypeIdList = (List)context.get("contentAssocTypeIdList" );
-    	Set visitedSet = (Set)context.get("visitedSet");
-    	if (visitedSet == null) {
+        String contentId = content.getString("contentId");
+        List contentAssocTypeIdList = (List)context.get("contentAssocTypeIdList" );
+        Set visitedSet = (Set)context.get("visitedSet");
+        if (visitedSet == null) {
             visitedSet = new HashSet();
             context.put("visitedSet", visitedSet);
         } else {
-        	if (visitedSet.contains(contentId)) {
-        		Debug.logWarning("visitedSet already contains:" + contentId, module);
+            if (visitedSet.contains(contentId)) {
+                Debug.logWarning("visitedSet already contains:" + contentId, module);
                 return ServiceUtil.returnError("visitedSet already contains:" + contentId);
             } else {
                 visitedSet.add(contentId);   
@@ -1572,8 +1586,8 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
         List kids = ContentWorker.getAssociatedContent(content, "from", contentAssocTypeIdList, null, null, null);
         Iterator iter = kids.iterator();
         while (iter.hasNext()) {
-        	GenericValue kidContent = (GenericValue)iter.next();
-        	followNodeChildrenMethod(kidContent, dispatcher, serviceName, context);
+            GenericValue kidContent = (GenericValue)iter.next();
+            followNodeChildrenMethod(kidContent, dispatcher, serviceName, context);
         }
         return result;
     }
