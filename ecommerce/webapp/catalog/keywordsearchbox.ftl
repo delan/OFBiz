@@ -60,7 +60,7 @@
                   </select>
                 </div>
               <#else>
-                <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId}">
+                <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
               </#if>
               <div class='tabletext'>
                 Any<input type='RADIO' name='SEARCH_OPERATOR' value='OR' <#if searchOperator == "OR">checked</#if>>
@@ -93,7 +93,7 @@
                   </select>
                 </div>
               <#else>
-                <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId}">
+                <input type='hidden' name="SEARCH_CATEGORY_ID" value="${searchCategoryId?if_exists}">
               </#if>
               <div class='tabletext'>
                 <a href="javascript:document.advancedsearchform.submit()" class="buttontext">Advanced Search</a>
