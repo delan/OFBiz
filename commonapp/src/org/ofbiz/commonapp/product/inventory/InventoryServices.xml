@@ -230,6 +230,7 @@
                     <else>
                         <!-- the default reserveOrderEnumId is INVRO_FIFO_REC, ie FIFO based on date received -->
                         <string-to-field string="-dateReceived" field-name="orderByString"/>
+                        <string-to-field string="INVRO_FIFO_REC" field-name="reserveOrderEnumId" map-name="parameters"/>
                     </else>
                 </if-compare>
                 </else>
@@ -475,6 +476,7 @@
     	<find-by-and entity-name="InventoryItem" map-name="lookupMap" list-name="inventoryItems"/>
     	
     	<!-- find all items which have a negative ATP; find their current reservations -->
+    	<log level="error" message="checking for negative items"/>
     	<iterate list-name="inventoryItems" entry-name="item">
     		<if-compare field-name="availableToPromise" map-name="item" operator="less" value="0">
     			<string-to-field field-name="statusId" map-name="resLookupMap" string="OIIR_RESERVED"/>
@@ -483,13 +485,16 @@
     	</iterate>
     	
     	<!-- sort the list by date -->
+    	<log level="error" message="sorting reservations"/>
     	<order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
     	
     	<!-- cancel the reservations -->    	
     	<iterate list-name="reservations" entry-name="oiir">
+    		<log level="error" message="working with reservation ${oiir}"/>
     		<!-- only continue if we have enough quantity to work with -->
     		<!-- for now; this will find the first available reservation which we can fill -->
     		<if-compare-field field-name="quantity" map-name="oiir" operator="less" to-field-name="availableToPromise" to-map-name="inventoryItem">
+    			<log level="error" message="doing the cancel"/>
     			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelMap"/>
     			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelMap"/>
     			<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelMap"/>
