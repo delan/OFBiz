@@ -1,5 +1,5 @@
 /*
- * $Id: GenerateContainer.java,v 1.1 2004/03/31 02:29:56 ajzeneski Exp $
+ * $Id: GenerateContainer.java,v 1.2 2004/03/31 02:48:11 ajzeneski Exp $
  *
  */
 package org.ofbiz.appservers;
@@ -30,7 +30,7 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
  * ** This container requires the ComponentContainer to be loaded first.
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class GenerateContainer implements Container {
@@ -73,9 +73,10 @@ public class GenerateContainer implements Container {
 
         Debug.log("Using Data : " + dataMap, module);
         for (int i = 0; i < files.length; i++) {
-            parseTemplate(files[i], dataMap);
+            if (!files[i].isDirectory() && !files[i].isHidden()) {
+                parseTemplate(files[i], dataMap);
+            }
         }
-
     }
 
     private File[] getTemplates() throws ContainerException {
