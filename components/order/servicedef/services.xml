@@ -412,7 +412,7 @@
     <!-- Tax Services -->
     <service name="calcTax" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="simpleTaxCalc">
-        <description>Calc Tax Service</description>
+        <description>Simple Calc Tax Service</description>
         <attribute name="productStoreId" type="String" mode="IN"/>
         <attribute name="itemProductList" type="java.util.List" mode="IN"/>
         <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
@@ -454,6 +454,19 @@
             location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="importFlatTable">
         <description>Import ZipSales Flat File</description>
         <attribute name="fileLocation" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="_calcTax" engine="java"
+            location="org.ofbiz.order.thirdparty.zipsales.ZipSalesServices" invoke="flatTaxCalc">
+        <description>Zip Sales Calc Tax Service - change this to calcTax to run</description>
+        <attribute name="productStoreId" type="String" mode="IN"/>
+        <attribute name="itemProductList" type="java.util.List" mode="IN"/>
+        <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
+        <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderShippingAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="shippingAddress" type="org.ofbiz.entity.GenericValue" mode="IN"/>
+        <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
+        <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
     </service>
 
     <!-- Customer Request Services -->
