@@ -1,5 +1,5 @@
 /*
- * $Id: ParametricSearch.java,v 1.8 2003/12/14 06:17:52 jonesde Exp $
+ * $Id: ParametricSearch.java,v 1.9 2004/01/20 17:57:47 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -23,40 +23,53 @@
 package org.ofbiz.product.feature;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityUtil;
 
 /**
  *  Utilities for parametric search based on features.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.1
  */
 public class ParametricSearch {
     
     public static final String module = ParametricSearch.class.getName();
     
+    public static final int DEFAULT_PER_TYPE_MAX_SIZE = 500;
+    
+    // caches expire after 10 minutes, a reasonable value hopefully...
+    //public static UtilCache featureAllCache = new UtilCache("custom.FeaturePerTypeAll", 0, 600000, true);
+    //public static UtilCache featureByCategoryCache = new UtilCache("custom.FeaturePerTypeByCategory", 0, 600000, true);
+    
     /** Gets all features associated with the specified category through: 
      * ProductCategory -> ProductFeatureCategoryAppl -> ProductFeatureCategory -> ProductFeature.
      * Returns a Map of Lists of ProductFeature GenericValue objects organized by productFeatureTypeId. 
      */
     public static Map makeCategoryFeatureLists(String productCategoryId, GenericDelegator delegator) {
+        return makeCategoryFeatureLists(productCategoryId, delegator, DEFAULT_PER_TYPE_MAX_SIZE);
+    }
+    
+    public static Map makeCategoryFeatureLists(String productCategoryId, GenericDelegator delegator, int perTypeMaxSize) {
         Map productFeaturesByTypeMap = new HashMap();
-        
         try {
             List productFeatureCategoryAppls = delegator.findByAndCache("ProductFeatureCategoryAppl", UtilMisc.toMap("productCategoryId", productCategoryId));
             productFeatureCategoryAppls = EntityUtil.filterByDate(productFeatureCategoryAppls, true);
@@ -68,14 +81,15 @@ public class ParametricSearch {
                     Iterator pfsIter = productFeatures.iterator();
                     while (pfsIter.hasNext()) {
                         GenericValue productFeature = (GenericValue) pfsIter.next();
-                        
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                         Map featuresByType = (Map) productFeaturesByTypeMap.get(productFeatureTypeId);
                         if (featuresByType == null) {
                             featuresByType = new HashMap();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
-                        featuresByType.put(productFeature.get("productFeatureId"), productFeature);
+                        if (featuresByType.size() < perTypeMaxSize) {
+                            featuresByType.put(productFeature.get("productFeatureId"), productFeature);
+                        }
                     }
                 }
             }
@@ -90,13 +104,11 @@ public class ParametricSearch {
                 Iterator pfcgasIter = productFeatureCatGrpAppls.iterator();
                 while (pfcgasIter.hasNext()) {
                     GenericValue productFeatureCatGrpAppl = (GenericValue) pfcgasIter.next();
-                    List productFeatureGroupAndAppls = delegator.findByAndCache("ProductFeatureGroupAndAppl", UtilMisc.toMap("productFeatureGroupId", productFeatureCatGrpAppl.get("productFeatureGroupId")));
-                    Iterator pfgaasIter = productFeatureGroupAndAppls.iterator();
+                    List productFeatureGroupAppls = delegator.findByAndCache("ProductFeatureGroupAppl", UtilMisc.toMap("productFeatureGroupId", productFeatureCatGrpAppl.get("productFeatureGroupId")));
+                    Iterator pfgaasIter = productFeatureGroupAppls.iterator();
                     while (pfgaasIter.hasNext()) {
-                        GenericValue productFeatureGroupAndAppl = (GenericValue) pfgaasIter.next();
-                        GenericValue productFeature = delegator.makeValue("ProductFeature", null);
-                        productFeature.setPKFields(productFeatureGroupAndAppl);
-                        productFeature.setNonPKFields(productFeatureGroupAndAppl);
+                        GenericValue productFeatureGroupAppl = (GenericValue) pfgaasIter.next();
+                        GenericValue productFeature = delegator.findByPrimaryKeyCache("ProductFeature", UtilMisc.toMap("productFeatureId", productFeatureGroupAppl.get("productFeatureId")));
                         
                         String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                         Map featuresByType = (Map) productFeaturesByTypeMap.get(productFeatureTypeId);
@@ -104,7 +116,9 @@ public class ParametricSearch {
                             featuresByType = new HashMap();
                             productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                         }
-                        featuresByType.put(productFeature.get("productFeatureId"), productFeature);
+                        if (featuresByType.size() < perTypeMaxSize) {
+                            featuresByType.put(productFeature.get("productFeatureId"), productFeature);
+                        }
                     }
                 }
             }
@@ -124,20 +138,29 @@ public class ParametricSearch {
     }
     
     public static Map getAllFeaturesByType(GenericDelegator delegator) {
+        return getAllFeaturesByType(delegator, DEFAULT_PER_TYPE_MAX_SIZE);
+    }
+    public static Map getAllFeaturesByType(GenericDelegator delegator, int perTypeMaxSize) {
         Map productFeaturesByTypeMap = new HashMap();
         try {
-            List productFeatures = delegator.findAll("ProductFeature", UtilMisc.toList("description"));
-            Iterator pfsIter = productFeatures.iterator();
-            while (pfsIter.hasNext()) {
-                GenericValue productFeature = (GenericValue) pfsIter.next();
-
+            Set typesWithOverflowMessages = new HashSet();
+            EntityListIterator productFeatureEli = delegator.findListIteratorByCondition("ProductFeature", null, null, UtilMisc.toList("description"));
+            GenericValue productFeature = null;
+            while ((productFeature = (GenericValue) productFeatureEli.next()) != null) {
                 String productFeatureTypeId = productFeature.getString("productFeatureTypeId");
                 List featuresByType = (List) productFeaturesByTypeMap.get(productFeatureTypeId);
                 if (featuresByType == null) {
                     featuresByType = new LinkedList();
                     productFeaturesByTypeMap.put(productFeatureTypeId, featuresByType);
                 }
-                featuresByType.add(productFeature);
+                if (featuresByType.size() > perTypeMaxSize) {
+                    if (!typesWithOverflowMessages.contains(productFeatureTypeId)) {
+                        typesWithOverflowMessages.add(productFeatureTypeId);
+                        // TODO: uh oh, how do we pass this message back? no biggie for now 
+                    }
+                } else {
+                    featuresByType.add(productFeature);
+                }
             }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Error getting all features", module);
