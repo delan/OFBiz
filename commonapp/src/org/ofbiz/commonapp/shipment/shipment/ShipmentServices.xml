@@ -56,36 +56,36 @@
         <!-- always create the WorkEfforts, even if dates aren't specified yet; when they are they will be set in the update service... -->
 
         <!-- the Ship WorkEffort entity -->
-        <string-to-field string="Shipment Ship" field-name="workEffortName" map-name="shipWorkEffortMap"/>
+        <string-to-field string="Shipment #${sequencedId} Ship" field-name="workEffortName" map-name="shipWorkEffortMap"/>
         <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="shipWorkEffortMap"/>
         <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="shipWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedStartDate" to-map-name="shipWorkEffortMap"/>
-        <!-- don't set this for now, leave open ended: <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedCompletionDate" to-map-name="shipWorkEffortMap"/> -->
+        <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedCompletionDate" to-map-name="shipWorkEffortMap"/>
         <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="shipWorkEffortMap"/>
         <call-service service-name="createWorkEffort" in-map-name="shipWorkEffortMap">
-            <result-to-field result-name="workEffortId" map-name="shipment" field-name="estimatedShipWorkEffId"/>
+            <result-to-field result-name="workEffortId" map-name="newEntity" field-name="estimatedShipWorkEffId"/>
         </call-service>
-        <if-not-empty field-name="partyIdFrom" map-name="shipment">
-            <field-to-field field-name="estimatedShipWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortShip"/>
-            <field-to-field field-name="partyIdFrom" map-name="shipment" to-field-name="partyId" to-map-name="assignPartyToWorkEffortShip"/>
+        <if-not-empty field-name="partyIdFrom" map-name="newEntity">
+            <field-to-field field-name="estimatedShipWorkEffId" map-name="newEntity" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortShip"/>
+            <field-to-field field-name="partyIdFrom" map-name="newEntity" to-field-name="partyId" to-map-name="assignPartyToWorkEffortShip"/>
             <string-to-field string="CAL_ATTENDEE" field-name="roleTypeId" map-name="assignPartyToWorkEffortShip"/>
             <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortShip"/>
             <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortShip"/>
         </if-not-empty>
         
         <!-- the Arrival WorkEffort entity -->
-        <string-to-field string="Shipment Arrival" field-name="workEffortName" map-name="arrivalWorkEffortMap"/>
+        <string-to-field string="Shipment #${sequencedId} Arrival" field-name="workEffortName" map-name="arrivalWorkEffortMap"/>
         <string-to-field string="EVENT" field-name="workEffortTypeId" map-name="arrivalWorkEffortMap"/>
         <string-to-field string="CAL_TENTATIVE" field-name="currentStatusId" map-name="arrivalWorkEffortMap"/>
         <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="arrivalWorkEffortMap"/>
-        <!-- don't set this for now, leave open ended: <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="arrivalWorkEffortMap"/> -->
+        <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="arrivalWorkEffortMap"/>
         <env-to-field env-name="userLogin.partyId" field-name="quickAssignPartyId" map-name="arrivalWorkEffortMap"/>
         <call-service service-name="createWorkEffort" in-map-name="arrivalWorkEffortMap">
-            <result-to-field result-name="workEffortId" map-name="shipment" field-name="estimatedArrivalWorkEffId"/>
+            <result-to-field result-name="workEffortId" map-name="newEntity" field-name="estimatedArrivalWorkEffId"/>
         </call-service>
-        <if-not-empty field-name="partyIdTo" map-name="shipment">
-            <field-to-field field-name="estimatedArrivalWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortArrival"/>
-            <field-to-field field-name="partyIdTo" map-name="shipment" to-field-name="partyId" to-map-name="assignPartyToWorkEffortArrival"/>
+        <if-not-empty field-name="partyIdTo" map-name="newEntity">
+            <field-to-field field-name="estimatedArrivalWorkEffId" map-name="newEntity" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortArrival"/>
+            <field-to-field field-name="partyIdTo" map-name="newEntity" to-field-name="partyId" to-map-name="assignPartyToWorkEffortArrival"/>
             <string-to-field string="CAL_ATTENDEE" field-name="roleTypeId" map-name="assignPartyToWorkEffortArrival"/>
             <string-to-field string="CAL_SENT" field-name="statusId" map-name="assignPartyToWorkEffortArrival"/>
             <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortArrival"/>
@@ -108,7 +108,6 @@
         </check-permission>
         <string-to-field string="Update Shipment" field-name="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusDelivered"/>
-        <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="Shipment"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
@@ -116,6 +115,14 @@
         
         <if-not-empty field-name="parameters.statusId">
 			<if-compare-field field-name="parameters.statusId" operator="not-equals" to-field-name="lookedUpValue.statusId">
+                <!-- make sure a StatusValidChange record exists, if not return error -->
+                <env-to-field env-name="lookedUpValue.statusId" field-name="statusId" map-name="checkStatusValidChangeMap"/>
+                <env-to-field env-name="parameters.statusId" field-name="statusIdTo" map-name="checkStatusValidChangeMap"/>
+                <find-by-primary-key entity-name="StatusValidChange" map-name="checkStatusValidChangeMap" value-name="checkStatusValidChange"/>
+                <if-empty field-name="checkStatusValidChange">
+                    <string-to-list string="ERROR: Changing the status from ${lookedUpValue.statusId} to ${parameters.statusId} is not allowed." list-name="error_list"/>
+                </if-empty>
+                
 				<make-value entity-name="ShipmentStatus" value-name="newStatusValue"/>
 				<field-to-field field-name="statusId" map-name="parameters" to-map-name="newStatusValue"/>
 				<field-to-field field-name="shipmentId" map-name="parameters" to-map-name="newStatusValue"/>
@@ -124,19 +131,24 @@
 			</if-compare-field>
         </if-not-empty>
 
+        <!-- now finally check for errors -->
+        <check-errors/>
+
         <!-- Check the pickup and delivery dates for changes and update the corresponding WorkEfforts -->
+<log level="info" message="About to check estimated date work effort for Shipment: ${lookedUpValue}"/>
         <if>
             <condition>
                 <and>
                     <not><if-empty field-name="estimatedShipDate" map-name="parameters"/></not>
-                    <if-compare-field field-name="parameters.estimatedShipDate" operator="not-equals" to-field-name="shipment.estimatedShipDate"/>
+                    <if-compare-field field-name="parameters.estimatedShipDate" operator="not-equals" to-field-name="lookedUpValue.estimatedShipDate"/>
                 </and>
             </condition>
             <then>
-                <field-to-field field-name="estimatedShipWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="estimatedShipWorkEffortMap"/>
+                <field-to-field field-name="estimatedShipWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="estimatedShipWorkEffortMap"/>
                 <find-by-primary-key entity-name="WorkEffort" map-name="estimatedShipWorkEffortMap" value-name="estimatedShipWorkEffort"/>
-                <field-to-field map-name="shipment" field-name="estimatedShipDate" to-field-name="estimatedStartDate" to-map-name="estimatedShipWorkEffort"/>
-                <field-to-field map-name="shipment" field-name="estimatedShipDate" to-field-name="estimatedCompletionDate" to-map-name="estimatedShipWorkEffort"/>
+<log level="info" message="About to update estimatedShipWorkEffort: ${estimatedShipWorkEffort}"/>
+                <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedStartDate" to-map-name="estimatedShipWorkEffort"/>
+                <field-to-field map-name="parameters" field-name="estimatedShipDate" to-field-name="estimatedCompletionDate" to-map-name="estimatedShipWorkEffort"/>
                 <set-service-fields service-name="updateWorkEffort" map-name="estimatedShipWorkEffort" to-map-name="estimatedShipWorkEffortUpdMap"/>
                 <call-service service-name="updateWorkEffort" in-map-name="estimatedShipWorkEffortUpdMap"/>
             </then>
@@ -145,15 +157,15 @@
             <condition>
                 <and>
                     <not><if-empty field-name="estimatedArrivalDate" map-name="parameters"/></not>
-                    <if-compare-field field-name="parameters.estimatedArrivalDate" operator="not-equals" to-field-name="shipment.estimatedArrivalDate"/>
+                    <if-compare-field field-name="parameters.estimatedArrivalDate" operator="not-equals" to-field-name="lookedUpValue.estimatedArrivalDate"/>
                 </and>
             </condition>
             <then>
-                <!-- Update the existing WorkEffort -->
-                <field-to-field field-name="estimatedArrivalWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="estimatedArrivalWorkEffortMap"/>
+                <field-to-field field-name="estimatedArrivalWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="estimatedArrivalWorkEffortMap"/>
                 <find-by-primary-key entity-name="WorkEffort" map-name="estimatedArrivalWorkEffortMap" value-name="estimatedArrivalWorkEffort"/>
-                <field-to-field map-name="shipment" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="estimatedArrivalWorkEffort"/>
-                <field-to-field map-name="shipment" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="estimatedArrivalWorkEffort"/>
+<log level="info" message="About to update estimatedArrivalWorkEffort: ${estimatedArrivalWorkEffort}"/>
+                <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedStartDate" to-map-name="estimatedArrivalWorkEffort"/>
+                <field-to-field map-name="parameters" field-name="estimatedArrivalDate" to-field-name="estimatedCompletionDate" to-map-name="estimatedArrivalWorkEffort"/>
                 <set-service-fields service-name="updateWorkEffort" map-name="estimatedArrivalWorkEffort" to-map-name="estimatedArrivalWorkEffortUpdMap"/>
                 <call-service service-name="updateWorkEffort" in-map-name="estimatedArrivalWorkEffortUpdMap"/>
             </then>
@@ -164,12 +176,12 @@
             <condition>
                 <and>
                     <not><if-empty field-name="parameters.partyIdFrom"/></not>
-                    <if-compare-field field-name="parameters.partyIdFrom" operator="not-equals" to-field-name="shipment.partyIdFrom"/>
+                    <if-compare-field field-name="parameters.partyIdFrom" operator="not-equals" to-field-name="lookedUpValue.partyIdFrom"/>
                 </and>
             </condition>
             <then>
-                <field-to-field field-name="estimatedShipWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortShip"/>
-                <field-to-field field-name="partyIdFrom" map-name="shipment" to-field-name="partyId" to-map-name="assignPartyToWorkEffortShip"/>
+                <field-to-field field-name="estimatedShipWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortShip"/>
+                <field-to-field field-name="partyIdFrom" map-name="parameters" to-field-name="partyId" to-map-name="assignPartyToWorkEffortShip"/>
                 <find-by-and entity-name="WorkEffortPartyAssignment" list-name="existingShipWepas" map-name="assignPartyToWorkEffortShip"/>
                 <filter-list-by-date list-name="existingShipWepas"/>
                 <if-empty field-name="existingShipWepas">
@@ -183,12 +195,12 @@
             <condition>
                 <and>
                     <not><if-empty field-name="parameters.partyIdTo"/></not>
-                    <if-compare-field field-name="parameters.partyIdTo" operator="not-equals" to-field-name="shipment.partyIdTo"/>
+                    <if-compare-field field-name="parameters.partyIdTo" operator="not-equals" to-field-name="lookedUpValue.partyIdTo"/>
                 </and>
             </condition>
             <then>
-                <field-to-field field-name="estimatedArrivalWorkEffId" map-name="shipment" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortArrival"/>
-                <field-to-field field-name="partyIdTo" map-name="shipment" to-field-name="partyId" to-map-name="assignPartyToWorkEffortArrival"/>
+                <field-to-field field-name="estimatedArrivalWorkEffId" map-name="lookedUpValue" to-field-name="workEffortId" to-map-name="assignPartyToWorkEffortArrival"/>
+                <field-to-field field-name="partyIdTo" map-name="parameters" to-field-name="partyId" to-map-name="assignPartyToWorkEffortArrival"/>
                 <find-by-and entity-name="WorkEffortPartyAssignment" list-name="existingArrivalWepas" map-name="assignPartyToWorkEffortArrival"/>
                 <filter-list-by-date list-name="existingArrivalWepas"/>
                 <if-empty field-name="existingArrivalWepas">
