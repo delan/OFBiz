@@ -6,6 +6,7 @@
     <classpathentry kind="src" path="components/entity/src"/>
     <classpathentry kind="src" path="components/security/src"/>
     <classpathentry kind="src" path="components/service/src"/>
+    <classpathentry kind="src" path="components/minilang/src"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/carol.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/commons-cli.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/jonas_timer.jar"/>
@@ -32,5 +33,6 @@
     <classpathentry kind="lib" path="components/service/lib/wsdl4j.jar"/>
     <classpathentry kind="lib" path="components/service/lib/jaxrpc.jar"/>
     <classpathentry kind="lib" path="components/service/lib/saaj.jar"/>
+    <classpathentry kind="lib" path="components/minilang/lib/jakarta-oro-2.0.6.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>

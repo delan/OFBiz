@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.2 2003/08/17 05:12:42 ajzeneski Exp $
+ *  $Id: build.xml,v 1.3 2003/08/17 06:06:13 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -70,7 +70,13 @@
         <echo message="[clean] ================================================"/>
         <echo message="[clean] ========== Cleaning service component =========="/>
         <echo message="[clean] ================================================"/>                
-        <ant dir="components/service" target="clean" inheritAll="false"/>                        
+        <ant dir="components/service" target="clean" inheritAll="false"/>
+        
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning minilang component =========="/>
+        <echo message="[clean] ==========-======================================"/>                
+        <ant dir="components/minilang" target="clean" inheritAll="false"/>                               
 
         <delete file="ofbiz.jar"/>
         <echo message="[clean] ========== Done Cleaning =========="/>
@@ -110,10 +116,16 @@
         <ant dir="components/security" inheritAll="false" />
         
         <echo message="[build]" />
-        <echo message="[build] ===========================-===================="/>
+        <echo message="[build] ================================================"/>
         <echo message="[build] ========== Building service component =========="/>
         <echo message="[build] ================================================"/>
         <ant dir="components/service" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] ================================================="/>
+        <echo message="[build] ========== Building minilang component =========="/>
+        <echo message="[build] ================================================="/>
+        <ant dir="components/minilang" inheritAll="false" />        
                                          
         <echo message="[build] ========== Done Building (Compile) ==========" />
     </target>
@@ -138,16 +150,22 @@
         <ant dir="components/entity" target="docs" inheritAll="false"/>
         
         <echo message="[docs]"/>
-        <echo message="[docs] ======================--========================="/>
+        <echo message="[docs] ================================================="/>
         <echo message="[docs] ========== Building security component =========="/>
         <echo message="[docs] ================================================="/>
         <ant dir="components/security" target="docs" inheritAll="false"/>
         
         <echo message="[docs]"/>
-        <echo message="[docs] ======================-========================="/>
+        <echo message="[docs] ================================================"/>
         <echo message="[docs] ========== Building service component =========="/>
-        <echo message="[docs] ======================-========================="/>
+        <echo message="[docs] ================================================"/>
         <ant dir="components/service" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ========== Building minilang component =========="/>
+        <echo message="[docs] ================================================="/>
+        <ant dir="components/minilang" target="docs" inheritAll="false"/>        
         
         <echo message="[docs] ========== Done Building (JavaDocs) ==========" />              
     </target>
