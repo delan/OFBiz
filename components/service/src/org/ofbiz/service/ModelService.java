@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.8 2004/02/19 18:52:35 ajzeneski Exp $
+ * $Id: ModelService.java,v 1.9 2004/03/12 23:45:01 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.security.Security;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ModelService {
@@ -350,7 +350,7 @@ public class ModelService {
                     missing = missing + ", ";
                 }               
             }
-            throw new ServiceValidationException("The following required parameters are missing: " + missing, this, requiredButNull, null);
+            throw new ServiceValidationException("The following required parameters are missing: " + missing, this, requiredButNull, null, mode);
         }
 
         if (verboseOn) {
@@ -371,8 +371,8 @@ public class ModelService {
         }
 
         try {
-            validate(requiredInfo, requiredTest, true, this);
-            validate(optionalInfo, optionalTest, false, this);
+            validate(requiredInfo, requiredTest, true, this, mode);
+            validate(optionalInfo, optionalTest, false, this, mode);
         } catch (ServiceValidationException e) {
             Debug.logError("[ModelService.validate] : {" + name + "} : (" + mode + ") Required test error: " + e.toString(), module);
             throw e;
@@ -385,7 +385,7 @@ public class ModelService {
      * @param test The map to test its value types.
      * @param reverse Test the maps in reverse.
      */
-    public static void validate(Map info, Map test, boolean reverse, ModelService model) throws ServiceValidationException {
+    public static void validate(Map info, Map test, boolean reverse, ModelService model, String mode) throws ServiceValidationException {
         if (info == null || test == null) {
             throw new ServiceValidationException("Cannot validate NULL maps");
         }
@@ -416,7 +416,7 @@ public class ModelService {
                 }
             }
 
-            throw new ServiceValidationException(serviceNameMessage + "the following required parameters are missing: " + missingStr, model, new ArrayList(missing), null);
+            throw new ServiceValidationException(serviceNameMessage + "the following required parameters are missing: " + missingStr, model, new ArrayList(missing), null, mode);
         }
         // This is to see if the info set contains all from the test set
         if (!keySet.containsAll(testSet)) {
@@ -432,7 +432,7 @@ public class ModelService {
                     extraStr += ", ";
                 }
             }
-            throw new ServiceValidationException(serviceNameMessage + "unknown parameters found: " + extraStr, model, null, new ArrayList(extra));
+            throw new ServiceValidationException(serviceNameMessage + "unknown parameters found: " + extraStr, model, null, new ArrayList(extra), mode);
         }
 
         // * Validate types next
