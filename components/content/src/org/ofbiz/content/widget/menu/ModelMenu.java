@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenu.java,v 1.2 2004/03/24 16:04:24 byersa Exp $
+ * $Id: ModelMenu.java,v 1.3 2004/03/29 18:14:16 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ModelMenu {
@@ -290,6 +290,7 @@ public class ModelMenu {
      */
     public void renderMenuString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
 
+            Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
         if ("simple".equals(this.type)) {
             this.renderSimpleMenuString(buffer, context, menuStringRenderer);
         } else {

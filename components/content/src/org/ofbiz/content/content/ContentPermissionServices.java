@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.11 2004/03/24 16:04:16 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.12 2004/03/29 18:14:13 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -225,7 +225,7 @@ public class ContentPermissionServices {
         String contentId = null;
         if (content != null)
             contentId = content.getString("contentId");
-        if (content != null && Debug.verboseOn()) Debug.logVerbose("in checkPermission, contentId(1):" + content.get("contentId"), null);
+        //if (content != null && Debug.infoOn()) Debug.logInfo("in checkPermission, contentId(1):" + content.get("contentId"), null);
         boolean isMatch = publicMatches(purposeOperations, targetOperations, purposeIds, passedRoles, statusList, privilegeEnumId, recorder, contentId);
         
         if( isMatch ) {
@@ -243,7 +243,7 @@ public class ContentPermissionServices {
         }
 
         // Do check of non-RoleType conditions
-        if (content != null && Debug.verboseOn()) Debug.logVerbose("in checkPermission, contentId(2):" + content.get("contentId"), null);
+        //if (Debug.infoOn()) Debug.logInfo("in publicMatches, contentId(3):" + contentId, null);
         isMatch = publicMatches(purposeOperations, targetOperations, purposeIds, passedRoles, statusList, privilegeEnumId, recorder, contentId);
         
         if( isMatch ) {
@@ -326,6 +326,7 @@ public class ContentPermissionServices {
         String contentId = null;
         if (content != null)
             contentId = content.getString("contentId");
+        //if (Debug.infoOn()) Debug.logInfo("in publicMatches, contentId(2):" + contentId, null);
         boolean isMatch = publicMatches(purposeOperations, targetOperations, passedPurposes, passedRoles, statusList, privilegeEnumId, recorder, contentId);
         if (isMatch) {
             result.put("permissionStatus", "granted");
@@ -433,6 +434,7 @@ public class ContentPermissionServices {
      */
     public static boolean publicMatches(List purposeOperations, List targetOperations, List purposes, List roles, List targStatusList, String targPrivilegeEnumId, PermissionRecorder recorder, String contentId) {
         boolean isMatch = false;
+        //if (Debug.infoOn()) Debug.logInfo("in publicMatches, contentId(1):" + contentId, null);
         if (recorder.isOn()) recorder.startMatchGroup(targetOperations, purposes, roles, targStatusList, targPrivilegeEnumId, contentId);
         int targPrivilegeSeq = 0;
 //        if (UtilValidate.isNotEmpty(targPrivilegeEnumId) && !targPrivilegeEnumId.equals("_NA_") && !targPrivilegeEnumId.equals("_00_") ) {
@@ -595,8 +597,7 @@ public class ContentPermissionServices {
         GenericValue contentTo = null;
         GenericValue contentFrom = null;
         try {
-                contentTo = delegator.findByPrimaryKey("Content", 
-                                                 UtilMisc.toMap("contentId", contentIdTo) );
+                contentTo = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentIdTo) );
                 contentFrom = delegator.findByPrimaryKey("Content", 
                                                  UtilMisc.toMap("contentId", contentIdFrom) );
                 if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentTo:" + contentTo, null);

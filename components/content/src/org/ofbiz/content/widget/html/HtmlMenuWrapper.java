@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuWrapper.java,v 1.2 2004/03/24 16:04:23 byersa Exp $
+ * $Id: HtmlMenuWrapper.java,v 1.3 2004/03/29 18:14:15 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,13 +42,14 @@ import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
 import org.xml.sax.SAXException;
+import org.ofbiz.entity.*;
 
 
 /**
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class HtmlMenuWrapper {
@@ -84,6 +85,10 @@ public class HtmlMenuWrapper {
         this.context = new HashMap();
         Map parameterMap = UtilHttp.getParameterMap(request);
         context.put("parameters", parameterMap);
+
+        HttpSession session = request.getSession();
+        GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+        context.put("userLogin", userLogin);
         
         //make sure the locale is in the context
         context.put("locale", UtilHttp.getLocale(request));
@@ -234,12 +239,22 @@ public class HtmlMenuWrapper {
         } else {
             menuWrapper.setRequest(request);    
             menuWrapper.setResponse(response);    
+            Map parameterMap = UtilHttp.getParameterMap(request);
+            menuWrapper.setParameters( parameterMap);
+
+            GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+            menuWrapper.putInContext("userLogin", userLogin);
+        
         }
 
         if (session != null) {
             session.setAttribute(menuSig, menuWrapper);
         }
         return menuWrapper;
+    }
+
+    public void setParameters(Map paramMap) {
+        context.put("parameters", paramMap);
     }
 
 }
