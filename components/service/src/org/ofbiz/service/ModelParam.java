@@ -1,5 +1,5 @@
 /*
- * $Id: ModelParam.java,v 1.2 2003/12/13 16:39:55 ajzeneski Exp $
+ * $Id: ModelParam.java,v 1.3 2004/07/27 18:11:35 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,12 +24,14 @@
  */
 package org.ofbiz.service;
 
+import java.util.List;
+
 /**
  * Generic Service Model Parameter
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jon</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelParam {
@@ -55,13 +57,16 @@ public class ModelParam {
     /** Parameter prefix for creating an attribute Map */
     public String stringMapPrefix;
 
-    /** Parameter sufix for creating an attribute List */
+    /** Parameter suffix for creating an attribute List */
     public String stringListSuffix;
+
+    /** Validation methods */
+    public List validators;
 
     /** Is this Parameter required or optional? Default to false, or required */
     public boolean optional = false;
     public boolean overrideOptional = false;
-    
+
     /** Is this parameter to be displayed via the form tool? */
     public boolean formDisplay = true;
     public boolean overrideFormDisplay = false;
@@ -80,6 +85,7 @@ public class ModelParam {
         this.fieldName = param.fieldName;
         this.stringMapPrefix = param.stringMapPrefix;
         this.stringListSuffix = param.stringListSuffix;
+        this.validators = param.validators;
         this.optional = param.optional;
         this.overrideOptional = param.overrideOptional;
         this.formDisplay = param.formDisplay;
@@ -97,6 +103,7 @@ public class ModelParam {
         buf.append(fieldName + "::");
         buf.append(stringMapPrefix + "::");
         buf.append(stringListSuffix + "::");
+        buf.append(validators.toString() + "::");
         buf.append(optional + "::");
         buf.append(overrideOptional + "::");
         buf.append(formDisplay + "::");
@@ -109,6 +116,29 @@ public class ModelParam {
         if (model.name.equals(this.name))
             return true;
         return false;
+    }
+
+    class ModelParamValidator {
+
+        protected String className;
+        protected String methodName;
+
+        public ModelParamValidator(String className, String methodName) {
+            this.className = className;
+            this.methodName = methodName;
+        }
+
+        public String getClassName() {
+            return className;
+        }
+
+        public String getMethodName() {
+            return methodName;
+        }
+
+        public String toString() {
+            return className + "::" + methodName;
+        }
     }
 }
 
