@@ -1,19 +1,7 @@
 
-This Orion deployment is kind of weird, actually Orion is kind of a weird app
-server. Note that this deployment does not use Orion's JTA or XA JDBC pooling
-implementations because I couldn't find out how to get the JTA UserTransaction
-and TransactionManager objects. If anyone knows, please email me.
-
-The performance under Orion is good, though not as good as Weblogic.
-
-To deploy on Orion copy the files in this directory to the Orion root directory
-and the files in config to the Orion config directory. Be sure to backup the
-files in the config directory that these will overwrite if those files are
-important to you.
-
-Now, go into the Orion home directory and run the "ofbiz-get-files.sh" script
-which will copy a bunch of files from the OFBiz directories to the orion/lib
-directory. The "ofbiz-remove-files.sh" script can be use to get rid of these.
+The Orion configuration has been updated quite a bit so that it references 
+the OFBiz JAR files in place where they are built by Ant. It also uses the
+Orion Connection Pool and Transaction Manager.
 
 With all of that in place, just set your $OFBIZ_HOME (or make sure that 
 orion/../ofbiz is the OFBIZ_HOME) environment variable
@@ -27,10 +15,13 @@ application.xml file or put orion and ofbiz as sibling directories.
 By the way, be sure to copy the tools.jar file from your JDK lib directory to
 the Orion root directory, it needs it there for compilation.
 
-The default entityengine.xml file is used at the moment for Orion
-because of the problem mentioned at the top of this file, ie no access to the
-JTA interfaces. So, the Tyrex configurations there can be used just fine.
-
+NOTE: This configuration is not 100% complete. In other words, we haven't been
+able to get everything in OFBiz working under Orion. We've resolved most of the
+issues, but some remain. The main ones are: not being able to find the 
+java:comp/UserTransaction object in JNDI, and certain JSPs 
+(like productdetail.jsp) won't compile because of parsing and JSP to Java
+translation errors. The productdetail.jsp issue may be related to the JSP
+compiler getting confused by the JavaScript in the page, just a guess...
 
 Hope that helps!
 
