@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import javax.mail.*;
 import javax.mail.internet.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.party.contact.*;
@@ -119,85 +120,44 @@ public class CheckOutEvents {
         }
     }
     
+    // Create order event - uses createOrder service for processing
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getSession().getServletContext().getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
-        StringBuffer errorMessage = new StringBuffer();
         
         //remove this whenever creating an order so quick reorder cache will refresh/recalc
         request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
         
-        if (cart != null && cart.size() > 0) {
-            String orderId = delegator.getNextSeqId("OrderHeader").toString();
-            Debug.log("[createOrder] Got next OrderHeader seq id " + orderId);
-            
-            GenericValue order = delegator.makeValue("OrderHeader", UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER", "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(), "statusId", "Ordered", "shippingInstructions", cart.getShippingInstructions()));
-            order.set("billingAccountId", cart.getBillingAccountId());
-            if (cart.getCartDiscount() != 0.0) {
-                order.preStoreOther(delegator.makeValue("OrderAdjustment", UtilMisc.toMap( "orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "DISCOUNT_ADJUSTMENT", "orderId", orderId, "orderItemSeqId", "NA", "percentage", new Double(cart.getCartDiscount()))));
-            }
-            order.preStoreOther(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SHIPPING_CHARGES", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getShipping()))));
-            order.preStoreOther(delegator.makeValue("OrderAdjustment", UtilMisc.toMap("orderAdjustmentId", delegator.getNextSeqId("OrderAdjustment").toString(), "orderAdjustmentTypeId", "SALES_TAX", "orderId", orderId, "orderItemSeqId", null, "amount", new Double(cart.getSalesTax()))));
-            order.preStoreOther(delegator.makeValue("OrderContactMech", UtilMisc.toMap( "contactMechId", cart.getShippingContactMechId(), "contactMechPurposeTypeId", "SHIPPING_LOCATION", "orderId", orderId)));
-            
-            GenericValue orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA, "shipmentMethodTypeId", cart.getShipmentMethodTypeId(), "carrierPartyId", cart.getCarrierPartyId(), "carrierRoleTypeId", "CARRIER" /* XXX */, "shippingInstructions", cart.getShippingInstructions()));
-            orderShipmentPreference.set("maySplit", cart.getMaySplit());
-            order.preStoreOther(orderShipmentPreference);
-            
-            order.preStoreOthers(cart.makeOrderItems(delegator, orderId));
-            
-            final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
-            for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
-                order.preStoreOther(delegator.makeValue("OrderRole", UtilMisc.toMap(
-                "orderId", orderId,
-                "partyId", userLogin.get("partyId"),
-                "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
-            }
-            String distributorId = DistributorEvents.getDistributorId(request);
-            if (UtilValidate.isNotEmpty(distributorId)) {
-                order.preStoreOther(delegator.makeValue("OrderRole", UtilMisc.toMap(
-                "orderId", orderId,
-                "partyId", distributorId,
-                "roleTypeId", "DISTRIBUTOR")));
-            }
-            
-            order.preStoreOther(delegator.makeValue("OrderStatus", UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(), "statusId", "Requested", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
-            
-            String creditCardId = cart.getCreditCardId();
-            if (creditCardId != null) {
-                order.preStoreOther(delegator.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(), "orderId", orderId, "paymentMethodTypeId", "CREDIT_CARD", "paymentInfoId", creditCardId)));
-            } else {
-                //XXX CASH should not be assumed!!
-                order.preStoreOther(delegator.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(), "orderId", orderId, "paymentMethodTypeId", "CASH", "paymentInfoId", creditCardId)));
-            }
-            
-            try {
-                delegator.create(order);
-                cart.clear();
-                
-                request.setAttribute("order_id", orderId);
-                request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
-            }
-            catch(GenericEntityException e) {
-                Debug.logWarning(e.getMessage());
-                errorMessage.append("<li>ERROR: Could not create order (write error: " + e.getMessage() + ").");
-            }
-            
-        }
-        else {
-            errorMessage.append("<li>There are no items in the cart.");
-        }
+        // build the service context
+        Map context = cart.makeCartMap();        
+        String distributorId = DistributorEvents.getDistributorId(request);
+        context.put("distributorId", distributorId);
+        context.put("partyId", userLogin.get("partyId"));
         
-        if ( errorMessage.length() > 0 ) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,errorMessage.toString());
+        // invoke the service
+        Map result = null;
+        try {
+            result = dispatcher.runSync("storeOrder",context);
+            cart.clear();
+        }
+        catch ( GenericServiceException e ) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Problem invoking the service: " + e.getMessage());
             return "error";
         }
-        else {
-            return "success";
-        }
+        
+        // check for error message(s)
+        if ( result.containsKey(ModelService.ERROR_MESSAGE) )
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,result.get(ModelService.ERROR_MESSAGE));
+        
+        // set the orderId for future use
+        request.setAttribute("order_id", result.get("orderId"));
+        request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
+            
+        // return the result
+        return result.containsKey(ModelService.RESPONSE_MESSAGE) ? (String)result.get(ModelService.RESPONSE_MESSAGE) : "success";
     }
-    
+            
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
         String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
