@@ -131,6 +131,7 @@ public class PaymentGatewayServices {
             String serviceName = null;
             Map processContext = new HashMap();
             processContext.put("orderId", orderId);
+            processContext.put("orderItems", orh.getOrderItems());
             processContext.put("processAmount", processAmount);
             processContext.put("contactPerson", contactPerson);
             processContext.put("contactEmail", contactEmail);
