@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.method.envops;
+package org.ofbiz.core.minilang.method;
 
 
 import java.net.*;
@@ -36,48 +36,44 @@ import org.ofbiz.core.minilang.method.*;
 
 
 /**
- * Copies an properties file property value to a field
+ * A type of MethodString that represents a String constant value
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    February 19, 2002
+ *@created    October 4, 2002
  *@version    1.0
  */
-public class PropertyToField extends MethodOperation {
-    String resource;
-    String property;
-    String defaultVal;
-    String mapName;
+public class FieldString extends MethodString {
     String fieldName;
+    String mapName;
 
-    public PropertyToField(Element element, SimpleMethod simpleMethod) {
+    public FieldString(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        resource = element.getAttribute("resource");
-        property = element.getAttribute("property");
-        defaultVal = element.getAttribute("default");
-        mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
+        mapName = element.getAttribute("map-name");
     }
 
-    public boolean exec(MethodContext methodContext) {
-        String value = UtilProperties.getPropertyValue(resource, property);
-
-        if (value == null || value.length() == 0) {
-            value = defaultVal;
-        }
+    public String getString(MethodContext methodContext) {
+        Object fieldVal = null;
 
         if (mapName != null && mapName.length() > 0) {
-            Map toMap = (Map) methodContext.getEnv(mapName);
+            Map fromMap = (Map) methodContext.getEnv(mapName);
 
-            if (toMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", creating new map");
-                toMap = new HashMap();
-                methodContext.putEnv(mapName, toMap);
+            if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapName + ", not getting string value");
+                return "";
             }
-            toMap.put(fieldName, value);
+
+            fieldVal = fromMap.get(fieldName);
         } else {
-            methodContext.putEnv(fieldName, value);
+            // no map name, try the env
+            fieldVal = methodContext.getEnv(fieldName);
         }
 
-        return true;
+        if (fieldVal == null) {
+            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not getting string value");
+            return "";
+        }
+        
+        return fieldVal.toString();
     }
 }

@@ -579,8 +579,6 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToEnv(curOperElem, simpleMethod));
                 } else if ("string-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.StringToField(curOperElem, simpleMethod));
-                } else if ("property-to-field".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.PropertyToField(curOperElem, simpleMethod));
                 } else if ("to-string".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.ToString(curOperElem, simpleMethod));
                 } else if ("clear-field".equals(nodeName)) {
@@ -589,8 +587,6 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.Iterate(curOperElem, simpleMethod));
                 } else if ("first-from-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FirstFromList(curOperElem, simpleMethod));
-                } else if ("calculate".equals(nodeName)) {
-                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.Calculate(curOperElem, simpleMethod));
 
                 } else if ("now-timestamp-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.NowTimestampToEnv(curOperElem, simpleMethod));
@@ -653,6 +649,14 @@ public class SimpleMethod {
                 } else if ("check-permission".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.ifops.CheckPermission(curOperElem, simpleMethod));
                 } else if ("else".equals(nodeName)) {// don't add anything, but don't complain either, this one is handled in the individual operations
+                    
+                } else if ("property-to-field".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.otherops.PropertyToField(curOperElem, simpleMethod));
+                } else if ("calculate".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.otherops.Calculate(curOperElem, simpleMethod));
+                } else if ("log".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.otherops.Log(curOperElem, simpleMethod));
+                    
                 } else {
                     Debug.logWarning("Operation element \"" + nodeName + "\" no recognized");
                 }

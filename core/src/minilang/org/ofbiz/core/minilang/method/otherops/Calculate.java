@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package org.ofbiz.core.minilang.method.envops;
+package org.ofbiz.core.minilang.method.otherops;
 
 
 import java.net.*;
