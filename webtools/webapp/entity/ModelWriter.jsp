@@ -1,5 +1,5 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.config.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><%
-
+<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.config.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.config.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" /><%
+try {
 if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("originalLoaderName") != null) {
   if ("true".equals(request.getParameter("savetofile"))) {
     //save to the file specified in the ModelReader config
@@ -90,7 +90,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
   String originalLoaderName = request.getParameter("originalLoaderName");
   String originalLocation = request.getParameter("originalLocation");
   if (originalLoaderName != null && originalLocation != null) {
-    ec = reader.getResourceHandlerEntities(new ResourceHandler(originalLoaderName, originalLocation));
+    ec = reader.getResourceHandlerEntities(new ResourceHandler(EntityConfigUtil.ENTITY_ENGINE_XML_FILENAME, originalLoaderName, originalLocation));
   } else {
     ec = reader.getEntityNames();
   }
@@ -222,5 +222,8 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
 } 
 else {
   %>ERROR: You do not have permission to use this page (ENTITY_MAINT needed)<%
+}
+} catch (Exception e) {
+    Debug.log(e);
 }
 %>
