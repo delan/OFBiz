@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<simple-methods>
+    <simple-method method-name="createCustRequest" short-description="Create Customer Request">
+        <call-map-processor xml-resource="org/ofbiz/commonapp/order/request/CustRequestMapProcessor.xml"
+                processor-name="createCustRequest" in-map-name="parameters" out-map-name="custRequestContext"/>
+        <if-empty map-name="parameters" field-name="custRequestId">
+            <sequenced-id-to-env sequence-name="CustRequest" env-name="envCustRequest"/>
+            <env-to-field env-name="envCustRequest" map-name="custRequestContext" field-name="custRequestId"/>
+            <to-string map-name="custRequestContext" field-name="custRequestId"/>
+        </if-empty>
+        <field-to-result map-name="custRequestContext" field-name="custRequestId" result-name="custRequestId"/>
+        <check-errors/>
+        <make-value value-name="newCustRequest" entity-name="CustRequest" map-name="custRequestContext"/>
+        <create-value value-name="newCustRequest"/>
+    </simple-method>
+    <simple-method method-name="createCustRequestAttribute" short-description="Create Customer Request Attribute">
+        <call-map-processor xml-resource="org/ofbiz/commonap/order/request/CustRequestMapProcessor.xml"
+            processor-name="createCustRequestAttribute" in-map-name="parameters" out-map-name="custRequestAttributeContext"/>
+        <check-errors/>
+        <make-value value-name="newCustRequestAttribute" entity-name="CustRequestAttribute" map-name="custRequestAttributeContext"/>
+        <create-value value-name="newCustRequestAttribute"/>
+    </simple-method>
+    <simple-method method-name="createCustRequestItem" short-description="Create Customer Request Item">
+        <call-map-processor xml-resource="org/ofbiz/commonapp/order/request/CustRequestMapProcessor.xml"
+                processor-name="createCustRequestItem" in-map-name="parameters" out-map-name="custRequestItemContext"/>
+        <sequenced-id-to-env sequence-name="CustRequestItem" env-name="envCustRequestItemSeqId"/>
+        <env-to-field env-name="envCustRequestItemSeqId" map-name="custRequestItemContext" field-name="custRequestItemSeqId"/>
+        <to-string map-name="custRequestItemContext" field-name="custRequestItemSeqId"/>
+        <field-to-result map-name="custRequestItemContext" field-name="custRequestItemSeqId" result-name="custRequestItemSeqId"/>
+        <check-errors/>
+        <make-value value-name="newCustRequestItem" entity-name="CustRequestItem" map-name="custRequestItemContext"/>
+        <create-value value-name="newCustRequestItem"/>
+    </simple-method>
+    <simple-method method-name="createCustRequestRole" short-description="Create Customer RequestRole">
+        <call-map-processor xml-resource="org/ofbiz/commonapp/order/request/CustRequestMapProcessor.xml"
+                processor-name="createCustRequestRole" in-map-name="parameters" out-map-name="custRequestRoleContext"/>
+        <check-errors/>
+        <make-value value-name="newCustRequestRole" entity-name="CustRequestRole" map-name="custRequestRoleContext"/>
+        <create-value value-name="newCustRequestRole"/>
+    </simple-method>
+</simple-methods>

@@ -52,4 +52,39 @@
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN"/>
     </service>
+
+    <!-- Customer Request Services -->
+    <service name="createCustRequest" engine="simple"
+                location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">
+        <description>Create a custRequest record</description>
+        <attribute name="custRequestId" type="String" mode="INOUT" optional="true"/>
+        <attribute name="custRequestTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestDate" type="String" mode="IN" optional="true"/>
+        <attribute name="responseRequiredDate" type="String" mode="IN" optional="false"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createCustRequestAttribute" engine="simple"
+                location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestAttribute" auth="true">
+        <description>Create CustRequestAttribute record</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="attrName" type="String" mode="IN" optional="false"/>
+        <attribute name="attrValue" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="createCustRequestItem" engine="simple"
+                location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestItem" auth="true">
+        <description>Create a CustRequestItem record</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="custRequestItemSeqId" type="String" mode="OUT" optional="false"/>
+        <attribute name="requiredByDate" type="String" mode="IN" optional="false"/>
+        <attribute name="quantity" type="String" mode="IN" optional="true"/>
+        <attribute name="maximumAmount" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createCustRequestRole" engine="simple"
+                location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequestRole" auth="true">
+        <description>Create a CustRequestRole record</description>
+        <attribute name="custRequestId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="roleTypeId" type="String" mode="IN" optional="false"/>
+    </service>
 </services>
