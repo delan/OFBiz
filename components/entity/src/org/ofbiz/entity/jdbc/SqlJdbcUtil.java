@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.13 2004/01/20 16:34:53 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.14 2004/01/20 16:40:16 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,7 +67,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -547,7 +547,7 @@ public class SqlJdbcUtil {
                 switch (typeValue) {
                 case 1:
                     if (java.sql.Types.CLOB == colType) {
-                        Debug.logInfo("For field " + curField.getName() + " of entity " + entity.getEntityName() + " getString was null or empty, trying getCharacterStream", module);
+                        // Debug.logInfo("For field " + curField.getName() + " of entity " + entity.getEntityName() + " getString is a CLOB, trying getCharacterStream", module);
                         // if the String is empty, try to get a text input stream, this is required for some databases for larger fields, like CLOBs
                         Clob valueClob = rs.getClob(ind);
                         Reader valueReader = null;
