@@ -195,7 +195,7 @@ public class TransactionUtil implements javax.transaction.Status {
     }
 
     /** Makes a roll back the only possible outcome of the transaction in the current thread IF transactions are available */
-    public static void setRollbackOnly() throws GenericTransactionException {
+    public static void setRollbackOnly() throws GenericTransactionException {        
         UserTransaction ut = TransactionFactory.getUserTransaction();
 
         if (ut != null) {
@@ -208,7 +208,7 @@ public class TransactionUtil implements javax.transaction.Status {
                     ut.setRollbackOnly();
                     Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set", module);
                 } else {
-                    Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set, status is STATUS_NO_TRANSACTION", module);
+                    Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only not set, status is STATUS_NO_TRANSACTION", module);
                 }
             } catch (SystemException e) {
                 //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
