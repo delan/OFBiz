@@ -41,4 +41,6 @@ public interface DistributedCacheClear {
     public void distributedClearCacheLineFlexible(GenericEntity dummyPK);
 
     public void distributedClearCacheLine(GenericPK primaryKey);
+    
+    public void clearAllCaches();
 }

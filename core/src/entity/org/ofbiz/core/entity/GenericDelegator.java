@@ -410,38 +410,70 @@ public class GenericDelegator {
         return this.create(genericValue);
     }
 
-    /** Creates a Entity in the form of a GenericValue and write it to the database
-     * @return GenericValue instance containing the new instance
+    /** Creates a Entity in the form of a GenericValue and write it to the datasource
+     *@param value The GenericValue to create a value in the datasource from
+     *@return GenericValue instance containing the new instance
      */
     public GenericValue create(GenericValue value) throws GenericEntityException {
+        return this.create(value, true);
+    }
+    
+    /** Creates a Entity in the form of a GenericValue and write it to the datasource
+     *@param value The GenericValue to create a value in the datasource from
+     *@param doCacheClear boolean that specifies whether to clear related cache entries for this value to be created
+     *@return GenericValue instance containing the new instance
+     */
+    public GenericValue create(GenericValue value, boolean doCacheClear) throws GenericEntityException {
+        if (value == null) {
+            throw new IllegalArgumentException("Cannot create a null value");
+        }
         GenericHelper helper = getEntityHelper(value.getEntityName());
 
-        if (value != null) value.setDelegator(this);
+        value.setDelegator(this);
         value = helper.create(value);
-        if (value != null) value.setDelegator(this);
-        if (value != null && value.lockEnabled()) {
-            refresh(value);
+        if (value == null) return null;
+        
+        value.setDelegator(this);
+        if (value.lockEnabled()) {
+            refresh(value, doCacheClear);
         } else {
+            if (doCacheClear) {
+                this.clearCacheLine(value);
+            }
+        }
+        return value;
+    }
+
+    /** Creates a Entity in the form of a GenericValue and write it to the datasource
+     *@param primaryKey The GenericPK to create a value in the datasource from
+     *@return GenericValue instance containing the new instance
+     */
+    public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
+        return this.create(primaryKey, true);
+    }
+    
+    /** Creates a Entity in the form of a GenericValue and write it to the datasource
+     *@param primaryKey The GenericPK to create a value in the datasource from
+     *@param doCacheClear boolean that specifies whether to clear related cache entries for this primaryKey to be created
+     *@return GenericValue instance containing the new instance
+     */
+    public GenericValue create(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException {
+        if (primaryKey == null) {
+            throw new IllegalArgumentException("Cannot create from a null primaryKey");
+        }
+        GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
+        GenericValue value = helper.create(primaryKey);
+
+        if (value != null) value.setDelegator(this);
+        if (doCacheClear) {
             this.clearCacheLine(value);
         }
         return value;
     }
 
-    /** Creates a Entity in the form of a GenericValue and write it to the database
-     * @return GenericValue instance containing the new instance
-     */
-    public GenericValue create(GenericPK primaryKey) throws GenericEntityException {
-        GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
-        GenericValue value = helper.create(primaryKey);
-
-        if (value != null) value.setDelegator(this);
-        this.clearCacheLine(value);
-        return value;
-    }
-
     /** Find a Generic Entity by its Primary Key
-     * @param primaryKey The primary key to find by.
-     * @return The GenericValue corresponding to the primaryKey
+     *@param primaryKey The primary key to find by.
+     *@return The GenericValue corresponding to the primaryKey
      */
     public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
@@ -605,25 +637,47 @@ public class GenericDelegator {
     }
 
     /** Remove a Generic Entity corresponding to the primaryKey
-     *@param  primaryKey  The primary key of the entity to remove.
+     *@param primaryKey  The primary key of the entity to remove.
      *@return int representing number of rows effected by this operation
      */
     public int removeByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
+        return this.removeByPrimaryKey(primaryKey, true);
+    }
+    
+    /** Remove a Generic Entity corresponding to the primaryKey
+     *@param primaryKey  The primary key of the entity to remove.
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this primaryKey to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeByPrimaryKey(GenericPK primaryKey, boolean doCacheClear) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(primaryKey.getEntityName());
 
-        // always clear cache before the operation
-        this.clearCacheLine(primaryKey);
+        if (doCacheClear) {
+            // always clear cache before the operation
+            this.clearCacheLine(primaryKey);
+        }
         return helper.removeByPrimaryKey(primaryKey);
     }
 
     /** Remove a Generic Value from the database
-     *@param  value The GenericValue object of the entity to remove.
+     *@param value The GenericValue object of the entity to remove.
      *@return int representing number of rows effected by this operation
      */
     public int removeValue(GenericValue value) throws GenericEntityException {
+        return this.removeValue(value, true);
+    }
+    
+    /** Remove a Generic Value from the database
+     *@param value The GenericValue object of the entity to remove.
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be removed
+     *@return int representing number of rows effected by this operation
+     */
+    public int removeValue(GenericValue value, boolean doCacheClear) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(value.getEntityName());
 
-        this.clearCacheLine(value);
+        if (doCacheClear) {
+            this.clearCacheLine(value);
+        }
         return helper.removeByPrimaryKey(value.getPrimaryKey());
     }
 
@@ -662,8 +716,9 @@ public class GenericDelegator {
 
         if (lst == null) {
             lst = findAll(entityName, orderBy);
-            if (lst != null)
+            if (lst != null) {
                 this.putInAllCache(entityName, lst);
+            }
         }
         return lst;
     }
@@ -911,8 +966,8 @@ public class GenericDelegator {
     }
 
     /** Removes/deletes Generic Entity records found by all of the specified fields (ie: combined using AND)
-     * @param entityName The Name of the Entity as defined in the entity XML file
-     * @param fields The fields of the named entity to query by with their corresponging values
+     *@param entityName The Name of the Entity as defined in the entity XML file
+     *@param fields The fields of the named entity to query by with their corresponging values
      *@return int representing number of rows effected by this operation
      */
     public int removeByAnd(String entityName, Map fields) throws GenericEntityException {
@@ -1140,8 +1195,18 @@ public class GenericDelegator {
      *@param value GenericValue instance containing the entity to refresh
      */
     public void refresh(GenericValue value) throws GenericEntityException {
-        // always clear cache before the operation
-        clearCacheLine(value);
+        this.refresh(value, true);
+    }
+    
+    /** Refresh the Entity for the GenericValue from the persistent store
+     *@param value GenericValue instance containing the entity to refresh
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be refreshed
+     */
+    public void refresh(GenericValue value, boolean doCacheClear) throws GenericEntityException {
+        if (doCacheClear) {
+            // always clear cache before the operation
+            clearCacheLine(value);
+        }
         GenericPK pk = value.getPrimaryKey();
         GenericValue newValue = findByPrimaryKey(pk);
 
@@ -1154,18 +1219,29 @@ public class GenericDelegator {
     }
 
     /** Store the Entity from the GenericValue to the persistent store
-     * @param value GenericValue instance containing the entity
+     *@param value GenericValue instance containing the entity
      *@return int representing number of rows effected by this operation
      */
     public int store(GenericValue value) throws GenericEntityException {
-        // always clear cache before the operation
-        this.clearCacheLine(value);
+        return this.store(value, true);
+    }
+    
+    /** Store the Entity from the GenericValue to the persistent store
+     *@param value GenericValue instance containing the entity
+     *@param doCacheClear boolean that specifies whether to clear cache entries for this value to be stored
+     *@return int representing number of rows effected by this operation
+     */
+    public int store(GenericValue value, boolean doCacheClear) throws GenericEntityException {
+        if (doCacheClear) {
+            // always clear cache before the operation
+            this.clearCacheLine(value);
+        }
         GenericHelper helper = getEntityHelper(value.getEntityName());
         int retVal = helper.store(value);
 
         // refresh the valueObject to get the new version
         if (value.lockEnabled()) {
-            refresh(value);
+            refresh(value, doCacheClear);
         }
         return retVal;
     }
@@ -1322,6 +1398,24 @@ public class GenericDelegator {
     // ======================================
     // ======= Cache Related Methods ========
 
+    /** This method is a shortcut to completely clear all entity engine caches. 
+     * For performance reasons this should not be called very often.
+     */
+    public void clearAllCaches() {
+        this.clearAllCaches(true);
+    }
+    
+    public void clearAllCaches(boolean distribute) {
+        if (this.allCache != null) this.allCache.clear();
+        if (this.andCache != null) this.andCache.clear();
+        if (this.andCacheFieldSets != null) this.andCacheFieldSets.clear();
+        if (this.primaryKeyCache != null) this.primaryKeyCache.clear();
+        
+        if (distribute) {
+            this.distributedCacheClear.clearAllCaches();
+        }
+    }
+    
     /** Remove a CACHED Generic Entity (List) from the cache, either a PK, ByAnd, or All
      *@param entityName The Name of the Entity as defined in the entity XML file
      *@param fields The fields of the named entity to query by with their corresponging values
@@ -1330,16 +1424,17 @@ public class GenericDelegator {
         // if no fields passed, do the all cache quickly and return
         if (fields == null && allCache != null) {
             allCache.remove(entityName);
+            return;
         }
 
         ModelEntity entity = this.getModelEntity(entityName);
-
         if (entity == null) {
             throw new IllegalArgumentException("[GenericDelegator.clearCacheLine] could not find entity for entityName: " + entityName);
         }
+        //if never cached, then don't bother clearing
+        if (entity.getNeverCache()) return;
 
         GenericPK dummyPK = new GenericPK(entity, fields);
-
         this.clearCacheLineFlexible(dummyPK);
     }
 
@@ -1356,6 +1451,9 @@ public class GenericDelegator {
 
     public void clearCacheLineFlexible(GenericEntity dummyPK, boolean distribute) {
         if (dummyPK != null) {
+            //if never cached, then don't bother clearing
+            if (dummyPK.getModelEntity().getNeverCache()) return;
+            
             // always auto clear the all cache too, since we know it's messed up in any case
             if (allCache != null) {
                 allCache.remove(dummyPK.getEntityName());
@@ -1375,10 +1473,10 @@ public class GenericDelegator {
                     }
                 }
             }
-        }
 
-        if (distribute && this.distributedCacheClear != null) {
-            this.distributedCacheClear.distributedClearCacheLineFlexible(dummyPK);
+            if (distribute && this.distributedCacheClear != null) {
+                this.distributedCacheClear.distributedClearCacheLineFlexible(dummyPK);
+            }
         }
     }
 
@@ -1394,6 +1492,9 @@ public class GenericDelegator {
     public void clearCacheLine(GenericPK primaryKey, boolean distribute) {
         if (primaryKey == null) return;
 
+        //if never cached, then don't bother clearing
+        if (primaryKey.getModelEntity().getNeverCache()) return;
+        
         // always auto clear the all cache too, since we know it's messed up in any case
         if (allCache != null) {
             allCache.remove(primaryKey.getEntityName());
@@ -1427,6 +1528,9 @@ public class GenericDelegator {
         // Debug.logInfo("running clearCacheLine for value: " + value + ", distribute: " + distribute);
         if (value == null) return;
 
+        //if never cached, then don't bother clearing
+        if (value.getModelEntity().getNeverCache()) return;
+        
         // always auto clear the all cache too, since we know it's messed up in any case
         if (allCache != null) {
             allCache.remove(value.getEntityName());
@@ -1571,6 +1675,12 @@ public class GenericDelegator {
 
     public void putInPrimaryKeyCache(GenericPK primaryKey, GenericValue value) {
         if (primaryKey == null || value == null) return;
+        
+        if (value.getModelEntity().getNeverCache()) {
+            Debug.logWarning("Tried to put a value of the " + value.getEntityName() + " entity in the BY PRIMARY KEY cache but this entity has never-cache set to true, not caching.");
+            return;
+        }
+        
         primaryKeyCache.put(primaryKey, value);
     }
 
@@ -1587,20 +1697,37 @@ public class GenericDelegator {
 
     public void putInAllCache(String entityName, List values) {
         if (entityName == null || values == null) return;
+        ModelEntity entity = this.getModelEntity(entityName);
+        this.putInAllCache(entity, values);
+    }
+        
+    public void putInAllCache(ModelEntity entity, List values) {
+        if (entity == null || values == null) return;
+        
+        if (entity.getNeverCache()) {
+            Debug.logWarning("Tried to put values of the " + entity.getEntityName() + " entity in the ALL cache but this entity has never-cache set to true, not caching.");
+            return;
+        }
+        
         // make the values immutable so that the list can be returned directly from the cache without copying and still be safe
         // NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
-        allCache.put(entityName, Collections.unmodifiableList(values));
+        allCache.put(entity.getEntityName(), Collections.unmodifiableList(values));
     }
 
     public void putInAndCache(String entityName, Map fields, List values) {
         if (entityName == null || fields == null || values == null) return;
         ModelEntity entity = this.getModelEntity(entityName);
-
         putInAndCache(entity, fields, values);
     }
 
     public void putInAndCache(ModelEntity entity, Map fields, List values) {
         if (entity == null || fields == null || values == null) return;
+        
+        if (entity.getNeverCache()) {
+            Debug.logWarning("Tried to put values of the " + entity.getEntityName() + " entity in the BY AND cache but this entity has never-cache set to true, not caching.");
+            return;
+        }
+        
         GenericPK tempPK = new GenericPK(entity, fields);
 
         if (tempPK == null) return;

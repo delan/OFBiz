@@ -100,6 +100,12 @@ public class ModelEntity implements Comparable {
     /** An indicator to specify if this entity requires locking for updates */
     protected boolean doLock = false;
 
+    /** An indicator to specify if this entity is never cached. 
+     * If true causes the delegator to not clear caches on write and to not get 
+     * from cache on read showing a warning messages to that effect 
+     */
+    protected boolean neverCache = false;
+
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
     public ModelEntity() {}
@@ -167,7 +173,8 @@ public class ModelEntity implements Comparable {
         this.tableName = UtilXml.checkEmpty(entityElement.getAttribute("table-name"), ModelUtil.javaNameToDbName(this.entityName));
         this.packageName = UtilXml.checkEmpty(entityElement.getAttribute("package-name"));
         this.dependentOn = UtilXml.checkEmpty(entityElement.getAttribute("dependent-on"));
-        this.doLock = UtilXml.checkBoolean(entityElement.getAttribute("enable-lock"));
+        this.doLock = UtilXml.checkBoolean(entityElement.getAttribute("enable-lock"), false);
+        this.neverCache = UtilXml.checkBoolean(entityElement.getAttribute("never-cache"), false);
 
         if (docElementValues == null) {
             this.title = UtilXml.checkEmpty(entityElement.getAttribute("title"), UtilXml.childElementValue(docElement, "title"), "None");
@@ -289,6 +296,18 @@ public class ModelEntity implements Comparable {
 
     public void setVersion(String version) {
         this.version = version;
+    }
+
+    /** An indicator to specify if this entity is never cached. 
+     * If true causes the delegator to not clear caches on write and to not get 
+     * from cache on read showing a warning messages to that effect 
+     */
+    public boolean getNeverCache() {
+        return this.neverCache;
+    }
+
+    public void setNeverCache(boolean neverCache) {
+        this.neverCache = neverCache;
     }
 
     /** An indicator to specify if this entity requires locking for updates */

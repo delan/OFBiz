@@ -381,11 +381,14 @@ public class UtilXml {
         return checkBoolean(str, false);
     }
 
-    public static boolean checkBoolean(String str, boolean def) {
-        if (str != null && str.equalsIgnoreCase("true")) {
-            return true;
+    public static boolean checkBoolean(String str, boolean defaultValue) {
+        if (defaultValue) {
+            //default to true, ie anything but false is true
+            return !"false".equals(str);
+        } else {
+            //default to false, ie anything but true is false
+            return "true".equals(str);
         }
-        return def;
     }
 
     /**

@@ -45,7 +45,8 @@
 	table-name CDATA #IMPLIED
 	package-name CDATA #REQUIRED
 	dependent-on CDATA #IMPLIED
-        enable-lock (true|false) "false"
+        enable-lock ( true | false ) "false"
+        never-cache ( true | false ) "false"
 	title CDATA #IMPLIED
 	copyright CDATA #IMPLIED
 	author CDATA #IMPLIED
@@ -62,6 +63,7 @@
 	entity-name CDATA #REQUIRED
 	package-name CDATA #REQUIRED
 	dependent-on CDATA #IMPLIED
+        never-cache ( true | false ) "false"
 	title CDATA #IMPLIED
 	copyright CDATA #IMPLIED
 	author CDATA #IMPLIED

@@ -96,6 +96,36 @@ public class EntityCacheServices implements DistributedCacheClear {
         }
     }
 
+    public void clearAllCaches() {
+        if (this.dispatcher == null) {
+            Debug.logWarning("No dispatcher is available, somehow the setDelegator (which also creates a dispatcher) was not called, not running distributed clear all caches");
+            return;
+        }
+
+        try {
+            this.dispatcher.runAsync("distributedClearAllEntityCaches", null, false);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Error running the distributedClearAllCaches service");
+        }
+    }
+    
+    /**
+     * Clear All Entity Caches Service
+     *@param ctx The DispatchContext that this service is operating in
+     *@param context Map containing the input parameters
+     *@return Map with the result of the service, the output parameters
+     */
+    public static Map clearAllEntityCaches(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Boolean distributeBool = (Boolean) context.get("distribute");
+        boolean distribute = false;
+        if (distributeBool != null) distribute = distributeBool.booleanValue();
+        
+        delegator.clearAllCaches(distribute);
+        
+        return ServiceUtil.returnSuccess();
+    }
+    
     /**
      * Clear Cache Line Service: one of the following context parameters is required: value, dummyPK or primaryKey
      *@param ctx The DispatchContext that this service is operating in
@@ -104,22 +134,25 @@ public class EntityCacheServices implements DistributedCacheClear {
      */
     public static Map clearCacheLine(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+        Boolean distributeBool = (Boolean) context.get("distribute");
+        boolean distribute = false;
+        if (distributeBool != null) distribute = distributeBool.booleanValue();
 
         if (context.containsKey("value")) {
             GenericValue value = (GenericValue) context.get("value");
             if (Debug.infoOn()) Debug.logInfo("Got a clear cache line by value service call; entityName: " + value.getEntityName());
             if (Debug.verboseOn()) Debug.logVerbose("Got a clear cache line by value service call; value: " + value);
-            delegator.clearCacheLine(value, false);
+            delegator.clearCacheLine(value, distribute);
         } else if (context.containsKey("dummyPK")) {
             GenericEntity dummyPK = (GenericEntity) context.get("dummyPK");
             if (Debug.infoOn()) Debug.logInfo("Got a clear cache line by dummyPK service call; entityName: " + dummyPK.getEntityName());
             if (Debug.verboseOn()) Debug.logVerbose("Got a clear cache line by dummyPK service call; dummyPK: " + dummyPK);
-            delegator.clearCacheLineFlexible(dummyPK, false);
+            delegator.clearCacheLineFlexible(dummyPK, distribute);
         } else if (context.containsKey("primaryKey")) {
             GenericPK primaryKey = (GenericPK) context.get("primaryKey");
             if (Debug.infoOn()) Debug.logInfo("Got a clear cache line by primaryKey service call; entityName: " + primaryKey.getEntityName());
             if (Debug.verboseOn()) Debug.logVerbose("Got a clear cache line by primaryKey service call; primaryKey: " + primaryKey);
-            delegator.clearCacheLine(primaryKey, false);
+            delegator.clearCacheLine(primaryKey, distribute);
         }
         return ServiceUtil.returnSuccess();
     }
