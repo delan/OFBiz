@@ -56,7 +56,8 @@
                         ${setRequestAttribute("miniProdQuantity", "1")}
                         ${setRequestAttribute("optProductId", productId)}
                         ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
-                        ${pages.get("/catalog/miniproductsummary.ftl")}
+                        <#if pages?exists>${pages.get("/catalog/miniproductsummary.ftl")}</#if>
+                        <#if screens?exists>${screens.render("component://ecommerce/widget/CatalogScreens.xml#miniproductsummary")}</#if>
                       </td>
                     </tr>
                     <#if productId_has_next && count < 3>
