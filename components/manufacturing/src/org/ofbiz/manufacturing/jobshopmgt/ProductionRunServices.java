@@ -287,14 +287,14 @@ public class ProductionRunServices {
                 //       the component is not added to the production run.
                 Iterator  pb = components.iterator();
                 while (pb.hasNext()) {
-                    // The components variable contains a list of ItemConfigurationNodes:
+                    // The components variable contains a list of BOMNodes:
                     // each node represents a product (component).
-                    org.ofbiz.manufacturing.bom.ItemConfigurationNode node = (org.ofbiz.manufacturing.bom.ItemConfigurationNode) pb.next();
+                    org.ofbiz.manufacturing.bom.BOMNode node = (org.ofbiz.manufacturing.bom.BOMNode) pb.next();
                     GenericValue productBom = node.getProductAssoc();
                     if ((productBom.getString("routingWorkEffortId") == null && first) || (productBom.getString("routingWorkEffortId") != null && productBom.getString("routingWorkEffortId").equals(routingTask.getString("workEffortId")))) {
                         serviceContext.clear();
                         serviceContext.put("workEffortId", productionRunTaskId);
-                        // Here we get the ProductAssoc record from the ItemConfigurationNode
+                        // Here we get the ProductAssoc record from the BOMNode
                         // object to be sure to use the
                         // right component (possibly configured).
                         serviceContext.put("productId", node.getProduct().get("productId"));

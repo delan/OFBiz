@@ -146,12 +146,12 @@ public class BOMServices {
             product.set("billOfMaterialLevel", llc);
             product.store();
             if (alsoComponents.booleanValue()) {
-                Map treeResult = dispatcher.runSync("getItemConfigurationTree", UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
-                ItemConfigurationTree tree = (ItemConfigurationTree)treeResult.get("tree");
+                Map treeResult = dispatcher.runSync("getBOMTree", UtilMisc.toMap("productId", productId, "bomType", "MANUF_COMPONENT"));
+                BOMTree tree = (BOMTree)treeResult.get("tree");
                 ArrayList products = new ArrayList();
                 tree.print(products, llc.intValue());
                 for (int i = 0; i < products.size(); i++) {
-                    ItemConfigurationNode oneNode = (ItemConfigurationNode)products.get(i);
+                    BOMNode oneNode = (BOMNode)products.get(i);
                     GenericValue oneProduct = oneNode.getProduct();
                     if (oneProduct.getLong("billOfMaterialLevel").intValue() < oneNode.getDepth()) {
                         oneProduct.set("billOfMaterialLevel", new Integer(oneNode.getDepth()));
@@ -243,15 +243,15 @@ public class BOMServices {
 
     /** It reads the product's bill of materials,
      * if necessary configures it, and it returns
-     * an object (see {@link ItemConfigurationTree}
-     * and {@link ItemConfigurationNode}) that represents a
+     * an object (see {@link BOMTree}
+     * and {@link BOMNode}) that represents a
      * configured bill of material tree.
      * Useful for tree traversal (breakdown, explosion, implosion).
      * @param dctx
      * @param context
      * @return
      */    
-    public static Map getItemConfigurationTree(DispatchContext dctx, Map context) {
+    public static Map getBOMTree(DispatchContext dctx, Map context) {
 
         Map result = new HashMap();
         Security security = dctx.getSecurity();
@@ -276,9 +276,9 @@ public class BOMServices {
             fromDate = new Date();
         }
         
-        ItemConfigurationTree tree = null;
+        BOMTree tree = null;
         try {
-            tree = new ItemConfigurationTree(productId, bomType, fromDate, type.intValue(), delegator, dispatcher);
+            tree = new BOMTree(productId, bomType, fromDate, type.intValue(), delegator, dispatcher);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
         }
@@ -290,7 +290,7 @@ public class BOMServices {
 
     /** It reads the product's bill of materials,
      * if necessary configures it, and it returns its (possibly configured) components in
-     * a List of {@link ItemConfigurationNode}).
+     * a List of {@link BOMNode}).
      * @param dctx
      * @param context
      * @return
@@ -328,10 +328,10 @@ public class BOMServices {
         //
         // Components
         //
-        ItemConfigurationTree tree = null;
+        BOMTree tree = null;
         ArrayList components = new ArrayList();
         try {
-            tree = new ItemConfigurationTree(productId, "MANUF_COMPONENT", fromDate, ItemConfigurationTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher);
+            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_SINGLE_LEVEL, delegator, dispatcher);
             tree.setRootQuantity(quantity.doubleValue());
             tree.print(components, excludePhantoms.booleanValue());
             if (components.size() > 0) components.remove(0);
@@ -393,11 +393,11 @@ public class BOMServices {
             fromDate = new Date();
         }
         
-        ItemConfigurationTree tree = null;
+        BOMTree tree = null;
         ArrayList components = new ArrayList();
         ArrayList productionRuns = new ArrayList();
         try {
-            tree = new ItemConfigurationTree(productId, "MANUF_COMPONENT", fromDate, ItemConfigurationTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
+            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
             tree.setRootQuantity(quantity.doubleValue());
             tree.print(components);
             tree.createManufacturingOrders(orderId, orderItemSeqId, shipmentId, fromDate, delegator, dispatcher, userLogin);
@@ -432,11 +432,11 @@ public class BOMServices {
             fromDate = new Date();
         }
         
-        ItemConfigurationTree tree = null;
+        BOMTree tree = null;
         ArrayList components = new ArrayList();
         ArrayList notAssembledComponents = new ArrayList();
         try {
-            tree = new ItemConfigurationTree(productId, "MANUF_COMPONENT", fromDate, ItemConfigurationTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
+            tree = new BOMTree(productId, "MANUF_COMPONENT", fromDate, BOMTree.EXPLOSION_MANUFACTURING, delegator, dispatcher);
             tree.setRootQuantity(quantity.doubleValue());
             tree.print(components);
         } catch(GenericEntityException gee) {
@@ -444,7 +444,7 @@ public class BOMServices {
         }
         Iterator componentsIt = components.iterator();
         while (componentsIt.hasNext()) {
-            ItemConfigurationNode oneComponent = (ItemConfigurationNode)componentsIt.next();
+            BOMNode oneComponent = (BOMNode)componentsIt.next();
             if (!oneComponent.isManufactured()) {
                 notAssembledComponents.add(oneComponent);
             }
