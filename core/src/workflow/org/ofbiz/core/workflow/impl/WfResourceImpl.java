@@ -178,7 +178,7 @@ public class WfResourceImpl implements WfResource {
                 GenericValue v = (GenericValue) i.next();
                 WfActivity a = null;
                 try {
-                    a = WorkflowClient.getActivity(delegator,v.getString("workEffortId"));
+                    a = WfFactory.getWfActivity(delegator,v.getString("workEffortId"));
                 }
                 catch ( RuntimeException e ) {
                     throw new WfException(e.getMessage(),e);
