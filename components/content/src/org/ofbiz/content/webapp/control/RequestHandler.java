@@ -69,7 +69,7 @@ import org.ofbiz.entity.GenericValue;
 public class RequestHandler implements Serializable {
 
     public static final String module = RequestHandler.class.getName();
-    public static final String err_resource = "ContentErrorUiLabel";
+    public static final String err_resource = "ContentErrorUiLabels";
     
     private ServletContext context = null;
     private RequestManager requestManager = null;
