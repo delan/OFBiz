@@ -50,6 +50,14 @@
                 window.close();
                 obj_caller.target.value = value;
         }
+        // function passing selected value to calling window
+        function set_values(value, value2) {
+                set_value(value);
+                if (!obj_caller.target2) return;
+                if (obj_caller.target2 == null) return;
+                obj_caller.target2.value = value2;
+        }
+
     </script>
 
 
