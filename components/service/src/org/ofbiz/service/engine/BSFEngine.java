@@ -1,5 +1,5 @@
 /*
- * $Id: BSFEngine.java,v 1.3 2004/04/11 08:28:23 jonesde Exp $
+ * $Id: BSFEngine.java,v 1.4 2004/07/01 15:27:13 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import com.ibm.bsf.BSFManager;
  * BSF Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class BSFEngine extends GenericAsyncEngine {
@@ -84,12 +84,15 @@ public class BSFEngine extends GenericAsyncEngine {
         // get the classloader to use
         ClassLoader cl = null;
 
-        if (dctx == null)
+        if (dctx == null) {
             cl = this.getClass().getClassLoader();
-        else
+        } else {
             cl = dctx.getClassLoader();
-         
-        // create the manager object and set the classloader    
+        }
+
+        String location = this.getLocation(modelService);
+
+        // create the manager object and set the classloader
         BSFManager mgr = new BSFManager();
         mgr.setClassLoader(cl);
 
@@ -105,13 +108,13 @@ public class BSFEngine extends GenericAsyncEngine {
         }
         
         // source the script into a string
-        String script = (String) scriptCache.get(localName + "_" + modelService.location);
+        String script = (String) scriptCache.get(localName + "_" + location);
 
         if (script == null) {
             synchronized (this) {
-                script = (String) scriptCache.get(localName + "_" + modelService.location);
+                script = (String) scriptCache.get(localName + "_" + location);
                 if (script == null) {
-                    URL scriptUrl = UtilURL.fromResource(modelService.location, cl);
+                    URL scriptUrl = UtilURL.fromResource(location, cl);
 
                     if (scriptUrl != null) {
                         try {
@@ -121,19 +124,19 @@ public class BSFEngine extends GenericAsyncEngine {
                             throw new GenericServiceException("Cannot read script from resource", e);
                         }
                     } else {
-                        throw new GenericServiceException("Cannot read script, resource [" + modelService.location + "] not found");
+                        throw new GenericServiceException("Cannot read script, resource [" + location + "] not found");
                     }
                     if (script == null || script.length() < 2) {
                         throw new GenericServiceException("Null or empty script");
                     }
-                    scriptCache.put(localName + "_" + modelService.location, script);
+                    scriptCache.put(localName + "_" + location, script);
                 }
             }
         }               
         
         // now invoke the script
         try {
-            bsfEngine.exec(modelService.location, 0, 0, script);
+            bsfEngine.exec(location, 0, 0, script);
         } catch (BSFException e) {
             throw new GenericServiceException("Script invocation error", e);
         }

@@ -35,6 +35,8 @@
     <engine name="soap" class="org.ofbiz.service.engine.SOAPClientEngine"/>
     <engine name="workflow" class="org.ofbiz.workflow.WorkflowEngine"/>
 
+    <service-location name="rmi" location="rmi://localhost:1099/RMIDispatcher"/>
+    
     <!-- Start-Up Services -->
     <!--
        - runtime-data-id refers to the RuntimeData entity for in-parameters

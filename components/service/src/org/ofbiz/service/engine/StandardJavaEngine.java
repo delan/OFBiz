@@ -1,5 +1,5 @@
 /*
- * $Id: StandardJavaEngine.java,v 1.2 2003/09/03 20:47:59 ajzeneski Exp $
+ * $Id: StandardJavaEngine.java,v 1.3 2004/07/01 15:27:14 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * Standard Java Static Method Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public final class StandardJavaEngine extends GenericAsyncEngine {
@@ -96,7 +96,7 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
             cl = dctx.getClassLoader();
 
         try {
-            Class c = cl.loadClass(modelService.location);
+            Class c = cl.loadClass(this.getLocation(modelService));
             Method m = c.getMethod(modelService.invoke, paramTypes);
             result = m.invoke(null, params);
         } catch (ClassNotFoundException cnfe) {

@@ -1,5 +1,5 @@
 /*
- * $Id: BeanShellEngine.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: BeanShellEngine.java,v 1.2 2004/07/01 15:27:13 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import bsh.Interpreter;
  * BeanShell Script Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public final class BeanShellEngine extends GenericAsyncEngine {
@@ -83,19 +83,22 @@ public final class BeanShellEngine extends GenericAsyncEngine {
         // get the classloader to use
         ClassLoader cl = null;
 
-        if (dctx == null)
+        if (dctx == null) {
             cl = this.getClass().getClassLoader();
-        else
+        } else {
             cl = dctx.getClassLoader();
+        }
+
+        String location = this.getLocation(modelService);
 
         // source the script into a string
-        String script = (String) scriptCache.get(localName + "_" + modelService.location);
+        String script = (String) scriptCache.get(localName + "_" + location);
 
         if (script == null) {
             synchronized (this) {
-                script = (String) scriptCache.get(localName + "_" + modelService.location);
+                script = (String) scriptCache.get(localName + "_" + location);
                 if (script == null) {
-                    URL scriptUrl = UtilURL.fromResource(modelService.location, cl);
+                    URL scriptUrl = UtilURL.fromResource(location, cl);
 
                     if (scriptUrl != null) {
                         try {
@@ -105,12 +108,12 @@ public final class BeanShellEngine extends GenericAsyncEngine {
                             throw new GenericServiceException("Cannot read script from resource", e);
                         }
                     } else {
-                        throw new GenericServiceException("Cannot read script, resource [" + modelService.location + "] not found");
+                        throw new GenericServiceException("Cannot read script, resource [" + location + "] not found");
                     }
                     if (script == null || script.length() < 2) {
                         throw new GenericServiceException("Null or empty script");
                     }
-                    scriptCache.put(localName + "_" + modelService.location, script);
+                    scriptCache.put(localName + "_" + location, script);
                 }
             }
         }

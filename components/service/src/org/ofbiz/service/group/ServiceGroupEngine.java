@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceGroupEngine.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id: ServiceGroupEngine.java,v 1.2 2004/07/01 15:27:14 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.service.engine.GenericAsyncEngine;
  * ServiceGroupEngine.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceGroupEngine extends GenericAsyncEngine {
@@ -51,7 +51,7 @@ public class ServiceGroupEngine extends GenericAsyncEngine {
      * @see org.ofbiz.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map)
      */
     public Map runSync(String localName, ModelService modelService, Map context) throws GenericServiceException {
-        GroupModel groupModel = ServiceGroupReader.getGroupModel(modelService.location);
+        GroupModel groupModel = ServiceGroupReader.getGroupModel(this.getLocation(modelService));
         if (groupModel == null)
             throw new GenericServiceException("GroupModel was null; not a valid ServiceGroup!");
         return groupModel.run(dispatcher, localName, context);
