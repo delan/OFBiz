@@ -278,6 +278,7 @@ public class CheckOutEvents {
 
         // set the orderId for use by chained events
         request.setAttribute("order_id", orderId);
+        request.setAttribute("orderId", orderId);
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
         
         // save the emails to the order                              
