@@ -23,6 +23,7 @@
  */
 package org.ofbiz.core.util;
 
+import java.net.*;
 import java.util.*;
 import javax.servlet.http.*;
 
@@ -40,13 +41,27 @@ public class UtilHttp {
      * @return The resulting Map
      */
     public static Map getParameterMap(HttpServletRequest request) {
-        HashMap paramMap = new OrderedMap();
+        Map paramMap = new OrderedMap();        
+        // first add in all path info parameters /~name=value/        
+        List pathInfo = StringUtil.split(request.getPathInfo(), "/");
+        for (int i = 1; i < pathInfo.size(); i++) {
+            String element = (String) pathInfo.get(i);
+            if (element.indexOf('~') == 0 && element.indexOf('=') > -1) {
+                List elementList = StringUtil.split(element, "=");
+                String name = (String) elementList.get(0);
+                String value = (String) elementList.get(1);
+                // take off the ~ and add the parameters
+                paramMap.put(name.substring(1), value);
+            }
+        }
+        
+        // now add all the actual parameters; these take priority
         java.util.Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
             paramMap.put(name, request.getParameter(name));
         }
-        return (Map) paramMap;
+        return paramMap;
     }
 
     /** 
@@ -136,4 +151,31 @@ public class UtilHttp {
         request.getSession().setAttribute("locale", locale);        
     }
     
+    /** URL Encodes a Map of arguements */
+    public static String urlEncodeArgs(Map args) {
+        StringBuffer buf = new StringBuffer();
+        Set names = args.keySet();
+        Iterator i = names.iterator();
+
+        while (i.hasNext()) {
+            String name = (String) i.next();
+            Object value = args.get(name);
+            String valueStr = null;
+            if (value != null && value instanceof String)
+                valueStr = (String) value;
+            else if (value != null)
+                valueStr = value.toString();
+                        
+            if (name != null) {
+                buf.append(URLEncoder.encode(name));
+                buf.append("=");
+                if (valueStr == null)
+                    valueStr = "";
+                buf.append(URLEncoder.encode(valueStr));
+                if (i.hasNext())
+                    buf.append("&");
+            }
+        }
+        return buf.toString();
+    }    
 }
