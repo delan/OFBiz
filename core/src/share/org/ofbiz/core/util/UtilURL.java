@@ -67,7 +67,6 @@ public class UtilURL {
                 loader = Thread.currentThread().getContextClassLoader();
             } catch (SecurityException e) {
                 UtilURL utilURL = new UtilURL();
-
                 loader = utilURL.getClass().getClassLoader();
             }
         }
@@ -79,6 +78,7 @@ public class UtilURL {
         if (url == null) url = ClassLoader.getSystemResource(resourceName + ".properties");
 
         if (url == null) url = fromFilename(resourceName);
+        if (url == null) url = fromUrlString(resourceName);
 
         // Debug.log("[fromResource] got URL " + url + " from resourceName " + resourceName);
         return url;
@@ -95,6 +95,16 @@ public class UtilURL {
             e.printStackTrace();
             url = null;
         }
+        return url;
+    }
+    
+    public static URL fromUrlString(String urlString) {
+        URL url = null;       
+        try {
+            url = new URL(urlString);
+        } catch (MalformedURLException e) {                        
+        }
+        
         return url;
     }
 }
