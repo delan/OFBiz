@@ -26,10 +26,8 @@ package org.ofbiz.pos.config;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.ArrayList;
 
 import net.xoetrope.swing.XButton;
@@ -40,6 +38,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.pos.screen.PosScreen;
 
 import org.w3c.dom.Element;
@@ -54,7 +53,7 @@ public class ButtonEventConfig {
 
     public static final String module = ButtonEventConfig.class.getName();
     public static final String BUTTON_EVENT_CONFIG = "buttonevents.xml";
-    private static Map buttonConfig = new HashMap();
+    private static UtilCache buttonConfig = new UtilCache("pos.ButtonEvent", 0, 0);
 
     protected String buttonName = null;
     protected String className = null;

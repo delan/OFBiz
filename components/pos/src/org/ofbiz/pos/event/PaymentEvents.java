@@ -57,6 +57,21 @@ public class PaymentEvents {
         pos.refresh();
     }
 
+    public static void payCheck(PosScreen pos) {
+        PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
+        try {
+            double amount = processAmount(trans, pos, null);
+            Debug.log("Processing [Check] Amount : " + amount, module);
+
+            // add the payment
+            trans.addPayment("PERSONAL_CHECK", amount);
+        } catch (GeneralException e) {
+            // errors handled
+        }
+
+        pos.refresh();
+    }
+
     public static void payCredit(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         Input input = pos.getInput();
@@ -142,18 +157,18 @@ public class PaymentEvents {
             // manual locks (not secured; will be unlocked on clear)
             pos.getInput().setLock(true);
             pos.getButtons().setLock(true);
-            pos.getInput().clear();
-            pos.getInput().setFunction("PAID");
-
-            // display change
-            pos.refresh();
+            pos.getOutput().print("Processing sale...");
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();  // TODO: check me!
+            }
 
             // process the order
             try {
-                trans.processSale();
+                trans.processSale(pos.getOutput());
+                pos.getInput().setFunction("PAID");
             } catch (GeneralException e) {
-                pos.getInput().clearFunction("PAID");
-                pos.getInput().setFunction("TOTAL");
                 pos.getInput().setLock(false);
                 pos.getButtons().setLock(false);
                 pos.showDialog("main/dialog/error/exception", e.getMessage());

@@ -24,8 +24,11 @@
  */
 package org.ofbiz.pos.event;
 
+import java.util.List;
+
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ItemNotFoundException;
 import org.ofbiz.pos.PosTransaction;
@@ -33,6 +36,8 @@ import org.ofbiz.pos.config.ButtonEventConfig;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.component.Journal;
 import org.ofbiz.pos.screen.PosScreen;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.util.EntityUtil;
 
 /**
  * 
@@ -126,13 +131,32 @@ public class MenuEvents {
             }
         }
 
-        // add the item to the cart; report any errors to the user
+        // locate the product ID
+        String productId = null;
         try {
-            trans.addItem(value, quantity);
-        } catch (CartItemModifyException e) {
+            List items = trans.lookupItem(value);
+            if (items != null && items.size() == 1) {
+                GenericValue product = EntityUtil.getFirst(items);
+                productId = product.getString("productId");
+            } else if (items != null && items.size() > 0) {
+                Debug.logInfo("Multiple products found; need to select one from the list", module);
+            }
+        } catch (GeneralException e) {
             Debug.logError(e, module);
             pos.showDialog("main/dialog/error/producterror");
-        } catch (ItemNotFoundException e) {
+        }
+
+        // add the item to the cart; report any errors to the user
+        if (productId != null) {
+            try {
+                trans.addItem(productId, quantity);
+            } catch (CartItemModifyException e) {
+                Debug.logError(e, module);
+                pos.showDialog("main/dialog/error/producterror");
+            } catch (ItemNotFoundException e) {
+                pos.showDialog("main/dialog/error/productnotfound");
+            }
+        } else {
             pos.showDialog("main/dialog/error/productnotfound");
         }
 
