@@ -256,6 +256,14 @@
                   <tr><td colspan='2'><div class="tabletext">No contact information on file.</div></td></tr>
               </ofbiz:unless>
           </ofbiz:unless>
+          <tr>
+            <td align="right" valigh="top" width="1%">
+              <input type="radio" name="contactMechId" value="_NEW_">
+            </td>
+            <td align="left" valign="middle" width="80%">
+              <span class="tabletext">Create a new billing address for this credit card.</span>
+            </td>
+          </tr>
         </table>
       </td>
     </tr>

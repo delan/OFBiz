@@ -87,6 +87,11 @@
         <put section='content' content='/party/EditUserLoginSecurityGroups.jsp'/>
     </define>
 
+    <define id='newcustomer' region='MAIN_REGION'>
+        <put section='title'>New Customer</put>
+        <put section='content' content='/party/newcustomer.jsp'/>
+    </define>
+    
     <define id='editperson' region='MAIN_REGION'>
         <put section='title'>Edit Personal Information</put>
         <put section='content' content='/party/editperson.jsp'/>

@@ -55,7 +55,7 @@
 
   <ofbiz:unless name="contactMech">
     <%-- When creating a new contact mech, first select the type, then actually create --%>
-    <%if (request.getParameter("preContactMechTypeId") == null) {%>
+    <%if (request.getParameter("preContactMechTypeId") == null && request.getAttribute("preContactMechTypeId") == null) {%>
     <p class="head1">Create New Contact Information</p>
     <form method="post" action='<ofbiz:url>/editcontactmech?DONE_PAGE=<ofbiz:print attribute="donePage"/></ofbiz:url>' name="createcontactmechform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
@@ -81,6 +81,7 @@
     &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Go&nbsp;Back]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
       <%String cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");%>
+      <%if (cmNewPurposeTypeId == null) cmNewPurposeTypeId = (String) request.getAttribute("contactMechPurposeTypeId");%>
       <%if (cmNewPurposeTypeId != null){%>
         <%GenericValue contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));%>
         <%if (contactMechPurposeType != null) {%>
@@ -91,9 +92,14 @@
         <form method="post" action='<ofbiz:url>/<ofbiz:print attribute="requestName"/></ofbiz:url>' name="editcontactmechform">
         <input type=hidden name='DONE_PAGE' value='<ofbiz:print attribute="donePage"/>'>
         <input type=hidden name='contactMechTypeId' value='<ofbiz:print attribute="contactMechTypeId"/>'>
-        <%if (UtilValidate.isNotEmpty(request.getParameter("preContactMechTypeId"))) {%><input type=hidden name='preContactMechTypeId' value='<%=request.getParameter("preContactMechTypeId")%>'><%}%>
         <input type=hidden name='partyId' value='<%=partyId%>'>
-        <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='contactMechPurposeTypeId' value='", "'>")%>
+        <%String preContactMechTypeId = request.getParameter("preContactMechTypeId");%>
+        <%if (preContactMechTypeId == null) preContactMechTypeId = (String) request.getAttribute("preContactMechTypeId");%>
+        <%String paymentMethodId = request.getParameter("paymentMethodId");%>
+        <%if (paymentMethodId == null) paymentMethodId = (String) request.getAttribute("paymentMethodId");%>
+        <%if (UtilValidate.isNotEmpty(preContactMechTypeId)) {%><input type='hidden' name='preContactMechTypeId' value='<%=preContactMechTypeId%>'><%}%>
+        <%if (UtilValidate.isNotEmpty(preContactMechTypeId)) {%><input type='hidden' name='contactMechPurposeTypeId' value='<%=cmNewPurposeTypeId%>'><%}%>
+        <%if (UtilValidate.isNotEmpty(paymentMethodId)) {%><input type='hidden' name='paymentMethodId' value='<%=paymentMethodId%>'><%}%>
     </ofbiz:unless>
     <ofbiz:if name="contactMech">
       <p class="head1">Edit Contact Information</p>

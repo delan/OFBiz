@@ -175,8 +175,9 @@
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="createCreditCard"/>
         <response name="success" type="view" value="viewprofile"/>
+        <response name="address" type="view" value="editcontactmech"/>
         <response name="error" type="view" value="editcreditcard"/>
-    </request-map>
+    </request-map>    
 
     <request-map uri="updateCreditCard">
         <security https="true" auth="true"/>
@@ -225,6 +226,17 @@
         <response name="error" type="view" value="viewprofile"/>
     </request-map>
 
+    <request-map uri="newcustomer">
+        <security https="true" auth="false"/>
+        <response name="success" type="view" value="newcustomer"/>
+    </request-map>
+    <request-map uri="createcustomer">
+        <security https="true" auth="false"/>
+        <event type="simple" path="org/ofbiz/partymgr/customer/CustomerEvents.xml" invoke="createCustomer"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="newcustomer"/>
+    </request-map>
+    
     <request-map uri="editperson">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editperson"/>
@@ -458,6 +470,7 @@
     <view-map name="editavsoverride" type="region"/>
     <view-map name="editlogin" type="region"/>
     <view-map name="EditUserLoginSecurityGroups" type="region"/>
+    <view-map name="newcustomer" type="region"/>
     <view-map name="editperson" type="region"/>
     <view-map name="editpartygroup" type="region"/>
     <view-map name="findparty" type="region"/>

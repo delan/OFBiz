@@ -48,6 +48,9 @@
           <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
             <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/editperson?create_new=Y</ofbiz:url>" class="headerbuttontext">New&nbsp;Person</a></td>
           <%}%>
+          <%if(security.hasEntityPermission("PARTYMGR", "_CREATE", session)) {%>
+            <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/newcustomer</ofbiz:url>" class="headerbuttontext">New&nbsp;Customer</a></td>
+          <%}%>
           <%if(security.hasEntityPermission("SECURITY", "_VIEW", session)) {%>
             <td nowrap class="headerButtonLeft"><a href="<ofbiz:url>/FindSecurityGroup</ofbiz:url>" class="headerbuttontext">Security</a></td>
           <%}%>
