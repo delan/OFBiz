@@ -148,7 +148,8 @@
       <field name="cost" type="currency-amount"></field>
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
-      <field name="waitingTime" type="floating-point"></field>
+      <field name="waitingTime" type="floating-point"></field>	
+      <prim-key field="executionObjectId" />
       <relation type="one" title="StartMode" rel-entity-name="Enumeration">
         <key-map field-name="startModeEnumId" rel-field-name="enumId" />
       </relation>
@@ -410,7 +411,8 @@
       <field name="durationUomId" type="id"></field>
       <field name="duration" type="floating-point"></field>
       <field name="workingTime" type="floating-point"></field>
-      <field name="waitingTime" type="floating-point"></field>
+      <field name="waitingTime" type="floating-point"></field>	
+      <prim-key field="executionObjectId" />
       <relation type="one" title="Country" rel-entity-name="Geo">
         <key-map field-name="countryGeoId" rel-field-name="geoId" />
       </relation>
