@@ -32,6 +32,7 @@ import javax.servlet.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 
 import org.ofbiz.ecommerce.shoppingcart.*;
 
@@ -65,6 +66,12 @@ public class CatalogWorker {
         return pageContext.getServletContext().getInitParameter("webSiteId");
     }
     
+    public static String getWebSiteId(ServletRequest request) {
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        if (application == null) return null;
+        return application.getInitParameter("webSiteId");
+    }
+    
     public static GenericValue getWebSite(PageContext pageContext) {
         String webSiteId = getWebSiteId(pageContext);
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
@@ -76,10 +83,14 @@ public class CatalogWorker {
         }
         return null;
     }
-    
+
     public static Collection getWebSiteCatalogs(PageContext pageContext) {
-        String webSiteId = getWebSiteId(pageContext);
-        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        return getWebSiteCatalogs(pageContext.getRequest());
+    }
+
+    public static Collection getWebSiteCatalogs(ServletRequest request) {
+        String webSiteId = getWebSiteId(request);
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         
         try {
             return EntityUtil.filterByDate(delegator.findByAndCache("WebSiteCatalog", UtilMisc.toMap("webSiteId", webSiteId), UtilMisc.toList("sequenceNum", "prodCatalogId")));
@@ -108,18 +119,23 @@ public class CatalogWorker {
     }
     
     public static String getCurrentCatalogId(PageContext pageContext) {
+        return getCurrentCatalogId(pageContext.getRequest());
+    }
+    
+    public static String getCurrentCatalogId(ServletRequest request) {
+        HttpSession session = ((HttpServletRequest) request).getSession();
         String prodCatalogId;
         boolean fromSession = false;
         //first see if a new catalog was specified as a parameter
-        prodCatalogId = pageContext.getRequest().getParameter("CURRENT_CATALOG_ID");
+        prodCatalogId = request.getParameter("CURRENT_CATALOG_ID");
         //if no parameter, try from session
         if (prodCatalogId == null) {
-            prodCatalogId = (String)pageContext.getSession().getAttribute("CURRENT_CATALOG_ID");
+            prodCatalogId = (String) session.getAttribute("CURRENT_CATALOG_ID");
             if (prodCatalogId != null) fromSession = true;
         }
         //get it from the database
         if (prodCatalogId == null) {
-            Collection webSiteCatalogs = getWebSiteCatalogs(pageContext);
+            Collection webSiteCatalogs = getWebSiteCatalogs(request);
             if (webSiteCatalogs != null && webSiteCatalogs.size() > 0) {
                 GenericValue webSiteCatalog = EntityUtil.getFirst(webSiteCatalogs);
                 prodCatalogId = webSiteCatalog.getString("prodCatalogId");
@@ -128,8 +144,8 @@ public class CatalogWorker {
         
         if (!fromSession) {
             Debug.logInfo("[CatalogWorker.getCurrentCatalogId] Setting new catalog name: " + prodCatalogId);
-            pageContext.getSession().setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
-            CategoryWorker.setTrail(pageContext, new ArrayList());
+            session.setAttribute("CURRENT_CATALOG_ID", prodCatalogId);
+            CategoryWorker.setTrail(request, new ArrayList());
         }
         return prodCatalogId;
     }
@@ -268,6 +284,76 @@ public class CatalogWorker {
 
         return categoryIds;
     }
+    
+    /* ========================================================================================*/
+    /* ================================ Catalog Inventory Check ===============================*/
+    
+    public static boolean isCatalogInventoryAvailable(ServletRequest request, String productId, double quantity) {
+        String prodCatalogId = getCurrentCatalogId(request);
+        if (prodCatalogId == null || prodCatalogId.length() == 0) {
+            Debug.logWarning("No current catalog id found, return false for inventory check");
+            return false;
+        }
+        
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericValue prodCatalog = null;
+        try {
+            prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up name for prodCatalog with id " + prodCatalogId);
+        }
+
+        if (prodCatalog == null) {
+            Debug.logWarning("No catalog found with id " + prodCatalogId + ", return false for inventory check");
+            return false;
+        }
+        
+        if ("Y".equals(prodCatalog.getString("oneInventoryFacility"))) {
+            String inventoryFacilityId = prodCatalog.getString("inventoryFacilityId");
+            if (UtilValidate.isEmpty(inventoryFacilityId)) {
+                Debug.logWarning("Catalog with id " + prodCatalogId + " has Y for oneInventoryFacility but inventoryFacilityId is empty, return false for inventory check");
+                return false;
+            }
+            
+            Double availableToPromise = null;
+            try {
+                Map result = dispatcher.runSync("getInventoryAvailableByFacility", 
+                        UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
+                availableToPromise = (Double) result.get("availableToPromise");
+
+                if (availableToPromise == null) {
+                    Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE));
+                    return false;
+                }
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e, "Error invoking getInventoryAvailableByFacility service in isCatalogInventoryAvailable");
+                return false;
+            }
+            
+            //whew, finally here: now check to see if we got enough back...
+            if (availableToPromise.doubleValue() > quantity) {
+                Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
+                return true;
+            } else {
+                Debug.logInfo("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
+                return false;
+            }
+            
+        } else {
+            Debug.logWarning("Catalog with id " + prodCatalogId + " uses multiple inventory facilities, which is not yet implemented, return false for inventory check");
+            return false;
+
+            //TODO: check multiple inventory locations
+            
+            //must entire quantity be available in one location?
+            
+            //loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
+        }
+    }
+    
+    /* ========================================================================================*/
+    /* ============================= Special Data Retreival Methods ===========================*/
     
     public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
         GenericDelegator delegator = (GenericDelegator)pageContext.getRequest().getAttribute("delegator");

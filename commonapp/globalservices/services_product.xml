@@ -419,6 +419,26 @@
         <description>Delete an InventoryItem</description>
         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
     </service>
+    <service name="getProductInventoryAvailable" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
+        <description>Check Inventory Availability for a Product</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
+    </service>
+    <service name="getInventoryAvailableByFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
+        <description>Check Inventory Availability for a Product constrained by a facilityId</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
+    </service>
+    <service name="getInventoryAvailableByContainer" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
+        <description>Check Inventory Availability for a Product constrained by a containerId</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="containerId" type="String" mode="IN" optional="false"/>
+        <attribute name="availableToPromise" type="Double" mode="OUT" optional="false"/>
+    </service>
     
     <!-- Product Feature Services -->
     <service name="createProductFeatureCategory" engine="simple"

@@ -30,6 +30,7 @@ import javax.servlet.http.*;
 import javax.servlet.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.ecommerce.catalog.*;
 
 
 /**
@@ -54,10 +55,11 @@ public class ShoppingCartEvents {
         // The rest should be product attributes.This only works w/ servlet api 2.3
         //Map paramMap = request.getParameterMap();
         Map paramMap = UtilMisc.getParameterMap(request);
-        if (paramMap.containsKey("ADD_PRODUCT_ID"))
+        if (paramMap.containsKey("ADD_PRODUCT_ID")) {
             productId = (String) paramMap.remove("ADD_PRODUCT_ID");
-        else if (paramMap.containsKey("add_product_id"))
+        } else if (paramMap.containsKey("add_product_id")) {
             productId = (String) paramMap.remove("add_product_id");
+        }
         if (productId == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"No add_product_id passed.");
             return "error";
@@ -101,7 +103,14 @@ public class ShoppingCartEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Cannot add a Virtual Product to the cart [productId: " + product.getString("productId") + "]");
             return "error";
         }
-
+        
+        //check inventory
+        if (!CatalogWorker.isCatalogInventoryAvailable(request, productId, quantity)) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + productId + "] in stock. Please try back later or call customer service for more information.");
+            //return success since this isn't really a critical error...
+            return "success";
+        }
+        
         cart.addOrIncreaseItem(product, quantity, attributes);
         
         if (cart.viewCartOnAdd())
@@ -131,7 +140,7 @@ public class ShoppingCartEvents {
                 Debug.logWarning(e.getMessage());
                 itemIter = null;
             }
-
+            
             if (itemIter != null && itemIter.hasNext()) {
                 String errMsg = "";
                 while(itemIter.hasNext()) {
@@ -141,8 +150,15 @@ public class ShoppingCartEvents {
                         if ("Y".equals(relProd.getString("isVirtual"))) {
                             errMsg += "<li>Did not add Virtual Product to the cart [productId: " + relProd.getString("productId") + "]";
                         } else {
-                            cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
-                            noItems = false;
+                            if (orderItem.get("quantity") != null) {
+                                //check inventory
+                                if (!CatalogWorker.isCatalogInventoryAvailable(request, relProd.getString("productId"), orderItem.getDouble("quantity").doubleValue())) {
+                                    errMsg += "<li>Sorry, we do not have enough of the product " + relProd.getString("productName") + " [product ID: " + relProd.getString("productId") + "] in stock.";
+                                } else {
+                                    cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
+                                    noItems = false;
+                                }
+                            }
                         }
                     } catch(GenericEntityException e) {
                         Debug.logWarning(e.getMessage());
@@ -176,8 +192,15 @@ public class ShoppingCartEvents {
                             if ("Y".equals(relProd.getString("isVirtual"))) {
                                 errMsg += "<li>Did not add Virtual Product to the cart [productId: " + relProd.getString("productId") + "]";
                             } else {
-                                cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
-                                noItems = false;
+                                if (orderItem.get("quantity") != null) {
+                                    //check inventory
+                                    if (!CatalogWorker.isCatalogInventoryAvailable(request, relProd.getString("productId"), orderItem.getDouble("quantity").doubleValue())) {
+                                        errMsg += "<li>Sorry, we do not have enough of the product " + relProd.getString("productName") + " [product ID: " + relProd.getString("productId") + "] in stock.";
+                                    } else {
+                                        cart.addOrIncreaseItem(relProd, orderItem.getDouble("quantity").doubleValue(), null);
+                                        noItems = false;
+                                    }
+                                }
                             }
                         } catch(GenericEntityException e) {
                             Debug.logWarning(e.getMessage());
@@ -213,7 +236,7 @@ public class ShoppingCartEvents {
         }
         
         ShoppingCart cart = getCartObject(request);
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         
         Collection prodCatMemberCol = null;
         try {
@@ -246,9 +269,14 @@ public class ShoppingCartEvents {
                         errMsg += "<li>Did not add product with id \"" + productCategoryMember.getString("productId") + "\" because a product with that ID could not be found.";
                     } else {
                         if ("Y".equals(product.getString("isVirtual"))) {
-                            errMsg += "<li>Did not add Virtual Product to the cart [productId: " + product.getString("productId") + "]";
+                            errMsg += "<li>Did not add Virtual Product named " + product.getString("productName") + " to the cart [productId: " + product.getString("productId") + "]";
                         } else {
-                            cart.addOrIncreaseItem(product, quantity, null);
+                            //check inventory
+                            if (!CatalogWorker.isCatalogInventoryAvailable(request, product.getString("productId"), quantity)) {
+                                errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock.";
+                            } else {
+                                cart.addOrIncreaseItem(product, quantity, null);
+                            }
                         }
                     }
                 }
@@ -261,7 +289,7 @@ public class ShoppingCartEvents {
         
         return "success";
     }
-
+    
     /** Adds all products in a category according to default quantity on ProductCategoryMember
      * for each; if no default for a certain product in the category, or if
      * quantity is 0, do not add
@@ -275,7 +303,7 @@ public class ShoppingCartEvents {
         }
         
         ShoppingCart cart = getCartObject(request);
-        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         
         Collection prodCatMemberCol = null;
         try {
@@ -309,10 +337,15 @@ public class ShoppingCartEvents {
                     errMsg += "<li>Did not add product with id \"" + productCategoryMember.getString("productId") + "\" because a product with that ID could not be found.";
                 } else {
                     if ("Y".equals(product.getString("isVirtual"))) {
-                        errMsg += "<li>Did not add Virtual Product to the cart [productId: " + product.getString("productId") + "]";
+                        errMsg += "<li>Did not add Virtual Product named " + product.getString("productName") + " to the cart [productId: " + product.getString("productId") + "]";
                     } else {
-                        cart.addOrIncreaseItem(product, quantity.doubleValue(), null);
-                        totalQuantity += quantity.doubleValue();
+                        //check inventory
+                        if (!CatalogWorker.isCatalogInventoryAvailable(request, product.getString("productId"), quantity.doubleValue())) {
+                            errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock.";
+                        } else {
+                            cart.addOrIncreaseItem(product, quantity.doubleValue(), null);
+                            totalQuantity += quantity.doubleValue();
+                        }
                     }
                 }
             }
@@ -351,9 +384,11 @@ public class ShoppingCartEvents {
         ShoppingCart cart = getCartObject(request);
         ArrayList deleteList = new ArrayList();
         Map paramMap = UtilMisc.getParameterMap(request);
+        String errMsg = "";
+        
         Set names = paramMap.keySet();
         Iterator i = names.iterator();
-        while ( i.hasNext() ) {
+        while (i.hasNext()) {
             String o = (String) i.next();
             int underscorePos = o.lastIndexOf('_');
             if (underscorePos >= 0) {
@@ -361,46 +396,58 @@ public class ShoppingCartEvents {
                     String indexStr = o.substring(underscorePos+1);
                     int index = Integer.parseInt(indexStr);
                     String quantString = (String) paramMap.get(o);
-                    int quantity = NumberFormat.getNumberInstance().parse(quantString).intValue();
-                    Debug.log("Got index: " + index + "  AND  quantity: " + quantity);
+                    double quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                    Debug.logInfo("Got index: " + index + "  AND  quantity: " + quantity);
                     
-                    if ( o.toUpperCase().startsWith("UPDATE") ) {
-                        if ( quantity == 0 ) {
+                    if (o.toUpperCase().startsWith("UPDATE")) {
+                        if (quantity == 0.0) {
                             deleteList.add(cart.findCartItem(index));
-                            Debug.log("Added index: " + index + " to delete list.");
-                        }
-                        else {
-                            Debug.log("Setting quantity.");
-                            cart.findCartItem(index).setQuantity(quantity);
+                            Debug.logInfo("Added index: " + index + " to delete list.");
+                        } else {
+                            ShoppingCartItem item = cart.findCartItem(index);
+                            if (item != null) {
+                                GenericValue product = item.getProduct();
+                                
+                                //check inventory
+                                if (quantity > item.getQuantity() && !CatalogWorker.isCatalogInventoryAvailable(request, product.getString("productId"), quantity)) {
+                                    errMsg += "<li>Sorry, we do not have enough of the product " + product.getString("productName") + " [product ID: " + product.getString("productId") + "] in stock, not updating quantity.";
+                                } else {
+                                    Debug.logInfo("Setting quantity.");
+                                    item.setQuantity(quantity);
+                                }
+                            }
                         }
                     }
                     
-                    if ( o.toUpperCase().startsWith("DELETE") ) {
+                    if (o.toUpperCase().startsWith("DELETE")) {
                         deleteList.add(cart.findCartItem(index));
-                        Debug.log("Added index: " + index + " to delete list.");
+                        Debug.logInfo("Added index: " + index + " to delete list.");
                     }
-                }
-                catch ( NumberFormatException nfe ) {
-                    Debug.log(nfe,"Caught number format exception.");
-                }
-                catch ( ParseException pe ) {
-                    Debug.log(pe,"Caught parse exception.");
-                }
-                catch ( Exception e ) {
-                    Debug.log(e,"Caught exception.");
+                } catch (NumberFormatException nfe) {
+                    Debug.logWarning(nfe, "Caught number format exception on cart update.");
+                } catch (ParseException pe) {
+                    Debug.logWarning(pe, "Caught parse exception on cart update.");
+                } catch (Exception e) {
+                    Debug.logWarning(e, "Caught exception on cart update.");
                 }
             }//else not a parameter we need
         }
         
         Iterator di = deleteList.iterator();
-        while ( di.hasNext() ) {
+        while (di.hasNext()) {
             Object o = di.next();
-            Debug.log("Removing item index: " + cart.getItemIndex(o));
+            Debug.logInfo("Removing item index: " + cart.getItemIndex(o));
             cart.removeCartItem(cart.getItemIndex(o));
         }
         
-        if ( !paramMap.containsKey("always_showcart") )
+        if (!paramMap.containsKey("always_showcart")) {
             cart.viewCartOnAdd(false);
+        }
+
+        if (errMsg.length() > 0) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<ul>" + errMsg + "</ul>");
+            return "error";
+        }
         
         return "success";
     }

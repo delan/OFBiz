@@ -26,8 +26,8 @@ package org.ofbiz.commonapp.product.category;
 
 import java.util.*;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.http.HttpSession;
-import javax.servlet.ServletRequest;
+import javax.servlet.http.*;
+import javax.servlet.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
@@ -307,7 +307,11 @@ public class CategoryWorker {
     }
 
     public static void setTrail(PageContext pageContext, String currentCategory) {
-        String previousCategory = pageContext.getRequest().getParameter("pcategory");
+        setTrail(pageContext.getRequest(), currentCategory);
+    }
+    
+    public static void setTrail(ServletRequest request, String currentCategory) {
+        String previousCategory = request.getParameter("pcategory");
         Debug.logInfo("[CatalogHelper.setTrail] Start: previousCategory=" + previousCategory +
                       " currentCategory=" + currentCategory);
 
@@ -316,7 +320,7 @@ public class CategoryWorker {
             return;
 
         //always get the last crumb list
-        ArrayList crumb = getTrail(pageContext);
+        ArrayList crumb = getTrail(request);
         if (crumb == null)
             crumb = new ArrayList();
 
@@ -364,22 +368,31 @@ public class CategoryWorker {
         //add the current category to the end of the list
         crumb.add(currentCategory);
         Debug.logInfo("[CatalogHelper.setTrail] Continuing list: Added currentCategory: " + currentCategory);
-        setTrail(pageContext, crumb);
+        setTrail(request, crumb);
     }
 
     public static ArrayList getTrail(PageContext pageContext) {
-        HttpSession session = pageContext.getSession();
+        return getTrail(pageContext.getRequest());
+    }
+    public static ArrayList getTrail(ServletRequest request) {
+        HttpSession session = ((HttpServletRequest) request).getSession();
         ArrayList crumb = (ArrayList) session.getAttribute("_BREAD_CRUMB_TRAIL_");
         return crumb;
     }
 
     public static void setTrail(PageContext pageContext, ArrayList crumb) {
-        HttpSession session = pageContext.getSession();
+        setTrail(pageContext.getRequest(), crumb);
+    }
+    public static void setTrail(ServletRequest request, ArrayList crumb) {
+        HttpSession session = ((HttpServletRequest) request).getSession();
         session.setAttribute("_BREAD_CRUMB_TRAIL_", crumb);
     }
 
     public static boolean checkTrailItem(PageContext pageContext, String category) {
-        ArrayList crumb = getTrail(pageContext);
+        return checkTrailItem(pageContext.getRequest(), category);
+    }
+    public static boolean checkTrailItem(ServletRequest request, String category) {
+        ArrayList crumb = getTrail(request);
         if (crumb != null && crumb.contains(category))
             return true;
         else
@@ -387,11 +400,15 @@ public class CategoryWorker {
     }
 
     public static String lastTrailItem(PageContext pageContext) {
-        ArrayList crumb = getTrail(pageContext);
-        if (crumb != null && crumb.size() > 0)
+        return lastTrailItem(pageContext.getRequest());
+    }
+    public static String lastTrailItem(ServletRequest request) {
+        ArrayList crumb = getTrail(request);
+        if (crumb != null && crumb.size() > 0) {
             return (String) crumb.get(crumb.size() - 1);
-        else
+        } else {
             return null;
+        }
     }
 }
 
