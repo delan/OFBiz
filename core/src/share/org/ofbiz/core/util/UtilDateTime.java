@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.3  2001/09/03 16:36:13  jonesde
  * Added toSqlDate and toSqlTime convenience functions.
  *
@@ -64,6 +67,28 @@ public class UtilDateTime
   public static java.util.Date nowDate()
   {
     return new java.util.Date();
+  }
+  
+  public static java.sql.Timestamp getDayStart(java.sql.Timestamp stamp) {
+    Calendar tempCal = Calendar.getInstance();
+    tempCal.setTime(new java.util.Date(stamp.getTime()));
+    tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+    return new java.sql.Timestamp(tempCal.getTime().getTime());
+  }
+
+  public static java.sql.Timestamp getDayEnd(java.sql.Timestamp stamp) {
+    Calendar tempCal = Calendar.getInstance();
+    tempCal.setTime(new java.util.Date(stamp.getTime()));
+    tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+    return new java.sql.Timestamp(tempCal.getTime().getTime());
+  }
+
+  public static java.sql.Timestamp getNextDayStart(java.sql.Timestamp stamp) {
+    Calendar tempCal = Calendar.getInstance();
+    tempCal.setTime(new java.util.Date(stamp.getTime()));
+    tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
+    tempCal.add(Calendar.DAY_OF_MONTH, 1);
+    return new java.sql.Timestamp(tempCal.getTime().getTime());
   }
   
   /** Converts a date String into a java.sql.Date
