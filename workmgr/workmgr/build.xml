@@ -1,0 +1,229 @@
+<?xml version="1.0"?>
+
+<!--
+ *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  This is the  Open for Business Party Manager component build script.
+ *  $Id$
+-->
+
+<project name="Open For Business Work Manager Component" default="jar-deploy" basedir=".">
+
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <target name="init">
+	<property environment="env"                                 />
+        <property name="name"           value="ofbworkmgr"          />
+        <property name="src.dir"        value="src"                 />
+        <property name="etc.dir"        value="etc"                 />
+        <property name="lib.dir"        value="lib"                 />
+        <property name="webapp.dir"     value="./webapp"            />
+        <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
+        <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
+	<property name="doc.dir"        value="docs"                />
+        <property name="build.dir"      value="build"               />
+        <property name="build.compiler" value="classic"             /> 
+        <property name="pkg-dist.name"  value="${name}-pkg"         />
+        <property name="commonapp.etc.dir" value="../commonapp/etc" />
+		
+	<!-- Classpath setting -->
+        <property name="ofbcore-share.jar"  value="../core/lib/ofbcore-share.jar" />
+        <property name="ofbcore-webapp.jar" value="../core/lib/ofbcore-webapp.jar" />
+        <property name="ofbcommonapp.jar"   value="../commonapp/lib/ofbcommonapp.jar" />
+	
+        <property name="servlet1.jar"  value="${env.CATALINA_HOME}/common/lib/servlet.jar" />
+        <property name="servlet2.jar"  value="${env.TOMCAT_HOME}/lib/servlet.jar" />
+        <property name="servlet.jar"   value="${servlet1.jar}:${servlet2.jar}" />
+
+        <property name="jdbc1.jar"     value="${env.CATALINA_HOME}/common/lib/jdbc2_0-stdext.jar" />
+        <property name="jdbc2.jar"     value="${env.JBOSS_HOME}/lib/jboss-jdbc_ext.jar.jar" />
+        <property name="jdbc3.jar"     value="${env.JBOSS_HOME}/lib/jdbc2_0-stdext.jar" />
+        <property name="jdbc.jar"      value="${jdbc1.jar}:${jdbc2.jar}:${jdbc3.jar}" />
+
+        <property name="mail1.jar"    value="${env.CATALINA_HOME}/common/lib/mail.jar" />
+        <property name="mail2.jar"    value="${env.JBOSS_HOME}/lib/ext/mail.jar" />
+        <property name="mail.jar"     value="${mail1.jar}:${mail2.jar}" />
+
+        <property name="jaxp1.jar"    value="${env.CATALINA_HOME}/common/lib/jaxp.jar" />
+        <property name="jaxp2.jar"    value="${env.JBOSS_HOME}/lib/jaxp.jar" />
+        <property name="jaxp.jar"     value="${jaxp1.jar}:${jaxp2.jar}" />
+
+        <property name="api-jars"      value="${servlet.jar}:${jdbc.jar}:${mail.jar}" />
+        <property name="xml-jars"      value="${jaxp.jar}" />
+	
+        <property name="ofb-jars"     value="${ofbcore-share.jar}:${ofbcore-webapp.jar}:${ofbcommonapp.jar}" />
+        <property name="classpath"   value="${env.CLASSPATH}:${lib.dir}:${ofb-jars}:${api-jars}:${xml-jars}" />
+	<echo message="classpath: ${classpath}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Removes all created files and directories                          -->
+    <!-- ================================================================== -->
+
+    <target name="clean" depends="clean-lib">
+      <delete dir="${build.dir}" />
+      <delete dir="${doc.dir}/api" />
+    </target>
+
+    <target name="clean-lib" depends="init">
+      <delete dir="${lib.dir}" />
+      <delete dir="${walib.dir}" />
+      <delete dir="${waclasses.dir}" />
+    </target>
+
+    <target name="prepare-docs" depends="init">
+      <mkdir dir="${doc.dir}" />
+      <mkdir dir="${doc.dir}/api" />
+    </target>	
+
+
+    <!-- ================================================================== -->
+    <!-- Makes sure the needed directory structure is in place              -->
+    <!-- ================================================================== -->
+
+    <target name="prepare" depends="clean-lib">
+        <mkdir dir="${build.dir}" />
+	<mkdir dir="${build.dir}/jar" />
+	<mkdir dir="${build.dir}/ejb" />
+	<mkdir dir="${build.dir}/ejb/META-INF" />
+	<mkdir dir="${build.dir}/j2ee" />
+	<mkdir dir="${build.dir}/j2ee/META-INF" />
+        <mkdir dir="${lib.dir}" />
+        <mkdir dir="${waclasses.dir}" />
+        <mkdir dir="${walib.dir}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Compilation of the common application components                   -->
+    <!-- ================================================================== -->
+
+    <target name="classes" depends="prepare">
+        <javac srcdir="${src.dir}"
+               classpath="${classpath}"
+               destdir="${build.dir}/jar" />               
+    </target>
+
+    <target name="jar" depends="classes">
+        <jar jarfile="${lib.dir}/${name}.jar"
+             basedir="${build.dir}/jar" />
+    </target>
+
+    <target name="jar-deploy" depends="jar">
+    	<copy file="${lib.dir}/${name}.jar"
+    		tofile="${walib.dir}/${name}.jar" />
+    	<copy file="${ofbcore-webapp.jar}"
+    		tofile="${walib.dir}/ofbcore-webapp.jar" />
+    	<copy file="${ofbcommonapp.jar}"
+    		tofile="${walib.dir}/ofbcommonapp.jar" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build the WARs                                                     -->
+    <!-- ================================================================== -->
+	
+    <target name="war" depends="jar,prepare">
+        <copy file="${lib.dir}/${name}.jar"
+              tofile="${walib.dir}/${name}.jar" />
+
+        <copy file="${ofbcore-webapp.jar}"
+              tofile="${walib.dir}/ofbcore-webapp.jar" />
+        <copy file="${ofbcommonapp.jar}"
+              tofile="${walib.dir}/ofbcommonapp.jar" />
+        
+        <jar jarfile="${lib.dir}/${name}.war"
+             basedir="${webapp.dir}" />
+    </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Build the EJB jar and EAR                                          -->
+    <!-- ================================================================== -->
+	<target name="meta-info" depends="jar,war">
+            <copy file="${etc.dir}/ejb-jar.xml"
+                  tofile="${build.dir}/ejb/META-INF/ejb-jar.xml" />
+            <copy file="${etc.dir}/jboss.xml"
+                  tofile="${build.dir}/ejb/META-INF/jboss.xml" />
+            <copy file="${etc.dir}/jaws.xml"
+                  tofile="${build.dir}/ejb/META-INF/jaws.xml" />
+            <copy file="${etc.dir}/application.xml"
+                  tofile="${build.dir}/j2ee/META-INF/application.xml" />			  
+	</target>
+	
+	<target name="ejb" depends="meta-info">
+		<jar jarfile="${build.dir}/j2ee/${name}-ejb.jar"
+		     basedir="${build.dir}/ejb" />
+	</target>
+			 
+	<target name="ear" depends="ejb">
+		<jar jarfile="${lib.dir}/${name}.ear"
+		     basedir="${build.dir}/j2ee" />
+	</target>
+	
+    <!-- ================================================================== -->
+    <!-- Build JavaDoc                                                      -->
+    <!-- ================================================================== -->
+
+	<target name="docs" depends="prepare-docs">
+		<javadoc packagenames="org.ofbiz.*" classpath="${classpath}"
+		         sourcepath="${src.dir}" destdir="${doc.dir}/api" />
+	</target> 	
+
+
+    <!-- ================================================================== -->
+    <!-- Generates a GZip'ed tar source distribution                        -->
+    <!-- ================================================================== -->
+
+    <target name="pkg-dist" depends="prepare">
+
+        <mkdir dir="${lib.dir}/${name}" />
+
+        <copy todir="${lib.dir}/${name}">
+            <fileset dir="." includes="${src.dir}/**" />        
+            <fileset dir="." includes="build.xml" />
+        </copy>
+
+        <tar tarfile="${lib.dir}/${pkg-dist.name}.tar"
+             basedir="${lib.dir}"
+             includes="${name}/**" />
+
+        <gzip src="${lib.dir}/${pkg-dist.name}.tar"
+              zipfile="${lib.dir}/${pkg-dist.name}.tar.gz" />
+
+        <delete file="${lib.dir}/${pkg-dist.name}.tar" />
+
+        <zip zipfile="${lib.dir}/${pkg-dist.name}.zip"
+             basedir="${lib.dir}"
+             includes="${name}/**" />
+
+        <delete dir="${lib.dir}/${name}" />
+
+    </target>
+
+    <!-- <target name="all" depends="jar,pkg-dist" /> -->
+    <target name="all" depends="war,pkg-dist" />
+
+</project>
+

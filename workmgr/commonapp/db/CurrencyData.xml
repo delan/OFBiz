@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+  <CurrencyCode currencyCode="CRC" currencyName="Costa Rica Colon"/>
+  <CurrencyCode currencyCode="COP" currencyName="Colombian Peso"/>
+  <CurrencyCode currencyCode="CNY" currencyName="China"/>
+  <CurrencyCode currencyCode="CLP" currencyName="Chilean Peso"/>
+  <CurrencyCode currencyCode="CHF" currencyName="Swiss Franc"/>
+  <CurrencyCode currencyCode="CDP" currencyName="Santo Domiongo"/>
+  <CurrencyCode currencyCode="CAD" currencyName="Canadian Dollar"/>
+  <CurrencyCode currencyCode="BZD" currencyName="Belize Dollar"/>
+  <CurrencyCode currencyCode="BYR" currencyName="Belorussian Ruble"/>
+  <CurrencyCode currencyCode="BWP" currencyName="Botswana Pula"/>
+  <CurrencyCode currencyCode="BSD" currencyName="Bahaman Dollar"/>
+  <CurrencyCode currencyCode="BRR" currencyName="Brazil"/>
+  <CurrencyCode currencyCode="BRL" currencyName="Brazilian Real"/>
+  <CurrencyCode currencyCode="BOB" currencyName="Bolivian Boliviano"/>
+  <CurrencyCode currencyCode="BND" currencyName="Brunei Dollar"/>
+  <CurrencyCode currencyCode="BMD" currencyName="Bermudan Dollar"/>
+  <CurrencyCode currencyCode="BIF" currencyName="Burundi Franc"/>
+  <CurrencyCode currencyCode="BHD" currencyName="Bahrain Dinar"/>
+  <CurrencyCode currencyCode="BGL" currencyName="Bulgarian Lev"/>
+  <CurrencyCode currencyCode="BEF" currencyName="Belgian Franc"/>
+  <CurrencyCode currencyCode="BDT" currencyName="Bangladesh Taka"/>
+  <CurrencyCode currencyCode="BBD" currencyName="Barbados Dollar"/>
+  <CurrencyCode currencyCode="BAD" currencyName="Bosnia-Herzogovinian Dinar"/>
+  <CurrencyCode currencyCode="AZM" currencyName="Azerbaijan Manat"/>
+  <CurrencyCode currencyCode="AWG" currencyName="Aruban Guilder"/>
+  <CurrencyCode currencyCode="AUD" currencyName="Australian Dollar"/>
+  <CurrencyCode currencyCode="ATS" currencyName="Austrian Schilling"/>
+  <CurrencyCode currencyCode="ARS" currencyName="Argentina Peso"/>
+  <CurrencyCode currencyCode="ARA" currencyName="Argentinian Austral"/>
+  <CurrencyCode currencyCode="AOK" currencyName="Angolan Kwanza"/>
+  <CurrencyCode currencyCode="ANG" currencyName="West Indian Guilder"/>
+  <CurrencyCode currencyCode="AMD" currencyName="Armenian Dram"/>
+  <CurrencyCode currencyCode="ALL" currencyName="Albanian Lek"/>
+  <CurrencyCode currencyCode="AFA" currencyName="Afghani"/>
+  <CurrencyCode currencyCode="AED" currencyName="United Arab Emirates Dirham"/>
+  <CurrencyCode currencyCode="ADP" currencyName="Andoran peseta"/>
+  <CurrencyCode currencyCode="CUP" currencyName="Cuban Peso"/>
+  <CurrencyCode currencyCode="CVE" currencyName="Cape Verde Escudo"/>
+  <CurrencyCode currencyCode="CYP" currencyName="Cyprus Pound"/>
+  <CurrencyCode currencyCode="CZK" currencyName="Czech Krona"/>
+  <CurrencyCode currencyCode="DEM" currencyName="German Mark"/>
+  <CurrencyCode currencyCode="DJF" currencyName="Djibouti Franc"/>
+  <CurrencyCode currencyCode="DKK" currencyName="Danish Krone"/>
+  <CurrencyCode currencyCode="DOP" currencyName="Dominican Peso"/>
+  <CurrencyCode currencyCode="DRP" currencyName="Dominican Republic Peso"/>
+  <CurrencyCode currencyCode="DZD" currencyName="Algerian Dinar"/>
+  <CurrencyCode currencyCode="ECS" currencyName="Ecuador Sucre"/>
+  <CurrencyCode currencyCode="ECU" currencyName="European Currency Unit"/>
+  <CurrencyCode currencyCode="EEK" currencyName="Estonian Krone"/>
+  <CurrencyCode currencyCode="EGP" currencyName="Egyptian Pound"/>
+  <CurrencyCode currencyCode="ESP" currencyName="Spanish Peseta"/>
+  <CurrencyCode currencyCode="ETB" currencyName="Ethiopian Birr"/>
+  <CurrencyCode currencyCode="EUR" currencyName="Euro"/>
+  <CurrencyCode currencyCode="FIM" currencyName="Finnish Mark"/>
+  <CurrencyCode currencyCode="FJD" currencyName="Fiji Dollar"/>
+  <CurrencyCode currencyCode="FKP" currencyName="Falkland Pound"/>
+  <CurrencyCode currencyCode="FRF" currencyName="French Franc"/>
+  <CurrencyCode currencyCode="GBP" currencyName="British Pound"/>
+  <CurrencyCode currencyCode="GEK" currencyName="Georgian Kupon"/>
+  <CurrencyCode currencyCode="GHC" currencyName="Ghanian Cedi"/>
+  <CurrencyCode currencyCode="GIP" currencyName="Gibraltar Pound"/>
+  <CurrencyCode currencyCode="GMD" currencyName="Gambian Dalasi"/>
+  <CurrencyCode currencyCode="GNF" currencyName="Guinea Franc"/>
+  <CurrencyCode currencyCode="GRD" currencyName="Greek Drachma"/>
+  <CurrencyCode currencyCode="GTQ" currencyName="Guatemalan Quedzal"/>
+  <CurrencyCode currencyCode="GWP" currencyName="Guinea Peso"/>
+  <CurrencyCode currencyCode="GYD" currencyName="Guyanese Dollar"/>
+  <CurrencyCode currencyCode="HKD" currencyName="Hong Kong Dollar"/>
+  <CurrencyCode currencyCode="HNL" currencyName="Honduran Lempira"/>
+  <CurrencyCode currencyCode="HRD" currencyName="Croatian Dinar"/>
+  <CurrencyCode currencyCode="HTG" currencyName="Haitian Gourde"/>
+  <CurrencyCode currencyCode="HUF" currencyName="Hungarian forint"/>
+  <CurrencyCode currencyCode="IDR" currencyName="Indeonesian Rupiah"/>
+  <CurrencyCode currencyCode="IEP" currencyName="Irish Pound"/>
+  <CurrencyCode currencyCode="ILS" currencyName="Israeli Scheckel"/>
+  <CurrencyCode currencyCode="INR" currencyName="Indian Rupee"/>
+  <CurrencyCode currencyCode="IQD" currencyName="Iraqui Dinar"/>
+  <CurrencyCode currencyCode="IRR" currencyName="Iranian Rial"/>
+  <CurrencyCode currencyCode="ISK" currencyName="Iceland Krona"/>
+  <CurrencyCode currencyCode="ITL" currencyName="Italian Lira"/>
+  <CurrencyCode currencyCode="JMD" currencyName="Jamaican Dollar"/>
+  <CurrencyCode currencyCode="JOD" currencyName="Jordanian Dinar"/>
+  <CurrencyCode currencyCode="JPY" currencyName="Japanese Yen"/>
+  <CurrencyCode currencyCode="KES" currencyName="Kenyan Shilling"/>
+  <CurrencyCode currencyCode="KHR" currencyName="Cambodian Riel"/>
+  <CurrencyCode currencyCode="KIS" currencyName="Kirghizstan Som"/>
+  <CurrencyCode currencyCode="KMF" currencyName="Comoros Franc"/>
+  <CurrencyCode currencyCode="KPW" currencyName="North Korean Won"/>
+  <CurrencyCode currencyCode="KRW" currencyName="South Korean Won"/>
+  <CurrencyCode currencyCode="KWD" currencyName="Kuwaiti Dinar"/>
+  <CurrencyCode currencyCode="KYD" currencyName="Cayman Dollar"/>
+  <CurrencyCode currencyCode="KZT" currencyName="Kazakhstani Tenge"/>
+  <CurrencyCode currencyCode="LAK" currencyName="Laotian Kip"/>
+  <CurrencyCode currencyCode="LBP" currencyName="Lebanese Pound"/>
+  <CurrencyCode currencyCode="LKR" currencyName="Sri Lankan Rupee"/>
+  <CurrencyCode currencyCode="LRD" currencyName="Liberian Dollar"/>
+  <CurrencyCode currencyCode="LSL" currencyName="Lesotho Loti"/>
+  <CurrencyCode currencyCode="LTL" currencyName="Lithuanian Lita"/>
+  <CurrencyCode currencyCode="LUF" currencyName="Luxembourgian Franc"/>
+  <CurrencyCode currencyCode="LVL" currencyName="Latvian Lat"/>
+  <CurrencyCode currencyCode="LYD" currencyName="Libyan Dinar"/>
+  <CurrencyCode currencyCode="MAD" currencyName="Moroccan Dirham"/>
+  <CurrencyCode currencyCode="MDL" currencyName="Moldavian Lei"/>
+  <CurrencyCode currencyCode="MGF" currencyName="Madagascan Franc"/>
+  <CurrencyCode currencyCode="MNC" currencyName="Monaco"/>
+  <CurrencyCode currencyCode="MNT" currencyName="Mongolian Tugrik"/>
+  <CurrencyCode currencyCode="MOP" currencyName="Macao Pataca"/>
+  <CurrencyCode currencyCode="MRO" currencyName="Mauritanian Ouguiya"/>
+  <CurrencyCode currencyCode="MTL" currencyName="Maltese Lira"/>
+  <CurrencyCode currencyCode="MUR" currencyName="Mauritius Rupee"/>
+  <CurrencyCode currencyCode="MVR" currencyName="Maldive Rufiyaa"/>
+  <CurrencyCode currencyCode="MWK" currencyName="Malawi Kwacha"/>
+  <CurrencyCode currencyCode="MXN" currencyName="Mexican Peso (new)"/>
+  <CurrencyCode currencyCode="MXP" currencyName="Mexican Peso (old)"/>
+  <CurrencyCode currencyCode="MYR" currencyName="Malaysian Ringgit"/>
+  <CurrencyCode currencyCode="MZM" currencyName="Mozambique Metical"/>
+  <CurrencyCode currencyCode="NGN" currencyName="Nigerian Naira"/>
+  <CurrencyCode currencyCode="NIC" currencyName="Nicaragua"/>
+  <CurrencyCode currencyCode="NIO" currencyName="Nicaraguan Cordoba"/>
+  <CurrencyCode currencyCode="NIS" currencyName="New Israeli Shekel"/>
+  <CurrencyCode currencyCode="NLG" currencyName="Dutch Guilder"/>
+  <CurrencyCode currencyCode="NOK" currencyName="Norwegian Krone"/>
+  <CurrencyCode currencyCode="NPR" currencyName="Nepalese Rupee"/>
+  <CurrencyCode currencyCode="NZD" currencyName="New Zealand Dollars"/>
+  <CurrencyCode currencyCode="OMR" currencyName="Omani Rial"/>
+  <CurrencyCode currencyCode="PAB" currencyName="Panamanian Balboa"/>
+  <CurrencyCode currencyCode="PEI" currencyName="Peruvian Inti"/>
+  <CurrencyCode currencyCode="PEN" currencyName="Peruvian Sol - New"/>
+  <CurrencyCode currencyCode="PES" currencyName="Peruvian Sol"/>
+  <CurrencyCode currencyCode="PGK" currencyName="Papua New Guinea Kina"/>
+  <CurrencyCode currencyCode="PHP" currencyName="Philippino Peso"/>
+  <CurrencyCode currencyCode="PKR" currencyName="Pakistan Rupee"/>
+  <CurrencyCode currencyCode="PLN" currencyName="Polish Zloty"/>
+  <CurrencyCode currencyCode="PLZ" currencyName="Poland"/>
+  <CurrencyCode currencyCode="PTE" currencyName="Portuguese Escudo"/>
+  <CurrencyCode currencyCode="PYG" currencyName="Paraguayan Guarani"/>
+  <CurrencyCode currencyCode="QAR" currencyName="Qatar Riyal"/>
+  <CurrencyCode currencyCode="RMB" currencyName="Chinese Renminbi Yuan"/>
+  <CurrencyCode currencyCode="ROL" currencyName="Roumanian Lei"/>
+  <CurrencyCode currencyCode="RUR" currencyName="Russian Rouble"/>
+  <CurrencyCode currencyCode="RWF" currencyName="Rwanda Franc"/>
+  <CurrencyCode currencyCode="SAR" currencyName="Saudi Riyal"/>
+  <CurrencyCode currencyCode="SBD" currencyName="Solomon Islands Dollar"/>
+  <CurrencyCode currencyCode="SCR" currencyName="Seychelles Rupee"/>
+  <CurrencyCode currencyCode="SDP" currencyName="Sudanese Pound"/>
+  <CurrencyCode currencyCode="SEK" currencyName="Swedish Krona"/>
+  <CurrencyCode currencyCode="SGD" currencyName="Singapore Dollar"/>
+  <CurrencyCode currencyCode="SHP" currencyName="St.Helena Pound"/>
+  <CurrencyCode currencyCode="SIT" currencyName="Slovenian Tolar"/>
+  <CurrencyCode currencyCode="SKK" currencyName="Slovakian Krona"/>
+  <CurrencyCode currencyCode="SLL" currencyName="Leone"/>
+  <CurrencyCode currencyCode="SOL" currencyName="Peru"/>
+  <CurrencyCode currencyCode="SOS" currencyName="Somalian Shilling"/>
+  <CurrencyCode currencyCode="SRG" currencyName="Surinam Guilder"/>
+  <CurrencyCode currencyCode="STD" currencyName="Sao Tome / Principe Dobra"/>
+  <CurrencyCode currencyCode="SUR" currencyName="Russian Ruble (old)"/>
+  <CurrencyCode currencyCode="SVC" currencyName="El Salvador Colon"/>
+  <CurrencyCode currencyCode="SYP" currencyName="Syrian Pound"/>
+  <CurrencyCode currencyCode="SZL" currencyName="Swaziland Lilangeni"/>
+  <CurrencyCode currencyCode="THB" currencyName="Thailand Baht"/>
+  <CurrencyCode currencyCode="TJR" currencyName="Tadzhikistani Ruble"/>
+  <CurrencyCode currencyCode="TMM" currencyName="Turkmenistani Manat"/>
+  <CurrencyCode currencyCode="TND" currencyName="Tunisian Dinar"/>
+  <CurrencyCode currencyCode="TOP" currencyName="Tongan Pa&apos;anga"/>
+  <CurrencyCode currencyCode="TPE" currencyName="Timor Escudo"/>
+  <CurrencyCode currencyCode="TRL" currencyName="Turkish Lira"/>
+  <CurrencyCode currencyCode="TTD" currencyName="Trinidad and Tobago Dollar"/>
+  <CurrencyCode currencyCode="TWD" currencyName="New Taiwan Dollar"/>
+  <CurrencyCode currencyCode="TZS" currencyName="Tanzanian Shilling"/>
+  <CurrencyCode currencyCode="UAK" currencyName="Ukrainian Karbowanez"/>
+  <CurrencyCode currencyCode="UGS" currencyName="Ugandan Shilling"/>
+  <CurrencyCode currencyCode="USD" currencyName="American Dollar"/>
+  <CurrencyCode currencyCode="UYP" currencyName="Uruguayan New Peso"/>
+  <CurrencyCode currencyCode="UYU" currencyName="Uruguay"/>
+  <CurrencyCode currencyCode="VEB" currencyName="Venezuelan Bolivar"/>
+  <CurrencyCode currencyCode="VND" currencyName="Vietnamese Dong"/>
+  <CurrencyCode currencyCode="VUV" currencyName="Vanuatu Vatu"/>
+  <CurrencyCode currencyCode="WST" currencyName="Samoan Tala"/>
+  <CurrencyCode currencyCode="XAF" currencyName="Gabon C.f.A Franc"/>
+  <CurrencyCode currencyCode="XCD" currencyName="East Carribean Dollar"/>
+  <CurrencyCode currencyCode="XOF" currencyName="Benin C.f.A. Franc"/>
+  <CurrencyCode currencyCode="YER" currencyName="Yemeni Ryal"/>
+  <CurrencyCode currencyCode="ZAR" currencyName="South African Rand"/>
+  <CurrencyCode currencyCode="ZMK" currencyName="Zambian Kwacha"/>
+  <CurrencyCode currencyCode="ZRZ" currencyName="Zaire"/>
+  <CurrencyCode currencyCode="ZWD" currencyName="Zimbabwean Dollar"/>
+</entity-engine-xml>

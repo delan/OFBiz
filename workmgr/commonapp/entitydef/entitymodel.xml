@@ -1,0 +1,1353 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+/**
+ *  Title: Entity Generator Definitions for the General Data Model
+ *  Description: None
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author David E. Jones (jonesde@ofbiz.org) 
+ *@author Andy Zeneski (jaz@zsolv.com)
+ *@version    1.0
+ */
+-->
+
+<!DOCTYPE entitymodel [
+    <!-- ====================== Root Element ======================= -->
+    <!ELEMENT entitymodel ( title?, description?, copyright?, author?, version?, entity* )>
+    <!-- ================= Children of entitymodel =================== -->
+    <!ELEMENT entity ( description?, field*, prim-key*, relation* )>
+    <!ELEMENT title ( #PCDATA  )>
+    <!ELEMENT description ( #PCDATA  )>
+    <!ELEMENT copyright ( #PCDATA  )>
+    <!ELEMENT author ( #PCDATA  )>
+    <!ELEMENT version ( #PCDATA  )>
+    <!-- ================== Children of entity ===================== -->
+    <!-- see the children of entitymodel section for description, etc. -->
+    <!ATTLIST entity
+	entity-name CDATA #REQUIRED >
+    <!ATTLIST entity
+	table-name CDATA #IMPLIED >
+    <!ATTLIST entity
+	package-name CDATA #REQUIRED >
+    <!ATTLIST entity
+	dependent-on CDATA #IMPLIED >
+    <!ATTLIST entity
+	title CDATA #IMPLIED >
+    <!ATTLIST entity
+	copyright CDATA #IMPLIED >
+    <!ATTLIST entity
+	author CDATA #IMPLIED >
+    <!ATTLIST entity
+	version CDATA #IMPLIED >
+    <!ELEMENT field ( validate* )>
+    <!ELEMENT prim-key EMPTY>
+    <!ATTLIST prim-key
+	field CDATA #REQUIRED >
+    <!ELEMENT relation ( key-map* )>
+    <!-- ==================== Children of field ===================== -->
+    <!ATTLIST field
+	name CDATA #REQUIRED >
+    <!ATTLIST field
+	col-name CDATA #IMPLIED >
+    <!ATTLIST field
+	type CDATA #REQUIRED >
+    <!ELEMENT validate EMPTY>
+    <!ATTLIST validate
+	name CDATA #REQUIRED >
+    <!-- ==================== Children of relation ====================== -->
+    <!-- specifies whether or not the relation is a dependent one; ie if the related entity can exist without the main entity -->
+    <!ATTLIST relation
+	type ( one | many ) #REQUIRED >
+    <!ATTLIST relation
+	title CDATA #IMPLIED >
+    <!ATTLIST relation
+	rel-entity-name CDATA #REQUIRED >
+    <!ATTLIST relation
+	rel-table-name CDATA #IMPLIED >
+    <!ELEMENT key-map EMPTY>
+    <!-- see definition of relation in entity section above -->
+    <!-- ===================== Children of key-map ====================== -->
+    <!ATTLIST key-map
+	field-name CDATA #REQUIRED >
+    <!ATTLIST key-map
+	rel-field-name CDATA #IMPLIED >
+]>
+
+
+<entitymodel>
+  <!-- ========================================================= -->
+  <!-- ======================== Defaults ======================= -->
+  <!-- ========================================================= -->
+    <title>Entity of an Open For Business Project Component</title>
+    <description>None</description>
+    <copyright>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org</copyright>
+    <author>None</author>
+    <version>1.0</version>
+
+  <!-- ========================================================= -->
+  <!-- ======================== Data Model ===================== -->
+  <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.commonapp.common.currency -->
+  <!--  - org.ofbiz.commonapp.common.enum -->
+  <!--  - org.ofbiz.commonapp.common.geo -->
+  <!--  - org.ofbiz.commonapp.common.note -->
+  <!--  - org.ofbiz.commonapp.common.period -->
+  <!--  - org.ofbiz.commonapp.common.sequence -->
+  <!--  - org.ofbiz.commonapp.common.status -->
+  <!--  - org.ofbiz.commonapp.common.uom -->
+  <!--  - org.ofbiz.commonapp.content.content -->
+  <!--  - org.ofbiz.commonapp.content.data -->
+  <!--  - org.ofbiz.commonapp.content.document -->
+  <!--  - org.ofbiz.commonapp.content.preference -->
+  <!--  - org.ofbiz.commonapp.content.subscription -->
+  <!--  - org.ofbiz.commonapp.content.visit -->
+  <!--  - org.ofbiz.commonapp.security.login -->
+  <!--  - org.ofbiz.commonapp.security.securitygroup -->
+  <!-- ========================================================= -->
+
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.currency -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="CurrencyCode" 
+            package-name="org.ofbiz.commonapp.common.currency"
+            title="Currency ISO Code Chart"
+            author="Andy Zeneski (jaz@zsolv.com)">
+      <field name="currencyCode" type="id-ne"></field>
+      <field name="currencyName" type="description"></field>	
+      <prim-key field="currencyCode" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.enum -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="Enumeration" 
+            package-name="org.ofbiz.commonapp.common.enum"
+            title="Enumeration Entity">
+      <field name="enumId" type="id-ne"></field>
+      <field name="enumTypeId" type="id-ne"></field>
+      <field name="enumCode" type="short-varchar"></field>
+      <field name="sequenceId" type="id"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="enumId" />
+      <relation type="one" rel-entity-name="EnumerationType">
+        <key-map field-name="enumTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="EnumerationType" 
+            package-name="org.ofbiz.commonapp.common.enum"
+            title="Enumeration Type Entity">
+      <field name="enumTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="enumTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="EnumerationType">
+        <key-map field-name="parentTypeId" rel-field-name="enumTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="EnumerationType">
+        <key-map field-name="enumTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="Enumeration">
+        <key-map field-name="enumTypeId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.geo -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="CountryCapital" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            dependent-on="CountryCode"
+            title="Country Capital Entity"
+            author="Andy Zeneski (jaz@zsolv.com)">
+      <field name="countryCode" type="id-ne"></field>
+      <field name="countryCapital" type="description"></field>	
+      <prim-key field="countryCode" />
+      <relation type="one" rel-entity-name="CountryCode">
+        <key-map field-name="countryCode" />
+      </relation>
+    </entity>	
+    <entity entity-name="CountryCode" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            title="ISO Country Code Entity"
+            author="Andy Zeneski (jaz@zsolv.com)">
+      <field name="countryCode" type="id-ne"></field>
+      <field name="countryAbbr" type="short-varchar"></field>
+      <field name="countryNumber" type="short-varchar"></field>
+      <field name="countryName" type="description"></field>	
+      <prim-key field="countryCode" />
+      <relation type="one" rel-entity-name="CountryCapital">
+        <key-map field-name="countryCode" />
+      </relation>
+      <relation type="one" rel-entity-name="CountryTeleCode">
+        <key-map field-name="countryCode" />
+      </relation>
+    </entity>	
+    <entity entity-name="CountryTeleCode" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            dependent-on="CountryCode"
+            title="Telephone Country Code Entity"
+            author="Andy Zeneski (jaz@zsolv.com)">
+      <field name="countryCode" type="id-ne"></field>
+      <field name="teleCode" type="short-varchar"></field>	
+      <prim-key field="countryCode" />
+      <relation type="one" rel-entity-name="CountryCode">
+        <key-map field-name="countryCode" />
+      </relation>
+    </entity>	
+    <entity entity-name="Geo" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            title="Geographic Boundary Entity">
+      <field name="geoId" type="id-ne"></field>
+      <field name="geoTypeId" type="id"></field>
+      <field name="geoName" type="name"></field>
+      <field name="geoCode" type="short-varchar"></field>
+      <field name="abbreviation" type="short-varchar"></field>	
+      <prim-key field="geoId" />
+      <relation type="one" rel-entity-name="GeoType">
+        <key-map field-name="geoTypeId" />
+      </relation>
+      <relation type="many" title="Main" rel-entity-name="GeoAssoc">
+        <key-map field-name="geoId" />
+      </relation>
+      <relation type="many" title="Assoc" rel-entity-name="GeoAssoc">
+        <key-map field-name="geoId" rel-field-name="geoIdTo" />
+      </relation>
+      <relation type="many" rel-entity-name="PostalAddressBoundary">
+        <key-map field-name="geoId" />
+      </relation>
+    </entity>	
+    <entity entity-name="GeoAssoc" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            title="Geographic Boundary Association Entity">
+      <field name="geoId" type="id-ne"></field>
+      <field name="geoIdTo" type="id-ne"></field>
+      <field name="geoAssocTypeId" type="id"></field>	
+      <prim-key field="geoId" />	
+      <prim-key field="geoIdTo" />
+      <relation type="one" title="Main" rel-entity-name="Geo">
+        <key-map field-name="geoId" />
+      </relation>
+      <relation type="one" title="Assoc" rel-entity-name="Geo">
+        <key-map field-name="geoIdTo" rel-field-name="geoId" />
+      </relation>
+      <relation type="one" rel-entity-name="GeoAssocType">
+        <key-map field-name="geoAssocTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="GeoAssocType" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            title="Geographic Boundary Association Entity">
+      <field name="geoAssocTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="geoAssocTypeId" />
+      <relation type="many" rel-entity-name="GeoAssoc">
+        <key-map field-name="geoAssocTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="GeoType" 
+            package-name="org.ofbiz.commonapp.common.geo"
+            title="Geographic Boundary Type Entity">
+      <field name="geoTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="geoTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="GeoType">
+        <key-map field-name="parentTypeId" rel-field-name="geoTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="GeoType">
+        <key-map field-name="geoTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="Geo">
+        <key-map field-name="geoTypeId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.note -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="NoteData" 
+            package-name="org.ofbiz.commonapp.common.note"
+            title="Note Data Entity">
+      <field name="noteId" type="id-ne"></field>
+      <field name="noteName" type="name"></field>
+      <field name="noteInfo" type="very-long"></field>	
+      <prim-key field="noteId" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.period -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="PeriodType" 
+            package-name="org.ofbiz.commonapp.common.period"
+            title="Period Type Entity">
+      <field name="periodTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="periodTypeId" />
+    </entity>	
+    <entity entity-name="StandardTimePeriod" 
+            package-name="org.ofbiz.commonapp.common.period"
+            title="Standard Time Period Entity">
+      <field name="standardTimePeriodId" type="id-ne"></field>
+      <field name="periodTypeId" type="id"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>	
+      <prim-key field="standardTimePeriodId" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.sequence -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="SequenceValueItem" 
+            package-name="org.ofbiz.commonapp.common.sequence"
+            title="Sequence Entity">
+      <field name="seqName" type="id-long-ne"></field>
+      <field name="seqId" type="numeric"></field>	
+      <prim-key field="seqName" />
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.status -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="StatusItem" 
+            package-name="org.ofbiz.commonapp.common.status"
+            title="Status Entity">
+      <field name="statusId" type="id-ne"></field>
+      <field name="statusTypeId" type="id"></field>
+      <field name="statusCode" type="short-varchar"></field>
+      <field name="sequenceId" type="id"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="statusId" />
+      <relation type="one" rel-entity-name="StatusType">
+        <key-map field-name="statusTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="OrderStatus">
+        <key-map field-name="statusId" />
+      </relation>
+      <relation type="many" title="Main" rel-entity-name="StatusValidChange">
+        <key-map field-name="statusId" />
+      </relation>
+      <relation type="many" title="To" rel-entity-name="StatusValidChange">
+        <key-map field-name="statusId" rel-field-name="statusIdTo" />
+      </relation>
+    </entity>	
+    <entity entity-name="StatusType" 
+            package-name="org.ofbiz.commonapp.common.status"
+            title="Status Type Entity">
+      <field name="statusTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="statusTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="StatusType">
+        <key-map field-name="parentTypeId" rel-field-name="statusTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="StatusType">
+        <key-map field-name="statusTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="StatusItem">
+        <key-map field-name="statusTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="StatusValidChange" 
+            package-name="org.ofbiz.commonapp.common.status"
+            title="Status Valid Change Entity">
+      <field name="statusId" type="id-ne"></field>
+      <field name="statusIdTo" type="id-ne"></field>
+      <field name="conditionExpression" type="long-varchar"></field>
+      <field name="transitionName" type="name"></field>	
+      <prim-key field="statusId" />	
+      <prim-key field="statusIdTo" />
+      <relation type="one" title="Main" rel-entity-name="StatusItem">
+        <key-map field-name="statusId" />
+      </relation>
+      <relation type="one" title="To" rel-entity-name="StatusItem">
+        <key-map field-name="statusIdTo" rel-field-name="statusId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.common.uom -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="Uom" 
+            package-name="org.ofbiz.commonapp.common.uom"
+            title="Unit Of Measure Entity">
+      <field name="uomId" type="id-ne"></field>
+      <field name="uomTypeId" type="id"></field>
+      <field name="abbreviation" type="short-varchar"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="uomId" />
+      <relation type="one" rel-entity-name="UomType">
+        <key-map field-name="uomTypeId" />
+      </relation>
+      <relation type="many" title="Main" rel-entity-name="UomConversion">
+        <key-map field-name="uomId" />
+      </relation>
+      <relation type="many" title="ConvTo" rel-entity-name="UomConversion">
+        <key-map field-name="uomId" rel-field-name="uomIdTo" />
+      </relation>
+    </entity>	
+    <entity entity-name="UomConversion" 
+            package-name="org.ofbiz.commonapp.common.uom"
+            title="Unit Of Measure Conversion Type Entity">
+      <field name="uomId" type="id-ne"></field>
+      <field name="uomIdTo" type="id-ne"></field>
+      <field name="conversionFactor" type="floating-point"></field>	
+      <prim-key field="uomId" />	
+      <prim-key field="uomIdTo" />
+      <relation type="one" title="Main" rel-entity-name="Uom">
+        <key-map field-name="uomId" />
+      </relation>
+      <relation type="one" title="ConvTo" rel-entity-name="Uom">
+        <key-map field-name="uomIdTo" rel-field-name="uomId" />
+      </relation>
+    </entity>	
+    <entity entity-name="UomType" 
+            package-name="org.ofbiz.commonapp.common.uom"
+            title="Unit Of Measure Type Entity">
+      <field name="uomTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="uomTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="UomType">
+        <key-map field-name="parentTypeId" rel-field-name="uomTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="UomType">
+        <key-map field-name="uomTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="Uom">
+        <key-map field-name="uomTypeId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.content -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="Content" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Entity">
+      <field name="contentId" type="id-ne"></field>
+      <field name="contentTypeId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <field name="description" type="description"></field>
+      <field name="urlLocation" type="url"></field>
+      <field name="dataObjectId" type="id"></field>	
+      <prim-key field="contentId" />
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId" />
+      </relation>
+      <relation type="one" rel-entity-name="ContentType">
+        <key-map field-name="contentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentTypeAttr">
+        <key-map field-name="contentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentAttribute">
+        <key-map field-name="contentId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentDataObjectUsage">
+        <key-map field-name="contentId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentCategoryClass">
+        <key-map field-name="contentId" />
+      </relation>
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ContentAssociation" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Association Entity">
+      <field name="contentIdFrom" type="id-ne"></field>
+      <field name="contentIdTo" type="id-ne"></field>
+      <field name="contactMechId" type="id"></field>
+      <field name="functionTypeId" type="id"></field>
+      <field name="upperLeftCoordinate" type="numeric"></field>	
+      <prim-key field="contentIdFrom" />	
+      <prim-key field="contentIdTo" />
+    </entity>	
+    <entity entity-name="ContentAttribute" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Attribute Entity">
+      <field name="contentId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="contentId" />	
+      <prim-key field="attrName" />
+      <relation type="one" rel-entity-name="Content">
+        <key-map field-name="contentId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentTypeAttr">
+        <key-map field-name="attrName" />
+      </relation>
+    </entity>	
+    <entity entity-name="ContentCategory" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Category Entity">
+      <field name="contentCategoryId" type="id-ne"></field>
+      <field name="parentCategoryId" type="id"></field>
+      <field name="parentSeqId" type="id"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="contentCategoryId" />
+      <relation type="one" rel-entity-name="ContentCategory">
+        <key-map field-name="parentCategoryId" rel-field-name="contentCategoryId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentCategoryClass">
+        <key-map field-name="contentCategoryId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ContentCategoryClass" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Category Classification Entity">
+      <field name="contentCategoryId" type="id-ne"></field>
+      <field name="contentId" type="id-ne"></field>
+      <field name="seqId" type="id-ne"></field>	
+      <prim-key field="contentCategoryId" />	
+      <prim-key field="contentId" />	
+      <prim-key field="seqId" />
+      <relation type="one" rel-entity-name="Content">
+        <key-map field-name="contentId" />
+      </relation>
+      <relation type="one" rel-entity-name="ContentCategory">
+        <key-map field-name="contentCategoryId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ContentDataObjectUsage" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Data Object Usage Entity">
+      <field name="contentId" type="id-ne"></field>
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="seqId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>	
+      <prim-key field="contentId" />	
+      <prim-key field="dataObjectId" />	
+      <prim-key field="seqId" />	
+      <prim-key field="fromDate" />
+      <relation type="one" rel-entity-name="Content">
+        <key-map field-name="contentId" />
+      </relation>
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ContentRole" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Role Entity">
+      <description>Data Type Of: Party Role</description>
+      <field name="contentId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>	
+      <prim-key field="contentId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="roleTypeId" />	
+      <prim-key field="fromDate" />
+    </entity>	
+    <entity entity-name="ContentType" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Type Entity">
+      <field name="contentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="contentTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="ContentType">
+        <key-map field-name="parentTypeId" rel-field-name="contentTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="ContentType">
+        <key-map field-name="contentTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentTypeAttr">
+        <key-map field-name="contentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="Content">
+        <key-map field-name="contentTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ContentTypeAttr" 
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Type Attribute Entity">
+      <field name="contentTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="contentTypeId" />	
+      <prim-key field="attrName" />
+      <relation type="one" rel-entity-name="ContentType">
+        <key-map field-name="contentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentAttribute">
+        <key-map field-name="attrName" />
+      </relation>
+      <relation type="many" rel-entity-name="Content">
+        <key-map field-name="contentTypeId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.data -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="DataCategory" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Category Entity">
+      <field name="dataCategoryId" type="id-ne"></field>
+      <field name="parentCategoryId" type="id"></field>
+      <field name="categoryName" type="name"></field>	
+      <prim-key field="dataCategoryId" />
+      <relation type="one" title="Parent" rel-entity-name="DataCategory">
+        <key-map field-name="parentCategoryId" rel-field-name="dataCategoryId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="DataCategory">
+        <key-map field-name="dataCategoryId" rel-field-name="parentCategoryId" />
+      </relation>
+      <relation type="many" title="Sibling" rel-entity-name="DataCategory">
+        <key-map field-name="parentCategoryId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataCategoryMember">
+        <key-map field-name="dataCategoryId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DataCategoryMember" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Category Member Entity">
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="dataCategoryId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>	
+      <prim-key field="dataObjectId" />	
+      <prim-key field="dataCategoryId" />
+      <relation type="one" rel-entity-name="DataCategory">
+        <key-map field-name="dataCategoryId" />
+      </relation>
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DataObject" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Object Entity">
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="dataObjectTypeId" type="id"></field>
+      <field name="dataObjectName" type="name"></field>
+      <field name="description" type="description"></field>
+      <field name="fileLocation" type="long-varchar"></field>
+      <field name="createdDate" type="date-time"></field>
+      <field name="createdByPartyId" type="id"></field>
+      <field name="lastModifiedDate" type="date-time"></field>
+      <field name="lastModifiedByPartyId" type="id"></field>	
+      <prim-key field="dataObjectId" />
+      <relation type="one" rel-entity-name="ElectronicText">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="one" rel-entity-name="ImageDataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="one" rel-entity-name="OtherDataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="many" rel-entity-name="Content">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="many" rel-entity-name="ContentDataObjectUsage">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="one" rel-entity-name="DataObjectType">
+        <key-map field-name="dataObjectTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataObjectTypeAttr">
+        <key-map field-name="dataObjectTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataObjectAttribute">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="many" rel-entity-name="PartyDataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="many" rel-entity-name="ProductDataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="many" rel-entity-name="FeatureDataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="one" title="CreatedBy" rel-entity-name="Party">
+        <key-map field-name="createdByPartyId" rel-field-name="partyId" />
+      </relation>
+      <relation type="one" title="LastModifiedBy" rel-entity-name="Party">
+        <key-map field-name="lastModifiedByPartyId" rel-field-name="partyId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataCategoryMember">
+        <key-map field-name="dataObjectId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DataObjectAttribute" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Object Attribute Entity">
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="dataObjectId" />	
+      <prim-key field="attrName" />
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataObjectTypeAttr">
+        <key-map field-name="attrName" />
+      </relation>
+    </entity>	
+    <entity entity-name="DataObjectPurpose" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Object Purpose Entity">
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="dataObjectPurposeTypeId" type="id-ne"></field>	
+      <prim-key field="dataObjectId" />	
+      <prim-key field="dataObjectPurposeTypeId" />
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+      <relation type="one" rel-entity-name="DataObjectPurposeType">
+        <key-map field-name="dataObjectPurposeTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DataObjectPurposeType" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Object Purpose Type Entity">
+      <field name="dataObjectPurposeTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="dataObjectPurposeTypeId" />
+      <relation type="many" rel-entity-name="DataObjectPurpose">
+        <key-map field-name="dataObjectPurposeTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DataObjectType" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Object Type Entity">
+      <field name="dataObjectTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="dataObjectTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="DataObjectType">
+        <key-map field-name="parentTypeId" rel-field-name="dataObjectTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="DataObjectType">
+        <key-map field-name="dataObjectTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataObjectTypeAttr">
+        <key-map field-name="dataObjectTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DataObjectTypeAttr" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Data Object Type Attribute Entity">
+      <field name="dataObjectTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="dataObjectTypeId" />	
+      <prim-key field="attrName" />
+      <relation type="one" rel-entity-name="DataObjectType">
+        <key-map field-name="dataObjectTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DataObjectAttribute">
+        <key-map field-name="attrName" />
+      </relation>
+      <relation type="many" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ElectronicText" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Electronic Text Entity">
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="textData" type="very-long"></field>	
+      <prim-key field="dataObjectId" />
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+    </entity>	
+    <entity entity-name="FunctionType" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Function Type Entity">
+      <field name="functionTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="functionTypeId" />
+    </entity>	
+    <entity entity-name="ImageDataObject" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Image Data Object Entity">
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="imageData" type="blob"></field>	
+      <prim-key field="dataObjectId" />
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+    </entity>	
+    <entity entity-name="OtherDataObject" 
+            package-name="org.ofbiz.commonapp.content.data"
+            title="Other Data Object Entity">
+      <field name="dataObjectId" type="id-ne"></field>
+      <field name="dataObjectContent" type="blob"></field>	
+      <prim-key field="dataObjectId" />
+      <relation type="one" rel-entity-name="DataObject">
+        <key-map field-name="dataObjectId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.document -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="Document" 
+            package-name="org.ofbiz.commonapp.content.document"
+            title="Document Entity">
+      <field name="documentId" type="id-ne"></field>
+      <field name="documentTypeId" type="id"></field>
+      <field name="dateCreated" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <field name="documentLocation" type="long-varchar"></field>
+      <field name="documentText" type="long-varchar"></field>
+      <field name="imageData" type="blob"></field>	
+      <prim-key field="documentId" />
+      <relation type="one" rel-entity-name="DocumentType">
+        <key-map field-name="documentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DocumentTypeAttr">
+        <key-map field-name="documentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DocumentAttribute">
+        <key-map field-name="documentId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DocumentAttribute" 
+            package-name="org.ofbiz.commonapp.content.document"
+            title="Document Attribute Entity">
+      <field name="documentId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="documentId" />	
+      <prim-key field="attrName" />
+      <relation type="one" rel-entity-name="Document">
+        <key-map field-name="documentId" />
+      </relation>
+      <relation type="many" rel-entity-name="DocumentTypeAttr">
+        <key-map field-name="attrName" />
+      </relation>
+    </entity>	
+    <entity entity-name="DocumentType" 
+            package-name="org.ofbiz.commonapp.content.document"
+            title="Document Type Entity">
+      <field name="documentTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="documentTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="DocumentType">
+        <key-map field-name="parentTypeId" rel-field-name="documentTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="DocumentType">
+        <key-map field-name="documentTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DocumentTypeAttr">
+        <key-map field-name="documentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="Document">
+        <key-map field-name="documentTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="DocumentTypeAttr" 
+            package-name="org.ofbiz.commonapp.content.document"
+            title="Document Type Attribute Entity">
+      <field name="documentTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="documentTypeId" />	
+      <prim-key field="attrName" />
+      <relation type="one" rel-entity-name="DocumentType">
+        <key-map field-name="documentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="DocumentAttribute">
+        <key-map field-name="attrName" />
+      </relation>
+      <relation type="many" rel-entity-name="Document">
+        <key-map field-name="documentTypeId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.preference -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="WebPreferenceType" 
+            package-name="org.ofbiz.commonapp.content.preference"
+            title="Web Preference Type Entity">
+      <field name="webPreferenceTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="webPreferenceTypeId" />
+      <relation type="many" rel-entity-name="WebUserPreference">
+        <key-map field-name="webPreferenceTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="WebUserPreference" 
+            package-name="org.ofbiz.commonapp.content.preference"
+            title="Web User Preference Entity">
+      <field name="userLoginId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="webPreferenceTypeId" type="id-ne"></field>	
+      <prim-key field="userLoginId" />	
+      <prim-key field="partyId" />	
+      <prim-key field="webPreferenceTypeId" />
+      <relation type="one" rel-entity-name="WebPreferenceType">
+        <key-map field-name="webPreferenceTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="UserLogin">
+        <key-map field-name="userLoginId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.subscription -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="Subscription" 
+            package-name="org.ofbiz.commonapp.content.subscription"
+            title="Subscription Entity">
+      <field name="subscriptionId" type="id-ne"></field>
+      <field name="communicationEventId" type="id"></field>
+      <field name="contactMechId" type="id"></field>
+      <field name="originatedFromPartyId" type="id"></field>
+      <field name="originatedFromRoleTypeId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="partyNeedId" type="id"></field>
+      <field name="needTypeId" type="id"></field>
+      <field name="productId" type="id"></field>
+      <field name="productCategoryId" type="id"></field>
+      <field name="subscriptionTypeId" type="id"></field>
+      <field name="startDate" type="date-time"></field>
+      <field name="endDate" type="date-time"></field>	
+      <prim-key field="subscriptionId" />
+      <relation type="one" rel-entity-name="CommunicationEvent">
+        <key-map field-name="communicationEventId" />
+      </relation>
+      <relation type="one" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" title="OriginatedFrom" rel-entity-name="Party">
+        <key-map field-name="originatedFromPartyId" rel-field-name="partyId" />
+      </relation>
+      <relation type="one" title="OriginatedFrom" rel-entity-name="RoleType">
+        <key-map field-name="originatedFromRoleTypeId" rel-field-name="roleTypeId" />
+      </relation>
+      <relation type="one" title="OriginatedFrom" rel-entity-name="PartyRole">
+        <key-map field-name="originatedFromPartyId" rel-field-name="partyId" />
+        <key-map field-name="originatedFromRoleTypeId" rel-field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyNeed">
+        <key-map field-name="partyNeedId" />
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="NeedType">
+        <key-map field-name="needTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="Product">
+        <key-map field-name="productId" />
+      </relation>
+      <relation type="one" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId" />
+      </relation>
+      <relation type="many" rel-entity-name="SubscriptionFulfillmentPiece">
+        <key-map field-name="subscriptionId" />
+      </relation>
+      <relation type="one" rel-entity-name="SubscriptionType">
+        <key-map field-name="subscriptionTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="SubscriptionTypeAttr">
+        <key-map field-name="subscriptionTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="SubscriptionAttribute">
+        <key-map field-name="subscriptionId" />
+      </relation>
+    </entity>	
+    <entity entity-name="SubscriptionActivity" 
+            package-name="org.ofbiz.commonapp.content.subscription"
+            title="Subscription Activity Entity">
+      <field name="subscriptionActivityId" type="id-ne"></field>
+      <field name="comments" type="comment"></field>
+      <field name="dateSent" type="date-time"></field>	
+      <prim-key field="subscriptionActivityId" />
+      <relation type="many" rel-entity-name="SubscriptionFulfillmentPiece">
+        <key-map field-name="subscriptionActivityId" />
+      </relation>
+    </entity>	
+    <entity entity-name="SubscriptionAttribute" 
+            package-name="org.ofbiz.commonapp.content.subscription"
+            title="Subscription Attribute Entity">
+      <field name="subscriptionId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>
+      <field name="attrValue" type="value"></field>	
+      <prim-key field="subscriptionId" />	
+      <prim-key field="attrName" />
+      <relation type="one" rel-entity-name="Subscription">
+        <key-map field-name="subscriptionId" />
+      </relation>
+      <relation type="many" rel-entity-name="SubscriptionTypeAttr">
+        <key-map field-name="attrName" />
+      </relation>
+    </entity>	
+    <entity entity-name="SubscriptionFulfillmentPiece" 
+            package-name="org.ofbiz.commonapp.content.subscription"
+            title="Subscription Fulfillment Piece Entity">
+      <field name="subscriptionActivityId" type="id-ne"></field>
+      <field name="subscriptionId" type="id-ne"></field>	
+      <prim-key field="subscriptionActivityId" />	
+      <prim-key field="subscriptionId" />
+      <relation type="one" rel-entity-name="Subscription">
+        <key-map field-name="subscriptionId" />
+      </relation>
+      <relation type="one" rel-entity-name="SubscriptionActivity">
+        <key-map field-name="subscriptionActivityId" />
+      </relation>
+    </entity>	
+    <entity entity-name="SubscriptionType" 
+            package-name="org.ofbiz.commonapp.content.subscription"
+            title="Subscription Type Entity">
+      <field name="subscriptionTypeId" type="id-ne"></field>
+      <field name="parentTypeId" type="id-ne"></field>
+      <field name="hasTable" type="indicator"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="subscriptionTypeId" />
+      <relation type="one" title="Parent" rel-entity-name="SubscriptionType">
+        <key-map field-name="parentTypeId" rel-field-name="subscriptionTypeId" />
+      </relation>
+      <relation type="many" title="Child" rel-entity-name="SubscriptionType">
+        <key-map field-name="subscriptionTypeId" rel-field-name="parentTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="SubscriptionTypeAttr">
+        <key-map field-name="subscriptionTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="Subscription">
+        <key-map field-name="subscriptionTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="SubscriptionTypeAttr" 
+            package-name="org.ofbiz.commonapp.content.subscription"
+            title="Subscription Type Attribute Entity">
+      <field name="subscriptionTypeId" type="id-ne"></field>
+      <field name="attrName" type="id-long-ne"></field>	
+      <prim-key field="subscriptionTypeId" />	
+      <prim-key field="attrName" />
+      <relation type="one" rel-entity-name="SubscriptionType">
+        <key-map field-name="subscriptionTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="SubscriptionAttribute">
+        <key-map field-name="attrName" />
+      </relation>
+      <relation type="many" rel-entity-name="Subscription">
+        <key-map field-name="subscriptionTypeId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.content.visit -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="BrowserType" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="Browser Type Entity">
+      <field name="browserTypeId" type="id-ne"></field>
+      <field name="browserName" type="name"></field>
+      <field name="browserVersion" type="very-short"></field>	
+      <prim-key field="browserTypeId" />
+      <relation type="many" rel-entity-name="UserAgent">
+        <key-map field-name="browserTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="PlatformType" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="Platform Type Entity">
+      <field name="platformTypeId" type="id-ne"></field>
+      <field name="platformName" type="name"></field>
+      <field name="platformVersion" type="very-short"></field>	
+      <prim-key field="platformTypeId" />
+      <relation type="many" rel-entity-name="UserAgent">
+        <key-map field-name="platformTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ProtocolType" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="Protocol Type Entity">
+      <field name="protocolTypeId" type="id-ne"></field>
+      <field name="protocolName" type="name"></field>	
+      <prim-key field="protocolTypeId" />
+      <relation type="many" rel-entity-name="UserAgent">
+        <key-map field-name="protocolTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="ServerHit" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="Server Hit Entity">
+      <field name="visitId" type="id-ne"></field>
+      <field name="hitDatetime" type="date-time"></field>
+      <field name="partyId" type="id"></field>
+      <field name="idByIpContactMechId" type="id"></field>
+      <field name="refByWebContactMechId" type="id"></field>
+      <field name="statusId" type="id"></field>
+      <field name="userAgentId" type="id"></field>
+      <field name="userLoginId" type="id"></field>
+      <field name="contentId" type="id"></field>
+      <field name="numOfBytes" type="numeric"></field>	
+      <prim-key field="visitId" />	
+      <prim-key field="hitDatetime" />
+      <relation type="one" rel-entity-name="Visit">
+        <key-map field-name="visitId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" title="IdByIp" rel-entity-name="ContactMech">
+        <key-map field-name="idByIpContactMechId" rel-field-name="contactMechId" />
+      </relation>
+      <relation type="one" title="RefByWeb" rel-entity-name="ContactMech">
+        <key-map field-name="refByWebContactMechId" rel-field-name="contactMechId" />
+      </relation>
+      <relation type="one" rel-entity-name="StatusItem">
+        <key-map field-name="statusId" />
+      </relation>
+      <relation type="one" rel-entity-name="UserAgent">
+        <key-map field-name="userAgentId" />
+      </relation>
+      <relation type="one" rel-entity-name="UserLogin">
+        <key-map field-name="userLoginId" />
+      </relation>
+      <relation type="one" rel-entity-name="Content">
+        <key-map field-name="contentId" />
+      </relation>
+    </entity>	
+    <entity entity-name="UserAgent" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="User Agent Entity">
+      <field name="userAgentId" type="id-ne"></field>
+      <field name="browserTypeId" type="id"></field>
+      <field name="platformTypeId" type="id"></field>
+      <field name="protocolTypeId" type="id"></field>
+      <field name="userAgentTypeId" type="id"></field>
+      <field name="userAgentMethodTypeId" type="id"></field>	
+      <prim-key field="userAgentId" />
+      <relation type="one" rel-entity-name="BrowserType">
+        <key-map field-name="browserTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="PlatformType">
+        <key-map field-name="platformTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="ProtocolType">
+        <key-map field-name="protocolTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="UserAgentType">
+        <key-map field-name="userAgentTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="UserAgentMethodType">
+        <key-map field-name="userAgentMethodTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ServerHit">
+        <key-map field-name="userAgentId" />
+      </relation>
+    </entity>	
+    <entity entity-name="UserAgentMethodType" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="User Agent Method Type Entity">
+      <field name="userAgentMethodTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="userAgentMethodTypeId" />
+      <relation type="many" rel-entity-name="UserAgent">
+        <key-map field-name="userAgentMethodTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="UserAgentType" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="User Agent Type Entity">
+      <field name="userAgentTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="userAgentTypeId" />
+      <relation type="many" rel-entity-name="UserAgent">
+        <key-map field-name="userAgentTypeId" />
+      </relation>
+    </entity>	
+    <entity entity-name="Visit" 
+            package-name="org.ofbiz.commonapp.content.visit"
+            title="Visit Entity">
+      <field name="visitId" type="id-ne"></field>
+      <field name="contactMechId" type="id"></field>
+      <field name="partyId" type="id"></field>
+      <field name="roleTypeId" type="id"></field>
+      <field name="cookie" type="short-varchar"></field>
+      <field name="fromDatetime" type="date-time"></field>
+      <field name="thruDatetime" type="date-time"></field>	
+      <prim-key field="visitId" />
+      <relation type="one" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="one" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId" />
+        <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ServerHit">
+        <key-map field-name="visitId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.security.login -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="UserLogin" 
+            package-name="org.ofbiz.commonapp.security.login"
+            title="User Login Entity">
+      <field name="userLoginId" type="id-vlong-ne"></field>
+      <field name="partyId" type="id"></field>
+      <field name="currentPassword" type="short-varchar"></field>
+      <field name="passwordHint" type="description"></field>	
+      <prim-key field="userLoginId" />
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+      <relation type="many" rel-entity-name="UserLoginSecurityGroup">
+        <key-map field-name="userLoginId" />
+      </relation>
+      <relation type="many" rel-entity-name="UserLoginHistory">
+        <key-map field-name="userLoginId" />
+      </relation>
+      <relation type="one" rel-entity-name="Person">
+        <key-map field-name="partyId" />
+      </relation>
+    </entity>	
+    <entity entity-name="UserLoginHistory" 
+            package-name="org.ofbiz.commonapp.security.login"
+            title="User Login History Entity">
+      <field name="userLoginId" type="id-vlong-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="partyId" type="id"></field>
+      <field name="referrerUrl" type="url"></field>
+      <field name="passwordUsed" type="short-varchar"></field>	
+      <prim-key field="userLoginId" />	
+      <prim-key field="fromDate" />
+      <relation type="one" rel-entity-name="UserLogin">
+        <key-map field-name="userLoginId" />
+      </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId" />
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.security.securitygroup -->
+  <!-- ========================================================= -->
+	
+    <entity entity-name="SecurityGroup" 
+            package-name="org.ofbiz.commonapp.security.securitygroup"
+            title="Security Component - Security Group Entity">
+      <field name="groupId" type="id-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="groupId" />
+      <relation type="many" rel-entity-name="UserLoginSecurityGroup">
+        <key-map field-name="groupId" />
+      </relation>
+      <relation type="many" rel-entity-name="SecurityGroupPermission">
+        <key-map field-name="groupId" />
+      </relation>
+    </entity>	
+    <entity entity-name="SecurityGroupPermission" 
+            package-name="org.ofbiz.commonapp.security.securitygroup"
+            title="Security Component - Security Group Permission Entity">
+      <description>Defines a permission available to a security group</description>
+      <field name="groupId" type="id-ne"></field>
+      <field name="permissionId" type="id-long-ne"></field>	
+      <prim-key field="groupId" />	
+      <prim-key field="permissionId" />
+      <relation type="one" rel-entity-name="SecurityGroup">
+        <key-map field-name="groupId" />
+      </relation>
+      <relation type="one" rel-entity-name="SecurityPermission">
+        <key-map field-name="permissionId" />
+      </relation>
+    </entity>	
+    <entity entity-name="SecurityPermission" 
+            package-name="org.ofbiz.commonapp.security.securitygroup"
+            title="Security Component - Security Permission Entity">
+      <field name="permissionId" type="id-long-ne"></field>
+      <field name="description" type="description"></field>	
+      <prim-key field="permissionId" />
+      <relation type="many" rel-entity-name="SecurityGroupPermission">
+        <key-map field-name="permissionId" />
+      </relation>
+    </entity>	
+    <entity entity-name="UserLoginSecurityGroup" 
+            package-name="org.ofbiz.commonapp.security.securitygroup"
+            title="Security Component - User Login Security Group Entity">
+      <description>Defines a permission available to a security group</description>
+      <field name="userLoginId" type="id-ne"></field>
+      <field name="groupId" type="id-ne"></field>	
+      <prim-key field="userLoginId" />	
+      <prim-key field="groupId" />
+      <relation type="one" rel-entity-name="UserLogin">
+        <key-map field-name="userLoginId" />
+      </relation>
+      <relation type="one" rel-entity-name="SecurityGroup">
+        <key-map field-name="groupId" />
+      </relation>
+      <relation type="many" rel-entity-name="SecurityGroupPermission">
+        <key-map field-name="groupId" />
+      </relation>
+    </entity>  
+</entitymodel>
+

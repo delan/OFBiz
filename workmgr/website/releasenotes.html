@@ -1,0 +1,411 @@
+<h2 align="center">The Open For Business Project - Release Notes</h2>
+
+<br>Written By: David E. Jones
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>
+<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A> 
+<br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
+<hr>
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#Release 1.0 Beta 1">Release 1.0 Beta 1</a> 
+  <li><a href="#Release 2001.09.29">Release 2001.09.29</a> 
+  <li><a href="#Release 2001.07.20">Release 2001.07.20</a>
+  <li><a href="#Release 2001.06.30">Release 2001.06.30</a>
+  <li><a href="#Release 2001.06.22">Release 2001.06.22</a>
+  <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
+  <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
+  <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
+</ul>
+
+<hr>
+<h3><a name="Release 1.0 Beta 1">Release 1.0 Beta 1</a></h3>
+<hr>
+<h4>Major Cleanups and Feature Enhancements</h4>
+<p>This release includes a number of clean ups and refactorings in addition to
+many new features in the eCommerce application, the Catalog Manager application, 
+and the many tools included to make development, maintenance, and administration
+faster and easier.</p>
+<h4>Version 1.0 Beta 1</h4>
+<p>We are calling this release 1.0 Beta 1 and it is being released in preparation
+for the final version 1.0 release of Open For Business. Version 1.0 will include
+the eCommerce application, the Catalog Manager, and the many tools and components 
+in the framework such as the Entity Engine, the Control Servlet, and the Data Model.
+It will also contain a "sneak peak" at the upcoming Generic Services Framework, the
+Workflow Engine and the Rules Engine which will be the primary elements of the 
+version 2.0 release.</p>
+<h4>Complete Download - Quick Setup Package</h4>
+<p>The complete download is now configured to use the Hypersonic SQL Java database
+so that a complete installation is included in the release. This means that installation
+for a demonstration or playing with it is as easy as 1) download it, 2) put it 
+/ofbiz/work and 3) run it! This includes a sample database which is prebuilt
+so you can run the various applications immediately.</p>
+<p>Of course, all of the configuration
+options are available still, including using various other databases. Starting from
+nothing with a new database is easy because the Entity Engine can create all of its
+own tables and check them, and initial data is included in XML and SQL files.</p>
+<h4>Tasks Completed</h4>
+<p>A number of tasks have been planned and completed for this release, in addition
+to the many smaller refinements and changes that have been done. These tasks include:</p>
+<ul>
+<li><b>eCommerce Subproject</b>
+  <ul>
+  <li>39628 - Associated Products
+  <li>39630 - Support Multiple "Catalogs"
+  <li>39635 - ecommerce.properties from URL
+  <li>39655 - Shipping Calculation
+  <li>39681 - Order History based Quick Reorder
+  <li>40613 - Quick add products from special category
+  <li>40896 - Make ecommerce.properties visual settings more flexible
+  <li>41070 - Only show associated products within date range
+  </ul>
+<li><b>Catalog Subproject</b>
+  <ul>
+  <li>39631 - Support keyword groups
+  <li>39632 - Category & Product: Browse & Search
+  <li>39633 - Associated Products Editor
+  <li>39634 - Visually organize prod & cat pages
+  <li>40588 - Support multiple top level categories
+  </ul>
+<li><b>CommonApp Subproject</b>
+  <ul>
+  <li>40342 - Reserved word checker in entityref_main.jsp
+  <li>40343 - Fix reserved word warnings
+  <li>40475 - Change .sql data init files to XML files
+  <li>40495 - Add ISO Country and Currency Codes
+  <li>40496 - Another Round of Reserved Word Resolutions
+  <li>40529 - Entity from Database tool JSP
+  <li>40553 - When writing entity model, also write entity group file
+  <li>40816 - Tighten security in commonapp entity pages
+  <li>40975 - Make entity ref fast by making warning checking optional
+  </ul>
+<li><b>Core Subproject</b>
+  <ul>
+  <li>39440 - Updates to the RequestHandler
+  <li>39441 - Update ConfigXMLReader and all scheduler/request XML files
+  <li>39593 - New JSP Tag - Tag for GenericValue attributes
+  <li>39636 - Change FlexibleProperties to use Factory pattern
+  <li>39710 - Multiple Entity Definition XML Files
+  <li>39713 - findAllByPrimaryKeys
+  <li>39962 - Add column type warnings to DAO database checker
+  <li>40012 - XML import/export functions in value objects
+  <li>40341 - Add storeAll method to delegator
+  </ul>
+</ul>
+
+<hr>
+<h3><a name="Release 2001.09.29">Release 2001.09.29</a></h3>
+<hr>
+<h4>First Major Release</h4>
+<p>This release is the first major release of the Open For Business Project. The
+last two months have been very busy for those involved with development. The
+current software is now being used in commercial projects and will soon have a
+number of deployed sites. Because of the many changed in this release, I am
+going to keep these release notes on a higher level and not put too much detail
+in about specific features.</p>
+<p>The first real user facing application (eCommerce) is essentially stable and
+now available for use. The catalog management tool is in place with very basic
+features and more to come soon. After running into some major design
+inconveniences and doing some refactoring, the data handling layer is not
+looking very good. There are also a number of tools available for management of
+data and data definitions.</p>
+<h4>New Lighter Weight Default Deployment</h4>
+<p>This release of Open For Business can run entirely on Tomcat and the default
+platform is Tomcat 4.0, or Catalina. With the new Entity Engine CMP Entity Beans
+are no longer necessary for persistence, so JBoss is not required for simple
+deployments. For larger scaled deployments JBoss or any other EJB container can
+be used by the Entity Engine as a persistence server to take the persistence
+related transaction load off the JSP/Servlet servers. This can be done through
+some simple configuration changes.</p>
+<h4>eCommerce Application Added</h4>
+<p>The first release of the eCommerce Application is included in this release of
+Open For Business. It has been tested a fair amount and is running very nicely.
+There are three integrated modules in the current eCommerce application:
+catalog, user profile, and order. The catalog module provides all of the product
+and product category browsing and finding products through a keyword search that
+supports wildcards, and a separate web application is included for editing
+catalog information. The user profile module has general contact information
+functionality in addition to personal information, credit card information, and
+user login or login account information. The order module allows customers to
+place orders using a shopping cart, view their order history and status, and
+even reuse old orders by adding them to the cart.</p>
+<h4>Entity Engine Added</h4>
+<p>The old Entity Code Generator has been deprecated in favor of the new dynamic
+Entity Engine. The OFBiz Entity Engine is the first of the major Common Tool
+Components of the Open For Business Architecture. The Entity Engine is dynamic
+in that none of the code in the engine is entity definition specific. It is all
+generic code that supports the persistence of any entity defined in its XML
+files. These defined entities can be communicated over any interface and to or
+from any data source the has an implementation of the GenericHelper interface.
+Documentation for the Entity Engine is located in ofbiz/core/docs/entity.html.</p>
+<hr>
+<h3><a name="Release 2001.07.20">Release 2001.07.20</a></h3>
+<hr>
+<h4>New Controller Servlet Added</h4>
+<p>The architecture used in commonapp for separating presentation logic from 
+other logic and handling authorization was done with a dispatcher that was 
+invoked by each JSP. The new servlet controller handles not only the separation 
+of presentation logic from other logic and security authorization, but also 
+provides a way to control the flow of the application and externalize that
+from the events and views.&nbsp;</p>
+
+<p> The definitions to control the servlet controller
+are specified in an XML file whose location is specified in the web.xml file.
+This file can be used to define requests and the events and views that
+correspond to them, the security settings for them, and is also used to define
+view maps. The controller is designed to be flexible so that many advanced
+things can be done easily with it, such as logging in or adding an item to the
+shopping cart, and staying on the same page. It also provides added simplicity
+for the JSPs by allowing the combination of views and events in a request such
+as the UpdateUserLogin request which calls the UserLogin update event, and on
+success forward the user to the ViewUserLogin view, which is then mapped to the
+appropriate JSP.</p>
+
+<p>The servlet not only acts as a controller for the web application and its
+views and events, but also has a job scheduler so that events can be run
+repeatedly. An XML file is used to specify optional start and stop date/times,
+intervals and interval units, the event to invoke, and parameters to pass to the
+event. The location of this XML file is also specified in web.xml.</p>
+
+<p>The servlet controller is in the new 'core' module. A number of classes have 
+been moved from the commonapp module into this module, namely from commonapp.common
+to core.util. This is part of a move to remove from commonapp everything that
+does not fit the definition of its purpose. The commonapp module is meant to 
+contain the Common Application Components as described in the architecture
+documents. It will contain the entities shared by all of the other applications
+in the ofbiz project. This includes the entity beans, administration pages, and
+other pieces that are entity based.</p>
+
+<h4>Various Enhancements to the Entity Code Generator</h4>
+<p>A number of enhancement have been made to the entitygen module, and the code
+in the commonapp module has been regenerated to reflect the changes to the 
+templates in the entitygen module. Following is a list of those changes, and
+their corresponding task ids on the SourceForge site.</p>
+<ul>
+<li>34237: Merge ViewEntity.jsp.jsp &amp; EditEntity.jsp.jsp
+<li>34259: Optimize entitygen DefReader.java for speed
+<li>32122: Entity relation support
+<li>33906: Add isModified() to EntityBean.java.jsp
+<li>34129: Enhance User Interface: tabs in ViewEntity
+<li>33869: Improve ViewEntity.jsp relation use
+<li>34019: Add title Field to Relation
+<li>33870: Support order-by in Finder definitions
+</ul>
+<p>A number of other small changes have been made that are not associated with
+tasks. These include making EntityHelper generated classes more thread safe,
+and the use of the core.util.Debug class for logging debug messages.</p>
+
+<hr>
+<h3><a name="Release 2001.06.30">Release 2001.06.30</a></h3>
+<hr>
+<h4>Added Cache to Speed Up the Entity Code Generator</h4>
+<p>Entitygen now uses a cache for each entity definition it reads from the XML data descriptor file.
+This dramatically speeds up the generation of source code, especially for large
+definition files and generation of all files and snippets for each, or for all,
+entities.</p>
+
+<h4>Updated CommonApp for the new Data Model, and Tested/Refined the Data Model</h4>
+<p>The CommonApp module now uses the basic user login and security entities from
+the big Data Model. Also, the data model has been organized, expanded, debugged
+and partially tested. All files and snippets generate succesfully, and all Java
+files compile successfully and with the generated deployment descriptors they
+deploy successfully in JBoss. Even with all 401 of the entities, JBoss starts up
+in less than a minute on my 500Mhz Athlon. All SQL files run successfully in
+MySQL.</p>
+<p>The Data Model has been cleaned up and expanded. The datamodel-data.sql file
+is now cleaned up and works with the data model definition in the new
+datamodel.xml file. Part of this included adding tables to make the main
+entities extensible, and cleaning up the tables that are already there. Also,
+the Content module has been enhanced significantly to support very flexible
+content organization. Relations have been defined for the Content module, and
+for the entities which implement the extensibility of the main entities.&nbsp;</p>
+<p>All of this brings the total number of entities in the data model to 401. The
+datamodel.xml file is now almost 9,000 lines long and is about 540Kb large. With
+the speed ups and all of these entities it takes about 45 minutes to generate
+all of the files on my 500Mhz Athlon. It generates 2630 Java files, 1203 JSP
+files, and about 2Mb of snippets in 8 files. Running wc on these files shows a
+count of 954,865 lines, 3,074,034 words, and 35,290,606 characters.</p>
+<p>With this progress in place the Open For Business Data Model is now ready to
+be used as a basis for the various applications that we wish to build. As each
+application is built it will probably require various changes to the data model,
+but the basis is in place and is essentially bug free.</p>
+<h4>Bugs Fixed and Ease of Generated Entity Deployment Enhanced</h4>
+<p>A number of lurking bugs have been fixed in this release in the entitygen
+templates and some of the commonapp support code. While generating and test
+compiling and deploying all of the Data Model entities a number of bugs and
+omissions were found and corrected. Also, some small restructurings (especially
+with EntityWebEvent.java) and additions to the templates make deploying the
+generated entities into an application is much more simple.</p>
+
+<hr>
+<h3><a name="Release 2001.06.22">Release 2001.06.22</a></h3>
+<hr>
+<p>It's been a while since the last release, but I assure you, this one will be
+worth the wait! Actually the biggest reason for the delay was my two week
+vacation to the United Kingdom, mostly Wales and Scotland. Enjoy this new stuff!</p>
+<h4>Auto Generate JSP and Java Files for One Entity or All Entities in a XML
+Data Descriptor File</h4>
+<p>Instead of right clicking on each file and saving from the entitygen main
+page, you can now specify a root directory and generate all Java or JSP files in
+directories under the root directory which correspond to the package name for
+each entity. The files are generated in a ready to use state (given no bugs in
+the templates or data definitions). This is done with a JSP which uses an open
+source library to retrieve the contents of a URL, and then saves those contents
+to the corresponding file under the specified root directory and package
+directory. The library used for this is from the open source project JoBo which
+can be found at <a href="http://www.matuschek.net/software/jobo/index.html">http://www.matuschek.net/software/jobo/index.html</a>.
+Thanks for making some cool stuff Daniel!</p>
+<h4>Extensive Data Model Introduced</h4>
+<p>This is a very exciting new part of the project. The file ofbiz/commonapp/entitydef/datamodel.xml
+contains definitions for about 288 entities covering common areas of business
+data. This effort stems from browsing a bookstore a finding two excellent books
+by Len Silverston called The Data Model Resource Book Revised Edition - Volumes
+1 &amp; 2, published by John Wiley &amp; Sons. This is a good starting point for
+any enterprise system development effort. Changes will be made to this model
+over time to expand and (hopefully) improve it. Industry specific models to be
+used along with the main model will also be added to the project over time. Many
+Thanks to Len Silverston. Anyone using these models will no doubt benefit from
+having a copy of his books on hand. These models include models for: parties
+(persons, companies, etc.) products &amp; catalogs, ordering, invoicing,
+shipping, accounting, human resources, work effort &amp; flow, and content
+management.</p>
+<p>Using the new automated code generator, it is easy to build the EJBs, JSPs
+and other code related to these entities. A few interesting stats: 292 entities,
+877 JSPs, 1606 Java Files, 9 snippet files (one for each type of snippet, just to get
+a size on them), totaling ~23 Mb, ~650,000 lines, ~2,100,000 words, ~23,800,000 characters. The XML definition
+file alone is about 4500 lines long. And yes, it does take my poor little
+500Mhz Athlon a while to generate all of this code (around 2.5 hours for all of it). I am
+not including all of this generated code right now, and I don't plan to until
+the definitions settle down more and some of this stuff is actually tested, if
+ever. I may create a separate distribution for it too.</p>
+<h4>Relation Support in ViewEntity.jsp</h4>
+<p>All generated ViewEntity.jsp files now take advantage of the relation
+definitions in the XML descriptor file. There are two types of relations: one
+and many. For a one relation, a view of the related entity similar to the normal
+view is created and a links as well. For a many relation, the corresponding
+finder is called and all results are listed in the page. This is a neat thing to
+see. You can now create an order entity, an order line item entity, and link
+them up to create a fully functional order entry system, or catalog browsing, or
+whatever you might want to do with relational entities. Note that the relations
+for the data model mentioned above are not yet finished. I can't wait untill
+they are!</p>
+<h4>A Few Other Small Changes</h4>
+<p>More data types are now supported in the generated JSP files for field entry
+and display, including primary key fields. Also, the ValueUpdate methods in the
+EntityHelper and EntityBean files are changes so that they only update a field
+when it is not null. This is an easy way to specify whether or not each field
+should be updated. To set a field to null, simply use the field specific setter.</p>
+<hr>
+<h3><a name="Release 2001.06.01">Release 2001.06.01</a></h3>
+<hr>
+<h4>New Versions of JBoss and Tomcat</h4>
+<p>This release includes updates for the new versions of JBoss and Tomcat. JBoss
+version 2.2.2 and Tomcat version 3.2.2 are now being used.</p>
+<h4>Input Validation</h4>
+<p>All EditEntity.jsp files from the Entity Code Generator (including the
+current entity admin pages) now support server-side input validation. The
+validation routines can be found in commonapp/src/org/ofbiz/common/UtilValidate.java.
+Many of these validation routines are based on the Netscape JavaScript
+validation package (FormChek.js). They have all been converted to Java and
+modified to work in the server-side validation context. Some additional
+validation routines have also been added. The current library of validators
+includes everything from not being empty to algorithmic verification of credit
+card numbers to a validator for email addresses.<p>The Entity Code Generator
+automatically uses the validators specified in the XML entity descriptor file.
+This file for commonapp can be found in /commonapp/entitydef/commonapp.xml. Any
+number of validators can be specified for each field of an entity.<p>In the JSP
+when the user has an error, all of the data on the page is maintained and a full
+list of all current errors is displayed in a red list at the top.<h4>Field Type
+Shorthand in XML Entity Descriptor</h4>
+<p>Field types can be defined in each XML entity descriptor file. Each field
+type definition specifies a field-type name, and a java-type, a sql-type, and
+any number of validate elements. Once a field-type is defined it can be used by
+any field definition of an entity definition in the descriptor file. The
+field-type is used in place of the sql-type, the java-type, and may specify some
+validators. If a sql-type or java-type is used in the cmp-field definition, they
+will override the field-type defaults. If validators are specified in the cmp-field
+definition they are added to the validators from the field-type.</p>
+
+<p>A first attempt at a list of common field types has been added to the
+beginning of /commonapp/entitydef/commonapp.xml. Some version of these field
+types will be used in every entity definition file in the project. This makes
+the XML descriptor code more concise and provides for more consistency in data
+type definitions.</p>
+
+<h4>Data Layout for Entity Relation</h4>
+
+<p>The data layout of the XML Entity Descriptor file for specifying entity
+relations has been defined. the /commonapp/entitydef/commonapp.xml has a number
+of examples of how this feature might be used. It supports nested relations and
+relations where one or many instances of the related entity may be returned
+depending on how the relation is defined.</p>
+
+<p>Entity relation definitions will be used in two main places: the JSP
+ViewEntity.jsp file to show information related to the current entity and
+provide for easy access to viewing and editing related entities; and in the
+Entity.java file to provide convenient methods of looking up related entities.
+NOTE: These have NOT been implemented yet. The relation data model is in place
+in the current release of ofbiz, but it is not used in any of the templates.</p>
+
+<hr>
+<h3><a name="Release 2001.05.28">Release 2001.05.28</a></h3>
+<hr>
+<h4>No Cookie Session Management Support</h4>
+<p>A call to reponse.encodeURL has been added to all <font SIZE="2" COLOR="#0000c0">&lt;a
+href&gt;</font>s and all <font SIZE="2" COLOR="#0000c0">&lt;form action&gt;</font>s to support session management
+with cookies turned off. All existing JSPs in the project support this, and all JSPs generated by entitygen support this.
+
+<h4>Cache Management</h4>
+<p>Three JSPs have been added along with a number of web event handlers and
+extensions to the UtilCache class.&nbsp;</p>
+
+<p>First of all, a number of bugs have been fixed in the UtilCache class making
+the caches actually work now.&nbsp;</p>
+
+<p>The expire feature has been enhanced so that whenever get() or containsKey()
+are called hasExpired() is checked and on expiration the element is removed from
+the cache. The get() method will then return null, not being able to find the
+element, and the containsKey() method will return false, also not being able to
+find the element. This becomes simply a cache hit and the routine which uses the
+cache will load the value the normal way.</p>
+
+<p>All caches have a name that they pass to the constructor and then
+initialization parameters are loaded from the conf/cache.properties file. If no
+name is passed, a default name is used with a number appended to it to make it
+unique. A Hashtable now stores a collection of all of the caches so that they
+can be maintained easily through a generic maintenance utility.</p>
+
+<p>The JSPs that have been added are common/FindUtilCache.jsp, common/EditUtilCache.jsp,
+and common/FindUtilCacheElements.jsp. All cache parameters can now be viewed in
+real time including cache size, hitCount and missCount, and maxSize and
+expireTime can not only be viewed by changed through the JSP interface. The
+pages are permission protected using the security system. Individual cache lines
+can now also be viewed, and removed, through the JSP interface.</p>
+
+<h4>Security Speed Enhancements</h4>
+<p>The Security class now has two caches (using UtilCache) to speed up the
+hasPermission() and hasEntityPermission() methods. The first cache stores a
+collection of security groups for each person. If a person belongs to no
+security groups, an empty collection is put into the cache so that those look
+ups will be fast too. The second cache corresponds to the
+SecurityGroupPermission entity and caches Boolean values keyed on a
+SecurityGroupPermissionPK. The Boolean value is true if the corresponding
+SecurityGroupPermission entity exists in the database, or false if it does not.</p>
+
+<h4>EntityPK Class Enhancement</h4>
+<p>All EntityPK, or primary key, classes now override the toString() method to make display of primary key information more simple and consistent.</p>
+
+<hr>
+<h3><a name="Release 2001.05.24">Release 2001.05.24</a></h3>
+<hr>
+<h4>Initial Release</h4>
+<p>This initial release includes the first version of the Entity Code Generator (entitygen) module 
+and the basic pieces of the Common Application Components (commonapp) module.</p>
+<p>The entitygen module represents a first round attempt using JSPs as templates to generate Java code (including Entity EJBs), 
+SQL table creation code, XML deployment descriptors, and JSP user interfaces to manage entities defined in XML descriptor files
+which resemble the ejb-jar.xml deployment descriptor.
+<p>The commonapp module will eventually contain all of the core entities that any enterprise would likely need to run their business.
+At the moment it is only the frameword to support the code generated by entitygen. This includes a security framework, a caching framework,
+output formatting utilities, the web event handler (removes non-display logic from JSPs), and a basic user interface layout.

@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+
+<HTML>
+ <HEAD>
+  <TITLE>The Open For Business Project</TITLE>
+  <link rel="stylesheet" href="maincss.css" type="text/css">
+ </HEAD>
+ <BODY BGCOLOR="#FFFFFF">
+<table cellpadding='0' cellspacing='0' width="100%"><tr>
+<td width="1" style="background-color: black;"><img src="ofblights2.gif" width="64" height="72"></td>
+<td align=center valign=center style="background-color: black; color: white;"><h1>The Open For Business Project</h1><h3>J2EE Business Software in Open Source</h3></td>
+<td width="1"><img height=72 src="openforbusiness2.jpg"></td>
+</tr></table>
+
+<table cellpadding='0' cellspacing='0'><tr>
+  <td id=tab1 class=offtab>
+    <a href='index.html' id=lnk1 class=offlnk>Resources</a>
+  </td>    
+
+  <td id=tab2 class=offtab>
+    <a href='introduction.html' id=lnk2 class=offlnk>Introduction</a>
+  </td>    
+
+  <td id=tab3 class=offtab>
+    <a href='documents.html' id=lnk3 class=offlnk>Documents</a>
+  </td>
+
+  <td id=tab4 class=ontab>
+    <a href='blurb.html' id=lnk4 class=onlnk>Blurb</a>
+  </td>
+
+  <td id=tab5 class=offtab>
+    <a href='services.html' id=lnk5 class=offlnk>Services</a>
+  </td>
+</tr></table>
+
+<div class=areaheader><b>The Latest Marketing Blurb for The Open For Business Project</b></div>
+
+<br>Project on Source Forge: <a href="http://sourceforge.net/projects/ofbiz/">The Open For Business Project (ofbiz)</a>
+<br>
+<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" width="88" height="31" border="0" alt="SourceForge Logo"></A> 
+<br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
+<hr>
+<br>
+The Open For Business Project released the newest version (1.0 Beta 1) of its business automation 
+  tools, components, and applications on Monday October 29, 2001. More information 
+  can be found on the Open For Business web site at http://www.ofbiz.org or on 
+  the Open For Business SourceForge project site at http://sf.net/projects/ofbiz.
+<p>The
+over-arching vision of the Open For Business Project is to embrace and enable
+the 5 E's: Ease of Cost, Ease of Installation, Ease of Customization, Ease of
+Integration, and Ease of Use.
+<p>The tools and components available can shorten J2EE business project cycles by months through a well designed architecture, pre-built components, and
+a dynamic entity model based data source abstraction layer. The goal of the Open
+For Business project is to provide useful, standards compliant tools and
+applications. These standards will include: XML; J2EE; WfMC's XPDL; BPML; ebXML;
+GAAP &amp; FASB; OMG's GL, Party, etc; ArapXML; and other leading standards that
+relate to the various tools, components and applications of Open For Business
+(see http://www.ofbiz.org for more details).
+<p>The Open For Business Project currently includes the following features:
+<ul>
+<li>-- Data Model -- A work-in-progress data model with nearly 400 entities providing for business data needs such as content, party (person and organization), product, order, shipment, work effort, accounting, human resources, and security data. All main entities have related tables making them extensible for flexibility.
+  Around 30% of the data model is in a stable state where application flows have
+  been implemented on the data model and missing features added that were
+  required for the flows. The rest of the data model will be refined as
+  applications are implemented.
+<li>-- eCommerce -- An eCommerce application that is based on this flexible and
+  enterprise wide data model allowing it to be surpisingly easy to customize and
+  easy to integrate with enterprise systems, that is until Open For Business can
+  provide those enterprise systems in addition to an eCommerce application. The
+  template site has a clean look and feel and provides all of the basic needs
+  for eCommerce including a dynamic catalog, customer information management,
+  and order history and status.
+<li>-- Entity Engine -- The OFBiz Entity Engine provides a simple and
+  powerful API for data source independent retrieval and manipulation of data.
+  The API is dynamic so that no entity specific persistence or encoding/decoding
+  code ever needs to be written, not even an entity bean of some sort like the
+  EJB CMP and JDO specifications require. Changing entity definitions is as easy
+  as changing an XML file, or using the entity editor, running a data source
+  synchronization routine (to automatically create tables or columns or a
+  database), and then change the user facing code that displays or handles the
+  input of that data. Integrating with other systems is as easy as writing a
+  data layout contract in XML in the form of entity definitions, and then moving
+  on to your business and display logic, or reusing existing business and
+  display logic based on existing entity definitions. The patterns used in
+the Entity Engine include: Business Delegate, Value Object, Composite Entity
+(variation), Value Object Assembler, Service Locator, Data Access Object, Data Transfer HashMap and
+Generic Attribute Access.
+<li>-- Servlet Controller -- A servlet controller to abstract non-presentation logic, security and
+  web application flow. It implements the following J2EE patterns: Intercepting
+  Filter, Front Controller, View Helper, and Dispatcher View. The Composite View
+  pattern is used for organization of views in the JSPs of the project.
+<li>An event scheduler along with the controller to provide asynchronous repeated actions
+<li>Core utilities to provide services such as input validation, output formatting, property file access and caching, conditional debug logging, and date and time handling
+<li>A cache utility which supports caches of limited or unlimited size, element expiration, least recently used (LRU) element removal, and a web based cache management application
+<li>The default database is MySQL and the default application server is Tomcat
+  4.0, or Catalina Optional portions of the project which need an EJB container
+  include build and deployment scripts for JBoss. Deployment on other databases and application servers is easily done, including commercial databases and application servers. MySQL, Tomcat
+  and JBoss were chosen because they are freely avaiable, facilitating evaluation and proof of concept,
+  and initial product development. They are also sufficient for many final
+  deployment circumstances.
+  <li>The Open For Business Project currently has 52 developers involved from 
+    around the world. More are joining all the time. There is a large need for 
+    developers because of the wide variety and large number of applications that 
+    will be built. The SourceForge site statistics currently report almost 27,000 
+    page hits and 5,000 downloads since the project began. These numbers are ever 
+    increasing and demonstrate the popularity of the project in spite of the fact 
+    that this release contains the first real application based on the framework 
+    and architecture that has been developed. 
+</ul>
+<p>So what does the future of Open For Business look like? A quick glance at the
+architecture diagrams on our web site will reveal that we have barely begun to
+implement all of the planned components and applications that are planned. The
+future will bring rules, contraint and workflow engines, data analysis and
+content and knowledge management tools, and a whole suite of enterprise
+applications ranging everywhere from eCommerce to Warehouse Management to
+Accounting to Human Resources to Sales Force and Marketing Automation.&nbsp;
+<p>If it needs to be done in general business, it will be done in Open For
+Business. And if it's not done in general business, but is specific to your
+industry or particular company, it will be easy to build and integrate with Open
+For Business.
+<p>Services based on the Open For Business Project are available through affiliated consultants and companies. For more information see Services tab of the Open For Business site at www.ofbiz.org.
+ 
+
+ </BODY>
+
+</HTML>
+

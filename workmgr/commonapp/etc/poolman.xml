@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<poolman>
+
+  <management-mode>local</management-mode>
+
+  <datasource>
+    <dbname>Postgres</dbname>
+    <!-- <jndiName>java:/PostgresDataSource</jndiName> -->
+    <driver>org.postgresql.Driver</driver>
+    <url>jdbc:postgresql://127.0.0.1/ofbiz</url>
+    <username>ofbiz</username>
+    <password>ofbiz</password>
+    <minimumSize>2</minimumSize>
+    <maximumSize>20</maximumSize>
+    <connectionTimeout>600</connectionTimeout>
+    <userTimeout>12</userTimeout>
+    <shrinkBy>2</shrinkBy>
+    <debugging>false</debugging>
+  </datasource>
+
+
+  <datasource>
+    <dbname>MySql</dbname>
+    <!-- <jndiName>java:/MySqlDataSource</jndiName> -->
+    <driver>org.gjt.mm.mysql.Driver</driver>
+    <url>jdbc:mysql://127.0.0.1/ofbiz</url>
+    <username>mysqldb</username>
+    <password>mysqldb</password>
+    <minimumSize>2</minimumSize>
+    <maximumSize>20</maximumSize>
+    <connectionTimeout>600</connectionTimeout>
+    <userTimeout>12</userTimeout>
+    <shrinkBy>2</shrinkBy>
+    <debugging>false</debugging>
+  </datasource>
+
+
+  <datasource>
+    <dbname>Hsql</dbname>
+    <!-- <jndiName>java:/HsqlDataSource</jndiName> -->
+    <driver>org.hsqldb.jdbcDriver</driver>
+    <url>jdbc:hsqldb:../../data/ofbiz</url>
+    <username>sa</username>
+    <password></password>
+    <minimumSize>2</minimumSize>
+    <maximumSize>20</maximumSize>
+    <connectionTimeout>600</connectionTimeout>
+    <userTimeout>12</userTimeout>
+    <shrinkBy>2</shrinkBy>
+    <debugging>false</debugging>
+  </datasource>
+
+  <datasource>
+    <dbname>Oracle</dbname>
+    <!-- <jndiName>java:/OracleDataSource</jndiName> -->
+    <driver>oracle.jdbc.driver.OracleDriver</driver>
+    <url>jdbc:oracle:thin:@localhost:1521:ofbiz</url>
+    <username>ofbiz</username>
+    <password>ofbiz</password>
+    <minimumSize>2</minimumSize>
+    <maximumSize>20</maximumSize>
+    <connectionTimeout>600</connectionTimeout>
+    <userTimeout>12</userTimeout>
+    <shrinkBy>2</shrinkBy>
+    <debugging>true</debugging>
+    <logFile>/ofbiz/poolman.log</logFile>
+  </datasource>
+
+</poolman>
+
+
+
+
