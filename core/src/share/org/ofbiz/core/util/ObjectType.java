@@ -339,23 +339,27 @@ public class ObjectType {
         if (obj instanceof java.lang.String) {
             fromType = "String";
             String str = (String) obj;
-
             if ("String".equals(type) || "java.lang.String".equals(type)) {
                 return obj;
             }
-
             if (str.length() == 0) {
                 return null;
             }
 
             if ("Boolean".equals(type) || "java.lang.Boolean".equals(type)) {
                 Boolean value = null;
-
                 if (str.equalsIgnoreCase("TRUE"))
                     value = new Boolean(true);
                 else
                     value = new Boolean(false);
                 return value;
+            } else if ("Locale".equals(type) || "java.util.Locale".equals(type)) {
+                Locale loc = UtilMisc.parseLocale(str);
+                if (loc != null) {
+                    return loc;
+                } else {
+                    throw new GeneralException("Could not convert " + str + " to " + type + ": ");    
+                }
             } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 try {
                     NumberFormat nf = null;
@@ -636,6 +640,16 @@ public class ObjectType {
                 else
                     return new Integer(0);                
             } else { 
+                throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
+            }
+        } else if (obj instanceof java.util.Locale) {
+            fromType = "Locale";
+            Locale loc = (Locale) obj;
+            if ("Locale".equals(type) || "java.util.Locale".equals(type)) {
+                return loc;
+            } else if ("String".equals(type) || "java.lang.String".equals(type)) {
+                return loc.toString();
+            } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
             }
         } else {
