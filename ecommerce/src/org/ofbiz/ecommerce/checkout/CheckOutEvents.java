@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/09/14 00:32:44  epabst
+ * standardized order information for checkout and orderstatus.  Yet to do confirmorder and all of their product sections
+ *
  * Revision 1.8  2001/09/13 18:31:36  epabst
  * cleaned up
  * fixed billing account handling
@@ -77,6 +80,16 @@ import org.ofbiz.ecommerce.shoppingcart.*;
  * Created on August 23, 2001, 7:58 PM
  */
 public class CheckOutEvents {
+    public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
+        ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART); 
+        if (cart != null && cart.size() > 0) {
+            return "success";
+        } else {            
+            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Cart is empty.");
+            return "error";
+        }
+    }
+
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART); 
         StringBuffer errorMessage = new StringBuffer();
@@ -163,26 +176,8 @@ public class CheckOutEvents {
             orderShipmentPreference.set("maySplit", cart.getMaySplit());
             order.preStoreOther(orderShipmentPreference);
 
-            Iterator itemIter = cart.iterator();
-            int seqId = 1;
-            while (itemIter.hasNext()) {
-                ShoppingCartItem item = (ShoppingCartItem) itemIter.next();
-                String orderItemSeqId = String.valueOf(seqId++);
-                Map map = UtilMisc.toMap(
-                        "orderId", orderId,
-                        "orderItemSeqId", orderItemSeqId,
-                        "orderItemTypeId", "SALES_ORDER_ITEM",
-                        "productId", item.getProductId(),
-                        "quantity", new Double(item.getQuantity()), 
-                        "unitPrice", new Double(item.getPrice()));
-                map.putAll(UtilMisc.toMap(
-                        "shippingInstructions", cart.getShippingInstructions(),
-                        "itemDescription", item.getDescription(),
-                        "comment", item.getItemComment(),
-                        "correspondingPoId", cart.getPoNumber(),
-                        "statusId", "Ordered"));
-                order.preStoreOther(helper.makeValue("OrderItem", map));
-            }
+            order.preStoreOthers(cart.makeOrderItems(helper, orderId));
+
             final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER", 
                     "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
             for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
@@ -224,7 +219,7 @@ public class CheckOutEvents {
         String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
         //XXX need to add secret code since no security yet
         try {
-            java.net.URL url = new java.net.URL("http",request.getServerName(),request.getServerPort(),controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id"));
+            java.net.URL url = new java.net.URL(request.getSession().getAttribute(SiteDefs.SERVER_ROOT_URL) + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id"));
             HttpClient httpClient = new HttpClient(url);
             String content = httpClient.get();
             request.setAttribute("confirmorder", content);
