@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.13 2003/08/27 18:12:56 jonesde Exp $
+ * $Id: ComponentContainer.java,v 1.14 2003/12/01 20:43:39 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.base.util.UtilValidate;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.13 $
+  *@version    $Revision: 1.14 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
@@ -57,7 +57,7 @@ public class ComponentContainer implements Container {
     protected Classpath classPath = null;   
 
     /**
-     * @see org.ofbiz.base.start.StartupContainer#start(java.lang.String)
+     * @see org.ofbiz.base.container.Container#start(java.lang.String)
      */
     public boolean start(String configFileLocation) throws ContainerException {
         if (classPath == null) {
@@ -121,7 +121,7 @@ public class ComponentContainer implements Container {
         return true;
     }
     
-    private void loadComponentDirectory(String directoryName) throws ContainerException {
+    private void loadComponentDirectory(String directoryName) {
         Debug.logInfo("Loading component directory [" + directoryName + "]", module);
         File parentPath = new File(directoryName);
         if (!parentPath.exists() || !parentPath.isDirectory()) {
@@ -157,7 +157,7 @@ public class ComponentContainer implements Container {
         }                           
     }
     
-    private void loadComponent(ComponentConfig config) throws ContainerException {
+    private void loadComponent(ComponentConfig config) {
         List classpathInfos = config.getClasspathInfos();
         String configRoot = config.getRootLocation();
         configRoot = configRoot.replace('\\', '/');
@@ -208,7 +208,7 @@ public class ComponentContainer implements Container {
     }
     
     /**
-     * @see org.ofbiz.base.start.StartupContainer#stop()
+     * @see org.ofbiz.base.container.Container#stop()
      */
     public void stop() throws ContainerException {        
     }    
