@@ -47,7 +47,7 @@
     <%if (cart.getIsGift() != null) pageContext.setAttribute("isGift", cart.getIsGift());%>
 </ofbiz:if>
 <%GenericValue party = userLogin.getRelatedOne("Party");%>
-<%pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", null)); %>
+<%pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", UtilMisc.toList("sequenceNumber"))); %>
 <%pageContext.setAttribute("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false)); %>  
 <%pageContext.setAttribute("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"))); %>
 <%pageContext.setAttribute("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));%>

@@ -37,12 +37,19 @@
             <td class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
           </ofbiz:if>
           <td class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <ofbiz:unless name="person">
-            <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
-          </ofbiz:unless>
+
           <ofbiz:if name="person">
             <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("person", "firstName", "&nbsp;", "", pageContext);%><%EntityField.run("person", "lastName", "&nbsp;", "", pageContext);%>!</TD>
           </ofbiz:if>
+          <ofbiz:unless name="person">
+            <ofbiz:if name="partyGroup">
+              <TD width="90%" align=center class='headerCenter'>Welcome<%EntityField.run("partyGroup", "groupName", "", "", pageContext);%>!</TD>
+            </ofbiz:if>
+            <ofbiz:unless name="partyGroup">
+              <TD width="90%" align=center class='headerCenter'>Welcome!</TD>
+            </ofbiz:unless>
+          </ofbiz:unless>
+
           <%if(CatalogWorker.getCatalogQuickaddUse(pageContext)) {%>
             <td class="headerButtonRight"><a href="<ofbiz:url>/quickadd</ofbiz:url>" class="buttontext">Quick&nbsp;Add</a></td>
           <%}%>

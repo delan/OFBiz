@@ -11,11 +11,17 @@
     if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
     GenericValue person = (GenericValue) session.getAttribute(SiteDefs.PERSON);
+    GenericValue partyGroup = (GenericValue) session.getAttribute(SiteDefs.PARTY_GROUP);
     if (person == null) {
         person = userLogin == null ? null : userLogin.getRelatedOne("Person");
         if (person != null) session.setAttribute(SiteDefs.PERSON, person);
     }
     if (person != null) request.setAttribute("person", person);
+    else if (partyGroup == null) {
+        person = userLogin == null ? null : userLogin.getRelatedOne("PartyGroup");
+        if (partyGroup != null) session.setAttribute(SiteDefs.PARTY_GROUP, partyGroup);
+    }
+    if (partyGroup != null) request.setAttribute("partyGroup", partyGroup);
 
     String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
     String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
