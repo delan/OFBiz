@@ -115,18 +115,22 @@
         <!-- we might get away with a cache here since real serious errors will occur during the reservation service... but only if we need the speed -->
         <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems"/> <!-- use-cache="true" -->
         
-        <call-bsh><![CDATA[ parameters.put("availableToPromise", new Double(0)); ]]></call-bsh>
+        <calculate field-name="availableToPromise" map-name="parameters"><number value="0"/></calculate>
         <iterate entry-name="inventoryItem" list-name="inventoryItems">
             <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                 <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
-                    <call-bsh><![CDATA[ parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue() + 1.0)); ]]></call-bsh>
+                    <calculate field-name="availableToPromise" map-name="parameters">
+                        <calcop operator="get" field-name="availableToPromise" map-name="parameters"/>
+                        <number value="1.0"/>
+                    </calculate>
                 </if-compare>
             </if-compare>
             <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                 <if-not-empty field-name="availableToPromise" map-name="inventoryItem">
-                    <call-bsh><![CDATA[ 
-                        parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue() + ((Double) inventoryItem.get("availableToPromise")).doubleValue())); 
-                    ]]></call-bsh>
+                    <calculate field-name="availableToPromise" map-name="parameters">
+                        <calcop operator="get" field-name="availableToPromise" map-name="parameters"/>
+                        <calcop operator="get" field-name="availableToPromise" map-name="inventoryItem"/>
+                    </calculate>
                 </if-not-empty>
             </if-compare>
         </iterate>
@@ -202,10 +206,14 @@
                         <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
                         <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="newOiirEntity"/>
-                        <call-bsh><![CDATA[ newOiirEntity.put("quantity", new Double(1)); ]]></call-bsh>
+                        <calculate field-name="quantity" map-name="newOiirEntity"><number value="1"/></calculate>
                         <create-value value-name="newOiirEntity"/>
 
-                        <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(((Double) parameters.get("quantityNotReserved")).doubleValue() - 1.0)); ]]></call-bsh>
+                        <calculate field-name="quantityNotReserved" map-name="parameters">
+                            <calcop operator="subtract" field-name="quantityNotReserved" map-name="parameters">
+                                <number value="1.0"/>
+                            </calcop>
+                        </calculate>
                     </if-compare>
                 </if-compare>
                 <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
@@ -216,10 +224,14 @@
                                     to-field-name="availableToPromise" to-map-name="inventoryItem">
                                 <field-to-field field-name="availableToPromise" map-name="inventoryItem" to-field-name="deductAmount" to-map-name="parameters"/>
                                 <else>
-                                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="deductAmount"/>
+                                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="deductAmount" to-map-name="parameters"/>
                                 </else>
                             </if-compare-field>
-                            <call-bsh><![CDATA[inventoryItem.put("availableToPromise", new Double(((Double) inventoryItem.get("availableToPromise")).doubleValue() - ((Double) parameters.get("deductAmount")).doubleValue())); ]]></call-bsh>
+                            <calculate field-name="availableToPromise" map-name="inventoryItem">
+                                <calcop operator="subtract" field-name="availableToPromise" map-name="inventoryItem">
+                                    <calcop operator="get" field-name="deductAmount" map-name="parameters"/>
+                                </calcop>
+                            </calculate>
                             <store-value value-name="inventoryItem"/>
 
                             <!-- clear the by and caches -->        
@@ -246,7 +258,11 @@
                             <!-- use env variable named lastNonSerInventoryItem, lastNonSerOrderItemInventoryRes -->
                             <env-to-field env-name="newOiirEntity" field-name="lastNonSerOrderItemInventoryRes"/>
 
-                            <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(((Double) parameters.get("quantityNotReserved")).doubleValue() - ((Double) parameters.get("deductAmount")).doubleValue())); ]]></call-bsh>
+                            <calculate field-name="quantityNotReserved" map-name="parameters">
+                                <calcop operator="subtract" field-name="quantityNotReserved" map-name="parameters">
+                                    <calcop operator="get" field-name="deductAmount" map-name="parameters"/>
+                                </calcop>
+                            </calculate>
                         </if-compare>
                     </if-not-empty>
                     
@@ -268,7 +284,11 @@
                 <else>
                     <if-not-empty field-name="lastNonSerInventoryItem">
                         <!-- subtract from quantityNotReserved from the availableToPromise of existing inventory item -->
-                        <call-bsh><![CDATA[ lastNonSerInventoryItem.put("availableToPromise", new Double(((Double) lastNonSerInventoryItem.get("availableToPromise")).doubleValue() - ((Double) parameters.get("quantityNotReserved")).doubleValue())); ]]></call-bsh>
+                        <calculate field-name="availableToPromise" map-name="lastNonSerInventoryItem">
+                            <calcop operator="subtract" field-name="availableToPromise" map-name="lastNonSerInventoryItem">
+                                <calcop operator="get" field-name="quantityNotReserved" map-name="parameters"/>
+                            </calcop>
+                        </calculate>
                         <store-value value-name="lastNonSerInventoryItem"/>
 
                         <!-- clear the by and caches -->        
@@ -285,7 +305,11 @@
                         
                         <!-- update OrderItemInventoryRes record -->
                         <if-not-empty field-name="lastNonSerOrderItemInventoryRes">
-                            <call-bsh><![CDATA[ lastNonSerOrderItemInventoryRes.put("quantity", new Double(((Double) lastNonSerOrderItemInventoryRes.get("quantity")).doubleValue() + ((Double) parameters.get("quantityNotReserved")).doubleValue())); ]]></call-bsh>
+                            <calculate field-name="quantity" map-name="lastNonSerOrderItemInventoryRes">
+                                <calcop operator="add" field-name="quantity" map-name="lastNonSerOrderItemInventoryRes">
+                                    <calcop operator="get" field-name="quantityNotReserved" map-name="parameters"/>
+                                </calcop>
+                            </calculate>
                             <store-value value-name="lastNonSerOrderItemInventoryRes"/>
                             
                             <else>
@@ -309,7 +333,9 @@
                             <field-to-field field-name="facilityId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                             <field-to-field field-name="containerId" map-name="parameters" to-map-name="newNonSerInventoryItem"/>
                             <string-to-field string="NON_SERIAL_INV_ITEM" field-name="inventoryItemTypeId" map-name="newNonSerInventoryItem"/>
-                            <call-bsh><![CDATA[ newNonSerInventoryItem.put("availableToPromise", new Double(-((Double) parameters.get("quantityNotReserved")).doubleValue())); ]]></call-bsh>
+                            <calculate field-name="availableToPromise" map-name="newNonSerInventoryItem">
+                                <calcop operator="negative" field-name="quantityNotReserved" map-name="parameters"/>
+                            </calculate>
                             <create-value value-name="newNonSerInventoryItem"/>
 
                             <!-- clear the by and caches -->        
@@ -334,7 +360,7 @@
                         </else>
                     </if-not-empty>
                     
-                    <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(0.0)); ]]></call-bsh>
+                    <calculate field-name="quantityNotReserved" map-name="parameters"><number value="0"/></calculate>
                 </else>
             </if-compare>
         </if-compare>
