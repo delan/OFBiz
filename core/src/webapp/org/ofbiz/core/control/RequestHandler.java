@@ -24,16 +24,35 @@
  */
 package org.ofbiz.core.control;
 
-import java.io.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.event.*;
-import org.ofbiz.core.stats.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.view.*;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.event.EventFactory;
+import org.ofbiz.core.event.EventHandler;
+import org.ofbiz.core.event.EventHandlerException;
+import org.ofbiz.core.stats.ServerHitBin;
+import org.ofbiz.core.stats.VisitHandler;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.StringUtil;
+import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilProperties;
+import org.ofbiz.core.view.ViewFactory;
+import org.ofbiz.core.view.ViewHandler;
+import org.ofbiz.core.view.ViewHandlerException;
 
 /**
  * RequestHandler - Request Processor Object
@@ -500,7 +519,7 @@ public class RequestHandler implements Serializable {
 
         boolean useHttps = UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y");        
         
-        if (useHttps || fullPath || secure || encode) {
+        if (useHttps || fullPath || secure) {
             if (secure || (useHttps && requestManager.requiresHttps(requestUri) && !request.isSecure())) {
                 String server = httpsServer;
 
@@ -512,7 +531,7 @@ public class RequestHandler implements Serializable {
                 if (!httpsPort.equals("443")) {
                     newURL.append(":" + httpsPort);
                 }
-            } else if (fullPath || encode || (useHttps && !requestManager.requiresHttps(requestUri) && request.isSecure())) {
+            } else if (fullPath || (useHttps && !requestManager.requiresHttps(requestUri) && request.isSecure())) {
                 String server = httpServer;
 
                 if (server == null || server.length() == 0) {
