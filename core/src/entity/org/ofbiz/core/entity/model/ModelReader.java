@@ -383,21 +383,4 @@ public class ModelReader {
 
         return field;
     }
-
-    protected Document getDocument(String filename) throws GenericEntityConfException {
-        if (filename == null) return null;
-        Document document = null;
-
-        try {
-            document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename));
-        } catch (SAXException e) {
-            throw new GenericEntityConfException("Error reading entity model XML file " + filename, e);
-        } catch (ParserConfigurationException e) {
-            throw new GenericEntityConfException("Error reading entity model XML file " + filename, e);
-        } catch (IOException e) {
-            throw new GenericEntityConfException("Error reading entity model XML file " + filename, e);
-        }
-
-        return document;
-    }
 }

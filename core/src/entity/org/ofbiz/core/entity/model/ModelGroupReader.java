@@ -209,32 +209,4 @@ public class ModelGroupReader {
         }
         return enames;
     }
-
-    protected Document getDocument(String filename) throws GenericEntityConfException {
-        if (filename == null)
-            return null;
-
-        Document document = null;
-
-        try {
-            document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename));
-        } catch (SAXException sxe) {
-            // Error generated during parsing)
-            Exception x = sxe;
-
-            if (sxe.getException() != null) {
-                x = sxe.getException();
-            }
-
-            throw new GenericEntityConfException("Error while parsing the XML document", x);
-        } catch (ParserConfigurationException pce) {
-            // Parser with specified options can't be built
-            throw new GenericEntityConfException("XML Parser Configuration Error", pce);
-        } catch (IOException ioe) {
-            throw new GenericEntityConfException("IO Exception while parsing the XML document", ioe);
-        }
-
-        return document;
-    }
-
 }

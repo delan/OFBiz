@@ -210,26 +210,4 @@ public class ModelFieldTypeReader {
 
         return field;
     }
-
-    protected Document getDocument(String filename) {
-        if (filename == null) return null;
-        Document document = null;
-
-        try {
-            document = UtilXml.readXmlDocument(UtilURL.fromFilename(filename));
-        } catch (SAXException sxe) {
-            // Error generated during parsing)
-            Exception x = sxe;
-
-            if (sxe.getException() != null) x = sxe.getException();
-            x.printStackTrace();
-        } catch (ParserConfigurationException pce) {
-            // Parser with specified options can't be built
-            pce.printStackTrace();
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
-        }
-
-        return document;
-    }
 }
