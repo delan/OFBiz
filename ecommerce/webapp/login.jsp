@@ -28,6 +28,7 @@
  */
 %>
 
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%String previousParams=(String) session.getAttribute(SiteDefs.PREVIOUS_PARAMS);%>
 
 <br>

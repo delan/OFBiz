@@ -391,28 +391,33 @@
     <!-- End of Request Mappings -->
 
     <!-- View Mappings -->
-    <view-map name="main" type="region"/>
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="login" page="/login.jsp"/>
-    <view-map name="showcart" page="/cart/showcart.jsp"/>
-    <view-map name="catalog" page="/catalog/catalog.jsp"/>
-    <view-map name="quickadd" page="/catalog/quickadd.jsp"/>
-    <view-map name="category" page="/catalog/category.jsp"/>
-    <view-map name="product" page="/catalog/product.jsp"/>
-    <view-map name="keywordsearch" page="/catalog/keywordsearch.jsp"/>
-    <view-map name="shippingAddress" page="/shipping/shipping.jsp"/>
-    <view-map name="checkoutoptions" page="/order/checkoutoptions.jsp"/>
-    <view-map name="checkout" page="/order/checkout.jsp"/>
-    <view-map name="confirmorder" page="/order/confirmorder.jsp"/>
-    <view-map name="showconfirmorder" page="/order/showconfirmorder.jsp"/>
-    <view-map name="orderhistory" page="/order/orderhistory.jsp"/>
-    <view-map name="orderstatus" page="/order/orderstatus.jsp"/>
-    <view-map name="viewprofile" page="/customer/viewprofile.jsp"/>
-    <view-map name="newcustomer" page="/customer/newcustomer.jsp"/>
-    <view-map name="newAffiliate" page="/newaffiliate.jsp"/>
-    <view-map name="editcontactmech" page="/customer/editcontactmech.jsp"/>
-    <view-map name="editcreditcard" page="/customer/editcreditcard.jsp"/>
-    <view-map name="changepassword" page="/customer/changepassword.jsp"/>
-    <view-map name="editperson" page="/customer/editperson.jsp"/>
+    <view-map name="main" type="region"/>
+    <view-map name="login" type="region"/>
+    
+    <view-map name="showcart" type="region"/>
+    
+    <view-map name="quickadd" type="region"/>
+    <view-map name="category" type="region"/>
+    <view-map name="product" type="region"/>
+    <view-map name="keywordsearch" type="region"/>
+    
+    <view-map name="shippingAddress" type="region"/>
+    
+    <view-map name="checkoutoptions" type="region"/>
+    <view-map name="checkout" type="region"/>
+    <view-map name="confirmorder" type="region"/>
+    <view-map name="showconfirmorder" type="region"/>
+    <view-map name="orderhistory" type="region"/>
+    <view-map name="orderstatus" type="region"/>
+    
+    <view-map name="viewprofile" type="region"/>
+    <view-map name="newcustomer" type="region"/>
+    <view-map name="editcontactmech" type="region"/>
+    <view-map name="editcreditcard" type="region"/>
+    <view-map name="changepassword" type="region"/>
+    <view-map name="editperson" type="region"/>
+    
+    <view-map name="newAffiliate" type="region"/>
     <!-- End of View Mappings -->
 </site-conf>

@@ -1,6 +1,5 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 

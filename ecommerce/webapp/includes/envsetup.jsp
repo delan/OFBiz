@@ -48,7 +48,4 @@
     layoutSettings.put("boxBottomColor", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.bottom.color", "white"));
     layoutSettings.put("boxTopPadding", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.top.padding", "4"));
     layoutSettings.put("boxBottomPadding", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "box.bottom.padding", "4"));
-
-    Debug.log("company name: " + layoutSettings.get("companyName"));
-    Debug.log(layoutSettings.toString());
 %>
