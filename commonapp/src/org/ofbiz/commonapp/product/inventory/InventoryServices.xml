@@ -94,7 +94,7 @@
         <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
     </simple-method>
 
-    <simple-method method-name="getProductInventoryAvailable" short-description="Get Inventory Available for a Product">
+    <simple-method method-name="getProductInventoryAvailable" short-description="Get Inventory Available for a Product" login-required="false">
         <!-- 
             this method can be called with some optional parameters: 
                 -facilityId
@@ -127,5 +127,60 @@
         </iterate>
         
         <field-to-result field-name="availableToPromise" map-name="parameters"/>
+    </simple-method>
+    <simple-method method-name="reserveProductInventory" short-description="Reserve Inventory for a Product">
+        <!-- 
+            this method can be called with some optional parameters: 
+                -facilityId
+                -containerId
+            If the service definitions are used then only one of these two will ever be specified, or neither of them.
+                
+            Whatever it is called with, it will basicly get a list of InventoryItems and reserve the first available inventory.
+        -->
+
+        <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupFieldMap"/>
+        <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupFieldMap"/>
+        <field-to-field field-name="containerId" map-name="parameters" to-map-name="lookupFieldMap"/>
+        
+        <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItems" use-cache="true"/>
+        
+        <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(0)); ]]></call-bsh>
+        <iterate entry-name="inventoryItem" list-name="inventoryItems">
+            <if-compare value="SERIALIZED_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                <if-compare value="INV_AVAILABLE" operator="equals" field-name="statusId" map-name="inventoryItem">
+                    <call-bsh><![CDATA[ parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue + 1.0)); ]]></call-bsh>
+                </if-compare>
+            </if-compare>
+            <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
+                <if-not-empty field-name="availableToPromise" map-name="inventoryItem">
+                    <call-bsh><![CDATA[ 
+                        parameters.put("availableToPromise", new Double(((Double) parameters.get("availableToPromise")).doubleValue + ((Double) inventoryItem.get("availableToPromise")).doubleValue())); 
+                    ]]></call-bsh>
+                </if-not-empty>
+            </if-compare>
+        </iterate>
+        
+        <field-to-result field-name="availableToPromise" map-name="parameters"/>
+        
+        <!-- ====================== -->
+        <field-to-field field-name="inventoryItemId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
+        
+        <call-bsh><![CDATA[ 
+            inventoryItem.put("availableToPromise", new Double(((Double) inventoryItem.get("availableToPromise")).doubleValue - ((Double) parameters.get("quantity")).doubleValue())); 
+        ]]></call-bsh>
+        <store-value value-name="inventoryItem"/>
+
+        <!-- clear the by and caches -->        
+        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapOne"/>
+        <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
+
+        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
+        <field-to-field field-name="facilityId" map-name="newEntity" to-map-name="clearCacheMapTwo"/>
+        <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapTwo"/>
+
+        <field-to-field field-name="productId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
+        <field-to-field field-name="containerId" map-name="newEntity" to-map-name="clearCacheMapThree"/>
+        <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
     </simple-method>
 </simple-methods>
