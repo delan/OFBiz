@@ -55,6 +55,7 @@
         <copy file="lib/common/castor-0.9.3.9.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/hsqldb.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/postgresql.jar" toDir="${catalina.dir}/common/lib"/>
+        <copy file="lib/common/sapdbc.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/log4j.jar" toDir="${catalina.dir}/common/lib"/>
         <copy file="lib/common/mm.mysql-2.0.14-bin.jar" toDir="${catalina.dir}/common/lib"/>
 
@@ -104,6 +105,7 @@
         <copy file="lib/common/castor-0.9.3.9.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/hsqldb.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/postgresql.jar" toDir="${catalina.dir}/shared/lib"/>
+        <copy file="lib/common/sapdbc.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/log4j.jar" toDir="${catalina.dir}/shared/lib"/>
         <copy file="lib/common/mm.mysql-2.0.14-bin.jar" toDir="${catalina.dir}/shared/lib"/>
 
