@@ -39,6 +39,8 @@ import org.ofbiz.core.util.*;
  * @since      2.0
  */
 public class ThirdPartyEvents {
+    
+    public static final String module = ThirdPartyEvents.class.getName();
 
     public final static String DISTRIBUTOR_ID = "_DISTRIBUTOR_ID_";
     public final static String AFFILIATE_ID = "_AFFILIATE_ID_";
@@ -110,7 +112,7 @@ public class ThirdPartyEvents {
         try {
             ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/ecommerce.properties");
         } catch (java.net.MalformedURLException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
 
         String store = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "distributor.store.customer");
@@ -125,7 +127,7 @@ public class ThirdPartyEvents {
         try {
             party = userLogin == null ? null : userLogin.getRelatedOne("Party");
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee);
+            Debug.logWarning(gee, module);
         }
 
         if (party != null) {
@@ -151,9 +153,9 @@ public class ThirdPartyEvents {
                     toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));
                     try {
                         delegator.storeAll(toBeStored);
-                        if (Debug.infoOn()) Debug.logInfo("Distributor for user " + party.getString("partyId") + " set to " + distributorId);
+                        if (Debug.infoOn()) Debug.logInfo("Distributor for user " + party.getString("partyId") + " set to " + distributorId, module);
                     } catch (GenericEntityException gee) {
-                        Debug.logWarning(gee);
+                        Debug.logWarning(gee, module);
                     }
                 } else {
                     // no distributorId is available
@@ -187,7 +189,7 @@ public class ThirdPartyEvents {
         try {
             ecommercePropertiesUrl = ((ServletContext) request.getAttribute("servletContext")).getResource("/WEB-INF/ecommerce.properties");
         } catch (java.net.MalformedURLException e) {
-            Debug.logWarning(e);
+            Debug.logWarning(e, module);
         }
 
         String store = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "affiliate.store.customer");
@@ -202,7 +204,7 @@ public class ThirdPartyEvents {
         try {
             party = userLogin == null ? null : userLogin.getRelatedOne("Party");
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee);
+            Debug.logWarning(gee, module);
         }
 
         if (party != null) {
@@ -220,9 +222,9 @@ public class ThirdPartyEvents {
                     partyRelationship.set("partyRelationshipTypeId", "SALES_AFFILIATE");
                     try {
                         delegator.create(partyRelationship);
-                        if (Debug.infoOn()) Debug.logInfo("Affiliate for user " + party.getString("partyId") + " set to " + affiliateId);
+                        if (Debug.infoOn()) Debug.logInfo("Affiliate for user " + party.getString("partyId") + " set to " + affiliateId, module);
                     } catch (GenericEntityException gee) {
-                        Debug.logWarning(gee);
+                        Debug.logWarning(gee, module);
                     }
                 } else {
                     // no distributorId is available
@@ -245,7 +247,7 @@ public class ThirdPartyEvents {
         try {
             return EntityUtil.getFirst(EntityUtil.filterByDate(party.getRelatedByAnd("FromPartyRelationship", UtilMisc.toMap("roleTypeIdTo", roleTypeTo)), true));
         } catch (GenericEntityException gee) {
-            Debug.logWarning(gee);
+            Debug.logWarning(gee, module);
         }
         return null;
     }
