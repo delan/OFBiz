@@ -238,17 +238,10 @@
     </service>
     
     <service name="autoCancelOrderItems" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="autoCancelItems">
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="cancelFlaggedSalesOrders">
         <description>Batch service for doing auto-cancel on set items</description>
         <!-- this service has no parameters IN or OUT -->
     </service>        
-    
-    <service name="checkOrderForBackOrders" engine="java"
-            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="checkBackOrderItems">
-    	<description>Check the order for items backordered</description>
-    	<attribute name="orderId" type="String" mode="IN" optional="false"/>
-    	<attribute name="backOrderedItems" type="List" mode="OUT" optional="false"/>
-    </service>
     
     <service name="setAllowOrderSplit" engine="java" auth="true"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="allowOrderSplit">
