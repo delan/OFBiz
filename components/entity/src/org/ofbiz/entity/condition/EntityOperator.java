@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.5 2004/07/07 00:15:25 doogie Exp $
+ * $Id: EntityOperator.java,v 1.6 2004/07/07 05:03:40 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.entity.condition;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -42,7 +43,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.0
  */
 public abstract class EntityOperator extends EntityConditionBase {
@@ -185,8 +186,8 @@ public abstract class EntityOperator extends EntityConditionBase {
     protected void appendRHSList(List entityConditionParams, StringBuffer whereStringBuffer, ModelField field, Object rhs) {
         whereStringBuffer.append('(');
 
-        if (rhs instanceof List) {
-            Iterator rhsIter = ((List) rhs).iterator();
+        if (rhs instanceof Collection) {
+            Iterator rhsIter = ((Collection) rhs).iterator();
 
             while (rhsIter.hasNext()) {
                 Object inObj = rhsIter.next();

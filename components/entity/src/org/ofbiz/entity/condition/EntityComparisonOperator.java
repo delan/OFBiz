@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.3 2004/07/07 00:15:24 doogie Exp $
+ * $Id: EntityComparisonOperator.java,v 1.4 2004/07/07 05:03:40 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
 
 package org.ofbiz.entity.condition;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +47,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {
@@ -213,7 +214,7 @@ public class EntityComparisonOperator extends EntityOperator {
                 return false;
             }
             return true;
-        } else if (((List) rhs).contains(lhs)) {
+        } else if (((Collection) rhs).contains(lhs)) {
             return true;
         }
         return false;
