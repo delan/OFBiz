@@ -118,7 +118,8 @@ public class PayPalEvents {
         parameters.put("return", returnUrl);
         parameters.put("cancel_return", cancelReturnUrl);
         parameters.put("image_url", imageUrl);
-        parameters.put("no_note", "1");   
+        parameters.put("no_note", "1");        // no notes allowed in paypal (not passed back)
+        parameters.put("no_shipping", "1");    // no shipping address required (local shipping used)
         
         HttpClient hclient = new HttpClient();
         String encodedParameters = hclient.encodeArgs(parameters);
