@@ -24,12 +24,17 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.dtd,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ *  $Id: ofbiz-component.dtd,v 1.2 2003/08/16 22:57:35 jonesde Exp $
 -->
 
-<!ELEMENT ofbiz-component ( resource-loader+, transaction-manager-jndi? )>
+<!ELEMENT ofbiz-component ( depends-on*, resource-loader+, classpath*, entity-resource*, service-resource*, webapp* )>
 <!ATTLIST ofbiz-component 
     name CDATA #REQUIRED
+>
+
+<!ELEMENT depends-on EMPTY>
+<!ATTLIST depends-on
+    component-name CDATA #REQUIRED
 >
 
 <!ELEMENT resource-loader EMPTY>
@@ -74,10 +79,10 @@
 
 <!--
 <ofbiz-component name="core">
-    <resource-loader name="maincomponent" class="org.ofbiz.core.config.ComponentFileLoader"/>
-    <resource-loader name="mainfile" class="org.ofbiz.core.config.FileLoader" prepend-env="ofbiz.home" prefix=""/>
-    <resource-loader name="maincp" class="org.ofbiz.core.config.ClasspathLoader"/>
-    <resource-loader name="mainurl" class="org.ofbiz.core.config.UrlLoader"/>
+    <resource-loader name="maincomponent" type="component"/>
+    <resource-loader name="mainfile" type="file" prepend-env="ofbiz.home" prefix=""/>
+    <resource-loader name="maincp" type="classpath"/>
+    <resource-loader name="mainurl" type="url"/>
 
     <classpath type="jar" loader="maincomponent" location="lib/product.jar"/>
     <classpath type="dir" loader="maincomponent" location="classes"/>
