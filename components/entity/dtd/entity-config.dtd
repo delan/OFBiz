@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  This is the DTD for the Open For Business Entity Engine configuration XML file.
- *  $Id: entity-config.dtd,v 1.8 2004/04/20 17:31:29 ajzeneski Exp $
+ *  $Id: entity-config.dtd,v 1.9 2004/04/22 22:42:11 doogie Exp $
 -->
 
 <!-- ====================== Root Element ======================= -->
@@ -117,6 +117,7 @@
     add-missing-on-start ( true | false ) "false"
     use-pk-constraint-names ( true | false ) "true"
     constraint-name-clip-length CDATA "30"
+    cursor-name CDATA "cursor"
     result-fetch-size CDATA "0"
     use-foreign-keys ( true | false ) "true"
     use-foreign-key-indices ( true | false ) "true"

@@ -1,5 +1,5 @@
 /*
- * $Id: TyrexConnectionFactory.java,v 1.3 2003/09/11 13:23:26 jonesde Exp $
+ * $Id: TyrexConnectionFactory.java,v 1.4 2004/04/22 22:42:16 doogie Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ package org.ofbiz.entity.transaction;
  * Tyrex ConnectionFactory - central source for JDBC connections from Tyrex
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class TyrexConnectionFactory {
@@ -62,7 +62,7 @@ public class TyrexConnectionFactory {
             // try once
             ds = (EnabledDataSource) dsCache.get(helperName);
             if (ds != null) {
-                return TransactionUtil.enlistConnection(ds.getXAConnection());
+                return TransactionFactory.getCursorConnection(helperName, TransactionUtil.enlistConnection(ds.getXAConnection()));
             }
 
             synchronized (TyrexConnectionFactory.class) {
@@ -87,7 +87,7 @@ public class TyrexConnectionFactory {
                 ds.setLogWriter(Debug.getPrintWriter());
 
                 dsCache.put(helperName, ds);
-                return TransactionUtil.enlistConnection(ds.getXAConnection());
+                return TransactionFactory.getCursorConnection(helperName, TransactionUtil.enlistConnection(ds.getXAConnection()));
             }
         }
 

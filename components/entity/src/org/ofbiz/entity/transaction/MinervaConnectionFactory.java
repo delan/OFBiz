@@ -1,5 +1,5 @@
 /*
- * $Id: MinervaConnectionFactory.java,v 1.1 2003/10/14 02:49:51 ajzeneski Exp $
+ * $Id: MinervaConnectionFactory.java,v 1.2 2004/04/22 22:42:15 doogie Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * MinervaConnectionFactory - Central source for Minerva JDBC Objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class MinervaConnectionFactory {
@@ -53,7 +53,7 @@ public class MinervaConnectionFactory {
     public static Connection getConnection(String helperName, Element jotmJdbcElement) throws SQLException, GenericEntityException {                               
         XAPoolDataSource pds = (XAPoolDataSource) dsCache.get(helperName);        
         if (pds != null) {                                  
-            return pds.getConnection();
+            return TransactionFactory.getCursorConnection(helperName, pds.getConnection());
         }
         
         synchronized (JotmConnectionFactory.class) {            
@@ -146,7 +146,7 @@ public class MinervaConnectionFactory {
             // cache the pool
             dsCache.put(helperName, pds);        
                                                       
-            return pds.getConnection();
+            return TransactionFactory.getCursorConnection(helperName, pds.getConnection());
         }                
     }
     
