@@ -239,12 +239,6 @@ public class otsUtils {
         	return "error";		//productstore not found
         }
 
-        // securitygroup which can only access the store and related items of the same shopname as the PartyGroupId
-        GenericValue securityGroup = writeEntity(delegator, writer, "SecurityGroup", UtilMisc.toMap("groupId","StoreAdmin"));
-        if (securityGroup == null)	{
-            request.setAttribute("_ERROR_MESSAGE_","SecurityGroup: StoreAdmin not found");
-            return "error";
-        }
         
         // get the orders placed
 
@@ -252,65 +246,23 @@ public class otsUtils {
         // retrieve the access users. When it is a group, retrieve its users
         explode(productStore, "ProductStoreRole",false, "Party",true, "UserLogin",false,"UserLoginSecurityGroup",false,"SecurityGroup",true, writer);
         explode(productStore, "ProductStoreRole",true, "Party",false, "UserLogin",true,"UserLoginSecurityGroup",true,"SecurityGroup",false, writer);
-/*		List productStoreRoles = null;
-        try { productStoreRoles = productStore.getRelated("ProductStoreRole"); } catch (GenericEntityException e) {;}
-        if (productStoreRoles != null && productStoreRoles.size() > 0)	{
-            Iterator psr = productStoreRoles.iterator();
-            while (psr.hasNext())	{
-                GenericValue productStoreRole = (GenericValue) psr.next();
-                // write store to party group relation
-                productStoreRole.writeXmlText(writer,""); numberWritten++;
-                GenericValue partyGroup = null;
-                try { partyGroup = productStoreRole.getRelatedOne("PartyGroup");	} catch (GenericEntityException e) {;}
-                if (partyGroup != null) {
-                    partyGroup.writeXmlText(writer,""); numberWritten++;
-                    // get loginId's
-                    explode(partyGroup,"UserLogin", "UserLoginSecurityGroup", writer);
-                    // find related parties in the party file
-                    List parties = null;
-                    try { parties = partyGroup.getRelated("Party"); } catch (GenericEntityException e) {;}
-                    if (parties != null && parties.size() > 0)	{
-                        Iterator p = parties.iterator();
-                        while (p.hasNext())	{
-                            GenericValue party = (GenericValue) p.next();
-                            party.writeXmlText(writer,""); numberWritten++;
-                            explode(party,"UserLogin",writer);
-                        }
-                    }
-                }
-            }
-        }
-    */	//get the related website records id
+    
+        //get the related website records id
         explode(productStore, "WebSite", writer);
+
         // get keyworde override
         explode(productStore, "ProductStoreKeywordOvrd", writer);
         // get the payment settings
         explode(productStore, "ProductStorePaymentSetting",writer);
+
         // get the email settings
         explode(productStore, "ProductStoreEmailSetting",writer);
+
         // get the ProductStoreShipmentMeth
-        List ships = null;
-        List exp = UtilMisc.toList(new EntityExpr("productStoreId", EntityOperator.EQUALS, productStoreId));
-        try {	ships = delegator.findByAnd("ProductStoreShipmentMeth", exp); } catch (GenericEntityException e) {	; }
-        if (ships != null && ships.size() > 0)	{
-            Iterator s = ships.iterator();
-            while (s.hasNext())	{
-            GenericValue ship = (GenericValue) s.next();
-            ship.writeXmlText(writer, ""); numberWritten++;
-            }
-        }
+        explode(productStore, "ProductStoreShipmentMeth",writer);
 
         // get the simple tax
-        List taxes = null;
-        List exp1 = UtilMisc.toList(new EntityExpr("productStoreId", EntityOperator.EQUALS, productStoreId));
-        try {	taxes = delegator.findByAnd("SimpleSalesTaxLookup", exp1); } catch (GenericEntityException e) {	; }
-        if (taxes != null && taxes.size() > 0)	{
-            Iterator s = taxes.iterator();
-            while (s.hasNext())	{
-            GenericValue tax = (GenericValue) s.next();
-            tax.writeXmlText(writer, ""); numberWritten++;
-            }
-        }
+        explode(productStore, "SimpleSalesTaxLookup",writer);
 
         // see if the primary category exists, if not create
         GenericValue productCategory = null;
@@ -392,7 +344,7 @@ public class otsUtils {
                 // try to get product content
                 explode(product, "ProductContent", "Content", "DataResource", writer);
                 // product reviews
-                explode(product, "ProductReview", "StatusItem", writer);
+//                explode(product, "ProductReview", "StatusItem", writer);
             }
         }
 
@@ -409,12 +361,11 @@ public class otsUtils {
                 GenericValue fixedAsset = (GenericValue) f.next();
                 // check if techdataCalendar needs to be created.
                 if (fixedAsset.get("calendarId") != null)	{
-                     explode(fixedAsset,"TechDataCalendar", writer);
+                     explode(fixedAsset,"TechDataCalendar", writer);  // tech data first
                      explode(fixedAsset,"TechDataCalendar", false, "TechDataCalendarExcDay",true, writer);
                 }
-                else {
-                	fixedAsset.writeXmlText(writer, ""); numberWritten++;
-                }
+                // fixed asset itself
+                fixedAsset.writeXmlText(writer, ""); numberWritten++;
 
                 // get relation to product
                 List fixedAssetProducts = null;
