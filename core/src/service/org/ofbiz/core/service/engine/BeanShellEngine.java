@@ -23,7 +23,7 @@
  *
  */
 
-package org.ofbiz.core.service;
+package org.ofbiz.core.service.engine;
 
 import java.io.*;
 import java.net.*;
@@ -32,6 +32,9 @@ import java.lang.reflect.*;
 
 import bsh.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.ServiceDispatcher;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.GenericServiceException;
 
 /**
  * BeanShell Script Service Engine

@@ -31,6 +31,7 @@ import java.lang.reflect.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.engine.*;
 
 /**
  * Standard Java Static Method Service Engine

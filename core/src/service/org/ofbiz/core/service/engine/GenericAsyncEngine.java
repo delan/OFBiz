@@ -23,7 +23,7 @@
  *
  */
 
-package org.ofbiz.core.service;
+package org.ofbiz.core.service.engine;
 
 import java.io.*;
 import java.util.*;
@@ -34,6 +34,7 @@ import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.job.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**

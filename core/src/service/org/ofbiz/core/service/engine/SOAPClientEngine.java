@@ -23,7 +23,7 @@
  *
  */
 
-package org.ofbiz.core.service;
+package org.ofbiz.core.service.engine;
 
 import java.net.*;
 import java.util.*;
@@ -31,6 +31,7 @@ import java.util.*;
 import org.apache.axis.client.*;
 import org.apache.axis.encoding.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
 
 /**
  * Generic Service SOAP Interface

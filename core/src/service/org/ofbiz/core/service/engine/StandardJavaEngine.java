@@ -23,12 +23,13 @@
  *
  */
 
-package org.ofbiz.core.service;
+package org.ofbiz.core.service.engine;
 
 import java.util.*;
 import java.lang.reflect.*;
 
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.*;
 
 /**
  * Standard Java Static Method Service Engine

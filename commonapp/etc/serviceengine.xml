@@ -7,10 +7,10 @@
     <!-- Thread pool configuration (max/min threads, uses to live and time to live) -->
     <thread-pool ttl="18000000" wait-millis="750" jobs="3" min-threads="5" max-threads="20" poll-db-millis="20000"/>
 
-    <engine name="java" class="org.ofbiz.core.service.StandardJavaEngine"/>
+    <engine name="java" class="org.ofbiz.core.service.engine.StandardJavaEngine"/>
     <engine name="workflow" class="org.ofbiz.core.workflow.WorkflowEngine"/>
-    <engine name="bsh" class="org.ofbiz.core.service.BeanShellEngine"/>
-    <engine name="soap" class="org.ofbiz.core.service.SOAPClientEngine"/>
+    <engine name="bsh" class="org.ofbiz.core.service.engine.BeanShellEngine"/>
+    <engine name="soap" class="org.ofbiz.core.service.engine.SOAPClientEngine"/>
     <engine name="simple" class="org.ofbiz.core.minilang.SimpleServiceEngine"/>
 
     <resource-loader name="mainfile" class="org.ofbiz.core.config.FileLoader"
