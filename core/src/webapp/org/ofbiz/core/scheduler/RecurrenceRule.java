@@ -9,10 +9,31 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 /**
+ * <p><b>Title:</b> Recurrence Rule Object
+ * <p><b>Description:</b> None
+ * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * <p>The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author  Andy Zeneski (jaz@zsolv.com)
  * @version 1.0
- * Created on November 6, 2001, 11:37 AM
+ * Created on November 6, 2001
  */
 public class RecurrenceRule {
     
@@ -196,7 +217,7 @@ public class RecurrenceRule {
      *@returns True if the date is within the rules
      */
     public boolean isValid(Date startDate, Date date) {
-        return false;
+        return isValid(startDate.getTime(),date.getTime());
     }
     
     /** Tests the date to see if it falls within the rules
@@ -204,6 +225,14 @@ public class RecurrenceRule {
      *@returns True if the date is within the rules
      */
     public boolean isValid(long startTime, long dateTime) {
+        long testTime = startTime;
+        if ( testTime == dateTime )
+            return true;        
+        while ( testTime < dateTime ) {
+            testTime = next(startTime,testTime,1);
+            if ( testTime == dateTime )
+                return true;
+        }            
         return false;
     }
     
