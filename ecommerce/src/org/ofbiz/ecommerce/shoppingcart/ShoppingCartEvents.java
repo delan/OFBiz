@@ -86,7 +86,7 @@ public class ShoppingCartEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         GenericValue product = null;
         try {
-            product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+            product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
             product = null;
