@@ -54,4 +54,10 @@ public interface GenericMessageListener extends MessageListener {
      */
     public void refresh() throws GenericServiceException;
 
+    /**
+     * Indicator if a connection is present.
+     * @return true if connectio is present.
+     */
+    public boolean isConnected();
+
 }
