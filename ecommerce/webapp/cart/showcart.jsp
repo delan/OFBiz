@@ -9,10 +9,10 @@
   <%pageContext.setAttribute("cartIter", cart.iterator());%>
 <%}%>
 <BR>
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Quick Add</div>
@@ -33,7 +33,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
             <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="quickaddform" style='margin: 0;'>
@@ -55,10 +55,10 @@
 //-->
 </script>
 <BR>
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Shopping Cart</div>
@@ -143,7 +143,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td>
       <table width="100%" border="0" cellpadding="0" cellspacing="0">

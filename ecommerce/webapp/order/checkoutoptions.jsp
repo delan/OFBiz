@@ -50,10 +50,10 @@
   <tr valign="top" align="left">
     <td height='100%'>
 <% pageContext.setAttribute("carrierShipmentMethodList", delegator.findAllCache("CarrierShipmentMethod", null)); %>
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign=middle align=left>
             <div class="boxhead" nowrap>1) How shall we ship it?</div>
@@ -64,7 +64,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
   <table width="100%" cellpadding="0" border="0" cellpadding="0" cellspacing="0">
@@ -184,10 +184,10 @@
 <% pageContext.setAttribute("shippingPartyContactPurposeList", delegator.findByAnd("PartyContactMechPurpose", UtilMisc.toMap(
         "partyId", userLogin.getString("partyId"),
         "contactMechPurposeTypeId", "SHIPPING_LOCATION"), null)); %>  
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black' style='height: 100%;'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>' style='height: 100%;'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign=middle align=left>
             <div class="boxhead" nowrap><b>2) Where&nbsp;shall&nbsp;we&nbsp;ship&nbsp;it?</b></div>
@@ -198,7 +198,7 @@
   </TR>
   <TR style='height: 100%;'>
     <TD width='100%' valign=top>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white' style='height: 100%;'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>' style='height: 100%;'>
         <tr>
           <td valign=top>
 
@@ -257,10 +257,10 @@
 
 <% pageContext.setAttribute("creditCardInfoList", userLogin.getRelatedOne("Party").getRelated("CreditCardInfo")); %>
 
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black' style='height: 100%;'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>' style='height: 100%;'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign=middle align=left>
             <div class="boxhead" nowrap><b>3) How shall you pay?</b></div>
@@ -271,7 +271,7 @@
   </TR>
   <TR style='height: 100%;'>
     <TD width='100%' valign=top>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white' style='height: 100%;'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>' style='height: 100%;'>
         <tr>
           <td valign=top>
 <a href="<ofbiz:url>/editcreditcard?DONE_PAGE=checkoutoptions</ofbiz:url>" class="buttontext">[Add Credit Card]</a>

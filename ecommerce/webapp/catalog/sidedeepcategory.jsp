@@ -6,10 +6,10 @@
 <%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));%>
 <%CatalogHelper.getRelatedCategories(pageContext, "curCategoryList", curCategoryId);%>
 
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign=middle align=center>
       <div class="boxhead">Browse&nbsp;Catalog</div>
@@ -20,7 +20,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
             <ul style='margin-left: 15;'>

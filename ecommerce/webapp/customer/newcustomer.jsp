@@ -43,10 +43,10 @@
 <p>If you already have an account, use your browser's Back button to return to the Login page and log in from there.</p>
 <%String fontColor = "Black";%>
 
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
             <p class="head2"><font color="white">&nbsp;Name and Shipping Address</font>
@@ -57,7 +57,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
 <form method="post" action="<ofbiz:url>/createcustomer</ofbiz:url>" name="newuserform" style='margin:0;'>
@@ -153,10 +153,10 @@
 
 <br>
 
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
             <p class="head2"><font color="white">&nbsp;Phone Numbers</font>
@@ -167,7 +167,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
 <table width="100%">
@@ -238,10 +238,10 @@
 
 <br>
 
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
             <p class="head2"><font color="white">&nbsp;Email Address</font>
@@ -252,7 +252,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
 <table width="100%">
@@ -287,10 +287,10 @@
 
 <br>
 
-<TABLE border=0 width='100%' cellpadding=1 cellspacing=0 bgcolor='black'>
+<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
   <TR>
     <TD width='100%'>
-      <table width="100%" border="0" cellpadding="4" cellspacing="0" bgcolor="#678475">
+      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
         <tr>
           <td valign="middle" align="left">
             <p class="head2"><font color="white">&nbsp;Username and Password</font>
@@ -304,7 +304,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border=0 cellpadding=4 cellspacing=0 bgcolor='white'>
+      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
         <tr>
           <td>
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
