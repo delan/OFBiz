@@ -1,6 +1,6 @@
 // ========================================================================
 // Copyright (c) 2002 Mort Bay Consulting (Australia) Pty. Ltd.
-// $Id: Classpath.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+// $Id: Classpath.java,v 1.2 2003/12/02 01:01:58 ajzeneski Exp $
 // ========================================================================
 
 //package org.mortbay.start;
@@ -83,7 +83,7 @@ public class Classpath {
         return cp.toString();
     }
 
-    public ClassLoader getClassLoader() {
+    public URL[] getUrls() {
         int cnt = _elements.size();
         URL[] urls = new URL[cnt];
         for (int i = 0; i < cnt; i++) {
@@ -91,6 +91,11 @@ public class Classpath {
                 urls[i] = ((File) (_elements.elementAt(i))).toURL();
             } catch (MalformedURLException e) {}
         }
+        return urls;
+    }
+
+    public ClassLoader getClassLoader() {
+        URL[] urls = getUrls();
 
         ClassLoader parent = Thread.currentThread().getContextClassLoader();
         if (parent == null) {
