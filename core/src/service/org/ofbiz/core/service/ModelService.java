@@ -251,6 +251,24 @@ public class ModelService {
             Object key = i.next();
             Object testObject = test.get(key);
             String infoType = (String) info.get(key);
+            
+            //small block to speed things up by putting in full package names for common objects, this turns out to help quite a bit...
+            if ("String".equals(infoType)) {
+                infoType = "java.lang.String";
+            } else if ("Double".equals(infoType)) {
+                infoType = "java.lang.Double";
+            } else if ("Float".equals(infoType)) {
+                infoType = "java.lang.Float";
+            } else if ("Long".equals(infoType)) {
+                infoType = "java.lang.Long";
+            } else if ("Integer".equals(infoType)) {
+                infoType = "java.lang.Integer";
+            } else if ("Timestamp".equals(infoType)) {
+                infoType = "java.sql.Timestamp";
+            } else if ("Time".equals(infoType)) {
+                infoType = "java.sql.Time";
+            }
+            
             Class infoClass = null;
             try {
                 infoClass = ObjectType.loadClass(infoType);
