@@ -1,5 +1,5 @@
 /*
- * $Id: EntityExpr.java,v 1.4 2004/04/23 01:42:16 doogie Exp $
+ * $Id: EntityExpr.java,v 1.5 2004/06/21 14:54:23 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.model.ModelField;
  * Encapsulates simple expressions used for specifying queries
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class EntityExpr extends EntityCondition {
@@ -58,6 +58,18 @@ public class EntityExpr extends EntityCondition {
             throw new IllegalArgumentException("The operator argument cannot be null");
         }
 
+        if (rhs == null) {
+            if (!EntityOperator.NOT_EQUAL.equals(operator) && !EntityOperator.EQUALS.equals(operator)) {
+                throw new IllegalArgumentException("Operator must be EQUALS or NOT_EQUAL when right/rhs argument is NULL ");
+            }
+        }
+
+        if (EntityOperator.BETWEEN.equals(operator)) {
+            if (!(rhs instanceof Collection) || (((Collection) rhs).size() != 2)) {
+                throw new IllegalArgumentException("BETWEEN Operator requires a Collection with 2 elements for the right/rhs argument");
+            }
+        }
+        
         this.lhs = lhs;
         this.operator = operator;
         this.rhs = rhs;
@@ -125,8 +137,10 @@ public class EntityExpr extends EntityCondition {
                     whereStringBuffer.append(colName);
                     if (EntityOperator.NOT_EQUAL.equals(this.getOperator())) {
                         whereStringBuffer.append(" IS NOT NULL ");
-                    } else {
+                    } else if (EntityOperator.EQUALS.equals(this.getOperator())) {
                         whereStringBuffer.append(" IS NULL ");
+                    } else {
+                        throw new IllegalArgumentException("Operator should be EQUAL or NOT EQUAL when right argument is NULL ");
                     }
                 } else {
                     if (this.isLUpper()) {
@@ -154,6 +168,18 @@ public class EntityExpr extends EntityCondition {
                                     whereStringBuffer.append(", ");
                                 }
 
+                            }
+                        } else if (EntityOperator.BETWEEN.equals(this.getOperator())) {
+                            if ((rhs instanceof Collection) && (((Collection) rhs).size() == 2)) {
+                                Iterator rhsIter = ((Collection) rhs).iterator();
+                                Object beginObj = rhsIter.next();
+                                Object endObj = rhsIter.next();
+
+                                addValue(whereStringBuffer, field, beginObj, entityConditionParams);
+                                whereStringBuffer.append(" AND ");
+                                addValue(whereStringBuffer, field, endObj, entityConditionParams);
+                            } else {
+                                throw new IllegalArgumentException("BETWEEN Operator requires a Collection with 2 elements");
                             }
                         } else {
                             addValue(whereStringBuffer, field, rhs, entityConditionParams);
