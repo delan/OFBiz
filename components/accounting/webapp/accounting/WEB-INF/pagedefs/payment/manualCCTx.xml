@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
     <template>main</template>
-    <property name="title">Manual CC Transaction</property>
+    <property name="title">Manual Electronic Transaction</property>
     <property name="headerItem">payments</property>
     <page-action name="/payment/manualCCTx.bsh"/>
 </page>

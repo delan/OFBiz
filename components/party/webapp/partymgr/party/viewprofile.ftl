@@ -368,8 +368,9 @@
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <div>
-                                    <#-- add security -->
-                                    <a href="/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${externalKeyParam}" class="buttontext">[Manual Tx]</a>
+                                    <#if security.hasEntityPermission("MANUAL", "_PAYMENT", session)>
+                                      <a href="/accounting/control/manualETx?paymentMethodId=${paymentMethod.paymentMethodId}${externalKeyParam}" class="buttontext">[Manual Tx]</a>
+                                    </#if>
                                     <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
                                         <a href='<@ofbizUrl>/editcreditcard?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                         [${uiLabelMap.CommonUpdate}]</a>
