@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.31 2003/12/31 01:25:29 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.32 2004/01/11 10:31:50 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -1092,19 +1092,108 @@ public class ProductPromoWorker {
     protected static void handleProductPromoCategories(Set productIds, List productPromoCategories, String productPromoApplEnumId, GenericDelegator delegator, Timestamp nowTimestamp) throws GenericEntityException {
         boolean include = !"PPPA_EXCLUDE".equals(productPromoApplEnumId);
         Set productCategoryIds = new HashSet();
+        Map productCategoryGroupSetListMap = new HashMap();
+        
         Iterator productPromoCategoryIter = productPromoCategories.iterator();
         while (productPromoCategoryIter.hasNext()) {
             GenericValue productPromoCategory = (GenericValue) productPromoCategoryIter.next();
             if (productPromoApplEnumId.equals(productPromoCategory.getString("productPromoApplEnumId"))) {
+                Set tempCatIdSet = new HashSet();
                 if ("Y".equals(productPromoCategory.getString("includeSubCategories"))) {
-                    ProductSearch.getAllSubCategoryIds(productPromoCategory.getString("productCategoryId"), productCategoryIds, delegator, nowTimestamp);
+                    ProductSearch.getAllSubCategoryIds(productPromoCategory.getString("productCategoryId"), tempCatIdSet, delegator, nowTimestamp);
                 } else {
-                    productCategoryIds.add(productPromoCategory.getString("productCategoryId"));
+                    tempCatIdSet.add(productPromoCategory.getString("productCategoryId"));
+                }
+                
+                String andGroupId = productPromoCategory.getString("andGroupId");
+                if ("_NA_".equals(andGroupId)) {
+                    productCategoryIds.addAll(tempCatIdSet);
+                } else {
+                    List catIdSetList = (List) productCategoryGroupSetListMap.get(andGroupId);
+                    if (catIdSetList == null) {
+                        catIdSetList = new LinkedList();
+                    }
+                    catIdSetList.add(tempCatIdSet);
+                }
+            }
+        }
+        
+        // for the ones with andGroupIds, if there is only one category move it to the productCategoryIds Set
+        // also remove all empty SetLists and Sets
+        Iterator pcgslmeIter = productCategoryGroupSetListMap.entrySet().iterator();
+        while (pcgslmeIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) pcgslmeIter.next();
+            List catIdSetList = (List) entry.getValue();
+            if (catIdSetList.size() == 0) {
+                pcgslmeIter.remove();
+            } else if (catIdSetList.size() == 1) {
+                Set catIdSet = (Set) catIdSetList.iterator().next();
+                if (catIdSet.size() == 0) {
+                    pcgslmeIter.remove();
+                } else {
+                    // if there is only one set in the list since the set will be or'ed anyway, just add them all to the productCategoryIds Set
+                    productCategoryIds.addAll(catIdSet);
+                    pcgslmeIter.remove();
                 }
             }
         }
 
-        Iterator productCategoryIdIter = productCategoryIds.iterator();
+        // take care of the productCategoryIds Set first
+        getAllProductIds(productCategoryIds, productIds, delegator, nowTimestamp, include);
+        
+        // now handle the productCategoryGroupSetListMap
+        // if a set has more than one category (because of an include sub-cats) then do an or
+        // all lists will have more than category because of the pre-pass that was done, so and them together
+        Iterator pcgslmIter = productCategoryGroupSetListMap.entrySet().iterator();
+        while (pcgslmIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) pcgslmIter.next();
+            List catIdSetList = (List) entry.getValue();
+            // TODO: get all productIds for this catIdSetList
+            List productIdSetList = new LinkedList();
+            
+            Iterator cidslIter = catIdSetList.iterator();
+            while (cidslIter.hasNext()) {
+                // make a Set of productIds including all ids from all categories
+                Set catIdSet = (Set) cidslIter.next();
+                Set groupProductIdSet = new HashSet();
+                getAllProductIds(catIdSet, groupProductIdSet, delegator, nowTimestamp, true);
+                productIdSetList.add(groupProductIdSet);
+            }
+            
+            // TODO: now go through all productId sets and only include IDs that are in all sets
+            // by definition if each id must be in all categories, then it must be in the first, so go through the first and drop each one that is not in all others
+            Set firstProductIdSet = (Set) productIdSetList.remove(0);
+            Iterator firstProductIdIter = firstProductIdSet.iterator();
+            while (firstProductIdIter.hasNext()) {
+                String curProductId = (String) firstProductIdIter.next();
+                
+                boolean allContainProductId = true;
+                Iterator productIdSetIter = productIdSetList.iterator();
+                while (productIdSetIter.hasNext()) {
+                    Set productIdSet = (Set) productIdSetIter.next();
+                    if (!productIdSet.contains(curProductId)) {
+                        allContainProductId = false;
+                        break;
+                    }
+                }
+                
+                if (!allContainProductId) {
+                    firstProductIdIter.remove();
+                }
+            }
+            
+            if (firstProductIdSet.size() >= 0) {
+                if (include) {
+                    productIds.addAll(firstProductIdSet);
+                } else {
+                    productIds.removeAll(firstProductIdSet);
+                }
+            }
+        }
+    }
+    
+    protected static void getAllProductIds(Set productCategoryIdSet, Set productIdSet, GenericDelegator delegator, Timestamp nowTimestamp, boolean include) throws GenericEntityException {
+        Iterator productCategoryIdIter = productCategoryIdSet.iterator();
         while (productCategoryIdIter.hasNext()) {
             String productCategoryId = (String) productCategoryIdIter.next();
             // get all product category memebers, filter by date
@@ -1115,9 +1204,9 @@ public class ProductPromoWorker {
                 GenericValue productCategoryMember = (GenericValue) productCategoryMemberIter.next();
                 String productId = productCategoryMember.getString("productId");
                 if (include) {
-                    productIds.add(productId);
+                    productIdSet.add(productId);
                 } else {
-                    productIds.remove(productId);
+                    productIdSet.remove(productId);
                 }
             }
         }
