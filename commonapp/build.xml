@@ -16,6 +16,7 @@
         <property name="lib.dir"        value="lib"                 />
         <property name="webapp.dir"     value="./webapp"            />
         <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
+        <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
 	<property name="doc.dir"        value="docs"                />
         <property name="build.dir"      value="build"               />
         <property name="build.compiler" value="classic"             /> 
@@ -43,6 +44,7 @@
         <delete dir="${lib.dir}" />
         <delete dir="${build.dir}" />
         <delete dir="${walib.dir}" />
+        <delete dir="${waclasses.dir}" />
     </target>
 
 	<target name="prepare-docs" depends="init">
@@ -74,21 +76,12 @@
 
     <target name="classes" depends="prepare">
         <javac srcdir="${src.dir}"
-		       classpath="${classpath}"
+               classpath="${classpath}"
                destdir="${lib.dir}/jar" />               
     </target>
 
-    <target name="conf-jar" depends="prepare">
-        <copy file="${conf.dir}/cache.properties"
-              tofile="${lib.dir}/jar/cache.properties" />
-        <copy file="${conf.dir}/debug.properties"
-              tofile="${lib.dir}/jar/debug.properties" />
-        <copy file="${conf.dir}/servers.properties"
-              tofile="${lib.dir}/jar/servers.properties" />
-    </target>
-    
     <!-- <target name="jar" depends="classes,conf-jar"> -->
-    <target name="jar" depends="conf-jar">
+    <target name="jar" depends="prepare">
         <jar jarfile="${build.dir}/${name}.jar"
              basedir="${lib.dir}/jar" />
     </target>
@@ -97,28 +90,37 @@
     <!-- Build the WAR                                                      -->
     <!-- ================================================================== -->
 	
-	<target name="war" depends="prepare,jar">
-                <copy file="${build.dir}/${name}.jar"
-                      tofile="${walib.dir}/${name}.jar" />
-                <copy file="${core.jar}"
-                      tofile="${walib.dir}/core.jar" />
-		<jar jarfile="${build.dir}/${name}.war"
-		     basedir="${webapp.dir}" />
-	</target>
+    <target name="conf" depends="prepare">
+        <copy file="${conf.dir}/cache.properties"
+              tofile="${waclasses.dir}/cache.properties" />
+        <copy file="${conf.dir}/debug.properties"
+              tofile="${waclasses.dir}/debug.properties" />
+        <copy file="${conf.dir}/servers.properties"
+              tofile="${waclasses.dir}/servers.properties" />
+    </target>
+    
+    <target name="war" depends="prepare,jar,conf">
+        <copy file="${build.dir}/${name}.jar"
+              tofile="${walib.dir}/${name}.jar" />
+        <copy file="${core.jar}"
+              tofile="${walib.dir}/core.jar" />
+        <jar jarfile="${build.dir}/${name}.war"
+             basedir="${webapp.dir}" />
+    </target>
 
 
     <!-- ================================================================== -->
     <!-- Build the EJB jar and EAR                                          -->
     <!-- ================================================================== -->
 	<target name="meta-info" depends="jar,war">
-		<copy file="${etc.dir}/ejb-jar.xml"
-		      tofile="${lib.dir}/ejb/META-INF/ejb-jar.xml" />
-		<copy file="${etc.dir}/jboss.xml"
-		      tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
-		<copy file="${etc.dir}/jaws.xml"
-		      tofile="${lib.dir}/ejb/META-INF/jaws.xml" />
-		<copy file="${etc.dir}/application.xml"
-		      tofile="${lib.dir}/j2ee/META-INF/application.xml" />			  
+            <copy file="${etc.dir}/ejb-jar.xml"
+                  tofile="${lib.dir}/ejb/META-INF/ejb-jar.xml" />
+            <copy file="${etc.dir}/jboss.xml"
+                  tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
+            <copy file="${etc.dir}/jaws.xml"
+                  tofile="${lib.dir}/ejb/META-INF/jaws.xml" />
+            <copy file="${etc.dir}/application.xml"
+                  tofile="${lib.dir}/j2ee/META-INF/application.xml" />			  
 	</target>
 	
 	<target name="ejb" depends="meta-info">
