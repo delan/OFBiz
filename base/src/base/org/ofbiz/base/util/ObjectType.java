@@ -23,18 +23,19 @@
  */
 package org.ofbiz.base.util;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+
+import javolution.util.FastMap;
 
 /**
  * Utilities for analyzing and converting Object types in Java 
@@ -50,7 +51,9 @@ public class ObjectType {
     
     public static final String module = ObjectType.class.getName();
 
-    protected static Map classCache = new HashMap();
+    public static final Object NULL = new NullObject();
+    
+    protected static Map classCache = new FastMap();
 
     public static final String LANG_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
     public static final String SQL_PACKAGE = "java.sql.";   // We will test both the raw value and this + raw value
@@ -1109,5 +1112,22 @@ public class ObjectType {
             }
         }
         return false;
+    }
+    
+    public static final class NullObject {
+        public NullObject() { }
+        
+        public String toString() {
+            return "ObjectType.NullObject";
+        }
+        
+        public boolean equals(Object other) {
+            if (other instanceof NullObject) {
+                // should do equality of object? don't think so, just same type
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 }

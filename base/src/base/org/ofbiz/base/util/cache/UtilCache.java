@@ -38,6 +38,9 @@ import javolution.util.FastList;
 import javolution.util.FastMap;
 import javolution.util.FastSet;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.ObjectType;
+
 /**
  * Generalized caching utility. Provides a number of caching features:
  * <ul>
@@ -56,7 +59,7 @@ import javolution.util.FastSet;
 public class UtilCache implements Serializable {
 
     public static final String module = UtilCache.class.getName();
-
+    
     /** A static Map to keep track of all of the UtilCache instances. */
     public static Map utilCacheTable = new WeakHashMap();
 
@@ -282,6 +285,10 @@ public class UtilCache implements Serializable {
      * @param expireTime how long to keep this key in the cache
      */
     public synchronized Object put(Object key, Object value, long expireTime) {
+        if (key == null) {
+            if (Debug.verboseOn()) Debug.logVerbose("In UtilCache tried to put with null key, using NullObject for cache " + this.getName(), module);
+            key = ObjectType.NULL;
+        }
         CacheLine oldCacheLine;
         if (expireTime > 0) {
             oldCacheLine = (CacheLine) cacheLineTable.put(key, new CacheLine(value, useSoftReference, System.currentTimeMillis(), expireTime));
@@ -305,6 +312,10 @@ public class UtilCache implements Serializable {
      * @return The value of the element specified by the key
      */
     public Object get(Object key) {
+        if (key == null) {
+            if (Debug.verboseOn()) Debug.logVerbose("In UtilCache tried to get with null key, using NullObject for cache " + this.getName(), module);
+            key = ObjectType.NULL;
+        }
         CacheLine line = (CacheLine) cacheLineTable.get(key);
         if (line == null) {
             missCountNotFound++;
