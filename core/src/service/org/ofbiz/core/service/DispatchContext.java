@@ -131,6 +131,57 @@ public class DispatchContext implements Serializable {
     public String getName() {
         return name;
     }
+    
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields 
+     * @param serviceName The name of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT) 
+     * @param context The initial set of values to pull from     
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map makeValidContext(String serviceName, String mode, Map context) throws GenericServiceException {        
+        ModelService model = this.getModelService(serviceName);
+        return makeValidContext(model, mode, context);
+        
+    }
+    
+    /**
+     * Uses an existing map of name value pairs and extracts the keys which are used in serviceName
+     * Note: This goes not guarantee the context will be 100% valid, there may be missing fields 
+     * @param model The ModelService object of the service to obtain parameters for
+     * @param mode The mode to use for building the new map (i.e. can be IN or OUT)
+     * @param context The initial set of values to pull from     
+     * @return Map contains any valid values
+     * @throws GenericServiceException
+     */
+    public Map makeValidContext(ModelService model, String mode, Map context) throws GenericServiceException {
+        Map newContext = null;
+        
+        int modeInt = 0;
+        if (mode.equalsIgnoreCase("in")) {
+            modeInt = 1;
+        } else if (mode.equalsIgnoreCase("out")) {
+            modeInt = 2;
+        }        
+                        
+        if (model == null) {
+            throw new GenericServiceException("Model service is null! Should never happen.");        
+        } else {
+            switch (modeInt) {
+                case 2:
+                    newContext = model.makeValid(context, ModelService.OUT_PARAM, true);
+                    break;
+                case 1:
+                    newContext = model.makeValid(context, ModelService.IN_PARAM, true);
+                    break;
+                default:
+                    throw new GenericServiceException("Invalid mode, should be either IN or OUT");
+            }
+            return newContext;
+        }        
+    }
 
     /** 
      * Gets the ModelService instance that corresponds to given the name
