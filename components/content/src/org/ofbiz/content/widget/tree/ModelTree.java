@@ -572,6 +572,7 @@ public class ModelTree {
             protected FlexibleStringExpander targetExdr;
             protected FlexibleStringExpander targetWindowExdr;
             protected FlexibleStringExpander prefixExdr;
+            protected FlexibleStringExpander nameExdr;
             protected Image image;
             protected String urlMode = "intra-app";
             protected boolean fullPath = false;
@@ -589,6 +590,7 @@ public class ModelTree {
                 setFullPath(null);
                 setSecure(null);
                 setEncode(null);
+                setName(null);
             }
 
             public Link( Element linkElement) {
@@ -603,6 +605,7 @@ public class ModelTree {
                 setFullPath(linkElement.getAttribute("full-path"));
                 setSecure(linkElement.getAttribute("secure"));
                 setEncode(linkElement.getAttribute("encode"));
+                setName(linkElement.getAttribute("name"));
                 Element imageElement = UtilXml.firstChildElement(linkElement, "image");
                 if (imageElement != null) {
                     this.image = new Image(imageElement);
@@ -632,6 +635,10 @@ public class ModelTree {
                 return this.styleExdr.expandString(context);
             }
             
+            public String getName(Map context) {
+                return this.nameExdr.expandString(context);
+            }
+        
             public String getTarget(Map context) {
                 return this.targetExdr.expandString(context);
             }
@@ -673,6 +680,9 @@ public class ModelTree {
             }
             public void setStyle( String val ) {
                 this.styleExdr = new FlexibleStringExpander(val);
+            }
+            public void setName( String val ) {
+                this.nameExdr = new FlexibleStringExpander(val);
             }
             public void setTarget( String val ) {
                 this.targetExdr = new FlexibleStringExpander(val);
