@@ -487,7 +487,7 @@
       <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
         <key-map field-name="fixedAssetId"/>
       </relation>
-      <relation type="many" rel-entity-name="ShipmentRouteSegment">
+      <relation type="many" rel-entity-name="Delivery">
         <key-map field-name="fixedAssetId"/>
       </relation>
     </entity>

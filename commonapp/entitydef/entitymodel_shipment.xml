@@ -43,6 +43,7 @@
   <!-- ========================================================= -->
   <!-- ======================== Data Model ===================== -->
   <!-- The modules in this file are as follows:                  -->
+  <!--  - org.ofbiz.commonapp.shipment.delivery -->
   <!--  - org.ofbiz.commonapp.shipment.issuance -->
   <!--  - org.ofbiz.commonapp.shipment.receipt -->
   <!--  - org.ofbiz.commonapp.shipment.shipment -->
@@ -243,6 +244,34 @@
         <key-map field-name="shipmentMethodTypeId"/>
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="Delivery"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Delivery Entity">
+      <field name="deliveryId" type="id-ne"></field>
+      <field name="originFacilityId" type="id"></field>
+      <field name="destFacilityId" type="id"></field>
+      <field name="actualStartDate" type="date-time"></field>
+      <field name="actualArrivalDate" type="date-time"></field>
+      <field name="estimatedStartDate" type="date-time"></field>
+      <field name="estimatedArrivalDate" type="date-time"></field>
+      <field name="fixedAssetId" type="id"></field>
+      <field name="startMileage" type="floating-point"></field>
+      <field name="endMileage" type="floating-point"></field>
+      <field name="fuelUsed" type="floating-point"></field>
+      <prim-key field="deliveryId"/>
+      <relation type="one" fk-name="DELIV_FXAS" rel-entity-name="FixedAsset">
+        <key-map field-name="fixedAssetId"/>
+      </relation>
+      <relation type="one" fk-name="DELIV_OFAC" title="Origin" rel-entity-name="Facility">
+        <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="DELIV_DFAC" title="Dest" rel-entity-name="Facility">
+        <key-map field-name="destFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="deliveryId"/>
       </relation>
     </entity>
     <entity entity-name="Shipment"
@@ -551,8 +580,6 @@
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentPackageSeqId" type="id-ne"></field>
       <field name="dateCreated" type="date-time"></field>
-      <field name="trackingCode" type="short-varchar"></field>
-      <field name="boxNumber" type="short-varchar"></field>
       <field name="weight" type="floating-point"></field>
       <field name="weightUomId" type="id"></field>
       <prim-key field="shipmentId"/>
@@ -565,6 +592,10 @@
         <key-map field-name="shipmentPackageSeqId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentPackageContent">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentPackageRouteSeg">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentPackageSeqId"/>
       </relation>
@@ -598,28 +629,51 @@
         <key-map field-name="shipmentItemSeqId"/>
       </relation>
     </entity>
+    <entity entity-name="ShipmentPackageRouteSeg"
+            package-name="org.ofbiz.commonapp.shipment.shipment"
+            title="Shipment Package Route Segment Entity">
+      <field name="shipmentId" type="id-ne"></field>
+      <field name="shipmentPackageSeqId" type="id-ne"></field>
+      <field name="shipmentRouteSegmentId" type="id-ne"></field>
+      <field name="trackingCode" type="short-varchar"></field>
+      <field name="boxNumber" type="short-varchar"></field>
+      <prim-key field="shipmentId"/>
+      <prim-key field="shipmentPackageSeqId"/>
+      <prim-key field="shipmentRouteSegmentId"/>
+      <relation type="one" fk-name="SHPKRTSG_SHPKG" rel-entity-name="ShipmentPackage">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentPackageSeqId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Shipment">
+        <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPKRTSG_RTSG" rel-entity-name="ShipmentRouteSegment">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentRouteSegmentId"/>
+      </relation>
+    </entity>
     <entity entity-name="ShipmentRouteSegment"
             package-name="org.ofbiz.commonapp.shipment.shipment"
             title="Shipment Route Segment Entity">
       <field name="shipmentId" type="id-ne"></field>
       <field name="shipmentRouteSegmentId" type="id-ne"></field>
+      <field name="deliveryId" type="id"></field>
       <field name="originFacilityId" type="id"></field>
       <field name="destFacilityId" type="id"></field>
       <field name="carrierPartyId" type="id"></field>
       <field name="shipmentMethodTypeId" type="id"></field>
-      <field name="actualShipCost" type="currency-amount"></field>
-      <field name="actualStartDatetime" type="date-time"></field>
-      <field name="actualArrivalDatetime" type="date-time"></field>
-      <field name="estimatedStartDatetime" type="date-time"></field>
+      <field name="actualCost" type="currency-amount"></field>
+      <field name="actualStartDate" type="date-time"></field>
+      <field name="actualArrivalDate" type="date-time"></field>
+      <field name="estimatedStartDate" type="date-time"></field>
       <field name="estimatedArrivalDate" type="date-time"></field>
-      <field name="fixedAssetId" type="id"></field>
-      <field name="startMileage" type="floating-point"></field>
-      <field name="endMileage" type="floating-point"></field>
-      <field name="fuelUsed" type="floating-point"></field>
       <prim-key field="shipmentId"/>
       <prim-key field="shipmentRouteSegmentId"/>
       <relation type="one" fk-name="SHPMT_RTSEG_SHPMT" rel-entity-name="Shipment">
         <key-map field-name="shipmentId"/>
+      </relation>
+      <relation type="one" fk-name="SHPMT_RTSEG_DEL" rel-entity-name="Delivery">
+        <key-map field-name="deliveryId"/>
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_CPTY" title="Carrier" rel-entity-name="Party">
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
@@ -630,9 +684,6 @@
       <relation type="one-nofk" title="Carrier" rel-entity-name="PartyGroup">
         <key-map field-name="carrierPartyId" rel-field-name="partyId"/>
       </relation>
-      <relation type="one" fk-name="SHPMT_RTSEG_FXAS" rel-entity-name="FixedAsset">
-        <key-map field-name="fixedAssetId"/>
-      </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_OFAC" title="Origin" rel-entity-name="Facility">
         <key-map field-name="originFacilityId" rel-field-name="facilityId"/>
       </relation>
@@ -641,6 +692,10 @@
       </relation>
       <relation type="one" fk-name="SHPMT_RTSEG_SHMT" rel-entity-name="ShipmentMethodType">
         <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ShipmentPackageRouteSeg">
+        <key-map field-name="shipmentId"/>
+        <key-map field-name="shipmentRouteSegmentId"/>
       </relation>
     </entity>
     <entity entity-name="ShipmentStatus"

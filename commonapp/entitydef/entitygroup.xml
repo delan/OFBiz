@@ -754,15 +754,10 @@
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentReceiptRole" />
 
   <!-- ========================================================= -->
-  <!-- org.ofbiz.commonapp.shipment.route -->
-  <!-- ========================================================= -->
-
-    <entity-group group="org.ofbiz.commonapp" entity="ShipmentRouteSegment" />
-
-  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.shipment.shipment -->
   <!-- ========================================================= -->
 
+    <entity-group group="org.ofbiz.commonapp" entity="Delivery" />
     <entity-group group="org.ofbiz.commonapp" entity="CarrierAndShipmentMethod" />
     <entity-group group="org.ofbiz.commonapp" entity="CarrierShipmentMethod" />
     <entity-group group="org.ofbiz.commonapp" entity="Shipment" />
@@ -776,6 +771,8 @@
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentMethodType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackage" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackageContent" />
+    <entity-group group="org.ofbiz.commonapp" entity="ShipmentPackageRouteSeg" />
+    <entity-group group="org.ofbiz.commonapp" entity="ShipmentRouteSegment" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentStatus" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentType" />
     <entity-group group="org.ofbiz.commonapp" entity="ShipmentTypeAttr" />
