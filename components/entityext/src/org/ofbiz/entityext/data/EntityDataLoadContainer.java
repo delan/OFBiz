@@ -30,14 +30,15 @@ import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
+import java.io.File;
 
 import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
-import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityDataLoader;
@@ -56,9 +57,13 @@ public class EntityDataLoadContainer implements Container {
 
     public static final String module = EntityDataLoadContainer.class.getName();
 
+    protected String overrideDelegator = null;
+    protected String overrideGroup = null;
     protected String configFile = null;
     protected String readers = null;
-    protected boolean single = false;
+    protected String directory = null;
+    protected String file = null;
+    protected boolean useDummyFks = false;
     protected int txTimeout = -1;
 
     public EntityDataLoadContainer() {
@@ -74,11 +79,60 @@ public class EntityDataLoadContainer implements Container {
         ServiceDispatcher.enableJM(false);
         ServiceDispatcher.enableJMS(false);
         ServiceDispatcher.enableSvcs(false);
-        if (args != null && args.length > 0) {
-            this.readers = args[0];
-            try {
-                txTimeout = Integer.parseInt(args[1]);
-            } catch (Exception e) {
+
+        /*
+           install arguments:
+           readers (none, all, seed, demo, ext, etc - configured in entityengine.xml and associated via ofbiz-component.xml)
+           timeout (transaction timeout default 7200)
+           delegator (overrides the delegator name configured for the container)
+           group (overrides the entity group name configured for the container)
+           dir (imports all XML files in a directory)
+           file (import a specific XML file)
+
+           Example:
+           $ java -jar ofbiz.jar -install -readers=seed,demo,ext -timeout=7200 -delegator=default -group=org.ofbiz
+           $ java -jar ofbiz.jar -install -file=/tmp/dataload.xml
+        */
+        for (int i = 0; i < args.length; i++) {
+            String argument = args[i];
+            // arguments can prefix w/ a '-'. Just strip them off
+            if (argument.startsWith("-")) {
+                int subIdx = 1;
+                if (argument.startsWith("--")) {
+                    subIdx = 2;
+                }
+                argument = argument.substring(subIdx);
+            }
+
+            // parse the arguments
+            if (argument.indexOf("=") != -1) {
+                String argumentName = argument.substring(0, argument.indexOf("="));
+                String argumentVal = argument.substring(argument.indexOf("=") + 1);
+                Debug.log("Install Argument - " + argumentName + " = " + argumentVal, module);
+                if ("readers".equalsIgnoreCase(argumentName)) {
+                    this.readers = argumentVal;
+                } else if ("timeout".equalsIgnoreCase(argumentName)) {
+                    try {
+                        this.txTimeout = Integer.parseInt(argumentVal);
+                    } catch (Exception e) {
+                        this.txTimeout = -1;
+                    }
+                } else if ("delegator".equalsIgnoreCase(argumentName)) {
+                    this.overrideDelegator = argumentVal;
+                } else if ("group".equalsIgnoreCase(argumentName)) {
+                    this.overrideGroup = argumentVal;
+                } else if ("file".equalsIgnoreCase(argumentName)) {
+                    this.file = argumentVal;
+                } else if ("dir".equalsIgnoreCase(argumentName)) {
+                    this.directory = argumentVal;
+                } else if ("createfks".equalsIgnoreCase(argumentName)) {
+                    this.useDummyFks = "true".equalsIgnoreCase(argumentVal);
+                }
+            }
+
+            // special case
+            if (this.readers == null && (this.file != null || this.directory != null)) {
+                this.readers = "none";
             }
         }
     }
@@ -108,35 +162,68 @@ public class EntityDataLoadContainer implements Container {
 
         // parse the pass in list of readers to use
         List readerNames = null;
-        if (this.readers != null) {
+        if (this.readers != null && !"none".equalsIgnoreCase(this.readers)) {
             if (this.readers.indexOf(",") == -1) {
-                if (UtilValidate.isUrl(this.readers)) {
-                    this.single = true;
-                } else if (!"all".equalsIgnoreCase(readers)) {
-                    readerNames = new LinkedList();
-                    readerNames.add(this.readers);
-                }
+                readerNames = new LinkedList();
+                readerNames.add(this.readers);
             } else {
                 readerNames = StringUtil.split(this.readers, ",");
             }
         }
 
-        GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
-        String helperName = delegator.getGroupHelperName(entityGroupName);
-        List urlList = null;
-
-        if (readerNames == null && single) {
-            try {
-                urlList = UtilMisc.toList(new URL(this.readers));
-            } catch (MalformedURLException e) {
-                throw new ContainerException("Url problems; not a valid URL");
-            }
-        } else if (readerNames == null) {
-            urlList = EntityDataLoader.getUrlList(helperName);
-        } else {
-            urlList = EntityDataLoader.getUrlList(helperName, readerNames);
+        String delegatorNameToUse = overrideDelegator != null ? overrideDelegator : delegatorName;
+        String groupNameToUse = overrideGroup != null ? overrideGroup : entityGroupName;
+        GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorNameToUse);
+        if (delegator == null) {
+            throw new ContainerException("Invalid delegator name!");
         }
 
+        String helperName = delegator.getGroupHelperName(groupNameToUse);
+        if (helperName == null) {
+            throw new ContainerException("Unable to locate the datasource helper for the group [" + groupNameToUse + "]");
+        }
+
+        // get the reader name URLs first
+        List urlList = null;
+        if (readerNames != null) {
+            urlList = EntityDataLoader.getUrlList(helperName, readerNames);
+        } else if (!"none".equalsIgnoreCase(this.readers)) {
+            urlList = EntityDataLoader.getUrlList(helperName);
+        }
+
+        // need a list if it is empty
+        if (urlList == null) {
+            urlList = new ArrayList();
+        }
+
+        // add in the defined extra file
+        if (this.file != null) {
+            URL fileUrl = UtilURL.fromResource(this.file);
+            if (fileUrl != null) {
+                urlList.add(fileUrl);
+            }
+        }
+
+        // next check for a directory of files
+        if (this.directory != null) {
+            File dir = new File(this.directory);
+            if (dir.exists() && dir.isDirectory() && dir.canRead()) {
+                File[] fileArray = dir.listFiles();
+                if (fileArray != null && fileArray.length > 0) {
+                    for (int i = 0; i < fileArray.length; i++) {
+                        if (fileArray[i].getName().toLowerCase().endsWith(".xml")) {
+                            try {
+                                urlList.add(fileArray[i].toURL());
+                            } catch (MalformedURLException e) {
+                                Debug.logError(e, "Unable to load file (" + fileArray[i].getName() + "); not a valid URL.", module);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // process the list of files
         NumberFormat changedFormat = NumberFormat.getIntegerInstance();
         changedFormat.setMinimumIntegerDigits(5);
         changedFormat.setGroupingUsed(false);
@@ -158,7 +245,7 @@ public class EntityDataLoadContainer implements Container {
             while (urlIter.hasNext()) {
                 URL dataUrl = (URL) urlIter.next();
                 try {
-                    int rowsChanged = EntityDataLoader.loadData(dataUrl, helperName, delegator, errorMessages, txTimeout);
+                    int rowsChanged = EntityDataLoader.loadData(dataUrl, helperName, delegator, errorMessages, txTimeout, useDummyFks);
                     totalRowsChanged += rowsChanged;
                     infoMessages.add(changedFormat.format(rowsChanged) + " of " + changedFormat.format(totalRowsChanged) + " from " + dataUrl.toExternalForm());
                 } catch (GenericEntityException e) {
