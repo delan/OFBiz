@@ -30,6 +30,7 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.mail.*;
 import javax.mail.internet.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
@@ -48,17 +49,17 @@ import org.ofbiz.ecommerce.shoppingcart.*;
  */
 public class CheckOutEvents {
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         if (cart != null && cart.size() > 0) {
             return "success";
         } else {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"Cart is empty.");
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Cart is empty.");
             return "error";
         }
     }
 
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         StringBuffer errorMessage = new StringBuffer();
         if (cart != null && cart.size() > 0) {
             String shippingMethod = request.getParameter("shipping_method");
@@ -74,9 +75,9 @@ public class CheckOutEvents {
                 int delimiterPos = shippingMethod.indexOf('@');
                 String shipmentMethodTypeId = null;
                 String carrierPartyId = null;
-                if(delimiterPos > 0) {
+                if (delimiterPos > 0) {
                     shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
-                    carrierPartyId = shippingMethod.substring(delimiterPos+1);
+                    carrierPartyId = shippingMethod.substring(delimiterPos + 1);
                 }
 
                 cart.setShipmentMethodTypeId(shipmentMethodTypeId);
@@ -98,7 +99,7 @@ public class CheckOutEvents {
                 errorMessage.append("<li>Please Select a Shipping Destination");
             }
 
-            if(UtilValidate.isNotEmpty(paymentMethodId)) {
+            if (UtilValidate.isNotEmpty(paymentMethodId)) {
                 cart.setPaymentMethodId(paymentMethodId);
             }
             if (UtilValidate.isNotEmpty(billingAccountId)) {
@@ -115,7 +116,7 @@ public class CheckOutEvents {
         }
 
         if (errorMessage.length() > 0) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,errorMessage.toString());
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errorMessage.toString());
             return "error";
         } else {
             return "success";
@@ -124,50 +125,48 @@ public class CheckOutEvents {
 
     // Create order event - uses createOrder service for processing
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
-        ShoppingCart cart = (ShoppingCart)request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         // remove this whenever creating an order so quick reorder cache will refresh/recalc
         request.getSession().removeAttribute("_QUICK_REORDER_PRODUCTS_");
 
+        String orderId = cart.getOrderId();
+
         // if the order is already stored don't store again.
-        if (cart.getOrderId() != null) {
-            request.setAttribute("order_id", cart.getOrderId());
-            request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
-            return "success";
-        }
+        if (cart.getOrderId() == null || cart.getOrderId().length() == 0) {
+            // build the service context
+            Map context = cart.makeCartMap(delegator);
+            String distributorId = (String) request.getSession().getAttribute("_DISTRIBUTOR_ID_");
+            String affiliateId = (String) request.getSession().getAttribute("_AFFILIATE_ID_");
+            if (distributorId != null) context.put("distributorId", distributorId);
+            if (affiliateId != null) context.put("affiliateId", affiliateId);
+            context.put("partyId", userLogin.get("partyId"));
 
-        // build the service context
-        Map context = cart.makeCartMap(delegator);
-        String distributorId =  (String) request.getSession().getAttribute("_DISTRIBUTOR_ID_");
-        String affiliateId = (String) request.getSession().getAttribute("_AFFILIATE_ID_");
-        if (distributorId != null) context.put("distributorId", distributorId);
-        if (affiliateId != null) context.put("affiliateId", affiliateId);
-        context.put("partyId", userLogin.get("partyId"));
+            // invoke the service
+            Map result = null;
+            try {
+                result = dispatcher.runSync("storeOrder", context);
+                orderId = (String) result.get("orderId");
+                if (orderId != null && orderId.length() > 0)
+                    cart.setOrderId(orderId);
+            } catch (GenericServiceException e) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Could not create order (problem invoking the service: " + e.getMessage() + ")");
+                Debug.logError(e);
+                return "error";
+            }
 
-        // invoke the service
-        Map result = null;
-        try {
-            result = dispatcher.runSync("storeOrder",context);
-            String orderId = (String) result.get("orderId");
-            if (orderId != null && orderId.length() > 0)
-                cart.setOrderId(orderId);
-        } catch (GenericServiceException e) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,"ERROR: Could not create order (problem invoking the service: " + e.getMessage() + ")");
-            Debug.logError(e);
-            return "error";
-        }
-
-        // check for error message(s)
-        if (result.containsKey(ModelService.ERROR_MESSAGE)) {
-            request.setAttribute(SiteDefs.ERROR_MESSAGE,result.get(ModelService.ERROR_MESSAGE));
-            return "error";
+            // check for error message(s)
+            if (result.containsKey(ModelService.ERROR_MESSAGE)) {
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, result.get(ModelService.ERROR_MESSAGE));
+                return "error";
+            }
         }
 
         // set the orderId for future use
-        request.setAttribute("order_id", result.get("orderId"));
+        request.setAttribute("order_id", orderId);
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
 
         // get the payment method - return proper result
@@ -182,26 +181,26 @@ public class CheckOutEvents {
     }
 
     public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
-        String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
+        String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
-        } catch(java.net.MalformedURLException e) {
+        } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e);
         }
 
         final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.securityCode");
 
-        String controlPath = (String)request.getAttribute(SiteDefs.CONTROL_PATH);
-        if(controlPath == null) {
+        String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+        if (controlPath == null) {
             Debug.logError("[CheckOutEvents.renderConfirmOrder] CONTROL_PATH is null.");
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
             return "error";
         }
-        String serverRoot = (String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
-        if(serverRoot == null) {
+        String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+        if (serverRoot == null) {
             Debug.logError("[CheckOutEvents.renderConfirmOrder] SERVER_ROOT_URL is null.");
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
             return "error";
@@ -221,13 +220,13 @@ public class CheckOutEvents {
     }
 
     public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
-        String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
+        String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
         //getServletContext appears to be new on the session object for Servlet 2.3
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         URL ecommercePropertiesUrl = null;
         try {
             ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
-        } catch(java.net.MalformedURLException e) {
+        } catch (java.net.MalformedURLException e) {
             Debug.logWarning(e);
         }
         try {
@@ -236,14 +235,18 @@ public class CheckOutEvents {
             final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email");
             final String ORDER_BCC = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email.bcc");
             final String ORDER_CC = UtilProperties.getPropertyValue(ecommercePropertiesUrl, "order.confirmation.email.cc");
-            GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+            GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
             StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
             GenericValue party = null;
-            try { party = userLogin.getRelatedOne("Party"); }
-            catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); party = null; }
-            if(party != null) {
+            try {
+                party = userLogin.getRelatedOne("Party");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e.getMessage());
+                party = null;
+            }
+            if (party != null) {
                 Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
-                while(emailIter != null && emailIter.hasNext()) {
+                while (emailIter != null && emailIter.hasNext()) {
                     GenericValue email = (GenericValue) emailIter.next();
                     emails.append(emails.length() > 0 ? "," : "").append(email.getString("infoString"));
                 }
