@@ -23,6 +23,7 @@
  */
 package org.ofbiz.core.widget.form;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -80,6 +81,7 @@ public class ModelForm {
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
     protected List autoFieldsEntities = new LinkedList();
+    protected List sortOrderFields = new LinkedList();
 
     /** This List will contain one copy of each field for each field name in the order
      * they were encountered in the service, entity, or form definition; field definitions
@@ -157,6 +159,45 @@ public class ModelForm {
             ModelFormField modelFormField = new ModelFormField(fieldElement, this);
             modelFormField = this.addUpdateField(modelFormField);
             //Debug.logInfo("Added field " + modelFormField.getName() + " from def, mapName=" + modelFormField.getMapName());
+        }
+
+        // get the sort-order
+        Element sortOrderElement = UtilXml.firstChildElement(formElement, "sort-order");
+        if (sortOrderElement != null) {
+            // read in sort-field
+            List sortFieldElements = UtilXml.childElementList(sortOrderElement, "sort-field");
+            Iterator sortFieldElementIter = sortFieldElements.iterator();
+            while (sortFieldElementIter.hasNext()) {
+                Element sortFieldElement = (Element) sortFieldElementIter.next();
+                this.sortOrderFields.add(sortFieldElement.getAttribute("name"));
+            }
+        }
+        
+        // reorder fields according to sort order
+        if (sortOrderFields.size() > 0) {
+            List sortedFields = new ArrayList(this.fieldList.size());
+            Iterator sortOrderFieldIter = this.sortOrderFields.iterator();
+            while (sortOrderFieldIter.hasNext()) {
+                String fieldName = (String) sortOrderFieldIter.next();
+                if (UtilValidate.isEmpty(fieldName)) {
+                    continue;
+                }
+            
+                // get all fields with the given name from the existing list and put them in the sorted list
+                Iterator fieldIter = this.fieldList.iterator();
+                while (fieldIter.hasNext()) {
+                    ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+                    if (fieldName.equals(modelFormField.getName())) {
+                        // matched the name; remove from the original last and add to the sorted list
+                        fieldIter.remove();
+                        sortedFields.add(modelFormField);
+                    }
+                }
+            }
+            // now add all of the rest of the fields from fieldList, ie those that were not explicitly listed in the sort order
+            sortedFields.addAll(this.fieldList);
+            // sortedFields all done, set fieldList
+            this.fieldList = sortedFields;
         }
     }
     
