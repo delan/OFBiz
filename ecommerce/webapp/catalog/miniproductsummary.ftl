@@ -24,13 +24,7 @@
  *@since      2.1
 -->
 
-<#assign miniProduct = requestAttributes.miniProduct?if_exists>
 <#if miniProduct?exists>
-    <#assign nowTimeLong = requestAttributes.nowTimeLong>
-    <#assign priceResult = requestAttributes.priceResult> <#-- priceResult: isSale, price, orderItemPriceInfos -->
-    <#assign miniProdFormName = requestAttributes.miniProdFormName>
-    <#assign miniProdQuantity = requestAttributes.miniProdQuantity>
-    
     <a href='<@ofbizUrl>/product?product_id=${miniProduct.productId}</@ofbizUrl>' class='buttontext'>${miniProduct.productName}</a>
     <div class='tabletext'><b>${miniProduct.productId}, 
         <span class='<#if priceResult.isSale>salePrice<#else>normalPrice</#if>'>${priceResult.price?string.currency}</span></b></div>

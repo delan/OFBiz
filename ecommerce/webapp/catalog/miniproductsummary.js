@@ -32,8 +32,6 @@ importPackage(Packages.org.ofbiz.commonapp.product.catalog);
 var miniProduct = request.getAttribute("miniProduct");
 
 if (miniProduct != null) {
-    request.setAttribute("nowTimeLong", UtilDateTime.nowTimestamp().getTime());
-
     var userLogin = session.getAttribute("userLogin");
     var dispatcher = request.getAttribute("dispatcher");
     
@@ -45,6 +43,13 @@ if (miniProduct != null) {
     if (userLogin != null) priceParams.put("partyId", userLogin.get("partyId"));
     var priceResult = dispatcher.runSync("calculateProductPrice", priceParams);
     // returns: isSale, price, orderItemPriceInfos
-    request.setAttribute("priceResult", priceResult);
+
+    context.put("priceResult", priceResult);
+
+    context.put("miniProduct", miniProduct);
+    context.put("nowTimeLong", UtilDateTime.nowTimestamp().getTime());
+
+    context.put("miniProdFormName", request.getAttribute("miniProdFormName"));
+    context.put("miniProdQuantity", request.getAttribute("miniProdQuantity"));
 }
 
