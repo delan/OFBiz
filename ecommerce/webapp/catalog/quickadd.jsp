@@ -10,35 +10,49 @@
 
 <%-- Get a list of all products in the current category. --%>
 <%
-  Collection quickAddCategories = CatalogWorker.getCatalogQuickaddCategories(pageContext);
   String categoryId = request.getParameter("category_id");
   if(categoryId == null || categoryId.length() <= 0) categoryId = CatalogWorker.getCatalogQuickaddCategoryPrimary(pageContext);
+  Collection quickAddCategories = CatalogWorker.getCatalogQuickaddCategories(pageContext);
+  pageContext.setAttribute("quickAddCats", quickAddCategories);
 %>
-<%CategoryWorker.getRelatedProducts(pageContext,"",categoryId,false);%>
-<br>
-
-<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.entity.*" %>
-<%@ page import="org.ofbiz.ecommerce.catalog.*" %>
-
 <%GenericValue category = null;
   try { category = delegator.findByPrimaryKeyCache("ProductCategory",UtilMisc.toMap("productCategoryId",categoryId)); }
   catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); category = null; }
-  if(category != null) pageContext.setAttribute("listingCategory", category);%>
+  if(category != null) pageContext.setAttribute("listingCategory", category);
+%>
+<%CategoryWorker.getRelatedProducts(pageContext,"",categoryId,false);%>
+
+<br>
+
 <ofbiz:if name="listingCategory">
 <table border='0' width="100%" cellpadding='3' cellspacing='0'>
   <tr>
-    <td colspan="2">
-      <div class="head1"><%=UtilFormatOut.checkNull(category.getString("description"))%></div>
+    <td align=left>
+      <div class="head2"><ofbiz:entityfield attribute="listingCategory" field="description"/></div>
+    </td>
+    <td align=right>
+      <form name="choosequickaddform" method="POST" action="<ofbiz:url>/quickadd</ofbiz:url>" style='margin: 0;'>
+        <SELECT name='category_id'>
+          <OPTION value='<%=categoryId%>'><ofbiz:entityfield attribute="listingCategory" field="description"/></OPTION>
+          <OPTION value='<%=categoryId%>'></OPTION>
+          <ofbiz:iterator name="quickAddCatalogId" property="quickAddCats" type="java.lang.String">
+            <%GenericValue loopCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", quickAddCatalogId));%>
+            <%if(loopCategory != null) {%>
+              <OPTION value='<%=quickAddCatalogId%>'><%=loopCategory.getString("description")%></OPTION>
+            <%}%>
+          </ofbiz:iterator>
+        </SELECT>
+        <div><a href="javascript:document.choosequickaddform.submit()" class="buttontext">Choose&nbsp;QuickAdd&nbsp;Category</a></div>
+      </form>
     </td>
   </tr>
   <%String categoryImageUrl = category.getString("categoryImageUrl");%>
   <%String categoryLongDescription = category.getString("longDescription");%>
   <%if(UtilValidate.isNotEmpty(categoryImageUrl) || UtilValidate.isNotEmpty(categoryLongDescription)) pageContext.setAttribute("showCategoryDetails", "true");%>
   <ofbiz:if name="showCategoryDetails">
-    <tr><td><hr class='sepbar'></td></tr>
+    <tr><td colspan='2'><hr class='sepbar'></td></tr>
     <tr>
-      <td align="left" valign="top" width="0">
+      <td align="left" valign="top" width="0" colspan='2'>
         <div class="tabletext">
         <% if(UtilValidate.isNotEmpty(categoryImageUrl)) {%>
           <img src="<%=categoryImageUrl%>" vspace="5" hspace="5" border="1" height='100' align=left>
