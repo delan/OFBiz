@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.6 2003/08/17 09:29:47 ajzeneski Exp $
+ *  $Id: build.xml,v 1.7 2003/08/17 10:51:03 jonesde Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -86,6 +86,12 @@
         
         <echo message="[clean]"/>
         <echo message="[clean] ================================================="/>
+        <echo message="[clean] ========== Cleaning common component ============"/>
+        <echo message="[clean] ==========-======================================"/>                
+        <ant dir="components/common" target="clean" inheritAll="false"/>                               
+
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================="/>
         <echo message="[clean] ========== Cleaning workflow component =========="/>
         <echo message="[clean] ==========-======================================"/>                
         <ant dir="components/workflow" target="clean" inheritAll="false"/>        
@@ -95,6 +101,12 @@
         <echo message="[clean] ========== Cleaning content component =========="/>
         <echo message="[clean] ==========-====================================="/>                
         <ant dir="components/content" target="clean" inheritAll="false"/>                                      
+
+        <echo message="[clean]"/>
+        <echo message="[clean] ================================================"/>
+        <echo message="[clean] ========== Cleaning securityext component =========="/>
+        <echo message="[clean] ==========-====================================="/>                
+        <ant dir="components/securityext" target="clean" inheritAll="false"/>                                      
 
         <delete file="ofbiz.jar"/>
         <echo message="[clean] ========== Done Cleaning =========="/>
@@ -150,6 +162,12 @@
         <echo message="[build] ========== Building minilang component =========="/>
         <echo message="[build] ================================================="/>
         <ant dir="components/minilang" inheritAll="false" />
+                                         
+        <echo message="[build]" />
+        <echo message="[build] ================================================="/>
+        <echo message="[build] ========== Building common component =========="/>
+        <echo message="[build] ================================================="/>
+        <ant dir="components/common" inheritAll="false" />
         
         <echo message="[build]" />
         <echo message="[build] ================================================="/>
@@ -161,7 +179,13 @@
         <echo message="[build] ================================================"/>
         <echo message="[build] ========== Building content component =========="/>
         <echo message="[build] ================================================"/>
-        <ant dir="components/minilang" inheritAll="false" />               
+        <ant dir="components/content" inheritAll="false" />               
+                                         
+        <echo message="[build]" />
+        <echo message="[build] ================================================"/>
+        <echo message="[build] ========== Building securityext component =========="/>
+        <echo message="[build] ================================================"/>
+        <ant dir="components/securityext" inheritAll="false" />               
                                          
         <echo message="[build] ========== Done Building (Compile) ==========" />
     </target>
@@ -198,6 +222,12 @@
         <ant dir="components/service" target="docs" inheritAll="false"/>
         
         <echo message="[docs]"/>
+        <echo message="[docs] ================================================"/>
+        <echo message="[docs] ========== Building entityext component =========="/>
+        <echo message="[docs] ================================================"/>
+        <ant dir="components/entityext" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
         <echo message="[docs] ================================================="/>
         <echo message="[docs] ========== Building minilang component =========="/>
         <echo message="[docs] ================================================="/>
@@ -214,6 +244,18 @@
         <echo message="[docs] ========== Building content component =========="/>
         <echo message="[docs] ================================================="/>
         <ant dir="components/content" target="docs" inheritAll="false"/>               
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ========== Building common component =========="/>
+        <echo message="[docs] ================================================="/>
+        <ant dir="components/common" target="docs" inheritAll="false"/>        
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ================================================="/>
+        <echo message="[docs] ========== Building common securityext =========="/>
+        <echo message="[docs] ================================================="/>
+        <ant dir="components/securityext" target="docs" inheritAll="false"/>        
         
         <echo message="[docs] ========== Done Building (JavaDocs) ==========" />              
     </target>
@@ -232,6 +274,5 @@
     <target name="run" depends="build">
         <java jar="ofbiz.jar" fork="true"/>
     </target>
-    
 </project>
 
