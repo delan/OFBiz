@@ -54,7 +54,7 @@
                   <th width="30%" align="left"><div class="tabletext"><b>Status</b></div></th>
                   <th width="5%" align="right"><div class="tabletext"><b>Quantity</b></div></th>
                   <th width="10%" align="right"><div class="tabletext"><b>Unit / List Price</b></div></th>
-                  <th width="10%" align="right"><div class="tabletext"><b>Modifiers</b></div></th>
+                  <th width="10%" align="right"><div class="tabletext"><b>Adjustments</b></div></th>
                   <th width="10%" align="right"><div class="tabletext"><b>Subtotal</b></div></th>
                 </tr>
              <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
@@ -95,8 +95,8 @@
                             </div>
                         </ofbiz:iterator>
                     </td>
-                    <td align="right" valign="top">
-                        <div class="tabletext" nowrap><%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%></div>
+                    <td align="center" valign="top">
+                        <div class="tabletext" nowrap><%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%>&nbsp;</div>
                     </td>
                     <td align="right" valign="top">
                         <div class="tabletext" nowrap><%=UtilFormatOut.formatPrice(orderItem.getDouble("unitPrice"))%> / <%=UtilFormatOut.formatPrice(orderItem.getDouble("unitListPrice"))%></div>
