@@ -1,5 +1,5 @@
 /*
- * $Id: OrderManagerEvents.java,v 1.1 2003/08/19 06:42:54 ajzeneski Exp $
+ * $Id: OrderManagerEvents.java,v 1.2 2003/11/01 18:01:49 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Order Manager Events
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class OrderManagerEvents {
@@ -111,20 +111,16 @@ public class OrderManagerEvents {
     
     public static String receiveOfflinePayment(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");       
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
                    
         String orderId = request.getParameter("orderId");
-        String workEffortId = request.getParameter("workEffortId");
         
         // get the order header & payment preferences       
         GenericValue orderHeader = null;
-        List currentPaymentPrefs = null;        
         try {
-            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));  
-            currentPaymentPrefs = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")));                
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems reading order header from datasource.", module);
             request.setAttribute("_ERROR_MESSAGE_", "<li>Problems reading order header information.");
@@ -181,7 +177,6 @@ public class OrderManagerEvents {
                 }
                 if (paymentTypeAmount > 0.00) {
                     paymentTally += paymentTypeAmount;
-                    java.sql.Timestamp now = UtilDateTime.nowTimestamp();
                     
                     // create the OrderPaymentPreference
                     Map prefFields = UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString());
@@ -189,45 +184,66 @@ public class OrderManagerEvents {
                     paymentPreference.set("paymentMethodTypeId", paymentMethodType.getString("paymentMethodTypeId"));
                     paymentPreference.set("maxAmount", new Double(paymentTypeAmount));                    
                     paymentPreference.set("statusId", "PAYMENT_RECEIVED");
-                    paymentPreference.set("authRefNum", paymentReference);
-                    paymentPreference.set("authDate", now);
                     paymentPreference.set("orderId", orderId);
                     toBeStored.add(paymentPreference);
                     
                     // create a payment record
-                    toBeStored.add(OrderChangeHelper.createPaymentFromPreference(paymentPreference, null, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));                               
+                    toBeStored.add(OrderChangeHelper.createPaymentFromPreference(paymentPreference, paymentReference, placingCustomer.getString("partyId"), "Payment received offline and manually entered."));
                 }
             }
         }
-                                                                      
-        // now finish up
-        if (paymentTally == grandTotal.doubleValue()) {
-            // cancel the old payment preferences
-            if (currentPaymentPrefs != null && currentPaymentPrefs.size() > 0) {
-                Iterator cppi = currentPaymentPrefs.iterator();
-                while (cppi.hasNext()) {
-                    GenericValue ppf = (GenericValue) cppi.next();
-                    ppf.set("statusId", "PAYMENT_CANCELLED");
-                    toBeStored.add(ppf);
+
+        // get the current payment prefs
+        GenericValue offlineValue = null;
+        List currentPrefs = null;
+        try {
+            List oppFields = UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId),
+                    new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED"));
+            currentPrefs = delegator.findByAnd("OrderPaymentPreference", oppFields);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "ERROR: Unable to get existing payment preferences from order", module);
+        }
+        if (currentPrefs != null && currentPrefs.size() > 0) {
+            Iterator cpi = currentPrefs.iterator();
+            while (cpi.hasNext()) {
+                GenericValue cp = (GenericValue) cpi.next();
+                String paymentMethodType = cp.getString("paymentMethodTypeId");
+                if ("EXT_OFFLINE".equals(paymentMethodType)) {
+                    offlineValue = cp;
+                } else {
+                    Double cpAmt = cp.getDouble("maxAmount");
+                    if (cpAmt != null) {
+                        paymentTally += cpAmt.doubleValue();
+                    }
                 }
             }
-            
-            // store the status changes and the newly created payment preferences and payments
-            try {
-                delegator.storeAll(toBeStored);
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Problems storing payment information", module);
-                request.setAttribute("_ERROR_MESSAGE_", "<li>Problem storing received payment information.");
-                return "error";
+        }
+
+        // now finish up
+        boolean okayToApprove = false;
+        if (paymentTally >= grandTotal.doubleValue()) {
+            // cancel the offline preference
+            okayToApprove = true;
+            if (offlineValue != null) {
+                offlineValue.set("statusId", "PAYMENT_CANCELLED");
+                toBeStored.add(offlineValue);
             }
-        } else {
-            request.setAttribute("_ERROR_MESSAGE_", "<li>The payment amount(s) do not match the order total.");
+        }
+
+        // store the status changes and the newly created payment preferences and payments
+        try {
+            delegator.storeAll(toBeStored);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems storing payment information", module);
+            request.setAttribute("_ERROR_MESSAGE_", "<li>Problem storing received payment information.");
             return "error";
         }
-                
-        // update the status of the order and items
-        OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-                 
+
+        if (okayToApprove) {
+            // update the status of the order and items
+            OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+        }
+
         return "success";
     }    
 
