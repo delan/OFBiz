@@ -994,6 +994,39 @@ result field.</p>
 <p>The to-string tag converts the Object in the specified field to a String,
 putting the string in the same field.</p>
 
+<p><b><u>iterate</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>entry-name</td><td>N</td>
+    <td>The name of the method environment field that will contain each entry as we iterate through the list.</td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the list to iterate over.</td>
+</tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Sub-Element&nbsp;Name</b></td>
+    <td><b>How&nbsp;Many</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>Any Operation</td><td>0 to many</td>
+    <td>Any simple-method operation can be nested under the iterate tag.</td>
+</tr>
+</table>
+<p>The operations contained by the iterate tag will be executed
+for each of the entries in the list, and will make the current entry available
+in the method environment by the entry-name specified. This tag can contain any of the simple-method
+operations, including the conditional/if operations.</p>
+
 <!-- ======================================================================= -->
 <!-- ======================================================================= -->
 <hr>
