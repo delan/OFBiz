@@ -88,11 +88,11 @@ public class Security
     if(exists == null)
     {
       try { 
-        if(delegator.findByPrimaryKey(securityGroupPermissionPK) != null) exists = new Boolean(true); 
-        else exists = new Boolean(false);
+        if(delegator.findByPrimaryKey(securityGroupPermissionPK) != null) exists = Boolean.TRUE; 
+        else exists = Boolean.FALSE;
       }
       catch(GenericEntityException e) { 
-        exists = new Boolean(false);
+        exists = Boolean.FALSE;
         Debug.logWarning(e); 
       }
       securityGroupPermissionCache.put(securityGroupPermissionPK, exists);

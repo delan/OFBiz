@@ -201,7 +201,7 @@ public class GenericWebEvent {
         try { resultBool = (Boolean)valMethod.invoke(null,params); }
         catch(Exception e) {
           Debug.logError("[updateGeneric] Could not access validation method: " + methodName + " of class " + className + "; returning true.");
-          resultBool = new Boolean(true);
+          resultBool = Boolean.TRUE;
         }
         
         if(!resultBool.booleanValue()) {
