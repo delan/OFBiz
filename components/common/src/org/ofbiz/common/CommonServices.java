@@ -46,6 +46,8 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.ServiceXaWrapper;
+import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.service.GenericServiceException;
 
 /**
  * Common Services
@@ -340,6 +342,60 @@ public class CommonServices {
             Debug.logError(e, module);
         } catch (IOException e) {
             Debug.logError(e, module);
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
+    public static Map uploadTest(DispatchContext dctx, Map context) {
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        ByteWrapper wrapper = (ByteWrapper) context.get("uploadFile");
+        String fileName = (String) context.get("_uploadFile_fileName");
+        String contentType = (String) context.get("_uploadFile_contentType");
+
+        Map createCtx = new HashMap();
+        createCtx.put("binData", wrapper);
+        createCtx.put("dataResourceTypeId", "OFBIZ_FILE");
+        createCtx.put("dataResourceName", fileName);
+        createCtx.put("dataCategoryId", "PERSONAL");
+        createCtx.put("statusId", "CTNT_PUBLISHED");
+        createCtx.put("mimeTypeId", contentType);
+        createCtx.put("userLogin", userLogin);
+
+        Map createResp = null;
+        try {
+            createResp = dispatcher.runSync("createFile", createCtx);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        if (ServiceUtil.isError(createResp)) {
+            return ServiceUtil.returnError(ServiceUtil.getErrorMessage(createResp));
+        }
+
+        GenericValue dataResource = (GenericValue) createResp.get("dataResource");
+        if (dataResource != null) {
+            Map contentCtx = new HashMap();
+            contentCtx.put("dataResourceId", dataResource.getString("dataResourceId"));
+            contentCtx.put("localeString", ((Locale) context.get("locale")).toString());
+            contentCtx.put("contentTypeId", "DOCUMENT");
+            contentCtx.put("mimeTypeId", contentType);
+            contentCtx.put("contentName", fileName);
+            contentCtx.put("statusId", "CTNT_PUBLISHED");
+            contentCtx.put("userLogin", userLogin);
+
+            Map contentResp = null;
+            try {
+                contentResp = dispatcher.runSync("createContent", contentCtx);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError(e.getMessage());
+            }
+            if (ServiceUtil.isError(contentResp)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(contentResp));
+            }
         }
 
         return ServiceUtil.returnSuccess();

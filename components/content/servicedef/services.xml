@@ -862,7 +862,9 @@
     <service name="createFile" engine="java"
         location="org.ofbiz.content.data.DataServices" invoke="createFile" auth="true">
         <description>Create a File</description>
-        <attribute mode="IN" name="dataResource" optional="true" type="GenericValue"/>
+        <implements service="createDataResource"/>
+        <attribute mode="INOUT" name="dataResource" optional="false" type="GenericValue"/>
+        <attribute mode="IN" name="binData" optional="true" type="org.ofbiz.entity.util.ByteWrapper"/>
         <attribute mode="IN" name="textData" optional="true" type="String"/>
         <attribute mode="IN" name="rootDir" optional="true" type="String"/>
     </service>
@@ -870,6 +872,7 @@
         location="org.ofbiz.content.data.DataServices" invoke="updateFile" auth="true">
         <description>Update a File</description>
         <attribute mode="IN" name="dataResource" optional="true" type="GenericValue"/>
+        <attribute mode="IN" name="binData" optional="true" type="org.ofbiz.entity.util.ByteWrapper"/>
         <attribute mode="IN" name="textData" optional="true" type="String"/>
         <attribute mode="IN" name="rootDir" optional="true" type="String"/>
     </service>
