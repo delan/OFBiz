@@ -26,14 +26,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Service Framework - Service ECA Definition DTD
- *  $Id: service-eca.dtd,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ *  $Id: service-eca.dtd,v 1.2 2003/11/13 21:13:45 ajzeneski Exp $
 -->
 
 <!ELEMENT service-eca ( eca+ )>
 <!ELEMENT eca ( (condition | condition-field)*, action+ )>
 <!ATTLIST eca
     service CDATA #REQUIRED
-    event ( auth | in-validate | out-validate | invoke | commit | return ) #REQUIRED
+    event ( global-commit | global-rollback | auth | in-validate | out-validate | invoke | commit | return ) #REQUIRED
     run-on-error ( true | false ) "false"
 >
 

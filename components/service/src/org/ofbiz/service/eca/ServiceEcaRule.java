@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaRule.java,v 1.2 2003/09/25 21:23:10 ajzeneski Exp $
+ * $Id: ServiceEcaRule.java,v 1.3 2003/11/13 21:13:45 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * ServiceEcaRule
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ServiceEcaRule {
@@ -79,8 +79,16 @@ public class ServiceEcaRule {
         List actList = UtilXml.childElementList(eca, "action");
         Iterator ai = actList.iterator();
 
+        // since it is the action class which handle mode; we will set the mode for
+        // the special case "global-rollback" and "global-commit" events here.
         while (ai.hasNext()) {
-            actions.add(new ServiceEcaAction((Element) ai.next()));
+            Element actionElement = (Element) ai.next();
+            if ("global-rollback".equalsIgnoreCase(eventName)) {
+                actionElement.setAttribute("mode", "_rollback");
+            } else if ("global-commit".equalsIgnoreCase(eventName)) {
+                actionElement.setAttribute("mode", "_commit");
+            }
+            actions.add(new ServiceEcaAction(actionElement));
         }
 
         if (Debug.verboseOn()) Debug.logVerbose("Actions: " + actions, module);
@@ -110,7 +118,7 @@ public class ServiceEcaRule {
             while (a.hasNext()) {
                 ServiceEcaAction ea = (ServiceEcaAction) a.next();
                 // in order to enable OR logic without multiple calls to the given service, 
-                //only execute a given service name once per service call phase 
+                // only execute a given service name once per service call phase
                 if (!actionsRun.contains(ea.serviceName)) {
                     if (Debug.infoOn()) Debug.logInfo("Running ECA Service: " + ea.serviceName + ", triggered by rule on Service: " + serviceName, module);
                     ea.runAction(serviceName, dctx, context, result);
