@@ -216,7 +216,6 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             return assignments;
         
         Iterator i = assignList.iterator();
-
         while (i.hasNext()) {
             GenericValue value = (GenericValue) i.next();
             String party = value.getString("partyId");
@@ -679,6 +678,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         context.put("userLogin", userLogin);
         context.put("workEffortId", runtimeKey());
         if (howManyAssignment() == 1) {
+            Debug.logInfo("Single assignment; getting assignment info.", module);
             List assignments = getAssignments();
             WfAssignment assign = (WfAssignment) assignments.iterator().next();
             WfResource res = assign.assignee();
@@ -703,10 +703,17 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                         throw new WfException("Bsh evaluation error.", e);
                     }
                 } else if (keyStr != null && keyStr.trim().toLowerCase().startsWith("name:")) {
-                    // name mapping; for renaming of the context values
+                    // name mapping of context values
                     List couple = StringUtil.split(keyStr.trim().substring(5).trim(), "=");
-                    if (context.containsKey(((String) couple.get(0)).trim()))
-                        actualContext.put(((String) couple.get(0)).trim(), context.get(((String)couple.get(1)).trim()));
+                    String mName = (String) couple.get(0); // mapped name
+                    String cName = (String) couple.get(1); // context name
+                    
+                    // trim out blank space
+                    if (mName != null) mName = mName.trim();
+                    if (cName != null) cName = cName.trim(); 
+                                                           
+                    if (mName != null && cName != null && context.containsKey(cName))
+                        actualContext.put(mName, context.get(cName));                                            
                 } else if (context.containsKey(key)) {
                     // direct assignment from context                   
                     actualContext.put(key, context.get(key));
