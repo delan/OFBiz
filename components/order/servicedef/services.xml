@@ -219,6 +219,7 @@
 
     <service name="resetGrandTotal" engine="java"
             location="org.ofbiz.order.order.OrderServices" invoke="resetGrandTotal" require-new-transaction="false">
+        <!-- NOTE: require-new-transaction is false because this service is often run as a sync action on an ECA, so generally at the same time and in a separate TX it runs into locking problems -->
         <description>Reset the grandTotal of an existing order</description>
         <attribute name="orderId" type="String" mode="IN"/>
     </service>
