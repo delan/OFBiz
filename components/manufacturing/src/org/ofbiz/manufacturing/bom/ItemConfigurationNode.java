@@ -138,11 +138,15 @@ public class ItemConfigurationNode {
                     if (newPart == null || newPart.equals("")) {
                         oneChildNode = null;
                     } else {
+                        ItemConfigurationNode origNode = oneChildNode;
                         oneChildNode = new ItemConfigurationNode(newPart, delegator);
                         oneChildNode.setSubstitutedNode(tmpNode);
                         oneChildNode.setRuleApplied(rule);
+                        oneChildNode.setScrapFactor(origNode.getScrapFactor());
                         if (ruleQuantity > 0) {
                             oneChildNode.setQuantityMultiplier(ruleQuantity);
+                        } else {
+                            oneChildNode.setQuantityMultiplier(origNode.getQuantityMultiplier());
                         }
                     }
                     break;
@@ -250,6 +254,8 @@ public class ItemConfigurationNode {
                             if (variantProduct != null) {
                                 newNode = new ItemConfigurationNode(variantProduct);
                                 newNode.setSubstitutedNode(oneChildNode);
+                                newNode.setQuantityMultiplier(oneChildNode.getQuantityMultiplier());
+                                newNode.setScrapFactor(oneChildNode.getScrapFactor());
                             }
 
                         }
