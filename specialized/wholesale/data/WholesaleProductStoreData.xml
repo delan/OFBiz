@@ -33,15 +33,6 @@
     <ProductStorePaymentSetting productStoreId="10002" paymentMethodTypeId="EXT_PAYPAL" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" lastUpdatedStamp="2004-01-26 10:35:02.406" lastUpdatedTxStamp="2004-01-26 10:35:01.341"/>
     <ProductStorePaymentSetting productStoreId="10002" paymentMethodTypeId="EXT_WORLDPAY" paymentServiceTypeEnumId="PRDS_PAY_EXTERNAL" lastUpdatedStamp="2004-01-26 10:35:02.408" lastUpdatedTxStamp="2004-01-26 10:35:01.341"/>
 
-    <ProductStoreRole partyId="admin" roleTypeId="SALES_REP" productStoreId="10002" fromDate="2001-01-01 12:00:00.0" lastUpdatedStamp="2004-01-26 10:35:02.43" lastUpdatedTxStamp="2004-01-26 10:35:01.341"/>
-
-<!-- this is kind of a hack and needs to be fixed in the storeOrder service instead -->
-    <ProductStoreRole partyId="10022" roleTypeId="SALES_REP" productStoreId="10002" fromDate="2004-01-26 14:53:42.613" lastUpdatedStamp="2004-01-26 14:53:42.613" lastUpdatedTxStamp="2004-01-26 14:53:42.613"/>
-    <ProductStoreRole partyId="10023" roleTypeId="SALES_REP" productStoreId="10002" fromDate="2004-01-26 14:53:56.391" lastUpdatedStamp="2004-01-26 14:53:56.391" lastUpdatedTxStamp="2004-01-26 14:53:56.391"/>
-    <ProductStoreRole partyId="10025" roleTypeId="SALES_REP" productStoreId="10002" fromDate="2004-01-26 14:54:14.21" lastUpdatedStamp="2004-01-26 14:54:14.21" lastUpdatedTxStamp="2004-01-26 14:54:14.21"/>
-    <ProductStoreRole partyId="10027" roleTypeId="SALES_REP" productStoreId="10002" fromDate="2004-01-26 14:54:23.506" lastUpdatedStamp="2004-01-26 14:54:23.506" lastUpdatedTxStamp="2004-01-26 14:54:23.506"/>
-    <ProductStoreRole partyId="10024" roleTypeId="SALES_REP" productStoreId="10002" fromDate="2004-01-26 14:54:06.494" thruDate="2004-02-02 15:15:03.774" lastUpdatedStamp="2004-02-02 15:15:03.774" lastUpdatedTxStamp="2004-02-02 15:15:03.774"/>
-
     <ProductStoreShipmentMethView productStoreId="10002" shipmentMethodTypeId="GROUND" partyId="UPS" roleTypeId="CARRIER" allowUspsAddr="N" requireUspsAddr="N" sequenceNumber="3" description="Ground"/>
     <ProductStoreShipmentMethView productStoreId="10002" shipmentMethodTypeId="AIR" partyId="UPS" roleTypeId="CARRIER" allowUspsAddr="N" requireUspsAddr="N" sequenceNumber="2" description="Air"/>
     <ProductStoreShipmentMethView productStoreId="10002" shipmentMethodTypeId="NEXT_DAY" partyId="UPS" roleTypeId="CARRIER" allowUspsAddr="N" requireUspsAddr="N" sequenceNumber="1" description="Guaranteed Next Day"/>
