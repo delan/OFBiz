@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -37,7 +37,7 @@
 </#if>
 
 <#if productIds?has_content>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
     <tr>
       <td align=right>
         <#-- Start Page Select Drop-Down -->
@@ -67,7 +67,7 @@
 
 <#if productIds?has_content>
 <center>
-  <table width="100%" cellpadding="0" cellspacing="0">
+  <table cellpadding="0" cellspacing="0">
     <#assign listIndex = lowIndex>
     <#list productIds as productId> <#-- note that there is no boundary range because that is being done before the list is put in the content -->
       ${setRequestAttribute("optProductId", productId)}
@@ -84,7 +84,7 @@
 </#if>
 
 <#if productIds?has_content>
-<table border="0" width="100%" cellpadding="2">
+<table border="0" cellpadding="2">
     <tr><td colspan="2"><hr class="sepbar"></td></tr>
     <tr>
       <td align=right>
