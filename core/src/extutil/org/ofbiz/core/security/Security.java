@@ -94,12 +94,12 @@ public class Security {
      * @return boolean specifying whether or not a SecurityGroupPermission row exists
      */
     public boolean securityGroupPermissionExists(String groupId, String permission) {
-        GenericPK securityGroupPermissionPK = delegator.makePK("SecurityGroupPermission",
+        GenericValue securityGroupPermissionValue = delegator.makeValue("SecurityGroupPermission",
                                                                UtilMisc.toMap("groupId", groupId, "permissionId", permission));
-        Boolean exists = (Boolean) securityGroupPermissionCache.get(securityGroupPermissionPK);
+        Boolean exists = (Boolean) securityGroupPermissionCache.get(securityGroupPermissionValue);
         if (exists == null) {
             try {
-                if (delegator.findByPrimaryKey(securityGroupPermissionPK) != null)
+                if (delegator.findByPrimaryKey(securityGroupPermissionValue.getPrimaryKey()) != null)
                     exists = Boolean.TRUE;
                 else
                     exists = Boolean.FALSE;
@@ -107,7 +107,7 @@ public class Security {
                 exists = Boolean.FALSE;
                 Debug.logWarning(e);
             }
-            securityGroupPermissionCache.put(securityGroupPermissionPK, exists);
+            securityGroupPermissionCache.put(securityGroupPermissionValue, exists);
         }
         return exists.booleanValue();
     }
