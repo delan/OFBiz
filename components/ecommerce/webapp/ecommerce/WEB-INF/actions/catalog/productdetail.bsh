@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.17 $
+ *@version    $Revision: 1.18 $
  *@since      2.1
  */
 
@@ -252,10 +252,10 @@ if (product != null) {
 	                    }
 
 	                    // append the content prefix
-	                    if (detailImage == null || detailImage.length() == 0) {
+	                    if (detailImage != null && detailImage.length() > 0) {
 	                        detailImage = ContentUrlTag.getContentPrefix(request) + detailImage;
 	                    }
-	                    if (largeImage == null || largeImage.length() == 0) {
+	                    if (largeImage != null && largeImage.length() > 0) {
 	                        largeImage = ContentUrlTag.getContentPrefix(request) + largeImage;
 	                    }
 
