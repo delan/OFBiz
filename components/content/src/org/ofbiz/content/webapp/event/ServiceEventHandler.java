@@ -154,9 +154,20 @@ public class ServiceEventHandler implements EventHandler {
                     if (item.isFormField() || item.getSize() == 0) {
                         multiPartMap.put(fieldName, item.getString());
                     } else {
+                        String fileName = item.getName();
+                        if (fileName.indexOf('\\') > -1 || fileName.indexOf('/') > -1) {
+                            // get just the file name IE and other browsers also pass in the local path
+                            int lastIndex = fileName.lastIndexOf('\\');
+                            if (lastIndex == -1) {
+                                lastIndex = fileName.lastIndexOf('/');
+                            }
+                            if (lastIndex > -1) {
+                                fileName = fileName.substring(lastIndex + 1);
+                            }
+                        }
                         multiPartMap.put(fieldName, new ByteWrapper(item.get()));
                         multiPartMap.put("_" + fieldName + "_size", new Long(item.getSize()));
-                        multiPartMap.put("_" + fieldName + "_fileName", item.getName());
+                        multiPartMap.put("_" + fieldName + "_fileName", fileName);
                         multiPartMap.put("_" + fieldName + "_contentType", item.getContentType());                        
                     }
                 }
