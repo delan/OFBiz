@@ -50,8 +50,8 @@
           <td>
               <table width="100%" border="0" cellpadding="1" cellspacing='0'>
                 <tr align=left valign=bottom>
-                  <th width="40%" align="left">Product</th>
-                  <th width="25%" align="left">Status</th>
+                  <th width="35%" align="left">Product</th>
+                  <th width="30%" align="left">Status</th>
                   <th width="5%" align="right">Quantity</th>
                   <th width="10%" align="right">Unit Price</th>
                   <th width="10%" align="right">&nbsp;Adjustments</th>
@@ -71,7 +71,11 @@
                   <ofbiz:unless type="String" name="productId" value="shoppingcart.CommentLine">
                     <td valign="top">
                       <div class="tabletext">
-                      <a href="/catalog/control/EditProduct?productId=<%=orderItem.getString("productId")%>" class="buttontext"><%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%></a>
+                        <%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%>
+                      </div>
+                      <div class="tabletext">
+                        <a href="/catalog/control/EditProduct?productId=<%=orderItem.getString("productId")%>" class="buttontext" target='_blank'>[catalog]</a>
+                        <a href="/ecommerce/control/product?product_id=<%=orderItem.getString("productId")%>" class="buttontext" target='_blank'>[ecommerce]</a>
                       </div>
                     </td>
                     <%-- now show status details per line item --%>
