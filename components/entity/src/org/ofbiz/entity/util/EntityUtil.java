@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.4 2003/11/12 07:46:39 jonesde Exp $
+ * $Id: EntityUtil.java,v 1.5 2003/11/12 20:35:14 jonesde Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -109,7 +109,7 @@ public class EntityUtil {
      *@return List of GenericValue's that are currently active
      */
     public static List filterByDate(List datedValues) {
-        return filterByDate(datedValues, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", true);
+        return filterByDate(datedValues, UtilDateTime.nowTimestamp(), null, null, true);
     }
 
     /**
@@ -120,7 +120,7 @@ public class EntityUtil {
      *@return List of GenericValue's that are currently active
      */
     public static List filterByDate(List datedValues, boolean allAreSame) {
-        return filterByDate(datedValues, UtilDateTime.nowTimestamp(), "fromDate", "thruDate", allAreSame);
+        return filterByDate(datedValues, UtilDateTime.nowTimestamp(), null, null, allAreSame);
     }
 
     /**
@@ -131,7 +131,7 @@ public class EntityUtil {
      *@return List of GenericValue's that are active at the moment
      */
     public static List filterByDate(List datedValues, java.util.Date moment) {
-        return filterByDate(datedValues, new java.sql.Timestamp(moment.getTime()), "fromDate", "thruDate", true);
+        return filterByDate(datedValues, new java.sql.Timestamp(moment.getTime()), null, null, true);
     }
 
     /**
@@ -142,7 +142,7 @@ public class EntityUtil {
      *@return List of GenericValue's that are active at the moment
      */
     public static List filterByDate(List datedValues, java.sql.Timestamp moment) {
-        return filterByDate(datedValues, moment, "fromDate", "thruDate", true);
+        return filterByDate(datedValues, moment, null, null, true);
     }
 
     /**
@@ -156,8 +156,8 @@ public class EntityUtil {
     public static List filterByDate(List datedValues, java.sql.Timestamp moment, String fromDateName, String thruDateName, boolean allAreSame) {
         if (datedValues == null) return null;
         if (moment == null) return datedValues;
-        if (fromDateName == null) throw new IllegalArgumentException("You must specify the name of the fromDate field to use this method");
-        if (thruDateName == null) throw new IllegalArgumentException("You must specify the name of the thruDate field to use this method");
+        if (fromDateName == null) fromDateName = "fromDate";
+        if (thruDateName == null) thruDateName = "thruDate";
 
         List result = new LinkedList();
         Iterator iter = datedValues.iterator();
