@@ -1,6 +1,13 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.21  2001/09/25 14:42:12  epabst
+ * added password hint
+ * added getCurrentPartyContactMechList helper method
+ * created (via refactoring) setPassword method to validate and set it and the hint
+ * fixed minor bugs
+ * fixed minor formatting
+ *
  * Revision 1.20  2001/09/23 12:19:31  jonesde
  * Added comment
  *
@@ -112,7 +119,8 @@ import org.ofbiz.commonapp.product.product.KeywordSearch;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
+ * @author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version 1.0
  * Created on August 23, 2001, 7:58 PM
  */
@@ -403,4 +411,25 @@ public class CatalogHelper {
     if(crumb != null && crumb.contains(category)) return true;
     else return false;
   }
+
+  public static void getAssociatedProducts(PageContext pageContext, String productAttributeName, String assocPrefix) {
+    GenericDelegator delegator = (GenericDelegator)pageContext.getServletContext().getAttribute("delegator");
+    GenericValue product = (GenericValue)pageContext.getAttribute(productAttributeName);
+    if(product == null) return;
+    
+    try {
+      Collection upgradeProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_UPGRADE"), null);
+      Collection complementProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_COMPLEMENT"), null);
+      Collection obsolescenceProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productIdTo", product.get("productId"), "productAssocTypeId", "PRODUCT_OBSOLESCENCE"), null);
+      Collection obsoleteByProducts = delegator.findByAndCache("ProductAssoc", UtilMisc.toMap("productId", product.get("productId"), "productAssocTypeId", "PRODUCT_OBSOLESCENCE"), null);
+
+      if(upgradeProducts != null && upgradeProducts.size() > 0) pageContext.setAttribute(assocPrefix + "upgrade", upgradeProducts);
+      if(complementProducts != null && complementProducts.size() > 0) pageContext.setAttribute(assocPrefix + "complement", complementProducts);
+      if(obsolescenceProducts != null && obsolescenceProducts.size() > 0) pageContext.setAttribute(assocPrefix + "obsolescence", obsolescenceProducts);
+      if(obsoleteByProducts != null && obsoleteByProducts.size() > 0) pageContext.setAttribute(assocPrefix + "obsoleteby", obsoleteByProducts);
+    }
+    catch(GenericEntityException e) {
+      Debug.logWarning(e);
+    }
+  }  
 }

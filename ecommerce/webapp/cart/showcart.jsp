@@ -37,7 +37,7 @@
         <tr>
           <td>
             <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="quickaddform" style='margin: 0;'>
-              <input type='text' name="product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("product_id"))%>">
+              <input type='text' name="add_product_id" value="<%=UtilFormatOut.checkNull(request.getParameter("add_product_id"))%>">
               <input type='text' size="5" name="quantity" value="<%=UtilFormatOut.checkNull(request.getParameter("quantity"), "1")%>">
               <input type='submit' value="Add To Cart">
               <%-- <a href="javascript:document.quickaddform.submit()" class="buttontext"><nobr>[Add to Cart]</nobr></a> --%>

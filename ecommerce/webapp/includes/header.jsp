@@ -73,7 +73,7 @@ function mClk(src){
               <IMG height='50' src='<%=headerImageUrl%>' alt='<%=UtilProperties.getPropertyValue("ecommerce", "company.name")%>'>
             </TD>
           <%}%>
-          <TD align=left width='50%'>
+          <TD align=left width='70%'>
             <%if(companyName != null && companyName.length() > 0) {%>
               <div class='headerCompanyName'><%=companyName%></div>
             <%}%>
@@ -81,7 +81,7 @@ function mClk(src){
               <div class='headerCompanySubtitle'><%=companySubtitle%></div>
             <%}%>
           </TD>
-          <TD align=right width='50%'>
+          <TD align=right width='30%'>
 <%@ include file="/cart/microcart.jsp"%>
           </td>
         </tr>

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/19 08:42:08  jonesde
+ * Initial checkin of refactored entity engine.
+ *
  * Revision 1.7  2001/09/06 15:36:31  epabst
  * watch for null value array
  *
@@ -93,12 +96,12 @@ public class ShoppingCartEvents {
     // The rest should be product attributes.This only works w/ servlet api 2.3
     //Map paramMap = request.getParameterMap();
     Map paramMap = UtilMisc.getParameterMap(request);
-    if(paramMap.containsKey("PRODUCT_ID"))
-      productId = (String) paramMap.remove("PRODUCT_ID");
-    else if(paramMap.containsKey("product_id"))
-      productId = (String) paramMap.remove("product_id");
+    if(paramMap.containsKey("ADD_PRODUCT_ID"))
+      productId = (String) paramMap.remove("ADD_PRODUCT_ID");
+    else if(paramMap.containsKey("add_product_id"))
+      productId = (String) paramMap.remove("add_product_id");
     if(productId == null) {
-      request.setAttribute(SiteDefs.ERROR_MESSAGE,"No product_id passed.");
+      request.setAttribute(SiteDefs.ERROR_MESSAGE,"No add_product_id passed.");
       return "error";
     }
     
