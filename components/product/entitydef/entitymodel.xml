@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.50 $
+ * @version    $Revision: 1.51 $
  */
 -->
 
@@ -2162,6 +2162,24 @@
         <key-map field-name="productPromoCodeId"/>
       </relation>
     </entity>
+    <view-entity entity-name="ProductPromoCodeEmailParty" 
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Email and Party View Entity">
+      <member-entity entity-alias="PPCE" entity-name="ProductPromoCodeEmail"/>
+      <member-entity entity-alias="CM" entity-name="ContactMech"/>
+      <member-entity entity-alias="PCM" entity-name="PartyContactMech"/>
+      <alias entity-alias="PPCE" name="productPromoCodeId"/>
+      <alias entity-alias="CM" name="infoString"/>
+      <alias entity-alias="PCM" name="partyId"/>
+      <alias entity-alias="PCM" name="fromDate"/>
+      <alias entity-alias="PCM" name="thruDate"/>
+      <view-link entity-alias="PPCE" rel-entity-alias="CM">
+      	<key-map field-name="emailAddress" rel-field-name="infoString"/>
+      </view-link>
+      <view-link entity-alias="CM" rel-entity-alias="PCM">
+      	<key-map field-name="contactMechId"/>
+      </view-link>
+    </view-entity>
     <entity entity-name="ProductPromoCodeParty"
             package-name="org.ofbiz.product.promo"
             title="Product Promotion Party Entity">

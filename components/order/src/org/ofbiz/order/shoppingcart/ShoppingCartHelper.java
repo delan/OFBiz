@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartHelper.java,v 1.6 2003/11/21 21:55:33 ajzeneski Exp $
+ * $Id: ShoppingCartHelper.java,v 1.7 2003/11/25 12:41:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ShoppingCartHelper {
@@ -145,7 +145,7 @@ public class ShoppingCartHelper {
             if (productId != null) {
                 itemId = cart.addOrIncreaseItem(productId, amount, quantity, null, attributes, catalogId, dispatcher);
             } else {
-                itemId = cart.addNonProductItem(delegator, itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
+                itemId = cart.addNonProductItem(itemType, itemDescription, productCategoryId, price, quantity, attributes, catalogId, dispatcher);
             }
 
             // set the shopping list info
@@ -187,14 +187,14 @@ public class ShoppingCartHelper {
             if (itemIter != null && itemIter.hasNext()) {
                 while (itemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) itemIter.next();
-                    int itemId = -1;
+                    // never read: int itemId = -1;
                     if (orderItem.get("productId") != null && orderItem.get("quantity") != null) {
                         double amount = 0.00;
                         if (orderItem.get("selectedAmount") != null) {
                             amount = orderItem.getDouble("selectedAmount").doubleValue();
                         }
                         try {
-                            itemId = this.cart.addOrIncreaseItem(orderItem.getString("productId"),
+                            this.cart.addOrIncreaseItem(orderItem.getString("productId"),
                                     amount, orderItem.getDouble("quantity").doubleValue(), null, null, catalogId, dispatcher);
                             noItems = false;
                         } catch (CartItemModifyException e) {
@@ -287,7 +287,7 @@ public class ShoppingCartHelper {
             return result;
         }
 
-        String errMsg = "";
+        // never read: String errMsg = "";
         Iterator pcmIter = prodCatMemberCol.iterator();
 
         while (pcmIter.hasNext()) {
