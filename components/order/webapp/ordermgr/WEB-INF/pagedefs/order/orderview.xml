@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">View Order</property>
+    <property name="headerItem">findorders</property>
+    <page-action name="/order/orderview.bsh"/> 
+</page>
