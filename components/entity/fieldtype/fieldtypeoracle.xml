@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypeoracle.xml,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ *  $Id: fieldtypeoracle.xml,v 1.2 2003/12/03 22:39:36 jonesde Exp $
  *  Title: Entity Generator Definitions for the General Data Model
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
@@ -35,7 +35,7 @@
 <fieldtypemodel>
   <!-- ===================== field-type-def ==================== -->
    <!-- General Types --> 
-    <field-type-def type="blob" sql-type="LONG RAW" java-type="java.lang.Object"></field-type-def>
+    <field-type-def type="blob" sql-type="BLOB" java-type="java.lang.Object"></field-type-def>
     
     <field-type-def type="date-time" sql-type="DATE" java-type="java.sql.Timestamp"></field-type-def>
     <field-type-def type="date" sql-type="DATE" java-type="java.sql.Date"></field-type-def>
@@ -53,7 +53,7 @@
     <field-type-def type="very-short" sql-type="VARCHAR2(10)" java-type="String"></field-type-def>
     <field-type-def type="short-varchar" sql-type="VARCHAR2(60)" java-type="String"></field-type-def>
     <field-type-def type="long-varchar" sql-type="VARCHAR2(255)" java-type="String"></field-type-def>
-    <field-type-def type="very-long" sql-type="VARCHAR2(4000)" java-type="String"></field-type-def>
+    <field-type-def type="very-long" sql-type="CLOB" java-type="String"></field-type-def>
    
     <field-type-def type="comment" sql-type="VARCHAR2(255)" java-type="String"></field-type-def>
     <field-type-def type="description" sql-type="VARCHAR2(255)" java-type="String"></field-type-def>
