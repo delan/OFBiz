@@ -60,11 +60,13 @@ public class OfbizUrlTransform implements TemplateTransformModel {
             public void close() throws IOException {  
                 try {                              
                     Environment env = Environment.getCurrentEnvironment();
-                    BeanModel req = (BeanModel)env.getVariable("requestBean");
-                    BeanModel res = (BeanModel) env.getVariable("responseBean");
+                    BeanModel req = (BeanModel)env.getVariable("request");
+                    BeanModel res = (BeanModel) env.getVariable("response");
                     HttpServletRequest request = (HttpServletRequest) req.getWrappedObject();
                     HttpServletResponse response = (HttpServletResponse) res.getWrappedObject();
                     ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+                    
+                    // make the link
                     RequestHandler rh = (RequestHandler) ctx.getAttribute(SiteDefs.REQUEST_HANDLER);                                        
                     out.write(rh.makeLink(request, response, buf.toString()));
                 } catch (TemplateModelException e) {
