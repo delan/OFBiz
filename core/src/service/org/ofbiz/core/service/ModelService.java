@@ -442,6 +442,7 @@ public class ModelService {
                     while (i.hasNext()) {
                         String s = (String) i.next();
                         implServices.add(s);
+                        Debug.logVerbose("Adding service [" + s + "] as interface of: [" + this.name + "]", module);
                     }
                 }                
             }
@@ -453,6 +454,7 @@ public class ModelService {
                     String serviceName = (String) implIter.next();
                     ModelService model = reader.getModelService(serviceName);
                     if (model != null) {
+                        Debug.logVerbose("Adding contextInfo from: [" + model.name + "] to: [" + this.name + "]", module);
                         newInfo.putAll(model.contextInfo);
                         newParams.addAll(model.contextParamList);
                     }
