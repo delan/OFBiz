@@ -33,7 +33,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     -->
 
     <delegator name="default" entity-model-reader="main" entity-group-reader="main" distributed-cache-clear-enabled="false">
-        <group-map group-name="org.ofbiz.commonapp" datasource-name="localhsql"/>
+        <group-map group-name="org.ofbiz.commonapp" datasource-name="localsapdb"/>
     </delegator>
     <delegator name="other" entity-model-reader="main" entity-group-reader="main">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres"/>
@@ -211,7 +211,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
                 isolation-level="ReadCommitted"/>
-        <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/> <!-- Orion Style JNDI name -->
+        <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localsapdb" isolation-level="ReadCommitted"/> --> <!-- Orion Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="localweblogic" jndi-name="SapDBDataSource"/> --> <!-- Weblogic Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="jdbc/localsapdb" isolation-level="ReadCommitted"/> --> <!-- JRun4 Style JNDI name -->
         <!-- <tyrex-dataSource dataSource-name="localsapdb" isolation-level="ReadCommitted"/> -->

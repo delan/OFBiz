@@ -740,7 +740,7 @@ public class CatalogWorker {
     public static void getQuickReorderProducts(PageContext pageContext, String productsAttrName, String quantitiesAttrName) {
         Map results = getQuickReorderProducts(pageContext.getRequest());
         pageContext.setAttribute(productsAttrName, results.get("products"));
-        pageContext.setAttribute(quantitiesAttrName, results.get("quantitie"));
+        pageContext.setAttribute(quantitiesAttrName, results.get("quantities"));
     }
                 
     public static Map getQuickReorderProducts(ServletRequest request) {
