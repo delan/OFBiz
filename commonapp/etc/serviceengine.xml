@@ -21,6 +21,7 @@
     <engine name="interface" class="org.ofbiz.core.service.engine.InterfaceEngine"/>
     <engine name="java" class="org.ofbiz.core.service.engine.StandardJavaEngine"/>
     <engine name="jms" class="org.ofbiz.core.service.jms.JmsServiceEngine"/>    
+    <engine name="route" class="org.ofbiz.core.service.engine.RouteEngine"/>
     <engine name="simple" class="org.ofbiz.core.minilang.SimpleServiceEngine"/>
     <engine name="soap" class="org.ofbiz.core.service.engine.SOAPClientEngine"/>
     <engine name="workflow" class="org.ofbiz.core.workflow.WorkflowEngine"/>    

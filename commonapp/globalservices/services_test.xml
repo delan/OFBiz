@@ -48,4 +48,9 @@
         <description>Test JMS Topic service</description>
         <attribute name="message" type="String" mode="IN"/>
     </service>
+    
+    <service name="testRoute" engine="route" location="" invoke="" auth="true">
+    	<description>Test the Route engine</description>
+    </service>
+    	
 </services>
