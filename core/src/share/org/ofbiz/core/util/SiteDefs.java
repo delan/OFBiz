@@ -42,7 +42,7 @@ public final class SiteDefs {
     /** The name of the flag in the request attributes to denote that the control servlet was passed through */
     public static final String FORWARDED_FROM_CONTROL_SERVLET = "_FORWARDED_FROM_CONTROL_SERVLET_";
     
-    /** Required context init parameter to specify the entity delegator name as defined in entityengine.properties */
+    /** Required context init parameter to specify the entity delegator name as defined in entityengine.xml */
     public static final String ENTITY_DELEGATOR_NAME = "entityDelegatorName";
 
     /** Required context init parameter to locate site specific configuration */
