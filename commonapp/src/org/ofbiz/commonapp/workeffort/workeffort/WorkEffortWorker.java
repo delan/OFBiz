@@ -24,12 +24,15 @@
  */
 package org.ofbiz.commonapp.workeffort.workeffort;
 
+import java.util.Collection;
 import java.util.Map;
 
 import javax.servlet.jsp.PageContext;
 
 import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.security.Security;
 import org.ofbiz.core.service.GenericServiceException;
 import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.service.ModelService;
@@ -46,6 +49,90 @@ import org.ofbiz.core.util.UtilMisc;
  * @since      2.0
  */
 public class WorkEffortWorker {
+    // TODO: REMOVE this method when JSPs/etc are moved to FreeMarker; this is replaced by a corresponding service
+    public static void getWorkEffort(PageContext pageContext, String workEffortIdAttrName, String workEffortAttrName, String partyAssignsAttrName,
+        String canViewAttrName, String tryEntityAttrName, String currentStatusAttrName) {
+        GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
+        Security security = (Security) pageContext.getRequest().getAttribute("security");
+        GenericValue userLogin = (GenericValue) pageContext.getSession().getAttribute(SiteDefs.USER_LOGIN);
+
+        String workEffortId = pageContext.getRequest().getParameter("workEffortId");
+
+        // if there was no parameter, check the request attribute, this may be a newly created entity
+        if (workEffortId == null)
+            workEffortId = (String) pageContext.getRequest().getAttribute("workEffortId");
+
+        GenericValue workEffort = null;
+
+        try {
+            workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+        }
+
+        Boolean canView = null;
+        Collection workEffortPartyAssignments = null;
+        Boolean tryEntity = null;
+        GenericValue currentStatus = null;
+
+        if (workEffort == null) {
+            tryEntity = new Boolean(false);
+            canView = new Boolean(true);
+
+            String statusId = pageContext.getRequest().getParameter("currentStatusId");
+
+            if (statusId != null && statusId.length() > 0) {
+                try {
+                    currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", statusId));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+            }
+        } else {
+            // get a collection of workEffortPartyAssignments, if empty then this user CANNOT view the event, unless they have permission to view all
+            if (userLogin != null && userLogin.get("partyId") != null && workEffortId != null) {
+                try {
+                    workEffortPartyAssignments =
+                            delegator.findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", workEffortId, "partyId", userLogin.get("partyId")));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+            }
+            canView = (workEffortPartyAssignments != null && workEffortPartyAssignments.size() > 0) ? new Boolean(true) : new Boolean(false);
+            if (!canView.booleanValue() && security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", pageContext.getSession())) {
+                canView = new Boolean(true);
+            }
+
+            tryEntity = new Boolean(true);
+
+            if (workEffort.get("currentStatusId") != null) {
+                try {
+                    currentStatus = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.get("currentStatusId")));
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+            }
+        }
+
+        // if there was an error message, don't get values from entity
+        if (pageContext.getRequest().getAttribute(SiteDefs.ERROR_MESSAGE) != null) {
+            tryEntity = new Boolean(false);
+        }
+
+        if (workEffortId != null)
+            pageContext.setAttribute(workEffortIdAttrName, workEffortId);
+        if (workEffort != null)
+            pageContext.setAttribute(workEffortAttrName, workEffort);
+        if (canView != null)
+            pageContext.setAttribute(canViewAttrName, canView);
+        if (workEffortPartyAssignments != null)
+            pageContext.setAttribute(partyAssignsAttrName, workEffortPartyAssignments);
+        if (tryEntity != null)
+            pageContext.setAttribute(tryEntityAttrName, tryEntity);
+        if (currentStatus != null)
+            pageContext.setAttribute(currentStatusAttrName, currentStatus);
+    }
+
     public static void getMonthWorkEffortEvents(PageContext pageContext, String attributeName) {}
 
     public static void getActivityContext(PageContext pageContext, String workEffortId) {
