@@ -422,6 +422,14 @@
         <implements service="calcShipmentEstimateInterface"/>
     </service>
 
+    <service name="upsRateEstimate" engine="java"
+            location="org.ofbiz.shipment.thirdparty.ups.UpsServices" invoke="upsRateInquire" auth="false">
+        <description>UPS On-Line rate inquire tool</description>
+        <implements service="calcShipmentEstimateInterface"/>
+        <attribute name="upsRateInquireMode" type="String" mode="IN" optional="true"/>
+        <attribute name="upsRateCodeMap" type="Map" mode="OUT" optional="false"/>
+    </service>
+
     <!-- Picking Related Services -->
     <service name="findOrdersToPickMove" engine="simple"
             location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findOrdersToPickMove">

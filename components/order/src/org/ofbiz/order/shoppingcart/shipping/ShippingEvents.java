@@ -1,5 +1,5 @@
 /*
- * $Id: ShippingEvents.java,v 1.12 2004/08/12 02:18:13 ajzeneski Exp $
+ * $Id: ShippingEvents.java,v 1.13 2004/08/12 21:33:34 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,6 +33,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -42,12 +43,13 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class ShippingEvents {
@@ -121,6 +123,7 @@ public class ShippingEvents {
             String shipmentMethodTypeId, String carrierPartyId, String carrierRoleTypeId, String shippingContactMechId,
             String productStoreId, List itemSizes, Map featureMap, double shippableWeight, double shippableQuantity,
             double shippableTotal) {
+        String standardMessage = "A problem occurred calculating shipping. Fees will be calculated offline.";
         List errorMessageList = new ArrayList();
 
         if (shipmentMethodTypeId == null || carrierPartyId == null) {
@@ -141,12 +144,6 @@ public class ShippingEvents {
             return ServiceUtil.returnError(errorMessageList);
         }
 
-        if (Debug.verboseOn()) {
-            Debug.logVerbose("Shippable Weight : " + shippableWeight, module);
-            Debug.logVerbose("Shippable Qty : " + shippableQuantity, module);
-            Debug.logVerbose("Shippable Total : " + shippableTotal, module);
-        }
-
         // no shippable items; we won't change any shipping at all
         if (shippableQuantity == 0) {
             Map result = ServiceUtil.returnSuccess();
@@ -155,19 +152,11 @@ public class ShippingEvents {
         }
 
         // check for an external service call
-        Map storeFields = UtilMisc.toMap("productStoreId", productStoreId, "shipmentMethodTypeId", shipmentMethodTypeId,
-                "partyId", carrierPartyId, "roleTypeId", carrierRoleTypeId);
+        GenericValue storeShipMethod = ProductStoreWorker.getProductStoreShipmentMethod(delegator, productStoreId,
+                shipmentMethodTypeId, carrierPartyId, carrierRoleTypeId);
 
-        GenericValue storeShipMeth = null;
-        try {
-            storeShipMeth = delegator.findByPrimaryKeyCache("ProductStoreShipmentMeth", storeFields);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, module);
-        }
-
-        if (storeShipMeth == null) {
-            Debug.logError("No ProductStoreShipmentMeth found - " + storeFields, module);
-            errorMessageList.add("System error.");
+        if (storeShipMethod == null) {
+            errorMessageList.add("System error");
             return ServiceUtil.returnError(errorMessageList);
         }
 
@@ -188,50 +177,27 @@ public class ShippingEvents {
         serviceFields.put("shipmentMethodTypeId", shipmentMethodTypeId);
         serviceFields.put("shippingContactMechId", shippingContactMechId);
 
-        // invoke the generic estimate service first
-        Map initalEstimate = null;
+        // call the external shipping service
         try {
-            initalEstimate = dispatcher.runSync("calcShipmentCostEstimate", serviceFields);
-        } catch (GenericServiceException e) {
-            Debug.logError(e, module);
-            return ServiceUtil.returnError("System Service Error");
-        }
-        if (ServiceUtil.isError(initalEstimate)) {
-            return initalEstimate;
-        } else {
-            Double initialShipAmt = (Double) initalEstimate.get("shippingEstimateAmount");
-            if (initialShipAmt != null) {
-                shippingTotal += initialShipAmt.doubleValue();
+            Double externalAmt = getExternalShipEstimate(dispatcher, storeShipMethod, serviceFields);
+            if (externalAmt != null) {
+                shippingTotal += externalAmt.doubleValue();
             }
+        } catch (GeneralException e) {
+            return ServiceUtil.returnSuccess(standardMessage);
         }
 
-        // invoke the external shipping estimate service - amount gets added to the inital total
-        if (storeShipMeth.get("serviceName") != null) {
-            String serviceName = storeShipMeth.getString("serviceName");
-            String configProps = storeShipMeth.getString("configProps");
-            if (UtilValidate.isNotEmpty(serviceName)) {
-                // prepare the external service context
-                serviceFields.put("serviceConfigProps", configProps);
-                serviceFields.put("initialEstimateAmt", new Double(shippingTotal));
+        // update the initial amount
+        serviceFields.put("initialEstimateAmt", new Double(shippingTotal));
 
-                // invoke the service
-                Map serviceResp = null;
-                try {
-                    Debug.log("Service : " + serviceName + " / " + configProps + " -- " + serviceFields, module);
-                    serviceResp = dispatcher.runSync(serviceName, serviceFields);
-                } catch (GenericServiceException e) {
-                    Debug.logError(e, module);
-                    return ServiceUtil.returnError("System Service Error");
-                }
-                if (!ServiceUtil.isError(serviceResp)) {
-                    Double externalShipAmt = (Double) serviceResp.get("shippingEstimateAmount");
-                    if (externalShipAmt != null) {
-                        shippingTotal += externalShipAmt.doubleValue();
-                    }
-                } else {
-                    return serviceResp;
-                }
+        // call the generic estimate service
+        try {
+            Double genericAmt = getGenericShipEstimate(dispatcher, storeShipMethod, serviceFields);
+            if (genericAmt != null) {
+                shippingTotal += genericAmt.doubleValue();
             }
+        } catch (GeneralException e) {
+            return ServiceUtil.returnSuccess(standardMessage);
         }
 
         // return the totals
@@ -240,107 +206,53 @@ public class ShippingEvents {
         return responseResult;
     }
 
-    /*
-     * Reserved for future use.
-     *
-     private static double getUPSRate(ShoppingCart cart, String fromZip, String upsMethod) {
-     HttpClient req = new HttpClient();
-     HashMap arguments = new HashMap();
-     double totalWeight = 0.00000;
-     double upsRate = 0.00;
+    public static Double getGenericShipEstimate(LocalDispatcher dispatcher, GenericValue storeShipMeth, Map context) throws GeneralException {
+        // invoke the generic estimate service next -- append to estimate amount
+        Map genericEstimate = null;
+        Double genericShipAmt = null;
+        try {
+            genericEstimate = dispatcher.runSync("calcShipmentCostEstimate", context);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Shipment Service Error", module);
+            throw new GeneralException();
+        }
+        if (ServiceUtil.isError(genericEstimate)) {
+            Debug.logError(ServiceUtil.getErrorMessage(genericEstimate), module);
+            throw new GeneralException();
+        } else {
+            genericShipAmt = (Double) genericEstimate.get("shippingEstimateAmount");
+        }
+        return genericShipAmt;
+    }
 
-     HashMap services = new HashMap();
-     services.put("1DA","Next Day Air");
-     services.put("1DM","Next Day Air Early");
-     services.put("1DP","Next Day Air Saver");
-     services.put("1DAPI","Next Day Air Intra (Puerto Rico)");
-     services.put("2DA","2nd Day Air");
-     services.put("2DM","2nd Day Air A.M.");
-     services.put("3DS","3rd Day");
-     services.put("GND","Ground Service");
-     services.put("STD","Canada Standard");
-     services.put("XPR","Worldwide Express");
-     services.put("XDM","Worldwide Express Plus");
-     services.put("XPD","Worldwide Expedited");
+    public static Double getExternalShipEstimate(LocalDispatcher dispatcher, GenericValue storeShipMeth, Map context) throws GeneralException {
+        // invoke the external shipping estimate service
+        Double externalShipAmt = null;
+        if (storeShipMeth.get("serviceName") != null) {
+            String serviceName = storeShipMeth.getString("serviceName");
+            String configProps = storeShipMeth.getString("configProps");
+            if (UtilValidate.isNotEmpty(serviceName)) {
+                // prepare the external service context
+                context.put("serviceConfigProps", configProps);
 
-     if ( !services.containsKey(upsMethod) )
-     return 0.00;
-
-     // Get the total weight from the cart.
-     Iterator cartItemIterator = cart.iterator();
-     while ( cartItemIterator.hasNext() ) {
-     ShoppingCartItem item = (ShoppingCartItem) cartItemIterator.next();
-     totalWeight += (item.getWeight() * item.getQuantity());
-     }
-     String weightString = new Double(totalWeight).toString();
-     if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Total Weight: " + weightString, module);
-
-     // Set up the UPS arguments.
-     arguments.put("AppVersion","1.2");
-     arguments.put("ResponseType","application/x-ups-rss");
-     arguments.put("AcceptUPSLicenseAgreement","yes");
-
-     arguments.put("RateChart","Regular Daily Pickup");              // ?
-     arguments.put("PackagingType","00");                                  // Using own container
-     arguments.put("ResidentialInd","1");                                     // Assume residential
-
-     arguments.put("ShipperPostalCode",fromZip);                      // Ship From ZipCode
-     arguments.put("ConsigneeCountry","US");                            // 2 char country ISO
-     arguments.put("ConsigneePostalCode","27703");                 // Ship TO ZipCode
-     arguments.put("PackageActualWeight",weightString);          // Total shipment weight
-
-     arguments.put("ActionCode","3");                                         // Specify the shipping type. (4) to get all
-     arguments.put("ServiceLevelCode",upsMethod);                   // User's shipping choice (or 1DA for ActionCode 4)
-
-     String upsResponse = null;
-     try {
-     req.setUrl(UPS_RATES_URL);
-     req.setLineFeed(false);
-     req.setParameters(arguments);
-     upsResponse = req.get();
-     }
-     catch ( HttpClientException e ) {
-     Debug.logError("[ShippingEvents.getUPSRate] Problems getting UPS Rate Infomation.", module);
-     return -1;
-     }
-
-     if ( upsResponse.indexOf("application/x-ups-error") != -1 ) {
-     // get the error message
-     }
-     else if ( upsResponse.indexOf("application/x-ups-rss") != -1 ) {
-     // get the content
-     upsResponse = upsResponse.substring(upsResponse.indexOf("UPSOnLine"));
-     upsResponse = upsResponse.substring(0,upsResponse.indexOf("--UPSBOUNDARY--") -1 );
-     ArrayList respList = new ArrayList();
-     while ( upsResponse.indexOf("%") != -1 ) {
-     respList.add(upsResponse.substring(0,upsResponse.indexOf("%")));
-     upsResponse = upsResponse.substring(upsResponse.indexOf("%") + 1);
-     if ( upsResponse.indexOf("%") == -1 )
-     respList.add(upsResponse);
-     }
-
-     // Debug:
-     Iterator i = respList.iterator();
-     while ( i.hasNext() ) {
-     String value = (String) i.next();
-     if (Debug.infoOn()) Debug.logInfo("[ShippingEvents.getUPSRate] Resp List: " + value, module);
-     }
-
-     // Shipping method is index 5
-     // Shipping rate is index 12
-     if ( !respList.get(5).equals(upsMethod) )
-     Debug.logInfo("[ShippingEvents.getUPSRate] Shipping method does not match.", module);
-     try {
-     upsRate = Double.parseDouble((String)respList.get(12));
-     }
-     catch ( NumberFormatException nfe ) {
-     Debug.logError("[ShippingEvents.getUPSRate] Problems parsing rate value.", module);
-     }
-     }
-
-     return upsRate;
-     }
-     */
-
+                // invoke the service
+                Map serviceResp = null;
+                try {
+                    Debug.log("Service : " + serviceName + " / " + configProps + " -- " + context, module);
+                    serviceResp = dispatcher.runSync(serviceName, context);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Shipment Service Error", module);
+                    throw new GeneralException();
+                }
+                if (!ServiceUtil.isError(serviceResp)) {
+                    externalShipAmt = (Double) serviceResp.get("shippingEstimateAmount");
+                } else {
+                    Debug.logError(ServiceUtil.getErrorMessage(serviceResp), module);
+                    throw new GeneralException();
+                }
+            }
+        }
+        return externalShipAmt;
+    }
 }
 
