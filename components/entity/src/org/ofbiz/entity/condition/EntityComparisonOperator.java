@@ -1,5 +1,5 @@
 /*
- * $Id: EntityComparisonOperator.java,v 1.10 2004/07/21 03:03:33 doogie Exp $
+ * $Id: EntityComparisonOperator.java,v 1.11 2004/07/21 03:05:40 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.entity.model.ModelField;
  *
  * @author     <a href="mailto:adam@doogie.org">Adam Heath</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  */
 public class EntityComparisonOperator extends EntityOperator {
@@ -120,6 +120,10 @@ public class EntityComparisonOperator extends EntityOperator {
             
     public boolean compare(Object lhs, Object rhs) {
         throw new UnsupportedOperationException(codeString);
+    }
+
+    public Object eval(GenericDelegator delegator, Map map, Object lhs, Object rhs) {
+        return mapMatches(delegator, map, lhs, rhs) ? Boolean.TRUE : Boolean.FALSE;
     }
 
     public boolean mapMatches(GenericDelegator delegator, Map map, Object lhs, Object rhs) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityJoinOperator.java,v 1.7 2004/07/14 06:36:18 doogie Exp $
+ * $Id: EntityJoinOperator.java,v 1.8 2004/07/21 03:05:40 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.model.ModelEntity;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  */
 public class EntityJoinOperator extends EntityOperator {
 
@@ -112,6 +112,10 @@ public class EntityJoinOperator extends EntityOperator {
         return entityMatches(entity, (EntityCondition) lhs, (EntityCondition) rhs);
     }
 
+    public Object eval(GenericEntity entity, EntityCondition lhs, EntityCondition rhs) {
+        return entityMatches(entity, lhs, rhs) ? Boolean.TRUE : Boolean.FALSE;
+    }
+
     public boolean entityMatches(GenericEntity entity, EntityCondition lhs, EntityCondition rhs) {
         if (lhs.entityMatches(entity)) return shortCircuitValue;
         if (rhs.entityMatches(entity)) return shortCircuitValue;
@@ -122,10 +126,18 @@ public class EntityJoinOperator extends EntityOperator {
         return mapMatches(entity.getDelegator(), entity, conditionList);
     }
 
+    public Object eval(GenericDelegator delegator, Map map, Object lhs, Object rhs) {
+        return castBoolean(mapMatches(delegator, map, lhs, rhs));
+    }
+
     public boolean mapMatches(GenericDelegator delegator, Map map, Object lhs, Object rhs) {
         if (((EntityCondition) lhs).mapMatches(delegator, map)) return shortCircuitValue;
         if (((EntityCondition) rhs).mapMatches(delegator, map)) return shortCircuitValue;
         return !shortCircuitValue;
+    }
+
+    public Object eval(GenericDelegator delegator, Map map, List conditionList) {
+        return castBoolean(mapMatches(delegator, map, conditionList));
     }
 
     public boolean mapMatches(GenericDelegator delegator, Map map, List conditionList) {

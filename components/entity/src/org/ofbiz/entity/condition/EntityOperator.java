@@ -1,5 +1,5 @@
 /*
- * $Id: EntityOperator.java,v 1.11 2004/07/14 06:36:18 doogie Exp $
+ * $Id: EntityOperator.java,v 1.12 2004/07/21 03:05:40 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.0
  */
 public abstract class EntityOperator extends EntityConditionBase {
@@ -210,6 +210,10 @@ public abstract class EntityOperator extends EntityConditionBase {
             addValue(whereStringBuffer, field, rhs, entityConditionParams);
         }
         whereStringBuffer.append(')');
+    }
+
+    public Object eval(GenericDelegator delegator, Map map, Object lhs, Object rhs) {
+        return castBoolean(mapMatches(delegator, map, lhs, rhs));
     }
 
     public abstract boolean mapMatches(GenericDelegator delegator, Map map, Object lhs, Object rhs);
