@@ -91,7 +91,7 @@ public class CacheLineTable implements Serializable {
         this.setLru(maxInMemory);
     }
 
-    public Object put(Object key, Object value) {
+    public synchronized Object put(Object key, Object value) {
         memoryTable.put(key, value);
         if (fileTable != null) {
             try {
@@ -117,7 +117,7 @@ public class CacheLineTable implements Serializable {
         return value;
     }
 
-    public Object remove(Object key) {
+    public synchronized Object remove(Object key) {
         Object value = this.get(key);
         if (fileTable != null) {
             try {
@@ -130,7 +130,7 @@ public class CacheLineTable implements Serializable {
         return value;
     }
 
-    public Collection values() {
+    public synchronized Collection values() {
         LinkedList values = new LinkedList();
 
         if (fileTable != null) {
@@ -151,7 +151,7 @@ public class CacheLineTable implements Serializable {
         return values;
     }
 
-    public Set keySet() {
+    public synchronized Set keySet() {
         HashSet keys = new HashSet();
 
         if (fileTable != null) {
@@ -172,7 +172,7 @@ public class CacheLineTable implements Serializable {
         return keys;
     }
 
-    public void clear() {
+    public synchronized void clear() {
         if (fileTable != null && this.size() > 0) {
             try {
                 // remove this table
@@ -197,7 +197,7 @@ public class CacheLineTable implements Serializable {
         }
     }
 
-    public void setLru(int newSize) {
+    public synchronized void setLru(int newSize) {
         this.maxInMemory = newSize;
 
         Map oldmap = null;
@@ -217,7 +217,7 @@ public class CacheLineTable implements Serializable {
         }
     }
 
-    public Object getKeyFromMemory(int index) {
+    public synchronized Object getKeyFromMemory(int index) {
         Iterator i = null;
         if (memoryTable instanceof LRUMap) {
             i = ((LRUMap) memoryTable).orderedMapIterator();
