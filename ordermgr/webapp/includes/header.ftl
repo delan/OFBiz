@@ -53,5 +53,6 @@
   </#if>
   <div class="col-right"><a href='<@ofbizUrl>/shipsetup</@ofbizUrl>' class="${selectedRightClassMap.setup?default(unselectedRightClassName)}">Setup</a></div>
   <div class="col-right"><a href='<@ofbizUrl>/orderreportlist</@ofbizUrl>' class="${selectedRightClassMap.reports?default(unselectedRightClassName)}">Reports</a></div>
+  <div class="col-right"><a href='<@ofbizUrl>/orderstats</@ofbizUrl>' class="${selectedRightClassMap.stats?default(unselectedRightClassName)}">Stats</a></div>
   <div class="col-fill">&nbsp;</div>
 </div>

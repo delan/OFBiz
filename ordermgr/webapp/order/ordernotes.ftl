@@ -32,9 +32,9 @@
           <td valign="middle" align="left">
             <div class="boxhead">&nbsp;Notes</div>
           </td>
-          <td valign="middle" align="right">&nbsp;
+          <td valign="middle" align="right">
             <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>  
-              <a href="<@ofbizUrl>/createnewnote?${paramString}</@ofbizUrl>" class="submenutextright">Create New</a>&nbsp;&nbsp;
+              <a href="<@ofbizUrl>/createnewnote?${paramString}</@ofbizUrl>" class="submenutextright">Create New</a>
             </#if>
           </td>
         </tr>

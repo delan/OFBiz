@@ -96,13 +96,4 @@
         <welcome-file>index.html</welcome-file>
         <welcome-file>index.htm</welcome-file>
     </welcome-file-list>
-
-    <taglib> 
-        <taglib-uri>ofbizTags</taglib-uri>
-        <taglib-location>/WEB-INF/ofbiz.tld</taglib-location> 
-    </taglib> 
-    <taglib>
-        <taglib-uri>regions</taglib-uri>
-        <taglib-location>/WEB-INF/regions.tld</taglib-location> 
-    </taglib> 
 </web-app>
