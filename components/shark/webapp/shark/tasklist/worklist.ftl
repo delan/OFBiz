@@ -14,7 +14,7 @@
       <td><div class="tableheadtext">State Change</div></td>
       <td>&nbsp;</td>
     </tr>
-    <assign formNumber = 0>
+    <#assign formNumber = 0>
     <#list assignments as assignm>
       <#assign formNumber = formNumber + 1>
       <#assign state = assignm.activity().state()?default("open.not_running.not_started")>

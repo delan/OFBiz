@@ -1,5 +1,5 @@
 /*
- * $Id: ProcessMgr.java,v 1.2 2004/05/11 16:59:55 ajzeneski Exp $
+ * $Id: ProcessMgr.java,v 1.3 2004/06/07 16:48:28 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.enhydra.shark.api.internal.instancepersistence.*;
  * Persistance Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class ProcessMgr implements ProcessMgrPersistenceInterface {
@@ -71,7 +71,7 @@ public class ProcessMgr implements ProcessMgrPersistenceInterface {
     public ProcessMgr(GenericDelegator delegator) {
         this.newValue = true;
         this.delegator = delegator;
-        this.processMgr = delegator.makeValue("WfProcessMgr", UtilMisc.toMap("state", new Long(0)));
+        this.processMgr = delegator.makeValue("WfProcessMgr", UtilMisc.toMap("currentState", new Long(0)));
     }
 
     public static ProcessMgr getInstance(GenericValue processMgr) throws PersistenceException {
