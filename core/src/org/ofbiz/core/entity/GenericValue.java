@@ -48,7 +48,7 @@ public class GenericValue extends GenericEntity {
   /** Creates new GenericValue from existing GenericValue */
   public GenericValue(GenericPK primaryKey) { super(primaryKey); }
   
-  public void create() { helper.create(this); }
+  public GenericValue create() { return helper.create(this); }
   public void store() { helper.store(this); }
   public void remove() { helper.removeByPrimaryKey(getPrimaryKey()); }
   public void refresh() { helper.refresh(this); }
