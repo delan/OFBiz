@@ -19,14 +19,14 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@zsolv.com)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones
  *@created    October 18, 2001
  *@version    1.0
 --%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="java.util.*" %>
+<%@ page import="java.util.*, java.sql.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*, org.ofbiz.commonapp.party.contact.*" %>
 
@@ -135,6 +135,26 @@
         highIndex = listSize;
     }
     if (lookupErrorMessage != null) pageContext.setAttribute("lookupErrorMessage", lookupErrorMessage);
+    
+    Calendar fromCal = Calendar.getInstance();
+    fromCal.setTimeInMillis(System.currentTimeMillis());
+    fromCal.set(Calendar.DAY_OF_WEEK, fromCal.getActualMinimum(Calendar.DAY_OF_WEEK));
+    fromCal.set(Calendar.HOUR_OF_DAY, fromCal.getActualMinimum(Calendar.HOUR_OF_DAY));
+    fromCal.set(Calendar.MINUTE, fromCal.getActualMinimum(Calendar.MINUTE));
+    fromCal.set(Calendar.SECOND, fromCal.getActualMinimum(Calendar.SECOND));
+    Timestamp fromTs = new Timestamp(fromCal.getTimeInMillis());
+    String fromStr = fromTs.toString();
+    fromStr = fromStr.substring(0, fromStr.indexOf('.'));
+
+    Calendar toCal = Calendar.getInstance();
+    toCal.setTimeInMillis(System.currentTimeMillis());
+    toCal.set(Calendar.DAY_OF_WEEK, toCal.getActualMaximum(Calendar.DAY_OF_WEEK));
+    toCal.set(Calendar.HOUR_OF_DAY, toCal.getActualMaximum(Calendar.HOUR_OF_DAY));
+    toCal.set(Calendar.MINUTE, toCal.getActualMaximum(Calendar.MINUTE));
+    toCal.set(Calendar.SECOND, toCal.getActualMaximum(Calendar.SECOND));
+    Timestamp toTs = new Timestamp(toCal.getTimeInMillis());
+    String toStr = toTs.toString();
+    toStr = toStr.substring(0, toStr.indexOf('.'));
 %>
 
 <br>
@@ -204,6 +224,7 @@
                   <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Min</div></td>
                   <td width="40%">
                     <input type="text" name="minDate" size="22" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("minDate"))%>'>
+                    <a href="javascript:call_cal(document.lookuporderd.minDate, '<%=fromStr%>');"><IMG SRC='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                   </td>
                   <td width="35%">&nbsp</td>
                 </tr>
@@ -211,6 +232,7 @@
                   <td width="25%" align=right><div class="tabletext">Date&nbsp;Span:&nbsp;Max</div></td>
                   <td width="40%">
                     <input type="text" name="maxDate" size="22" style="font-size: small;" value='<%=UtilFormatOut.checkNull(request.getParameter("maxDate"))%>'>
+                    <a href="javascript:call_cal(document.lookuporderd.maxDate, '<%=toStr%>');"><IMG SRC='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                   </td>
                   <td width="35%"><a href="javascript:document.lookuporderd.submit()" class="buttontext">[Lookup Orders]</a></td>
                 </tr>
