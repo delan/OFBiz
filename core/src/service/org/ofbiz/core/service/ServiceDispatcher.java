@@ -712,7 +712,7 @@ public class ServiceDispatcher {
                 if (model.debug && enable && debugOn) {
                     // turn it off
                     Debug.set(Debug.VERBOSE, false);
-                    Debug.logVerbose("Verbose logging turned IN", module);
+                    Debug.logVerbose("Verbose logging turned OFF", module);
                     return true;
                 }               
                 break;
@@ -720,7 +720,7 @@ public class ServiceDispatcher {
                 if (model.debug && enable && !debugOn) {
                     // turn it on
                     Debug.set(Debug.VERBOSE, true);
-                    Debug.logInfo("Verbose logging turned OFF", module);
+                    Debug.logInfo("Verbose logging turned ON", module);
                     return true;                  
                 }
                 break;
