@@ -132,8 +132,8 @@ if (product != null) {
 
     // get categories
     List allCategories = delegator.findByAnd("ProductCategory",
-            UtilMisc.toList(new EntityExpr("showInSelect", EntityOperator.NOT_EQUAL, "N")),
-            UtilMisc.toList("description"));
+            new EntityExpr(new EntityExpr("showInSelect", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr("showInSelect", EntityOperator.NOT_EQUAL, "N")),
+            null, UtilMisc.toList("description"));
 
     List categoryMembers = product.getRelated("ProductCategoryMember");
     categoryMembers = EntityUtil.filterByDate(categoryMembers);
@@ -219,7 +219,7 @@ if (product != null) {
         }
         context.put("grams", grams);
     }
-    prodFeaturesFiltered = EntityUtil.filterByAnd(productFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", "NET_WEIGHT", "uomId", "WT_oz"));
+    prodFeaturesFiltered = EntityUtil.filterByAnd(productFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", "AMOUNT", "uomId", "WT_oz"));
     if (prodFeaturesFiltered.size() > 0) {
         try {
             ntwt = ((GenericValue)prodFeaturesFiltered.get(0)).getDouble("numberSpecified");
@@ -275,7 +275,7 @@ if (product != null) {
             if (prodFeaturesFiltered.size() > 0) {
                 featureGrams.put(assocProduct.getString("productId"), ((GenericValue)prodFeaturesFiltered.get(0)).getDouble("numberSpecified"));
             }
-            prodFeaturesFiltered = EntityUtil.filterByAnd(assocProductFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", "NET_WEIGHT", "uomId", "WT_oz"));
+            prodFeaturesFiltered = EntityUtil.filterByAnd(assocProductFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", "AMOUNT", "uomId", "WT_oz"));
             if (prodFeaturesFiltered.size() > 0) {
                 featureNtwt.put(assocProduct.getString("productId"), ((GenericValue)prodFeaturesFiltered.get(0)).getDouble("numberSpecified"));
             }
