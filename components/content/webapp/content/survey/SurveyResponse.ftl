@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.1
 -->
 
@@ -32,6 +32,7 @@
   <table width="100%" border="0" cellpadding="2" cellspacing="0">
     <#assign questions = surveyWrapper.getSurveyQuestions()>
     <#assign surveyResults = surveyWrapper.getResults(questions)>
+
     <#if questions?has_content>
       <#list questions as question>
         <#assign results = surveyResults.get(question.surveyQuestionId)?if_exists>
@@ -70,7 +71,6 @@
                 </div>
               <#elseif question.surveyQuestionTypeId == "OPTION">
                 <#assign options = question.getRelated("SurveyQuestionOption", sequenceSort)?if_exists>
-                <#assign selectedOption = (answer.surveyOptionSeqId)?default("_NA_")>
                 <#if options?has_content>
                   <#list options as option>
                     <#assign optionResults = results.get(option.surveyOptionSeqId)?if_exists>
@@ -82,12 +82,44 @@
                     </div>
                   </#list>
                 </#if>
+              <#else>
+                <#assign answers = surveyWrapper.getQuestionResponses(question, 0, 0)>
+                <#if answers?has_content>
+                  <#list answers as answer>
+                    <#if question.surveyQuestionTypeId == "TEXTAREA">
+                      <div class="tabletext">${(answer.textResponse)?if_exists}</div>
+                    <#elseif question.surveyQuestionTypeId == "TEXT_SHORT">
+                      <div class="tabletext">${(answer.textResponse)?if_exists}</div>
+                    <#elseif question.surveyQuestionTypeId == "TEXT_LONG">
+                      <div class="tabletext">${(answer.textResponse)?if_exists}</div>
+                    <#elseif question.surveyQuestionTypeId == "EMAIL">
+                      <div class="tabletext">${(answer.textResponse)?if_exists}</div>
+                    <#elseif question.surveyQuestionTypeId == "URL">
+                      <div class="tabletext">${(answer.textResponse)?if_exists}</div>
+                    <#elseif question.surveyQuestionTypeId == "DATE">
+                      <div class="tabletext">${(answer.textResponse)?if_exists}</div>
+                    <#elseif question.surveyQuestionTypeId == "CREDIT_CARD">
+                      <div class="tabletext">${(answer.textResponse)?if_exists}</div>
+                    <#elseif question.surveyQuestionTypeId == "GIFT_CARD">
+                      <div class="tabletext">${(answer.textResponse)?if_exists}</div>
+                    <#elseif question.surveyQuestionTypeId == "NUMBER_CURRENCY">
+                      <div class="tabletext">${answer.currencyResponse?default(0)?string.currency}</div>
+                    <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
+                      <div class="tabletext">${answer.floatResponse?default(0)?string("#")}</div>
+                    <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">
+                      <div class="tabletext">${answer.numericResponse?default(0)?string("#")}&nbsp;[Tally: ${results._tally?default(0)?string("#")} / Average: ${results._average?default(0)?string("#")}]</div>
+                    <#elseif question.surveyQuestionTypeId == "PASSWORD">
+                      <div class="tabletext">[Not Shown]</div>
+                    </#if>
+                  </#list>
+                </#if>
               </#if>
             </td>
 
             <td width="90%">&nbsp;</td>
           </#if>
         </tr>
+        <tr><td colspan="3">&nbsp;</td></tr>
       </#list>
     <#else>
       <tr>

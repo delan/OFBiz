@@ -1,5 +1,5 @@
 /*
- * $Id: SurveyWrapper.java,v 1.10 2004/05/21 07:05:38 ajzeneski Exp $
+ * $Id: SurveyWrapper.java,v 1.11 2004/05/25 16:22:20 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,7 @@ import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -57,7 +58,7 @@ import freemarker.ext.beans.BeansWrapper;
  * Survey Wrapper - Class to render survey forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  */
 public class SurveyWrapper {
@@ -311,6 +312,27 @@ public class SurveyWrapper {
         return answerMap;
     }
 
+    public List getQuestionResponses(GenericValue question, int startIndex, int number) throws SurveyWrapperException {
+        EntityListIterator eli = this.getEli(question);
+        List resp = null;
+        try {
+            if (startIndex > 0 && number > 0) {
+                resp = eli.getPartialList(startIndex, number);
+            } else {
+                resp = eli.getCompleteList();
+            }
+        } catch (GenericEntityException e) {
+            throw new SurveyWrapperException(e);
+        } finally {
+            try {
+                eli.close();
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+            }
+        }
+        return resp;
+    }
+
     public Map getResults(List questions) throws SurveyWrapperException {
         Map questionResults = new HashMap();
         if (questions != null) {
@@ -543,9 +565,15 @@ public class SurveyWrapper {
     }
 
     private EntityListIterator getEli(GenericValue question) throws SurveyWrapperException {
+        EntityFindOptions efo = new EntityFindOptions();
+        efo.setResultSetType(EntityFindOptions.TYPE_SCROLL_INSENSITIVE);
+        efo.setResultSetConcurrency(EntityFindOptions.CONCUR_READ_ONLY);
+        efo.setSpecifyTypeAndConcur(true);
+        efo.setDistinct(false);
+
         EntityListIterator eli = null;
         try {
-            eli = delegator.findListIteratorByCondition("SurveyResponseAndAnswer", makeEliCondition(question), null, null);
+            eli = delegator.findListIteratorByCondition("SurveyResponseAndAnswer", makeEliCondition(question), null, null, null, efo);
         } catch (GenericEntityException e) {
             Debug.logError(e, module);
             throw new SurveyWrapperException("Unable to get responses", e);
