@@ -55,6 +55,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <entity-data-reader name="main"/>
 
     <field-type name="hsql" loader="fieldfile" location="fieldtypehsql.xml"/>
+    <field-type name="derby" loader="fieldfile" location="fieldtypederby.xml"/>
     <field-type name="cloudscape" loader="fieldfile" location="fieldtypecloudscape.xml"/>
     <field-type name="mysql" loader="fieldfile" location="fieldtypemysql.xml"/>
     <field-type name="postgres" loader="fieldfile" location="fieldtypepostgres.xml"/>
@@ -94,7 +95,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <read-data reader-name="main"/>
         <inline-jdbc
                 jdbc-driver="org.hsqldb.jdbcDriver"
-                jdbc-uri="jdbc:hsqldb:data/ofbiz"
+                jdbc-uri="jdbc:hsqldb:data/hsqldb/ofbiz"
                 jdbc-username="sa"
                 jdbc-password=""
                 isolation-level="ReadUncommitted"
@@ -103,6 +104,22 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/HsqlDataSource" isolation-level="ReadUncommitted"/> -->
         <!-- <jndi-jdbc jndi-server-name="default" jndi-name="comp/env/jdbc/xa/localhsql" isolation-level="ReadUncommitted"/> --> <!-- Orion Style JNDI name -->
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="localhsqlDataSource"/> --> <!-- Weblogic Style JNDI name -->
+    </datasource>
+
+    <datasource name="localderby"
+            helper-class="org.ofbiz.entity.datasource.GenericHelperDAO"
+            schema-name="OFBIZ"
+            field-type-name="derby"
+            check-on-start="true"
+            add-missing-on-start="true"
+            use-pk-constraint-names="false">
+        <read-data reader-name="main"/>
+        <inline-jdbc
+                jdbc-driver="com.ihost.cs.jdbc.CloudscapeDriver"
+                jdbc-uri="jdbc:cloudscape:data/derby/ofbiz; create=true"
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
+                isolation-level="ReadCommitted"/>
     </datasource>
 
     <datasource name="localcloudscape"

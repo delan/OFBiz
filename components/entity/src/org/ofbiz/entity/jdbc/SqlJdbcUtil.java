@@ -31,6 +31,7 @@ import java.io.Reader;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Clob;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -506,13 +507,13 @@ public class SqlJdbcUtil {
                         // Debug.logInfo("For field " + curField.getName() + " of entity " + entity.getEntityName() + " getString is a CLOB, trying getCharacterStream", module);
                         // if the String is empty, try to get a text input stream, this is required for some databases for larger fields, like CLOBs
                         
-                        /*Clob valueClob = rs.getClob(ind);
+                        Clob valueClob = rs.getClob(ind);
                         Reader valueReader = null;
                         if (valueClob != null) {
                             valueReader = valueClob.getCharacterStream();
-                        }*/
+                        }
                         
-                        Reader valueReader = rs.getCharacterStream(ind);
+                        //Reader valueReader = rs.getCharacterStream(ind);
                         if (valueReader != null) {
                             char[] inCharBuffer = new char[CHAR_BUFFER_SIZE];
                             StringBuffer strBuf = new StringBuffer();

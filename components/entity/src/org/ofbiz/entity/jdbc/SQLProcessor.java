@@ -552,7 +552,18 @@ public class SQLProcessor {
                 _ps.setString(_ind, field);
             //}
         } else {
-            _ps.setNull(_ind, Types.VARCHAR);
+            // silly workaround for Derby (Cloudscape 10 beta Bug #5928)
+            // this should be removed after the know bug is fixed
+            try {
+                _ps.setNull(_ind, Types.VARCHAR);
+            } catch (SQLException e) {
+                try {
+                    _ps.setString(_ind, null);
+                } catch (SQLException e2) {
+                    Debug.logError(e2, module);
+                    throw e;
+                }
+            }
         }
         _ind++;
     }
