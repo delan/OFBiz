@@ -41,14 +41,14 @@ public class SessionToField extends MethodOperation {
     
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
-    ServletAccessor sessionAcsr;
+    FlexibleServletAccessor sessionAcsr;
     String defaultVal;
 
     public SessionToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
-        sessionAcsr = new ServletAccessor(element.getAttribute("session-name"), element.getAttribute("field-name"));
+        sessionAcsr = new FlexibleServletAccessor(element.getAttribute("session-name"), element.getAttribute("field-name"));
         defaultVal = element.getAttribute("default");
     }
 
@@ -58,7 +58,7 @@ public class SessionToField extends MethodOperation {
         Object fieldVal = null;
         // only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
-            fieldVal = sessionAcsr.get(methodContext.getRequest().getSession(), methodContext);
+            fieldVal = sessionAcsr.get(methodContext.getRequest().getSession(), methodContext.getEnvMap());
             if (fieldVal == null) {
                 Debug.logWarning("Session attribute value not found with name " + sessionAcsr);
             }

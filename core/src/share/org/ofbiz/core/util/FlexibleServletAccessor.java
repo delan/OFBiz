@@ -21,12 +21,11 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.core.minilang.method;
+package org.ofbiz.core.util;
 
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import org.ofbiz.core.util.*;
 
 /**
  * Used to flexibly access Map values, supporting the "." (dot) syntax for
@@ -37,7 +36,7 @@ import org.ofbiz.core.util.*;
  * @version    $Revision$
  * @since      2.1
  */
-public class ServletAccessor {
+public class FlexibleServletAccessor {
 
     protected String name;
     protected String attributeName;
@@ -45,11 +44,11 @@ public class ServletAccessor {
     protected boolean needsExpand;
     protected boolean empty;
 
-    public ServletAccessor(String name) {
+    public FlexibleServletAccessor(String name) {
         init(name);
     }
     
-    public ServletAccessor(String name, String defaultName) {
+    public FlexibleServletAccessor(String name, String defaultName) {
         if (name == null || name.length() == 0) {
             init(defaultName);
         } else {
@@ -91,14 +90,14 @@ public class ServletAccessor {
     }
 
     /** Based on name get from ServletRequest or from List in ServletRequest */
-    public Object get(ServletRequest request, MethodContext methodContext) {
-        AttributeAccessor aa = new AttributeAccessor(name, methodContext, this.attributeName, this.fma, this.needsExpand);
+    public Object get(ServletRequest request, Map expandContext) {
+        AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.get(request);
     }
 
     /** Based on name get from HttpSession or from List in HttpSession */
-    public Object get(HttpSession session, MethodContext methodContext) {
-        AttributeAccessor aa = new AttributeAccessor(name, methodContext, this.attributeName, this.fma, this.needsExpand);
+    public Object get(HttpSession session, Map expandContext) {
+        AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.get(session);
     }
 
@@ -108,8 +107,8 @@ public class ServletAccessor {
      * If a "+" (plus sign) is included inside the square brackets before the index 
      * number the value will inserted/added at that point instead of set at the point.
      */
-    public void put(ServletRequest request, Object value, MethodContext methodContext) {
-        AttributeAccessor aa = new AttributeAccessor(name, methodContext, this.attributeName, this.fma, this.needsExpand);
+    public void put(ServletRequest request, Object value, Map expandContext) {
+        AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         aa.put(request, value);
     }
     
@@ -119,20 +118,20 @@ public class ServletAccessor {
      * If a "+" (plus sign) is included inside the square brackets before the index 
      * number the value will inserted/added at that point instead of set at the point.
      */
-    public void put(HttpSession session, Object value, MethodContext methodContext) {
-        AttributeAccessor aa = new AttributeAccessor(name, methodContext, this.attributeName, this.fma, this.needsExpand);
+    public void put(HttpSession session, Object value, Map expandContext) {
+        AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         aa.put(session, value);
     }
     
     /** Based on name remove from ServletRequest or from List in ServletRequest */
-    public Object remove(ServletRequest request, MethodContext methodContext) {
-        AttributeAccessor aa = new AttributeAccessor(name, methodContext, this.attributeName, this.fma, this.needsExpand);
+    public Object remove(ServletRequest request, Map expandContext) {
+        AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.remove(request);
     }
     
     /** Based on name remove from HttpSession or from List in HttpSession */
-    public Object remove(HttpSession session, MethodContext methodContext) {
-        AttributeAccessor aa = new AttributeAccessor(name, methodContext, this.attributeName, this.fma, this.needsExpand);
+    public Object remove(HttpSession session, Map expandContext) {
+        AttributeAccessor aa = new AttributeAccessor(name, expandContext, this.attributeName, this.fma, this.needsExpand);
         return aa.remove(session);
     }
     
@@ -143,12 +142,12 @@ public class ServletAccessor {
 
     /** The equals and hashCode methods are imnplemented just case this object is ever accidently used as a Map key */    
     public boolean equals(Object obj) {
-        if (obj instanceof ContextAccessor) {
-            ContextAccessor contextAccessor = (ContextAccessor) obj;
+        if (obj instanceof FlexibleServletAccessor) {
+            FlexibleServletAccessor flexibleServletAccessor = (FlexibleServletAccessor) obj;
             if (this.name == null) {
-                return contextAccessor.name == null;
+                return flexibleServletAccessor.name == null;
             }
-            return this.name.equals(contextAccessor.name);
+            return this.name.equals(flexibleServletAccessor.name);
         } else {
             String str = (String) obj;
             if (this.name == null) {
@@ -164,7 +163,7 @@ public class ServletAccessor {
     }
     
     protected static class AttributeAccessor {
-        protected MethodContext methodContext;
+        protected Map expandContext;
         protected String attributeName;
         protected FlexibleMapAccessor fma;
         protected boolean isListReference;
@@ -174,12 +173,12 @@ public class ServletAccessor {
         protected int openBrace;
         protected int closeBrace;
         
-        public AttributeAccessor(String origName, MethodContext methodContext, String defAttributeName, FlexibleMapAccessor defFma, boolean needsExpand) {
+        public AttributeAccessor(String origName, Map expandContext, String defAttributeName, FlexibleMapAccessor defFma, boolean needsExpand) {
             attributeName = defAttributeName;
             fma = defFma;
             
             if (needsExpand) {
-                String name = methodContext.expandString(origName);
+                String name = FlexibleStringExpander.expandString(origName, expandContext);
                 int dotIndex = name.indexOf('.');
                 if (dotIndex != -1) {
                     attributeName = name.substring(0, dotIndex);

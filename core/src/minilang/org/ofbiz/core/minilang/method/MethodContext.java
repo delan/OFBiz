@@ -158,6 +158,10 @@ public class MethodContext {
     public int getMethodType() {
         return this.methodType;
     }
+
+    public Map getEnvMap() {
+        return this.env;
+    }
     
     /** Gets the named value from the environment. Supports the "." (dot) syntax to access Map members and the
      * "[]" (bracket) syntax to access List entries. This value is expanded, supporting the insertion of other 
@@ -172,7 +176,7 @@ public class MethodContext {
         return this.getEnv(fma);
     }
     public Object getEnv(FlexibleMapAccessor fma) {
-        return fma.get(env);
+        return fma.get(this.env);
     }
 
     /** Puts the named value in the environment. Supports the "." (dot) syntax to access Map members and the
@@ -193,7 +197,7 @@ public class MethodContext {
         this.putEnv(fma, value);
     }
     public void putEnv(FlexibleMapAccessor fma, Object value) {
-        fma.put(env, value);
+        fma.put(this.env, value);
     }
 
     /** Calls putEnv for each entry in the Map, thus allowing for the additional flexibility in naming 
@@ -219,7 +223,7 @@ public class MethodContext {
         return this.removeEnv(fma);
     }
     public Object removeEnv(FlexibleMapAccessor fma) {
-        return fma.remove(env);
+        return fma.remove(this.env);
     }
 
     public Iterator getEnvEntryIterator() {
@@ -288,44 +292,6 @@ public class MethodContext {
     
     /** Expands environment variables delimited with ${} */
     public String expandString(String original) {
-        if (original == null || original.length() == 0) {
-            return original;
-        }
-        
-        int start = original.indexOf("${");
-        if (start == -1) {
-            return original;
-        }
-        StringBuffer expanded = new StringBuffer();
-        int currentInd = 0;
-        int end = -1;
-        while (start != -1) {
-            end = original.indexOf("}", start);
-            if (end == -1) break;
-            
-            //append everything from the current index to the start of the var
-            expanded.append(original.substring(currentInd, start));
-            
-            //get the environment value and append it
-            String envName = original.substring(start+2, end);
-            Object envVal = this.getEnv(envName);
-            if (envVal != null) {
-                expanded.append(envVal.toString());
-            } else {
-                Debug.logWarning("Could not find value in environment for the name [" + envName + "], inserting nothing.");
-            }
-            
-            //reset the current index to after the var, and the start to the beginning of the next var
-            currentInd = end + 1;
-            start = original.indexOf("${", currentInd);
-        }
-        
-        //append the rest of the original string, ie after the last variable
-        if (currentInd < original.length()) {
-            expanded.append(original.substring(currentInd));
-        }
-        
-        //call back into this method with new String to take care of any/all nested expands
-        return expandString(expanded.toString());
+        return FlexibleStringExpander.expandString(original, this.env);
     }
 }

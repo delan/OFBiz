@@ -126,7 +126,7 @@ public class CallService extends MethodOperation {
             Iterator iter = resultToRequestElements.iterator();
             while (iter.hasNext()) {
                 Element resultToRequestElement = (Element) iter.next();
-                ServletAccessor reqAcsr = new ServletAccessor(resultToRequestElement.getAttribute("request-name"), resultToRequestElement.getAttribute("result-name"));
+                FlexibleServletAccessor reqAcsr = new FlexibleServletAccessor(resultToRequestElement.getAttribute("request-name"), resultToRequestElement.getAttribute("result-name"));
                 ContextAccessor resultAcsr = new ContextAccessor(resultToRequestElement.getAttribute("result-name"));
                 resultToRequest.put(reqAcsr, resultAcsr);
             }
@@ -137,7 +137,7 @@ public class CallService extends MethodOperation {
             Iterator iter = resultToSessionElements.iterator();
             while (iter.hasNext()) {
                 Element resultToSessionElement = (Element) iter.next();
-                ServletAccessor sesAcsr = new ServletAccessor(resultToSessionElement.getAttribute("session-name"), resultToSessionElement.getAttribute("result-name"));
+                FlexibleServletAccessor sesAcsr = new FlexibleServletAccessor(resultToSessionElement.getAttribute("session-name"), resultToSessionElement.getAttribute("result-name"));
                 ContextAccessor resultAcsr = new ContextAccessor(resultToSessionElement.getAttribute("result-name"));
                 resultToSession.put(sesAcsr, resultAcsr);
             }
@@ -245,9 +245,9 @@ public class CallService extends MethodOperation {
                 Iterator iter = resultToRequest.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-                    ServletAccessor requestAcsr = (ServletAccessor) entry.getKey();
+                    FlexibleServletAccessor requestAcsr = (FlexibleServletAccessor) entry.getKey();
                     ContextAccessor resultAcsr = (ContextAccessor) entry.getValue();
-                    requestAcsr.put(methodContext.getRequest(), resultAcsr.get(result, methodContext), methodContext);
+                    requestAcsr.put(methodContext.getRequest(), resultAcsr.get(result, methodContext), methodContext.getEnvMap());
                 }
             }
 
@@ -255,9 +255,9 @@ public class CallService extends MethodOperation {
                 Iterator iter = resultToSession.entrySet().iterator();
                 while (iter.hasNext()) {
                     Map.Entry entry = (Map.Entry) iter.next();
-                    ServletAccessor sessionAcsr = (ServletAccessor) entry.getKey();
+                    FlexibleServletAccessor sessionAcsr = (FlexibleServletAccessor) entry.getKey();
                     ContextAccessor resultAcsr = (ContextAccessor) entry.getValue();
-                    sessionAcsr.put(methodContext.getRequest().getSession(), resultAcsr.get(result, methodContext), methodContext);
+                    sessionAcsr.put(methodContext.getRequest().getSession(), resultAcsr.get(result, methodContext), methodContext.getEnvMap());
                 }
             }
         }

@@ -41,14 +41,14 @@ public class RequestToField extends MethodOperation {
     
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
-    ServletAccessor requestAcsr;
+    FlexibleServletAccessor requestAcsr;
     String defaultVal;
 
     public RequestToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
-        requestAcsr = new ServletAccessor(element.getAttribute("request-name"), element.getAttribute("field-name"));
+        requestAcsr = new FlexibleServletAccessor(element.getAttribute("request-name"), element.getAttribute("field-name"));
         defaultVal = element.getAttribute("default");
     }
 
@@ -58,7 +58,7 @@ public class RequestToField extends MethodOperation {
         Object fieldVal = null;
         // only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
-            fieldVal = requestAcsr.get(methodContext.getRequest(), methodContext);
+            fieldVal = requestAcsr.get(methodContext.getRequest(), methodContext.getEnvMap());
             if (fieldVal == null) {
                 Debug.logWarning("Request attribute value not found with name " + requestAcsr);
             }
