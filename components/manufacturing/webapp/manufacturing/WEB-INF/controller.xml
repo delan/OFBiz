@@ -513,10 +513,8 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <!-- <view-map name="main" type="jpublish" page="/main.ftl"/> -->
     <view-map name="main" type="jpublish" page="/jobshopmgt/FindProductionRun.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>       
-
+    <view-map name="login" type="screen" page="component://manufacturing/widget/manufacturing/CommonScreens.xml#login"/>
 
     <!-- Routing view mappings -->
     <view-map name="FindCalendar" type="jpublish" page="/routing/FindCalendar.ftl"/>
