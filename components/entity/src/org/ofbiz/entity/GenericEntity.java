@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.15 2004/01/20 17:31:16 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.16 2004/01/24 21:46:12 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.15 $
+ *@version    $Revision: 1.16 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -784,17 +784,56 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         while (modelFields.hasNext()) {
             ModelField modelField = (ModelField) modelFields.next();
             String name = modelField.getName();
-            String value = this.getString(name);
+            StringBuffer value = new StringBuffer(this.getString(name));
 
             if (value != null) {
-                if (value.indexOf('\n') >= 0 || value.indexOf('\r') >= 0) {
-                    cdataMap.put(name, value);
+                boolean needsCdata = false;
+                
+                // check each character, if line-feed or carriage-return is found set needsCdata to true; also look for invalid characters
+                for (int i = 0; i < value.length(); i++) {
+                    char curChar = value.charAt(i);
+                    switch (curChar) {
+                    case '\'':
+                        value.replace(i, i+1, "&apos;");
+                        break;
+                    case '"':
+                        value.replace(i, i+1, "&quot;");
+                        break;
+                    case '&':
+                        value.replace(i, i+1, "&amp;");
+                        break;
+                    case '<':
+                        value.replace(i, i+1, "&lt;");
+                        break;
+                    case '>':
+                        value.replace(i, i+1, "&gt;");
+                        break;
+                    case 0xA: // newline, \n
+                        needsCdata = true;
+                        break;
+                    case 0xD: // carriage return, \r
+                        needsCdata = true;
+                        break;
+                    case 0x9: // tab
+                        // do nothing, just catch here so it doesn't get into the default
+                        break;
+                    default:
+                        if (curChar < 0x20) {
+                            // if it is less that 0x20 at this point it is invalid because the only valid values < 0x20 are 0x9, 0xA, 0xD as caught above
+                            Debug.logInfo("Removing invalid character [" + curChar + "] hex value [" + Character.digit(curChar, 16) + "] for field " + name + " of entity with PK: " + this.getPrimaryKey().toString(), module);
+                            value.deleteCharAt(i);
+                        }
+                    }
+                }
+                
+                if (needsCdata) {
+                    cdataMap.put(name, value.toString());
                 } else {
                     writer.print(' ');
                     writer.print(name);
                     writer.print("=\"");
                     // encode the value...
-                    writer.print(UtilFormatOut.encodeXmlValue(value));
+                    writer.print(value.toString());
                     writer.print("\"");
                 }
             }

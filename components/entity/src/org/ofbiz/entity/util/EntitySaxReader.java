@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.1 2003/08/17 04:56:26 jonesde Exp $
+ * $Id: EntitySaxReader.java,v 1.2 2004/01/24 21:46:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -252,6 +252,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
             try {
                 currentValue = delegator.makeValue(entityName, null);
+                currentValue.setIsFromEntitySync(true);
             } catch (Exception e) {
                 Debug.logError(e, module);
             }
