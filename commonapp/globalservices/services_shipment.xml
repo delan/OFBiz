@@ -30,6 +30,8 @@
         </auto-attributes>
         <attribute name="oldStatusId" type="String" mode="OUT" optional="true"/>
         <attribute name="oldPrimaryOrderId" type="String" mode="OUT" optional="true"/>
+        <attribute name="oldOriginFacilityId" type="String" mode="OUT" optional="true"/>
+        <attribute name="oldDestinationFacilityId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="deleteShipment" default-entity-name="Shipment" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipment" auth="true">
@@ -39,6 +41,11 @@
     <service name="setShipmentSettingsFromPrimaryOrder" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="setShipmentSettingsFromPrimaryOrder" auth="true">
         <description>Set Shipment Settings From Primary Order</description>
+        <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="setShipmentSettingsFromFacilities" engine="simple"
+            location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="setShipmentSettingsFromFacilities" auth="true">
+        <description>Set Shipment Settings From Facilities</description>
         <attribute name="shipmentId" type="String" mode="IN" optional="false"/>
     </service>
     <service name="sendShipmentScheduledNotification" engine="simple"

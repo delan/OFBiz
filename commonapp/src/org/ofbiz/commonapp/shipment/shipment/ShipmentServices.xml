@@ -93,8 +93,6 @@
             <call-service service-name="assignPartyToWorkEffort" in-map-name="assignPartyToWorkEffortArrival"/>
         </if-not-empty>
 
-        <!-- TODO: lookup contactMechs for Facilities and set as originContactMechId, originTelecomNumberId, dest... - origin and destination facilities in the create/update Shipment services -->
-
         <create-value value-name="newEntity"/>
         
         <!-- get the ShipmentStatus history started -->
@@ -226,11 +224,11 @@
             </then>
         </if>
 
-        <!-- TODO: lookup contactMechs for Facilities and set as originContactMechId, originTelecomNumberId, dest... - origin and destination facilities in the create/update Shipment services -->
-        
-        <!-- finally before setting nonpk fields, set the oldStatusId, oldPrimaryOrderId -->
+        <!-- finally before setting nonpk fields, set the oldStatusId, oldPrimaryOrderId, oldOriginFacilityId, oldDestinationFacilityId -->
         <field-to-result field-name="statusId" map-name="lookedUpValue" result-name="oldStatusId"/>
         <field-to-result field-name="primaryOrderId" map-name="lookedUpValue" result-name="oldPrimaryOrderId"/>
+        <field-to-result field-name="originFacilityId" map-name="lookedUpValue" result-name="oldOriginFacilityId"/>
+        <field-to-result field-name="destinationFacilityId" map-name="lookedUpValue" result-name="oldDestinationFacilityId"/>
         
         <!-- now that all changes have been checked, set the nonpks -->
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
@@ -254,10 +252,10 @@
     </simple-method>
     <simple-method method-name="setShipmentSettingsFromPrimaryOrder" short-description="Set Shipment Settings From Primary Order">
         <check-permission permission="FACILITY" action="_CREATE">
-            <fail-message message="Security Error: to run setShipmentSettingsFromOrder you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run setShipmentSettingsFromPrimaryOrder you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <check-permission permission="FACILITY" action="_UPDATE">
-            <fail-message message="Security Error: to run setShipmentSettingsFromOrder you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+            <fail-message message="Security Error: to run setShipmentSettingsFromPrimaryOrder you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
         </check-permission>
         <string-to-field string="Set Shipment Settings From Primary Order" field-name="operationName"/>
         <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
@@ -411,6 +409,58 @@
 
         <set-service-fields service-name="updateShipment" map-name="shipment" to-map-name="shipmentUpdateMap"/>
         <call-service service-name="updateShipment" in-map-name="shipmentUpdateMap"/>
+    </simple-method>
+    <simple-method method-name="setShipmentSettingsFromFacilities" short-description="Set Shipment Settings From Facilities">
+        <check-permission permission="FACILITY" action="_CREATE">
+            <fail-message message="Security Error: to run setShipmentSettingsFromFacilities you must have the FACILITY_CREATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-permission permission="FACILITY" action="_UPDATE">
+            <fail-message message="Security Error: to run setShipmentSettingsFromFacilities you must have the FACILITY_UPDATE or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <string-to-field string="Set Shipment Settings From Facilities" field-name="operationName"/>
+        <call-simple-method method-name="checkCanChangeShipmentStatusPacked"/>
+        <check-errors/>
+
+        <field-to-field field-name="shipmentId" map-name="parameters" to-map-name="lookupShipmentPKMap"/>
+        <find-by-primary-key entity-name="Shipment" map-name="lookupShipmentPKMap" value-name="shipment"/>
+        
+        <string-to-list string="-fromDate" list-name="descendingFromDateOrder"/>
+        <if-not-empty field-name="originFacilityId" map-name="shipment">
+	        <if-empty field-name="originContactMechId" map-name="shipment">
+	            <field-to-field field-name="originFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
+	            <string-to-field string="SHIP_ORIG_LOCATION" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
+	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
+	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
+	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
+	            <field-to-field field-name="facilityId" map-name="facilityContactMechPurpose" to-field-name="originContactMechId" to-map-name="shipment"/>
+	        </if-empty>
+	        <if-empty field-name="originTelecomNumberId" map-name="shipment">
+	            <field-to-field field-name="originFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
+	            <string-to-field string="PHONE_SHIP_ORIG" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
+	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
+	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
+	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
+	            <field-to-field field-name="facilityId" map-name="facilityContactMechPurpose" to-field-name="originTelecomNumberId" to-map-name="shipment"/>
+	        </if-empty>
+        </if-not-empty>
+        <if-not-empty field-name="destinationFacilityId" map-name="shipment">
+	        <if-empty field-name="destinationContactMechId" map-name="shipment">
+	            <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
+	            <string-to-field string="SHIPPING_LOCATION" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
+	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
+	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
+	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
+	            <field-to-field field-name="facilityId" map-name="facilityContactMechPurpose" to-field-name="destinationContactMechId" to-map-name="shipment"/>
+	        </if-empty>
+	        <if-empty field-name="destinationTelecomNumberId" map-name="shipment">
+	            <field-to-field field-name="destinationFacilityId" map-name="shipment" to-field-name="facilityId" to-map-name="findFcmpMap"/>
+	            <string-to-field string="PHONE_SHIPPING" field-name="contactMechPurposeTypeId" map-name="findFcmpMap"/>
+	            <find-by-and entity-name="FacilityContactMechPurpose" map-name="findFcmpMap" order-by-list-name="descendingFromDateOrder" list-name="facilityContactMechPurposes"/>
+	            <filter-list-by-date list-name="facilityContactMechPurposes"/>
+	            <first-from-list entry-name="facilityContactMechPurpose" list-name="facilityContactMechPurposes"/>
+	            <field-to-field field-name="facilityId" map-name="facilityContactMechPurpose" to-field-name="destinationTelecomNumberId" to-map-name="shipment"/>
+	        </if-empty>
+	    </if-not-empty>
     </simple-method>
     <simple-method method-name="sendShipmentScheduledNotification" short-description="Send Shipment Scheduled Notification">
         <check-permission permission="FACILITY" action="_CREATE">
