@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.10 2004/04/17 08:00:15 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.11 2004/04/19 20:58:44 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -142,7 +142,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
 
             public void close() throws IOException {
                 List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
-                if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
+                //if (Debug.infoOn()) Debug.logInfo("Render close, globalNodeTrail(2a):" + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), "");
                 try {
                     if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, close:", module);
                     renderSubContent();
