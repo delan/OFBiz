@@ -65,7 +65,7 @@
     <field-type-def type="credit-card-date" sql-type="VARCHAR(20)" sql-type-alias="VARCHAR() ASCII" java-type="String"><validate name="isDateAfterToday" /></field-type-def>
     <field-type-def type="email" sql-type="VARCHAR(255)" sql-type-alias="VARCHAR() ASCII" java-type="String"><validate name="isEmail" /></field-type-def>
     <field-type-def type="url" sql-type="VARCHAR(255)" sql-type-alias="VARCHAR() ASCII" java-type="String"></field-type-def>
-    <field-type-def type="id-ne" sql-type="VARCHAR(40)" sql-type-alias="VARCHAR() ASCII" java-type="String"><validate name="isNotEmpty" /></field-type-def>
+    <field-type-def type="id-ne" sql-type="VARCHAR(20)" sql-type-alias="VARCHAR() ASCII" java-type="String"><validate name="isNotEmpty" /></field-type-def>
     <field-type-def type="id-long-ne" sql-type="VARCHAR(60)" sql-type-alias="VARCHAR() ASCII" java-type="String"><validate name="isNotEmpty" /></field-type-def>
     <field-type-def type="id-vlong-ne" sql-type="VARCHAR(255)" sql-type-alias="VARCHAR() ASCII" java-type="String"><validate name="isNotEmpty" /></field-type-def>
     <field-type-def type="tel-number" sql-type="VARCHAR(60)" sql-type-alias="VARCHAR() ASCII" java-type="String"><validate name="isInternationalPhoneNumber" /></field-type-def>

@@ -373,9 +373,9 @@
       <field name="workEffortId" type="id-ne"></field>
       <field name="workEffortTypeId" type="id"></field>
       <field name="workEffortParentId" type="id"></field>
-      <field name="workflowPackageId" type="id"></field>
-      <field name="workflowProcessId" type="id"></field>
-      <field name="workflowActivityId" type="id"></field>
+      <field name="workflowPackageId" type="id-long"></field>
+      <field name="workflowProcessId" type="id-long"></field>
+      <field name="workflowActivityId" type="id-long"></field>
       <field name="currentStatusId" type="id"></field>
       <field name="lastStatusUpdate" type="date-time"></field>
       <field name="universalId" type="short-varchar"></field>

@@ -1181,7 +1181,7 @@
       <field name="refByWebContactMechId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="userAgentId" type="id"></field>
-      <field name="userLoginId" type="id"></field>
+      <field name="userLoginId" type="id-vlong"></field>
       <field name="partyId" type="id"></field>
       <field name="numOfBytes" type="numeric"></field>
       <field name="runningTimeMillis" type="numeric"></field>
@@ -1305,7 +1305,7 @@
             title="Visit Entity">
       <field name="visitId" type="id-long-ne"></field>
       <field name="contactMechId" type="id"></field>
-      <field name="userLoginId" type="id"></field>
+      <field name="userLoginId" type="id-vlong"></field>
       <field name="partyId" type="id"></field>
       <field name="roleTypeId" type="id"></field>
       <field name="cookie" type="short-varchar"></field>
@@ -1342,7 +1342,7 @@
             title="Web Page Entity">
       <field name="webPageId" type="id-ne"></field>
       <field name="pageName" type="name"></field>
-      <field name="contentId" type="id"></field>
+      <field name="contentId" type="id-vlong-ne"></field>
       <prim-key field="webPageId"/>
       <relation type="one" fk-name="WEB_PAGE_CONTENT" rel-entity-name="Content">
         <key-map field-name="contentId"/>

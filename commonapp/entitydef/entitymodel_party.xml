@@ -988,7 +988,7 @@
       <field name="communicationEventId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
-      <field name="visitId" type="id"></field>
+      <field name="visitId" type="id-long"></field>
       <field name="datetimeRecorded" type="date-time"></field>
       <field name="description" type="description"></field>
       <prim-key field="partyNeedId"/>
