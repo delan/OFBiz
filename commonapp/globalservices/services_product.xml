@@ -699,6 +699,17 @@
         <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="quantityNotReserved" type="Double" mode="OUT" optional="false"/>
     </service>
+    <service name="cancelOrderInventoryReservation" engine="simple"
+                location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="cancelOrderInventoryReservation" auth="true">
+        <description>
+            Iterates through each OrderItemInventoryRes on each OrderItem for the order
+            with the given orderId and cancels the reservation by changing the status
+            of the OrderItemInventoryRes and incrementing the corresponding non-serialized
+            inventoryItem's availableToPromise quantity, or setting the status of the 
+            corresponding serialized inventoryItem to available.
+        </description>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
+    </service>
 
     <!-- Product Feature Services -->
     <service name="createProductFeatureCategory" engine="simple"
