@@ -48,7 +48,7 @@ import org.ofbiz.service.ServiceAuthException;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      3.0
  *
  * 
@@ -737,4 +737,83 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
        
         return result;
     }
+    
+    public static Map updateLeafCount(DispatchContext dctx, Map context) throws GenericServiceException{
+
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        List typeList = (List)context.get("typeList");
+        if (typeList == null)
+        	typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
+        String startContentId = (String)context.get("contentId");
+        try {
+        	int leafCount = ContentManagementWorker.updateStatsTopDown(delegator, startContentId, typeList);
+        	result.put("leafCount", new Integer(leafCount));
+        } catch(GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());         	
+        }
+        return result;
+    }
+    
+    public static Map updateLeafChange(DispatchContext dctx, Map context) throws GenericServiceException{
+
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        List typeList = (List)context.get("typeList");
+        if (typeList == null)
+        	typeList = UtilMisc.toList("PUBLISH_LINK", "SUB_CONTENT");
+        String contentId = (String)context.get("contentId");
+        
+        try {
+	    	GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+	    	if (thisContent == null)
+	    		throw new RuntimeException("No entity found for id=" + contentId);
+	    	
+	    	String thisContentId = thisContent.getString("contentId");
+	    	Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
+	    	int subLeafCount = (leafCount == null) ? 1 : leafCount.intValue();
+	        String mode = (String)context.get("mode");
+	        if (mode != null && mode.equalsIgnoreCase("remove"))
+	        	subLeafCount *= -1;
+	        else
+	        	subLeafCount = subLeafCount;
+	        
+	       List condList = new ArrayList();
+	       Iterator iterType = typeList.iterator();
+	       while (iterType.hasNext()) {
+	       	String type = (String)iterType.next();
+	       	condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
+	       }
+	       
+	       EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
+	       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentId", EntityOperator.EQUALS, thisContentId), conditionType), EntityOperator.AND);
+            List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, null);
+            List listFiltered = EntityUtil.filterByDate(listAll);
+            Iterator iter = listFiltered.iterator();
+            while (iter.hasNext()) {
+            	GenericValue contentAssoc = (GenericValue)iter.next();
+            	String subContentId = contentAssoc.getString("contentId");
+            	GenericValue contentTo = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", subContentId));
+            	Integer childBranchCount = (Integer)contentTo.get("childBranchCount");
+            	int branchCount = (childBranchCount == null) ? 1 : childBranchCount.intValue();
+                if (mode != null && mode.equalsIgnoreCase("remove"))
+                	branchCount += -1;
+                else
+                	branchCount += 1;
+                // For the level just above only, update the branch count
+                contentTo.put("childBranchCount", new Integer(branchCount));
+                
+                // Start the updating of leaf counts above
+            	ContentManagementWorker.updateStatsBottomUp(delegator, subContentId, typeList, subLeafCount);
+            }
+        
+        
+        } catch(GenericEntityException e) {
+            Debug.logError(e, module);
+            return ServiceUtil.returnError(e.getMessage());         	
+        }
+        return result;
+    }
+
 }

@@ -32,12 +32,17 @@ import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.security.Security;
 import org.ofbiz.base.util.collections.LifoSet;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+
 
 /**
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      3.0
  *
  * 
@@ -718,5 +723,74 @@ public class ContentManagementWorker {
             retStr = cleanQuery.toString();
         }
         return retStr;
+    }
+    
+    public static int updateStatsTopDown(GenericDelegator delegator, String contentId, List typeList) throws GenericEntityException {
+    	int subLeafCount = 0;
+    	GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+    	if (thisContent == null)
+    		throw new RuntimeException("No entity found for id=" + contentId);
+    	
+    	String thisContentId = thisContent.getString("contentId");
+       List condList = new ArrayList();
+       Iterator iterType = typeList.iterator();
+       while (iterType.hasNext()) {
+       	String type = (String)iterType.next();
+       	condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
+       }
+       
+       EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
+       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentIdTo", EntityOperator.EQUALS, thisContentId), conditionType), EntityOperator.AND);
+            List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, null);
+            List listFiltered = EntityUtil.filterByDate(listAll);
+            Iterator iter = listFiltered.iterator();
+            while (iter.hasNext()) {
+            	GenericValue contentAssoc = (GenericValue)iter.next();
+            	String subContentId = contentAssoc.getString("contentId");
+            	subLeafCount += updateStatsTopDown(delegator, subContentId, typeList);
+            }
+            
+            // If no children, count this as a leaf
+            if (subLeafCount == 0)
+            	subLeafCount = 1;
+            thisContent.put("childBranchCount", new Integer(listFiltered.size()));
+            thisContent.put("childLeafCount", new Integer(subLeafCount));
+            thisContent.store();
+		
+    	return subLeafCount;
+    }
+    
+    public static void updateStatsBottomUp(GenericDelegator delegator, String contentId, List typeList, int changeAmount) throws GenericEntityException {
+    	GenericValue thisContent = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+    	if (thisContent == null)
+    		throw new RuntimeException("No entity found for id=" + contentId);
+    	
+    	String thisContentId = thisContent.getString("contentId");
+    	Integer leafCount = (Integer)thisContent.get("nodeLeafCount");
+    	int subLeafCount = (leafCount == null) ? 0 : leafCount.intValue();
+    	subLeafCount += changeAmount;
+    	thisContent.put("nodeLeafCount", new Integer(subLeafCount));
+        thisContent.store();
+
+       List condList = new ArrayList();
+       Iterator iterType = typeList.iterator();
+       while (iterType.hasNext()) {
+       	String type = (String)iterType.next();
+       	condList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, type));
+       }
+       
+       EntityCondition conditionType = new EntityConditionList(condList, EntityOperator.OR);
+       EntityCondition conditionMain = new EntityConditionList(UtilMisc.toList( new EntityExpr("contentId", EntityOperator.EQUALS, thisContentId), conditionType), EntityOperator.AND);
+            List listAll = delegator.findByConditionCache("ContentAssoc", conditionMain, null, null);
+            List listFiltered = EntityUtil.filterByDate(listAll);
+            Iterator iter = listFiltered.iterator();
+            while (iter.hasNext()) {
+            	GenericValue contentAssoc = (GenericValue)iter.next();
+            	String subContentId = contentAssoc.getString("contentId");
+            	updateStatsBottomUp(delegator, subContentId, typeList, changeAmount);
+            }
+            
+		
+    	return ;
     }
 }
