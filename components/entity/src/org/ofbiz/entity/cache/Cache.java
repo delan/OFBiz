@@ -1,5 +1,5 @@
 /*
- * $Id: Cache.java,v 1.2 2004/07/13 11:29:46 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -26,11 +26,14 @@ package org.ofbiz.entity.cache;
 
 import java.util.List;
 
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.condition.EntityCondition;
 
 public class Cache {
+
+    public static final String module = Cache.class.getName();
 
     protected EntityCache entityCache;
     protected EntityListCache entityListCache;
@@ -41,8 +44,8 @@ public class Cache {
     public Cache(String delegatorName) {
         this.delegatorName = delegatorName;
         entityCache = new EntityCache(delegatorName);
-        entityListCache = new EntityListCache(delegatorName);
         entityObjectCache = new EntityObjectCache(delegatorName);
+        entityListCache = new EntityListCache(delegatorName);
     }
 
     public void clear() {
@@ -111,6 +114,7 @@ public class Cache {
     }
 
     public GenericEntity remove(GenericEntity entity) {
+        if (Debug.verboseOn()) Debug.logVerbose("Cache remove GenericEntity: " + entity, module);
         GenericEntity oldEntity = entityCache.remove(entity.getPrimaryKey());
         entityListCache.storeHook(entity, null);
         entityObjectCache.storeHook(entity, null);
@@ -118,6 +122,7 @@ public class Cache {
     }
 
     public GenericEntity remove(GenericPK pk) {
+        if (Debug.verboseOn()) Debug.logVerbose("Cache remove GenericPK: " + pk, module);
         GenericEntity oldEntity = entityCache.remove(pk);
         entityListCache.storeHook(pk, null);
         entityObjectCache.storeHook(pk, null);

@@ -27,6 +27,7 @@ package org.ofbiz.base.util.cache;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
@@ -153,6 +154,10 @@ public class CacheLineTable implements Serializable {
         return values;
     }
 
+    /**
+     * 
+     * @return An unmodifiable Set for the keys for this cache; to remove while iterating call the remove method on this class.
+     */
     public synchronized Set keySet() {
         HashSet keys = new HashSet();
 
@@ -171,7 +176,7 @@ public class CacheLineTable implements Serializable {
             keys.addAll(memoryTable.keySet());
         }
 
-        return keys;
+        return Collections.unmodifiableSet(keys);
     }
 
     public synchronized void clear() {
