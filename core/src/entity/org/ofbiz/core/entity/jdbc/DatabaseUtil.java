@@ -360,7 +360,7 @@ public class DatabaseUtil {
                 }
             }
         }
-        // for each newly added table, add fks
+        // for each newly added table, add fk indices
         if (datasourceInfo.useFkIndices) {
             Iterator eaIter = entitiesAdded.iterator();
 
@@ -377,6 +377,29 @@ public class DatabaseUtil {
                     if (messages != null) messages.add(indErrMsg);
                 } else {
                     String message = "Created foreign key indices for entity \"" + curEntity.getEntityName() + "\"";
+
+                    Debug.logImportant(message, module);
+                    if (messages != null) messages.add(message);
+                }
+            }
+        }
+        // for each newly added table, add declared indexes
+        if (datasourceInfo.useIndices) {
+            Iterator eaIter = entitiesAdded.iterator();
+
+            while (eaIter.hasNext()) {
+                ModelEntity curEntity = (ModelEntity) eaIter.next();
+                String indErrMsg = this.createDeclaredIndices(curEntity);
+
+                if (indErrMsg != null && indErrMsg.length() > 0) {
+                    String message = "Could not create declared indices for entity \"" + curEntity.getEntityName() + "\"";
+
+                    Debug.logError(message, module);
+                    if (messages != null) messages.add(message);
+                    Debug.logError(indErrMsg, module);
+                    if (messages != null) messages.add(indErrMsg);
+                } else {
+                    String message = "Created declared indices for entity \"" + curEntity.getEntityName() + "\"";
 
                     Debug.logImportant(message, module);
                     if (messages != null) messages.add(message);
@@ -489,6 +512,8 @@ public class DatabaseUtil {
         if (datasourceInfo.useFkIndices && datasourceInfo.checkFkIndicesOnStart) {
             int numIndicesCreated = 0;
             // TODO: check each key-map to make sure it exists in the index, if any differences warn and then remove the index and recreate it
+
+            // TODO: also check the declared indices on start, if the datasourceInfo.checkIndicesOnStart flag is set
 
             // get ALL column info, put into hashmap by table name
             Map tableIndexListMap = this.getIndexInfo(indexTableNames, messages);
@@ -1655,6 +1680,181 @@ public class DatabaseUtil {
             stmt.executeUpdate(sqlBuf.toString());
         } catch (SQLException sqle) {
             return "SQL Exception while executing the following:\n" + sqlBuf.toString() + "\nError was: " + sqle.toString();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException sqle) {}
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {}
+        }
+        return null;
+    }
+
+    /* ====================================================================== */
+
+    /* ====================================================================== */
+    public String createDeclaredIndices(ModelEntity entity) {
+        if (entity == null) {
+            return "ModelEntity was null and is required to create declared indices for a table";
+        }
+        if (entity instanceof ModelViewEntity) {
+            return "ERROR: Cannot create declared indices for a view entity";
+        }
+
+        StringBuffer retMsgsBuffer = new StringBuffer();
+
+        // go through the indexes to see if any need to be added
+        Iterator indexesIter = entity.getIndexesIterator();
+        while (indexesIter.hasNext()) {
+            ModelIndex modelIndex = (ModelIndex) indexesIter.next();
+
+            String retMsg = createDeclaredIndex(entity, modelIndex);
+
+            if (retMsg != null && retMsg.length() > 0) {
+                if (retMsgsBuffer.length() > 0) {
+                    retMsgsBuffer.append("\n");
+                }
+                retMsgsBuffer.append(retMsg);
+            }
+        }
+        if (retMsgsBuffer.length() > 0) {
+            return retMsgsBuffer.toString();
+        } else {
+            return null;
+        }
+    }
+
+    public String createDeclaredIndex(ModelEntity entity, ModelIndex modelIndex) {
+        Connection connection = null;
+        Statement stmt = null;
+
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            return "Unable to esablish a connection with the database... Error was: " + sqle.toString();
+        } catch (GenericEntityException e) {
+            return "Unable to esablish a connection with the database... Error was: " + e.toString();
+        }
+
+        String createIndexSql = makeIndexClause(entity, modelIndex);
+        if (Debug.verboseOn()) Debug.logVerbose("[createForeignKeyIndex] index sql=" + createIndexSql);
+
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate(createIndexSql);
+        } catch (SQLException sqle) {
+            return "SQL Exception while executing the following:\n" + createIndexSql + "\nError was: " + sqle.toString();
+        } finally {
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (SQLException sqle) {}
+            try {
+                if (connection != null)
+                    connection.close();
+            } catch (SQLException sqle) {}
+        }
+        return null;
+    }
+
+    public String makeIndexClause(ModelEntity entity, ModelIndex modelIndex) {
+        Iterator fieldNamesIter = modelIndex.getIndexFieldsIterator();
+        StringBuffer mainCols = new StringBuffer();
+
+        while (fieldNamesIter.hasNext()) {
+            String fieldName = (String) fieldNamesIter.next();
+            ModelField mainField = entity.getField(fieldName);
+            if (mainCols.length() > 0) {
+                mainCols.append(", ");
+            }
+            mainCols.append(mainField.getColName());
+        }
+
+        StringBuffer indexSqlBuf = new StringBuffer("CREATE ");
+        if (modelIndex.getUnique()) {
+            indexSqlBuf.append("UNIQUE ");
+        }
+        indexSqlBuf.append("INDEX ");
+        indexSqlBuf.append(modelIndex.getName());
+        indexSqlBuf.append(" ON ");
+        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+            indexSqlBuf.append(this.datasourceInfo.schemaName);
+            indexSqlBuf.append('.');
+        }
+        indexSqlBuf.append(entity.getTableName());
+
+        indexSqlBuf.append(" (");
+        indexSqlBuf.append(mainCols.toString());
+        indexSqlBuf.append(")");
+
+        return indexSqlBuf.toString();
+    }
+
+    public String deleteDeclaredIndices(ModelEntity entity) {
+        if (entity == null) {
+            return "ModelEntity was null and is required to delete foreign keys indices for a table";
+        }
+        if (entity instanceof ModelViewEntity) {
+            return "ERROR: Cannot delete foreign keys indices for a view entity";
+        }
+
+        StringBuffer retMsgsBuffer = new StringBuffer();
+
+        // go through the relationships to see if any foreign keys need to be added
+        Iterator indexesIter = entity.getIndexesIterator();
+        while (indexesIter.hasNext()) {
+            ModelIndex modelIndex = (ModelIndex) indexesIter.next();
+            String retMsg = deleteDeclaredIndex(entity, modelIndex);
+            if (retMsg != null && retMsg.length() > 0) {
+                if (retMsgsBuffer.length() > 0) {
+                    retMsgsBuffer.append("\n");
+                }
+                retMsgsBuffer.append(retMsg);
+            }
+        }
+        
+        if (retMsgsBuffer.length() > 0) {
+            return retMsgsBuffer.toString();
+        } else {
+            return null;
+        }
+    }
+
+    public String deleteDeclaredIndex(ModelEntity entity, ModelIndex modelIndex) {
+        Connection connection = null;
+        Statement stmt = null;
+
+        try {
+            connection = getConnection();
+        } catch (SQLException sqle) {
+            return "Unable to esablish a connection with the database... Error was: " + sqle.toString();
+        } catch (GenericEntityException e) {
+            return "Unable to esablish a connection with the database... Error was: " + e.toString();
+        }
+
+        // TODO: also remove the constraing if this was a unique index, in most databases dropping the index does not drop the constraint
+
+        StringBuffer indexSqlBuf = new StringBuffer("DROP INDEX ");
+        if (this.datasourceInfo.schemaName != null && this.datasourceInfo.schemaName.length() > 0) {
+            indexSqlBuf.append(this.datasourceInfo.schemaName);
+            indexSqlBuf.append('.');
+        }
+        indexSqlBuf.append(entity.getTableName());
+        indexSqlBuf.append(".");
+        indexSqlBuf.append(modelIndex.getName());
+
+        String deleteIndexSql = indexSqlBuf.toString();
+
+        if (Debug.verboseOn()) Debug.logVerbose("[deleteForeignKeyIndex] index sql=" + deleteIndexSql);
+
+        try {
+            stmt = connection.createStatement();
+            stmt.executeUpdate(deleteIndexSql);
+        } catch (SQLException sqle) {
+            return "SQL Exception while executing the following:\n" + deleteIndexSql + "\nError was: " + sqle.toString();
         } finally {
             try {
                 if (stmt != null)

@@ -334,6 +334,8 @@ public class EntityConfigUtil {
         public int constraintNameClipLength = 30;
         public String fkStyle = null;
         public boolean useFkInitiallyDeferred = true;
+        public boolean useIndices = true;
+        public boolean checkIndicesOnStart = false;
         public String joinStyle = null;
 
         public DatasourceInfo(Element element) {
@@ -356,6 +358,8 @@ public class EntityConfigUtil {
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for constraint-name-clip-length (30)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for fk-style (name_constraint)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-fk-initially-deferred (true)");
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for use-indices (true)");
+                Debug.logWarning("datasource def not found with name " + this.name + ", using default for check-indices-on-start (false)");
                 Debug.logWarning("datasource def not found with name " + this.name + ", using default for join-style (ansi)");
             } else {
                 schemaName = datasourceElement.getAttribute("schema-name");
@@ -381,6 +385,10 @@ public class EntityConfigUtil {
                 fkStyle = datasourceElement.getAttribute("fk-style");
                 // anything but true is false
                 useFkInitiallyDeferred = "true".equals(datasourceElement.getAttribute("use-fk-initially-deferred"));
+                // anything but false is true
+                useIndices = !"false".equals(datasourceElement.getAttribute("use-indices"));
+                // anything but true is false
+                checkIndicesOnStart = "true".equals(datasourceElement.getAttribute("check-indices-on-start"));
                 joinStyle = datasourceElement.getAttribute("join-style");
             }
             if (fkStyle == null || fkStyle.length() == 0) fkStyle = "name_constraint";

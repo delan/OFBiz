@@ -512,7 +512,6 @@ public class ModelEntity implements Comparable {
         if (relationName == null) return null;
         for (int i = 0; i < relations.size(); i++) {
             ModelRelation relation = (ModelRelation) relations.get(i);
-
             if (relationName.equals(relation.title + relation.relEntityName)) return relation;
         }
         return null;
@@ -524,6 +523,35 @@ public class ModelEntity implements Comparable {
 
     public ModelRelation removeRelation(int index) {
         return (ModelRelation) this.relations.remove(index);
+    }
+
+    public int getIndexesSize() {
+        return this.indexes.size();
+    }
+
+    public ModelIndex getIndex(int index) {
+        return (ModelIndex) this.indexes.get(index);
+    }
+
+    public Iterator getIndexesIterator() {
+        return this.indexes.iterator();
+    }
+
+    public ModelIndex getIndex(String indexName) {
+        if (indexName == null) return null;
+        for (int i = 0; i < indexes.size(); i++) {
+            ModelIndex index = (ModelIndex) indexes.get(i);
+            if (indexName.equals(index.getName())) return index;
+        }
+        return null;
+    }
+
+    public void addIndex(ModelIndex index) {
+        this.indexes.add(index);
+    }
+
+    public ModelIndex removeIndex(int index) {
+        return (ModelIndex) this.indexes.remove(index);
     }
 
     public String nameString(List flds) {
