@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.41 2004/06/01 11:27:08 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.42 2004/06/06 01:36:05 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.41 $
+ * @version    $Revision: 1.42 $
  * @since      2.0
  */
 public class ShoppingCart implements Serializable {
@@ -1073,7 +1073,8 @@ public class ShoppingCart implements Serializable {
         if (this.currencyUom != null) {
             return this.currencyUom;
         } else {
-            return UtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD");
+            // uh oh, not good, should always be passed in on init, we can't really do anything without it, so throw an exception
+            throw new IllegalStateException("The Currency UOM is not set in the shopping cart, this is not a valid state, it should always be passed in when the cart is created.");
         }
     }
 
