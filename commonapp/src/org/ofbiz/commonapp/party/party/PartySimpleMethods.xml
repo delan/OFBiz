@@ -23,6 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@jflow.net)
+ * @author     David E Jones (jonesde@ofbiz.org)
  * @version    1.0
  * @created    Sept 19, 2002
 -->
@@ -33,12 +34,12 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="PartyIcsAvsOverride" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-not-empty map-name="lookedUpValue" field-name="partyId">
-          <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-          <store-value value-name="lookedUpValue"/>
+            <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+            <store-value value-name="lookedUpValue"/>
         </if-not-empty>
         <if-empty map-name="lookedUpValue" field-name="partyId">
-          <set-nonpk-fields map-name="parameters" value-name="lookupPKMap"/>
-          <create-value value-name="lookupPKMap"/>
+            <set-nonpk-fields map-name="parameters" value-name="lookupPKMap"/>
+            <create-value value-name="lookupPKMap"/>
         </if-empty>
     </simple-method>
 
@@ -47,7 +48,31 @@
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="PartyIcsAvsOverride" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-not-empty map-name="lookedUpValue" field-name="partyId">
-          <remove-value value-name="lookedUpValue"/>
+            <remove-value value-name="lookedUpValue"/>
         </if-not-empty>
+    </simple-method>
+
+    <simple-method method-name="ensureNaPartyRole" short-description="Ensure Party is in _NA_ Role">
+    	<!-- must have a partyId, partyIdFrom, or partyIdTo in the parameters map, should be called through different service defs for each one -->
+    	<if-not-empty field-name="partyId" map-name="parameters">
+	    	<field-to-field field-name="partyId" map-name="parameters" to-map-name="lookupPKMap"/>
+	    <else>
+	    	<if-not-empty field-name="partyIdFrom" map-name="parameters">
+		    	<field-to-field field-name="partyIdFrom" map-name="parameters" to-field-name="partyId" to-map-name="lookupPKMap"/>
+		    <else>
+		    	<if-not-empty field-name="partyIdTo" map-name="parameters">
+			    	<field-to-field field-name="partyIdTo" map-name="parameters" to-field-name="partyId" to-map-name="lookupPKMap"/>
+			    </if-not-empty>
+		    </else>
+		    </if-not-empty>
+	    </else>
+	    </if-not-empty>
+	    
+    	<string-to-field string="_NA_" field-name="roleTypeId" map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="PartyRole" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-empty field-name="lookedUpValue">
+	        <make-value value-name="newValue" entity-name="PartyRole" map-name="lookupPKMap"/>
+            <create-value value-name="newValue"/>
+        </if-empty>
     </simple-method>
 </simple-methods>

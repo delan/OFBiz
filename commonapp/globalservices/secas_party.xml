@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
+
+<service-eca>
+    <eca service="createPerson" event="commit">
+        <action service="ensureNaPartyRole" mode="sync"/>
+    </eca>
+    <eca service="createPartyGroup" event="commit">
+        <action service="ensureNaPartyRole" mode="sync"/>
+    </eca>
+    <eca service="createAffiliate" event="commit">
+        <action service="ensureNaPartyRole" mode="sync"/>
+    </eca>
+
+	<!-- before running the createPartyRelationship service, make sure the party is in the _NA_ role if that is the desired roleTypeId for From or To -->
+    <eca service="createPartyRelationship" event="invoke">
+    	<condition field-name="roleTypeIdFrom" operator="equals" value="_NA_"/>
+        <action service="ensureNaPartyRoleFrom" mode="sync"/>
+    </eca>
+    <eca service="createPartyRelationship" event="invoke">
+    	<condition field-name="roleTypeIdTo" operator="equals" value="_NA_"/>
+        <action service="ensureNaPartyRoleTo" mode="sync"/>
+    </eca>
+</service-eca>
