@@ -65,24 +65,6 @@ msgResult = request.getParameter("msgResult");
 if (msgResult == null) msgResult = request.getAttribute("msgResult");
 // if (msgResult == null) { msgResult.add("truc"); }
 
-/*UtilMisc.toMap("routing","crac") if (msgResult != null && ! msgResult.isEmpty()) {
-	Iterator ite = msgResult.iterator();
-
-if (calendarId == null) {
-    calendarId = request.getAttribute("calendarId");
-}
-if (calendarId != null) {
-    techDataCalendar = delegator.findByPrimaryKey("TechDataCalendar", UtilMisc.toMap("calendarId", calendarId));
-    context.put("techDataCalendar", techDataCalendar);
-}
-List allCalendarWeek = delegator.findAll("TechDataCalendarWeek");
-context.put("calendarWeeks", allCalendarWeek);
-
-calendarData = context.get("techDataCalendar");
-if (!tryEntity) calendarData = requestParams;
-if (calendarData == null) calendarData = new HashMap();
- */
-
 tryEntity = true;
 errorMessage = request.getAttribute("_ERROR_MESSAGE_");
 if (errorMessage != null && errorMessage.length() > 0) {
