@@ -263,8 +263,21 @@ public class ContentManagementServices {
                     	return ServiceUtil.returnError(e.getMessage());
                 	}
             	}
+                    Map newDrContext = new HashMap();
+                	ModelService dataResourceModel = dispatcher.getDispatchContext().getModelService("updateDataResource");
+                	Map ctx = dataResourceModel.makeValid(dataResource, "IN");
+                    newDrContext.putAll(ctx);
+                    newDrContext.put("userLogin", userLogin);
+                    newDrContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
+                    ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+                    if (byteWrapper != null) {
+                    	String mimeTypeId = (String) context.get("_imageData_contentType");
+						String fileName = (String) context.get("_imageData_fileName");
+                    	newDrContext.put("objectInfo", fileName);
+						newDrContext.put("mimeTypeId", mimeTypeId);
+                    }
                 if (!dataResourceExists) {
-                    Map thisResult = DataServices.createDataResourceMethod(dctx, context);
+                    Map thisResult = dispatcher.runSync("createDataResource", newDrContext);
                     String errorMsg = ServiceUtil.getErrorMessage(thisResult);
                     if (UtilValidate.isNotEmpty(errorMsg)) {
                             return ServiceUtil.returnError(errorMsg);
@@ -272,103 +285,99 @@ public class ContentManagementServices {
                     dataResourceId = (String)thisResult.get("dataResourceId");
                     if (Debug.infoOn()) Debug.logInfo("in persist... dataResourceId(0):" + dataResourceId, null);
                     dataResource = (GenericValue)thisResult.get("dataResource");
+                    Map fileContext = new HashMap();
+                    fileContext.put("userLogin", userLogin);
                     if ( dataResourceTypeId.indexOf("_FILE") >=0) {
-                        dataResource = (GenericValue)thisResult.get("dataResource");
-                        context.put("dataResource", dataResource);
-                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
-                        if (byteWrapper != null) {
-                            context.put("binData", byteWrapper);
-                            String m = updateTypeAndFile(dataResource, context);
-                            if (UtilValidate.isNotEmpty(m))
-                            	return ServiceUtil.returnError(m);
+                        if (textData != null) {
+                            fileContext.put("textData", textData);
                         }
-                        thisResult = DataServices.createFileMethod(dctx, context);
+                        if (byteWrapper != null) {
+                            fileContext.put("binData", byteWrapper);
+                        }
+                        fileContext.put("rootDir", context.get("rootDir"));
+                        fileContext.put("dataResourcetype", dataResourceTypeId);
+                        fileContext.put("objectInfo", dataResource.get("objectInfo"));
+                        thisResult = dispatcher.runSync("createFileMethod", fileContext);
                         errorMsg = ServiceUtil.getErrorMessage(thisResult);
                         if (UtilValidate.isNotEmpty(errorMsg)) {
                             return ServiceUtil.returnError(errorMsg);
                         }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
                         if (byteWrapper != null) {
-                            context.put("dataResourceId", dataResourceId);
-                            String m = updateTypeAndFile(dataResource, context);
-                            if (UtilValidate.isNotEmpty(m))
-                            	return ServiceUtil.returnError(m);
-                                
-                            thisResult = DataServices.createImageMethod(dctx, context);
+                            fileContext.put("dataResourceId", dataResourceId);
+                            fileContext.put("imageData", byteWrapper);
+                            thisResult = dispatcher.runSync("createImage", fileContext);
+                        	errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        	if (UtilValidate.isNotEmpty(errorMsg)) {
+                            	return ServiceUtil.returnError(errorMsg);
+                        	}
                         } else {
                             return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
                         }
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
                         // assume ELECTRONIC_TEXT
-                        if (UtilValidate.isNotEmpty(textData)) {
-                            context.put("dataResourceId", dataResourceId);
-                            thisResult = DataServices.createElectronicTextMethod(dctx, context);
-                            errorMsg = ServiceUtil.getErrorMessage(thisResult);
-                        	if (UtilValidate.isNotEmpty(errorMsg)) {
-                            	return ServiceUtil.returnError(errorMsg);
-                        	}
-                        }
+                        fileContext.put("dataResourceId", dataResourceId);
+                        fileContext.put("textData", textData);
+                        thisResult = dispatcher.runSync("updateElectronicText", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                    	if (UtilValidate.isNotEmpty(errorMsg)) {
+                        	return ServiceUtil.returnError(errorMsg);
+                    	}
                     }
                 } else {
-                    Map newDrContext = new HashMap();
-                    newDrContext.putAll(dataResource);
-                    newDrContext.put("userLogin", userLogin);
-                    newDrContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                     Map thisResult = dispatcher.runSync("updateDataResource", newDrContext);
-                    String errMsg = ServiceUtil.getErrorMessage(thisResult);
-        			if (UtilValidate.isNotEmpty(errMsg)) {
-            			return ServiceUtil.returnError(errMsg);
+                    String errorMsg = ServiceUtil.getErrorMessage(thisResult);
+        			if (UtilValidate.isNotEmpty(errorMsg)) {
+            			return ServiceUtil.returnError(errorMsg);
         			}
                     //Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
                     if (Debug.infoOn()) Debug.logInfo("in persist... thisResult.permissionStatus(0):" + thisResult.get("permissionStatus"), null);
                         //thisResult = DataServices.updateElectronicTextMethod(dctx, context);
+                    Map fileContext = new HashMap();
+                    fileContext.put("userLogin", userLogin);
                     if (dataResourceTypeId.indexOf("_FILE") >=0) {
-                        dataResource = (GenericValue)thisResult.get("dataResource");
-                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
-                        if (byteWrapper != null) {
-                            context.put("binData", byteWrapper);
-                            String m = updateTypeAndFile(dataResource, context);
-                            if (UtilValidate.isNotEmpty(m))
-                            	return ServiceUtil.returnError(m);
+                        if (textData != null) {
+                            fileContext.put("textData", textData);
                         }
-                        context.put("dataResource", dataResource);
-                        try {
-                            thisResult = DataServices.updateFileMethod(dctx, context);
-                        } catch(GenericServiceException e) {
-                            return ServiceUtil.returnError(e.getMessage());
+                        if (byteWrapper != null) {
+                            fileContext.put("binData", byteWrapper);
+                        }
+                        fileContext.put("rootDir", context.get("rootDir"));
+                        fileContext.put("dataResourcetype", dataResourceTypeId);
+                        fileContext.put("objectInfo", dataResource.get("objectInfo"));
+                        thisResult = dispatcher.runSync("updateFileMethod", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        if (UtilValidate.isNotEmpty(errorMsg)) {
+                            return ServiceUtil.returnError(errorMsg);
                         }
                     } else if (dataResourceTypeId.equals("IMAGE_OBJECT")) {
-                        ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
                         if (byteWrapper != null) {
-                            context.put("dataResourceId", dataResourceId);
-                            String m = updateTypeAndFile(dataResource, context);
-                            if (UtilValidate.isNotEmpty(m))
-                            	return ServiceUtil.returnError(m);
-                                
-                            thisResult = DataServices.updateImageMethod(dctx, context);
+                            fileContext.put("dataResourceId", dataResourceId);
+                            fileContext.put("imageData", byteWrapper);
+                            thisResult = dispatcher.runSync("updateImage", fileContext);
+                        	errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                        	if (UtilValidate.isNotEmpty(errorMsg)) {
+                            	return ServiceUtil.returnError(errorMsg);
+                        	}
                         } else {
                             return ServiceUtil.returnError("'byteWrapper' empty when trying to create database image.");
                         }
                     } else if (dataResourceTypeId.equals("SHORT_TEXT")) {
                     } else {
-                        Map newContext = new HashMap();
-                        newContext.put("dataResourceId", dataResourceId);
-                        newContext.put("textData", textData);
-                        newContext.put("userLogin", userLogin);
-                        newContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
-                        thisResult = dispatcher.runSync("updateElectronicText", newContext);
+                        fileContext.put("dataResourceId", dataResourceId);
+                        fileContext.put("textData", textData);
+                        thisResult = dispatcher.runSync("updateElectronicText", fileContext);
+                        errorMsg = ServiceUtil.getErrorMessage(thisResult);
+                    	if (UtilValidate.isNotEmpty(errorMsg)) {
+                        	return ServiceUtil.returnError(errorMsg);
+                    	}
                     }
-                    errMsg = ServiceUtil.getErrorMessage(thisResult);
-        			if (UtilValidate.isNotEmpty(errMsg)) {
-            			Debug.logError(errMsg, module);
-            			return ServiceUtil.returnError(errMsg);
-        			}
                 }
 
                 result.put("dataResourceId", dataResourceId);
                 context.put("dataResourceId", dataResourceId);
+                content.put("dataResourceId", dataResourceId);
                 context.put("drDataResourceId", dataResourceId);
         }
         // Do update and create permission checks on Content if warranted.
@@ -393,13 +402,35 @@ public class ContentManagementServices {
             context.putAll(content);
             if (contentExists) {
                 //targetOperations.add("CONTENT_UPDATE");
-                Map thisResult = ContentServices.updateContentMethod(dctx, context);
+                    Map contentContext = new HashMap();
+                	ModelService contentModel = dispatcher.getDispatchContext().getModelService("updateContent");
+                	Map ctx = contentModel.makeValid(content, "IN");
+                    contentContext.putAll(ctx);
+                    contentContext.put("userLogin", userLogin);
+                    contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
+                    Map thisResult = dispatcher.runSync("updateContent", contentContext);
+                    String errMsg = ServiceUtil.getErrorMessage(thisResult);
+        			if (UtilValidate.isNotEmpty(errMsg)) {
+            			return ServiceUtil.returnError(errMsg);
+        			}
+                //Map thisResult = ContentServices.updateContentMethod(dctx, context);
                 boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) 
                     return ServiceUtil.returnError( (String)thisResult.get(ModelService.ERROR_MESSAGE));
             } else {
                 //targetOperations.add("CONTENT_CREATE");
-                Map thisResult = ContentServices.createContentMethod(dctx, context);
+                    Map contentContext = new HashMap();
+                	ModelService contentModel = dispatcher.getDispatchContext().getModelService("createContent");
+                	Map ctx = contentModel.makeValid(content, "IN");
+                    contentContext.putAll(ctx);
+                    contentContext.put("userLogin", userLogin);
+                    contentContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
+                    Map thisResult = dispatcher.runSync("createContent", contentContext);
+                    String errMsg = ServiceUtil.getErrorMessage(thisResult);
+        			if (UtilValidate.isNotEmpty(errMsg)) {
+            			return ServiceUtil.returnError(errMsg);
+        			}
+                //Map thisResult = ContentServices.createContentMethod(dctx, context);
                 boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) 
                     return ServiceUtil.returnError( (String)thisResult.get(ModelService.ERROR_MESSAGE));
@@ -459,20 +490,32 @@ public class ContentManagementServices {
                 contentAssocPK.setAllFields(context, false, "ca", new Boolean(true));
                 context.putAll(contentAssoc);
                 GenericValue contentAssocExisting = null;
+                Map contentAssocContext = new HashMap();
+                contentAssocContext.put("userLogin", userLogin);
+                contentAssocContext.put("skipPermissionCheck", context.get("skipPermissionCheck"));
                 if (contentAssocPK.isPrimaryKey())
                     contentAssocExisting = delegator.findByPrimaryKeyCache("ContentAssoc", contentAssocPK);
-                if (contentAssocExisting == null)
-                    thisResult = ContentServices.createContentAssocMethod(dctx, context);
-                else
-                    thisResult = ContentServices.updateContentAssocMethod(dctx, context);
+                    
+                if (contentAssocExisting == null) {
+                	ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("createContentAssoc");
+                	Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
+                    contentAssocContext.putAll(ctx);
+                    thisResult = dispatcher.runSync("createContentAssoc", contentAssocContext);
+                } else {
+                	ModelService contentAssocModel = dispatcher.getDispatchContext().getModelService("updateContentAssoc");
+                	Map ctx = contentAssocModel.makeValid(contentAssoc, "IN");
+                    contentAssocContext.putAll(ctx);
+                    thisResult = dispatcher.runSync("updateContentAssoc", contentAssocContext);
+                }
             } catch (GenericEntityException e) {
                 throw new GenericServiceException(e.getMessage());
             } catch (Exception e2) {
                 throw new GenericServiceException(e2.getMessage());
             }
-            boolean isError = ModelService.RESPOND_ERROR.equals(thisResult.get(ModelService.RESPONSE_MESSAGE));
-            if (isError) 
-                return ServiceUtil.returnError( (String)thisResult.get(ModelService.ERROR_MESSAGE));
+            String errMsg = ServiceUtil.getErrorMessage(thisResult);
+   			if (UtilValidate.isNotEmpty(errMsg)) {
+       			return ServiceUtil.returnError(errMsg);
+   			}
 
             result.put("contentIdTo", thisResult.get("contentIdTo"));
             result.put("contentIdFrom", thisResult.get("contentIdFrom"));
@@ -788,6 +831,16 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
                 return ServiceUtil.returnError("content was null");
             }
             String dataResourceId = content.getString("dataResourceId");
+            String contentTypeIdTo = content.getString("contentTypeId");
+            if (UtilValidate.isNotEmpty(contentTypeIdTo)) {
+                if (contentTypeIdTo.equals("OUTLINE_NODE")) {
+                    content.put("contentTypeId", "OUTLINE_NODE");
+                } else if (contentTypeIdTo.equals("PAGE_NODE")) {
+                    content.put("contentTypeId", "SUBPAGE_NODE");
+                } else
+                    content.put("contentTypeId", "PAGE_NODE");
+            }
+
             content.set("dataResourceId", null);
             content.set("lastModifiedDate", UtilDateTime.nowTimestamp());
             content.set("lastModifiedByUserLogin", userLoginId);
@@ -1045,4 +1098,91 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
 		return retVal;
 	}
 
+    public static Map initContentChildCounts(DispatchContext dctx, Map context) throws GenericServiceException{
+		Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+		
+			GenericValue content = (GenericValue)context.get("content");
+            if (content == null) {
+                    return ServiceUtil.returnError("No Content found.");
+            }
+            Long leafCount = (Long)content.get("childLeafCount");
+            if (leafCount == null) {
+            	content.set("childLeafCount", new Long(0)); 
+            }
+            Long branchCount = (Long)content.get("childBranchCount");
+            if (branchCount == null) {
+            	content.set("childBranchCount", new Long(0)); 
+            }
+            
+            //content.store();
+
+		return result;
+	}
+
+    public static Map incrementContentChildStats(DispatchContext dctx, Map context) throws GenericServiceException{
+		Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+		
+			String contentId = (String)context.get("contentId");
+            
+            try {
+                	GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+                if (content == null) {
+                        return ServiceUtil.returnError("No Content found.");
+                }
+                Long leafCount = (Long)content.get("childLeafCount");
+                if (leafCount == null) {
+                	leafCount = new Long(0);
+                }
+                int changeLeafCount = leafCount.intValue() + 1;
+                int changeBranchCount = 1;
+                
+                ContentManagementWorker.updateStatsBottomUp(delegator, contentId, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"), changeBranchCount, changeLeafCount);
+            } catch(GenericEntityException e) {
+                    return ServiceUtil.returnError(e.getMessage());
+            }
+		return result;
+	}
+    
+    public static Map decrementContentChildStats(DispatchContext dctx, Map context) throws GenericServiceException{
+		Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+		
+			String contentId = (String)context.get("contentId");
+            
+            try {
+                	GenericValue content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+                if (content == null) {
+                        return ServiceUtil.returnError("No Content found.");
+                }
+                Long leafCount = (Long)content.get("childLeafCount");
+                if (leafCount == null) {
+                	leafCount = new Long(0);
+                }
+                int changeLeafCount = -1 * leafCount.intValue() - 1;
+                int changeBranchCount = -1;
+                
+                ContentManagementWorker.updateStatsBottomUp(delegator, contentId, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"), changeBranchCount, changeLeafCount);
+            } catch(GenericEntityException e) {
+                    return ServiceUtil.returnError(e.getMessage());
+            }
+		return result;
+	}
+
+    public static Map updateContentChildStats(DispatchContext dctx, Map context) throws GenericServiceException{
+		Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+		
+			String contentId = (String)context.get("contentId");
+            
+            try {
+                
+                ContentManagementWorker.updateStatsTopDown(delegator, contentId, UtilMisc.toList("SUB_CONTENT", "PUBLISH_LINK"));
+            } catch(GenericEntityException e) {
+                    return ServiceUtil.returnError(e.getMessage());
+            }
+		return result;
+	}
+    
 }

@@ -811,10 +811,11 @@ public class ContentManagementWorker {
                 	int intBranchCount = 0;
         			Long branchCount = (Long)contentTo.get("childBranchCount");
         	    	if (branchCount != null) {
-            	    	intBranchCount = branchCount.intValue() * -1;
+            	    	intBranchCount = branchCount.intValue();
         	    	}
                 	contentTo.set("childBranchCount", new Long(intBranchCount + branchChangeAmount)); 
                 }
+                contentTo.store();
                 updateStatsBottomUp(delegator, contentIdTo, typeList, 0, leafChangeAmount);
             }
             
