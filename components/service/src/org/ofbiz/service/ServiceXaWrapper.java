@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceXaWrapper.java,v 1.8 2004/07/27 18:12:42 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.transaction.GenericTransactionException;
  * ServiceXaWrapper - XA Resource wrapper for running services on commit() or rollback()
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ServiceXaWrapper extends GenericXaResource {

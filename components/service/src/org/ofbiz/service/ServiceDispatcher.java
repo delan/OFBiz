@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.20 2004/06/27 05:03:23 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.w3c.dom.Element;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.20 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ServiceDispatcher {

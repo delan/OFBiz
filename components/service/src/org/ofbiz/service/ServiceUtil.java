@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceUtil.java,v 1.15 2004/07/10 06:04:10 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * Generic Service Utility Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ServiceUtil {

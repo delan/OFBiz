@@ -1,5 +1,5 @@
 /*
- * $Id: ModelPermission.java,v 1.1 2004/02/11 16:49:36 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.List;
  * Service Permission Model Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class ModelPermission {

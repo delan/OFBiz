@@ -1,5 +1,5 @@
 /*
- * $Id: JmsListenerFactory.java,v 1.2 2003/12/06 23:32:11 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.w3c.dom.NodeList;
  * JmsListenerFactory
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class JmsListenerFactory implements Runnable {

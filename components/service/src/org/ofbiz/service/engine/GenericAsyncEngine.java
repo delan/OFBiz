@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAsyncEngine.java,v 1.6 2004/07/30 21:57:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.service.job.JobManagerException;
  * Generic Asynchronous Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public abstract class GenericAsyncEngine extends AbstractEngine {

@@ -1,5 +1,5 @@
 /*
- * $Id: HttpEngine.java,v 1.4 2004/07/01 15:27:14 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.service.ServiceDispatcher;
  * HttpEngine.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class HttpEngine extends GenericAsyncEngine {

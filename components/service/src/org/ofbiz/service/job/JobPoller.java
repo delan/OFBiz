@@ -1,5 +1,5 @@
 /*
- * $Id: JobPoller.java,v 1.6 2004/01/24 22:02:16 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.Debug;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:">Magnus Rosenquist</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class JobPoller implements Runnable {

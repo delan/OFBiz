@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEngineTests.java,v 1.1 2004/05/04 15:37:36 ajzeneski Exp $
+ * $Id$
  *
  */
 package org.ofbiz.service.test;
@@ -17,7 +17,7 @@ import org.ofbiz.base.util.UtilMisc;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      May 4, 2004
  */
 public class ServiceEngineTests extends TestCase {

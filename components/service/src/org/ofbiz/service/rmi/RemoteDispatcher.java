@@ -1,5 +1,5 @@
 /*
- * $Id: RemoteDispatcher.java,v 1.2 2003/12/06 23:10:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.ofbiz.service.GenericServiceException;
  * Generic Services Remote Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public interface RemoteDispatcher extends Remote {

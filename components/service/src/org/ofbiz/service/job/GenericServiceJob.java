@@ -1,5 +1,5 @@
 /*
- * $Id: GenericServiceJob.java,v 1.4 2004/06/17 00:52:15 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.service.ModelService;
  * Generic Service Job - A generic async-service Job.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> *
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class GenericServiceJob extends AbstractJob {

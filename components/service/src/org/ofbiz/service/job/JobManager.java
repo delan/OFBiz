@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.15 2004/06/17 06:13:58 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -61,7 +61,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.15 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class JobManager {
