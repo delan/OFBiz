@@ -60,23 +60,29 @@
              <%if (orderItemList != null) pageContext.setAttribute("orderItemList", orderItemList);%>
              <ofbiz:iterator name="orderItem" property="orderItemList">
                 <tr><td colspan="7"><hr class='sepbar'></td></tr>
-
                 <tr>
-                  <%pageContext.setAttribute("productId", orderItem.getString("productId"));%>
-                  <ofbiz:if type="String" name="productId" value="shoppingcart.CommentLine">
+                  <% GenericValue orderItemType = orderItem.getRelatedOneCache("OrderItemType");%>
+                  <% String productId = orderItem.getString("productId");%>
+                  <% if (productId != null) pageContext.setAttribute("productId", productId);%>
+                  <% if (productId != null && productId.equals("shoppingcart.CommentLine")) {%>
                     <td colspan="1" valign="top">    
                       <b><div class="tabletext"> &gt;&gt; <%=orderItem.getString("itemDescription")%></div></b>
                     </td>
-                  </ofbiz:if>
-                  <ofbiz:unless type="String" name="productId" value="shoppingcart.CommentLine">
+                  <%} else {%>                 
                     <td valign="top">
                       <div class="tabletext">
+                      	<% if (productId != null) { %>
                         <%=orderItem.getString("productId")%> - <%=orderItem.getString("itemDescription")%>
+                        <%} else {%>
+                        <%=orderItemType.getString("description")%> - <%=orderItem.getString("itemDescription")%>
+                        <%}%>
                       </div>
+                      <%if (productId != null) {%>
                       <div class="tabletext">
                         <a href="/catalog/control/EditProduct?productId=<%=orderItem.getString("productId")%>" class="buttontext" target='_blank'>[catalog]</a>
                         <a href="/ecommerce/control/product?product_id=<%=orderItem.getString("productId")%>" class="buttontext" target='_blank'>[ecommerce]</a>
                       </div>
+                      <%}%>
                     </td>
                     <%-- now show status details per line item --%>
                     <%GenericValue currentItemStatus = orderItem.getRelatedOneCache("StatusItem");%>
@@ -135,7 +141,7 @@
                       &nbsp;<%--<input name="item_id" value="<%=orderItem.getString("orderItemSeqId")%>" type="checkbox">--%>
                     </td>
                   </ofbiz:if>
-                  </ofbiz:unless>
+                  <%}%>
                 </tr>
                 <%-- now show adjustment details per line item --%>
                 <%Collection orderItemAdjustments = OrderReadHelper.getOrderItemAdjustmentList(orderItem, orderAdjustments);%>
