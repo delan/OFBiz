@@ -60,13 +60,16 @@ public class LoginServices {
             if( password.compareTo(value.getString("currentPassword")) == 0 ) {
                 result.put("userLogin",value);
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+                Debug.logInfo("[LoginServices.userLogin] : Password Matched");
             }
             else {
+                Debug.logInfo("[LoginServices.userLogin] : Password Incorrect");
                 errors.add("Password incorrect.");
             }
         }
         else {
             errors.add("User not found.");
+            Debug.logInfo("[LoginServices.userLogin] : Invalid User");
         }
         if ( errors.size() > 0 ) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
