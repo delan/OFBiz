@@ -21,7 +21,7 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: ofbiz-component.xml,v 1.2 2003/08/18 16:35:37 jonesde Exp $
+ *  $Id: ofbiz-component-example.xml,v 1.1 2003/08/20 07:01:43 ajzeneski Exp $
 -->
 
 <ofbiz-component name="example">
