@@ -768,16 +768,8 @@ public class OrderServices {
         return result;
     }
     
-    /** Service to email a customer with order status */
-    public static Map emailOrderConfirm(DispatchContext ctx, Map context) {     
-        GenericDelegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();
-        
-        Map mailFields = new HashMap(context);
-        String orderId = (String) mailFields.remove("orderId");            
-        String templateUrl = (String) mailFields.remove("templateUrl");
-        Locale localLocale = (Locale) context.get("locale");
-                
+    /** Helper method to prepare a FTL template w/ order data */
+    public static Writer prepareOrderConfirm(GenericDelegator delegator, String orderId, URL template, Locale localLocale) {
         // build the template data-model
         WrappingTemplateModel.setDefaultObjectWrapper(BeansWrapper.getDefaultInstance());
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
@@ -791,7 +783,7 @@ public class OrderServices {
             List orderHeaderAdjustments = orh.getOrderHeaderAdjustments();                                                           
             double orderSubTotal = orh.getOrderItemsSubTotal();
             List headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
-            
+           
             templateContext.put("localOrderReadHelper", orh);
             templateContext.put("orderHeader", OrderReadHelper.getOrderHeaderDisplay(orderHeader, orderHeaderAdjustments, orderSubTotal));
             templateContext.put("orderItems", OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments));
@@ -799,7 +791,7 @@ public class OrderServices {
             templateContext.put("orderHeaderAdjustments", orderHeaderAdjustments);
             templateContext.put("orderSubTotal", new Double(orderSubTotal));
             templateContext.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
-                        
+                       
             double shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
             shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
             templateContext.put("orderShippingTotal", new Double(shippingAmount));
@@ -819,7 +811,7 @@ public class OrderServices {
             templateContext.put("shippingAddress", shippingAddress);
             GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
             templateContext.put("billingAccount", billingAccount);
-      
+    
             Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
             if (orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
                 GenericValue orderPaymentPreference = (GenericValue) orderPaymentPreferences.next();
@@ -827,7 +819,7 @@ public class OrderServices {
                 GenericValue paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
                 templateContext.put("paymentMethod", paymentMethod);
                 templateContext.put("paymentMethodType", paymentMethodType);
-            
+          
                 if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
                     GenericValue creditCard = (GenericValue) paymentMethod.getRelatedOneCache("CreditCard");
                     templateContext.put("creditCard", creditCard);
@@ -851,13 +843,13 @@ public class OrderServices {
                 templateContext.put("isGift", shipmentPreference.getBoolean("isGift"));
                 templateContext.put("trackingNumber", shipmentPreference.getString("trackingNumber"));
             }
-           
+         
             Iterator orderItemPOIter = UtilMisc.toIterator(orderItems);
             if (orderItemPOIter != null && orderItemPOIter.hasNext()) {
                 GenericValue orderItemPo = (GenericValue) orderItemPOIter.next();
                 templateContext.put("customerPoNumber", orderItemPo.getString("correspondingPoId"));
             }   
-        
+      
         } catch (GenericEntityException e) {
             Debug.logError(e, "Entity read error", module);
             ServiceUtil.returnError("Problem with entity lookup, see error log");            
@@ -865,26 +857,24 @@ public class OrderServices {
         
         // add an instance of the url transform
         templateContext.put("ofbizUrl", new OfbizUrlTransform());
-           
+         
         // open the reader and read the template    
-        URL templateURL = null;
         Reader reader = null;        
-        try {     
-            templateURL = new URL(templateUrl);   
-            reader = new InputStreamReader(templateURL.openStream());
+        try {                    
+            reader = new InputStreamReader(template.openStream());
         } catch (IOException e) {
             Debug.logError(e, "Problems reading the template url", module);
             ServiceUtil.returnError("Problems opening url, see error log");            
         }
         
         File rootPath = null;
-        if (templateURL.getProtocol().equals("file")) {
-            Debug.logError("Setting rootPath to: " + templateURL.getPath(), module);
-            File tmpFile = new File(templateURL.getPath());
+        if (template.getProtocol().equals("file")) {
+            Debug.logError("Setting rootPath to: " + template.getPath(), module);
+            File tmpFile = new File(template.getPath());
             Debug.logError("getting parent: " + tmpFile.getParent(), module);
             rootPath = new File(tmpFile.getParent());
         }        
-        
+       
         // process the template
         Configuration config = Configuration.getDefaultConfiguration();            
         config.setObjectWrapper(BeansWrapper.getDefaultInstance());        
@@ -895,7 +885,7 @@ public class OrderServices {
         } catch (IOException e) {   
             Debug.logError(e, "", module);         
         }            
-        
+       
         templateContext.put("Static", staticModels);
         try {                  
             Debug.logError("" + staticModels, module);
@@ -903,11 +893,11 @@ public class OrderServices {
         } catch (Exception e) {
             Debug.logError(e, "", module);
         }
-               
+             
         Writer writer = new StringWriter();      
         try {        
-            Template template = new Template(templateUrl, reader, config);
-            template.process(templateContext, writer, BeansWrapper.getDefaultInstance());
+            Template ftl = new Template(template.toExternalForm(), reader, config);
+            ftl.process(templateContext, writer, BeansWrapper.getDefaultInstance());
         } catch (IOException ie) {
             Debug.logError(ie, "Problems reading from reader", module);
             ServiceUtil.returnError("Template reading problem, see error logs");
@@ -915,7 +905,30 @@ public class OrderServices {
             Debug.logError(te, "Problems processing template", module);
             ServiceUtil.returnError("Template processing problem, see error log");
         }
+        return writer;            
+    }
+    
+    /** Service to email a customer with order status */
+    public static Map emailOrderConfirm(DispatchContext ctx, Map context) {     
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
         
+        Map mailFields = new HashMap(context);
+        String orderId = (String) mailFields.remove("orderId");            
+        String templateUrl = (String) mailFields.remove("templateUrl");
+        Locale localLocale = (Locale) context.get("locale");
+
+        URL templateURL = null;
+        try {
+            templateURL = new URL(templateUrl);
+        } catch (MalformedURLException e) {
+            Debug.logError(e, "Problems getting URL from string", module);
+            ServiceUtil.returnError("Cannot get template URL");            
+        } 
+        
+        // get the parsed template writer
+        Writer writer = prepareOrderConfirm(delegator, orderId, templateURL, localLocale);           
+                     
         // write the processed template as a string
         mailFields.put("body", writer.toString());
         

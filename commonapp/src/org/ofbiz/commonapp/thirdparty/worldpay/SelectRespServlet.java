@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -50,37 +50,38 @@ import com.worldpay.select.merchant.*;
 public class SelectRespServlet extends SelectServlet implements SelectDefs {
     
     public static final String module = SelectRespServlet.class.getName();
-    
-    private ServletContext sctx = null;
-    private GenericDelegator delegator = null;
-    private LocalDispatcher dispatcher = null;
-    private URL orderPropertiesUrl = null;
-    private GenericValue userLogin = null;   
-    
+          
     protected void doRequest(SelectServletRequest request, SelectServletResponse response) throws ServletException, IOException {
-        Debug.logInfo("Request receive from worldpay..", module);
+        Debug.logInfo("Response received from worldpay..", module);
         
         String orderPropertiesString = request.getParameter("M_orderProperties");
+        String localLocaleStr = request.getParameter("M_localLocale");
         String webSiteId = request.getParameter("M_webSiteId");
         String delegatorName = request.getParameter("M_delegatorName");
         String dispatchName = request.getParameter("M_dispatchName");
         String userLoginId = request.getParameter("M_userLoginId");
+        String confirmTemplate = request.getParameter("M_confirmTemplate");
                      
         // get the delegator
-        delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
         
         // get the dispatcher
         ServiceDispatcher serviceDisp = ServiceDispatcher.getInstance(dispatchName, delegator);
         DispatchContext dctx = serviceDisp.getLocalContext(dispatchName);
-        dispatcher = dctx.getDispatcher();  
+        LocalDispatcher dispatcher = dctx.getDispatcher();  
         
         // get the userLogin
+        GenericValue userLogin = null;  
         try {
             userLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));      
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot get admin UserLogin entity", module);
             callError(request);
         }
+        
+        // get the client locale
+        List localeSplit = StringUtil.split(localLocaleStr, "_");
+        Locale localLocale = new Locale((String) localeSplit.get(0), (String) localeSplit.get(1));
                 
         // get the properties file       
         String configString = null;
@@ -127,7 +128,8 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         request.setAttribute("ecommerceProperties", request.getParameter("M_ecommerceProperties"));
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getParameter("M_controlPath"));
         
-        // load the order.properties file.        
+        // load the order.properties file.  
+        URL orderPropertiesUrl = null;         
         try {
             orderPropertiesUrl = new URL(orderPropertiesString);
         } catch (MalformedURLException e) {
@@ -155,7 +157,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         
         if (okay) {        
             // set the payment preference
-            okay = setPaymentPreferences(orderId, request);
+            okay = setPaymentPreferences(delegator, orderId, request);
         }
         
         if (okay) {                
@@ -175,21 +177,28 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         // attempt to release the offline hold on the order (workflow)
         OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId); 
                 
-        // call the existing confirm order events (calling direct)
-        String confirm = CheckOutEvents.renderConfirmOrder(request, response);
-        String email = CheckOutEvents.emailOrder(request, response);
-        
-        // set up the output stream for the page
+        // send the email confirmation
+        String email = CheckOutEvents.emailOrderConfirm(request, response);   
+
+        // convert confirm string to url
+        URL confirmUrl = null;
+        if (!confirmTemplate.equals("")) {
+            confirmUrl = new URL(confirmTemplate);
+        }
+                                                       
+        // set up the output stream for the response
         response.setContentType("text/html");
-        ServletOutputStream out = response.getOutputStream();
-        String content = (String) request.getAttribute("confirmorder");
-        if (content != null)
-            out.println(content); 
-        else
-            out.println("Error getting content");                                         
+        ServletOutputStream out = response.getOutputStream();  
+        if (confirmUrl != null) {                                    
+            // render the thank-you / confirm page
+            Writer writer = OrderServices.prepareOrderConfirm(delegator, orderId, confirmUrl, localLocale);
+            out.println(writer.toString()); 
+        } else {
+            out.println("Error getting content");
+        }                                                 
     }
                
-    private boolean setPaymentPreferences(String orderId, ServletRequest request) {
+    private boolean setPaymentPreferences(GenericDelegator delegator, String orderId, ServletRequest request) {
         List paymentPrefs = null;
         boolean okay = true;
         try {
