@@ -298,6 +298,96 @@
         <response name="error" type="view" value="event"/>
     </request-map>
 
+    <request-map uri="eventPartyAssignments">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="eventPartyAssignments"/>
+    </request-map>
+    <request-map uri="createEventPartyAssign">
+    	<security https="true" auth="true"/>
+        <event type="service" invoke="assignPartyToWorkEffort"/>
+    	<response name="success" type="view" value="eventPartyAssignments"/>
+        <response name="error" type="view" value="eventPartyAssignments"/>
+    </request-map>
+    <request-map uri="removeEventPartyAssign">
+    	<security https="true" auth="true"/>
+        <event type="service" invoke="unassignPartyFromWorkEffort"/>
+    	<response name="success" type="view" value="eventPartyAssignments"/>
+        <response name="error" type="view" value="eventPartyAssignments"/>
+    </request-map>
+         
+    <request-map uri="eventContactMechs">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="eventContactMechs"/>
+    </request-map> 
+    <request-map uri="addContactMech">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="editContactMech"/>    	
+    </request-map>
+    <request-map uri="editContactMech">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="editContactMech"/>    	
+    </request-map> 	 	
+    <request-map uri="createContactMech">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createWorkEffortContactMech"/>
+    	<response name="success" type="view" value="eventContactMechs"/> 
+    	<response name="error" type="view" value="editContactMech"/>   	
+    </request-map>  
+    <request-map uri="updateContactMech">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="updateWorkEffortContactMech"/>
+    	<response name="success" type="view" value="eventContactMechs"/> 
+    	<response name="error" type="view" value="editContactMech"/>   	
+    </request-map>       
+    <request-map uri="deleteContactMech">
+    	<security https="true" auth="true"/>
+        <event type="service" invoke="deleteWorkEffortContactMech"/>
+    	<response name="success" type="view" value="eventContactMechs"/>
+        <response name="error" type="view" value="eventContactMechs"/>
+    </request-map>     
+    
+    <request-map uri="createPostalAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortPostalAddress"/>
+    	<response name="success" type="view" value="eventContactMechs"/> 
+    	<response name="error" type="view" value="editContactMech"/>  
+    </request-map>
+
+    <request-map uri="updatePostalAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortPostalAddress"/>
+    	<response name="success" type="view" value="eventContactMechs"/> 
+    	<response name="error" type="view" value="editContactMech"/> 
+    </request-map>
+     
+    <request-map uri="createTelecomNumber">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortTelecomNumber"/>
+    	<response name="success" type="view" value="eventContactMechs"/> 
+    	<response name="error" type="view" value="editContactMech"/> 
+    </request-map>
+
+    <request-map uri="updateTelecomNumber">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortTelecomNumber"/>
+    	<response name="success" type="view" value="eventContactMechs"/> 
+    	<response name="error" type="view" value="editContactMech"/> 
+    </request-map>
+
+    <request-map uri="createEmailAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffortEmailAddress"/>
+    	<response name="success" type="view" value="eventContactMechs"/> 
+    	<response name="error" type="view" value="editContactMech"/> 
+    </request-map>
+
+    <request-map uri="updateEmailAddress">
+        <security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffortEmailAddress"/>
+    	<response name="success" type="view" value="eventContactMechs"/> 
+    	<response name="error" type="view" value="editContactMech"/> 
+    </request-map>
+                  
     <request-map uri="day">
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="day"/>
@@ -446,6 +536,10 @@
     <view-map name="week" type="jpublish" page="/calendar/week.ftl"/>
     <view-map name="month" type="jpublish" page="/calendar/month.ftl"/>
     <view-map name="upcoming" type="jpublish" page="/calendar/upcoming.ftl"/>
+    
+    <view-map name="eventPartyAssignments" type="jpublish" page="/calendar/eventPartyAssignments.ftl"/>
+    <view-map name="eventContactMechs" type="jpublish" page="/calendar/eventContactMechs.ftl"/>
+    <view-map name="editContactMech" type="jpublish" page="/workeffort/editContactMech.ftl"/>
     
     <!-- project management views -->
     <view-map name="projectlist" type="jpublish" page="/project/projectlist.ftl"/>
