@@ -190,10 +190,14 @@
           <b>publish:</b>
           <input type="radio" name="statusId_o_${row}" value="BLOG_PUBLISHED"/>
           </td>
+          <td class="tabletext">
+          <b>reject:</b>
+          <input type="radio" name="statusId_o_${row}" value="BLOG_REJECTED"/>
+          </td>
         </tr>
           <input type="hidden" name="contentId_o_${row}" value="${content.contentId}"/>
         <tr>
-          <td colspan="5" class="tabletext">
+          <td colspan="6" class="tabletext">
           <b>content:</b><br/>
             <@renderSubContentCache subContentId=content.contentId/>
           </td>

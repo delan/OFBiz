@@ -165,4 +165,65 @@
                 <hidden value="${nodeTrailCsv}"/>
         </field>
     </form>
+
+    <!-- ContentPurposeOperation forms -->
+   <form
+        name="UpdateContentPurposeOperation"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        list-name="contentList"
+        target="updateContentPurposeOperation" title="" type="list">
+        <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeTypeId=${contentPurposeTypeId}&amp;contentOperationId=${contentOperationId}&amp;roleTypeId=${roleTypeId}&amp;statusId=${statusId}&amp;privilegeEnumId=${privilegeEnumId}"/>
+        </field>
+    </form>
+    <form
+        name="AddContentPurposeOperation"
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="inputBox"
+        target="addContentPurposeOperation" title="" type="single">
+        <auto-fields-service service-name="createContentPurposeOperation"/>
+        <field name="contentPurposeTypeId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}"
+                    entity-name="ContentPurposeType" key-field-name="contentPurposeTypeId"/>
+            </drop-down>
+        </field>
+        <field name="contentOperationId">
+            <drop-down allow-empty="false">
+                <entity-options description="${description}"
+                    entity-name="ContentOperation" key-field-name="contentOperationId"/>
+            </drop-down>
+        </field>
+        <field name="roleTypeId">
+            <drop-down allow-empty="false">
+                <option key="_NA_" description="Not Applicable"/>
+                <entity-options description="${description}"
+                    entity-name="RoleType" key-field-name="roleTypeId"/>
+            </drop-down>
+        </field>
+        <field name="statusId">
+            <drop-down allow-empty="false">
+                <option key="_NA_" description="Not Applicable"/>
+                <entity-options description="${description}"
+                    entity-name="StatusItem" key-field-name="statusId">
+                    <entity-constraint name="statusTypeId" value="PUBLISH_STATUS"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="privilegeEnumId">
+            <drop-down allow-empty="false">
+                <option key="_NA_" description="Not Applicable"/>
+                <entity-options description="${description}"
+                    entity-name="Enumeration" key-field-name="enumId">
+                    <entity-constraint name="enumTypeId" value="SUBSCRIPTION_TYPE"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="Add" widget-style="standardSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+
 </forms>
