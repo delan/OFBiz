@@ -73,6 +73,16 @@
         <put section='content' content='/requirement/tasks.jsp'/>
     </define>
 
+    <define id='request' region='MAIN_REGION'>
+        <put section='title'>Edit Request</put>
+        <put section='content' content='/request/request.jsp'/>
+    </define>
+
+    <define id='requestitem' region='MAIN_REGION'>
+        <put section='title'>Request Item Detail</put>
+        <put section='content' content='/request/request.jsp'/>
+    </define>
+
     <define id='event' region='MAIN_REGION'>
         <put section='title'>Edit Calendar Event</put>
         <put section='content' content='/calendar/event.jsp'/>

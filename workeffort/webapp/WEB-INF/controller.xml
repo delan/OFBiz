@@ -120,6 +120,56 @@
         <response name="error" type="view" value="workefforts"/>
     </request-map>
 
+    <request-map uri="request"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="request"/>
+    </request-map>
+
+    <request-map uri="createrequest"><security https="true" auth="true"/>
+        <event type="service" invoke="createCustRequest"/>
+    	<response name="success" type="view" value="request"/>
+        <response name="error" type="view" value="request"/>
+    </request-map>
+
+    <request-map uri="updaterequest"><security https="true" auth="true"/>
+        <event type="service" invoke="updateCustRequest"/>
+    	<response name="success" type="view" value="request"/>
+        <response name="error" type="view" value="request"/>
+    </request-map>
+
+    <request-map uri="createrequestrole"><security https="true" auth="true"/>
+        <event type="service" invoke="createCustRequestRole"/>
+    	<response name="success" type="view" value="request"/>
+        <response name="error" type="view" value="request"/>
+    </request-map>
+
+    <request-map uri="removerequestrole"><security https="true" auth="true"/>
+        <event type="service" invoke="removeCustRequestRole"/>
+    	<response name="success" type="view" value="request"/>
+        <response name="error" type="view" value="request"/>
+    </request-map>
+
+    <request-map uri="requestitem"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="requestitem"/>
+    </request-map>
+
+    <request-map uri="createrequestitem"><security https="true" auth="true"/>
+        <event type="service" invoke="createCustRequestItem"/>
+    	<response name="success" type="view" value="request"/>
+        <response name="error" type="view" value="request"/>
+    </request-map>
+
+    <request-map uri="updaterequestitem"><security https="true" auth="true"/>
+        <event type="service" invoke="updateCustRequestItem"/>
+    	<response name="success" type="view" value="requestitem"/>
+        <response name="error" type="view" value="requestitem"/>
+    </request-map>
+
+    <request-map uri="createrequestitemnote"><security https="true" auth="true"/>
+        <event type="service" invoke="createCustRequestItemNote"/>
+    	<response name="success" type="view" value="requestitem"/>
+        <response name="error" type="view" value="requestitem"/>
+    </request-map>
+
     <request-map uri="activity"><security https="true" auth="true"/>
     	<response name="success" type="view" value="activity"/>
     </request-map>
@@ -216,12 +266,16 @@
     <view-map name="main" type="region"/>
     <view-map name="login" type="region"/>
 
-    <view-map name="task" type="region"/>
-    <view-map name="workefforts" type="region"/>
+    <view-map name="request" type="region"/>
+    <view-map name="requestlist" type="region"/>
     <view-map name="requirement" type="region"/>
+    <view-map name="requirementlist" type="region"/>
+    <view-map name="workefforts" type="region"/>
+
+    <view-map name="task" type="region"/>
     <view-map name="activity" type="region"/>
     <view-map name="mytasks" type="region"/>
-    <view-map name="requirementlist" type="region"/>
+
 
     <view-map name="event" type="region"/>
     <view-map name="day" type="region"/>
