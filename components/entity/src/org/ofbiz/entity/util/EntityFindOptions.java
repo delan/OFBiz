@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFindOptions.java,v 1.2 2003/10/11 19:04:22 ajzeneski Exp $
+ * $Id: EntityFindOptions.java,v 1.3 2004/06/11 16:40:26 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,8 @@ import java.sql.ResultSet;
  * Contains a number of variables used to select certain advanced finding options.
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.2 $
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ *@version    $Revision: 1.3 $
  *@since      2.0
  */
 public class EntityFindOptions implements java.io.Serializable {
@@ -52,6 +53,8 @@ public class EntityFindOptions implements java.io.Serializable {
     protected boolean specifyTypeAndConcur = true;
     protected int resultSetType = TYPE_FORWARD_ONLY;
     protected int resultSetConcurrency = CONCUR_READ_ONLY;
+    protected int fetchSize = -1;
+    protected int maxRows = -1;
     protected boolean distinct = false;
 
     /** Default constructor. Defaults are as follows:
@@ -59,14 +62,21 @@ public class EntityFindOptions implements java.io.Serializable {
      *      resultSetType = TYPE_FORWARD_ONLY
      *      resultSetConcurrency = CONCUR_READ_ONLY
      *      distinct = false
+     *      maxRows = 0 (all rows)
      */
     public EntityFindOptions() {}
 
-    public EntityFindOptions(boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency, boolean distinct) {
+    public EntityFindOptions(boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency, int fetchSize, int maxRows, boolean distinct) {
         this.specifyTypeAndConcur = specifyTypeAndConcur;
         this.resultSetType = resultSetType;
         this.resultSetConcurrency = resultSetConcurrency;
+        this.fetchSize = fetchSize;
+        this.maxRows = maxRows;
         this.distinct = distinct;
+    }
+
+    public EntityFindOptions(boolean specifyTypeAndConcur, int resultSetType, int resultSetConcurrency, boolean distinct) {
+        this(specifyTypeAndConcur, resultSetType, resultSetConcurrency, -1, -1, distinct);
     }
 
     /** If true the following two parameters (resultSetType and resultSetConcurrency) will be used to specify
@@ -113,6 +123,26 @@ public class EntityFindOptions implements java.io.Serializable {
      */
     public void setResultSetConcurrency(int resultSetConcurrency) {
         this.resultSetConcurrency = resultSetConcurrency;
+    }
+
+    /** Specifies the fetch size for this query. -1 will fall back to datasource settings. */
+    public int getFetchSize() {
+        return fetchSize;
+    }
+
+    /** Specifies the fetch size for this query. -1 will fall back to datasource settings. */
+    public void setFetchSize(int fetchSize) {
+        this.fetchSize = fetchSize;
+    }
+
+    /** Specifies the max number of rows to return, 0 means all rows. */
+    public int getMaxRows() {
+        return maxRows;
+    }
+
+    /** Specifies the max number of rows to return, 0 means all rows. */
+    public void setMaxRows(int maxRows) {
+        this.maxRows = maxRows;
     }
 
     /** Specifies whether the values returned should be filtered to remove duplicate values. */
