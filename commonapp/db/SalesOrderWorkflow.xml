@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>             
-<?xml version="1.0" encoding="UTF-8"?>
-<entity-engine-xml>   
     <WorkflowSpecification specificationId="XPDL" currentVersion="0.03"/>
     <WorkflowPackage packageId="org.ofbiz.commonapp.order.order" packageVersion="1.5" packageName="" description="Demo Order Processing Workflow" specificationVersion="0.03" specificationId="XPDL" sourceVendorInfo="OFBiz.org" creationDateTime="2002-12-03 00:00:00.0" author="Andy Zeneski" publicationStatusId="WPS_UNDER_REVISION" graphConformanceEnumId="WGC_FULL_BLOCKED" priorityUomId="P" costUomId="USD" responsibleListId="10002" documentationUrl="None"/>
     <WorkflowProcess packageId="org.ofbiz.commonapp.order.order" packageVersion="1.5" processId="ProcessOrder" processVersion="1.5" objectName="Processes incoming orders" objectPriority="5" description="Order Processing Workflow" creationDateTime="2002-12-01 12:00:00.0" author="OFBiz" publicationStatusId="WPS_UNDER_REVISION" timeLimit="12.0" validFromDate="2002-12-01 12:00:00.0" validToDate="2012-12-01 12:00:00.0" responsibleListId="10003" durationUomId="m" duration="3.0" waitingTime="2.0" defaultStartActivityId="receiveOrder" sourceReferenceField="orderId"/>
