@@ -417,7 +417,7 @@ public class ShoppingCartEvents {
         HttpSession session = request.getSession(true);
         ShoppingCart cart = (ShoppingCart) session.getAttribute(SiteDefs.SHOPPING_CART);
         if (cart == null) {
-            cart = new ShoppingCart(delegator);
+            cart = new ShoppingCart(delegator, session);
         }
         session.setAttribute(SiteDefs.SHOPPING_CART,cart);
         return cart;

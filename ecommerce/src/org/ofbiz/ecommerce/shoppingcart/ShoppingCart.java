@@ -25,6 +25,7 @@ package org.ofbiz.ecommerce.shoppingcart;
 
 import java.text.*;
 import java.util.*;
+import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
@@ -67,13 +68,15 @@ public class ShoppingCart implements java.io.Serializable {
     private List cartLines = new ArrayList();
 
     private GenericDelegator delegator;
-
+    private HttpSession session;
+    
     /** don't allow empty constructor */
     protected ShoppingCart() {}
     
     /** Creates new empty ShoppingCart object. */
-    public ShoppingCart(GenericDelegator delegator) {
+    public ShoppingCart(GenericDelegator delegator, HttpSession session) {
         this.delegator = delegator;
+        this.session = session;
     }
 
     // =======================================================================
@@ -191,6 +194,11 @@ public class ShoppingCart implements java.io.Serializable {
         return cartLines.iterator();
     }
 
+    /** Gets the userLogin from the session; may be null */
+    public GenericValue getUserLogin() {
+        return (GenericValue) this.session.getAttribute("userLogin");
+    }
+    
     // =======================================================================
     // Methods for cart fields
     // =======================================================================

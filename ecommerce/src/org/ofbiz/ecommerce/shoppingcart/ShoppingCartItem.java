@@ -1,5 +1,25 @@
 /*
  * $Id$
+ *
+ *  Copyright (c) 2002 The Open For Business Project and repected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.ecommerce.shoppingcart;
@@ -13,24 +33,6 @@ import org.ofbiz.commonapp.order.order.OrderReadHelper;
 /**
  * <p><b>Title:</b> ShoppingCartItem.java
  * <p><b>Description:</b> Shopping cart item object.
- * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
  * @version    1.1
@@ -46,10 +48,12 @@ public class ShoppingCartItem implements java.io.Serializable {
     private String productId = null;
     private String itemComment = null;
     private double quantity = 0.0;
+    private double basePrice = 0.0;
     private Map features = null;
     private Map attributes = null;
     private String orderItemSeqId = null;
     
+    private List orderItemPriceInfos = null;
     private List itemAdjustments = new LinkedList();
     private boolean isPromo = false;
 
@@ -169,6 +173,31 @@ public class ShoppingCartItem implements java.io.Serializable {
         double oldQuantity = this.quantity;
         this.quantity = quantity;
         
+        //set basePrice using the calculateProductPrice service
+        try {
+            Map priceContext = new HashMap();
+            priceContext.put("product", this.getProduct());
+            priceContext.put("prodCatalogId", prodCatalogId);
+            GenericValue userLogin = cart.getUserLogin();
+            if (userLogin != null) {
+                priceContext.put("partyId", userLogin.getString("partyId"));
+            }
+            priceContext.put("quantity", new Double(quantity));
+            Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
+            
+            if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
+            }
+            
+            Double price = (Double) priceResult.get("price");
+            if (price != null) {
+                this.basePrice = price.doubleValue();
+            }
+            this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
+        } catch (GenericServiceException e) {
+            throw new CartItemModifyException("There was an error while calculating the price", e);
+        }
+        
         //apply/unapply promotions
         if (doPromotions) {
             org.ofbiz.ecommerce.catalog.ProductPromoWorker.doPromotions(prodCatalogId, cart, this, oldQuantity, getDelegator(), dispatcher);
@@ -239,14 +268,7 @@ public class ShoppingCartItem implements java.io.Serializable {
                 
     /** Returns the base price. */
     public double getBasePrice() {
-        // todo calculate the price using price component.
-        Double defaultPrice = getProduct().getDouble("defaultPrice");
-        double defPrice = 0.0;
-        if (defaultPrice != null) {
-            defPrice = defaultPrice.doubleValue();
-        }
-
-        return defPrice;
+        return basePrice;
     }
     /** Returns the "other" adjustments. */
     public double getOtherAdjustments() {
