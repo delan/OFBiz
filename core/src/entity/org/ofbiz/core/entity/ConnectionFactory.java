@@ -102,7 +102,9 @@ public class ConnectionFactory {
                             DataSource nds = (DataSource) ds;
                             con = nds.getConnection();
                         }
-                        
+
+                        /* NOTE: This code causes problems because settting the transaction isolation level after a transaction has started is a no-no
+                         * The question is: how should we do this?
                         String isolationLevel = jndiJdbcElement.getAttribute("isolation-level");
                         if (con != null && isolationLevel != null && isolationLevel.length() > 0) {
                             if ("Serializable".equals(isolationLevel)) {
@@ -117,6 +119,7 @@ public class ConnectionFactory {
                                 con.setTransactionIsolation(Connection.TRANSACTION_NONE);
                             }
                         }
+                         */
                         
                         //if (con != null) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
                         return con;
@@ -139,6 +142,9 @@ public class ConnectionFactory {
                     Debug.logError("Got a null data source for dataSource-name " + dataSourceName + " for tyrex-dataSource element in the " + helperName + " data-source definition");
                 } else {
                     Connection con = tyrexDataSource.getConnection();
+
+                    /* NOTE: This code causes problems because settting the transaction isolation level after a transaction has started is a no-no
+                     * The question is: how should we do this?
                     String isolationLevel = tyrexDataSourceElement.getAttribute("isolation-level");
                     if (con != null && isolationLevel != null && isolationLevel.length() > 0) {
                         if ("Serializable".equals(isolationLevel)) {
@@ -153,6 +159,7 @@ public class ConnectionFactory {
                             con.setTransactionIsolation(Connection.TRANSACTION_NONE);
                         }
                     }
+                     */
                     return con;
                 }
             }
