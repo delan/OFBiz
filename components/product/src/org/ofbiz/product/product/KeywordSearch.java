@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.2 2003/09/20 18:02:16 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.3 2003/10/15 06:33:34 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -49,7 +49,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class KeywordSearch {
@@ -137,13 +137,14 @@ public class KeywordSearch {
             while (resultSet.next()) {
                 //since there is a chance of duplicate IDs, check to see if the ID is already in the list to eliminate all but the first
                 String productId = resultSet.getString("PRODUCT_ID");
-                if (!idSet.contains(productId)) {
+                if (productId != null && !idSet.contains(productId)) {
                     pbkList.add(productId);
                     idSet.add(productId);
                     // Debug.logInfo("PRODUCT_ID=" + productId + " TOTAL_WEIGHT=" + resultSet.getInt("TOTAL_WEIGHT"), module);
                 }
             }
             if (Debug.infoOn()) Debug.logInfo("[KeywordSearch] got " + pbkList.size() + " results found for search string: [" + keywordsString + "], keyword combine operator is " + intraKeywordOperator + ", categoryId=" + categoryId + ", anyPrefix=" + anyPrefix + ", anySuffix=" + anySuffix + ", removeStems=" + removeStems, module);
+            //if (Debug.infoOn()) Debug.logInfo("pbkList=" + pbkList, module);
 
             try {
                 GenericValue productKeywordResult = delegator.makeValue("ProductKeywordResult", null);
