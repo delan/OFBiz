@@ -125,7 +125,7 @@ public class Journal {
 
         PosTransaction tx = PosTransaction.getCurrentTx(pos.getSession());
         XModel jmodel = this.createModel();
-        if (!tx.isEmpty()) {
+        if (tx != null && !tx.isEmpty()) {
             tx.appendItemDataModel(jmodel);
             this.appendEmpty(jmodel);
             tx.appendTotalDataModel(jmodel);
