@@ -62,6 +62,9 @@ public class ModelViewEntity extends ModelEntity {
     }
     
     public void populateFields(Map entityCache) {
+        if (this.memberModelEntities == null) {
+            this.memberModelEntities = new HashMap();
+        }
         Iterator meIter = memberEntityNames.entrySet().iterator();
         while (meIter.hasNext()) {
             Map.Entry entry = (Map.Entry) meIter.next();
