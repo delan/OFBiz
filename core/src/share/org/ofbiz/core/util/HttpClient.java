@@ -43,6 +43,7 @@ public class HttpClient {
     private boolean followRedirects = true;
     
     private String url = null;
+    private String rawStream = null;
     private Map parameters = null;
     private Map headers = null;
     
@@ -101,6 +102,11 @@ public class HttpClient {
     /** Turns on or off line feeds in the request. (default is on) */
     public void setLineFeed(boolean lineFeed) {
         this.lineFeed = lineFeed;
+    }
+    
+    /** Set the raw stream for posts. */
+    public void setRawStream(String stream) {
+        this.rawStream = stream;
     }
     
     /** Set the URL for this request. */
@@ -166,6 +172,12 @@ public class HttpClient {
     public String post() throws HttpClientException {
         return sendHttpRequest("post");
     }
+    
+    /** Invoke HTTP request POST and pass raw stream. */
+    public String post(String stream) throws HttpClientException {
+        this.rawStream = stream;
+        return sendHttpRequest("post");
+    }
 
     /** Invoke HTTP request POST. */
     public InputStream postStream() throws HttpClientException {
@@ -174,50 +186,57 @@ public class HttpClient {
 
     /** Returns the value of the specified named response header field. */
     public String getResponseHeader(String header) throws HttpClientException {
-        if (con == null)
+        if (con == null) {
             throw new HttpClientException("Connection not yet established");
+        }
         return con.getHeaderField(header);
     }
 
     /** Returns the key for the nth response header field. */
     public String getResponseHeaderFieldKey(int n) throws HttpClientException {
-        if (con == null)
+        if (con == null) {
             throw new HttpClientException("Connection not yet established");
+        }
         return con.getHeaderFieldKey(n);
     }
 
     /** Returns the value for the nth response header field. It returns null of there are fewer then n fields. */
     public String getResponseHeaderField(int n) throws HttpClientException {
-        if (con == null)
+        if (con == null) {
             throw new HttpClientException("Connection not yet established");
+        }
         return con.getHeaderField(n);
     }
 
     /** Returns the content of the response. */
     public Object getResponseContent() throws java.io.IOException, HttpClientException {
-        if (con == null)
+        if (con == null) {
             throw new HttpClientException("Connection not yet established");
+        }
         return con.getContent();
     }
 
     /** Returns the content-type of the response. */
     public String getResponseContentType() throws HttpClientException {
-        if (con == null)
+        if (con == null) {
             throw new HttpClientException("Connection not yet established");
+        }
         return con.getContentType();
     }
 
     /** Returns the content length of the response */
     public int getResponseContentLength() throws HttpClientException {
-        if (con == null)
+        if (con == null) {
             throw new HttpClientException("Connection not yet established");
+        }
         return con.getContentLength();
     }
 
     /** Returns the content encoding of the response. */
     public String getResponseContentEncoding() throws HttpClientException {
-        if (con == null)
+        if (con == null) {
             throw new HttpClientException("Connection not yet established");
+        }
         return con.getContentEncoding();
     }
 
@@ -271,8 +290,9 @@ public class HttpClient {
             while ((line = post.readLine()) != null) {
                 if (Debug.verboseOn()) Debug.logVerbose("[HttpClient] : " + line, module);
                 buf.append(line);
-                if (lineFeed)
+                if (lineFeed) {
                     buf.append("\n");
+                }
             }
         } catch (Exception e) {
             throw new HttpClientException("Error processing input stream", e);
@@ -286,27 +306,36 @@ public class HttpClient {
         String proxyHost = UtilProperties.getPropertyValue("jsse.properties", "https.proxyHost", "NONE");
         String proxyPort = UtilProperties.getPropertyValue("jsse.properties", "https.proxyPort", "NONE");        
         String cypher = UtilProperties.getPropertyValue("jsse.properties", "https.cipherSuites", "NONE");
-        if (protocol != null && !protocol.equals("NONE"))
+        if (protocol != null && !protocol.equals("NONE")) {
             System.setProperty("java.protocol.handler.pkgs", protocol);
-        if (proxyHost != null && !proxyHost.equals("NONE"))
+        }
+        if (proxyHost != null && !proxyHost.equals("NONE")) {
             System.setProperty("https.proxyHost", proxyHost);
-        if (proxyPort != null && !proxyPort.equals("NONE"))
+        }
+        if (proxyPort != null && !proxyPort.equals("NONE")) {
             System.setProperty("https.proxyPort", proxyPort);
-        if (cypher != null && !cypher.equals("NONE"))
-            System.setProperty("https.cipherSuites", cypher);   
+        }
+        if (cypher != null && !cypher.equals("NONE")) {
+            System.setProperty("https.cipherSuites", cypher);
+        }   
             
         String arguments = null;
         InputStream in = null;                     
 
-        if (url == null)
+        if (url == null) {
             throw new HttpClientException("Cannot process a null URL.");
+        }
 
-        if (parameters != null && parameters.size() > 0)
+        if (rawStream != null) {
+            arguments = rawStream;
+        } else if (parameters != null && parameters.size() > 0) {
             arguments = UtilHttp.urlEncodeArgs(parameters);
+        }
 
         // Append the arguments to the query string if GET.
-        if (method.equalsIgnoreCase("get") && arguments != null)
+        if (method.equalsIgnoreCase("get") && arguments != null) {
             url = url + "?" + arguments;
+        }
 
         // Create the URL and open the connection.
         try {
@@ -342,6 +371,8 @@ public class HttpClient {
             }
 
             in = con.getInputStream();
+        } catch (IOException ioe) {
+            throw new HttpClientException("IO Error processing request", ioe);
         } catch (Exception e) {
             throw new HttpClientException("Error processing request", e);
         }
