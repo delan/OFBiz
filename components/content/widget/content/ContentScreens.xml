@@ -77,7 +77,9 @@
                     <set field="queryString" from-field="result.queryString"/>
                     <set field="viewIndex" from-field="requestParameters.VIEW_INDEX" type="Integer"/>
                     <set field="viewSize" from-field="requestParameters.VIEW_SIZE" type="Integer" default-value="20"/>
+		    <!-- moved this functionality to inside HtmlFormRenderer
 		    <script location="component://content/widget/findprep.bsh"/>
+		    -->
 	    </actions>
         <widgets>
           <decorator-screen name="common" >
