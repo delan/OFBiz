@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.1 2004/03/15 14:53:57 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.2 2004/03/16 20:21:56 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.content.content.ContentPermissionServices;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -129,7 +129,8 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         MenuTarget target = menuItem.getCurrentMenuTarget();
         String divStr = buildDivStr(menuItem, context);
         String url = target.renderAsUrl( context);
-        buffer.append("<a href=\""); 
+        String titleStyle = menuItem.getTitleStyle();
+        buffer.append("<a  class=\"" + titleStyle + "\" href=\""); 
         appendOfbizUrl(buffer,  url);
         buffer.append("\">" + divStr + "</a>");
         buffer.append("</td>");
@@ -141,8 +142,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public String buildDivStr(ModelMenuItem menuItem, Map context) {
         String divStr = "";
-        String titleStyle = menuItem.getTitleStyle();
-        divStr = "<div class='" + titleStyle + "'>" + menuItem.getTitle(context) + "</div>";
+        divStr =  menuItem.getTitle(context);
         return divStr;
     }
 
