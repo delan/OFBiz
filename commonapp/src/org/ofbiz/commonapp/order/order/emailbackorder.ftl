@@ -467,10 +467,10 @@
               </tr>              
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>                
                 <tr>
-                  <td align="right" colspan="4"><div class="tabletext"><b>${orderHeaderAdjustment.typeDescription}</b></div></td>
-                  <td align="right" nowrap><div class="tabletext">${orderHeaderAdjustment.adjustmentCalc?string.currency}</div></td>
+                  <td align="right" colspan="4"><div class="tabletext"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
+                  <td align="right" nowrap><div class="tabletext">${localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment)?string.currency}</div></td>
                 </tr>
-              </#list>                 
+              </#list>
               <tr>
                 <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderShippingTotal?string.currency}</div></td>

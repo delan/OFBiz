@@ -125,7 +125,7 @@
               </tr>              
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>                
                 <tr>
-                  <td align="right" colspan="4"><div class="tabletext"><b>${orderHeaderAdjustment.typeDescription}</b></div></td>
+                  <td align="right" colspan="4"><div class="tabletext"><b>${localOrderReadHelper.getAdjustmentType(orderHeaderAdjustment)}</b></div></td>
                   <td align="right" nowrap><div class="tabletext">${localOrderReadHelper.getOrderAdjustmentTotal(orderHeaderAdjustment)?string.currency}</div></td>
                 </tr>
               </#list>                 
