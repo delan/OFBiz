@@ -372,7 +372,7 @@
                       <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
                       <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
                       <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
-                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
+                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", ", ")%>
                       <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
                       <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
                       </div>
