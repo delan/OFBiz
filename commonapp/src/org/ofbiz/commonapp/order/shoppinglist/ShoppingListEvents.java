@@ -167,11 +167,49 @@ public class ShoppingListEvents {
             }            
         }
         
-        if (eventMessage.length() > 0)
+        if (eventMessage.length() > 0) {
             request.setAttribute(SiteDefs.EVENT_MESSAGE, eventMessage.toString());
+        }
         
         // all done
         return "success";
     }
 
+    public static String replaceShoppingListItem(HttpServletRequest request, HttpServletResponse response) {
+        String quantityStr = request.getParameter("quantity");
+        
+        // just call the updateShoppingListItem service
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
+        
+        Double quantity = null;
+        try {
+            quantity = Double.valueOf(quantityStr);
+        } catch (Exception e) {
+            // do nothing, just won't pass to service if it is null
+        }
+        
+        Map serviceInMap = new HashMap();
+        serviceInMap.put("shoppingListId", request.getParameter("shoppingListId"));
+        serviceInMap.put("shoppingListItemSeqId", request.getParameter("shoppingListItemSeqId"));
+        serviceInMap.put("productId", request.getParameter("add_product_id"));
+        serviceInMap.put("userLogin", userLogin);
+        if (quantity != null) serviceInMap.put("quantity", quantity);
+        Map result = null;
+        try {
+            result = dispatcher.runSync("updateShoppingListItem", serviceInMap);
+        } catch (GenericServiceException e) {
+            String errMsg = "Error calling the updateShoppingListItem in handleShoppingListItemVariant: " + e.toString();
+            Debug.logError(e, errMsg);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
+            return "error";
+        }
+        
+        ServiceUtil.getMessages(request, result, "", "", "", "", "", "", "");
+        if ("error".equals(result.get(ModelService.RESPONSE_MESSAGE))) {
+            return "error";
+        } else {
+            return "success";
+        }
+    }
 }

@@ -113,14 +113,14 @@
     	<security auth="true"/>
     	<event type="service" path="" invoke="createShoppingList"/>
     	<response name="success" type="view" value="editShoppingList"/>
-    	<response name="error" type="view" value="editShoppingList"/>    	
+    	<response name="error" type="view" value="editShoppingList"/>
     </request-map>
     
     <request-map uri="updateShoppingList">
     	<security auth="true"/>
     	<event type="service" path="" invoke="updateShoppingList"/>
     	<response name="success" type="view" value="editShoppingList"/>
-    	<response name="error" type="view" value="editShoppingList"/>    	
+    	<response name="error" type="view" value="editShoppingList"/>
     </request-map>
     
     <request-map uri="addItemToShoppingList">
@@ -149,14 +149,21 @@
         <event type="service" path="" invoke="updateShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
-    </request-map>    
+    </request-map>
         
     <request-map uri="removeFromShoppingList">
         <security auth="true"/>
         <event type="service" path="" invoke="removeShoppingListItem"/>
         <response name="success" type="view" value="editShoppingList"/>
         <response name="error" type="view" value="editShoppingList"/>
-    </request-map>    
+    </request-map>
+    
+    <request-map uri="replaceShoppingListItem">
+        <security auth="true"/>
+        <event type="java" path="org.ofbiz.commonapp.order.shoppinglist.ShoppingListEvents" invoke="replaceShoppingListItem"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
     
     <request-map uri="additem">
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="addToCart"/>

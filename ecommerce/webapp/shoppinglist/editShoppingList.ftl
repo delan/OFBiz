@@ -264,10 +264,8 @@
                     <#assign unitPrice = shoppingListItemData.unitPrice>
                     <#assign totalPrice = shoppingListItemData.totalPrice>
                     <#assign productVariantAssocs = shoppingListItemData.productVariantAssocs?if_exists>
-                    <form method="POST" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
-                      <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
-                      <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
-                      
+                    <#assign isVirtual = product.isVirtual?exists && product.isVirtual.equals("Y")>
+                    
                       <tr>
                         <td>
                           <div class='tabletext'>
@@ -276,9 +274,13 @@
                           </div>
                         </td>
                         <td nowrap align="center">
-                          <div class='tabletext'>
-                            <input size="6" class='inputBox' type="text" name="quantity" value="${shoppingListItem.quantity?string.number}">
-                          </div>
+						  <form method="POST" action="<@ofbizUrl>/updateShoppingListItem</@ofbizUrl>" name='listform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+						    <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
+						    <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
+                            <div class='tabletext'>
+                              <input size="6" class='inputBox' type="text" name="quantity" value="${shoppingListItem.quantity?string.number}">
+                            </div>
+		                  </form>
                         </td>
                         <td nowrap align="center">
                           <div class="tabletext">${shoppingListItem.quantityPurchased?default(0)?string.number}</div>
@@ -292,10 +294,32 @@
                         <td align="right">
                         	<a href="javascript:document.listform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[Update]</a>
                         	<a href="<@ofbizUrl>/removeFromShoppingList?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}</@ofbizUrl>" class="buttontext">[Remove]</a>
+                          <#if isVirtual && productVariantAssocs?has_content>
+                            <#assign replaceItemAction = "/replaceShoppingListItem/" + requestAttributes._CURRENT_VIEW_?if_exists>
+                            <#assign addToCartAction = "/additem/" + requestAttributes._CURRENT_VIEW_?if_exists>
+                            <br/>
+                            <form method="POST" action="<@ofbizUrl>${addToCartAction}</@ofbizUrl>" name='listreplform_${shoppingListItem.shoppingListItemSeqId}' style='margin: 0;'>
+                              <input type="hidden" name="shoppingListId" value="${shoppingListItem.shoppingListId}">
+                              <input type="hidden" name="shoppingListItemSeqId" value="${shoppingListItem.shoppingListItemSeqId}">
+                              <input type="hidden" name="quantity" value="${shoppingListItem.quantity}">
+                              <select name="add_product_id" class="selectBox">
+                              	<#list productVariantAssocs as productVariantAssoc>
+                              	  <#assign variantProduct = productVariantAssoc.getRelatedOneCache("AssocProduct")>
+                              	  <#if variantProduct?exists>
+                              	    <option value="${variantProduct.productId}">${variantProduct.productName} [${variantProduct.productId}]</option>
+                              	  </#if>
+                              	</#list>
+                              </select>
+                              <br/>
+                              <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${replaceItemAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[Replace&nbsp;With&nbsp;Variation]</a>
+                              <br/>
+                              <a href="javascript:document.listreplform_${shoppingListItem.shoppingListItemSeqId}.action='<@ofbizUrl>${addToCartAction}</@ofbizUrl>';document.listreplform_${shoppingListItem.shoppingListItemSeqId}.submit();" class="buttontext">[Add&nbsp;${shoppingListItem.quantity?string}&nbsp;of&nbsp;Variation&nbsp;To&nbsp;Cart]</a>
+                            </form>
+                          <#else>
                             <a href="<@ofbizUrl>/additem<#if requestAttributes._CURRENT_VIEW_?exists>/${requestAttributes._CURRENT_VIEW_}</#if>?shoppingListId=${shoppingListItem.shoppingListId}&shoppingListItemSeqId=${shoppingListItem.shoppingListItemSeqId}&quantity=${shoppingListItem.quantity}&add_product_id=${shoppingListItem.productId}</@ofbizUrl>" class="buttontext">[Add&nbsp;${shoppingListItem.quantity?string}&nbsp;To&nbsp;Cart]</a>
+                          </#if>
                         </td>
                       </tr>
-                    </form>
                   </#list>
                   <tr><td colspan="6"><hr class='sepbar'></td></tr>
 				  <tr>
