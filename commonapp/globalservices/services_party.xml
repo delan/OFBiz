@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
+
+<services>
+  <description>Common Application Shared Party Services</description>
+  <vendor>OFBiz</vendor>
+  <version>1.0</version>
+	
+  
+  <!-- ContactMech services -->
+  <service name="createContactMech" engine="java"
+    location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createContactMech" auth="true">
+	  <description>Create a ContactMech</description>
+	  <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+  </service>
+  <service name="updateContactMech" engine="java"
+    location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateContactMech" auth="true">
+	  <description>Update a ContactMech</description>
+  </service>
+  <service name="deleteContactMech" engine="java"
+    location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="deleteContactMech" auth="true">
+	  <description>Delete a ContactMech</description>
+	  <attribute name="workEffortId" type="String" mode="IN"/>
+  </service>
+
+  <!-- Party ContactMech Purpose services -->
+  <service name="createPartyContactMechPurpose" engine="java"
+    location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createPartyContactMechPurpose" auth="true">
+	  <description>Create a Party ContactMech Purpose</description>
+	  <attribute name="partyId" type="String" mode="IN" optional="true"/>
+	  <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+	  <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="false"/>
+	  <attribute name="fromDate" type="Timestamp" mode="OUT" optional="true"/>
+  </service>
+  <service name="deletePartyContactMechPurpose" engine="java"
+    location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="deletePartyContactMechPurpose" auth="true">
+	  <description>Delete a Party ContactMech Purpose</description>
+	  <attribute name="partyId" type="String" mode="IN" optional="true"/>
+	  <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+	  <attribute name="contactMechPurposeTypeId" type="String" mode="IN" optional="false"/>
+	  <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+  </service>
+
+  <!-- CreditCardInfo services -->
+  <service name="createCreditCardInfo" engine="java"
+    location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="createCreditCardInfo" auth="true">
+	  <description>Create CreditCardInfo</description>
+	  <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+  </service>
+  <service name="updateCreditCardInfo" engine="java"
+    location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="updateCreditCardInfo" auth="true">
+	  <description>Update CreditCardInfo</description>
+  </service>
+  <service name="deleteCreditCardInfo" engine="java"
+    location="org.ofbiz.commonapp.party.contact.ContactMechServices" invoke="deleteCreditCardInfo" auth="true">
+	  <description>Delete CreditCardInfo</description>
+	  <attribute name="workEffortId" type="String" mode="IN"/>
+  </service>
+</services>
