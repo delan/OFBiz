@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.order.shoppingcart;
-
 
 import java.util.*;
 import java.text.*;
@@ -37,13 +35,12 @@ import org.ofbiz.core.util.*;
 
 import org.ofbiz.commonapp.product.catalog.*;
 
-
 /**
  * Shopping cart events.
  *
- * @author     Andy Zeneski (jaz@zsolv.com)
- * @version    1.0
- * @created    August 4, 2001, 8:21 PM
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ShoppingCartEvents {
 
@@ -86,6 +83,11 @@ public class ShoppingCartEvents {
             quantity = Double.parseDouble(quantityStr);
         } catch (NumberFormatException nfe) {
             quantity = 1;
+        }
+        
+        if (quantity < 0) {
+        	request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
+        	return "error";
         }
 
         // Create a HashMap of product attributes.
@@ -375,6 +377,11 @@ public class ShoppingCartEvents {
                     int index = Integer.parseInt(indexStr);
                     String quantString = (String) paramMap.get(o);
                     double quantity = NumberFormat.getNumberInstance().parse(quantString).doubleValue();
+                    
+                    if (quantity < 0) {
+        				request.setAttribute(SiteDefs.ERROR_MESSAGE, "Quantity must be a positive number.");
+        				return "error";
+        			}
 
                     if (Debug.infoOn()) Debug.logInfo("Got index: " + index + "  AND  quantity: " + quantity);
 
