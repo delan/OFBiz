@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFormField.java,v 1.9 2004/02/21 23:58:04 jonesde Exp $
+ * $Id: ModelFormField.java,v 1.10 2004/02/28 01:33:56 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  */
 public class ModelFormField {
@@ -1423,7 +1423,13 @@ public class ModelFormField {
                 while (valueIter.hasNext()) {
                     GenericValue value = (GenericValue) valueIter.next();
                     // add key and description with string expansion, ie expanding ${} stuff, passing locale explicitly to expand value stirng because it won't be found in the Entity
-                    optionValues.add(new OptionValue(value.get(this.getKeyFieldName()).toString(), this.description.expandString(value, UtilMisc.ensureLocale(context.get("locale")))));
+                    String optionDesc = this.description.expandString(value, UtilMisc.ensureLocale(context.get("locale")));
+                    Object keyFieldObject = value.get(this.getKeyFieldName());
+                    if (keyFieldObject == null) {
+                    	throw new IllegalArgumentException("The value found for key-name [" + this.getKeyFieldName() + "], may not be a valid key field name.");
+                    }
+                    String keyFieldValue = keyFieldObject.toString();
+                    optionValues.add(new OptionValue(keyFieldValue, optionDesc));
                 }
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting entity options in form", module);
