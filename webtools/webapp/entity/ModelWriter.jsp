@@ -74,7 +74,7 @@ if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("ori
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org) <%-- *@created    <%=(new Date()).toString()%> --%>
- *@author Andy Zeneski (jaz@zsolv.com)
+ *@author Andy Zeneski (jaz@jflow.net)
  *@version    1.0
  */
 -->
