@@ -31,7 +31,7 @@
 	<property name="tools.dir" value="${basedir}/tools"/>
 	<property name="web.dir" value="web"/>
 	<property name="src.dir" value="./src"/>
-	<property name="classpath" value=""/>
+	<property name="classpath" value="${lib.dir}/jdom.jar;${lib.dir}/ejb.jar"/>
 	<!-- File settings -->
 	<property name="jar.name" value="${name}.jar"/>
 	<property name="war.name" value="${name}.war"/>
