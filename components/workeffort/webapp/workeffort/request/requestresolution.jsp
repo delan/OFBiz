@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.2 $
+ *@version    $Rev:$
  *@since      2.0
 --%>
 

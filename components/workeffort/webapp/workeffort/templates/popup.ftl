@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  *@since      2.1
 -->
 

@@ -1,5 +1,5 @@
 /*
- * $Id: WorkEffortApplication.java,v 1.1 2003/08/18 16:29:43 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import bsh.EvalError;
  * WorkEffortWorker - Worker class to reduce code in JSPs & make it more reusable
  *
  * @author     Manuel Soto
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public final class WorkEffortApplication {

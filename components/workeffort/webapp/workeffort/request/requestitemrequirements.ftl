@@ -22,7 +22,7 @@
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
  *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
