@@ -33,21 +33,22 @@
     <!-- ================================================================== -->
 
     <target name="init">
-	<property environment="env"                                 />
-        <property name="name"           value="ofbcommonapp"           />
-        <property name="src.dir"        value="src"                 />
-        <property name="etc.dir"        value="etc"                 />
-        <property name="lib.dir"        value="lib"                 />
-        <property name="webapp.dir"     value="./webapp"            />
+	<property environment="env" />
+        <property name="name"           value="ofbcommonapp" />
+        <property name="src.dir"        value="src" />
+        <property name="etc.dir"        value="etc" />
+        <property name="lib.dir"        value="lib" />
+        <property name="webapp.dir"     value="./webapp" />
         <property name="walib.dir"      value="${webapp.dir}/WEB-INF/lib" />
         <property name="waclasses.dir"  value="${webapp.dir}/WEB-INF/classes" />
-	<property name="doc.dir"        value="docs"                />
-        <property name="build.dir"      value="build"               />
-        <property name="build.compiler" value="classic"             /> 
-        <property name="pkg-dist.name"  value="${name}-pkg"         />
+		<property name="doc.dir"        value="docs" />
+        <property name="build.dir"      value="build" />
+        <property name="build.compiler" value="classic" /> 
+        <property name="pkg-dist.name"  value="${name}-pkg" />
 		
 	<!-- Classpath setting -->
-        <property name="ofbcore.jar"       value="../core/lib/ofbcore.jar"             />
+        <property name="ofbcore-share.jar"  value="../core/lib/ofbcore-share.jar" />
+        <property name="ofbcore-webapp.jar" value="../core/lib/ofbcore-webapp.jar" />
         
         <property name="servlet1.jar"  value="${env.CATALINA_HOME}/common/lib/servlet.jar" />
         <property name="servlet2.jar"  value="${env.TOMCAT_HOME}/lib/servlet.jar" />
