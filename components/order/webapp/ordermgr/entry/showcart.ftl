@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 
@@ -127,7 +127,7 @@ function addToList() {
         <tr><td><hr class="sepbar"></td></tr>
         <tr>
           <td>
-            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="quickaddform" style="margin: 0;">
+            <form method="POST" action="<@ofbizUrl>/additem</@ofbizUrl>" name="bulkworkaddform" style="margin: 0;">
                 <div class="tableheadtext">
                     Item&nbsp;Type:&nbsp;<select name="add_item_type" class="selectBox"><option value="BULK_ORDER_ITEM">Bulk Item</option><option value="WORK_ORDER_ITEM">Work Item</option></select>
                     Category:&nbsp;<select name="add_category_id" class="selectBox">
