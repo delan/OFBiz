@@ -64,19 +64,19 @@
             <DIV class='tabletext'>This application is primarily intended for developers and system administrators.</DIV>
             <ul>
               <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
-                <li><div class='tabletext'>Cache Utilities</div>
+                <li><div class='tabletext'>Cache Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class='buttontext'>Cache Maintenance</A>
                 </ul>
               <%}%>
               <%if(security.hasPermission("UTIL_DEBUG_VIEW", session)){%>
-                <li><div class='tabletext'>Debug Utilities</div>
+                <li><div class='tabletext'>Debug Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/debuglevels</ofbiz:url>" class='buttontext'>Adjust Debugging Levels</A>
                 </ul>
               <%}%>
               <%if(security.hasPermission("ENTITY_MAINT", session)){%>
-                <li><div class='tabletext'>Entity Engine Utilities</div>
+                <li><div class='tabletext'>Entity Engine Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/entitymaint</ofbiz:url>" class='buttontext'>Entity Data Maintenance</A>
                   <li><a href="<ofbiz:url>/view/entityref</ofbiz:url>" class='buttontext' target='_blank'>Entity Reference &amp; Editing Tools</A>
@@ -98,33 +98,33 @@
                 </ul>
               <%}%>
               <%if(security.hasPermission("DATAFILE_MAINT", session)){%>
-                <li><div class='tabletext'>Data File Utilities</div>
+                <li><div class='tabletext'>Data File Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class='buttontext'>View Data File</A>
                 </ul>
               <%}%>
               <%if(security.hasPermission("RULES_MAINT", session)){%>
-                <li><div class='tabletext'>Rules Utilities</div>
+                <li><div class='tabletext'>Rule Engine Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/logikus</ofbiz:url>" class='buttontext'>Logikus - Run Rulesets</A>
                 </ul>
               <%}%>
               <%if(security.hasPermission("WORKFLOW_MAINT", session)){%>
-                <li><div class='tabletext'>Workflow Utilities</div>
+                <li><div class='tabletext'>Workflow Engine Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/workflowMonitor</ofbiz:url>" class="buttontext">Workflow Monitor</a>
                   <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class='buttontext'>Read XPDL File</A>
                 </ul>
               <%}%>
               <%if(security.hasPermission("WEBTOOLS_VIEW", session)) {%>
-                <li><div class='tabletext'>Service Utilities</div>
+                <li><div class='tabletext'>Service Engine Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/jobList</ofbiz:url>" class="buttontext">Job List</a>
                   <li><a href="<ofbiz:url>/scheduleJob</ofbiz:url>" class="buttontext">Schedule Job</a>
                 </ul>
               <%}%>
               <% if (session.getAttribute("userLogin") != null) { %>
-                <li><div class='tabletext'>Misc. Setup</div>
+                <li><div class='tabletext'>Misc. Setup Tools</div>
                 <ul>
                   <%if(security.hasPermission("PERIOD_MAINT", session)){%>
                     <li><a href="<ofbiz:url>/EditCustomTimePeriod</ofbiz:url>" class='buttontext'>Edit Custom Time Periods</a>
@@ -136,7 +136,7 @@
                 </ul>
               <%}%>
               <%if(security.hasPermission("SERVER_STATS_VIEW", session)){%>
-                <li><div class='tabletext'>Server Hit Statistics</div>
+                <li><div class='tabletext'>Server Hit Statistics Tools</div>
                 <ul>
                   <li><a href="<ofbiz:url>/StatsSinceStart</ofbiz:url>" class='buttontext'>Stats Since Server Start</a>
                 </ul>
