@@ -55,7 +55,7 @@
             <actions>
                 <set field="title" value="Find Requirements For Supplier"/>
                 <set field="entityName" value="Requirement"/>
-                <set field="requestParameters.requirementTypeId" to-scope="screen" default-value="MRP_PRO_PURCH_ORDER"/>
+                <!--<set field="requestParameters.requirementTypeId" to-scope="screen" default-value="MRP_PRO_PURCH_ORDER"/>-->
                 <set field="requestParameters.statusId" to-scope="screen" default-value="REQ_APPROVED"/>
             </actions>
             <widgets>
