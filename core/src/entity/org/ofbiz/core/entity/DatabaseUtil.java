@@ -169,99 +169,101 @@ public class DatabaseUtil {
                     List colList = (List) colInfo.get(entity.getTableName().toUpperCase());
                     int numCols = 0;
 
-                    for (; numCols < colList.size(); numCols++) {
-                        ColumnCheckInfo ccInfo = (ColumnCheckInfo) colList.get(numCols);
+                    if (colList != null) {
+                        for (; numCols < colList.size(); numCols++) {
+                            ColumnCheckInfo ccInfo = (ColumnCheckInfo) colList.get(numCols);
 
-                        //-list all columns that do not have a corresponding field
-                        if (fieldColNames.containsKey(ccInfo.columnName)) {
-                            ModelField field = null;
+                            //-list all columns that do not have a corresponding field
+                            if (fieldColNames.containsKey(ccInfo.columnName)) {
+                                ModelField field = null;
 
-                            field = (ModelField) fieldColNames.remove(ccInfo.columnName);
-                            ModelFieldType modelFieldType = modelFieldTypeReader.getModelFieldType(field.getType());
-                            
-                            if (modelFieldType != null) {
-                                //make sure each corresponding column is of the correct type
-                                String fullTypeStr = modelFieldType.getSqlType();
-                                String typeName;
-                                int columnSize = -1;
-                                int decimalDigits = -1;
-                                
-                                int openParen = fullTypeStr.indexOf('(');
-                                int closeParen = fullTypeStr.indexOf(')');
-                                int comma = fullTypeStr.indexOf(',');
-                                
-                                if (openParen > 0 && closeParen > 0 && closeParen > openParen) {
-                                    typeName = fullTypeStr.substring(0, openParen);
-                                    if (comma > 0 && comma > openParen && comma < closeParen) {
-                                        String csStr = fullTypeStr.substring(openParen + 1, comma);
+                                field = (ModelField) fieldColNames.remove(ccInfo.columnName);
+                                ModelFieldType modelFieldType = modelFieldTypeReader.getModelFieldType(field.getType());
 
-                                        try {
-                                            columnSize = Integer.parseInt(csStr);
-                                        } catch (NumberFormatException e) {
-                                            Debug.logError(e, module);
-                                        }
-                                        
-                                        String ddStr = fullTypeStr.substring(comma + 1, closeParen);
+                                if (modelFieldType != null) {
+                                    //make sure each corresponding column is of the correct type
+                                    String fullTypeStr = modelFieldType.getSqlType();
+                                    String typeName;
+                                    int columnSize = -1;
+                                    int decimalDigits = -1;
 
-                                        try {
-                                            decimalDigits = Integer.parseInt(ddStr);
-                                        } catch (NumberFormatException e) {
-                                            Debug.logError(e, module);
+                                    int openParen = fullTypeStr.indexOf('(');
+                                    int closeParen = fullTypeStr.indexOf(')');
+                                    int comma = fullTypeStr.indexOf(',');
+
+                                    if (openParen > 0 && closeParen > 0 && closeParen > openParen) {
+                                        typeName = fullTypeStr.substring(0, openParen);
+                                        if (comma > 0 && comma > openParen && comma < closeParen) {
+                                            String csStr = fullTypeStr.substring(openParen + 1, comma);
+
+                                            try {
+                                                columnSize = Integer.parseInt(csStr);
+                                            } catch (NumberFormatException e) {
+                                                Debug.logError(e, module);
+                                            }
+
+                                            String ddStr = fullTypeStr.substring(comma + 1, closeParen);
+
+                                            try {
+                                                decimalDigits = Integer.parseInt(ddStr);
+                                            } catch (NumberFormatException e) {
+                                                Debug.logError(e, module);
+                                            }
+                                        } else {
+                                            String csStr = fullTypeStr.substring(openParen + 1, closeParen);
+
+                                            try {
+                                                columnSize = Integer.parseInt(csStr);
+                                            } catch (NumberFormatException e) {
+                                                Debug.logError(e, module);
+                                            }
                                         }
                                     } else {
-                                        String csStr = fullTypeStr.substring(openParen + 1, closeParen);
+                                        typeName = fullTypeStr;
+                                    }
 
-                                        try {
-                                            columnSize = Integer.parseInt(csStr);
-                                        } catch (NumberFormatException e) {
-                                            Debug.logError(e, module);
-                                        }
+                                    if (!ccInfo.typeName.equals(typeName.toUpperCase())) {
+                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
+                                            entity.getEntityName() + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" +
+                                            typeName + "\" in the entity definition.";
+
+                                        Debug.logError(message, module);
+                                        if (messages != null)
+                                            messages.add(message);
+                                    }
+                                    if (columnSize != -1 && ccInfo.columnSize != -1 && columnSize != ccInfo.columnSize) {
+                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
+                                            entity.getEntityName() + "\" has a column size of \"" + ccInfo.columnSize +
+                                            "\" in the database, but is defined to have a column size of \"" + columnSize + "\" in the entity definition.";
+
+                                        Debug.logWarning(message, module);
+                                        if (messages != null)
+                                            messages.add(message);
+                                    }
+                                    if (decimalDigits != -1 && decimalDigits != ccInfo.decimalDigits) {
+                                        String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
+                                            entity.getEntityName() + "\" has a decimalDigits of \"" + ccInfo.decimalDigits +
+                                            "\" in the database, but is defined to have a decimalDigits of \"" + decimalDigits + "\" in the entity definition.";
+
+                                        Debug.logWarning(message, module);
+                                        if (messages != null)
+                                            messages.add(message);
                                     }
                                 } else {
-                                    typeName = fullTypeStr;
-                                }
-                                
-                                if (!ccInfo.typeName.equals(typeName.toUpperCase())) {
-                                    String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
-                                        entity.getEntityName() + "\" is of type \"" + ccInfo.typeName + "\" in the database, but is defined as type \"" +
-                                        typeName + "\" in the entity definition.";
+                                    String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" + entity.getEntityName() +
+                                        "\" has a field type name of \"" + field.getType() + "\" which is not found in the field type definitions";
 
                                     Debug.logError(message, module);
                                     if (messages != null)
                                         messages.add(message);
                                 }
-                                if (columnSize != -1 && ccInfo.columnSize != -1 && columnSize != ccInfo.columnSize) {
-                                    String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
-                                        entity.getEntityName() + "\" has a column size of \"" + ccInfo.columnSize +
-                                        "\" in the database, but is defined to have a column size of \"" + columnSize + "\" in the entity definition.";
-
-                                    Debug.logWarning(message, module);
-                                    if (messages != null)
-                                        messages.add(message);
-                                }
-                                if (decimalDigits != -1 && decimalDigits != ccInfo.decimalDigits) {
-                                    String message = "WARNING: Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" +
-                                        entity.getEntityName() + "\" has a decimalDigits of \"" + ccInfo.decimalDigits +
-                                        "\" in the database, but is defined to have a decimalDigits of \"" + decimalDigits + "\" in the entity definition.";
-
-                                    Debug.logWarning(message, module);
-                                    if (messages != null)
-                                        messages.add(message);
-                                }
                             } else {
-                                String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" + entity.getEntityName() +
-                                    "\" has a field type name of \"" + field.getType() + "\" which is not found in the field type definitions";
+                                String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" + entity.getEntityName() + "\" exists in the database but has no corresponding field";
 
-                                Debug.logError(message, module);
+                                Debug.logWarning(message, module);
                                 if (messages != null)
                                     messages.add(message);
                             }
-                        } else {
-                            String message = "Column \"" + ccInfo.columnName + "\" of table \"" + entity.getTableName() + "\" of entity \"" + entity.getEntityName() + "\" exists in the database but has no corresponding field";
-
-                            Debug.logWarning(message, module);
-                            if (messages != null)
-                                messages.add(message);
                         }
                     }
                     
@@ -349,7 +351,7 @@ public class DatabaseUtil {
 
         // for each newly added table, add fks
         if (useFks) {
-            /* THIS IS NO LONGER NEEDED NOW THAT EACH FK/RELATIONSHIP IS CHECKED BELOW
+            // THIS IS NO LONGER NEEDED NOW THAT EACH FK/RELATIONSHIP IS CHECKED BELOW
             Iterator eaIter = entitiesAdded.iterator();
 
             while (eaIter.hasNext()) {
@@ -370,11 +372,12 @@ public class DatabaseUtil {
                     if (messages != null) messages.add(message);
                 }
             }
-            */
+            
         }
         
         //make sure each one-relation has an FK
         if (useFks) {
+            /* This ISN'T working for Postgres or MySQL, who knows about others, may be from JDBC driver bugs...
             int numFksCreated = 0;
             //TODO: check each key-map to make sure it exists in the FK, if any differences warn and then remove FK and recreate it
             
@@ -459,6 +462,7 @@ public class DatabaseUtil {
              
             }
             Debug.logInfo("Created " + numFksCreated + " fk refs");
+        */
         }
         
         timer.timerString("Finished Checking Entity Database");
@@ -807,6 +811,7 @@ public class DatabaseUtil {
         Map refInfo = new HashMap();
 
         try {
+            //ResultSet rsCols = dbData.getCrossReference(null, null, null, null, null, null);
             ResultSet rsCols = dbData.getImportedKeys(null, null, null);
             
             int totalFkRefs = 0;
@@ -849,7 +854,7 @@ public class DatabaseUtil {
                         if (!tableRefInfo.containsKey(rcInfo.fkName)) totalFkRefs++;
                         tableRefInfo.put(rcInfo.fkName, rcInfo);
                     } catch (SQLException sqle) {
-                        String message = "Error getting column info for column. Error was:" + sqle.toString();
+                        String message = "Error getting fk reference info for table. Error was:" + sqle.toString();
 
                         Debug.logError(message, module);
                         if (messages != null)
@@ -862,7 +867,7 @@ public class DatabaseUtil {
                 try {
                     rsCols.close();
                 } catch (SQLException sqle) {
-                    String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
+                    String message = "Unable to close ResultSet for fk reference list, continuing anyway... Error was:" + sqle.toString();
 
                     Debug.logError(message, module);
                     if (messages != null)
@@ -872,7 +877,7 @@ public class DatabaseUtil {
             Debug.logInfo("There are " + totalFkRefs + " foreign key refs in the database");
             
         } catch (SQLException sqle) {
-            String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
+            String message = "Error getting fk reference meta data Error was:" + sqle.toString() + ". Not checking fk refs.";
 
             Debug.logError(message, module);
             if (messages != null)
