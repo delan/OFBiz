@@ -42,11 +42,23 @@ public class ToString extends MethodOperation {
     
     ContextAccessor mapAcsr;
     ContextAccessor fieldAcsr;
+    String format;
+    Integer numericPadding;
 
     public ToString(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        format = element.getAttribute("format");
+        
+        String npStr = element.getAttribute("numeric-padding");
+        if (UtilValidate.isNotEmpty(npStr)) {
+            try {
+                this.numericPadding = Integer.valueOf(npStr);
+            } catch (Exception e) {
+                Debug.logError(e, "Error parsing numeric-padding attribute value on the to-string element");
+            }
+        }
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -63,15 +75,35 @@ public class ToString extends MethodOperation {
 
             Object obj = fieldAcsr.get(toMap, methodContext);
             if (obj != null) {
-                fieldAcsr.put(toMap, obj.toString(), methodContext);
+                fieldAcsr.put(toMap, doToString(obj), methodContext);
             }
         } else {
             Object obj = fieldAcsr.get(methodContext);
             if (obj != null) {
-                fieldAcsr.put(methodContext, obj.toString());
+                fieldAcsr.put(methodContext, doToString(obj));
             }
         }
 
         return true;
+    }
+    
+    public String doToString(Object obj) {
+        String outStr = null;
+        try {
+            outStr = (String) ObjectType.simpleTypeConvert(obj, "java.lang.String", format, null);
+        } catch (GeneralException e) {
+            Debug.logError(e, "");
+            outStr = obj.toString();
+        }
+        
+        if (this.numericPadding != null) {
+            StringBuffer outStrBfr = new StringBuffer(outStr); 
+            while (this.numericPadding.intValue() > outStrBfr.length()) {
+                outStrBfr.insert(0, '0');
+            }
+            outStr = outStrBfr.toString();
+        }
+        
+        return outStr;
     }
 }
