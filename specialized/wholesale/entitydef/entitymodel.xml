@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  @author  Si Chen (sichen@sinfoniasolutions.com)
+ -->
+
+<entitymodel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/entitymodel.xsd">
+    <title>Special Entities for Wholesale</title>
+    <description>None</description>
+    <copyright>Copyright (c) 2005 The Open For Business Project - www.ofbiz.org</copyright>
+    <author>Si Chen</author>
+    <version>1.0</version>
+
+	<view-entity entity-name="PartyRelationshipAndType"
+		package-name="org.ofbiz.wholesale"
+		title="Links together PartyRelationship:partyIdTo with Party:partyId">
+		<member-entity entity-alias="PR" entity-name="PartyRelationship"/>
+		<member-entity entity-alias="P" entity-name="Party"/>
+		<alias-all entity-alias="PR"/>
+		<alias-all entity-alias="P"/>
+		<view-link entity-alias="PR" rel-entity-alias="P">
+			<key-map field-name="partyIdTo" rel-field-name="partyId"/>
+		</view-link>
+	</view-entity>
+	
+	<view-entity entity-name="OrderHeaderPersonGroupRoleNote"
+		package-name="org.ofbiz.wholesale"
+		title="Links together OrderHeader:orderId to OrderRole:orderId, OrderHeaderNote:orderId and OrderRole:partyId to Party:partyId, PartyGroup:partyId">
+		<member-entity entity-alias="OH" entity-name="OrderHeader"/>
+		<member-entity entity-alias="OHN" entity-name="OrderHeaderNote"/>
+		<member-entity entity-alias="ORL" entity-name="OrderRole"/>
+		<member-entity entity-alias="P" entity-name="Party"/>
+		<member-entity entity-alias="PERSN" entity-name="Person"/>
+		<member-entity entity-alias="PG" entity-name="PartyGroup"/>
+        <member-entity entity-alias="ND" entity-name="NoteData"/>
+		<alias-all entity-alias="OH"/>
+		<alias-all entity-alias="OHN"/>
+		<alias-all entity-alias="ORL"/>
+		<alias-all entity-alias="P"/>
+		<alias-all entity-alias="PG"/>
+		<alias-all entity-alias="PERSN"/>
+		<alias-all entity-alias="ND"/>
+		<view-link entity-alias="ORL" rel-entity-alias="OH">
+		    <key-map field-name="orderId"/>
+		</view-link>
+		<view-link entity-alias="ORL" rel-entity-alias="OHN" rel-optional="true">
+		    <key-map field-name="orderId"/>
+		</view-link>
+		<view-link entity-alias="ORL" rel-entity-alias="P">
+		    <key-map field-name="partyId"/>
+		</view-link>
+		<view-link entity-alias="ORL" rel-entity-alias="PERSN" rel-optional="true">
+		    <key-map field-name="partyId"/>
+		</view-link>
+		<view-link entity-alias="ORL" rel-entity-alias="PG" rel-optional="true">
+		    <key-map field-name="partyId"/>
+		</view-link>
+        <view-link entity-alias="OHN" rel-entity-alias="ND" rel-optional="true">
+            <key-map field-name="noteId"/>
+         </view-link>
+         <relation type="one" fk-name="ORDER_HDR_STTS" rel-entity-name="StatusItem">
+        	<key-map field-name="statusId"/>
+      	</relation>
+	</view-entity>
+</entitymodel>
+
