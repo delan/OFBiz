@@ -4,11 +4,15 @@
 <site-conf>
     <description>Catalog Module Site Configuration File</description>
     <owner>The Open For Business Project (c) 2001 </owner>
-    <errorpage>/error/error.jsp"</errorpage>
+    <errorpage>/error/error.jsp</errorpage>
     
-    <handler name="java" class="org.ofbiz.core.event.JavaEventHandler"/>
-    <handler name="soap" class="org.ofbiz.core.event.SOAPEventHandler"/>
-    <handler name="service" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    <handler name="java" type="request" class="org.ofbiz.core.event.JavaEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.core.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
+
+    <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
+    <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
     
     <preprocessor>
     	<!-- Events to run on every request before security (chains exempt) -->
@@ -169,19 +173,19 @@
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
-    <view-map name="login" page="/login.jsp"/>
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" page="/main.jsp"/>
+    <view-map name="main" type="region"/>
+    <view-map name="login" type="region"/>
 
-    <view-map name="FastLoadCache" page="/FastLoadCache.jsp"/>
-    <view-map name="keywordsearch" page="/find/keywordsearch.jsp"/>
-    <view-map name="ChooseTopCategory" page="/ChooseTopCategory.jsp"/>
-    <view-map name="EditCategory" page="/EditCategory.jsp"/>
-    <view-map name="EditProduct" page="/EditProduct.jsp"/>
-    <view-map name="EditProductCategories" page="/EditProductCategories.jsp"/>
-    <view-map name="EditProductKeyword" page="/EditProductKeyword.jsp"/>
-    <view-map name="EditProductAssoc" page="/EditProductAssoc.jsp"/>
-    <view-map name="UploadImage" page="/UploadImage.jsp"/>
-    <view-map name="UploadCategoryImage" page="/UploadCategoryImage.jsp"/>
+    <view-map name="FastLoadCache" type="region"/>
+    <view-map name="keywordsearch" type="region"/>
+    <view-map name="ChooseTopCategory" type="region"/>
+    <view-map name="EditCategory" type="region"/>
+    <view-map name="EditProduct" type="region"/>
+    <view-map name="EditProductCategories" type="region"/>
+    <view-map name="EditProductKeyword" type="region"/>
+    <view-map name="EditProductAssoc" type="region"/>
+    <view-map name="UploadImage" type="region"/>
+    <view-map name="UploadCategoryImage" type="region"/>
     <!-- end of view mappings -->
 </site-conf>

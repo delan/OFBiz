@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE regions PUBLIC "-//OFBiz//DTD Regions Config//EN" "http://www.ofbiz.org/dtds/regions.dtd">
+
+<regions>
+    <define id='MAIN_REGION' template='/templates/main_template.jsp'>
+        <put section='title'>Application Page</put> <!-- this is a default and is meant to overridden -->
+        <put section='header' content='/includes/header.jsp'/>
+        <put section='appbar' content='/includes/appbar.jsp'/>
+        <put section='error' content='/includes/errormsg.jsp'/>
+        <put section='content' content='/main.jsp'/> <!-- this is a default and is meant to overridden -->
+        <put section='footer' content='/includes/footer.jsp'/>
+    </define>
+
+    <define id='LEFTBAR_REGION' template='/templates/leftbar_template.jsp'>
+        <put section='first' content='/find/keywordsearchbox.jsp'/>
+        <put section='second' content='/find/sidedeepcategory.jsp'/>
+        <put section='third' content='/find/miniproductlist.jsp'/>
+    </define>
+
+    <define id='RIGHTBAR_REGION' template='/templates/rightbar_template.jsp'>
+        <!-- <put section='first' content='/first.jsp'/> -->
+    </define>
+
+    <define id='LEFT_ONLY_REGION' region='MAIN_REGION'>
+        <put section='leftbar' content='LEFTBAR_REGION'/>
+    </define>
+
+    <define id='RIGHT_ONLY_REGION' region='MAIN_REGION'>
+        <put section='rightbar' content='RIGHTBAR_REGION'/>
+    </define>
+
+    <define id='LEFT_RIGHT_REGION' region='MAIN_REGION'>
+        <put section='leftbar' content='LEFTBAR_REGION'/>
+        <put section='rightbar' content='RIGHTBAR_REGION'/>
+        <!-- <put section='right'><![CDATA[<font size='4'>Direct Content</font>]]></put> -->
+    </define>
+
+    <!-- ====== Start View Specific Regions ====== -->
+    <define id='main' region='LEFT_ONLY_REGION'>
+        <put section='title'>Main Page</put>
+        <put section='content' content='/main.jsp'/>
+    </define>
+    <define id='login' region='MAIN_REGION'>
+        <put section='title'>Login Page</put>
+        <put section='content' content='/login.jsp'/>
+    </define>
+
+    <define id='FastLoadCache' region='LEFT_ONLY_REGION'>
+        <put section='title'>Fast Load Cache Page</put>
+        <put section='content' content='/FastLoadCache.jsp'/>
+    </define>
+
+    <define id='keywordsearch' region='LEFT_ONLY_REGION'>
+        <put section='title'>Keyword Search Page</put>
+        <put section='content' content='/find/keywordsearch.jsp'/>
+    </define>
+
+    <define id='ChooseTopCategory' region='LEFT_ONLY_REGION'>
+        <put section='title'>Choose Top Category Page</put>
+        <put section='content' content='/ChooseTopCategory.jsp'/>
+    </define>
+
+    <define id='EditCategory' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Category Page</put>
+        <put section='content' content='/EditCategory.jsp'/>
+    </define>
+    <define id='EditProduct' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Page</put>
+        <put section='content' content='/EditProduct.jsp'/>
+    </define>
+    <define id='EditProductCategories' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Categories Page</put>
+        <put section='content' content='/EditProductCategories.jsp'/>
+    </define>
+    <define id='EditProductKeyword' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Keyword Page</put>
+        <put section='content' content='/EditProductKeyword.jsp'/>
+    </define>
+    <define id='EditProductAssoc' region='LEFT_ONLY_REGION'>
+        <put section='title'>Edit Product Associations Page</put>
+        <put section='content' content='/EditProductAssoc.jsp'/>
+    </define>
+
+    <define id='UploadImage' region='MAIN_REGION'>
+        <put section='title'>Upload Product Image Page</put>
+        <put section='content' content='/UploadImage.jsp'/>
+    </define>
+    <define id='UploadCategoryImage' region='MAIN_REGION'>
+        <put section='title'>Upload Category Image Page</put>
+        <put section='content' content='/UploadCategoryImage.jsp'/>
+    </define>
+</regions>

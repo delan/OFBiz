@@ -84,28 +84,14 @@
     <welcome-file>/index.jsp</welcome-file>
   </welcome-file-list>
 
-  <error-page>
-    <error-code>403</error-code>
-    <location>/error/error403.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>404</error-code>
-    <location>/error/error404.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>410</error-code>
-    <location>/error/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>500</error-code>
-    <location>/error/error.jsp</location>
-  </error-page>
-
-  <taglib> 
+  <taglib>
      <taglib-uri>ofbizTags</taglib-uri>
-     <taglib-location>/WEB-INF/taglib.tld</taglib-location> 
+     <taglib-location>/WEB-INF/ofbiz.tld</taglib-location> 
   </taglib> 
-
+  <taglib>
+     <taglib-uri>regions</taglib-uri>
+     <taglib-location>/WEB-INF/regions.tld</taglib-location> 
+  </taglib> 
 
 <!-- HTTP Response Code definitions:
 | "400"   ; Bad Request

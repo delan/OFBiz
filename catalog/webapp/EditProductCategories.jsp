@@ -28,11 +28,12 @@
  */
 %>
 
-<%pageContext.setAttribute("PageName", "Edit Product");%>
+<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/leftcolumn.jsp" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
@@ -136,6 +137,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

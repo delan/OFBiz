@@ -1,6 +1,10 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.commonapp.product.category.*, org.ofbiz.core.util.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.commonapp.product.category.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+
 <%String defaultTopCategoryId = request.getParameter("TOP_CATEGORY") != null ? 
                                 request.getParameter("TOP_CATEGORY") : 
                                 UtilProperties.getPropertyValue(application.getResource("/WEB-INF/catalog.properties"), "top.category.default");%>
@@ -9,11 +13,11 @@
 <%GenericValue currentTopCategory = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", currentTopCategoryId));%>
 <%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("PRODUCT_CATEGORY_ID"));%>
 <%CategoryWorker.setTrail(pageContext, curCategoryId);%>
-
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<BR>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
             <div class="boxhead">Browse&nbsp;Catalog</div>
@@ -24,7 +28,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
             <div><a href='<ofbiz:url>/ChooseTopCategory</ofbiz:url>' class='buttontext'>Choose Top Category</a></div>

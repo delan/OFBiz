@@ -29,16 +29,14 @@
  */
 %>
 
-<%@ page import="java.io.*" %>
-<%@ page import="org.ofbiz.core.util.*" %>
+<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
-<%pageContext.setAttribute("PageName", "Upload Image");%>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
 <table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
-<%@ include file="/includes/onecolumn.jsp" %>
-
 <%!
     //these should be static in the JSP context, which should make them work...
     static Object forLock = new Object();
@@ -158,6 +156,4 @@
   <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
 
-<%@ include file="/includes/onecolumnclose.jsp" %>
 </td><td>&nbsp;&nbsp;</td></tr></table>
-<%@ include file="/includes/footer.jsp" %>

@@ -28,11 +28,12 @@
  */
 %>
 
-<% pageContext.setAttribute("PageName", "Edit Product Keywords"); %>
+<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
-<%@ include file="/includes/leftcolumn.jsp" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", request.getSession())) {%>
 <%
@@ -57,10 +58,10 @@
 <br>
 <div class='tabletext'>NOTE: Keywords are automatically created when product information is changed, but you may manually CREATE or DELETE keywords here as well.</div>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
             <DIV class='boxhead'>Add product-keyword (enter keyword):</DIV>
@@ -74,7 +75,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
       <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
@@ -91,10 +92,10 @@
 </TABLE>
 <BR>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
             <DIV class='boxhead'>Keywords</DIV>
@@ -109,7 +110,7 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td valign=top>
       <TABLE width='100%' cellpadding='0' cellspacing='0' border='0'>
@@ -151,10 +152,10 @@
 </TABLE>
 <BR>
 
-<TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxTopPadding%>' cellspacing='0' bgcolor='<%=boxTopColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
             <DIV class='boxhead'>Add product-keyword (enter keyword):</DIV>
@@ -168,15 +169,15 @@
   </TR>
   <TR>
     <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
-      <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
-        <input type="hidden" name="UPDATE_MODE" value="CREATE">
-        <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
-        <input type="text" size="20" name="KEYWORD" value="">
-        <input type="submit" value="Add">
-      </form>
+              <form method="POST" action="<ofbiz:url>/UpdateProductKeyword</ofbiz:url>" style='margin: 0;'>
+                <input type="hidden" name="UPDATE_MODE" value="CREATE">
+                <input type="hidden" name="PRODUCT_ID" value="<%=productId%>">
+                <input type="text" size="20" name="KEYWORD" value="">
+                <input type="submit" value="Add">
+              </form>
           </td>
         </tr>
       </table>
@@ -199,6 +200,3 @@
 <%}else{%>
   <h3>You do not have permission to view this page.  ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>

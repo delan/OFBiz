@@ -1,30 +1,31 @@
-<%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<%@ page import="java.util.*, java.net.*" %>
+<%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
-<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
-<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
-<%GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);%>
-<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<%
+    GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+    if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
-<%String pageName = UtilFormatOut.checkNull((String)pageContext.getAttribute("PageName"));%>
+    GenericValue person = (GenericValue) session.getAttribute(SiteDefs.PERSON);
+    if (person == null) {
+        person = userLogin == null ? null : userLogin.getRelatedOne("Person");
+        if (person != null) session.setAttribute(SiteDefs.PERSON, person);
+    }
+    if (person != null) request.setAttribute("person", person);
 
-<%String companyName = "OFBiz: Catalog Manager";%>
-<%String companySubtitle = "Part of the Open For Business Family of Open Source Software";%>
-<%String headerImageUrl = null;%>
+    String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+    String contextRoot = (String) request.getAttribute(SiteDefs.CONTEXT_ROOT);
+    String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);
 
-<%String headerBoxBorderColor = "black";%>
-<%String headerBoxBorderWidth = "1";%>
-<%String headerBoxTopColor = "#678475";%>
-<%String headerBoxBottomColor = "#cccc99";%>
-<%String headerBoxBottomColorAlt = "#eeeecc";%>
-<%String headerBoxTopPadding = "4";%>
-<%String headerBoxBottomPadding = "2";%>
-
-<%String boxBorderColor = "black";%>
-<%String boxBorderWidth = "1";%>
-<%String boxTopColor = "#678475";%>
-<%String boxBottomColor = "white";%>
-<%String boxTopPadding = "4";%>
-<%String boxBottomPadding = "4";%>
+    Map layoutSettings = new HashMap();
+    request.setAttribute("layoutSettings", layoutSettings);
+    
+    layoutSettings.put("companyName", "OFBiz: Catalog Manager");
+    layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
+    layoutSettings.put("headerImageUrl", null);
+    layoutSettings.put("headerMiddleBackgroundUrl", null);
+    layoutSettings.put("headerRightBackgroundUrl", null);
+%>

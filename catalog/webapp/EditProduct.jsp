@@ -28,12 +28,14 @@
  */
 %>
 
-<%pageContext.setAttribute("PageName", "Edit Product");%>
+<%@ page import="java.util.*, java.io.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
 
-<%@ include file="/includes/envsetup.jsp" %>
-<%@ include file="/includes/header.jsp" %>
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
+
 <table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
-<%@ include file="/includes/leftcolumn.jsp" %>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
@@ -270,11 +272,7 @@
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Edit Associations]</a>
 <%}%>
 <br>
-
 <%}else{%>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
-
-<%@ include file="/includes/onecolumnclose.jsp" %>
 </td><td>&nbsp;&nbsp;</td></tr></table>
-<%@ include file="/includes/footer.jsp" %>
