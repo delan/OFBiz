@@ -145,8 +145,9 @@ public class ContentPermissionServices {
         auxGetter.setList(passedPurposes);
         //Debug.logInfo("passedPurposes(b):" + passedPurposes, "");
         List targetOperations = (List) context.get("targetOperationList"); 
+        Debug.logInfo("targetOperations(b):" + targetOperations, "");
         String targetOperationString = (String) context.get("targetOperationString"); 
-        //Debug.logInfo("targetOperationString(b):" + targetOperationString, "");
+        Debug.logInfo("targetOperationString(b):" + targetOperationString, "");
         if (UtilValidate.isNotEmpty(targetOperationString)) {
             List operationsFromString = StringUtil.split(targetOperationString, "|");
             if (targetOperations == null) {
@@ -154,6 +155,7 @@ public class ContentPermissionServices {
             }
             targetOperations.addAll(operationsFromString);
         }
+        Debug.logInfo("targetOperations(c):" + targetOperations, "");
         StdPermissionConditionGetter permCondGetter = new StdPermissionConditionGetter ( "ContentPurposeOperation",  "contentOperationId", "roleTypeId", "statusId", "contentPurposeTypeId", "privilegeEnumId");
         permCondGetter.setOperationList(targetOperations);
         
@@ -1187,6 +1189,7 @@ public class ContentPermissionServices {
             return privilegeEnumSeq;
             
         }
+        
         public String getAuxiliaryValue() {
             return this.currentValue.getString(this.auxiliaryFieldName);
         }
@@ -1227,6 +1230,8 @@ public class ContentPermissionServices {
              
              buf.append("Dump for ");
              buf.append(this.entityName);
+             buf.append(" ops:");
+             buf.append(StringUtil.join(this.operationList, ","));
              buf.append("\n");
              Iterator itFields = fieldNames.iterator();
              while (itFields.hasNext()) {

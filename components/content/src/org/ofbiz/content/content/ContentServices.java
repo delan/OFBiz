@@ -209,6 +209,7 @@ public class ContentServices {
     public static Map createContentMethod(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperationList = ContentWorker.prepTargetOperationList(context, "_CREATE");
+        if (Debug.infoOn()) Debug.logInfo("in createContentMethod, targetOperationList: " + targetOperationList, null);
 
         List contentPurposeList = ContentWorker.prepContentPurposeList(context);
         context.put("targetOperationList", targetOperationList);
