@@ -74,14 +74,38 @@
     </eca>        
 
     <!-- Return ECAs -->
+    <eca service="updateReturnHeader" event="commit">
+        <condition field-name="statusId" operator="equals" value="RETURN_ACCEPTED"/>
+        <condition field-name="currentStatusId" operator="not-equals" value="RETURN_ACCEPTED"/>
+        <action service="sendReturnAcceptNotification" mode="async" persist="true"/>
+    </eca>
+    <eca service="updateReturnHeader" event="commit">
+        <condition field-name="statusId" operator="equals" value="RETURN_COMPLETED"/>
+        <condition field-name="currentStatusId" operator="not-equals" value="RETURN_COMPLETED"/>
+        <action service="sendReturnCompleteNotification" mode="async" persist="true"/>
+    </eca>
+    <eca service="updateReturnHeader" event="commit">
+        <condition field-name="statusId" operator="equals" value="RETURN_CANCELLED"/>
+        <condition field-name="currentStatusId" operator="not-equals" value="RETURN_CANCELLED"/>
+        <action service="sendReturnCancelNotification" mode="async" persist="true"/>
+    </eca>
     <eca service="updateReturnStatusFromReceipt" event="commit">
         <condition field-name="returnHeaderStatus" operator="equals" value="RETURN_RECEIVED"/>        
         <action service="processReplacementReturn" mode="sync"/>
         <action service="processCreditReturn" mode="sync"/>
         <action service="processRefundReturn" mode="sync"/>
     </eca>
-    
-    <!-- ShoppingList ECAs --> 
+    <eca service="processReplacementReturn" event="commit">
+        <action service="checkReturnComplete" mode="sync"/>
+    </eca>
+    <eca service="processCreditReturn" event="commit">
+        <action service="checkReturnComplete" mode="sync"/>
+    </eca>
+    <eca service="processRefundReturn" event="commit">
+        <action service="checkReturnComplete" mode="sync"/>
+    </eca>
+
+    <!-- ShoppingList ECAs -->
     <eca service="createShoppingListItem" event="in-validate">
         <condition field-name="shoppingListId" operator="is-empty"/>
         <action service="createShoppingList" mode="sync" result-to-context="true"/>
