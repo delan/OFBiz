@@ -4,6 +4,8 @@ import java.rmi.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import java.math.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 
@@ -47,98 +49,136 @@ public class GenericWebEvent
    */
   public static String updateGeneric(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
   {
-/*
     // a little check to reprocessing the web event in error cases - would cause infinate loop
     if(request.getAttribute("ERROR_MESSAGE") != null) return "success";
     if(request.getSession().getAttribute("ERROR_MESSAGE") != null) return "success";    
     String errMsg = "";
     
+    String entityName = request.getParameter("entityName");
+    if(entityName == null || entityName.length() <= 0)
+    {
+      request.getSession().setAttribute("ERROR_MESSAGE", "The entityName was not specified, but is required.");
+      Debug.logWarning("[updateGeneric] The entityName was not specified, but is required.");
+    }
+    
+    Security security = (Security)request.getSession().getAttribute("security");
+    GenericHelper helper = (GenericHelper)request.getSession().getAttribute("helper");
+    ModelReader reader = helper.getModelReader();
+    ModelEntity entity = reader.getModelEntity(entityName);
+    
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0)
     {
-      request.getSession().setAttribute("ERROR_MESSAGE", "update<%=entity.ejbName%>: Update Mode was not specified, but is required.");
-      Debug.logWarning("update<%=entity.ejbName%>: Update Mode was not specified, but is required.");
+      request.getSession().setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
+      Debug.logWarning("[updateGeneric] Update Mode was not specified, but is required; entityName: " + entityName);
     }
     
     //check permissions before moving on...
-    if(!Security.hasEntityPermission("<%=entity.tableName%>", "_" + updateMode, request.getSession()))
+    if(!security.hasEntityPermission(entity.tableName, "_" + updateMode, request.getSession()))
     {
-      request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " <%=entity.ejbName%> (<%=entity.tableName%>_" + updateMode + " or <%=entity.tableName%>_ADMIN needed).");
+      request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " <%=entity.ejbName%> (<%=entity.tableName%>_" + updateMode + " or " + entity.tableName + "_ADMIN needed).");
+      //not really successful, but error return through ERROR_MESSAGE, so quietly fail
       return "success";
     }
 
-    //get the primary key parameters...
-  <%for(i=0;i<entity.pks.size();i++){EgField curField=(EgField)entity.pks.elementAt(i);%><%if(curField.javaType.compareTo("java.lang.String") == 0 || curField.javaType.compareTo("String") == 0){%>
-    String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0 || curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
-    String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
-    String <%=curField.fieldName%>Time = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_TIME");  <%}else{%>
-    String <%=curField.fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}%><%}%>
+    GenericEntity findByEntity = new GenericEntity(entity);
 
-  <%for(i=0;i<entity.pks.size();i++){EgField curField=(EgField)entity.pks.elementAt(i);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%><%if(curField.javaType.indexOf("Timestamp") >= 0){%>
-    java.sql.Timestamp <%=curField.fieldName%> = UtilDateTime.toTimestamp(<%=curField.fieldName%>Date, <%=curField.fieldName%>Time);
-    if(!UtilValidate.isDate(<%=curField.fieldName%>Date)) errMsg = errMsg + "<li><%=curField.columnName%> isDate failed: " + UtilValidate.isDateMsg;
-    if(!UtilValidate.isTime(<%=curField.fieldName%>Time)) errMsg = errMsg + "<li><%=curField.columnName%> isTime failed: " + UtilValidate.isTimeMsg;<%}else if(curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
-    java.util.Date <%=curField.fieldName%> = UtilDateTime.toDate(<%=curField.fieldName%>Date, <%=curField.fieldName%>Time);
-    if(!UtilValidate.isDate(<%=curField.fieldName%>Date)) errMsg = errMsg + "<li><%=curField.columnName%> isDate failed: " + UtilValidate.isDateMsg;
-    if(!UtilValidate.isTime(<%=curField.fieldName%>Time)) errMsg = errMsg + "<li><%=curField.columnName%> isTime failed: " + UtilValidate.isTimeMsg;<%}else{%>
-    <%=curField.javaType%> <%=curField.fieldName%> = null;
-    try
+    //get the primary key parameters...
+    for(int fnum=0; fnum<entity.pks.size(); fnum++)
     {
-      if(<%=curField.fieldName%>String != null && <%=curField.fieldName%>String.length() > 0)
+      ModelField field = (ModelField)entity.pks.get(fnum);
+      ModelFieldType type = field.modelFieldType;
+      if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp"))
       {
-        <%=curField.fieldName%> = <%=curField.javaType%>.valueOf(<%=curField.fieldName%>String);
+        String fvalDate = request.getParameter(field.name + "_DATE");
+        String fvalTime = request.getParameter(field.name + "_TIME");
+        if(fvalDate != null && fvalDate.length() > 0)
+        {
+          try { findByEntity.setString(field.name, fvalDate + " " + fvalTime); }
+          catch(Exception e)
+          {
+            errMsg = errMsg + "<li>" + field.colName + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.javaType;
+            Debug.logWarning("[updateGeneric] " + field.colName + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.javaType + "; entityName: " + entityName);
+          }
+        }
+      }
+      else
+      {
+        String fval = request.getParameter(field.name);
+        if(fval != null && fval.length() > 0)
+        {
+          try { findByEntity.setString(field.name, fval); }
+          catch(Exception e)
+          {
+            errMsg = errMsg + "<li>" + field.colName + " conversion failed: \"" + fval + "\" is not a valid " + type.javaType;
+            Debug.logWarning("[updateGeneric] " + field.colName + " conversion failed: \"" + fval + "\" is not a valid " + type.javaType + "; entityName: " + entityName);
+          }
+        }
       }
     }
-    catch(Exception e)
-    {
-      errMsg = errMsg + "<li><%=curField.columnName%> conversion failed: \"" + <%=curField.fieldName%>String + "\" is not a valid <%=curField.javaType%>;
-    }<%}%><%}%><%}%>
 
     //if this is a delete, do that before getting all of the non-pk parameters and validating them
     if(updateMode.equals("DELETE"))
     {
       //Remove associated/dependent entries from other tables here
       //Delete actual main entity last, just in case database is set up to do a cascading delete, caches won't get cleared
-      <%=entity.ejbName%>Helper.removeByPrimaryKey(<%=entity.pkNameString()%>);
+      helper.removeByPrimaryKey(findByEntity.getPrimaryKey());
       return "success";
     }
 
     //get the non-primary key parameters
-  <%for(i=0;i<entity.fields.size();i++){EgField curField=(EgField)entity.fields.elementAt(i);%><%if(!curField.isPk){%><%if(curField.javaType.equals("java.lang.String") || curField.javaType.equals("String")){%>
-    String <%=curField.fieldName%> = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}else if(curField.javaType.indexOf("Timestamp") >= 0 || curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
-    String <%=curField.fieldName%>Date = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_DATE");
-    String <%=curField.fieldName%>Time = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>_TIME");  <%}else{%>
-    String <%=curField.fieldName%>String = request.getParameter("<%=entity.tableName%>_<%=curField.columnName%>");  <%}%><%}%><%}%>
-
-  <%for(i=0;i<entity.fields.size();i++){EgField curField=(EgField)entity.fields.elementAt(i);%><%if(!curField.isPk){%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%><%if(curField.javaType.indexOf("Timestamp") >= 0){%>
-    java.sql.Timestamp <%=curField.fieldName%> = UtilDateTime.toTimestamp(<%=curField.fieldName%>Date, <%=curField.fieldName%>Time);
-    if(!UtilValidate.isDate(<%=curField.fieldName%>Date)) errMsg = errMsg + "<li><%=curField.columnName%> isDate failed: " + UtilValidate.isDateMsg;
-    if(!UtilValidate.isTime(<%=curField.fieldName%>Time)) errMsg = errMsg + "<li><%=curField.columnName%> isTime failed: " + UtilValidate.isTimeMsg;<%}else if(curField.javaType.equals("java.util.Date") || curField.javaType.equals("Date")){%>
-    java.util.Date <%=curField.fieldName%> = UtilDateTime.toDate(<%=curField.fieldName%>Date, <%=curField.fieldName%>Time);
-    if(!UtilValidate.isDate(<%=curField.fieldName%>Date)) errMsg = errMsg + "<li><%=curField.columnName%> isDate failed: " + UtilValidate.isDateMsg;
-    if(!UtilValidate.isTime(<%=curField.fieldName%>Time)) errMsg = errMsg + "<li><%=curField.columnName%> isTime failed: " + UtilValidate.isTimeMsg;<%}else{%>
-    <%=curField.javaType%> <%=curField.fieldName%> = null;
-    try
+    for(int fnum=0; fnum<entity.nopks.size(); fnum++)
     {
-      if(<%=curField.fieldName%>String != null && <%=curField.fieldName%>String.length() > 0)
-      { <%if(curField.javaType.equals("java.lang.Object") || curField.javaType.equals("Object")){%>
-        <%=curField.fieldName%> = <%=curField.fieldName%>String;<%}else{%>
-        <%=curField.fieldName%> = <%=curField.javaType%>.valueOf(<%=curField.fieldName%>String);<%}%>
+      ModelField field = (ModelField)entity.nopks.get(fnum);
+      ModelFieldType type = field.modelFieldType;
+      if(type.javaType.equals("Timestamp") || type.javaType.equals("java.sql.Timestamp"))
+      {
+        String fvalDate = request.getParameter(field.name + "_DATE");
+        String fvalTime = request.getParameter(field.name + "_TIME");
+        if(fvalDate != null && fvalDate.length() > 0)
+        {
+          try { findByEntity.setString(field.name, fvalDate + " " + fvalTime); }
+          catch(Exception e)
+          {
+            errMsg = errMsg + "<li>" + field.colName + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.javaType;
+            Debug.logWarning("[updateGeneric] " + field.colName + " conversion failed: \"" + fvalDate + " " + fvalTime + "\" is not a valid " + type.javaType + "; entityName: " + entityName);
+          }
+        }
+      }
+      else
+      {
+        String fval = request.getParameter(field.name);
+        if(fval != null && fval.length() > 0)
+        {
+          try { findByEntity.setString(field.name, fval); }
+          catch(Exception e)
+          {
+            errMsg = errMsg + "<li>" + field.colName + " conversion failed: \"" + fval + "\" is not a valid " + type.javaType;
+            Debug.logWarning("[updateGeneric] " + field.colName + " conversion failed: \"" + fval + "\" is not a valid " + type.javaType + "; entityName: " + entityName);
+          }
+        }
       }
     }
-    catch(Exception e)
-    {
-      errMsg = errMsg + "<li><%=curField.columnName%> conversion failed: \"" + <%=curField.fieldName%>String + "\" is not a valid <%=curField.javaType%>";
-    }<%}%><%}%><%}%><%}%>
 
     //if the updateMode is CREATE, check to see if an entity with the specified primary key already exists
     if(updateMode.compareTo("CREATE") == 0)
-      if(<%=entity.ejbName%>Helper.findByPrimaryKey(<%=entity.pkNameString()%>) != null) errMsg = errMsg + "<li><%=entity.ejbName%> already exists with <%=entity.colNameString(entity.pks)%>:" + <%=entity.pkNameString(" + \", \" + ", "")%> + "; please change.";
+      if(helper.findByPrimaryKey(findByEntity.getPrimaryKey()) != null)
+      {
+        errMsg = errMsg + "<li>" + entity.entityName + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.";
+        Debug.logWarning("[updateGeneric] " + entity.entityName + " already exists with primary key: " + findByEntity.getPrimaryKey().toString() + "; please change.");
+      }
 
     //Validate parameters...
-  <%for(i=0;i<entity.fields.size();i++){EgField curField=(EgField)entity.fields.elementAt(i);%><%for(int j=0;j<curField.validators.size();j++){String curValidate=(String)curField.validators.elementAt(j);%><%if(!curField.javaType.equals("java.lang.String") && !curField.javaType.equals("String")){%>
-    if(!UtilValidate.<%=curValidate%>(<%=curField.fieldName%>String)) errMsg = errMsg + "<li><%=curField.columnName%> <%=curValidate%> failed: " + UtilValidate.<%=curValidate%>Msg;<%}else{%>
-    if(!UtilValidate.<%=curValidate%>(<%=curField.fieldName%>)) errMsg = errMsg + "<li><%=curField.columnName%> <%=curValidate%> failed: " + UtilValidate.<%=curValidate%>Msg;<%}%><%}%><%}%>
+    for(int fnum=0; fnum<entity.fields.size(); fnum++)
+    {
+      ModelField field = (ModelField)entity.fields.get(fnum);
+      findByEntity.get(field.name).toString();
+      for(int j=0;j<field.validators.size();j++)
+      {
+        String curValidate=(String)field.validators.elementAt(j);
+        //if(!UtilValidate.<%=curValidate%>(<%=curField.fieldName%>)) errMsg = errMsg + "<li><%=curField.columnName%> <%=curValidate%> failed: " + UtilValidate.<%=curValidate%>Msg;
+      }
+    }
 
     if(errMsg.length() > 0)
     {
@@ -149,28 +189,29 @@ public class GenericWebEvent
 
     if(updateMode.equals("CREATE"))
     {
-      <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=entity.ejbName%>Helper.create(<%=entity.fieldNameString()%>);
-      if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null)
+      GenericValue value = helper.create(findByEntity.entityName, findByEntity.fields);
+      if(value == null)
       {
-        request.getSession().setAttribute("ERROR_MESSAGE", "Creation of <%=entity.ejbName%> failed. <%=entity.colNameString(entity.pks)%>: " + <%=entity.pkNameString(" + \", \" + ", "")%>);
+        request.getSession().setAttribute("ERROR_MESSAGE", "Creation of " + entity.entityName + " failed for entity: " + findByEntity.toString());
         return "success";
       }
     }
     else if(updateMode.equals("UPDATE"))
     {
-      <%=entity.ejbName%> <%=GenUtil.lowerFirstChar(entity.ejbName)%> = <%=entity.ejbName%>Helper.update(<%=entity.fieldNameString()%>);
-      if(<%=GenUtil.lowerFirstChar(entity.ejbName)%> == null)
+      GenericValue value = helper.makeValue(findByEntity.entityName, findByEntity.fields);
+      try { value.store(); }
+      catch(Exception e)
       {
-        request.getSession().setAttribute("ERROR_MESSAGE", "Update of <%=entity.ejbName%> failed. <%=entity.colNameString(entity.pks)%>: " + <%=entity.pkNameString(" + \", \" + ", "")%>);
+        request.getSession().setAttribute("ERROR_MESSAGE", "Update of " + entity.entityName + " failed for value: " + value.toString());
         return "success";
       }
     }
     else
     {
-      request.getSession().setAttribute("ERROR_MESSAGE", "update<%=entity.ejbName%>: Update Mode specified (" + updateMode + ") was not valid.");
-      Debug.logWarning("update<%=entity.ejbName%>: Update Mode specified (" + updateMode + ") was not valid.");
+      request.getSession().setAttribute("ERROR_MESSAGE", "Update Mode specified (" + updateMode + ") was not valid.");
+      Debug.logWarning("updateGeneric: Update Mode specified (" + updateMode + ") was not valid for entity: " + findByEntity.toString());
     }
-*/
+
     return "success";
   }
 }
