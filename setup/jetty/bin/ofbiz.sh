@@ -49,7 +49,6 @@ CP=$CP:`find $OFBIZ_HOME/lib/jotm -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/scripting -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/weka -name *.jar | paste -s -d":" -`
 CP=$CP:`find $OFBIZ_HOME/lib/worldpay -name *.jar | paste -s -d":" -`
-CP=$CP:`find $OFBIZ_HOME/lib/wspublisher -name *.jar | paste -s -d":" -`
 CP=$CP:$OFBIZ_HOME/lib/compile/xerces.jar:$OFBIZ_HOME/lib/compile/mail.jar
 CP=$CP:$OFBIZ_HOME/lib/compile/activation.jar:$OFBIZ_HOME/lib/compile/jdbc2_0-stdext.jar
 CP=$CP:$OFBIZ_HOME/commonapp/lib/commonapp.jar 
