@@ -77,9 +77,6 @@
       <relation type="one" fk-name="DATA_SRC_TYP" rel-entity-name="DataSourceType">
         <key-map field-name="dataSourceTypeId"/>
       </relation>
-      <relation type="many" rel-entity-name="Party">
-        <key-map field-name="dataSourceId" rel-field-name="originalDataSourceId"/>
-      </relation>
       <relation type="many" rel-entity-name="PartyDataSource">
         <key-map field-name="dataSourceId"/>
       </relation>

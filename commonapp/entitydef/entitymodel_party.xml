@@ -1019,9 +1019,6 @@
       <relation type="one" fk-name="PARTY_PTY_TYP" rel-entity-name="PartyType">
         <key-map field-name="partyTypeId"/>
       </relation>
-      <relation type="one" fk-name="PARTY_ORG_DTSRC" title="Original" rel-entity-name="DataSource">
-        <key-map field-name="originalDataSourceId" rel-field-name="dataSourceId"/>
-      </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
         <key-map field-name="partyTypeId"/>
       </relation>
