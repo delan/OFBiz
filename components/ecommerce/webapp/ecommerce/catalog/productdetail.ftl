@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.31 $
+ *@version    $Revision: 1.32 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -168,7 +168,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <tr>
     <td align="left" valign="top" width="0">
       <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")?if_exists>
-      <#-- remove the next two lines to always display the virtual image first (virtual images must exist -->
+      <#-- remove the next two lines to always display the virtual image first (virtual images must exist) -->
       <#if firstLargeImage?has_content>
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
@@ -180,6 +180,20 @@ ${requestAttributes.virtualJavaScript?if_exists}
       <div class="head2">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</div>
       <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}</div>
       <div class="tabletext"><b>${product.productId?if_exists}</b></div>
+      <#-- example of showing a certain type of feature with the product -->
+      <#if sizeProductFeatureAndAppls?has_content>
+        <div class="tabletext">
+          <#if (sizeProductFeatureAndAppls?size == 1)>
+            Size:
+          <#else>
+            Sizes Available:
+          </#if>
+          <#list sizeProductFeatureAndAppls as sizeProductFeatureAndAppl>
+            ${sizeProductFeatureAndAppl.description?default(sizeProductFeatureAndAppl.abbrev?default(sizeProductFeatureAndAppl.productFeatureId))}<#if sizeProductFeatureAndAppl_has_next>,</#if>
+          </#list>
+        </div>
+      </#if>
+      
       <#-- for prices:
               - if price < competitivePrice, show competitive or "Compare At" price
               - if price < listPrice, show list price

@@ -171,8 +171,9 @@
   <ProductFeatureType description="Other Feature" hasTable="N" parentTypeId="" productFeatureTypeId="OTHER_FEATURE"/>
   <ProductFeatureType description="Product Quality" hasTable="N" parentTypeId="" productFeatureTypeId="PRODUCT_QUALITY"/>
   <ProductFeatureType description="Size" hasTable="N" parentTypeId="" productFeatureTypeId="SIZE"/>
-  <ProductFeatureType description="Style" hasTable="N" parentTypeId="" productFeatureTypeId="STYLE"/>
   <ProductFeatureType description="Software Feature" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
+  <ProductFeatureType description="Style" hasTable="N" parentTypeId="" productFeatureTypeId="STYLE"/>
+  <ProductFeatureType description="Symptom" hasTable="N" parentTypeId="" productFeatureTypeId="SYMPTOM"/>
   <ProductFeatureType description="Topic" hasTable="N" parentTypeId="" productFeatureTypeId="TOPIC"/>
   <ProductFeatureType description="Type" hasTable="N" parentTypeId="" productFeatureTypeId="TYPE"/>
   <ProductFeatureType description="Warranty" hasTable="N" parentTypeId="" productFeatureTypeId="WARRANTY"/>

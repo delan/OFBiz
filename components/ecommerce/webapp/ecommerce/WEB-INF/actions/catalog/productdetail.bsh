@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.29 $
+ *@version    $Revision: 1.30 $
  *@since      2.1
  */
 
@@ -177,7 +177,7 @@ if (product != null) {
     request.setAttribute("priceMap", priceMap);
 
     // get the product review(s)
-    reviews = product.getRelated("ProductReview", null, UtilMisc.toList("-postedDateTime"));
+    reviews = product.getRelatedCache("ProductReview", null, UtilMisc.toList("-postedDateTime"));
     context.put("productReviews", reviews);
     // get the average rating
     if (reviews != null && reviews.size() > 0) {
@@ -211,6 +211,10 @@ if (product != null) {
     disFeatureMap = dispatcher.runSync("getProductFeatures", UtilMisc.toMap("productId", productId, "type", "DISTINGUISHING_FEAT"));
     disFeatureList = disFeatureMap.get("productFeatures");
     request.setAttribute("disFeatureList", disFeatureList);
+    
+    // an example of getting features of a certain type to show
+    sizeProductFeatureAndAppls = delegator.findByAnd("ProductFeatureAndAppl", UtilMisc.toMap("productId", productId, "productFeatureTypeId", "SIZE"), UtilMisc.toList("sequenceNum", "defaultSequenceNum"));
+    context.put("sizeProductFeatureAndAppls", sizeProductFeatureAndAppls);
 
     // Special Variant Code
     if ("Y".equals(product.getString("isVirtual"))) {

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.18 $
+ *@version    $Revision: 1.19 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -50,6 +50,19 @@
             <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>" class="buttontext">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</a>
           </div>
           <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}<#if daysToShip?exists>&nbsp;-&nbsp;${uiLabelMap.ProductUsuallyShipsIn} <b>${daysToShip}</b> ${uiLabelMap.CommonDays}!</#if></div>
+          <#-- example of showing a certain type of feature with the product -->
+          <#if sizeProductFeatureAndAppls?has_content>
+            <div class="tabletext">
+              <#if (sizeProductFeatureAndAppls?size == 1)>
+                Size:
+              <#else>
+                Sizes Available:
+              </#if>
+              <#list sizeProductFeatureAndAppls as sizeProductFeatureAndAppl>
+                ${sizeProductFeatureAndAppl.abbrev?default(sizeProductFeatureAndAppl.description?default(sizeProductFeatureAndAppl.productFeatureId))}<#if sizeProductFeatureAndAppl_has_next>,</#if>
+              </#list>
+            </div>
+          </#if>
           <div class="tabletext">
               <b>${product.productId?if_exists}</b>
                 <#if price.competitivePrice?exists && price.price?exists && price.price?double < price.competitivePrice?double>
