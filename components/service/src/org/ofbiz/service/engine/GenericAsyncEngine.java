@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAsyncEngine.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: GenericAsyncEngine.java,v 1.2 2003/10/30 20:30:34 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,11 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.transaction.InvalidTransactionException;
-import javax.transaction.SystemException;
-import javax.transaction.Transaction;
-import javax.transaction.TransactionManager;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
@@ -43,22 +38,16 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
-import org.ofbiz.entity.transaction.TransactionFactory;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericRequester;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.service.ServiceDispatcher;
+import org.ofbiz.service.*;
 import org.ofbiz.service.job.GenericServiceJob;
 import org.ofbiz.service.job.Job;
 import org.ofbiz.service.job.JobManagerException;
-import org.ofbiz.service.job.PersistedServiceJob;
 
 /**
  * Generic Asynchronous Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public abstract class GenericAsyncEngine implements GenericEngine {
@@ -91,34 +80,17 @@ public abstract class GenericAsyncEngine implements GenericEngine {
     /**
      * @see org.ofbiz.service.engine.GenericEngine#runAsync(java.lang.String, org.ofbiz.service.ModelService, java.util.Map, org.ofbiz.service.GenericRequester, boolean)
      */
-    public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist)
-        throws GenericServiceException {
-
+    public void runAsync(String localName, ModelService modelService, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
         DispatchContext dctx = dispatcher.getLocalContext(localName);
         Job job = null;
 
         if (persist) {
             // check for a delegator
-            if (dispatcher.getDelegator() == null)
+            if (dispatcher.getDelegator() == null) {
                 throw new GenericServiceException("No reference to delegator; cannot run persisted services.");
-                
-            // suspend the current transaction
-            TransactionManager tm = TransactionFactory.getTransactionManager();
-
-            if (tm == null)
-                throw new GenericServiceException("Cannot get the transaction manager; cannot run persisted services.");
-
-            Transaction parentTrans = null;
-
-            try {
-                parentTrans = tm.suspend();
-            } catch (SystemException se) {
-                Debug.logError(se, "Cannot suspend transaction: " + se.getMessage(), module);
             }
 
-            String exceptionMessage = "Cannot begin asynchronous service.";
             GenericValue jobV = null;
-
             // Build the value object(s).
             try {
                 List toBeStored = new LinkedList();
@@ -135,55 +107,36 @@ public abstract class GenericAsyncEngine implements GenericEngine {
                 // Create the job info
                 String jobName = new String(new Long((new Date().getTime())).toString());
                 Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", UtilDateTime.nowTimestamp(),
-                        "serviceName", modelService.name, "loaderName", localName,
-                        "runtimeDataId", dataId);
+                        "serviceName", modelService.name, "loaderName", localName, "runtimeDataId", dataId);
 
                 jobV = dispatcher.getDelegator().makeValue("JobSandbox", jFields);
                 toBeStored.add(jobV);
                 dispatcher.getDelegator().storeAll(toBeStored);
 
             } catch (GenericEntityException e) {
-                resumeTransaction(tm, parentTrans);
-                throw new GenericServiceException(exceptionMessage, e);
+                throw new GenericServiceException("Unable to create persisted job", e);
             } catch (SerializeException e) {
-                resumeTransaction(tm, parentTrans);
-                throw new GenericServiceException(exceptionMessage, e);
+                throw new GenericServiceException("Problem serializing service attributes", e);
             } catch (FileNotFoundException e) {
-                resumeTransaction(tm, parentTrans);
-                throw new GenericServiceException(exceptionMessage, e);
+                throw new GenericServiceException("Problem serializing service attributes", e);
             } catch (IOException e) {
-                resumeTransaction(tm, parentTrans);
-                throw new GenericServiceException(exceptionMessage, e);
+                throw new GenericServiceException("Problem serializing service attributes", e);
             }
 
-            resumeTransaction(tm, parentTrans);
-
-            if (jobV == null)
-                throw new GenericServiceException("Problems creating job.");
-            job = new PersistedServiceJob(dctx, jobV, requester);
+            // make sure we stored okay
+            if (jobV == null) {
+                throw new GenericServiceException("Persisted job not created");
+            } else {
+                Debug.logInfo("Persisted job queued : " + jobV.getString("jobName"), module);
+            }
         } else {
             String name = new Long(new Date().getTime()).toString();
-
             job = new GenericServiceJob(dctx, name, modelService.name, context, requester);
-        }
-
-        // Schedule the job.
-        try {
-            dispatcher.getJobManager().runJob(job);
-        } catch (JobManagerException jse) {
-            throw new GenericServiceException("Cannot run job.", jse);
-        }
-    }
-
-    private void resumeTransaction(TransactionManager tm, Transaction trans) throws GenericServiceException {
-        if (trans == null)
-            return;
-        try {
-            tm.resume(trans);
-        } catch (InvalidTransactionException ite) {
-            throw new GenericServiceException("Cannot resume transaction", ite);
-        } catch (SystemException se) {
-            throw new GenericServiceException("Unexpected transaction error", se);
+            try {
+                dispatcher.getJobManager().runJob(job);
+            } catch (JobManagerException jse) {
+                throw new GenericServiceException("Cannot run job.", jse);
+            }
         }
     }
 }
