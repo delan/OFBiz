@@ -87,5 +87,10 @@
 	<classpathentry kind="lib" path="components/minerva/lib/jta_1.0.1.jar"/>
 	<classpathentry kind="lib" path="components/minerva/lib/jdbc2_0-stdext.jar"/>
 	<classpathentry kind="var" path="JRE_SRC"/>
+	<classpathentry kind="lib" path="components/content/lib/commons-fileupload.jar"/>
+	<classpathentry kind="lib" path="components/service/lib/commons-discovery.jar"/>
+	<classpathentry kind="lib" path="components/service/lib/axis-ant.jar"/>
+	<classpathentry kind="lib" path="components/accounting/lib/cybersource/icswssecurity.jar"/>
+	<classpathentry kind="lib" path="components/accounting/lib/cybersource/icswsclients.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
