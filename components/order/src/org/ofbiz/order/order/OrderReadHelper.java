@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.29 2004/08/16 19:20:23 jonesde Exp $
+ * $Id: OrderReadHelper.java,v 1.30 2004/08/16 19:56:36 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.29 $
+ * @version    $Revision: 1.30 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -1072,7 +1072,7 @@ public class OrderReadHelper {
         double totalTaxNotReturned = 0;
         double totalShippingNotReturned = 0;
         
-        Iterator orderItems = this.getOrderItems().iterator();
+        Iterator orderItems = this.getValidOrderItems().iterator();
         while (orderItems.hasNext()) {
             GenericValue orderItem = (GenericValue) orderItems.next();
             
@@ -1106,7 +1106,11 @@ public class OrderReadHelper {
         }
 
         // calculate tax and shipping adjustments for entire order, add to result
-        double orderFactorNotReturned = totalSubTotalNotReturned / this.getOrderItemsSubTotal();
+        double orderItemsSubTotal = this.getOrderItemsSubTotal();
+        double orderFactorNotReturned = 0.0;
+        if (orderItemsSubTotal != 0.0) {
+            orderFactorNotReturned = totalSubTotalNotReturned / orderItemsSubTotal;
+        }
         double orderTaxNotReturned = this.getTaxTotal() * orderFactorNotReturned;
         double orderShippingNotReturned = this.getShippingTotal() * orderFactorNotReturned;
         
