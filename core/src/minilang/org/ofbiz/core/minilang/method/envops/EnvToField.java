@@ -34,7 +34,7 @@ import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
 
 /**
- * Copies a map field to a map field
+ * Copies an environment field to a map field
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    February 19, 2002
