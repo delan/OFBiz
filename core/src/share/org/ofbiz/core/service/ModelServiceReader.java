@@ -161,27 +161,41 @@ public class ModelServiceReader {
         service.engineName = checkEmpty(serviceElement.getAttribute("engine"));
         service.location = checkEmpty(serviceElement.getAttribute("location"));
         service.invoke = checkEmpty(serviceElement.getAttribute("invoke"));
-        service.export = checkBoolean(serviceElement.getAttribute("export"));        
+        service.export = checkBoolean(serviceElement.getAttribute("export"));
         service.validate = checkBoolean(serviceElement.getAttribute("validate"));
-        service.contextInfo = new HashMap();        
+        service.contextInfo = new HashMap();
         
-        createAttrDefs(serviceElement, "attribute", service.contextInfo);                
+        createAttrDefs(serviceElement, "attribute", service.contextInfo);
         return service;
     }
     
     protected void createAttrDefs(Element baseElement, String parentNodeName, Map contextMap) {
+        // Add the default responseMessage and errorMessage OUT parameters
+        ModelParam d1 = new ModelParam();
+        d1.name = ModelService.RESPONSE_MESSAGE;
+        d1.type = "String";
+        d1.mode = "OUT";
+        d1.optional = true;
+        contextMap.put(d1.name,d1);
+        ModelParam d2 = new ModelParam();
+        d2.name = ModelService.ERROR_MESSAGE;
+        d2.type = "String";
+        d2.mode = "OUT";
+        d2.optional = true;
+        contextMap.put(d2.name,d2);
+        // Add in the defined attributes (override the above defaults if specified)
         NodeList attrList = baseElement.getElementsByTagName(parentNodeName);
         for ( int i = 0; i < attrList.getLength(); i++ ) {
             Element attribute = (Element) attrList.item(i);
-            ModelParam param = new ModelParam();            
+            ModelParam param = new ModelParam();
             param.name = checkEmpty(attribute.getAttribute("name"));
             param.type = checkEmpty(attribute.getAttribute("type"));
             param.mode = checkEmpty(attribute.getAttribute("mode"));
-            param.optional = checkBoolean(attribute.getAttribute("optional"));            
-            contextMap.put(param.name,param);            
+            param.optional = checkBoolean(attribute.getAttribute("optional"));
+            contextMap.put(param.name,param);
         }
     }
-     
+    
     protected String childElementValue(Element element, String childElementName) {
         if(element == null || childElementName == null) return null;
         //get the value of the first element with the given name
@@ -222,7 +236,7 @@ public class ModelServiceReader {
     }
     
     protected boolean checkBoolean(String string) {
-        if ( string != null && string.equalsIgnoreCase("true") ) 
+        if ( string != null && string.equalsIgnoreCase("true") )
             return true;
         return false;
     }
