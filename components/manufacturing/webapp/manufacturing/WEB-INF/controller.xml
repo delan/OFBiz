@@ -387,11 +387,11 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="FindMrpPlannedEvents"/>
     </request-map>
-    <request-map uri="RunningMrp">
+    <request-map uri="RunMrp">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="MrpExecution"/>
     </request-map>
-    <request-map uri="RunningMrpGo">
+    <request-map uri="runMrpGo">
         <security https="true" auth="true"/>
         <event type="service" invoke="runningMrp"/>
         <response name="success" type="view" value="MrpExecution"/>

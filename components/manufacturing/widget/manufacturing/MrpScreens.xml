@@ -58,19 +58,19 @@
         <section>
             <actions>
                 <set field="title" value="Run MRP"/>
-                <set field="titleProperty" value="ManufacturingRunningMrp"/>
-                <set field="tabButtonItem" value="RunningMrp"/>
-                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
+                <set field="titleProperty" value="ManufacturingRunMrp"/>
+                <set field="tabButtonItem" value="RunMrp"/>
                 <set field="headerItem" value="mrp"/>
-
-                <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/mrp/RunningMrp.bsh"/>
             </actions>
             <widgets>
                 <decorator-screen name="CommonMrpDecorator">
                     <decorator-section name="body">
-                        <platform-specific>
-                            <html><html-template location="component://manufacturing/webapp/manufacturing/mrp/RunningMrp.ftl"/></html>
-                        </platform-specific>
+                        <container>
+                            <label style="head1" text="${uiLabelMap.ManufacturingRunMrp}"/>
+                        </container>
+                        <container>
+                            <include-form name="RunMrp" location="component://manufacturing/webapp/manufacturing/mrp/MrpForms.xml"/>
+                        </container>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
@@ -82,9 +82,7 @@
                 <set field="title" value="MRP Planned Events"/>
                 <set field="titleProperty" value="PageTitleFindInventoryEventPlan"/>
                 <set field="tabButtonItem" value="findInventoryEventPlan"/>
-                <!--<set field="labelTitleProperty" value="ProductProductBom"/>-->
                 <set field="headerItem" value="mrp"/>
-
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/mrp/findInventoryEventPlan.bsh"/>
             </actions>
             <widgets>
