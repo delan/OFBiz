@@ -32,6 +32,12 @@ import java.util.Map;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
 import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.entity.model.ModelEntity;
+import org.ofbiz.core.entity.model.ModelField;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelParam;
+import org.ofbiz.core.service.ModelService;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.FlexibleMapAccessor;
 import org.ofbiz.core.util.FlexibleStringExpander;
@@ -117,6 +123,7 @@ public class ModelFormField {
             
             if (UtilValidate.isEmpty(subElementName)) {
                 this.fieldInfo = null;
+                this.induceFieldInfo();
             } else if ("display".equals(subElementName)) {
                 this.fieldInfo = new DisplayField(subElement, this);
             } else if ("hyperlink".equals(subElementName)) {
@@ -171,6 +178,168 @@ public class ModelFormField {
         if (overrideFormField.fieldInfo != null) {
             this.setFieldInfo(overrideFormField.fieldInfo);
         }        
+    }
+    
+    public boolean induceFieldInfo() {
+        if (this.induceFieldInfoFromEntityField()) {
+            return true;
+        }
+        if (this.induceFieldInfoFromServiceParam()) {
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean induceFieldInfoFromServiceParam() {
+        if (UtilValidate.isEmpty(this.serviceName) || UtilValidate.isEmpty(this.attributeName)) {
+            return false;
+        }
+        LocalDispatcher dispatcher = this.getModelForm().getDispacher();
+        try {
+            ModelService modelService = dispatcher.getDispatchContext().getModelService(this.serviceName);
+            if (modelService != null) {
+                ModelParam modelParam = modelService.getParam(this.attributeName);
+                if (modelParam != null) {
+                    if (UtilValidate.isNotEmpty(modelParam.entityName) && UtilValidate.isNotEmpty(modelParam.fieldName)) {
+                        this.entityName = modelParam.entityName;
+                        this.fieldName = modelParam.fieldName;
+                        if (this.induceFieldInfoFromEntityField()) {
+                            return true;
+                        }
+                    }
+                    
+                    this.induceFieldInfoFromServiceParam(modelService, modelParam);
+                    return true;
+                }
+            }
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "error getting service parameter definition for auto-field with serviceName: " + this.serviceName + ", and attributeName: " + this.attributeName);
+        }
+        return false;
+    }
+    
+    public boolean induceFieldInfoFromServiceParam(ModelService modelService, ModelParam modelParam) {
+        if (modelService == null || modelParam == null) {
+            return false;
+        }
+        
+        this.serviceName = modelService.name;
+        this.attributeName = modelParam.name;
+        
+        if (modelParam.type.indexOf("Double") != -1 || modelParam.type.indexOf("Float") != -1 || modelParam.type.indexOf("Long") != -1 || modelParam.type.indexOf("Integer") != -1) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
+            textField.setSize(6);
+            this.setFieldInfo(textField);
+        } else if (modelParam.type.indexOf("Timestamp") != -1) {
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
+            dateTimeField.setType("timestamp");
+            this.setFieldInfo(dateTimeField);
+        } else if (modelParam.type.indexOf("Date") != -1) {
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
+            dateTimeField.setType("date");
+            this.setFieldInfo(dateTimeField);
+        } else if (modelParam.type.indexOf("Time") != -1) {
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
+            dateTimeField.setType("time");
+            this.setFieldInfo(dateTimeField);
+        } else {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, this);
+            this.setFieldInfo(textField);
+        }
+        
+        return true;
+    }
+
+    public boolean induceFieldInfoFromEntityField() {
+        if (UtilValidate.isEmpty(this.entityName) || UtilValidate.isEmpty(this.fieldName)) {
+            return false;
+        }
+        GenericDelegator delegator = this.getModelForm().getDelegator();
+        ModelEntity modelEntity = delegator.getModelEntity(this.entityName);
+        if (modelEntity != null) {
+            ModelField modelField = modelEntity.getField(this.fieldName);
+            if (modelField != null) {
+                // okay, populate using the entity field info...
+                this.induceFieldInfoFromEntityField(modelEntity, modelField);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public boolean induceFieldInfoFromEntityField(ModelEntity modelEntity, ModelField modelField) {
+        if (modelEntity == null || modelField == null) {
+            return false;
+        }
+
+        this.entityName = modelEntity.getEntityName();
+        this.fieldName = modelField.getName();
+        
+        if ("id".equals(modelField.getType()) || "id-ne".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            textField.setSize(20);
+            textField.setMaxlength(new Integer(20));
+            this.setFieldInfo(textField);
+        } else if ("id-long".equals(modelField.getType()) || "id-long-ne".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            textField.setSize(40);
+            textField.setMaxlength(new Integer(60));
+            this.setFieldInfo(textField);
+        } else if ("id-vlong".equals(modelField.getType()) || "id-vlong-ne".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            textField.setSize(60);
+            textField.setMaxlength(new Integer(250));
+            this.setFieldInfo(textField);
+        } else if ("indicator".equals(modelField.getType())) {
+            ModelFormField.DropDownField dropDownField = new ModelFormField.DropDownField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            dropDownField.setAllowEmpty(false);
+            dropDownField.addOptionSource(new ModelFormField.SingleOption("Y", null, dropDownField));
+            dropDownField.addOptionSource(new ModelFormField.SingleOption("N", null, dropDownField));
+            //ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            //textField.setSize(1);
+            //textField.setMaxlength(new Integer(1));
+            //this.setFieldInfo(textField);
+        } else if ("very-short".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            textField.setSize(6);
+            textField.setMaxlength(new Integer(10));
+            this.setFieldInfo(textField);
+        } else if ("very-long".equals(modelField.getType())) {
+            ModelFormField.TextareaField textareaField = new ModelFormField.TextareaField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            textareaField.setCols(60);
+            textareaField.setRows(2);
+            this.setFieldInfo(textareaField);
+        } else if ("name".equals(modelField.getType()) || "short-varchar".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            textField.setSize(40);
+            textField.setMaxlength(new Integer(60));
+            this.setFieldInfo(textField);
+        } else if ("value".equals(modelField.getType()) || "comment".equals(modelField.getType()) || 
+                "description".equals(modelField.getType()) || "long-varchar".equals(modelField.getType()) ||
+                "url".equals(modelField.getType()) || "email".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            textField.setSize(60);
+            textField.setMaxlength(new Integer(250));
+            this.setFieldInfo(textField);
+        } else if ("floating-point".equals(modelField.getType()) || "currency".equals(modelField.getType()) || "numeric".equals(modelField.getType())) {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            textField.setSize(6);
+            this.setFieldInfo(textField);
+        } else if ("date-time".equals(modelField.getType()) || "date".equals(modelField.getType()) || "time".equals(modelField.getType())) {
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            if ("date-time".equals(modelField.getType())) {
+                dateTimeField.setType("timestamp");
+            } else if ("date".equals(modelField.getType())) {
+                dateTimeField.setType("date");
+            } else if ("time".equals(modelField.getType())) {
+                dateTimeField.setType("time");
+            }
+            this.setFieldInfo(dateTimeField);
+        } else {
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
+            this.setFieldInfo(textField);
+        }
+        return true;
     }
     
     public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
