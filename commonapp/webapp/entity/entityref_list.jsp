@@ -75,6 +75,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 <a href="<%=response.encodeURL(controlPath + "/view/ModelWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Model XML to Files</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter")%>" target='_blank' class='listtext'>Generate Entity Group XML</A><BR>
 <a href="<%=response.encodeURL(controlPath + "/view/ModelGroupWriter?savetofile=true")%>" target='_blank' class='listtext'>Save Entity Group XML to File</A><BR>
+<a href="<%=response.encodeURL(controlPath + "/view/ModelInduceFromDb")%>" target='_blank' class='listtext'>Induce Model XML from Database</A><BR>
 <HR>
 
 <%

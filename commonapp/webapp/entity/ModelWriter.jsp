@@ -1,6 +1,6 @@
 <%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%
 
-if(security.hasPermission("ENTITY_MAINT", session)) {
+if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("originalFileName") != null) {
   if("true".equals(request.getParameter("savetofile"))) {
     //save to the file specified in the ModelReader config
     String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
@@ -92,6 +92,8 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     <!ATTLIST entity
 	package-name CDATA #REQUIRED >
     <!ATTLIST entity
+	dependent-on CDATA #IMPLIED >
+    <!ATTLIST entity
 	title CDATA #IMPLIED >
     <!ATTLIST entity
 	copyright CDATA #IMPLIED >
@@ -130,13 +132,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     <!ATTLIST key-map
 	field-name CDATA #REQUIRED >
     <!ATTLIST key-map
-	col-name CDATA #IMPLIED >
-    <!-- this is only required if the field-name in the related table is different from the name in this table -->
-    <!ATTLIST key-map
 	rel-field-name CDATA #IMPLIED >
-    <!-- this is only required if the col-name in the related table is different from the col-name in this table -->
-    <!ATTLIST key-map
-	rel-col-namee CDATA #IMPLIED >
 ]>
 <% 
   //GenericDelegator delegator = GenericHelperFactory.getDefaultHelper();
