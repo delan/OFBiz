@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.26 $
+ *@version    $Revision: 1.27 $
  *@since      2.1
  */
 
@@ -119,7 +119,7 @@ if (product != null) {
     // get the main detail image (virtual or single product)
     mainDetailImage = productContentWrapper.get("DETAIL_IMAGE_URL");
     if (mainDetailImage != null && mainDetailImage.length() > 0) {
-        mainDetailImageUrl = ContentUrlTag.getContentPrefix(request) + mainDetailImageUrl;
+        mainDetailImageUrl = ContentUrlTag.getContentPrefix(request) + mainDetailImage;
         mainDetailImageUrl = URLEncoder.encode(Base64.base64Encode(mainDetailImage), "UTF-8");
         context.put("mainDetailImageUrl", mainDetailImageUrl);
     }
