@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.5 2003/09/20 18:13:22 jonesde Exp $
+ * $Id: RequestHandler.java,v 1.6 2003/10/28 09:41:34 jonesde Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -472,6 +472,8 @@ public class RequestHandler implements Serializable {
                 req.setCharacterEncoding(charset);
             } catch (UnsupportedEncodingException e) {
                 throw new RequestHandlerException("Could not set character encoding to " + charset, e);
+            } catch (IllegalStateException e) {
+                Debug.logInfo(e, "Could not set character encoding to " + charset + ", something has probably already committed the stream", module);
             }
         }
 
