@@ -307,7 +307,7 @@ public class WorkflowServices {
     // Service 'Worker' Methods
     // -------------------------------------------------------------------
 
-    private static boolean hasPermission(Security security, String workEffortId, GenericValue userLogin) {
+    public static boolean hasPermission(Security security, String workEffortId, GenericValue userLogin) {
         if (userLogin == null || workEffortId == null) {
             return false;
         }
@@ -315,18 +315,40 @@ public class WorkflowServices {
             return true;
         } else {
             String partyId = userLogin.getString("partyId");
-            List expr = UtilMisc.toList(new EntityExpr("partyId", EntityOperator.EQUALS, partyId),
-                                        new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId),
-                                        new EntityExpr("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO,
-                                                       UtilDateTime.nowTimestamp()));
+            List expr = new ArrayList();
+            expr.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+            expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
+            expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+            expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
+            expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
+            expr.add(new EntityExpr("workEffortId", EntityOperator.EQUALS, workEffortId));
+            expr.add(new EntityExpr("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+
             Collection c = null;
 
             try {
-                c = userLogin.getDelegator().findByAnd("WorkEffortPartyAssignment", expr);
+                c = userLogin.getDelegator().findByAnd("WorkEffortAndPartyAssign", expr);
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
                 return false;
             }
+            if (c.size() == 0) {
+                expr = new ArrayList();
+                expr.add(new EntityExpr("partyId", EntityOperator.EQUALS, partyId));
+                expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"));
+                expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"));
+                expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"));
+                expr.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED"));
+                expr.add(new EntityExpr("workEffortParentId", EntityOperator.EQUALS, workEffortId));
+                expr.add(new EntityExpr("fromDate", EntityOperator.GREATER_THAN_EQUAL_TO, UtilDateTime.nowTimestamp()));
+                try {
+                    c = userLogin.getDelegator().findByAnd("WorkEffortAndPartyAssign", expr);
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                    return false;
+                }
+            }
+
             if (c.size() > 0) {
                 return true;
             }

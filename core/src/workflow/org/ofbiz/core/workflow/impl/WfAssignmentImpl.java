@@ -41,6 +41,8 @@ import org.ofbiz.core.workflow.*;
  */
 public class WfAssignmentImpl implements WfAssignment {
 
+    public static final String module = WfAssignmentImpl.class.getName();
+
     protected WfActivity activity;
     protected WfResource resource;
     protected Timestamp fromDate;
@@ -104,11 +106,30 @@ public class WfAssignmentImpl implements WfAssignment {
      *@throws WfException
      */
     public void accept() throws WfException {
+        // remove other assignments
+        boolean acceptAll = activity.getDefinitionObject().get("acceptAllAssignments") != null ?
+                activity.getDefinitionObject().getBoolean("acceptAllAssignments").booleanValue() : false;
+        if (!acceptAll) {
+            Debug.logInfo("[WfAssignment.accept] : setting other assignments to delegated status.", module);
+            Iterator ai = activity.getIteratorAssignment();
+            while (ai.hasNext()) {
+                WfAssignment a = (WfAssignment) ai.next();
+                if (!a.equals(this)) a.changeStatus("CAL_DELEGATED");
+            }
+        }
         changeStatus("CAL_ACCEPTED");
         try {
             activity.activate();
         } catch (CannotStart e) {
             throw new WfException(e.getMessage(), e);
+        }
+        try {
+            GenericValue v = activity.getRuntimeObject();
+            v.set("estimatedStartDate", UtilDateTime.nowTimestamp());
+            v.store();
+        } catch (GenericEntityException e) {
+            e.printStackTrace();
+            Debug.logWarning("[WfAssignment.accept] : could not set startdate", module);
         }
     }
 
@@ -141,7 +162,9 @@ public class WfAssignmentImpl implements WfAssignment {
         try {
             valueObject.set("statusId", status);
             valueObject.store();
+            Debug.logInfo("[WfAssignment.changeStatus] : changed status to " + status, module);
         } catch (GenericEntityException e) {
+            e.printStackTrace();
             throw new WfException(e.getMessage(), e);
         }
     }
