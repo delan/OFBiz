@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (johan@oddjob.se)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      3.0
 -->
 
@@ -28,7 +28,7 @@
 
 ${pages.get("/product/ProductTabBar.ftl")}
     
-    <div class="head1">Edit Content <span class='head2'>for ${product.internalName?if_exists} <#if content?has_content>[ID:${contentId}]</#if></span></div>
+    <div class="head1">Edit Content <span class='head2'>for ${(product.internalName)?default("[Name Unknown]")} <#if content?has_content>[ID:${contentId}]</#if></span></div>
     
     <a href="<@ofbizUrl>/EditProductContent?productId=${productId}</@ofbizUrl>" class="buttontext">[Product Content List]</a>
     <#if contentId?has_content>
