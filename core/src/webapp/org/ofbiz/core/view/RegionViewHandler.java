@@ -75,7 +75,6 @@ public class RegionViewHandler implements ViewHandler {
         request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
         
         Region region = RegionManager.getRegion(regionFile, viewSource);
-        RegionStack.push(request, region);
         
         try {
             region.render(request, response);

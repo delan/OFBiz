@@ -62,6 +62,8 @@ public class Section extends Content {
     }
     
     public void render(PageContext pageContext) throws JspException {
+        Debug.logVerbose("Rendering " + this.toString());
+        
         if(content != null) {
             // see if this section's content is a region
             Region region = RegionManager.getRegion(regionFile, content);
@@ -91,6 +93,6 @@ public class Section extends Content {
     }
     
     public String toString() {
-        return "Section: " + name + ", content= " + content.toString();
+        return "Section: " + name + ", content=" + content + ", direct=" + direct;
     }
 }

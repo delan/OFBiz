@@ -34,6 +34,8 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 import org.w3c.dom.*;
 
+import org.ofbiz.core.util.*;
+
 /**
  * A region is content that contains a set of sections that can render in a PageContext
  * <br>Implements abstract render(PageContext) from Content
@@ -68,6 +70,8 @@ public class Region extends Content {
     public Map getSections() { return sections; }
     
     public void render(PageContext pageContext) throws JspException {
+        Debug.logVerbose("Rendering " + this.toString());
+        
         try {
             pageContext.include(content);
         } catch (Exception ex) {
@@ -77,6 +81,11 @@ public class Region extends Content {
     }
     
     public void render(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException, ServletException {
+        Debug.logVerbose("Rendering " + this.toString());
+        
+        //this render method does not come from a page tag so some setup needs to happen here
+        RegionStack.push(request, this);
+        
         RequestDispatcher rd = request.getRequestDispatcher(content);
         if (rd == null)
             throw new IllegalArgumentException("Source returned a null dispatcher (" + content + ")");
