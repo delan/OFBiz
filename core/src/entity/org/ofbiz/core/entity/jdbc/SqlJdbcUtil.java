@@ -518,21 +518,40 @@ public class SqlJdbcUtil {
 
                 case 10:
                     Object obj = null;
-  
-                    Blob blobLocator = rs.getBlob(ind);
                     InputStream binaryInput = null;
-                    if (blobLocator != null) {
-                        binaryInput = blobLocator.getBinaryStream();
+                    
+                    byte[] fieldBytes = rs.getBytes(ind);
+                    if (fieldBytes != null && fieldBytes.length > 0) {
+                        binaryInput = new ByteArrayInputStream(fieldBytes);
                     }
-                    if (null != binaryInput) {
+                    
+                    if (fieldBytes != null && fieldBytes.length <= 0) {
+                        Debug.logWarning("Got bytes back for Object field with length: " + fieldBytes.length + " while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + "): ", module);
+                    }
+                    
+                    //alt 1: binaryInput = rs.getBinaryStream(ind);
+                    //alt 2: Blob blobLocator = rs.getBlob(ind);
+                    //if (blobLocator != null) {
+                    //    binaryInput = blobLocator.getBinaryStream();
+                    //}
+                    
+                    if (binaryInput != null) {
+                        ObjectInputStream in = null;
                         try {
-                            ObjectInputStream in = new ObjectInputStream(binaryInput);
+                            in = new ObjectInputStream(binaryInput);
                             obj = in.readObject();
-                            in.close();
                         } catch (IOException ex) {
-                            throw new GenericDataSourceException("Unable to read BLOB data from input stream: ", ex);
+                            throw new GenericDataSourceException("Unable to read BLOB data from input stream while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + "): " + ex.toString(), ex);
                         } catch (ClassNotFoundException ex) {
-                            throw new GenericDataSourceException("Class not found: Unable to cast BLOB data to an Java object: ", ex);
+                            throw new GenericDataSourceException("Class not found: Unable to cast BLOB data to an Java object while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + "): " + ex.toString(), ex);
+                        } finally {
+                            if (in != null) {
+                                try {
+                                    in.close();
+                                } catch (IOException e) {
+                                    throw new GenericDataSourceException("Unable to close binary input stream while getting value : " + curField.getName() + " [" + curField.getColName() + "] (" + ind + "): " + e.toString(), e);
+                                }
+                            }
                         }
                     }
 
