@@ -128,11 +128,53 @@ public class UtilHttp {
                             String key = fieldName.substring(prefix.length(), fieldName.length() - (suffix.length() - 1));
                             Object value = additionalFields.get(fieldName);
                             paramMap.put(key, value);
+
+                            // check for image upload data
+                            if (!(value instanceof String)) {
+                                String nameKey = "_" + key + "_fileName";
+                                Object nameVal = additionalFields.get("_" + fieldName + "_fileName");
+                                if (nameVal != null) {
+                                    paramMap.put(nameKey, nameVal);
+                                }
+
+                                String typeKey = "_" + key + "_contentType";
+                                Object typeVal = additionalFields.get("_" + fieldName + "_contentType");
+                                if (typeVal != null) {
+                                    paramMap.put(typeKey, typeVal);
+                                }
+
+                                String sizeKey = "_" + key + "_size";
+                                Object sizeVal = additionalFields.get("_" + fieldName + "_size");
+                                if (sizeVal != null) {
+                                    paramMap.put(sizeKey, sizeVal);
+                                }
+                            }
                         }
                     } else {
                         String key = fieldName.substring(prefix.length());
                         Object value = additionalFields.get(fieldName);
                         paramMap.put(key, value);
+
+                        // check for image upload data
+                        if (!(value instanceof String)) {
+                            String nameKey = "_" + key + "_fileName";
+                            Object nameVal = additionalFields.get("_" + fieldName + "_fileName");
+                            if (nameVal != null) {
+                                paramMap.put(nameKey, nameVal);
+                            }
+
+                            String typeKey = "_" + key + "_contentType";
+                            Object typeVal = additionalFields.get("_" + fieldName + "_contentType");
+                            if (typeVal != null) {
+                                paramMap.put(typeKey, typeVal);
+                            }
+
+                            String sizeKey = "_" + key + "_size";
+                            Object sizeVal = additionalFields.get("_" + fieldName + "_size");
+                            if (sizeVal != null) {
+                                paramMap.put(sizeKey, sizeVal);
+                            }
+                        }
                     }
                 }
             }
