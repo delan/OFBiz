@@ -83,7 +83,7 @@ public final class SiteDefs {
     public static final String REQUEST_HANDLER = "_REQUEST_HANDLER_";
 
     /** Used session object to locate the shopping cart */
-    public static final String SHOPPING_CART = "_SHOPPING_CART_";
+    public static final String SHOPPING_CART = "shoppingCart";
 
     /** Session attribute name for UserLogin entity of current logged in user, if one is logged in */
     public static final String USER_LOGIN = "userLogin";

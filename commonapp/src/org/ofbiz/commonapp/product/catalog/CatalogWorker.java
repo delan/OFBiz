@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,12 +21,9 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.product.catalog;
 
-
 import java.util.*;
-import java.net.*;
 import javax.servlet.jsp.*;
 import javax.servlet.http.*;
 import javax.servlet.*;
@@ -38,14 +35,13 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.commonapp.product.category.*;
 import org.ofbiz.commonapp.order.shoppingcart.*;
 
-
 /**
  * CatalogWorker - Worker class for catalog related functionality
  *
- *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    1.0
- *@created    May 29, 2002
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CatalogWorker {
 
@@ -578,7 +574,7 @@ public class CatalogWorker {
 
     public static void getRandomCartProductAssoc(PageContext pageContext, String assocsAttrName) {
         GenericDelegator delegator = (GenericDelegator) pageContext.getRequest().getAttribute("delegator");
-        ShoppingCart cart = (ShoppingCart) pageContext.getSession().getAttribute("_SHOPPING_CART_");
+        ShoppingCart cart = (ShoppingCart) pageContext.getSession().getAttribute("shoppingCart");
 
         if (cart == null || cart.size() <= 0) return;
 
