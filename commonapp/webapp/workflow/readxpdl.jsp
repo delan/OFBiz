@@ -1,5 +1,5 @@
 <%--
- *  Copyright (c) 2001 The Open For Business Project and respected authors.
+ *  Copyright (c) 2001 The Open For Business Project and respective authors.
  
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -56,8 +56,8 @@
         }
     }
 %>
-<h3>View Data File</h3>
-<div>This page is used to view data from data files parsed by the configurable data file parser.</div>
+<h3>Read XPDL File</h3>
+<div>This page is used to read and import XPDL files into the workflow process repository.</div>
 
 <%if(security.hasPermission("WORKFLOW_MAINT", session)) {%>
   <FORM method=POST action='<ofbiz:url>/readxpdl</ofbiz:url>'>
