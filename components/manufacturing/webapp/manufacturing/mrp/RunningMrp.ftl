@@ -33,6 +33,7 @@ ${pages.get("/mrp/MrpTabBar.ftl")}
 
   <br>
   <table width="90%" border="0" cellpadding="2" cellspacing="0">
+<#--
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.ManufacturingTimePeriod}</div></td>
       <td width="5">&nbsp;</td>
@@ -44,6 +45,7 @@ ${pages.get("/mrp/MrpTabBar.ftl")}
         </select>
       </td>
     </tr>
+-->
     <tr>
       <td width='26%' align='right' valign='top'><div class="tabletext">${uiLabelMap.ProductFacility}</div></td>
       <td width="5">&nbsp;</td>
