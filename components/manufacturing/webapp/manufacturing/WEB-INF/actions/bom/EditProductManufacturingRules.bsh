@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Jacopo Cappellato (tiz@sastau.it)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.0
  */
 
@@ -40,7 +40,6 @@ if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
 }
 GenericValue techDataMachineGroup = null;
 
-//List allMachineGroups = delegator.findByAnd("FixedAsset",UtilMisc.toMap("fixedAssetTypeId", "GROUP_EQUIPMENT"));
 List allRules = delegator.findAll("ProductManufacturingRule");
 
 HtmlFormWrapper listManufacturingRulesWrapper = new HtmlFormWrapper("/bom/BomForms.xml", "ListProductManufacturingRules", request, response);
