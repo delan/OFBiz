@@ -25,9 +25,12 @@
 --%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
+<%@ page import="java.util.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*, org.ofbiz.core.entity.*" %>
 <%@ page import="org.ofbiz.commonapp.product.category.*, org.ofbiz.commonapp.product.catalog.*" %>
 
+<%Collection otherSearchProdCatalogCategories = CatalogWorker.getProdCatalogCategories(pageContext, CatalogWorker.getCurrentCatalogId(pageContext), "PCCT_OTHER_SEARCH");%>
+<%if (otherSearchProdCatalogCategories != null) pageContext.setAttribute("otherSearchProdCatalogCategories", otherSearchProdCatalogCategories);%>
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -48,8 +51,22 @@
           <td align=center>
             <form name="keywordsearchform" method="POST" action="<ofbiz:url>/keywordsearch</ofbiz:url>" style='margin: 0;'>
               <input type='hidden' name="VIEW_SIZE" value="10">
-              <input type='hidden' name="SEARCH_CATEGORY_ID" value="<%=UtilFormatOut.checkNull(CatalogWorker.getCatalogSearchCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)))%>">
-              <input type='text' name="SEARCH_STRING" size="14" maxlength="50">
+              <div class='tabletext'><input type='text' name="SEARCH_STRING" size="14" maxlength="50"></div>
+              <ofbiz:if name="otherSearchProdCatalogCategories" size="0">
+                <div class='tabletext'><select name='SEARCH_CATEGORY_ID' size='1'>
+                  <option value="<%=UtilFormatOut.checkNull(CatalogWorker.getCatalogSearchCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)))%>">Entire Catalog</option>
+                  <ofbiz:iterator name="otherSearchProdCatalogCategory" property="otherSearchProdCatalogCategories">
+                    <%GenericValue searchProductCategory = otherSearchProdCatalogCategory.getRelatedOneCache("ProductCategory");%>
+                    <%if (searchProductCategory != null) {%>
+                      <option value="<%=searchProductCategory.getString("productCategoryId")%>"><%=UtilFormatOut.checkNull(searchProductCategory.getString("description"))%></option>
+                    <%}%>
+                  </ofbiz:iterator>
+                </select>
+                </div>
+              </ofbiz:if>
+              <ofbiz:unless name="otherSearchProdCatalogCategories" size="0">
+                  <input type='hidden' name="SEARCH_CATEGORY_ID" value="<%=UtilFormatOut.checkNull(CatalogWorker.getCatalogSearchCategoryId(pageContext, CatalogWorker.getCurrentCatalogId(pageContext)))%>">
+              </ofbiz:unless>
               <div class='tabletext'>
                 Any<input type=RADIO name='SEARCH_OPERATOR' value='OR' checked>
                 All<input type=RADIO name='SEARCH_OPERATOR' value='AND'>
