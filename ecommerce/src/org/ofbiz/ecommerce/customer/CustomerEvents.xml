@@ -298,7 +298,7 @@
         <if-compare field-name="USE_ADDRESS" map-name="parameters" operator="equals" value="false">
             <!-- address not used, do nothing -->
             <else>
-                <call-service service-name="createPostalAddress" in-map-name="addressContext">
+                <call-service service-name="createPartyPostalAddress" in-map-name="addressContext">
                     <result-to-field result-name="contactMechId" map-name="addressPurposeContext"/>
                 </call-service>
                 <field-to-field field-name="partyId" map-name="tempMap" to-map-name="addressPurposeContext"/>
@@ -313,7 +313,7 @@
 
         <!-- home phone -->
         <if-not-empty field-name="CUSTOMER_HOME_CONTACT" map-name="parameters">
-            <call-service service-name="createTelecomNumber" in-map-name="homePhoneContext">
+            <call-service service-name="createPartyTelecomNumber" in-map-name="homePhoneContext">
                 <result-to-field result-name="contactMechId" map-name="homePhonePurposeContext"/>
             </call-service>
             <field-to-field field-name="partyId" map-name="tempMap" to-map-name="homePhonePurposeContext"/>
@@ -323,7 +323,7 @@
 
         <!-- work phone -->
         <if-not-empty field-name="CUSTOMER_WORK_CONTACT" map-name="parameters">
-            <call-service service-name="createTelecomNumber" in-map-name="workPhoneContext">
+            <call-service service-name="createPartyTelecomNumber" in-map-name="workPhoneContext">
                 <result-to-field result-name="contactMechId" map-name="workPhonePurposeContext"/>
             </call-service>
             <field-to-field field-name="partyId" map-name="tempMap" to-map-name="workPhonePurposeContext"/>
@@ -333,7 +333,7 @@
 
         <!-- fax phone -->
         <if-not-empty field-name="CUSTOMER_FAX_CONTACT" map-name="parameters">
-            <call-service service-name="createTelecomNumber" in-map-name="faxPhoneContext">
+            <call-service service-name="createPartyTelecomNumber" in-map-name="faxPhoneContext">
                 <result-to-field result-name="contactMechId" map-name="faxPhonePurposeContext"/>
             </call-service>
             <field-to-field field-name="partyId" map-name="tempMap" to-map-name="faxPhonePurposeContext"/>
@@ -343,7 +343,7 @@
 
         <!-- mobile phone -->
         <if-not-empty field-name="CUSTOMER_MOBILE_CONTACT" map-name="parameters">
-            <call-service service-name="createTelecomNumber" in-map-name="mobilePhoneContext">
+            <call-service service-name="createPartyTelecomNumber" in-map-name="mobilePhoneContext">
                 <result-to-field result-name="contactMechId" map-name="mobilePhonePurposeContext"/>
             </call-service>
             <field-to-field field-name="partyId" map-name="tempMap" to-map-name="mobilePhonePurposeContext"/>
@@ -352,7 +352,7 @@
         </if-not-empty>
 
         <!-- email address -->
-        <call-service service-name="createEmailAddress" in-map-name="emailContext">
+        <call-service service-name="createPartyEmailAddress" in-map-name="emailContext">
             <result-to-field result-name="contactMechId" map-name="emailPurposeContext"/>
         </call-service>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="emailPurposeContext"/>
