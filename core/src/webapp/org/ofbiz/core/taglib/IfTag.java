@@ -92,8 +92,6 @@ public class IfTag extends BodyTagSupport {
 
         if (size != null) {
             int localSize = size.intValue();
-            //make sure is reset since it is an optional attribute
-            size = null;
 
             try {
                 if (object instanceof Collection) {
