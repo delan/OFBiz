@@ -1,93 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-  <AcctgTransType acctgTransTypeId="INTERNAL_ACCTG_TRANS" description=""
-    hasTable="Y" parentTypeId=""/>
-  <AcctgTransType acctgTransTypeId="AMORTIZATION" description=""
-    hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
-  <AcctgTransType acctgTransTypeId="DEPRECIATION" description=""
-    hasTable="Y" parentTypeId="INTERNAL_ACCTG_TRANS"/>
-  <AcctgTransType acctgTransTypeId="CAPITALIZATION" description=""
-    hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
-  <AcctgTransType acctgTransTypeId="ITEM_VARIANCE_ACCTG_" description=""
-    hasTable="Y" parentTypeId="INTERNAL_ACCTG_TRANS"/>
-  <AcctgTransType acctgTransTypeId="OTHER_INTERNAL_ACCTG" description=""
-    hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
-  <AcctgTransType acctgTransTypeId="EXTERNAL_ACCTG_TRANS" description=""
-    hasTable="Y" parentTypeId=""/>
-  <AcctgTransType acctgTransTypeId="OBLIGATION_ACCTG_TRA" description=""
-    hasTable="N" parentTypeId="EXTERNAL_ACCTG_TRANS"/>
-  <AcctgTransType acctgTransTypeId="CREDIT_LINE" description=""
-    hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
-  <AcctgTransType acctgTransTypeId="CREDIT_MEMO" description=""
-    hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="INTERNAL_ACCTG_TRANS" description="" hasTable="Y" parentTypeId=""/>
+  <AcctgTransType acctgTransTypeId="AMORTIZATION" description="" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="DEPRECIATION" description="" hasTable="Y" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="CAPITALIZATION" description="" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="ITEM_VARIANCE_ACCTG_" description="" hasTable="Y" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="OTHER_INTERNAL_ACCTG" description="" hasTable="N" parentTypeId="INTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="EXTERNAL_ACCTG_TRANS" description="" hasTable="Y" parentTypeId=""/>
+  <AcctgTransType acctgTransTypeId="OBLIGATION_ACCTG_TRA" description="" hasTable="N" parentTypeId="EXTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="CREDIT_LINE" description="" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="CREDIT_MEMO" description="" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
   <AcctgTransType acctgTransTypeId="NOTE" description="" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
-  <AcctgTransType acctgTransTypeId="OTHER_OBLIGATION" description=""
-    hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
-  <AcctgTransType acctgTransTypeId="SALES_ACCTG_TRANS" description=""
-    hasTable="Y" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="OTHER_OBLIGATION" description="" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
+  <AcctgTransType acctgTransTypeId="SALES_ACCTG_TRANS" description="" hasTable="Y" parentTypeId="OBLIGATION_ACCTG_TRA"/>
   <AcctgTransType acctgTransTypeId="TAX_DUE" description="" hasTable="N" parentTypeId="OBLIGATION_ACCTG_TRA"/>
-  <AcctgTransType acctgTransTypeId="PAYMENT_ACCTG_TRANS" description=""
-    hasTable="Y" parentTypeId="EXTERNAL_ACCTG_TRANS"/>
-  <AcctgTransType acctgTransTypeId="DISBURSEMENT_ACCTG_T" description=""
-    hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
-  <AcctgTransType acctgTransTypeId="RECEIPT_ACCTG_TRANS" description=""
-    hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
-  <AgreementItemType agreementItemTypeId="SUBAGREEMENT" description=""
-    hasTable="N" parentTypeId=""/>
-  <AgreementItemType agreementItemTypeId="AGREEMENT_EXHIBIT"
-    description="" hasTable="N" parentTypeId=""/>
-  <AgreementItemType agreementItemTypeId="AGREEMENT_PRICING_PR"
-    description="" hasTable="N" parentTypeId=""/>
-  <AgreementItemType agreementItemTypeId="AGREEMENT_SECTION"
-    description="" hasTable="N" parentTypeId=""/>
-  <AgreementType agreementTypeId="PRODUCT_AGREEMENT" description=""
-    hasTable="N" parentTypeId=""/>
-  <AgreementType agreementTypeId="PURCHASE_AGREEMENT" description=""
-    hasTable="N" parentTypeId="PRODUCT_AGREEMENT"/>
-  <AgreementType agreementTypeId="SALES_AGREEMENT" description=""
-    hasTable="N" parentTypeId="PRODUCT_AGREEMENT"/>
-  <AgreementType agreementTypeId="EMPLOYMENT_AGREEMENT" description=""
-    hasTable="N" parentTypeId=""/>
-  <AgreementType agreementTypeId="OTHER_AGREEMENT" description=""
-    hasTable="N" parentTypeId=""/>
-  <BudgetItemType budgetItemTypeId="REQUIREMENT_BUDGET_A" description=""
-    hasTable="Y" parentTypeId=""/>
+  <AcctgTransType acctgTransTypeId="PAYMENT_ACCTG_TRANS" description="" hasTable="Y" parentTypeId="EXTERNAL_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="DISBURSEMENT_ACCTG_T" description="" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
+  <AcctgTransType acctgTransTypeId="RECEIPT_ACCTG_TRANS" description="" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
+  <AgreementItemType agreementItemTypeId="SUBAGREEMENT" description="" hasTable="N" parentTypeId=""/>
+  <AgreementItemType agreementItemTypeId="AGREEMENT_EXHIBIT" description="" hasTable="N" parentTypeId=""/>
+  <AgreementItemType agreementItemTypeId="AGREEMENT_PRICING_PR" description="" hasTable="N" parentTypeId=""/>
+  <AgreementItemType agreementItemTypeId="AGREEMENT_SECTION" description="" hasTable="N" parentTypeId=""/>
+  <AgreementType agreementTypeId="PRODUCT_AGREEMENT" description="" hasTable="N" parentTypeId=""/>
+  <AgreementType agreementTypeId="PURCHASE_AGREEMENT" description="" hasTable="N" parentTypeId="PRODUCT_AGREEMENT"/>
+  <AgreementType agreementTypeId="SALES_AGREEMENT" description="" hasTable="N" parentTypeId="PRODUCT_AGREEMENT"/>
+  <AgreementType agreementTypeId="EMPLOYMENT_AGREEMENT" description="" hasTable="N" parentTypeId=""/>
+  <AgreementType agreementTypeId="OTHER_AGREEMENT" description="" hasTable="N" parentTypeId=""/>
+  <BudgetItemType budgetItemTypeId="REQUIREMENT_BUDGET_A" description="" hasTable="Y" parentTypeId=""/>
   <BudgetType budgetTypeId="CAPITAL_BUDGET" description="" hasTable="N" parentTypeId=""/>
-  <BudgetType budgetTypeId="OPERATING_BUDGET" description=""
-    hasTable="N" parentTypeId=""/>
-  <CommunicationEventPrpTyp
-    communicationEventPrpTypId="ACTIVITY_REQUEST" description=""
-    hasTable="N" parentTypeId=""/>
-  <CommunicationEventPrpTyp communicationEventPrpTypId="CONFERENCE"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventPrpTyp
-    communicationEventPrpTypId="CUSTOMER_SERVICE_CAL" description=""
-    hasTable="N" parentTypeId=""/>
-  <CommunicationEventPrpTyp communicationEventPrpTypId="INQUIRY"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventPrpTyp communicationEventPrpTypId="MEETING"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventPrpTyp communicationEventPrpTypId="SALES_FOLLOW_UP"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventPrpTyp communicationEventPrpTypId="SEMINAR"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventPrpTyp communicationEventPrpTypId="SUPPORT_CALL"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventType communicationEventTypeId="EMAIL_COMMUNICATION"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventType
-    communicationEventTypeId="FACE_TO_FACE_COMMUNI" description=""
-    hasTable="N" parentTypeId=""/>
-  <CommunicationEventType communicationEventTypeId="FAX_COMMUNICATION"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventType
-    communicationEventTypeId="LETTER_CORRESPONDENC" description=""
-    hasTable="N" parentTypeId=""/>
-  <CommunicationEventType communicationEventTypeId="PHONE_COMMUNICATION"
-    description="" hasTable="N" parentTypeId=""/>
-  <CommunicationEventType
-    communicationEventTypeId="WEB_SITE_COMMUNICATI" description=""
-    hasTable="N" parentTypeId=""/>
+  <BudgetType budgetTypeId="OPERATING_BUDGET" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventPrpTyp communicationEventPrpTypId="ACTIVITY_REQUEST" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventPrpTyp communicationEventPrpTypId="CONFERENCE" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventPrpTyp communicationEventPrpTypId="CUSTOMER_SERVICE_CAL" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventPrpTyp communicationEventPrpTypId="INQUIRY" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventPrpTyp communicationEventPrpTypId="MEETING" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventPrpTyp communicationEventPrpTypId="SALES_FOLLOW_UP" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventPrpTyp communicationEventPrpTypId="SEMINAR" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventPrpTyp communicationEventPrpTypId="SUPPORT_CALL" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventType communicationEventTypeId="EMAIL_COMMUNICATION" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventType communicationEventTypeId="FACE_TO_FACE_COMMUNI" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventType communicationEventTypeId="FAX_COMMUNICATION" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventType communicationEventTypeId="LETTER_CORRESPONDENC" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventType communicationEventTypeId="PHONE_COMMUNICATION" description="" hasTable="N" parentTypeId=""/>
+  <CommunicationEventType communicationEventTypeId="WEB_SITE_COMMUNICATI" description="" hasTable="N" parentTypeId=""/>
   <ContactMechPurposeType contactMechPurposeTypeId="SHIPPING_LOCATION" description="Shipping Destination Address"/>
   <ContactMechPurposeType contactMechPurposeTypeId="BILLING_LOCATION" description="Billing Address"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_HOME" description="Main Home Phone Number"/>
@@ -98,20 +53,13 @@
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_MOBILE" description="Main Mobile Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PRIMARY_EMAIL" description="Primary Email Address"/>
   <ContactMechPurposeType contactMechPurposeTypeId="OTHER_EMAIL" description="Other Email Address"/>
-  <ContactMechType contactMechTypeId="ELECTRONIC_ADDRESS"
-    description="Electronic Address" hasTable="N" parentTypeId=""/>
-  <ContactMechType contactMechTypeId="POSTAL_ADDRESS"
-    description="Postal Address" hasTable="Y" parentTypeId=""/>
-  <ContactMechType contactMechTypeId="TELECOM_NUMBER"
-    description="Phone Number" hasTable="Y" parentTypeId=""/>
-  <ContactMechType contactMechTypeId="EMAIL_ADDRESS"
-    description="Email Address" hasTable="N" parentTypeId="ELECTRONIC_ADDRESS"/>
-  <ContactMechType contactMechTypeId="IP_ADDRESS"
-    description="Internet IP Address" hasTable="N" parentTypeId="ELECTRONIC_ADDRESS"/>
-  <ContactMechType contactMechTypeId="DOMAIN_NAME"
-    description="Internet Domain Name" hasTable="N" parentTypeId="ELECTRONIC_ADDRESS"/>
-  <ContactMechType contactMechTypeId="WEB_ADDRESS"
-    description="Web URL/Address" hasTable="N" parentTypeId="ELECTRONIC_ADDRESS"/>
+  <ContactMechType contactMechTypeId="ELECTRONIC_ADDRESS" description="Electronic Address" hasTable="N" parentTypeId=""/>
+  <ContactMechType contactMechTypeId="POSTAL_ADDRESS" description="Postal Address" hasTable="Y" parentTypeId=""/>
+  <ContactMechType contactMechTypeId="TELECOM_NUMBER" description="Phone Number" hasTable="Y" parentTypeId=""/>
+  <ContactMechType contactMechTypeId="EMAIL_ADDRESS" description="Email Address" hasTable="N" parentTypeId="ELECTRONIC_ADDRESS"/>
+  <ContactMechType contactMechTypeId="IP_ADDRESS" description="Internet IP Address" hasTable="N" parentTypeId="ELECTRONIC_ADDRESS"/>
+  <ContactMechType contactMechTypeId="DOMAIN_NAME" description="Internet Domain Name" hasTable="N" parentTypeId="ELECTRONIC_ADDRESS"/>
+  <ContactMechType contactMechTypeId="WEB_ADDRESS" description="Web URL/Address" hasTable="N" parentTypeId="ELECTRONIC_ADDRESS"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="OTHER_EMAIL" contactMechTypeId="EMAIL_ADDRESS"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PRIMARY_EMAIL" contactMechTypeId="EMAIL_ADDRESS"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="BILLING_LOCATION" contactMechTypeId="POSTAL_ADDRESS"/>
@@ -126,41 +74,24 @@
   <ContentType contentTypeId="PRODUCT_INFO" description="" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="COMPANY_INFO" description="" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="ADVERTISEMENT" description="" hasTable="N" parentTypeId=""/>
-  <CostComponentType costComponentTypeId="ESTIMATED_LABOR_COST"
-    description="" hasTable="N" parentTypeId=""/>
-  <CostComponentType costComponentTypeId="ESTIMATED_MATERIALS_"
-    description="" hasTable="N" parentTypeId=""/>
-  <CostComponentType costComponentTypeId="ESTIMATED_OTHER_COST"
-    description="" hasTable="N" parentTypeId=""/>
-  <CustRequestType custRequestTypeId="RFI"
-    description="Request For Information" hasTable="N" parentTypeId=""/>
-  <CustRequestType custRequestTypeId="RFP"
-    description="Request For Proposal" hasTable="N" parentTypeId=""/>
-  <CustRequestType custRequestTypeId="RFQ"
-    description="Request For Quote" hasTable="N" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="ELECTRONIC_TEXT" description=""
-    hasTable="Y" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="IMAGE_OBJECT" description=""
-    hasTable="Y" parentTypeId=""/>
-  <DataObjectType dataObjectTypeId="OTHER_OBJECT" description=""
-    hasTable="Y" parentTypeId=""/>
-  <DocumentType description="" documentTypeId="SHIPPING_DOCUMENT"
-    hasTable="Y" parentTypeId=""/>
-  <DocumentType description="" documentTypeId="BILL_OF_LADING"
-    hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="" documentTypeId="EXPORT_DOCUMENTATION"
-    hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="" documentTypeId="HAZ_MAT_DOCUMENT"
-    hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+  <CostComponentType costComponentTypeId="ESTIMATED_LABOR_COST" description="" hasTable="N" parentTypeId=""/>
+  <CostComponentType costComponentTypeId="ESTIMATED_MATERIALS_" description="" hasTable="N" parentTypeId=""/>
+  <CostComponentType costComponentTypeId="ESTIMATED_OTHER_COST" description="" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFI" description="Request For Information" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFP" description="Request For Proposal" hasTable="N" parentTypeId=""/>
+  <CustRequestType custRequestTypeId="RFQ" description="Request For Quote" hasTable="N" parentTypeId=""/>
+  <DataObjectType dataObjectTypeId="ELECTRONIC_TEXT" description="" hasTable="Y" parentTypeId=""/>
+  <DataObjectType dataObjectTypeId="IMAGE_OBJECT" description="" hasTable="Y" parentTypeId=""/>
+  <DataObjectType dataObjectTypeId="OTHER_OBJECT" description="" hasTable="Y" parentTypeId=""/>
+  <DocumentType description="" documentTypeId="SHIPPING_DOCUMENT" hasTable="Y" parentTypeId=""/>
+  <DocumentType description="" documentTypeId="BILL_OF_LADING" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+  <DocumentType description="" documentTypeId="EXPORT_DOCUMENTATION" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+  <DocumentType description="" documentTypeId="HAZ_MAT_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
   <DocumentType description="" documentTypeId="MANIFEST" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="" documentTypeId="OTHER_SHIP_DOCUMENT"
-    hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="" documentTypeId="PACKAGING_SLIP"
-    hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="" documentTypeId="PORT_CHARGE_DOCUMENT"
-    hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
-  <DocumentType description="" documentTypeId="TAX_TARIFF_DOCUMENT"
-    hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+  <DocumentType description="" documentTypeId="OTHER_SHIP_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+  <DocumentType description="" documentTypeId="PACKAGING_SLIP" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+  <DocumentType description="" documentTypeId="PORT_CHARGE_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
+  <DocumentType description="" documentTypeId="TAX_TARIFF_DOCUMENT" hasTable="N" parentTypeId="SHIPPING_DOCUMENT"/>
   <EnumerationType description="Parent Type for all Work Effort enum types" enumTypeId="WORK_EFFORT" hasTable="N" parentTypeId=""/>
   <EnumerationType description="Work Effort Expectations" enumTypeId="WORK_EFF_EXPECT" hasTable="N" parentTypeId="WORK_EFFORT"/>
   <Enumeration description="For Your Information" enumCode="FYI" enumId="WEE_FYI" sequenceId="01" enumTypeId="WORK_EFF_EXPECT"/>
@@ -235,20 +166,13 @@
   <FacilityType description="" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
   <FacilityType description="" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="" facilityTypeId="WAREHOUSE" hasTable="N" parentTypeId=""/>
-  <FinAccountTransType description="" finAccountTransTypeId="DEPOSIT"
-    hasTable="N" parentTypeId=""/>
-  <FinAccountTransType description="" finAccountTransTypeId="WITHDRAWAL"
-    hasTable="Y" parentTypeId=""/>
-  <FinAccountType description="" finAccountTypeId="BANK_ACCOUNT"
-    hasTable="N" parentTypeId=""/>
-  <FinAccountType description="" finAccountTypeId="INVESTMENT_ACCOUNT"
-    hasTable="N" parentTypeId=""/>
-  <FixedAssetType description="" fixedAssetTypeId="EQUIPMENT"
-    hasTable="N" parentTypeId=""/>
-  <FixedAssetType description="" fixedAssetTypeId="OTHER_FIXED_ASSET"
-    hasTable="N" parentTypeId=""/>
-  <FixedAssetType description="" fixedAssetTypeId="PROPERTY"
-    hasTable="N" parentTypeId=""/>
+  <FinAccountTransType description="" finAccountTransTypeId="DEPOSIT" hasTable="N" parentTypeId=""/>
+  <FinAccountTransType description="" finAccountTransTypeId="WITHDRAWAL" hasTable="Y" parentTypeId=""/>
+  <FinAccountType description="" finAccountTypeId="BANK_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <FinAccountType description="" finAccountTypeId="INVESTMENT_ACCOUNT" hasTable="N" parentTypeId=""/>
+  <FixedAssetType description="" fixedAssetTypeId="EQUIPMENT" hasTable="N" parentTypeId=""/>
+  <FixedAssetType description="" fixedAssetTypeId="OTHER_FIXED_ASSET" hasTable="N" parentTypeId=""/>
+  <FixedAssetType description="" fixedAssetTypeId="PROPERTY" hasTable="N" parentTypeId=""/>
   <FixedAssetType description="" fixedAssetTypeId="VEHICLE" hasTable="N" parentTypeId=""/>
   <GeoType description="" geoTypeId="CITY" hasTable="N" parentTypeId=""/>
   <GeoType description="" geoTypeId="STATE" hasTable="N" parentTypeId=""/>
@@ -261,47 +185,27 @@
   <GeoType description="" geoTypeId="SALES_TERRITORY" hasTable="N" parentTypeId=""/>
   <GeoType description="" geoTypeId="SERVICE_TERRITORY" hasTable="N" parentTypeId=""/>
   <GeoType description="" geoTypeId="TERRITORY" hasTable="N" parentTypeId=""/>
-  <GoodIdentificationType description="" goodIdentificationTypeId="ISBN"
-    hasTable="N" parentTypeId=""/>
-  <GoodIdentificationType description=""
-    goodIdentificationTypeId="MANUFACTURER_ID_NO" hasTable="N" parentTypeId=""/>
-  <GoodIdentificationType description=""
-    goodIdentificationTypeId="OTHER_ID" hasTable="N" parentTypeId=""/>
-  <GoodIdentificationType description="" goodIdentificationTypeId="SKU"
-    hasTable="N" parentTypeId=""/>
-  <GoodIdentificationType description="" goodIdentificationTypeId="UPCA"
-    hasTable="N" parentTypeId=""/>
-  <GoodIdentificationType description="" goodIdentificationTypeId="UPCE"
-    hasTable="N" parentTypeId=""/>
-  <InventoryItemType description="" hasTable="N"
-    inventoryItemTypeId="SERIALIZED_INV_ITEM" parentTypeId=""/>
-  <InventoryItemType description="" hasTable="N"
-    inventoryItemTypeId="NON_SERIAL_INV_ITEM" parentTypeId=""/>
-  <InvoiceItemType description="" hasTable="N"
-    invoiceItemTypeId="PURCHASE_INVOICE_ITE" parentTypeId=""/>
-  <InvoiceItemType description="" hasTable="N"
-    invoiceItemTypeId="SALES_INVOICE_ITEM" parentTypeId=""/>
-  <InvoiceType description="" hasTable="N"
-    invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
+  <GoodIdentificationType description="" goodIdentificationTypeId="ISBN" hasTable="N" parentTypeId=""/>
+  <GoodIdentificationType description="" goodIdentificationTypeId="MANUFACTURER_ID_NO" hasTable="N" parentTypeId=""/>
+  <GoodIdentificationType description="" goodIdentificationTypeId="OTHER_ID" hasTable="N" parentTypeId=""/>
+  <GoodIdentificationType description="" goodIdentificationTypeId="SKU" hasTable="N" parentTypeId=""/>
+  <GoodIdentificationType description="" goodIdentificationTypeId="UPCA" hasTable="N" parentTypeId=""/>
+  <GoodIdentificationType description="" goodIdentificationTypeId="UPCE" hasTable="N" parentTypeId=""/>
+  <InventoryItemType description="" hasTable="N" inventoryItemTypeId="SERIALIZED_INV_ITEM" parentTypeId=""/>
+  <InventoryItemType description="" hasTable="N" inventoryItemTypeId="NON_SERIAL_INV_ITEM" parentTypeId=""/>
+  <InvoiceItemType description="" hasTable="N" invoiceItemTypeId="PURCHASE_INVOICE_ITE" parentTypeId=""/>
+  <InvoiceItemType description="" hasTable="N" invoiceItemTypeId="SALES_INVOICE_ITEM" parentTypeId=""/>
+  <InvoiceType description="" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
   <InvoiceType description="" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>
-  <OrderAdjustmentType description="Discount" hasTable="N"
-    orderAdjustmentTypeId="DISCOUNT_ADJUSTMENT" parentTypeId=""/>
-  <OrderAdjustmentType description="Fee" hasTable="N"
-    orderAdjustmentTypeId="FEE" parentTypeId=""/>
-  <OrderAdjustmentType description="Miscellaneous" hasTable="N"
-    orderAdjustmentTypeId="MISCELLANEOUS_CHARGE" parentTypeId=""/>
-  <OrderAdjustmentType description="Sales Tax" hasTable="N"
-    orderAdjustmentTypeId="SALES_TAX" parentTypeId=""/>
-  <OrderAdjustmentType description="Shipping and Handling" hasTable="N"
-    orderAdjustmentTypeId="SHIPPING_CHARGES" parentTypeId=""/>
-  <OrderAdjustmentType description="Surcharge" hasTable="N"
-    orderAdjustmentTypeId="SURCHARGE_ADJUSTMENT" parentTypeId=""/>
-  <OrderItemType description="" hasTable="N"
-    orderItemTypeId="PURCHASE_ORDER_ITEM" parentTypeId=""/>
-  <OrderItemType description="" hasTable="N"
-    orderItemTypeId="SALES_ORDER_ITEM" parentTypeId=""/>
-  <OrderItemType description="" hasTable="N"
-    orderItemTypeId="WORK_ORDER_ITEM" parentTypeId=""/>
+  <OrderAdjustmentType description="Discount" hasTable="N" orderAdjustmentTypeId="DISCOUNT_ADJUSTMENT" parentTypeId=""/>
+  <OrderAdjustmentType description="Fee" hasTable="N" orderAdjustmentTypeId="FEE" parentTypeId=""/>
+  <OrderAdjustmentType description="Miscellaneous" hasTable="N" orderAdjustmentTypeId="MISCELLANEOUS_CHARGE" parentTypeId=""/>
+  <OrderAdjustmentType description="Sales Tax" hasTable="N" orderAdjustmentTypeId="SALES_TAX" parentTypeId=""/>
+  <OrderAdjustmentType description="Shipping and Handling" hasTable="N" orderAdjustmentTypeId="SHIPPING_CHARGES" parentTypeId=""/>
+  <OrderAdjustmentType description="Surcharge" hasTable="N" orderAdjustmentTypeId="SURCHARGE_ADJUSTMENT" parentTypeId=""/>
+  <OrderItemType description="" hasTable="N" orderItemTypeId="PURCHASE_ORDER_ITEM" parentTypeId=""/>
+  <OrderItemType description="" hasTable="N" orderItemTypeId="SALES_ORDER_ITEM" parentTypeId=""/>
+  <OrderItemType description="" hasTable="N" orderItemTypeId="WORK_ORDER_ITEM" parentTypeId=""/>
   <OrderType description="" hasTable="N" orderTypeId="PURCHASE_ORDER" parentTypeId=""/>
   <OrderType description="" hasTable="N" orderTypeId="SALES_ORDER" parentTypeId=""/>
   <OrderType description="" hasTable="N" orderTypeId="WORK_ORDER" parentTypeId=""/>
@@ -314,53 +218,24 @@
   <PartyClassificationType description="" hasTable="N" parentTypeId="" partyClassificationTypeId="SIZE_CLASSIFICATION"/>
   <PartyQualType description="" hasTable="N" parentTypeId="" partyQualTypeId="CERTIFICATION"/>
   <PartyQualType description="" hasTable="N" parentTypeId="" partyQualTypeId="DEGREE"/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName=""
-    partyRelationshipTypeId="DISTRIBUTION_CHANNEL"
-    roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="Y" parentTypeId=""
-    partyRelationshipName="" partyRelationshipTypeId="EMPLOYMENT"
-    roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName=""
-    partyRelationshipTypeId="ORGANIZATION_CONTRAC"
-    roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName=""
-    partyRelationshipTypeId="ORGANIZATION_ROLLUP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName="" partyRelationshipTypeId="PARTNERSHIP"
-    roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName=""
-    partyRelationshipTypeId="SUPPLIER_RELATIONSHI"
-    roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName=""
-    partyRelationshipTypeId="CUSTOMER_RELATIONSHI"
-    roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName=""
-    partyRelationshipTypeId="HOST_SERVER_VISITOR" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName="" partyRelationshipTypeId="VISITOR_ISP"
-    roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
-  <PartyRelationshipType description="" hasTable="N" parentTypeId=""
-    partyRelationshipName=""
-    partyRelationshipTypeId="WEB_MASTER_ASSIGNMEN"
-    roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="DISTRIBUTION_CHANNEL" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="Y" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="EMPLOYMENT" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="ORGANIZATION_CONTRAC" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="ORGANIZATION_ROLLUP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="PARTNERSHIP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="SUPPLIER_RELATIONSHI" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="CUSTOMER_RELATIONSHI" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="HOST_SERVER_VISITOR" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="VISITOR_ISP" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
+  <PartyRelationshipType description="" hasTable="N" parentTypeId="" partyRelationshipName="" partyRelationshipTypeId="WEB_MASTER_ASSIGNMEN" roleTypeIdValidFrom="" roleTypeIdValidTo=""/>
   <PartyType description="" hasTable="Y" parentTypeId="" partyTypeId="PERSON"/>
   <PartyType description="" hasTable="N" parentTypeId="" partyTypeId="ORGANIZATION"/>
   <PartyType description="" hasTable="N" parentTypeId="ORGANIZATION" partyTypeId="LEGAL_ORGANIZATION"/>
   <PartyType description="" hasTable="N" parentTypeId="ORGANIZATION" partyTypeId="INFORMAL_ORGANIZATIO"/>
-  <PartyType description="" hasTable="N"
-    parentTypeId="INFORMAL_ORGANIZATIO" partyTypeId="FAMILY"/>
-  <PartyType description="" hasTable="N"
-    parentTypeId="LEGAL_ORGANIZATION" partyTypeId="CORPORATION"/>
-  <PartyType description="" hasTable="N"
-    parentTypeId="LEGAL_ORGANIZATION" partyTypeId="GOVERNMENT_AGENCY"/>
-  <PartyType description="" hasTable="N"
-    parentTypeId="INFORMAL_ORGANIZATIO" partyTypeId="TEAM"/>
+  <PartyType description="" hasTable="N" parentTypeId="INFORMAL_ORGANIZATIO" partyTypeId="FAMILY"/>
+  <PartyType description="" hasTable="N" parentTypeId="LEGAL_ORGANIZATION" partyTypeId="CORPORATION"/>
+  <PartyType description="" hasTable="N" parentTypeId="LEGAL_ORGANIZATION" partyTypeId="GOVERNMENT_AGENCY"/>
+  <PartyType description="" hasTable="N" parentTypeId="INFORMAL_ORGANIZATIO" partyTypeId="TEAM"/>
   <PartyType description="" hasTable="N" parentTypeId="" partyTypeId="AUTOMATED_AGENT"/>
   <PartyTypeAttr attrName="FEDERAL_TAX_ID_NUM" partyTypeId="LEGAL_ORGANIZATION"/>
   <PartyTypeAttr attrName="NAME" partyTypeId="ORGANIZATION"/>
@@ -448,13 +323,10 @@
   <RoleType description="" hasTable="Y" parentTypeId="ORGANIZATION_ROLE" roleTypeId="INTERNAL_ORGANIZATIO"/>
   <RoleType description="" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="CARRIER"/>
   <RoleType description="" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="UNION"/>
-  <RoleType description="" hasTable="N"
-    parentTypeId="INTERNAL_ORGANIZATIO" roleTypeId="OTHER_INTERNAL_ORGAN"/>
+  <RoleType description="" hasTable="N" parentTypeId="INTERNAL_ORGANIZATIO" roleTypeId="OTHER_INTERNAL_ORGAN"/>
   <RoleType description="" hasTable="N" parentTypeId="" roleTypeId="DISTRIBUTION_CHANNEL"/>
-  <RoleType description="" hasTable="N"
-    parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="DISTRIBUTOR"/>
-  <RoleType description="" hasTable="N"
-    parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="AGENT"/>
+  <RoleType description="" hasTable="N" parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="DISTRIBUTOR"/>
+  <RoleType description="" hasTable="N" parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="AGENT"/>
   <RoleType description="" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ORGANIZATION_UNIT"/>
   <RoleType description="" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="OTHER_ORGANIZATION_U"/>
   <RoleType description="" hasTable="N" parentTypeId="ORGANIZATION_UNIT" roleTypeId="PARENT_ORGANIZATION"/>
@@ -480,14 +352,10 @@
   <ShipmentMethodType description="Local Delivery" shipmentMethodTypeId="LOCAL_DELIVERY"/>
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="INCOMING_SHIPMENT"/>
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="OUTGOING_SHIPMENT"/>
-  <ShipmentType description="" hasTable="N"
-    parentTypeId="INCOMING_SHIPMENT" shipmentTypeId="CUSTOMER_RETURN"/>
-  <ShipmentType description="" hasTable="N"
-    parentTypeId="OUTGOING_SHIPMENT" shipmentTypeId="CUSTOMER_SHIPMENT"/>
-  <ShipmentType description="" hasTable="N"
-    parentTypeId="INCOMING_SHIPMENT" shipmentTypeId="PURCHASE_SHIPMENT"/>
-  <ShipmentType description="" hasTable="N"
-    parentTypeId="OUTGOING_SHIPMENT" shipmentTypeId="PURCHASE_RETURN"/>
+  <ShipmentType description="" hasTable="N" parentTypeId="INCOMING_SHIPMENT" shipmentTypeId="CUSTOMER_RETURN"/>
+  <ShipmentType description="" hasTable="N" parentTypeId="OUTGOING_SHIPMENT" shipmentTypeId="CUSTOMER_SHIPMENT"/>
+  <ShipmentType description="" hasTable="N" parentTypeId="INCOMING_SHIPMENT" shipmentTypeId="PURCHASE_SHIPMENT"/>
+  <ShipmentType description="" hasTable="N" parentTypeId="OUTGOING_SHIPMENT" shipmentTypeId="PURCHASE_RETURN"/>
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="DROP_SHIPMENT"/>
   <ShipmentType description="" hasTable="N" parentTypeId="" shipmentTypeId="TRANSFER"/>
   <StatusItem description="Ordered" sequenceId="01" statusCode="ORDERED" statusId="ORDERED" statusTypeId="ORDER_STATUS"/>
@@ -504,26 +372,31 @@
   <StatusValidChange condition="" statusId="ORDERED" statusIdTo="CANCELLED" transitionName="Cancel Order"/>
   <StatusValidChange condition="" statusId="BACKORDERED" statusIdTo="CANCELLED" transitionName="Cancel Back Order"/>
   <StatusValidChange condition="" statusId="SCHEDULED" statusIdTo="CANCELLED" transitionName="Last Minute Cancel Order"/>
+  <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Needs Action" sequenceId="01" statusCode="NEEDS ACTION" statusId="CAL_NEEDS_ACTION" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Sent" sequenceId="02" statusCode="SENT" statusId="CAL_SENT" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Declined" sequenceId="03" statusCode="DECLINED" statusId="CAL_DECLINED" statusTypeId="CALENDAR_STATUS"/>
   <StatusItem description="Delegated" sequenceId="04" statusCode="DELEGATED" statusId="CAL_DELEGATED" statusTypeId="CALENDAR_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="TASK_STATUS"/>
   <StatusItem description="Accepted" sequenceId="01" statusCode="ACCEPTED" statusId="CAL_ACCEPTED" statusTypeId="TASK_STATUS"/>
   <StatusItem description="Completed" sequenceId="02" statusCode="COMPLETED" statusId="CAL_COMPLETED" statusTypeId="TASK_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="EVENT_STATUS"/>
   <StatusItem description="Tentative" sequenceId="01" statusCode="TENTATIVE" statusId="CAL_TENTATIVE" statusTypeId="EVENT_STATUS"/>
   <StatusItem description="Confirmed" sequenceId="02" statusCode="CONFIRMED" statusId="CAL_CONFIRMED" statusTypeId="EVENT_STATUS"/>
-  <StatusItem description="open.not_running.not_started" sequenceId="01" statusCode="open.not_running.not_started" statusId="WF_NOT_STARTED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="open.not_running.suspended" sequenceId="02" statusCode="open.not_running.suspended" statusId="WF_SUSPENDED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="open.running" sequenceId="03" statusCode="open.running" statusId="WF_RUNNING" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="closed.completed" sequenceId="04" statusCode="closed.completed" statusId="WF_COMPLETED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="closed.terminated" sequenceId="05" statusCode="closed.terminated" statusId="WF_TERMINATED" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusItem description="closed.aborted" sequenceId="06" statusCode="closed.aborted" statusId="WF_ABORTED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="Not Started" sequenceId="01" statusCode="open.not_running.not_started" statusId="WF_NOT_STARTED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="Suspended" sequenceId="02" statusCode="open.not_running.suspended" statusId="WF_SUSPENDED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="Running" sequenceId="03" statusCode="open.running" statusId="WF_RUNNING" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="Completed" sequenceId="04" statusCode="closed.completed" statusId="WF_COMPLETED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="Terminated" sequenceId="05" statusCode="closed.terminated" statusId="WF_TERMINATED" statusTypeId="WORKFLOW_STATUS"/>
+  <StatusItem description="Aborted" sequenceId="06" statusCode="closed.aborted" statusId="WF_ABORTED" statusTypeId="WORKFLOW_STATUS"/>
   <StatusValidChange condition="" statusId="WF_NOT_STARTED" statusIdTo="WF_RUNNING" transitionName="Start"/>
   <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_SUSPENDED" transitionName="Suspend"/>
   <StatusValidChange condition="" statusId="WF_SUSPENDED" statusIdTo="WF_RUNNING" transitionName="Un-suspend"/>
-  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_COMPLETED" transitionName="Suspend"/>
-  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_TERMINATED" transitionName="Suspend"/>
-  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_ABORTED" transitionName="Suspend"/>
+  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_COMPLETED" transitionName="Complete"/>
+  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_TERMINATED" transitionName="Terminate"/>
+  <StatusValidChange condition="" statusId="WF_RUNNING" statusIdTo="WF_ABORTED" transitionName="Abort"/>
   <StatusItem description="Under Revision" sequenceId="01" statusCode="UNDER_REVISION" statusId="WPS_UNDER_REVISION" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Under Test"  sequenceId="02" statusCode="UNDER_TEST" statusId="WPS_UNDER_TEST" statusTypeId="WORKFLOW_PUB_STATUS"/>
   <StatusItem description="Released"  sequenceId="03" statusCode="RELEASED" statusId="WPS_RELEASED" statusTypeId="WORKFLOW_PUB_STATUS"/>
@@ -540,11 +413,6 @@
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="SHIPMENT_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="UNEMPL_CLAIM_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFF_ASSET_STTS"/>
-  <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="WORK_EFFORT_STATUS"/>
-  <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="WORKFLOW_STATUS"/>
-  <StatusType description="" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="CALENDAR_STATUS"/>
-  <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="EVENT_STATUS"/>
-  <StatusType description="" hasTable="N" parentTypeId="CALENDAR_STATUS" statusTypeId="TASK_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="PARTY_ASSET_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="PARTY_REL_STATUS"/>
   <StatusType description="" hasTable="N" parentTypeId="" statusTypeId="SERVER_HIT_STATUS"/>
@@ -589,3 +457,4 @@
   <WorkEffortTypeAttr attrName="QUANTITY_REJECTED" workEffortTypeId="PRODUCTION_RUN"/>
   <WorkEffortTypeAttr attrName="QUANTITY_TO_PRODUCE" workEffortTypeId="PRODUCTION_RUN"/>
 </entity-engine-xml>
+
