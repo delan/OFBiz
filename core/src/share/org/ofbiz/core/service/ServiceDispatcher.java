@@ -100,8 +100,11 @@ public class ServiceDispatcher {
      *@param context Map of name, value pairs composing the context
      *@return Map of name, value pairs composing the result
      */
-    public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
+    public Map runSync(String localName, ModelService service, Map context) throws ServiceAuthException, GenericServiceException {
         context = checkAuth(localName,context);
+        Object userLogin = context.get("userLogin");
+        if ( service.auth && userLogin == null )
+            throw new ServiceAuthException("User authorization is required for this service");     
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
 
@@ -109,7 +112,8 @@ public class ServiceDispatcher {
         if (service.validate) {
             try {
                 service.validate(context, ModelService.IN_PARAM);
-            } catch (GenericServiceException e) {
+            } 
+            catch( ServiceValidationException e ) {
                 throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
             }
         }
@@ -118,7 +122,8 @@ public class ServiceDispatcher {
         if (service.validate) {
             try {
                 service.validate(result, ModelService.OUT_PARAM);
-            } catch (GenericServiceException e) {
+            } 
+            catch( ServiceValidationException e ) {
                 throw new GenericServiceException("Result (in runSync) does not match expected requirements: ", e);
             }
         }
@@ -129,8 +134,11 @@ public class ServiceDispatcher {
     /** Run the service synchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
+    public void runSyncIgnore(String localName, ModelService service, Map context) throws ServiceAuthException, GenericServiceException {
         context = checkAuth(localName,context);
+        Object userLogin = context.get("userLogin");
+        if ( service.auth && userLogin == null )
+            throw new ServiceAuthException("User authorization is required for this service");
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
 
@@ -138,7 +146,8 @@ public class ServiceDispatcher {
         if (service.validate) {
             try {
                 service.validate(context, ModelService.IN_PARAM);
-            } catch (GenericServiceException e) {
+            } 
+            catch( ServiceValidationException e ) {
                 throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
             }
         }
@@ -149,8 +158,11 @@ public class ServiceDispatcher {
      *@param context Map of name, value pairs composing the context
      *@param requester Object implementing GenericRequester interface which will receive the result
      */
-    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester) throws GenericServiceException {
+    public void runAsync(String localName, ModelService service, Map context, GenericRequester requester) throws ServiceAuthException, GenericServiceException {
         context = checkAuth(localName,context);
+        Object userLogin = context.get("userLogin");
+        if ( service.auth && userLogin == null )
+            throw new ServiceAuthException("User authorization is required for this service");        
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
 
@@ -158,8 +170,9 @@ public class ServiceDispatcher {
         if (service.validate) {
             try {
                 service.validate(context, ModelService.IN_PARAM);
-            } catch (GenericServiceException e) {
-                throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+            } 
+            catch( ServiceValidationException e ) {
+                throw new GenericServiceException("Context (in runAsync) does not match expected requirements: ", e);
             }
         }
         engine.runAsync(service, context, requester);
@@ -168,8 +181,11 @@ public class ServiceDispatcher {
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runAsync(String localName, ModelService service, Map context) throws GenericServiceException {
+    public void runAsync(String localName, ModelService service, Map context) throws ServiceAuthException, GenericServiceException {
         context = checkAuth(localName,context);
+        Object userLogin = context.get("userLogin");
+        if ( service.auth && userLogin == null )
+            throw new ServiceAuthException("User authorization is required for this service");
         GenericEngine engine = getGenericEngine(service.engineName);
         engine.setLoader(localName);
 
@@ -177,8 +193,9 @@ public class ServiceDispatcher {
         if (service.validate) {
             try {
                 service.validate(context, ModelService.IN_PARAM);
-            } catch (GenericServiceException e) {
-                throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+            } 
+            catch( ServiceValidationException e ) {
+                throw new GenericServiceException("Context (in runAsync) does not match expected requirements: ", e);
             }
         }
         engine.runAsync(service, context);

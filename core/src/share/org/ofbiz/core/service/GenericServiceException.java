@@ -4,8 +4,6 @@
 
 package org.ofbiz.core.service;
 
-import java.io.*;
-
 /**
  * <p><b>Title:</b> Generic Service Exception
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.

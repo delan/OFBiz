@@ -89,6 +89,7 @@
       </FormalParameters>
       
       <BasicType Type="STRING"/> <!-- how is this used? -->
+
       <!--
       <DataFields>
         <DataField Id="NMTOKEN" Name="CDATA #IMPLIED" IsArray="FALSE">
@@ -98,13 +99,17 @@
         </DataField>
       </DataFields>
       -->
+
       <Participants>
         <Participant Id="admin" Name="First Participant">
           <ParticipantType Type="HUMAN"/>
           <Description>None</Description>
-          <ExtendedAttributes><ExtendedAttribute Name="partyId" Value="admin"/></ExtendedAttributes>
+		  <ExtendedAttributes>
+		    <ExtendedAttribute Name="partyId" Value="admin"/>
+	      </ExtendedAttributes>
         </Participant>
       </Participants>
+
       <!--
       <Applications>
         <Application Id="NMTOKEN" Name="CDATA #IMPLIED">
@@ -120,6 +125,7 @@
         </Application>
       </Applications>
       -->
+
       <Activities>
         <Activity Id="receive_order" Name="Receive Order">
           <Description>The first activity to run when an order is received.</Description>
@@ -129,6 +135,7 @@
           <StartMode><Automatic/></StartMode>
           <FinishMode><Automatic/></FinishMode>
           <Priority>1</Priority>
+
           <!--
           <SimulationInformation Instantiation="ONCE">
             <Cost>5</Cost>
@@ -157,6 +164,7 @@
             </TransitionRestriction>
           </TransitionRestrictions>
           -->
+
           <ExtendedAttributes>
             <ExtendedAttribute Name="canStart" Value="Y"/> <!-- must always be Y or N -->
           </ExtendedAttributes>
@@ -164,10 +172,16 @@
         <Activity Id="assign_approver" Name="Assign Approver">
           <Description>Assigns a participant to approve the order.</Description>
           <Limit>1</Limit>
-          <Implementation><Tool Id="assignApprover" Type="PROCEDURE"/></Implementation>
+		  <Implementation>
+		    <Tool Id="assignApprover" Type="PROCEDURE"/>
+		  </Implementation>
           <Performer>admin</Performer>
-          <StartMode><Automatic/></StartMode>
-          <FinishMode><Automatic/></FinishMode>
+		  <StartMode>
+		    <Automatic/>
+		  </StartMode>
+		  <FinishMode>
+		    <Automatic/>
+		  </FinishMode>
           <Priority>1</Priority>
           <TransitionRestrictions>
             <TransitionRestriction>
@@ -179,10 +193,18 @@
         <Activity Id="approve_order" Name="Approve Order">
           <Description>The assigned participant approves the order.</Description>
           <Limit>1</Limit>
-          <Implementation><No/></Implementation>
+		  <Implementation>
+		    <No/>
+		  </Implementation>
+
           <!-- <Performer>??? - assigned at run time</Performer> -->
-          <StartMode><Manual/></StartMode>
-          <FinishMode><Manual/></FinishMode>
+
+		  <StartMode>
+            <Manual/>
+		  </StartMode>
+		  <FinishMode>
+		    <Manual/>
+		  </FinishMode>
           <Priority>2</Priority>
           <TransitionRestrictions>
             <TransitionRestriction>

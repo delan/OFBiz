@@ -63,6 +63,9 @@ public class ModelService {
     /** The method or function to invoke for this service */
     public String invoke;
     
+    /** Does this service require authorization */
+    public boolean auth;
+    
     /** Can this service be exported via RPC, RMI, SOAP, etc */
     public boolean export;
     
@@ -87,7 +90,7 @@ public class ModelService {
      * @param mode Test either mode IN or mode OUT
      * @return true if the validation is successful
      */
-    public void validate(Map test, String mode) throws GenericServiceException {
+    public void validate(Map test, String mode) throws ServiceValidationException {
         Map requiredInfo = new HashMap();
         Map optionalInfo = new HashMap();
         
@@ -132,7 +135,8 @@ public class ModelService {
         try {
             validate(requiredInfo,requiredTest,true);
             validate(optionalInfo,optionalTest,false);
-        } catch (GenericServiceException e) {
+        } 
+        catch (ServiceValidationException e) {
             Debug.logError("[ModelService.validate] : (" + mode + ") Required test error: " + e.toString());
             throw e;
         }
@@ -146,9 +150,9 @@ public class ModelService {
      * @param reverse Test the maps in reverse.
      * @returns true if validation is successful
      */
-    public static void validate(Map info, Map test, boolean reverse) throws GenericServiceException {
+    public static void validate(Map info, Map test, boolean reverse) throws ServiceValidationException {
         if ( info == null || test == null )
-            throw new GenericServiceException("Cannot validate NULL maps");
+            throw new ServiceValidationException("Cannot validate NULL maps");
         
         // * Validate keys first
         Set testSet = test.keySet();
@@ -170,7 +174,7 @@ public class ModelService {
                 }
             }
             
-            throw new GenericServiceException("The following required parameters are missing: " + missingStr);
+            throw new ServiceValidationException("The following required parameters are missing: " + missingStr);
         }
         // This is to see if the info set contains all from the test set
         if ( !keySet.containsAll(testSet) ) {
@@ -185,7 +189,7 @@ public class ModelService {
                 }
             }
             
-            throw new GenericServiceException("Unknown paramters found: " + extraStr);
+            throw new ServiceValidationException("Unknown paramters found: " + extraStr);
         }
         
         // * Validate types next
@@ -200,30 +204,36 @@ public class ModelService {
             Class infoClass = null;
             try {
                 infoClass = ObjectType.loadClass(infoType);
-            } catch (SecurityException se1) {
-                throw new GenericServiceException("Problems with classloader: sercurity exception (" + se1.getMessage() + ")");
-            } catch (ClassNotFoundException e1) {
+            } 
+            catch (SecurityException se1) {
+                throw new ServiceValidationException("Problems with classloader: sercurity exception (" + se1.getMessage() + ")");
+            } 
+            catch (ClassNotFoundException e1) {
                 try {
                     infoClass = ObjectType.loadClass(LANG_PACKAGE + infoType);
-                } catch (SecurityException se2) {
-                    throw new GenericServiceException("Problems with classloader: sercurity exception (" + se2.getMessage() + ")");
-                } catch (ClassNotFoundException e2) {
+                } 
+                catch (SecurityException se2) {
+                    throw new ServiceValidationException("Problems with classloader: sercurity exception (" + se2.getMessage() + ")");
+                } 
+                catch (ClassNotFoundException e2) {
                     try {
                         infoClass = ObjectType.loadClass(SQL_PACKAGE + infoType);
-                    } catch (SecurityException se3) {
-                        throw new GenericServiceException("Problems with classloader: sercurity exception (" + se3.getMessage() + ")");
-                    } catch (ClassNotFoundException e3) {
-                        throw new GenericServiceException("Cannot find and load the class of type: " + infoType + " or of type: " + LANG_PACKAGE + infoType + " or of type: " + SQL_PACKAGE + infoType + ":  (" + e3.getMessage() + ")");
+                    } 
+                    catch (SecurityException se3) {
+                        throw new ServiceValidationException("Problems with classloader: sercurity exception (" + se3.getMessage() + ")");
+                    } 
+                    catch (ClassNotFoundException e3) {
+                        throw new ServiceValidationException("Cannot find and load the class of type: " + infoType + " or of type: " + LANG_PACKAGE + infoType + " or of type: " + SQL_PACKAGE + infoType + ":  (" + e3.getMessage() + ")");
                     }
                 }
             }
             
             if (infoClass == null)
-                throw new GenericServiceException("Illegal type found in info map (could not load class for specified type)");
+                throw new ServiceValidationException("Illegal type found in info map (could not load class for specified type)");
             
             if (!ObjectType.instanceOf(testObject, infoClass)) {
                 String testType = testObject == null ? "null" : testObject.getClass().getName();
-                throw new GenericServiceException("Type check failed for field " + key + "; expected type is " + infoType + "; actual type is: " + testType);
+                throw new ServiceValidationException("Type check failed for field " + key + "; expected type is " + infoType + "; actual type is: " + testType);
             }
         }
     }

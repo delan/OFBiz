@@ -161,6 +161,7 @@ public class ModelServiceReader {
         service.engineName = UtilXml.checkEmpty(serviceElement.getAttribute("engine"));
         service.location = UtilXml.checkEmpty(serviceElement.getAttribute("location"));
         service.invoke = UtilXml.checkEmpty(serviceElement.getAttribute("invoke"));
+        service.auth = checkBoolean(serviceElement.getAttribute("auth"));
         service.export = checkBoolean(serviceElement.getAttribute("export"));
         service.validate = checkBoolean(serviceElement.getAttribute("validate"));
         service.contextInfo = new HashMap();
