@@ -60,15 +60,10 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         init();
     }
 
-    /**
-     * Create a new WfActivityImpl
-     * @param value GenericValue object of the WorkflowActivity entity
-     * @param process The WorkEffort ID of the parent process
-     * @throws WfException
-     */
-    public WfActivityImpl(GenericDelegator delegator,
-                          String workEffortId) throws WfException {
+    public WfActivityImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         super(delegator, workEffortId);
+        if (activityId == null || activityId.length() == 0)
+            throw new WfException("Execution object is not of type WfActivity");
         this.process = getRuntimeObject().getString("workEffortParentId");
     }
 

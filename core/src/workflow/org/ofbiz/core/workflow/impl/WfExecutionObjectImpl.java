@@ -29,6 +29,8 @@ import java.io.*;
 import java.util.*;
 import java.sql.Timestamp;
 
+import javax.transaction.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
@@ -61,8 +63,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @param valueObject The GenericValue object for the definition entity
      * @param parentId WorkEffort ID of the parent runtime object (null for process)
      */
-    public WfExecutionObjectImpl(GenericValue valueObject,
-                                 String parentId) throws WfException {
+    public WfExecutionObjectImpl(GenericValue valueObject, String parentId) throws WfException {
         this.packageId = valueObject.getString("packageId");
         this.processId = valueObject.getString("processId");
         if (valueObject.getEntityName().equals("WorkflowActivity"))
@@ -73,8 +74,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         createRuntime(parentId);
     }
 
-    public WfExecutionObjectImpl(GenericDelegator delegator,
-                                 String workEffortId) throws WfException {
+    public WfExecutionObjectImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         this.delegator = delegator;
         this.workEffortId = workEffortId;
         this.packageId = getRuntimeObject().getString("workflowPackageId");
@@ -87,32 +87,54 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
     private void createRuntime(String parentId) throws WfException {
         GenericValue valueObject = getDefinitionObject();
         GenericValue dataObject = null;
+
+        workEffortId = getDelegator().getNextSeqId("WorkEffort").toString();
+        Map dataMap = new HashMap();
+        String weType = activityId != null ? "ACTIVITY" : "WORK_FLOW";
+        dataMap.put("workEffortId", workEffortId);
+        dataMap.put("workEffortTypeId", weType);
+        dataMap.put("workEffortParentId", parentId);
+        dataMap.put("workflowPackageId", packageId);
+        dataMap.put("workflowProcessId", processId);
+        dataMap.put("workEffortName", valueObject.getString("objectName"));
+        dataMap.put("description", valueObject.getString("description"));
+        dataMap.put("createdDate", new Timestamp((new Date()).getTime()));
+        dataMap.put("actualStartDate", dataMap.get("createdDate"));
+        dataMap.put("lastModifiedDate", dataMap.get("createdDate"));
+        dataMap.put("priority", valueObject.getLong("objectPriority"));
+        dataMap.put("currentStatusId", getEntityStatus("open.not_running.not_started"));
+        if (activityId != null)
+            dataMap.put("workflowActivityId", activityId);
+
+        /*
+        TransactionManager tm = TransactionFactory.getTransactionManager();
+        Transaction parentTrans = null;
         try {
-            workEffortId = getDelegator().getNextSeqId("WorkEffort").toString();
-            Map dataMap = new HashMap();
-            String weType = activityId != null ? "ACTIVITY" : "WORK_FLOW";
-            dataMap.put("workEffortId", workEffortId);
-            dataMap.put("workEffortTypeId", weType);
-            dataMap.put("workEffortParentId", parentId);
-            dataMap.put("workflowPackageId", packageId);
-            dataMap.put("workflowProcessId", processId);
-            dataMap.put("workEffortName", valueObject.getString("objectName"));
-            dataMap.put("description", valueObject.getString("description"));
-            dataMap.put("createdDate", new Timestamp((new Date()).getTime()));
-            dataMap.put("actualStartDate", dataMap.get("createdDate"));
-            dataMap.put("lastModifiedDate", dataMap.get("createdDate"));
-            dataMap.put("priority", valueObject.getLong("objectPriority"));
-            dataMap.put("currentStatusId", getEntityStatus("open.not_running.not_started"));
-            if (activityId != null)
-                dataMap.put("workflowActivityId", activityId);
+            parentTrans = tm.suspend();
+        } catch (SystemException se) {
+            Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
+        }
+        */
+
+        try {
+            Collection c = new ArrayList();
             dataObject = getDelegator().makeValue("WorkEffort", dataMap);
-            if (dataObject != null)
-                getDelegator().create(dataObject);
-            Debug.logInfo("Created new runtime object (Workeffort: " +
-                          runtimeKey() + ")", module);
+            c.add(dataObject);
+            getDelegator().storeAll(c);
+            Debug.logInfo("Created new runtime object (Workeffort: " + runtimeKey() + ")", module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
+
+        /*
+        try {
+            tm.resume(parentTrans);
+        } catch (InvalidTransactionException ite) {
+            Debug.logError(ite, module);
+        } catch (SystemException se) {
+            Debug.logError(se, module);
+        }
+        */
     }
 
     /**
@@ -534,7 +556,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         GenericValue value = null;
         try {
             value = getDelegator().findByPrimaryKey("WorkEffort",
-                                                    UtilMisc.toMap("workEffortId", workEffortId));
+                    UtilMisc.toMap("workEffortId", workEffortId));
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -560,7 +582,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             if (dataObject.get("runtimeDataId") == null) {
                 String seqId = getDelegator().getNextSeqId("RuntimeData").toString();
                 runtimeData = getDelegator().makeValue("RuntimeData",
-                                                       UtilMisc.toMap("runtimeDataId", seqId));
+                        UtilMisc.toMap("runtimeDataId", seqId));
                 getDelegator().create(runtimeData);
                 dataObject.set("runtimeDataId", seqId);
                 dataObject.store();
@@ -625,7 +647,7 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             dataObject.set("serviceLoaderName", loader);
             dataObject.store();
             Debug.logInfo("------- EXECUTION OBJECT : Service loader set: " +
-                          dataObject.getString("serviceLoaderName"), module);
+                    dataObject.getString("serviceLoaderName"), module);
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }

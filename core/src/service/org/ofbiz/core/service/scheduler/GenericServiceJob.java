@@ -69,11 +69,11 @@ public class GenericServiceJob extends AbstractJob {
             Map result = dispatcher.runSync(getServiceName(), getContext());
             if (requester != null)
                 requester.receiveResult(result);
-            finish();
         } catch (GenericServiceException ge) {
             ge.printStackTrace();
             Debug.logError(ge, "Service invocation error: " + ge.getMessage(), module);
         }
+        finish();
     }
 
     protected void finish() {

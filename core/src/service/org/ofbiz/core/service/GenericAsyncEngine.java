@@ -104,13 +104,14 @@ public abstract class GenericAsyncEngine implements GenericEngine {
         Job job = null;
 
         if (persist) {
+            // suspend the current transaction
             TransactionManager tm = TransactionFactory.getTransactionManager();
             if (tm == null)
                 throw new GenericServiceException("Cannot get the transaction manager; cannot run persisted services.");
 
             Transaction parentTrans = null;
             try {
-                tm.suspend();
+                parentTrans = tm.suspend();
             } catch (SystemException se) {
                 Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
             }

@@ -50,15 +50,17 @@ public class WfResourceImpl implements WfResource {
     protected String type;
 
 
-    /** Creates a new WfResource
+    /**
+     * Creates a new WfResource
      * @param resourceKey Uniquely identifies the resource
      * @param resourceName The name of the resource
      * @param partyId The partyID of this resource
      * @param roleTypeId The roleTypeId of this resource
      * @param fromDate The fromDate of this resource
      */
-    public WfResourceImpl(GenericDelegator delegator, String resourceKey,
-                          String resourceName, String partyId, String roleTypeId) {
+    public WfResourceImpl(GenericDelegator delegator, String resourceKey, String resourceName,
+                          String partyId, String roleTypeId) {
+
         this.delegator = delegator;
         this.resourceKey = resourceKey;
         this.resourceName = resourceName;
@@ -68,7 +70,8 @@ public class WfResourceImpl implements WfResource {
         this.type = "HUMAN";
     }
 
-    /** Creates a new WfResource
+    /**
+     * Creates a new WfResource
      * @param valueObject The GenericValue object of the WorkflowParticipant
      */
     public WfResourceImpl(GenericValue valueObject) {
@@ -85,7 +88,8 @@ public class WfResourceImpl implements WfResource {
             roleTypeId = "_NA_";
     }
 
-    /** Gets the number of work items
+    /**
+     * Gets the number of work items
      * @throws WfException
      * @return Count of work items
      */
@@ -93,7 +97,8 @@ public class WfResourceImpl implements WfResource {
         return workItems().size();
     }
 
-    /** Gets an iterator of work items
+    /**
+     * Gets an iterator of work items
      * @throws WfException
      * @return Iterator of work items
      */
@@ -101,7 +106,8 @@ public class WfResourceImpl implements WfResource {
         return workItems().iterator();
     }
 
-    /** Gets the work items
+    /**
+     * Gets the work items
      * @param maxNumber
      * @throws WfException
      * @return List of WfAssignment objects.
@@ -112,7 +118,8 @@ public class WfResourceImpl implements WfResource {
         return workItems();
     }
 
-    /** Checks if an assignment object is associated with this resource
+    /**
+     * Checks if an assignment object is associated with this resource
      * @param member The assignment object to check
      * @throws WfException
      * @return true if assignment is part of the work list
@@ -121,7 +128,8 @@ public class WfResourceImpl implements WfResource {
         return workItems().contains(member);
     }
 
-    /** Gets the resource key.
+    /**
+     * Gets the resource key.
      * @throws WfException
      * @return String of the resouce key.
      */
@@ -129,7 +137,8 @@ public class WfResourceImpl implements WfResource {
         return resourceKey;
     }
 
-    /** Gets the resource name
+    /**
+     * Gets the resource name
      * @throws WfException
      * @return String of the resource name
      */
@@ -145,7 +154,8 @@ public class WfResourceImpl implements WfResource {
         return roleTypeId;
     }
 
-    /** Gets the party id of this resource
+    /**
+     * Gets the party id of this resource
      * @throws WfException
      * @return String party id of this participant or null if none
      */
@@ -153,7 +163,8 @@ public class WfResourceImpl implements WfResource {
         return partyId;
     }
 
-    /** Release the resouce from the assignement
+    /**
+     * Release the resouce from the assignement
      * @param fromAssigment
      * @param releaseInfo
      * @throws WfException

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -112,8 +112,8 @@ public class WorkflowServices {
             return result;
         }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            activity.changeState(newState);
+            WorkflowClient client = WfFactory.getClient(ctx);
+            client.setState(workEffortId, newState);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -136,8 +136,8 @@ public class WorkflowServices {
             return result;
         }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            result.put("activityState", activity.state());
+            WorkflowClient client = WfFactory.getClient(ctx);
+            result.put("activityState", client.getState(workEffortId));
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -160,8 +160,8 @@ public class WorkflowServices {
             return result;
         }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            result.put("activityContext", activity.processContext());
+            WorkflowClient client = WfFactory.getClient(ctx);
+            result.put("activityContext", client.getContext(workEffortId));
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -190,32 +190,8 @@ public class WorkflowServices {
             return result;
         }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            activity.setResult(appendContext);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (WfException e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
-        }
-        return result;
-    }
-
-    /** Manually activate an activity */
-    public static Map activateActivity(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();
-        String workEffortId = (String) context.get("workEffortId");
-
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        if (!hasPermission(security, workEffortId, userLogin)) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
-            return result;
-        }
-        try {
-            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            activity.activate();
+            WorkflowClient client = WfFactory.getClient(ctx);
+            client.appendContext(workEffortId, appendContext);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -244,9 +220,8 @@ public class WorkflowServices {
             return result;
         }
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            WfResource resource = WfFactory.getWfResource(delegator, null, null, partyId, roleType);
-            activity.assign(resource, removeOldAssign ? false : true);
+            WorkflowClient client = WfFactory.getClient(ctx);
+            client.assign(workEffortId, partyId, roleType, removeOldAssign ? false : true);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException e) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -266,8 +241,8 @@ public class WorkflowServices {
         Timestamp fromDate = (Timestamp) context.get("fromDate");
 
         try {
-            WfAssignment assign = WfFactory.getWfAssignment(delegator, workEffortId, partyId, roleType, fromDate);
-            assign.accept();
+            WorkflowClient client = WfFactory.getClient(ctx);
+            client.accept(workEffortId, partyId, roleType, fromDate);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -296,11 +271,8 @@ public class WorkflowServices {
         }
 
         try {
-            WfAssignment assign = WfFactory.getWfAssignment(delegator, workEffortId, partyId, roleType, fromDate);
-            if (actResults != null && actResults.size() > 0) {
-                assign.setResult(actResults);
-            }
-            assign.complete();
+            WorkflowClient client = WfFactory.getClient(ctx);
+            client.complete(workEffortId, partyId, roleType, fromDate, actResults);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -318,8 +290,9 @@ public class WorkflowServices {
         Map limitContext = (Map) context.get("limitContext");
 
         try {
-            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            if (activity.state().startsWith("open")) {
+            WorkflowClient client = WfFactory.getClient(ctx);
+            String state = client.getState(workEffortId);
+            if (state.startsWith("open")) {
                 dispatcher.runSync(limitService, limitContext);
             }
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);

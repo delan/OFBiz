@@ -73,7 +73,8 @@ public class WfRequesterImpl implements WfRequester {
         // Set the context w/ the process
         process.setProcessContext(context);
 
-        // Start the process
+        // Start the process  -- moved to the WorkflowEngine
+        /*
         try {
             process.start();
         } catch (CannotStart cs) {
@@ -81,6 +82,7 @@ public class WfRequesterImpl implements WfRequester {
         } catch (AlreadyRunning ar) {
             throw new WfException("Process already running", ar);
         }
+        */
     }
 
     /**

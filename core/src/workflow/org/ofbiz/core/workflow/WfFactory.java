@@ -29,6 +29,7 @@ import java.sql.Timestamp;
 import java.util.*;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.workflow.impl.*;
 
 /**
@@ -46,6 +47,7 @@ public class WfFactory {
     private static Map activity = new HashMap();
     private static Map assign = new HashMap();
     private static Map resource = new HashMap();
+    private static Map client = new HashMap();
 
     /** Creates a new {@link WfActivity} instance.
      * @param value GenericValue object defining this activity.
@@ -205,4 +207,15 @@ public class WfFactory {
     public static WfEventAudit getWfEventAudit(WfExecutionObject object, String type) throws WfException {
         return new WfEventAuditImpl(object, type);
     }
+
+    public static WorkflowClient getClient(DispatchContext dctx) {
+        if (!client.containsKey(dctx)) {
+            synchronized (WfFactory.class) {
+                if (!client.containsKey(dctx))
+                    resource.put(dctx, new WorkflowClient(dctx));
+            }
+        }
+        return (WorkflowClient) resource.get(dctx);
+    }
+
 }

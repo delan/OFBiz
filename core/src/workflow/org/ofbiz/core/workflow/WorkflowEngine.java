@@ -27,8 +27,11 @@ package org.ofbiz.core.workflow;
 
 import java.util.*;
 
+import javax.transaction.*;
+
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.scheduler.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.impl.*;
 
@@ -40,6 +43,8 @@ import org.ofbiz.core.workflow.impl.*;
  *@version    1.0
  */
 public class WorkflowEngine implements GenericEngine {
+
+    public static final String module = WorkflowEngine.class.getName();
 
     protected ServiceDispatcher dispatcher;
     protected String loader;
@@ -101,6 +106,18 @@ public class WorkflowEngine implements GenericEngine {
      */
     public void runAsync(ModelService modelService, Map context, GenericRequester requester, boolean persist)
             throws GenericServiceException {
+        // Suspend the current transaction
+        TransactionManager tm = TransactionFactory.getTransactionManager();
+        if (tm == null)
+            throw new GenericServiceException("Cannot get the transaction manager; cannot run persisted services.");
+
+        Transaction parentTrans = null;
+        try {
+            parentTrans = tm.suspend();
+            Debug.logVerbose("Suspended transaction.", module);
+        } catch (SystemException se) {
+            Debug.logError(se, "Cannot suspend transaction: " + se.getMessage());
+        }
         // Build the requester
         WfRequester req = null;
         try {
@@ -143,8 +160,8 @@ public class WorkflowEngine implements GenericEngine {
             GenericValue userLogin = (GenericValue) context.remove("userLogin");
             try {
                 Map fields = UtilMisc.toMap("partyId", userLogin.getString("partyId"),
-                                            "roleTypeId", "WF_OWNER", "workEffortId", process.runtimeKey(),
-                                            "fromDate", UtilDateTime.nowTimestamp());
+                        "roleTypeId", "WF_OWNER", "workEffortId", process.runtimeKey(),
+                        "fromDate", UtilDateTime.nowTimestamp());
                 try {
                     GenericValue wepa = dispatcher.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
                     dispatcher.getDelegator().create(wepa);
@@ -162,5 +179,53 @@ public class WorkflowEngine implements GenericEngine {
         } catch (WfException wfe) {
             throw new GenericServiceException(wfe.getMessage(), wfe);
         }
+
+        try {
+            Job job = new WorkflowRunner(process, requester);
+            Debug.logVerbose("Created WorkflowRunner: " + job, module);
+            dispatcher.getJobManager().runJob(job);
+        } catch (JobSchedulerException je) {
+            throw new GenericServiceException(je.getMessage(), je);
+        }
+
+        // Resume the parent transaction
+        if (parentTrans != null) {
+            try {
+                tm.resume(parentTrans);
+                Debug.logVerbose("Resumed the parent transaction.", module);
+            } catch (InvalidTransactionException ite) {
+                throw new GenericServiceException("Cannot resume transaction", ite);
+            } catch (SystemException se) {
+                throw new GenericServiceException("Unexpected transaction error", se);
+            }
+        }
     }
 }
+
+class WorkflowRunner extends AbstractJob {
+
+    GenericRequester requester;
+    WfProcess process;
+
+    WorkflowRunner(WfProcess process, GenericRequester requester) {
+        super(process.toString());
+        this.process = process;
+        runtime = new Date().getTime();
+    }
+
+    protected void finish() {
+        runtime = -1;
+    }
+
+    public void exec() {
+        try {
+            process.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            Debug.logError(e);
+            requester.receiveResult(null);
+        }
+        finish();
+    }
+}
+

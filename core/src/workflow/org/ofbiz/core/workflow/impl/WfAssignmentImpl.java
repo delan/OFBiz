@@ -52,8 +52,7 @@ public class WfAssignmentImpl implements WfAssignment {
      *@param resource The WfResource object this is assigned to
      *@throws WfException
      */
-    public WfAssignmentImpl(WfActivity activity, WfResource resource,
-                            Timestamp fromDate) throws WfException {
+    public WfAssignmentImpl(WfActivity activity, WfResource resource, Timestamp fromDate) throws WfException {
         this.activity = activity;
         this.resource = resource;
         this.fromDate = fromDate;
