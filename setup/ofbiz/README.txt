@@ -1,4 +1,4 @@
-The Open For Business Project
+The Open For Business Project - www.ofbiz.org
 
 Getting Started: See the setup/setup.html file.
 
