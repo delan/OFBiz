@@ -594,7 +594,7 @@ public class XpdlReader {
         if (loopElement == null)
             return;
 
-        GenericValue loopValue = delegator.makeValue("WorkflowActivityTool", null);
+        GenericValue loopValue = delegator.makeValue("WorkflowActivityLoop", null);
         values.add(loopValue);
 
         loopValue.set("packageId", packageId);
