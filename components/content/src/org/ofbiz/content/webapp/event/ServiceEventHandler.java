@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEventHandler.java,v 1.4 2003/11/19 21:48:50 ajzeneski Exp $
+ * $Id: ServiceEventHandler.java,v 1.5 2003/11/19 22:03:22 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ServiceEventHandler implements EventHandler {
@@ -59,7 +59,7 @@ public class ServiceEventHandler implements EventHandler {
 
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
-  
+
     /**
      * @see org.ofbiz.content.webapp.event.EventHandler#invoke(java.lang.String, java.lang.String, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
@@ -72,8 +72,8 @@ public class ServiceEventHandler implements EventHandler {
         DispatchContext dctx = dispatcher.getDispatchContext();
         if (dctx == null) {
             throw new EventHandlerException("Dispatch context cannot be found");
-        }        
-        
+        }
+
         // get the details for the service(s) to call
         String mode = SYNC;
         String serviceName = null;
@@ -83,19 +83,19 @@ public class ServiceEventHandler implements EventHandler {
         } else {
             mode = eventPath;
         }
-        
+
         // nake sure we have a defined service to call
-        serviceName = eventMethod;                       
+        serviceName = eventMethod;
         if (serviceName == null) {
             throw new EventHandlerException("Service name (eventMethod) cannot be null");
         }
         if (Debug.verboseOn()) Debug.logVerbose("[Set mode/service]: " + mode + "/" + serviceName, module);
-                
+
         // some needed info for when running the service
         Locale locale = UtilHttp.getLocale(request);
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-                                
+
         // get the service model to generate context
         ModelService model = null;
 
@@ -123,19 +123,19 @@ public class ServiceEventHandler implements EventHandler {
             if ("userLogin".equals(name)) continue;
             // don't include locale, that is also taken care of below
             if ("locale".equals(name)) continue;
-            
+
             Object value = null;
             if (modelParam.stringMapPrefix != null && modelParam.stringMapPrefix.length() > 0) {
                 Map paramMap = UtilHttp.makeParamMapWithPrefix(request, modelParam.stringMapPrefix, null);
                 value = paramMap;
-                Debug.logInfo("Set [" + modelParam.name + "]: " + paramMap, module);
+                if (Debug.verboseOn()) Debug.log("Set [" + modelParam.name + "]: " + paramMap, module);
             } else {
                 value = request.getParameter(name);
-    
+
                 // if the parameter wasn't passed and no other value found, don't pass on the null
                 if (value == null) {
                     value = request.getAttribute(name);
-                } 
+                }
                 if (value == null) {
                     value = request.getSession().getAttribute(name);
                 }
@@ -143,7 +143,7 @@ public class ServiceEventHandler implements EventHandler {
                     //still null, give up for this one
                     continue;
                 }
-                
+
                 if (value instanceof String && ((String) value).length() == 0) {
                     // interpreting empty fields as null values for each in back end handling...
                     value = null;
@@ -155,14 +155,14 @@ public class ServiceEventHandler implements EventHandler {
 
         // get only the parameters for this service - converted to proper type
         serviceContext = model.makeValid(serviceContext, ModelService.IN_PARAM);
-        
+
         // include the UserLogin value object
-        if (userLogin != null) {        
+        if (userLogin != null) {
             serviceContext.put("userLogin", userLogin);
-        }        
-        
+        }
+
         // include the Locale object
-        if (locale != null) {        
+        if (locale != null) {
             serviceContext.put("locale", locale);
         }
 

@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  */
 -->
 
@@ -974,6 +974,7 @@
             title="Survey Entity">
       <field name="surveyId" type="id-ne"/>
       <field name="description" type="description"/>
+      <field name="comments" type="comment"/>
       <field name="isAnonymous" type="indicator"/>
       <field name="allowMultiple" type="indicator"/>
       <prim-key field="surveyId"/>
