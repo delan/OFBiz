@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <page>
-    <template>main_lr</template>    
+    <template>main</template>    
     <property name="title">Edit Person</property>
     <page-action>/customer/editperson.js</page-action>
 </page>
