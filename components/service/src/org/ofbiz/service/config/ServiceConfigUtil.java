@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceConfigUtil.java,v 1.6 2004/06/16 20:48:42 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ServiceConfigUtil {

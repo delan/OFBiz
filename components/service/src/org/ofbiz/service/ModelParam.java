@@ -1,5 +1,5 @@
 /*
- * $Id: ModelParam.java,v 1.3 2004/07/27 18:11:35 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import java.util.List;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jon</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelParam {

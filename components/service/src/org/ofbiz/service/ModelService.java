@@ -1,5 +1,5 @@
 /*
- * $Id: ModelService.java,v 1.12 2004/07/10 04:55:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.group.ServiceGroupReader;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.12 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelService {

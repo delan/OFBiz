@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractJob.java,v 1.3 2004/06/17 00:52:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.service.job;
  * Abstract Service Job - Invokes a service
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public abstract class AbstractJob implements Job {

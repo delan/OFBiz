@@ -1,5 +1,5 @@
 /*
- * $Id: JobInvoker.java,v 1.6 2004/06/17 00:52:15 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import org.ofbiz.base.util.UtilDateTime;
  * JobInvoker
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class JobInvoker implements Runnable {

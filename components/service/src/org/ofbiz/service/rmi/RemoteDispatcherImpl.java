@@ -1,5 +1,5 @@
 /*
- * $Id: RemoteDispatcherImpl.java,v 1.4 2003/12/08 20:13:42 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import java.util.Map;
  * Generic Services Remote Dispatcher Implementation
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class RemoteDispatcherImpl extends UnicastRemoteObject implements RemoteDispatcher {

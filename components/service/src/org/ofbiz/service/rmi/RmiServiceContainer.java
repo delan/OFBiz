@@ -1,5 +1,5 @@
 /*
- * $Id: RmiServiceContainer.java,v 1.6 2004/07/31 20:10:15 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.service.LocalDispatcher;
  * RMI Service Engine Container / Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class RmiServiceContainer implements Container {

@@ -1,5 +1,5 @@
 /*
- * $Id: BSFEngine.java,v 1.4 2004/07/01 15:27:13 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import com.ibm.bsf.BSFManager;
  * BSF Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class BSFEngine extends GenericAsyncEngine {

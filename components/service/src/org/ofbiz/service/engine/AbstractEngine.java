@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractEngine.java,v 1.1 2004/07/01 15:27:13 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
  * Abstract Service Engine
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public abstract class AbstractEngine implements GenericEngine {

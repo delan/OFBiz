@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractJmsListener.java,v 1.2 2003/12/02 17:12:55 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.service.*;
  * AbstractJmsListener
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public abstract class AbstractJmsListener implements GenericMessageListener, ExceptionListener {

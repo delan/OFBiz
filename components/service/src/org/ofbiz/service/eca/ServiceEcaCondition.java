@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaCondition.java,v 1.2 2003/09/25 21:23:10 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.w3c.dom.Element;
  * ServiceEcaCondition
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ServiceEcaCondition {

@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceValidationException.java,v 1.3 2004/03/12 23:45:01 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import java.util.ArrayList;
  * ServiceValidationException
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ServiceValidationException extends GenericServiceException {

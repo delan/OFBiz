@@ -1,5 +1,5 @@
 /*
- * $Id: BeanShellEngine.java,v 1.2 2004/07/01 15:27:13 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import bsh.Interpreter;
  * BeanShell Script Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public final class BeanShellEngine extends GenericAsyncEngine {

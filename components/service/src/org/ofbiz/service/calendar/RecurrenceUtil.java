@@ -1,5 +1,5 @@
 /*
- * $Id: RecurrenceUtil.java,v 1.1 2003/08/17 05:12:42 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import java.util.List;
  * Recurrence Utilities
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class RecurrenceUtil {

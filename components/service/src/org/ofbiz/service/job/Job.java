@@ -1,5 +1,5 @@
 /*
- * $Id: Job.java,v 1.2 2004/06/17 00:52:15 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import java.io.Serializable;
  * Job Interface
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public interface Job extends Serializable {

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericAbstractDispatcher.java,v 1.5 2004/06/17 00:52:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.base.util.Debug;
  * Generic Services Local Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public abstract class GenericAbstractDispatcher implements LocalDispatcher {
