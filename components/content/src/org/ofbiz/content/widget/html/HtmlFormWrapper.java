@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormWrapper.java,v 1.2 2003/09/21 05:58:51 jonesde Exp $
+ * $Id: HtmlFormWrapper.java,v 1.3 2003/12/05 20:42:52 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Form Wrapper class - makes it easy to do the setup and render of a form
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class HtmlFormWrapper {
@@ -68,6 +68,7 @@ public class HtmlFormWrapper {
         this.response = response;
         
         this.modelForm = FormFactory.getFormFromWebappContext(resourceName, formName, request);
+
         this.renderer = new HtmlFormRenderer(request, response);
         
         this.context = new HashMap();
