@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.13 2003/12/23 12:34:17 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.14 2004/01/20 17:17:09 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -317,12 +317,14 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      * @param value The String value to convert and set
      */
     public void setString(String name, String value) {
+        if (value == null) {
+            set(name, null);
+        }
+        
         ModelField field = getModelEntity().getField(name);
-
         if (field == null) set(name, value); // this will get an error in the set() method...
 
         ModelFieldType type = null;
-
         try {
             type = getDelegator().getEntityFieldType(getModelEntity(), field.getType());
         } catch (GenericEntityException e) {
