@@ -43,7 +43,6 @@ import org.ofbiz.service.eca.ServiceEcaUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.cache.UtilCache;
 
 import org.w3c.dom.Element;
 
