@@ -125,7 +125,7 @@ public class ModelForm {
         Iterator fieldElementIter = fieldElements.iterator();
         while (fieldElementIter.hasNext()) {
             Element fieldElement = (Element) fieldElementIter.next();
-            ModelFormField modelFormField = new ModelFormField(fieldElement);
+            ModelFormField modelFormField = new ModelFormField(fieldElement, this);
             this.addUpdateField(modelFormField);
         }
     }

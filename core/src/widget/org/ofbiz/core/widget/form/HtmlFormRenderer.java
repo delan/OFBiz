@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.util.UtilValidate;
 import org.ofbiz.core.widget.form.ModelFormField.CheckField;
 import org.ofbiz.core.widget.form.ModelFormField.DateTimeField;
 import org.ofbiz.core.widget.form.ModelFormField.DisplayField;
@@ -53,8 +54,16 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDisplayField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DisplayField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
      */
     public void renderDisplayField(StringBuffer buffer, Map context, DisplayField displayField, GenericDelegator delegator, LocalDispatcher dispatcher) {
-        // TODO Auto-generated method stub
-
+        ModelFormField modelFormField = displayField.getModelFormField();
+        buffer.append("<span");
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
+            buffer.append(" class=\"");
+            buffer.append(modelFormField.getWidgetStyle());
+            buffer.append("\"");
+        }
+        buffer.append(">");
+        buffer.append(displayField.getDescription(context));
+        buffer.append("</span>");
     }
 
     /* (non-Javadoc)
@@ -148,8 +157,16 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFieldTitle(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField, org.ofbiz.core.entity.GenericDelegator, org.ofbiz.core.service.LocalDispatcher)
      */
     public void renderFieldTitle(StringBuffer buffer, Map context, ModelFormField modelFormField, GenericDelegator delegator, LocalDispatcher dispatcher) {
-        // TODO Auto-generated method stub
-
+        buffer.append("<span");
+        if (UtilValidate.isNotEmpty(modelFormField.getTitleStyle())) {
+            buffer.append(" class=\"");
+            buffer.append(modelFormField.getTitleStyle());
+            buffer.append("\"");
+        }
+        buffer.append(">");
+        buffer.append(modelFormField.getTitle(context));
+        buffer.append("</span>");
+        
     }
 
     /* (non-Javadoc)
@@ -162,7 +179,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("\" name=\"");
         buffer.append(modelForm.getName());
         if (itemNumber != null) {
-            buffer.append(itemNumber.toString());
+            buffer.append(itemNumber.intValue());
         }
         buffer.append("\">");
     }
@@ -210,8 +227,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderFormatHeaderRowCellOpen(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelForm, org.ofbiz.core.widget.form.ModelFormField)
      */
     public void renderFormatHeaderRowCellOpen(StringBuffer buffer, Map context, ModelForm modelForm, ModelFormField modelFormField) {
-        // TODO Auto-generated method stub
-        buffer.append("");
+        buffer.append("<td>");
     }
 
     /* (non-Javadoc)
@@ -222,8 +238,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
     }
 
     public void renderFormatHeaderRowFormCellOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
-        // TODO Auto-generated method stub
-        buffer.append("");
+        buffer.append("<td align=\"center\">");
     }
 
     /* (non-Javadoc)

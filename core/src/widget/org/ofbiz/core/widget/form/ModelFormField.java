@@ -50,7 +50,7 @@ public class ModelFormField {
     protected String parameterName;
     protected String fieldName;
     protected String attributeName;
-    protected String title;
+    protected FlexibleStringExpander title;
     protected String tooltip;
     protected String titleStyle;
     protected String widgetStyle;
@@ -77,7 +77,7 @@ public class ModelFormField {
         this.parameterName = UtilXml.checkEmpty(fieldElement.getAttribute("parameter-name"), this.name);
         this.fieldName = UtilXml.checkEmpty(fieldElement.getAttribute("field-name"), this.name);
         this.attributeName = UtilXml.checkEmpty(fieldElement.getAttribute("attribute-name"), this.name);
-        this.title = fieldElement.getAttribute("title");
+        this.setTitle(fieldElement.getAttribute("title"));
         this.tooltip = fieldElement.getAttribute("tooltip");
         this.titleStyle = fieldElement.getAttribute("title-style");
         this.widgetStyle = fieldElement.getAttribute("widget-style");
@@ -231,8 +231,8 @@ public class ModelFormField {
     /**
      * @return
      */
-    public String getTitle() {
-        return title;
+    public String getTitle(Map context) {
+        return title.expandString(context);
     }
 
     /**
@@ -337,7 +337,7 @@ public class ModelFormField {
      * @param string
      */
     public void setTitle(String string) {
-        title = string;
+        this.title = new FlexibleStringExpander(string);
     }
 
     /**
@@ -462,21 +462,21 @@ public class ModelFormField {
     }
     
     public static class SingleOption extends OptionSource {
-        protected String key;
-        protected String description;
+        protected FlexibleStringExpander key;
+        protected FlexibleStringExpander description;
         
         public SingleOption(String key, String description) {
-            this.key = key;
-            this.description = UtilXml.checkEmpty(description, key);
+            this.key = new FlexibleStringExpander(key);
+            this.description = new FlexibleStringExpander(UtilXml.checkEmpty(description, key));
         }
         
         public SingleOption(Element optionElement) {
-            this.key = optionElement.getAttribute("key");
-            this.description = UtilXml.checkEmpty(optionElement.getAttribute("description"), this.key);
+            this.key = new FlexibleStringExpander(optionElement.getAttribute("key"));
+            this.description = new FlexibleStringExpander(UtilXml.checkEmpty(optionElement.getAttribute("description"), optionElement.getAttribute("key")));
         }
         
         public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
-            // TODO: add key and description with string expansion, ie expanding ${} stuff
+            optionValues.add(new OptionValue(key.expandString(context), description.expandString(context)));
         }
     }
     
@@ -537,15 +537,29 @@ public class ModelFormField {
         /**
          * @return
          */
-        public boolean isAlsoHidden() {
+        public boolean getAlsoHidden() {
             return alsoHidden;
         }
 
         /**
          * @return
          */
-        public String getDescription() {
-            return description;
+        public String getDescription(Map context) {
+            // TODO: put this logic in a method somewhere, ie out of this method, get the description
+            if (UtilValidate.isNotEmpty(this.description)) {
+                // TODO: expand the description
+                return this.description;
+            } else {
+                // TODO: expand the map name
+                // TODO: if map name not specified on field, look for default name on form
+                Map dataMap = (Map) context.get(modelFormField.getMapName());
+                Object retVal = dataMap.get(modelFormField.getEntryName());
+                if (retVal != null) {
+                    return retVal.toString();
+                } else {
+                    return "";
+                }
+            }
         }
 
         /**
