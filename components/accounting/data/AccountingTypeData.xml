@@ -171,6 +171,11 @@
   <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_PAID" transitionName="Invoice Paid"/>
   <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>    
   
+  <!-- payment status -->
+  <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="PAYMENT_STATUS"/>
+  <StatusItem description="Not Paid" sequenceId="01" statusCode="NOT_PAID" statusId="PAYMENT_NOT_PAID" statusTypeId="PAYMENT_STATUS"/>
+  <StatusItem description="Paid" sequenceId="02" statusCode="PAID" statusId="PAYMENT_PAID" statusTypeId="PAYMENT_STATUS"/>
+  
   <SettlementTerm settlementTermId="COD" termName="Cash Due on Delivery" termValue="0" uomId="TF_day"/>
   <SettlementTerm settlementTermId="NET_15" termName="Net Due in 15 Days" termValue="15" uomId="TF_day"/>
   <SettlementTerm settlementTermId="NET_30" termName="Net Due in 30 Days" termValue="30" uomId="TF_day"/>

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.11 2003/08/27 13:53:25 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.12 2003/09/02 04:18:04 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  */
 
@@ -396,10 +396,14 @@ public class OrderServices {
         } 
                                            
         // now add the roles
-        if (userOrderRoleTypes != null && partyId != null && !"_NA_".equals(partyId)) {
+        if (userOrderRoleTypes != null) {
             Iterator i = userOrderRoleTypes.iterator();
-            while (i.hasNext()) {
+            while (i.hasNext()) {            	            
                 String roleType = (String) i.next();
+				String thisParty = partyId;
+				if (thisParty == null) {
+					thisParty = "_NA_";  // will always set these roles so we can query
+				}
                 // make sure the party is in the role before adding
                 toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleType)));
                 toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleType)));

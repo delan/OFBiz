@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -1845,6 +1845,7 @@
       <field name="partyIdFrom" type="id-ne"></field>
       <field name="partyIdTo" type="id-ne"></field>
       <field name="roleTypeIdTo" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
       <field name="effectiveDate" type="date-time"></field>
       <field name="paymentRefNum" type="short-varchar"></field>
       <field name="amount" type="currency-amount"></field>
@@ -1888,6 +1889,9 @@
         <key-map field-name="partyIdTo" rel-field-name="partyId"/>
         <key-map field-name="roleTypeIdTo" rel-field-name="roleTypeId"/>
       </relation>
+      <relation type="one" fk-name="PAYMENT_STTSITM" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>      
       <relation type="one" fk-name="PAYMENT_FACTX" rel-entity-name="FinAccountTrans">
         <key-map field-name="finAccountTransId"/>
       </relation>
