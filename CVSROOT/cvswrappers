@@ -44,4 +44,5 @@
 *.BZ -k 'b'
 *.ppt -k 'b'
 *.PPT -k 'b'
+*.sxi -k 'b'
 
