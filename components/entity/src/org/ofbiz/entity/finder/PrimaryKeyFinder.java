@@ -87,13 +87,16 @@ public class PrimaryKeyFinder {
         Map entityContext = new HashMap();
         if (autoFieldMapBool) {
             GenericValue tempVal = delegator.makeValue(entityName, null);
-            // just get the primary keys, and hopefully will get all of them, if not they must be manually filled in below in the field-maps
-            tempVal.setAllFields(context, true, null, Boolean.TRUE);
-            // if we don't get a full PK, try a map called "parameters"
+
+            // try a map called "parameters", try it first so values from here are overriden by values in the main context
             Object parametersObj = context.get("parameters");
-            if (!tempVal.containsPrimaryKey() && parametersObj != null && parametersObj instanceof Map) {
+            if (parametersObj != null && parametersObj instanceof Map) {
                 tempVal.setAllFields((Map) parametersObj, true, null, Boolean.TRUE);
             }
+
+            // just get the primary keys, and hopefully will get all of them, if not they must be manually filled in below in the field-maps
+            tempVal.setAllFields(context, true, null, Boolean.TRUE);
+
             entityContext.putAll(tempVal);
         }
         EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, entityContext);
@@ -122,11 +125,13 @@ public class PrimaryKeyFinder {
             }
             //Debug.logInfo("PrimaryKeyFinder: valueOut=" + valueOut, module);
             //Debug.logInfo("PrimaryKeyFinder: going into=" + this.valueNameAcsr.getOriginalName(), module);
-            if (valueNameAcsr != null)
+            if (valueNameAcsr != null) {
                this.valueNameAcsr.put(context, valueOut);
-           else
-               if (valueOut != null)
+            } else {
+               if (valueOut != null) {
                    context.putAll(valueOut);
+               }
+            }
         } catch (GenericEntityException e) {
             String errMsg = "Error finding entity value by primary key with entity-one: " + e.toString();
             Debug.logError(e, errMsg, module);
