@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizCurrencyTransform.java,v 1.6 2004/04/30 23:08:26 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import freemarker.core.Environment;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:ray.barlow@makeyour-point.com">Ray Barlow</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class OfbizCurrencyTransform implements TemplateTransformModel {

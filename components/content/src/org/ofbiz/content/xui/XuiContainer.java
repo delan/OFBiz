@@ -1,5 +1,5 @@
 /*
- * $Id: XuiContainer.java,v 1.6 2004/07/31 20:10:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.entity.GenericDelegator;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public abstract class XuiContainer implements Container {

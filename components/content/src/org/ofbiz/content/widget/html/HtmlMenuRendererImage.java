@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRendererImage.java,v 1.4 2004/04/11 08:28:18 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.GenericValue;
  * Widget Library - HTML Menu Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.2
  */
 

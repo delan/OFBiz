@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionRecorder.java,v 1.4 2004/04/11 08:28:12 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -37,7 +37,7 @@ import org.ofbiz.entity.GenericValue;
  * PermissionRecorder Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.

@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.39 2004/08/14 07:35:11 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -76,7 +76,7 @@ import freemarker.template.TemplateException;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.39 $
+ * @version $Rev:$
  * @since 3.0
  */
 public class DataResourceWorker {

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTreeAction.java,v 1.1 2004/07/24 22:57:29 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * Widget Library - Tree model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public abstract class ModelTreeAction {

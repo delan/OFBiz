@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Rev:$
  *@since      3.0
  ***Note: there cannot be a blank line after the end of comment here for XSL-FO templates
 -->

@@ -30,7 +30,7 @@ import org.ofbiz.service.LocalDispatcher;
  * DataEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.16 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * 

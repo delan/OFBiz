@@ -1,5 +1,5 @@
 /*
- * $Id: LoginWorker.java,v 1.1 2004/07/18 10:09:33 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Common Workers
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class LoginWorker {

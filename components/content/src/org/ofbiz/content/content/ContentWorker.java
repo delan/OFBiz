@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.42 2004/08/12 18:05:12 byersa Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.42 $
+ * @version $Rev:$
  * @since 2.2
  * 
  *  

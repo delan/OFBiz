@@ -1,5 +1,5 @@
 /*
- * $Id: LimitedSubContentCacheTransform.java,v 1.4 2004/07/24 20:34:35 ajzeneski Exp $
+ * $Id$
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -48,7 +48,7 @@ import freemarker.template.TransformControl;
  * LimitedSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.4 $
+ * @version $Rev:$
  * @since 3.0
  */
 public class LimitedSubContentCacheTransform implements TemplateTransformModel {

@@ -1,5 +1,5 @@
 /*
- * $Id: relatedoneprep.bsh,v 1.4 2003/11/04 23:58:06 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.2
  * Finds the one-to-one related entity (such as ElectronicText or ImageDataResource)
  * that is associated with the current entity (such as Content or DataResource).

@@ -1,5 +1,5 @@
 /*
- * $Id: ViewHandlerException.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.content.webapp.view;
  * ViewHandlerException - View Handler Exception
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ViewHandlerException extends org.ofbiz.base.util.GeneralException {

@@ -1,5 +1,5 @@
 /*
- * $Id: JPublishWrapper.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.ofbiz.base.util.GeneralException;
  * JPublishWrapper - Used for calling pages through JPublish
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class JPublishWrapper {

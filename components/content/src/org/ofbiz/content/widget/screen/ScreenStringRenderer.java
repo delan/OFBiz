@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenStringRenderer.java,v 1.8 2004/08/12 18:05:14 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import java.util.Map;
  * Widget Library - Screen String Renderer interface
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public interface ScreenStringRenderer {

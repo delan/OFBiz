@@ -5,7 +5,7 @@ package org.ofbiz.content.layout;
  * LayoutServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * 

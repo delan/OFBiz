@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.18 2004/07/31 05:05:57 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.18 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class RequestHandler implements Serializable {

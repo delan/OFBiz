@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizUrlTransform.java,v 1.6 2004/07/10 16:24:09 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import freemarker.template.TemplateTransformModel;
  * OfbizUrlTransform - Freemarker Transform for URLs (links)
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class OfbizUrlTransform implements TemplateTransformModel {

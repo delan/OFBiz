@@ -1,5 +1,5 @@
 /*
- * $Id: BsfEventHandler.java,v 1.2 2003/08/19 17:45:22 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import com.ibm.bsf.util.IOUtils;
  * BsfEventHandler - BSF Event Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class BsfEventHandler implements EventHandler {

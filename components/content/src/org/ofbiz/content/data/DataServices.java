@@ -1,5 +1,5 @@
 /*
- * $Id: DataServices.java,v 1.16 2004/07/10 16:24:08 byersa Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * DataServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.16 $
+ * @version $Rev:$
  * @since 3.0
  * 
  *  

@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.36 2004/08/14 07:35:12 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -75,7 +75,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.36 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class FreeMarkerWorker {

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlWidget.java,v 1.4 2004/07/30 02:11:17 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import freemarker.template.TemplateException;
  * Widget Library - Screen model HTML class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class HtmlWidget extends ModelScreenWidget {

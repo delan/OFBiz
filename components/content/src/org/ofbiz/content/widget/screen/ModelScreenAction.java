@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenAction.java,v 1.9 2004/07/31 12:17:40 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.9 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public abstract class ModelScreenAction {

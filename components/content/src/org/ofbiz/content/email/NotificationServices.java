@@ -1,5 +1,5 @@
 /*
- * $Id: NotificationServices.java,v 1.6 2004/04/11 08:28:13 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -103,7 +103,7 @@ import freemarker.template.TemplateException;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class NotificationServices {

@@ -1,5 +1,5 @@
 /*
- * $Id: RenderWrappedTextTransform.java,v 1.9 2004/04/30 23:08:27 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import freemarker.template.TemplateTransformModel;
  * RenderWrappedTextTransform - Freemarker Transform for URLs (links)
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class RenderWrappedTextTransform implements  TemplateTransformModel {

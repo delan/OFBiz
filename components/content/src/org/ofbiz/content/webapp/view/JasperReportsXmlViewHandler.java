@@ -1,5 +1,5 @@
 /*
- * $Id: JasperReportsXmlViewHandler.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import dori.jasper.engine.JasperReport;
  * Handles JasperReports PDF view rendering
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class JasperReportsXmlViewHandler implements ViewHandler {

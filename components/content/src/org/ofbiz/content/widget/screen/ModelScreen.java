@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreen.java,v 1.8 2004/07/30 02:11:17 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class ModelScreen {

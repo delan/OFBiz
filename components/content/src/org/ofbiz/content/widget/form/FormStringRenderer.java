@@ -1,5 +1,5 @@
 /*
- * $Id: FormStringRenderer.java,v 1.3 2004/03/15 14:53:56 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public interface FormStringRenderer {

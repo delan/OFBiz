@@ -1,5 +1,5 @@
 /*
- * $Id: contentassocprep.bsh,v 1.6 2003/12/05 21:55:34 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import javax.servlet.http.*;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      3.0
 
  * A special "formprep"-like script for ContentAssoc which has two (from/to)

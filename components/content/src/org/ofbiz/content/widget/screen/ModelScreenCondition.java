@@ -1,5 +1,5 @@
 /*
- * $Id: ModelScreenCondition.java,v 1.2 2004/08/18 16:12:35 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.w3c.dom.Element;
  * Widget Library - Screen model condition class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class ModelScreenCondition {

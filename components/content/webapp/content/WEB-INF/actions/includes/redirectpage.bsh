@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers
- *@version    $Revision: 1.2 $
+ *@version    $Rev:$
  *@since      2.2
  * This is a general menu redirection script. It must be called from a page
  * action and not a content action because it is only possible to redirect

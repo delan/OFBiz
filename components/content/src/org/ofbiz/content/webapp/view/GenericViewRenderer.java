@@ -1,5 +1,5 @@
 /*
- * $Id: GenericViewRenderer.java,v 1.1 2003/08/17 08:40:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import com.anthonyeden.lib.config.XMLConfiguration;
  * Generic JPublish View Renderer - This is in testing; for use in wrapping other renderers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class GenericViewRenderer implements ViewRenderer {

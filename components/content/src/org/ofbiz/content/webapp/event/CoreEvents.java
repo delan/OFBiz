@@ -1,5 +1,5 @@
 /*
- * $Id: CoreEvents.java,v 1.8 2004/07/10 06:04:09 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -58,7 +58,7 @@ import org.ofbiz.service.calendar.RecurrenceRule;
  * CoreEvents - WebApp Events Related To CORE components
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class CoreEvents {

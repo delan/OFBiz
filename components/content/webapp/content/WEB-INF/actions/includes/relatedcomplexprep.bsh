@@ -1,5 +1,5 @@
 /*
- * $Id: relatedcomplexprep.bsh,v 1.3 2003/09/14 05:30:33 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import java.sql.Timestamp;
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.2
 
  */

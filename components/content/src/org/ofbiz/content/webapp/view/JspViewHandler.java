@@ -1,5 +1,5 @@
 /*
- * $Id: JspViewHandler.java,v 1.3 2004/05/25 20:27:16 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.content.webapp.control.ContextFilter;
  * ViewHandlerException - View Handler Exception
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class JspViewHandler implements ViewHandler {

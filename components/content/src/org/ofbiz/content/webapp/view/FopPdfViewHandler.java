@@ -1,5 +1,5 @@
 /*
- * $Id: FopPdfViewHandler.java,v 1.3 2003/09/08 20:42:12 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.xml.sax.InputSource;
  * This handler will use JPublish to generate the XSL-FO
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class FopPdfViewHandler extends JPublishViewHandler {

@@ -42,7 +42,7 @@ import org.ofbiz.entity.condition.EntityOperator;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.18 $
+ * @version    $Rev:$
  * @since      3.0
  *
  * 

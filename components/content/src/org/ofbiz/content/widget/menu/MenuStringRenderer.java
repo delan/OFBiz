@@ -1,5 +1,5 @@
 /*
- * $Id: MenuStringRenderer.java,v 1.5 2004/07/29 04:42:36 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.content.widget.menu.ModelMenuItem.MenuTarget;
  * Widget Library - Form String Renderer interface
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public interface MenuStringRenderer {

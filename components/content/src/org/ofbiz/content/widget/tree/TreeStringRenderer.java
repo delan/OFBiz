@@ -1,5 +1,5 @@
 /*
- * $Id: TreeStringRenderer.java,v 1.3 2004/07/29 04:42:37 byersa Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.content.widget.screen.ScreenStringRenderer;
  * Widget Library - Tree String Renderer interface
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public interface TreeStringRenderer {

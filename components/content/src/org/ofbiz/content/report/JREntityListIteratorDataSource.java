@@ -1,5 +1,5 @@
 /*
- * $Id: JREntityListIteratorDataSource.java,v 1.3 2004/05/21 06:39:09 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import dori.jasper.engine.JRField;
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
- * @version $Revision: 1.3 $
+ * @version $Rev:$
  */
 public class JREntityListIteratorDataSource implements JRDataSource {
     

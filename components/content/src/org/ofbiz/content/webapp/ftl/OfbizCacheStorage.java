@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizCacheStorage.java,v 1.1 2003/08/17 08:40:13 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import freemarker.cache.CacheStorage;
  * A custom cache wrapper for caching FreeMarker templates
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public class OfbizCacheStorage implements CacheStorage {

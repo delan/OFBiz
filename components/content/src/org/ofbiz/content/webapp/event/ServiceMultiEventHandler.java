@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceMultiEventHandler.java,v 1.6 2004/06/30 19:28:41 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.ServiceAuthException;
  * ServiceMultiEventHandler - Event handler for running a service multiple times; for bulk forms
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Rev:$
  * @since      2.2
  */
 public class ServiceMultiEventHandler implements EventHandler {

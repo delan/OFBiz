@@ -1,5 +1,5 @@
 /*
- * $Id: ControlEventListener.java,v 1.3 2004/05/22 20:13:41 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.entity.serialize.XmlSerializer;
  * HttpSessionListener that gathers and tracks various information and statistics
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ControlEventListener implements HttpSessionListener {

@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentTransform.java,v 1.8 2004/06/11 00:32:54 byersa Exp $
+ * $Id$
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -44,7 +44,7 @@ import freemarker.template.TransformControl;
  * TraverseSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.8 $
+ * @version $Rev:$
  * @since 3.0
  */
 public class TraverseSubContentTransform implements TemplateTransformModel {

@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentCacheTransform.java,v 1.12 2004/06/11 00:32:50 byersa Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.12 $
+ * @version $Rev:$
  * @since 3.0
  */
 public class EditRenderSubContentCacheTransform implements TemplateTransformModel {
