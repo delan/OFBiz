@@ -1652,6 +1652,7 @@
       <field name="scrapFactor" type="floating-point"></field>
       <field name="instruction" type="long-varchar"></field>
       <field name="routingWorkEffortId" type="id"></field>
+      <field name="formula" type="long-varchar"></field>
       <prim-key field="productId"/>
       <prim-key field="productIdTo"/>
       <prim-key field="productAssocTypeId"/>
