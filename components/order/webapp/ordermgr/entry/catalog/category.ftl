@@ -23,7 +23,10 @@
  *@version    $Rev:$
  *@since      2.1
 -->
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
+${pages.get("/entry/OrderEntryTabBar.ftl")}
 <#if productCategory?has_content>
   ${pages.get(detailTemplate)}
 <#else>  

@@ -24,7 +24,9 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
 <#if productCategory?exists>
 <table border="0" width="100%" cellpadding="3">
   <tr>

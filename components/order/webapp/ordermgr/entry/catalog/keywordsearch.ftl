@@ -24,7 +24,11 @@
  *@since      2.1
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
+<#if (requestAttributes.uiLabelMap)?exists>
+    <#assign uiLabelMap = requestAttributes.uiLabelMap>
+</#if>
+${pages.get("/entry/OrderEntryTabBar.ftl")}
+
 <div class="head1">Product Search, <span class="head2">you searched for:</span></div>
 <#list searchConstraintStrings as searchConstraintString>
     <div class="tabletext">&nbsp;<a href="<@ofbizUrl>/keywordsearch?removeConstraint=${searchConstraintString_index}&clearSearch=N</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${searchConstraintString}</div>

@@ -66,4 +66,13 @@
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
+    
+    <simple-method method-name="getRequirementsForSupplier" short-description="Add a task to a requirement">
+        <make-value value-name="newEntity" entity-name="Requirement"/>
+        <entity-condition entity-name="Requirement" list-name="requirementsForSupplier">
+            <condition-object field-name="parameters.requirementConditions"/>
+        </entity-condition>
+        <field-to-result field-name="requirementsForSupplier" result-name="requirementsForSupplier"/>
+    </simple-method>
+
 </simple-methods>

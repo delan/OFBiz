@@ -100,7 +100,7 @@ function gwAll(e) {
         }
     }
     if (cartSize > passed && selectedValue != "NO^") {
-        alert(${uiLabelMap.OrderSelectedGiftNotAvailableForAll});
+        alert("${uiLabelMap.OrderSelectedGiftNotAvailableForAll}");
     }
     cform.submit();
 }
@@ -110,27 +110,7 @@ function gwAll(e) {
 <TABLE border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <TR>
     <TD width="100%">
-      <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
-        <tr>
-          <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;
-           		${uiLabelMap.CommonCreate}	
-            	<#if modeStr?exists>
-	            	<#if modeStr="Sales">
-		            	${uiLabelMap.OrderSalesOrder}
-		            <#else>
-		            	${uiLabelMap.OrderPurchaseOrder}
-            		</#if>
-            	</#if>
-            </div>
-          </td>
-          <td valign="middle" align="right">                     
-            <#if (shoppingCartSize > 0)><a href="javascript:document.cartform.submit()" class="submenutext">${uiLabelMap.OrderRecalculateOrder}</a><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderClearOrder}</a><#if shoppingCart.getOrderType() == "PURCHASE_ORDER"><a href="<@ofbizUrl>/finalizeOrder?finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a><#else><a href="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderFinalizeOrder}</a></#if>
-            <#else><span class="submenutextdisabled">${uiLabelMap.OrderRecalculateOrder}</span><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">${uiLabelMap.OrderClearOrder}</a><span class="submenutextrightdisabled">${uiLabelMap.OrderFinalizeOrder}</span>
-            </#if>
-          </td>
-        </tr>
-      </table>
+${pages.get("/entry/OrderEntryTabBar.ftl")}
     </TD>
   </TR>
   <TR>
@@ -155,6 +135,12 @@ function gwAll(e) {
                   <td valign="middle">
                      <div class="tabletext">${uiLabelMap.AccountingCurrency} : [${currencyUomId}]
                   </td>
+                  <#if shoppingCart.getOrderType() == "PURCHASE_ORDER">
+                  <td align="right" valign="middle">
+                     <a href="<@ofbizUrl>/RequirementsForSupplier</@ofbizUrl>" class="buttontext">[${uiLabelMap.Requirements}]</a>
+                  </td>
+                  </#if>
+
                   <#if security.hasEntityPermission("CATALOG", "_CREATE", session)>
                   <td align="right" valign="middle">
                     <a href="/catalog/control/EditProduct?externalLoginKey=${requestAttributes.externalLoginKey}" target="catalog" class="buttontext">[${uiLabelMap.ProductCreateNewProduct}]</a>
