@@ -93,6 +93,8 @@
         <!-- Allow module-level defaults for this build -->
         <property file="build.properties"/>
         
+        <property name="ofbiz.version" value=""/>
+        
         <property environment="env" />
         <property name="home.dir"       value="${env.OFBIZ_HOME}" />
         <property name="classes.dir"    value="${home.dir}/classes" />
@@ -105,6 +107,8 @@
         <property file="${user.home}/build.properties"/>
         <!-- Allow module-level defaults for this build -->
         <property file="build.properties"/>
+        
+        <property name="ofbiz.version" value=""/>
         
         <property environment="env" />
         <property name="catalina.dir"    value="${env.CATALINA_HOME}" />
@@ -196,7 +200,7 @@
     <!-- Build Modules                                                     -->
     <!-- ================================================================== -->
 
-    <target name="build" depends="">
+    <target name="build" depends="ofbiz-init">
         <echo message="[build] ===== Building core =====" />
         <ant dir="core" inheritAll="false" />
         <echo message="[build] ===== Building commonapp =====" />
