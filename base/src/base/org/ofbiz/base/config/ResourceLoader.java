@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceLoader.java,v 1.2 2003/08/18 03:15:10 ajzeneski Exp $
+ * $Id: ResourceLoader.java,v 1.3 2003/08/20 23:02:13 jonesde Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.w3c.dom.Element;
  * Loads resources using dynamically specified resource loader classes
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.0
  */
 public abstract class ResourceLoader {
@@ -55,11 +55,18 @@ public abstract class ResourceLoader {
 
     public static InputStream loadResource(String xmlFilename, String location, String loaderName) throws GenericConfigException {
         ResourceLoader loader = getLoader(xmlFilename, loaderName);
-
         if (loader == null) {
             throw new IllegalArgumentException("ResourceLoader not found with name [" + loaderName + "] in " + xmlFilename);
         }
         return loader.loadResource(location);
+    }
+
+    public static URL getURL(String xmlFilename, String location, String loaderName) throws GenericConfigException {
+        ResourceLoader loader = getLoader(xmlFilename, loaderName);
+        if (loader == null) {
+            throw new IllegalArgumentException("ResourceLoader not found with name [" + loaderName + "] in " + xmlFilename);
+        }
+        return loader.getURL(location);
     }
 
     public static ResourceLoader getLoader(String xmlFilename, String loaderName) throws GenericConfigException {
@@ -200,4 +207,5 @@ public abstract class ResourceLoader {
     }
 
     public abstract InputStream loadResource(String location) throws GenericConfigException;
+    public abstract URL getURL(String location) throws GenericConfigException;
 }

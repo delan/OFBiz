@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceHandler.java,v 1.2 2003/08/18 03:15:10 ajzeneski Exp $
+ * $Id: ResourceHandler.java,v 1.3 2003/08/20 23:02:13 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.base.config;
 
 import java.io.InputStream;
+import java.net.URL;
 
 import org.w3c.dom.Document;
 
@@ -32,7 +33,7 @@ import org.w3c.dom.Document;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public interface ResourceHandler {
@@ -44,6 +45,8 @@ public interface ResourceHandler {
     public Document getDocument() throws GenericConfigException;
     
     public InputStream getStream() throws GenericConfigException;
+    
+    public URL getURL() throws GenericConfigException;
     
     public boolean isFileResource() throws GenericConfigException;
     

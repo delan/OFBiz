@@ -1,5 +1,5 @@
 /*
- * $Id: FileLoader.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: FileLoader.java,v 1.2 2003/08/20 23:02:13 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,11 +32,11 @@ import org.ofbiz.base.util.*;
  * Loads resources from the file system
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class FileLoader extends ResourceLoader {
-    public InputStream loadResource(String location) throws GenericConfigException {
+    public URL getURL(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
         URL fileUrl = null;
 
@@ -44,6 +44,11 @@ public class FileLoader extends ResourceLoader {
         if (fileUrl == null) {
             throw new GenericConfigException("File Resource not found: " + fullLocation);
         }
+        return fileUrl;
+    }
+    
+    public InputStream loadResource(String location) throws GenericConfigException {
+        URL fileUrl = getURL(location);
         try {
             return fileUrl.openStream();
         } catch (java.io.IOException e) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConfigUtil.java,v 1.4 2003/08/19 11:08:58 jonesde Exp $
+ * $Id: EntityConfigUtil.java,v 1.5 2003/08/20 23:00:53 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Element;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class EntityConfigUtil {
@@ -243,6 +243,10 @@ public class EntityConfigUtil {
 
     public static EntityConfigUtil.EntityEcaReaderInfo getEntityEcaReaderInfo(String name) {
         return (EntityConfigUtil.EntityEcaReaderInfo) entityEcaReaderInfos.get(name);
+    }
+
+    public static EntityConfigUtil.EntityDataReaderInfo getEntityDataReaderInfo(String name) {
+        return (EntityConfigUtil.EntityDataReaderInfo) entityDataReaderInfos.get(name);
     }
 
     public static EntityConfigUtil.FieldTypeInfo getFieldTypeInfo(String name) {
