@@ -1153,9 +1153,14 @@
             </iterate>
         </iterate>
         
+        <log level="info" message="Finished quickShipEntireOrder:\nshipmentShipGroupFacilityList=${shipmentShipGroupFacilityList}\nsuccessMessageList=${successMessageList}"/>
         <field-to-result field-name="shipmentShipGroupFacilityList"/>
         <field-to-result field-name="successMessageList"/>
-        <log level="info" message="Finished quickShipEntireOrder:\nshipmentShipGroupFacilityList=${shipmentShipGroupFacilityList}\nsuccessMessageList=${successMessageList}"/>
+        
+        <if-empty field-name="shipmentShipGroupFacilityList">
+            <add-error><fail-message message="Warning: no shipments created; could not find anything ready and needing to be shipped."/></add-error>
+        </if-empty>
+        <check-errors/>
     </simple-method>   
 
     <!-- quick ship order using multiple packages per tracking number -->
