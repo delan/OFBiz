@@ -1,5 +1,5 @@
 /*
- * $Id: IcsPaymentServices.java,v 1.8 2004/01/22 17:47:24 ajzeneski Exp $
+ * $Id: IcsPaymentServices.java,v 1.9 2004/02/05 21:39:39 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -42,7 +42,7 @@ import com.cybersource.ws.client.axis.AxisFaultException;
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  */
 public class IcsPaymentServices {
@@ -360,32 +360,44 @@ public class IcsPaymentServices {
 
         // contact info
         GenericValue email = (GenericValue) context.get("contactEmail");
-        request.put("billTo_email", email.getString("infoString"));
+        if (email != null) {
+            request.put("billTo_email", email.getString("infoString"));
+        } else {
+            Debug.logWarning("Email not defined; Cybersource will fail.", module);
+        }
 
         // phone number seems to not be used; possibly only for reporting.
 
         // payment Info
         GenericValue creditCard = (GenericValue) context.get("creditCard");
-        List expDateList = StringUtil.split(creditCard.getString("expireDate"), "/");
+        if (creditCard != null) {
+            List expDateList = StringUtil.split(creditCard.getString("expireDate"), "/");
 
-        request.put("card_accountNumber", creditCard.getString("cardNumber"));
-        request.put("card_expirationMonth", expDateList.get(0));
-        request.put("card_expirationYear", expDateList.get(1));
+            request.put("card_accountNumber", creditCard.getString("cardNumber"));
+            request.put("card_expirationMonth", expDateList.get(0));
+            request.put("card_expirationYear", expDateList.get(1));
+        } else {
+            Debug.logWarning("CreditCard not defined; Cybersource will fail.", module);
+        }
 
         // payment contact info
         GenericValue billingAddress = (GenericValue) context.get("billingAddress");
 
-        request.put("billTo_street1", billingAddress.getString("address1"));
-        if (billingAddress.get("address2") != null) {
-            request.put("billTo_street2", billingAddress.getString("address2"));
-        }
-        request.put("billTo_city", billingAddress.getString("city"));
-        String bCountry = billingAddress.get("countryGeoId") != null ? billingAddress.getString("countryGeoId") : "USA";
+        if (billingAddress != null) {
+            request.put("billTo_street1", billingAddress.getString("address1"));
+            if (billingAddress.get("address2") != null) {
+                request.put("billTo_street2", billingAddress.getString("address2"));
+            }
+            request.put("billTo_city", billingAddress.getString("city"));
+            String bCountry = billingAddress.get("countryGeoId") != null ? billingAddress.getString("countryGeoId") : "USA";
 
-        request.put("billTo_country", bCountry);
-        request.put("billTo_postalCode", billingAddress.getString("postalCode"));
-        if (billingAddress.get("stateProvinceGeoId") != null) {
-            request.put("billTo_state", billingAddress.getString("stateProvinceGeoId"));
+            request.put("billTo_country", bCountry);
+            request.put("billTo_postalCode", billingAddress.getString("postalCode"));
+            if (billingAddress.get("stateProvinceGeoId") != null) {
+                request.put("billTo_state", billingAddress.getString("stateProvinceGeoId"));
+            }
+        } else {
+            Debug.logWarning("BillingAddress not defined; Cybersource will fail.", module);
         }
 
         // order shipping information
