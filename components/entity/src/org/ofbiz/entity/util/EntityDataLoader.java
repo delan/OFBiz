@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataLoader.java,v 1.1 2003/08/20 22:58:44 jonesde Exp $
+ * $Id: EntityDataLoader.java,v 1.2 2004/06/16 11:57:00 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * Some utility routines for loading seed data.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class EntityDataLoader {
@@ -174,6 +174,13 @@ public class EntityDataLoader {
 
     public static int loadData(URL dataUrl, String helperName, GenericDelegator delegator, List errorMessages) throws GenericEntityException {
         int rowsChanged = 0;
+        
+        if (dataUrl == null) {
+            String errMsg = "Cannot load data, dataUrl was null";
+            errorMessages.add(errMsg);
+            Debug.logError(errMsg, module);
+            return 0;
+        }
 
         Debug.logInfo("[install.loadData] Loading XML Resource: \"" + dataUrl.toExternalForm() + "\"", module);
 

@@ -87,21 +87,38 @@
           reader.setTransactionTimeout(txTimeout.intValue());
       }
       URL url = null;
-      try { url = isUrl?new URL(filename):UtilURL.fromFilename(filename); }
-      catch(java.net.MalformedURLException e) { %><div>ERROR: <%=e.toString()%></div><% } 
+      try {
+          url = isUrl?new URL(filename):UtilURL.fromFilename(filename);
+      } catch(java.net.MalformedURLException e) {
+          %><div>ERROR: <%=e.toString()%></div><%
+      }
+
       if (UtilValidate.isNotEmpty(fmfilename)) {
         FileReader templateReader = null;
-        try { templateReader = new FileReader(fmfilename);}
-        catch(java.io.FileNotFoundException e) { %><div>ERROR: <%=e.toString()%></div><% } 
+        try {
+            templateReader = new FileReader(fmfilename);
+        } catch(java.io.FileNotFoundException e) {
+            %><div>ERROR: <%=e.toString()%></div><%
+        }
+        
         StringWriter outWriter = new StringWriter();
         Configuration conf = org.ofbiz.content.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
+        
         Template template = null;
-        try { template = new Template("FMImportFilter", templateReader, conf); }
-        catch(IOException e) { %><div>ERROR: <%=e.toString()%></div><% } 
+        try {
+            template = new Template("FMImportFilter", templateReader, conf);
+        } catch(IOException e) {
+            %><div>ERROR: <%=e.toString()%></div><%
+        }
+
         Map context = new HashMap();
         InputStream is = null;
-        try { is = url.openStream(); }
-        catch(IOException e) { %><div>ERROR: <%=e.toString()%></div><% } 
+        try {
+            is = url.openStream();
+        } catch(IOException e) {
+            %><div>ERROR: <%=e.toString()%></div><%
+        }
+
         NodeModel nodeModel = NodeModel.parse(new InputSource(is));
         context.put("doc", nodeModel);
         template.process(context, outWriter);
