@@ -1,5 +1,5 @@
 /*
- * $Id: UtilProperties.java,v 1.8 2003/11/26 11:18:50 jonesde Exp $
+ * $Id: UtilProperties.java,v 1.9 2004/01/21 14:00:33 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import java.util.ResourceBundle;
  * Generic Property Accessor with Cache - Utilities for working with properties files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      1.0
  */
 public class UtilProperties {
@@ -449,6 +449,9 @@ public class UtilProperties {
      * @return Map containing all entries in The ResourceBundle
      */
     public static Map getResourceBundleMap(String resource, Locale locale) {
+        if (locale == null) {
+            throw new IllegalArgumentException("Locale cannot be null");
+        }
         
         String resourceCacheKey = resource + "_" + locale.toString();        
         Map bundleMap = (Map) bundleLocaleCache.get(resourceCacheKey);
