@@ -116,7 +116,7 @@
   <RoleType description="Distributor" hasTable="N" parentTypeId="DISTRIBUTION_CHANNEL" roleTypeId="DISTRIBUTOR"/>
   <RoleType description="Employee" hasTable="N" parentTypeId="PERSON_ROLE" roleTypeId="EMPLOYEE"/>
   <RoleType description="End-User Customer" hasTable="N" parentTypeId="CUSTOMER" roleTypeId="END_USER_CUSTOMER"/>  
-  <RoleType description="Hosehold" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="HOUSEHOLD"/>
+  <RoleType description="Household" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="HOUSEHOLD"/>
   <RoleType description="Internal Organization" hasTable="Y" parentTypeId="ORGANIZATION_ROLE" roleTypeId="INTERNAL_ORGANIZATIO"/>
   <RoleType description="Limited Administrator" hasTable="N" parentTypeId="ADMIN" roleTypeId="LTD_ADMIN"/>  
   <RoleType description="Organization Unit" hasTable="N" parentTypeId="ORGANIZATION_ROLE" roleTypeId="ORGANIZATION_UNIT"/>      
