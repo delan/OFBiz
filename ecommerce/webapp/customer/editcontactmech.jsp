@@ -73,7 +73,7 @@
       <%String cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");%>
       <%if (cmNewPurposeTypeId != null){%>
         <%GenericValue contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));%>
-        <%if (contactMechPurposeType != null){%>
+        <%if (contactMechPurposeType != null) {%>
         <div>(Note: this new contact information will have the purpose <b>"<%=UtilFormatOut.checkNull(contactMechPurposeType.getString("description"))%>"</b>)</div>
         <%} else { cmNewPurposeTypeId = null; }%>
       <%}%>
@@ -94,7 +94,7 @@
           <td width="74%">
             <table border='0' cellspacing='1' bgcolor='black'>
               <ofbiz:iterator name="partyContactMechPurpose" property="partyContactMechPurposes">
-                <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
+                <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType");%>
                 <tr>
                   <td bgcolor='white'>
                     <div class="tabletext">&nbsp;

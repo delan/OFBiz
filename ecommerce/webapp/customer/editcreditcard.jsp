@@ -165,13 +165,13 @@
             <td align="left" valign="top" width="80%">
               <div class="tabletext"><b>Use Current Address:</b></div>
               <ofbiz:iterator name="curPartyContactMechPurpose" property="curPartyContactMechPurposes">
-                <%GenericValue curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
-                  <div class="tabletext">
-                    <b><%=curContactMechPurposeType.getString("description")%></b>
-                    <%if(curPartyContactMechPurpose.get("thruDate") != null){%>
-                      (Expire:<%=UtilDateTime.toDateTimeString(curPartyContactMechPurpose.getTimestamp("thruDate"))%>)
-                    <%}%>
-                  </div>
+                <%GenericValue curContactMechPurposeType = curPartyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType");%>
+                <div class="tabletext">
+                  <b><%=curContactMechPurposeType.getString("description")%></b>
+                  <%if (curPartyContactMechPurpose.get("thruDate") != null) {%>
+                    (Expire:<%=UtilDateTime.toDateTimeString(curPartyContactMechPurpose.getTimestamp("thruDate"))%>)
+                  <%}%>
+                </div>
               </ofbiz:iterator>
               <div class="tabletext">
                 <ofbiz:entityfield attribute="curPostalAddress" field="toName" prefix="<b>To:</b> " suffix="<br>"/>
@@ -209,7 +209,7 @@
               </td>
               <td align="left" valign="top" width="80%">
                 <ofbiz:iterator name="partyContactMechPurpose" property="partyContactMechPurposes">
-                    <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOne("ContactMechPurposeType");%>
+                    <%GenericValue contactMechPurposeType = partyContactMechPurpose.getRelatedOneCache("ContactMechPurposeType");%>
                     <div class="tabletext">
                       <b><%=contactMechPurposeType.getString("description")%></b>
                       <ofbiz:entityfield attribute="partyContactMechPurpose" field="thruDate" prefix="(Expire:" suffix=")"/>
