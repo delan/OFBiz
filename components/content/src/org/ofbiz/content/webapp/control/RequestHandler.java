@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.10 2003/12/09 17:35:10 ajzeneski Exp $
+ * $Id: RequestHandler.java,v 1.11 2004/03/24 16:04:19 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -621,6 +621,10 @@ public class RequestHandler implements Serializable {
             }            
             encodedUrl = newURL.toString();
         }
+        //if (encodedUrl.indexOf("null") > 0) {
+            //Debug.logError("in makeLink, controlPath:" + controlPath + " url:" + url, "");
+            //throw new RuntimeException("in makeLink, controlPath:" + controlPath + " url:" + url);
+        //}
         
         return encodedUrl;              
     }

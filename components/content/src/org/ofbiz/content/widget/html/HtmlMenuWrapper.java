@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuWrapper.java,v 1.1 2004/03/15 14:53:58 byersa Exp $
+ * $Id: HtmlMenuWrapper.java,v 1.2 2004/03/24 16:04:23 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,7 @@ import java.util.Map;
 import java.lang.IllegalAccessException;
 import java.lang.InstantiationException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -36,6 +37,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.Debug;
 import org.ofbiz.content.widget.menu.MenuFactory;
 import org.ofbiz.content.widget.menu.MenuStringRenderer;
 import org.ofbiz.content.widget.menu.ModelMenu;
@@ -46,7 +48,7 @@ import org.xml.sax.SAXException;
  * Widget Library - HTML Menu Wrapper class - makes it easy to do the setup and render of a menu
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class HtmlMenuWrapper {
@@ -104,8 +106,21 @@ public class HtmlMenuWrapper {
     }
     
     public String renderMenuString() {
+        HttpServletRequest req = ((HtmlMenuRenderer)renderer).request;
+        ServletContext ctx = (ServletContext) req.getAttribute("servletContext");
+        if (ctx == null) {
+            if (Debug.infoOn()) Debug.logInfo("in renderMenuString, ctx is null(0)" , "");
+        }
+
         StringBuffer buffer = new StringBuffer();
         modelMenu.renderMenuString(buffer, context, renderer);
+
+        HttpServletRequest req2 = ((HtmlMenuRenderer)renderer).request;
+        ServletContext ctx2 = (ServletContext) req2.getAttribute("servletContext");
+        if (ctx2 == null) {
+            if (Debug.infoOn()) Debug.logInfo("in renderMenuString, ctx is null(2)" , "");
+        }
+
         return buffer.toString();
     }
 
@@ -181,6 +196,14 @@ public class HtmlMenuWrapper {
         ((HtmlMenuRenderer)renderer).setResponse( response );
     }
 
+    public HttpServletRequest getRequest() {
+        return ((HtmlMenuRenderer)renderer).request;
+    }
+
+    public HttpServletResponse getResponse() {
+        return ((HtmlMenuRenderer)renderer).response;
+    }
+
     public static HtmlMenuWrapper getMenuWrapper(HttpServletRequest request, HttpServletResponse response, HttpSession session, String menuDefFile, String menuName, String menuWrapperClassName ) {
         
         HtmlMenuWrapper menuWrapper = null;
@@ -208,7 +231,11 @@ public class HtmlMenuWrapper {
             } catch(ParserConfigurationException e6) {
                 throw new RuntimeException(e6.getMessage());
             }
+        } else {
+            menuWrapper.setRequest(request);    
+            menuWrapper.setResponse(response);    
         }
+
         if (session != null) {
             session.setAttribute(menuSig, menuWrapper);
         }

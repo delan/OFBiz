@@ -1,5 +1,5 @@
 /*
- * $Id: WrapSubContentCacheTransform.java,v 1.1 2004/03/16 17:27:17 byersa Exp $
+ * $Id: WrapSubContentCacheTransform.java,v 1.2 2004/03/24 16:04:21 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.0
  */
 public class WrapSubContentCacheTransform implements TemplateTransformModel {
@@ -90,15 +90,15 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         final Map savedValuesUp = new HashMap();
         FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
-        if (Debug.infoOn()) Debug.logInfo("in Wrap(0a), savedValuesUp ." + savedValuesUp , module);
+        //if (Debug.infoOn()) Debug.logInfo("in Wrap(0a), savedValuesUp ." + savedValuesUp , module);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
-        if (Debug.infoOn()) Debug.logInfo("in Wrap(0b), savedValuesUp ." + savedValuesUp , module);
+        //if (Debug.infoOn()) Debug.logInfo("in Wrap(0b), savedValuesUp ." + savedValuesUp , module);
         final String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
-        if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, wrapTemplateId(1):" + wrapTemplateId, module);
+        //if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, wrapTemplateId(1):" + wrapTemplateId, module);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(E)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
-                if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, trail(0):" + trail, "");
+                //if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, trail(0):" + trail, "");
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
@@ -108,7 +108,7 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
         } catch(GeneralException e) {
             throw new RuntimeException("Error getting current content. " + e.toString());
         }
-                if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, trail(1):" + trail, "");
+                //if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, trail(1):" + trail, "");
         final GenericValue view = val;
 
         String dataResourceId = null;
@@ -133,7 +133,7 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
         }
         final Map savedValues = new HashMap();
         FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
-        if (Debug.infoOn()) Debug.logInfo("in Wrap(1), savedValues ." + savedValues , module);
+        //if (Debug.infoOn()) Debug.logInfo("in Wrap(1), savedValues ." + savedValues , module);
         // This order is taken so that the mimeType can be overridden in the transform arguments.
         String mimeTypeId = FreeMarkerWorker.getMimeTypeId(delegator, view, templateCtx);
         templateCtx.put("drDataResourceId", dataResourceId);
@@ -156,12 +156,12 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
 
             public void close() throws IOException {
                 FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-        if (Debug.infoOn()) Debug.logInfo("in Wrap(2), savedValues ." + savedValues , module);
+                //if (Debug.infoOn()) Debug.logInfo("in Wrap(2), savedValues ." + savedValues , module);
                 String wrappedContent = buf.toString();
                 
-                if (view != null && Debug.infoOn()) Debug.logInfo("in WrapSubContent, view(2):" + view.get("contentId"), module);
-                if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, wrappedContent:" + wrappedContent, module);
-                if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, wrapTemplateId(2):" + wrapTemplateId, module);
+                //if (view != null && Debug.infoOn()) Debug.logInfo("in WrapSubContent, view(2):" + view.get("contentId"), module);
+                //if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, wrappedContent:" + wrappedContent, module);
+                //if (Debug.infoOn()) Debug.logInfo("in WrapSubContent, wrapTemplateId(2):" + wrapTemplateId, module);
                 if (UtilValidate.isNotEmpty(wrapTemplateId)) {
                     templateCtx.put("wrappedContent", wrappedContent);
                     
@@ -181,9 +181,9 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
                     String mimeTypeId = (String)templateCtx.get("mimeTypeId");
                     Locale locale = null;
                     try {
-        if (Debug.infoOn()) Debug.logInfo("in Edit(0), before calling renderContentAsText ." , module);
+                        //if (Debug.infoOn()) Debug.logInfo("in Edit(0), before calling renderContentAsText ." , module);
                         ContentWorker.renderContentAsTextCache(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);
-        if (Debug.infoOn()) Debug.logInfo("in Edit(0), after calling renderContentAsText ." , module);
+                        //if (Debug.infoOn()) Debug.logInfo("in Edit(0), after calling renderContentAsText ." , module);
                     } catch (IOException e) {
                         Debug.logError(e, "Error rendering content" + e.getMessage(), module);
                         throw new IOException("Error rendering content" + e.toString());
@@ -194,7 +194,7 @@ public class WrapSubContentCacheTransform implements TemplateTransformModel {
                     if (Debug.verboseOn()) Debug.logVerbose("in ERSC, after renderContentAsText", module);
                         
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
-        if (Debug.infoOn()) Debug.logInfo("in Wrap(2), savedValuesUp ." + savedValuesUp , module);
+                        //if (Debug.infoOn()) Debug.logInfo("in Wrap(2), savedValuesUp ." + savedValuesUp , module);
                 }
             }
         };

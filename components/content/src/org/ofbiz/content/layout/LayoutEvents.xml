@@ -43,8 +43,8 @@
       <field-to-field map-name="parameters" field-name="contentPurposeTypeId"
           to-map-name="context" />
       <string-to-list list-name="targetOperationList" string="CONTENT_CREATE"/>
-      <env-to-field env-name="targetOperationList" to-map-name="context" 
-               to-field-name="targetOperationList" />
+      <env-to-field env-name="targetOperationList" map-name="context" 
+               field-name="targetOperationList" />
       <session-to-field field-name="userLogin" map-name="context" session-name="userLogin"/>
       <call-service in-map-name="context" service-name="checkContentPermission">
         <result-to-field field-name="permissionStatus" result-name="permissionStatus"/>

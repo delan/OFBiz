@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionRecorder.java,v 1.1 2004/03/16 17:27:13 byersa Exp $
+ * $Id: PermissionRecorder.java,v 1.2 2004/03/24 16:04:17 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * PermissionRecorder Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -186,27 +186,27 @@ public class PermissionRecorder {
         permCheckResults.add(currentContentMap);
         String s = null;
         if (targetOperations != null) {
-            if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targetOperations:" + targetOperations, module);
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targetOperations:" + targetOperations, module);
             s = targetOperations.toString();
-            if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targetOperations(string):" + s, module);
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targetOperations(string):" + s, module);
             currentContentMap.put("contentOperationId", s);
         }
         if (purposes != null) {
-            if (Debug.infoOn()) Debug.logInfo("startMatchGroup, purposes:" + purposes, module);
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, purposes:" + purposes, module);
             s = purposes.toString();
-            if (Debug.infoOn()) Debug.logInfo("startMatchGroup, purposes(string):" + s, module);
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, purposes(string):" + s, module);
             currentContentMap.put("contentPurposeTypeId", s);
         }
         if (roles != null) {
-            if (Debug.infoOn()) Debug.logInfo("startMatchGroup, roles:" + roles, module);
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, roles:" + roles, module);
             s = roles.toString();
-            if (Debug.infoOn()) Debug.logInfo("startMatchGroup, roles(string):" + s, module);
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, roles(string):" + s, module);
             currentContentMap.put("roleTypeId", s);
         }
         if (targStatusList != null) {
-            if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targStatusList:" + targStatusList, module);
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targStatusList:" + targStatusList, module);
             s = targStatusList.toString();
-            if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targStatusList(string):" + s, module);
+            //if (Debug.infoOn()) Debug.logInfo("startMatchGroup, targStatusList(string):" + s, module);
             currentContentMap.put("statusId", s);
         }
         currentContentMap.put("privilegeEnumId", privilegeEnumId);
@@ -236,7 +236,7 @@ public class PermissionRecorder {
         sb.append(".headr {background-color:white; font-weight:bold; font-family:Verdana,Arial,sans-serif; font-size:12px; }");
         sb.append("</style>");
 
-        if (Debug.infoOn()) Debug.logInfo("toHtml, style:" + sb.toString(), module);
+        //if (Debug.infoOn()) Debug.logInfo("toHtml, style:" + sb.toString(), module);
         sb.append("<table border=\"1\" >");
         // Do header row
         sb.append("<tr>");
@@ -245,7 +245,7 @@ public class PermissionRecorder {
         sb.append("Content Id");
         sb.append("</td>");
 
-        if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (1):" + sb.toString(), module);
+        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (1):" + sb.toString(), module);
         String str = null;
         String s = null;
         for (int i=0; i < fieldTitles.length; i++) {
@@ -290,7 +290,7 @@ public class PermissionRecorder {
         sb.append((String)currentContentResultMap.get("contentId"));
         sb.append("</td>");
 
-        if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (1):" + sb.toString(), module);
+        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (1):" + sb.toString(), module);
         String str = null;
         String s = null;
         for (int i=0; i < opFields.length; i++) {
@@ -307,7 +307,7 @@ public class PermissionRecorder {
         sb.append("<td class=\"target\" >&nbsp;</td>");
         sb.append("</tr>");
 
-        if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (2):" + sb.toString(), module);
+        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (2):" + sb.toString(), module);
         // Do UUT row
         sb.append("<tr>");
 
@@ -323,16 +323,16 @@ public class PermissionRecorder {
             if (!bool.booleanValue())
                 isPass = false;
             sb.append("<td class=\"" + cls + "\">");
-        if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (2b):" + sb.toString(), module);
+        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (2b):" + sb.toString(), module);
             s = (String)rMap.get(opField);
-        if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (s):" + s,  module);
+        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (s):" + s,  module);
             sb.append(s);
             sb.append("</td>");
         }
         String passFailCls = (isPass) ? "pass" : "fail";
         sb.append("<td class=\"" + passFailCls +"\">" + passFailCls.toUpperCase() + "</td>");
         sb.append("</tr>");
-        if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (3):" + sb.toString(), module);
+        //if (Debug.infoOn()) Debug.logInfo("renderResultRowHtml, (3):" + sb.toString(), module);
 
         return sb.toString();
     }

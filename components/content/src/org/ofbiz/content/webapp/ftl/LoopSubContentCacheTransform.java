@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.4 2004/03/16 17:27:16 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.5 2004/03/24 16:04:21 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -57,7 +57,7 @@ import java.io.*;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -122,7 +122,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
         // This is what the FM template will see.
         List passedGlobalNodeTrail = (List)ctx.get("passedGlobalNodeTrail");
-        if (Debug.infoOn()) Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
+        //if (Debug.infoOn()) Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
         List trail = null;
         if (passedGlobalNodeTrail != null) 
             trail = new ArrayList(passedGlobalNodeTrail);
@@ -140,7 +140,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         Boolean isReturnAfterObj = (Boolean)trailNode.get("isReturnAfter");
         Boolean isPickObj = (Boolean)trailNode.get("isPick");
         Boolean isFollowObj = (Boolean)trailNode.get("isFollow");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, isReturnBeforeObj" + isReturnBeforeObj + " isPickObj:" + isPickObj + " isFollowObj:" + isFollowObj + " isReturnAfterObj:" + isReturnAfterObj, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, isReturnBeforeObj" + isReturnBeforeObj + " isPickObj:" + isPickObj + " isFollowObj:" + isFollowObj + " isReturnAfterObj:" + isReturnAfterObj, module);
         if ( (isReturnBeforeObj == null || !isReturnBeforeObj.booleanValue())
            && ( (isPickObj != null && isPickObj.booleanValue())
               ||  (isFollowObj != null && isFollowObj.booleanValue()))
@@ -150,10 +150,10 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             int indentSz = trail.size();
             ctx.put("indent", new Integer(indentSz));
                 String csvTrail = FreeMarkerWorker.nodeTrailToCsv(trail);
-                if (Debug.infoOn()) Debug.logInfo("in Loop, csvTrail:"+csvTrail,module);
+                //if (Debug.infoOn()) Debug.logInfo("in Loop, csvTrail:"+csvTrail,module);
             ctx.put("globalNodeTrail", trail);
-                if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(2):" + trail, "");
-                if (Debug.infoOn()) Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
+                //if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(2):" + trail, "");
+                //if (Debug.infoOn()) Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
             if (electronicText != null)
                 ctx.put("textData", electronicText.get("textData"));
             else
@@ -246,7 +246,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
        
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), trail ." + trail, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), trail ." + trail, module);
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
         GenericValue val = null;
@@ -271,13 +271,13 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             passedGlobalNodeTrail = new ArrayList();
         templateCtx.put("passedGlobalNodeTrail", passedGlobalNodeTrail);
         String contentId = (String)view.get("contentId");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), passedGlobalNodeTrail ." + passedGlobalNodeTrail, module);
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), passedGlobalNodeTrail ." + passedGlobalNodeTrail, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
         final String contentIdTo = contentId;
 
         String thisMapKey = (String)templateCtx.get("mapKey");
         Map results = null;
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         try {
             results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId);
@@ -287,7 +287,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             throw new RuntimeException(e.getMessage());
         }
         List longList = (List) results.get("entityList");
-        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
         String viewSizeStr = (String)templateCtx.get("viewSize");
         if (UtilValidate.isEmpty(viewSizeStr))
             viewSizeStr = "10";
@@ -382,7 +382,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
-                if (Debug.infoOn()) Debug.logInfo("in LoopSubContent, wrappedContent:" + wrappedContent, module);
+                //if (Debug.infoOn()) Debug.logInfo("in LoopSubContent, wrappedContent:" + wrappedContent, module);
 /*
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrappedContent:"+wrappedContent,module);
                 String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");

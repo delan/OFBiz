@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRendererImage.java,v 1.1 2004/03/15 14:53:58 byersa Exp $
+ * $Id: HtmlMenuRendererImage.java,v 1.2 2004/03/24 16:04:23 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.ContentManagementWorker;
  * Widget Library - HTML Menu Renderer implementation
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 
@@ -67,43 +67,43 @@ public class HtmlMenuRendererImage extends HtmlMenuRenderer {
     public void renderMenuItem(StringBuffer buffer, Map context, ModelMenuItem menuItem) {
         
         boolean hideThisItem = isHideIfSelected(menuItem);
-            Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
         if (hideThisItem)
             return;
 
         boolean bHasPermission = permissionCheck(menuItem);
         if (!bHasPermission) 
             return;
-            Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
 
         String cellWidth = menuItem.getCellWidth();
-            Debug.logInfo("in HtmlMenuRendererImage, cellWidth:" + cellWidth,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, cellWidth:" + cellWidth,"");
         String widthStr = "";
         if (UtilValidate.isNotEmpty(cellWidth)) 
             widthStr = " width=\"" + cellWidth + "\" ";
-            Debug.logInfo("in HtmlMenuRendererImage, widthStr:" + widthStr,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, widthStr:" + widthStr,"");
         
         String orientation = menuItem.getModelMenu().getOrientation();
         if (orientation.equalsIgnoreCase("vertical"))
             buffer.append("<tr>");
         buffer.append("<td align=left width='" + widthStr + "'>");
         MenuTarget target = menuItem.getCurrentMenuTarget();
-            Debug.logInfo("in HtmlMenuRendererImage, target:" + target,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, target:" + target,"");
         String divStr = buildDivStr(menuItem, context);
-            Debug.logInfo("in HtmlMenuRendererImage, divStr:" + divStr,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, divStr:" + divStr,"");
         String url = target.renderAsUrl( context);
-            Debug.logInfo("in HtmlMenuRendererImage, url:" + url,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, url:" + url,"");
         buffer.append("<a href=\""); 
         appendOfbizUrl(buffer,  url);
         String imgStr = buildImgStr(menuItem);
-            Debug.logInfo("in HtmlMenuRendererImage, imgStr:" + imgStr,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, imgStr:" + imgStr,"");
         buffer.append("\">" + imgStr + "</a>");
         buffer.append("</td> ");
         if (orientation.equalsIgnoreCase("vertical"))
             buffer.append("</tr>");
         this.appendWhitespace(buffer);
       
-            Debug.logInfo("in HtmlMenuRendererImage, buffer:" + buffer.toString(),"");
+                //Debug.logInfo("in HtmlMenuRendererImage, buffer:" + buffer.toString(),"");
         return;
     }
 */
@@ -114,18 +114,18 @@ public class HtmlMenuRendererImage extends HtmlMenuRenderer {
         String contentId = menuItem.getAssociatedContentId(context);
         GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
         GenericValue webSitePublishPoint = null;
-            Debug.logInfo("in HtmlMenuRendererImage, contentId:" + contentId,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, contentId:" + contentId,"");
         try {
             webSitePublishPoint = ContentManagementWorker.getWebSitePublishPoint(delegator, contentId);
         } catch(GenericEntityException e) {
-            Debug.logInfo("in HtmlMenuRendererImage, GEException:" + e.getMessage(),"");
+                //Debug.logInfo("in HtmlMenuRendererImage, GEException:" + e.getMessage(),"");
             throw new RuntimeException(e.getMessage());
         }
         String medallionLogoStr = webSitePublishPoint.getString("medallionLogo");
         StringBuffer buf = new StringBuffer();
         appendContentUrl(buf, medallionLogoStr);
         imgStr += buf.toString();
-            Debug.logInfo("in HtmlMenuRendererImage, imgStr:" + imgStr,"");
+                //Debug.logInfo("in HtmlMenuRendererImage, imgStr:" + imgStr,"");
         String cellWidth = menuItem.getCellWidth();
         imgStr += "\"";
         String widthStr = "";

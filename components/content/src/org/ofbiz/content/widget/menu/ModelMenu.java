@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenu.java,v 1.1 2004/03/15 22:06:17 byersa Exp $
+ * $Id: ModelMenu.java,v 1.2 2004/03/24 16:04:24 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ModelMenu {
@@ -210,7 +210,7 @@ public class ModelMenu {
             this.defaultCellWidth = menuElement.getAttribute("default-cell-width");
         if (menuElement.hasAttribute("default-hide-if-selected")) {
             String val = menuElement.getAttribute("default-hide-if-selected");
-            Debug.logInfo("in ModelMenu, hideIfSelected, val:" + val, module);
+                //Debug.logInfo("in ModelMenu, hideIfSelected, val:" + val, module);
             if (val != null && val.equalsIgnoreCase("true"))
                 defaultHideIfSelected = new Boolean(true);
             else 
@@ -295,7 +295,7 @@ public class ModelMenu {
         } else {
             throw new IllegalArgumentException("The type " + this.getType() + " is not supported for menu with name " + this.getName());
         }
-            Debug.logInfo("in ModelMenu, buffer:" + buffer.toString(), module);
+            //Debug.logInfo("in ModelMenu, buffer:" + buffer.toString(), module);
     }
 
     public void renderSimpleMenuString(StringBuffer buffer, Map context, MenuStringRenderer menuStringRenderer) {
@@ -309,7 +309,7 @@ public class ModelMenu {
         // render formatting wrapper open
         menuStringRenderer.renderFormatSimpleWrapperOpen(buffer, context, this);
 
-            Debug.logInfo("in ModelMenu, menuItemList:" + menuItemList, module);
+            //Debug.logInfo("in ModelMenu, menuItemList:" + menuItemList, module);
         // render each menuItem row, except hidden & ignored rows
         menuItemIter = this.menuItemList.iterator();
         ModelMenuItem currentMenuItem = null;

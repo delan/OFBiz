@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlMenuRenderer.java,v 1.2 2004/03/16 20:21:56 byersa Exp $
+ * $Id: HtmlMenuRenderer.java,v 1.3 2004/03/24 16:04:22 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import java.util.Locale;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilProperties;
@@ -53,7 +54,7 @@ import org.ofbiz.content.content.ContentPermissionServices;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class HtmlMenuRenderer implements MenuStringRenderer {
@@ -78,12 +79,52 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
 
     public void appendOfbizUrl(StringBuffer buffer, String location) {
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        if (ctx == null) {
+            //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, ctx is null(0): buffer=" + buffer.toString() + " location:" + location, "");
+            HttpSession session = request.getSession();
+            if (session != null) {
+                ctx = session.getServletContext();
+            } else {
+                if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, session is null(1)", "");
+            }
+            if (ctx == null) {
+                throw new RuntimeException("ctx is null. buffer=" + buffer.toString() + " location:" + location);
+            }
+                //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, ctx is NOT null(2)", "");
+        }
+        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        if (delegator == null) {
+                //if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl, delegator is null(5)", "");
+        }
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
         // make and append the link
-        buffer.append(rh.makeLink(this.request, this.response, location));
+        String s = rh.makeLink(this.request, this.response, location);
+            if (s.indexOf("null") >= 0) {
+                if (Debug.infoOn()) Debug.logInfo("in appendOfbizUrl(3), url: " + s, "");
+            }
+        buffer.append(s);
     }
 
     public void appendContentUrl(StringBuffer buffer, String location) {
+        ServletContext ctx = (ServletContext) this.request.getAttribute("servletContext");
+        if (ctx == null) {
+            //if (Debug.infoOn()) Debug.logInfo("in appendContentUrl, ctx is null(0): buffer=" + buffer.toString() + " location:" + location, "");
+            HttpSession session = request.getSession();
+            if (session != null) {
+                ctx = session.getServletContext();
+            } else {
+                //if (Debug.infoOn()) Debug.logInfo("in appendContentUrl, session is null(1)", "");
+            }
+            if (ctx == null) {
+                throw new RuntimeException("ctx is null. buffer=" + buffer.toString() + " location:" + location);
+            }
+                //if (Debug.infoOn()) Debug.logInfo("in appendContentUrl, ctx is NOT null(2)", "");
+            this.request.setAttribute("servletContext", ctx);
+        }
+        GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+        if (delegator == null) {
+                //if (Debug.infoOn()) Debug.logInfo("in appendContentUrl, delegator is null(6)", "");
+        }
         ContentUrlTag.appendContentPrefix(this.request, buffer);
         buffer.append(location);
     }
@@ -108,14 +149,14 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
     public void renderMenuItem(StringBuffer buffer, Map context, ModelMenuItem menuItem) {
         
         boolean hideThisItem = isHideIfSelected(menuItem);
-            Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
+            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, hideThisItem:" + hideThisItem,"");
         if (hideThisItem)
             return;
 
         boolean bHasPermission = permissionCheck(menuItem, context);
         if (!bHasPermission) 
             return;
-            Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
+            //if (Debug.infoOn()) Debug.logInfo("in HtmlMenuRendererImage, bHasPermission(2):" + bHasPermission,"");
 
         String orientation = menuItem.getModelMenu().getOrientation();
         if (orientation.equalsIgnoreCase("vertical"))
@@ -218,8 +259,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         String currentMenuItemName = menu.getCurrentMenuItemName();
         String currentItemName = menuItem.getName();
         Boolean hideIfSelected = menuItem.getHideIfSelected();
-            Debug.logInfo("in HtmlMenuRenderer, currentMenuItemName:" + currentMenuItemName
-                           + " currentItemName:" + currentItemName + " hideIfSelected:" + hideIfSelected,"");
+            //Debug.logInfo("in HtmlMenuRenderer, currentMenuItemName:" + currentMenuItemName + " currentItemName:" + currentItemName + " hideIfSelected:" + hideIfSelected,"");
         if (hideIfSelected != null && hideIfSelected.booleanValue() && currentMenuItemName != null && currentMenuItemName.equals(currentItemName)) 
             return true;
         else
@@ -249,7 +289,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         String userLoginId = null;
         if (userLogin != null)
             userLoginId = userLogin.getString("userLoginId");
-        Debug.logInfo("in HtmlMenuRenderer, userLoginId:" + userLoginId + " userLoginIdAtPermGrant:" + userLoginIdAtPermGrant ,"");
+            //Debug.logInfo("in HtmlMenuRenderer, userLoginId:" + userLoginId + " userLoginIdAtPermGrant:" + userLoginIdAtPermGrant ,"");
         if ((userLoginId == null && userLoginIdAtPermGrant != null)
            || (userLoginId != null && userLoginIdAtPermGrant == null)
            || ((userLoginId != null && userLoginIdAtPermGrant != null)
@@ -262,7 +302,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
     public boolean doPermissionCheck( ModelMenuItem menuItem, Map context) {
 
         String permissionOperation = menuItem.getPermissionOperation();
-            Debug.logInfo("in HtmlMenuRenderer, permissionOperation:" + permissionOperation,"");
+                //Debug.logInfo("in HtmlMenuRenderer, permissionOperation:" + permissionOperation,"");
         if (UtilValidate.isEmpty(permissionOperation)) 
             return true;
 
@@ -275,7 +315,7 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
             throw new RuntimeException(e.getMessage());
         }
         String contentId = content.getString("contentId");
-            Debug.logInfo("in HtmlMenuRenderer, contentId:" + contentId,"");
+                //Debug.logInfo("in HtmlMenuRenderer, contentId:" + contentId,"");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         Security security = (Security) request.getAttribute("security");
         List targetOperations = UtilMisc.toList(permissionOperation);
@@ -285,20 +325,10 @@ public class HtmlMenuRenderer implements MenuStringRenderer {
         List passedPurposes = null;
         List passedRoles = null;
 
-            Debug.logInfo("in HtmlMenuRenderer, contentId:" + contentId
-                    + " content:" + content
-                    + " permissionStatusId:" + permissionStatusId
-                    + " userLogin:" + userLogin
-                    + " passedPurposes:" + passedPurposes
-                    + " targetOperations:" + targetOperations
-                    + " passedRoles:" + passedRoles
-                    + " security:" + security
-                    + " entityAction:" + entityAction
-              ,"");
         Map results = ContentPermissionServices.checkPermission(content, permissionStatusId, userLogin, passedPurposes, targetOperations, passedRoles, delegator , security, entityAction, privilegeEnumId );
         String permissionStatus = (String)results.get("permissionStatus");
-            Debug.logInfo("in HtmlMenuRenderer, permissionStatus:" + permissionStatus,"");
-            Debug.logInfo("in HtmlMenuRenderer, results:" + results,"");
+                //Debug.logInfo("in HtmlMenuRenderer, permissionStatus:" + permissionStatus,"");
+                //Debug.logInfo("in HtmlMenuRenderer, results:" + results,"");
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted"))
             return true;
         else

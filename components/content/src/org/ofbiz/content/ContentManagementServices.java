@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  *
  * 
@@ -131,7 +131,7 @@ public class ContentManagementServices {
         Map permContext = new HashMap();
 
         List contentPurposeList = (List)context.get("contentPurposeList");
-        if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
+        //if (Debug.infoOn()) Debug.logInfo("in persist... contentPurposeList(0):" + contentPurposeList, null);
         GenericValue content = delegator.makeValue("Content", null);
         content.setPKFields(context);
         content.setNonPKFields(context);

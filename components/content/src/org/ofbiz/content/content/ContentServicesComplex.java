@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServicesComplex.java,v 1.9 2004/03/16 17:27:13 byersa Exp $
+ * $Id: ContentServicesComplex.java,v 1.10 2004/03/24 16:04:16 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -65,7 +65,7 @@ import org.ofbiz.minilang.SimpleMapProcessor;
  * ContentServicesComplex Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  *
  * 
@@ -270,7 +270,7 @@ public class ContentServicesComplex {
         } else {
             viewName = "ContentAssocDataResourceViewTo";
         }
-            if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, assocTypes:" + assocTypes, module);
+            //if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, assocTypes:" + assocTypes, module);
         Map fieldMap = UtilMisc.toMap(contentFieldName, contentId);
         if (assocTypes != null && assocTypes.size() == 1) {
             fieldMap.putAll(UtilMisc.toMap("contentAssocTypeId", assocTypes.get(0)));
@@ -292,10 +292,10 @@ public class ContentServicesComplex {
         }
         List contentAssocsUnfiltered = null;
         
-            if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, fieldMap:" + fieldMap, module);
+            //if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, fieldMap:" + fieldMap, module);
         contentAssocsUnfiltered = delegator.findByAndCache("ContentAssoc", fieldMap, UtilMisc.toList("-fromDate"));
 
-            if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, contentAssocsUnfiltered:" + contentAssocsUnfiltered, module);
+            //if (Debug.infoOn()) Debug.logInfo("in getAssocAndContent...Cache, contentAssocsUnfiltered:" + contentAssocsUnfiltered, module);
         if (fromDate == null && fromDateStr != null ) {
             fromDate = UtilDateTime.toTimestamp( fromDateStr );
 	}

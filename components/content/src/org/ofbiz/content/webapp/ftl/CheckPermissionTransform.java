@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.4 2004/03/16 17:27:15 byersa Exp $
+ * $Id: CheckPermissionTransform.java,v 1.5 2004/03/24 16:04:19 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -35,6 +35,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.content.content.ContentServicesComplex;
 import org.ofbiz.content.content.ContentPermissionServices;
 import org.ofbiz.content.content.ContentWorker;
+import org.ofbiz.content.content.PermissionRecorder;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -53,7 +54,7 @@ import freemarker.template.TemplateModelException;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {
@@ -92,8 +93,8 @@ public class CheckPermissionTransform implements TemplateTransformModel {
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(C)after overrride", templateCtx, 0),module);
         final String mode = (String)templateCtx.get("mode");
         final Map savedValues = new HashMap();
-                    Debug.logInfo("in CheckPermission, contentId(1):" + templateCtx.get("contentId"),"");
-                    Debug.logInfo("in CheckPermission, subContentId(1):" + templateCtx.get("subContentId"),"");
+                    //Debug.logInfo("in CheckPermission, contentId(1):" + templateCtx.get("contentId"),"");
+                    //Debug.logInfo("in CheckPermission, subContentId(1):" + templateCtx.get("subContentId"),"");
 
         return new LoopWriter(out) {
 
@@ -109,9 +110,9 @@ public class CheckPermissionTransform implements TemplateTransformModel {
             public int onStart() throws TemplateModelException, IOException {
                 List trail = (List)templateCtx.get("globalNodeTrail");
                 String trailCsv = FreeMarkerWorker.nodeTrailToCsv(trail);
-                    Debug.logInfo("in CheckPermission, trailCsv(2):" + trailCsv,"");
-                    Debug.logInfo("in CheckPermission, contentId(2):" + templateCtx.get("contentId"),"");
-                    Debug.logInfo("in CheckPermission, subContentId(2):" + templateCtx.get("subContentId"),"");
+                    //Debug.logInfo("in CheckPermission, trailCsv(2):" + trailCsv,"");
+                    //Debug.logInfo("in CheckPermission, contentId(2):" + templateCtx.get("contentId"),"");
+                    //Debug.logInfo("in CheckPermission, subContentId(2):" + templateCtx.get("subContentId"),"");
              
                 GenericValue currentContent = null;
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
@@ -126,7 +127,7 @@ public class CheckPermissionTransform implements TemplateTransformModel {
                 final GenericValue view = val;
                 currentContent = val;
                 if (currentContent != null)
-                    Debug.logInfo("in CheckPermission, currentContent:" + currentContent.get("contentId"),"");
+                    //Debug.logInfo("in CheckPermission, currentContent:" + currentContent.get("contentId"),"");
 
                 if (currentContent == null) {
                     currentContent = delegator.makeValue("Content", null);
@@ -156,8 +157,8 @@ public class CheckPermissionTransform implements TemplateTransformModel {
                 }
                 List targetOperationList = StringUtil.split(targetOperation, "|");
                 if (targetOperationList.size() == 0) {
-                    Debug.logInfo("in CheckPermission, entityOperation:" + entityOperation,"");
-                    Debug.logInfo("in CheckPermission, templateCtx:" + templateCtx,"");
+                    //Debug.logInfo("in CheckPermission, entityOperation:" + entityOperation,"");
+                    //Debug.logInfo("in CheckPermission, templateCtx:" + templateCtx,"");
                     throw new IOException("targetOperationList has zero size.");
                 }
                 List roleList = new ArrayList();
@@ -176,12 +177,32 @@ public class CheckPermissionTransform implements TemplateTransformModel {
 
                 String permissionStatus = (String) results.get("permissionStatus");
 
-                if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted") && (UtilValidate.isEmpty(mode) || mode.equals("equals"))) {
+                if (UtilValidate.isEmpty(permissionStatus) || !permissionStatus.equals("granted")) {
+                
+                    String errorMessage = "Permission to add response is denied (2)";
+                    PermissionRecorder recorder = (PermissionRecorder)results.get("permissionRecorder");
+                        //Debug.logInfo("recorder(0):" + recorder, "");
+                    if (recorder != null) {
+                        String permissionMessage = recorder.toHtml();
+                        //Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
+                        errorMessage += " \n " + permissionMessage;
+                    }
+                    templateCtx.put("permissionErrorMsg", errorMessage);
+                }
+
+
+                if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
                     if (Debug.verboseOn()) Debug.logVerbose("in CheckPermission, permissionStatus" + permissionStatus, module);
                     FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
-                    return TransformControl.EVALUATE_BODY;
+                    if (mode == null || !mode.equalsIgnoreCase("not-equals"))
+                        return TransformControl.EVALUATE_BODY;
+                    else
+                        return TransformControl.SKIP_BODY;
                 } else {
-                    return TransformControl.SKIP_BODY;
+                    if (mode == null || !mode.equalsIgnoreCase("not-equals"))
+                        return TransformControl.SKIP_BODY;
+                    else
+                        return TransformControl.EVALUATE_BODY;
                 }
             }
 

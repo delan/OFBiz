@@ -1,5 +1,5 @@
 /*
- * $Id: ModelMenuItem.java,v 1.1 2004/03/15 22:06:17 byersa Exp $
+ * $Id: ModelMenuItem.java,v 1.2 2004/03/24 16:04:24 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -59,7 +59,7 @@ import bsh.Interpreter;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ModelMenuItem {
@@ -130,7 +130,6 @@ public class ModelMenuItem {
         this.cellWidth = fieldElement.getAttribute("cell-width");
         this.privilegeEnumId = fieldElement.getAttribute("privilege-enum-id");
         String val = fieldElement.getAttribute("hide-if-selected");
-Debug.logInfo("in MenuItem, val:" + val,"");
         if (UtilValidate.isNotEmpty(val))
             if (val.equalsIgnoreCase("true"))
                 hideIfSelected = new Boolean(true);
@@ -378,11 +377,14 @@ Debug.logInfo("in MenuItem, val:" + val,"");
      */
     public MenuTarget getCurrentMenuTarget() {
         MenuTarget target = (MenuTarget)targetMap.get(currentMenuTargetName);
+        //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target: " + target + " targetMap:" + targetMap, module);
         if (target == null) {
             target = (MenuTarget)targetMap.get(defaultMenuTargetName);
+        //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target(2): " + target + " defaultMenuTargetName:" + defaultMenuTargetName, module);
             if (target == null) {
                if (targetList.size() > 0) {
                    target = (MenuTarget)targetList.get(0);
+        //if (Debug.infoOn()) Debug.logInfo("in getCurrentMenuTarget, target(3): " + target + " targetList:" + targetList, module);
                } 
             }
         }
@@ -620,7 +622,6 @@ Debug.logInfo("in MenuItem, val:" + val,"");
       
             Map thisParamMap = new HashMap();
             Iterator iter = paramList.iterator();
-Debug.logInfo("in renderAsUrl, context:" + context,"");
             while (iter.hasNext()) {
                 MenuParam param = (MenuParam)iter.next();
                 Map map = param.getParamMap(context);
@@ -630,6 +631,9 @@ Debug.logInfo("in renderAsUrl, context:" + context,"");
             String paramStr = UtilHttp.urlEncodeArgs(thisParamMap);
             String questionMark = UtilValidate.isNotEmpty(paramStr) ? "?" : "";
             String url = "/" + this.requestName + questionMark + paramStr;
+            if (url.indexOf("null") >= 0) {
+                if (Debug.infoOn()) Debug.logInfo("in renderAsUrl, requestName: " + requestName, module);
+            }
             return url;
         }
 
@@ -754,10 +758,8 @@ Debug.logInfo("in renderAsUrl, context:" + context,"");
 
                Map map = null;
                Object obj = getValue(context);
-Debug.logInfo("in getParamMap, obj:" + obj,"");
                if (obj != null && obj instanceof Map)
                    map = (Map)getValue(context);
-Debug.logInfo("in getParamMap, map:" + map,"");
                return map;
            }
 

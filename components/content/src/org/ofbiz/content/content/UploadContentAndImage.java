@@ -48,7 +48,7 @@ import javax.servlet.http.HttpSession;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -71,7 +71,7 @@ public class UploadContentAndImage {
             GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
 
             DiskFileUpload fu = new DiskFileUpload();
-            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]DiskFileUpload " + fu, module);
+            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]DiskFileUpload " + fu, module);
             java.util.List lst = null;
             try {
                 lst = fu.parseRequest(request);
@@ -80,7 +80,7 @@ public class UploadContentAndImage {
                 Debug.logError("[UploadContentAndImage.uploadContentAndImage] " + e4.getMessage(), module);
                 return "error";
             }
-            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]lst " + lst, module);
+            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]lst " + lst, module);
     
             if (lst.size() == 0) {
                 request.setAttribute("_ERROR_MESSAGE_", "No files uploaded");
@@ -105,6 +105,7 @@ public class UploadContentAndImage {
                     imageBytes = imageFi.get();
                 }
             }
+            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]passedParams: " + passedParams, module);
 
             TransactionUtil.begin();
             // Create or update FTL template
@@ -122,7 +123,7 @@ public class UploadContentAndImage {
             ftlContext.put("privilegeEnumId", passedParams.get("privilegeEnumId"));
             if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]passedParams " + passedParams, module);
             String drid = (String)passedParams.get("dataResourceId");
-            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]drid:" + drid, module);
+            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]drid:" + drid, module);
             ftlContext.put("dataResourceId", drid);
             if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext(1):" + ftlContext, module);
             ftlContext.put("dataResourceTypeId", null); // inhibits persistence of DataResource, because it already exists
@@ -142,8 +143,8 @@ public class UploadContentAndImage {
             String ftlContentId = (String)ftlResults.get("contentId");
             String ftlDataResourceId = drid;
 
-            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]ftlContentId:" + ftlContentId, module);
-            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]ftlDataResourceId:" + ftlDataResourceId, module);
+            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]ftlContentId:" + ftlContentId, module);
+            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]ftlDataResourceId:" + ftlDataResourceId, module);
             // Create or update summary text subContent
             if ( passedParams.containsKey("summaryData") ) {
                 Map sumContext = new HashMap();
@@ -151,7 +152,7 @@ public class UploadContentAndImage {
                 sumContext.put("contentId", passedParams.get("sumContentId"));
                 sumContext.put("ownerContentId", ftlContentId);
                 sumContext.put("contentTypeId", "DOCUMENT");
-                sumContext.put("statusId", null);
+                sumContext.put("statusId", passedParams.get("statusId"));
                 sumContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
                 sumContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
                 sumContext.put("contentName", passedParams.get("contentName"));
@@ -180,7 +181,7 @@ public class UploadContentAndImage {
             txtContext.put("contentId", passedParams.get("txtContentId"));
             txtContext.put("ownerContentId", ftlContentId);
             txtContext.put("contentTypeId", "DOCUMENT");
-            txtContext.put("statusId", null);
+            txtContext.put("statusId", passedParams.get("statusId"));
             txtContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
             txtContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
             txtContext.put("contentName", passedParams.get("contentName"));
@@ -209,7 +210,7 @@ public class UploadContentAndImage {
                 imgContext.put("contentId", passedParams.get("imgContentId"));
                 imgContext.put("ownerContentId", ftlContentId);
                 imgContext.put("contentTypeId", "DOCUMENT");
-                imgContext.put("statusId", null);
+                imgContext.put("statusId", passedParams.get("statusId"));
                 imgContext.put("contentName", passedParams.get("contentName"));
                 imgContext.put("description", passedParams.get("description"));
                 imgContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
@@ -236,7 +237,7 @@ public class UploadContentAndImage {
             String userLoginId = userLogin.getString("userLoginId");
             List authorAssocList = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", ftlContentId, "contentIdTo", userLoginId, "contentAssocTypeId", "AUTHOR"));
             List currentAuthorAssocList = EntityUtil.filterByDate(authorAssocList);
-            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]currentAuthorAssocList " + currentAuthorAssocList, module);
+            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]currentAuthorAssocList " + currentAuthorAssocList, module);
             if (currentAuthorAssocList.size() == 0) {
                 // Don't want to bother with permission checking on this association
                 GenericValue authorAssoc = delegator.makeValue("ContentAssoc", null);
@@ -254,7 +255,9 @@ public class UploadContentAndImage {
             request.setAttribute("dataResourceId", ftlDataResourceId);
             request.setAttribute("drDataResourceId", ftlDataResourceId);
             request.setAttribute("contentId", ftlContentId);
-            request.setAttribute("nodeTrailCsv", passedParams.get("nodeTrailCsv"));
+            String newTrail = passedParams.get("nodeTrailCsv") + "," + ftlContentId;
+            request.setAttribute("nodeTrailCsv", newTrail);
+            //if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]newTrail: " + newTrail, module);
             TransactionUtil.commit();
         } catch( Exception e) {
             Debug.logError(e, "[UploadContentAndImage] " , module);

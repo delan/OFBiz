@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.17 2004/03/16 17:27:12 byersa Exp $
+ * $Id: ContentServices.java,v 1.18 2004/03/24 16:04:16 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.content.content.PermissionRecorder;
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @since 2.2
  * 
  *  
@@ -359,7 +359,7 @@ public class ContentServices {
         serviceInMap.put("targetOperationList", context.get("targetOperationList"));
         List contentPurposeList = (List)context.get("contentPurposeList");
         serviceInMap.put("contentPurposeList", contentPurposeList); 
-if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeList:" + contentPurposeList, "");
+        //if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeList:" + contentPurposeList, "");
         serviceInMap.put("entityOperation", context.get("entityOperation"));
         serviceInMap.put("contentAssocPredicateId", context.get("contentAssocPredicateId"));
         serviceInMap.put("contentIdTo", contentIdTo);
@@ -368,22 +368,22 @@ if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeLi
         serviceInMap.put("privilegeEnumId", context.get("privilegeEnumId"));
         serviceInMap.put("roleTypeList", context.get("roleTypeList"));
         Map permResults = null;
-                Debug.logInfo("createContentAssocMethod, before checkAssocPermission" , "");
+                //Debug.logInfo("createContentAssocMethod, before checkAssocPermission" , "");
         permResults = dispatcher.runSync("checkAssocPermission", serviceInMap);
-                Debug.logInfo("permResults(0):" + permResults, "");
+                //Debug.logInfo("permResults(0):" + permResults, "");
         permissionStatus = (String) permResults.get("permissionStatus");
 
         if (Debug.verboseOn()) Debug.logVerbose("CREATING CONTENTASSOC permissionStatus :" + permissionStatus, null);
         if (permissionStatus != null && permissionStatus.equals("granted")) {
             contentAssoc.create();
         } else {
-            if (Debug.infoOn()) Debug.logInfo("CREATING CONTENTASSOC permission denied:" + contentAssoc, null);
+            //if (Debug.infoOn()) Debug.logInfo("CREATING CONTENTASSOC permission denied:" + contentAssoc, null);
             String errorMessage = "Permission to create contentAssoc:" + contentAssoc + " is denied."; 
             PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
-                Debug.logInfo("recorder(0):" + recorder, "");
+                //Debug.logInfo("recorder(0):" + recorder, "");
             if (recorder != null) {
                 String permissionMessage = recorder.toHtml();
-                Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
+                //Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
                 errorMessage += " \n " + permissionMessage;
                 PermissionRecorder recorderTo = (PermissionRecorder)permResults.get("permissionRecorderTo");
                 if (recorderTo != null) {
@@ -451,10 +451,10 @@ if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeLi
             String errorMessage = "Permission to update content:" + content + " is denied."; 
 /*
             PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
-                Debug.logInfo("recorder(0):" + recorder, "");
+                //Debug.logInfo("recorder(0):" + recorder, "");
             if (recorder != null) {
                 String permissionMessage = recorder.toHtml();
-                Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
+                //Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
                 errorMessage += " \n " + permissionMessage;
             }
 */
@@ -566,10 +566,10 @@ if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeLi
         } else {
             String errorMessage = "Permission to update contentAssoc:" + contentAssoc + " is denied."; 
             PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
-                Debug.logInfo("recorder(0):" + recorder, "");
+                //Debug.logInfo("recorder(0):" + recorder, "");
             if (recorder != null) {
                 String permissionMessage = recorder.toHtml();
-                Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
+                //Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
                 errorMessage += " \n " + permissionMessage;
             }
             return ServiceUtil.returnError(errorMessage); 
@@ -587,6 +587,7 @@ if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeLi
         String contentAssocTypeId = (String) context.get("contentAssocTypeId");
         String activeContentId = (String) context.get("activeContentId");
         Timestamp fromDate = (Timestamp) context.get("fromDate");
+        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         Map results = new HashMap();
         try {
             GenericValue activeAssoc =
