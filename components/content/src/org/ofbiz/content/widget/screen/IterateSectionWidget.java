@@ -163,7 +163,7 @@ public class IterateSectionWidget extends ModelScreenWidget {
         setActualPageSize(highIndex - lowIndex);
         if (paginate) {
             try {
-            renderNextPrev(writer, context);   
+                renderNextPrev(writer, context);   
             } catch(IOException e) {
                 Debug.logError(e, module);   
                 throw new RuntimeException(e.getMessage());
@@ -248,10 +248,17 @@ public class IterateSectionWidget extends ModelScreenWidget {
         
        if (paginate) {
             try {
-                viewIndex = ((Integer) context.get("viewIndex")).intValue();
+                Map params = (Map)context.get("parameters");
+                String viewIndexString = (String) params.get("VIEW_INDEX");
+                viewIndex = Integer.parseInt(viewIndexString);
             } catch (Exception e) {
-                viewIndex = 0;
+                try {
+                    viewIndex = ((Integer) context.get("viewIndex")).intValue();
+                } catch (Exception e2) {
+                    viewIndex = 0;
+                }
             }
+            context.put("viewIndex", new Integer(this.viewIndex));
     
             try {
                 viewSize = ((Integer) context.get("viewSize")).intValue();
