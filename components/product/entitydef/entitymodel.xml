@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.72 $
+ * @version    $Revision: 1.73 $
  */
 -->
 
@@ -87,12 +87,13 @@
             title="Catalog Category Association Entity">
       <field name="prodCatalogId" type="id-ne"></field>
       <field name="productCategoryId" type="id-ne"></field>
+      <field name="prodCatalogCategoryTypeId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <field name="sequenceNum" type="numeric"></field>
-      <field name="prodCatalogCategoryTypeId" type="id"></field>
       <prim-key field="prodCatalogId"/>
       <prim-key field="productCategoryId"/>
+      <prim-key field="prodCatalogCategoryTypeId"/>
       <prim-key field="fromDate"/>
       <relation type="one" fk-name="PROD_CC_CATALOG" rel-entity-name="ProdCatalog">
         <key-map field-name="prodCatalogId"/>
