@@ -241,15 +241,15 @@ public class ContentManagementServices {
                         context.put("dataResource", dataResource);
                         context.put("dataResourceId", dataResourceId);
                         ByteWrapper byteWrapper = (ByteWrapper)context.get("imageData");
+                        if (byteWrapper != null) 
+                            context.put("binData", byteWrapper);
+			/* removed to interact with Andy's changes
                         byte[] imageBytes = byteWrapper.getBytes();
                         if (Debug.infoOn()) Debug.logInfo("in persist... imageBytes(C):" + imageBytes, null);
                         if (imageBytes != null) 
                             context.put("imageData", imageBytes);
-                        try {
-                            thisResult = DataServices.createBinaryFileMethod(dctx, context);
-                        } catch(GenericServiceException e) {
-                            return ServiceUtil.returnError(e.getMessage());
-                        }
+			*/
+                        thisResult = DataServices.createBinaryFileMethod(dctx, context);
                     } else if (dataResourceTypeId.indexOf("_FILE") >=0) {
                         dataResource = (GenericValue)thisResult.get("dataResource");
                         context.put("dataResource", dataResource);
