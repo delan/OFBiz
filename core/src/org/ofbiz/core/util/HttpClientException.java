@@ -1,9 +1,15 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/23 18:38:14  azeneski
+ * Added in new HttpClient. Makes behind the scenes HTTP request (GET/POST)
+ * and returns the output as a string.
+ *
  */
 
 package org.ofbiz.core.util;
+
+import java.io.*;
 
 /**
  * <p><b>Title:</b> HttpClientException.java
@@ -32,21 +38,44 @@ package org.ofbiz.core.util;
  * Created on July 21, 2001, 1:08 PM
  */
 public class HttpClientException extends java.lang.Exception {
+  Throwable nested = null;
+  
+  public HttpClientException() {
+    super();
+  }
 
-    /**
-     * Creates new <code>HttpClientException</code> without detail message.
-     */
-    public HttpClientException() {
-    }
+  public HttpClientException(String str) {
+    super(str);
+  }
 
+  public HttpClientException(String str, Throwable nested) {
+    super(str);
+    this.nested = nested;
+  }
+  
+  /** Returns the detail message, including the message from the nested exception if there is one. */
+  public String getMessage() {
+    if(nested != null) return super.getMessage() + " (" + nested.getMessage() + ")";
+    else return super.getMessage();
+  }
+  
+  /** Prints the composite message to System.err. */
+  public void printStackTrace() {
+    super.printStackTrace();
+    if(nested != null) nested.printStackTrace();
+  }
 
-    /**
-     * Constructs an <code>HttpClientException</code> with the specified detail message.
-     * @param msg the detail message.
-     */
-    public HttpClientException(String msg) {
-        super(msg);
-    }
+  /** Prints the composite message and the embedded stack trace to the specified stream ps. */
+  public void printStackTrace(PrintStream ps) {
+    super.printStackTrace(ps);
+    if(nested != null) nested.printStackTrace(ps);
+  }
+
+  /** Prints the composite message and the embedded stack trace to the specified print writer pw. */
+  public void printStackTrace(PrintWriter pw) {
+    super.printStackTrace(pw);
+    if(nested != null) nested.printStackTrace(pw);
+  }
 }
 
 

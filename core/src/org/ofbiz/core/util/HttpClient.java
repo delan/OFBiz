@@ -1,6 +1,9 @@
 /* 
  * $Id$
  * $Log$
+ * Revision 1.3  2001/09/06 07:09:17  jonesde
+ * Added getStream and postStream functions that return an InputStream instead of a string.
+ *
  * Revision 1.2  2001/07/25 02:02:00  jonesde
  * Added newline character at the end of each downloaded line. All text was coming
  * out on a single line.
@@ -181,7 +184,7 @@ public class HttpClient {
         }
       }
       catch ( Exception e ) {
-          throw new HttpClientException(e.getMessage());
+          throw new HttpClientException("Error processing input stream", e);
       }
       return buf.toString();
     }
@@ -234,7 +237,7 @@ public class HttpClient {
             in = con.getInputStream();
         }
         catch ( Exception e ) {
-            throw new HttpClientException(e.getMessage());
+            throw new HttpClientException("Error processing request", e);
         }
         
         return in;
