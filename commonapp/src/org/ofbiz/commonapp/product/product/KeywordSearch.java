@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/11 00:00:08  jonesde
+ * Removed unnecessary throws statement.
+ *
  * Revision 1.1  2001/09/10 23:38:10  jonesde
  * Moved to commonapp
  *
@@ -172,9 +175,11 @@ public class KeywordSearch {
   }
 
   public static String tokens = ";: ,.!?\t\"\'\r\n()[]{}*%<>";
-  public static void induceKeywords(GenericValue product, GenericHelper helper)
+  public static void induceKeywords(GenericValue product)
   {
-    if(product == null || helper == null) return;
+    if(product == null) return;
+    GenericHelper helper = product.getHelper();
+    if(helper == null) return;
 
     Collection keywords = new TreeSet();
     keywords.add(product.getString("productId").toLowerCase());
