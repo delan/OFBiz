@@ -26,13 +26,106 @@
 
 <#if hasPermission>
 
-<div class="head1">Create Product in Category <span class='head2'><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]</span></div>
-<#if prodCatalogId?has_content>
+<div class="head1">Create Product in Category <span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]</span></div>
+<#if productCategoryId?has_content>
     <a href="<@ofbizUrl>/EditProductCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[Edit ProductCategory]</a>
 </#if>
 
+<div class="head1">
+    Checking for existing product in category <#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]
 
+    <#if productFeatureAndTypeDatas?has_content>
+        where 
+        <#list productFeatureAndTypeDatas as productFeatureAndTypeData>
+            <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
+            <#assign productFeature = productFeatureAndTypeData.productFeature>
+            ${productFeatureType.description} = ${productFeature.description}
+            <#if productFeatureAndTypeData_has_next>, and </#if>
+        </#list>
+    </#if>
+</div>
 
+<#if products?has_content>
+    <#list products as product>
+        <div class="tabletext">
+            ${product.productName?default("-no name-")} [${product.productId}]
+            <a href="<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[This is it]</a>
+        </div>
+    </#list>
 <#else>
-  <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
+    <div class="head3">&nbsp;No existing products found.</div>
+</#if>
+
+<form name="createProductInCategoryForm" method="POST" action="<@ofbizUrl>/createProductInCategory</@ofbizUrl>" style="margin: 0;">
+    <input type="hidden" name="productCategoryId" value="${productCategoryId}">
+    <table border="0" wdith="100%">
+        <#list productFeatureAndTypeDatas?if_exists as productFeatureAndTypeData>
+            <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
+            <#assign productFeature = productFeatureAndTypeData.productFeature>
+            <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
+            <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
+            <tr>
+                <td>
+                    <div class="tabletext">${productFeatureType.description}</div>
+                </td>
+                <td>$nbsp;</td>
+                <td>
+                    <div class="tabletext">
+                        ${productFeature.description}
+                        <#if requestParameters["pftsel_" + productFeatureTypeId]?exists>
+                            <input type="hidden" name="pftsel_${productFeatureTypeId}" value="Y"/>
+                            [Selectable]
+                        <#else>
+                            <input type="hidden" name="pftsel_${productFeatureTypeId}" value="N"/>
+                            [Standard]
+                        </#if>
+                    </div>
+                </td>
+            </tr>
+        </#list>
+        <tr>
+            <td><div class="tabletext">Product Name:</div></td>
+            <td>$nbsp;</td>
+            <td>
+                <input type="hidden" name="productName" value="${requestParameters.productName?if_exists}"/>
+                <div class="tabletext">${requestParameters.productName?if_exists}</div>
+            </td>
+        </tr>
+        <tr>
+            <td><div class="tabletext">Short Description:</div></td>
+            <td>$nbsp;</td>
+            <td>
+                <input type="hidden" name="shortDescription" value="${requestParameters.shortDescription?if_exists}"/>
+                <div class="tabletext">${requestParameters.shortDescription?if_exists}</div>
+            </td>
+        </tr>
+        <tr>
+            <td><div class="tabletext">Default Price:</div></td>
+            <td>$nbsp;</td>
+            <td>
+                <input type="hidden" name="defaultPrice" value="${requestParameters.defaultPrice?if_exists}"/>
+                <div class="tabletext">${requestParameters.defaultPrice?if_exists}</div>
+            </td>
+        </tr>
+        <tr>
+            <td><div class="tabletext">Average Cost:</div></td>
+            <td>$nbsp;</td>
+            <td>
+                <input type="hidden" name="averageCost" value="${requestParameters.averageCost?if_exists}"/>
+                <div class="tabletext">${requestParameters.averageCost?if_exists}</div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <div class="tabletext">
+                    New Product ID: <input type="text" name="productId" value=""/>
+                    <input type="submit" value="Create New Product"/>
+                </div>
+            </td>
+        </tr>
+    </table>
+</form>
+  
+<#else>
+    <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 </#if>

@@ -43,5 +43,5 @@ productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("
 productFeaturesByTypeMap = ParametricSearch.makeCategoryFeatureLists(productCategoryId, delegator);
 
 context.put("productCategoryId", productCategoryId);
-context.put("productCategory", searchCategory);
+context.put("productCategory", productCategory);
 context.put("productFeaturesByTypeMap", productFeaturesByTypeMap);

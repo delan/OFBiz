@@ -40,5 +40,39 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 productCategoryId = request.getParameter("productCategoryId");
 productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 
+// get all products in category, add each productId to a List, then filter by features...
+productCategoryMembers = productCategory.getRelated("ProductCategoryMember");
+productCategoryMemberIter = productCategoryMembers.iterator();
+productIds = new ArrayList(productCategoryMembers.size());
+while (productCategoryMemberIter.hasNext()) {
+    productCategoryMember = productCategoryMemberIter.next();
+    productIds.add(productCategoryMember.get("productId"));
+}
+featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(request);
+ParametricSearch.filterProductIdListByFeatures(productIds, featureIdByType, delegator);
+
+// get the product for each ID
+productIdIter = productIds.iterator();
+products = new ArrayList(productIds.size());
+while (productIdIter.hasNext()) {
+    productId = productIdIter.next();
+    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+    products.add(product);
+}
+
+productFeatureAndTypeDatas = new ArrayList(featureIdByType.size());
+featureIdByTypeIter = featureIdByType.entrySet().iterator();
+while (featureIdByTypeIter.hasNext()) {
+    featureIdByTypeEntry = featureIdByTypeIter.next();
+    productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", UtilMisc.toMap("productFeatureTypeId", featureIdByTypeEntry.getKey()));
+    productFeature = delegator.findByPrimaryKeyCache("ProductFeature", UtilMisc.toMap("productFeatureId", featureIdByTypeEntry.getValue()));
+    productFeatureAndTypeData = new HashMap();
+    productFeatureAndTypeData.put("productFeatureType", productFeatureType);
+    productFeatureAndTypeData.put("productFeature", productFeature);
+    productFeatureAndTypeDatas.add(productFeatureAndTypeData);
+}
+
 context.put("productCategoryId", productCategoryId);
 context.put("productCategory", searchCategory);
+context.put("productFeatureAndTypeDatas", productFeatureAndTypeDatas);
+context.put("products", products);
