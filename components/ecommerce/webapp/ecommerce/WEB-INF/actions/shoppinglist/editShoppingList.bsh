@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1.1
  */
  
@@ -67,64 +67,64 @@ if (shoppingListId != null) {
     context.put("shoppingList", shoppingList);
 
     if (shoppingList != null) {
-    	shoppingListItemTotal = 0.0;
-    	shoppingListChildTotal = 0.0;
+        shoppingListItemTotal = 0.0;
+        shoppingListChildTotal = 0.0;
     
         shoppingListItems = shoppingList.getRelatedCache("ShoppingListItem");
         if (shoppingListItems != null) {
-	        shoppingListItemDatas = new ArrayList(shoppingListItems.size());
-	        shoppingListItemIter = shoppingListItems.iterator();
-	        while (shoppingListItemIter.hasNext()) {
-	        	shoppingListItem = shoppingListItemIter.next();
-	        	shoppingListItemData = new HashMap();
+            shoppingListItemDatas = new ArrayList(shoppingListItems.size());
+            shoppingListItemIter = shoppingListItems.iterator();
+            while (shoppingListItemIter.hasNext()) {
+                shoppingListItem = shoppingListItemIter.next();
+                shoppingListItemData = new HashMap();
 
-	        	product = shoppingListItem.getRelatedOneCache("Product");
+                product = shoppingListItem.getRelatedOneCache("Product");
 
-	        	calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "currencyUomId", UtilHttp.getCurrencyUom(session), "userLogin", userLogin);
-	        	calcPriceOutMap = dispatcher.runSync("calculateProductPrice", calcPriceInMap);
+                calcPriceInMap = UtilMisc.toMap("product", product, "quantity", shoppingListItem.get("quantity"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "currencyUomId", UtilHttp.getCurrencyUom(session), "userLogin", userLogin);
+                calcPriceOutMap = dispatcher.runSync("calculateProductPrice", calcPriceInMap);
                 price = calcPriceOutMap.get("price");
                 totalPrice = price * shoppingListItem.getDouble("quantity");
                 shoppingListItemTotal += totalPrice;
-	        	
-	        	productVariantAssocs = null;
+                
+                productVariantAssocs = null;
                 if ("Y".equals(product.getString("isVirtual"))) {
                     productVariantAssocs = product.getRelatedCache("MainProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("sequenceNum"));
                 }
                 
-	        	shoppingListItemData.put("shoppingListItem", shoppingListItem);
-	        	shoppingListItemData.put("product", product);
-	        	shoppingListItemData.put("unitPrice", price);
-	        	shoppingListItemData.put("totalPrice", totalPrice);
-	        	shoppingListItemData.put("productVariantAssocs", productVariantAssocs);
-	        	shoppingListItemDatas.add(shoppingListItemData);
-	        }
-	        context.put("shoppingListItemDatas", shoppingListItemDatas);
+                shoppingListItemData.put("shoppingListItem", shoppingListItem);
+                shoppingListItemData.put("product", product);
+                shoppingListItemData.put("unitPrice", price);
+                shoppingListItemData.put("totalPrice", totalPrice);
+                shoppingListItemData.put("productVariantAssocs", productVariantAssocs);
+                shoppingListItemDatas.add(shoppingListItemData);
+            }
+            context.put("shoppingListItemDatas", shoppingListItemDatas);
         }
         
         shoppingListType = shoppingList.getRelatedOne("ShoppingListType");
         context.put("shoppingListType", shoppingListType);
-	
+    
         // get the child shopping lists of the current list for the logged in user
         childShoppingLists = delegator.findByAndCache("ShoppingList", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "parentShoppingListId", shoppingListId), UtilMisc.toList("listName"));
         // now get prices for each child shopping list...
         if (childShoppingLists != null) {
-	        childShoppingListDatas = new ArrayList(childShoppingLists.size());
-	        childShoppingListIter = childShoppingLists.iterator();
-	        while (childShoppingListIter.hasNext()) {
-	        	childShoppingList = childShoppingListIter.next();
-	        	childShoppingListData = new HashMap();
+            childShoppingListDatas = new ArrayList(childShoppingLists.size());
+            childShoppingListIter = childShoppingLists.iterator();
+            while (childShoppingListIter.hasNext()) {
+                childShoppingList = childShoppingListIter.next();
+                childShoppingListData = new HashMap();
 
-				calcListPriceInMap = UtilMisc.toMap("shoppingListId", childShoppingList.get("shoppingListId"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "userLogin", userLogin);
-	        	childShoppingListPriceMap = dispatcher.runSync("calculateShoppingListDeepTotalPrice", calcListPriceInMap);
-	        	totalPrice = childShoppingListPriceMap.get("totalPrice");
+                calcListPriceInMap = UtilMisc.toMap("shoppingListId", childShoppingList.get("shoppingListId"), "prodCatalogId", prodCatalogId, "webSiteId", webSiteId, "userLogin", userLogin);
+                childShoppingListPriceMap = dispatcher.runSync("calculateShoppingListDeepTotalPrice", calcListPriceInMap);
+                totalPrice = childShoppingListPriceMap.get("totalPrice");
                 shoppingListChildTotal += totalPrice;
 
-	        	childShoppingListData.put("childShoppingList", childShoppingList);
-	        	childShoppingListData.put("totalPrice", totalPrice);
-	        	childShoppingListDatas.add(childShoppingListData);
-	        }
-	        context.put("childShoppingListDatas", childShoppingListDatas);
-	    }
+                childShoppingListData.put("childShoppingList", childShoppingList);
+                childShoppingListData.put("totalPrice", totalPrice);
+                childShoppingListDatas.add(childShoppingListData);
+            }
+            context.put("childShoppingListDatas", childShoppingListDatas);
+        }
         context.put("shoppingListTotalPrice", shoppingListItemTotal + shoppingListChildTotal);
         context.put("shoppingListItemTotal", shoppingListItemTotal);
         context.put("shoppingListChildTotal", shoppingListChildTotal);
