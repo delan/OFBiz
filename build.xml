@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.20 2003/08/22 18:21:08 ajzeneski Exp $
+ *  $Id: build.xml,v 1.21 2003/10/17 20:21:19 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -461,6 +461,18 @@
         <echo message="[docs] ========== Done Building (JavaDocs) =========="/>              
     </target>
     
+    <!-- ================================================================== -->
+    <!-- Contrib Targets                                                    -->
+    <!-- ================================================================== -->
+    
+    <target name="copy-contrib">
+        <copy todir="${basedir}" overwrite="true" verbose="true">
+            <fileset dir="${basedir}/contrib" excludes="contrib/**,**/*.class"/>
+        </copy>
+    </target>
+    
+    <target name="build-contrib" depends="copy-contrib,refresh"/> 
+        
     <!-- ================================================================== -->
     <!-- WebSite Targets                                                    -->
     <!-- ================================================================== -->
