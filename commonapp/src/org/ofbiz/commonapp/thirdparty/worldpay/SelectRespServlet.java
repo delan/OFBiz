@@ -77,8 +77,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
           
     protected void doRequest(SelectServletRequest request, SelectServletResponse response) throws ServletException, IOException {
         Debug.logInfo("Response received from worldpay..", module);
-        
-        String orderPropertiesString = request.getParameter("M_orderProperties");
+                
         String localLocaleStr = request.getParameter("M_localLocale");
         String webSiteId = request.getParameter("M_webSiteId");
         String delegatorName = request.getParameter("M_delegatorName");
@@ -155,19 +154,9 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         request.setAttribute("dispatcher", dispatcher);
         request.setAttribute("order_id", orderId);
         request.setAttribute("notifyEmail", request.getParameter("M_notifyEmail"));
-        request.setAttribute("confirmEmail", request.getParameter("M_confirmEmail"));
-        request.setAttribute("orderProperties", request.getParameter("M_orderProperties"));
-        request.setAttribute("ecommerceProperties", request.getParameter("M_ecommerceProperties"));
+        request.setAttribute("confirmEmail", request.getParameter("M_confirmEmail"));        
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getParameter("M_controlPath"));
-        
-        // load the order.properties file.  
-        URL orderPropertiesUrl = null;         
-        try {
-            orderPropertiesUrl = new URL(orderPropertiesString);
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, "Problems loading order.properties", module);
-        }    
-        
+                
         // attempt to start a transaction
         boolean beganTransaction = false;
         try {
@@ -180,11 +169,11 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         if (transStatus.equalsIgnoreCase("Y")) {
             // order was approved
             Debug.logInfo("Order #" + orderId + " approved", module);
-            okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);                  
+            okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);                  
         } else {
             // order was cancelled
             Debug.logInfo("Order #" + orderId + " cancelled", module);
-            okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+            okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
         }
         
         if (okay) {        

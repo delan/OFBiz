@@ -60,15 +60,7 @@ public class WorldPayEvents {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
-        
-        // get order.properties        
-        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);       
-        String orderPropertiesString = orderPropertiesUrl.toExternalForm();
-        
-        // get ecommerce.properties
-        URL ecommercePropertiesUrl = CheckOutEvents.getEcommerceProperties(request);
-        String ecommercePropertiesString = ecommercePropertiesUrl.toExternalForm();
-                
+                                 
         // we need the websiteId for the correct properties file
         String webSiteId = CatalogWorker.getWebSiteId(request);
         
@@ -182,9 +174,7 @@ public class WorldPayEvents {
         String confirmTemplate = UtilProperties.getPropertyValue(configString, "payment.worldpay.confirmTemplate", "");
         String timeout = UtilProperties.getPropertyValue(configString, "payment.worldpay.timeout", "0");
         String company = UtilProperties.getPropertyValue(configString, "payment.general.company", "");
-        String defCur = UtilProperties.getPropertyValue(configString, "payment.general.defaultCurrency", "USD");        
-        String notifyEmail = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.notification.email.template");
-        String confirmEmail = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.confirmation.email.template");
+        String defCur = UtilProperties.getPropertyValue(configString, "payment.general.defaultCurrency", "USD");                
                            
         // order description
         String description = "Order #" + orderId;
@@ -298,15 +288,11 @@ public class WorldPayEvents {
         
         // now set some send-back parameters
         linkParms.setValue("M_controlPath", (String)request.getAttribute(SiteDefs.CONTROL_PATH));
-        linkParms.setValue("M_userLoginId", userLogin.getString("userLoginId"));
-        linkParms.setValue("M_orderProperties", orderPropertiesString);
-        linkParms.setValue("M_ecommerceProperties", ecommercePropertiesString);
+        linkParms.setValue("M_userLoginId", userLogin.getString("userLoginId"));               
         linkParms.setValue("M_dispatchName", dispatcher.getName());
         linkParms.setValue("M_delegatorName", delegator.getDelegatorName());        
         linkParms.setValue("M_webSiteId", webSiteId);        
-        linkParms.setValue("M_localLocale", UtilHttp.getLocale(request).toString());
-        linkParms.setValue("M_notifyEmail", notifyEmail != null ? notifyEmail : "");
-        linkParms.setValue("M_confirmEmail", confirmEmail != null ? confirmEmail : "");
+        linkParms.setValue("M_localLocale", UtilHttp.getLocale(request).toString());               
         linkParms.setValue("M_confirmTemplate", confirmTemplate != null ? confirmTemplate : "");
                     
         // redirect to worldpay

@@ -248,10 +248,7 @@ public class PayPalEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems getting authentication user.");
             return "error";
         }
-        
-        // get order.properties        
-        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);   
-                
+                               
         // get the orderId
         String orderId = request.getParameter("invoice");
         
@@ -284,9 +281,9 @@ public class PayPalEvents {
                 
         boolean okay = false;        
         if (paymentStatus.equals("Completed")) {
-            okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);            
+            okay = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);            
         } else if (paymentStatus.equals("Failed") || paymentStatus.equals("Denied")) {
-            okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);            
+            okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);            
         }
         
         if (okay) {                                     
@@ -341,12 +338,9 @@ public class PayPalEvents {
         } catch (GenericTransactionException gte) {
             Debug.logError(gte, "Unable to begin transaction", module);
         }   
-        
-        // get order.properties        
-        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);   
-                
+              
         // cancel the order
-        boolean okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+        boolean okay = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
         
         if (okay) {                
             try {

@@ -26,10 +26,11 @@
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilProperties;
 import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 
 delegator = request.getAttribute("delegator");
-
-if (UtilProperties.propertyValueEqualsIgnoreCase(application.getResource("/WEB-INF/ecommerce.properties"), "create.allow.password", "true")) {
+productStore = ProductStoreWorker.getProductStore(request);
+if (productStore.getString("allowPassword").equals("Y")) {
     context.put("createAllowPassword", true);
 } else {
     context.put("createAllowPassword", false);

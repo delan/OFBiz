@@ -28,6 +28,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.commonapp.product.catalog.*;
+import org.ofbiz.commonapp.product.store.*;
 
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     keySet = map.keySet();
@@ -133,8 +134,8 @@ if (product != null) {
     request.setAttribute("productReviews", reviews);
     
     // get the days to ship
-    prodCatalog = CatalogWorker.getProdCatalog(request);
-    facilityId = prodCatalog.getString("inventoryFacilityId");
+    productStore = ProductStoreWorker.getProductStore(request);
+    facilityId = productStore.getString("inventoryFacilityId");
     productFacility = delegator.findByPrimaryKeyCache("ProductFacility", UtilMisc.toMap("productId", productId, "facilityId", facilityId));
     if (productFacility != null && productFacility.get("daysToShip") != null) {
         context.put("daysToShip", productFacility.get("daysToShip"));

@@ -30,19 +30,26 @@
  -->
 
 <simple-methods>
-    <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">    	       
-        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="create.allow.password" default="true" field-name="create_allow_password"/>
-        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="default.customer.password" default="ungssblepsswd" field-name="default_customer_password"/>
-
+    <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
+    	<call-class-method class-name="org.ofbiz.commonapp.product.store.ProductStoreWorker" method-name="getProductStore" ret-field-name="productStore">
+    	    <field field-name="request" type="javax.servlet.ServletRequest"/>
+    	</call-class-method>
+        <if-empty field-name="allowPassword" map-name="productStore">
+            <string-to-field field-name="allowPassword" map-name="productStore" string="Y"/>
+        </if-empty>
+        <if-empty field-name="defaultPassword" map-name="productStore">
+            <string-to-field field-name="defaultPassword" map-name="productStore" string="ungssblepswd"/>
+        </if-empty>    	
+    	      
         <property-to-field resource="security" property="username.lowercase" default="false" field-name="username_lowercase"/>
         <property-to-field resource="security" property="password.lowercase" default="false" field-name="password_lowercase"/>
 
         <now-timestamp-to-env env-name="nowStamp"/>
         <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="parameters"/>
 
-        <if-compare field-name="create_allow_password" operator="not-equals" value="true">
-            <env-to-field env-name="default_customer_password" field-name="PASSWORD" map-name="parameters"/>
-            <env-to-field env-name="default_customer_password" field-name="CONFIRM_PASSWORD" map-name="parameters"/>
+        <if-compare field-name="allowPassword" map-name="productStore" operator="not-equals" value="Y">
+            <field-to-field field-name="defaultPassword" map-name="productStore" to-field-name="PASSWORD" to-map-name="parameters"/>
+            <field-to-field field-name="defaultPassword" map-name="productStore" to-field-name="CONFIRM_PASSWORD" to-map-name="parameters"/>
             <string-to-field string="No hint set, accout not yet enabled" field-name="PASSWORD_HINT" map-name="parameters"/>
         </if-compare>
         
@@ -360,7 +367,7 @@
         <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
 
         <!-- now finished, log in the user... -->
-        <if-compare field-name="create_allow_password" operator="equals" value="true">
+        <if-compare field-name="allowPassword" map-name="productStore" operator="equals" value="Y">
             <call-bsh><![CDATA[
                 org.ofbiz.commonapp.security.login.LoginEvents.doBasicLogin(createdUserLogin, request);
                 org.ofbiz.commonapp.security.login.LoginEvents.autoLoginSet(request, response);

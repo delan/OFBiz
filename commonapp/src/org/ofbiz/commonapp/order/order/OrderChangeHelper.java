@@ -44,10 +44,16 @@ public class OrderChangeHelper {
     
     public static final String module = OrderChangeHelper.class.getName();
     
-    public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, URL orderPropertiesUrl) {        
-        // get some payment related strings from order.properties.
-        final String HEADER_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
-        final String ITEM_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
+    public static boolean approveOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {        
+        GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
+        String HEADER_STATUS = "ORDER_PROCESSING";
+        String ITEM_STATUS = "ITEM_CREATED";
+        if (productStore.get("headerApprovedStatus") != null) {
+            HEADER_STATUS = productStore.getString("headerApprovedStatus");
+        }
+        if (productStore.get("itemApprovedStatus") != null) {
+            ITEM_STATUS = productStore.getString("itemApprovedStatus");
+        }
         
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, "ITEM_CREATED", ITEM_STATUS);
@@ -59,10 +65,16 @@ public class OrderChangeHelper {
         return true;
     }    
     
-    public static boolean rejectOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, URL orderPropertiesUrl) {        
-        // get some payment related strings from order.properties.
-        final String HEADER_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
-        final String ITEM_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
+    public static boolean rejectOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {        
+        GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
+        String HEADER_STATUS = "ORDER_REJECTED";
+        String ITEM_STATUS = "ITEM_REJECTED";
+        if (productStore.get("headerDeclinedStatus") != null) {
+              HEADER_STATUS = productStore.getString("headerDeclinedStatus");
+          }
+          if (productStore.get("itemDeclinedStatus") != null) {
+              ITEM_STATUS = productStore.getString("itemDeclinedStatus");
+          }        
         
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS);
@@ -75,10 +87,16 @@ public class OrderChangeHelper {
         return true;
     }        
     
-    public static boolean cancelOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId, URL orderPropertiesUrl) {
-        // get some payment related strings from order.properties.
-        final String HEADER_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.cancelled.status", "ORDER_REJECTED");
-        final String ITEM_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_REJECTED");
+    public static boolean cancelOrder(LocalDispatcher dispatcher, GenericValue userLogin, String orderId) {
+        GenericValue productStore = OrderReadHelper.getProductStoreFromOrder(dispatcher.getDelegator(), orderId);
+        String HEADER_STATUS = "ORDER_CANCELLED";
+        String ITEM_STATUS = "ITEM_CANCELLED";
+        if (productStore.get("headerCancelStatus") != null) {
+              HEADER_STATUS = productStore.getString("headerCancelStatus");
+          }
+          if (productStore.get("itemCancelStatus") != null) {
+              ITEM_STATUS = productStore.getString("itemCancelStatus");
+          }                  
         
         try {
             OrderChangeHelper.orderStatusChanges(dispatcher, userLogin, orderId, HEADER_STATUS, null, ITEM_STATUS);
@@ -183,32 +201,37 @@ public class OrderChangeHelper {
         GenericDelegator delegator = dispatcher.getDelegator();
         
         // find the workEffortId for this order
-        GenericValue workEffort = null;
+        List workEfforts = null;
         try {
-            List workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("workEffortTypeId", "WORK_FLOW", "sourceReferenceId", orderId));
-            if (workEfforts != null && workEfforts.size() > 1) {
-                Debug.logWarning("More then one workflow found for defined order: " + orderId, module);                
-            }
-            workEffort = EntityUtil.getFirst(workEfforts);
+            workEfforts = delegator.findByAnd("WorkEffort", UtilMisc.toMap("currentStatusId", "WF_SUSPENDED", "sourceReferenceId", orderId));            
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems getting WorkEffort with order ref number: " + orderId, module);
             return false;
         }        
                          
-        if (workEffort != null) {            
-            // attempt to release the order workflow from 'Hold' status (resume workflow)                        
-            String workEffortId = workEffort.getString("workEffortId");
-            try {                                           
-                if (workEffort.getString("currentStatusId").equals("WF_SUSPENDED")) {
-                    WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());                
-                    client.resume(workEffortId);
-                }                 
-            } catch (WfException e) {
-                Debug.logError(e, "Problem resuming workflow", module);      
-                return false;                 
+        if (workEfforts != null) {            
+            // attempt to release the order workflow from 'Hold' status (resume workflow)
+            boolean allPass = true; 
+            Iterator wei = workEfforts.iterator();
+            while (wei.hasNext()) {
+                GenericValue workEffort = (GenericValue) wei.next();                             
+                String workEffortId = workEffort.getString("workEffortId");
+                try {                                           
+                    if (workEffort.getString("currentStatusId").equals("WF_SUSPENDED")) {
+                        WorkflowClient client = new WorkflowClient(dispatcher.getDispatchContext());                
+                        client.resume(workEffortId);
+                    } else {
+                        Debug.logVerbose("Current : --{" + workEffort + "}-- not resuming", module);
+                    }                
+                } catch (WfException e) {
+                    Debug.logError(e, "Problem resuming activity : " + workEffortId, module);
+                    allPass = false;                                     
+                }
             }
-            return true;
-        } 
+            return allPass;
+        } else {
+            Debug.logWarning("No WF found for order ID : " + orderId, module);
+        }
         return false;               
     }
     
@@ -244,5 +267,5 @@ public class OrderChangeHelper {
             }             
         }                              
         return false;
-    }                          
+    }                        
 }

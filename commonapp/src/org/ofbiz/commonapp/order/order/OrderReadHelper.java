@@ -93,6 +93,10 @@ public class OrderReadHelper {
     public String getWebSiteId() {
         return orderHeader.getString("webSiteId");
     }
+    
+    public String getProductStoreId() {
+        return orderHeader.getString("productStoreId");
+    }
 
     public String getCurrency() {
         return orderHeader.getString("currencyUom");
@@ -601,6 +605,36 @@ public class OrderReadHelper {
     // =================== Static Methods ===================
     // ======================================================
 
+    public static GenericValue getOrderHeader(GenericDelegator delegator, String orderId) {
+        GenericValue orderHeader = null;
+        if (orderId != null && delegator != null) {
+            try {
+                orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot get order header", module);
+            }
+        }
+        return orderHeader;
+    }
+    
+    public static GenericValue getProductStoreFromOrder(GenericDelegator delegator, String orderId) {
+        return getProductStoreFromOrder(getOrderHeader(delegator, orderId));        
+    }
+    
+    public static GenericValue getProductStoreFromOrder(GenericValue orderHeader) {
+        GenericDelegator delegator = orderHeader.getDelegator();
+        GenericValue productStore = null;
+        if (orderHeader != null && orderHeader.get("productStoreId") != null) {
+            try {
+                productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId")));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot locate ProductStore from OrderHeader", module);
+            }
+        } else {
+            Debug.logError("Null header or productStoreId", module);
+        }
+        return productStore;
+    }
     public static double getOrderGrandTotal(List orderItems, List adjustments) {
         double total = getOrderItemsTotal(orderItems, adjustments);
         double adj = getOrderAdjustmentsTotal(orderItems, adjustments);

@@ -2323,7 +2323,9 @@
       <field name="declinedMessage" type="long-varchar"></field>
       <field name="rejectedMessage" type="long-varchar"></field>
       <field name="styleSheet" type="url"></field>
-      <field name="headerLogo" type="url"></field>    
+      <field name="headerLogo" type="url"></field>
+      <field name="headerMiddleBackground" type="url"></field>
+      <field name="headerRightBackground" type="url"></field>
       <prim-key field="productStoreId"/>
       <relation type="one" fk-name="PROD_STR_FACILITY" rel-entity-name="Facility">
         <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>

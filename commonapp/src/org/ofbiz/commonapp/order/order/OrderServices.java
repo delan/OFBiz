@@ -230,6 +230,10 @@ public class OrderServices {
         if (UtilValidate.isNotEmpty((String) context.get("visitId"))) { 
             order.set("visitId", context.get("visitId"));
         }
+        
+        if (UtilValidate.isNotEmpty((String) context.get("productStoreId"))) {
+            order.set("productStoreId", context.get("productStoreId"));
+        }
        
         if (UtilValidate.isNotEmpty((String) context.get("webSiteId"))) {
             order.set("webSiteId", context.get("webSiteId"));

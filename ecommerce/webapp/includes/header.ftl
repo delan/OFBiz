@@ -29,8 +29,8 @@
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>${layoutSettings.companyName?if_exists}: ${page.title?if_exists}</title>
-    <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>
+    <title>${productStore.storeName?if_exists}: ${page.title?if_exists}</title>
+    <link rel='stylesheet' href='<@ofbizContentUrl>${productStore.styleSheet?default('/images/maincss.css')}</@ofbizContentUrl>' type='text/css'>
 
     <#-- Append CSS for catalog -->
     <#if catalogStyleSheet?exists>
@@ -59,14 +59,14 @@
             <TD align=left width='1%'><IMG src='${sessionAttributes.overrideLogo}'></TD> 
           <#elseif catalogHeaderLogo?exists>
             <TD align=left width='1%'><IMG src='${catalogHeaderLogo}'></TD> 
-          <#elseif layoutSettings.headerImageUrl?has_content>
-            <td align=left width='1%'><IMG src='<@ofbizContentUrl>${layoutSettings.headerImageUrl}</@ofbizContentUrl>'></TD>
+          <#elseif productStore.headerLogo?has_content>
+            <td align=left width='1%'><IMG src='<@ofbizContentUrl>${productStore.headerLogo}</@ofbizContentUrl>'></TD>
           </#if>
-          <td align=center width='98%' <#if layoutSettings.headerMiddleBackgroundUrl?has_content>background='<@ofbizContentUrl>${layoutSettings.headerMiddleBackgroundUrl}</@ofbizContentUrl>'</#if> >
-              <#if layoutSettings.companyName?exists><span class='headerCompanyName'>${layoutSettings.companyName}</span></#if>
-              <#if layoutSettings.companySubtitle?exists><br><span class='headerCompanySubtitle'>${layoutSettings.companySubtitle}</span></#if>
+          <td align=center width='98%' <#if productStore.headerMiddleBackground?has_content>background='<@ofbizContentUrl>${productStore.headerMiddleBackground}</@ofbizContentUrl>'</#if> >
+              <#if productStore.title?exists><span class='headerCompanyName'>${productStore.title}</span></#if>
+              <#if productStore.subtitle?exists><br><span class='headerCompanySubtitle'>${productStore.subtitle}</span></#if>
           </td>
-          <td align=right width='1%' nowrap <#if layoutSettings.headerRightBackgroundUrl?has_content>background='<@ofbizContentUrl>${layoutSettings.headerRightBackgroundUrl}</@ofbizContentUrl>'</#if> >
+          <td align=right width='1%' nowrap <#if productStore.headerRightBackground?has_content>background='<@ofbizContentUrl>${productStore.headerRightBackground}</@ofbizContentUrl>'</#if> >
             ${pages.get("/cart/microcart.ftl")}
           </td>
         </tr>

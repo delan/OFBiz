@@ -438,9 +438,11 @@ public class CheckOutEvents {
     public static boolean explodeOrderItems(HttpServletRequest request) {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
                 
-        // Load the order.properties file.
-        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);
-        return UtilProperties.propertyValueEqualsIgnoreCase(orderPropertiesUrl, "order.item.explode", "Y");
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);
+        if (productStore.get("explodeOrderItems") == null) {
+            return false;
+        }
+        return productStore.getBoolean("explodeOrderItems").booleanValue();        
     }
 
     // Event wrapper for processPayment.
@@ -464,11 +466,11 @@ public class CheckOutEvents {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
 
-        // Load the order.properties file.
-        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);    
+        // Load the ProductStore settings.
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);        
 
-        // Get some payment related strings from order.properties.        
-        final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.declined.message", "Error! Set the declined message!");
+        // Get some payment related strings      
+        String DECLINE_MESSAGE = productStore.getString("declinedMessage");
 
         // Get the orderId from the cart.
         String orderId = cart.getOrderId();
@@ -506,7 +508,7 @@ public class CheckOutEvents {
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
                     request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);                    
                                        
-                     boolean ok = OrderChangeHelper.rejectOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+                     boolean ok = OrderChangeHelper.rejectOrder(dispatcher, userLogin, orderId);
                     if (!ok)
                         throw new GeneralException("Problem with order change; see above error");                                                
                         
@@ -518,7 +520,7 @@ public class CheckOutEvents {
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
                                         
                     // set the order and item status to approved  
-                    boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+                    boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
                     if (!ok)
                         throw new GeneralException("Problem with order change; see above error");                                                                                         
                         
@@ -530,7 +532,7 @@ public class CheckOutEvents {
                 if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);                    
                                 
                 // set the order and item status to cancelled and reverse inventory reservations
-                boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+                boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
                 if (!ok)
                     throw new GeneralException("Problem with order change; see above error");
                                               
@@ -541,7 +543,7 @@ public class CheckOutEvents {
         } else if (cart.getBillingAccountId() != null || paymentMethodTypeId.contains("EXT_COD")) {
             // approve all billing account or COD transactions (would not be able to use account if limit is reached)
             // note this is okay for now since only one payment method can be used; but this will need to be adjusted later
-            boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
+            boolean ok = OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
             if (!ok)
                 throw new GeneralException("Problem with order change; see above error");   
             return true;          
@@ -618,60 +620,16 @@ public class CheckOutEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-                                    
-        // Load the order.properties file.
-        URL orderPropertiesUrl = CheckOutEvents.getOrderProperties(request);
-     
-        // Get some payment related strings from order.properties.       
-        final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
-        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");                  
-        final String REJECT_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.rejected.message", "Error! Set the rejected message!");
+
+        // get the reject message                           
+        GenericValue productStore = ProductStoreWorker.getProductStore(request);                                          
+        String REJECT_MESSAGE = productStore.getString("rejectedMessage");
 
         // Get the orderId from the cart.
         String orderId = cart.getOrderId();
         
-        Map statusResult = null;
-        try {
-            // set the status on the order header
-            statusResult = dispatcher.runSync("changeOrderStatus",
-                    UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
-            if (statusResult.containsKey("errorMessage")) {
-                throw new GenericServiceException((String) statusResult.get("errorMessage"));
-            }
-
-            // set the status on the order item(s)
-            GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-
-            if (orderHeader != null) {
-                Collection orderItems = orderHeader.getRelated("OrderItem");
-
-                if (orderItems != null && orderItems.size() > 0) {
-                    Iterator i = orderItems.iterator();
-                    while (i.hasNext()) {
-                        GenericValue v = (GenericValue) i.next();
-                        v.set("statusId", ITEM_DECLINE_STATUS);
-                        v.store();
-                    }
-                }
-            }
-                        
-            // cancel inventory reservations
-            try {
-                Map cancelResult = dispatcher.runSync("cancelOrderInventoryReservation", UtilMisc.toMap("orderId", orderId, "userLogin", userLogin));
-
-                if (ModelService.RESPOND_ERROR.equals((String) cancelResult.get(ModelService.RESPONSE_MESSAGE))) {
-                    Debug.logError("cancelOrderInventoryReservation service failed for Order with ID [" + orderId + "] - " + ServiceUtil.makeErrorMessage(cancelResult, "", "\n", "", ""), module);
-                }
-            } catch (GenericServiceException e) {
-                throw new GeneralException("Error in cancelOrderInventoryReservation for Order with ID [" + orderId + "]", e);
-            }
-
-            // null out the orderId for next pass.
-            cart.setOrderId(null);
-        } catch (GeneralException e) {            
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
-            return "error";
-        }
+        // set the order/item status - reverse inv
+        OrderChangeHelper.rejectOrder(dispatcher, userLogin, orderId);
         
         // nuke the userlogin
         userLogin.set("enabled", "N");
@@ -917,39 +875,5 @@ public class CheckOutEvents {
         }
                         
         return "success";
-    }
-            
-    public static URL getOrderProperties(ServletRequest request) {
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        // Load the order.properties file.
-        URL propsUrl = null;
-        try {
-            String orderPropertiesStr = (String) request.getAttribute("orderProperties");
-            if (orderPropertiesStr != null) {
-                propsUrl = new URL(orderPropertiesStr);
-            } else {
-                propsUrl = application.getResource("/WEB-INF/order.properties");
-            }                        
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, "Cannot get order.properties URL", module);
-        } 
-        return propsUrl;       
-    }   
-       
-    public static URL getEcommerceProperties(ServletRequest request) {
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-        // Load the ecommerce.properties file.
-        URL propsUrl = null;
-        try {
-            String ecommercePropertiesStr = (String) request.getAttribute("ecommerceProperties");
-            if (ecommercePropertiesStr != null) {
-                propsUrl = new URL(ecommercePropertiesStr);
-            } else {
-                propsUrl = application.getResource("/WEB-INF/ecommerce.properties");
-            }                        
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, "Cannot get ecommerce.properties URL", module);
-        } 
-        return propsUrl;       
-    }             
+    }                
 }

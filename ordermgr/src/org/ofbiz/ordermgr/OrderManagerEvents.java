@@ -51,22 +51,9 @@ public class OrderManagerEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");       
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
-
-
-        // load the order.properties file.
-        URL orderPropertiesUrl = null;
-        try {
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
-                
-        // get some payment related strings from order.properties.
-        final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
-        final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
-             
+              
         if (session.getAttribute("OFFLINE_PAYMENTS") != null) {
-            String orderId = (String) request.getAttribute("order_id");
+            String orderId = (String) request.getAttribute("order_id");                                            
             List toBeStored = new LinkedList();                     
             List paymentPrefs = null;
             GenericValue placingCustomer = null;
@@ -103,7 +90,7 @@ public class OrderManagerEvents {
                 }
                 
                 // set the status of the order to approved
-                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);             
+                OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);             
             }
         }
         return "success";
@@ -115,24 +102,16 @@ public class OrderManagerEvents {
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");       
         GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
-
-        // load the order.properties file.
-        URL orderPropertiesUrl = null;
-        try {
-            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
-        } catch (MalformedURLException e) {
-            Debug.logWarning(e, module);
-        }
-                
+                   
         String orderId = request.getParameter("orderId");
         String workEffortId = request.getParameter("workEffortId");
         
-        // get the order header & payment preferences
+        // get the order header & payment preferences       
         GenericValue orderHeader = null;
-        List currentPaymentPrefs = null;
+        List currentPaymentPrefs = null;        
         try {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));  
-            currentPaymentPrefs = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")));      
+            currentPaymentPrefs = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")));                
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problems reading order header from datasource.", module);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems reading order header information.");
@@ -234,11 +213,8 @@ public class OrderManagerEvents {
         }
                 
         // update the status of the order and items
-        OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId, orderPropertiesUrl);
-        
-        // attempt to release the order workflow from 'Hold' status (resume workflow)
-        OrderChangeHelper.releaseInitialOrderHold(dispatcher, orderId);
-                    
+        OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
+                 
         return "success";
     }    
 

@@ -27,20 +27,14 @@
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 import org.ofbiz.commonapp.common.CommonWorkers;
 import org.ofbiz.commonapp.order.shoppingcart.*;
 
 userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 
-ecommercePropertiesUrl = application.getResource("/WEB-INF/ecommerce.properties");
-layoutSettings = new HashMap();
-context.put("layoutSettings", layoutSettings);
-
-layoutSettings.put("companyName", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.name"));
-layoutSettings.put("companySubtitle", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "company.subtitle"));
-layoutSettings.put("headerImageUrl", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.image.url"));
-layoutSettings.put("headerMiddleBackgroundUrl", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.middle.background.url"));
-layoutSettings.put("headerRightBackgroundUrl", UtilProperties.getPropertyValue(ecommercePropertiesUrl, "header.right.background.url"));
+productStore = ProductStoreWorker.getProductStore(request);
+context.put("productStore", productStore);
 
 prodCatalog = CatalogWorker.getProdCatalog(request);
 if (prodCatalog != null) {
