@@ -3,20 +3,23 @@
 <%@ page import="org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*, org.ofbiz.commonapp.common.*" %>
 <%@ page import="java.util.*" %>
+<%Map layoutSettings = (Map) pageContext.findAttribute("layoutSettings");%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='headerboxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
-          <%EntityField.run("layoutSettings", "headerImageUrl", "<TD align=left width='1%'><IMG height='50' src='", "'></TD>", pageContext);%>
+          <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerImageUrl"))) {%>
+            <TD align=left width='1%'><IMG height='50' src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
+          <%}%>
           <TD>&nbsp;&nbsp;</TD>
-          <TD align=left width='98%' <%EntityField.run("layoutSettings", "headerMiddleBackgroundUrl", "background='", "'", pageContext);%>>
+          <TD align=left width='98%' <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerMiddleBackgroundUrl"))) {%>background='<ofbiz:contenturl><%=(String) layoutSettings.get("headerMiddleBackgroundUrl")%></ofbiz:contenturl>'<%}%>>
               <%EntityField.run("layoutSettings", "companyName", "<div class='headerCompanyName'>", "</div>", pageContext);%>
               <%EntityField.run("layoutSettings", "companySubtitle", "<div class='headerCompanySubtitle'>", "</div>", pageContext);%>
               &nbsp;
           </TD>
-          <TD align=right width='1%' nowrap <%EntityField.run("layoutSettings", "headerRightBackgroundUrl", "background='", "'", pageContext);%>>
+          <TD align=right width='1%' nowrap <%if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerRightBackgroundUrl"))) {%>background='<ofbiz:contenturl><%=(String) layoutSettings.get("headerRightBackgroundUrl")%></ofbiz:contenturl>'<%}%>>
             <%@ include file="/cart/microcart.jsp"%>
           </td>
         </tr>

@@ -7,7 +7,7 @@
         <%String smallImageUrl = localProduct.getString("smallImageUrl");%>
         <%if(smallImageUrl == null || smallImageUrl.length() <= 0) smallImageUrl = "/images/defaultImage.jpg";%>
           <a href='<ofbiz:url>/product?<ofbiz:if name="category_id">category_id=<ofbiz:print attribute="category_id"/>&</ofbiz:if>product_id=<%EntityField.run("product", "productId", pageContext);%></ofbiz:url>'>
-            <img src="<%=smallImageUrl%>" align="left" height="50" class='imageborder' border='0'>
+            <img src='<ofbiz:contenturl><%=smallImageUrl%></ofbiz:contenturl>' align="left" height="50" class='imageborder' border='0'>
           </a>
       </td>
       <td align="left" valign="top" width="100%">

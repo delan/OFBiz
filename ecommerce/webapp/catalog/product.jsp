@@ -246,7 +246,9 @@
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
     <tr>
       <td align="left" valign="top" width="0">
-        <ofbiz:entityfield attribute="product" field="largeImageUrl" prefix="<img src='" suffix="' name='mainImage' vspace='5' hspace='5' border='1' width='200' align=left>"/>
+        <%if (UtilValidate.isNotEmpty((String) product.get("largeImageUrl"))) {%>
+            <img src='<ofbiz:contenturl><%=(String) product.get("largeImageUrl")%></ofbiz:contenturl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align=left>
+        <%}%>
       </td>
       <td align="right" valign="top">
         <div class="head2"><%EntityField.run("product", "productName", pageContext);%></div>
@@ -334,7 +336,7 @@
               <%if (imageUrl != null && imageUrl.length() > 0){%>
                 <td>
                   <table cellspacing="0" cellpadding="0">
-                    <tr><td><a href="#"><img src="<%=imageUrl%>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>',1);"></a></td></tr>
+                    <tr><td><a href="#"><img src="<ofbiz:contenturl><%=imageUrl%></ofbiz:contenturl>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>',1);"></a></td></tr>
                     <tr><td align="center" valign="top"><span class="tabletext"><%=featureDescription%></span></td></tr>
                   </table>
                 </td>
@@ -508,6 +510,4 @@
         <%pageContext.removeAttribute("assocProducts");%>
     </ofbiz:if>
   </table>
-
 </ofbiz:if>
-
