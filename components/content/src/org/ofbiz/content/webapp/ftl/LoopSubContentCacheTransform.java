@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.14 2004/04/30 23:08:26 ajzeneski Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.15 2004/05/10 20:30:46 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -50,7 +50,7 @@ import freemarker.template.TransformControl;
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
@@ -58,7 +58,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
     public static final String module = LoopSubContentCacheTransform.class.getName();
 
     public static final String [] upSaveKeyNames = {"globalNodeTrail"};
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "entityList", "entityIndex", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail"};
+    public static final String [] saveKeyNames = {"contentId", "subContentId", "entityList", "entityIndex", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly", "globalNodeTrail", "outputIndex"};
 
     /**
      * A wrapper for the FreeMarkerWorker version.
@@ -233,6 +233,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         List globalNodeTrail = (List)templateCtx.get("globalNodeTrail");
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), nodeTrailCsv ." + FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail), module);
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
+        String orderBy = (String)templateCtx.get("orderBy");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
         GenericValue val = null;
         try {
@@ -258,7 +259,7 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         try {
-            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId);
+            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId, orderBy);
         } catch(MiniLangException e2) {
             throw new RuntimeException(e2.getMessage());
         } catch(GenericEntityException e) {
