@@ -985,7 +985,7 @@ public class GenericDelegator {
     public Collection readXmlDocument(URL url) throws SAXException, ParserConfigurationException, java.io.IOException {
         if (url == null)
             return null;
-        return this.makeValues(UtilXml.readXmlDocument(url));
+        return this.makeValues(UtilXml.readXmlDocument(url, false));
     }
 
     public Collection makeValues(Document document) {
