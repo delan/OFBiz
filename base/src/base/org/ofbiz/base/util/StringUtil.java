@@ -1,5 +1,5 @@
 /*
- * $Id: StringUtil.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: StringUtil.java,v 1.2 2003/08/26 22:12:24 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@
  */
 package org.ofbiz.base.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -37,10 +38,12 @@ import java.util.StringTokenizer;
  * Misc String Utility Functions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class StringUtil {
+    
+    public static final String module = StringUtil.class.getName();
 
     /** 
      * Replaces all occurances of oldString in mainString with newString
@@ -159,7 +162,11 @@ public class StringUtil {
             String name = (String) e.get(0);
             String value = (String) e.get(1);
 
-            decodedMap.put(URLDecoder.decode(name), URLDecoder.decode(value));
+            try {
+                decodedMap.put(URLDecoder.decode(name, "UTF-8"), URLDecoder.decode(value, "UTF-8"));
+            } catch (UnsupportedEncodingException e1) {                
+                Debug.logError(e1, module);
+            }
         }
         return decodedMap;
     }
@@ -182,9 +189,19 @@ public class StringUtil {
 
             if (!(key instanceof String) || !(value instanceof String))
                 continue;
-            String encodedName = URLEncoder.encode((String) key);
-            String encodedValue = URLEncoder.encode((String) value);
-
+            String encodedName = null;
+            try {
+                encodedName = URLEncoder.encode((String) key, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                Debug.logError(e, module);              
+            }
+            String encodedValue = null;
+            try {
+                encodedValue = URLEncoder.encode((String) value, "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                Debug.logError(e, module);                
+            }
+            
             if (first)
                 first = false;
             else
