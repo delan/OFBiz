@@ -194,6 +194,7 @@
 
     <entity-group group="org.ofbiz.commonapp" entity="Content" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentAssoc" />
+    <entity-group group="org.ofbiz.commonapp" entity="ContentAssocPredicate" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentAssocType" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="ContentRole" />

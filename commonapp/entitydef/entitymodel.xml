@@ -548,9 +548,9 @@
       <field name="thruDate" type="date-time"></field>
       <field name="sequenceNum" type="numeric"></field>
       <field name="mapKey" type="name"></field>
-      <field name="predicateName" type="name"></field>
       <field name="upperCoordinate" type="numeric"></field>
       <field name="leftCoordinate" type="numeric"></field>
+      <field name="contentAssocPredicateId" type="id"></field>
       <prim-key field="contentId"/>
       <prim-key field="contentIdTo"/>
       <prim-key field="contentAssocTypeId"/>
@@ -564,6 +564,13 @@
       <relation type="one" fk-name="CONTENT_ASSC_TYP" rel-entity-name="ContentAssocType">
         <key-map field-name="contentAssocTypeId"/>
       </relation>
+    </entity>
+    <entity entity-name="ContentAssocPredicate"
+            package-name="org.ofbiz.commonapp.content.content"
+            title="Content Association Predicate Entity">
+      <field name="contentAssocPredicateId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <prim-key field="contentAssocPredicateId"/>
     </entity>
     <entity entity-name="ContentAssocType"
             package-name="org.ofbiz.commonapp.content.content"
