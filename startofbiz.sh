@@ -1,2 +1,2 @@
 
-$JAVA_HOME/bin/java -Xmx128 -jar ofbiz.jar
+$JAVA_HOME/bin/java -Xmx128M -jar ofbiz.jar
