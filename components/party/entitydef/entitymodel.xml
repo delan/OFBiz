@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  */
 -->
 
@@ -1804,21 +1804,6 @@
         <key-map field-name="partyId"/>
       </view-link>
     </view-entity>
-    <entity entity-name="PartySurveyResponse"
-            package-name="org.ofbiz.party.party"
-            title="Party Survey Response Entity">
-      <field name="partyId" type="id-ne"></field>
-      <field name="surveyId" type="id-long-ne"></field>
-      <field name="surveyResponseId" type="id-long-ne"></field>
-      <field name="surveyResponse" type="very-long"></field>
-      <field name="responseDateTime" type="date-time"></field>
-      <prim-key field="partyId"/>
-      <prim-key field="surveyId"/>
-      <prim-key field="surveyResponseId"/>
-      <relation type="one" fk-name="PARTY_SRVYRSP_PTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-    </entity>
     <entity entity-name="PartyType"
             package-name="org.ofbiz.party.party"
             title="Party Type Entity">
