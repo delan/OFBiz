@@ -33,7 +33,8 @@
   <ContactMechPurposeType contactMechPurposeTypeId="PAYMENT_LOCATION" description="Payment (AR) Address"/>
   <ContactMechPurposeType contactMechPurposeTypeId="GENERAL_LOCATION" description="General Correspondence Address"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PUR_RET_LOCATION" description="Purchase Return Address"/>
-  <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIPPING" description="Shipping Phone Number"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIPPING" description="Shipping Destination Phone Number"/>
+  <ContactMechPurposeType contactMechPurposeTypeId="PHONE_SHIP_ORIG" description="Shipping Origin Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_BILLING" description="Billing (AP) Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_PAYMENT" description="Payment (AR) Phone Number"/>
   <ContactMechPurposeType contactMechPurposeTypeId="PHONE_HOME" description="Main Home Phone Number"/>
@@ -69,6 +70,7 @@
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_WORK" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_WORK_SEC" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIPPING" contactMechTypeId="TELECOM_NUMBER"/>
+  <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_SHIP_ORIG" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_BILLING" contactMechTypeId="TELECOM_NUMBER"/>
   <ContactMechTypePurpose contactMechPurposeTypeId="PHONE_PAYMENT" contactMechTypeId="TELECOM_NUMBER"/>
 
