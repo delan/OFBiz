@@ -86,19 +86,19 @@ public class ModelService {
         Map optionalInfo = new HashMap();        
         
         // get the info values
-        Collection values = contextInfo.values();      
+        Collection values = contextInfo.values();              
         
         Iterator i = values.iterator();
         while ( i.hasNext() ) {
             ModelParam p = (ModelParam) i.next();            
-            if ( p.mode.equals("INOUT") || p.mode.equals(mode) ) {
+            if ( p.mode.equals("INOUT") || p.mode.equals(mode) ) {                
                 if ( !p.optional )
                     requiredInfo.put(p.name,p.type);
                 else
                     optionalInfo.put(p.name,p.type);
             }
-        }        
-        
+        }     
+                        
         // get the test values
         Map optionalTest = new HashMap();
         if ( test != null ) {
@@ -107,15 +107,15 @@ public class ModelService {
             while ( t.hasNext() ) {
                 Object key = t.next();
                 Object value = test.get(key);              
-                if ( !requiredInfo.containsKey(key) ) {
+                if ( !requiredInfo.containsKey(key) ) {                    
                     test.remove(key);
                     optionalTest.put(key,value);
                 }
             }
         }
-        
-        boolean testRequired = validate(requiredInfo,test,false);
-        boolean testOptional = validate(optionalInfo,optionalTest,true);
+                        
+        boolean testRequired = validate(requiredInfo,test,true);        
+        boolean testOptional = validate(optionalInfo,optionalTest,false);
         if ( testRequired && testOptional )
             return true;
         return false;                                            
@@ -137,17 +137,18 @@ public class ModelService {
         Set testSet = test.keySet();
         Set keySet = info.keySet();
         
-        // This is to see if the test set contains all from the info set
-        if ( !testSet.containsAll(keySet) )
+        // This is to see if the test set contains all from the info set (reverse)
+        if ( reverse && !testSet.containsAll(keySet) )         
+            return false;        
+        // This is to see if the info set contains all from the test set
+        if ( !keySet.containsAll(testSet) )             
             return false;
-        // This is to see if the info set contains all from the test set (reverse)
-        if ( reverse && !keySet.containsAll(testSet) )
-            return false;
+        
                 
         // * Validate types next
         // Warning - the class types MUST be accessible to this classloader
         String DEFAULT_PACKAGE = "java.lang."; // We will test both the raw value and this + raw value
-        Iterator i = keySet.iterator();
+        Iterator i = testSet.iterator();
         while ( i.hasNext() ) {
             Object key = i.next();
             Object testObject = test.get(key);
