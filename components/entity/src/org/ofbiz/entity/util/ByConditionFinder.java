@@ -1,5 +1,5 @@
 /*
- * $Id: ByConditionFinder.java,v 1.2 2004/07/10 14:25:58 jonesde Exp $
+ * $Id: ByConditionFinder.java,v 1.3 2004/07/10 15:18:32 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class ByConditionFinder {
@@ -147,40 +147,68 @@ public class ByConditionFinder {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
 
-        // TODO: if useCache == true && outputHandler instanceof UseIterator, throw exception; not a valid combination
-        
-        
-        // TODO: create whereEntityCondition from whereCondition
+        // create whereEntityCondition from whereCondition
+        EntityCondition whereEntityCondition = this.whereCondition.createCondition(context, entityName, delegator);
 
-        // TODO: create havingEntityCondition from havingCondition
+        // create havingEntityCondition from havingCondition
+        EntityCondition havingEntityCondition = this.havingCondition.createCondition(context, entityName, delegator);
 
-        // TODO: get the list of fieldsToSelect from selectFieldExpanderList
+        if (useCache == true) {
+            // if useCache == true && outputHandler instanceof UseIterator, throw exception; not a valid combination
+            if (outputHandler instanceof UseIterator) {
+                throw new IllegalArgumentException("In find entity by condition cannot have use-cache set to true and select use-iterator for the output type.");
+            }
+            if (distinct) {
+                throw new IllegalArgumentException("In find entity by condition cannot have use-cache set to true and set distinct to true.");
+            }
+            if (havingEntityCondition != null) {
+                throw new IllegalArgumentException("In find entity by condition cannot have use-cache set to true and specify a having-condition-list (can only use a where condition with condition-expr or condition-list).");
+            }
+        }
         
-        // TODO: get the list of orderByFields from orderByExpanderList
+        // get the list of fieldsToSelect from selectFieldExpanderList
+        List fieldsToSelect = null;
+        if (this.selectFieldExpanderList != null && this.selectFieldExpanderList.size() > 0) {
+            fieldsToSelect = new LinkedList();
+            Iterator selectFieldExpanderIter = selectFieldExpanderList.iterator();
+            while (selectFieldExpanderIter.hasNext()) {
+                FlexibleStringExpander selectFieldExpander = (FlexibleStringExpander) selectFieldExpanderIter.next();
+                fieldsToSelect.add(selectFieldExpander.expandString(context));
+            }
+        }
         
-        /*
+        
+        // get the list of orderByFields from orderByExpanderList
+        List orderByFields = null;
+        if (this.orderByExpanderList != null && this.orderByExpanderList.size() > 0) {
+            orderByFields = new LinkedList();
+            Iterator orderByExpanderIter = orderByExpanderList.iterator();
+            while (orderByExpanderIter.hasNext()) {
+                FlexibleStringExpander orderByExpander = (FlexibleStringExpander) orderByExpanderIter.next();
+                orderByFields.add(orderByExpander.expandString(context));
+            }
+        }
+        
         try {
             // TODO: if filterByDate, do a date filter on the results based on the now-timestamp
+            if (filterByDate) {
+                throw new IllegalArgumentException("The filer-by-date feature is not yet implemented");
+            }
             
             if (useCache) {
-                listAcsr.put(methodContext, delegator.findByAndCache(entityName, (Map) mapAcsr.get(methodContext), orderByNames));
+                List results = delegator.findByConditionCache(entityName, whereEntityCondition, fieldsToSelect, orderByFields);
+                this.outputHandler.handleOutput(results, context, listAcsr);
             } else {
-                listAcsr.put(methodContext, delegator.findByAnd(entityName, (Map) mapAcsr.get(methodContext), orderByNames));
+                EntityFindOptions options = new EntityFindOptions();
+                options.setDistinct(distinct);
+                EntityListIterator eli = delegator.findListIteratorByCondition(entityName, whereEntityCondition, havingEntityCondition, fieldsToSelect, orderByFields, options);
+                this.outputHandler.handleOutput(eli, context, listAcsr);
             }
         } catch (GenericEntityException e) {
+            String errMsg = "Error doing find by condition: " + e.toString();
             Debug.logError(e, module);
-            String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [problem finding the " + entityName + " entity: " + e.getMessage() + "]";
-
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                methodContext.putEnv(simpleMethod.getEventErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getEventResponseCodeName(), simpleMethod.getDefaultErrorCode());
-            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                methodContext.putEnv(simpleMethod.getServiceErrorMessageName(), errMsg);
-                methodContext.putEnv(simpleMethod.getServiceResponseMessageName(), simpleMethod.getDefaultErrorCode());
-            }
-            return false;
+            throw new GeneralException(errMsg, e);
         }
-        */
     }
     
     public static interface Condition {
@@ -273,6 +301,7 @@ public class ByConditionFinder {
     
     public static interface OutputHandler {
         public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr);
+        public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr);
     }
     public static class LimitRange implements OutputHandler {
         FlexibleStringExpander startExdr;
@@ -283,27 +312,31 @@ public class ByConditionFinder {
             this.sizeExdr = new FlexibleStringExpander(limitRangeElement.getAttribute("size"));
         }
         
-        public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
+        int getStart(Map context) {
             String startStr = this.startExdr.expandString(context);
-            String sizeStr = this.sizeExdr.expandString(context);
-            
-            int start = 0;
-            int size = 0;
             try {
-                start = Integer.parseInt(startStr);
+                return Integer.parseInt(startStr);
             } catch (NumberFormatException e) {
                 String errMsg = "The limit-range start number \"" + startStr + "\" was not valid: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
+        }
+        
+        int getSize(Map context) {
+            String sizeStr = this.sizeExdr.expandString(context);
             try {
-                size = Integer.parseInt(sizeStr);
+                return Integer.parseInt(sizeStr);
             } catch (NumberFormatException e) {
                 String errMsg = "The limit-range size number \"" + sizeStr + "\" was not valid: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
-            
+        }
+        
+        public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
+            int start = getStart(context);
+            int size = getSize(context);
             try {
                 listAcsr.put(context, eli.getPartialList(start, size));
             } catch (GenericEntityException e) {
@@ -311,6 +344,12 @@ public class ByConditionFinder {
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
+        }
+
+        public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr) {
+            int start = getStart(context);
+            int size = getSize(context);
+            listAcsr.put(context, results.subList(start, start + size));
         }
     }
     public static class LimitView implements OutputHandler {
@@ -322,26 +361,31 @@ public class ByConditionFinder {
             this.viewSizeExdr = new FlexibleStringExpander(limitViewElement.getAttribute("view-size"));
         }
         
-        public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
+        int getIndex(Map context) {
             String viewIndexStr = this.viewIndexExdr.expandString(context);
-            String viewSizeStr = this.viewSizeExdr.expandString(context);
-            
-            int index = 0;
-            int size = 0;
             try {
-                index = Integer.parseInt(viewIndexStr);
+                return Integer.parseInt(viewIndexStr);
             } catch (NumberFormatException e) {
                 String errMsg = "The limit-view view-index number \"" + viewIndexStr + "\" was not valid: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
+        }
+        
+        int getSize(Map context) {
+            String viewSizeStr = this.viewSizeExdr.expandString(context);
             try {
-                size = Integer.parseInt(viewSizeStr);
+                return Integer.parseInt(viewSizeStr);
             } catch (NumberFormatException e) {
                 String errMsg = "The limit-view view-size number \"" + viewSizeStr + "\" was not valid: " + e.toString();
                 Debug.logError(e, errMsg, module);
                 throw new IllegalArgumentException(errMsg);
             }
+        }
+        
+        public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
+            int index = this.getIndex(context);
+            int size = this.getSize(context);
             
             try {
                 listAcsr.put(context, eli.getPartialList(index * size, size));
@@ -351,6 +395,12 @@ public class ByConditionFinder {
                 throw new IllegalArgumentException(errMsg);
             }
         }
+
+        public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr) {
+            int index = this.getIndex(context);
+            int size = this.getSize(context);
+            listAcsr.put(context, results.subList(index * size, index * size + size));
+        }
     }
     public static class UseIterator implements OutputHandler {
         public UseIterator(Element useIteratorElement) {
@@ -359,6 +409,10 @@ public class ByConditionFinder {
         
         public void handleOutput(EntityListIterator eli, Map context, FlexibleMapAccessor listAcsr) {
             listAcsr.put(context, eli);
+        }
+
+        public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr) {
+            throw new IllegalArgumentException("Cannot handle output with use-iterator when the query is cached, or the result in general is not an EntityListIterator");
         }
     }
 }
