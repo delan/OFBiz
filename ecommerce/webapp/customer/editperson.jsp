@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Edit Person Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,20 +22,21 @@
  *@author     David E. Jones
  *@created    Sep 1 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
-<ofbiz:object name="person" property="person" type="org.ofbiz.core.entity.GenericValue" />  
+<ofbiz:object name="userLogin" property="userLogin" type="org.ofbiz.core.entity.GenericValue" />  
 
 <%
+    GenericValue person = userLogin == null ? null : userLogin.getRelatedOne("Person");
+    if (person != null) pageContext.setAttribute("person", person);
+
     boolean tryEntity = true;
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
-    if(person == null)
-        tryEntity = false;
+    if(person == null) tryEntity = false;
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
     String donePage = request.getParameter("DONE_PAGE");
