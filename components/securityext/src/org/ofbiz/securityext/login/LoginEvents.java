@@ -1,5 +1,5 @@
 /*
- * $Id: LoginEvents.java,v 1.17 2004/07/06 17:07:19 ajzeneski Exp $
+ * $Id: LoginEvents.java,v 1.18 2004/07/07 18:25:11 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -26,12 +26,6 @@ package org.ofbiz.securityext.login;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.FileInputStream;
-import java.io.ByteArrayInputStream;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
@@ -46,7 +40,6 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.UtilObject;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericDelegator;
@@ -66,15 +59,18 @@ import org.ofbiz.service.ModelService;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="">Dustin Caldwell</a>
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class LoginEvents {
 
     public static final String module = LoginEvents.class.getName();
     public static final String resource = "SecurityextUiLabels";
-
     public static final String EXTERNAL_LOGIN_KEY_ATTR = "externalLoginKey";
+
+    // the amount of time after restart we will ignore the auto-logout feature
+    // this will allow users logged in during a restart to resume where they left
+    public static final long SESSION_ALLOW_TIME = (long) UtilProperties.getPropertyNumber("security.properties", "login.ignore.autologout.time");
 
     /** This Map is keyed by the randomly generated externalLoginKey and the value is a UserLogin GenericValue object */
     public static Map externalLoginKeys = new HashMap();
@@ -85,6 +81,7 @@ public class LoginEvents {
      * When a user logs out this Map will be cleared so the user will be logged out automatically on subsequent requests.
      */
     public static Map loggedInSessions = new HashMap();
+    private static final long classInitTime = System.currentTimeMillis();
 
     /**
      * Save USERNAME and PASSWORD for use by auth pages even if we start in non-auth pages.
@@ -622,7 +619,7 @@ public class LoginEvents {
         return autoLoginCheck(delegator, session, userLogin.getString("userLoginId"));
     }
 
-    public static String autoLoginRemove(HttpServletRequest request, HttpServletResponse response) throws java.io.IOException {
+    public static String autoLoginRemove(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         GenericValue userLogin = (GenericValue) session.getAttribute("autoUserLogin");
 
@@ -696,7 +693,7 @@ public class LoginEvents {
                 }
 
                 // logout the current user and login the new user...
-                String logoutRetVal = logout(request, response);
+                logout(request, response);
                 // ignore the return value; even if the operation failed we want to set the new UserLogin
             }
 
@@ -726,6 +723,9 @@ public class LoginEvents {
     }
 
     public static boolean isLoggedInSession(GenericValue userLogin, HttpServletRequest request) {
+        if (userLogin == null || userLogin.get("userLoginId") == null) {
+            return false;
+        }
         return isLoggedInSession(userLogin.getString("userLoginId"), request, true);
     }
 
@@ -733,7 +733,7 @@ public class LoginEvents {
         if (userLoginId != null) {
             Map webappMap = (Map) loggedInSessions.get(userLoginId);
             if (webappMap == null) {
-                return false;
+                return checkServerReboot(userLoginId, request);
             } else {
                 String sessionId = (String) webappMap.get(UtilHttp.getApplicationName(request));
                 if (!checkSessionId) {
@@ -752,12 +752,30 @@ public class LoginEvents {
         }
     }
 
+    private static boolean checkServerReboot(String userLoginId, HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        long created = session.getCreationTime();
+        long now = System.currentTimeMillis();
+        if ((created < classInitTime) && (classInitTime + SESSION_ALLOW_TIME) > now) {
+            loginToSession(userLoginId, request);
+            return true;
+        }
+        return false;
+    }
+
     public static void loginToSession(GenericValue userLogin, HttpServletRequest request) {
-        if (userLogin != null) {
-            Map webappMap = (Map) loggedInSessions.get(userLogin.get("userLoginId"));
+        if (userLogin == null || userLogin.get("userLoginId") == null) {
+            return;
+        }
+        loginToSession(userLogin.getString("userLoginId"), request);
+    }
+
+    public static void loginToSession(String userLoginId, HttpServletRequest request) {
+        if (userLoginId != null) {
+            Map webappMap = (Map) loggedInSessions.get(userLoginId);
             if (webappMap == null) {
                 webappMap = new HashMap();
-                loggedInSessions.put(userLogin.get("userLoginId"), webappMap);
+                loggedInSessions.put(userLoginId, webappMap);
             }
 
             String webappName = UtilHttp.getApplicationName(request);
@@ -774,7 +792,6 @@ public class LoginEvents {
     protected static boolean hasBasePermission(GenericValue userLogin, HttpServletRequest request) {
         ServletContext context = (ServletContext) request.getAttribute("servletContext");
         Security security = (Security) request.getAttribute("security");
-        HttpSession session = request.getSession();
 
         String serverId = (String) context.getAttribute("_serverId");
         String contextPath = request.getContextPath();
