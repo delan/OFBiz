@@ -53,7 +53,7 @@
         <property name="xerces.jar"    value="${extlib.dir}/compile/xerces.jar" />
         
         <property name="castor.jar"    value="${extlib.dir}/common/castor-0.9.3.9.jar" />
-        <property name="tyrex.jar"     value="${extlib.dir}/common/tyrex-0.9.8.5.jar" />
+        <property name="tyrex.jar"     value="${extlib.dir}/common/tyrex-1.0.jar" />
         <property name="log4j.jar"     value="${extlib.dir}/common/log4j.jar"/>
 
         <property name="bsh.jar"       value="${extlib.dir}/share/bsh-1.2b3.jar"/>

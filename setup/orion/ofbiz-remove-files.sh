@@ -19,7 +19,7 @@ rm $ORION_HOME/lib/localdtds.properties
 #rm $ORION_HOME/lib/tyrexdomain.xml
 
 # get all of the third party jars
-#rm $ORION_HOME/lib/tyrex-0.9.8.5.jar $ORION_HOME/lib/ots-jts_1.0.jar
+#rm $ORION_HOME/lib/tyrex-1.0.jar $ORION_HOME/lib/ots-jts_1.0.jar
 rm $ORION_HOME/lib/castor-0.9.3.9.jar $ORION_HOME/lib/hsqldb.jar $ORION_HOME/lib/jdbc7.1-1.3.jar
 rm $ORION_HOME/lib/mm.mysql-2.0.8-bin.jar $ORION_HOME/lib/log4j.jar
 rm $ORION_HOME/lib/axis.jar $ORION_HOME/lib/clutil.jar $ORION_HOME/lib/wsdl4j.jar

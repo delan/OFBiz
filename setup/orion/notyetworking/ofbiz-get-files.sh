@@ -21,7 +21,7 @@ cp -i $OFBIZ_HOME/commonapp/etc/localdtds.properties $ORION_HOME/lib
 #cp -i $OFBIZ_HOME/commonapp/etc/tyrexdomain.xml $ORION_HOME/lib
 
 # get all of the third party jars
-#cp -i $OFBIZ_HOME/lib/common/tyrex-0.9.8.5.jar $OFBIZ_HOME/lib/common/ots-jts_1.0.jar $ORION_HOME/lib
+#cp -i $OFBIZ_HOME/lib/common/tyrex-1.0.jar $OFBIZ_HOME/lib/common/ots-jts_1.0.jar $ORION_HOME/lib
 cp -i $OFBIZ_HOME/lib/common/castor-0.9.3.9.jar $OFBIZ_HOME/lib/common/hsqldb.jar $OFBIZ_HOME/lib/common/jdbc7.1-1.3.jar $ORION_HOME/lib
 cp -i $OFBIZ_HOME/lib/common/mm.mysql-2.0.8-bin.jar $OFBIZ_HOME/lib/common/log4j.jar $ORION_HOME/lib
 cp -i $OFBIZ_HOME/lib/share/axis.jar $OFBIZ_HOME/lib/share/clutil.jar $OFBIZ_HOME/lib/share/wsdl4j.jar $ORION_HOME/lib
