@@ -33,6 +33,7 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.view.*;
 
 import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.template.Configuration;
@@ -114,44 +115,42 @@ public class FreeMarkerViewHandler implements ViewHandler {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
         
         root.put("Static", wrapper.getStaticModels());
-
-        //NOTE: no longer wrapping for efficiency reasons, FreeMarker will wrap on the fly
-        //try {
-            // add in the OFBiz objects
-            root.put("delegator", request.getAttribute("delegator"));
-            root.put("dispatcher", request.getAttribute("dispatcher"));
-            root.put("security", request.getAttribute("security"));
-            root.put("userLogin", session.getAttribute("userLogin"));
-
-            // add the response object (for transforms) to the context as a BeanModel
-            root.put("response", response);
-            
-            // add the application object (for transforms) to the context as a BeanModel
-            root.put("application", servletContext);
-            
-            // add the servlet context -- this has been deprecated, and now requires servlet, do we really need it?
-            //root.put("applicationAttributes", new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance()));                       
-                                 
-            // add the session object (for transforms) to the context as a BeanModel
-            root.put("session", session);
-
-            // add the session
-            root.put("sessionAttributes", new HttpSessionHashModel(session, wrapper));
-
-            // add the request object (for transforms) to the context as a BeanModel
-            root.put("request", request);
-
-            // add the request
-            root.put("requestAttributes", new HttpRequestHashModel(request, wrapper));
-
-            // add the request parameters -- this now uses a Map from UtilHttp
-            Map requestParameters = UtilHttp.getParameterMap(request);
-            root.put("requestParameters", requestParameters);
-
-        //} catch (freemarker.template.TemplateModelException e) {
-        //    Debug.logError(e, "Error creating template model in OFBiz FreeMarker preparation");
-        //}
         
+        // add in the OFBiz objects
+        root.put("delegator", request.getAttribute("delegator"));
+        root.put("dispatcher", request.getAttribute("dispatcher"));
+        root.put("security", request.getAttribute("security"));
+        root.put("userLogin", session.getAttribute("userLogin"));
+
+        // add the response object (for transforms) to the context as a BeanModel
+        root.put("response", response);
+            
+        // add the application object (for transforms) to the context as a BeanModel
+        root.put("application", servletContext);
+            
+        // add the servlet context -- this has been deprecated, and now requires servlet, do we really need it?
+        //root.put("applicationAttributes", new ServletContextHashModel(servletContext, BeansWrapper.getDefaultInstance()));                       
+                                 
+        // add the session object (for transforms) to the context as a BeanModel
+        root.put("session", session);
+
+        // add the session
+        root.put("sessionAttributes", new HttpSessionHashModel(session, wrapper));
+
+        // add the request object (for transforms) to the context as a BeanModel
+        root.put("request", request);
+
+        // add the request
+        root.put("requestAttributes", new HttpRequestHashModel(request, wrapper));
+
+        // add the request parameters -- this now uses a Map from UtilHttp
+        Map requestParameters = UtilHttp.getParameterMap(request);
+        root.put("requestParameters", requestParameters);
+           
+        // add the TabLibFactory
+        TaglibFactory JspTaglibs = new TaglibFactory(servletContext);
+        root.put("JspTaglibs", JspTaglibs);
+ 
         // add the OFBiz transforms/methods
         root.put("ofbizUrl", ofbizUrl);
         root.put("ofbizContentUrl", ofbizContentUrl);
