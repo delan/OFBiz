@@ -1,5 +1,5 @@
 /*
- * $Id: XuiContainer.java,v 1.2 2004/07/09 03:13:14 ajzeneski Exp $
+ * $Id: XuiContainer.java,v 1.3 2004/07/10 19:55:06 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,8 @@
  */
 package org.ofbiz.content.xui;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JFrame;
 
 import net.xoetrope.swing.XApplet;
@@ -39,19 +41,16 @@ import org.ofbiz.entity.GenericDelegator;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class XuiContainer implements Container {
 
     public static final String module = XuiContainer.class.getName();
-
-    protected static GenericDelegator delegator = null;
-    protected static LocalDispatcher dispatcher = null;
+    protected static Map sessions = new HashMap();
 
     protected XuiScreen initial = null;
     protected String startup = null;
-
 
     public void init(String[] args) throws ContainerException {
     }
@@ -65,15 +64,26 @@ public class XuiContainer implements Container {
 
         // get the delegator
         String delegatorName = ContainerConfig.getPropertyValue(cc, "delegator-name", "default");
-        delegator = GenericDelegator.getGenericDelegator(delegatorName);
+        GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
 
         // get the dispatcher
         String dispatcherName = ContainerConfig.getPropertyValue(cc, "dispatcher-name", "xui-dispatcher");
+        LocalDispatcher dispatcher = null;
         try {
             dispatcher = GenericDispatcher.getLocalDispatcher(dispatcherName, delegator);
         } catch (GenericServiceException e) {
             throw new ContainerException(e);
         }
+
+        // get the pre-defined session ID
+        String xuiSessionId = ContainerConfig.getPropertyValue(cc, "xui-session-id", null);
+        if (xuiSessionId == null) {
+            throw new ContainerException("No xui-session-id value set in xui-container!");
+        }
+
+        // create and cache the session
+        XuiSession session = new XuiSession(xuiSessionId, delegator, dispatcher);
+        sessions.put(xuiSessionId, session);
 
         // load the XUI and render the initial screen
         this.startup = ContainerConfig.getPropertyValue(cc, "startup-file", "xui.properties");
@@ -86,12 +96,8 @@ public class XuiContainer implements Container {
     public void stop() throws ContainerException {
     }
 
-    public static GenericDelegator getGenericDelegator() {
-        return delegator;
-    }
-
-    public static LocalDispatcher getLocalDispatcher() {
-        return dispatcher;
+    public static XuiSession getSession(String sessionId) {
+        return (XuiSession) sessions.get(sessionId);
     }
 
     class XuiScreen extends XApplet {
