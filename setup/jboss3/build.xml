@@ -110,7 +110,7 @@
 	<copy toDir="${j2eedeploy.dir}" file="lib/jotm/jonas_timer.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/fop.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/share/freemarker.jar"/>
-	<copy toDir="${j2eedeploy.dir}" file="lib/jasperreports/itext-0.92.jar"/>
+	<copy toDir="${j2eedeploy.dir}" file="lib/jasperreports/itext-0.96.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/jasperreports/jasperreports.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/jasperreports/jasperreports-applet.jar"/>
 	<copy toDir="${j2eedeploy.dir}" file="lib/scripting/jacl.jar"/>
