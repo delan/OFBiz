@@ -942,9 +942,9 @@
     <service name="createFacilityLocation" default-entity-name="FacilityLocation" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="createFacilityLocation" auth="true">
         <description>Create a Facility Location</description>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="locationSeqId" type="String" mode="OUT" optional="false"/>       
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
     </service>
     <service name="updateFacilityLocation" default-entity-name="FacilityLocation" engine="simple"
                 location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="updateFacilityLocation" auth="true">
