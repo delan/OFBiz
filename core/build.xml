@@ -133,19 +133,29 @@
         <!-- also put the DTDs in this jar file... -->
         <copy todir="${build.dir}/share">
             <fileset dir="${doc.dir}/xmldefs/ofbiz" includes="*.dtd" />
+            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
         </copy>
 		
     	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/webapp" />
         </javac>
+        <copy todir="${build.dir}/webapp">
+            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
+        </copy>
     	
-    	<javac debug="on" destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share:{$build.dir}/webapp">
+    	<javac debug="on" destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/workflow" />    
         </javac>
+        <copy todir="${build.dir}/workflow">
+            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
+        </copy>
 
-    	<javac debug="on" destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share:{$build.dir}/webapp">
+    	<javac debug="on" destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/rules" />    
         </javac>
+        <copy todir="${build.dir}/rules">
+            <fileset dir="${src.dir}" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic" />
+        </copy>
 
 <!--
   	<javac destdir="${build.dir}/crypto" classpath="${classpath}:${build.dir}/share">
