@@ -150,6 +150,13 @@
       <relation type="one" rel-entity-name="ShipmentMethodType">
         <key-map field-name="shipmentMethodTypeId"/>
       </relation>
+      <relation type="one" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
       <relation type="many" rel-entity-name="OrderShipmentPreference">
         <key-map field-name="shipmentMethodTypeId"/>
         <key-map field-name="partyId" rel-field-name="carrierPartyId"/>
