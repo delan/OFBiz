@@ -451,6 +451,8 @@
   <ServerHitType description="Entity" hitTypeId="ENTITY"/>
   <ServerHitType description="Service" hitTypeId="SERVICE"/>
 
+  <ShipmentMethodType description="Standard" shipmentMethodTypeId="standard"/>
+  <ShipmentMethodType description="Express" shipmentMethodTypeId="express"/>
   <ShipmentMethodType description="Ground" shipmentMethodTypeId="GROUND"/>
   <ShipmentMethodType description="Air" shipmentMethodTypeId="AIR"/>
   <ShipmentMethodType description="Guaranteed Next Day" shipmentMethodTypeId="NEXT_DAY"/>
