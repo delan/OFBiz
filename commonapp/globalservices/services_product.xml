@@ -9,10 +9,17 @@
     <!-- Product Feature Services -->
     <service name="createProductFeatureCategory" engine="simple"
                 location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="createProductFeatureCategory" auth="true">
-        <description>Create a ProductFeature record</description>
+        <description>Create a ProductFeatureCategory record</description>
         <attribute name="parentCategoryId" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="false"/>
         <attribute name="productFeatureCategoryId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateProductFeatureCategory" engine="simple"
+                location="org/ofbiz/commonapp/product/feature/ProductFeatureServices.xml" invoke="updateProductFeatureCategory" auth="true">
+        <description>Update a ProductFeatureCategory record</description>
+        <attribute name="productFeatureCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="parentCategoryId" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="false"/>
     </service>
 
     <service name="createProductFeature" engine="simple"

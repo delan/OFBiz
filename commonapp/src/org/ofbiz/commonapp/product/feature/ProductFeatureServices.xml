@@ -42,6 +42,19 @@
         <make-value value-name="newEntity" entity-name="ProductFeatureCategory" map-name="newEntityContext"/>
         <create-value value-name="newEntity"/>
     </simple-method>
+    <simple-method method-name="updateProductFeatureCategory" short-description="Update Product Feature Category">
+        <!-- TODO: do security check, make sure has "CATALOG", "_UPDATE" -->
+        <field-to-field field-name="productFeatureCategoryId" map-name="parameters" to-map-name="productFeatureCategoryPKMap"/>
+        <find-by-primary-key entity-name="ProductFeatureCategory" map-name="productFeatureCategoryPKMap" value-name="productFeatureCategory"/>
+        <call-map-processor in-map-name="parameters" out-map-name="productFeatureCategory">
+            <simple-map-processor name="populateEntity">
+                <process field="parentCategoryId"><copy/></process>
+                <process field="description"><copy/></process>
+            </simple-map-processor>
+        </call-map-processor>
+        <check-errors/>
+        <store-value value-name="productFeatureCategory"/>
+    </simple-method>
 
     <simple-method method-name="createProductFeature" short-description="Create Product Feature">
         <!-- TODO: do security check, make sure has "CATALOG", "_CREATE" -->
