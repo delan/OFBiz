@@ -436,11 +436,9 @@ function ShowTab(lname)
     </div>
     <%
       String findString = "entityName=" + relatedEntity.entityName;
-      for(int knum=0; knum<relation.keyMaps.size(); knum++)
-      {
+      for(int knum=0; knum<relation.keyMaps.size(); knum++) {
         ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(knum);
-        if(value.get(keyMap.fieldName) != null)
-        {
+        if(value.get(keyMap.fieldName) != null) {
           findString = findString + "&" + keyMap.relFieldName + "=" + value.get(keyMap.fieldName);
         }
       }
@@ -516,13 +514,20 @@ function ShowTab(lname)
       String rowClassResult2 = "viewManyTR2"; 
       String rowClassResult = "";
     %>
-<%--
+    <%
+      String findString = "entityName=" + relatedEntity.entityName;
+      for(int knum=0; knum<relation.keyMaps.size(); knum++) {
+        ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(knum);
+        if(value.get(keyMap.fieldName) != null) {
+          findString += "&" + keyMap.relFieldName + "=" + value.get(keyMap.fieldName);
+        }
+      }
+    %>
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + <%=relatedEntity.httpRelationArgList(relation)%>)%>" class="buttontext">[Create <%=relatedEntity.entityName%>]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewGeneric?" + UtilFormatOut.encodeQuery(findString))%>" class="buttontext">[Create <%=relatedEntity.entityName%>]</a>
     <%}%>    
-    <%String curFindString = "SEARCH_TYPE=<%=relation.keyMapRelatedUpperString("And","")%>";%>
-    <%for(int j=0;j<relation.keyMaps.size();j++){%><%curFindString = curFindString + "&SEARCH_PARAMETER<%=j+1%>=" + value.get<%=GenUtil.upperFirstChar(((ModelKeyMap)relation.keyMaps.elementAt(j)).fieldName)%><%}%>();%>
-    <a href="<%=response.encodeURL(controlPath + "/FindGeneric?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find <%=relatedEntity.entityName%>]</a>
+    <a href="<%=response.encodeURL(controlPath + "/FindGeneric?find=true&" + UtilFormatOut.encodeQuery(findString))%>" class="buttontext">[Find <%=relatedEntity.entityName%>]</a>
+<%--
   <div style='width:100%;overflow:visible;border-style:none;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -624,3 +629,4 @@ Displaying <%=relatedLoopCount%> entities.
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
+
