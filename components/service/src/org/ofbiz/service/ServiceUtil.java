@@ -89,7 +89,7 @@ public class ServiceUtil {
     
     public static Map returnProblem(String returnType, String errorMessage, List errorMessageList, Map errorMessageMap, Map nestedResult) {
         Map result = new HashMap();
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+        result.put(ModelService.RESPONSE_MESSAGE, returnType);
         if (errorMessage != null) {
             result.put(ModelService.ERROR_MESSAGE, errorMessage);
         }
