@@ -33,7 +33,7 @@ Your return request for the following items:<br><br>
 <#list returnItems as item>
   <#assign returnReason = item.getRelatedOne("ReturnReason")?if_exists>
   <#assign returnType = item.getRelatedOne("ReturnType")?if_exists>
-  ${item.description?default("N/A")} - ${item.returnQuantity?string.number} @ ${item.returnPrice?string.currency}
+  ${item.description?default("N/A")} - ${item.returnQuantity?string.number} @ ${item.returnPrice}
 </#list>
 </pre>
 <br><br>

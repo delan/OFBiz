@@ -113,7 +113,7 @@ function toggleBillingAccount(box) {
                               <#if cart.getShippingContactMechId()?exists>
                                 <#assign shippingEstMap = Static["org.ofbiz.order.shoppingcart.shipping.ShippingEvents"].getShipEstimate(delegator, cart, shippingMethod)>
                                 <#if shippingEstMap?has_content && shippingEstMap.shippingTotal?exists>
-                                  <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal?string.currency>
+                                  <#assign shippingEstimate = " - " + shippingEstMap.shippingTotal>
                                 <#else>
                                   <#assign shippingEstimate = " - Calculated Offline">
                                 </#if>

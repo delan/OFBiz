@@ -46,7 +46,7 @@
   <#-- success -->
   <br>
   Your gift card : ${displayNumber} has been reloaded.<br>
-  The new balance is : ${amount?string.currency} from ${previousAmount?string.currency}<br>
+  The new balance is : ${amount} from ${previousAmount}<br>
 <#else>
   <#-- fail -->
   <br>

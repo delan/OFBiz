@@ -76,7 +76,7 @@
                             <td><div class="tabletext">${requirement.productId?if_exists}</div></td>
                             <td align='right'><div class="tabletext">${requirement.quantity?default(0)?string.number}></div></td>
                             <td>&nbsp;&nbsp;</td>
-                            <td align='right'><div class="tabletext">${requirement.estimatedBudget?default(0)?string.currency}</div></td>
+                            <td align='right'><div class="tabletext">${requirement.estimatedBudget?default(0)}</div></td>
                             <td>&nbsp;&nbsp;</td>
                             <td><div class="tabletext">${requirement.requiredByDate?if_exists}</div></td>
                             <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/requirement?requirementId=${requirement.requirementId}&custRequestId=${custRequestId}&custRequestItemSeqId=${requirement.custRequestItemSeqId}&donePage=request</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></td>

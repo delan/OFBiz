@@ -103,7 +103,7 @@
                     <#elseif question.surveyQuestionTypeId == "GIFT_CARD">
                       <div class="tabletext">${(answer.textResponse)?if_exists}</div>
                     <#elseif question.surveyQuestionTypeId == "NUMBER_CURRENCY">
-                      <div class="tabletext">${answer.currencyResponse?default(0)?string.currency}</div>
+                      <div class="tabletext">${answer.currencyResponse?default(0)}</div>
                     <#elseif question.surveyQuestionTypeId == "NUMBER_FLOAT">
                       <div class="tabletext">${answer.floatResponse?default(0)?string("#")}</div>
                     <#elseif question.surveyQuestionTypeId == "NUMBER_LONG">

@@ -183,14 +183,14 @@ function addToList() {
             <td nowrap align="right">
               <div class="tabletext">
                 <#if cartLine.getIsPromo() || (shoppingCart.getOrderType() == "SALES_ORDER" && !security.hasEntityPermission("SALESREP_ORDER", "_SALES_PRICEMOD", session))>
-                  ${cartLine.getBasePrice()?string.currency}
+                  ${cartLine.getBasePrice()}
                 <#else>
                   <input size="6" class="inputBox" type="text" name="price_${cartLineIndex}" value="${cartLine.getBasePrice()?string("##0.00")}">
                 </#if>
               </div>
             </td>
-            <td nowrap align="right"><div class="tabletext">${cartLine.getOtherAdjustments()?string.currency}</div></td>
-            <td nowrap align="right"><div class="tabletext">${cartLine.getItemSubTotal()?string.currency}</div></td>
+            <td nowrap align="right"><div class="tabletext">${cartLine.getOtherAdjustments()}</div></td>
+            <td nowrap align="right"><div class="tabletext">${cartLine.getItemSubTotal()}</div></td>
           </TR>
         </#list>    
     </FORM>
@@ -199,14 +199,14 @@ function addToList() {
             <tr><td colspan="7"><hr class="sepbar"></td></tr>
               <tr>
                 <td colspan="4" nowrap align="right"><div class="tabletext">Sub&nbsp;Total:</div></td>
-                <td nowrap align="right"><div class="tabletext">${shoppingCart.getSubTotal()?string.currency}</div></td>
+                <td nowrap align="right"><div class="tabletext">${shoppingCart.getSubTotal()}</div></td>
                 <td>&nbsp;</td>
               </tr>
             <#list shoppingCart.getAdjustments() as cartAdjustment>
               <#assign adjustmentType = cartAdjustment.getRelatedOneCache("OrderAdjustmentType")>
               <tr>
                 <td colspan="4" nowrap align="right"><div class="tabletext"><i>Adjustment</i> - ${adjustmentType.description?if_exists}:</div></td>
-                <td nowrap align="right"><div class="tabletext">${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())?string.currency}</div></td>
+                <td nowrap align="right"><div class="tabletext">${Static["org.ofbiz.order.order.OrderReadHelper"].calcOrderAdjustment(cartAdjustment, shoppingCart.getSubTotal())}</div></td>
                 <td>&nbsp;</td>
               </tr>
             </#list>
@@ -218,7 +218,7 @@ function addToList() {
           </td>
           <td align="right" valign=bottom>
             <hr size=1 class="sepbar">
-            <div class="tabletext"><b>${shoppingCart.getGrandTotal()?string.currency}</b></div>
+            <div class="tabletext"><b>${shoppingCart.getGrandTotal()}</b></div>
           </td>
         </tr> 
         <tr><td colspan="7"><hr class="sepbar"></td></tr>     

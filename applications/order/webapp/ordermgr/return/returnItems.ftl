@@ -223,7 +223,7 @@
         <td><div class='tabletext'>Shipping Amount</div></td>
         <td align='center'><div class='tabletext'>-</div></td>
         <td align='center'><div class='tabletext'>-</div></td>
-        <td><div class='tabletext'>${shippingAmount?string.currency}</div></td>
+        <td><div class='tabletext'>${shippingAmount}</div></td>
         <td>
           <input type="text" class="inputBox" size="8" name="returnPrice_o_${rowCount}" value="${shippingAmount?string("##0.00")}">
         </td>

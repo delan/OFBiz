@@ -64,27 +64,27 @@
               <tr>
                 <td>&nbsp;</td>
                 <td><div class="tabletext">Gross Dollar Amounts (includes adjustments and pending orders)</div></td>
-                <td><div class="tabletext">${dayItemTotal?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${weekItemTotal?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${monthItemTotal?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${yearItemTotal?string.currency}</ofbiz:format></div></td>
+                <td><div class="tabletext">${dayItemTotal}</ofbiz:format></div></td>
+                <td><div class="tabletext">${weekItemTotal}</ofbiz:format></div></td>
+                <td><div class="tabletext">${monthItemTotal}</ofbiz:format></div></td>
+                <td><div class="tabletext">${yearItemTotal}</ofbiz:format></div></td>
               </tr>
               <tr>
                 <td>&nbsp;</td>
                 <td><div class="tabletext">Paid Dollar Amounts (includes adjustments)</div></td>
-                <td><div class="tabletext">${dayItemTotalPaid?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${weekItemTotalPaid?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${monthItemTotalPaid?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${yearItemTotalPaid?string.currency}</ofbiz:format></div></td>
+                <td><div class="tabletext">${dayItemTotalPaid}</ofbiz:format></div></td>
+                <td><div class="tabletext">${weekItemTotalPaid}</ofbiz:format></div></td>
+                <td><div class="tabletext">${monthItemTotalPaid}</ofbiz:format></div></td>
+                <td><div class="tabletext">${yearItemTotalPaid}</ofbiz:format></div></td>
               </tr>
 
               <tr>
                 <td>&nbsp;</td>
                 <td><div class="tabletext">Pending Payment Dollar Amounts (includes adjustments)</div></td>
-                <td><div class="tabletext">${dayItemTotalPending?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${weekItemTotalPending?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${monthItemTotalPending?string.currency}</ofbiz:format></div></td>
-                <td><div class="tabletext">${yearItemTotalPending?string.currency}</ofbiz:format></div></td>
+                <td><div class="tabletext">${dayItemTotalPending}</ofbiz:format></div></td>
+                <td><div class="tabletext">${weekItemTotalPending}</ofbiz:format></div></td>
+                <td><div class="tabletext">${monthItemTotalPending}</ofbiz:format></div></td>
+                <td><div class="tabletext">${yearItemTotalPending}</ofbiz:format></div></td>
               </tr>
 
               <TR><TD colspan='8'><HR class='sepbar'></TD></TR>  

@@ -181,7 +181,7 @@ document.lookupinvoice.invoiceId.focus();
               <td><div class='tabletext'>${invoiceType.description?default(invoiceType.invoiceTypeId?default(""))}</div></td>
               <td><a href="<@ofbizUrl>/viewInvoice?invoiceId=${invoice.invoiceId}</@ofbizUrl>" class='buttontext'>${invoice.invoiceId}</a></td>
               
-              <td align="right"><div class="tabletext">${invoiceTotal?default(0.00)?string.currency}</div></td>
+              <td align="right"><div class="tabletext">${invoiceTotal?default(0.00)}</div></td>
               <td>&nbsp;</td>
               <td><div class="tabletext">${statusItem.description?default(statusItem.statusId?default("N/A"))}</div></td>
               <td><div class="tabletext"><nobr>${invoice.invoiceDate?default("N/A").toString()}</nobr></div></td>                            

@@ -103,8 +103,8 @@ function setAssocFields(select) {
           <td><div class="tabletext">${estimate.partyId?default("All")}</div></td>
           <td><div class="tabletext">${estimate.roleTypeId?default("All")}</div></td>
           <td><div class="tabletext">${estimate.orderPricePercent?default(0)?string.number}%</div></td>
-          <td><div class="tabletext">${estimate.orderFlatPrice?default(0)?string.currency}</div></td>
-          <td><div class="tabletext">${estimate.orderItemFlatPrice?default(0)?string.currency}</div></td>
+          <td><div class="tabletext">${estimate.orderFlatPrice?default(0)}</div></td>
+          <td><div class="tabletext">${estimate.orderItemFlatPrice?default(0)}</div></td>
           <td align="center">
             <div class="tabletext"><#if security.hasEntityPermission("SHIPRATE", "_DELETE", session)><a href="<@ofbizUrl>/storeRemoveShipRate?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a></#if> <a href="<@ofbizUrl>/EditProductStoreShipSetup?viewProductStoreId=${productStoreId}&shipmentCostEstimateId=${estimate.shipmentCostEstimateId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a></div>
           </td>
@@ -157,7 +157,7 @@ function setAssocFields(select) {
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFlatBasePrice}</span></td>
           <td>
-            <span class="tabletext">${estimate.orderFlatPrice?default(0)?string.currency}</span>
+            <span class="tabletext">${estimate.orderFlatPrice?default(0)}</span>
             <span class="tabletext"> - ${uiLabelMap.ProductShipamountPrice}</span>
           </td>
           <td>&nbsp;</td>
@@ -165,7 +165,7 @@ function setAssocFields(select) {
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductFlatItemPrice}</span></td>
           <td>
-            <span class="tabletext">${estimate.orderItemFlatPrice?default(0)?string.currency}</span>
+            <span class="tabletext">${estimate.orderItemFlatPrice?default(0)}</span>
             <span class="tabletext"> - ${uiLabelMap.ProductShipamountTotalQuantityPrice}</span>
           </td>
           <td>&nbsp;</td>
@@ -190,7 +190,7 @@ function setAssocFields(select) {
         <tr>
           <td align='right'><span class="tableheadtext">Per-Feature Price</span></td>
           <td>
-            <span class="tabletext">${estimate.featurePrice?default(0)?string.currency}</span>
+            <span class="tabletext">${estimate.featurePrice?default(0)}</span>
             <span class="tabletext"> - shipamount : shipamount + (price * total feature(s) applied)</span>
           </td>
           <td>&nbsp;</td>
@@ -207,7 +207,7 @@ function setAssocFields(select) {
         <tr>
           <td align='right'><span class="tableheadtext">Oversize Surcharge</span></td>
           <td>
-            <span class="tabletext">${estimate.oversizePrice?default(0)?string.currency}</span>
+            <span class="tabletext">${estimate.oversizePrice?default(0)}</span>
             <span class="tabletext"> - shipamount : shipamount + (# oversize products * surcharge)</span>
           </td>
           <td>&nbsp;</td>
@@ -230,7 +230,7 @@ function setAssocFields(select) {
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductPerUnitPrice}</span></td>
           <td>
-            <span class="tabletext">${estimate.weightUnitPrice?default(0)?string.currency}</span>
+            <span class="tabletext">${estimate.weightUnitPrice?default(0)}</span>
             <span class="tabletext"> -${uiLabelMap.ProductOnlyAppliesWithinSpan}</span>
           </td>
           <td>&nbsp;</td>
@@ -253,7 +253,7 @@ function setAssocFields(select) {
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductPerUnitPrice}</span></td>
           <td>
-            <span class="tabletext">${estimate.quantityUnitPrice?default(0)?string.currency}</span>
+            <span class="tabletext">${estimate.quantityUnitPrice?default(0)}</span>
             <span class="tabletext"> - ${uiLabelMap.ProductOnlyAppliesWithinSpan}</span>
           </td>
           <td>&nbsp;</td>
@@ -271,7 +271,7 @@ function setAssocFields(select) {
         <tr>
           <td align='right'><span class="tableheadtext">${uiLabelMap.ProductPerUnitPrice}</span></td>
           <td>
-            <span class="tabletext">${estimate.priceUnitPrice?default(0)?string.currency}</span>
+            <span class="tabletext">${estimate.priceUnitPrice?default(0)}</span>
             <span class="tabletext"> - ${uiLabelMap.ProductOnlyAppliesWithinSpan}</span>
           </td>
           <td>&nbsp;</td>

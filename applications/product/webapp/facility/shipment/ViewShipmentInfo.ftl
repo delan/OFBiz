@@ -72,7 +72,7 @@
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductEstimatedShipCost}</span></td>
         <td><span class="tabletext">&nbsp;</span></td>
-        <td width="80%" align="left"><span class="tabletext">${(shipment.estimatedShipCost?string.currency)?if_exists}</span></td>
+        <td width="80%" align="left"><span class="tabletext">${(shipment.estimatedShipCost)?if_exists}</span></td>
       </tr>
       <tr>
         <td width="20%" align="right"><span class="tableheadtext">${uiLabelMap.ProductHandlingInstructions}</span></td>
