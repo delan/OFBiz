@@ -190,6 +190,10 @@ public class OrderServices {
             }     
             Debug.logInfo("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"));
             Debug.logInfo("[OrderServices.setOrderStatus] : To Status : " + statusId);
+            if ( orderHeader.getString("statusId").equals(statusId) ) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+                return result;
+            }                
             try {
                 Map statusFields = UtilMisc.toMap("statusId",orderHeader.getString("statusId"),"statusIdTo",statusId);
                 GenericValue statusChange = delegator.findByPrimaryKeyCache("StatusValidChange",statusFields);
