@@ -1,5 +1,5 @@
 /*
- * $Id: EditRenderSubContentCacheTransform.java,v 1.5 2004/03/16 17:48:08 byersa Exp $
+ * $Id: EditRenderSubContentCacheTransform.java,v 1.6 2004/03/24 16:04:20 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -57,7 +57,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since 3.0
  */
 public class EditRenderSubContentCacheTransform implements TemplateTransformModel {
@@ -180,9 +180,9 @@ public class EditRenderSubContentCacheTransform implements TemplateTransformMode
                         String mimeTypeId = (String)templateCtx.get("mimeTypeId");
                         Locale locale = null;
                         try {
-        if (Debug.infoOn()) Debug.logInfo("in Edit(0), before calling renderContentAsTextCache, wrapTemplateId: ." + wrapTemplateId , module);
+                           //if (Debug.infoOn()) Debug.logInfo("in Edit(0), before calling renderContentAsTextCache, wrapTemplateId: ." + wrapTemplateId , module);
                             ContentWorker.renderContentAsTextCache(delegator, wrapTemplateId, out, templateRoot, null, locale, mimeTypeId);
-        if (Debug.infoOn()) Debug.logInfo("in Edit(0), after calling renderContentAsTextCache, wrapTemplateId: ." + wrapTemplateId , module);
+                           //if (Debug.infoOn()) Debug.logInfo("in Edit(0), after calling renderContentAsTextCache, wrapTemplateId: ." + wrapTemplateId , module);
                         } catch (IOException e) {
                             Debug.logError(e, "Error rendering content" + e.getMessage(), module);
                             throw new IOException("Error rendering content" + e.toString());

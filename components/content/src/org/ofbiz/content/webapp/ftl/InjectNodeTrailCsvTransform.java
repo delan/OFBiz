@@ -1,5 +1,5 @@
 /*
- * $Id: InjectNodeTrailCsvTransform.java,v 1.2 2004/03/16 17:27:16 byersa Exp $
+ * $Id: InjectNodeTrailCsvTransform.java,v 1.3 2004/03/24 16:04:20 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -51,7 +51,7 @@ import freemarker.template.TemplateModelException;
  * InjectNodeTrailCsvTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @since 3.0
  */
 public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
@@ -103,8 +103,8 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
             public int onStart() throws TemplateModelException, IOException {
                 String csvTrail = null;
                 List trail = (List)templateCtx.get("globalNodeTrail");
-                if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, trail:"+trail,module);
-                if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, passedCsv:"+passedCsv,module);
+                //if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, trail:"+trail,module);
+                //if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, passedCsv:"+passedCsv,module);
                 if (UtilValidate.isNotEmpty(passedCsv)) {
                     csvTrail = passedCsv;
                     int lastComma = passedCsv.lastIndexOf(",");
@@ -131,7 +131,7 @@ public class InjectNodeTrailCsvTransform implements TemplateTransformModel {
                 } else {
                     csvTrail = FreeMarkerWorker.nodeTrailToCsv(trail);
                 }
-                if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, csvTrail:"+csvTrail,module);
+                //if (Debug.infoOn()) Debug.logInfo("in InjectNodeTrailCsv, csvTrail:"+csvTrail,module);
                 templateCtx.put("nodeTrailCsv", csvTrail);
                 return TransformControl.EVALUATE_BODY;
             }

@@ -1,5 +1,5 @@
 /*
- * $Id: HtmlFormRenderer.java,v 1.7 2004/03/15 14:53:57 byersa Exp $
+ * $Id: HtmlFormRenderer.java,v 1.8 2004/03/24 16:04:22 byersa Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import org.ofbiz.content.widget.form.ModelFormField.ImageField;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
@@ -1517,7 +1517,6 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         String queryString = (String) context.get("queryString");
-
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
 
@@ -1527,7 +1526,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("      <b>\n");
         if (viewIndex > 0) {
             buffer.append(" <a href=\"");
-            String linkText = targetService + "?" + queryString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex - 1) + "\"";
+            String linkText = targetService + "?";
+            if (queryString != null && !queryString.equals("null"))
+                linkText += queryString + "&";
+            linkText += "VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex - 1) + "\"";
+
             // make the link
             buffer.append(rh.makeLink(request, response, linkText, false, false, false));
             buffer.append(" class=\"buttontext\">[Previous]</a>\n");

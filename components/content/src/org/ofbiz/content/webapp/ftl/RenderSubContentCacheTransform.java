@@ -1,5 +1,5 @@
 /*
- * $Id: RenderSubContentCacheTransform.java,v 1.4 2004/03/16 17:27:17 byersa Exp $
+ * $Id: RenderSubContentCacheTransform.java,v 1.5 2004/03/24 16:04:21 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -53,7 +53,7 @@ import freemarker.template.TemplateModelException;
  * RenderSubContentCacheTransform - Freemarker Transform for Content rendering
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @since 3.0
  * 
  * This transform cannot be called recursively (at this time).
@@ -93,7 +93,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(R)after overrride", templateCtx, 0),module);
         final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
-        if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
+        //if (Debug.infoOn()) Debug.logInfo("in Render(0), globalNodeTrail ." + trail , module);
         String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
         Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
@@ -147,12 +147,12 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
             }
 
             public void close() throws IOException {
-        if (Debug.infoOn()) Debug.logInfo("in Render(1), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
+                 //if (Debug.infoOn()) Debug.logInfo("in Render(1), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
                 try {
                     if (Debug.verboseOn()) Debug.logVerbose("in RenderSubContent, close:", module);
                     renderSubContent();
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
-        if (Debug.infoOn()) Debug.logInfo("in Render(2), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
+                 //if (Debug.infoOn()) Debug.logInfo("in Render(2), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
                 } catch (IOException e) {
                     throw new IOException(e.getMessage());
                 }
@@ -162,7 +162,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 //TemplateHashModel dataRoot = env.getDataModel();
                 Timestamp fromDate = UtilDateTime.nowTimestamp();
                 List passedGlobalNodeTrail = (List)templateCtx.get("globalNodeTrail");
-        if (Debug.infoOn()) Debug.logInfo("in Render(3), passedGlobalNodeTrail ." + passedGlobalNodeTrail , module);
+                 //if (Debug.infoOn()) Debug.logInfo("in Render(3), passedGlobalNodeTrail ." + passedGlobalNodeTrail , module);
                 GenericValue thisView = null;
                 if (passedGlobalNodeTrail.size() > 0) {
                     thisView = (GenericValue)((Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1)).get("value");
@@ -172,7 +172,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                 String rootDir = servletContext.getRealPath("/");
                 String webSiteId = (String) servletContext.getAttribute("webSiteId");
                 String https = (String) servletContext.getAttribute("https");
-                if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, rootDir:" + rootDir, module);
+                //if (Debug.infoOn()) Debug.logInfo("in RenderSubContent, rootDir:" + rootDir, module);
                 templateCtx.put("webSiteId", webSiteId);
                 templateCtx.put("https", https);
                 templateCtx.put("rootDir", rootDir);
@@ -211,7 +211,7 @@ public class RenderSubContentCacheTransform implements TemplateTransformModel {
                     Debug.logError(e, "Error rendering content", module);
                     throw new IOException("Error rendering thisView:" + thisView + " msg:" + e.toString());
                 }
-        if (Debug.infoOn()) Debug.logInfo("in Render(4), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
+                //if (Debug.infoOn()) Debug.logInfo("in Render(4), globalNodeTrail ." + templateCtx.get("globalNodeTrail") , module);
                 return;
             }
         };

@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.10 2004/03/16 17:27:12 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.11 2004/03/24 16:04:16 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -123,6 +123,7 @@ public class ContentPermissionServices {
             if ( content.get("createdByUserLogin") != null && userLogin != null) {
                 String userLoginId = (String)userLogin.get("userLoginId");
                 String userLoginIdCB = (String)content.get("createdByUserLogin");
+                //if (Debug.infoOn()) Debug.logInfo("userLoginId:" + userLoginId + " userLoginIdCB:" + userLoginIdCB, null);
                 if (userLoginIdCB.equals(userLoginId)) {
                     passedRoles.add("_OWNER_");
                 }
@@ -136,9 +137,9 @@ public class ContentPermissionServices {
                                       userLogin, passedPurposes,
                                       targetOperations, passedRoles,
                                       delegator, security, entityAction, privilegeEnumId);
-                Debug.logInfo("results(b):" + results, "");
+                //Debug.logInfo("results(b):" + results, "");
                 PermissionRecorder r = (PermissionRecorder)results.get("permissionRecorder");
-                Debug.logInfo("recorder(b):" + r, "");
+                //Debug.logInfo("recorder(b):" + r, "");
         return results;
     }
 
@@ -183,7 +184,7 @@ public class ContentPermissionServices {
 
         Map result = new HashMap();
         PermissionRecorder recorder = new PermissionRecorder();
-                Debug.logInfo("recorder(a):" + recorder, "");
+                //Debug.logInfo("recorder(a):" + recorder, "");
         result.put("permissionRecorder", recorder);
 
         if (content != null) {
@@ -236,7 +237,7 @@ public class ContentPermissionServices {
         // Combine any passed purposes with those linked to the Content entity
         // Note that purposeIds is a list of contentPurposeTypeIds, not GenericValues
         purposeIds = getRelatedPurposes(content, passedPurposes );
-        if (Debug.infoOn()) Debug.logInfo("purposeIds:" + purposeIds, null);
+        //if (Debug.infoOn()) Debug.logInfo("purposeIds:" + purposeIds, null);
         if (purposeIds == null || purposeIds.size() == 0) {
             Debug.logWarning("No purposeIds.", module);
         }
@@ -263,7 +264,7 @@ public class ContentPermissionServices {
 
 
         if (content == null || content.isEmpty() ) {
-            if (Debug.infoOn()) Debug.logInfo("content is null:" + content, null);
+            //if (Debug.infoOn()) Debug.logInfo("content is null:" + content, null);
             return result;
         }
 
@@ -289,9 +290,9 @@ public class ContentPermissionServices {
             result.put("roleTypeList", thisResult.get("roleTypeList"));
             result.put("permissionStatus", thisResult.get("permissionStatus"));
         }
-                Debug.logInfo("result(a):" + result, "");
+                //Debug.logInfo("result(a):" + result, "");
                 PermissionRecorder r = (PermissionRecorder)result.get("permissionRecorder");
-                Debug.logInfo("recorder(a):" + r, "");
+                //Debug.logInfo("recorder(a):" + r, "");
         return result;
 
     }
@@ -333,7 +334,7 @@ public class ContentPermissionServices {
 
         // recursively try if the "owner" Content has ContentRoles that allow a match
         String ownerContentId = (String)content.get("ownerContentId");
-        if (Debug.infoOn()) Debug.logInfo("ownerContentId:" + ownerContentId, null);
+        //if (Debug.infoOn()) Debug.logInfo("ownerContentId:" + ownerContentId, null);
         if (UtilValidate.isNotEmpty(ownerContentId)) {
             GenericValue ownerContent = null;
             try {
@@ -458,26 +459,11 @@ public class ContentPermissionServices {
             if (recorder.isOn()) {
                 recorder.record(purposeOp, targetOpCond, purposesCond, statusCond, privilegeCond, roleCond);
             }
-            if (permissionDebug) {
-                if (Debug.infoOn()) Debug.logInfo("testContentOperationId:" + testContentOperationId + " targetOperations:" + targetOperations + " targetOpCond:" + targetOpCond, null);
-                if (Debug.infoOn()) Debug.logInfo("testContentPurposeTypeId:" + testContentPurposeTypeId + " purposes:" + purposes + " purposesCond:" + purposesCond, null);
-                if (Debug.infoOn()) Debug.logInfo("testPrivilegeEnumId:" + testPrivilegeEnumId + " targPrivilegeEnumId:" + targPrivilegeEnumId + " privilegeCond:" + privilegeCond, null);
-                if (Debug.infoOn()) Debug.logInfo("testStatusId:" + testStatusId + " targStatusList:" + targStatusList + " statusCond:" + statusCond, null);
-                if (Debug.infoOn()) Debug.logInfo("testRoleTypeId:" + testRoleTypeId + " roles:" + roles + " roleCond:" + roleCond, null);
-            }
  
             if (targetOpCond && purposesCond && statusCond && privilegeCond && roleCond) {
                 
-                    if (permissionDebug) {
-                        if (Debug.infoOn()) Debug.logInfo("MATCH", null);
-                        if (Debug.infoOn()) Debug.logInfo(" ", null);
-                    }
                     isMatch = true;
                     break;
-            }
-            if (permissionDebug) {
-                    if (Debug.infoOn()) Debug.logInfo("NO_MATCH", null);
-                    if (Debug.infoOn()) Debug.logInfo(" ", null);
             }
         }
         return isMatch;
@@ -596,7 +582,7 @@ public class ContentPermissionServices {
         GenericValue content = (GenericValue) context.get("currentContent"); 
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
         List purposeList = (List) context.get("contentPurposeList"); 
-if (Debug.infoOn()) Debug.logInfo("in checkAssocPerm, purposeList:" + purposeList, "");
+        //if (Debug.infoOn()) Debug.logInfo("in checkAssocPerm, purposeList:" + purposeList, "");
         List targetOperations = (List) context.get("targetOperationList"); 
         List roleList = (List) context.get("roleTypeList"); 
         if (roleList == null) roleList = new ArrayList();
@@ -604,8 +590,8 @@ if (Debug.infoOn()) Debug.logInfo("in checkAssocPerm, purposeList:" + purposeLis
         if (entityAction == null) entityAction = "_ADMIN";
 	List roleIds = null;
 
-if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentIdTo:" + contentIdTo, null);
-if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentIdFrom:" + contentIdFrom, null);
+        if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentIdTo:" + contentIdTo, null);
+        if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentIdFrom:" + contentIdFrom, null);
         GenericValue contentTo = null;
         GenericValue contentFrom = null;
         try {
@@ -613,7 +599,7 @@ if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentIdFrom:" + co
                                                  UtilMisc.toMap("contentId", contentIdTo) );
                 contentFrom = delegator.findByPrimaryKey("Content", 
                                                  UtilMisc.toMap("contentId", contentIdFrom) );
-if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentTo:" + contentTo, null);
+                if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentTo:" + contentTo, null);
 if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentFrom:" + contentFrom, null);
         } catch (GenericEntityException e) {
             return ServiceUtil.returnError("Error in retrieving content To or From. " + e.getMessage());

@@ -55,7 +55,7 @@ import org.ofbiz.minilang.MiniLangException;
  * ContentManagementWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      3.0
  *
  * 
@@ -354,7 +354,7 @@ public class ContentManagementWorker {
                  targetOperationList = StringUtil.split(permittedOperations, "|");
             }
             Map results = null;
-            if (Debug.infoOn()) Debug.logInfo("in getPermittedPublishPoints, content:" + content, module);
+            //if (Debug.infoOn()) Debug.logInfo("in getPermittedPublishPoints, content:" + content, module);
             results = ContentPermissionServices.checkPermission(content, statusId, userLogin, passedPurposes, targetOperationList, roles, delegator, security, entityAction);
             String permissionStatus = (String)results.get("permissionStatus");
             if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
@@ -491,7 +491,7 @@ public class ContentManagementWorker {
             if (webSitePublishPoint == null) {
                 webSitePublishPoint = delegator.makeValue("WebSitePublishPoint", UtilMisc.toMap("contentId", contentId));
             }
-            if (Debug.infoOn()) Debug.logInfo("in getWebSitePublishPoint, contentId:" + contentId, module);
+            //if (Debug.infoOn()) Debug.logInfo("in getWebSitePublishPoint, contentId:" + contentId, module);
             webSitePublishPoint = overrideWebSitePublishPoint(delegator, webSitePublishPoint);
             cachedWebSitePublishPoints.put(contentId, webSitePublishPoint);
         }
@@ -502,7 +502,7 @@ public class ContentManagementWorker {
         String contentId = passedValue.getString("contentId");
         GenericValue webSitePublishPoint = passedValue;
         String contentIdTo = getParentWebSitePublishPointId(delegator, contentId);
-            if (Debug.infoOn()) Debug.logInfo("in overrideWebSitePublishPoint, contentIdTo:" + contentIdTo, module);
+            //if (Debug.infoOn()) Debug.logInfo("in overrideWebSitePublishPoint, contentIdTo:" + contentIdTo, module);
         if (contentIdTo != null) {
             //webSitePublishPoint = getWebSitePublishPoint(delegator, contentIdTo, false);
             webSitePublishPoint = delegator.findByPrimaryKeyCache("WebSitePublishPoint", UtilMisc.toMap("contentId", contentIdTo));
@@ -601,6 +601,7 @@ public class ContentManagementWorker {
                 subPointList.add(subArr2);
             }
         }
+/* */
         List assocValueList = null;
         try {
             List rawAssocValueList = delegator.findByAndCache("ContentAssoc", UtilMisc.toMap("contentId", targContentId, "contentAssocTypeId", "SUB_CONTENT"));
@@ -615,7 +616,7 @@ public class ContentManagementWorker {
             String contentIdTo = contentAssoc.getString("contentIdTo");
             String topContentId = (String)publishPointMapAll.get(contentIdTo);
             Object [] subArr = (Object [])publishPointMap.get(topContentId);
-                if (Debug.infoOn()) Debug.logInfo("in getPublishLinks, subArr:" + Arrays.asList(subArr) , module);
+                //if (Debug.infoOn()) Debug.logInfo("in getPublishLinks, subArr:" + Arrays.asList(subArr) , module);
             if (contentIdTo.equals(topContentId)) {
                 subArr[3] =  contentAssoc.get("fromDate");
             } else {
@@ -658,7 +659,7 @@ public class ContentManagementWorker {
                 authorContent = delegator.makeValue("Content", null);
                 authorContent.setPKFields(value);
                 authorContent.setNonPKFields(value);
-            if (Debug.infoOn()) Debug.logInfo("in getAuthorContent, authorContent:" + authorContent, module);
+            //if (Debug.infoOn()) Debug.logInfo("in getAuthorContent, authorContent:" + authorContent, module);
             }
         } catch(GenericEntityException e) {
         } catch(MiniLangException e2) {
@@ -690,7 +691,7 @@ public class ContentManagementWorker {
                  targetOperationList = StringUtil.split(permittedOperations, "|");
             }
             Map results = null;
-            if (Debug.infoOn()) Debug.logInfo("in getPermittedDepartmentPoints, content:" + content, module);
+            //if (Debug.infoOn()) Debug.logInfo("in getPermittedDepartmentPoints, content:" + content, module);
             results = ContentPermissionServices.checkPermission(content, statusId, userLogin, passedPurposes, targetOperationList, roles, delegator, security, entityAction);
             String permissionStatus = (String)results.get("permissionStatus");
             if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {

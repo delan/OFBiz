@@ -1,5 +1,5 @@
 /*
- * $Id: TraverseSubContentCacheTransform.java,v 1.6 2004/03/16 17:27:17 byersa Exp $
+ * $Id: TraverseSubContentCacheTransform.java,v 1.7 2004/03/24 16:04:21 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -52,7 +52,7 @@ import freemarker.template.TemplateModelException;
  * TraverseSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @since 3.0
  */
 public class TraverseSubContentCacheTransform implements TemplateTransformModel {
@@ -131,12 +131,17 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
         }
         traverseContext.put("thruDate", thruDate);
         String startContentAssocTypeId = (String)templateCtx.get( "contentAssocTypeId");
-        if (startContentAssocTypeId != null)
+            //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, startContentAssocTypeId:" + startContentAssocTypeId, module);
+        if (UtilValidate.isEmpty(startContentAssocTypeId))
             startContentAssocTypeId = "SUB_CONTENT";
         traverseContext.put("contentAssocTypeId", startContentAssocTypeId);
         String direction = (String)templateCtx.get( "direction");
-        if (UtilValidate.isEmpty(direction)) 
+        if (UtilValidate.isEmpty(direction)) {
             direction = "From";
+        }
+        if (direction.equalsIgnoreCase("TO")) {
+            //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, DIRECTION=TO(2):", module);
+        }
         traverseContext.put("direction", direction);
 
 
@@ -158,13 +163,13 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 Map node = null;
                 GenericValue subContentDataResourceView = null;
                 List passedGlobalNodeTrail = (List)templateCtx.get("globalNodeTrail");
-        //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, passedGlobalNodeTrail(2):" + passedGlobalNodeTrail , module);
+                //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, passedGlobalNodeTrail(2):" + passedGlobalNodeTrail , module);
                 if (passedGlobalNodeTrail.size() > 0) {
                     int sz = passedGlobalNodeTrail.size() ;
                     nodeTrail = new ArrayList();
                     //nodeTrail = passedGlobalNodeTrail.subList(sz - 1, sz);
                     node = (Map)passedGlobalNodeTrail.get(sz - 1);
-                if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, node(1):" + node , module);
+                    //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, node(1):" + node , module);
                     Boolean checkedObj = (Boolean)node.get("checked");
                     Map whenMap = (Map)templateCtx.get("whenMap");
                     if (checkedObj == null || !checkedObj.booleanValue()) {
@@ -183,19 +188,19 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 GenericValue content = null;
                 FreeMarkerWorker.traceNodeTrail("1",nodeTrail);
                 ContentWorker.selectKids(node, traverseContext);
-                if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, node(2):" + node , module);
+                //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, node(2):" + node , module);
                 FreeMarkerWorker.traceNodeTrail("2",nodeTrail);
                 nodeTrail.add(node);
                 Boolean isPickBool = (Boolean)node.get("isPick");
                 Boolean isFollowBool = (Boolean)node.get("isFollow");
-                if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, isPickBool(1):" + isPickBool + " isFollowBool:" + isFollowBool, module);
+                //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, isPickBool(1):" + isPickBool + " isFollowBool:" + isFollowBool, module);
                 boolean isPick = true;
                 if ((isPickBool == null || !isPickBool.booleanValue())
                    && (isFollowBool != null && isFollowBool.booleanValue())) {
                     FreeMarkerWorker.traceNodeTrail("3",nodeTrail);
                     isPick = ContentWorker.traverseSubContent(traverseContext);
                     FreeMarkerWorker.traceNodeTrail("4",nodeTrail);
-                    if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, isPick(2):" + isPick, module);
+                    //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContentCache, onStart, isPick(2):" + isPick, module);
                 }
                 if (isPick) {
                     if (Debug.verboseOn()) Debug.logVerbose("populateContext, nodeTrail csv(0):" + FreeMarkerWorker.nodeTrailToCsv((List)nodeTrail), "");
@@ -239,7 +244,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
                 String wrappedContent = buf.toString();
                 out.write(wrappedContent);
-                if (Debug.infoOn()) Debug.logInfo("in TraverseSubContent, wrappedContent:" + wrappedContent, module);
+                //if (Debug.infoOn()) Debug.logInfo("in TraverseSubContent, wrappedContent:" + wrappedContent, module);
 
 /*
                 String encloseWrappedText = (String)templateCtx.get("encloseWrappedText");
@@ -342,7 +347,7 @@ public class TraverseSubContentCacheTransform implements TemplateTransformModel 
                 if (Debug.verboseOn()) Debug.logVerbose("in TraverseSubContentCache, nodeTrail:" + sz + " passedGlobalNodeTrail:" + passedGlobalNodeTrail.size() + " globalNodeTrail:" + indentSz, module);
                 templateContext.put("indent", new Integer(indentSz));
                 String csvTrail = FreeMarkerWorker.nodeTrailToCsv(globalNodeTrail);
-                if (Debug.infoOn()) Debug.logInfo("in Traverse, csvTrail:"+csvTrail,module);
+                //if (Debug.infoOn()) Debug.logInfo("in Traverse, csvTrail:"+csvTrail,module);
                 templateContext.put("globalNodeTrail", globalNodeTrail);
                 if (Debug.verboseOn()) Debug.logVerbose("populateContext, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)globalNodeTrail), "");
                 return;

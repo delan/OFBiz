@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.10 2004/03/16 17:27:16 byersa Exp $
+ * $Id: FreeMarkerWorker.java,v 1.11 2004/03/24 16:04:20 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
@@ -663,8 +663,7 @@ public class FreeMarkerWorker {
             passedGlobalNodeTrail = new ArrayList();
         //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, passedGlobalNodeTrail(3):" + passedGlobalNodeTrail , module);
         int sz = passedGlobalNodeTrail.size();
-        if (Debug.verboseOn()) Debug.logVerbose("sz:" + sz ,module);
-        String viewContentId = null;
+        if (Debug.verboseOn()) Debug.logVerbose("sz:" + sz ,module); String viewContentId = null;
         if (sz > 0) {
             Map nd = (Map)passedGlobalNodeTrail.get(sz - 1);
             if (nd != null)
@@ -674,9 +673,9 @@ public class FreeMarkerWorker {
         }
 
         //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, currentContent(3):" + currentContent , module);
-        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
-        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
-        if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
 /*
         if (UtilValidate.isNotEmpty(subContentId) && UtilValidate.isNotEmpty(contentId) && contentId.equals(subContentId)) {
             Debug.logError("subContentId and contentId cannot be equal. Setting subContentId to null", module);
@@ -696,7 +695,7 @@ public class FreeMarkerWorker {
                 return currentContent;
             }
         }
-        if (Debug.infoOn()) Debug.logInfo("getCurrentContent(2), contentId:" + contentId + " viewContentId:" + viewContentId + " subContentId:" + subContentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent(2), contentId:" + contentId + " viewContentId:" + viewContentId + " subContentId:" + subContentId, "");
         if (UtilValidate.isNotEmpty(contentId) || UtilValidate.isNotEmpty(subContentId)) {
             
                 try {
