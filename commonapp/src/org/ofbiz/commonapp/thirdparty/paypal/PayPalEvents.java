@@ -24,19 +24,42 @@
  */
 package org.ofbiz.commonapp.thirdparty.paypal;
 
-import java.io.*;
-import java.net.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.product.catalog.*;
-import org.ofbiz.commonapp.order.order.*;
-import org.ofbiz.commonapp.order.shoppingcart.*;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.ofbiz.commonapp.order.order.OrderChangeHelper;
+import org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents;
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericTransactionException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.entity.TransactionUtil;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.OrderedMap;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilDateTime;
+import org.ofbiz.core.util.UtilFormatOut;
+import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.util.UtilProperties;
 
 /**
  * PayPal Events
@@ -289,9 +312,13 @@ public class PayPalEvents {
             // attempt to release the offline hold on the order (workflow)            
             OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId);   
             
-            // call the existing confirm order events (calling direct)
-            request.setAttribute("order_id", orderId);
-            String email = CheckOutEvents.emailOrderConfirm(request, response);            
+            // call the email confirm service
+            Map emailContext = UtilMisc.toMap("orderId", orderId);
+            try {
+                Map emailResult = dispatcher.runSync("sendOrderConfirmation", emailContext);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, "Problems sending email confirmation", module);
+            }                        
         }                 
                                 
         return "success";

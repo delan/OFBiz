@@ -50,6 +50,7 @@ import org.ofbiz.core.entity.GenericTransactionException;
 import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.entity.TransactionUtil;
 import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.GenericServiceException;
 import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.service.ServiceDispatcher;
 import org.ofbiz.core.util.Debug;
@@ -207,10 +208,14 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         
         // attempt to release the offline hold on the order (workflow)
         OrderChangeHelper.relaeaseOfflineOrderHold(dispatcher, orderId); 
-                
-        // send the email confirmation
-        String email = CheckOutEvents.emailOrderConfirm(request, response);   
-        Debug.logInfo("Email notification sent.", module);
+                        
+        // call the email confirm service
+        Map emailContext = UtilMisc.toMap("orderId", orderId);
+        try {
+            Map emailResult = dispatcher.runSync("sendOrderConfirmation", emailContext);
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Problems sending email confirmation", module);
+        }                                 
                                                               
         // set up the output stream for the response
         response.setContentType("text/html");
