@@ -367,7 +367,7 @@ public class LoginEvents {
 
         Map parameters = new HashMap();
         parameters.put("password", UtilFormatOut.checkNull(passwordToSend));
-        parameters.put("useEncryption", Boolean.toString(useEncryption));
+        parameters.put("useEncryption", new Boolean(useEncryption).toString());
         context.put("bodyUrlParameters", parameters);
         
         //String content = "Username: " + userLoginId + "\n" + (useEncryption ? "New Password: " : "Current Password: ") + ;
