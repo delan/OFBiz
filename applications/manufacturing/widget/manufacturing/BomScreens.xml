@@ -138,6 +138,14 @@
                 <set field="type" from-field="parameters.type"/>
                 <set field="quantity" from-field="parameters.quantity"/>
                 <set field="amount" from-field="parameters.amount"/>
+                
+                <set field="productFeatureApplTypeId" value="STANDARD_FEATURE"/>
+                
+                <entity-and entity-name="ProductFeatureAndAppl" list-name="selectedFeatures">
+                    <field-map env-name="productId"/>
+                    <field-map env-name="productFeatureApplTypeId"/>
+                    <order-by field-name="sequenceNum"/>
+                </entity-and>
                 <script location="component://manufacturing/webapp/manufacturing/WEB-INF/actions/bom/BomSimulation.bsh"/>
             </actions>
             <widgets>
