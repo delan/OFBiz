@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/08/28 02:21:45  azeneski
+ * Moved helper and security to the request object rather then session. Added support for PoolMan connection pool.
+ *
  * Revision 1.12  2001/08/25 17:29:11  azeneski
  * Started migrating Debug.log to Debug.logInfo and Debug.logError
  *
@@ -127,7 +130,7 @@ public class ControlServlet extends HttpServlet {
         
         // Setup the CONTROL_PATH for JSP dispatching.
         request.setAttribute(SiteDefs.CONTROL_PATH, request.getContextPath() + request.getServletPath());
-        Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
+        // Debug.logInfo("Control Path: " + request.getAttribute(SiteDefs.CONTROL_PATH));
         request.setAttribute(SiteDefs.JOB_MANAGER,jm);
         
         // Store some first hit client info for later.
