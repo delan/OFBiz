@@ -118,9 +118,9 @@
   <ProductAssocType description="Engineering Bill of Materials" hasTable="N" parentTypeId="PRODUCT_COMPONENT" productAssocTypeId="ENGINEER_COMPONENT"/>
   <ProductAssocType description="Product Manufactured As" hasTable="N" parentTypeId="" productAssocTypeId="PRODUCT_MANUFACTURED"/>
   
-
   <ProductCategoryType description="Catalog" hasTable="N" parentTypeId="" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategoryType description="Industry" hasTable="N" parentTypeId="" productCategoryTypeId="INDUSTRY_CATEGORY"/>
+  <ProductCategoryType description="Internal" hasTable="N" parentTypeId="" productCategoryTypeId="INTERNAL_CATEGORY"/>
   <ProductCategoryType description="Materials" hasTable="N" parentTypeId="" productCategoryTypeId="MATERIALS_CATEGORY"/>
   <ProductCategoryType description="Quick Add" hasTable="N" parentTypeId="" productCategoryTypeId="QUICKADD_CATEGORY"/>
   <ProductCategoryType description="Search" hasTable="N" parentTypeId="" productCategoryTypeId="SEARCH_CATEGORY"/>
