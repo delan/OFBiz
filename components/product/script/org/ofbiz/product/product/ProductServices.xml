@@ -559,4 +559,107 @@
         
         <store-value value-name="product"/>
     </simple-method>
+    <simple-method method-name="copyToProductVariants" short-description="Updates the Product's Variants">
+        <string-to-field string="copyToProductVariants" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <call-simple-method method-name="checkProductRelatedPermission"/>
+        <check-errors/>
+
+        <field-to-field field-name="virtualProductId" map-name="parameters" to-field-name="productId" to-map-name="productFindContext"/>
+        <find-by-primary-key entity-name="Product" map-name="productFindContext" value-name="oldProduct"/>
+        
+        <field-to-field field-name="virtualProductId" map-name="parameters" to-field-name="productId" to-map-name="variantsFindContext"/>
+        <string-to-field value="PRODUCT_VARIANT" to-field-name="productAssocTypeId" to-map-name="variantsFindContext"/>
+        <find-by-and entity-name="ProductAssoc" map-name="variantsFindContext" list-name="variants"/>
+        <iterate entry-name="newProduct" list-name="variants">
+            <field-to-field field-name="productIdTo" map-name="newProduct" to-field-name="productId" to-map-name="productVariantContext"/>
+            <!-- if requested, duplicate related data -->
+            <if-not-empty field-name="duplicatePrices" map-name="parameters">
+                <if-not-empty field-name="removeBefore" map-name="parameters">
+                    <find-by-and entity-name="ProductPrice" map-name="productVariantContext" list-name="foundVariantValues"/>
+                    <iterate entry-name="foundVariantValue" list-name="foundVariantValues">
+                        <remove-value value-name="foundVariantValue"/>
+                    </iterate>
+                </if-not-empty>
+                <find-by-and entity-name="ProductPrice" map-name="productFindContext" list-name="foundValues"/>
+                <iterate entry-name="foundValue" list-name="foundValues">
+                    <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <create-value value-name="newTempValue"/>
+                </iterate>
+            </if-not-empty>
+            <if-not-empty field-name="duplicateIDs" map-name="parameters">
+                <if-not-empty field-name="removeBefore" map-name="parameters">
+                    <find-by-and entity-name="GoodIdentification" map-name="productVariantContext" list-name="foundVariantValues"/>
+                    <iterate entry-name="foundVariantValue" list-name="foundVariantValues">
+                        <remove-value value-name="foundVariantValue"/>
+                    </iterate>
+                </if-not-empty>
+                <find-by-and entity-name="GoodIdentification" map-name="productFindContext" list-name="foundValues"/>
+                <iterate entry-name="foundValue" list-name="foundValues">
+                    <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <create-value value-name="newTempValue"/>
+                </iterate>
+            </if-not-empty>
+            <if-not-empty field-name="duplicateContent" map-name="parameters">
+                <if-not-empty field-name="removeBefore" map-name="parameters">
+                    <find-by-and entity-name="ProductContent" map-name="productVariantContext" list-name="foundVariantValues"/>
+                    <iterate entry-name="foundVariantValue" list-name="foundVariantValues">
+                        <remove-value value-name="foundVariantValue"/>
+                    </iterate>
+                </if-not-empty>
+                <find-by-and entity-name="ProductContent" map-name="productFindContext" list-name="foundValues"/>
+                <iterate entry-name="foundValue" list-name="foundValues">
+                    <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <create-value value-name="newTempValue"/>
+                </iterate>
+            </if-not-empty>
+            <if-not-empty field-name="duplicateCategoryMembers" map-name="parameters">
+                <if-not-empty field-name="removeBefore" map-name="parameters">
+                    <find-by-and entity-name="ProductCategoryMember" map-name="productVariantContext" list-name="foundVariantValues"/>
+                    <iterate entry-name="foundVariantValue" list-name="foundVariantValues">
+                        <remove-value value-name="foundVariantValue"/>
+                    </iterate>
+                </if-not-empty>
+                <find-by-and entity-name="ProductCategoryMember" map-name="productFindContext" list-name="foundValues"/>
+                <iterate entry-name="foundValue" list-name="foundValues">
+                    <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <create-value value-name="newTempValue"/>
+                </iterate>
+            </if-not-empty>
+            <if-not-empty field-name="duplicateAttributes" map-name="parameters">
+                <if-not-empty field-name="removeBefore" map-name="parameters">
+                    <find-by-and entity-name="ProductAttribute" map-name="productVariantContext" list-name="foundVariantValues"/>
+                    <iterate entry-name="foundVariantValue" list-name="foundVariantValues">
+                        <remove-value value-name="foundVariantValue"/>
+                    </iterate>
+                </if-not-empty>
+                <find-by-and entity-name="ProductAttribute" map-name="productFindContext" list-name="foundValues"/>
+                <iterate entry-name="foundValue" list-name="foundValues">
+                    <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <create-value value-name="newTempValue"/>
+                </iterate>
+            </if-not-empty>
+            <if-not-empty field-name="duplicateFacilities" map-name="parameters">
+                <if-not-empty field-name="removeBefore" map-name="parameters">
+                    <find-by-and entity-name="ProductFacility" map-name="productVariantContext" list-name="foundVariantValues"/>
+                    <iterate entry-name="foundVariantValue" list-name="foundVariantValues">
+                        <remove-value value-name="foundVariantValue"/>
+                    </iterate>
+                </if-not-empty>
+                <find-by-and entity-name="ProductFacility" map-name="productFindContext" list-name="foundValues"/>
+                <iterate entry-name="foundValue" list-name="foundValues">
+                    <clone-value value-name="foundValue" new-value-name="newTempValue"/>
+                    <field-to-field field-name="productIdTo" map-name="newProduct" to-map-name="newTempValue" to-field-name="productId"/>
+                    <create-value value-name="newTempValue"/>
+                </iterate>
+            </if-not-empty>
+        </iterate>
+    </simple-method>
 </simple-methods>

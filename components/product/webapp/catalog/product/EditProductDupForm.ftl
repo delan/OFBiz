@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
@@ -59,5 +59,23 @@
                 ${uiLabelMap.ProductInventoryItems}&nbsp;<input type="checkbox" class="checkBox" name="removeInventoryItems" value="Y"/>
             </div>
         </form>
+        <#if product?exists && product.isVirtual?if_exists == "Y">
+        <hr class="sepbar">
+        <div class="head2">${uiLabelMap.ProductUpdateProductVariants}</div>
+        <form action="<@ofbizUrl>/UpdateProductVariants</@ofbizUrl>" method="POST" style="margin: 0;">
+            <INPUT type=hidden name="virtualProductId" value="${productId}">
+            <div class="tabletext">
+                <b>${uiLabelMap.CommonUpdateVariants}:</b>
+                ${uiLabelMap.ProductRemoveBefore}&nbsp;<input type="checkbox" class="checkBox" name="removeBefore" value="Y"/>
+                ${uiLabelMap.ProductPrices}&nbsp;<input type="checkbox" class="checkBox" name="duplicatePrices" value="Y" checked/>
+                ${uiLabelMap.CommonId}&nbsp;<input type="checkbox" class="checkBox" name="duplicateIDs" value="Y" checked/>
+                ${uiLabelMap.ProductContent}&nbsp;<input type="checkbox" class="checkBox" name="duplicateContent" value="Y" checked/>
+                ${uiLabelMap.ProductCategoryMembers}&nbsp;<input type="checkbox" class="checkBox" name="duplicateCategoryMembers" value="Y" checked/>
+                ${uiLabelMap.ProductAttributes}&nbsp;<input type="checkbox" class="checkBox" name="duplicateAttributes" value="Y" checked/>
+                ${uiLabelMap.ProductFacilities}&nbsp;<input type="checkbox" class="checkBox" name="duplicateFacilities" value="Y" checked/>
+            </div>
+            <INPUT type=submit class="standardSubmit" value="Go!">
+        </form>
+        </#if>
         <br/>
     </#if>
