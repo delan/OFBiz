@@ -25,7 +25,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
 -->
 
@@ -255,6 +255,74 @@
             <!-- use the service so it will expire the old account and create a new one; don't break on error since this is a background process, just get whatever we can done... -->
             <call-service service-name="updateEftAccount" in-map-name="ueaMap" break-on-error="false"/>
         </iterate>
+    </simple-method>
+    
+    <simple-method method-name="createPayment" short-description="Create a Payment">    	
+    	<if>
+    	  <condition>
+    	  	<and>
+              <not>
+    	  	    <if-has-permission permission="PAY_INFO" action="_UPDATE"/>    	  	   
+    	  	  </not>
+    	  	  <not>
+    	  	  	<if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="parameters"/>
+    	  	  </not>
+    	  	  <not>
+    	  	  	<if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="parameters"/>
+    	  	  </not>
+    	  	</and>    	  	  
+    	  </condition>
+    	  <then>
+    	    <add-error>
+    	      <fail-message message="Security Error: To Create a Payment you must either be the to or from party or have the PAY_INFO_CREATE or PAY_INFO_ADMIN permissions."/>
+    	    </add-error>
+    	  </then>
+    	</if>
+        <check-errors/>
+        
+        <make-value entity-name="Payment" value-name="payment"/>
+        <sequenced-id-to-env sequence-name="Payment" env-name="paymentId"/>
+        <to-string field-name="paymentId"/>
+        <env-to-field env-name="paymentId" map-name="payment"/>
+        
+        <if-empty field-name="effectiveDate" map-name="parameters">
+        	<now-timestamp-to-env env-name="timestamp"/>
+        	<env-to-field env-name="timestamp" field-name="effectiveDate" map-name="payment"/>
+        </if-empty>
+        
+        <set-nonpk-fields map-name="parameters" value-name="payment"/>
+        <create-value value-name="payment"/>
+    </simple-method>
+    
+    <simple-method method-name="updatePayment" short-description="Update a Payment">
+    	<make-value entity-name="Payment" value-name="lookupPayment"/>
+    	<set-pk-fields value-name="lookupPayment" map-name="parameters"/>
+    	
+    	<find-by-primary-key entity-name="Payment" map-name="lookupPayment" value-name="payment"/>
+    	<if>
+    	  <condition>
+    	  	<and>
+              <not>
+    	  	    <if-has-permission permission="PAY_INFO" action="_UPDATE"/>    	  	   
+    	  	  </not>
+    	  	  <not>
+    	  	  	<if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdFrom" to-map-name="payment"/>
+    	  	  </not>
+    	  	  <not>
+    	  	  	<if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-field-name="partyIdTo" to-map-name="payment"/>
+    	  	  </not>
+    	  	</and>    	  	  
+    	  </condition>
+    	  <then>
+    	    <add-error>
+    	      <fail-message message="Security Error: To Update a Payment you must either be the to or from party or have the PAY_INFO_UPDATE or PAY_INFO_ADMIN permissions."/>
+    	    </add-error>
+    	  </then>
+    	</if>
+        <check-errors/>
+        
+        <set-nonpk-fields map-name="parameters" value-name="payment"/>
+        <store-value value-name="payment"/>
     </simple-method>
     
     <simple-method method-name="createPaymentApplication" short-description="Create a Payment Application">
