@@ -373,6 +373,7 @@
         <attribute name="facilityId" type="String" mode="IN" optional="false"/>
         <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="maxNumberOfOrders" type="Long" mode="IN" optional="true"/>
+        <attribute name="setPickStartedDate" type="String" mode="IN" optional="true"/><!-- Y or N, defaults to N -->
         <attribute name="inventoryItemInfoList" type="List" mode="OUT" optional="true"/>
         <attribute name="orderHeaderInfoList" type="List" mode="OUT" optional="true"/>
         <attribute name="wrongQuantityReservedList" type="List" mode="OUT" optional="true"/>
