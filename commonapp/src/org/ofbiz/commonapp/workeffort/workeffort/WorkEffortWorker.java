@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/11/14 12:38:58  jonesde
+ * Refactored upcoming work efforts worker to use UtilDateTime methods and use a period (day) based approach, much simpler
+ *
  * Revision 1.6  2001/11/13 15:47:15  jonesde
  * Updated upcoming events, though one small todo left there
  *
@@ -103,10 +106,9 @@ public class WorkEffortWorker {
     }
     
     //if there was an error message, don't get values from entity
-    if(pageContext.getRequest().getAttribute(SiteDefs.ERROR_MESSAGE) != null) {
+    if(pageContext.getRequest().getAttribute("ERROR_MESSAGE") != null || pageContext.getRequest().getAttribute(SiteDefs.ERROR_MESSAGE) != null) {
       tryEntity = new Boolean(false);
     }
-    Debug.logInfo("[WorkEffortWorker.getWorkEffort] tryEntity = " + tryEntity);
     
     if(workEffortId != null) pageContext.setAttribute(workEffortIdAttrName, workEffortId);
     if(workEffort != null) pageContext.setAttribute(workEffortAttrName, workEffort);
@@ -114,8 +116,6 @@ public class WorkEffortWorker {
     if(workEffortPartyAssignments != null) pageContext.setAttribute(partyAssignsAttrName, workEffortPartyAssignments);
     if(tryEntity != null) pageContext.setAttribute(tryEntityAttrName, tryEntity);
     if(currentStatus != null) pageContext.setAttribute(currentStatusAttrName, currentStatus);
-    
-    pageContext.setAttribute(tryEntityAttrName, new Boolean(workEffort==null?false:true));
   }
     
   public static void getEventStatusItems(PageContext pageContext, String attributeName) {
