@@ -38,11 +38,14 @@
 	list-entry-name: if specified each list entry will be put in the context
 		with this name; otherwise the list entry must be a Map and the entries
 		in the Map will be put into the context by name
+	type: a single form is a simple single form with values from a single set of values;
+		a list form is a list of individual forms in a table (could be called a tabular form), it has a list of sets of values and creates one form for each list element;
+		a multi form is like a list/tabular form, but it creates a single form to submit all list item forms at once; the field names in the resulting form have an appendage attached to make them unique according to the pattern used for the multi-service event handler that will call one service for each list element
 -->
 <!ELEMENT form ( alt-target*, auto-fields-service*, auto-fields-entity*, field* )>
 <!ATTLIST form
     name CDATA #REQUIRED
-    type ( single | list ) #REQUIRED
+    type ( single | list | multi ) #REQUIRED
     target CDATA #REQUIRED
     title CDATA #IMPLIED
     tooltip CDATA #IMPLIED
@@ -53,6 +56,8 @@
     default-service-name CDATA #IMPLIED
     default-title-style CDATA #IMPLIED
     default-widget-style CDATA #IMPLIED
+    default-tooltip-style CDATA #IMPLIED
+    item-index-separator CDATA "_ms_"
 >
 
 <!ELEMENT alt-target EMPTY>
@@ -123,6 +128,7 @@
     tooltip CDATA #IMPLIED
     title-style CDATA #IMPLIED
     widget-style CDATA #IMPLIED
+    tooltip-style CDATA #IMPLIED
     position CDATA "1"
     red-when ( never | before-now | after-now | by-name ) "by-name"
     use-when CDATA #IMPLIED

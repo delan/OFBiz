@@ -72,6 +72,8 @@ public class ModelForm {
     protected String defaultServiceName;
     protected String defaultTitleStyle;
     protected String defaultWidgetStyle;
+    protected String defaultTooltipStyle;
+    protected String itemIndexSeparator;
     
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
@@ -115,6 +117,8 @@ public class ModelForm {
         this.defaultServiceName = formElement.getAttribute("default-service-name");
         this.defaultTitleStyle = formElement.getAttribute("default-title-style");
         this.defaultWidgetStyle = formElement.getAttribute("default-widget-style");
+        this.defaultTooltipStyle = formElement.getAttribute("default-tooltip-style");
+        this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
         
         // alt-target
         List altTargetElements = UtilXml.childElementList(formElement, "alt-target");
@@ -362,6 +366,8 @@ public class ModelForm {
             this.renderSingleFormString(buffer, context, formStringRenderer, positions);
         } else if ("list".equals(this.type)) {
             this.renderListFormString(buffer, context, formStringRenderer, positions);
+        } else if ("multi".equals(this.type)) {
+            this.renderMultiFormString(buffer, context, formStringRenderer, positions);
         } else {
             throw new IllegalArgumentException("The type " + this.getType() + " is not supported for form with name " + this.getName());
         }
@@ -374,35 +380,7 @@ public class ModelForm {
         formStringRenderer.renderFormOpen(buffer, context, this);
             
         // render all hidden & ignored fields
-        fieldIter = this.fieldList.iterator();
-        while (fieldIter.hasNext()) {
-            ModelFormField modelFormField = (ModelFormField) fieldIter.next();
-            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-
-            // render hidden/ignored field widget
-            switch (fieldInfo.getFieldType()) {
-                case ModelFormField.FieldInfo.HIDDEN:
-                case ModelFormField.FieldInfo.IGNORED:
-                if (modelFormField.shouldUse(context)) {
-                    modelFormField.renderFieldString(buffer, context, formStringRenderer);
-                }
-                break;
-                    
-                case ModelFormField.FieldInfo.DISPLAY:
-                ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
-                if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
-                    formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
-                }
-                break;
-                    
-                case ModelFormField.FieldInfo.HYPERLINK:
-                ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
-                if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(context)) {
-                    formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
-                }
-                break;
-            }
-        }
+        this.renderHiddenIgnoredFields(buffer, context, formStringRenderer);
             
         // render formatting wrapper open
         formStringRenderer.renderFormatSingleWrapperOpen(buffer, context, this);
@@ -538,9 +516,37 @@ public class ModelForm {
         formStringRenderer.renderFormatListWrapperOpen(buffer, context, this);
             
         // ===== render header row =====
-        formStringRenderer.renderFormatHeaderRowOpen(buffer, context, this);
+        this.renderHeaderRow(buffer, context, formStringRenderer);    
             
-        // render title for each field, except hidden & ignored rows
+        // ===== render the item rows =====
+        this.renderItemRows(buffer, context, formStringRenderer, true);
+            
+        // render formatting wrapper close
+        formStringRenderer.renderFormatListWrapperClose(buffer, context, this);
+    }
+
+    public void renderMultiFormString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, int positions) {
+        formStringRenderer.renderFormOpen(buffer, context, this);
+
+        // render formatting wrapper open
+        formStringRenderer.renderFormatListWrapperOpen(buffer, context, this);
+            
+        // ===== render header row =====
+        this.renderHeaderRow(buffer, context, formStringRenderer);    
+            
+        // ===== render the item rows =====
+        this.renderItemRows(buffer, context, formStringRenderer, false);
+            
+        // render formatting wrapper close
+        formStringRenderer.renderFormatListWrapperClose(buffer, context, this);
+
+        formStringRenderer.renderFormClose(buffer, context, this);
+    }
+    
+    public void renderHeaderRow(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+        formStringRenderer.renderFormatHeaderRowOpen(buffer, context, this);
+        
+        // render title for each field, except hidden & ignored, etc
             
         // start by rendering all display and hyperlink fields, until we
         //get to a field that should go into the form cell, then render
@@ -593,6 +599,11 @@ public class ModelForm {
                 continue;
             }
 
+            // skip all of the submit/reset fields
+            if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.SUBMIT || fieldInfo.getFieldType() == ModelFormField.FieldInfo.RESET) {
+                continue;
+            }
+
             if (!modelFormField.shouldUse(context)) {
                 continue;
             }
@@ -609,15 +620,11 @@ public class ModelForm {
             ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
                 
             // render title (unless this is a submit or a reset field)
-            if (fieldInfo.getFieldType() != ModelFormField.FieldInfo.SUBMIT && fieldInfo.getFieldType() != ModelFormField.FieldInfo.RESET) {
-                formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
+            formStringRenderer.renderFieldTitle(buffer, context, modelFormField);
 
-                if (headerFormFieldIter.hasNext()) {
-                    // TODO: determine somehow if this is the last one... how?
-                    formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(buffer, context, this, modelFormField, false);
-                }
-            } else {
-                formStringRenderer.renderFormatEmptySpace(buffer, context, this);
+            if (headerFormFieldIter.hasNext()) {
+                // TODO: determine somehow if this is the last one... how?
+                formStringRenderer.renderFormatHeaderRowFormCellTitleSeparator(buffer, context, this, modelFormField, false);
             }
         }
 
@@ -650,9 +657,9 @@ public class ModelForm {
         }
             
         formStringRenderer.renderFormatHeaderRowClose(buffer, context, this);
-            
-        // ===== render the item rows =====
-            
+    }
+
+    public void renderItemRows(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, boolean formPerItem) {
         // if list is empty, do not render rows
         List items = (List) context.get(this.getListName());
         if (items == null || items.size() == 0) {
@@ -702,42 +709,16 @@ public class ModelForm {
                 
                     formStringRenderer.renderFormatItemRowCellClose(buffer, localContext, this, modelFormField);
                 }
-            
+
                 // render the "form" cell 
                 formStringRenderer.renderFormatItemRowFormCellOpen(buffer, localContext, this);
-                    
-                formStringRenderer.renderFormOpen(buffer, localContext, this);
+
+                if (formPerItem) {            
+                    formStringRenderer.renderFormOpen(buffer, localContext, this);
+                }
                     
                 // do all of the hidden fields...
-                Iterator fieldIter = this.fieldList.iterator();
-                while (fieldIter.hasNext()) {
-                    ModelFormField modelFormField = (ModelFormField) fieldIter.next();
-                    ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
-
-                    // render hidden/ignored field widget
-                    switch (fieldInfo.getFieldType()) {
-                        case ModelFormField.FieldInfo.HIDDEN:
-                        case ModelFormField.FieldInfo.IGNORED:
-                        if (modelFormField.shouldUse(localContext)) {
-                            modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
-                        }
-                        break;
-                    
-                        case ModelFormField.FieldInfo.DISPLAY:
-                        ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
-                        if (displayField.getAlsoHidden() && modelFormField.shouldUse(localContext)) {
-                            formStringRenderer.renderHiddenField(buffer, localContext, modelFormField, modelFormField.getEntry(localContext));
-                        }
-                        break;
-                    
-                        case ModelFormField.FieldInfo.HYPERLINK:
-                        ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
-                        if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(localContext)) {
-                            formStringRenderer.renderHiddenField(buffer, localContext, modelFormField, modelFormField.getEntry(localContext));
-                        }
-                        break;
-                    }
-                }
+                this.renderHiddenIgnoredFields(buffer, localContext, formStringRenderer);
             
                 Iterator innerFormFieldIter = this.fieldList.iterator();
                 while (innerFormFieldIter.hasNext()) {
@@ -762,7 +743,9 @@ public class ModelForm {
                     modelFormField.renderFieldString(buffer, localContext, formStringRenderer);
                 }
 
-                formStringRenderer.renderFormClose(buffer, localContext, this);
+                if (formPerItem) {            
+                    formStringRenderer.renderFormClose(buffer, localContext, this);
+                }
             
                 formStringRenderer.renderFormatItemRowFormCellClose(buffer, localContext, this);
             
@@ -796,9 +779,38 @@ public class ModelForm {
                 formStringRenderer.renderFormatItemRowClose(buffer, localContext, this);
             }
         }
-            
-        // render formatting wrapper close
-        formStringRenderer.renderFormatListWrapperClose(buffer, context, this);
+    }
+    
+    public void renderHiddenIgnoredFields(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
+        Iterator fieldIter = this.fieldList.iterator();
+        while (fieldIter.hasNext()) {
+            ModelFormField modelFormField = (ModelFormField) fieldIter.next();
+            ModelFormField.FieldInfo fieldInfo = modelFormField.getFieldInfo();
+
+            // render hidden/ignored field widget
+            switch (fieldInfo.getFieldType()) {
+                case ModelFormField.FieldInfo.HIDDEN:
+                case ModelFormField.FieldInfo.IGNORED:
+                if (modelFormField.shouldUse(context)) {
+                    modelFormField.renderFieldString(buffer, context, formStringRenderer);
+                }
+                break;
+                    
+                case ModelFormField.FieldInfo.DISPLAY:
+                ModelFormField.DisplayField displayField = (ModelFormField.DisplayField) fieldInfo;
+                if (displayField.getAlsoHidden() && modelFormField.shouldUse(context)) {
+                    formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
+                }
+                break;
+                    
+                case ModelFormField.FieldInfo.HYPERLINK:
+                ModelFormField.HyperlinkField hyperlinkField = (ModelFormField.HyperlinkField) fieldInfo;
+                if (hyperlinkField.getAlsoHidden() && modelFormField.shouldUse(context)) {
+                    formStringRenderer.renderHiddenField(buffer, context, modelFormField, modelFormField.getEntry(context));
+                }
+                break;
+            }
+        }
     }
     
 
@@ -852,6 +864,24 @@ public class ModelForm {
     /**
      * @return
      */
+    public String getDefaultTooltipStyle() {
+        return this.defaultTooltipStyle;
+    }
+
+    /**
+     * @return
+     */
+    public String getItemIndexSeparator() {
+        if (UtilValidate.isNotEmpty(this.itemIndexSeparator)) {
+            return this.itemIndexSeparator;
+        } else {
+            return "_ms_";
+        }
+    }
+
+    /**
+     * @return
+     */
     public String getListEntryName() {
         return this.listEntryName;
     }
@@ -877,8 +907,8 @@ public class ModelForm {
             formName = this.getName();
         }
         
-        if (itemIndex != null) {
-            return formName + itemIndex.intValue();
+        if (itemIndex != null && "list".equals(this.getType())) {
+            return formName + this.getItemIndexSeparator() + itemIndex.intValue();
         } else {
             return formName;
         }
@@ -951,84 +981,98 @@ public class ModelForm {
      * @param string
      */
     public void setDefaultEntityName(String string) {
-        defaultEntityName = string;
+        this.defaultEntityName = string;
     }
 
     /**
      * @param string
      */
     public void setDefaultMapName(String string) {
-        defaultMapName = new FlexibleMapAccessor(string);
+        this.defaultMapName = new FlexibleMapAccessor(string);
     }
 
     /**
      * @param string
      */
     public void setDefaultServiceName(String string) {
-        defaultServiceName = string;
+        this.defaultServiceName = string;
     }
 
     /**
      * @param string
      */
     public void setDefaultTitleStyle(String string) {
-        defaultTitleStyle = string;
+        this.defaultTitleStyle = string;
     }
 
     /**
      * @param string
      */
     public void setDefaultWidgetStyle(String string) {
-        defaultWidgetStyle = string;
+        this.defaultWidgetStyle = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setDefaultTooltipStyle(String string) {
+        this.defaultTooltipStyle = string;
+    }
+
+    /**
+     * @param string
+     */
+    public void setItemIndexSeparator(String string) {
+        this.itemIndexSeparator = string;
     }
 
     /**
      * @param string
      */
     public void setListEntryName(String string) {
-        listEntryName = string;
+        this.listEntryName = string;
     }
 
     /**
      * @param string
      */
     public void setListName(String string) {
-        listName = string;
+        this.listName = string;
     }
 
     /**
      * @param string
      */
     public void setName(String string) {
-        name = string;
+        this.name = string;
     }
 
     /**
      * @param string
      */
     public void setTarget(String string) {
-        target = string;
+        this.target = string;
     }
 
     /**
      * @param string
      */
     public void setTitle(String string) {
-        title = string;
+        this.title = string;
     }
 
     /**
      * @param string
      */
     public void setTooltip(String string) {
-        tooltip = string;
+        this.tooltip = string;
     }
 
     /**
      * @param string
      */
     public void setType(String string) {
-        type = string;
+        this.type = string;
     }
     
     public static class AltTarget {

@@ -68,6 +68,7 @@ public class ModelFormField {
     protected FlexibleStringExpander tooltip;
     protected String titleStyle;
     protected String widgetStyle;
+    protected String tooltipStyle;
     protected Integer position = null;
     protected String redWhen;
     protected String useWhen;
@@ -95,6 +96,7 @@ public class ModelFormField {
         this.setTooltip(fieldElement.getAttribute("tooltip"));
         this.titleStyle = fieldElement.getAttribute("title-style");
         this.widgetStyle = fieldElement.getAttribute("widget-style");
+        this.tooltipStyle = fieldElement.getAttribute("tooltip-style");
         this.redWhen = fieldElement.getAttribute("red-when");
         this.useWhen = fieldElement.getAttribute("use-when");
         
@@ -256,7 +258,7 @@ public class ModelFormField {
             //Debug.logInfo("Getting entry, isError true so getting from parameters for field " + this.getName() + " of form " + this.modelForm.getName());
             Map parameters = (Map) context.get("parameters");
             if (parameters != null) {
-                return (String) parameters.get(this.getParameterName());
+                return (String) parameters.get(this.getParameterName(context));
             } else {
                 return defaultValue;
             }
@@ -339,11 +341,19 @@ public class ModelFormField {
      * 
      * @return 
      */
-    public String getParameterName() {
+    public String getParameterName(Map context) {
+        String baseName;
         if (UtilValidate.isNotEmpty(this.parameterName)) {
-            return this.parameterName;
+            baseName = this.parameterName;
         } else {
-            return this.name;
+            baseName = this.name;
+        }
+        
+        Integer itemIndex = (Integer) context.get("itemIndex");
+        if (itemIndex != null && "multi".equals(this.modelForm.getType())) {
+            return baseName + this.modelForm.getItemIndexSeparator() + itemIndex.intValue();
+        } else {
+            return baseName;
         }
     }
 
@@ -538,7 +548,11 @@ public class ModelFormField {
      * @return
      */
     public String getTooltip(Map context) {
-        return tooltip.expandString(context);
+        if (tooltip != null && !tooltip.isEmpty()) {
+            return tooltip.expandString(context);
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -581,6 +595,17 @@ public class ModelFormField {
             return this.widgetStyle;
         } else {
             return this.modelForm.getDefaultWidgetStyle();
+        }
+    }
+
+    /**
+     * @return
+     */
+    public String getTooltipStyle() {
+        if (UtilValidate.isNotEmpty(this.tooltipStyle)) {
+            return this.tooltipStyle;
+        } else {
+            return this.modelForm.getDefaultTooltipStyle();
         }
     }
 
@@ -665,28 +690,35 @@ public class ModelFormField {
      * @param string
      */
     public void setTitleStyle(String string) {
-        titleStyle = string;
+        this.titleStyle = string;
     }
 
     /**
      * @param string
      */
     public void setTooltip(String string) {
-        tooltip = new FlexibleStringExpander(string);
+        this.tooltip = new FlexibleStringExpander(string);
     }
 
     /**
      * @param string
      */
     public void setUseWhen(String string) {
-        useWhen = string;
+        this.useWhen = string;
     }
 
     /**
      * @param string
      */
     public void setWidgetStyle(String string) {
-        widgetStyle = string;
+        this.widgetStyle = string;
+    }
+    
+    /**
+     * @param string
+     */
+    public void setTooltipStyle(String string) {
+        this.tooltipStyle = string;
     }
     
     public static abstract class FieldInfo {

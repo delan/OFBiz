@@ -87,6 +87,23 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ContentUrlTag.appendContentPrefix(this.request, buffer);
         buffer.append(location);
     }
+    
+    public void appendTooltip(StringBuffer buffer, Map context, ModelFormField modelFormField) {
+        // render the tooltip, in other methods too
+        String tooltip = modelFormField.getTooltip(context);
+        if (UtilValidate.isNotEmpty(tooltip)) {
+            buffer.append("<span");
+            String tooltipStyle = modelFormField.getTooltipStyle();
+            if (UtilValidate.isNotEmpty(tooltipStyle)) {
+                buffer.append(" class=\"");
+                buffer.append(tooltipStyle);
+                buffer.append("\"");
+            }
+            buffer.append("> -[");
+            buffer.append(tooltip);
+            buffer.append("]- </span>");
+        }
+    }
 
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDisplayField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DisplayField)
@@ -110,17 +127,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(">");
         buffer.append(displayField.getDescription(context));
         buffer.append("</span>");
-        
-        // render the tooltip, in other methods too
-        buffer.append("<span");
-        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
-            buffer.append(" class=\"");
-            buffer.append(modelFormField.getWidgetStyle());
-            buffer.append("\"");
-        }
-        buffer.append(">-[");
-        buffer.append(modelFormField.getTooltip(context));
-        buffer.append("]-</span>");
+
+        this.appendTooltip(buffer, context, modelFormField);        
         
         this.appendWhitespace(buffer);
     }
@@ -148,6 +156,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append(hyperlinkField.getDescription(context));
         buffer.append("</a>");
         
+        this.appendTooltip(buffer, context, modelFormField);        
+        
         this.appendWhitespace(buffer);
     }
 
@@ -172,7 +182,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append(" name=\"");
-        buffer.append(modelFormField.getParameterName());
+        buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
         
         String value = modelFormField.getEntry(context);
@@ -195,6 +205,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append("/>");
         
+        this.appendTooltip(buffer, context, modelFormField);        
+        
         this.appendWhitespace(buffer);
     }
 
@@ -214,7 +226,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append(" name=\"");
-        buffer.append(modelFormField.getParameterName());
+        buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
 
         buffer.append(" cols=\"");
@@ -233,6 +245,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append("</textarea>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
         
         this.appendWhitespace(buffer);
     }
@@ -258,7 +272,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append(" name=\"");
-        buffer.append(modelFormField.getParameterName());
+        buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
         
         String value = modelFormField.getEntry(context);
@@ -295,7 +309,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("<a href=\"javascript:call_cal(document.");
             buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
             buffer.append('.');
-            buffer.append(modelFormField.getParameterName());
+            buffer.append(modelFormField.getParameterName(context));
             buffer.append(", '");
             buffer.append(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context)));
             buffer.append("');\">");
@@ -303,6 +317,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
             this.appendContentUrl(buffer, "/images/cal.gif");
             buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
         }
+        
+        this.appendTooltip(buffer, context, modelFormField);        
         
         this.appendWhitespace(buffer);
     }
@@ -324,7 +340,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
 
         buffer.append(" name=\"");
-        buffer.append(modelFormField.getParameterName());
+        buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
 
         buffer.append(" size=\"1\">");
@@ -371,6 +387,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append("</select>");
         
+        this.appendTooltip(buffer, context, modelFormField);        
+        
         this.appendWhitespace(buffer);
     }
     
@@ -384,7 +402,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         ModelForm modelForm = modelFormField.getModelForm();
         String currentValue = modelFormField.getEntry(context);
         
-        buffer.append("<div");
+        buffer.append("<span");
         String className = modelFormField.getWidgetStyle();
         if (UtilValidate.isNotEmpty(className)) {
             buffer.append(" class=\"");
@@ -402,11 +420,13 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append(" checked");
         }
         buffer.append(" name=\"");
-        buffer.append(modelFormField.getParameterName());
+        buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
         buffer.append(" value=\"Y\"/>");
         // any description by it?
-        buffer.append("</div>");
+        buffer.append("</span>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
         
         this.appendWhitespace(buffer);
     }
@@ -442,7 +462,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
                 buffer.append(" checked");
             }
             buffer.append(" name=\"");
-            buffer.append(modelFormField.getParameterName());
+            buffer.append(modelFormField.getParameterName(context));
             buffer.append('"');
             buffer.append(" value=\"");
             buffer.append(optionValue.getKey());
@@ -452,6 +472,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
             buffer.append("</div>");
         }
 
+        this.appendTooltip(buffer, context, modelFormField);        
+        
         this.appendWhitespace(buffer);
     }
 
@@ -490,7 +512,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             }
         
             buffer.append(" name=\"");
-            buffer.append(modelFormField.getParameterName());
+            buffer.append(modelFormField.getParameterName(context));
             buffer.append('"');
         
             String title = modelFormField.getTitle(context);
@@ -518,7 +540,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             }
         
             buffer.append(" name=\"");
-            buffer.append(modelFormField.getParameterName());
+            buffer.append(modelFormField.getParameterName(context));
             buffer.append('"');
         
             String title = modelFormField.getTitle(context);
@@ -530,6 +552,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         
             buffer.append("/>");
         }
+        
+        this.appendTooltip(buffer, context, modelFormField);        
         
         this.appendWhitespace(buffer);
     }
@@ -550,7 +574,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append(" name=\"");
-        buffer.append(modelFormField.getParameterName());
+        buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
         
         String title = modelFormField.getTitle(context);
@@ -561,6 +585,8 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append("/>");
+        
+        this.appendTooltip(buffer, context, modelFormField);        
         
         this.appendWhitespace(buffer);
     }
@@ -578,7 +604,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         buffer.append("<input type=\"hidden\"");
         
         buffer.append(" name=\"");
-        buffer.append(modelFormField.getParameterName());
+        buffer.append(modelFormField.getParameterName(context));
         buffer.append('"');
         
         if (UtilValidate.isNotEmpty(value)) {
@@ -624,7 +650,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         this.appendOfbizUrl(buffer, "/" + modelForm.getTarget(context));
         buffer.append("\" name=\"");
         buffer.append(modelForm.getCurrentFormName(context));
-        buffer.append("\">");
+        buffer.append("\" style=\"margin: 0;\">");
         
         this.appendWhitespace(buffer);
     }
