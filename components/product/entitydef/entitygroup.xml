@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.13 $
+ *@version    $Revision: 1.14 $
  */
 -->
 
@@ -156,6 +156,7 @@
     <entity-group group="org.ofbiz" entity="ProductPromoCond" />
     <entity-group group="org.ofbiz" entity="ProductPromoProduct" />
     <entity-group group="org.ofbiz" entity="ProductPromoRule" />
+    <entity-group group="org.ofbiz" entity="ProductPromoUse" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.storage -->
@@ -195,7 +196,7 @@
     <entity-group group="org.ofbiz" entity="ProductStoreKeywordOvrd" />
     <entity-group group="org.ofbiz" entity="ProductStorePaymentSetting" />
     <entity-group group="org.ofbiz" entity="ProductStorePromoAppl" />
-    <entity-group group="org.ofbiz" entity="ProductStoreRole" />    
+    <entity-group group="org.ofbiz" entity="ProductStoreRole" />
     <entity-group group="org.ofbiz" entity="ProductStoreShipmentMeth" />
     <entity-group group="org.ofbiz" entity="ProductStoreShipmentMethView" />
 

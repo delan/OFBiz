@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.16 2003/11/12 23:45:27 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.17 2003/11/14 18:28:20 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,10 +27,7 @@ import java.text.NumberFormat;
 import java.util.*;
 import java.sql.Timestamp;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilProperties;
-import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericPK;
@@ -45,7 +42,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -72,9 +69,20 @@ public class ShoppingCart implements java.io.Serializable {
     private List adjustments = new LinkedList();
     private List cartLines = new ArrayList();
     private Map contactMechIdsMap = new HashMap();
+
+    public static class ProductPromoUseInfo {
+        public String productPromoId;
+        public String productPromoCodeId;
+        public ProductPromoUseInfo(String productPromoId, String productPromoCodeId) {
+            this.productPromoId = productPromoId;
+            this.productPromoCodeId = productPromoCodeId;
+        }
+    }
+    /** Contains a List for each productPromoId (key) containing a productPromoCodeId (or empty string for no code) for each use of the productPromoId */
+    private List productPromoUseInfoList = new LinkedList();
+    /** Contains the promo codes entered */
+    private Set productPromoCodes = new HashSet();
     private List freeShippingProductPromoActions = new ArrayList();
-    private Map productPromoUses = new HashMap();
-    private Map productPromoCodeUses = new HashMap();
 
     private transient GenericDelegator delegator = null;
     private String delegatorName = null;
@@ -105,6 +113,8 @@ public class ShoppingCart implements java.io.Serializable {
         this.adjustments = new LinkedList(cart.getAdjustments());
         this.contactMechIdsMap = new HashMap(cart.getOrderContactMechIds());
         this.freeShippingProductPromoActions = new ArrayList(cart.getFreeShippingProductPromoActions());
+        this.productPromoUseInfoList = new LinkedList(cart.productPromoUseInfoList);
+        this.productPromoCodes = new HashSet(cart.productPromoCodes);
         this.locale = cart.getLocale();
         this.currencyUom = cart.getCurrency();
 
@@ -355,8 +365,8 @@ public class ShoppingCart implements java.io.Serializable {
 
         this.orderAdditionalEmails = null;
         this.freeShippingProductPromoActions.clear();
-        this.productPromoUses.clear();
-        this.productPromoCodeUses.clear();
+        this.productPromoUseInfoList.clear();
+        this.productPromoCodes.clear();
 
         this.paymentMethodIds.clear();
         this.paymentMethodTypeIds.clear();
@@ -929,50 +939,49 @@ public class ShoppingCart implements java.io.Serializable {
         return this.freeShippingProductPromoActions;
     }
 
-    public void addProductPromoUse(String productPromoId) {
-        Long uses = (Long) productPromoUses.get(productPromoId);
-        if (uses == null) {
-            productPromoUses.put(productPromoId, new Integer(1));
-        } else {
-            productPromoUses.put(productPromoId, new Integer(uses.intValue() + 1));
+    public void addProductPromoUse(String productPromoId, String productPromoCodeId) {
+        if (UtilValidate.isNotEmpty(productPromoCodeId) && !this.productPromoCodes.contains(productPromoCodeId)) {
+            throw new IllegalStateException("Cannot add a use to a promo code use for a code that has not been entered.");
         }
+        this.productPromoUseInfoList.add(new ProductPromoUseInfo(productPromoId, productPromoCodeId));
     }
 
     public void clearProductPromoUses() {
-        this.productPromoUses.clear();
+        this.productPromoUseInfoList.clear();
     }
 
-    public Map getProductPromoUses() {
-        return this.productPromoUses;
+    public int getProductPromoUseCount(String productPromoId) {
+        if (productPromoId == null) return 0;
+        int useCount = 0;
+        Iterator productPromoUseInfoIter = this.productPromoUseInfoList.iterator();
+        while (productPromoUseInfoIter.hasNext()) {
+            ProductPromoUseInfo productPromoUseInfo = (ProductPromoUseInfo) productPromoUseInfoIter.next();
+            if (productPromoId.equals(productPromoUseInfo.productPromoId)) {
+                useCount++;
+            }
+        }
+        return useCount;
+    }
+
+    public int getProductPromoCodeUse(String productPromoCodeId) {
+        if (productPromoCodeId == null) return 0;
+        int useCount = 0;
+        Iterator productPromoUseInfoIter = this.productPromoUseInfoList.iterator();
+        while (productPromoUseInfoIter.hasNext()) {
+            ProductPromoUseInfo productPromoUseInfo = (ProductPromoUseInfo) productPromoUseInfoIter.next();
+            if (productPromoCodeId.equals(productPromoUseInfo.productPromoCodeId)) {
+                useCount++;
+            }
+        }
+        return useCount;
     }
 
     public void addProductPromoCode(String productPromoCodeId) {
-        if (!productPromoCodeUses.containsKey(productPromoCodeId)) {
-            productPromoCodeUses.put(productPromoCodeId, new Integer(0));
-        }
+        this.productPromoCodes.add(productPromoCodeId);
     }
 
-    public void addProductPromoCodeUse(String productPromoCodeId) {
-        Long uses = (Long) productPromoCodeUses.get(productPromoCodeId);
-        if (uses == null) {
-            throw new IllegalStateException("Cannot add a use to a promo code use for a code that has not been entered.");
-        } else {
-            productPromoCodeUses.put(productPromoCodeId, new Integer(uses.intValue() + 1));
-        }
-    }
-
-    public void resetProductPromoCodeUses() {
-        // we don't want to clear the Map because it represents codes that are entered, just set all values to zero
-        Integer zeroValue = new Integer(0);
-        Iterator entryIter = this.productPromoCodeUses.entrySet().iterator();
-        while (entryIter.hasNext()) {
-            Map.Entry entry = (Map.Entry) entryIter.next();
-            entry.setValue(zeroValue);
-        }
-    }
-
-    public Map getProductPromoCodeUses() {
-        return this.productPromoCodeUses;
+    public Set getProductPromoCodesEntered() {
+        return this.productPromoCodes;
     }
 
     // =======================================================================
