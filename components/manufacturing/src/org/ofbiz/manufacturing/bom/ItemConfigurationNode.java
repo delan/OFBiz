@@ -12,17 +12,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Date;
+import java.sql.Timestamp;
 
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
-
+import org.ofbiz.manufacturing.techdata.ProductHelper;
 
 /** An ItemCoinfigurationNode represents a component in a bill of materials.
  * @author <a href="mailto:tiz@sastau.it">Jacopo Cappellato</a>
@@ -34,18 +36,19 @@ public class ItemConfigurationNode {
     private ItemConfigurationNode substitutedNode; // The virtual node (if any) that this instance substitutes
     private GenericValue ruleApplied; // The rule (if any) that that has been applied to configure the current node
     private String productForRules;
-    private GenericValue part; // the current product (from Product entity)
+    private GenericValue product; // the current product (from Product entity)
+    private GenericValue productAssoc; // the product assoc record (from ProductAssoc entity) in which the current product is in productIdTo
     private ArrayList children; // current node's children (ProductAssocs)
     private ArrayList childrenNodes; // current node's children nodes (ItemConfigurationNode)
-    private float quantityMultiplier; // the necessary quantity as declared in the bom (from ProductAssocs or ProductManufacturingRule)
-    private float scrapFactor; // the scrap factor as declared in the bom (from ProductAssocs)
+    private double quantityMultiplier; // the necessary quantity as declared in the bom (from ProductAssocs or ProductManufacturingRule)
+    private double scrapFactor; // the scrap factor as declared in the bom (from ProductAssocs)
     // Runtime fields
     private int depth; // the depth of this node in the current tree
-    private float quantity; // the quantity of this node in the current tree
+    private double quantity; // the quantity of this node in the current tree
     private String bomTypeId; // the type of the current tree
    
-    public ItemConfigurationNode(GenericValue part) {
-        this.part = part;
+    public ItemConfigurationNode(GenericValue product) {
+        this.product = product;
         children = new ArrayList();
         childrenNodes = new ArrayList();
         parentNode = null;
@@ -63,16 +66,16 @@ public class ItemConfigurationNode {
     }
 
     protected void loadChildren(String partBomTypeId, Date inDate, List productFeatures, int type, LocalDispatcher dispatcher) throws GenericEntityException {
-        if (part == null) {
-            throw new GenericEntityException("Part is null");
+        if (product == null) {
+            throw new GenericEntityException("product is null");
         }
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
 
         bomTypeId = partBomTypeId;
-        GenericDelegator delegator = part.getDelegator();
+        GenericDelegator delegator = product.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
-                                            UtilMisc.toMap("productId", part.get("productId"), 
+                                            UtilMisc.toMap("productId", product.get("productId"), 
                                                        "productAssocTypeId", partBomTypeId),
                                             UtilMisc.toList("sequenceNum"));
         rows = EntityUtil.filterByDate(rows, inDate);
@@ -80,7 +83,7 @@ public class ItemConfigurationNode {
             // If no child is found and this is a substituted node
             // we try to search for substituted node's children.
             rows = delegator.findByAnd("ProductAssoc", 
-                                        UtilMisc.toMap("productId", substitutedNode.getPart().get("productId"), 
+                                        UtilMisc.toMap("productId", substitutedNode.getProduct().get("productId"), 
                                                        "productAssocTypeId", partBomTypeId),
                                         UtilMisc.toList("sequenceNum"));
             rows = EntityUtil.filterByDate(rows, inDate);
@@ -119,9 +122,9 @@ public class ItemConfigurationNode {
                 String ruleCondition = (String)rule.get("productFeature");
                 String ruleOperator = (String)rule.get("ruleOperator");
                 String newPart = (String)rule.get("productIdInSubst");
-                float ruleQuantity = 0;
+                double ruleQuantity = 0;
                 try {
-                    ruleQuantity = rule.getDouble("quantity").floatValue();
+                    ruleQuantity = rule.getDouble("quantity").doubleValue();
                 } catch(Exception exc) {
                     ruleQuantity = 0;
                 }
@@ -150,6 +153,7 @@ public class ItemConfigurationNode {
                         oneChildNode = new ItemConfigurationNode(newPart, delegator);
                         oneChildNode.setSubstitutedNode(tmpNode);
                         oneChildNode.setRuleApplied(rule);
+                        oneChildNode.setProductAssoc(origNode.getProductAssoc());
                         oneChildNode.setScrapFactor(origNode.getScrapFactor());
                         if (ruleQuantity > 0) {
                             oneChildNode.setQuantityMultiplier(ruleQuantity);
@@ -168,15 +172,16 @@ public class ItemConfigurationNode {
     
     private ItemConfigurationNode configurator(GenericValue node, List productFeatures, String productIdForRules, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
         ItemConfigurationNode oneChildNode = new ItemConfigurationNode((String)node.get("productIdTo"), delegator);
+        oneChildNode.setProductAssoc(node);
         try {
-            oneChildNode.setQuantityMultiplier(node.getDouble("quantity").floatValue());
+            oneChildNode.setQuantityMultiplier(node.getDouble("quantity").doubleValue());
         } catch(Exception nfe) {
             oneChildNode.setQuantityMultiplier(1);
         }
         try {
-            float percScrapFactor = node.getDouble("scrapFactor").floatValue();
-            if (percScrapFactor != 0 && percScrapFactor < 100) {
-                percScrapFactor = 1 + percScrapFactor / 100;
+            double percScrapFactor = node.getDouble("scrapFactor").doubleValue();
+            if (percScrapFactor >= 0 && percScrapFactor < 100) {
+                percScrapFactor = 1 - percScrapFactor / 100;
             } else {
                 percScrapFactor = 1;
             }
@@ -197,7 +202,7 @@ public class ItemConfigurationNode {
             if (substitutedNode != null) {
                 productPartRules.addAll(delegator.findByAnd("ProductManufacturingRule",
                                                     UtilMisc.toMap("productId", productIdForRules,
-                                                    "productIdFor", substitutedNode.getPart().getString("productId"),
+                                                    "productIdFor", substitutedNode.getProduct().getString("productId"),
                                                     "productIdIn", node.get("productIdTo"))));
             }
             productPartRules = EntityUtil.filterByDate(productPartRules, inDate);
@@ -210,7 +215,7 @@ public class ItemConfigurationNode {
                                                         "productIdIn", node.get("productIdTo")));
                 if (substitutedNode != null) {
                     genericLinkRules.addAll(delegator.findByAnd("ProductManufacturingRule",
-                                                        UtilMisc.toMap("productIdFor", substitutedNode.getPart().getString("productId"),
+                                                        UtilMisc.toMap("productIdFor", substitutedNode.getProduct().getString("productId"),
                                                         "productIdIn", node.get("productIdTo"))));
                 }
                 genericLinkRules = EntityUtil.filterByDate(genericLinkRules, inDate);
@@ -265,6 +270,7 @@ public class ItemConfigurationNode {
                                     newNode.setSubstitutedNode(oneChildNode);
                                     newNode.setQuantityMultiplier(oneChildNode.getQuantityMultiplier());
                                     newNode.setScrapFactor(oneChildNode.getScrapFactor());
+                                    newNode.setProductAssoc(oneChildNode.getProductAssoc());
                                 }
                             }
 
@@ -278,16 +284,16 @@ public class ItemConfigurationNode {
     }
 
     protected void loadParents(String partBomTypeId, Date inDate, List productFeatures) throws GenericEntityException {
-        if (part == null) {
-            throw new GenericEntityException("Part is null");
+        if (product == null) {
+            throw new GenericEntityException("product is null");
         }
         // If the date is null, set it to today.
         if (inDate == null) inDate = new Date();
 
         bomTypeId = partBomTypeId;
-        GenericDelegator delegator = part.getDelegator();
+        GenericDelegator delegator = product.getDelegator();
         List rows = delegator.findByAnd("ProductAssoc", 
-                                            UtilMisc.toMap("productIdTo", part.get("productId"), 
+                                            UtilMisc.toMap("productIdTo", product.get("productId"), 
                                                        "productAssocTypeId", partBomTypeId),
                                             UtilMisc.toList("sequenceNum"));
         rows = EntityUtil.filterByDate(rows, inDate);
@@ -295,7 +301,7 @@ public class ItemConfigurationNode {
             // If no parent is found and this is a substituted node
             // we try to search for substituted node's parents.
             rows = delegator.findByAnd("ProductAssoc", 
-                                        UtilMisc.toMap("productIdTo", substitutedNode.getPart().get("productId"), 
+                                        UtilMisc.toMap("productIdTo", substitutedNode.getProduct().get("productId"), 
                                                        "productAssocTypeId", partBomTypeId),
                                         UtilMisc.toList("sequenceNum"));
             rows = EntityUtil.filterByDate(rows, inDate);
@@ -340,11 +346,11 @@ public class ItemConfigurationNode {
     }
     // ------------------------------------
     // Method used for TEST and DEBUG purposes
-    public void print(StringBuffer sb, float quantity, int depth) {
+    public void print(StringBuffer sb, double quantity, int depth) {
         for (int i = 0; i < depth; i++) {
             sb.append("<b>&nbsp;*&nbsp;</b>");
         }
-        sb.append(part.get("productId"));
+        sb.append(product.get("productId"));
         sb.append(" - ");
         sb.append("" + quantity);
         GenericValue oneChild = null;
@@ -352,9 +358,9 @@ public class ItemConfigurationNode {
         depth++;
         for (int i = 0; i < children.size(); i++) {
             oneChild = (GenericValue)children.get(i);
-            float bomQuantity = 0;
+            double bomQuantity = 0;
             try {
-                bomQuantity = oneChild.getDouble("quantity").floatValue();
+                bomQuantity = oneChild.getDouble("quantity").doubleValue();
             } catch(Exception exc) {
                 bomQuantity = 1;
             }
@@ -366,11 +372,12 @@ public class ItemConfigurationNode {
         }
     }
 
-    public void print(ArrayList arr, float quantity, int depth) {
+    public void print(ArrayList arr, double quantity, int depth) {
         // Now we set the depth and quantity of the current node
         // in this breakdown.
         this.depth = depth;
-        this.quantity = quantity * quantityMultiplier * scrapFactor;
+        //this.quantity = Math.floor(quantity * quantityMultiplier / scrapFactor + 0.5);
+        this.quantity = quantity * quantityMultiplier / scrapFactor;
         // First of all we visit the corrent node.
         arr.add(this);
         // Now (recursively) we visit the children.
@@ -388,11 +395,11 @@ public class ItemConfigurationNode {
 
     public void sumQuantity(HashMap nodes) {
         // First of all, we try to fetch a node with the same partId
-        ItemConfigurationNode sameNode = (ItemConfigurationNode)nodes.get(part.getString("productId"));
-        // If the node is not found we create a new node for the current part
+        ItemConfigurationNode sameNode = (ItemConfigurationNode)nodes.get(product.getString("productId"));
+        // If the node is not found we create a new node for the current product
         if (sameNode == null) {
-            sameNode = new ItemConfigurationNode(part);
-            nodes.put(part.getString("productId"), sameNode);
+            sameNode = new ItemConfigurationNode(product);
+            nodes.put(product.getString("productId"), sameNode);
         }
         // Now we add the current quantity to the node
         sameNode.setQuantity(sameNode.getQuantity() + quantity);
@@ -406,16 +413,48 @@ public class ItemConfigurationNode {
         }
     }
 
-    public void createManufacturingOrder(String orderId, String orderItemSeqId, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
+    public void createManufacturingOrder(String orderId, String orderItemSeqId, String shipmentId, Date date, boolean useSubstitute, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
         if (isManufactured()) {
-            // FIXME: Not still implemented
-            // dispatcher.runSync("createProductionRun",...);
-            System.out.println("Production run created for " + getPart().getString("productId"));
+            Timestamp startDate = UtilDateTime.toTimestamp(UtilDateTime.toDateTimeString(date));
+            Map serviceContext = new HashMap();
+            if (!useSubstitute) {
+                serviceContext.put("productId", getProduct().getString("productId"));
+            } else {
+                serviceContext.put("productId", getSubstitutedNode().getProduct().getString("productId"));
+            }
+            serviceContext.put("pRQuantity", new Double(getQuantity()));
+            serviceContext.put("startDate", startDate);
+            serviceContext.put("userLogin", userLogin);
+            GenericValue routing = null;
+            routing = ProductHelper.getRouting(getProduct(), getQuantity(), startDate);
+            if (routing == null && getSubstitutedNode() != null) {
+                routing = ProductHelper.getRouting(getSubstitutedNode().getProduct(), getQuantity(), startDate);
+            }
+            if (routing != null) {
+                serviceContext.put("routingId", routing.getString("workEffortId"));
+                Map resultService = null;
+                String productionRunId = null;
+                try {
+                    resultService = dispatcher.runSync("createProductionRun", serviceContext);
+                    productionRunId = (String)resultService.get("productionRunId");
+                } catch (GenericServiceException e) {
+                    //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+                }
+                System.out.println("Production run #" + productionRunId + " created for " + getProduct().getString("productId"));
+                try {
+                    if (productionRunId != null && orderId != null && orderItemSeqId != null) {
+                        delegator.create("WorkOrderItemFulfillment", UtilMisc.toMap("workEffortId", productionRunId, "orderId", orderId, "orderItemSeqId", orderItemSeqId));
+                    }
+                } catch (GenericEntityException e) {
+                    //Debug.logError(e, "Problem calling the getManufacturingComponents service", module);
+                }
+                    
+            }
             ItemConfigurationNode oneChildNode = null;
             for (int i = 0; i < childrenNodes.size(); i++) {
                 oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
                 if (oneChildNode != null) {
-                    oneChildNode.createManufacturingOrder(orderId, orderItemSeqId, delegator, dispatcher, userLogin);
+                    oneChildNode.createManufacturingOrder(orderId, orderItemSeqId, shipmentId, date, false, delegator, dispatcher, userLogin);
                 }
             }
         }
@@ -424,7 +463,7 @@ public class ItemConfigurationNode {
     protected boolean isPurchased() {
         boolean isPurchased = false;
         try {
-            List pfs = getPart().getRelatedCache("ProductFacility");
+            List pfs = getProduct().getRelatedCache("ProductFacility");
             Iterator pfsIt = pfs.iterator();
             GenericValue pf = null;
             boolean found = false;
@@ -437,7 +476,7 @@ public class ItemConfigurationNode {
             }
             // If no records are found, we try to search for substituted node's records
             if (!found && getSubstitutedNode() != null) {
-                pfs = getSubstitutedNode().getPart().getRelatedCache("ProductFacility");
+                pfs = getSubstitutedNode().getProduct().getRelatedCache("ProductFacility");
                 pfsIt = pfs.iterator();
                 pf = null;
                 while(pfsIt.hasNext()) {
@@ -458,7 +497,7 @@ public class ItemConfigurationNode {
     }
     
     protected boolean isVirtual() {
-        return (part.get("isVirtual") != null? part.get("isVirtual").equals("Y"): false);
+        return (product.get("isVirtual") != null? product.get("isVirtual").equals("Y"): false);
     }
 
     public void isConfigured(ArrayList arr) {
@@ -483,11 +522,11 @@ public class ItemConfigurationNode {
      * @return Value of property quantity.
      *
      */
-    public float getQuantity() {
+    public double getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(float quantity) {
+    public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
 
@@ -500,8 +539,8 @@ public class ItemConfigurationNode {
         return depth;
     }
   
-    public GenericValue getPart() {
-        return part;
+    public GenericValue getProduct() {
+        return product;
     }
     
     /** Getter for property substitutedNode.
@@ -552,7 +591,7 @@ public class ItemConfigurationNode {
      * @return Value of property quantityMultiplier.
      *
      */
-    public float getQuantityMultiplier() {
+    public double getQuantityMultiplier() {
         return quantityMultiplier;
     }    
     
@@ -560,7 +599,7 @@ public class ItemConfigurationNode {
      * @param quantityMultiplier New value of property quantityMultiplier.
      *
      */
-    public void setQuantityMultiplier(float quantityMultiplier) {
+    public void setQuantityMultiplier(double quantityMultiplier) {
         this.quantityMultiplier = quantityMultiplier;
     }
     
@@ -584,7 +623,7 @@ public class ItemConfigurationNode {
      * @return Value of property scrapFactor.
      *
      */
-    public float getScrapFactor() {
+    public double getScrapFactor() {
         return scrapFactor;
     }
     
@@ -592,8 +631,40 @@ public class ItemConfigurationNode {
      * @param scrapFactor New value of property scrapFactor.
      *
      */
-    public void setScrapFactor(float scrapFactor) {
+    public void setScrapFactor(double scrapFactor) {
         this.scrapFactor = scrapFactor;
+    }
+    
+    /** Getter for property childrenNodes.
+     * @return Value of property childrenNodes.
+     *
+     */
+    public java.util.ArrayList getChildrenNodes() {
+        return childrenNodes;
+    }
+    
+    /** Setter for property childrenNodes.
+     * @param childrenNodes New value of property childrenNodes.
+     *
+     */
+    public void setChildrenNodes(java.util.ArrayList childrenNodes) {
+        this.childrenNodes = childrenNodes;
+    }
+    
+    /** Getter for property productAssoc.
+     * @return Value of property productAssoc.
+     *
+     */
+    public org.ofbiz.entity.GenericValue getProductAssoc() {
+        return productAssoc;
+    }
+    
+    /** Setter for property productAssoc.
+     * @param productAssoc New value of property productAssoc.
+     *
+     */
+    public void setProductAssoc(org.ofbiz.entity.GenericValue productAssoc) {
+        this.productAssoc = productAssoc;
     }
     
 }
