@@ -53,7 +53,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     private double quantity = 0.0;
     private double basePrice = 0.0;
     private double listPrice = 0.0;
-    private Map additionalProductFeatureAndAppls = new HashMap();
+    private Map additionalProductFeatureAndAppls = null;
     private Map attributes = null;
     private String orderItemSeqId = null;
     private GenericValue orderShipmentPreference = null;
@@ -310,6 +310,7 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
     
     public void putAdditionalProductFeatureAndAppl(GenericValue additionalProductFeatureAndAppl) {
+        if (this.additionalProductFeatureAndAppls == null) this.additionalProductFeatureAndAppls = new HashMap();
         if (additionalProductFeatureAndAppl == null) return;
         
         //if one already exists with the given type, remove it with the corresponding adjustment
@@ -328,14 +329,20 @@ public class ShoppingCartItem implements java.io.Serializable {
     }
     
     public GenericValue getAdditionalProductFeatureAndAppl(String productFeatureTypeId) {
+        if (this.additionalProductFeatureAndAppls == null) return null;
         return (GenericValue) this.additionalProductFeatureAndAppls.get(productFeatureTypeId);
     }
     
     public GenericValue removeAdditionalProductFeatureAndAppl(String productFeatureTypeId) {
+        if (this.additionalProductFeatureAndAppls == null) return null;
+        
         GenericValue oldAdditionalProductFeatureAndAppl = (GenericValue) this.additionalProductFeatureAndAppls.remove(productFeatureTypeId);
         if (oldAdditionalProductFeatureAndAppl != null) {
             removeFeatureAdjustment(oldAdditionalProductFeatureAndAppl.getString("productFeatureId"));
         }
+        
+        if (this.additionalProductFeatureAndAppls.size() == 0) this.additionalProductFeatureAndAppls = null;
+        
         return oldAdditionalProductFeatureAndAppl;
     }
     
