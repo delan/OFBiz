@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  -->
 <simple-methods>
@@ -651,7 +651,7 @@
         <check-errors/>
 
         <field-to-env field-name="stockMoveHandled" map-name="parameters"/>
-        <string-to-field string="null" field-name="productId" map-name="productSave"/>
+        <string-to-field string="" field-name="productId" map-name="productSave"/>
 
         <!--
             The will involve finding all stock moves for ProductFacilityLocation based pre-emptive moves.
