@@ -744,7 +744,7 @@
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="region"/>
+    <view-map name="main" type="jpublish" page="/main.ftl"/>
     <view-map name="login" type="region"/>
 
     <view-map name="FastLoadCache" type="region"/>
