@@ -248,7 +248,7 @@ function lookupOrders() {
                 <#if partyId != "_NA_">
                   <a href="/partymgr/control/viewprofile?party_id=${partyId}${requestAttributes.externalKeyParam}" class="buttontext">${partyId}</a>
                 <#else>
-                  &nbsp;
+                  <span class='tabletext'>N/A</span>
                 </#if>
               </td>
               <td align='right'>
