@@ -1,5 +1,5 @@
 /*
- * $Id: ModelRelation.java,v 1.2 2003/10/14 22:34:46 jonesde Exp $
+ * $Id: ModelRelation.java,v 1.3 2004/01/19 19:26:52 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ModelRelation {
@@ -66,6 +66,7 @@ public class ModelRelation {
     /** Default Constructor */
     public ModelRelation(String type, String title, String relEntityName, String fkName, List keyMaps) {
         this.title = title;
+        if (title == null) title = "";
         this.type = type;
         this.relEntityName = relEntityName;
         this.fkName = fkName;
@@ -97,11 +98,18 @@ public class ModelRelation {
 
     /** the title, gives a name/description to the relation */
     public String getTitle() {
+        if (this.title == null) {
+            this.title = "";
+        }
         return this.title;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        if (title == null) {
+            this.title = "";
+        } else {
+            this.title = title;
+        }
     }
 
     /** the type: either "one" or "many" or "one-nofk" */
