@@ -283,4 +283,10 @@ public final class Debug {
     public static void logFatal(Throwable t, String msg, String module) {
         log(Debug.FATAL, t, msg, module);
     }
+
+    public static void set(int level, boolean on) {
+        if (!useLevelOnCache)
+            return;
+        levelOnCache[level] = on;
+    }
 }
