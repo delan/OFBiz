@@ -56,7 +56,7 @@
                 <process field="body"><copy/></process>
             </simple-map-processor>
         </call-map-processor>
-        <webapp-property-to-field resource="ecommerce.properties" property="smtp.relay.host" map-name="serviceContext" field-name="sendVia"/>
+        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="smtp.relay.host" map-name="serviceContext" field-name="sendVia"/>
         <check-errors/>
         <call-service service-name="sendMail" in-map-name="serviceContext"/>
     </simple-method>
