@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/11/13 02:17:51  jonesde
+ * Added day begin/end timestamp funcs
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -70,27 +73,33 @@ public class UtilDateTime
   }
   
   public static java.sql.Timestamp getDayStart(java.sql.Timestamp stamp) {
+    return getDayStart(stamp, 0);
+  }
+
+  public static java.sql.Timestamp getDayStart(java.sql.Timestamp stamp, int daysLater) {
     Calendar tempCal = Calendar.getInstance();
     tempCal.setTime(new java.util.Date(stamp.getTime()));
     tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    return new java.sql.Timestamp(tempCal.getTime().getTime());
-  }
-
-  public static java.sql.Timestamp getDayEnd(java.sql.Timestamp stamp) {
-    Calendar tempCal = Calendar.getInstance();
-    tempCal.setTime(new java.util.Date(stamp.getTime()));
-    tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
-    return new java.sql.Timestamp(tempCal.getTime().getTime());
-  }
-
-  public static java.sql.Timestamp getNextDayStart(java.sql.Timestamp stamp) {
-    Calendar tempCal = Calendar.getInstance();
-    tempCal.setTime(new java.util.Date(stamp.getTime()));
-    tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-    tempCal.add(Calendar.DAY_OF_MONTH, 1);
+    if(daysLater > 0) tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
     return new java.sql.Timestamp(tempCal.getTime().getTime());
   }
   
+  public static java.sql.Timestamp getNextDayStart(java.sql.Timestamp stamp) {
+    return getDayStart(stamp, 1);
+  }
+  
+  public static java.sql.Timestamp getDayEnd(java.sql.Timestamp stamp) {
+    return getDayEnd(stamp, 0);
+  }
+    
+  public static java.sql.Timestamp getDayEnd(java.sql.Timestamp stamp, int daysLater) {
+    Calendar tempCal = Calendar.getInstance();
+    tempCal.setTime(new java.util.Date(stamp.getTime()));
+    tempCal.set(tempCal.get(Calendar.YEAR), tempCal.get(Calendar.MONTH), tempCal.get(Calendar.DAY_OF_MONTH), 23, 59, 59);
+    if(daysLater > 0) tempCal.add(Calendar.DAY_OF_MONTH, daysLater);
+    return new java.sql.Timestamp(tempCal.getTime().getTime());
+  }
+
   /** Converts a date String into a java.sql.Date
    * @param date The date String: MM/DD/YYYY
    * @return A java.sql.Date made from the date String
