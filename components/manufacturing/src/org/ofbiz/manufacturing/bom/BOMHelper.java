@@ -9,6 +9,7 @@ package org.ofbiz.manufacturing.bom;
 import java.util.Date;
 import java.util.List;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
@@ -56,6 +57,15 @@ public class BOMHelper {
      *  Useful to avoid loops when adding new assocs to a bill of materials.
      */
     public static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, String bomType, Date fromDate, GenericDelegator delegator) throws GenericEntityException {
+        return searchDuplicatedAncestor(productId, productIdKey, null, bomType, fromDate, delegator);
+    }
+    
+    public static GenericValue searchDuplicatedAncestor(String productId, String productIdKey, ArrayList productIdKeys, String bomType, Date fromDate, GenericDelegator delegator) throws GenericEntityException {
+        if (productIdKeys == null) {
+            ItemConfigurationTree tree = new ItemConfigurationTree(productIdKey, bomType, fromDate, delegator);
+            productIdKeys = tree.getAllProductsId();
+            productIdKeys.add(productIdKey);
+        }
         List productNodesList = delegator.findByAndCache("ProductAssoc", 
                                          UtilMisc.toMap("productIdTo", productId,
                                          //"fromDate", fromDate,
@@ -65,10 +75,12 @@ public class BOMHelper {
         Iterator nodesIterator = productNodesList.iterator();
         while (nodesIterator.hasNext()) {
             oneNode = (GenericValue)nodesIterator.next();
-            if (oneNode.getString("productId").equals(productIdKey)) {
-                return oneNode;
+            for (int i = 0; i < productIdKeys.size(); i++) {
+                if (oneNode.getString("productId").equals((String)productIdKeys.get(i))) {
+                    return oneNode;
+                }
             }
-            duplicatedNode = searchDuplicatedAncestor(oneNode.getString("productId"), productIdKey, bomType, fromDate, delegator);
+            duplicatedNode = searchDuplicatedAncestor(oneNode.getString("productId"), productIdKey, productIdKeys, bomType, fromDate, delegator);
             if (duplicatedNode != null) {
                 break;
             }
