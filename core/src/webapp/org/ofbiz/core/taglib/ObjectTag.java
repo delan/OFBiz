@@ -35,7 +35,7 @@ import org.ofbiz.core.util.*;
 /**
  * ObjectTag - Loads an object from the PageContext.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    1.0
  * @created    August 4, 2001
  */

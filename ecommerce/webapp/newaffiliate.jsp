@@ -22,7 +22,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@zsolv.com)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@yahoo.com)
  *@created    January 24, 2002
  *@version    1.0

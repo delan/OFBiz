@@ -31,7 +31,7 @@ import java.security.NoSuchAlgorithmException;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    1.0
  * @created    August 23, 2001
  */

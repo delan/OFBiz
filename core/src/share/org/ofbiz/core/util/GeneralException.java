@@ -32,7 +32,7 @@ import java.io.PrintWriter;
 /**
  * Base OFBiz Exception, provides nested exceptions, etc
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@created    November 5, 2001
  *@version    1.0
  */

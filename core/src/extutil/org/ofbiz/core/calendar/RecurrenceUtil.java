@@ -33,7 +33,7 @@ import java.text.*;
 /**
  * Recurrence Utilities
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @created    November 6, 2001
  * @version    1.0
  */

@@ -130,7 +130,7 @@
             package-name="org.ofbiz.commonapp.common.geo"
             dependent-on="CountryCode"
             title="Country Capital Entity"
-            author="Andy Zeneski (jaz@zsolv.com)">
+            author="Andy Zeneski (jaz@ofbiz.org)">
       <field name="countryCode" type="id-ne"></field>
       <field name="countryCapital" type="description"></field>
       <prim-key field="countryCode"/>
@@ -141,7 +141,7 @@
     <entity entity-name="CountryCode"
             package-name="org.ofbiz.commonapp.common.geo"
             title="ISO Country Code Entity"
-            author="Andy Zeneski (jaz@zsolv.com)">
+            author="Andy Zeneski (jaz@ofbiz.org)">
       <field name="countryCode" type="id-ne"></field>
       <field name="countryAbbr" type="short-varchar"></field>
       <field name="countryNumber" type="short-varchar"></field>
@@ -158,7 +158,7 @@
             package-name="org.ofbiz.commonapp.common.geo"
             dependent-on="CountryCode"
             title="Telephone Country Code Entity"
-            author="Andy Zeneski (jaz@zsolv.com)">
+            author="Andy Zeneski (jaz@ofbiz.org)">
       <field name="countryCode" type="id-ne"></field>
       <field name="teleCode" type="short-varchar"></field>
       <prim-key field="countryCode"/>

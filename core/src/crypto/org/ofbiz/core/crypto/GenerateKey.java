@@ -35,7 +35,7 @@ import org.ofbiz.core.crypto.BlowFishCrypt;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    1.0
  * @created    August 23, 2001
  */
@@ -66,7 +66,7 @@ public class GenerateKey {
         System.out.println("CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT");
         System.out.println("OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR");
         System.out.println("THE USE OR OTHER DEALINGS IN THE SOFTWARE.");
-        System.out.println("@author Andy Zeneski (jaz@zsolv.com)");
+        System.out.println("@author Andy Zeneski (jaz@ofbiz.org)");
         System.out.println();
         System.out.print("Generating key...");
         KeyGenerator keyGen = KeyGenerator.getInstance("Blowfish");

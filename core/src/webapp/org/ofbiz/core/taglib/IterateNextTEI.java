@@ -1,14 +1,6 @@
 /*
  * $Id$
- */
-
-package org.ofbiz.core.taglib;
-
-
-import javax.servlet.jsp.tagext.*;
-
-
-/**
+ *
  * <p><b>Title:</b> IterateNextTEI.java
  * <p><b>Description:</b> Extra-Info class for the IterateNextTag.
  * <p>Copyright (c) 2002 The Open For Business Project and repected authors.
@@ -29,11 +21,17 @@ import javax.servlet.jsp.tagext.*;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ */
+package org.ofbiz.core.taglib;
+
+import javax.servlet.jsp.tagext.*;
+
+/**
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    1.0
  * @created    August 4, 2001
  */
+
 public class IterateNextTEI extends TagExtraInfo {
 
     public IterateNextTEI() {

@@ -32,7 +32,7 @@ import javax.servlet.jsp.tagext.*;
 /**
  * ObjectTEI
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    1.0
  * @created    August 4, 2001
  */
