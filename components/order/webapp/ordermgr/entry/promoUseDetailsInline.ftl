@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      3.0
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -80,7 +80,7 @@
                         <#list cartLine.getQuantityUsedPerPromoCandidateIter() as quantityUsedPerPromoCandidateEntry>
                             <#assign productPromoCandidatePK = quantityUsedPerPromoCandidateEntry.getKey()>
                             <#assign candidateQuantityUsed = quantityUsedPerPromoCandidateEntry.getValue()>
-                            <#assign isQualifier = "ProductPromoCond" == productPromoActualPK.getEntityName()>
+                            <#assign isQualifier = "ProductPromoCond" == productPromoCandidatePK.getEntityName()>
                             <!-- Left over not reset or confirmed, shouldn't happen: ${candidateQuantityUsed} Might be Used (Candidate) as <#if isQualifier>${uiLabelMap.CommonQualifier}<#else>${uiLabelMap.CommonBenefit}</#if> ${uiLabelMap.EcommerceOfPromotion} [${productPromoCandidatePK.productPromoId}] -->
                             <!-- productPromoCandidatePK ${productPromoCandidatePK.toString()} -->
                         </#list>
