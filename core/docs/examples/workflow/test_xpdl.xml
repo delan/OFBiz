@@ -230,6 +230,9 @@
               <Split Type="AND"/>
             </TransitionRestriction>
           </TransitionRestrictions>
+          <ExtendedAttributes>
+            <ExtendedAttribute Name="canStart" Value="Y"/> <!-- must always be Y or N -->
+          </ExtendedAttributes>
         </Activity>
 
         <Activity Id="send_notification" Name="Send Notification">

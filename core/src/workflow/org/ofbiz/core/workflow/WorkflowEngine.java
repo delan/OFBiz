@@ -154,6 +154,9 @@ public class WorkflowEngine implements GenericEngine {
         
         // Grab the locale from the context
         Locale locale = (Locale) context.remove("locale");
+        
+        // Grab the starting activityId from the context
+        String startActivityId = (String) context.remove("startWithActivityId");
 
         // Register the process and set the workflow owner
         try {
@@ -177,9 +180,10 @@ public class WorkflowEngine implements GenericEngine {
                 throw new GenericServiceException(wfe.getMessage(), wfe);
             }
         }
-                        
+        
+        // Use the WorkflowRunner to start the workflow in a new thread                        
         try {
-            Job job = new WorkflowRunner(process, requester);
+            Job job = new WorkflowRunner(process, requester, startActivityId);
             if (Debug.verboseOn()) 
                 Debug.logVerbose("Created WorkflowRunner: " + job, module);
             dispatcher.getJobManager().runJob(job);
@@ -217,11 +221,13 @@ class WorkflowRunner extends AbstractJob {
 
     GenericRequester requester;
     WfProcess process;
+    String startActivityId;
 
-    WorkflowRunner(WfProcess process, GenericRequester requester) {
+    WorkflowRunner(WfProcess process, GenericRequester requester, String startActivityId) {
         super(process.toString());
         this.process = process;
         this.requester = requester;
+        this.startActivityId = startActivityId;
         runtime = new Date().getTime();
     }
 
@@ -231,7 +237,10 @@ class WorkflowRunner extends AbstractJob {
 
     public void exec() {
         try {
-            process.start();
+            if (startActivityId != null)
+                process.start(startActivityId);
+            else
+                process.start();
         } catch (Exception e) {
             e.printStackTrace();
             Debug.logError(e);

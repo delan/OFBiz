@@ -74,12 +74,14 @@ public class WfRequesterImpl implements WfRequester {
         localContext.putAll(mgr.getInitialContext());
         process.setProcessContext(localContext);   
         
-        // set the source reference id if one was passed
-        if (context.containsKey("sourceReferenceId")) {  
+        // Set the source reference id if one was passed
+        GenericValue processDefinition = process.getDefinitionObject();
+        String sourceReferenceField = processDefinition.getString("sourceReferenceField");
+        if (context.containsKey(sourceReferenceField)) {  
             GenericValue processObj = process.getRuntimeObject();
             if (processObj != null) {
                 try {
-                    processObj.set("sourceReferenceId", localContext.get("sourceReferenceId"));
+                    processObj.set("sourceReferenceId", localContext.get(sourceReferenceField));
                     processObj.store();
                 } catch (GenericEntityException e) {
                     throw new WfException("Cannot set sourceReferenceId on the process runtime object", e);

@@ -64,10 +64,13 @@ public class StartActivityJob extends AbstractJob {
      * @see org.ofbiz.core.service.job.Job#exec()
      */
     public void exec() {
+        String activityIds = null;
         try {
+            activityIds = activity.getDefinitionObject().getString("activityId") + " / " + 
+                    activity.getRuntimeObject().getString("workEffortId");
             activity.activate();
-        } catch (Exception e) {
-            Debug.logError(e, "Start Activity Failed.", module);
+        } catch (Exception e) {            
+            Debug.logError(e, "Start Activity [" + activityIds + "] Failed", module);
             if (requester != null)
                 requester.receiveException(e);
         }

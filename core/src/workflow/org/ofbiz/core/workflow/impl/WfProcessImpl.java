@@ -46,20 +46,14 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     public static final String module = WfProcessImpl.class.getName();
 
     private WfRequester requester = null;
-    private WfProcessMgr manager = null;
-
-    /**
-     * Method WfProcessImpl.
-     * @param valueObject
-     * @param manager
-     * @throws WfException
-     */
+    private WfProcessMgr manager = null;    
+   
     public WfProcessImpl(GenericValue valueObject, WfProcessMgr manager) throws WfException {
         super(valueObject, null);
-        this.manager = manager;
+        this.manager = manager;           
         this.requester = null;
     }
-
+        
     /**
      * @see org.ofbiz.core.workflow.impl.WfExecutionObjectImpl#WfExecutionObjectImpl(org.ofbiz.core.entity.GenericDelegator, java.lang.String)
      */
@@ -93,10 +87,17 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      * @see org.ofbiz.core.workflow.WfProcess#start()
      */
     public void start() throws WfException, CannotStart, AlreadyRunning {
+        start(null);
+    }
+     
+    /**
+     * @see org.ofbiz.core.workflow.WfProcess#start()
+     */
+    public void start(String activityId) throws WfException, CannotStart, AlreadyRunning {
         if (state().equals("open.running"))
             throw new AlreadyRunning("Process is already running");
 
-        if (getDefinitionObject().get("defaultStartActivityId") == null)
+        if (activityId == null && getDefinitionObject().get("defaultStartActivityId") == null)
             throw new CannotStart("Initial activity is not defined.");
 
         changeState("open.running");
@@ -105,12 +106,26 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
         GenericValue start = null;
 
         try {
-            start = getDefinitionObject().getRelatedOne("DefaultStartWorkflowActivity");
+            if (activityId != null) {
+                GenericValue processDef = getDefinitionObject();
+                Map fields = UtilMisc.toMap("packageId", processDef.getString("packageId"), "packageVersion", 
+                        processDef.getString("packageVersion"), "processId", processDef.getString("processId"), 
+                        "processVersion", processDef.getString("processVersion"), "activityId", activityId);                         
+                start = getDelegator().findByPrimaryKey("WorkflowActivity", fields);
+                
+                // here we must check and make sure this activity is defined to as a starting activity
+                if (!start.getBoolean("canStart").booleanValue())
+                    throw new CannotStart("The specified activity cannot initiate the workflow process");
+            } else {
+                // this is either the first activity defined or specified as an ExtendedAttribute
+                // since this is defined in XPDL, we don't care if canStart is set.
+                start = getDefinitionObject().getRelatedOne("DefaultStartWorkflowActivity");
+            }
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e.getNested());
         }
         if (start == null)
-            throw new CannotStart("No initial activity set");
+            throw new CannotStart("No initial activity available");
 
         if (Debug.verboseOn()) 
             Debug.logVerbose("[WfProcess.start] : Started the workflow process.", module);

@@ -115,6 +115,15 @@ public interface WfProcess extends WfExecutionObject {
      * @throws AlreadyRunning
      */
     public void start() throws WfException, CannotStart, AlreadyRunning;
+    
+    /**
+     * Starts the Workflow process on the defined activity
+     * @param activityId The activity to start 
+     * @throws WfException
+     * @throws CannotStart
+     * @throws AlreadyRunning
+     */
+    public void start(String activityId) throws WfException, CannotStart, AlreadyRunning;    
 
     /**
      * @param state

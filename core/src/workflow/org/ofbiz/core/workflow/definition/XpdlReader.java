@@ -497,6 +497,8 @@ public class XpdlReader {
         readTransitions(transitions, packageId, packageVersion, processId, processVersion);
         
         // ExtendedAttributes?
+        workflowProcessValue.set("defaultStartActivityId", getExtendedAttributeValue(workflowProcessElement, "defaultStartActivityId", workflowProcessValue.getString("defaultStartActivityId")));
+        workflowProcessValue.set("sourceReferenceField", getExtendedAttributeValue(workflowProcessElement, "sourceReferenceField", "sourceReferenceId"));        
         workflowProcessValue.set("processInitiateUrl", getExtendedAttributeValue(workflowProcessElement, "initateUrl", ""));
         workflowProcessValue.set("processTaskUrl", getExtendedAttributeValue(workflowProcessElement, "taskUrl", ""));
     }
