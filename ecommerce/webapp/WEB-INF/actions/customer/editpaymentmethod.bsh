@@ -23,16 +23,16 @@
  *@version    1.0
  */
 
-importClass(Packages.java.util.HashMap);
-importClass(Packages.org.ofbiz.core.util.SiteDefs);
-importClass(Packages.org.ofbiz.core.util.UtilHttp);
-importClass(Packages.org.ofbiz.commonapp.accounting.payment.PaymentWorker);
-importClass(Packages.org.ofbiz.commonapp.party.contact.ContactMechWorker);
+import java.util.HashMap;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.commonapp.accounting.payment.PaymentWorker;
+import org.ofbiz.commonapp.party.contact.ContactMechWorker;
 
-var userLogin = session.getAttribute("userLogin");
-var security = request.getAttribute("security");
+userLogin = session.getAttribute("userLogin");
+security = request.getAttribute("security");
 
-var paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId")) 
+paymentResults = PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId")) 
 //returns the following: "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
 context.put("paymentMethod", paymentResults.get("paymentMethod"));
 context.put("creditCard", paymentResults.get("creditCard"));
@@ -42,26 +42,26 @@ context.put("curContactMechId", paymentResults.get("curContactMechId"));
 context.put("donePage", paymentResults.get("donePage"));
 context.put("tryEntity", paymentResults.get("tryEntity"));
 
-var curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId")); 
+curPostalAddressResults = ContactMechWorker.getCurrentPostalAddress(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId")); 
 //returns the following: "curPartyContactMech", "curContactMech", "curPostalAddress", "curPartyContactMechPurposes"
 context.put("curPartyContactMech", curPostalAddressResults.get("curPartyContactMech"));
 context.put("curContactMech", curPostalAddressResults.get("curContactMech"));
 context.put("curPostalAddress", curPostalAddressResults.get("curPostalAddress"));
 context.put("curPartyContactMechPurposes", curPostalAddressResults.get("curPartyContactMechPurposes"));
 
-var postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId"));
+postalAddressInfos = ContactMechWorker.getPartyPostalAddresses(request, userLogin.getString("partyId"), paymentResults.get("curContactMechId"));
 context.put("postalAddressInfos", postalAddressInfos);
 
 //prepare "Data" maps for filling form input boxes
-var parameterMap = UtilHttp.getParameterMap(request);
-var tryEntity = paymentResults.get("tryEntity");
+parameterMap = UtilHttp.getParameterMap(request);
+tryEntity = paymentResults.get("tryEntity");
 
-var creditCardData = paymentResults.get("creditCard");
+creditCardData = paymentResults.get("creditCard");
 if (!tryEntity.booleanValue()) creditCardData = parameterMap;
 if (creditCardData == null) creditCardData = new HashMap();
 context.put("creditCardData", creditCardData);
 
-var eftAccountData = paymentResults.get("eftAccount");
+eftAccountData = paymentResults.get("eftAccount");
 if (!tryEntity.booleanValue()) eftAccountData = parameterMap;
 if (eftAccountData == null) eftAccountData = new HashMap();
 context.put("eftAccountData", eftAccountData);

@@ -2,6 +2,6 @@
 <page>
     <template>main</template>    
     <property name="title">Edit Person</property>
-    <page-action name="/customer/editperson.js"/>
+    <page-action name="/customer/editperson.bsh"/>
 </page>
 

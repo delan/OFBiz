@@ -2,5 +2,5 @@
 <page>
     <template>main_left</template>
     <property name="title">Shopping Cart</property>
-    <page-action name="/cart/showcart.js"/>
+    <page-action name="/cart/showcart.bsh"/>
 </page>

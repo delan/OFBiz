@@ -28,16 +28,23 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.commonapp.product.catalog.*;
 
-delegator = request.getAttribute("delegator");
-productCategoryId = request.getParameter("category_id");
-category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
 catalogName = CatalogWorker.getCatalogName(request);
-content = context.get("page");
-content.setProperty("title", category.getString("description"));
-context.put("metaDescription", category.getString("description"));
-context.put("metaKeywords", category.getString("description") + ", " + catalogName);
+delegator = request.getAttribute("delegator");
+requestParameters = UtilHttp.getParameterMap(request);
+Debug.logInfo("Params: " + requestParameters);
+productCategoryId = requestParameters.get("category_id");
+Debug.logInfo("productCategoryId: " + productCategoryId);
+category = delegator.findByPrimaryKeyCache("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
+if (category != null) {
+    content = context.get("page");
+    content.setProperty("title", category.getString("description"));
+    context.put("metaDescription", category.getString("description"));
+    context.put("metaKeywords", category.getString("description") + ", " + catalogName);
+    context.put("productCategory", category);
+}
 
 request.setAttribute("productCategoryId", productCategoryId);
 request.setAttribute("defaultViewSize", new Integer(10));
 request.setAttribute("limitView", new Boolean(true));
+
 

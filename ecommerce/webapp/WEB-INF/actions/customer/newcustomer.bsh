@@ -23,8 +23,8 @@
  *@version    1.0
  */
 
-importClass(Packages.org.ofbiz.core.util.SiteDefs);
-importClass(Packages.org.ofbiz.core.util.UtilProperties);
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilProperties;
 
 if (UtilProperties.propertyValueEqualsIgnoreCase(application.getResource("/WEB-INF/ecommerce.properties"), "create.allow.password", "true")) {
     context.put("createAllowPassword", true);
@@ -32,7 +32,7 @@ if (UtilProperties.propertyValueEqualsIgnoreCase(application.getResource("/WEB-I
     context.put("createAllowPassword", false);
 }
 
-var previousParams = session.getAttribute(SiteDefs.PREVIOUS_PARAMS);
+previousParams = session.getAttribute(SiteDefs.PREVIOUS_PARAMS);
 if (previousParams != null && previousParams.length() > 0) {
     previousParams = "?" + previousParams;
 } else {

@@ -2,5 +2,5 @@
 <page>
     <template>main</template> 
     <property name="title">Order Summary - Thank you for your order!</property>
-    <page-action name="/order/orderstatus.js"/>
+    <page-action name="/order/orderstatus.bsh"/>
 </page>

@@ -19,18 +19,21 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision$
- *@since      2.1
-*/
+ *@author     David E. Jones
+ *@version    1.0
+ */
 
-importPackage(Packages.java.lang);
-importPackage(Packages.org.ofbiz.commonapp.product.catalog);
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.commonapp.common.CommonWorkers;
 
-var catalogId = CatalogWorker.getCurrentCatalogId(request);
-var promoCat = CatalogWorker.getCatalogPromotionsCategoryId(request, catalogId);
+context.put("autoUserLogin", session.getAttribute("autoUserLogin"));
+context.put("autoLogoutUrl", CommonWorkers.makeLoginUrl(request, "autoLogout")); 
 
-request.setAttribute("productCategoryId", promoCat);
-request.setAttribute("defaultViewSize", new Integer(10)); // number of items to show
-request.setAttribute("limitView", new Boolean(true));
+previousParams = session.getAttribute(SiteDefs.PREVIOUS_PARAMS);
+if (previousParams != null && previousParams.length() > 0) {
+    previousParams = "?" + previousParams;
+} else {
+    previousParams = "";
+}
+context.put("previousParams", previousParams);
 

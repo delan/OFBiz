@@ -2,5 +2,5 @@
 <page>
     <template>main_right</template> 
     <property name="title">Order Status</property>
-    <page-action name="/order/orderstatus.js"/>
+    <page-action name="/order/orderstatus.bsh"/>
 </page>

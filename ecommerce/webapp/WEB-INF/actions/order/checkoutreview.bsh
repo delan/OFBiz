@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,60 +24,60 @@
  *@since      2.1
 */
 
-importPackage(Packages.java.lang);
-importPackage(Packages.org.ofbiz.core.util);
-importPackage(Packages.org.ofbiz.core.entity);
-importPackage(Packages.org.ofbiz.commonapp.order.order);
-importPackage(Packages.org.ofbiz.commonapp.party.contact);
+import java.lang.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.commonapp.order.order.*;
+import org.ofbiz.commonapp.party.contact.*;
 
-var delegator = request.getAttribute("delegator");
-var userLogin = session.getAttribute("userLogin");
-var cart = session.getAttribute(SiteDefs.SHOPPING_CART);
+delegator = request.getAttribute("delegator");
+userLogin = session.getAttribute("userLogin");
+cart = session.getAttribute(SiteDefs.SHOPPING_CART);
 context.put("cart", cart);
 
-var orderAdjustments = cart.makeAllAdjustments();
+orderAdjustments = cart.makeAllAdjustments();
 context.put("orderAdjustments", orderAdjustments);
 
-var orderItems = cart.makeOrderItems();
-var orderDisplayItems = OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments);
+orderItems = cart.makeOrderItems();
+orderDisplayItems = OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments);
 context.put("orderItems", orderDisplayItems);
 
-var orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
+orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(orderAdjustments);
 context.put("orderHeaderAdjustments", orderHeaderAdjustments);
 
-var orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments)
+orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, orderAdjustments)
 context.put("orderSubTotal", orderSubTotal);
 context.put("placingCustomerPerson", userLogin == null ? null : userLogin.getRelatedOne("Person"));
 context.put("shippingAddress", cart.getShippingAddress());
 
-var paymentMethods = cart.getPaymentMethods();
-var paymentMethod = null;
+paymentMethods = cart.getPaymentMethods();
+paymentMethod = null;
 if (paymentMethods != null && paymentMethods.size() > 0) {
     paymentMethod = paymentMethods.get(0);
 }
 context.put("paymentMethod", paymentMethod);
 
 if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-    var creditCard = paymentMethod.getRelatedOneCache("CreditCard");
+    creditCard = paymentMethod.getRelatedOneCache("CreditCard");
     context.put("creditCard", creditCard);
     context.put("formattedCardNumber", ContactHelper.formatCreditCard(creditCard));
 } else if (paymentMethod != null && "EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-    var eftAccount = paymentMethod.getRelatedOneCache("EftAccount");
+    eftAccount = paymentMethod.getRelatedOneCache("EftAccount");
     context.put("eftAccount", eftAccount);
 }
 
-var paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
-var paymentMethodType = null;
-var paymentMethodTypeId = null;
+paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
+paymentMethodType = null;
+paymentMethodTypeId = null;
 if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
     paymentMethodTypeId = paymentMethodTypeIds.get(0);
     paymentMethodType = delegator.findByPrimaryKey("PaymentMethodType", UtilMisc.toMap("paymentMethodTypeId", paymentMethodTypeId));
 }   
 context.put("paymentMethodType", paymentMethodType);
 
-var billingAddress = null;
+billingAddress = null;
 if (paymentMethod != null) {
-    var creditCard = paymentMethod.getRelatedOne("CreditCard");
+    creditCard = paymentMethod.getRelatedOne("CreditCard");
     if (creditCard != null) {
         billingAddress = creditCard.getRelatedOne("PostalAddress");
     }
@@ -93,16 +93,16 @@ context.put("maySplit", cart.getMaySplit());
 context.put("giftMessage", cart.getGiftMessage());
 context.put("isGift", cart.getIsGift());
 
-var shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId()));
+shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", cart.getShipmentMethodTypeId()));
 if (shipmentMethodType != null) context.put("shipMethDescription", shipmentMethodType.getString("description"));
 
 context.put("headerAdjustmentsToShow", OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal));
 
-var shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
+shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
 shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
 context.put("orderShippingTotal", shippingAmount);
 
-var taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
+taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
 taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);
 context.put("orderTaxTotal", taxAmount);   
 context.put("orderGrandTotal", OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments));

@@ -24,6 +24,8 @@
  *@since      2.1
 */
 
+import java.lang.*;
+import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
@@ -33,9 +35,10 @@ dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
 catalogName = CatalogWorker.getCatalogName(request);
+requestParams = UtilHttp.getParameterMap(request);
 
 detailTemplate = "/catalog/productdetail.ftl";
-productId = request.getParameter("product_id");
+productId = requestParams.get("product_id");
 if (productId != null) {
     request.setAttribute("productId", productId);
 }
@@ -75,4 +78,5 @@ if (templatePathPrefix != null) {
     
 // set the template for the view
 request.setAttribute("detailTemplate", detailTemplate);
+    
     

@@ -2,5 +2,5 @@
 <page>
     <template>main</template>    
     <property name="title">Edit Contact Mechanism</property>
-    <page-action name="/customer/editcontactmech.js"/>
+    <page-action name="/customer/editcontactmech.bsh"/>
 </page>

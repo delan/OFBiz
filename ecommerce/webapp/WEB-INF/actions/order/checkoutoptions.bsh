@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,17 +24,17 @@
  *@since      2.1
 */
 
-importPackage(Packages.java.lang);
-importPackage(Packages.org.ofbiz.core.util);
-importPackage(Packages.org.ofbiz.core.entity);
-importPackage(Packages.org.ofbiz.commonapp.party.contact);
+import java.lang.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.commonapp.party.contact.*;
 
-var delegator = request.getAttribute("delegator");
-var cart = session.getAttribute(SiteDefs.SHOPPING_CART);
-var userLogin = session.getAttribute("userLogin");
-var party = userLogin.getRelatedOne("Party");
+delegator = request.getAttribute("delegator");
+cart = session.getAttribute(SiteDefs.SHOPPING_CART);
+userLogin = session.getAttribute("userLogin");
+party = userLogin.getRelatedOne("Party");
 
-var checkOutPaymentId = "";
+checkOutPaymentId = "";
 if (cart != null) {
     if (cart.getPaymentMethodIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodIds().get(0);

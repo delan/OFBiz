@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -24,23 +24,23 @@
  *@since      2.1
 */
 
-importPackage(Packages.java.lang);
-importPackage(Packages.org.ofbiz.core.util);
-importPackage(Packages.org.ofbiz.core.entity);
-importPackage(Packages.org.ofbiz.commonapp.order.order);
-importPackage(Packages.org.ofbiz.commonapp.party.contact);
+import java.lang.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.commonapp.order.order.*;
+import org.ofbiz.commonapp.party.contact.*;
 
-var delegator = request.getAttribute("delegator");
-var userLogin = session.getAttribute("userLogin"); 
-var orderId = request.getParameter("order_id");
+delegator = request.getAttribute("delegator");
+userLogin = session.getAttribute("userLogin"); 
+orderId = request.getParameter("order_id");
 if (orderId == null)
     orderId = request.getAttribute("order_id");
-var orderHeader = null;
+orderHeader = null;
 
 if (orderId != null && orderId.length() > 0) {
   orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
   if (orderHeader != null) {      
-      var orderRole = delegator.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
+      orderRole = delegator.findByPrimaryKey("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER"));
       if (orderRole == null) {
           context.remove("orderHeader");
           orderHeader = null;
@@ -50,12 +50,12 @@ if (orderId != null && orderId.length() > 0) {
 
 if (orderHeader != null) {
     //context.put("orderHeader", orderHeader);
-    var orderReadHelper = new OrderReadHelper(orderHeader);
-    var orderItems = orderReadHelper.getOrderItems();
-    var orderAdjustments = orderReadHelper.getAdjustments();
-    var orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
-    var orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
-    var headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
+    orderReadHelper = new OrderReadHelper(orderHeader);
+    orderItems = orderReadHelper.getOrderItems();
+    orderAdjustments = orderReadHelper.getAdjustments();
+    orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
+    orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
+    headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
 
     context.put("orderHeader", OrderReadHelper.getOrderHeaderDisplay(orderHeader, orderHeaderAdjustments, orderSubTotal));
     context.put("localOrderReadHelper", orderReadHelper);
@@ -65,49 +65,49 @@ if (orderHeader != null) {
     context.put("orderSubTotal", orderSubTotal);
     context.put("headerAdjustmentsToShow", headerAdjustmentsToShow);
     
-    var shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
+    shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
     shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
     context.put("orderShippingTotal", shippingAmount);
 
-    var taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
+    taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
     taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);
     context.put("orderTaxTotal", taxAmount);   
     context.put("orderGrandTotal", OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments));
     
-    var placingCustomerOrderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
-    var placingCustomerOrderRole = EntityUtil.getFirst(placingCustomerOrderRoles);        
-    var placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
+    placingCustomerOrderRoles = delegator.findByAnd("OrderRole",UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+    placingCustomerOrderRole = EntityUtil.getFirst(placingCustomerOrderRoles);        
+    placingCustomerPerson = placingCustomerOrderRole == null ? null : delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId", placingCustomerOrderRole.getString("partyId")));
     context.put("placingCustomerPerson", placingCustomerPerson);
 
-    var shippingAddress = orderReadHelper.getShippingAddress();
+    shippingAddress = orderReadHelper.getShippingAddress();
     context.put("shippingAddress", shippingAddress);
-    var billingAccount = orderHeader.getRelatedOne("BillingAccount");
+    billingAccount = orderHeader.getRelatedOne("BillingAccount");
     context.put("billingAccount", billingAccount);
   
-    var orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
+    orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
     if (orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
-        var orderPaymentPreference = orderPaymentPreferences.next();
-        var paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");        
-        var paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
+        orderPaymentPreference = orderPaymentPreferences.next();
+        paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");        
+        paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
         context.put("paymentMethod", paymentMethod);
         context.put("paymentMethodType", paymentMethodType);
         
         if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-            var creditCard = paymentMethod.getRelatedOneCache("CreditCard");
+            creditCard = paymentMethod.getRelatedOneCache("CreditCard");
             context.put("creditCard", creditCard);
             context.put("formattedCardNumber", ContactHelper.formatCreditCard(creditCard));
         } else if (paymentMethod != null && "EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-            var eftAccount = paymentMethod.getRelatedOneCache("EftAccount");
+            eftAccount = paymentMethod.getRelatedOneCache("EftAccount");
             context.put("eftAccount", eftAccount);
         }        
     }   
        
-    var orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
+    orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
     if (orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
-        var shipmentPreference = orderShipmentPreferences.next();
+        shipmentPreference = orderShipmentPreferences.next();
         context.put("carrierPartyId", shipmentPreference.getString("carrierPartyId"));
         context.put("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId"));       
-        var shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId")));
+        shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentPreference.getString("shipmentMethodTypeId")));
         context.put("shipMethDescription", shipmentMethodType.getString("description"));       
         context.put("shippingInstructions", shipmentPreference.getString("shippingInstructions"));
         context.put("maySplit", shipmentPreference.getBoolean("maySplit"));
@@ -116,10 +116,10 @@ if (orderHeader != null) {
         context.put("trackingNumber", shipmentPreference.getString("trackingNumber"));
     }
 
-    var customerPoNumber = null;
-    var orderItemPOIter = UtilMisc.toIterator(orderItems);
+    customerPoNumber = null;
+    orderItemPOIter = UtilMisc.toIterator(orderItems);
     if (orderItemPOIter != null && orderItemPOIter.hasNext()) {
-        var orderItemPo = orderItemPOIter.next();
+        orderItemPo = orderItemPOIter.next();
         context.put("customerPoNumber", orderItemPo.getString("correspondingPoId"));
     }
 }

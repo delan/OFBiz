@@ -23,25 +23,35 @@
  *@version    1.0
  */
 
-importClass(Packages.java.util.HashMap);
-importClass(Packages.org.ofbiz.core.util.SiteDefs);
-importClass(Packages.org.ofbiz.core.util.UtilHttp);
+import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.commonapp.product.promo.ProductPromoWorker;
 
-var userLogin = session.getAttribute("userLogin");
+delegator = request.getAttribute("delegator");
 
-var tryEntity = true;
-var errorMessage = request.getAttribute(SiteDefs.ERROR_MESSAGE);
-if (errorMessage != null && errorMessage.length() > 0) {
-    tryEntity = false;    
+// Get the Cart and Prepare Size
+shoppingCart = session.getAttribute("shoppingCart");
+if (shoppingCart != null) {
+    context.put("shoppingCartSize", shoppingCart.size());
+} else {
+    context.put("shoppingCartSize", 0);
 }
+context.put("shoppingCart", shoppingCart);
 
-var donePage = request.getParameter("DONE_PAGE");
-if (donePage == null || donePage.length() == 0) donePage = "viewprofile";
+//Get Cart Associated Products Data
+context.put("associatedProducts", CatalogWorker.getRandomCartProductAssoc(request));
 
-var userLoginData = userLogin;
-if (!tryEntity.booleanValue()) userLoginData = UtilHttp.getParameterMap(request);
-if (userLoginData == null) userLoginData = new HashMap();
+//Get Promo Text Data
+productPromos = ProductPromoWorker.getCatalogProductPromos(delegator, request);
+//Make sure that at least one promo has non-empty promoText
+showPromoText = false;
+productPromoIterator = productPromos.iterator(); 
+while (productPromoIterator.hasNext()) {
+    productPromo = productPromoIterator.next(); 
+    promoText = productPromo.get("promoText"); 
+    if (promoText != null && promoText.length() > 0) showPromoText = true;
+}
+context.put("productPromos", productPromos);
+context.put("showPromoText", showPromoText);
 
-context.put("donePage", donePage);
-context.put("userLoginData", userLoginData);
+context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
 

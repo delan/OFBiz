@@ -23,29 +23,29 @@
  *@version    1.0
  */
 
-importPackage(Packages.java.lang);
-importPackage(Packages.java.util);
-importPackage(Packages.org.ofbiz.core.util);
-importPackage(Packages.org.ofbiz.core.entity);
-importClass(Packages.org.ofbiz.commonapp.party.contact.ContactMechWorker);
-importClass(Packages.org.ofbiz.commonapp.accounting.payment.PaymentWorker);
+import java.lang.*;
+import java.util.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.commonapp.party.contact.ContactMechWorker;
+import org.ofbiz.commonapp.accounting.payment.PaymentWorker;
 
-var dispatcher = request.getAttribute("dispatcher");
-var delegator = request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
+delegator = request.getAttribute("delegator");
 
-var userLogin = session.getAttribute("userLogin");
+userLogin = session.getAttribute("userLogin");
 if (userLogin != null) {
-    var partyId = userLogin.getString("partyId");
-    var partyIdMap = UtilMisc.toMap("partyId", partyId);
+    partyId = userLogin.getString("partyId");
+    partyIdMap = UtilMisc.toMap("partyId", partyId);
     
-    var party = delegator.findByPrimaryKey("Party", partyIdMap);
-    var person = delegator.findByPrimaryKey("Person", partyIdMap);
-    var partyGroup = delegator.findByPrimaryKey("PartyGroup", partyIdMap);
+    party = delegator.findByPrimaryKey("Party", partyIdMap);
+    person = delegator.findByPrimaryKey("Person", partyIdMap);
+    partyGroup = delegator.findByPrimaryKey("PartyGroup", partyIdMap);
     
-    var showOld = "true".equals(request.getParameter("SHOW_OLD"));
+    showOld = "true".equals(request.getParameter("SHOW_OLD"));
      
-    var partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, userLogin.getString("partyId"), showOld);
-    var paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, userLogin.getString("partyId"), showOld);
+    partyContactMechValueMaps = ContactMechWorker.getPartyContactMechValueMaps(delegator, userLogin.getString("partyId"), showOld);
+    paymentMethodValueMaps = PaymentWorker.getPartyPaymentMethodValueMaps(delegator, userLogin.getString("partyId"), showOld);
     
     context.put("party", party);
     context.put("person", person);

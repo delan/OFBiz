@@ -2,6 +2,6 @@
 <page>
     <template>main</template> 
     <property name="title">Login</property>
-    <page-action name="login.js"/>
+    <page-action name="login.bsh"/>
 </page>
 

@@ -23,25 +23,25 @@
  *@version    1.0
  */
 
-importClass(Packages.java.util.HashMap);
-importClass(Packages.org.ofbiz.commonapp.party.contact.ContactMechWorker);
-importClass(Packages.org.ofbiz.core.util.UtilHttp);
-importClass(Packages.org.ofbiz.core.util.UtilMisc);
+import java.util.HashMap;
+import org.ofbiz.commonapp.party.contact.ContactMechWorker;
+import org.ofbiz.core.util.UtilHttp;
+import org.ofbiz.core.util.UtilMisc;
 
-var userLogin = session.getAttribute("userLogin");
-var security = request.getAttribute("security");
-var delegator = request.getAttribute("delegator");
+userLogin = session.getAttribute("userLogin");
+security = request.getAttribute("security");
+delegator = request.getAttribute("delegator");
 
 /* puts the following in the context: "contactMech", "contactMechId", 
         "partyContactMech", "partyContactMechPurposes", "contactMechTypeId", 
         "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", 
         "requestName", "donePage", "tryEntity", "contactMechTypes"
  */
-var target = new HashMap();
+target = new HashMap();
 ContactMechWorker.getContactMechAndRelated(request, userLogin.getString("partyId"), target);
-var targetIter = target.keySet().iterator();
+targetIter = target.keySet().iterator();
 while (targetIter.hasNext()) {
-    var key = targetIter.next();
+    key = targetIter.next();
     context.put(key, target.get(key));
 }
 
@@ -52,18 +52,18 @@ if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && context.get("
     context.put("canNotView", false);
 }
 
-var preContactMechTypeId = request.getParameter("preContactMechTypeId");
+preContactMechTypeId = request.getParameter("preContactMechTypeId");
 if (preContactMechTypeId == null) preContactMechTypeId = request.getAttribute("preContactMechTypeId");
 context.put("preContactMechTypeId", preContactMechTypeId);
 
-var paymentMethodId = request.getParameter("paymentMethodId");
+paymentMethodId = request.getParameter("paymentMethodId");
 if (paymentMethodId == null) paymentMethodId = request.getAttribute("paymentMethodId");
 context.put("paymentMethodId", paymentMethodId);
 
-var cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");
+cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");
 if (cmNewPurposeTypeId == null) cmNewPurposeTypeId = request.getAttribute("contactMechPurposeTypeId");
 if (cmNewPurposeTypeId != null) {
-    var contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));
+    contactMechPurposeType = delegator.findByPrimaryKey("ContactMechPurposeType", UtilMisc.toMap("contactMechPurposeTypeId", cmNewPurposeTypeId));
     if (contactMechPurposeType != null) {
         context.put("contactMechPurposeType", contactMechPurposeType);
     } else {
@@ -72,25 +72,25 @@ if (cmNewPurposeTypeId != null) {
 }
 context.put("cmNewPurposeTypeId", cmNewPurposeTypeId);
 
-var tryEntity = context.get("tryEntity");
-var requestParameters = UtilHttp.getParameterMap(request);
+tryEntity = context.get("tryEntity");
+requestParameters = UtilHttp.getParameterMap(request);
 
-var contactMechData = context.get("contactMech");
+contactMechData = context.get("contactMech");
 if (!tryEntity.booleanValue()) contactMechData = requestParameters;
 if (contactMechData == null) contactMechData = new HashMap();
 context.put("contactMechData", contactMechData);
 
-var partyContactMechData = context.get("partyContactMech");
+partyContactMechData = context.get("partyContactMech");
 if (!tryEntity.booleanValue()) partyContactMechData = requestParameters; 
 if (partyContactMechData == null) partyContactMechData = new HashMap();
 context.put("partyContactMechData", partyContactMechData);
 
-var postalAddressData = context.get("postalAddress");
+postalAddressData = context.get("postalAddress");
 if (!tryEntity.booleanValue()) postalAddressData = requestParameters; 
 if (postalAddressData == null) postalAddressData = new HashMap();
 context.put("postalAddressData", postalAddressData);
 
-var telecomNumberData = context.get("telecomNumber");
+telecomNumberData = context.get("telecomNumber");
 if (!tryEntity.booleanValue()) telecomNumberData = requestParameters; 
 if (telecomNumberData == null) telecomNumberData = new HashMap();
 context.put("telecomNumberData", telecomNumberData);

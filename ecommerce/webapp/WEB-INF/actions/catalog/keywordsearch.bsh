@@ -29,8 +29,9 @@ import org.ofbiz.commonapp.product.catalog.*;
 import org.ofbiz.commonapp.product.product.*;
 
 contentPathPrefix = CatalogWorker.getContentPathPrefix(request);
-searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");
-searchOperator = request.getParameter("SEARCH_OPERATOR");
+requestParams = UtilHttp.getParameterMap(request);
+searchCategoryId = requestParams.get("SEARCH_CATEGORY_ID");
+searchOperator = requestParams.get("SEARCH_OPERATOR");
 if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { 
     searchOperator = "OR"; 
 }
