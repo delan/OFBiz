@@ -30,8 +30,9 @@
   <servlet>
     <servlet-name>ControlServlet</servlet-name>
     <display-name>ControlServlet</display-name>
-    <description>no description</description>
+    <description>Main Control Servlet</description>
     <servlet-class>org.ofbiz.core.control.ControlServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>ControlServlet</servlet-name>
@@ -39,8 +40,14 @@
   </servlet-mapping>
 
   <context-param>
+    <description>Request/View Mapping And Site Configuration File</description>
     <param-name>siteConfigurationFile</param-name>
     <param-value>/WEB-INF/commonapp-config.xml</param-value>
+  </context-param>
+  <context-param>
+    <description>Configuration File For The Job Scheduler</description>
+    <param-name>schedulerConfigurationFile</param-name>
+    <param-value>/WEB-INF/scheduler-config.xml</param-value>
   </context-param>
 
   <session-config>
