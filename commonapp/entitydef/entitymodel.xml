@@ -6398,7 +6398,6 @@
       <field><col-name>PRODUCT_ID</col-name><type>id-ne</type></field>
       <field><col-name>FROM_DATE</col-name><type>date-time</type></field>
       <field><col-name>THRU_DATE</col-name><type>date-time</type></field>
-      <field><col-name>PRIMARY_FLAG</col-name><type>indicator</type></field>
       <field><col-name>COMMENT</col-name><type>comment</type></field>	
       <prim-key-col>PRODUCT_CATEGORY_ID</prim-key-col>	
       <prim-key-col>PRODUCT_ID</prim-key-col>
@@ -7437,6 +7436,11 @@
         <key-map><col-name>PRODUCT_ID</col-name></key-map>
       </relation>
       <relation>
+        <type>many</type>
+        <rel-table-name>PRODUCT_KEYWORD</rel-table-name>
+        <key-map><col-name>PRODUCT_ID</col-name></key-map>
+      </relation>
+      <relation>
         <type>one</type><title>Manufacturer</title>
         <rel-table-name>PARTY</rel-table-name>
         <key-map><col-name>MANUFACTURER_PARTY_ID</col-name><rel-col-name>PARTY_ID</rel-col-name></key-map>
@@ -7658,6 +7662,20 @@
         <key-map><col-name>PRODUCT_TYPE_ID</col-name></key-map>
       </relation>
     </entity>	
+    <entity>
+      <title>Product Keyword Entity</title>
+      <package-name>org.ofbiz.commonapp.product.product</package-name>
+      <table-name>PRODUCT_KEYWORD</table-name>
+      <field><col-name>PRODUCT_ID</col-name><type>id-ne</type></field>
+      <field><col-name>KEYWORD</col-name><type>short-varchar</type></field>	
+      <prim-key-col>PRODUCT_ID</prim-key-col>	
+      <prim-key-col>KEYWORD</prim-key-col>
+      <relation>
+        <type>one</type>
+        <rel-table-name>PRODUCT</rel-table-name>
+        <key-map><col-name>PRODUCT_ID</col-name></key-map>
+      </relation>
+    </entity>
     <entity>
       <title>Product Type Attribute Entity</title>
       <package-name>org.ofbiz.commonapp.product.product</package-name>
