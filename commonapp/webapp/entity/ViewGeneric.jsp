@@ -109,7 +109,7 @@ function ShowViewTab(lname)
   </td>
   <%}%>
 </table>
-<div style='color: white; width: 100%; background-color: black; padding:3;'>
+<div style='color: white; background-color: black; padding:3;'>
   <b>View Entity: <%=entityName%> with primary key <%=findByPK.toString()%></b>
 </div>
 
@@ -124,11 +124,11 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(value == null){%>
-<div style='width:100%;height:400px;overflow:visible;'>
+<div style='width:auto;height:400px;overflow:visible;'>
 <%}else{%>
-<div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
+<div style='width:auto;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
-  <DIV id=viewarea style="VISIBILITY: visible; POSITION: absolute" width="100%">
+  <DIV id=viewarea style="VISIBILITY: visible; POSITION: absolute" width="1%">
 <table border="0" cellspacing="2" cellpadding="2">
 <%if(value == null){%>
 <tr class="<%=rowClass1%>"><td><h3>Specified <%=entityName%> was not found.</h3></td></tr>
@@ -166,7 +166,7 @@ function ShowViewTab(lname)
   </div>
 <%GenericValue valueSave = value;%>
 <%if(hasUpdatePermission || hasCreatePermission){%>
-  <DIV id=editarea style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+  <DIV id=editarea style="VISIBILITY: hidden; POSITION: absolute" width="1%">
 <%boolean showFields = true;%>
 <%if(value == null && (findByPK.getAllFields().size() > 0)){%>
     <%=entity.entityName%> with primary key <%=findByPK.toString()%> not found.<br>
@@ -409,7 +409,9 @@ function ShowTab(lname)
         <a href='javascript:ShowTab("tab<%=tabIndex+1%>")' id=lnk<%=tabIndex+1%> class=<%=(tabIndex==0?"onlnk":"offlnk")%>>
           <%=relation.title%><%=relation.relEntityName%></a>
       </td>
-  <%}%><%}%>
+    <%}%>
+    <%if((tabIndex+1)%5 == 0){%></tr><tr><%}%>
+  <%}%>
 </tr></table>
 <%}%>
   
