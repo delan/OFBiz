@@ -24,6 +24,7 @@
  */
 
 import org.ofbiz.base.util.*;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.shoppingcart.product.ProductPromoWorker;
 
 delegator = request.getAttribute("delegator");
@@ -31,6 +32,11 @@ userLogin = session.getAttribute("userLogin");
 
 productPromoId = request.getParameter("productPromoId");
 productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));
+
+List productPromoCategoryList = delegator.findByAndCache("ProductPromoCategory", UtilMisc.toMap("productPromoId", productPromoId));
+productPromoCategoryIncludeList = EntityUtil.filterByAnd(productPromoCategoryList, UtilMisc.toMap("productPromoApplEnumId", "PPPA_INCLUDE"));
+productPromoCategoryExcludeList = EntityUtil.filterByAnd(productPromoCategoryList, UtilMisc.toMap("productPromoApplEnumId", "PPPA_EXCLUDE"));
+productPromoCategoryAlwaysList = EntityUtil.filterByAnd(productPromoCategoryList, UtilMisc.toMap("productPromoApplEnumId", "PPPA_ALWAYS"));
 
 Set productIdsCond = new HashSet();
 Set productIdsAction = new HashSet();
@@ -44,6 +50,11 @@ List productIds = new ArrayList(productIdSet);
 
 context.put("productPromoId", productPromoId);
 context.put("productPromo", productPromo);
+
+context.put("productPromoCategoryIncludeList", productPromoCategoryIncludeList);
+context.put("productPromoCategoryExcludeList", productPromoCategoryExcludeList);
+context.put("productPromoCategoryAlwaysList", productPromoCategoryAlwaysList);
+
 context.put("productIdsCond", productIdsCond);
 context.put("productIdsAction", productIdsAction);
 context.put("productIds", productIds);
