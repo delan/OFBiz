@@ -868,6 +868,8 @@ public class OrderServices {
             List headerAdjustmentsToShow = OrderReadHelper.getOrderHeaderAdjustmentToShow(orderHeaderAdjustments, orderSubTotal);
            
             //templateContext.put("localOrderReadHelper", orh);
+            result.put("orderId", orderId);
+            result.put("orderItemSeqId", context.get("orderItemSeqId"));
             result.put("orderHeader", OrderReadHelper.getOrderHeaderDisplay(orderHeader, orderHeaderAdjustments, orderSubTotal));
             result.put("orderItems", OrderReadHelper.getOrderItemDisplay(orderItems, orderAdjustments));
             result.put("statusString", orh.getStatusString());
