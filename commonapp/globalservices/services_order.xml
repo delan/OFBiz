@@ -12,19 +12,20 @@
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="orderStatusId" type="String" mode="OUT"/>
     </service>
-    <service name="storeOrder" engine="java" validate="false"
+    <service name="storeOrder" engine="java" validate="true" auth="true"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="createOrder">
         <description>Creates order entities</description>
         <attribute name="partyId" type="String" mode="IN"/>
-		<attribute name="affiliateId" type="String" mode="IN" optional="true"/>
+        <attribute name="affiliateId" type="String" mode="IN" optional="true"/>
         <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
         <attribute name="distributorId" type="String" mode="IN" optional="true"/>
         <attribute name="orderItems" type="java.util.List" mode="IN"/>
+        <attribute name="orderAdjustments" type="java.util.List" mode="IN"/>
         <attribute name="shippingInstructions" type="String" mode="IN"/>
         <attribute name="billingAccountId" type="String" mode="IN"/>
         <attribute name="cartDiscount" type="Double" mode="IN"/>
-        <attribute name="shippingAmount" type="Double" mode="IN"/>
-        <attribute name="taxAmount" type="Double" mode="IN"/>
+        <attribute name="shippingAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="shippingContactMechId" type="String" mode="IN"/>
         <attribute name="shipmentMethodTypeId" type="String" mode="IN"/>
         <attribute name="carrierPartyId" type="String" mode="IN"/>

@@ -343,6 +343,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemBilling" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemContactMech" />
+    <entity-group group="org.ofbiz.commonapp" entity="OrderItemInventoryRes" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemRole" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemType" />
     <entity-group group="org.ofbiz.commonapp" entity="OrderItemTypeAttr" />

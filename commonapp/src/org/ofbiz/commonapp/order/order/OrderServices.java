@@ -28,6 +28,7 @@ import java.util.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.security.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.product.catalog.*;
@@ -49,8 +50,16 @@ public class OrderServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
+        Security security = ctx.getSecurity();
         Collection toBeStored = new LinkedList();
 
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+        //check security
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "ORDERMGR", "_CREATE");
+        if (result.size() > 0) {
+            return result;
+        }
+        
         // check to make sure we have something to order
         List orderItems = (List) context.get("orderItems");
         if (orderItems.size() < 1) {
@@ -145,7 +154,6 @@ public class OrderServices {
         }
 
         // set the roles
-        String partyId = (String) context.get("partyId");
         final String[] USER_ORDER_ROLE_TYPES = {"END_USER_CUSTOMER", "SHIP_TO_CUSTOMER",
                                                 "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
 
@@ -219,7 +227,7 @@ public class OrderServices {
                     Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId, 
                             orderItem.getString("productId"), orderItem.getDouble("quantity"),
                             orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
-                            delegator, dispatcher);
+                            userLogin, delegator, dispatcher);
                     if (inventoryNotReserved != null) {
                         //if inventoryNotReserved is not 0.0 then that is the amount that it couldn't reserve
                         GenericValue product = null;

@@ -154,6 +154,7 @@ public class CheckOutEvents {
             String affiliateId = (String) request.getSession().getAttribute("_AFFILIATE_ID_");
             if (distributorId != null) context.put("distributorId", distributorId);
             if (affiliateId != null) context.put("affiliateId", affiliateId);
+            context.put("userLogin", userLogin);
             context.put("partyId", userLogin.get("partyId"));
             context.put("prodCatalogId", CatalogWorker.getCurrentCatalogId(request));
 

@@ -78,7 +78,7 @@ public class CatalogWorker {
             }
             
             //whew, finally here: now check to see if we got enough back...
-            if (availableToPromise.doubleValue() > quantity) {
+            if (availableToPromise.doubleValue() >= quantity) {
                 Debug.logInfo("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise);
                 return true;
             } else {
@@ -100,11 +100,8 @@ public class CatalogWorker {
 
     /** tries to reserve the specified quantity, if fails returns quantity that it could not reserve or zero if there was an error, otherwise returns null */
     public static Double reserveCatalogInventory(String prodCatalogId, String productId, Double quantity,
-            String orderId, String orderItemSeqId, GenericDelegator delegator, LocalDispatcher dispatcher) {
+            String orderId, String orderItemSeqId, GenericValue userLogin, GenericDelegator delegator, LocalDispatcher dispatcher) {
                 
-        //THIS METHOD IS CURRENTLY DISABLED BECAUSE IT IS NOT FINISHED
-        if (true) return null;
-        
         GenericValue prodCatalog = null;
         try {
             prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
@@ -128,7 +125,7 @@ public class CatalogWorker {
             try {
                 Map result = dispatcher.runSync("reserveProductInventoryByFacility", UtilMisc.toMap(
                         "productId", productId, "facilityId", inventoryFacilityId,
-                        "orderId", orderId, "orderItemSeqId", orderItemSeqId, "quantity", quantity));
+                        "orderId", orderId, "orderItemSeqId", orderItemSeqId, "quantity", quantity, "userLogin", userLogin));
                 quantityNotReserved = (Double) result.get("quantityNotReserved");
 
                 if (quantityNotReserved == null) {
