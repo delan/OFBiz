@@ -216,9 +216,9 @@ public class UtilMisc {
     }
 
     /** This is meant to be very quick to create and use for small sized maps, perfect for how we usually use UtilMisc.toMap */
-    public static class SimpleMap implements Map, java.io.Serializable {
+    protected static class SimpleMap implements Map, java.io.Serializable {
         protected Map realMapIfNeeded = null;
-        
+
         int sizeValue;
         String name1 = null;
         String name2 = null;
@@ -228,7 +228,7 @@ public class UtilMisc {
         Object value2 = null;
         Object value3 = null;
         Object value4 = null;
-        
+
         public SimpleMap(String name1, Object value1) {
             sizeValue = 1;
             this.name1 = name1; this.value1 = value1;
@@ -251,7 +251,7 @@ public class UtilMisc {
             this.name3 = name3; this.value3 = value3;
             this.name4 = name4; this.value4 = value4;
         }
-        
+
         protected void makeRealMap() {
             realMapIfNeeded = new HashMap();
             if (name1 != null) realMapIfNeeded.put(name1, value1);
@@ -259,7 +259,7 @@ public class UtilMisc {
             if (name3 != null) realMapIfNeeded.put(name3, value3);
             if (name4 != null) realMapIfNeeded.put(name4, value4);
         }
-        
+
         public void clear() {
             if (realMapIfNeeded != null) {
                 realMapIfNeeded.clear();
@@ -275,7 +275,7 @@ public class UtilMisc {
                 value4 = null;
             }
         }
-        
+
         public boolean containsKey(Object obj) {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.containsKey(obj);
@@ -287,7 +287,7 @@ public class UtilMisc {
                 return false;
             }
         }
-        
+
         public boolean containsValue(Object obj) {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.containsValue(obj);
@@ -299,7 +299,7 @@ public class UtilMisc {
                 return false;
             }
         }
-        
+
         public java.util.Set entrySet() {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.entrySet();
@@ -308,7 +308,7 @@ public class UtilMisc {
                 return realMapIfNeeded.entrySet();
             }
         }
-        
+
         public Object get(Object obj) {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.get(obj);
@@ -320,7 +320,7 @@ public class UtilMisc {
                 return null;
             }
         }
-        
+
         public boolean isEmpty() {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.isEmpty();
@@ -329,7 +329,7 @@ public class UtilMisc {
                 return false;
             }
         }
-        
+
         public java.util.Set keySet() {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.keySet();
@@ -338,7 +338,7 @@ public class UtilMisc {
                 return realMapIfNeeded.keySet();
             }
         }
-        
+
         public Object put(Object obj, Object obj1) {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.put(obj, obj1);
@@ -347,7 +347,7 @@ public class UtilMisc {
                 return realMapIfNeeded.put(obj, obj1);
             }
         }
-        
+
         public void putAll(java.util.Map map) {
             if (realMapIfNeeded != null) {
                 realMapIfNeeded.putAll(map);
@@ -356,7 +356,7 @@ public class UtilMisc {
                 realMapIfNeeded.putAll(map);
             }
         }
-        
+
         public Object remove(Object obj) {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.remove(obj);
@@ -365,7 +365,7 @@ public class UtilMisc {
                 return realMapIfNeeded.remove(obj);
             }
         }
-        
+
         public int size() {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.size();
@@ -373,7 +373,7 @@ public class UtilMisc {
                 return this.sizeValue;
             }
         }
-        
+
         public java.util.Collection values() {
             if (realMapIfNeeded != null) {
                 return realMapIfNeeded.values();
