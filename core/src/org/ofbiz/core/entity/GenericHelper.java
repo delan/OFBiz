@@ -26,7 +26,7 @@ import org.ofbiz.core.entity.model.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    Tue Aug 07 01:10:32 MDT 2001
  *@version    1.0
  */
@@ -108,14 +108,18 @@ public interface GenericHelper
   /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
-   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@param order The fields of the named entity to order the query by; 
+   *       optionall add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
   public Collection findByAnd(String entityName, Map fields, List orderBy);
-  /** Finds Generic Entity records by all of the specified fields (ie: combined using AND), looking first in the cache; uses orderBy for lookup, but only keys results on the entityName and fields
+  /** Finds Generic Entity records by all of the specified fields (ie: combined 
+   *  using AND), looking first in the cache; uses orderBy for lookup, but only 
+   *  keys results on the entityName and fields
    *@param entityName The Name of the Entity as defined in the entity XML file
    *@param fields The fields of the named entity to query by with their corresponging values
-   *@param order The fields of the named entity to order the query by; optionall add a " ASC" for ascending or " DESC" for descending
+   *@param order The fields of the named entity to order the query by; 
+   *       optionall add a " ASC" for ascending or " DESC" for descending
    *@return Collection of GenericValue instances that match the query
    */
   public Collection findByAndCache(String entityName, Map fields, List orderBy);
@@ -133,14 +137,18 @@ public interface GenericHelper
   public void store(GenericValue value);
   
   /** Get the named Related Entity for the GenericValue from the persistent store
-   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param relationName String containing the relation name which is the 
+   *       combination of relation.title and relation.rel-entity-name as 
+   *       specified in the entity XML definition file
    *@param value GenericValue instance containing the entity
    *@return Collection of GenericValue instances as specified in the relation definition
    */
   public Collection getRelated(String relationName, GenericValue value);
 
   /** Get the named Related Entity for the GenericValue from the persistent store
-   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param relationName String containing the relation name which is the 
+   *       combination of relation.title and relation.rel-entity-name as 
+   *       specified in the entity XML definition file
    *@param value GenericValue instance containing the entity
    *@return GenericValue instance as specified in the one-relation definition 
    *@throws IllegalArgumentException if the relation is a many-relation
@@ -148,12 +156,20 @@ public interface GenericHelper
   public GenericValue getRelatedOne(String relationName, GenericValue value);
 
   /** Remove the named Related Entity for the GenericValue from the persistent store
-   *@param relationName String containing the relation name which is the combination of relation.title and relation.rel-entity-name as specified in the entity XML definition file
+   *@param relationName String containing the relation name which is the 
+   *       combination of relation.title and relation.rel-entity-name as 
+   *       specified in the entity XML definition file
    *@param value GenericValue instance containing the entity
    */
   public void removeRelated(String relationName, GenericValue value);
 
-  /** Get the next guaranteed unique seq id from the sequence with the given sequence name; if the named sequence doesn't exist, it will be created
+  /** Refresh the Entity for the GenericValue from the persistent store
+   *@param value GenericValue instance containing the entity to refresh
+   */
+  public void refresh(GenericValue value);
+
+  /** Get the next guaranteed unique seq id from the sequence with the given 
+   *  sequence name; if the named sequence doesn't exist, it will be created
    *@param seqName The name of the sequence to get the next seq id from
    *@return Long with the next seq id for the given sequence name
    */
