@@ -1,5 +1,5 @@
 /*
- * $Id: currentvalprep.bsh,v 1.6 2003/12/15 12:10:58 byersa Exp $
+ * $Id: currentvalprep.bsh,v 1.7 2003/12/30 07:28:06 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      3.0
 
  * A commonly called script to find the "current" entity (either Content or DataResource
@@ -46,17 +46,18 @@ import org.ofbiz.content.ContentManagementWorker;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+String module = "currentvalprep.bsh";
 
-LocalDispatcher dispatcher	= (LocalDispatcher)request.getAttribute("dispatcher");
+LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
 GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
 currentEntityMap = session.getAttribute("currentEntityMap");
-if(currentEntityMap == null){
-    currentEntityMap     = new HashMap();
+if (currentEntityMap == null) {
+    currentEntityMap = new HashMap();
     session.setAttribute("currentEntityMap", currentEntityMap);
 }
 
-entityName		= page.getProperty("entityName");
+entityName = page.getProperty("entityName");
 currentEntityPropertyName = page.getProperty("currentEntityPropertyName");
 if (currentEntityPropertyName == null) {
     currentEntityName = entityName;
@@ -64,13 +65,13 @@ if (currentEntityPropertyName == null) {
     currentEntityName = page.getProperty(currentEntityPropertyName);
 }
 
-Debug.logInfo("in currentvalprep, currentEntityName:" + currentEntityName,"");
+if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, currentEntityName:" + currentEntityName,module);
 cachedPK = currentEntityMap.get(currentEntityName);
-Debug.logInfo("in currentvalprep, cachedPK:" + cachedPK,"");
+if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, cachedPK:" + cachedPK,module);
 
 // Build a key from param or attribute values.
 Map paramMap	= UtilHttp.getParameterMap(request);
-Debug.logInfo("paramMap:" + paramMap, null);
+if (Debug.verboseOn()) Debug.logVerbose("paramMap:" + paramMap, null);
 GenericValue v = delegator.makeValue(currentEntityName, null);
 passedPK = v.getPrimaryKey();
 keyColl = passedPK.getAllKeys();
@@ -81,14 +82,14 @@ while (keyIt.hasNext()) {
     if (attrVal == null) {
         attrVal = paramMap.get(attrName);
     }
-Debug.logInfo("in currentvalprep, attrName:" + attrName,"");
-Debug.logInfo("in currentvalprep, attrVal:" + attrVal,"");
+if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, attrName:" + attrName,module);
+if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, attrVal:" + attrVal,module);
     if (attrVal != null && attrVal != void) {
         passedPK.put(attrName,attrVal);
     }
 }
 
-Debug.logInfo("in currentvalprep, passedPK:" + passedPK,"");
+if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, passedPK:" + passedPK,module);
 // messed up code to determine whether or not the cached or passed keys have missing fields,
 // in which case, the valid one is used to retrieve the current value
 boolean pksEqual = true;
@@ -131,7 +132,7 @@ if(!pksEqual) {
     currentPK = cachedPK;
    // all other condition result in currentPK = passedPK
 }
-Debug.logInfo("in currentvalprep, currentPK:" + currentPK,"");
+if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, currentPK:" + currentPK,module);
 
 currentEntityMap.put(currentEntityName, currentPK);
 request.setAttribute("currentPK", currentPK);
@@ -139,7 +140,7 @@ context.put("currentPK", currentPK);
 currentValue = delegator.findByPrimaryKey(currentPK.getPrimaryKey()); 
 context.put("currentValue", currentValue);
 request.setAttribute("currentValue", currentValue);
-Debug.logInfo("in currentvalprep, currentValue:" + request.getAttribute("currentValue"),"");
+if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, currentValue:" + request.getAttribute("currentValue"),module);
 if (currentValue != null) {
     if (currentEntityName.indexOf("DataResource") >=0) {
         String suffix = "";
@@ -184,7 +185,7 @@ if (currentValue != null) {
             }
         }
 
-Debug.logInfo("in currentvalprep, suffix:" + suffix,"");
+if (Debug.verboseOn()) Debug.logVerbose("in currentvalprep, suffix:" + suffix,module);
         if (UtilValidate.isNotEmpty(suffix)) {
             ContentManagementWorker.mruAdd(session, (GenericEntity)currentPK, suffix);
         } else {

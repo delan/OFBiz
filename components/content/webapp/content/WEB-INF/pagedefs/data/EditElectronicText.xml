@@ -16,7 +16,7 @@
     <property name="allowedResourceType">ELECTRONIC_TEXT</property>    
     <property name="permissionType">simple</property>    
     <page-action name="/includes/permprep.bsh"/>
-    <content-action name="/includes/currentvalprep.bsh"/>
+    <page-action name="/includes/currentvalprep.bsh"/>
     <content-action name="/data/checkresourcetype.bsh" />
     <content-action name="/includes/relatedoneprep.bsh" />
 </page>
