@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_def</template> 
+    <property name="title">Edit Content Purpose Type</property>
+    <property name="headerItem">Content</property>    
+    <property name="entityName">ContentPurposeType</property>    
+    <property name="subMenu">/includes/content_menu.ftl</property>    
+    <property name="formDefFile">/content/ContentForms.xml</property>    
+</page>

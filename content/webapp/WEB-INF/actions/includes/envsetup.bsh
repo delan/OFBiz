@@ -33,6 +33,8 @@ import org.ofbiz.commonapp.common.*;
 userLogin = session.getAttribute(SiteDefs.USER_LOGIN);
 if (userLogin != null) request.setAttribute("userLogin", userLogin);
 
+context.put("contentSubPage", session.getAttribute("contentSubPage"));
+
 person = session.getAttribute(SiteDefs.PERSON);
 partyGroup = session.getAttribute(SiteDefs.PARTY_GROUP);
 if (person == null) {

@@ -176,17 +176,339 @@
     	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
     	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
     </request-map>
+
+    <!-- ================ ContentType Requests ================= -->
+    <request-map uri="EditContentType">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentType"/>
+    </request-map>
+    <request-map uri="addContentType">
+        <security auth="true" https="true"/>
+        <event invoke="createContentType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentType"/>
+        <response name="error" type="view" value="EditContentType"/>
+    </request-map>
+    <request-map uri="updateContentType">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentType"/>
+        <response name="error" type="view" value="EditContentType"/>
+    </request-map>
+    <request-map uri="removeContentType">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentType"/>
+        <response name="error" type="view" value="EditContentType"/>
+    </request-map>
+
+    <!-- ================ ContentRole Requests ================= -->
+    <request-map uri="EditContentRole">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentRole"/>
+    </request-map>
+    <request-map uri="addContentRole">
+        <security auth="true" https="true"/>
+        <event invoke="createContentRole" path="" type="service"/>
+        <response name="success" type="view" value="EditContentRole"/>
+        <response name="error" type="view" value="EditContentRole"/>
+    </request-map>
+    <request-map uri="updateContentRole">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentRole" path="" type="service"/>
+        <response name="success" type="view" value="EditContentRole"/>
+        <response name="error" type="view" value="EditContentRole"/>
+    </request-map>
+    <request-map uri="removeContentRole">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentRole" path="" type="service"/>
+        <response name="success" type="view" value="EditContentRole"/>
+        <response name="error" type="view" value="EditContentRole"/>
+    </request-map>
+
+    <!-- ================ ContentAssocType Requests ================= -->
+    <request-map uri="EditContentAssocType">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentAssocType"/>
+    </request-map>
+    <request-map uri="addContentAssocType">
+        <security auth="true" https="true"/>
+        <event invoke="createContentAssocType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssocType"/>
+        <response name="error" type="view" value="EditContentAssocType"/>
+    </request-map>
+    <request-map uri="updateContentAssocType">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentAssocType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssocType"/>
+        <response name="error" type="view" value="EditContentAssocType"/>
+    </request-map>
+    <request-map uri="removeContentAssocType">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentAssocType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssocType"/>
+        <response name="error" type="view" value="EditContentAssocType"/>
+    </request-map>
+
+    <!-- ================ ContentPurposeType Requests ================= -->
+    <request-map uri="EditContentPurposeType">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentPurposeType"/>
+    </request-map>
+    <request-map uri="addContentPurposeType">
+        <security auth="true" https="true"/>
+        <event invoke="createContentPurposeType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurposeType"/>
+        <response name="error" type="view" value="EditContentPurposeType"/>
+    </request-map>
+    <request-map uri="updateContentPurposeType">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentPurposeType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurposeType"/>
+        <response name="error" type="view" value="EditContentPurposeType"/>
+    </request-map>
+    <request-map uri="removeContentPurposeType">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentPurposeType" path="" type="service"/>
+        <response name="success" type="view" value="EditContentPurposeType"/>
+        <response name="error" type="view" value="EditContentPurposeType"/>
+    </request-map>
+
+    <!-- ================ ContentTypeAttr Requests ================= -->
+    <request-map uri="EditContentTypeAttr">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentTypeAttr"/>
+    </request-map>
+    <request-map uri="addContentTypeAttr">
+        <security auth="true" https="true"/>
+        <event invoke="createContentTypeAttr" path="" type="service"/>
+        <response name="success" type="view" value="EditContentTypeAttr"/>
+        <response name="error" type="view" value="EditContentTypeAttr"/>
+    </request-map>
+    <request-map uri="removeContentTypeAttr">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentTypeAttr" path="" type="service"/>
+        <response name="success" type="view" value="EditContentTypeAttr"/>
+        <response name="error" type="view" value="EditContentTypeAttr"/>
+    </request-map>
+
+    <!-- ================ ContentAssocPredicate Requests ================= -->
+    <request-map uri="EditContentAssocPredicate">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditContentAssocPredicate"/>
+    </request-map>
+    <request-map uri="addContentAssocPredicate">
+        <security auth="true" https="true"/>
+        <event invoke="createContentAssocPredicate" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssocPredicate"/>
+        <response name="error" type="view" value="EditContentAssocPredicate"/>
+    </request-map>
+    <request-map uri="updateContentAssocPredicate">
+        <security auth="true" https="true"/>
+        <event invoke="updateContentAssocPredicate" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssocPredicate"/>
+        <response name="error" type="view" value="EditContentAssocPredicate"/>
+    </request-map>
+    <request-map uri="removeContentAssocPredicate">
+        <security auth="true" https="true"/>
+        <event invoke="removeContentAssocPredicate" path="" type="service"/>
+        <response name="success" type="view" value="EditContentAssocPredicate"/>
+        <response name="error" type="view" value="EditContentAssocPredicate"/>
+    </request-map>
+
+    <!-- ================ CharacterSet Requests ================= -->
+    <request-map uri="EditCharacterSet">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditCharacterSet"/>
+    </request-map>
+    <request-map uri="addCharacterSet">
+        <security auth="true" https="true"/>
+        <event invoke="createCharacterSet" path="" type="service"/>
+        <response name="success" type="view" value="EditCharacterSet"/>
+        <response name="error" type="view" value="EditCharacterSet"/>
+    </request-map>
+    <request-map uri="updateCharacterSet">
+        <security auth="true" https="true"/>
+        <event invoke="updateCharacterSet" path="" type="service"/>
+        <response name="success" type="view" value="EditCharacterSet"/>
+        <response name="error" type="view" value="EditCharacterSet"/>
+    </request-map>
+    <request-map uri="removeCharacterSet">
+        <security auth="true" https="true"/>
+        <event invoke="removeCharacterSet" path="" type="service"/>
+        <response name="success" type="view" value="EditCharacterSet"/>
+        <response name="error" type="view" value="EditCharacterSet"/>
+    </request-map>
+
+    <!-- ================ DataCategory Requests ================= -->
+    <request-map uri="EditDataCategory">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataCategory"/>
+    </request-map>
+    <request-map uri="addDataCategory">
+        <security auth="true" https="true"/>
+        <event invoke="createDataCategory" path="" type="service"/>
+        <response name="success" type="view" value="EditDataCategory"/>
+        <response name="error" type="view" value="EditDataCategory"/>
+    </request-map>
+    <request-map uri="updateDataCategory">
+        <security auth="true" https="true"/>
+        <event invoke="updateDataCategory" path="" type="service"/>
+        <response name="success" type="view" value="EditDataCategory"/>
+        <response name="error" type="view" value="EditDataCategory"/>
+    </request-map>
+    <request-map uri="removeDataCategory">
+        <security auth="true" https="true"/>
+        <event invoke="removeDataCategory" path="" type="service"/>
+        <response name="success" type="view" value="EditDataCategory"/>
+        <response name="error" type="view" value="EditDataCategory"/>
+    </request-map>
+    <!-- ================ DataResourceType Requests ================= -->
+    <request-map uri="EditDataResourceType">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceType"/>
+    </request-map>
+    <request-map uri="addDataResourceType">
+        <security auth="true" https="true"/>
+        <event invoke="createDataResourceType" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceType"/>
+        <response name="error" type="view" value="EditDataResourceType"/>
+    </request-map>
+    <request-map uri="updateDataResourceType">
+        <security auth="true" https="true"/>
+        <event invoke="updateDataResourceType" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceType"/>
+        <response name="error" type="view" value="EditDataResourceType"/>
+    </request-map>
+    <request-map uri="removeDataResourceType">
+        <security auth="true" https="true"/>
+        <event invoke="removeDataResourceType" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceType"/>
+        <response name="error" type="view" value="EditDataResourceType"/>
+    </request-map>
+
+    <!-- ================ DataResourceTypeAttr Requests ================= -->
+    <request-map uri="EditDataResourceTypeAttr">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditDataResourceTypeAttr"/>
+    </request-map>
+    <request-map uri="addDataResourceTypeAttr">
+        <security auth="true" https="true"/>
+        <event invoke="createDataResourceTypeAttr" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceTypeAttr"/>
+        <response name="error" type="view" value="EditDataResourceTypeAttr"/>
+    </request-map>
+    <request-map uri="removeDataResourceTypeAttr">
+        <security auth="true" https="true"/>
+        <event invoke="removeDataResourceTypeAttr" path="" type="service"/>
+        <response name="success" type="view" value="EditDataResourceTypeAttr"/>
+        <response name="error" type="view" value="EditDataResourceTypeAttr"/>
+    </request-map>
+    
+    <!-- ================ FileExtension Requests ================= -->
+    <request-map uri="EditFileExtension">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditFileExtension"/>
+    </request-map>
+    <request-map uri="addFileExtension">
+        <security auth="true" https="true"/>
+        <event invoke="createFileExtension" path="" type="service"/>
+        <response name="success" type="view" value="EditFileExtension"/>
+        <response name="error" type="view" value="EditFileExtension"/>
+    </request-map>
+    <request-map uri="updateFileExtension">
+        <security auth="true" https="true"/>
+        <event invoke="updateFileExtension" path="" type="service"/>
+        <response name="success" type="view" value="EditFileExtension"/>
+        <response name="error" type="view" value="EditFileExtension"/>
+    </request-map>
+    <request-map uri="removeFileExtension">
+        <security auth="true" https="true"/>
+        <event invoke="removeFileExtension" path="" type="service"/>
+        <response name="success" type="view" value="EditFileExtension"/>
+        <response name="error" type="view" value="EditFileExtension"/>
+    </request-map>
+    
+    <!-- ================ MetaDataPredicate Requests ================= -->
+    <request-map uri="EditMetaDataPredicate">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditMetaDataPredicate"/>
+    </request-map>
+    <request-map uri="addMetaDataPredicate">
+        <security auth="true" https="true"/>
+        <event invoke="createMetaDataPredicate" path="" type="service"/>
+        <response name="success" type="view" value="EditMetaDataPredicate"/>
+        <response name="error" type="view" value="EditMetaDataPredicate"/>
+    </request-map>
+    <request-map uri="updateMetaDataPredicate">
+        <security auth="true" https="true"/>
+        <event invoke="updateMetaDataPredicate" path="" type="service"/>
+        <response name="success" type="view" value="EditMetaDataPredicate"/>
+        <response name="error" type="view" value="EditMetaDataPredicate"/>
+    </request-map>
+    <request-map uri="removeMetaDataPredicate">
+        <security auth="true" https="true"/>
+        <event invoke="removeMetaDataPredicate" path="" type="service"/>
+        <response name="success" type="view" value="EditMetaDataPredicate"/>
+        <response name="error" type="view" value="EditMetaDataPredicate"/>
+    </request-map>
+    
+    <!-- ================ MimeType Requests ================= -->
+    <request-map uri="EditMimeType">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="EditMimeType"/>
+    </request-map>
+    <request-map uri="addMimeType">
+        <security auth="true" https="true"/>
+        <event invoke="createMimeType" path="" type="service"/>
+        <response name="success" type="view" value="EditMimeType"/>
+        <response name="error" type="view" value="EditMimeType"/>
+    </request-map>
+    <request-map uri="updateMimeType">
+        <security auth="true" https="true"/>
+        <event invoke="updateMimeType" path="" type="service"/>
+        <response name="success" type="view" value="EditMimeType"/>
+        <response name="error" type="view" value="EditMimeType"/>
+    </request-map>
+    <request-map uri="removeMimeType">
+        <security auth="true" https="true"/>
+        <event invoke="removeMimeType" path="" type="service"/>
+        <response name="success" type="view" value="EditMimeType"/>
+        <response name="error" type="view" value="EditMimeType"/>
+    </request-map>
+
+    <!-- ================ Redirect Content Requests ================= -->
+    <request-map uri="RedirectContent">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/redirectContent.bsh" path="" type="bsf"/>
+    </request-map>
+    <request-map uri="RedirectData">
+        <security auth="true" https="true"/>
+        <event invoke="org/ofbiz/content/redirectData.bsh" path="" type="bsf"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
-    <view-map name="main" type="jpublish" page="/main.ftl"/>
-    <view-map name="login" type="jpublish" page="/login.ftl"/>
-
-    <view-map name="FindWebSite" type="jpublish" page="/website/FindWebSite.ftl"/>
-    <view-map name="EditWebSite" type="jpublish" page="/website/EditWebSite.ftl"/>
-    <view-map name="EditWebSiteEmail" type="jpublish" page="/website/EditWebSiteEmail.ftl"/>
-    <view-map name="EditWebSiteParties" type="jpublish" page="/website/EditWebSiteParties.ftl"/>
-    <view-map name="EditWebSiteProdCatalogs" type="jpublish" page="/website/EditWebSiteProdCatalogs.ftl"/>
+    <view-map name="main" page="/main.ftl" type="jpublish"/>
+    <view-map name="login" page="/login.ftl" type="jpublish"/>
+    <view-map name="FindWebSite" page="/website/FindWebSite.ftl" type="jpublish"/>
+    <view-map name="EditWebSite" page="/website/EditWebSite.ftl" type="jpublish"/>
+    <view-map name="EditWebSiteEmail" page="/website/EditWebSiteEmail.ftl" type="jpublish"/>
+    <view-map name="EditWebSiteParties" page="/website/EditWebSiteParties.ftl" type="jpublish"/>
+    <view-map name="EditWebSiteProdCatalogs" page="/website/EditWebSiteProdCatalogs.ftl" type="jpublish"/>
+    <view-map name="RedirectContent" page="/content/RedirectContent.ftl" type="none"/>
+    <view-map name="EditContentType" page="/content/EditContentType.ftl" type="jpublish"/>
+    <view-map name="EditContentAssocType" page="/content/EditContentAssocType.ftl" type="jpublish"/>
+    <view-map name="EditContentRole" page="/content/EditContentRole.ftl" type="jpublish"/>
+    <view-map name="EditContentPurposeType" page="/content/EditContentPurposeType.ftl" type="jpublish"/>
+    <view-map name="EditContentTypeAttr" page="/content/EditContentTypeAttr.ftl" type="jpublish"/>
+    <view-map name="EditContentAssocPredicate" page="/content/EditContentAssocPredicate.ftl" type="jpublish"/>
+    <view-map name="EditDataResourceType" page="/data/EditDataResourceType.ftl" type="jpublish"/>
+    <view-map name="EditDataResourceTypeAttr" page="/data/EditDataResourceTypeAttr.ftl" type="jpublish"/>
+    <view-map name="EditDataCategory" page="/data/EditDataCategory.ftl" type="jpublish"/>
+    <view-map name="EditMetaDataPredicate" page="/data/EditMetaDataPredicate.ftl" type="jpublish"/>
+    <view-map name="EditCharacterSet" page="/data/EditCharacterSet.ftl" type="jpublish"/>
+    <view-map name="EditFileExtension" page="/data/EditFileExtension.ftl" type="jpublish"/>
+    <view-map name="EditMimeType" page="/data/EditMimeType.ftl" type="jpublish"/>
     <!-- end of view mappings -->
 </site-conf>

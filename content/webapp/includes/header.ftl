@@ -34,6 +34,8 @@
 <div class="row">
   <div class="col"><a href="<@ofbizUrl>/main</@ofbizUrl>" class="${selectedLeftClassMap.main?default(unselectedLeftClassName)}">Main</a></div>
   <div class="col"><a href="<@ofbizUrl>/FindWebSite</@ofbizUrl>" class="${selectedLeftClassMap.WebSite?default(unselectedLeftClassName)}">WebSites</a></div>
+  <div class="col"><a href="<@ofbizUrl>/RedirectContent</@ofbizUrl>" class="${selectedLeftClassMap.Content?default(unselectedLeftClassName)}">Content</a></div>
+  <div class="col"><a href="<@ofbizUrl>/RedirectData</@ofbizUrl>" class="${selectedLeftClassMap.DataResource?default(unselectedLeftClassName)}">DataResource</a></div>
 
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.login?default(unselectedRightClassName)}">Logout</a></div>

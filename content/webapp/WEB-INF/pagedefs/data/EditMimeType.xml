@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main_def</template> 
+    <property name="title">Edit Mime Type</property>
+    <property name="headerItem">Data</property>    
+    <property name="entityName">MimeType</property>    
+    <property name="formDefFile">/data/DataForms.xml</property>    
+    <property name="subMenu">/includes/data_menu.ftl</property>    
+</page>
