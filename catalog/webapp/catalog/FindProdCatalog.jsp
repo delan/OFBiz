@@ -53,6 +53,7 @@
     <td><div class="tabletext"><b>OneInv Facility?</b></div></td>
     <td><div class="tabletext"><b>Check Inv?</b></div></td>
     <td><div class="tabletext"><b>Reserve Inv?</b></div></td>
+    <td><div class="tabletext"><b>Reserve Order</b></div></td>
     <td><div class="tabletext"><b>Require Inv?</b></div></td>
     <td><div class="tabletext"><b>Use QuickAdd?</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
@@ -61,6 +62,8 @@
   <tr valign="middle">
     <%GenericValue facility = prodCatalog.getRelatedOne("Facility");%>
     <%if (facility != null) pageContext.setAttribute("facility", facility);%>
+    <%GenericValue reserveOrderEnum = prodCatalog.getRelatedOne("ReserveOrderEnumeration");%>
+    <%if (reserveOrderEnum != null) pageContext.setAttribute("reserveOrderEnum", reserveOrderEnum);%>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="catalogName"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="title"/></div></td>
@@ -69,6 +72,7 @@
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="oneInventoryFacility"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="checkInventory"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveInventory"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="reserveOrderEnum" field="description"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="requireInventory"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="useQuickAdd"/></div></td>
     <td>

@@ -71,11 +71,15 @@
       <field name="oneInventoryFacility" type="indicator"></field>
       <field name="checkInventory" type="indicator"></field>
       <field name="reserveInventory" type="indicator"></field>
+      <field name="reserveOrderEnumId" type="indicator"></field>
       <field name="requireInventory" type="indicator"></field>
       <field name="useQuickAdd" type="indicator"></field>
       <prim-key field="prodCatalogId"/>
       <relation type="one" fk-name="PROD_CAT_FACILITY" rel-entity-name="Facility">
         <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CAT_RORDENUM" title="ReserveOrder" rel-entity-name="Enumeration">
+        <key-map field-name="reserveOrderEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="many" rel-entity-name="ProdCatalogPromoAppl">
         <key-map field-name="prodCatalogId"/>
@@ -642,6 +646,8 @@
       <field name="productId" type="id"></field>
       <field name="partyId" type="id"></field>
       <field name="statusId" type="id"></field>
+      <field name="dateReceived" type="date-time"></field>
+      <field name="expireDate" type="date-time"></field>
       <field name="facilityId" type="id"></field>
       <field name="containerId" type="id"></field>
       <field name="lotId" type="id"></field>

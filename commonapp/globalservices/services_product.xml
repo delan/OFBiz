@@ -122,6 +122,7 @@
         <attribute name="oneInventoryFacility" type="String" mode="IN" optional="true"/>
         <attribute name="checkInventory" type="String" mode="IN" optional="true"/>
         <attribute name="reserveInventory" type="String" mode="IN" optional="true"/>
+        <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
     </service>
@@ -136,6 +137,7 @@
         <attribute name="oneInventoryFacility" type="String" mode="IN" optional="true"/>
         <attribute name="checkInventory" type="String" mode="IN" optional="true"/>
         <attribute name="reserveInventory" type="String" mode="IN" optional="true"/>
+        <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
     </service>
@@ -551,6 +553,8 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="dateReceived" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="expireDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="containerId" type="String" mode="IN" optional="true"/>
         <attribute name="lotId" type="String" mode="IN" optional="true"/>
@@ -570,6 +574,8 @@
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="statusId" type="String" mode="IN" optional="true"/>
+        <attribute name="dateReceived" type="java.sql.Timestamp" mode="IN" optional="true"/>
+        <attribute name="expireDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
         <attribute name="facilityId" type="String" mode="IN" optional="true"/>
         <attribute name="containerId" type="String" mode="IN" optional="true"/>
         <attribute name="lotId" type="String" mode="IN" optional="true"/>
@@ -585,6 +591,7 @@
         <description>Delete an InventoryItem</description>
         <attribute name="inventoryItemId" type="String" mode="IN" optional="false"/>
     </service>
+    
     <service name="getProductInventoryAvailable" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="getProductInventoryAvailable" auth="false">
         <description>Get Inventory Availability for a Product</description>

@@ -41,6 +41,7 @@
     String prodCatalogId = request.getParameter("prodCatalogId");
     GenericValue prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
     GenericValue facility = null;
+    GenericValue reserveOrderEnum = null;
     if(prodCatalog == null) {
         tryEntity = false;
     } else {
@@ -48,11 +49,17 @@
 
         facility = prodCatalog.getRelatedOne("Facility");
         if (facility != null) pageContext.setAttribute("facility", facility);
+
+        reserveOrderEnum = prodCatalog.getRelatedOne("ReserveOrderEnumeration");
+        if (reserveOrderEnum != null) pageContext.setAttribute("reserveOrderEnum", reserveOrderEnum);
     }
 
     //facilities
     Collection facilities = delegator.findAll("Facility");
     if (facilities != null) pageContext.setAttribute("facilities", facilities);
+
+    Collection reserveOrderEnums = delegator.findByAnd("Enumeration", UtilMisc.toMap("enumTypeId", "INV_RES_ORDER"));
+    if (reserveOrderEnums != null) pageContext.setAttribute("reserveOrderEnums", reserveOrderEnums);
 %>
 
 <br>
@@ -159,6 +166,19 @@
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='reserveInventory' default="Y"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>
+        </td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Reserve Order:</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+          <select name='reserveOrderEnumId'>
+              <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveOrderEnumId"/>'><ofbiz:inputvalue entityAttr="reserveOrderEnum" field="description"/> <ofbiz:entityfield attribute="prodCatalog" field="reserveOrderEnumId" prefix="[" suffix="]"/></option>
+              <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveOrderEnumId"/>'>----</option>
+              <ofbiz:iterator name="newReserveOrderEnum" property="reserveOrderEnums">
+                <option value='<ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="enumId"/>'><ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="description"/> [<ofbiz:inputvalue entityAttr="newReserveOrderEnum" field="enumId"/>]</option>
+              </ofbiz:iterator>
+          </select>
         </td>
       </tr>
       <tr>
