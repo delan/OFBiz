@@ -11,9 +11,11 @@
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
 
+    <handler name="jsp" type="view" class="org.ofbiz.core.view.JspViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
     <handler name="http" type="view" class="org.ofbiz.core.view.HttpViewHandler"/>
+    <handler name="wsp" type="view" class="org.ofbiz.core.view.WspViewHandler"/>
 
     <!-- Events run from here for the first hit in a visit -->
     <firstvisit>
@@ -520,6 +522,7 @@
 
     <view-map name="quickadd" type="region"/>
     <view-map name="category" type="region"/>
+    <!-- Uncomment this for WSP: <view-map name="category" type="wsp" page="/catalog/category.jsp"/> -->
     <view-map name="product" type="region"/>
     <view-map name="keywordsearch" type="region"/>
 

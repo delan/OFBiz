@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+
+<!-- Configuration file for a WSPublisher site -->
+<wsp>
+
+    <name>WSPublisher Site</name>
+
+    <page-root>.</page-root>
+    <action-root>.</action-root>
+    <static-root>.</static-root>
+
+    <action-identifier>wsp-action</action-identifier>
+
+    <default-page>index.html</default-page>
+
+    <!-- Make the XML editor work. -->
+    <character-encoding-map path="*.html">
+            <page-encoding>UTF-8</page-encoding>
+            <template-encoding>UTF-8</template-encoding>
+            <request-encoding>UTF-8</request-encoding>
+            <response-encoding>UTF-8</response-encoding>
+    </character-encoding-map>
+    <character-encoding-map path="*.xml">
+            <page-encoding>UTF-8</page-encoding>
+            <template-encoding>UTF-8</template-encoding>
+            <request-encoding>UTF-8</request-encoding>
+            <response-encoding>UTF-8</response-encoding>
+    </character-encoding-map>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        Modules
+     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!-- This provides the "edit this page" functionality -->
+    <module name="Edit" classname="com.wspublisher.modules.edit.EditModule">
+        <!--
+                Override default PageEditorManager with:
+                <page-editor-manager classname="mydomain.MyPageEditorManager">
+        -->
+        <page-editor-manager>
+            <page-editor name="TextEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/text/decoration-header.html</decoration-header>
+                <decoration-footer>admin/editors/text/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor name="IEHTMLEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/html/editall/decoration-header.html</decoration-header>
+                <decoration-footer>admin/editors/html/editall/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor name="TextHTMLEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/html/text/decoration-header.html</decoration-header>
+                <decoration-footer>admin/editors/html/text/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor name="MozHTMLEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/html/editall/decoration-header.html</decoration-header>
+                <decoration-footer>admin/editors/html/editall/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor name="XMLEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/xml/decoration-header.html</decoration-header>
+                <decoration-footer>admin/editors/xml/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor name="OfbizOrderEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/ofbiz/order-header.html</decoration-header>
+                <decoration-footer>admin/editors/ofbiz/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor name="OfbizProductEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/ofbiz/product-header.html</decoration-header>
+                <decoration-footer>admin/editors/ofbiz/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor name="OfbizCatalogEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/ofbiz/catalog-header.html</decoration-header>
+                <decoration-footer>admin/editors/ofbiz/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor name="OfbizCategoryEditor" classname="com.wspublisher.modules.edit.GenericPageEditor">
+                <decoration-header>admin/editors/ofbiz/category-header.html</decoration-header>
+                <decoration-footer>admin/editors/ofbiz/decoration-footer.html</decoration-footer>
+            </page-editor>
+            <page-editor-selector classname="com.wspublisher.modules.edit.DefaultPageEditorSelector">
+                <default-editor>TextEditor</default-editor>
+            </page-editor-selector>
+        </page-editor-manager>
+
+        <!--
+                These parameters are for sending out notification emails.  Please
+                change them to suit your environment.
+
+                <from-email> is the email address that will appear in the "From:"
+                field of edit notification emails.  If it is not specified, no
+                emails will be sent.
+
+                <group-email-property> is the property to look for on each group to
+                determine whether or not to send email to all the users in that
+                group.  It is optional; the value shown below is the default.
+
+                <smtp-server> is the SMTP server via which to send the notification
+                emails.  It is optional; the value shown below is the default.
+        -->
+        <notification>
+                <from-email>edit-notification@wspublisher.com</from-email>
+                <group-email-property>wsp.edit.notify</group-email-property>
+                <smtp-server>localhost</smtp-server>
+        </notification>
+    </module>
+
+    <!-- Search  -->
+    <module classname="com.wspublisher.search.SearchModule" />
+
+    <!-- This provides Web services as objects in Velocity templates -->
+    <module classname="com.wspublisher.modules.soapclient.SOAPClientModule">
+        <web-service name="google">
+                <stub classname="com.wspublisher.modules.soapclient.google.GoogleSearchServiceLocator"/>
+        </web-service>
+        <!--
+        <web-service name="wsp">
+                <generate-proxy classname="com.wspublisher.modules.soapcommon.WSPPublishingService">
+                        <soap-server-url>http://localhost/einnovation-web/</soap-server-url>
+                        <object-uri>WSPPublishingService</object-uri>
+                </generate-proxy>
+        </web-service>
+        -->
+    </module>
+
+    <!-- This provides WSP repository get/put as a Web service. -->
+    <module classname="com.wspublisher.modules.soapserver.SOAPServerModule"/>
+
+    <!-- This provides the administration interface. -->
+    <module name="admin" classname="com.wspublisher.modules.admin.AdminModule">
+        <!--
+                If you wish to support FTP uploads, you will need to supply the FTP
+                URL of the root directory below, as follows:
+
+                <root-ftp-url>ftp://username@hostname/path/to/site</root-ftp-url>
+        -->
+    </module>
+
+    <!--
+             Location of the FormProc configuration file relative to the context directory
+    <module classname="org.jpublish.module.formproc.FormProcModule">
+            <config>WEB-INF/formproc.xml</config>
+    </module>
+
+    <formproc-config>WEB-INF/formproc.xml</formproc-config>
+    -->
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        Page Manager
+     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <page-manager classname="com.wspublisher.pagemanager.FileSystemPageManagerWithDefault" />
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        Page Finder
+     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!--
+            The default PageFinderFactory is org.jpublish.finder.DefaultPageFinderFactory. The
+            class it instantiates can be overridden as follows. The class must extend
+            org.jpublish.finder.AbstractPageFinder.
+
+                    <page-finder-factory>
+                            <page-finder classname="mydomain.MyPageFinder">
+                                    <my-config>...</my-config>
+                            </page-finder>
+                    </page-finder-factory>
+
+            Alternatively, the factory itself can be overridden as follows:
+
+                    <page-finder-factory classname="mydomin.MyPageFinderFactory">
+                            <my-config>...</my-config>
+                    </page-finder-factory>
+    -->
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+            Page Wrapper
+     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+    <!--
+            The default PageWrapperFactory is org.jpublish.page.BasicPageFinderFactory. The
+            class it instantiates can be overridden as follows. The class must extend
+            org.jpublish.page.AbstractPageWrapper.
+
+                    <page-wrapper-factory>
+                            <page-wrapper classname="mydomain.MyPageWrapper"/>
+                                    <my-config>...</my-config>
+                            </page-wrapper>
+                    </page-wrapper-factory>
+
+            Alternatively, the factory itself can be overridden as follows:
+
+                    <page-wrapper-factory classname="mydomin.MyPageFinderFactory">
+                            <my-config>...</my-config>
+                    </page-wrapper-factory>
+    -->
+    <page-wrapper-factory classname="com.wspublisher.modules.edit.EditablePageWrapperFactory">
+        <page-wrapper classname="com.wspublisher.modules.edit.EditablePageWrapper">
+            <edit-toolbar>admin/editors/edittoolbar.html</edit-toolbar>
+        </page-wrapper>
+    </page-wrapper-factory>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        User Manager
+     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <user-manager classname="com.wspublisher.users.filesystem.ConfigurableFileSystemUserManager">
+        <user-directory>WEB-INF/users</user-directory>
+        <group-directory>WEB-INF/groups</group-directory>
+    </user-manager>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        Generators
+     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!-- this is needed only if other generators are called for -->
+    <generator classname="com.wspublisher.generators.VelocityGenerator"/>
+    <generator classname="com.wspublisher.generators.FreeMarkerGenerator"/>
+
+    <generator classname="com.wspublisher.generators.FileGenerator"/>
+
+    <generator classname="com.wspublisher.generators.XMLGenerator">
+        <stylesheet-root>stylesheets</stylesheet-root>
+    </generator>
+
+    <generator classname="com.wspublisher.generators.XHtmlGenerator" />
+    <generator classname="com.wspublisher.generators.PdfGenerator" />
+    <generator classname="com.wspublisher.generators.CachedGenerator" />
+
+    <generator name="jsp" classname="com.wspublisher.generators.JspGenerator">
+        <jsp-servlet-class>com.caucho.jsp.JspServlet</jsp-servlet-class>
+        <jsp-file-attribute>caucho.jsp.jsp-file</jsp-file-attribute>
+    </generator>
+
+    <default-error-handlers>
+        <error-handler classname="com.wspublisher.error.FileNotFoundErrorHandler"/>
+        <error-handler classname="com.wspublisher.error.HtmlErrorHandler"/>
+    </default-error-handlers>
+
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        Repositories
+            make cvs_repository the default one for our demo web site
+     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <repository name="cvs_repository" classname="com.wspublisher.modules.cvsrepository.CVSRepository" >
+        <write-allowed>true</write-allowed>
+        <cvsroot>:pserver:wspdemo@localhost:/home/cvs/wspdemo</cvsroot>
+        <password>demowsp</password>
+        <root>.</root>
+    </repository>
+
+
+    <!-- The default file system repository. -->
+    <repository name="fs_repository" classname="org.jpublish.repository.filesystem.FileSystemRepository" default="true">
+        <root>.</root>
+        <write-allowed>true</write-allowed>
+    </repository>
+
+    <!--
+            used in JSP Pages 
+    -->
+    <repository name="chain_repository" classname="org.jpublish.repository.filesystem.ChainRepository">
+        <root>.</root>
+        <write-allowed>false</write-allowed>
+    </repository>
+
+    <!-- MIME Type Map configuration -->
+    <mime-type-map>
+        <mime-type type="text/plain" extensions="txt"/>
+        <mime-type type="text/css"   extensions="css"/>
+        <mime-type type="text/html"  extensions="htm,html,jsp"/>
+        <mime-type type="text/xml"   extensions="xml,xconf"/>
+        <mime-type type="text/xsl"   extensions="xsl"/>
+        <mime-type type="image/gif"  extensions="gif"/>
+        <mime-type type="image/jpeg" extensions="jpg,jpeg"/>
+        <mime-type type="image/png" extensions="png"/>
+        <mime-type type="image/svg+xml" extensions="svg"/>
+    </mime-type-map>
+
+    <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+        Actions
+     - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+    <!--
+         Load all Web services every time anyone requests a page.  This action
+         is defined in the SOAP module.
+    -->
+    <global-action name="load-services"/> <!-- from the SOAPModule -->
+
+    <!--
+            Protect the /admin directory from users that do not have the
+            administrative privilege.
+    -->
+    <path-action path="/admin/*" name="enforceAdminPrivilege">
+        <!--
+                This is the path to which to redirect if the user does not have
+                the appropriate permission.  Defaults to /admin/logon.html.
+        -->
+        <login-path>/admin/logon.html</login-path>
+
+        <!--
+                This is the permission that is required in order to view the
+                specified pages.  Defaults to wsp.administration.
+        -->
+        <permission>wsp.administration</permission>
+
+        <!--
+                These are the paths within /admin that are excluded from the
+                permission check:
+
+                        - logon.html:   the login page
+                        - dologon.html: the target of the login form
+                        - editors/*:    these require wsp.edit, not wsp.administration
+                        - images/*:     these are images required by editors, etc.
+        -->
+        <exclude>/admin/logon.html</exclude>
+        <exclude>/admin/dologon.html</exclude>
+        <exclude>/admin/editors/*</exclude>
+        <exclude>/admin/images/*</exclude>
+        <exclude>/admin/help/*</exclude>
+    </path-action>
+</wsp>
