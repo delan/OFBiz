@@ -107,6 +107,7 @@
         <mkdir dir="${build.dir}/rules/META-INF" />
         <mkdir dir="${build.dir}/datafile/META-INF" />
         <mkdir dir="${build.dir}/minilang/META-INF" />
+        <mkdir dir="${build.dir}/start/META-INF" />
         <mkdir dir="${lib.dir}" />
     </target>
 	
@@ -249,7 +250,14 @@
         <copy todir="${build.dir}/datafile">
           <fileset dir="${src.dir}/datafile" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
-
+        
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/start">            
+            <src path="${src.dir}/start" />
+        </javac>
+        <copy todir="${build.dir}/start">
+          <fileset dir="${src.dir}/start" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
+        </copy>
+               
         <!--
         <javac debug="on" destdir="${build.dir}/crypto">
             <classpath>
@@ -275,6 +283,8 @@
         <jar jarfile="${lib.dir}/${name}-rules${ofbiz.version}.jar" basedir="${build.dir}/rules" />
         <jar jarfile="${lib.dir}/${name}-datafile${ofbiz.version}.jar" basedir="${build.dir}/datafile" />
         <jar jarfile="${lib.dir}/${name}-minilang${ofbiz.version}.jar" basedir="${build.dir}/minilang" />
+        <jar jarfile="../ofbiz.jar" manifest="${src.dir}/start/org/ofbiz/core/start/MANIFEST.MF" basedir="${build.dir}/start" />
+        
         <!-- <jar jarfile="${lib.dir}/${name}-crypto${ofbiz.version}.jar" basedir="${build.dir}/crypto" /> -->
     </target>
 
