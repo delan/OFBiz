@@ -594,6 +594,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToEnv(curOperElem, simpleMethod));
                 } else if ("string-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.StringToField(curOperElem, simpleMethod));
+                } else if ("string-to-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.StringToList(curOperElem, simpleMethod));
                 } else if ("to-string".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.ToString(curOperElem, simpleMethod));
                 } else if ("clear-field".equals(nodeName)) {

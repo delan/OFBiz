@@ -1206,7 +1206,7 @@ map in the method environment.</p>
 
 <p><b><u>string-to-field</u></b></p>
 
-<p>The string-to-field tag put the inlined string value in the specified field.</p>
+<p>The string-to-field tag puts the inlined string value in the specified field.</p>
 
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
@@ -1226,6 +1226,40 @@ map in the method environment.</p>
 <tr>
     <td>field-name</td><td>Y</td>
     <td>The name (key) of the map field to use.</td>
+</tr>
+<tr>
+    <td>arg-list-name</td><td>N</td>
+    <td>The name (key) of a list to use for argument values for any place
+    holders in the string. Formatting is done with the Java MessageFormat class.
+    Place holders, for example, are denoted as follows: {0}, {1}, etc and can
+    appear anywhere in the string.</td>
+</tr>
+</table>
+
+<p><b><u>string-to-list</u></b></p>
+
+<p>The string-to-list tag appends the inlined string value in the specified List.</p>
+
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>string</td><td>Y</td>
+    <td>The string value to append to the list.</td>
+</tr>
+<tr>
+    <td>list-name</td><td>Y</td>
+    <td>The name of the list in the method environment.</td>
+</tr>
+<tr>
+    <td>arg-list-name</td><td>N</td>
+    <td>The name (key) of a list to use for argument values for any place
+    holders in the string. Formatting is done with the Java MessageFormat class.
+    Place holders, for example, are denoted as follows: {0}, {1}, etc and can
+    appear anywhere in the string.</td>
 </tr>
 </table>
 
