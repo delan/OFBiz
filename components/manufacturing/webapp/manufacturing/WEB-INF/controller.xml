@@ -370,22 +370,22 @@
     </request-map> 
     <request-map uri="LookupRouting">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupRouting"/>
+        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupRouting"/>
     	<response name="success" type="view" value="GenericLookup"/>
     </request-map> 
     <request-map uri="LookupRoutingTask">
     	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupRoutingTask"/>
+        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupRoutingTask"/>
     	<response name="success" type="view" value="GenericLookup"/>
     </request-map> 
     <request-map uri="LookupVirtualProduct">
         <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupVirtualProduct"/>
+        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupVirtualProduct"/>
         <response name="success" type="view" value="GenericLookup"/>
     </request-map>
     <request-map uri="LookupProduct">
         <security auth="true" https="true"/>
-        <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupProduct"/>
+        <event type="java" path="org.ofbiz.manufacturing.ManufacLookupParams" invoke="lookupProduct"/>
         <response name="success" type="view" value="GenericLookup"/>
     </request-map>
 
