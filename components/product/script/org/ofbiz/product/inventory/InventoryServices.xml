@@ -455,6 +455,7 @@
                     <field-to-field field-name="inventoryItemId" map-name="lastNonSerInventoryItem" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="reserveOrderEnumId" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantity" to-map-name="reserveOiiMap"/>
+                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="quantityNotAvailable" to-map-name="reserveOiiMap"/>
                     <field-to-field field-name="reservedDatetime" map-name="parameters" to-map-name="reserveOiiMap"/>
                     <env-to-field env-name="promisedDatetime" field-name="promisedDatetime" map-name="reserveOiiMap"/>
                     <call-service service-name="reserveOrderItemInventory" in-map-name="reserveOiiMap"/>
