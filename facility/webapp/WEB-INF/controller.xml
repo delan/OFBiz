@@ -418,7 +418,13 @@
     <request-map uri="ReceiveReturn">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="ReceiveReturn"/>
-    </request-map>      
+    </request-map>
+    <request-map uri="receiveReturnedProduct">
+        <security https="true" auth="true"/>
+        <event type="service-multi" path="" invoke="receiveInventoryProduct"/>
+        <response name="success" type="view" value="ReceiveReturn"/>
+        <response name="error" type="view" value="ReceiveReturn"/>
+    </request-map>         
                      
     <!-- ================ Picklist Requests ================= -->
     <request-map uri="PicklistOptions"><security https="true" auth="true"/>

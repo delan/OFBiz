@@ -78,7 +78,7 @@
 
 <#-- Multi-Item Return Receiving -->
 <#if returnHeader?has_content>
-  <form method="post" action="<@ofbizUrl>/receiveInventoryProduct/ReceiveReturn</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
+  <form method="post" action="<@ofbizUrl>/receiveReturnedProduct</@ofbizUrl>" name='selectAllForm' style='margin: 0;'>
     <#-- general request fields -->
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
     <input type="hidden" name="returnId" value="${requestParameters.returnId?if_exists}">   
@@ -110,8 +110,7 @@
           <input type="hidden" name="returnId_o_${rowCount}" value="${returnItem.returnId}">
           <input type="hidden" name="returnItemSeqId_o_${rowCount}" value="${returnItem.returnItemSeqId}"> 
           <input type="hidden" name="facilityId_o_${rowCount}" value="${requestParameters.facilityId?if_exists}">       
-          <input type="hidden" name="datetimeReceived_o_${rowCount}" value="${now}">
-          <input type="hidden" name="quantityRejected_o_${rowCount}" value="0">
+          <input type="hidden" name="datetimeReceived_o_${rowCount}" value="${now}">          
           <input type="hidden" name="comments_o_${rowCount}" value="Returned Item RA# ${returnItem.returnId}">
           <tr>
             <td colspan="2"><hr class="sepbar"></td>

@@ -503,43 +503,45 @@
     	<make-value entity-name="InventoryItem" value-name="lookupPKMap"/>
     	<set-pk-fields value-name="lookupPKMap" map-name="parameters"/>
     	<find-by-primary-key entity-name="InventoryItem" map-name="lookupPKMap" value-name="inventoryItem"/>
+    	<if-compare field-name="inventoryItemTypeId" map-name="inventoryItem" operator="equals" value="NON_SERIAL_INV_ITEM">    	
+	    	<!-- now find all items related by product/facility -->
+   		 	<field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="lookupMap"/>
+    		<field-to-field field-name="productId" map-name="inventoryItem" to-map-name="lookupMap"/>
+    		<string-to-field field-name="inventoryItemTypeId" map-name="lookupMap" string="NON_SERIAL_INV_ITEM"/>
+    		<find-by-and entity-name="InventoryItem" map-name="lookupMap" list-name="inventoryItems"/>    	
     	
-    	<!-- now find all items related by product/facility -->
-    	<field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="lookupMap"/>
-    	<field-to-field field-name="productId" map-name="inventoryItem" to-map-name="lookupMap"/>
-    	<find-by-and entity-name="InventoryItem" map-name="lookupMap" list-name="inventoryItems"/>
+    		<!-- find all items which have a negative ATP; find their current reservations -->    	
+    		<iterate list-name="inventoryItems" entry-name="item">    		
+    			<if-compare field-name="availableToPromise" map-name="item" operator="less" value="0">
+    				<get-related value-name="item" relation-name="OrderItemInventoryRes" list-name="relatedRes"/>
+    				<list-to-list list-name="relatedRes" to-list-name="reservations"/>
+    			</if-compare>
+    		</iterate>
     	
-    	<!-- find all items which have a negative ATP; find their current reservations -->    	
-    	<iterate list-name="inventoryItems" entry-name="item">    		
-    		<if-compare field-name="availableToPromise" map-name="item" operator="less" value="0">
-    			<get-related value-name="item" relation-name="OrderItemInventoryRes" list-name="relatedRes"/>
-    			<list-to-list list-name="relatedRes" to-list-name="reservations"/>
-    		</if-compare>
-    	</iterate>
-    	
-    	<!-- sort the list by date -->    	
-    	<order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
-    	        	
-    	<iterate list-name="reservations" entry-name="oiir">
-    		<!-- cancel the reservation -->
-   			<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
-   			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
-   			<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>   			
-            <call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
-            <clear-field field-name="cancelOiirMap"/>
+   		 	<!-- sort the list by date -->    	
+    		<order-value-list list-name="reservations" order-by-list-name="reservedDatetime"/>
+    	    	
+    		<iterate list-name="reservations" entry-name="oiir">
+    			<!-- cancel the reservation -->
+   				<field-to-field field-name="orderId" map-name="oiir" to-map-name="cancelOiirMap"/>
+   				<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="cancelOiirMap"/>
+   				<field-to-field field-name="inventoryItemId" map-name="oiir" to-map-name="cancelOiirMap"/>   			
+           	 	<call-service service-name="cancelOrderItemInventoryRes" in-map-name="cancelOiirMap"/>
+            	<clear-field field-name="cancelOiirMap"/>
 
-   			<!-- re-reserve the cancelled item -->
-    		<!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
-    		<field-to-field field-name="productId" map-name="inventoryItem" to-map-name="resMap"/>
-    		<field-to-field field-name="orderId" map-name="oiir" to-map-name="resMap"/>
-    		<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="resMap"/>
-    		<field-to-field field-name="quantity" map-name="oiir" to-map-name="resMap"/>
-    		<field-to-field field-name="reservedDatetime" map-name="oiir" to-map-name="resMap"/>
-    		<field-to-field field-name="reserveOrderEnumId" map-name="oiir" to-map-name="resMap"/>
-    		<string-to-field field-name="requireInventory" map-name="resMap" string="N"/>    		
-    		<call-service service-name="reserveProductInventory" in-map-name="resMap"/>
-    		<clear-field field-name="resMap"/>
-    	</iterate>    	    	    	    	    	
+   				<!-- re-reserve the cancelled item -->
+    			<!-- require inventory is N because it had to be N to begin with to have a negative ATP -->
+    			<field-to-field field-name="productId" map-name="inventoryItem" to-map-name="resMap"/>
+    			<field-to-field field-name="orderId" map-name="oiir" to-map-name="resMap"/>
+    			<field-to-field field-name="orderItemSeqId" map-name="oiir" to-map-name="resMap"/>
+    			<field-to-field field-name="quantity" map-name="oiir" to-map-name="resMap"/>
+    			<field-to-field field-name="reservedDatetime" map-name="oiir" to-map-name="resMap"/>
+    			<field-to-field field-name="reserveOrderEnumId" map-name="oiir" to-map-name="resMap"/>
+    			<string-to-field field-name="requireInventory" map-name="resMap" string="N"/>    		
+    			<call-service service-name="reserveProductInventory" in-map-name="resMap"/>
+    			<clear-field field-name="resMap"/>
+    		</iterate>
+    	</if-compare>
     </simple-method>
     
     <!-- Inventory Transfer Services -->
