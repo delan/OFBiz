@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.3 2003/12/06 00:55:20 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.4 2003/12/06 08:15:28 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -37,6 +37,8 @@ import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
@@ -52,7 +54,7 @@ import org.ofbiz.service.ServiceUtil;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -74,11 +76,18 @@ public class EntitySyncServices {
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         
         String entitySyncId = (String) context.get("entitySyncId");
+        // this is the other part of the history PK, leave null until we create the history object
+        Timestamp startDate = null;
         
         try {
             GenericValue entitySync = delegator.findByPrimaryKey("EntitySync", UtilMisc.toMap("entitySyncId", entitySyncId));
             if (entitySync == null) {
                 return ServiceUtil.returnError("Not running EntitySync [" + entitySyncId + "], no record found with that ID.");
+            }
+            
+            String targetServiceName = entitySync.getString("targetServiceName");
+            if (UtilValidate.isEmpty(targetServiceName)) {
+                return ServiceUtil.returnError("Not running EntitySync [" + entitySyncId + "], no targetServiceName is specified, where do we send the data?");
             }
             
             // check to see if this sync is already running, if so return error
@@ -91,15 +100,6 @@ public class EntitySyncServices {
             Map startEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING"));
             if (ModelService.RESPOND_ERROR.equals(startEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
                 return ServiceUtil.returnError("Could not start Entity Sync service, could not mark as running", null, null, startEntitySyncRes);
-            }
-            
-            // TODO: create history record, should run in own tx
-            
-            
-            
-            String targetServiceName = entitySync.getString("targetServiceName");
-            if (UtilValidate.isEmpty(targetServiceName)) {
-                return ServiceUtil.returnError("Not running EntitySync [" + entitySyncId + "], no targetServiceName is specified, where do we send the data?");
             }
             
             Timestamp lastSuccessfulSynchTime = entitySync.getTimestamp("lastSuccessfulSynchTime");
@@ -134,6 +134,24 @@ public class EntitySyncServices {
                 }
             }
             
+            // create history record, should run in own tx
+            Map initialHistoryRes = dispatcher.runSync("createEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", "ESR_RUNNING", "beginningSynchTime", currentRunStartTime));
+            if (ServiceUtil.isError(initialHistoryRes)) {
+                String errorMsg = "Not running EntitySync [" + entitySyncId + "], could not create EntitySyncHistory";
+                List errorList = new LinkedList();
+                saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher);
+                return ServiceUtil.returnError(errorMsg, errorList, null, initialHistoryRes);
+            }
+            startDate = (Timestamp) initialHistoryRes.get("startDate");
+
+            long numInserted = 0;
+            long numUpdated = 0;
+            long numNotUpdated = 0;
+            long numRemoved = 0;
+            long numAlreadyRemoved = 0;
+            long totalRowsToStore = 0;
+            long totalRowsToRemove = 0;
+            
             // increment starting time to run until now
             while (currentRunStartTime.before(nowTimestamp)) {
                 Timestamp currentRunEndTime = new Timestamp(currentRunStartTime.getTime() + splitMillis);
@@ -142,15 +160,81 @@ public class EntitySyncServices {
                 }
                 
                 // TODO: make sure tx times are indexed somehow
+                // TODO: save info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
                 
-                // TODO: iterate through entities, get all records with tx stamp in the current time range, put all in a single list
+                // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
+                List valuesToStore = new LinkedList();
+                Iterator entityModelToUseIter = entityModelToUseList.iterator();
+                while (entityModelToUseIter.hasNext()) {
+                    ModelEntity modelEntity = (ModelEntity) entityModelToUseIter.next();
+                    // find all instances of this entity with the STAMP_TX_FIELD != null, sort ascending to get lowest/oldest value first, then grab first and consider as candidate currentRunStartTime
+                    EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
+                            new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
+                            new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
+                    EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_FIELD));
+                    GenericValue nextValue = null;
+                    while ((nextValue = (GenericValue) eli.next()) != null) {
+                        valuesToStore.add(nextValue);
+                    }
+                    eli.close();
+                }
                 
                 // TODO: get all removed items from the given time range, add to list for those
+                List keysToRemove = new LinkedList();
                 
-                // TODO: call service named on EntitySync
+                // grab some totals before calling...
+                long totalRowsToStoreCur = valuesToStore.size();
+                long totalRowsToRemoveCur = keysToRemove.size();
+
+                totalRowsToStore += totalRowsToStoreCur;
+                totalRowsToRemove += totalRowsToRemoveCur;
                 
-                // TODO: store result of service call on history with results so far, should run in own tx
-                // TODO: store latest result on EntitySync, ie update lastSuccessfulSynchTime, should run in own tx
+                // call service named on EntitySync
+                Map remoteStoreResult = dispatcher.runSync(targetServiceName, UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove));
+                if (ServiceUtil.isError(remoteStoreResult)) {
+                    String errorMsg = "Error running EntitySync [" + entitySyncId + "], call to store service [" + targetServiceName + "] failed.";
+                    List errorList = new LinkedList();
+                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_OTHER_ERROR", errorList, dispatcher);
+                    return ServiceUtil.returnError(errorMsg, errorList, null, remoteStoreResult);
+                }
+                
+                long numInsertedCur = remoteStoreResult.get("numInserted") == null ? 0 : ((Long) remoteStoreResult.get("numInserted")).longValue();
+                long numUpdatedCur = remoteStoreResult.get("numUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numUpdated")).longValue();
+                long numNotUpdatedCur = remoteStoreResult.get("numNotUpdated") == null ? 0 : ((Long) remoteStoreResult.get("numNotUpdated")).longValue();
+                long numRemovedCur = remoteStoreResult.get("numRemoved") == null ? 0 : ((Long) remoteStoreResult.get("numRemoved")).longValue();
+                long numAlreadyRemovedCur = remoteStoreResult.get("numAlreadyRemoved") == null ? 0 : ((Long) remoteStoreResult.get("numAlreadyRemoved")).longValue();
+                
+                numInserted += numInsertedCur;
+                numUpdated += numUpdatedCur;
+                numNotUpdated += numNotUpdatedCur;
+                numRemoved += numRemovedCur;
+                numAlreadyRemoved += numAlreadyRemovedCur;
+                
+                // store latest result on EntitySync, ie update lastSuccessfulSynchTime, should run in own tx
+                Map updateEsRunResult = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "lastSuccessfulSynchTime", currentRunEndTime));
+
+                // store result of service call on history with results so far, should run in own tx
+                Map updateHistoryMap = UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "lastSuccessfulSynchTime", currentRunEndTime);
+                updateHistoryMap.put("numInserted", new Long(numInserted));
+                updateHistoryMap.put("numUpdated", new Long(numUpdated));
+                updateHistoryMap.put("numNotUpdated", new Long(numNotUpdated));
+                updateHistoryMap.put("numRemoved", new Long(numRemoved));
+                updateHistoryMap.put("numAlreadyRemoved", new Long(numAlreadyRemoved));
+                Map updateEsHistRunResult = dispatcher.runSync("updateEntitySyncHistory", updateHistoryMap);
+                
+                // now we have updated EntitySync and EntitySyncHistory, check both ops for errors...
+                if (ServiceUtil.isError(updateEsRunResult)) {
+                    String errorMsg = "Error running EntitySync [" + entitySyncId + "], update of EntitySync record with lastSuccessfulSynchTime failed.";
+                    List errorList = new LinkedList();
+                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher);
+                    return ServiceUtil.returnError(errorMsg, errorList, null, updateEsRunResult);
+                }
+                if (ServiceUtil.isError(updateEsHistRunResult)) {
+                    String errorMsg = "Error running EntitySync [" + entitySyncId + "], update of EntitySyncHistory (startDate:[" + startDate + "]) record with lastSuccessfulSynchTime and result stats failed.";
+                    List errorList = new LinkedList();
+                    saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher);
+                    return ServiceUtil.returnError(errorMsg, errorList, null, updateEsHistRunResult);
+                }
                 
                 // update start time, loop
                 currentRunStartTime = currentRunEndTime;
@@ -162,18 +246,43 @@ public class EntitySyncServices {
                 // what to do here? try again?
                 return ServiceUtil.returnError("Could not mark Entity Sync as complete, but all synchronization was successful", null, null, completeEntitySyncRes);
             }
-            
         } catch (GenericEntityException e) {
-            // TODO: save failure status on history record, should run in own tx
-            // TODO: save failure status on EntitySync record, should run in own tx
-            // TODO: return error describing what happened
+            String errorMessage = "Error running EntitySync [" + entitySyncId + "], data access error: " + e.toString();
+            Debug.logError(e, errorMessage, module);
+            List errorList = new LinkedList();
+            saveSyncErrorInfo(entitySyncId, startDate, "ESR_DATA_ERROR", errorList, dispatcher);
+            return ServiceUtil.returnError(errorMessage, errorList, null, null);
         } catch (GenericServiceException e) {
-            // TODO: save failure status on history record, should run in own tx
-            // TODO: save failure status on EntitySync record, should run in own tx
-            // TODO: return error describing what happened
+            String errorMessage = "Error running EntitySync [" + entitySyncId + "], service call error: " + e.toString();
+            Debug.logError(e, errorMessage, module);
+            List errorList = new LinkedList();
+            saveSyncErrorInfo(entitySyncId, startDate, "ESR_SERVICE_ERROR", errorList, dispatcher);
+            return ServiceUtil.returnError(errorMessage, errorList, null, null);
         }
         
         return ServiceUtil.returnSuccess();
+    }
+    
+    protected static void saveSyncErrorInfo(String entitySyncId, Timestamp startDate, String runStatusId, List errorMessages, LocalDispatcher dispatcher) {
+        // set error statuses on the EntitySync and EntitySyncHistory entities
+        try {
+            Map errorEntitySyncRes = dispatcher.runSync("updateEntitySyncRunning", UtilMisc.toMap("entitySyncId", entitySyncId, "runStatusId", runStatusId));
+            if (ModelService.RESPOND_ERROR.equals(errorEntitySyncRes.get(ModelService.RESPONSE_MESSAGE))) {
+                errorMessages.add("Could not save error run status [" + runStatusId + "] on EntitySync with ID [" + entitySyncId + "]: " + errorEntitySyncRes.get(ModelService.ERROR_MESSAGE));
+            }
+        } catch (GenericServiceException e) {
+            errorMessages.add("Could not save error run status [" + runStatusId + "] on EntitySync with ID [" + entitySyncId + "]: " + e.toString());
+        }
+        if (startDate != null) {
+            try {
+                Map errorEntitySyncHistoryRes = dispatcher.runSync("updateEntitySyncHistory", UtilMisc.toMap("entitySyncId", entitySyncId, "startDate", startDate, "runStatusId", runStatusId));
+                if (ModelService.RESPOND_ERROR.equals(errorEntitySyncHistoryRes.get(ModelService.RESPONSE_MESSAGE))) {
+                    errorMessages.add("Could not save error run status [" + runStatusId + "] on EntitySyncHistory with ID [" + entitySyncId + "]: " + errorEntitySyncHistoryRes.get(ModelService.ERROR_MESSAGE));
+                }
+            } catch (GenericServiceException e) {
+                errorMessages.add("Could not save error run status [" + runStatusId + "] on EntitySyncHistory with ID [" + entitySyncId + ":" + startDate + "]: " + e.toString());
+            }
+        }
     }
     
     /** prepare a list of all entities we want to synchronize: remove all view-entities and all entities that don't match the patterns attached to this EntitySync */

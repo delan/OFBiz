@@ -121,6 +121,7 @@
         <description>Create EntitySyncHistory</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="startDate" mode="OUT"/>
     </service>
     <service name="updateEntitySyncHistory" default-entity-name="EntitySyncHistory" engine="simple"
             location="org/ofbiz/entityext/synchronization/EntitySyncServices.xml" invoke="updateEntitySyncHistory" auth="true" require-new-transaction="true">
