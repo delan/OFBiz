@@ -121,17 +121,20 @@
         <response name="success" type="view" value="EditFacilityLocation"/>
         <response name="error" type="view" value="EditFacilityLocation"/>
     </request-map>    
-    <request-map uri="createProductFacilityLocation"><security https="true" auth="true"/>
+    <request-map uri="createProductFacilityLocation">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createProductFacilityLocation"/>
     	<response name="success" type="view" value="EditFacilityLocation"/>
         <response name="error" type="view" value="EditFacilityLocation"/>
     </request-map>
-    <request-map uri="updateProductFacilityLocation"><security https="true" auth="true"/>
+    <request-map uri="updateProductFacilityLocation">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProductFacilityLocation"/>
     	<response name="success" type="view" value="EditFacilityLocation"/>
         <response name="error" type="view" value="EditFacilityLocation"/>
     </request-map>
-    <request-map uri="deleteProductFacilityLocation"><security https="true" auth="true"/>
+    <request-map uri="deleteProductFacilityLocation">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteProductFacilityLocation"/>
     	<response name="success" type="view" value="EditFacilityLocation"/>
         <response name="error" type="view" value="EditFacilityLocation"/>
@@ -449,208 +452,267 @@
     </request-map>         
                      
     <!-- ================ Picklist Requests ================= -->
-    <request-map uri="PicklistOptions"><security https="true" auth="true"/>
+    <request-map uri="PicklistOptions">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="PicklistOptions"/>
     </request-map>
-    <request-map uri="Picklist"><security https="true" auth="true"/>
+    <request-map uri="Picklist">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="Picklist"/>
     </request-map>
-    <request-map uri="PickStarted"><security https="true" auth="true"/>
+    <request-map uri="PickStarted">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="PickStarted"/>
     </request-map>
-    <request-map uri="clearPickStarted"><security https="true" auth="true"/>
+    <request-map uri="clearPickStarted">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="clearPickStarted"/>
         <response name="success" type="view" value="PickStarted"/>
         <response name="error" type="view" value="PickStarted"/>
     </request-map>
 
-    <request-map uri="PickMoveStock"><security https="true" auth="true"/>
+    <request-map uri="PickMoveStock">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="PickMoveStock"/>
     </request-map>
-    <request-map uri="processPhysicalStockMove"><security https="true" auth="true"/>
+    <request-map uri="processPhysicalStockMove">
+    	<security https="true" auth="true"/>
         <event type="service-multi" path="" invoke="processPhysicalStockMove"/>
         <response name="success" type="view" value="PickMoveStock"/>
         <response name="error" type="view" value="PickMoveStock"/>
     </request-map>
     
     <!-- ================ Shipment Requests ================= -->
-    <request-map uri="FindShipment"><security https="true" auth="true"/>
+    <request-map uri="FindShipment">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="FindShipment"/>
     </request-map>
-    <request-map uri="ViewShipment"><security https="true" auth="true"/>
+    <request-map uri="ViewShipment">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="ViewShipment"/>
     </request-map>
-    <request-map uri="EditShipment"><security https="true" auth="true"/>
+    <request-map uri="EditShipment">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="EditShipment"/>
     </request-map>
-    <request-map uri="createShipment"><security https="true" auth="true"/>
+    <request-map uri="createShipment">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createShipment"/>
         <response name="success" type="view" value="EditShipment"/>
         <response name="error" type="view" value="EditShipment"/>
     </request-map>
-    <request-map uri="updateShipment"><security https="true" auth="true"/>
+    <request-map uri="updateShipment">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateShipment"/>
         <response name="success" type="view" value="EditShipment"/>
         <response name="error" type="view" value="EditShipment"/>
     </request-map>
-    <request-map uri="setShipmentSettingsFromPrimaryOrder"><security https="true" auth="true"/>
+    <request-map uri="setShipmentSettingsFromPrimaryOrder">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="setShipmentSettingsFromPrimaryOrder"/>
         <response name="success" type="view" value="EditShipment"/>
         <response name="error" type="view" value="EditShipment"/>
     </request-map>
+    <request-map uri="quickShipOrder">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="QuickShipOrder"/>
+    </request-map>
+    <request-map uri="createQuickShipment">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="quickShipEntireOrder"/>
+        <response name="success" type="view" value="QuickShipOrder"/>
+        <response name="error" type="view" value="QuickShipOrder"/>
+    </request-map> 
+    <request-map uri="setQuickPackageWeight">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="updateShipmentPackage"/>
+        <response name="success" type="view" value="QuickShipOrder"/>
+        <response name="error" type="view" value="QuickShipOrder"/>
+    </request-map>        	
 
     <!-- ================ Shipment Items Requests ================= -->
-    <request-map uri="EditShipmentItems"><security https="true" auth="true"/>
+    <request-map uri="EditShipmentItems">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="EditShipmentItems"/>
     </request-map>
-    <request-map uri="createShipmentItem"><security https="true" auth="true"/>
+    <request-map uri="createShipmentItem">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createShipmentItem"/>
         <response name="success" type="view" value="EditShipmentItems"/>
         <response name="error" type="view" value="EditShipmentItems"/>
     </request-map>
-    <request-map uri="deleteShipmentItem"><security https="true" auth="true"/>
+    <request-map uri="deleteShipmentItem">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteShipmentItem"/>
         <response name="success" type="view" value="EditShipmentItems"/>
         <response name="error" type="view" value="EditShipmentItems"/>
     </request-map>
-    <request-map uri="deleteShipmentItemIssuance"><security https="true" auth="true"/>
+    <request-map uri="deleteShipmentItemIssuance">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteItemIssuance"/>
         <response name="success" type="view" value="EditShipmentItems"/>
         <response name="error" type="view" value="EditShipmentItems"/>
     </request-map>
-    <request-map uri="createShipmentItemPackageContent"><security https="true" auth="true"/>
+    <request-map uri="createShipmentItemPackageContent">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createShipmentPackageContent"/>
         <response name="success" type="view" value="EditShipmentItems"/>
         <response name="error" type="view" value="EditShipmentItems"/>
     </request-map>
-    <request-map uri="deleteShipmentItemPackageContent"><security https="true" auth="true"/>
+    <request-map uri="deleteShipmentItemPackageContent">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteShipmentPackageContent"/>
         <response name="success" type="view" value="EditShipmentItems"/>
         <response name="error" type="view" value="EditShipmentItems"/>
     </request-map>
 
     <!-- ================ Shipment Packages Requests ================= -->
-    <request-map uri="EditShipmentPackages"><security https="true" auth="true"/>
+    <request-map uri="EditShipmentPackages">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
     </request-map>
-    <request-map uri="createShipmentPackage"><security https="true" auth="true"/>
+    <request-map uri="createShipmentPackage">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createShipmentPackage"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
         <response name="error" type="view" value="EditShipmentPackages"/>
     </request-map>
-    <request-map uri="updateShipmentPackage"><security https="true" auth="true"/>
+    <request-map uri="updateShipmentPackage">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateShipmentPackage"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
         <response name="error" type="view" value="EditShipmentPackages"/>
     </request-map>
-    <request-map uri="deleteShipmentPackage"><security https="true" auth="true"/>
+    <request-map uri="deleteShipmentPackage">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteShipmentPackage"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
         <response name="error" type="view" value="EditShipmentPackages"/>
     </request-map>
-    <request-map uri="createShipmentPackageContent"><security https="true" auth="true"/>
+    <request-map uri="createShipmentPackageContent">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createShipmentPackageContent"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
         <response name="error" type="view" value="EditShipmentPackages"/>
     </request-map>
-    <request-map uri="deleteShipmentPackageContent"><security https="true" auth="true"/>
+    <request-map uri="deleteShipmentPackageContent">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteShipmentPackageContent"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
         <response name="error" type="view" value="EditShipmentPackages"/>
     </request-map>
-    <request-map uri="createShipmentPackageRouteSeg"><security https="true" auth="true"/>
+    <request-map uri="createShipmentPackageRouteSeg">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createShipmentPackageRouteSeg"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
         <response name="error" type="view" value="EditShipmentPackages"/>
     </request-map>
-    <request-map uri="updateShipmentPackageRouteSeg"><security https="true" auth="true"/>
+    <request-map uri="updateShipmentPackageRouteSeg">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateShipmentPackageRouteSeg"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
         <response name="error" type="view" value="EditShipmentPackages"/>
     </request-map>
-    <request-map uri="deleteShipmentPackageRouteSeg"><security https="true" auth="true"/>
+    <request-map uri="deleteShipmentPackageRouteSeg">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteShipmentPackageRouteSeg"/>
         <response name="success" type="view" value="EditShipmentPackages"/>
         <response name="error" type="view" value="EditShipmentPackages"/>
     </request-map>
 
     <!-- ================ Shipment Route Segments Requests ================= -->
-    <request-map uri="EditShipmentRouteSegments"><security https="true" auth="true"/>
+    <request-map uri="EditShipmentRouteSegments">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="createShipmentRouteSegment"><security https="true" auth="true"/>
+    <request-map uri="createShipmentRouteSegment">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createShipmentRouteSegment"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="updateShipmentRouteSegment"><security https="true" auth="true"/>
+    <request-map uri="updateShipmentRouteSegment">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateShipmentRouteSegment"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="deleteShipmentRouteSegment"><security https="true" auth="true"/>
+    <request-map uri="deleteShipmentRouteSegment">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteShipmentRouteSegment"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="createRouteSegmentShipmentPackage"><security https="true" auth="true"/>
+    <request-map uri="createRouteSegmentShipmentPackage">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createShipmentPackageRouteSeg"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="updateRouteSegmentShipmentPackage"><security https="true" auth="true"/>
+    <request-map uri="updateRouteSegmentShipmentPackage">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateShipmentPackageRouteSeg"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="deleteRouteSegmentShipmentPackage"><security https="true" auth="true"/>
+    <request-map uri="deleteRouteSegmentShipmentPackage">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="deleteShipmentPackageRouteSeg"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="upsShipmentConfirm"><security https="true" auth="true"/>
+    <request-map uri="upsShipmentConfirm">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="upsShipmentConfirm"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="upsShipmentAccept"><security https="true" auth="true"/>
+    <request-map uri="upsShipmentAccept">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="upsShipmentAccept"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="upsVoidShipment"><security https="true" auth="true"/>
+    <request-map uri="upsVoidShipment">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="upsVoidShipment"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="upsTrackShipment"><security https="true" auth="true"/>
+    <request-map uri="upsTrackShipment">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="upsTrackShipment"/>
         <response name="success" type="view" value="EditShipmentRouteSegments"/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
-    <request-map uri="viewShipmentPackageRouteSegLabelImage"><security https="true" auth="true"/>
+    <request-map uri="viewShipmentPackageRouteSegLabelImage">
+    	<security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.shipment.shipment.ShipmentEvents" invoke="viewShipmentPackageRouteSegLabelImage"/>
         <response name="success" type="none" value=""/>
         <response name="error" type="view" value="EditShipmentRouteSegments"/>
     </request-map>
 
     <!-- ================ Shipment Items From Order Requests ================= -->
-    <request-map uri="AddItemsFromOrder"><security https="true" auth="true"/>
+    <request-map uri="AddItemsFromOrder">
+    	<security https="true" auth="true"/>
         <response name="success" type="view" value="AddItemsFromOrder"/>
     </request-map>
-    <request-map uri="issueOrderItemToShipment"><security https="true" auth="true"/>
+    <request-map uri="issueOrderItemToShipment">
+    	<security https="true" auth="true"/>
         <event type="service-multi" path="" invoke="issueOrderItemToShipment"/>
         <response name="success" type="view" value="AddItemsFromOrder"/>
         <response name="error" type="view" value="AddItemsFromOrder"/>
     </request-map>
-    <request-map uri="issueOrderItemInventoryResToShipment"><security https="true" auth="true"/>
+    <request-map uri="issueOrderItemInventoryResToShipment">
+    	<security https="true" auth="true"/>
         <event type="service-multi" path="" invoke="issueOrderItemInventoryResToShipment"/>
         <response name="success" type="view" value="AddItemsFromOrder"/>
         <response name="error" type="view" value="AddItemsFromOrder"/>
     </request-map>
 
     <!-- ================ Shipment Manifest Report Requests ================= -->
-    <request-map uri="ShipmentManifestReport.pdf"><security https="true" auth="true"/>
+    <request-map uri="ShipmentManifestReport.pdf">
+    	<security https="true" auth="true"/>
         <event type="bsf" path="/shipmentreports/" invoke="ShipmentItemReportPrepare.bsh"/>
         <response name="success" type="view" value="ShipmentManifestReport"/>
     </request-map>
@@ -697,6 +759,7 @@
     <view-map name="EditShipmentPackages" type="jpublish" page="/shipment/EditShipmentPackages.ftl"/>
     <view-map name="EditShipmentRouteSegments" type="jpublish" page="/shipment/EditShipmentRouteSegments.ftl"/>
     <view-map name="AddItemsFromOrder" type="jpublish" page="/shipment/AddItemsFromOrder.ftl"/>
+    <view-map name="QuickShipOrder" type="jpublish" page="/shipment/QuickShipOrder.ftl"/>
 
     <view-map name="ShipmentManifestReport" type="jasperreportspdf" page="/shipmentreports/ShipmentManifestReport.xml" content-type="application/pdf" encoding="none"/>
     <!-- end of view mappings -->
