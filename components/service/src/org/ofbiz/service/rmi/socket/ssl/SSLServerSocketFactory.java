@@ -30,17 +30,15 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.rmi.server.RMIServerSocketFactory;
-import java.security.KeyManagementException;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLServerSocket;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.SSLUtil;
 import org.ofbiz.base.util.UtilProperties;
 
 /**
@@ -62,31 +60,21 @@ public class SSLServerSocketFactory implements RMIServerSocketFactory, Serializa
     public ServerSocket createServerSocket(int port) throws IOException {
 		String storeType = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore.type", "jks");
         String storeFile = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore", null);
+        String storeAlias = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore.alias", null);
         String storePass = UtilProperties.getPropertyValue("jsse.properties", "ofbiz.rmi.keyStore.password", null);
 		char[] passphrase = null;
         if (storePass != null) {
             passphrase = storePass.toCharArray();
         }
 
-        javax.net.ssl.SSLServerSocketFactory ssf = null;
+        KeyStore ks = null;
         try {
-            KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-            SSLContext ctx = SSLContext.getInstance("TLS");
-            KeyStore ks = KeyStore.getInstance(storeType);
+            ks = KeyStore.getInstance(storeType);
             ks.load(new FileInputStream(storeFile), passphrase);
-            kmf.init(ks, passphrase);
-            ctx.init(kmf.getKeyManagers(), null, null);
-            ssf = ctx.getServerSocketFactory();            
         } catch (NoSuchAlgorithmException e) {
             Debug.logError(e, module);
             throw new IOException(e.getMessage());
-        } catch (KeyManagementException e) {
-            Debug.logError(e, module);
-            throw new IOException(e.getMessage());
         } catch (CertificateException e) {
-            Debug.logError(e, module);
-            throw new IOException(e.getMessage());
-        } catch (UnrecoverableKeyException e) {
             Debug.logError(e, module);
             throw new IOException(e.getMessage());
         } catch (KeyStoreException e) {
@@ -94,7 +82,24 @@ public class SSLServerSocketFactory implements RMIServerSocketFactory, Serializa
             throw new IOException(e.getMessage());
         }
 
-        SSLServerSocket socket = (SSLServerSocket) ssf.createServerSocket(port);
+        if (ks == null) {
+            throw new IOException("Unable to load KeyStore containing RMI SSL certificate");
+        }
+
+
+        javax.net.ssl.SSLServerSocketFactory factory = null;
+        try {
+            factory = SSLUtil.getSSLServerSocketFactory(ks, storePass, storeAlias);
+        } catch (GeneralSecurityException e) {
+            Debug.logError(e, module);
+            throw new IOException(e.getMessage());
+        }
+
+        if (factory == null) {
+            throw new IOException("Unable to obtain SSLServerSocketFactory for provided KeyStore");
+        }
+
+        SSLServerSocket socket = (SSLServerSocket) factory.createServerSocket(port);
         socket.setNeedClientAuth(clientAuth);
         return socket;
 	}
