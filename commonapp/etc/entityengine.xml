@@ -170,9 +170,9 @@ access. For a detailed description see the core/docs/entityconfig.html file.
         <inline-jdbc
                 jdbc-driver="com.sap.dbtech.jdbc.DriverSapDB"
                 jdbc-uri="jdbc:sapdb://localhost/OFBIZ"
-                jdbc-username="ofbdba"
-                jdbc-password="ofbdba"
-                isolation-level="Serializable"/>
+                jdbc-username="ofbiz"
+                jdbc-password="ofbiz"
+                isolation-level="ReadCommitted"/>
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/SapDBDataSource" isolation-level="Serializable"/> -->
         <!-- <tyrex-dataSource dataSource-name="localsapdb" isolation-level="ReadCommitted"/> -->
     </datasource>
