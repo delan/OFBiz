@@ -29,10 +29,13 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Iterator;
 
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.model.ModelEntity;
+import org.ofbiz.entity.model.ModelRelation;
+import org.ofbiz.entity.model.ModelKeyMap;
 import org.ofbiz.entity.util.EntityUtil;
 
 
@@ -392,6 +395,47 @@ public class GenericValue extends GenericEntity {
      */
     public GenericPK getRelatedDummyPK(String relationName, Map byAndFields) throws GenericEntityException {
         return this.getDelegator().getRelatedDummyPK(relationName, byAndFields, this);
+    }
+
+    /**
+     * Checks to see if all foreign key records exist in the database. Will create a dummy value for
+     * those missing when specified.
+     *
+     * @param insertDummy Create a dummy record using the provided fields
+     * @return true if all FKs exist (or when all missing are created)
+     * @throws GenericEntityException
+     */
+    public boolean checkFks(boolean insertDummy) throws GenericEntityException {
+        ModelEntity model = this.getModelEntity();
+        Iterator relItr = model.getRelationsIterator();
+        while (relItr.hasNext()) {
+            ModelRelation relation = (ModelRelation) relItr.next();
+            if ("one".equalsIgnoreCase(relation.getType())) {
+                // see if the related value exists
+                String relationName = relation.getTitle() + relation.getRelEntityName();
+                Map fields = new HashMap();
+                for (int i = 0; i < relation.getKeyMapsSize(); i++) {
+                    ModelKeyMap keyMap = relation.getKeyMap(i);
+                    fields.put(keyMap.getRelFieldName(), this.get(keyMap.getFieldName()));
+                }
+                long count = this.getDelegator().findCountByAnd(relationName, fields);
+                if (count == 0) {
+                    if (insertDummy) {
+                        // create the new related value (dummy)
+                        GenericValue newValue = this.getDelegator().makeValue(relation.getRelEntityName(), null);
+                        Iterator keyMapIter = relation.getKeyMapsIterator();
+                        while (keyMapIter.hasNext()) {
+                            ModelKeyMap mkm = (ModelKeyMap) keyMapIter.next();
+                            newValue.set(mkm.getRelFieldName(), this.get(mkm.getFieldName()));
+                        }
+                        newValue.create();
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /** Clones this GenericValue, this is a shallow clone & uses the default shallow HashMap clone
