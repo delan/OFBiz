@@ -43,14 +43,14 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.service.*;
-import org.ofbiz.content.webapp.taglib.*;
+import org.ofbiz.webapp.taglib.*;
 import org.ofbiz.product.product.ProductContentWrapper;
 import org.ofbiz.product.product.ProductSearch;
 import org.ofbiz.product.product.ProductSearchSession;
 import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.product.catalog.*;
 import org.ofbiz.product.store.*;
-import org.ofbiz.content.stats.VisitHandler;
+import org.ofbiz.webapp.stats.VisitHandler;
 
 String buildNext(Map map, List order, String current, String prefix, Map featureTypes) {
     keySet = map.keySet();

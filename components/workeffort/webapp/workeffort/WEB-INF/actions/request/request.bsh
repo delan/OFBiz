@@ -8,7 +8,7 @@ import org.ofbiz.base.util.*;
 
 delegator = request.getAttribute("delegator");
 
-//<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+//<%@ page import="org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 
     
 // Get the request types

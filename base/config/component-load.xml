@@ -43,6 +43,9 @@
     <load-component component-location="${ofbiz.home}/components/securityext"/>
     <load-component component-location="${ofbiz.home}/components/service"/>
     <load-component component-location="${ofbiz.home}/components/entityext"/>
+    <load-component component-location="${ofbiz.home}/components/webapp"/>
+    <load-component component-location="${ofbiz.home}/components/guiapp"/>
+    <load-component component-location="${ofbiz.home}/components/widget"/>
     <load-component component-location="${ofbiz.home}/components/content"/>
     <load-component component-location="${ofbiz.home}/components/appservers"/>
     <load-component component-location="${ofbiz.home}/components/workeffort"/>

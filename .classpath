@@ -2,6 +2,9 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="base/src/base"/>
+	<classpathentry kind="src" path="components/guiapp/src"/>
+	<classpathentry kind="src" path="components/widget/src"/>
+	<classpathentry kind="src" path="components/webapp/src"/>
 	<classpathentry kind="src" path="components/catalina/src"/>
 	<classpathentry kind="src" path="components/jetty/src"/>
 	<classpathentry kind="src" path="components/jotm/src"/>
@@ -40,25 +43,13 @@
 	<classpathentry kind="lib" path="components/service/lib/wsdl4j.jar"/>
 	<classpathentry kind="lib" path="components/service/lib/jaxrpc.jar"/>
 	<classpathentry kind="lib" path="components/service/lib/saaj.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/EdenLib.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/JPublish.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/velocity-1.3.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/velocity-dep-1.3.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/DataVision.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/iText.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/jcalendar.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/MinML2.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/jasperreports.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/jasperreports-applet.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/jdbc/hsqldb.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/jdbc/p6spy.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/jdbc/postgresql.jar"/>
 	<classpathentry kind="lib" path="components/entity/lib/jdbc/sapdbc.jar"/>
 	<classpathentry kind="lib" path="components/accounting/lib/worldpay/cryptix.jar"/>
 	<classpathentry kind="lib" path="components/accounting/lib/worldpay/select.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/batik.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/fop.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/avalon-framework-cvs-20020806.jar"/>
 	<classpathentry kind="lib" path="components/minerva/lib/ots-jts_1.0.jar"/>
 	<classpathentry kind="lib" path="components/minerva/lib/oswego-concurrent.jar"/>
 	<classpathentry kind="lib" path="components/minerva/lib/jta_1.0.1.jar"/>
@@ -136,8 +127,6 @@
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina-ant.jar"/>
 	<classpathentry kind="lib" path="components/catalina/lib/server/catalina.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/lucene.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/xom-1.0d25.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/krysalis-barcode.jar"/>
 	<classpathentry kind="lib" path="base/lib/junitperf.jar"/>
 	<classpathentry kind="lib" path="base/lib/freemarker.jar"/>
 	<classpathentry kind="lib" path="base/lib/avalon-util-exception-1.0.0.jar"/>
@@ -160,7 +149,6 @@
 	<classpathentry kind="lib" path="components/pos/lib/gtkswing.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkrepositorypersistence-filesystem.jar"/>
 	<classpathentry kind="lib" path="components/shark/lib/sharkassignment-historyrelated.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/XuiCoreSwing.jar"/>
 	<classpathentry kind="lib" path="base/lib/jdbm.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-primitives.jar"/>
 	<classpathentry kind="lib" path="base/lib/commons/commons-codec.jar"/>
@@ -168,6 +156,21 @@
 	<classpathentry kind="lib" path="base/lib/httpunit.jar"/>
 	<classpathentry kind="lib" path="base/lib/scripting/jruby.jar"/>
 	<classpathentry kind="lib" path="components/content/lib/poi.jar"/>
-	<classpathentry kind="lib" path="components/content/lib/iTextXML.jar"/>
+	<classpathentry kind="lib" path="components/guiapp/lib/XuiCoreSwing.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/velocity-dep-1.3.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/velocity-1.3.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/MinML2.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/krysalis-barcode.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/JPublish.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/jasperreports-applet.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/jasperreports.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/iTextXML.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/iText.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/fop.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/EdenLib.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/DataVision.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/batik.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/avalon-framework-cvs-20020806.jar"/>
+	<classpathentry kind="lib" path="components/webapp/lib/xom-1.0d25.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

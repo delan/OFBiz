@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -29,17 +29,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import javax.xml.parsers.ParserConfigurationException;
 
-import bsh.EvalError;
-import freemarker.ext.dom.NodeModel;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -49,8 +45,8 @@ import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.content.ContentManagementWorker;
 import org.ofbiz.content.data.DataResourceWorker;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -63,10 +59,12 @@ import org.ofbiz.minilang.SimpleMapProcessor;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.entity.model.ModelEntity;
-
+import org.ofbiz.webapp.ftl.FreeMarkerWorker;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import bsh.EvalError;
+import freemarker.ext.dom.NodeModel;
 //import com.clarkware.profiler.Profiler;
 
 /**
@@ -78,10 +76,61 @@ import org.xml.sax.SAXException;
  * 
  *  
  */
-public class ContentWorker {
+public class ContentWorker implements org.ofbiz.widget.ContentWorkerInterface {
 
     public static final String module = ContentWorker.class.getName();
 
+    public ContentWorker() { }
+    
+    public GenericValue getCurrentContentExt(GenericDelegator delegator, List trail, GenericValue userLogin, Map ctx, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GeneralException {
+        return getCurrentContent(delegator, trail, userLogin, ctx, nullThruDatesOnly, contentAssocPredicateId);
+    }
+
+    public Map renderSubContentAsTextExt(GenericDelegator delegator, String contentId, Writer out, String mapKey, String subContentId, GenericValue subContentDataResourceView, 
+            Map templateContext, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
+        return renderSubContentAsText(delegator, contentId, out, mapKey, subContentId, subContentDataResourceView, 
+                templateContext, locale, mimeTypeId, userLogin, fromDate);
+    }
+
+    public String renderSubContentAsTextCacheExt(GenericDelegator delegator, String contentId,  String mapKey, GenericValue subContentDataResourceView, 
+            Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
+        return renderSubContentAsTextCache(delegator, contentId, mapKey, subContentDataResourceView, 
+                templateRoot, locale, mimeTypeId, userLogin, fromDate);
+    }
+
+    public Map renderSubContentAsTextCacheExt(GenericDelegator delegator, String contentId, Writer out, String mapKey,  GenericValue subContentDataResourceView, 
+            Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
+        return renderSubContentAsTextCache(delegator, contentId, out, mapKey, subContentDataResourceView, 
+                templateRoot, locale, mimeTypeId, userLogin, fromDate);
+    }
+
+    public Map renderSubContentAsTextCacheExt(GenericDelegator delegator, String contentId, Writer out, String mapKey,  GenericValue subContentDataResourceView, 
+            Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate, Boolean nullThruDatesOnly) throws GeneralException, IOException {
+        return renderSubContentAsTextCache(delegator, contentId, out, mapKey, subContentDataResourceView, 
+                templateRoot, locale, mimeTypeId, userLogin, fromDate, nullThruDatesOnly);
+    }
+
+    public Map renderContentAsTextExt(GenericDelegator delegator, String contentId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+        return renderContentAsText(delegator, contentId, out, templateContext, view, locale, mimeTypeId);
+    }
+
+    public String renderContentAsTextCacheExt(GenericDelegator delegator, String contentId,  Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+        return renderContentAsTextCache(delegator, contentId,  templateContext, view, locale, mimeTypeId);
+    }
+
+    public Map renderContentAsTextCacheExt(GenericDelegator delegator, String contentId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+        return renderContentAsTextCache(delegator, contentId, out, templateContext, view, locale, mimeTypeId);
+    }
+
+    public String getMimeTypeIdExt(GenericDelegator delegator, GenericValue view, Map ctx) {
+        return getMimeTypeId(delegator, view, ctx);
+    }
+
+    public GenericValue getWebSitePublishPointExt(GenericDelegator delegator, String contentId, boolean ignoreCache) throws GenericEntityException {
+        return ContentManagementWorker.getWebSitePublishPoint(delegator, contentId, ignoreCache);
+    }
+
+    
     public static GenericValue findAlternateLocaleContent(GenericDelegator delegator, GenericValue view, Locale locale) {
         GenericValue contentAssocDataResourceViewFrom = view;
         if (locale == null) {
@@ -374,22 +423,22 @@ public class ContentWorker {
 
     public static void selectKids(Map currentNode, Map ctx) {
         
-        GenericDelegator delegator = (GenericDelegator)ctx.get("delegator");
-        GenericValue parentContent = (GenericValue)currentNode.get("value");
-        String contentAssocTypeId = (String)ctx.get("contentAssocTypeId");
-        String contentTypeId = (String)ctx.get("contentTypeId");
-        String mapKey = (String)ctx.get("mapKey");
+        GenericDelegator delegator = (GenericDelegator) ctx.get("delegator");
+        GenericValue parentContent = (GenericValue) currentNode.get("value");
+        String contentAssocTypeId = (String) ctx.get("contentAssocTypeId");
+        String contentTypeId = (String) ctx.get("contentTypeId");
+        String mapKey = (String) ctx.get("mapKey");
         String parentContentId = (String) parentContent.get("contentId");
         //if (Debug.infoOn()) Debug.logInfo("traverse, contentAssocTypeId:" + contentAssocTypeId,null);
-        Map whenMap = (Map)ctx.get("whenMap");
+        Map whenMap = (Map) ctx.get("whenMap");
         Map context = new HashMap();
         List kids = new ArrayList();
         currentNode.put("kids", kids);
-        String direction = (String)ctx.get("direction");
+        String direction = (String) ctx.get("direction");
         if (UtilValidate.isEmpty(direction))
             direction = "From";
-        Timestamp fromDate = (Timestamp)ctx.get("fromDate");
-        Timestamp thruDate = (Timestamp)ctx.get("thruDate");
+        Timestamp fromDate = (Timestamp) ctx.get("fromDate");
+        Timestamp thruDate = (Timestamp) ctx.get("thruDate");
         
         List assocTypeList = StringUtil.split(contentAssocTypeId, " ");
         List contentTypeList = StringUtil.split(contentTypeId, " ");
@@ -403,12 +452,12 @@ public class ContentWorker {
         } catch (MiniLangException e2) {
             throw new RuntimeException(e2.getMessage());
         }
-        List relatedViews = (List)results.get("entityList");
+        List relatedViews = (List) results.get("entityList");
         //if (Debug.infoOn()) Debug.logInfo("traverse, relatedViews:" + relatedViews,null);
         Iterator it = relatedViews.iterator();
         while (it.hasNext()) {
             GenericValue assocValue = (GenericValue) it.next();
-            Map thisNode = FreeMarkerWorker.makeNode(assocValue);
+            Map thisNode = ContentWorker.makeNode(assocValue);
             checkConditions(delegator, thisNode, null, whenMap);
             boolean isReturnBeforePick = booleanDataType(thisNode.get("isReturnBeforePick"));
             boolean isReturnAfterPick = booleanDataType(thisNode.get("isReturnAfterPick"));
@@ -679,65 +728,6 @@ public class ContentWorker {
         return;
     }
     
-    public static void getEntityOwners(GenericDelegator delegator, GenericValue entity,  List contentOwnerList, String entityName, String ownerIdFieldName) throws GenericEntityException {
-
-        String ownerContentId = entity.getString(ownerIdFieldName);
-        if (UtilValidate.isNotEmpty(ownerContentId)) {
-            contentOwnerList.add(ownerContentId);
-            ModelEntity modelEntity = delegator.getModelEntity(entityName);
-            String pkFieldName = getPkFieldName(entityName, modelEntity);
-            GenericValue ownerContent = delegator.findByPrimaryKeyCache(entityName, UtilMisc.toMap(pkFieldName, ownerContentId));
-            if (ownerContent != null) {
-                getEntityOwners(delegator, ownerContent, contentOwnerList, entityName, ownerIdFieldName );
-            }
-        }
-        return;
-    }
-    
-    public static String getPkFieldName(String entityName, ModelEntity modelEntity) {
-        List pkFieldNames = modelEntity.getPkFieldNames();
-        String idFieldName = null;
-        if (pkFieldNames.size() > 0) {
-            idFieldName = (String)pkFieldNames.get(0);
-        }
-        return idFieldName;
-    }
-    
-    public static int getPrivilegeEnumSeq(GenericDelegator delegator, String privilegeEnumId) throws GenericEntityException {
-            int privilegeEnumSeq = -1;
-            
-            if ( UtilValidate.isNotEmpty(privilegeEnumId)) {
-                GenericValue privEnum = delegator.findByPrimaryKeyCache("Enumeration", UtilMisc.toMap("enumId", privilegeEnumId));
-                if (privEnum != null) {
-                    String sequenceId = privEnum.getString("sequenceId");   
-                    try {
-                        privilegeEnumSeq = Integer.parseInt(sequenceId);
-                    } catch(NumberFormatException e) {
-                        // just leave it at -1   
-                    }
-                }
-            }
-            return privilegeEnumSeq;
-    }
-    
-    public static List getUserRolesFromList(GenericDelegator delegator, List idList, String partyId, String entityIdFieldName, String partyIdFieldName, String roleTypeIdFieldName, String entityName) throws GenericEntityException {
-        
-        EntityExpr expr = new EntityExpr(entityIdFieldName, EntityOperator.IN, idList);
-        EntityExpr expr2 = new EntityExpr(partyIdFieldName, EntityOperator.EQUALS, partyId);
-        EntityConditionList condList = new EntityConditionList(UtilMisc.toList(expr, expr2), EntityOperator.AND);
-        List roleList = delegator.findByConditionCache(entityName, condList, null, null);
-        List roleListFiltered = EntityUtil.filterByDate(roleList);
-        HashSet distinctSet = new HashSet();
-        Iterator iter = roleListFiltered.iterator();
-        while (iter.hasNext()) {
-            GenericValue contentRole = (GenericValue)iter.next();
-            String roleTypeId = contentRole.getString(roleTypeIdFieldName);
-            distinctSet.add(roleTypeId);
-        }
-        List distinctList = Arrays.asList(distinctSet.toArray());
-        return distinctList;
-    }
-
     public static void getContentAncestryAll(GenericDelegator delegator, String contentId, String passedContentTypeId, String direction, List contentAncestorList) {
         String contentIdField = null;
         String contentIdOtherField = null;
@@ -785,7 +775,7 @@ public class ContentWorker {
          Iterator contentAncestorListIter = contentAncestorList.iterator(); 
          while (contentAncestorListIter.hasNext()) {
              GenericValue value = (GenericValue) contentAncestorListIter.next();
-             Map thisNode = FreeMarkerWorker.makeNode(value);
+             Map thisNode = ContentWorker.makeNode(value);
              nodeTrail.add(thisNode);
          }
          return nodeTrail;
@@ -949,6 +939,63 @@ public class ContentWorker {
         return view;
     }
 
+    public static GenericValue getCurrentContent(GenericDelegator delegator, List trail, GenericValue userLogin, Map ctx, Boolean nullThruDatesOnly, String contentAssocPredicateId)  throws GeneralException {
+
+        String contentId = (String)ctx.get("contentId");
+        String subContentId = (String)ctx.get("subContentId");
+        String mapKey = (String)ctx.get("mapKey");
+        Timestamp fromDate = UtilDateTime.nowTimestamp();
+        List assocTypes = null;
+        List passedGlobalNodeTrail = null;
+        GenericValue currentContent = null;
+        String viewContentId = null;
+        if (trail != null && trail.size() > 0) { 
+            passedGlobalNodeTrail = new ArrayList(trail);
+        } else {
+            passedGlobalNodeTrail = new ArrayList();
+        }
+        //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, passedGlobalNodeTrail(3):" + passedGlobalNodeTrail , module);
+        int sz = passedGlobalNodeTrail.size();
+        if (sz > 0) {
+            Map nd = (Map)passedGlobalNodeTrail.get(sz - 1);
+            if (nd != null)
+                currentContent = (GenericValue)nd.get("value");
+            if (currentContent != null) 
+                viewContentId = (String)currentContent.get("contentId");
+        }
+
+        //if (Debug.infoOn()) Debug.logInfo("in getCurrentContent, currentContent(3):" + currentContent , module);
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, contentId:" + contentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, subContentId:" + subContentId, "");
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, viewContentId:" + viewContentId, "");
+        if (UtilValidate.isNotEmpty(subContentId)) {
+            ctx.put("subContentId", subContentId);
+            ctx.put("contentId", null);
+            if (viewContentId != null && viewContentId.equals(subContentId) ) {
+                return currentContent;
+            }
+        } else {
+            ctx.put("contentId", contentId);
+            ctx.put("subContentId", null);
+            if (viewContentId != null && viewContentId.equals(contentId) ) {
+                return currentContent;
+            }
+        }
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent(2), contentId:" + contentId + " viewContentId:" + viewContentId + " subContentId:" + subContentId, "");
+        if (UtilValidate.isNotEmpty(contentId) || UtilValidate.isNotEmpty(subContentId)) {
+            try {
+                currentContent = ContentWorker.getSubContentCache(delegator, contentId, mapKey, subContentId, userLogin, assocTypes, fromDate, nullThruDatesOnly, contentAssocPredicateId);
+                Map node = ContentWorker.makeNode(currentContent);
+                passedGlobalNodeTrail.add(node);
+            } catch (GenericEntityException e) {
+                throw new GeneralException(e.getMessage());
+            }
+        }
+        ctx.put("globalNodeTrail", passedGlobalNodeTrail);
+        ctx.put("indent", new Integer(sz));
+        //if (Debug.infoOn()) Debug.logInfo("getCurrentContent, currentContent:" + currentContent, "");
+        return currentContent;
+    }
 
     public static GenericValue getContentFromView(GenericValue view) {
         GenericValue content = null;
@@ -1425,5 +1472,140 @@ public class ContentWorker {
             val = (GenericValue)filteredList.get(0);
         }
         return val;
+    }
+
+    public static Map makeNode(GenericValue thisContent) {
+        Map thisNode = null;
+        if (thisContent == null) 
+            return thisNode;
+
+        thisNode = new HashMap();
+        thisNode.put("value", thisContent);
+        String contentId = (String)thisContent.get("contentId");
+        thisNode.put("contentId", contentId);
+        thisNode.put("contentTypeId", thisContent.get("contentTypeId"));
+        thisNode.put("isReturnBeforePick", new Boolean(false));
+        thisNode.put("isReturnAfterPick", new Boolean(false));
+        thisNode.put("isPick", new Boolean(true));
+        thisNode.put("isFollow", new Boolean(true));
+        try {
+            thisNode.put("contentAssocTypeId", thisContent.get("caContentAssocTypeId"));
+            thisNode.put("mapKey", thisContent.get("caMapKey"));
+            thisNode.put("fromDate", thisContent.get("caFromDate"));
+            thisNode.put("contentAssocTypeId", thisContent.get("caContentAssocTypeId"));
+        } catch(Exception e) {
+            // This ignores the case when thisContent does not have ContentAssoc values
+        }
+        return thisNode;
+    }
+
+
+    public static String nodeTrailToCsv(List nodeTrail) {
+        
+        if (nodeTrail == null)
+            return "";
+        StringBuffer csv = new StringBuffer();
+        Iterator it = nodeTrail.iterator();
+        while (it.hasNext()) {
+            if (csv.length() > 0)
+                csv.append(",");
+            Map node = (Map)it.next();
+            if (node == null)
+                break;
+
+            String contentId = (String)node.get("contentId");
+            csv.append(contentId);
+        }
+        return csv.toString();
+    }
+
+    public static List csvToList(String csv, GenericDelegator delegator) {
+        
+        ArrayList outList = new ArrayList();
+        List contentIdList = StringUtil.split(csv, ",");
+        GenericValue content = null;
+        String contentId = null;
+        String contentName = null;
+        ArrayList values = null;
+        Iterator it = contentIdList.iterator();
+        while (it.hasNext()) {
+            contentId = (String)it.next();
+            try {
+                content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+            } catch(GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
+                return new ArrayList();
+            }
+            contentName = (String)content.get("contentName");
+            values = new ArrayList();
+            values.add(contentId);
+            values.add(contentName);
+            outList.add(values);    
+        }
+        return outList;
+    }
+
+    public static List csvToContentList(String csv, GenericDelegator delegator) {
+
+        List trail = new ArrayList();
+        if (csv == null)
+            return trail;
+
+        ArrayList outList = new ArrayList();
+        List contentIdList = StringUtil.split(csv, ",");
+        GenericValue content = null;
+        String contentId = null;
+        Iterator it = contentIdList.iterator();
+        while (it.hasNext()) {
+            contentId = (String)it.next();
+            try {
+                content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+            } catch(GenericEntityException e) {
+                Debug.logError(e.getMessage(), module);
+                return new ArrayList();
+            }
+            trail.add(content);
+        }
+        return trail;
+    }
+
+    public static List csvToTrail(String csv, GenericDelegator delegator) {
+
+        ArrayList trail = new ArrayList();
+        if (csv == null)
+            return trail;
+
+        List contentList = csvToContentList(csv, delegator);
+        GenericValue content = null;
+        Iterator it = contentList.iterator();
+        while (it.hasNext()) {
+            content = (GenericValue)it.next();
+            Map node = makeNode(content);
+            trail.add(node);
+        }
+        return trail;
+    }
+
+    public static String getMimeTypeId(GenericDelegator delegator, GenericValue view, Map ctx) {
+        // This order is taken so that the mimeType can be overridden in the transform arguments.
+        String mimeTypeId = (String)ctx.get("mimeTypeId");
+        if (UtilValidate.isEmpty(mimeTypeId) && view != null) {
+            mimeTypeId = (String) view.get("mimeTypeId");
+            String parentContentId = (String)ctx.get("contentId");
+            if (UtilValidate.isEmpty(mimeTypeId) && UtilValidate.isNotEmpty(parentContentId)) { // will need these below
+                try {
+                    GenericValue parentContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", parentContentId));
+                    if (parentContent != null) {
+                        mimeTypeId = (String) parentContent.get("mimeTypeId");
+                        ctx.put("parentContent", parentContent);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e.getMessage(), module);
+                    //throw new GeneralException(e.getMessage());
+                }
+            }
+
+        }
+        return mimeTypeId;
     }
 }

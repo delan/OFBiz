@@ -21,14 +21,14 @@
  *
  *@author     David E. Jones
  *@author     Andy Zeneski
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      1.0
 --%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
 <%@ page import="org.ofbiz.party.contact.*, org.ofbiz.party.party.*" %>
 <%@ page import="org.ofbiz.accounting.payment.*" %>

@@ -41,6 +41,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -567,5 +569,25 @@ public class UtilHttp {
                 bos.close();
             }
         }
+    }
+
+    public static String stripViewParamsFromQueryString(String queryString) {
+        String retStr = null;
+        if (UtilValidate.isNotEmpty(queryString)) {
+            StringTokenizer queryTokens = new StringTokenizer(queryString, "&");
+            StringBuffer cleanQuery = new StringBuffer();
+            while (queryTokens.hasMoreTokens()) {
+                String token =  queryTokens.nextToken();
+                if ((token.indexOf("VIEW_INDEX") == -1) && (token.indexOf("VIEW_SIZE")==-1)
+                    && (token.indexOf("viewIndex") == -1) && (token.indexOf("viewSize")==-1)) {
+                    cleanQuery.append(token);
+                    if(queryTokens.hasMoreTokens()){
+                        cleanQuery.append("&");
+                    }
+                }
+            }
+            retStr = cleanQuery.toString();
+        }
+        return retStr;
     }
 }

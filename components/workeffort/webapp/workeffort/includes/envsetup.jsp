@@ -1,5 +1,5 @@
 <%@ page import="java.util.*, java.net.*" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*, org.ofbiz.base.util.collections.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*, org.ofbiz.base.util.collections.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 

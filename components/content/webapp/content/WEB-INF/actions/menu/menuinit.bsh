@@ -1,4 +1,4 @@
-import org.ofbiz.content.widget.html.HtmlMenuWrapper;
+import org.ofbiz.widget.html.HtmlMenuWrapper;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import javax.servlet.*;

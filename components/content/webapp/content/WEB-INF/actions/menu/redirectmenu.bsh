@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  * This is a general menu redirection script. It must be called from a page
  * action and not a content action because it is only possible to redirect
@@ -35,8 +35,8 @@
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.content.widget.html.HtmlMenuWrapper;
-import org.ofbiz.content.widget.WidgetWorker;
+import org.ofbiz.widget.html.HtmlMenuWrapper;
+import org.ofbiz.widget.WidgetWorker;
 import javax.servlet.*;
 import javax.servlet.http.*;
 

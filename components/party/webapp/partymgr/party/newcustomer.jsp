@@ -29,7 +29,7 @@
 <%@ page import="java.util.*" %>
 <%@ page import="javax.servlet.*" %>
 <%@ page import="javax.servlet.http.*" %>
-<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.*" %>
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
 <%String previousParams = (String) session.getAttribute("_PREVIOUS_PARAMS_");%>

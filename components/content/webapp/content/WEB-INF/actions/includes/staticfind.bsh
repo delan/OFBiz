@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
 
  * Calls performFind service to return an EntityListIterator of the
@@ -49,8 +49,8 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.content.widget.html.*;
-import org.ofbiz.content.widget.form.*;
+import org.ofbiz.widget.html.*;
+import org.ofbiz.widget.form.*;
 import org.ofbiz.base.util.BshUtil;
 import bsh.EvalError;
 

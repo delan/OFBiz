@@ -20,13 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Al Byers (byersa@automationgroups.com)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
 import java.util.*;
 import org.ofbiz.entity.*;
-import org.ofbiz.content.webapp.control.*;
+import org.ofbiz.webapp.control.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;

@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      3.3
 --%>
 
@@ -31,7 +31,7 @@
                  org.ofbiz.service.engine.GenericEngine,
                  java.sql.Timestamp" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
-<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 

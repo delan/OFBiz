@@ -30,7 +30,7 @@
 %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
-<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 <%String previousParams=(String)session.getAttribute("_PREVIOUS_PARAMS_");%>
 
 <br>

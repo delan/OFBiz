@@ -38,7 +38,7 @@ import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.util.EntityListIterator;
-import org.ofbiz.content.widget.html.*;
+import org.ofbiz.widget.html.*;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");

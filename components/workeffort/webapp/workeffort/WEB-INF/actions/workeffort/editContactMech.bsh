@@ -5,7 +5,7 @@ import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.workeffort.workeffort.*;
-import org.ofbiz.content.webapp.control.*;
+import org.ofbiz.webapp.control.*;
 
 delegator = request.getAttribute("delegator");
 dispatcher = request.getAttribute("dispatcher");

@@ -33,7 +33,7 @@ import org.ofbiz.entity.model.*;
 import org.ofbiz.entity.condition.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
-import org.ofbiz.content.webapp.control.*;
+import org.ofbiz.webapp.control.*;
 
 delegator = request.getAttribute("delegator");
 extraInfo = request.getParameter("extInfo");

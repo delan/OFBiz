@@ -54,7 +54,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ServiceUtil;
-import org.ofbiz.content.xui.XuiSession;
+import org.ofbiz.guiapp.xui.XuiSession;
 
 /**
  * 

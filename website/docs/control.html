@@ -156,7 +156,7 @@ will
 throw a 404 server error.<br>
 <br>
 The configuration looks like this:<br>
-<pre>&lt;filter&gt; <br>  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;<br>  &lt;display-name&gt;ContextSecurityFilter&lt;/display-name&gt; <br>  &lt;filter-class&gt;org.ofbiz.content.webapp.control.ContextSecurityFilter&lt;/filter-class&gt;    <br>  &lt;init-param&gt; <br>    &lt;param-name&gt;allowedPaths&lt;/param-name&gt; <br>    &lt;param-value&gt;/control:/index.html:/index.jsp:/default.html:/default.jsp:/images&lt;/param-value&gt;    <br>  &lt;/init-param&gt; <br>  &lt;init-param&gt; <br>    &lt;param-name&gt;errorCode&lt;/param-name&gt;    <br>    &lt;param-value&gt;403&lt;/param-value&gt; <br>  &lt;/init-param&gt; <br>&lt;/filter&gt;    <br>&lt;filter-mapping&gt; <br>  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;    <br>  &lt;url-pattern&gt;/*&lt;/url-pattern&gt; <br>&lt;/filter-mapping&gt; </pre>
+<pre>&lt;filter&gt; <br>  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;<br>  &lt;display-name&gt;ContextSecurityFilter&lt;/display-name&gt; <br>  &lt;filter-class&gt;org.ofbiz.webapp.control.ContextSecurityFilter&lt;/filter-class&gt;    <br>  &lt;init-param&gt; <br>    &lt;param-name&gt;allowedPaths&lt;/param-name&gt; <br>    &lt;param-value&gt;/control:/index.html:/index.jsp:/default.html:/default.jsp:/images&lt;/param-value&gt;    <br>  &lt;/init-param&gt; <br>  &lt;init-param&gt; <br>    &lt;param-name&gt;errorCode&lt;/param-name&gt;    <br>    &lt;param-value&gt;403&lt;/param-value&gt; <br>  &lt;/init-param&gt; <br>&lt;/filter&gt;    <br>&lt;filter-mapping&gt; <br>  &lt;filter-name&gt;ContextSecurityFilter&lt;/filter-name&gt;    <br>  &lt;url-pattern&gt;/*&lt;/url-pattern&gt; <br>&lt;/filter-mapping&gt; </pre>
 <hr class="sepbar">
 <h3><a name="ControlServlet">Control Servlet</a>
 </h3>
@@ -379,7 +379,7 @@ type will assume JSP type view.</td>
 <hr class="sepbar">
 <p class="contenttext">Event Handlers are defined in the XML config
 file such as:</p>
-<pre>  &lt;handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/&gt;</pre>
+<pre>  &lt;handler name="java" type="request" class="org.ofbiz.webapp.event.JavaEventHandler"/&gt;</pre>
 <p class="contenttext">As in the above request mapping the login event
 is defined with a type
 of <code>java</code>. The event type is mapped to an Event Handler
@@ -404,7 +404,7 @@ is forthcoming. <br>
 <hr class="sepbar">
 <p class="contenttext">View Handlers are defined just like Event
 Handlers, except the type is <code>view</code>:</p>
-<pre>  &lt;handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/&gt;</pre>
+<pre>  &lt;handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/&gt;</pre>
 <p class="contenttext">The view handler handles rendering the next page
 the user will see. The <code>default</code> view handler supports
 standard html/jsp pages by dispatching to the page defined in the view

@@ -31,7 +31,7 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.*, org.ofbiz.party.contact.*" %>
 <%@ page import="org.ofbiz.accounting.payment.*" %>
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />

@@ -42,7 +42,7 @@ import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.Hits;
 import org.apache.lucene.queryParser.QueryParser;
-import org.ofbiz.content.widget.html.HtmlFormWrapper;
+import org.ofbiz.widget.html.HtmlFormWrapper;
 import org.ofbiz.product.feature.ParametricSearch;
 
 paramMap = UtilHttp.getParameterMap(request);

@@ -25,7 +25,7 @@
 
 <%@ page import="java.util.*, java.net.*, java.io.*" %>
 <%@ page import="org.w3c.dom.*" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.* " %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.* " %>
 <%@ page import="java.io.InputStream, java.io.StringWriter, java.io.FileReader, freemarker.template.*, freemarker.ext.dom.NodeModel, java.io.IOException, org.xml.sax.InputSource, freemarker.ext.beans.BeansWrapper " %>
 
 <%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
@@ -115,7 +115,7 @@
         }
         
         StringWriter outWriter = new StringWriter();
-        Configuration conf = org.ofbiz.content.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
+        Configuration conf = org.ofbiz.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
         
         Template template = null;
         try {
@@ -187,7 +187,7 @@
         }
         
         StringWriter outWriter = new StringWriter();
-        Configuration conf = org.ofbiz.content.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
+        Configuration conf = org.ofbiz.webapp.ftl.FreeMarkerWorker.makeDefaultOfbizConfig();
         
         Template template = null;
         try {
