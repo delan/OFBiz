@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -183,6 +183,34 @@
     </TD>
   </TR>
 </TABLE>
+<#-- ============================================================= -->
+<#if monthsToInclude?exists && totalSubRemainingAmount?exists && totalOrders?exists>
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Loyalty Points</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+<div class="tabletext">You have ${totalSubRemainingAmount} points from ${totalOrders} order(s) in the last ${monthsToInclude} months.</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+</#if>
 <#-- ============================================================= -->
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>

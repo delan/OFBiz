@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.16 $
+ *@version    $Revision: 1.17 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -74,6 +74,7 @@
         <tr>
           <td>
 <#if person?exists>
+<div>
   <table width="100%" border="0" cellpadding="0" cellspacing='0'>
     <tr>
       <td align="right" width="10%"><div class="tabletext"><b>${uiLabelMap.PartyName}</b></div></td>
@@ -101,6 +102,7 @@
     <#if person.totalYearsWorkExperience?exists><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.PartyYearsWork}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.totalYearsWorkExperience}</div></td></tr></#if>
     <#if person.comments?has_content><tr><td align=right nowrap><div class='tabletext'><b>${uiLabelMap.CommonComments}</b></div></td><td>&nbsp;</td><td align=left><div class='tabletext'>${person.comments}</div></td></tr></#if>
   </table>
+</div>
 <#else>
 <div class="tabletext">${uiLabelMap.PartyPersonalInformationNotFound}</div>
 </#if>
@@ -110,6 +112,36 @@
     </TD>
   </TR>
 </TABLE>
+
+<#-- ============================================================= -->
+<#if monthsToInclude?exists && totalSubRemainingAmount?exists && totalOrders?exists>
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Loyalty Points</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+<div class="tabletext">You have ${totalSubRemainingAmount} points from ${totalOrders} order(s) in the last ${monthsToInclude} months.</div>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+</#if>
+
 <#-- ============================================================= -->
 <br>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
