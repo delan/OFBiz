@@ -205,23 +205,29 @@ public class OrderServices {
                     "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
                     "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
 
-        if (context.get("currencyUom") != null)
+        if (context.get("currencyUom") != null) {
             order.set("currencyUom", context.get("currencyUom"));
+        }
             
-        if (context.get("firstAttemptOrderId") != null)
+        if (context.get("firstAttemptOrderId") != null) {
             order.set("firstAttemptOrderId", context.get("firstAttemptOrderId"));
+        }
             
-        if (context.get("grandTotal") != null)
+        if (context.get("grandTotal") != null) {
             order.set("grandTotal", context.get("grandTotal"));
+        }
             
-        if (UtilValidate.isNotEmpty((String) context.get("visitId"))) 
-        	order.set("visitId", context.get("visitId"));
+        if (UtilValidate.isNotEmpty((String) context.get("visitId"))) { 
+            order.set("visitId", context.get("visitId"));
+        }
        
-        if (UtilValidate.isNotEmpty((String) context.get("webSiteId")))
+        if (UtilValidate.isNotEmpty((String) context.get("webSiteId"))) {
             order.set("webSiteId", context.get("webSiteId"));
+        }
         	
-        if (userLogin != null && userLogin.get("userLoginId") != null)
+        if (userLogin != null && userLogin.get("userLoginId") != null) {
             order.set("createdBy", userLogin.getString("userLoginId"));
+        }
         
         // first try to create the OrderHeader; if this does not fail, continue.
         try {
@@ -361,6 +367,22 @@ public class OrderServices {
         if (UtilValidate.isNotEmpty(distributorId)) {
             toBeStored.add(delegator.makeValue("OrderRole", 
             		UtilMisc.toMap("orderId", orderId, "partyId", distributorId, "roleTypeId", "DISTRIBUTOR")));                        
+        }
+        
+        // find all parties in role VENDOR associated with WebSite, associated first valid with the Order
+        if (UtilValidate.isNotEmpty((String) context.get("webSiteId"))) {
+            try {
+                List webSiteRoles = delegator.findByAnd("WebSiteRole", UtilMisc.toMap("roleTypeId", "VENDOR", "webSiteId", context.get("webSiteId")), UtilMisc.toList("-fromDate"));
+                webSiteRoles = EntityUtil.filterByDate(webSiteRoles, true);
+                GenericValue webSiteRole = EntityUtil.getFirst(webSiteRoles);
+                if (webSiteRole != null) {
+                    toBeStored.add(delegator.makeValue("OrderRole", 
+                            UtilMisc.toMap("orderId", orderId, "partyId", webSiteRole.get("partyId"), "roleTypeId", "VENDOR")));                        
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error looking up Vendor for the current Web Site");
+            }
+            
         }
 
         // set the order status
