@@ -165,17 +165,13 @@ public class MenuEvents {
 
         // re-calc tax
         trans.calcTax();
-
-        pos.getJournal().refresh(pos);
-        pos.getInput().clear();
+        pos.refresh();
     }
 
     public static void voidAll(PosScreen pos) {
         PosTransaction trans = PosTransaction.getCurrentTx(pos.getSession());
         trans.voidSale();
-
-        pos.getJournal().refresh(pos);
-        pos.getInput().clear();
+        pos.refresh();
     }
 
     private static String getSelectedItem(PosScreen pos) {

@@ -210,6 +210,7 @@ public class PosTransaction {
     public void voidSale() {
         trace("void sale");
         cart.clear();
+        currentTx = null;
     }
 
     public void calcTax() {

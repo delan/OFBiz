@@ -28,7 +28,6 @@ import net.xoetrope.swing.XTable;
 import net.xoetrope.swing.XPanel;
 import net.xoetrope.xui.data.XModel;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.pos.screen.PosScreen;
 
@@ -138,7 +137,6 @@ public class Journal {
             // bug in XUI causes this; ignore for now
             // it has been reported and will be fixed soon
         }
-        Debug.log("Selected Row : " + jtable.getSelectedRow(), module);
     }
 
     private XModel createModel() {
