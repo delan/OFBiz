@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<simple-methods>
+    <simple-method method-name="createRequirement" short-description="Create a new requirement">
+        <make-value value-name="newEntity" entity-name="Requirement"/>
+        <sequenced-id-to-env sequence-name="Requirement" env-name="requirementId"/>
+        <to-string field-name="requirementId"/>
+        <env-to-field env-name="requirementId" map-name="newEntity"/>
+        <field-to-result field-name="requirementId" result-name="requirementId"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="requirementCreationDate" map-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+
+    <simple-method method-name="updateRequirement" short-description="Update a requirement">
+        <make-value value-name="lookupPKMap" entity-name="Requirement"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="Requirement" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <clone-value value-name="lookedUpValue" new-value-name="savedValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+
+        <!-- only save if something has changed -->
+        <if-compare-field field-name="lookedUpValue" operator="not-equals" to-field-name="savedValue" type="Object">
+            <!-- only set lastModifiedDate after comparing new & old to see if anything has changed -->
+            <store-value value-name="lookedUpValue"/>
+        </if-compare-field>
+    </simple-method>
+</simple-methods>
