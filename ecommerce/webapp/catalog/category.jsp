@@ -53,13 +53,13 @@
       <td align=right>
         <b>
         <%if(viewIndex.intValue() > 0){%>
-          <a href="<%=response.encodeURL(controlPath + "/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="button" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
           <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
-          | <a href="<%=response.encodeURL(controlPath + "/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1))%>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="button" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>
@@ -89,13 +89,13 @@
       <td align=right>
         <b>
         <%if(viewIndex.intValue() > 0){%>
-          <a href="<%=response.encodeURL(controlPath + "/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<ofbiz:url><%="/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()-1)%></ofbiz:url>" class="button" class="buttontext">[Previous]</a> |
         <%}%>
         <%if(listSize.intValue() > 0){%>
           <%=lowIndex%> - <%=highIndex%> of <%=listSize%>
         <%}%>
         <%if(listSize.intValue() > highIndex.intValue()){%>
-          | <a href="<%=response.encodeURL(controlPath + "/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1))%>" class="buttontext">[Next]</a>
+          | <a href="<ofbiz:url><%="/category?category_id=" + categoryId + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex.intValue()+1)%></ofbiz:url>" class="button" class="buttontext">[Next]</a>
         <%}%>
         </b>
       </td>

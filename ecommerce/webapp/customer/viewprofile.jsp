@@ -61,10 +61,10 @@
     </td>
     <td align=right>
       <%if(showOld){%>
-        <a href="<%=response.encodeURL(controlPath + "/viewprofile")%>" class="buttontext">
+        <a href="<ofbiz:url>/viewprofile</ofbiz:url>" class="buttontext">
         [Hide Old]</a>&nbsp;&nbsp;
       <%}else{%>
-        <a href="<%=response.encodeURL(controlPath + "/viewprofile?SHOW_OLD=true")%>" class="buttontext">
+        <a href="<ofbiz:url>/viewprofile?SHOW_OLD=true</ofbiz:url>" class="buttontext">
         [Show Old]</a>&nbsp;&nbsp;
       <%}%>
     </td>
@@ -81,7 +81,7 @@
       <div class="boxhead">&nbsp;Personal Information</div>
     </td>
     <td valign="middle" align="right">
-      <a href="<%=response.encodeURL(controlPath + "/editperson")%>" class="lightbuttontext">
+      <a href="<ofbiz:url>/editperson</ofbiz:url>" class="lightbuttontext">
       [<%=(person==null?"Create":"Update")%>]</a>&nbsp;&nbsp;
     </td>
   </tr>
@@ -138,7 +138,7 @@
       <div class="boxhead">&nbsp;Contact Information</div>
     </td>
     <td valign="middle" align="right">
-        <a href="<%=response.encodeURL(controlPath + "/editcontactmech")%>" class="lightbuttontext">
+        <a href="<ofbiz:url>/editcontactmech</ofbiz:url>" class="lightbuttontext">
         [Create New]</a>&nbsp;&nbsp;
     </td>
   </tr>
@@ -211,11 +211,11 @@
                 <td align="center" valign="top" nowrap width="1%"><div class="tabletext"><b>(<%=UtilFormatOut.checkNull(partyContactMech.getString("allowSolicitation"))%>)</b></div></td>
                 <td width="5">&nbsp;</td>
                 <td align="right" valign="top" nowrap width="1%">
-                  <div><a href="<%=response.encodeURL(controlPath + "/editcontactmech?CONTACT_MECH_ID=" + contactMech.getString("contactMechId"))%>" class="buttontext">
+                  <div><a href="<ofbiz:url><%="/editcontactmech?CONTACT_MECH_ID=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="button" class="buttontext">
                   [Update]</a></div>&nbsp;
                 </td>
                 <td align="right" valign="top" width="1%">
-                  <div><a href="<%=response.encodeURL(controlPath + "/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&CONTACT_MECH_ID=" + contactMech.getString("contactMechId"))%>" class="buttontext">
+                  <div><a href="<ofbiz:url><%="/updatecontactmech/viewprofile?UPDATE_MODE=DELETE&CONTACT_MECH_ID=" + contactMech.getString("contactMechId")%></ofbiz:url>" class="button" class="buttontext">
                   [Delete]</a></div>
                 </td>
               </tr>
@@ -239,7 +239,7 @@
       <div class="boxhead">&nbsp;Credit Card Information</div>
     </td>
     <td valign="middle" align="right">
-      <a href="<%=response.encodeURL(controlPath + "/editcreditcard")%>" class="lightbuttontext">
+      <a href="<ofbiz:url>/editcreditcard</ofbiz:url>" class="lightbuttontext">
       [Create New]</a>&nbsp;&nbsp;
     </td>
   </tr>
@@ -271,11 +271,11 @@
                           </div>
                         <td>
                         <td align="right" width='1%' nowrap>
-                          <a href="<%=response.encodeURL(controlPath + "/editcreditcard?CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId"))%>" class="buttontext">
+                          <a href="<ofbiz:url><%="/editcreditcard?CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="button" class="buttontext">
                           [Update]</a>
                         </td>
                         <td align="right" width='1%'>
-                          <a href="<%=response.encodeURL(controlPath + "/updatecreditcard/viewprofile?UPDATE_MODE=DELETE&CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId"))%>" class="buttontext">
+                          <a href="<ofbiz:url><%="/updatecreditcard/viewprofile?UPDATE_MODE=DELETE&CREDIT_CARD_ID=" + creditCardInfo.getString("creditCardId")%></ofbiz:url>" class="button" class="buttontext">
                           [Delete]</a>
                         </td>
                       </tr>
@@ -302,7 +302,7 @@
       <div class="boxhead">&nbsp;User Name & Password</div>
     </td>
     <td valign="middle" align="right">
-      <a href="<%=response.encodeURL(controlPath + "/changepassword")%>" class="lightbuttontext">
+      <a href="<ofbiz:url>/changepassword</ofbiz:url>" class="lightbuttontext">
       [Change Password]</a>&nbsp;&nbsp;
     </td>
   </tr>

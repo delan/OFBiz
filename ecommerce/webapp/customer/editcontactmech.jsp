@@ -52,13 +52,13 @@
 
 <%if(!security.hasPermission("USER_ADMIN", session) && partyContactMech == null && contactMech != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
-  &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Back]</a>
+  &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Back]</a>
 <%}else{%>
 
   <%if(contactMech == null){%>
     <%if(request.getParameter("CONTACT_MECH_TYPE_ID") == null){%>
     <p class="head1">Create New Contact Information</p>
-    <form method="post" action="<%=response.encodeURL(controlPath + "/editcontactmech?DONE_PAGE=" + donePage)%>" name="createcontactmechform">
+    <form method="post" action="<ofbiz:url><%="/editcontactmech?DONE_PAGE=" + donePage%></ofbiz:url>" name="createcontactmechform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <tr>
           <td width="26%"><div class="tabletext">Select Contact Type:</div></td>
@@ -92,8 +92,8 @@
         <%}else{ cmNewPurposeTypeId = null; }%>
       <%}%>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
-        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech?DONE_PAGE=" + donePage)%>" name="editcontactmechform">
++ donePage%></ofbiz:url>" name="editcontactmechform"> --%>
+        <form method="post" action="<ofbiz:url><%="/updatecontactmech?DONE_PAGE=" + donePage%></ofbiz:url>" name="editcontactmechform">
         <input type=hidden name="CONTACT_MECH_TYPE_ID" value="<%=contactMechTypeId%>">
         <input type=hidden name="UPDATE_MODE" value="CREATE">
         <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='CM_NEW_PURPOSE_TYPE_ID' value='", "'>")%>
@@ -116,14 +116,14 @@
                         (Since:<%=UtilDateTime.toDateString(partyContactMechPurpose.getTimestamp("fromDate"))%>)
                         <%=UtilFormatOut.ifNotEmpty(UtilDateTime.toDateTimeString(partyContactMechPurpose.getTimestamp("thruDate")), "(Expires:", ")")%>
                       &nbsp;</div></td>
-                    <td bgcolor='white'><div><a href='<%=response.encodeURL(controlPath + "/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + contactMechPurposeType.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage)%>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
+                    <td bgcolor='white'><div><a href='<ofbiz:url><%="/deletepartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&CONTACT_MECH_PURPOSE_TYPE_ID=" + contactMechPurposeType.getString("contactMechPurposeTypeId") + "&DONE_PAGE=" + donePage%></ofbiz:url>' class='buttontext'>&nbsp;Delete&nbsp;</a></div></td>
                   </tr>
                 <%}%>
               <%}%>
               <%Iterator purposeTypes = UtilMisc.toIterator(helper.findByAnd("ContactMechTypePurpose", UtilMisc.toMap("contactMechTypeId", contactMechTypeId), null));%>
               <%if(purposeTypes != null && purposeTypes.hasNext()){%>
               <tr>
-                <form method=POST action='<%=response.encodeURL(controlPath + "/createpartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&DONE_PAGE=" + donePage)%>' name='newpurposeform'>
+                <form method=POST action='<ofbiz:url><%="/createpartycontactmechpurpose?CONTACT_MECH_ID=" + contactMechId + "&DONE_PAGE=" + donePage%></ofbiz:url>' name='newpurposeform'>
                   <td bgcolor='white'>
                     <SELECT name='CONTACT_MECH_PURPOSE_TYPE_ID'>
                       <OPTION>&nbsp;</OPTION>
@@ -143,8 +143,8 @@
             </table>
           </td>
         </tr>
-        <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
-        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech?DONE_PAGE=" + donePage)%>" name="editcontactmechform">
++ donePage%></ofbiz:url>" name="editcontactmechform"> --%>
+        <form method="post" action="<ofbiz:url><%="/updatecontactmech?DONE_PAGE=" + donePage%></ofbiz:url>" name="editcontactmechform">
         <input type=hidden name="CONTACT_MECH_ID" value="<%=contactMechId%>">
         <input type=hidden name="UPDATE_MODE" value="UPDATE">
     <%}%>
@@ -244,11 +244,11 @@
   </form>
   </table>
 
-    &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Done]</a>
+    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Done]</a>
     &nbsp;<a href="javascript:document.editcontactmechform.submit()" class="buttontext">[Save]</a>
     <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
   <%}else{%>
-    &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Back]</a>
+    &nbsp;<a href="<ofbiz:url><%="/authview/" + donePage%></ofbiz:url>" class="buttontext">[Back]</a>
   <%}%>
 <%}%>
 

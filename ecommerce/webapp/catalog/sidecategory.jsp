@@ -1,6 +1,7 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="org.ofbiz.ecommerce.catalog.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%CatalogHelper.getRelatedCategories(pageContext, "topLevelList", "CATALOG1");%>
 <%String curCategoryId = UtilFormatOut.checkNull(request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));%>
 <%CatalogHelper.getRelatedCategories(pageContext, "curCategoryList", curCategoryId);%>

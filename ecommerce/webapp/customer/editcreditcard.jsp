@@ -51,17 +51,17 @@
 <%if(!security.hasPermission("USER_ADMIN", session) && creditCard != null && 
      !userLogin.getString("partyId").equals(creditCard.getString("partyId"))){%>
   <p><h3>The credit card specified does not belong to you, you may not view or edit it.</h3></p>
-  &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Back]</a>
++ donePage%></ofbiz:url>" class="buttontext">[Back]</a>
 <%}else{%>
     <%if(creditCard == null){%>
       <%useValues = false;%>
       <p class="head1">Add New Credit Card</p>
-      <form method="post" action="<%=response.encodeURL(controlPath + "/updatecreditcard/" + donePage)%>" name="editcreditcardform">
++ donePage%></ofbiz:url>" name="editcreditcardform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name="UPDATE_MODE" value="CREATE">
     <%}else{%>
       <p class="head1">Edit Credit Card</p>
-      <form method="post" action="<%=response.encodeURL(controlPath + "/updatecreditcard/" + donePage)%>" name="editcreditcardform">
++ donePage%></ofbiz:url>" name="editcreditcardform">
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
         <input type=hidden name="CREDIT_CARD_ID" value="<%=creditCardId%>">
         <input type=hidden name="UPDATE_MODE" value="UPDATE">
@@ -158,7 +158,7 @@
       <td width="5">&nbsp;</td>
       <td width="74%">
         <%-- Removed because is confusing, can add but would have to come back here with all data populated as before...
-        <a href="<%=response.encodeURL(controlPath + "/editcontactmech")%>" class="buttontext">
+        <a href="<ofbiz:url>/editcontactmech</ofbiz:url>" class="buttontext">
           [Create New Address]</a>&nbsp;&nbsp;
         --%>
         <table width="100%" border="0" cellpadding="1">
@@ -265,7 +265,7 @@
   </table>
   </form>
 
-  &nbsp;<a href="<%=response.encodeURL(controlPath + "/authview/" + donePage)%>" class="buttontext">[Done]</a>
++ donePage%></ofbiz:url>" class="buttontext">[Done]</a>
   &nbsp;<a href="javascript:document.editcreditcardform.submit()" class="buttontext">[Save]</a>
   <%--  <input type="image" value="[Save]" border="0" src="/commerce/images/btn_save.gif"> --%>
 <%}%>

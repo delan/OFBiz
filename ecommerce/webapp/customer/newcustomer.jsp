@@ -57,7 +57,7 @@
   <tr>
     <td bgcolor='white' colspan='2'>
 <p>If you already have an account, use your browser's Back button to return to the Login page and log in from there.</p>
-<form method="post" action="<%=response.encodeURL(controlPath + "/createcustomer")%>" name="newuserform" style='margin:0;'>
+<form method="post" action="<ofbiz:url>/createcustomer</ofbiz:url>" name="newuserform" style='margin:0;'>
 <table width="100%" border="0" cellpadding="2" cellspacing="0">
   <tr>
     <td width="26%"><div class="tabletext"><font color='<%=fontColor%>'>Title</font></div></td>

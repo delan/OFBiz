@@ -6,7 +6,7 @@
   </tr>
   <tr>
     <td align="center" valign="center" bgcolor='white' width='100%'>
-      <form name="keywordsearchform" method="POST" action="<%=response.encodeURL(controlPath + "/keywordsearch")%>" style='margin: 0;'>
+      <form name="keywordsearchform" method="POST" action="<ofbiz:url>/keywordsearch</ofbiz:url>" style='margin: 0;'>
         <input type=hidden name="VIEW_SIZE" value="10">
         <p><input type="text" name="SEARCH_STRING" size="14" maxlength="50"><a href="javascript:document.keywordsearchform.submit()" class="buttontext">&nbsp;Find</a></p>
       </form>

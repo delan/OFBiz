@@ -12,7 +12,7 @@
   while(prods.hasNext())
   {
     GenericValue prod1 = (GenericValue)prods.next();
-    KeywordSearch.induceKeywords(prod1, helper);
+    KeywordSearch.induceKeywords(prod1);
   }
   
   if(request.getParameter("makeall") == null) {
@@ -43,7 +43,7 @@
         }
         Double price = new Double(2.99 + prod);
         GenericValue product = helper.create("Product", UtilMisc.toMap("productId", "" + (cat*100 + prod), "primaryProductCategoryId", "" + (cat), "name", "Product " + "" + (cat*100 + prod), "description", desc, "longDescription", longDesc, "defaultPrice", price));
-        KeywordSearch.induceKeywords(product, helper);
+        KeywordSearch.induceKeywords(product);
         helper.create("ProductCategoryMember", UtilMisc.toMap("productId", "" + (cat*100 + prod), "productCategoryId", "" + (cat)));
       }
     }

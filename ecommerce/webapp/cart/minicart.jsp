@@ -1,3 +1,4 @@
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
@@ -17,7 +18,7 @@
 <%if(miniShoppingCart != null && miniShoppingCart.size() > 0){%>
     <tr>
       <td colspan="3">
-        <a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<%=response.encodeURL(controlPath + "/checkoutoptions")%>" class="buttontext">[Checkout]</a>
+        <a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="buttontext">[Checkout]</a>
       </td>
     </tr>
     <tr>
@@ -32,7 +33,7 @@
           <%=UtilFormatOut.formatQuantity(miniShoppingCartItem.getQuantity())%></div>
         </td>
         <td valign="top">
-          <div><a href="<%=response.encodeURL(controlPath + "/product?product_id=" + miniShoppingCartItem.getProductId())%>" class="buttontext">
+          <div><a href="<ofbiz:url><%="/product?product_id=" + miniShoppingCartItem.getProductId()%></ofbiz:url>" class="buttontext">
           <%=miniShoppingCartItem.getName()%></a></div>
         </td>
         <td align="right" valign="top"><div class="tabletext" nowrap>
@@ -47,7 +48,7 @@
     </tr>
     <tr>
       <td colspan="3">
-        <a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<%=response.encodeURL(controlPath + "/checkoutoptions")%>" class="buttontext">[Checkout]</a>
+        <a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="buttontext">[View&nbsp;Cart]&nbsp;</a><a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="buttontext">[Checkout]</a>
       </td>
     </tr>
 <%}else{%>

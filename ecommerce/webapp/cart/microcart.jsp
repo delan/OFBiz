@@ -1,3 +1,4 @@
+<%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="org.ofbiz.ecommerce.shoppingcart.*" %>
@@ -11,5 +12,5 @@
 <%}%>
 </font>
 <br>
-<a href="<%=response.encodeURL(controlPath + "/view/showcart")%>" class="lightbuttontext">[View&nbsp;Cart]</a>
-<a href="<%=response.encodeURL(controlPath + "/checkoutoptions")%>" class="lightbuttontext">[Checkout]</a>
+<a href="<ofbiz:url>/view/showcart</ofbiz:url>" class="lightbuttontext">[View&nbsp;Cart]</a>
+<a href="<ofbiz:url>/checkoutoptions</ofbiz:url>" class="lightbuttontext">[Checkout]</a>

@@ -69,7 +69,7 @@
     <td align="center" valign="center" bgcolor='white' width='100%'>
       <table border="0" cellpadding="0" cellspacing="0" width='100%'>
         <tr>
-          <form method="POST" action="<%=response.encodeURL(controlPath + "/newcustomer")%>" style='margin: 0;'>
+          <form method="POST" action="<ofbiz:url>/newcustomer</ofbiz:url>" style='margin: 0;'>
             <div align=center>You may create a new account here:</div>
             <div align=center><input type="submit" value="Create"></div>
           </form>
