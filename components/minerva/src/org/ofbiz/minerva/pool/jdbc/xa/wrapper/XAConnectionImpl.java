@@ -141,7 +141,9 @@ public class XAConnectionImpl implements XAConnection, PooledObject {
      * returned to a pool.  If not, it can be closed or returned immediately.
      */
     public void clientConnectionClosed(XAClientConnection clientCon) {
-        clientConnections.remove(clientCon);
+        synchronized(clientConnections) {
+            clientConnections.remove(clientCon);
+        }
         if (clientConnections.size() > 0)
             return;  // Only take action if the last connection referring to this is closed
         boolean trans = resource.isTransaction(); // could be committed directly on notification?  Seems unlikely, but let's not rule it out.
