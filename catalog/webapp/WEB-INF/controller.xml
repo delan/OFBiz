@@ -875,7 +875,7 @@
     </request-map>
     <request-map uri="createProductStoreCatalog">
     	<security https="true" auth="true"/>
-        <event type="service" path="" invoke="ProductStoreCatalog"/>
+        <event type="service" path="" invoke="createProductStoreCatalog"/>
     	<response name="success" type="view" value="EditProductStoreCatalogs"/>
     	<response name="error" type="view" value="EditProductStoreCatalogs"/>
     </request-map>
