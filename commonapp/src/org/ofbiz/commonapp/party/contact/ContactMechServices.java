@@ -72,8 +72,10 @@ public class ContactMechServices {
 
         toBeStored.add(tempContactMech);
 
-        toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(),
+        if (!partyId.equals("_NA_")) {
+            toBeStored.add(delegator.makeValue("PartyContactMech", UtilMisc.toMap("partyId", partyId, "contactMechId", newCmId.toString(),
                     "fromDate", now, "roleTypeId", context.get("roleTypeId"), "allowSolicitation", context.get("allowSolicitation"), "extension", context.get("extension"))));
+        }
 
         if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
             return ServiceUtil.returnError("This service (createContactMech) should not be used for POSTAL_ADDRESS type ContactMechs, use the createPostalAddress service");

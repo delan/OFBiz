@@ -336,9 +336,9 @@ public class OrderServices {
             }
         }
 
-        try {
-            boolean beganTransaction = TransactionUtil.begin();
-
+        try {           
+            boolean beganTransaction = TransactionUtil.begin();                        
+            
             try {
                 // store line items, etc so that they will be there for the foreign key checks
                 delegator.storeAll(toBeStored);
@@ -430,6 +430,7 @@ public class OrderServices {
             if (orderHeader == null) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status; order cannot be found.");
+                return result;
             }
             if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"));
             if (Debug.verboseOn()) Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId);
@@ -573,7 +574,7 @@ public class OrderServices {
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
-
+    
     /** Service to email a customer with order status */
     public static Map emailOrder(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -816,4 +817,8 @@ public class OrderServices {
             return new Double(0.00);
         }
     }
+    
+    
+    
+    
 }
