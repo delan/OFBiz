@@ -51,8 +51,15 @@ public class CatalogWorker {
         }
 
         if (prodCatalog == null) {
-            Debug.logWarning("No catalog found with id " + prodCatalogId + ", return false for inventory check");
+            Debug.logWarning("No catalog found with id " + prodCatalogId + ", returning false for inventory available check");
             return false;
+        }
+        
+        //if prodCatalog is set to not check inventory, break here
+        if ("N".equals(prodCatalog.getString("checkInventory"))) {
+            //note: if not set, defaults to yes, check inventory
+            Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check");
+            return true;
         }
         
         if ("Y".equals(prodCatalog.getString("oneInventoryFacility"))) {
@@ -111,6 +118,13 @@ public class CatalogWorker {
 
         if (prodCatalog == null) {
             Debug.logWarning("No catalog found with id " + prodCatalogId + ", not reserving inventory");
+            return new Double(0.0);
+        }
+        
+        //if prodCatalog is set to not reserve inventory, break here
+        if ("N".equals(prodCatalog.getString("reserveInventory"))) {
+            //note: if not set, defaults to yes, reserve inventory
+            Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT reserve inventory, not reserving inventory");
             return new Double(0.0);
         }
         

@@ -241,7 +241,7 @@ public class OrderServices {
                             invErrMsg += product.getString("productName");
                         }
                         invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
-                        errorMessages.add(invErrMsg);
+                        resErrorMessages.add(invErrMsg);
                     }
                 }
                 

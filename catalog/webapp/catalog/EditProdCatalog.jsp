@@ -144,6 +144,26 @@
         </td>
       </tr>
       <tr>
+        <td width="26%" align=right><div class="tabletext">Check Inventory?</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+          <SELECT name='checkInventory'>
+            <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='checkInventory' default="Y"/></OPTION>
+            <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
+          </SELECT>
+        </td>
+      </tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Reserve Inventory?</div></td>
+        <td>&nbsp;</td>
+        <td width="74%">
+          <SELECT name='reserveInventory'>
+            <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='reserveInventory' default="Y"/></OPTION>
+            <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
+          </SELECT>
+        </td>
+      </tr>
+      <tr>
         <td width="26%" align=right><div class="tabletext">Use Quick Add?</div></td>
         <td>&nbsp;</td>
         <td width="74%">
@@ -164,4 +184,4 @@
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 <%}%>
 </td><td>&nbsp;&nbsp;</td></tr></table>
-<%} catch (Exception e) { Debug.logError(e); } %>
+<%} catch (Exception e) { Debug.logError(e); throw e; } %>

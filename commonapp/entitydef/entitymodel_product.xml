@@ -69,6 +69,8 @@
       <field name="subtitle" type="description"></field>
       <field name="inventoryFacilityId" type="id"></field>
       <field name="oneInventoryFacility" type="indicator"></field>
+      <field name="checkInventory" type="indicator"></field>
+      <field name="reserveInventory" type="indicator"></field>
       <field name="useQuickAdd" type="indicator"></field>
       <prim-key field="prodCatalogId"/>
       <relation type="one" rel-entity-name="Facility">

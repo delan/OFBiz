@@ -52,8 +52,10 @@
     <td><div class="tabletext"><b>Name</b></div></td>
     <td><div class="tabletext"><b>Title</b></div></td>
     <td><div class="tabletext"><b>Inventory Facility</b></div></td>
-    <td><div class="tabletext"><b>OneInvFacility?</b></div></td>
-    <td><div class="tabletext"><b>UseQuickAdd?</b></div></td>
+    <td><div class="tabletext"><b>OneInv Facility?</b></div></td>
+    <td><div class="tabletext"><b>Check Inv?</b></div></td>
+    <td><div class="tabletext"><b>Reserve Inv?</b></div></td>
+    <td><div class="tabletext"><b>Use QuickAdd?</b></div></td>
     <td><div class="tabletext">&nbsp;</div></td>
   </tr>
 <ofbiz:iterator name="prodCatalog" property="prodCatalogs">
@@ -66,6 +68,8 @@
     <td><a href='<ofbiz:url>/EditFacility?facilityId=<ofbiz:inputvalue entityAttr="prodCatalog" field="inventoryFacilityId"/></ofbiz:url>' class='buttontext'>&nbsp;
         <ofbiz:inputvalue entityAttr="facility" field="facilityName"/> <ofbiz:entityfield attribute="prodCatalog" field="inventoryFacilityId" prefix="[" suffix="]"/></a></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="oneInventoryFacility"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="checkInventory"/></div></td>
+    <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveInventory"/></div></td>
     <td><div class='tabletext'>&nbsp;<ofbiz:inputvalue entityAttr="prodCatalog" field="useQuickAdd"/></div></td>
     <td>
       <a href='<ofbiz:url>/EditProdCatalog?prodCatalogId=<ofbiz:inputvalue entityAttr="prodCatalog" field="prodCatalogId"/></ofbiz:url>' class="buttontext">

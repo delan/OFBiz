@@ -98,6 +98,8 @@
         <attribute name="subtitle" type="String" mode="IN" optional="true"/>
         <attribute name="inventoryFacilityId" type="String" mode="IN" optional="true"/>
         <attribute name="oneInventoryFacility" type="String" mode="IN" optional="true"/>
+        <attribute name="checkInventory" type="String" mode="IN" optional="true"/>
+        <attribute name="reserveInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
     </service>
     <service name="updateProdCatalog" engine="simple"
@@ -109,6 +111,8 @@
         <attribute name="subtitle" type="String" mode="IN" optional="true"/>
         <attribute name="inventoryFacilityId" type="String" mode="IN" optional="true"/>
         <attribute name="oneInventoryFacility" type="String" mode="IN" optional="true"/>
+        <attribute name="checkInventory" type="String" mode="IN" optional="true"/>
+        <attribute name="reserveInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
     </service>
     <service name="deleteProdCatalog" engine="simple"
