@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.18 2003/12/15 10:27:57 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.19 2003/12/15 21:26:15 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -63,7 +64,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.18 $
+ * @version    $Revision: 1.19 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -72,6 +73,9 @@ public class EntitySyncServices {
     
     // set default split to 10 seconds, ie try not to get too much data moving over at once
     public static final long defaultSyncSplitMillis = 10000;
+    
+    // default to 5 minutes
+    public static final long syncEndBufferMillis = 300000;
 
     /**
      * Run an Entity Sync (checks to see if other already running, etc)
@@ -82,8 +86,11 @@ public class EntitySyncServices {
     public static Map runEntitySync(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        
+        // make the last time to sync X minutes before the current time so that if this machines clock is up to that amount of time 
+        //ahead of another machine writing to the DB it will still work fine and not lose any data
+        Timestamp syncEndStamp = new Timestamp(System.currentTimeMillis() - syncEndBufferMillis);
         
         String entitySyncId = (String) context.get("entitySyncId");
         Debug.logInfo("Running runEntitySync with entitySyncId=" + entitySyncId, module);
@@ -144,6 +151,7 @@ public class EntitySyncServices {
                         }
                     }
                 }
+                if (Debug.infoOn()) Debug.logInfo("No currentRunStartTime was stored on the EntitySync record, so searched for the earliest value and got: " + currentRunStartTime, module);
             }
             
             // create history record, should run in own tx
@@ -174,23 +182,26 @@ public class EntitySyncServices {
             long startingTimeMillis = System.currentTimeMillis();
             
             // increment starting time to run until now
-            while (currentRunStartTime.before(nowTimestamp)) {
+            while (currentRunStartTime.before(syncEndStamp)) {
                 long splitStartTime = System.currentTimeMillis();
                 
                 Timestamp currentRunEndTime = new Timestamp(currentRunStartTime.getTime() + splitMillis);
-                if (currentRunEndTime.after(nowTimestamp)) {
-                    currentRunEndTime = nowTimestamp;
+                if (currentRunEndTime.after(syncEndStamp)) {
+                    currentRunEndTime = syncEndStamp;
                 }
+                
+                // TODO: make sure the following message is commented out before commit:
+                Debug.logInfo("Doing runEntitySync split, currentRunStartTime=" + currentRunStartTime + ", currentRunEndTime=" + currentRunEndTime, module);
                 
                 totalSplits++;
                 
-                // make sure tx times are indexed somehow
+                // tx times are indexed
                 // keep track of how long these sync runs take and store that info on the history table
-                // save info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
+                // saves info about removed, all entities that don't have no-auto-stamp set, this will be done in the GenericDAO like the stamp sets
                 
                 // simulate two ordered lists and merge them on-the-fly for faster combined sorting
                 ArrayList valuesToStore = new ArrayList(); // make it an ArrayList to easily merge in sorted lists
-                
+
                 // iterate through entities, get all records with tx stamp in the current time range, put all in a single list
                 Iterator entityModelToUseIter = entityModelToUseList.iterator();
                 while (entityModelToUseIter.hasNext()) {
@@ -339,6 +350,8 @@ public class EntitySyncServices {
                     return ServiceUtil.returnError("Could not mark Entity Sync History as complete, but all synchronization was successful", null, null, completeEntitySyncHistRes);
                 }
             }
+            
+            if (Debug.infoOn()) Debug.logInfo("Finished runEntitySync: totalRows=" + totalRows + ", totalRowsToStore=" + totalRowsToStore + ", totalRowsToRemove=" + totalRowsToRemove, module);
         } catch (GenericEntityException e) {
             String errorMessage = "Error running EntitySync [" + entitySyncId + "], data access error: " + e.toString();
             Debug.logError(e, errorMessage, module);
@@ -431,11 +444,14 @@ public class EntitySyncServices {
                 }
                 
                 if (matchesAlways || (matchesInclude && !matchesExclude)) {
+                    // make sure this log message is not checked in uncommented:
+                    //Debug.logInfo("In runEntitySync adding [" + modelEntity.getEntityName() + "] to list of Entities to sync", module);
                     entityModelToUseList.add(modelEntity);
                 }
             }
         }
         
+        if (Debug.infoOn()) Debug.logInfo("In runEntitySync with ID [" + entitySync.get("entitySyncId") + "] syncing " + entityModelToUseList.size() + " entities", module);
         return entityModelToUseList;
     }
 
