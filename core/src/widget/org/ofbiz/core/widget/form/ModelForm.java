@@ -277,18 +277,18 @@ public class ModelForm {
      * @return
      */
     public String getDefaultEntityName() {
-        return defaultEntityName;
+        return this.defaultEntityName;
     }
 
     /**
      * @return
      */
     public String getDefaultMapName() {
-        return defaultMapName.getOriginalName();
+        return this.defaultMapName.getOriginalName();
     }
 
     public Map getDefaultMap(Map context) {
-        return (Map) defaultMapName.get(context);
+        return (Map) this.defaultMapName.get(context);
     }
 
     /**
@@ -302,35 +302,44 @@ public class ModelForm {
      * @return
      */
     public String getDefaultTitleStyle() {
-        return defaultTitleStyle;
+        return this.defaultTitleStyle;
     }
 
     /**
      * @return
      */
     public String getDefaultWidgetStyle() {
-        return defaultWidgetStyle;
+        return this.defaultWidgetStyle;
     }
 
     /**
      * @return
      */
     public String getListEntryName() {
-        return listEntryName;
+        return this.listEntryName;
     }
 
     /**
      * @return
      */
     public String getListName() {
-        return listName;
+        return this.listName;
     }
 
     /**
      * @return
      */
     public String getName() {
-        return name;
+        return this.name;
+    }
+    
+    public String getNameWithIndex(Map context) {
+        Integer itemIndex = (Integer) context.get("itemIndex");
+        if (itemIndex != null) {
+            return this.name + itemIndex.intValue();
+        } else {
+            return this.name;
+        }
     }
 
     /** iterate through altTargets list to see if any should be used, if not return original target
@@ -370,21 +379,21 @@ public class ModelForm {
      * @return
      */
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     /**
      * @return
      */
     public String getTooltip() {
-        return tooltip;
+        return this.tooltip;
     }
 
     /**
      * @return
      */
     public String getType() {
-        return type;
+        return this.type;
     }
     
     public Interpreter getBshInterpreter(Map context) throws EvalError {

@@ -188,7 +188,14 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append("/>");
         
-        // TODO: add calendar pop-up button and seed data
+        // add calendar pop-up button and seed data
+        buffer.append("<a href=\"javascript:call_cal(document.");
+        buffer.append(modelFormField.getModelForm().getNameWithIndex(context));
+        buffer.append('.');
+        buffer.append(modelFormField.getParameterName());
+        buffer.append(", '");
+        buffer.append(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context)));
+        buffer.append("<img src=\"/images/cal.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
     }
 
     /* (non-Javadoc)
@@ -336,11 +343,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
         // TODO: call ofbiz URL for target
         buffer.append("/" + modelForm.getTarget(context));
         buffer.append("\" name=\"");
-        buffer.append(modelForm.getName());
-        Integer itemIndex = (Integer) context.get("itemIndex");
-        if (itemIndex != null) {
-            buffer.append(itemIndex.intValue());
-        }
+        buffer.append(modelForm.getNameWithIndex(context));
         buffer.append("\">");
     }
 

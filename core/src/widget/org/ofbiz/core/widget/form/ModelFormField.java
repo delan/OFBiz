@@ -230,13 +230,17 @@ public class ModelFormField {
      * @return
      */
     public String getEntry(Map context) {
+        return this.getEntry(context, "");
+    }
+
+    public String getEntry(Map context, String defaultValue) {
         Boolean isError = (Boolean) context.get("isError");
         if (isError != null && isError.booleanValue()) {
             Map parameters = (Map) context.get("parameters");
             if (parameters != null) {
                 return (String) parameters.get(this.getParameterName());
             } else {
-                return "";
+                return defaultValue;
             }
         } else {
             Map dataMap = this.getMap(context);
@@ -254,11 +258,11 @@ public class ModelFormField {
             if (retVal != null) {
                 return retVal.toString();
             } else {
-                return "";
+                return defaultValue;
             }
         }
     }
-
+    
     public Map getMap(Map context) {
         if (this.mapAcsr.isEmpty()) {
             return this.modelForm.getDefaultMap(context);
@@ -1123,6 +1127,16 @@ public class ModelFormField {
          */
         public void setType(String string) {
             type = string;
+        }
+
+        public String getDefaultDateTimeString(Map context) {
+            if ("date".equals(this.type)) {
+                return (new java.sql.Date(System.currentTimeMillis())).toString();
+            } else if ("time".equals(this.type)) {
+                return (new java.sql.Time(System.currentTimeMillis())).toString();
+            } else {
+                return UtilDateTime.nowTimestamp().toString();
+            }
         }
     }
 
