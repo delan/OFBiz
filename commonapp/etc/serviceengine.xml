@@ -20,8 +20,7 @@
     <engine name="bsh" class="org.ofbiz.core.service.engine.BeanShellEngine"/>
     <engine name="soap" class="org.ofbiz.core.service.engine.SOAPClientEngine"/>
     <engine name="simple" class="org.ofbiz.core.minilang.SimpleServiceEngine"/>
-    <engine name="jmsqueue" class="org.ofbiz.core.service.jms.JMSQueueSender"/>
-    <engine name="jmstopic" class="org.ofbiz.core.service.jms.JMSTopicPublisher"/>
+    <engine name="jms" class="org.ofbiz.core.service.jms.JmsServiceEngine"/>
 
     <!-- Resource Loader Configuration -->
     <resource-loader name="mainfile" class="org.ofbiz.core.config.FileLoader"
@@ -47,25 +46,15 @@
     <service-ecas loader="mainfile" location="secas_workeffort.xml"/>
 
     <!-- JMS Service Queue/Topic Configuration -->
-<!--
-    <jms-service name="testQueue"
-                 jndi-name="OpenJMS"
-                 type="queue"
-                 broker="JmsQueueConnectionFactory"
-                 topic-queue="queue1"
-                 publisher-enabled="true"
-                 listener-enabled="true"
-                 listener-class="org.ofbiz.core.service.jms.JMSQueueListener"/>
+    <jms-service name="testQueue" send-mode="all">
+        <server jndi-server-name="default"
+                jndi-name="jms/QueueConnectionFactory"
+                topic-queue="jms/OFBQueue"
+                type="queue"
+                username="admin"
+                password="admin"
+                listen="true"/>
+    </jms-service>
 
-    <jms-service name="testTopic"
-                 jndi-name="OpenJMS"
-                 type="topic"
-                 broker="JmsTopicConnectionFactory"
-                 topic-queue="topic1"
-                 username="sub1"
-                 publisher-enabled="true"
-                 listener-enabled="true"
-                 listener-class="org.ofbiz.core.service.jms.JMSTopicListener"/>
--->
 </service-config>
 
