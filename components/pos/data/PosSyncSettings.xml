@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
-<!-- Central Server to Per Store Server -->
+<!-- MCS->PSS Central Server to Per Store Server -->
     <EntityGroup entityGroupId="5500" entityGroupName="POS: Central Server to Per Store Server"/>
     <!-- these are used to update sync settings on the POS terminals from the central server -->
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.entity.group" applEnumId="ESIA_INCLUDE"/>
@@ -9,7 +9,7 @@
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.party.party" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.party.contact" applEnumId="ESIA_INCLUDE"/>
 
-<!-- Per Store Server to POS Terminal -->
+<!-- PSS->POS Per Store Server to POS Terminal -->
     <EntityGroup entityGroupId="5501" entityGroupName="POS: Per Store Server to POS Terminal"/>
     <!-- these are used to update sync settings on the POS terminals from the central server -->
     <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.ofbiz.entity.group" applEnumId="ESIA_INCLUDE"/>
@@ -22,21 +22,46 @@
     <!-- org.ofbiz.party.party may be needed for certain promotions -->
     <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.ofbiz.party.party" applEnumId="ESIA_INCLUDE"/>
 
-<!-- POS Terminal to Per Store Server -->
+<!-- POS->PSS POS Terminal to Per Store Server -->
     <EntityGroup entityGroupId="5505" entityGroupName="POS: POS Terminal to Per Store Server"/>
     <!-- all order and related information, including payment, etc info -->
     <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.order" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.accounting.invoice" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.accounting.payment" applEnumId="ESIA_INCLUDE"/>
-    <!-- TODO: include InventoryItemTx entity once implemented --> 
+    <!-- NOTE: no inventory information will be on the POS terminal, so don't send any over --> 
 
-<!-- Per Store Server to Central Server -->
+<!-- PSS->MCS Per Store Server to Central Server -->
     <EntityGroup entityGroupId="5506" entityGroupName="POS: Per Store Server to Central Server"/>
     <!-- all order and related information, including payment, etc info -->
     <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.order" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.accounting.invoice" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.accounting.payment" applEnumId="ESIA_INCLUDE"/>
-    <!-- TODO: include InventoryItemTx entity once implemented --> 
+    <!-- include inventory and issuance info --> 
+    <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.shipment.issuance" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.product.inventory" applEnumId="ESIA_INCLUDE"/>
+    
 
-    <!-- For example settings for Entity Sync and pre-populated scheduled services, see the EntityScheduledServices.xml file -->
+<!-- Some examples of EntitySync settings for pulling and pushing data around -->
+    <!-- POS example meant to be used for pulling data from MCS to PSS -->
+    <!-- NOTE: for pulling setup the EntitySync record lives on the server the data is pulled from and should ONLY BE USED FOR ONE CLIENT! -->
+    <EntitySync entitySyncId="5500" runStatusId="ESR_NOT_STARTED" syncSplitMillis="600000" 
+            keepRemoveInfoHours="24" forPullOnly="Y"/>
+    <EntitySyncIncludeGroup entitySyncId="5500" entityGroupId="5500"/>
+    <!-- POS example meant to be used for pushing data from PSS to MCS -->
+    <EntitySync entitySyncId="5506" runStatusId="ESR_NOT_STARTED" syncSplitMillis="600000" targetServiceName="remoteStoreEntitySyncDataRmi" 
+            keepRemoveInfoHours="24" forPushOnly="Y"/>
+    <EntitySyncIncludeGroup entitySyncId="5506" entityGroupId="5506"/>
+
+    <!-- POS example meant to be used for pushing data from POS to PSS -->
+    <EntitySync entitySyncId="5505" runStatusId="ESR_NOT_STARTED" syncSplitMillis="600000" targetServiceName="remoteStoreEntitySyncDataRmi" 
+            keepRemoveInfoHours="24" forPushOnly="Y"/>
+    <EntitySyncIncludeGroup entitySyncId="5505" entityGroupId="5505"/>
+    <!-- POS example meant to be used for pulling data from PSS to POS -->
+    <!-- NOTE: for pulling setup the EntitySync record lives on the server the data is pulled from and should ONLY BE USED FOR ONE CLIENT! -->
+    <EntitySync entitySyncId="5501" runStatusId="ESR_NOT_STARTED" syncSplitMillis="600000" 
+            keepRemoveInfoHours="24" forPullOnly="Y"/>
+    <EntitySyncIncludeGroup entitySyncId="5501" entityGroupId="5501"/>
+
+    <!-- For more example settings for Entity Sync and pre-populated scheduled services, see the EntityScheduledServices.xml file -->
 </entity-engine-xml>
+

@@ -87,6 +87,8 @@
       <field name="targetServiceName" type="long-varchar"></field>
       <field name="targetDelegatorName" type="long-varchar"></field>
       <field name="keepRemoveInfoHours" type="floating-point"></field>
+      <field name="forPullOnly" type="indicator"></field>
+      <field name="forPushOnly" type="indicator"></field>
       <prim-key field="entitySyncId"/>
       <relation type="many" rel-entity-name="EntitySyncInclGrpDetailView">
         <key-map field-name="entitySyncId"/>

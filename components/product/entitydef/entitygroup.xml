@@ -106,11 +106,16 @@
     <entity-group group="org.ofbiz" entity="Lot" />
     <entity-group group="org.ofbiz" entity="PhysicalInventory" />
     <entity-group group="org.ofbiz" entity="PhysicalInventoryAndVariance" />
+    <entity-group group="org.ofbiz" entity="VarianceReason" />
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.product.location -->
+  <!-- ========================================================= -->
+
     <entity-group group="org.ofbiz" entity="ProductFacility" />
     <entity-group group="org.ofbiz" entity="ProductFacilityLocation" />
     <entity-group group="org.ofbiz" entity="ProductFacilityLocationView" />
     <entity-group group="org.ofbiz" entity="ProductFacilityLocationQuantityTest" />
-    <entity-group group="org.ofbiz" entity="VarianceReason" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.product.price -->
