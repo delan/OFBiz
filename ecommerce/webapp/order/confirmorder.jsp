@@ -156,15 +156,33 @@
       GenericValue billingAddress = order.getShippingAddress(); 
       GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
-      GenericValue creditCardInfo = orderHeader.getRelatedOne("OrderPaymentPreference").getRelatedOne("CreditCardInfo");
+      GenericValue creditCardInfo = null;
+      Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
+      if(orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
+        GenericValue orderPaymentPreference = (GenericValue)orderPaymentPreferences.next();
+        creditCardInfo = orderPaymentPreference.getRelatedOne("CreditCardInfo");
+      }
 
-      GenericValue shipmentPreference = orderHeader.getRelatedOne("OrderShipmentPreference");
-      Boolean maySplit = shipmentPreference.getBoolean("maySplit");
-      String carrierPartyId = shipmentPreference.getString("carrierPartyId");
-      String shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
-      String shippingInstructions = shipmentPreference.getString("shippingInstructions");
+      GenericValue shipmentPreference = null;
+      Boolean maySplit = null;
+      String carrierPartyId = null;
+      String shipmentMethodTypeId = null;
+      String shippingInstructions = null;
 
-      String customerPoNumber = ((GenericValue) orderHeader.getRelated("OrderItem").iterator().next()).getString("correspondingPoId");
+      Iterator orderShipmentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
+      if(orderShipmentPreferences != null && orderShipmentPreferences.hasNext()) {
+        shipmentPreference = (GenericValue)orderShipmentPreferences.next();
+        maySplit = shipmentPreference.getBoolean("maySplit");
+        carrierPartyId = shipmentPreference.getString("carrierPartyId");
+        shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
+        shippingInstructions = shipmentPreference.getString("shippingInstructions");
+      }
+
+      String customerPoNumber = null;
+      Iterator orderItemPOIter = UtilMisc.toIterator(orderItemList);
+      if(orderItemPOIter != null && orderItemPOIter.hasNext()) {
+        customerPoNumber = ((GenericValue)orderItemPOIter.next()).getString("correspondingPoId");
+      }
 %>
 <h1><div class="head1">Order Confirmation</div></h1>
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>

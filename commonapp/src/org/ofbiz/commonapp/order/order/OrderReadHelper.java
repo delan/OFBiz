@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.6  2001/09/19 08:35:19  jonesde
+ * Initial checkin of refactored entity engine.
+ *
  * Revision 1.5  2001/09/18 20:42:25  jonesde
  * Fixed null pointer problems...
  *
@@ -52,7 +55,9 @@ public class OrderReadHelper {
   
   public String getShippingMethod() {
     try {
-      GenericValue shipmentPreference = orderHeader.getRelatedOne("OrderShipmentPreference");
+      GenericValue shipmentPreference = null;
+      Iterator tempIter = UtilMisc.toIterator(orderHeader.getRelated("OrderShipmentPreference"));
+      if(tempIter != null && tempIter.hasNext()) { shipmentPreference = (GenericValue)tempIter.next(); }
       if(shipmentPreference != null) {
         GenericValue carrierShipmentMethod = shipmentPreference.getRelatedOne("CarrierShipmentMethod");
         if(carrierShipmentMethod != null) {
