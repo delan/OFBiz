@@ -802,5 +802,12 @@
 		<attribute type="String" mode="IN" name="productId" optional="false"/>
 		<attribute type="List" mode="OUT" name="featureCombinations" optional="false"/>
 	</service>
-
+     <service name="getCategoryVariantProducts" engine="java" auth="false"
+         location="org.ofbiz.product.feature.ProductFeatureServices" invoke="getCategoryVariantProducts">
+         <description>Takes a productCategoryId and a list of product features and resolves all the product category's
+             product members from virtual to variant</description>
+         <attribute type="String" mode="IN" name="productCategoryId" optional="false"/>
+         <attribute type="java.util.List" mode="IN" name="productFeatures" optional="false"/>
+         <attribute type="java.util.List" mode="OUT" name="products"/>
+     </service>
 </services>

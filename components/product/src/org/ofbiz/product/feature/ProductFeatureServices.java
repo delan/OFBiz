@@ -36,6 +36,7 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
@@ -301,6 +302,65 @@ public class ProductFeatureServices {
             return ServiceUtil.returnError(ex.getMessage());
         }
         
+        return results;
+    }
+
+  /* 
+   * Parameters: productCategoryId (String) and productFeatures (a List of ProductFeature GenericValues)
+   * Result: products (a List of Product GenericValues)
+   */
+     public static Map getCategoryVariantProducts(DispatchContext dctx, Map context) {
+        Map results = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+
+        List productFeatures = (List) context.get("productFeatures");
+        String productCategoryId = (String) context.get("productCategoryId");
+		
+        // get all the product members of the product category
+        Map result = new HashMap();
+        try {
+            result = dispatcher.runSync("getProductCategoryMembers", UtilMisc.toMap("categoryId", productCategoryId));
+        } catch (GenericServiceException ex) {
+            Debug.logError("Cannot get category memebers for " + productCategoryId + " due to error: " + ex.getMessage(), module);
+            return ServiceUtil.returnError(ex.getMessage());
+        }
+
+        List memberProducts = (List) result.get("categoryMembers");
+        if ((memberProducts != null) && (memberProducts.size() > 0)) {
+            // construct a Map of productFeatureTypeId -> productFeatureId from the productFeatures List
+            Map featuresByType = new HashMap();
+            for (Iterator pFi = productFeatures.iterator(); pFi.hasNext(); ) {
+                GenericValue nextFeature = (GenericValue) pFi.next();
+                featuresByType.put(nextFeature.getString("productFeatureTypeId"), nextFeature.getString("productFeatureId"));
+	    }
+
+            List products = new ArrayList();  // final list of variant products  
+            for (Iterator mPi = memberProducts.iterator(); mPi.hasNext(); ) {
+                // find variants for each member product of the category
+                GenericValue memberProduct = (GenericValue) mPi.next();
+
+                try {
+                    result = dispatcher.runSync("getProductVariant", UtilMisc.toMap("productId", memberProduct.getString("productId"), "selectedFeatures", featuresByType));
+                } catch (GenericServiceException ex) {
+                    Debug.logError("Cannot get product variants for " + memberProduct.getString("productId") + " due to error: " + ex.getMessage(), module);
+                    return ServiceUtil.returnError(ex.getMessage());
+                }
+
+                List variantProducts = (List) result.get("products");
+                if ((variantProducts != null) && (variantProducts.size() > 0)) {
+                    products.addAll(variantProducts);
+                } else {
+                    Debug.logWarning("Product " + memberProduct.getString("productId") + " did not have any variants for the given features", module);
+                }
+            }
+
+            results = ServiceUtil.returnSuccess();
+            results.put("products", products);
+        } else {
+            Debug.logWarning("No products found in " + productCategoryId, module);
+        }
+
         return results;
     }
 }
