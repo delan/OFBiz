@@ -84,7 +84,7 @@ public class ModelForm {
     protected String defaultWidgetStyle;
     protected String defaultTooltipStyle;
     protected String itemIndexSeparator;
-    protected String paginateTarget;
+    protected FlexibleStringExpander paginateTarget;
     protected boolean separateColumns = false;
     protected String listIteratorName;
     protected boolean paginate = true;
@@ -227,7 +227,7 @@ public class ModelForm {
         if (this.itemIndexSeparator == null || formElement.hasAttribute("item-index-separator"))
             this.itemIndexSeparator = formElement.getAttribute("item-index-separator");
         if (this.paginateTarget == null || formElement.hasAttribute("paginate-target"))
-            this.paginateTarget = formElement.getAttribute("paginate-target");
+            this.paginateTarget = new FlexibleStringExpander(formElement.getAttribute("paginate-target"));
         
         paginate = "true".equals(formElement.getAttribute("true"));
         if (formElement.hasAttribute("separate-columns")) {
@@ -969,8 +969,8 @@ public class ModelForm {
                 // render row formatting close
                 formStringRenderer.renderFormatItemRowClose(buffer, localContext, this);
             }
-            if (itemIndex < highIndex)
-                setHighIndex(itemIndex);
+            if ((itemIndex + 1) < highIndex)
+                setHighIndex(itemIndex + 1);
             setActualPageSize(highIndex - lowIndex);
             
             if (iter != null) {
@@ -1332,8 +1332,8 @@ public class ModelForm {
     /**
      * @return
      */
-    public String getPaginateTarget() {
-        return this.paginateTarget;
+    public String getPaginateTarget(Map context) {
+        return this.paginateTarget.expandString(context);
     }
     
     public String getTargetWindow(Map context) {
@@ -1363,7 +1363,7 @@ public class ModelForm {
      * @param string
      */
     public void setPaginateTarget(String string) {
-        this.paginateTarget = string;
+        this.paginateTarget = new FlexibleStringExpander(string);
     }
 
     public void setViewIndex(int val) {
