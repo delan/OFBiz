@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.10  2001/09/02 00:35:20  jonesde
+ * Added change password page
+ *
  * Revision 1.9  2001/08/31 22:45:18  jonesde
  * Added final touches to contact mech maint, including some validators
  *
@@ -448,6 +451,8 @@ public class CustomerEvents
       partyContactMech.set("thruDate", UtilDateTime.nowTimestamp());
       try { partyContactMech.store(); }
       catch(Exception e) { errMsg = "<li>ERROR: Could not change contact info (write failure) . Please contact customer service."; request.setAttribute("ERROR_MESSAGE", errMsg); return "error"; }
+
+      request.setAttribute("CONTACT_MECH_ID", newCMId.toString());
     }
     else
     {
@@ -456,6 +461,7 @@ public class CustomerEvents
       return "error";
     }
     
+    request.setAttribute("EVENT_MESSAGE", "Contact Information Updated.");
     return "success";
   }
 
@@ -583,6 +589,8 @@ public class CustomerEvents
     userLogin.set("currentPassword", newPassword);
     try { userLogin.store(); }
     catch(Exception e) { request.setAttribute("ERROR_MESSAGE", "<li>ERROR: Could not change password (write failure). Please contact customer service."); return "error"; }
+
+    request.setAttribute("EVENT_MESSAGE", "Password Changed.");
     return "success";
   }
 

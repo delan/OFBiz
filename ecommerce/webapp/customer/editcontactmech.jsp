@@ -42,7 +42,7 @@
   if(donePage == null || donePage.length() <= 0) donePage="viewprofile";
 
   String contactMechId = request.getParameter("CONTACT_MECH_ID");
-  if(contactMechId == null) contactMechId = (String)request.getAttribute("CONTACT_MECH_ID");
+  if(contactMechId == null || request.getParameter("UPDATE_MODE") != null) contactMechId = (String)request.getAttribute("CONTACT_MECH_ID");
 
   GenericValue partyContactMech = helper.findByPrimaryKey("PartyContactMech", UtilMisc.toMap("partyId", userLogin.get("partyId"), "contactMechId", contactMechId));
   GenericValue contactMech = helper.findByPrimaryKey("ContactMech", UtilMisc.toMap("contactMechId", contactMechId));
@@ -85,7 +85,8 @@
     <%if(contactMech == null){%>
       <p class="head1">Create New Contact Information</p>
       <table width="90%" border="0" cellpadding="2" cellspacing="0">
-        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
+        <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
+        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech?DONE_PAGE=" + donePage)%>" name="editcontactmechform">
         <input type=hidden name="CONTACT_MECH_TYPE_ID" value="<%=contactMechTypeId%>">
         <input type=hidden name="UPDATE_MODE" value="CREATE">
     <%}else{%>
@@ -134,7 +135,8 @@
             </table>
           </td>
         </tr>
-        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform">
+        <%-- <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech/" + donePage)%>" name="editcontactmechform"> --%>
+        <form method="post" action="<%=response.encodeURL(controlPath + "/updatecontactmech?DONE_PAGE=" + donePage)%>" name="editcontactmechform">
         <input type=hidden name="CONTACT_MECH_ID" value="<%=contactMechId%>">
         <input type=hidden name="UPDATE_MODE" value="UPDATE">
     <%}%>
