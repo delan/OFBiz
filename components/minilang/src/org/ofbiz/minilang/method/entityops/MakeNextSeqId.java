@@ -1,5 +1,5 @@
 /*
- * $Id: MakeNextSeqId.java,v 1.3 2003/11/25 06:05:36 jonesde Exp $
+ * $Id: MakeNextSeqId.java,v 1.4 2003/11/28 18:48:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
@@ -40,7 +41,7 @@ import org.w3c.dom.Element;
  * Gets a sequenced ID from the delegator and puts it in the env
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class MakeNextSeqId extends MethodOperation {
@@ -111,15 +112,10 @@ public class MakeNextSeqId extends MethodOperation {
 
                 String newSeqId = null;
                 if (seqVal != null) {
-                    newSeqId = Integer.toString(seqVal.intValue() + incrementBy);
+                    newSeqId = UtilFormatOut.formatPaddedNumber(seqVal.intValue() + incrementBy, numericPadding);
                 } else {
-                    newSeqId = "1";
+                    newSeqId = UtilFormatOut.formatPaddedNumber(1, numericPadding);
                 }
-                StringBuffer outStrBfr = new StringBuffer(newSeqId);
-                while (numericPadding > outStrBfr.length()) {
-                    outStrBfr.insert(0, '0');
-                }
-                newSeqId = outStrBfr.toString();
 
                 value.set(seqFieldName, newSeqId);
             } catch (Exception e) {

@@ -1,5 +1,5 @@
 /*
- * $Id: UtilFormatOut.java,v 1.3 2003/11/27 15:29:45 jonesde Exp $
+ * $Id: UtilFormatOut.java,v 1.4 2003/11/28 18:48:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import java.util.Currency;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class UtilFormatOut {
@@ -186,6 +186,15 @@ public class UtilFormatOut {
     public static String formatQuantity(double quantity) {
         return quantityDecimalFormat.format(quantity);
     }
+    
+    public static String formatPaddedNumber(long number, int numericPadding) {
+        StringBuffer outStrBfr = new StringBuffer(Long.toString(number));
+        while (numericPadding > outStrBfr.length()) {
+            outStrBfr.insert(0, '0');
+        }
+        return outStrBfr.toString();
+    }
+    
     
     // ------------------- date handlers -------------------          
     /** Formats a String timestamp into a nice string

@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.21 2003/11/26 07:25:07 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.22 2003/11/28 18:48:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.shipping.ShippingEvents;
 import org.ofbiz.party.contact.ContactHelper;
 import org.ofbiz.product.store.ProductStoreWorker;
@@ -51,7 +52,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 
@@ -373,6 +374,15 @@ public class OrderServices {
                 toBeStored.add(oipi);
             }
         }
+        
+        // store the orderProductPromoUseInfos
+        List orderProductPromoUses = (List) context.get("orderProductPromoUses");
+        Iterator orderProductPromoUseIter = orderProductPromoUses.iterator();
+        while (orderProductPromoUseIter.hasNext()) {
+            GenericValue productPromoUse = (GenericValue) orderProductPromoUseIter.next();
+            productPromoUse.set("orderId", orderId);
+            toBeStored.add(productPromoUse);
+        }
 
         // define the roles for the order
         List userOrderRoleTypes = null;
@@ -391,10 +401,10 @@ public class OrderServices {
             Iterator i = userOrderRoleTypes.iterator();
             while (i.hasNext()) {            	            
                 String roleType = (String) i.next();
-				String thisParty = partyId;
-				if (thisParty == null) {
-					thisParty = "_NA_";  // will always set these roles so we can query
-				}
+                String thisParty = partyId;
+                if (thisParty == null) {
+                    thisParty = "_NA_";  // will always set these roles so we can query
+                }
                 // make sure the party is in the role before adding
                 toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", roleType)));
                 toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap("orderId", orderId, "partyId", partyId, "roleTypeId", roleType)));

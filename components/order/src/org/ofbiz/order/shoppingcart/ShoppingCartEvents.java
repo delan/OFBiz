@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.10 2003/11/28 12:25:59 jonesde Exp $
+ * $Id: ShoppingCartEvents.java,v 1.11 2003/11/28 18:48:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
@@ -63,10 +63,11 @@ public class ShoppingCartEvents {
     private static final String ERROR = "error";
 
     public static String addProductPromoCode(HttpServletRequest request, HttpServletResponse response) {
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         ShoppingCart cart = getCartObject(request);
-        String productPromoCodeId = (String) request.getParameter("productPromoCodeId");
+        String productPromoCodeId = request.getParameter("productPromoCodeId");
         if (UtilValidate.isNotEmpty(productPromoCodeId)) {
-            String checkResult = cart.addProductPromoCode(productPromoCodeId);
+            String checkResult = cart.addProductPromoCode(productPromoCodeId, dispatcher);
             if (UtilValidate.isNotEmpty(checkResult)) {
                 request.setAttribute("_ERROR_MESSAGE_", checkResult);
                 return "error";
