@@ -204,6 +204,25 @@
         <field name="contentName"><display/></field>
         <field name="description"><display/></field>
         <field name="drObjectInfo" title="Template File"><display/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeContent?contentId=${contentId}&amp;contentIdTo=${contentIdTo}&amp;contentAssocTypeId=${contentAssocTypeId}&amp;fromDate=${fromDate}"/>
+        </field>
+    </form>
+
+    <form name="listListLayout" 
+        default-title-style="tableheadtext"
+        default-tooltip-style="tabletext" default-widget-style="display"
+        default-entity-name="ContentAssocDataResourceViewFrom"
+        list-name="entityList" target="" paginate-target="" title="" type="list">
+        <field name="contentId" title="Edit" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="${contentId}" target="EditLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/>
+        </field>
+        <field name="contentName"><display/></field>
+        <field name="description"><display/></field>
+        <field name="drObjectInfo" title="Template File"><display/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink also-hidden="false" description="[Delete]" target="removeLayout?contentId=${contentId}&amp;contentIdTo=${caContentIdTo}&amp;contentAssocTypeId=${caContentAssocTypeId}&amp;fromDate=${caFromDate}"/>
+        </field>
     </form>
 
 
