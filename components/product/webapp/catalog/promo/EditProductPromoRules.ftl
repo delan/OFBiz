@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -100,8 +100,8 @@
                                     <#else>
                                         <option value="">&nbsp;</option>
                                     </#if>
-                                    <#list inputParamEnums as inputParamEnums>
-                                    <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
+                                    <#list inputParamEnums as inputParamEnum>
+                                        <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
                                     </#list>
                                 </select>
                                 <select name="operatorEnumId" size=1 class="selectBox">
@@ -135,7 +135,7 @@
                             <input type=text size="5" name="productPromoCondSeqId" value="${maxCondSeqId}" class="inputBox">
                             <select name="inputParamEnumId" size=1 class="selectBox">
                                 <#list inputParamEnums as inputParamEnum>
-                                <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
+                                    <option value="${(inputParamEnum.enumId)?if_exists}">${(inputParamEnum.description)?if_exists}</option>
                                 </#list>
                             </select>
                             <select name="operatorEnumId" size=1 class="selectBox">
