@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -99,6 +99,21 @@
                         <div class="tabletext">${invoice.invoiceDate?default("N/A").toString()}</div>
                       </td>
                     </tr>
+                    <#-- invoiced orders -->
+                    <#if orders?has_content>
+                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                      <tr>
+                        <td align="right" valign="top" width="15%">
+                          <div class="tabletext">&nbsp;<b>Orders</b></div>
+                        </td>
+                        <td width="5">&nbsp;</td>
+                        <td align="left" valign="top" width="80%">
+                          <#list orders as order>
+                            <div class="tabletext">#<a href="/ordermgr/control/orderview?order_id=${order}${requestAttributes.externalKeyParam}" class="buttontext">${order}</a></div>
+                          </#list>
+                        </td>
+                      </tr>
+                    </#if>
                   </table>
                 </td>
               </tr>
