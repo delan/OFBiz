@@ -72,6 +72,10 @@ public class HtmlWidget extends ModelScreenWidget {
     public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
         childWidget.renderWidgetString(writer, context, screenStringRenderer);
     }
+
+    public String rawString() {
+        return "<html-widget>" + (this.childWidget==null?"":this.childWidget.rawString());
+    }
     
     public static void renderHtmlTemplate(Writer writer, FlexibleStringExpander locationExdr, Map context) {
         String location = locationExdr.expandString(context);
@@ -108,6 +112,10 @@ public class HtmlWidget extends ModelScreenWidget {
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
             renderHtmlTemplate(writer, this.locationExdr, context);
+        }
+
+        public String rawString() {
+            return "<html-template location=\"" + this.locationExdr.getOriginal() + "\"/>";
         }
     }
 
@@ -147,6 +155,10 @@ public class HtmlWidget extends ModelScreenWidget {
 
             renderHtmlTemplate(writer, this.locationExdr, context);
         }
+
+        public String rawString() {
+            return "<html-template-decorator location=\"" + this.locationExdr.getOriginal() + "\"/>";
+        }
     }
 
     public static class HtmlTemplateDecoratorSection extends ModelScreenWidget {
@@ -164,6 +176,10 @@ public class HtmlWidget extends ModelScreenWidget {
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) throws GeneralException {
             // render sub-widgets
             renderSubWidgetsString(this.subWidgets, writer, context, screenStringRenderer);
+        }
+
+        public String rawString() {
+            return "<html-template-decorator-section name=\"" + this.name + "\"/>";
         }
     }
 }
