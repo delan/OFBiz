@@ -1567,10 +1567,17 @@ public class OrderReadHelper {
     }
 
     public static GenericValue getProductStoreFromOrder(GenericDelegator delegator, String orderId) {
-        return getProductStoreFromOrder(getOrderHeader(delegator, orderId));
+        GenericValue orderHeader = getOrderHeader(delegator, orderId);
+        if (orderHeader == null) {
+            Debug.logWarning("Could not find OrderHeader for orderId [" + orderId + "] in getProductStoreFromOrder, returning null", module);
+        }
+        return getProductStoreFromOrder(orderHeader);
     }
 
     public static GenericValue getProductStoreFromOrder(GenericValue orderHeader) {
+        if (orderHeader == null) {
+            return null;
+        }
         GenericDelegator delegator = orderHeader.getDelegator();
         GenericValue productStore = null;
         if (orderHeader != null && orderHeader.get("productStoreId") != null) {
