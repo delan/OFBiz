@@ -135,7 +135,7 @@ public class BOMServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String productId = (String) context.get("productId");
+        String productId = (String) context.get("productIdTo");
         Boolean alsoComponents = (Boolean) context.get("alsoComponents");
         if (alsoComponents == null) {
             alsoComponents = new Boolean(true);
@@ -235,7 +235,7 @@ public class BOMServices {
             while (productsIt.hasNext()) {
                 GenericValue product = (GenericValue)productsIt.next();
                 try {
-                    Map depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.toMap("productId", product.getString("productId"), "alsoComponents", Boolean.valueOf(false), "alsoVariants", Boolean.valueOf(false)));
+                    Map depthResult = dispatcher.runSync("updateLowLevelCode", UtilMisc.toMap("productIdTo", product.getString("productId"), "alsoComponents", Boolean.valueOf(false), "alsoVariants", Boolean.valueOf(false)));
                     productLLCs.add(product.getString("productId") + " - " + depthResult.get("lowLevelCode"));
                 } catch(Exception exc) {
                 }

@@ -70,4 +70,11 @@
             </convert>
         </process>
     </simple-map-processor>
+    <simple-map-processor name="prepareDeleteProductAssoc">
+        <process field="fromDate">
+            <convert type="Timestamp">
+                <fail-property resource="ManufacturingUiLabels" property="ManufacturingFromDateBadFormat"/>
+            </convert>
+        </process>
+    </simple-map-processor>
 </simple-map-processors>
