@@ -170,7 +170,7 @@ public class Journal {
 
     public static XModel appendNode(XModel node, String tag, String id, String value) {
         XModel newNode = (XModel) node.append(id);
-        newNode.setTagName(tag);
+        newNode.setTagName(tag);        
         if (value != null) {
             newNode.set(value);
         }
