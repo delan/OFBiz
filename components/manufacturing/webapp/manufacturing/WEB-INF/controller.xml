@@ -363,19 +363,24 @@
     </request-map>
  
     <!-- Lookup request mappings -->
-    <request-map uri="fieldLookup">
+    <request-map uri="GenericLookup">
     	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="fieldLookup"/>
+    	<response name="success" type="view" value="GenericLookup"/>
+    </request-map> 
+    <request-map uri="LookupRoutingTask">
+    	<security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupRoutingTask"/>
+    	<response name="success" type="view" value="GenericLookup"/>
     </request-map> 
     <request-map uri="LookupVirtualProduct">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupVirtualProduct"/>
-        <response name="error" type="view" value="LookupVirtualProduct"/>
+        <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupVirtualProduct"/>
+        <response name="success" type="view" value="GenericLookup"/>
     </request-map>
     <request-map uri="LookupProduct">
         <security auth="true" https="true"/>
-        <response name="success" type="view" value="LookupProduct"/>
-        <response name="error" type="view" value="LookupProduct"/>
+        <event type="java" path="org.ofbiz.manufacturing.lookupParams" invoke="lookupProduct"/>
+        <response name="success" type="view" value="GenericLookup"/>
     </request-map>
 
      <!-- MRP request mappings -->
@@ -397,7 +402,6 @@
     <request-map uri="CreateProductionRunGo">
         <security https="true" auth="true"/>
         <event type="simple" path="org/ofbiz/manufacturing/jobshopmgt/ProductionRunSimpleEvents.xml" invoke="checkFieldCreateProductionRun"/>
-<!--        <event type="service" invoke="createProductionRun"/> SAV -->
         <response name="success" type="view" value="CreateProductionRun"/>
         <response name="error" type="view" value="CreateProductionRun"/>
     </request-map>
@@ -431,9 +435,7 @@
     <view-map name="EditProductBom" type="jpublish" page="/bom/EditProductBom.ftl"/>
     <view-map name="EditProductManufacturingRules" type="jpublish" page="/bom/EditProductManufacturingRules.ftl"/>
     <!-- Lookup request mappings -->
-    <view-map name="fieldLookup" type="jpublish" page="/includes/fieldlookup.ftl"/>
-    <view-map name="LookupVirtualProduct" page="/bom/LookupVirtualProduct.ftl" type="jpublish"/>
-    <view-map name="LookupProduct" page="/includes/LookupProduct.ftl" type="jpublish"/>
+    <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
     <!-- MRP view mappings -->
     <view-map name="RunningMrp" type="jpublish" page="/mrp/RunningMrp.ftl"/>
      <!-- JobShop Management request mappings -->
