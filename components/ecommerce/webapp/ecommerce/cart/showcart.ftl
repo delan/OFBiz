@@ -118,7 +118,7 @@ function setAlternateGwp(field) {
             <div class="boxhead">&nbsp;${uiLabelMap.CommonQuickAdd}</div>
           </td>
           <td valign="middle" align="right">
-            <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 1)>
+            <#if ((sessionAttributes.lastViewedProducts)?has_content && sessionAttributes.lastViewedProducts?size > 0)>
               <#assign continueLink = "/product?product_id=" + sessionAttributes.lastViewedProducts.get(0)>
             <#else>
               <#assign continueLink = "/main">
