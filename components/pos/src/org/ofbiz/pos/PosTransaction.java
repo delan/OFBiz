@@ -104,6 +104,10 @@ public class PosTransaction {
         trace("transaction created");
     }
 
+    public String getUserId() {
+        return session.getUserId();
+    }
+
     public int getDrawerNumber() {
         return drawerIdx + 1;
     }
@@ -129,6 +133,10 @@ public class PosTransaction {
         return this.orderId;
     }
 
+    public double getTaxTotal() {
+        return cart.getTotalSalesTax();
+    }
+    
     public double getGrandTotal() {
         return UtilFormatOut.formatPriceNumber(cart.getGrandTotal()).doubleValue();
     }
@@ -141,6 +149,23 @@ public class PosTransaction {
         double grandTotal = this.getGrandTotal();
         double paymentAmt = this.getPaymentTotal();
         return (grandTotal - paymentAmt);
+    }
+
+    public int size() {
+        return cart.size();
+    }
+
+    public Map getItemInfo(int index) {
+        ShoppingCartItem item = cart.findCartItem(index);
+        Map itemInfo = new HashMap();
+        itemInfo.put("productId", item.getProductId());
+        itemInfo.put("description", item.getDescription());
+        itemInfo.put("quantity", UtilFormatOut.formatQuantity(item.getQuantity()));
+        itemInfo.put("basePrice", UtilFormatOut.formatPrice(item.getBasePrice()));
+        itemInfo.put("adjustments", UtilFormatOut.formatPrice(item.getOtherAdjustments()));
+        itemInfo.put("subtotal", UtilFormatOut.formatPrice(item.getItemSubTotal()));
+        itemInfo.put("isTaxable", item.taxApplies() ? "T" : "");
+        return itemInfo;
     }
 
     public double getItemQuantity(String productId) {
