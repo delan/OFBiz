@@ -172,7 +172,7 @@ public class ModelFormField {
             this.setFieldInfo(overrideFormField.fieldInfo);
         }        
     }
-
+    
     public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
         this.fieldInfo.renderFieldString(buffer, context, formStringRenderer);
     }
@@ -195,8 +195,11 @@ public class ModelFormField {
      * @param fieldInfo
      */
     public void setFieldInfo(FieldInfo fieldInfo) {
-        this.fieldInfo = fieldInfo;
-        if (this.fieldInfo != null) {
+        if (fieldInfo == null) return;
+        
+        // field info is a little different, check source for priority
+        if (this.fieldInfo == null || (fieldInfo.getFieldSource() <= this.fieldInfo.getFieldSource())) {
+            this.fieldInfo = fieldInfo;
             this.fieldInfo.modelFormField = this;
         }
     }
@@ -735,6 +738,15 @@ public class ModelFormField {
         public static final int RESET = 10;
         public static final int HIDDEN = 11;
         public static final int IGNORED = 12;
+
+        // the numbering here represents the priority of the source; 
+        //when setting a new fieldInfo on a modelFormField it will only set
+        //the new one if the fieldSource is less than or equal to the existing
+        //fieldSource, which should always be passed as one of the following...
+        public static final int SOURCE_EXPLICIT = 1;
+        public static final int SOURCE_AUTO_ENTITY = 2;
+        public static final int SOURCE_AUTO_SERVICE = 3;
+
         
         public static Map fieldTypeByName = new HashMap();
         
@@ -754,19 +766,22 @@ public class ModelFormField {
         }
         
         protected int fieldType;
+        protected int fieldSource;
         protected ModelFormField modelFormField;
         
         /** Don't allow the Default Constructor */
         protected FieldInfo() {}
 
         /** Value Constructor */        
-        public FieldInfo(int fieldType, ModelFormField modelFormField) {
+        public FieldInfo(int fieldSource, int fieldType, ModelFormField modelFormField) {
             this.fieldType = fieldType;
+            this.fieldSource = fieldSource;
             this.modelFormField = modelFormField;
         }
         
         /** XML Constructor */        
         public FieldInfo(Element element, ModelFormField modelFormField) {
+            this.fieldSource = FieldInfo.SOURCE_EXPLICIT;
             this.fieldType = findFieldTypeFromName(element.getTagName());
             this.modelFormField = modelFormField;
         }
@@ -787,10 +802,10 @@ public class ModelFormField {
         }
 
         /**
-         * @param i
+         * @return
          */
-        public void setFieldType(int i) {
-            fieldType = i;
+        public int getFieldSource() {
+            return this.fieldSource;
         }
 
         public static int findFieldTypeFromName(String name) {
@@ -811,8 +826,8 @@ public class ModelFormField {
         protected String noCurrentSelectedKey;
         protected List optionSources = new LinkedList();
 
-        public FieldInfoWithOptions(int fieldType, ModelFormField modelFormField) {
-            super(fieldType, modelFormField);
+        public FieldInfoWithOptions(int fieldSource, int fieldType, ModelFormField modelFormField) {
+            super(fieldSource, fieldType, modelFormField);
         }
 
         public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
@@ -826,22 +841,20 @@ public class ModelFormField {
             while (childElementIter.hasNext()) {
                 Element childElement = (Element) childElementIter.next();
                 if ("option".equals(childElement.getTagName())) {
-                    optionSources.add(new SingleOption(childElement, this));
+                    this.addOptionSource(new SingleOption(childElement, this));
                 } else if ("entity-options".equals(childElement.getTagName())) {
-                    optionSources.add(new EntityOptions(childElement, this));
+                    this.addOptionSource(new EntityOptions(childElement, this));
                 }
             }
         }
 
         public List getAllOptionValues(Map context, GenericDelegator delegator) {
             List optionValues = new LinkedList();
-            
             Iterator optionSourceIter = this.optionSources.iterator();
             while (optionSourceIter.hasNext()) {
                 OptionSource optionSource = (OptionSource) optionSourceIter.next();
                 optionSource.addOptionValues(optionValues, context, delegator);
             }
-                  
             return optionValues;
         }
         
@@ -872,6 +885,10 @@ public class ModelFormField {
 
         public void setNoCurrentSelectedKey(String string) {
             this.noCurrentSelectedKey = string;
+        }
+        
+        public void addOptionSource(OptionSource optionSource) {
+            this.optionSources.add(optionSource);
         }
     }
     
@@ -998,7 +1015,11 @@ public class ModelFormField {
         protected DisplayField() { super(); }
 
         public DisplayField(ModelFormField modelFormField) {
-            super(FieldInfo.DISPLAY, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.DISPLAY, modelFormField);
+        }
+
+        public DisplayField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.DISPLAY, modelFormField);
         }
 
         public DisplayField(Element element, ModelFormField modelFormField) {
@@ -1053,7 +1074,11 @@ public class ModelFormField {
         protected HyperlinkField() { super(); }
 
         public HyperlinkField(ModelFormField modelFormField) {
-            super(FieldInfo.HYPERLINK, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.HYPERLINK, modelFormField);
+        }
+
+        public HyperlinkField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.HYPERLINK, modelFormField);
         }
 
         public HyperlinkField(Element element, ModelFormField modelFormField) {
@@ -1133,7 +1158,11 @@ public class ModelFormField {
         protected TextField() { super(); }
 
         public TextField(ModelFormField modelFormField) {
-            super(FieldInfo.TEXT, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.TEXT, modelFormField);
+        }
+
+        public TextField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.TEXT, modelFormField);
         }
 
         public TextField(Element element, ModelFormField modelFormField) {
@@ -1199,7 +1228,11 @@ public class ModelFormField {
         protected TextareaField() { super(); }
 
         public TextareaField(ModelFormField modelFormField) {
-            super(FieldInfo.TEXTAREA, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.TEXTAREA, modelFormField);
+        }
+
+        public TextareaField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.TEXTAREA, modelFormField);
         }
 
         public TextareaField(Element element, ModelFormField modelFormField) {
@@ -1263,7 +1296,11 @@ public class ModelFormField {
         protected DateTimeField() { super(); }
 
         public DateTimeField(ModelFormField modelFormField) {
-            super(FieldInfo.DATE_TIME, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.DATE_TIME, modelFormField);
+        }
+
+        public DateTimeField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.DATE_TIME, modelFormField);
         }
 
         public DateTimeField(Element element, ModelFormField modelFormField) {
@@ -1307,7 +1344,11 @@ public class ModelFormField {
         protected DropDownField() { super(); }
 
         public DropDownField(ModelFormField modelFormField) {
-            super(FieldInfo.DROP_DOWN, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.DROP_DOWN, modelFormField);
+        }
+
+        public DropDownField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.DROP_DOWN, modelFormField);
         }
 
         public DropDownField(Element element, ModelFormField modelFormField) {
@@ -1358,7 +1399,11 @@ public class ModelFormField {
         protected RadioField() { super(); }
 
         public RadioField(ModelFormField modelFormField) {
-            super(FieldInfo.RADIO, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.RADIO, modelFormField);
+        }
+
+        public RadioField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.RADIO, modelFormField);
         }
 
         public RadioField(Element element, ModelFormField modelFormField) {
@@ -1374,7 +1419,11 @@ public class ModelFormField {
         protected CheckField() { super(); }
 
         public CheckField(ModelFormField modelFormField) {
-            super(FieldInfo.CHECK, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.CHECK, modelFormField);
+        }
+
+        public CheckField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.CHECK, modelFormField);
         }
 
         public CheckField(Element element, ModelFormField modelFormField) {
@@ -1393,7 +1442,11 @@ public class ModelFormField {
         protected SubmitField() { super(); }
 
         public SubmitField(ModelFormField modelFormField) {
-            super(FieldInfo.SUBMIT, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.SUBMIT, modelFormField);
+        }
+
+        public SubmitField(int fieldInfo, ModelFormField modelFormField) {
+            super(fieldInfo, FieldInfo.SUBMIT, modelFormField);
         }
 
         public SubmitField(Element element, ModelFormField modelFormField) {
@@ -1439,7 +1492,11 @@ public class ModelFormField {
         protected ResetField() { super(); }
 
         public ResetField(ModelFormField modelFormField) {
-            super(FieldInfo.RESET, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.RESET, modelFormField);
+        }
+
+        public ResetField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.RESET, modelFormField);
         }
 
         public ResetField(Element element, ModelFormField modelFormField) {
@@ -1457,7 +1514,11 @@ public class ModelFormField {
         protected HiddenField() { super(); }
 
         public HiddenField(ModelFormField modelFormField) {
-            super(FieldInfo.HIDDEN, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.HIDDEN, modelFormField);
+        }
+
+        public HiddenField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.HIDDEN, modelFormField);
         }
 
         public HiddenField(Element element, ModelFormField modelFormField) {
@@ -1486,7 +1547,11 @@ public class ModelFormField {
         protected IgnoredField() { super(); }
 
         public IgnoredField(ModelFormField modelFormField) {
-            super(FieldInfo.IGNORED, modelFormField);
+            super(FieldInfo.SOURCE_EXPLICIT, FieldInfo.IGNORED, modelFormField);
+        }
+
+        public IgnoredField(int fieldSource, ModelFormField modelFormField) {
+            super(fieldSource, FieldInfo.IGNORED, modelFormField);
         }
 
         public IgnoredField(Element element, ModelFormField modelFormField) {

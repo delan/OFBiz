@@ -28,6 +28,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.model.ModelEntity;
@@ -166,7 +168,19 @@ public class ModelForm {
     public ModelFormField addUpdateField(ModelFormField modelFormField) {
         if (modelFormField.getUseWhen() != null && modelFormField.getUseWhen().length() > 0) {
             // is a conditional field, add to the List but don't worry about the Map
-            this.fieldList.add(modelFormField);
+            //for adding to list, see if there is another field with that name in the list and if so, put it before that one
+            boolean inserted = false;
+            for (int i = 0; i < this.fieldList.size(); i++) {
+                ModelFormField curField = (ModelFormField) this.fieldList.get(i);
+                if (curField.getName() != null && curField.getName().equals(modelFormField.getName())) {
+                    this.fieldList.add(i, modelFormField);
+                    inserted = true;
+                    break;
+                }
+            }
+            if (!inserted) {
+                this.fieldList.add(modelFormField);
+            }
             return modelFormField;
         } else {
             // not a conditional field, see if a named field exists in Map
@@ -226,23 +240,23 @@ public class ModelForm {
         newFormField.setAttributeName(modelParam.name);
         
         if (modelParam.type.indexOf("Double") != -1 || modelParam.type.indexOf("Float") != -1 || modelParam.type.indexOf("Long") != -1 || modelParam.type.indexOf("Integer") != -1) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, newFormField);
             textField.setSize(6);
             newFormField.setFieldInfo(textField);
         } else if (modelParam.type.indexOf("Timestamp") != -1) {
-            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(newFormField);
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, newFormField);
             dateTimeField.setType("timestamp");
             newFormField.setFieldInfo(dateTimeField);
         } else if (modelParam.type.indexOf("Date") != -1) {
-            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(newFormField);
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, newFormField);
             dateTimeField.setType("date");
             newFormField.setFieldInfo(dateTimeField);
         } else if (modelParam.type.indexOf("Time") != -1) {
-            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(newFormField);
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, newFormField);
             dateTimeField.setType("time");
             newFormField.setFieldInfo(dateTimeField);
         } else {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_SERVICE, newFormField);
             newFormField.setFieldInfo(textField);
         }
         newFormField.setTitle(modelParam.formLabel);
@@ -276,53 +290,57 @@ public class ModelForm {
         newFormField.setFieldName(modelField.getName());
         
         if ("id".equals(modelField.getType()) || "id-ne".equals(modelField.getType())) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             textField.setSize(20);
             textField.setMaxlength(new Integer(20));
             newFormField.setFieldInfo(textField);
         } else if ("id-long".equals(modelField.getType()) || "id-long-ne".equals(modelField.getType())) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             textField.setSize(40);
             textField.setMaxlength(new Integer(60));
             newFormField.setFieldInfo(textField);
         } else if ("id-vlong".equals(modelField.getType()) || "id-vlong-ne".equals(modelField.getType())) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             textField.setSize(60);
             textField.setMaxlength(new Integer(250));
             newFormField.setFieldInfo(textField);
         } else if ("indicator".equals(modelField.getType())) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
-            textField.setSize(1);
-            textField.setMaxlength(new Integer(1));
-            newFormField.setFieldInfo(textField);
+            ModelFormField.DropDownField dropDownField = new ModelFormField.DropDownField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
+            dropDownField.setAllowEmpty(false);
+            dropDownField.addOptionSource(new ModelFormField.SingleOption("Y", null, dropDownField));
+            dropDownField.addOptionSource(new ModelFormField.SingleOption("N", null, dropDownField));
+            //ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
+            //textField.setSize(1);
+            //textField.setMaxlength(new Integer(1));
+            //newFormField.setFieldInfo(textField);
         } else if ("very-short".equals(modelField.getType())) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             textField.setSize(6);
             textField.setMaxlength(new Integer(10));
             newFormField.setFieldInfo(textField);
         } else if ("very-long".equals(modelField.getType())) {
-            ModelFormField.TextareaField textareaField = new ModelFormField.TextareaField(newFormField);
+            ModelFormField.TextareaField textareaField = new ModelFormField.TextareaField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             textareaField.setCols(60);
             textareaField.setRows(2);
             newFormField.setFieldInfo(textareaField);
         } else if ("name".equals(modelField.getType()) || "short-varchar".equals(modelField.getType())) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             textField.setSize(40);
             textField.setMaxlength(new Integer(60));
             newFormField.setFieldInfo(textField);
         } else if ("value".equals(modelField.getType()) || "comment".equals(modelField.getType()) || 
                 "description".equals(modelField.getType()) || "long-varchar".equals(modelField.getType()) ||
                 "url".equals(modelField.getType()) || "email".equals(modelField.getType())) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             textField.setSize(60);
             textField.setMaxlength(new Integer(250));
             newFormField.setFieldInfo(textField);
         } else if ("floating-point".equals(modelField.getType()) || "currency".equals(modelField.getType()) || "numeric".equals(modelField.getType())) {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             textField.setSize(6);
             newFormField.setFieldInfo(textField);
         } else if ("date-time".equals(modelField.getType()) || "date".equals(modelField.getType()) || "time".equals(modelField.getType())) {
-            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(newFormField);
+            ModelFormField.DateTimeField dateTimeField = new ModelFormField.DateTimeField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             if ("date-time".equals(modelField.getType())) {
                 dateTimeField.setType("timestamp");
             } else if ("date".equals(modelField.getType())) {
@@ -332,7 +350,7 @@ public class ModelForm {
             }
             newFormField.setFieldInfo(dateTimeField);
         } else {
-            ModelFormField.TextField textField = new ModelFormField.TextField(newFormField);
+            ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, newFormField);
             newFormField.setFieldInfo(textField);
         }
         
@@ -400,6 +418,8 @@ public class ModelForm {
         if (fieldIter.hasNext()) {
             nextFormField = (ModelFormField) fieldIter.next();
         }
+        
+        Set alreadyRendered = new TreeSet();
 
         boolean isFirstPass = true;            
         while (currentFormField != null) {
@@ -432,10 +452,17 @@ public class ModelForm {
             if (fieldInfo.getFieldType() == ModelFormField.FieldInfo.HIDDEN || fieldInfo.getFieldType() == ModelFormField.FieldInfo.IGNORED) {
                 continue; 
             }
+            
+            if (alreadyRendered.contains(currentFormField.getName())) {
+                continue;
+            }
 
+            //Debug.logInfo("In single form evaluating use-when for field " + currentFormField.getName() + ": " + currentFormField.getUseWhen());
             if (!currentFormField.shouldUse(context)) {
                 continue;
             }
+            
+            alreadyRendered.add(currentFormField.getName());
                 
             boolean stayingOnRow = false;
             if (lastFormField != null) {
@@ -465,7 +492,7 @@ public class ModelForm {
             }
                 
             if (stayingOnRow) {
-                // render spacer cell
+                // no spacer cell, might add later though...
                 //formStringRenderer.renderFormatFieldRowSpacerCell(buffer, context, currentFormField);
             } else {
                 if (lastFormField != null) {
