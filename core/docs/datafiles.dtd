@@ -50,7 +50,7 @@
   <!ELEMENT field EMPTY>
   <!ATTLIST field
     name CDATA #REQUIRED
-    position CDATA #REQUIRED
+    position CDATA #IMPLIED
     length CDATA #IMPLIED
     type CDATA #REQUIRED
     format CDATA #IMPLIED
