@@ -149,6 +149,10 @@ public class ModelViewEntity extends ModelEntity {
         this.memberEntityNames.put(alias, aliasedEntityName);
     }
 
+    public void removeMemberEntityAlias(String alias) {
+        this.memberEntityNames.remove(alias);
+    }
+
     /** List of aliases with information in addition to what is in the standard field list */
     public ModelAlias getAlias(int index) {
         return (ModelAlias) this.aliases.get(index);
