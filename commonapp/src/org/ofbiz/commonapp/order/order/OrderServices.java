@@ -595,9 +595,12 @@ public class OrderServices {
             while (itemIter.hasNext()) {
                 GenericValue item = (GenericValue) itemIter.next();
                 String statusId = item.getString("statusId");
+                Debug.log("Item Status: " + statusId, module);
                 if (!"ITEM_CANCELLED".equals(statusId)) {
+                    Debug.log("Not set to cancel", module);
                     allCanceled = false;
-                    if (!"ITEM_COMPLETED".equals("statusId")) {
+                    if (!"ITEM_COMPLETED".equals(statusId)) {
+                        Debug.log("Not set to complete", module);
                         allComplete = false;
                         break;                       
                     }
@@ -1826,5 +1829,40 @@ public class OrderServices {
                 }
             }
         }   
-    }     
+    }
+    
+    public static Map autoCancelItems(DispatchContext ctx, Map context) {
+        GenericDelegator delegator = ctx.getDelegator();
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        List itemsToCancel = null;
+        try {
+            List exprs = UtilMisc.toList(new EntityExpr("autoCancelDate", EntityOperator.NOT_EQUAL, null));
+            exprs.add(new EntityExpr("dontCancelSetDate", EntityOperator.EQUALS, null));
+            exprs.add(new EntityExpr("dontCancelSetUserLogin", EntityOperator.EQUALS, null));
+            exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_COMPLETED"));
+            exprs.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"));           
+            itemsToCancel = delegator.findByAnd("OrderItem", exprs, UtilMisc.toList("autoCancelDate"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problem getting OrderItem(s) to cancel", module);            
+        }
+        
+        if (itemsToCancel != null) {
+            Iterator itemsIter = itemsToCancel.iterator();
+            Timestamp now = UtilDateTime.nowTimestamp();
+            while (itemsIter.hasNext()) {
+                GenericValue item = (GenericValue) itemsIter.next();
+                Timestamp autoCancelDate = item.getTimestamp("autoCancelDate");
+                if (now.after(autoCancelDate)) {
+                    try {
+                        Map serviceContext = UtilMisc.toMap("orderId", item.get("orderId"), "orderItemSeqId", item.get("orderItemSeqId"), "statusId", "ITEM_CANCELLED");
+                        Map result = dispatcher.runSync("changeOrderItemStatus", serviceContext);                
+                    } catch (GenericServiceException e) {
+                        Debug.logError(e, "Problems calling cancel item : " + item, module);
+                    }
+                }
+            }
+        }
+        
+        return ServiceUtil.returnSuccess();     
+    }
 }

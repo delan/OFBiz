@@ -232,7 +232,13 @@
     	<description>Updates the (purchase) order/order item status based on receipt</description>
     	<attribute name="orderId" type="String" mode="IN" optional="false"/>    	
     	<attribute name="currentStatusId" type="String" mode="OUT" optional="false"/>
-    </service>    
+    </service>
+    
+    <service name="autoCancelOrderItems" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="autoCancelItems">
+        <description>Batch service for doing auto-cancel on set items</description>
+        <!-- this service has no parameters IN or OUT -->
+    </service>        
     
     <service name="checkOrderForBackOrders" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="checkBackOrderItems">
