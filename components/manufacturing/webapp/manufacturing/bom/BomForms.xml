@@ -27,6 +27,39 @@
 
 <forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
+    <form name="RunBomSimulation" type="single" 
+            target="runBomSimulation" title=""
+            default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">
+        <field name="lookupFlag"><hidden value="Y"/></field>
+        <field name="productId">
+            <lookup target-form-name="LookupProduct"/>
+        </field>
+        <field name="bomType" title="${uiLabelMap.ManufacturingBomType}" widget-style="selectBox">
+            <drop-down allow-empty="false">
+                <entity-options entity-name="ProductAssocType" key-field-name="productAssocTypeId" description="${description}">
+                    <entity-constraint name="parentTypeId" value="PRODUCT_COMPONENT"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="fromDate" title="${uiLabelMap.ManufacturingFromDate}">
+            <date-time/>
+        </field>
+        <field name="rootQuantity" title="${uiLabelMap.CommonQuantity}">
+            <text default-value="1"/>
+        </field>
+        <field name="type">
+            <drop-down>
+                <option key="0" description="${uiLabelMap.ManufacturingExplosion}"/>
+                <option key="1" description="${uiLabelMap.ManufacturingExplosionSingleLevel}"/>
+                <option key="2" description="${uiLabelMap.ManufacturingExplosionManufacturing}"/>
+                <option key="3" description="${uiLabelMap.ManufacturingImplosion}"/>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonSubmit}" widget-style="smallSubmit">
+            <submit button-type="button"/>
+        </field>
+    </form>
+        
     <form name="ListProductManufacturingRules" type="list" 
             target="UpdateProductManufacturingRule" title="" list-name="manufacturingRules"
             default-title-style="tableheadtext" default-widget-style="tabletext" default-tooltip-style="tabletext">

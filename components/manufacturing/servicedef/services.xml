@@ -446,6 +446,7 @@
         <attribute mode="IN" name="type" optional="true" type="Integer"/>
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
         <attribute mode="IN" name="bomType" optional="false" type="String"/>
+        <attribute mode="IN" name="quantity" optional="true" type="Double"/>
         <attribute mode="OUT" name="tree" optional="true" type="org.ofbiz.manufacturing.bom.BOMTree"/>
     </service>
 
