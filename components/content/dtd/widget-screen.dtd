@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.5 2004/06/28 23:30:17 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.6 2004/06/29 15:55:17 jonesde Exp $
 -->
 
 <!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific">
@@ -69,40 +69,40 @@
         filter-by-date ( true | false | by-name ) "false"
     >
 
-		<!ELEMENT condition-list ( ( condition | condition-list )+ )>
-		<!ATTLIST condition-list
-			cache ( and | or ) "and"
-		>
-	
-		<!ELEMENT condition EMPTY>
-		<!ATTLIST condition
-			field-name CDATA #REQUIRED
-			operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
-			env-name CDATA #REQUIRED
-		>
-		
-		<!ELEMENT order-by EMPTY>
-		<!ATTLIST order-by
-			field-name CDATA #REQUIRED
-		>
-		
-		<!ELEMENT limit-range EMPTY>
-		<!ATTLIST limit-range
-			start-env-name CDATA #REQUIRED
-			size-env-name CDATA #REQUIRED
-		>
-		
-		<!ELEMENT limit-view EMPTY>
-		<!ATTLIST limit-view
-			view-index-env-name CDATA #REQUIRED
-			view-size-env-name CDATA #REQUIRED
-		>
-		
-		<!ELEMENT field-map EMPTY>
-		<!ATTLIST field-map
-			env-name CDATA #REQUIRED
-			field-name CDATA #IMPLIED
-		>
+        <!ELEMENT condition-list ( ( condition | condition-list )+ )>
+        <!ATTLIST condition-list
+            cache ( and | or ) "and"
+        >
+    
+        <!ELEMENT condition EMPTY>
+        <!ATTLIST condition
+            field-name CDATA #REQUIRED
+            operator ( less | greater | less-equals | greater-equals | equals | not-equals | in | between | like ) #REQUIRED
+            env-name CDATA #REQUIRED
+        >
+        
+        <!ELEMENT order-by EMPTY>
+        <!ATTLIST order-by
+            field-name CDATA #REQUIRED
+        >
+        
+        <!ELEMENT limit-range EMPTY>
+        <!ATTLIST limit-range
+            start-env-name CDATA #REQUIRED
+            size-env-name CDATA #REQUIRED
+        >
+        
+        <!ELEMENT limit-view EMPTY>
+        <!ATTLIST limit-view
+            view-index-env-name CDATA #REQUIRED
+            view-size-env-name CDATA #REQUIRED
+        >
+        
+        <!ELEMENT field-map EMPTY>
+        <!ATTLIST field-map
+            env-name CDATA #REQUIRED
+            field-name CDATA #IMPLIED
+        >
 
     <!ELEMENT script EMPTY>
     <!ATTLIST script
@@ -114,71 +114,71 @@
     name CDATA #IMPLIED
 >
 
-<!ELEMENT container ( (%AllWidgets;)* )>
-<!ATTLIST container
-    id CDATA #IMPLIED
-    style CDATA #IMPLIED
->
-
-<!ELEMENT include-screen EMPTY>
-<!ATTLIST include-screen
-    name CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-
-<!-- renders the named screen and includes the children of this elements at the point where it finds the decorator-parent tag -->
-<!ELEMENT composite-screen ( composite-section+ )>
-<!ATTLIST composite-screen
-    name CDATA #REQUIRED
-    location CDATA #IMPLIED
->
-
-<!ELEMENT composite-section ( (%AllWidgets;)* )>
-<!ATTLIST composite-section
-    name CDATA #REQUIRED
->
-
-<!-- this is just a place holder to tell the renderer to include the parent container's contents at this point -->
-<!ELEMENT composite-section-include EMPTY>
-<!ATTLIST composite-section-include
-    name CDATA #REQUIRED
->
-
-<!ELEMENT label (#PCDATA)>
-<!ATTLIST label
-    text CDATA #IMPLIED
-    id CDATA #IMPLIED
-    style CDATA #IMPLIED
->
-
-<!ELEMENT form EMPTY>
-<!ATTLIST form
-    name CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-
-<!ELEMENT menu EMPTY>
-<!ATTLIST menu
-    name CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-
-<!ELEMENT tree EMPTY>
-<!ATTLIST tree
-    name CDATA #REQUIRED
-    location CDATA #REQUIRED
->
-
-<!ELEMENT content EMPTY>
-<!ATTLIST content
-    content-id CDATA #REQUIRED
->
-
-<!ELEMENT sub-content EMPTY>
-<!ATTLIST sub-content
-    content-id CDATA #REQUIRED
-    assoc-name CDATA #REQUIRED
->
+    <!ELEMENT container ( (%AllWidgets;)* )>
+    <!ATTLIST container
+        id CDATA #IMPLIED
+        style CDATA #IMPLIED
+    >
+    
+    <!ELEMENT include-screen EMPTY>
+    <!ATTLIST include-screen
+        name CDATA #REQUIRED
+        location CDATA #REQUIRED
+    >
+    
+    <!-- renders the named screen and includes the children of this elements at the point where it finds the decorator-section-include tag -->
+    <!ELEMENT decorator-screen ( decorator-section+ )>
+    <!ATTLIST decorator-screen
+        name CDATA #REQUIRED
+        location CDATA #IMPLIED
+    >
+    
+    <!ELEMENT decorator-section ( (%AllWidgets;)* )>
+    <!ATTLIST decorator-section
+        name CDATA #REQUIRED
+    >
+    
+    <!-- this is just a place holder to tell the renderer to include the parent container's contents at this point -->
+    <!ELEMENT decorator-section-include EMPTY>
+    <!ATTLIST decorator-section-include
+        name CDATA #REQUIRED
+    >
+    
+    <!ELEMENT label (#PCDATA)>
+    <!ATTLIST label
+        text CDATA #IMPLIED
+        id CDATA #IMPLIED
+        style CDATA #IMPLIED
+    >
+    
+    <!ELEMENT form EMPTY>
+    <!ATTLIST form
+        name CDATA #REQUIRED
+        location CDATA #REQUIRED
+    >
+    
+    <!ELEMENT menu EMPTY>
+    <!ATTLIST menu
+        name CDATA #REQUIRED
+        location CDATA #REQUIRED
+    >
+    
+    <!ELEMENT tree EMPTY>
+    <!ATTLIST tree
+        name CDATA #REQUIRED
+        location CDATA #REQUIRED
+    >
+    
+    <!ELEMENT content EMPTY>
+    <!ATTLIST content
+        content-id CDATA #REQUIRED
+    >
+    
+    <!ELEMENT sub-content EMPTY>
+    <!ATTLIST sub-content
+        content-id CDATA #REQUIRED
+        assoc-name CDATA #REQUIRED
+    >
 
 <!-- ============== Platform Specific Elements =============== -->
 
@@ -196,9 +196,13 @@
 >
 
 <!-- don't really want to encourage, should be done on the screen level -->
-<!ELEMENT template-decorator ( (%AllWidgets;)* )>
+<!ELEMENT template-decorator ( template-decorator-section+ )>
 <!ATTLIST template-decorator
     location CDATA #REQUIRED
+>
+<!ELEMENT template-decorator-section ( (%AllWidgets;)* )>
+<!ATTLIST template-decorator-section
+    name CDATA #REQUIRED
 >
 
 <!-- ============== Swing Specific Elements =============== -->
