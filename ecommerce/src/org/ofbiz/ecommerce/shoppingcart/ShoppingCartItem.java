@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.3  2001/08/28 02:24:34  azeneski
+ * Updated shopping cart to use store a reference to the product entity, rather then individual attributes.
+ * Worked on the equals() method in ShoppingCartItem.java. Might be fixed now.
+ *
  * Revision 1.2  2001/08/27 17:29:31  epabst
  * simplified
  *
@@ -14,6 +18,7 @@ package org.ofbiz.ecommerce.shoppingcart;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.ofbiz.core.entity.GenericValue;
 
@@ -44,13 +49,15 @@ import org.ofbiz.core.entity.GenericValue;
  * Created on August 4, 2001, 8:21 PM
  */
 public class ShoppingCartItem implements Serializable {
-
-    private GenericValue product;
-    private HashMap attributes;
+    
+    private transient GenericValue product;
+    private String productId;    
     private String itemComment;
     private double discountAmount;
     private double quantity;            
     private boolean shippingApplies;
+    private Map features;
+    private Map attributes;
     private int type;
     
     /** Creates new ShoppingCartItem object. */
@@ -59,14 +66,16 @@ public class ShoppingCartItem implements Serializable {
     }
        
     /** Creates new ShoppingCartItem object. */
-    public ShoppingCartItem(GenericValue product, double quantity, HashMap attributes) {
+    public ShoppingCartItem(GenericValue product, double quantity, HashMap features) {
         this.product = product;
+        this.productId = product.getString("productId");
         this.quantity = quantity;
-        this.attributes = attributes;
+        this.attributes = features;
         this.discountAmount = 0.00;
         this.itemComment = null;
         this.shippingApplies = true;
         this.type = 0;
+        this.attributes = new HashMap();
     }
         
     /** Sets the quantity for the item. */
@@ -89,14 +98,24 @@ public class ShoppingCartItem implements Serializable {
         this.shippingApplies = shippingApplies;
     }
     
+    /** Sets an item attribute. */
+    public void setAttribute(String name, String value) {
+        attributes.put(name,value);
+    }
+    
     /** Returns true if shipping charges apply to this item. */
     public boolean shippingApplies() {
         return shippingApplies;
     }
     
+    /** Return a specific attribute. */
+    public String getAttribute(String name) {
+        return (String) attributes.get(name);
+    }        
+    
     /** Returns the item's productId. */
     public String getProductId() {
-        return product.getString("productId");
+        return productId;
     }
     
     /** Returns the item's description. */
@@ -135,23 +154,23 @@ public class ShoppingCartItem implements Serializable {
         return (getBasePrice() - discountAmount) * quantity;
     }
     
-    /** Returns the attributes for the item. */
-    public HashMap getAttributes() {
-        return attributes;
+    /** Returns the features for the item. */
+    public Map getFeatures() {
+        return features;
     }
     
     /** Returns a collection of attribute names. */
-    public Collection getAttributeNames() {
-        if ( attributes == null || attributes.size() < 1 )
+    public Collection getFeatureNames() {
+        if ( features == null || features.size() < 1 )
             return null;       
-        return (Collection) attributes.keySet();
+        return (Collection) features.keySet();
     }
     
     /** Returns a collection of attribute values. */
-    public Collection getAttributeValues() {
-        if ( attributes == null || attributes.size() < 1 )
+    public Collection getFeatureValues() {
+        if ( features == null || features.size() < 1 )
             return null;
-        return attributes.values();
+        return features.values();
     }     
     
     /** Compares the specified object with this cart item. */
@@ -159,13 +178,13 @@ public class ShoppingCartItem implements Serializable {
         if ( item == null ) 
             return false;
         if ( item.getProductId().equals(getProductId()) ) {
-            if ( getAttributes() != null ) {
-                if ( item.getAttributes() != null ) {
-                    if ( item.getAttributes().equals(getAttributes()) )
+            if ( getFeatures() != null ) {
+                if ( item.getFeatures() != null ) {
+                    if ( item.getFeatures().equals(getFeatures()) )
                         return true;
                 }
             } 
-            else if (item.getAttributes() == null ) 
+            else if (item.getFeatures() == null ) 
                 return true;
         }
         return false;
