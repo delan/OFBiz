@@ -385,6 +385,12 @@ public class ShoppingCartItem implements java.io.Serializable {
         return this.additionalProductFeatureAndAppls;
     }
 
+    /** Removes an item attribute. */
+    public void removeAttribute(String name) {
+        if (attributes == null) attributes = new HashMap();
+        if (attributes.containsKey(name))
+            attributes.remove(name);
+    }
     /** Sets an item attribute. */
     public void setAttribute(String name, Object value) {
         if (attributes == null) attributes = new HashMap();
