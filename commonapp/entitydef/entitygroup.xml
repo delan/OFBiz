@@ -417,8 +417,10 @@
     <entity-group group="org.ofbiz.commonapp" entity="SimpleSalesTaxLookup" />
     <entity-group group="org.ofbiz.commonapp" entity="ReturnHeader" />
     <entity-group group="org.ofbiz.commonapp" entity="ReturnItem" />
+    <entity-group group="org.ofbiz.commonapp" entity="ReturnItemResponse" />
     <entity-group group="org.ofbiz.commonapp" entity="ReturnReason" />
-    <entity-group group="org.ofbiz.commonapp" entity="ReturnStatus" />    
+    <entity-group group="org.ofbiz.commonapp" entity="ReturnStatus" /> 
+    <entity-group group="org.ofbiz.commonapp" entity="ReturnType" />   
     <entity-group group="org.ofbiz.commonapp" entity="WorkOrderItemFulfillment" />
 
   <!-- ========================================================= -->

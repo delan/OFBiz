@@ -1273,19 +1273,26 @@
     <entity entity-name="ReturnHeader"
             package-name="org.ofbiz.commonapp.order.order"
             title="Return Entity">
-      <field name="returnId" type="id-ne"></field>
+      <field name="returnId" type="id-ne"></field>     
       <field name="statusId" type="id"></field>
       <field name="fromPartyId" type="id"></field>
+      <field name="billingAccountId" type="id"></field>
       <field name="entryDate" type="date-time"></field>
       <field name="originContactMechId" type="id"></field>
       <field name="destinationFacilityId" type="id"></field>
       <prim-key field="returnId"/>
+      <relation type="one" fk-name="RTN_HEAD_TYPE" rel-entity-name="ReturnType">
+        <key-map field-name="returnTypeId"/>
+      </relation>
       <relation type="many" rel-entity-name="ReturnItem">
         <key-map field-name="returnId"/>        
       </relation>
       <relation type="one" fk-name="RTN_FROM_PARTY" rel-entity-name="Party">
         <key-map field-name="fromPartyId" rel-field-name="partyId"/>
       </relation>
+      <relation type="one" fk-name="RTN_TO_BACT" rel-entity-name="BillingAccount">
+        <key-map field-name="billingAccountId"/>
+      </relation>      
       <relation type="one" fk-name="RTN_TO_FACILITY" rel-entity-name="Facility">
         <key-map field-name="destinationFacilityId" rel-field-name="facilityId"/>
       </relation>
@@ -1308,27 +1315,32 @@
       <field name="returnId" type="id-ne"></field>
       <field name="returnItemSeqId" type="id-ne"></field>
       <field name="returnReasonId" type="id"></field>
+      <field name="returnTypeId" type="id"></field>
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="statusId" type="id"></field>
       <field name="returnQuantity" type="floating-point"></field>
       <field name="returnPrice" type="currency-amount"></field>
+      <field name="returnItemResponseId" type="id"></field>
       <prim-key field="returnId"/>
       <prim-key field="returnItemSeqId"/>
-      <relation type="one" fk-name="RTNI_ITEM_RTN" rel-entity-name="ReturnHeader">
+      <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="ReturnHeader">
         <key-map field-name="returnId"/>
       </relation>
-      <relation type="one" fk-name="RTNI_REASON" rel-entity-name="ReturnReason">
+      <relation type="one" fk-name="RTN_ITEM_REASON" rel-entity-name="ReturnReason">
         <key-map field-name="returnReasonId"/>
       </relation>
-      <relation type="one" fk-name="RTNI_ODR_HEADER" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="RTN_ITEM_TYPE" rel-entity-name="ReturnType">
+        <key-map field-name="returnTypeId"/>
+      </relation>      
+      <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
-      <relation type="one" fk-name="RTNI_ODR_ITEM" rel-entity-name="OrderItem">
+      <relation type="one" fk-name="RTN_ITEM_ODRIT" rel-entity-name="OrderItem">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>
       </relation>      
-      <relation type="one" fk-name="RTN_STTS_ITEM" rel-entity-name="StatusItem">
+      <relation type="one" fk-name="RTN_ITEM_STTSIT" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>      
       <relation type="many" rel-entity-name="ReturnStatus">
@@ -1340,11 +1352,37 @@
         <key-map field-name="orderItemSeqId"/>
       </relation>         
     </entity>
+    <entity entity-name="ReturnItemResponse"
+            package-name="org.ofbiz.commonapp.order.order"
+            never-cache="true"
+            title="The Return Item Response Entity">
+      <field name="returnItemResponseId" type="id-ne"></field>
+      <field name="orderPaymentPreferenceId" type="id"></field>
+      <field name="replacementOrderId" type="id"></field>
+      <field name="paymentId" type="id"></field>
+      <field name="billingAccountId" type="id"></field>
+      <field name="responseAmount" type="currency-amount"></field>
+      <field name="responseDate" type="date-time"></field>    
+      <prim-key field="returnItemResponseId"/>   
+      <relation type="one" fk-name="RTN_PAY_ORDPAYPF" rel-entity-name="OrderPaymentPreference">
+        <key-map field-name="orderPaymentPreferenceId"/>
+      </relation>
+      <relation type="one" fk-name="RTN_RESP_NEWORD" rel-entity-name="OrderHeader">
+        <key-map field-name="replacementOrderId" rel-field-name="orderId"/>   
+      </relation>
+      <relation type="one" fk-name="RTN_PAY_PAYMENT" rel-entity-name="Payment">
+        <key-map field-name="paymentId"/>
+      </relation> 
+      <relation type="one" fk-name="RTN_PAY_BACT" rel-entity-name="BillingAccount">
+        <key-map field-name="billingAccountId"/>
+      </relation>              
+    </entity>    
     <entity entity-name="ReturnReason"
             package-name="org.ofbiz.commonapp.order.order"
             title="Return Reason Entity">
       <field name="returnReasonId" type="id-ne"></field>
       <field name="description" type="description"></field>
+      <field name="sequenceId" type="id"></field>
       <prim-key field="returnReasonId"/>
       <relation type="many" rel-entity-name="ReturnItem">
         <key-map field-name="returnReasonId"/>
@@ -1369,7 +1407,15 @@
         <key-map field-name="returnId"/>
         <key-map field-name="returnItemSeqId"/>
       </relation>
-    </entity>         
+    </entity>
+    <entity entity-name="ReturnType"
+            package-name="org.ofbiz.commonapp.order.order"
+            title="Return Type Entity">
+      <field name="returnTypeId" type="id-ne"></field>
+      <field name="description" type="description"></field>
+      <field name="sequenceId" type="id"></field>
+      <prim-key field="returnTypeId"/>      	
+    </entity>
     <entity entity-name="WorkOrderItemFulfillment"
             package-name="org.ofbiz.commonapp.order.order"
             title="Work Order Item Fulfillment Entity">
