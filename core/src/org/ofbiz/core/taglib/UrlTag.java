@@ -1,6 +1,9 @@
 /*
  * $id$
  * $Log$
+ * Revision 1.3  2001/09/21 11:15:17  jonesde
+ * Updates related to Tomcat 4 update, bug fixes.
+ *
  * Revision 1.2  2001/08/06 00:45:09  azeneski
  * minor adjustments to tag files. added new format tag.
  *
@@ -50,10 +53,6 @@ import org.ofbiz.core.util.Debug;
  */
 public class UrlTag extends BodyTagSupport {
   
-  public int doStartTag() {
-    return EVAL_BODY_AGAIN;
-  }
-  
   public int doEndTag() throws JspException {
     HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
     HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
@@ -62,7 +61,7 @@ public class UrlTag extends BodyTagSupport {
     String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
     String baseURL = body.getString();
     String newURL = controlPath + baseURL;
-    Debug.logInfo("baseURL: " + baseURL + "; newURL: " + newURL);
+    //Debug.logInfo("baseURL: " + baseURL + "; newURL: " + newURL);
     
     body.clearBody();
     

@@ -47,9 +47,7 @@ public class GenericHelperEJB implements GenericHelper {
 
   /** Initializes the genericHome, from a JNDI lookup */
   public GenericHome getGenericHome(String helperName) {
-    JNDIContext myJNDIContext;
-    myJNDIContext = new JNDIContext(helperName);
-    InitialContext initialContext = myJNDIContext.getInitialContext();
+    InitialContext initialContext = JNDIContextFactory.getInitialContext(helperName);
     try {
       Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.core.entity.GenericHome");
       genericHome = (GenericHome)MyNarrow.narrow(homeObject, GenericHome.class);

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/09/21 11:15:17  jonesde
+ * Updates related to Tomcat 4 update, bug fixes.
+ *
  * Revision 1.6  2001/09/20 17:55:11  jonesde
  * Removed some long info messages that were starting to get annoying.
  *
@@ -62,154 +65,154 @@ import org.ofbiz.core.util.Debug;
  * Created on August 4, 2001, 8:21 PM
  */
 public class IteratorTag extends BodyTagSupport {
+  
+  protected Iterator iterator = null;
+  protected String name = null;
+  protected String property = null;
+  protected Object element = null;
+  protected Class type = null;
+  
+  public void setName(String name) {
+    this.name = name;
+  }
+  
+  public void setProperty(String property) {
+    this.property = property;
+  }
+  
+  public void setType(String type) throws ClassNotFoundException {
+    this.type = Class.forName(type);
+  }
+  
+  public void setIterator(Iterator iterator) {
+    this.iterator = iterator;
+  }
+  
+  public String getName() {
+    return name;
+  }
+  
+  public String getProperty() {
+    return property;
+  }
+  
+  public Object getElement() {
+    return element;
+  }
+  
+  public Iterator getIterator() {
+    return this.iterator;
+  }
+  
+  public String getType() {
+    return type.getName();
+  }
+  
+  public int doStartTag() throws JspTagException {
+    //Debug.logInfo("Starting Iterator Tag...");
     
-    protected Iterator iterator = null;
-    protected String name = null;    
-    protected String property = null;
-    protected Object element = null;
-    protected Class type = null;    
+    if (  !defineIterator() )
+      return SKIP_BODY;
     
-    public void setName(String name) {
-        this.name = name;
-    }
-        
-    public void setProperty(String property) {
-        this.property = property;
-    }
+    //Debug.logInfo("We now have an iterator.");
     
-    public void setType(String type) throws ClassNotFoundException {
-        this.type = Class.forName(type);
+    if ( defineElement() )
+      return EVAL_BODY_AGAIN;
+    else
+      return SKIP_BODY;
+  }
+  
+  public int doAfterBody() {
+    if ( defineElement() )
+      return EVAL_BODY_AGAIN;
+    else
+      return SKIP_BODY;
+  }
+  
+  public int doEndTag() {
+    try {
+      BodyContent body = getBodyContent();
+      if (body != null) {
+        JspWriter out = body.getEnclosingWriter();
+        out.print(body.getString());
+      }
     }
-    
-    public void setIterator(Iterator iterator) {
-        this.iterator = iterator;
+    catch(IOException e) {
+      Debug.logInfo("IteratorTag IO Error");
+      Debug.logInfo(e);
     }
-        
-    public String getName() {
-        return name;
+    return EVAL_PAGE;
+  }
+  
+  private boolean defineIterator() {
+    //clear the iterator, after this it may be set directly
+    Iterator newIterator = null;
+    Collection thisCollection = null;
+    if ( property != null ) {
+      Debug.logInfo("Getting iterator from property: " + property);
+      Object propertyObject = pageContext.findAttribute(property);
+      if (propertyObject instanceof Iterator) {
+        newIterator = (Iterator) propertyObject;
+      } else {
+        //if ClassCastException, it should indicate looking for a Collection
+        thisCollection = (Collection) propertyObject;
+      }
     }
-       
-    public String getProperty() {
-        return property;
-    }
-    
-    public Object getElement() {
-        return element;
-    }
-    
-    public Iterator getIterator() {
-        return this.iterator;
-    }
-    
-    public String getType() {
-        return type.getName();
-    }
-            
-    public int doStartTag() throws JspTagException {
-        Debug.logInfo("Starting Iterator Tag...");
-        
-        if (  !defineIterator() )
-            return SKIP_BODY;
-        
-        Debug.logInfo("We now have an iterator.");
-        
-        if ( defineElement() )
-            return EVAL_BODY_AGAIN;
-        else
-            return SKIP_BODY;
-    }
-    
-    public int doAfterBody() {
-        if ( defineElement() )
-            return EVAL_BODY_AGAIN;
-        else
-            return SKIP_BODY;
-    }
-    
-    public int doEndTag() {
+    else {
+      //Debug.logInfo("No property, check for Object Tag.");
+      ObjectTag objectTag = (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
+      if ( objectTag == null )
+        return false;
+      if ( objectTag.getType().equals("java.util.Collection") )
+        thisCollection = (Collection) objectTag.getObject();
+      else {
         try {
-            BodyContent body = getBodyContent();
-            if (body != null) {
-                JspWriter out = body.getEnclosingWriter();
-                out.print(body.getString());
+          Method[] m = Class.forName(objectTag.getType()).getDeclaredMethods();
+          for ( int i = 0; i <m.length; i++ ) {
+            if ( m[i].getName().equals("iterator") ) {
+              //Debug.logInfo("Found iterator method. Using it.");
+              newIterator = (Iterator) m[i].invoke(objectTag.getObject(),null);
+              break;
             }
+          }
         }
-        catch(IOException e) {
-            Debug.logInfo("IteratorTag IO Error");
-            Debug.logInfo(e);
+        catch ( Exception e ) {
+          return false;
         }
-        return EVAL_PAGE;
+      }
     }
     
-    private boolean defineIterator() {
-        //clear the iterator, after this it may be set directly
-        Iterator newIterator = null;
-        Collection thisCollection = null;
-        if ( property != null ) {
-            Debug.logInfo("Getting iterator from property: " + property);
-            Object propertyObject = pageContext.findAttribute(property);
-            if (propertyObject instanceof Iterator) {
-                newIterator = (Iterator) propertyObject;
-            } else {
-                //if ClassCastException, it should indicate looking for a Collection
-                thisCollection = (Collection) propertyObject;
-            }
-        } 
-        else {
-            Debug.logInfo("No property, check for Object Tag.");
-            ObjectTag objectTag = (ObjectTag) findAncestorWithClass(this, ObjectTag.class);
-            if ( objectTag == null )
-                return false;
-            if ( objectTag.getType().equals("java.util.Collection") )
-                thisCollection = (Collection) objectTag.getObject();    
-            else {
-                try {
-                    Method[] m = Class.forName(objectTag.getType()).getDeclaredMethods();
-                    for ( int i = 0; i <m.length; i++ ) {
-                        if ( m[i].getName().equals("iterator") ) {
-                            Debug.logInfo("Found iterator method. Using it.");
-                            newIterator = (Iterator) m[i].invoke(objectTag.getObject(),null);
-                            break;
-                        }
-                    }
-                }
-                catch ( Exception e ) {
-                    return false;
-                }
-            }
-        }
-        
-        if (newIterator == null) {
-            if ( thisCollection == null || thisCollection.size() < 1 )
-                return false;
-
-            newIterator = thisCollection.iterator();
-            Debug.logInfo("Got iterator.");
-        } else {//already set
-            Debug.logInfo("iterator already set.");
-        }
-        this.iterator = newIterator;
-        return true;
+    if (newIterator == null) {
+      if ( thisCollection == null || thisCollection.size() < 1 )
+        return false;
+      
+      newIterator = thisCollection.iterator();
+      //Debug.logInfo("Got iterator.");
+    } else {//already set
+      Debug.logInfo("iterator already set.");
     }
-    
-    private boolean defineElement() {
-        element = null;
-        pageContext.removeAttribute(name);
-        if ( this.iterator.hasNext() ) {
-            element = this.iterator.next();
-            //Debug.logInfo("iterator has another object: " + element);
-        } else {
-            Debug.logInfo("iterator has no more objects");
-        }
-        if ( element != null ) {
-            //Debug.logInfo("set attribute " + name + " to be " + element + " as next value from iterator");
-            pageContext.setAttribute(name,element);
-            return true;
-        }
-        //Debug.logInfo("no more iterations; element = " + element);
-        Debug.logInfo("no more iterations");
-        return false;        
+    this.iterator = newIterator;
+    return true;
+  }
+  
+  private boolean defineElement() {
+    element = null;
+    pageContext.removeAttribute(name);
+    if ( this.iterator.hasNext() ) {
+      element = this.iterator.next();
+      //Debug.logInfo("iterator has another object: " + element);
+    } else {
+      //Debug.logInfo("iterator has no more objects");
     }
+    if ( element != null ) {
+      //Debug.logInfo("set attribute " + name + " to be " + element + " as next value from iterator");
+      pageContext.setAttribute(name,element);
+      return true;
+    }
+    //Debug.logInfo("no more iterations; element = " + element);
+    //Debug.logInfo("no more iterations");
+    return false;
+  }
 }
 
 

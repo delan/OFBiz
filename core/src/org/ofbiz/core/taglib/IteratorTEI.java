@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/16 01:24:19  azeneski
+ * Updated property tags to use the EntityValue by default.
+ *
  * Revision 1.1  2001/08/05 00:48:47  azeneski
  * Added new core JSP tag library. Non-application specific taglibs.
  *
@@ -37,28 +40,27 @@ import javax.servlet.jsp.tagext.*;
  * Created on August 4, 2001, 8:21 PM
  */
 public class IteratorTEI extends TagExtraInfo {
-
-    public IteratorTEI () { 
-	super();
-    }
-
-    public VariableInfo[] getVariableInfo (TagData data) {
-        String name = null;
-        String className = null;
-        
-	name = data.getAttributeString("name");        
-	className = data.getAttributeString("type");
-        System.out.println("IteratorTEI: "+className);
-        if ( className == null )
-            className = "org.ofbiz.core.entity.GenericValue";
-        System.out.println("IteratorTEI: "+className);
-                             
-	VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
-	VariableInfo[] result = { info };
-	return result;
-    }
-
-    public boolean isValid (TagData data) {	
-	return true;
-    }         
+  
+  public IteratorTEI() {
+    super();
+  }
+  
+  public VariableInfo[] getVariableInfo(TagData data) {
+    String name = null;
+    String className = null;
+    
+    name = data.getAttributeString("name");
+    className = data.getAttributeString("type");
+    //Debug.logInfo("IteratorTEI: "+className);
+    if(className == null) className = "org.ofbiz.core.entity.GenericValue";
+    //Debug.logInfo("IteratorTEI: "+className);
+    
+    VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
+    VariableInfo[] result = { info };
+    return result;
+  }
+  
+  public boolean isValid(TagData data) {
+    return true;
+  }
 }

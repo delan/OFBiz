@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.17  2001/09/19 08:32:01  jonesde
+ * Initial checkin of refactored entity engine.
+ *
  * Revision 1.16  2001/09/19 00:22:58  jonesde
  * Fixed bug with server root path where it was getting lost in the session, now putting in each request.
  *
@@ -71,6 +74,7 @@ import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
+import java.lang.reflect.Method;
 
 /**
  * <p><b>Title:</b> ControlServlet.java
@@ -110,6 +114,15 @@ public class ControlServlet extends HttpServlet {
     super.init(config);
     // setup the request handler
     getRequestHandler();
+
+    //if exists, start PoolMan
+    try {
+      Class poolManClass = Class.forName("com.codestudio.sql.PoolMan");
+      Method startMethod = poolManClass.getMethod("start", null);
+      startMethod.invoke(null, null);
+      //Debug.logInfo("Found PoolMan Driver...");
+    }
+    catch(Exception ex) { }
     
     //initialize the entity & security stuff
     String delegatorName = config.getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);

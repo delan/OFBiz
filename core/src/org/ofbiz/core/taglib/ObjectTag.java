@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/06 00:45:09  azeneski
+ * minor adjustments to tag files. added new format tag.
+ *
  * Revision 1.1  2001/08/05 00:48:47  azeneski
  * Added new core JSP tag library. Non-application specific taglibs.
  *
@@ -75,20 +78,20 @@ public  class ObjectTag extends TagSupport {
     }
     
     public int doStartTag() throws JspTagException {
-        Debug.log("Starting Object Tag...");
+        //Debug.logInfo("Starting Object Tag...");
         element = pageContext.findAttribute(property);        
         if ( element != null ) {
-            Debug.log("Got element from property: " + property);
+            //Debug.logInfo("Got element from property: " + property);
             pageContext.setAttribute(name,element);
         }
         else {
-            Debug.log("Did not find element in property. ("+property+")");
+            Debug.logWarning("Did not find element in property. ("+property+")");
         }
         return EVAL_BODY_INCLUDE;
     }
     
     public int doEndTag() {
-        Debug.log("ObjectTag done.");
+        //Debug.logInfo("ObjectTag done.");
         return EVAL_PAGE;
     }
 }
