@@ -80,7 +80,7 @@
 <table border="1" width="100%" cellpadding='2' cellspacing='0'>
   <tr>
     <td><div class="tabletext"><b>Facility</b></div></td>
-    <td align="center"><div class="tabletext"><b>Minimum&nbsp;Stock&nbsp;&amp;&nbsp;Reorder&nbsp;Quantity</b></div></td>
+    <td align="center"><div class="tabletext"><b>Minimum&nbsp;Stock&nbsp;&amp;&nbsp;Reorder&nbsp;Quantity&nbsp;&amp;&nbsp;Days To Ship</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
   </tr>
 <%int line = 0;%>
@@ -95,6 +95,7 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productFacility" field="facilityId" fullattrs="true"/>>
             <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="minimumStock" fullattrs="true"/> class='inputBox'>
             <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="reorderQuantity" fullattrs="true"/> class='inputBox'>
+            <input type=text size='10' <ofbiz:inputvalue entityAttr="productFacility" field="daysToShip" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -120,6 +121,7 @@
         </select>
         Minimum&nbsp;Stock:&nbsp;<input type=text size='10' name='minimumStock' class='inputBox'>
         Reorder&nbsp;Quantity:&nbsp;<input type=text size='10' name='reorderQuantity' class='inputBox'>
+        Days&nbsp;To&nbsp;Ship:&nbsp;<input type=text size='10' name='daysToShip' class='inputBox'>
         <input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 
