@@ -41,7 +41,7 @@
 -->
 
 <!ENTITY % SimpleMethodOperations "call-map-processor | check-errors | call-service | call-bsh |
-        field-to-request | field-to-session | field-to-result | field-to-field |
+        field-to-request | field-to-session | request-to-field | session-to-field | field-to-result | field-to-field |
         if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
 
 <!ELEMENT simple-methods ( simple-method+ )>
@@ -207,6 +207,19 @@ Error messages go on the error list and are handled with the check-errors tag.
     field-name CDATA #REQUIRED
     session-name CDATA #IMPLIED
 >
+<!ELEMENT request-to-field EMPTY>
+<!ATTLIST request-to-field
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+    request-name CDATA #IMPLIED
+>
+<!ELEMENT session-to-field EMPTY>
+<!ATTLIST session-to-field
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+    session-name CDATA #IMPLIED
+>
+
 <!ELEMENT field-to-result EMPTY>
 <!ATTLIST field-to-result
     map-name CDATA #REQUIRED

@@ -414,6 +414,12 @@ public class SimpleMethod {
                     methodOperations.add(new FieldToRequest(curOperElem, simpleMethod));
                 } else if ("field-to-session".equals(nodeName)) {
                     methodOperations.add(new FieldToSession(curOperElem, simpleMethod));
+                } else if ("request-to-field".equals(nodeName)) {
+                    methodOperations.add(new RequestToField(curOperElem, simpleMethod));
+                } else if ("session-to-field".equals(nodeName)) {
+                    methodOperations.add(new SessionToField(curOperElem, simpleMethod));
+                } else if ("field-to-result".equals(nodeName)) {
+                    methodOperations.add(new FieldToResult(curOperElem, simpleMethod));
                 } else if ("field-to-field".equals(nodeName)) {
                     methodOperations.add(new FieldToField(curOperElem, simpleMethod));
                 } else if ("if-validate-method".equals(nodeName)) {
