@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Revision$
+ * @since      2.2
+-->
+
+<simple-methods>
+    <simple-method method-name="createReturnHeader" short-description="Create a ReturnHeader">
+        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="ReturnHeader"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="ReturnHeader" env-name="returnId"/>
+        <to-string field-name="returnId"/>
+        <env-to-field env-name="returnId" map-name="newEntity"/>
+        <field-to-result field-name="returnId" result-name="returnId"/>
+        
+        <if-empty field-name="entryDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+        </if-empty>        
+        
+        <if-empty field-name="statusId" map-name="newEntity">
+            <string-to-field string="RETURN_REQUESTED" field-name="statusId" map-name="newEntity"/>
+        </if-empty>  
+        
+        <create-value value-name="newEntity"/>      
+    </simple-method>
+    <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>      
+        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
+        
+        <set-nonpk-fields map-name="parameters" value-name="returnHeader"/>
+        <store-value value-name="returnHeader"/>    	
+    </simple-method>
+    
+    <simple-method method-name="createReturnItem" short-description="Create Return Item">
+        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="ReturnItem"/>
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="newEntity"/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupMap"/>
+        <string-to-list string="-returnItemSeqId" list-name="orderBy"/>
+        <find-by-and entity-name="ReturnItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
+        <if-empty field-name="currentItems">
+            <string-to-field string="1" field-name="returnItemSeqId" map-name="newEntity"/>                        
+        <else>
+           <first-from-list entry-name="newestItem" list-name="currentItems"/>
+           <calculate field-name="returnItemSeqId" map-name="newEntity" type="Integer">
+               <calcop field-name="returnItemSeqId" map-name="newestItem" operator="add">
+                   <number value="1"/>
+               </calcop>
+           </calculate>
+           <to-string field-name="returnItemSeqId" map-name="newEntity"/>           
+        </else>
+        </if-empty>        
+        
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <field-to-result field-name="returnItemSeqId" map-name="newEntity"/>                                        
+        <field-to-result field-name="returnId" map-name="newEntity"/>                                        
+        <create-value value-name="newEntity"/>
+    </simple-method>       
+    <simple-method method-name="updateReturnItem" short-description="Update Return Item">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
+        
+        <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
+        <store-value value-name="returnItem"/>       	
+    </simple-method>
+</simple-methods>
