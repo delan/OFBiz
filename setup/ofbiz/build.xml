@@ -38,7 +38,8 @@
         <!-- Allow module-level defaults for this build -->
         <property file="build.properties"/>
 
-        <property name="sub.project.target" value="war"/>
+		<!-- set this to "war" to build war files, or "jar-deploy" to just build jars and prepare for running outside a war -->
+        <property name="sub.project.target" value="jar-deploy"/>
         <property name="ofbiz.version" value=""/>
         <property name="ofbcore-webapp.jar" value="core/lib/ofbcore-webapp${ofbiz.version}.jar" />
 
