@@ -40,8 +40,9 @@
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateWebSite you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="WebSite" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <make-value value-name="lookupKeyValue" entity-name="Content"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="WebSite" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -60,9 +61,9 @@
         <check-permission permission="PAYPROC" action="_UPDATE"><fail-message message="Security Error: to run updateWebSitePaymentSetting you must have the PAYPROC_UPDATE or PAYPROC_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <field-to-field field-name="paymentMethodTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="WebSitePaymentSetting" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <make-value value-name="lookupKeyValue" entity-name="WebSitePaymentSetting"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="WebSitePaymentSetting" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
@@ -70,9 +71,9 @@
         <check-permission permission="PAYPROC" action="_DELETE"><fail-message message="Security Error: to run removeWebSitePaymentSetting you must have the PAYPROC_DELETE or PAYPROC_ADMIN permission"/></check-permission>
         <check-errors/>
 
-        <field-to-field field-name="webSiteId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <field-to-field field-name="paymentMethodTypeId" map-name="parameters" to-map-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="WebSitePaymentSetting" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <make-value value-name="lookupKeyValue" entity-name="WebSitePaymentSetting"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="WebSitePaymentSetting" map-name="lookupKeyValue" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>    
     
