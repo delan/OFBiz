@@ -1,0 +1,33 @@
+import java.util.*;
+import org.ofbiz.core.security.*;
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.core.pseudotag.*;
+import org.ofbiz.commonapp.workeffort.workeffort.*;
+import org.ofbiz.commonapp.common.status.*;
+
+delegator = request.getAttribute("delegator");
+dispatcher = request.getAttribute("dispatcher");
+
+String workEffortId = request.getParameter("workEffortId");
+if(workEffortId == null) workEffortId = request.getAttribute("workEffortId");
+ 
+Map serviceCtx = UtilMisc.toMap(
+    "userLogin",context.getSession().getAttribute("userLogin"),
+    "workEffortId",workEffortId);
+Map result = dispatcher.runSync("getWorkEffort",serviceCtx);
+
+context.put("workEffort",result.get("workEffort"));
+context.put("workEffortId",result.get("workEffortId"));
+context.put("partyAssigns",result.get("partyAssigns"));
+context.put("canView",result.get("canView"));
+context.put("tryEntity",result.get("tryEntity"));
+context.put("currentStatusItem",result.get("currentStatusItem"));
+
+
+serviceCtx = UtilMisc.toMap(
+    "statusTypeIds",UtilMisc.toList("EVENT_STATUS"));
+result = dispatcher.runSync("getStatusItems",serviceCtx);    
+
+context.put("eventStatusItems",result.get("statusItems"));
+
