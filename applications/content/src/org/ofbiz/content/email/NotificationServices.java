@@ -34,13 +34,11 @@ import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
-import freemarker.template.TemplateException;
-
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilURL;
-import org.ofbiz.webapp.ftl.FreeMarkerWorker;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -49,6 +47,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelService;
 import org.ofbiz.service.ServiceUtil;
+
+import freemarker.template.TemplateException;
 
 /**
  * Provides generic services related to preparing and

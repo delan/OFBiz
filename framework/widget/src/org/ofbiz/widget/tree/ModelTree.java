@@ -85,13 +85,15 @@ public class ModelTree {
     protected int openDepth;
     protected int postTrailOpenDepth;
     protected int [] nodeIndices = new int[20];
-    protected String entityName;
-    protected String pkName;
+    protected String defaultEntityName;
+    protected String defaultPkName;
     
 // ===== CONSTRUCTORS =====
     /** Default Constructor */
 
     /** XML Constructor */
+    public ModelTree() {}
+    
     public ModelTree(Element treeElement, GenericDelegator delegator, LocalDispatcher dispatcher) {
 
         this.name = treeElement.getAttribute("name");
@@ -108,7 +110,7 @@ public class ModelTree {
         this.trailNameExdr = new FlexibleStringExpander(UtilFormatOut.checkEmpty(treeElement.getAttribute("trail-name"), "trail"));
         this.delegator = delegator;
         this.dispatcher = dispatcher;
-        setEntityName( treeElement.getAttribute("entity-name") );
+        setDefaultEntityName( treeElement.getAttribute("entity-name") );
         try {
         	openDepth = Integer.parseInt(treeElement.getAttribute("open-depth"));
         } catch(NumberFormatException e) {
@@ -141,23 +143,23 @@ public class ModelTree {
         return name;
     }
 
-    public void setEntityName(String name) {
+    public void setDefaultEntityName(String name) {
      
         String nm = name;
         if (UtilValidate.isEmpty(nm))
             nm = "Content";
-        this.entityName = nm;
-        ModelEntity modelEntity = delegator.getModelEntity(this.entityName);
+        this.defaultEntityName = nm;
+        ModelEntity modelEntity = delegator.getModelEntity(this.defaultEntityName);
         ModelField modelField = modelEntity.getPk(0);
-        this.pkName = modelField.getName();
+        this.defaultPkName = modelField.getName();
     }
     
-    public String getEntityName() {
-    	return this.entityName;
+    public String getDefaultEntityName() {
+    	return this.defaultEntityName;
     }
     
-    public String getPkName() {
-    	return this.pkName;
+    public String getDefaultPkName() {
+    	return this.defaultPkName;
     }
     
     public String getRootNodeName() {
@@ -254,7 +256,7 @@ public class ModelTree {
                 throw new RuntimeException("Tree 'trail' value is empty.");
             
             context.put("rootEntityId", trail.get(0));
-            context.put(pkName, trail.get(0));
+            context.put(defaultPkName, trail.get(0));
             context.put("targetNodeTrail", trail);
         } else {
                 Debug.logError("Trail value is empty.", module);
@@ -310,6 +312,8 @@ public class ModelTree {
         protected ModelTreeCondition condition;
         protected String renderStyle;
         protected String entryName;
+        protected String entityName;
+        protected String pkName;
 
         public ModelNode() {}
 
@@ -321,6 +325,7 @@ public class ModelTree {
             this.wrapStyleExdr = new FlexibleStringExpander(nodeElement.getAttribute("wrap-style"));
             this.renderStyle = nodeElement.getAttribute("render-style");
             this.entryName = UtilFormatOut.checkEmpty(nodeElement.getAttribute("entry-name"), null); 
+            setEntityName( nodeElement.getAttribute("entity-name") );
     
             Element actionElement = UtilXml.firstChildElement(nodeElement, "entity-one");
             if (actionElement != null) {
@@ -393,11 +398,11 @@ public class ModelTree {
 			if (passed) {
 				//this.subNodeValues = new ArrayList();
 				//context.put("subNodeValues", new ArrayList());
-				//if (Debug.infoOn()) Debug .logInfo(" renderNodeString, " + modelTree.getPkName() + " :" + context.get(modelTree.getPkName()), module);
+				//if (Debug.infoOn()) Debug .logInfo(" renderNodeString, " + modelTree.getdefaultPkName() + " :" + context.get(modelTree.getdefaultPkName()), module);
 				context.put("processChildren", new Boolean(true));
 				// this action will usually obtain the "current" entity
 				ModelTreeAction.runSubActions(this.actions, context);
-    			String pkName = modelTree.getPkName();
+    			String pkName = getPkName();
 				String id = null;
     			if (UtilValidate.isNotEmpty(this.entryName)) {
     			    Map map = (Map)context.get(this.entryName);
@@ -446,7 +451,8 @@ public class ModelTree {
 							//GenericPK pk = val.getPrimaryKey();
 							//if (Debug.infoOn()) Debug.logInfo(" pk:" + pk,
 							// module);
-							String thisEntityId = (String) val.get(pkName);
+							String thisPkName = node.getPkName();
+							String thisEntityId = (String) val.get(thisPkName);
 							Map newContext = ((MapStack) context) .standAloneChildStack();
 							String nodeEntryName = node.getEntryName();
 							if (UtilValidate.isNotEmpty(nodeEntryName)) {
@@ -502,7 +508,7 @@ public class ModelTree {
              }
        		if (obj != null)
                 nodeCount = (Long)obj;
-             String entName = modelTree.getEntityName();
+             String entName = this.getEntityName();
              GenericDelegator delegator = modelTree.getDelegator();
              ModelEntity modelEntity = delegator.getModelEntity(entName);
              ModelField modelField = modelEntity.getField("childBranchCount"); 
@@ -524,7 +530,7 @@ public class ModelTree {
                  }
                  */
                  nodeCount = new Long(this.subNodeValues.size());
-    			String pkName = modelTree.getPkName();
+    			String pkName = this.getPkName();
 				String id = null;
     			if (UtilValidate.isNotEmpty(this.entryName)) {
     			    Map map = (Map)context.get(this.entryName);
@@ -661,6 +667,34 @@ public class ModelTree {
         public ModelTree getModelTree() {
         	return this.modelTree;
         }
+        
+        public void setEntityName(String name) {
+         
+            this.entityName = name;
+            if (UtilValidate.isNotEmpty(this.entityName)) {
+            	ModelEntity modelEntity = modelTree.delegator.getModelEntity(this.entityName);
+            	ModelField modelField = modelEntity.getPk(0);
+            	this.pkName = modelField.getName();
+            }
+        }
+        
+        public String getEntityName() {
+            if (UtilValidate.isNotEmpty(this.entityName)) {
+            	return this.entityName;
+            } else {
+            	return this.modelTree.getDefaultEntityName();
+            }
+        }
+    
+        public String getPkName() {
+            if (UtilValidate.isNotEmpty(this.pkName)) {
+            	return this.pkName;
+            } else {
+            	return this.modelTree.getDefaultPkName();
+            }
+        }
+    
+        
         
         public static class ModelSubNode {
     

@@ -39,7 +39,7 @@ import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilURL;
-import org.ofbiz.webapp.ftl.FreeMarkerWorker;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;

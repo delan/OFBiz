@@ -1,7 +1,7 @@
 /*
  * $Id: EditRenderSubContentCacheTransform.java 4070 2004-12-19 01:56:22Z jonesde $
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -37,10 +37,10 @@ import javax.servlet.http.HttpServletRequest;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.template.FreeMarkerWorker;
 import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.webapp.ftl.FreeMarkerWorker;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateTransformModel;

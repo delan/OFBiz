@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-package org.ofbiz.webapp.ftl;
+package org.ofbiz.base.util.template;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,14 +44,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.cache.UtilCache;
-import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericEntityException;
-import org.ofbiz.entity.GenericPK;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.webapp.barcode.BarcodeTransform;
 
 import freemarker.core.Environment;
 import freemarker.ext.beans.BeanModel;
@@ -78,22 +72,26 @@ public class FreeMarkerWorker {
     
     public static final String module = FreeMarkerWorker.class.getName();
     
+    // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
+    public static UtilCache cachedTemplates = new UtilCache("template.ftl.general", 0, 0, false);
+    // these are mode "code" oriented so don't use soft references
+    public static UtilCache cachedLocationTemplates = new UtilCache("template.ftl.location", 0, 0, false);
+
     public static Map ftlTransforms = new HashMap();
     
     static {
-        ftlTransforms.put("ofbizUrl", new OfbizUrlTransform());
-        ftlTransforms.put("ofbizContentUrl", new OfbizContentTransform());
-        ftlTransforms.put("ofbizCurrency", new OfbizCurrencyTransform());
-        ftlTransforms.put("setRequestAttribute", new SetRequestAttributeMethod());
-
-        ftlTransforms.put("barcodeTransform", new BarcodeTransform());
-        ftlTransforms.put("renderWrappedText", new RenderWrappedTextTransform());
-    
         try {
             ClassLoader loader = Thread.currentThread().getContextClassLoader();
 
             // note: loadClass is necessary for these since this class doesn't know anything about them at compile time
             // double note: may want to make this more dynamic and configurable in the future
+            ftlTransforms.put("ofbizUrl", loader.loadClass("org.ofbiz.webapp.ftl.OfbizUrlTransform").newInstance());
+            ftlTransforms.put("ofbizContentUrl", loader.loadClass("org.ofbiz.webapp.ftl.OfbizContentTransform").newInstance());
+            ftlTransforms.put("ofbizCurrency", loader.loadClass("org.ofbiz.webapp.ftl.OfbizCurrencyTransform").newInstance());
+            ftlTransforms.put("setRequestAttribute", loader.loadClass("org.ofbiz.webapp.ftl.SetRequestAttributeMethod").newInstance());
+            ftlTransforms.put("renderWrappedText", loader.loadClass("org.ofbiz.webapp.ftl.RenderWrappedTextTransform").newInstance());
+
+            ftlTransforms.put("barcodeTransform", loader.loadClass("org.ofbiz.webapp.barcode.BarcodeTransform").newInstance());
 
             ftlTransforms.put("menuWrap", loader.loadClass("org.ofbiz.widget.menu.MenuWrapTransform").newInstance());
             
@@ -121,11 +119,6 @@ public class FreeMarkerWorker {
             Debug.logError(e, "Could not pre-initialize dynamically loaded class: ", module);
         }
     }
-
-    // use soft references for this so that things from Content records don't kill all of our memory, or maybe not for performance reasons... hmmm, leave to config file...
-    public static UtilCache cachedTemplates = new UtilCache("template.ftl.general", 0, 0, false);
-    // these are mode "code" oriented so don't use soft references
-    public static UtilCache cachedLocationTemplates = new UtilCache("template.ftl.location", 0, 0, false);
 
     public static void renderTemplateAtLocation(String location, Map context, Writer outWriter) throws MalformedURLException, TemplateException, IOException {
         Template template = (Template) cachedTemplates.get(location);
@@ -331,62 +324,6 @@ public class FreeMarkerWorker {
         return bean;
     }
 
-   /*
-    * Tries to find the mime type of the associated content and parent content.
-    *
-    * @param delegator 
-    * @param view SubContentDataResourceView
-    * @param parentContent Content entity
-    * @param contentId part of primary key of view. To be used if view is null.
-    * @param dataResourceId part of primary key of view. To be used if view is null.
-    * @param parentContentId primary key of parent content. To be used if parentContent is null;
-    */
-    public static String determineMimeType(GenericDelegator delegator, GenericValue view,
-                             GenericValue parentContent, String contentId, String dataResourceId,
-                             String parentContentId) throws GenericEntityException {
-        String mimeTypeId = null;
-
-        if (view != null) {
-            mimeTypeId = (String)view.get("mimeTypeId");
-            String drMimeTypeId = (String)view.get("drMimeTypeId");
-            if (UtilValidate.isNotEmpty(drMimeTypeId)) {
-                mimeTypeId = drMimeTypeId;
-            }
-        }
-
-        if (UtilValidate.isEmpty(mimeTypeId)) {
-            if (UtilValidate.isNotEmpty(contentId) && UtilValidate.isNotEmpty(dataResourceId)) {
-                view = delegator.findByPrimaryKey("SubContentDataResourceView",
-                        UtilMisc.toMap("contentId", contentId, "drDataResourceId", dataResourceId));
-                if (view != null) {
-                    mimeTypeId = (String)view.get("mimeTypeId");
-                    String drMimeTypeId = (String)view.get("drMimeTypeId");
-                    if (UtilValidate.isNotEmpty(drMimeTypeId)) {
-                        mimeTypeId = drMimeTypeId;
-                    }
-                }
-            }
-        }
-
-        if (UtilValidate.isEmpty(mimeTypeId)) {
-            if (parentContent != null) {
-                mimeTypeId = (String)parentContent.get("mimeTypeId");
-            }
-        }
-
-        if (UtilValidate.isEmpty(mimeTypeId)) {
-            if (UtilValidate.isNotEmpty(parentContentId)) {
-                parentContent = delegator.findByPrimaryKey("Content",
-                        UtilMisc.toMap("contentId", contentId));
-                if (parentContent != null) {
-                    mimeTypeId = (String)parentContent.get("mimeTypeId");
-                }
-            }
-        }
-
-        return mimeTypeId;
-    }
-
     public static Object get(SimpleHash args, String key) {
         Object returnObj = null;
         Object o = null;
@@ -475,104 +412,6 @@ public class FreeMarkerWorker {
         return templateRoot;
     }
     
-    public static void traceNodeTrail(String lbl, List nodeTrail) {
-
-/*
-        if (!Debug.verboseOn()) {
-            return;
-        }
-        if (nodeTrail == null) {
-            return;
-        }
-        String s = "";
-        int sz = nodeTrail.size();
-        s = "nTsz:" + sz;
-        if (sz > 0) {
-            Map cN = (Map)nodeTrail.get(sz - 1);
-            if (cN != null) {
-                String cid = (String)cN.get("contentId");
-                s += " cN[" + cid + "]";
-                List kids = (List)cN.get("kids");
-                int kSz = (kids == null) ? 0 : kids.size();
-                s += " kSz:" + kSz;
-                Boolean isPick = (Boolean)cN.get("isPick");
-                s += " isPick:" + isPick;
-                Boolean isFollow = (Boolean)cN.get("isFollow");
-                s += " isFollow:" + isFollow;
-                Boolean isReturnAfterPick = (Boolean)cN.get("isReturnAfterPick");
-                s += " isReturnAfterPick:" + isReturnAfterPick;
-            }
-        }
-*/
-        return;
-    }
-
-    public static String logMap(String lbl, Map map, int indent) {
-        String sep = ":";
-        String eol = "\n";
-        String spc = "";
-        for (int i=0; i<indent; i++) 
-            spc += "  ";
-        String s = (lbl != null) ? lbl : "";
-        s += "=" + indent + "==>" + eol;
-        Set keySet = map.keySet();
-        Iterator it = keySet.iterator();
-        while (it.hasNext()) {
-            String key = (String)it.next();
-            if ("request response session".indexOf(key) < 0) {
-                Object obj = map.get(key);
-                s += spc + key + sep;;
-                if (obj instanceof GenericValue) {
-                    GenericValue gv = (GenericValue)obj;
-                    GenericPK pk = gv.getPrimaryKey();
-                    s += logMap("GMAP[" + key + " name:" + pk.getEntityName()+ "]", pk, indent + 1);
-                } else if (obj instanceof List) {
-                    s += logList("LIST[" + ((List)obj).size() + "]", (List)obj, indent + 1);
-                } else if (obj instanceof Map) {
-                    s += logMap("MAP[" + key + "]", (Map)obj, indent + 1);
-                } else if (obj != null) {
-                    s += obj + sep + obj.getClass() + eol;
-                } else {
-                    s += eol;
-                }
-            }
-        }
-        return s + eol + eol;
-    }
-
-    public static String logList(String lbl, List lst, int indent) {
-   
-        String sep = ":";
-        String eol = "\n";
-        String spc = "";
-        if (lst == null)
-            return "";
-        int sz = lst.size();
-        for (int i=0; i<indent; i++) 
-            spc += "  ";
-        String s = (lbl != null) ? lbl : "";
-        s += "=" + indent + "==> sz:" + sz + eol;
-        Iterator it = lst.iterator();
-        while (it.hasNext()) {
-            Object obj = it.next();
-                s += spc;
-                if (obj instanceof GenericValue) {
-                    GenericValue gv = (GenericValue)obj;
-                    GenericPK pk = gv.getPrimaryKey();
-                    s += logMap("MAP[name:" + pk.getEntityName() + "]", pk, indent + 1);
-                } else if (obj instanceof List) {
-                    s += logList("LIST[" + ((List)obj).size() + "]", (List)obj, indent + 1);
-                } else if (obj instanceof Map) {
-                    s += logMap("MAP[]", (Map)obj, indent + 1);
-                } else if (obj != null) {
-                    s += obj + sep + obj.getClass() + eol;
-                } else {
-                    s += eol;
-                }
-        }
-        return s + eol + eol;
-    }
-
     public static void saveContextValues(Map context, String [] saveKeyNames, Map saveMap ) {
         //Map saveMap = new HashMap();
         for (int i=0; i<saveKeyNames.length; i++) {
