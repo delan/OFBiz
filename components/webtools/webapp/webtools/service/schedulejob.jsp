@@ -21,14 +21,14 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski 
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.0
 --%>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*" %>
 <%@ page import="org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
-<%@ page import="org.ofbiz.service.*, org.ofbiz.core.calendar.*" %>
+<%@ page import="org.ofbiz.service.*, org.ofbiz.service.calendar.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
@@ -100,7 +100,7 @@
         <td colspan="2">&nbsp;</td>
       </tr>
       <tr>
-        <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+        <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="Submit"></td>
       </tr>
     </table>
   </FORM>
@@ -144,7 +144,7 @@
         <td colspan="2">&nbsp;</td>
       </tr>
       <tr>
-        <td colspan="2" align="center"><input type="submit" value="Submit"></td>
+        <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="Submit"></td>
       </tr>      
     </table>
   </FORM>	
