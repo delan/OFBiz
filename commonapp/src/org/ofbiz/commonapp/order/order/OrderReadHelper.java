@@ -63,6 +63,18 @@ public class OrderReadHelper {
         this.orderHeader = orderHeader;
     }
 
+    public String getOrderId() {
+        return orderHeader.getString("orderId");
+    }
+    
+    public String getWebSiteId() {
+        return orderHeader.getString("webSiteId");
+    }
+    
+    public String getCurrency() {
+        return orderHeader.getString("currencyUom");
+    }
+    
     public List getOrderItems() {
         if (orderItems == null) {
             try {
