@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.13 $
+ * @version    $Revision: 1.14 $
  * @since      2.0
  -->
 
@@ -41,7 +41,7 @@
 
         <field-to-field field-name="productId" map-name="parameters" to-map-name="newEntity"/>
         <if-empty field-name="productId" map-name="newEntity">
-            <sequenced-id-to-env sequence-name="Product" env-name="newEntity.productId" to-string="true"/>
+            <sequenced-id-to-env sequence-name="Product" env-name="newEntity.productId"/>
         <else>
             <check-id field-name="productId" map-name="newEntity"/>
             <check-errors/>
@@ -199,7 +199,6 @@
 
                 <!-- this one is slightly different because it needs a new sequenced inventoryItemId -->
                 <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
-                <to-string field-name="inventoryItemId"/>
                 <env-to-field env-name="inventoryItemId" map-name="newTempValue"/>
 
                 <create-value value-name="newTempValue"/>
@@ -475,7 +474,6 @@
 
         <!-- create the new ProductReview -->
         <sequenced-id-to-env sequence-name="ProductReview" env-name="productReviewId"/>
-        <to-string field-name="productReviewId"/>
         <env-to-field env-name="productReviewId" map-name="newEntity"/>
         <field-to-result field-name="productReviewId" result-name="productReviewId"/>
 

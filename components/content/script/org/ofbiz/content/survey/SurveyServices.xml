@@ -34,7 +34,7 @@
         </check-permission>
         <check-errors/>
         <make-value entity-name="Survey" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="Survey" to-string="true" env-name="newEntity.surveyId"/>
+        <sequenced-id-to-env sequence-name="Survey" env-name="newEntity.surveyId"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
         <field-to-result field-name="surveyId" map-name="newEntity"/>
@@ -102,7 +102,7 @@
         <check-errors/>
         <make-value entity-name="SurveyQuestion" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="SurveyQuestion" to-string="true" env-name="newEntity.surveyQuestionId"/>
+        <sequenced-id-to-env sequence-name="SurveyQuestion" env-name="newEntity.surveyQuestionId"/>
         <create-value value-name="newEntity"/>
         <field-to-result field-name="surveyQuestionId" map-name="newEntity"/>
     </simple-method>
@@ -210,7 +210,7 @@
         <check-errors/>
         <make-value entity-name="SurveyQuestionCategory" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
-        <sequenced-id-to-env sequence-name="SurveyQuestionCategory" to-string="true" env-name="newEntity.surveyQuestionCategoryId"/>
+        <sequenced-id-to-env sequence-name="SurveyQuestionCategory" env-name="newEntity.surveyQuestionCategoryId"/>
         <create-value value-name="newEntity"/>
         <field-to-result field-name="surveyQuestionCategoryId" map-name="newEntity"/>
     </simple-method>
@@ -429,7 +429,6 @@
         <if-empty field-name="surveyResponse">
             <make-value value-name="surveyResponse" entity-name="SurveyResponse"/>
             <sequenced-id-to-env sequence-name="SurveyResponse" env-name="surveyResponseId"/>
-            <to-string field-name="surveyResponseId"/>
             <env-to-field env-name="surveyResponseId" map-name="surveyResponse"/>
             <set-nonpk-fields value-name="surveyResponse" map-name="parameters"/>
             <create-value value-name="surveyResponse"/>

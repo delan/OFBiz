@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
 -->
 <simple-methods>
@@ -38,7 +38,7 @@
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ItemIssuance"/>
-        <sequenced-id-to-env sequence-name="ItemIssuance" env-name="newEntity.itemIssuanceId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="ItemIssuance" env-name="newEntity.itemIssuanceId"/>
         <field-to-result field-name="itemIssuanceId" map-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <now-timestamp-to-env env-name="newEntity.issuedDateTime"/>

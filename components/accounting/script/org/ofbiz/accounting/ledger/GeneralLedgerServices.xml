@@ -37,7 +37,7 @@
 
         <!-- GlAccount uses a sequenced id, so get the next one now and set it... -->
         <if-empty field-name="parameters.glAccountId">
-            <sequenced-id-to-env sequence-name="GlAccount" env-name="newEntity.glAccountId" to-string="true"/>
+            <sequenced-id-to-env sequence-name="GlAccount" env-name="newEntity.glAccountId"/>
         <else>
             <set-pk-fields map-name="parameters" value-name="newEntity"/>
         </else>
@@ -107,7 +107,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <!-- GlJournal uses a sequenced id, so get the next one now and set it... -->        
-        <sequenced-id-to-env sequence-name="GlJournal" env-name="newEntity.glJournalId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="GlJournal" env-name="newEntity.glJournalId"/>
         <field-to-result field-name="newEntity.glJournalId" result-name="glJournalId"/>
 
         <create-value value-name="newEntity"/>
@@ -154,7 +154,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <!-- GlReconciliation uses a sequenced id, so get the next one now and set it... -->        
-        <sequenced-id-to-env sequence-name="GlReconciliation" env-name="newEntity.glReconciliationId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="GlReconciliation" env-name="newEntity.glReconciliationId"/>
         <field-to-result field-name="newEntity.glReconciliationId" result-name="glReconciliationId"/>
         
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>

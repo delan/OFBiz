@@ -36,7 +36,7 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
         <!-- AcctgTrans uses a sequenced id, so get the next one now and set it... -->        
-        <sequenced-id-to-env sequence-name="AcctgTrans" env-name="newEntity.acctgTransId" to-string="true"/>
+        <sequenced-id-to-env sequence-name="AcctgTrans" env-name="newEntity.acctgTransId"/>
         <field-to-result field-name="newEntity.acctgTransId" result-name="acctgTransId"/>
         
         <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="lastModifiedByUserLogin" to-map-name="newEntity"/>
