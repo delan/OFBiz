@@ -21,6 +21,11 @@
   <AcctgTransType acctgTransTypeId="DISBURSEMENT_ACCTG_T" description="Disbursement" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
   <AcctgTransType acctgTransTypeId="RECEIPT_ACCTG_TRANS" description="Receipt" hasTable="N" parentTypeId="PAYMENT_ACCTG_TRANS"/>
 
+  <StatusType description="Acctg Entry Reconcile" hasTable="N" parentTypeId="" statusTypeId="ACCTG_ENREC_STATUS"/>
+  <StatusItem description="Not Reconciled" sequenceId="01" statusCode="NOT_RECONCILED" statusId="AES_NOT_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
+  <StatusItem description="Partly Reconciled" sequenceId="02" statusCode="PARTLY_RECONCILED" statusId="AES_PARTLY_RECON" statusTypeId="ACCTG_ENREC_STATUS"/>
+  <StatusItem description="Reconciled" sequenceId="03" statusCode="RECONCILED" statusId="AES_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
+
   <BudgetItemType budgetItemTypeId="REQUIREMENT_BUDGET_A" description="Requirement" hasTable="Y" parentTypeId=""/>
 
   <BudgetType budgetTypeId="CAPITAL_BUDGET" description="Capital" hasTable="N" parentTypeId=""/>
@@ -165,11 +170,6 @@
   <StatusValidChange condition="" statusId="PAYMENT_NOT_AUTH" statusIdTo="PAYMENT_CANCELLED" transitionName="Payment Cancelled"/>
   <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_SETTLED" transitionName="Payment Settled"/>
   <StatusValidChange condition="" statusId="PAYMENT_AUTHORIZED" statusIdTo="PAYMENT_CANCELLED" transitionName="Payment Cancelled"/>
-
-  <StatusType description="Acctg Entry Reconcile" hasTable="N" parentTypeId="" statusTypeId="ACCTG_ENREC_STATUS"/>
-  <StatusItem description="Not Reconciled" sequenceId="01" statusCode="NOT_RECONCILED" statusId="AES_NOT_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
-  <StatusItem description="Partly Reconciled" sequenceId="02" statusCode="PARTLY_RECONCILED" statusId="AES_PARTLY_RECON" statusTypeId="ACCTG_ENREC_STATUS"/>
-  <StatusItem description="Reconciled" sequenceId="03" statusCode="RECONCILED" statusId="AES_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
 
   <!-- invoice status -->
   <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
