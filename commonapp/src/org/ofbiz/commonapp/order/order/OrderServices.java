@@ -98,7 +98,7 @@ public class OrderServices {
         GenericValue orderShipmentPreference = delegator.makeValue("OrderShipmentPreference",
                 UtilMisc.toMap("orderId", orderId, "orderItemSeqId", DataModelConstants.SEQ_ID_NA,
                         "shipmentMethodTypeId", shipmentMethodTypeId,
-                        "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER" /* XXX */,
+                        "carrierPartyId", carrierPartyId, "carrierRoleTypeId", "CARRIER",
                         "shippingInstructions", shippingInstructions));
         orderShipmentPreference.set("maySplit", maySplit);
         toBeStored.add(orderShipmentPreference);
@@ -119,6 +119,10 @@ public class OrderServices {
                                                 "BILL_TO_CUSTOMER", "PLACING_CUSTOMER"};
 
         for (int i = 0; i < USER_ORDER_ROLE_TYPES.length; i++) {
+            //make sure the party is in the role before adding it...
+            toBeStored.add(delegator.makeValue("PartyRole", UtilMisc.toMap(
+                    "partyId", partyId,
+                    "roleTypeId", USER_ORDER_ROLE_TYPES[i])));
             toBeStored.add(delegator.makeValue("OrderRole", UtilMisc.toMap(
                     "orderId", orderId,
                     "partyId", partyId,
