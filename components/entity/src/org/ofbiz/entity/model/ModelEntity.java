@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelEntity.java,v 1.2 2003/09/19 21:39:55 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.base.util.*;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -151,7 +151,7 @@ public class ModelEntity implements Comparable {
 
     /** DB Names Constructor */
     public ModelEntity(String tableName, List colList, ModelFieldTypeReader modelFieldTypeReader) {
-        this.tableName = tableName.toUpperCase();
+        this.tableName = tableName;
         this.entityName = ModelUtil.dbNameToClassName(this.tableName);
         Iterator columns = colList.iterator();
 
