@@ -120,24 +120,24 @@ the Generic Entity which is a set of Java code used to implement persistence and
 other entity management features. The third is the Web-based Tool Set in the
 CommonApp module.</p>
 <p>The configuration of the Entity Engine is done through a simple properties
-file called <b> servers.properties</b> that must exist somewhere on the classpath. This
+file called <b> entityengine.properties</b> that must exist somewhere on the classpath. This
 properties file is used to define parameters for persistence servers such as EJB
 server parameters or JDBC server parameters. It is also used to specify which
 XML entity, entity group, and field type model files will be used for that server.
-The default file for the OFBiz distribution can be found in <b>ofbiz/commonapp/etc/servers.properties</b>.</p>
+The default file for the OFBiz distribution can be found in <b>ofbiz/commonapp/etc/entityengine.properties</b>.</p>
 
 <p>Each application that uses the Entity Engine does so through a <b>GenericDelegator</b>
 instance. The delegator name must be passed to the static factory method which
 is then passed to the constructor if a new instance is needed. This delegator
-name is used to look up settings for that delegator in the <b>servers.properties</b>
+name is used to look up settings for that delegator in the <b>entityengine.properties</b>
 file. Each delegator uses an entity model XML file and an entity group XML file
 which specifies a group name for each named entity in the entity model file. The
-<b>servers.properties</b> file contains the settings which map each group name
+<b>entityengine.properties</b> file contains the settings which map each group name
 to a <b>GenericHelper</b> for that group. <b>GenericHelper</b> is an interface
 that must be implemented for each type of data source (ie: JDBC, EJB, SOAP,
 HTTP, et cetera).&nbsp;</p>
 
-<p>The setting for each named <b>GenericHelper</b> are specified in the <b>servers.properties</b>
+<p>The setting for each named <b>GenericHelper</b> are specified in the <b>entityengine.properties</b>
 file. For a JDBC helper these would include database connection parameters such
 as either the JNDI data source name or the JDBC parameters including the driver
 name, the JDBC URI, and the username and password for the database. An EJB
@@ -148,7 +148,7 @@ the URL package prefixes.</p>
 services. Each service request is dispatched to the helper that corresponds to
 the entity that the service is requested for according to the group name of the
 entity specified in the entity group XML file and the helper for that group
-specified in the <b>servers.properties</b> file. The default entity group XML
+specified in the <b>entityengine.properties</b> file. The default entity group XML
 file for the OFBiz entity model can be found in <b>ofbiz/commonapp/entitydef/entitygroup.xml</b>.</p>
 
 <hr>

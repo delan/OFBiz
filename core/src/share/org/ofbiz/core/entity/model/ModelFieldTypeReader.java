@@ -62,7 +62,7 @@ public class ModelFieldTypeReader {
   public String entityFileName;
   
   public static ModelFieldTypeReader getModelFieldTypeReader(String helperName) {
-    String tempModelName = UtilProperties.getPropertyValue("servers", helperName + ".field.type.reader");
+    String tempModelName = UtilProperties.getPropertyValue("entityengine", helperName + ".field.type.reader");
     ModelFieldTypeReader reader = (ModelFieldTypeReader)readers.get(tempModelName);
     if(reader == null) //don't want to block here
     {
@@ -80,7 +80,7 @@ public class ModelFieldTypeReader {
   
   public ModelFieldTypeReader(String modelName) {
     this.modelName = modelName;
-    fieldTypeFileName = UtilProperties.getPropertyValue("servers", modelName + ".xml.field.type");
+    fieldTypeFileName = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.field.type");
     
     //preload caches...
     getFieldTypeCache();

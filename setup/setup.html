@@ -75,11 +75,11 @@ JBOSS_CLASSPATH explicitly in your startup script.</p>
 <p>There is no need to run any SQL scripts to create the tables or populate them
 with the default data. The entity engine can create missing tables or fields
 when the server starts up and does so if the appropriate property is set in the
-servers.properties file. This is the file that configures the servers for the
+entityengine.properties file. This is the file that configures the servers for the
 entity engine.</p>
 <p>For the table creation routine to work properly, the field types must be set
 up by specifying the corresponding fieldtypeXXX.xml (where XXX is the database
-name) file for the server in the servers.properties file. These fieldtypeXXX.xml
+name) file for the server in the entityengine.properties file. These fieldtypeXXX.xml
 files are located in the <b>&lt;main&gt;/ofbiz/commonapp/entitydef </b>directory,
 along with the entitymodel.xml file which contains database independent entity
 definitions.</p>
@@ -151,7 +151,7 @@ as can be expected.</p>
 <p>The easiest way to install OFBiz is to put everything in the default path of <b>/ofbiz/work</b>,
 which will be referred to as the <b>&lt;main&gt;</b> directory in this section.
 There is really only one file that has hard paths in it, and everything else is
-relative. That file in the distribution is <b>ofbiz/commonapp/etc/servers.properties</b>.
+relative. That file in the distribution is <b>ofbiz/commonapp/etc/entityengine.properties</b>.
 When you are done with this section just replace all instances of &quot;<b>/ofbiz/work</b>&quot;
 with whatever root, or <b>&lt;main&gt;</b>,&nbsp; path you use.</p>
 <p><b>USING JBoss/Tomcat</b>: In the JBoss/Tomcat zip file there are two main directories: <b>jboss</b> and
@@ -213,8 +213,8 @@ parameters on the command line.</p>
 and then click on the link for data loading, or go to <a href="http://localhost:8080/commonapp/control/main">http://localhost:8080/commonapp/control/install</a>
 directly. Since there can be multiple servers depending on the name of the
 entity group, you must enter the entity group name so the JSP knows which files
-to load to which server, as setup in the servers.properties file. This JSP loads all .SQL files in the directories specified in the
-servers.properties file for the given group name. The default group name for all
+to load to which server, as setup in the entityengine.properties file. This JSP loads all .SQL files in the directories specified in the
+entityengine.properties file for the given group name. The default group name for all
 of the default entities in ofbiz is &quot;org.ofbiz.commonapp&quot;, which you
 will notice pre-populated in the form on the install page. Just click on
 &quot;Load Data&quot;, and after reviewing the summary of what it will do, click

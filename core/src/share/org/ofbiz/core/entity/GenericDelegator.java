@@ -104,10 +104,10 @@ public class GenericDelegator {
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
         //get the helper and if configured, do the datasource check
         GenericHelper helper = GenericHelperFactory.getHelper(helperName);
-        if(UtilProperties.propertyValueEqualsIgnoreCase("servers", helperName + ".datasource.check.on.start", "true"))
+        if(UtilProperties.propertyValueEqualsIgnoreCase("entityengine", helperName + ".datasource.check.on.start", "true"))
         {
-          boolean addMissing = UtilProperties.propertyValueEqualsIgnoreCase("servers", helperName + ".datasource.add.missing.on.start", "true");
-          Debug.logInfo("[GenericDelegator.GenericDelegator] Doing database check as requested in servers.properties with addMissing=" + addMissing);
+          boolean addMissing = UtilProperties.propertyValueEqualsIgnoreCase("entityengine", helperName + ".datasource.add.missing.on.start", "true");
+          Debug.logInfo("[GenericDelegator.GenericDelegator] Doing database check as requested in entityengine.properties with addMissing=" + addMissing);
           try { helper.checkDataSource(this.getModelEntityMapByGroup(groupName), null, addMissing); }
           catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); }
         }
@@ -173,7 +173,7 @@ public class GenericDelegator {
    *@return String with the helper name that corresponds to this delegator and the specified entityName
    */
   public String getGroupHelperName(String groupName) {
-    return UtilProperties.getPropertyValue("servers", delegatorName + ".group." + groupName);
+    return UtilProperties.getPropertyValue("entityengine", delegatorName + ".group." + groupName);
   }
   
   /** Gets the helper name that corresponds to this delegator and the specified entityName

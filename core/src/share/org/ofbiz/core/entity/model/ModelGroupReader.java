@@ -58,7 +58,7 @@ public class ModelGroupReader {
   public String entityGroupFileName;
   
   public static ModelGroupReader getModelGroupReader(String delegatorName) {
-    String tempModelName = UtilProperties.getPropertyValue("servers", delegatorName + ".model.group.reader");
+    String tempModelName = UtilProperties.getPropertyValue("entityengine", delegatorName + ".model.group.reader");
     ModelGroupReader reader = (ModelGroupReader)readers.get(tempModelName);
     if(reader == null) //don't want to block here
     {
@@ -76,7 +76,7 @@ public class ModelGroupReader {
   
   public ModelGroupReader(String modelName) {
     this.modelName = modelName;
-    entityGroupFileName = UtilProperties.getPropertyValue("servers", modelName + ".xml.group");
+    entityGroupFileName = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.group");
     
     //preload caches...
     getGroupCache();

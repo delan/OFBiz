@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.1  2001/09/21 19:38:50  jonesde
  * Updated settings to work with PoolMan & Tomcat 4, the current default config
  * Includes updated JNDIContextFactory and default datasource get through JNDI
@@ -45,7 +48,7 @@ import org.ofbiz.core.util.*;
 public final class JNDIContextFactory {
   static Map contexts = new Hashtable();
   
-  /** Return the initial context according to the servers.properties parameters that correspond to the given helper name
+  /** Return the initial context according to the entityengine.properties parameters that correspond to the given helper name
    * @return the JNDI initial context
    */
   public static InitialContext getInitialContext(String helperName) {
@@ -56,9 +59,9 @@ public final class JNDIContextFactory {
       String contextFactory;
       String pkgPrefix;
 
-      providerUrl = UtilProperties.getPropertyValue("servers", helperName + ".context.provider.url", "127.0.0.1:1099");
-      contextFactory = UtilProperties.getPropertyValue("servers", helperName + ".initial.context.factory", "com.sun.jndi.rmi.registry.RegistryContextFactory");
-      pkgPrefix = UtilProperties.getPropertyValue("servers", helperName + ".url.pkg.prefixes", "java.naming.rmi.security.manager");
+      providerUrl = UtilProperties.getPropertyValue("entityengine", helperName + ".context.provider.url", "127.0.0.1:1099");
+      contextFactory = UtilProperties.getPropertyValue("entityengine", helperName + ".initial.context.factory", "com.sun.jndi.rmi.registry.RegistryContextFactory");
+      pkgPrefix = UtilProperties.getPropertyValue("entityengine", helperName + ".url.pkg.prefixes", "java.naming.rmi.security.manager");
 
       try {
         Hashtable h = new Hashtable();

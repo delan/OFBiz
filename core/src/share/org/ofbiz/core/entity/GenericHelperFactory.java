@@ -41,7 +41,7 @@ public class GenericHelperFactory {
         helper = (GenericHelper)helperCache.get(helperName);
         if(helper == null) {
           try {
-            String helperClassName = UtilProperties.getPropertyValue("servers", helperName + ".helper.class", "org.ofbiz.core.entity.GenericHelperDAO");
+            String helperClassName = UtilProperties.getPropertyValue("entityengine", helperName + ".helper.class", "org.ofbiz.core.entity.GenericHelperDAO");
             Class helperClass = null;
             if(helperClassName != null && helperClassName.length() > 0) {
               try { helperClass = Class.forName(helperClassName); }

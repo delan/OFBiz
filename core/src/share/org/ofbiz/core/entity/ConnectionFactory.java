@@ -36,7 +36,7 @@ import org.ofbiz.core.util.*;
 public class ConnectionFactory {
   static Map dsCache = new Hashtable();
   public static Connection getConnection(String helperName) throws SQLException {
-    String jndiName = UtilProperties.getPropertyValue("servers", helperName + ".jdbc.jndi.name");
+    String jndiName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.jndi.name");
     if(jndiName != null && jndiName.length() > 0) {
       DataSource ds;
       ds = (DataSource)dsCache.get(jndiName);
@@ -62,7 +62,7 @@ public class ConnectionFactory {
     catch(Exception ex) { usingPoolMan = false; }
     
     if(usingPoolMan) {
-      String poolManName = UtilProperties.getPropertyValue("servers", helperName + ".jdbc.poolman");
+      String poolManName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.poolman");
       //Debug.logInfo("Attempting to connect to '"+poolManName+"'");
       if(poolManName != null && poolManName.length() > 0) {
         Connection con = DriverManager.getConnection("jdbc:poolman://" + poolManName);
@@ -75,13 +75,13 @@ public class ConnectionFactory {
     }
     
     // Default to plain JDBC.
-    String driverClassName = UtilProperties.getPropertyValue("servers", helperName + ".jdbc.driver");
+    String driverClassName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.driver");
       if(driverClassName != null && driverClassName.length() > 0) {
       try { Class.forName(driverClassName); }
       catch(ClassNotFoundException cnfe) { Debug.logWarning("Could not find JDBC driver class named " + driverClassName + ".\n"); Debug.logWarning(cnfe); return null; }
-      return DriverManager.getConnection(UtilProperties.getPropertyValue("servers", helperName + ".jdbc.uri"),
-                                         UtilProperties.getPropertyValue("servers", helperName + ".jdbc.username"),
-                                         UtilProperties.getPropertyValue("servers", helperName + ".jdbc.password"));
+      return DriverManager.getConnection(UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.uri"),
+                                         UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.username"),
+                                         UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.password"));
     }
     
     Debug.log("******* ERROR: No database connection found for helperName \"" + helperName + "\"");

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.16  2001/09/27 07:08:57  jonesde
  * Removed company specific stuff that shouldn't be there.
  *
@@ -92,7 +95,7 @@ public final class SiteDefs {
     public static final String LOGIN_REQUEST_URI = "login";
     public static final String LOGOUT_REQUEST_URI = "logout";
  
-    /** Required context init parameter to specify the entity delegator name as defined in servers.properties */
+    /** Required context init parameter to specify the entity delegator name as defined in entityengine.properties */
     public static final String ENTITY_DELEGATOR_NAME = "entityDelegatorName";
 
     /** Required context init parameter to locate site specific configuration */

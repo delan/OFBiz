@@ -16,7 +16,7 @@
 
   if(groupName != null && groupName.length() > 0) {
     helperName = delegator.getGroupHelperName(groupName);
-    paths = UtilProperties.getPropertyValue("servers", helperName + ".sql.load.paths");
+    paths = UtilProperties.getPropertyValue("entityengine", helperName + ".sql.load.paths");
   }
 
   ArrayList fileList = new ArrayList();

@@ -68,7 +68,7 @@ public class ModelReader {
   public Map entityFile;
   
   public static ModelReader getModelReader(String delegatorName) {
-    String tempModelName = UtilProperties.getPropertyValue("servers", delegatorName + ".model.reader");
+    String tempModelName = UtilProperties.getPropertyValue("entityengine", delegatorName + ".model.reader");
     ModelReader reader = (ModelReader)readers.get(tempModelName);
     if(reader == null) //don't want to block here
     {
@@ -90,7 +90,7 @@ public class ModelReader {
     fileNameEntities = new HashMap();
     entityFile = new HashMap();
 
-    String wholeFileNamesStr = UtilProperties.getPropertyValue("servers", modelName + ".xml.entity");
+    String wholeFileNamesStr = UtilProperties.getPropertyValue("entityengine", modelName + ".xml.entity");
     String fileNamesStr = wholeFileNamesStr;
     fileNamesStr.trim();
     
