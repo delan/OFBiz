@@ -55,29 +55,8 @@
         </if-empty>
         
         <create-value value-name="newEntity"/>
-        <!-- The low level code is updated for the child node's subtree -->
-        <field-to-field field-name="productIdTo" map-name="parameters" to-field-name="productId" to-map-name="updateLowLevelCodeContext" />
-        <call-service service-name="updateLowLevelCode" in-map-name="updateLowLevelCodeContext"/>
     </simple-method>
     
-    <simple-method method-name="updateBOMAssoc" short-description="Update Product to Product Association">
-        <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
-        <store-value value-name="lookedUpValue"/>
-    </simple-method>
-    
-    <simple-method method-name="removeBOMAssoc" short-description="Remove Product to Product Association">
-        <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
-        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="lookedUpValue"/>
-        <remove-value value-name="lookedUpValue"/>
-        <!-- The low level code is updated for the child node's subtree -->
-        <field-to-field field-name="productIdTo" map-name="parameters" to-field-name="productId" to-map-name="updateLowLevelCodeContext" />
-        <call-service service-name="updateLowLevelCode" in-map-name="updateLowLevelCodeContext"/>
-    </simple-method>
-
     <simple-method method-name="copyBOMAssocs" short-description="Copy BOM associations from one product to another">
         <make-value value-name="lookupMap" entity-name="ProductAssoc"/>
         <set-pk-fields map-name="parameters" value-name="lookupMap"/>
@@ -89,15 +68,14 @@
         </iterate>
     </simple-method>
 
-    
     <simple-method method-name="eventEditBOM" short-description="Add, update, delete components in BOM">
         <if-compare value="UPDATE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
-            <set-service-fields service-name="updateBOMAssoc" map-name="parameters" to-map-name="context"/>
+            <set-service-fields service-name="updateProductAssoc" map-name="parameters" to-map-name="context"/>
             <call-map-processor xml-resource="org/ofbiz/manufacturing/bom/BomMapProcs.xml"
                                 processor-name="prepareUpdateBOMAssoc" 
                                 in-map-name="parameters" out-map-name="context"/>
             <check-errors/>
-            <call-service service-name="updateBOMAssoc" in-map-name="context"/>
+            <call-service service-name="updateProductAssoc" in-map-name="context"/>
             <check-errors/>
         </if-compare>
         <if-compare value="CREATE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
@@ -117,12 +95,12 @@
             <!--<check-errors/>-->
         </if-compare>
         <if-compare value="DELETE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
-            <set-service-fields service-name="removeBOMAssoc" map-name="parameters" to-map-name="context"/>
+            <set-service-fields service-name="deleteProductAssoc" map-name="parameters" to-map-name="context"/>
             <call-map-processor xml-resource="org/ofbiz/manufacturing/bom/BomMapProcs.xml"
-                                processor-name="prepareUpdateBOMAssoc" 
+                                processor-name="prepareDeleteProductAssoc" 
                                 in-map-name="parameters" out-map-name="context"/>
             <check-errors/>
-            <call-service service-name="removeBOMAssoc" in-map-name="context"/>
+            <call-service service-name="deleteProductAssoc" in-map-name="context"/>
             <check-errors/>
         </if-compare>
         <if-compare value="COPY" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
@@ -130,9 +108,7 @@
             <call-service service-name="copyBOMAssocs" in-map-name="context"/>
             <check-errors/>
         </if-compare>
-
     </simple-method>
-
     
     <simple-method method-name="updateProductManufacturingRule" short-description="Update Manufacturing Rule">
         <check-permission permission="MANUFACTURING" action="_UPDATE">

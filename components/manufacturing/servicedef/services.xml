@@ -355,19 +355,6 @@
         <attribute name="errorMessage" type="String" optional="true" mode="OUT"/>
         <override name="fromDate" optional="true"/>
     </service>
-    <service name="updateBOMAssoc" default-entity-name="ProductAssoc" engine="simple"
-                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="updateBOMAssoc" auth="true">
-        <description>Update Product to Product Association</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-    <service name="removeBOMAssoc" default-entity-name="ProductAssoc" engine="simple"
-                location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="removeBOMAssoc" auth="true">
-        <description>Remove Product to Product Association</description>
-        <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
-    </service>
-
     <service name="copyBOMAssocs" default-entity-name="ProductAssoc" engine="simple"
                 location="org/ofbiz/manufacturing/bom/BomSimpleMethods.xml" invoke="copyBOMAssocs" auth="true">
         <description>Copy BOM associations from one product to another</description>
@@ -417,7 +404,7 @@
     <service name="updateLowLevelCode" engine="java"
             location="org.ofbiz.manufacturing.bom.BOMServices" invoke="updateLowLevelCode">
         <description>Updates the low level code of the product in the Product entity</description>
-        <attribute mode="IN" name="productId" optional="false" type="String"/>
+        <attribute mode="IN" name="productIdTo" optional="false" type="String"/>
         <attribute mode="IN" name="alsoComponents" optional="true" type="Boolean"/>
         <attribute mode="IN" name="alsoVariants" optional="true" type="Boolean"/>
         <attribute mode="OUT" name="lowLevelCode" optional="false" type="Integer"/>
