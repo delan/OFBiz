@@ -42,7 +42,7 @@
   <ContentType contentTypeId="STRUCTURE_LEAF" description="Structure Leaf" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="STRUCTURE_DEF" description="Structure Definition (like DTD)" hasTable="N" parentTypeId=""/>
   <ContentType contentTypeId="TXFORM_DEF" description="Transformation Definition (like XSLT)" hasTable="N" parentTypeId=""/>
-  <ContentType contentTypeId="TEMPLATE" description="Template" hasTable="N" parentTypeId=""/>
+  <ContentType contentTypeId="DOCUMENT" description="Template" hasTable="N" parentTypeId=""/>
   <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
 
   <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
@@ -107,4 +107,43 @@
   <SurveyQuestionType surveyQuestionTypeId="TEXT_LONG" description="Long Text (single-line)"/>
   <SurveyQuestionType surveyQuestionTypeId="TEXTAREA" description="Text (multi-line)"/>
   <SurveyQuestionType surveyQuestionTypeId="URL" description="URL"/>
+
+    <DataResource dataResourceId="STDWRAP001" dataResourceTypeId="ELECTRONIC_TEXT" dataTemplateTypeId="FTL" />
+    <ElectronicText dataResourceId="STDWRAP001" >
+        <textData><![CDATA[<#assign mapKey=wrapMapKey?if_exists/>
+<#assign subDataResourceId=wrapDataResourceId?if_exists/>
+<#assign subDataResourceTypeId=wrapDataResourceTypeId?if_exists/>
+<#assign contentIdTo=wrapContentIdTo?if_exists/>
+<#assign mimeTypeId=wrapMimeTypeId?if_exists/>
+<#assign subContentId=wrapSubContentId?if_exists/>
+
+mapKey:${mapKey?if_exists}
+<div id="divTwo" class="wrapOuter">
+<div id="divOne" class="wrapInner">
+<@renderWrappedText />
+</div>
+<a class="tabButton" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentIdTo?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}') " >
+    Lookup    
+</a>
+ 
+<#assign ofbizRequest=""/>
+<#assign httpParams="contentIdTo=" + contentIdTo?if_exists + "&mapKey=" + mapKey?if_exists />
+<#if subDataResourceTypeId == "IMAGE_OBJECT">
+    <#assign ofbizRequest="EditLayoutImage" />
+<#else>
+    <#if subDataResourceTypeId == "URL_RESOURCE">
+        <#assign ofbizRequest="EditLayoutUrl" />
+    <#else>
+        <#assign ofbizRequest="EditLayoutSubContent" />
+    </#if>
+</#if>
+<a class="tabButton" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>" >New</a>
+<#if subContentId?exists && (0 < subContentId?length)>
+ 
+    <a class="tabButton" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&contentId=${subContentId}&drDataResourceId=${subDataResourceId?if_exists}</@ofbizUrl>" >Edit</a>
+</#if>
+</div>]]></textData>
+    </ElectronicText>
+  <Content contentId="STDWRAP001" contentTypeId="DOCUMENT" dataResourceId="STDWRAP001" contentName="Standard SubContent Wrapper" description="Standard SubContent Wrapper" />
+
 </entity-engine-xml>
