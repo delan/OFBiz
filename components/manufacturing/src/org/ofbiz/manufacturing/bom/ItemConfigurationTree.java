@@ -38,7 +38,7 @@ public class ItemConfigurationTree {
     public static final int IMPLOSION = 3;
     
     ItemConfigurationNode root;
-    float rootQuantity;
+    double rootQuantity;
     Date inDate;
     String bomTypeId;
 
@@ -103,28 +103,31 @@ public class ItemConfigurationTree {
                                             UtilMisc.toMap("productId", 
                                             (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): productId)));
         if (product == null) return;
+        ItemConfigurationNode originalNode = new ItemConfigurationNode(product);
         // If the product hasn't a bill of materials we try to retrieve
         // the bill of materials of its virtual product (if the current
         // product is variant).
-        if (!hasBom(product, inDate) && product.get("isVariant")!=null && 
-                product.getString("isVariant").equals("Y")) {
+        if (!hasBom(product, inDate)) {
             List virtualProducts = product.getRelatedByAnd("AssocProductAssoc", UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
-            virtualProducts = EntityUtil.filterByDate(virtualProducts, inDate);
             if (virtualProducts != null && virtualProducts.size() > 0) {
-                GenericValue virtualProduct = (GenericValue)virtualProducts.get(0);
-                // If the virtual product is manufactured as a different product,
-                // load the new product
-                productIdForRules = virtualProduct.getString("productId");
-                manufacturedAsProduct = manufacturedAsProduct(virtualProduct.getString("productId"), inDate, delegator);
-                product = delegator.findByPrimaryKey("Product", 
-                                            UtilMisc.toMap("productId", 
-                                            (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): virtualProduct.get("productId"))));
+                virtualProducts = EntityUtil.filterByDate(virtualProducts, inDate);
+                if (virtualProducts != null && virtualProducts.size() > 0) {
+                    GenericValue virtualProduct = (GenericValue)virtualProducts.get(0);
+                    // If the virtual product is manufactured as a different product,
+                    // load the new product
+                    productIdForRules = virtualProduct.getString("productId");
+                    manufacturedAsProduct = manufacturedAsProduct(virtualProduct.getString("productId"), inDate, delegator);
+                    product = delegator.findByPrimaryKey("Product", 
+                                                UtilMisc.toMap("productId", 
+                                                (manufacturedAsProduct != null? manufacturedAsProduct.getString("productIdTo"): virtualProduct.get("productId"))));
+                }
             }
         }
         if (product == null) return;
         try {
             root = new ItemConfigurationNode(product);
             root.setProductForRules(productIdForRules);
+            root.setSubstitutedNode(originalNode);
             if (type == IMPLOSION) {
                 root.loadParents(bomTypeId, inDate, productFeatures);
             } else {
@@ -172,7 +175,7 @@ public class ItemConfigurationTree {
      * @return Value of property rootQuantity.
      *
      */
-    public float getRootQuantity() {
+    public double getRootQuantity() {
         return rootQuantity;
     }
     
@@ -180,7 +183,7 @@ public class ItemConfigurationTree {
      * @param rootQuantity New value of property rootQuantity.
      *
      */
-    public void setRootQuantity(float rootQuantity) {
+    public void setRootQuantity(double rootQuantity) {
         this.rootQuantity = rootQuantity;
     }
 
@@ -261,7 +264,7 @@ public class ItemConfigurationTree {
         ArrayList productsId = new ArrayList();
         print(nodeArr);
         for (int i = 0; i < nodeArr.size(); i++) {
-            productsId.add(((ItemConfigurationNode)nodeArr.get(i)).getPart().getString("productId"));
+            productsId.add(((ItemConfigurationNode)nodeArr.get(i)).getProduct().getString("productId"));
         }
         return productsId;
     }
@@ -274,9 +277,9 @@ public class ItemConfigurationTree {
      * @param delegator The delegator used.
      * @throws GenericEntityException If a db problem occurs.
      */    
-    public void createManufacturingOrders(String orderId, String orderItemSeqId, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin)  throws GenericEntityException {
+    public void createManufacturingOrders(String orderId, String orderItemSeqId, String shipmentId, Date date, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin)  throws GenericEntityException {
         if (root != null) {
-            root.createManufacturingOrder(orderId, orderItemSeqId, delegator, dispatcher, userLogin);
+            root.createManufacturingOrder(orderId, orderItemSeqId, shipmentId, date, true, delegator, dispatcher, userLogin);
         }
     }
 
