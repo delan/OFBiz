@@ -319,7 +319,6 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             alias-view-columns="true"
             always-use-constraint-keyword="true">
         <read-data reader-name="main"/>
-        <!-- NOTE: nothing else can be connected to the database at the same time, including the Advantage Data Architect program; also can run only one app server -->
         <inline-jdbc
                 jdbc-driver="com.extendedsystems.jdbc.advantage.ADSDriver"
                 jdbc-uri="jdbc:extendedsystems:advantage://localhost:6262;catalog=c:\\advantage\\OFBIZ.ADD;TableType=adt"
