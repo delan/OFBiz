@@ -207,6 +207,13 @@
                 <set field="title-property" value="PageTitleAdvancedSearch"/>
                 <set field="headerItem" value="Advanced Search"/>
                 <script location="component://order/webapp/ordermgr/WEB-INF/actions/entry/catalog/advancedsearchoptions.bsh"/>
+                
+                <entity-condition entity-name="PartyRoleAndPartyDetail" list-name="supplerPartyRoleAndPartyDetails">
+                    <condition-expr field-name="roleTypeId" value="SUPPLIER"/>
+                    <order-by field-name="groupName"/>
+                    <order-by field-name="lastName"/>
+                    <order-by field-name="firstName"/>
+                </entity-condition>
             </actions>
             <widgets>
                 <decorator-screen name="CommonOrderCatalogDecorator" location="component://order/widget/ordermgr/OrderEntryCommonScreens.xml">
@@ -243,6 +250,4 @@
             </widgets>
         </section>
     </screen>
-
-
 </screens>
