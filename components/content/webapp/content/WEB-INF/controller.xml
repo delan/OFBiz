@@ -1241,6 +1241,13 @@
         <response name="error" type="view" value="CMSSites"/>
     </request-map>
 
+   <request-map uri="removeSite">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="deactivateAssocs"/>
+        <response name="success" type="view" value="CMSSites"/>
+        <response name="error" type="view" value="CMSSites"/>
+    </request-map>
+
 
     <!-- View Mappings -->
     <view-map name="error" page="/error/error.jsp"/>
