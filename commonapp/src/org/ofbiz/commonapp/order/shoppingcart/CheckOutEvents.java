@@ -1121,7 +1121,7 @@ public class CheckOutEvents {
         // Load the ecommerce.properties file.
         URL propsUrl = null;
         try {
-            String ecommercePropertiesStr = (String) request.getAttribute("ecoommerceProperties");
+            String ecommercePropertiesStr = (String) request.getAttribute("ecommerceProperties");
             if (ecommercePropertiesStr != null) {
                 propsUrl = new URL(ecommercePropertiesStr);
             } else {

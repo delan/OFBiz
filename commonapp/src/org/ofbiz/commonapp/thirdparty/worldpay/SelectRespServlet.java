@@ -245,9 +245,12 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         } else {
             paymentPreference.set("statusId", "PAYMENT_CANCELLED");
         }
+        Long transTimeLong = new Long(transTime);
+        java.sql.Timestamp authDate = new java.sql.Timestamp(transTimeLong.longValue());
+        
         paymentPreference.set("avsCode", avsCode);
         paymentPreference.set("authRefNum", transId);
-        paymentPreference.set("authDate", transTime);
+        paymentPreference.set("authDate", authDate);
         paymentPreference.set("authFlag", transStatus);
         paymentPreference.set("authMessage", rawAuthMessage);
         
