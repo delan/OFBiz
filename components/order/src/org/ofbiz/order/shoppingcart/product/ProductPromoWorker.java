@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.4 2003/11/12 20:35:14 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.5 2003/11/12 23:45:27 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -159,7 +159,6 @@ public class ProductPromoWorker {
                 GenericValue productPromo = prodCatalogPromoAppl.getRelatedOneCache("ProductPromo");
 
                 Collection productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
-
                 if (productPromoRules != null) {
                     allPromoRules.addAll(productPromoRules);
                 }
@@ -215,7 +214,6 @@ public class ProductPromoWorker {
                         allPromoRulesIter.remove();
 
                         Iterator productPromoActions = UtilMisc.toIterator(productPromoRule.getRelatedCache("ProductPromoAction", null, UtilMisc.toList("productPromoActionSeqId")));
-
                         while (productPromoActions != null && productPromoActions.hasNext()) {
                             GenericValue productPromoAction = (GenericValue) productPromoActions.next();
 
@@ -494,6 +492,10 @@ public class ProductPromoWorker {
 
         // remove all free shipping promo actions
         cart.removeAllFreeShippingProductPromoActions();
+
+        // clear promo uses & reset promo code uses
+        cart.clearProductPromoUses();
+        cart.resetProductPromoCodeUses();
     }
 
     protected static boolean doItemPromoAction(GenericValue productPromoAction, ShoppingCartItem cartItem, String quantityField, GenericDelegator delegator) {
