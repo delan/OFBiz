@@ -322,7 +322,7 @@ public class ModelFormField {
             textField.setSize(60);
             textField.setMaxlength(new Integer(250));
             this.setFieldInfo(textField);
-        } else if ("floating-point".equals(modelField.getType()) || "currency".equals(modelField.getType()) || "numeric".equals(modelField.getType())) {
+        } else if ("floating-point".equals(modelField.getType()) || "currency-amount".equals(modelField.getType()) || "numeric".equals(modelField.getType())) {
             ModelFormField.TextField textField = new ModelFormField.TextField(ModelFormField.FieldInfo.SOURCE_AUTO_ENTITY, this);
             textField.setSize(6);
             this.setFieldInfo(textField);
