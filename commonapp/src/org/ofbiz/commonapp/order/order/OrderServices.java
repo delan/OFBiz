@@ -175,6 +175,12 @@ public class OrderServices {
                     "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
                     "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
 
+        if (context.get("currencyUom") != null)
+            order.set("currencyUom", context.get("currencyUom"));
+            
+        if (context.get("firstAttemptOrderId") != null)
+            order.set("firstAttemptOrderId", context.get("firstAttemptOrderId"));
+            
         if (context.get("grandTotal") != null)
             order.set("grandTotal", context.get("grandTotal"));
             

@@ -50,8 +50,7 @@ public class PaymentGatewayServices {
      */
     public static Map authOrderPayments(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
-        String orderId = (String) context.get("orderId");
-        String webSiteId = (String) context.get("webSiteId");
+        String orderId = (String) context.get("orderId");        
         Map result = new HashMap();
 
         // get the order header and payment preferences
@@ -74,6 +73,12 @@ public class PaymentGatewayServices {
         if (orderHeader == null) {
             return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
         }
+        
+        // get the webSiteId from the OrderHeader
+        String webSiteId = orderHeader.getString("webSiteId");
+        
+        // get the currency from the OrderHeader
+        String currency = orderHeader.getString("currencyUom");
                      
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
         double amountToBill = orh.getOrderGrandTotal();
@@ -157,7 +162,7 @@ public class PaymentGatewayServices {
             processContext.put("contactEmail", contactEmail);
             processContext.put("billingAddress", billingAddress);
             processContext.put("shippingAddress", orh.getShippingAddress());
-            processContext.put("currency", context.get("currency"));
+            processContext.put("currency", currency);
             
             // use pre-defined names for the services; just override the service in the definition file.
             if (creditCard != null) {
@@ -186,7 +191,8 @@ public class PaymentGatewayServices {
 
             try {
                 // pass the payTo partyId to the result processor; we just add it to the result context.
-                processorResult.put("payToPartyId", context.get("payToPartyId"));
+                String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+                processorResult.put("payToPartyId", payToPartyId);
                 if (processResult(dctx, processorResult, paymentPref, paymentSettings))
                     amountToBill -= thisAmount;
             } catch (GeneralException ge) {
@@ -234,8 +240,7 @@ public class PaymentGatewayServices {
     public static Map captureOrderPayments(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String orderId = (String) context.get("orderId");
-        String webSiteId = (String) context.get("webSiteId");
+        String orderId = (String) context.get("orderId");        
         Map result = new HashMap();        
 
         // get the order header and payment preferences
@@ -260,6 +265,12 @@ public class PaymentGatewayServices {
         if (orderHeader == null) {
             return ServiceUtil.returnError("Could not find OrderHeader with orderId: " + orderId + "; not processing payments.");
         }  
+        
+        // get the webSiteId from the OrderHeader
+        String webSiteId = orderHeader.getString("webSiteId");
+        
+        // get the currency from the OrderHeader
+        String currency = orderHeader.getString("currencyUom");
         
         // get the order total
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
@@ -314,7 +325,7 @@ public class PaymentGatewayServices {
             captureContext.put("orderPaymentPreference", paymentPref);
             captureContext.put("paymentConfig", paymentConfig);
             captureContext.put("captureAmount", captureAmount);
-            captureContext.put("currency", context.get("currency"));
+            captureContext.put("currency", currency);
             
             // now invoke the capture service
             Map captureResult = null;
@@ -326,7 +337,8 @@ public class PaymentGatewayServices {
             } 
             
             // pass the payTo partyId to the result processor; we just add it to the result context.
-            captureResult.put("payToPartyId", context.get("payToPartyId"));
+            String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+            captureResult.put("payToPartyId", payToPartyId);
             
             // process the capture's results
             boolean processResult = false;
@@ -385,7 +397,7 @@ public class PaymentGatewayServices {
         paymentPreference.store();
     }
 
-    private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue paymentPreference, GenericValue paymentConfig) throws GeneralException {
+    private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {
         Boolean captureResult = (Boolean) result.get("captureResult");
         String payTo = (String) result.get("payToPartyId");
 
@@ -414,7 +426,9 @@ public class PaymentGatewayServices {
             payment.set("effectiveDate", UtilDateTime.nowTimestamp());
             delegator.create(payment);
 
-            paymentPreference.set("authRefNum", result.get("authRefNum"));
+            if (result.get("authRefNum") != null) {            
+                paymentPreference.set("authRefNum", result.get("authRefNum"));
+            }
             paymentPreference.set("statusId", "PAYMENT_SETTLED");
             paymentPreference.store();
 
@@ -481,5 +495,19 @@ public class PaymentGatewayServices {
         result.put("authMessage", "This is a test processor; no payments were captured or authorized.");
         return result;
     }
+    
+    /**
+     * Test capture service (returns true)
+     */
+     public static Map testCapture(DispatchContext dctx, Map context) {         
+         Map result = new HashMap();
+         long nowTime = new Date().getTime();
+         
+         result.put("captureResult", new Boolean(true));
+         result.put("captureAmount", context.get("captureAmount"));
+         result.put("captureRefNum", new Long(nowTime).toString());
+         
+         return result;
+     }
 
 }

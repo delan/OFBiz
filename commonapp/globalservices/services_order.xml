@@ -44,6 +44,8 @@
         <attribute name="orderAdjustments" type="java.util.List" mode="IN"/>
         <attribute name="billingAccountId" type="String" mode="IN"/>
         <attribute name="shippingAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="firstAttemptOrderId" type="String" mode="IN" optional="true"/>
+        <attribute name="currencyUom" type="String" mode="IN" optional="false"/>
         <attribute name="grandTotal" type="Double" mode="IN" optional="true"/>
         <attribute name="taxAmount" type="Double" mode="IN" optional="true"/>
         <attribute name="orderShipmentPreferences" type="java.util.List" mode="IN" optional="true"/>

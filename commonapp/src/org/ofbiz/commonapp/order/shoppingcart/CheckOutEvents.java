@@ -195,7 +195,7 @@ public class CheckOutEvents {
         // check for an order via order mgr
         String partyId = session.getAttribute("orderPartyId") != null ? (String) session.getAttribute("orderPartyId") :
         		userLogin.getString("partyId");
-        
+               
         context.put("grandTotal", grandTotal);
         context.put("userLogin", userLogin);
         context.put("partyId", partyId);
@@ -274,11 +274,13 @@ public class CheckOutEvents {
         
         if (toBeStored.size() > 0) {
             try {
-                Debug.logInfo("To Be Stored: " + toBeStored, module);
+                if (Debug.verboseOn()) Debug.logVerbose("To Be Stored: " + toBeStored, module);
                 delegator.storeAll(toBeStored);
+                /* Why is this here?
                 try {
                     Thread.sleep(2000);
                 } catch (Exception e) {}
+                */
             } catch (GenericEntityException e) {
                 // not a fatal error; so just print a message
                 Debug.logWarning(e, "Problems storing order email contact information", module);
@@ -790,7 +792,7 @@ public class CheckOutEvents {
             Map paymentResult = null;
             try {
                 // invoke the payment gateway service.
-                paymentResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId, "webSiteId", CatalogWorker.getWebSiteId((ServletRequest)request)));
+                paymentResult = dispatcher.runSync("authOrderPayments", UtilMisc.toMap("orderId", orderId));
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, module);
             }

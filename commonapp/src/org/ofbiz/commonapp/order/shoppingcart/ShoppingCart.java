@@ -32,6 +32,8 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.order.order.OrderReadHelper;
 
+import sun.security.krb5.internal.crypto.r;
+
 /**
  * <p><b>Title:</b> ShoppingCart.java
  * <p><b>Description:</b> Shopping Cart Object.
@@ -52,6 +54,7 @@ public class ShoppingCart implements java.io.Serializable {
     private String orderId = null;
     private String firstAttemptOrderId = null;
     private String billingAccountId = null;
+    private String currencyUom = null;
 
     private GenericValue orderShipmentPreference = null;
     private String orderAdditionalEmails = null;
@@ -703,6 +706,28 @@ public class ShoppingCart implements java.io.Serializable {
     public void setFirstAttemptOrderId(String orderId) {
         this.firstAttemptOrderId = orderId;
     }
+    
+    /** Sets the currency for the cart. */
+    public void setCurrency(LocalDispatcher dispatcher, String currencyUom) throws CartItemModifyException {
+        String previousCurrency = this.currencyUom;
+        this.currencyUom = currencyUom;        
+        if (!previousCurrency.equals(this.currencyUom)) {
+            Iterator itemIterator = this.iterator();
+            while (itemIterator.hasNext()) {
+                ShoppingCartItem item = (ShoppingCartItem) itemIterator.next();
+                item.updatePrice(dispatcher, this);
+            }            
+        }        
+    }
+    
+    /** Get the current currency setting. */
+    public String getCurrency() {
+        if (this.currencyUom != null) {        
+            return this.currencyUom;
+        } else {
+            return UtilProperties.getPropertyValue("general.properties", "currency.uom.id.default", "USD");
+        }
+    }
 
     /** Removes a free shipping ProductPromoAction by trying to find one in the list with the same primary key. */
     public void removeFreeShippingProductPromoAction(GenericPK productPromoActionPK) {
@@ -1041,16 +1066,18 @@ public class ShoppingCart implements java.io.Serializable {
     public Map makeCartMap(LocalDispatcher dispatcher, boolean explodeItems) {
         Map result = new HashMap();
 
-        result.put("orderItems", makeOrderItems(explodeItems, dispatcher));
-        result.put("orderAdjustments", makeAllAdjustments());
-        result.put("orderItemPriceInfos", makeAllOrderItemPriceInfos());
+        result.put("orderItems", this.makeOrderItems(explodeItems, dispatcher));
+        result.put("orderAdjustments", this.makeAllAdjustments());
+        result.put("orderItemPriceInfos", this.makeAllOrderItemPriceInfos());
 
-        result.put("orderContactMechs", makeAllOrderContactMechs());
-        result.put("orderItemContactMechs", makeAllOrderItemContactMechs());
-        result.put("orderPaymentPreferences", makeAllOrderPaymentPreferences());
-        result.put("orderShipmentPreferences", makeAllOrderShipmentPreferences());
+        result.put("orderContactMechs", this.makeAllOrderContactMechs());
+        result.put("orderItemContactMechs", this.makeAllOrderItemContactMechs());
+        result.put("orderPaymentPreferences", this.makeAllOrderPaymentPreferences());
+        result.put("orderShipmentPreferences", this.makeAllOrderShipmentPreferences());
 
-        result.put("billingAccountId", getBillingAccountId());          
+        result.put("firstAttemptOrderId", this.getFirstAttemptOrderId());
+        result.put("currencyUom", this.getCurrency());
+        result.put("billingAccountId", this.getBillingAccountId());          
         return result;
     }
 }

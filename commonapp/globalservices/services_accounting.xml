@@ -260,23 +260,18 @@
         <attribute name="paymentId" type="String" mode="OUT" optional="true"/>
     </service>
 
+    <!-- Payment Auth/Capture Services -->
     <service name="authOrderPayments" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="authOrderPayments" auth="false">
         <description>Process (authorizes) payments for an order</description>
         <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
-        <attribute name="currency" type="String" mode="IN" optional="true"/>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>
     </service>
     
     <service name="captureOrderPayments" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="captureOrderPayments" auth="true">
         <description>Captures (settles) pre-authorized order payments</description>       
-        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
-        <attribute name="payToPartyId" type="String" mode="IN" optional="true"/>
-        <attribute name="currency" type="String" mode="IN" optional="true"/>
-        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>      
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>        
     </service>
 
@@ -307,7 +302,7 @@
 	<service name="ccCaptureInterface" engine="interface" location="" invoke="">
 	    <description>Credit Card Capture Interface</description>
 	    <attribute name="orderPaymentPreference" type="GenericValue" mode="IN" optional="false"/>
-	    <attribute name="captureAmount" type="Double" mode="IN" optional="false"/>
+	    <attribute name="captureAmount" type="Double" mode="INOUT" optional="false"/>
 	    <attribute name="currency" type="String" mode="IN" optional="true"/>
 	    <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
 	    <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>

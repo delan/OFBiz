@@ -227,6 +227,8 @@
       <field name="visitId" type="id"></field>
       <field name="statusId" type="id"></field>
       <field name="createdBy" type="id-vlong"></field>
+      <field name="firstAttemptOrderId" type="id"></field>
+      <field name="currencyUom" type="id"></field>
       <field name="syncStatusId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="originFacilityId" type="id"></field>

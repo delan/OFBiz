@@ -239,38 +239,42 @@ public class ShoppingCartItem implements java.io.Serializable {
         double oldQuantity = this.quantity;
 
         this.quantity = quantity;
-
-        // set basePrice using the calculateProductPrice service
-        try {
-            Map priceContext = new HashMap();
-            
-            priceContext.put("product", this.getProduct());
-            priceContext.put("prodCatalogId", prodCatalogId);
-            priceContext.put("webSiteId", webSiteId);
-            
-            String partyId = cart.getPartyId();
-            if (partyId != null)
-            	priceContext.put("partyId", partyId);
-            
-            priceContext.put("quantity", new Double(quantity));
-            Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
-
-            if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
-                throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
-            }
-
-            if (priceResult.get("price") != null) this.basePrice = ((Double) priceResult.get("price")).doubleValue();
-            if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
-            this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
-        } catch (GenericServiceException e) {
-            throw new CartItemModifyException("There was an error while calculating the price", e);
-        }
+        this.updatePrice(dispatcher, cart);
 
         // apply/unapply promotions
         if (doPromotions) {
             org.ofbiz.commonapp.product.promo.ProductPromoWorker.doPromotions(prodCatalogId, cart, this, oldQuantity, getDelegator(), dispatcher);
         }
     }
+
+    public void updatePrice(LocalDispatcher dispatcher, ShoppingCart cart) throws CartItemModifyException {
+        // set basePrice using the calculateProductPrice service
+        try {
+            Map priceContext = new HashMap();
+            
+            priceContext.put("currencyUomId", cart.getCurrency());
+            priceContext.put("product", this.getProduct());
+            priceContext.put("prodCatalogId", prodCatalogId);
+            priceContext.put("webSiteId", webSiteId);            
+            
+            String partyId = cart.getPartyId();
+            if (partyId != null)
+            	priceContext.put("partyId", partyId);
+            
+            priceContext.put("quantity", new Double(this.getQuantity()));
+            Map priceResult = dispatcher.runSync("calculateProductPrice", priceContext);
+        
+            if (ModelService.RESPOND_ERROR.equals(priceResult.get(ModelService.RESPONSE_MESSAGE))) {
+                throw new CartItemModifyException("There was an error while calculating the price: " + priceResult.get(ModelService.ERROR_MESSAGE));
+            }
+        
+            if (priceResult.get("price") != null) this.basePrice = ((Double) priceResult.get("price")).doubleValue();
+            if (priceResult.get("listPrice") != null) this.listPrice = ((Double) priceResult.get("listPrice")).doubleValue();
+            this.orderItemPriceInfos = (List) priceResult.get("orderItemPriceInfos");
+        } catch (GenericServiceException e) {
+            throw new CartItemModifyException("There was an error while calculating the price", e);
+        }
+    }      
            
     /** Returns the quantity. */
     public double getQuantity() {
