@@ -27,7 +27,10 @@
  -->
 <simple-methods>
     <simple-method method-name="createProduct" short-description="Create an Product">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_CREATE">
+        	<alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+        	<fail-message message="Security Error: to run createProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>
 		<check-id field-name="productId" map-name="parameters"/>
         <check-errors/>
 
@@ -56,17 +59,58 @@
         -->
         
         <!-- induce keywords if autoCreateKeywords is emtpy or Y-->
-        <if-empty field-name="autoCreateKeywords" map-name="newEntity">
-            <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]></call-bsh>
-        <else>
-            <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y">
+        <if>
+            <condition>
+            	<or>
+			        <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
+		            <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
+            	</or>
+            </condition>
+            <then>
                 <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]></call-bsh>
-            </if-compare>
-        </else>
-        </if-empty>
+            </then>
+        </if>
+        
+        <!-- if the user has the role limited position, add this product to the limit category/ies -->
+        <if-has-permission permission="CATALOG_ROLE" action="_CREATE">
+        	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupCategoryRolesMap"/>
+        	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupCategoryRolesMap"/>
+        	<find-by-and entity-name="ProductCategoryRole" map-name="lookupCategoryRolesMap" list-name="productCategoryRoles"/>
+        	<filter-list-by-date list-name="productCategoryRoles" valid-date-name="nowTimestamp"/>
+        	<iterate entry-name="productCategoryRole" list-name="productCategoryRoles">
+        		<!-- add this new product to the category -->
+		        <make-value value-name="newLimitMember" entity-name="ProductCategoryMember"/>
+        		<field-to-field field-name="productId" map-name="newEntity" to-map-name="newLimitMember"/>
+        		<field-to-field field-name="productCategoryId" map-name="productCategoryRole" to-map-name="newLimitMember"/>
+		        <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newLimitMember"/>
+		        <create-value value-name="newLimitMember"/>
+        	</iterate>
+        </if-has-permission>
     </simple-method>
     <simple-method method-name="updateProduct" short-description="Update an Product">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProduct you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+    	<!-- find all role-categories that this product is a member of -->
+    	<field-to-field field-name="productId" map-name="parameters" to-map-name="lookupRoleCategoriesMap"/>
+    	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
+    	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
+    	<find-by-and entity-name="ProductCategoryMemberAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
+    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
+    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
+    	<if>
+    		<condition>
+    			<not>
+    				<or>
+    					<if-has-permission permission="CATALOG" action="_UPDATE"/>
+    					<and>
+    						<if-has-permission permission="CATALOG_ROLE" action="_UPDATE"/>
+    						<not><if-empty field-name="roleCategories"/></not>
+    					</and>
+    				</or>
+    			</not>
+    		</condition>
+    		<then>
+    			<add-error><fail-message message="Security Error: to run updateProduct you must have the CATALOG_UPDATE or CATALOG_ADMIN permission or have the CATALOG_ROLE_UPDATE permission and be associated with a category containing this product."/></add-error>
+    		</then>
+        </if>
         <check-errors/>
 
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -94,15 +138,18 @@
         </if-not-empty>
         -->
         
-        <!-- induce keywords if autoCreateKeywords is empty or Y-->
-        <if-empty field-name="autoCreateKeywords" map-name="lookedUpValue">
-            <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(lookedUpValue);]]></call-bsh>
-        <else>
-            <if-compare field-name="autoCreateKeywords" map-name="lookedUpValue" operator="equals" value="Y">
-                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(lookedUpValue);]]></call-bsh>
-            </if-compare>
-        </else>
-        </if-empty>
+        <!-- induce keywords if autoCreateKeywords is emtpy or Y-->
+        <if>
+            <condition>
+            	<or>
+			        <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
+		            <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
+            	</or>
+            </condition>
+            <then>
+                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]></call-bsh>
+            </then>
+        </if>
     </simple-method>
     
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
@@ -120,14 +167,17 @@
         <create-value value-name="newProduct"/>
         
         <!-- induce keywords if autoCreateKeywords is empty or Y-->
-        <if-empty field-name="autoCreateKeywords" map-name="newProduct">
-            <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newProduct);]]></call-bsh>
-        <else>
-            <if-compare field-name="autoCreateKeywords" map-name="newProduct" operator="equals" value="Y">
-                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newProduct);]]></call-bsh>
-            </if-compare>
-        </else>
-        </if-empty>
+        <if>
+            <condition>
+            	<or>
+			        <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
+		            <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
+            	</or>
+            </condition>
+            <then>
+                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]></call-bsh>
+            </then>
+        </if>
 
         <!-- if requested, duplicate related data as well -->
         <if-not-empty field-name="duplicatePrices" map-name="parameters">

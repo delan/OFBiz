@@ -32,7 +32,10 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="createProductCategory" short-description="Create an ProductCategory">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-permission permission="CATALOG" action="_CREATE">
+        	<alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+        	<fail-message message="Security Error: to run createProductCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>
 		<check-id field-name="productCategoryId" map-name="parameters"/>
         <check-errors/>
 
@@ -53,9 +56,47 @@
             <create-value value-name="newRollup"/>
         </if-not-empty>
         -->
+
+        <!-- if the user has the role limited position, add this category to the limit category/ies -->
+        <if-has-permission permission="CATALOG_ROLE" action="_CREATE">
+        	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupCategoryRolesMap"/>
+        	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupCategoryRolesMap"/>
+        	<find-by-and entity-name="ProductCategoryRole" map-name="lookupCategoryRolesMap" list-name="productCategoryRoles"/>
+        	<filter-list-by-date list-name="productCategoryRoles" valid-date-name="nowTimestamp"/>
+        	<iterate entry-name="productCategoryRole" list-name="productCategoryRoles">
+        		<!-- add this new product to the category -->
+		        <make-value value-name="newLimitRollup" entity-name="ProductCategoryRollup"/>
+        		<field-to-field field-name="productCategoryId" map-nane="newEntity" to-map-name="newLimitRollup"/>
+        		<field-to-field field-name="productCategoryId" map-nane="productCategoryRole" to-field-name="parentProductCategoryId" to-map-name="newLimitRollup"/>
+		        <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newLimitRollup"/>
+		        <create-value value-name="newLimitRollup"/>
+        	</iterate>
+        </if-has-permission>
     </simple-method>
     <simple-method method-name="updateProductCategory" short-description="Update an ProductCategory">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductCategory you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+    	<!-- find all role-categories that this product is a member of -->
+    	<field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupRoleCategoriesMap"/>
+    	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
+    	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
+    	<find-by-and entity-name="ProductCategoryRollupAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
+    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
+    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
+    	<if>
+    		<condition>
+    			<not>
+    				<or>
+    					<if-has-permission permission="CATALOG" action="_UPDATE"/>
+    					<and>
+    						<if-has-permission permission="CATALOG_ROLE" action="_UPDATE"/>
+    						<not><if-empty field-name="roleCategories"/></not>
+    					</and>
+    				</or>
+    			</not>
+    		</condition>
+    		<then>
+    			<add-error><fail-message message="Security Error: to run updateProductCategory you must have the CATALOG_UPDATE or CATALOG_ADMIN permission or have the CATALOG_ROLE_UPDATE permission and be associated with a category containing this category."/></add-error>
+    		</then>
+        </if>
         <check-errors/>
 
         <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupPKMap"/>
