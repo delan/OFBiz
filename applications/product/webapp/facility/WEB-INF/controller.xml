@@ -823,7 +823,7 @@
     <view-map name="FindFacilityLocation" type="jpublish" page="/facility/FindFacilityLocation.ftl"/>
     <view-map name="EditFacilityLocation" type="jpublish" page="/facility/EditFacilityLocation.ftl"/>
     <view-map name="EditFacilityInventoryItems" type="jpublish" page="/facility/EditFacilityInventoryItems.ftl"/>
-    <view-map name="ViewFacilityInventoryByProduct" type="jpublish" page="/facility/ViewFacilityInventoryByProduct.ftl"/>
+    <view-map name="ViewFacilityInventoryByProduct" type="screen" page="component://product/widget/facility/FacilityScreens.xml#ViewFacilityInventoryByProduct"/>
     <view-map name="EditFacilityGroups" type="jpublish" page="/facility/EditFacilityGroups.ftl"/>
     <view-map name="EditFacilityRoles" type="jpublish" page="/facility/EditFacilityRoles.ftl"/>
 
