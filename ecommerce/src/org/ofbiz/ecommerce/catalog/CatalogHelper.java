@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/05 04:04:44  azeneski
+ * Updated. (not finished)
+ *
  * Revision 1.7  2001/09/05 01:35:22  azeneski
  * Update.. (not finished)
  *
@@ -41,6 +44,7 @@ import javax.servlet.ServletRequest;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.util.UtilMisc;
+import org.ofbiz.core.util.UtilFormatOut;
 
 import org.ofbiz.core.entity.GenericPK;
 import org.ofbiz.core.entity.GenericEntity;
@@ -126,34 +130,74 @@ public class CatalogHelper {
         getRelatedProducts(pageContext,attributeName,null);
     }
     
-    public static void getRelatedProducts(PageContext pageContext, String attributeName, String parentId) {
-        ArrayList products = new ArrayList();
-        ServletRequest request = pageContext.getRequest();
-        
-        if ( parentId == null ) {
-            if ( request.getParameter("catalog_id") != null )
-                parentId = request.getParameter("catalog_id");
-            else if ( request.getParameter("CATALOG_ID") != null )
-                parentId = request.getParameter("CATALOG_ID");
-            else if ( request.getParameter("category_id") != null )
-                parentId = request.getParameter("category_id");
-            else if ( request.getParameter("CATEGORY_ID") != null )
-                parentId = request.getParameter("CATEGORY_ID");
-        }
-        
-        if ( parentId == null )
-            return;
-        
+    /**
+     * Puts the following into the pageContext attribute list with a prefix, if specified:
+     *  productList, categoryId, viewIndex, viewSize, lowIndex, highIndex, listSize
+     * Puts the following into the session attribute list:
+     *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
+     *@param pageContext The pageContext of the calling JSP
+     *@param attributePrefix A prefix to put on each attribute name in the pageContext
+     *@param parentId The ID of the parent category
+     */
+    public static void getRelatedProducts(PageContext pageContext, String attributePrefix, String parentId) {
         GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
-        GenericValue category = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
+        ServletRequest request = pageContext.getRequest();
+        if(attributePrefix == null) attributePrefix = "";
+
+        int viewIndex = 0;
+        try { viewIndex = Integer.valueOf((String)pageContext.getRequest().getParameter("VIEW_INDEX")).intValue(); }
+        catch (Exception e) { viewIndex = 0; }
         
-        if ( category != null ) {
-            Collection p = helper.getRelated("PrimaryProduct",category);
-            products.addAll(p);
+        int viewSize = 10;
+        try { viewSize = Integer.valueOf((String)pageContext.getRequest().getParameter("VIEW_SIZE")).intValue(); }
+        catch (Exception e) { viewSize = 10; }
+        
+        if(parentId == null)
+          parentId = UtilFormatOut.checkNull(request.getParameter("catalog_id"), request.getParameter("CATALOG_ID"),
+                                             request.getParameter("category_id"), request.getParameter("CATEGORY_ID"));        
+        if(parentId == null || parentId.length() <= 0) return;
+        
+        String curFindString = "ProductCategoryByParentId:" + parentId;
+        
+        ArrayList products = (ArrayList)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
+        String resultArrayName = (String)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
+
+        if(products == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
+            Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
+            Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
+            
+            GenericValue category = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
+
+            if ( category != null ) {
+                products = new ArrayList();
+                Collection p = helper.getRelated("PrimaryProduct",category);
+                products.addAll(p);
+            }
+            
+            if(products != null) {
+                pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", products);
+                pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
+            }
         }
         
-        if ( products.size() > 0 )
-            pageContext.setAttribute(attributeName,products);
+        int lowIndex = viewIndex*viewSize+1;
+        int highIndex = (viewIndex+1)*viewSize;
+        int listSize = 0;
+        if(products!=null) listSize = products.size();
+        if(listSize<highIndex) highIndex=listSize;
+        
+        ArrayList someProducts = new ArrayList();
+        for(int ind=lowIndex; ind<=highIndex; ind++) {
+            someProducts.add(products.get(ind-1));
+        }
+
+        pageContext.setAttribute(attributePrefix + "viewIndex", new Integer(viewIndex));
+        pageContext.setAttribute(attributePrefix + "viewSize", new Integer(viewSize));
+        pageContext.setAttribute(attributePrefix + "lowIndex", new Integer(lowIndex));
+        pageContext.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
+        pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
+        pageContext.setAttribute(attributePrefix + "categoryId", parentId);
+        if(someProducts.size() > 0) pageContext.setAttribute(attributePrefix + "productList",someProducts);
     }
     
     public static void getProduct(PageContext pageContext, String attributeName) {
@@ -182,13 +226,14 @@ public class CatalogHelper {
     }
     
     /**
-     * Puts the following into the pageContext attribute list:
+     * Puts the following into the pageContext attribute list with a prefix if specified:
      *  searchProductList, keywordString, viewIndex, viewSize, lowIndex, highIndex, listSize
      * Puts the following into the session attribute list:
      *  CACHE_SEARCH_RESULTS, CACHE_SEARCH_RESULTS_NAME
      *@param pageContext The pageContext of the calling JSP
+     *@param attributePrefix A prefix to put on each attribute name in the pageContext
      */
-    public static void getKeywordSearchProducts(PageContext pageContext) {
+    public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix) {
         GenericHelper helper = (GenericHelper)pageContext.getServletContext().getAttribute("helper");
         
         int viewIndex = 0;
@@ -232,13 +277,13 @@ public class CatalogHelper {
             products.add(helper.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productIds.get(ind-1))));
         }
         
-        pageContext.setAttribute("viewIndex", new Integer(viewIndex));
-        pageContext.setAttribute("viewSize", new Integer(viewSize));
-        pageContext.setAttribute("lowIndex", new Integer(lowIndex));
-        pageContext.setAttribute("highIndex", new Integer(highIndex));
-        pageContext.setAttribute("listSize", new Integer(listSize));
-        pageContext.setAttribute("keywordString", keywordString);
-        if(products.size() > 0) pageContext.setAttribute("searchProductList",products);
+        pageContext.setAttribute(attributePrefix + "viewIndex", new Integer(viewIndex));
+        pageContext.setAttribute(attributePrefix + "viewSize", new Integer(viewSize));
+        pageContext.setAttribute(attributePrefix + "lowIndex", new Integer(lowIndex));
+        pageContext.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
+        pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
+        pageContext.setAttribute(attributePrefix + "keywordString", keywordString);
+        if(products.size() > 0) pageContext.setAttribute(attributePrefix + "searchProductList",products);
     }
     
     public static void setTrail(PageContext pageContext, String currentCategory, boolean topLevel) {

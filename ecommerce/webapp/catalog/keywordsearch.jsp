@@ -6,7 +6,7 @@
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/leftcolumn.jsp" %> 
 
-<%org.ofbiz.ecommerce.catalog.CatalogHelper.getKeywordSearchProducts(pageContext);%>
+<%org.ofbiz.ecommerce.catalog.CatalogHelper.getKeywordSearchProducts(pageContext, "");%>
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />
 <ofbiz:object name="lowIndex" property="lowIndex" type='java.lang.Integer' />
