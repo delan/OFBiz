@@ -52,6 +52,8 @@
 
     <target name="prepare" depends="clean">
         <mkdir dir="${lib.dir}" />
+		<mkdir dir="${lib.dir}/jar" />
+		<mkdir dir="${lib.dir}/jar/META-INF" />
 		<mkdir dir="${lib.dir}/ejb" />
 		<mkdir dir="${lib.dir}/ejb/META-INF" />
 		<mkdir dir="${lib.dir}/j2ee" />
@@ -68,21 +70,40 @@
     <target name="classes" depends="prepare">
         <javac srcdir="${src.dir}"
 		       classpath="${classpath}"
-               destdir="${lib.dir}" />               
+               destdir="${lib.dir}/jar" />               
     </target>
 
+	<target name="jar-meta-info" depends="classes">
+		<copy file="${src.dir}/META-INF/ejb-jar.xml"
+		      tofile="${lib.dir}/jar/META-INF/jboss.xml" />
+		<copy file="${src.dir}/META-INF/jboss.xml"
+		      tofile="${lib.dir}/jar/META-INF/ejb-jar.xml" />
+		<copy file="${src.dir}/META-INF/jaws.xml"
+		      tofile="${lib.dir}/jar/META-INF/jaws.xml" />
+	</target>
 
-    <target name="jar" depends="classes">
+
+    <target name="jar" depends="jar-meta-info">
         <jar jarfile="${build.dir}/${name}.jar"
-             basedir="${lib.dir}" />
+             basedir="${lib.dir}/jar" />
     </target>
+
+
+    <!-- ================================================================== -->
+    <!-- Build the WAR                                                      -->
+    <!-- ================================================================== -->
+	
+	<target name="war" depends="prepare">
+		<jar jarfile="${build.dir}/${name}.war"
+		     basedir="./webapp" />
+	</target>
 
 
     <!-- ================================================================== -->
     <!-- Build the EJB jar and EAR                                          -->
     <!-- ================================================================== -->
 	
-	<target name="meta-info" depends="jar">
+	<target name="meta-info" depends="jar,war">
 		<copy file="${src.dir}/META-INF/ejb-jar.xml"
 		      tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
 		<copy file="${src.dir}/META-INF/jboss.xml"
