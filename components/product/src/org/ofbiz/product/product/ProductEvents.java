@@ -1,28 +1,45 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2004 The Open For Business Project (www.ofbiz.org)
+ * 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
  *
- * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 package org.ofbiz.product.product;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.*;
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilParse;
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -37,8 +54,6 @@ import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.ServiceUtil;
 
 /**
  * Product Information Related Events
@@ -1138,30 +1153,31 @@ public class ProductEvents {
         if ((fromDate == null) || (fromDate.trim().length() == 0)) {
             fromDate = UtilDateTime.nowTimestamp().toString();
         }
-        String[] productFeatureId = request.getParameterValues("productFeatureId");
-        try {
-            for (int i = 0; i < productFeatureId.length; i++) {
-                if (!productFeatureId[i].equals("~~any~~")) {
-                    List featureAppls = delegator.findByAnd("ProductFeatureAppl",
-                            UtilMisc.toMap("productId", productId,
-                                    "productFeatureId", productFeatureId[i],
-                                    "productFeatureApplTypeId", productFeatureApplTypeId));
-                    if (featureAppls.size() == 0) {
-                        // no existing application for this
-                        delegator.create("ProductFeatureAppl",
+        String[] productFeatureIdArray = request.getParameterValues("productFeatureId");
+        if (productFeatureIdArray.length > 0) {
+            try {
+                for (int i = 0; i < productFeatureIdArray.length; i++) {
+                    if (!productFeatureIdArray[i].equals("~~any~~")) {
+                        List featureAppls = delegator.findByAnd("ProductFeatureAppl",
                                 UtilMisc.toMap("productId", productId,
-                                    "productFeatureId", productFeatureId[i],
-                                    "productFeatureApplTypeId", productFeatureApplTypeId,
-                                    "fromDate", fromDate));
+                                        "productFeatureId", productFeatureIdArray[i],
+                                        "productFeatureApplTypeId", productFeatureApplTypeId));
+                        if (featureAppls.size() == 0) {
+                            // no existing application for this
+                            delegator.create("ProductFeatureAppl",
+                                    UtilMisc.toMap("productId", productId,
+                                        "productFeatureId", productFeatureIdArray[i],
+                                        "productFeatureApplTypeId", productFeatureApplTypeId,
+                                        "fromDate", fromDate));
+                        }
                     }
                 }
+            } catch (GenericEntityException e) {
+                String errMsg = "Error adding feature: " + e.toString();
+                request.setAttribute("_ERROR_MESSAGE_", errMsg);
+                return "error";
             }
-        } catch (GenericEntityException e) {
-            String errMsg = "Error adding feature: " + e.toString();
-            request.setAttribute("_ERROR_MESSAGE_", errMsg);
-            return "error";
         }
         return "success";
     }
-
 }
