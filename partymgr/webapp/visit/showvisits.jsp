@@ -75,11 +75,11 @@
     lowIndex = viewIndex * viewSize;
     highIndex = (viewIndex + 1) * viewSize;
             
-    List visitList = visitListIt.getPartialList(1, highIndex + 1);
+    List visitList = visitListIt.getPartialList(lowIndex + 1, viewSize + 1);
 	if (visitList != null) pageContext.setAttribute("visitList", visitList);
     
     if (visitList != null) {
-    	listSize = visitList.size();
+    	listSize = lowIndex + visitList.size();
     }
 
     if (listSize < highIndex) {
@@ -137,7 +137,7 @@
     <td colspan="7"><hr class="sepbar"></td>
   </tr>
   
-  <ofbiz:iterator name="visit" property="visitList" offset="<%=lowIndex%>" limit="<%=viewSize%>">
+  <ofbiz:iterator name="visit" property="visitList" limit="<%=viewSize%>">
   <tr class="<%=rowClass = rowClass.equals("viewManyTR1") ? "viewManyTR2" : "viewManyTR1"%>">
     <td><a href="<ofbiz:url>/visitdetail?visitId=<%=UtilFormatOut.checkNull(visit.getString("visitId"))%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(visit.getString("visitId"))%></a></td>
     <% if (partyId == null) { %>
