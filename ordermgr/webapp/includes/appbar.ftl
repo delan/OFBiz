@@ -50,9 +50,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="${linkClass}">Party</a></td>
-                <td class="tabdownright"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="${response.encodeURL("/partymgr/control/main" + externalKeyParam)}" title="Party Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr> 
               <#if !requestAttributes.isPartyMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -78,9 +78,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${leftClass}"><a href="${response.encodeURL("/marketing/control/main" + externalKeyParam)}" title="Marketing Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/marketing/control/main" + externalKeyParam)}" title="Marketing Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/marketing/control/main" + externalKeyParam)}" title="Marketing Manager" class="${linkClass}">Marketing</a></td>
-                <td class="${rightClass}"><a href="${response.encodeURL("/marketing/control/main" + externalKeyParam)}" title="Marketing Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/marketing/control/main" + externalKeyParam)}" title="Marketing Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <#if !requestAttributes.isMarketingMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -106,9 +106,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${leftClass}"><a href="${response.encodeURL("/catalog/control/main" + externalKeyParam)}" title="Catalog Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/catalog/control/main" + externalKeyParam)}" title="Catalog Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/catalog/control/main" + externalKeyParam)}" title="Catalog Manager" class="${linkClass}">Catalog</a></td>
-                <td class="${rightClass}"><a href="${response.encodeURL("/catalog/control/main" + externalKeyParam)}" title="Catalog Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/catalog/control/main" + externalKeyParam)}" title="Catalog Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>  
               <#if !requestAttributes.isCatalogMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -134,9 +134,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${leftClass}"><a href="${response.encodeURL("/facility/control/main" + externalKeyParam)}" title="Facility Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/facility/control/main" + externalKeyParam)}" title="Facility Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/facility/control/main" + externalKeyParam)}" title="Facility Manager" class="${linkClass}">Facility</a></td>
-                <td class="${rightClass}"><a href="${response.encodeURL("/facility/control/main" + externalKeyParam)}" title="Facility Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/facility/control/main" + externalKeyParam)}" title="Facility Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <#if !requestAttributes.isFacilityMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -162,9 +162,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${leftClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}">Order</a></td>
-                <td class="${rightClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/ordermgr/control/main" + externalKeyParam)}" title="Order Manager" class="${linkClass}selected"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr> 
               <#if !requestAttributes.isOrderMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -190,9 +190,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${leftClass}"><a href="${response.encodeURL("/accouting/control/main" + externalKeyParam)}" title="Accounting" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/accouting/control/main" + externalKeyParam)}" title="Accounting" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/accounting/control/main" + externalKeyParam)}" title="Accounting" class="${linkClass}">Accounting</a></td>
-                <td class="${rightClass}"><a href="${response.encodeURL("/accounting/control/main" + externalKeyParam)}" title="Accounting" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/accounting/control/main" + externalKeyParam)}" title="Accounting" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <#if !requestAttributes.isAccountingMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -218,9 +218,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${leftClass}"><a href="j${response.encodeURL("/workeffort/control/main" + externalKeyParam)}" title="WorkEffort" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="j${response.encodeURL("/workeffort/control/main" + externalKeyParam)}" title="WorkEffort" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/workeffort/control/main" + externalKeyParam)}" title="WorkEffort" class="${linkClass}">WorkEffort</a></td>
-                <td class="${rightClass}"><a href="${response.encodeURL("/workeffort/control/main" + externalKeyParam)}" title="WorkEffort" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/workeffort/control/main" + externalKeyParam)}" title="WorkEffort" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <#if !requestAttributes.isWorkEffortMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -246,9 +246,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${leftClass}"><a href="${response.encodeURL("/content/control/main" + externalKeyParam)}" title="Content Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/content/control/main" + externalKeyParam)}" title="Content Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/content/control/main" + externalKeyParam)}" title="Content Manager" class="${linkClass}">Content</a></td>
-                <td class="${rightClass}"><a href="${response.encodeURL("/content/control/main" + externalKeyParam)}" title="Content Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/content/control/main" + externalKeyParam)}" title="Content Manager" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <#if !requestAttributes.isContentMgrActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>
@@ -273,9 +273,9 @@
           <td height="15" class="${colClass}">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="${leftClass}"><a href="${response.encodeURL("/webtools/control/main" + externalKeyParam)}" title="WebTools" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${leftClass}"><a href="${response.encodeURL("/webtools/control/main" + externalKeyParam)}" title="WebTools" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="${centerClass}"><a href="${response.encodeURL("/webtools/control/main" + externalKeyParam)}" title="WebTools" class="${linkClass}">WebTools</a></td>
-                <td class="${rightClass}"><a href="${response.encodeURL("/webtools/control/main" + externalKeyParam)}" title="WebTools" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="${rightClass}"><a href="${response.encodeURL("/webtools/control/main" + externalKeyParam)}" title="WebTools" class="${linkClass}"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <#if !requestAttributes.isWebToolsActive?default(false)>
               <tr><td colspan="3" class="blackarea"><img src="<@ofbizContentUrl>/images/spacer.gif</@ofbizContentUrl>" alt="" height="1"></td></tr>

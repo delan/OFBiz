@@ -19,9 +19,9 @@
           <td height="15" class="tabdownblock">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="<%=response.encodeURL("/partymgr/control/main" + externalKeyParam)%>" title="Party Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="<%=response.encodeURL("/partymgr/control/main" + externalKeyParam)%>" title="Party Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="<%=response.encodeURL("/partymgr/control/main" + externalKeyParam)%>" title="Party Manager" class="tablink">Party</a></td>
-                <td class="tabdownright"><a href="<%=response.encodeURL("/partymgr/control/main" + externalKeyParam)%>" title="Party Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="<%=response.encodeURL("/partymgr/control/main" + externalKeyParam)%>" title="Party Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <tr><td colspan="3" class="blackarea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>               
@@ -32,9 +32,9 @@
           <td height="15" class="tabdownblock">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="<%=response.encodeURL("/marketing/control/main" + externalKeyParam)%>" title="Marketing Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="<%=response.encodeURL("/marketing/control/main" + externalKeyParam)%>" title="Marketing Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="<%=response.encodeURL("/marketing/control/main" + externalKeyParam)%>" title="Marketing Manager" class="tablink">Marketing</a></td>
-                <td class="tabdownright"><a href="<%=response.encodeURL("/marketing/control/main" + externalKeyParam)%>" title="Marketing Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="<%=response.encodeURL("/marketing/control/main" + externalKeyParam)%>" title="Marketing Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <tr><td colspan="3" class="blackarea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>               
@@ -45,9 +45,9 @@
           <td class="mainblock">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabupleft"><a href="<%=response.encodeURL("/catalog/control/main" + externalKeyParam)%>" title="Catalog Manager" class="tablinkselected"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabupleft"><a href="<%=response.encodeURL("/catalog/control/main" + externalKeyParam)%>" title="Catalog Manager" class="tablinkselected"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabupcenter"><a href="<%=response.encodeURL("/catalog/control/main" + externalKeyParam)%>" title="Catalog Manager" class="tablinkselected">Catalog</a></td>
-                <td class="tabupright"><a href="<%=response.encodeURL("/catalog/control/main" + externalKeyParam)%>" title="Catalog Manager" class="tablinkselected"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabupright"><a href="<%=response.encodeURL("/catalog/control/main" + externalKeyParam)%>" title="Catalog Manager" class="tablinkselected"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>                
             </table>
           </td>	     
@@ -56,9 +56,9 @@
           <td height="15" class="tabdownblock">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="<%=response.encodeURL("/facility/control/main" + externalKeyParam)%>" title="Facility Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="<%=response.encodeURL("/facility/control/main" + externalKeyParam)%>" title="Facility Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="<%=response.encodeURL("/facility/control/main" + externalKeyParam)%>" title="Facility Manager" class="tablink">Facility</a></td>
-                <td class="tabdownright"><a href="<%=response.encodeURL("/facility/control/main" + externalKeyParam)%>" title="Facility Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="<%=response.encodeURL("/facility/control/main" + externalKeyParam)%>" title="Facility Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <tr><td colspan="3" class="blackarea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>               
@@ -69,9 +69,9 @@
           <td height="15" class="tabdownblock">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="<%=response.encodeURL("/ordermgr/control/main" + externalKeyParam)%>" title="Order Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="<%=response.encodeURL("/ordermgr/control/main" + externalKeyParam)%>" title="Order Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="<%=response.encodeURL("/ordermgr/control/main" + externalKeyParam)%>" title="Order Manager" class="tablink">Order</a></td>
-                <td class="tabdownright"><a href="<%=response.encodeURL("/ordermgr/control/main" + externalKeyParam)%>" title="Order Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="<%=response.encodeURL("/ordermgr/control/main" + externalKeyParam)%>" title="Order Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <tr><td colspan="3" class="blackarea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
               <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>               
@@ -82,57 +82,57 @@
           <td height="15" class="tabdownblock">
             <table width="100%" border="0" cellspacing="0" cellpadding="0">                
               <tr>
-                <td class="tabdownleft"><a href="<%=response.encodeURL("/accounting/control/main" + externalKeyParam)%>" title="Accounting" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="<%=response.encodeURL("/accounting/control/main" + externalKeyParam)%>" title="Accounting" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="<%=response.encodeURL("/accounting/control/main" + externalKeyParam)%>" title="Accounting" class="tablink">Accounting</a></td>
-                <td class="tabdownright"><a href="<%=response.encodeURL("/accounting/control/main" + externalKeyParam)%>" title="Accounting" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="<%=response.encodeURL("/accounting/control/main" + externalKeyParam)%>" title="Accounting" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <tr><td colspan="3" class="blackarea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
-              <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>               
+              <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
             </table>
           </td>     
-          <%}%>               
+          <%}%>
           <%if(security.hasEntityPermission("WORKEFFORTMGR", "_VIEW", session)) {%>
           <td height="15" class="tabdownblock">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">                
+            <table width="100%" border="0" cellspacing="0" cellpadding="0"> 
               <tr>
-                <td class="tabdownleft"><a href="<%=response.encodeURL("/workeffort/control/main" + externalKeyParam)%>" title="WorkEffort" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="<%=response.encodeURL("/workeffort/control/main" + externalKeyParam)%>" title="WorkEffort" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="<%=response.encodeURL("/workeffort/control/main" + externalKeyParam)%>" title="WorkEffort" class="tablink">WorkEffort</a></td>
-                <td class="tabdownright"><a href="<%=response.encodeURL("/workeffort/control/main" + externalKeyParam)%>" title="WorkEffort" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="<%=response.encodeURL("/workeffort/control/main" + externalKeyParam)%>" title="WorkEffort" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <tr><td colspan="3" class="blackarea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
-              <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>               
+              <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
             </table>
-          </td>                        
+          </td>         
           <%}%>
           <%if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {%>
           <td height="15" class="tabdownblock">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">                
+            <table width="100%" border="0" cellspacing="0" cellpadding="0"> 
               <tr>
-                <td class="tabdownleft"><a href="<%=response.encodeURL("/content/control/main" + externalKeyParam)%>" title="Content Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="<%=response.encodeURL("/content/control/main" + externalKeyParam)%>" title="Content Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="<%=response.encodeURL("/content/control/main" + externalKeyParam)%>" title="Content Manager" class="tablink">Content</a></td>
-                <td class="tabdownright"><a href="<%=response.encodeURL("/content/control/main" + externalKeyParam)%>" title="Content Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="<%=response.encodeURL("/content/control/main" + externalKeyParam)%>" title="Content Manager" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <tr><td colspan="3" class="blackarea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
-              <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>               
+              <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
             </table>
           </td>  
           <%}%>          
           <td height="15" class="tabdownblock">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">                
+            <table width="100%" border="0" cellspacing="0" cellpadding="0"> 
               <tr>
-                <td class="tabdownleft"><a href="<%=response.encodeURL("/webtools/control/main" + externalKeyParam)%>" title="WebTools" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownleft"><a href="<%=response.encodeURL("/webtools/control/main" + externalKeyParam)%>" title="WebTools" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
                 <td nowrap="nowrap" class="tabdowncenter"><a href="<%=response.encodeURL("/webtools/control/main" + externalKeyParam)%>" title="WebTools" class="tablink">WebTools</a></td>
-                <td class="tabdownright"><a href="<%=response.encodeURL("/webtools/control/main" + externalKeyParam)%>" title="WebTools" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="24" height="15" border="0"></a></td>
+                <td class="tabdownright"><a href="<%=response.encodeURL("/webtools/control/main" + externalKeyParam)%>" title="WebTools" class="tablink"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" width="10" height="15" border="0"></a></td>
               </tr>
               <tr><td colspan="3" class="blackarea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
-              <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>               
+              <tr><td colspan="3" class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td></tr>
             </table>
           </td>            
           <td width="100%" style="vertical-align: bottom;">
-            <table width="100%" border="0" cellspacing="0" cellpadding="0">                
+            <table width="100%" border="0" cellspacing="0" cellpadding="0"> 
               <tr>
-                <td class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td>               
-              </tr>               
+                <td class="whitearea"><img src="<ofbiz:contenturl>/images/spacer.gif</ofbiz:contenturl>" alt="" height="1"></td>
+              </tr>
             </table>
           </td>           
         </tr>        
