@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  */
 -->
 
@@ -49,7 +49,6 @@
   <!--  - org.ofbiz.common.language -->
   <!--  - org.ofbiz.common.note -->
   <!--  - org.ofbiz.common.period -->
-  <!--  - org.ofbiz.common.sequence -->
   <!--  - org.ofbiz.common.status -->
   <!--  - org.ofbiz.common.uom -->
   <!-- ========================================================= -->
@@ -335,18 +334,6 @@
       <relation type="one" fk-name="STD_TM_PER_TYPE" rel-entity-name="PeriodType">
         <key-map field-name="periodTypeId"/>
       </relation>
-    </entity>
-
-  <!-- ========================================================= -->
-  <!-- org.ofbiz.common.sequence -->
-  <!-- ========================================================= -->
-
-    <entity entity-name="SequenceValueItem"
-            package-name="org.ofbiz.common.sequence"
-            title="Sequence Entity">
-      <field name="seqName" type="id-long-ne"></field>
-      <field name="seqId" type="numeric"></field>
-      <prim-key field="seqName"/>
     </entity>
 
   <!-- ========================================================= -->
