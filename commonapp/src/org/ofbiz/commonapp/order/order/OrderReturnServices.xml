@@ -105,6 +105,13 @@
         <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Security Error: to run removeReturnItem you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/></check-permission>
         <check-errors/>
         
+        <field-tofield field-name="returnId" map-name="parameters" to-map-name="headerPKMap"/>
+        <find-by-primary-key entity-name="ReturnHeader" map-name="headerPKMap" value-name="returnHeader"/>
+        <if-compare field-name="statusId" map-name="returnHeader" operator="not-equals" type="String" value="RETURN_REQUESTED">
+            <add-error><fail-message message="Cannot remove items once return is approved"/></add-error>
+            <check-errors/>
+        </if-compare>
+        
         <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
