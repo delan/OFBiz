@@ -178,14 +178,14 @@ public class ShoppingCart implements Serializable {
                 } else {
                     int pmCmp = this.paymentMethodId.compareTo(that.paymentMethodId);
                     if (pmCmp == 0) {
-                        if (this.refNum != null) {
-                            if (that.refNum != null) {
+                        if (this.refNum != null && this.refNum[0] != null) {
+                            if (that.refNum != null && that.refNum[0] != null) {
                                 return this.refNum[0].compareTo(that.refNum[0]);
                             } else {
                                 return 1;
                             }
                         } else {
-                            if (that.refNum != null) {
+                            if (that.refNum != null && that.refNum[0] != null) {
                                 return -1;
                             } else {
                                 return 0;
@@ -201,14 +201,14 @@ public class ShoppingCart implements Serializable {
                 } else {
                     int pmtCmp = this.paymentMethodTypeId.compareTo(that.paymentMethodTypeId);
                     if (pmtCmp == 0) {
-                        if (this.refNum != null) {
-                            if (that.refNum != null) {
+                        if (this.refNum != null && this.refNum[0] != null) {
+                            if (that.refNum != null && that.refNum[0] != null) {
                                 return this.refNum[0].compareTo(that.refNum[0]);
                             } else {
                                 return 1;
                             }
                         } else {
-                            if (that.refNum != null) {
+                            if (that.refNum != null && that.refNum[0] != null) {
                                 return -1;
                             } else {
                                 return 0;
