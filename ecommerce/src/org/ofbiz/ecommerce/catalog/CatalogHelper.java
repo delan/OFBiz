@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/08/27 17:29:31  epabst
+ * simplified
+ *
  * Revision 1.1.1.1  2001/08/24 01:01:43  azeneski
  * Initial Import
  *
@@ -14,6 +17,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+import javax.servlet.jsp.PageContext;
 
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
@@ -29,22 +33,22 @@ import org.ofbiz.core.entity.GenericHelperFactory;
  * <p><b>Title:</b> CatalogHelper.java
  * <p><b>Description:</b> Helper class to reduce code in JSPs.
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
- * <p>Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- * <p>The above copyright notice and this permission notice shall be included 
+ * <p>The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author Andy Zeneski (jaz@zsolv.com)
@@ -53,60 +57,48 @@ import org.ofbiz.core.entity.GenericHelperFactory;
  */
 public class CatalogHelper {
     
-    public static Collection getRelatedCategories(String parentId) {
-        if ( parentId == null )
-            return null;
-        
+    public static void getRelatedCategories(PageContext pageContext, String parentId) {        
         ArrayList categories = new ArrayList();
-        HashMap ifm = new HashMap();
-        ifm.put("parentProductCategoryId",parentId);
-        
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-        Collection rollups = helper.findByAnd("ProductCategoryRollup",ifm,null);
+        Collection rollups = helper.findByAnd("ProductCategoryRollup",UtilMisc.toMap("parentProductCategoryId",parentId),null);
         
-        Iterator ri = rollups.iterator();
-        while ( ri.hasNext() ) {
-            HashMap cfm = new HashMap();
-            GenericValue value = (GenericValue) ri.next();
-            cfm.put("productCategoryId",value.getString("productCategoryId"));
-            Collection cc = helper.findByAnd("ProductCategory",cfm,null);
-            if ( cc != null )
-                categories.addAll(cc);
+        Debug.log("Got rollups...");
+        if ( rollups != null && rollups.size() > 0 ) {
+            Debug.log("Rollup size: " + rollups.size());            
+            Iterator ri = rollups.iterator();
+            while ( ri.hasNext() ) {               
+                GenericValue parent = (GenericValue) ri.next();
+                Debug.log("Adding children of: " + parent.getString("parentProductCategoryId"));
+                Collection cc = helper.getRelated("CurrentProductCategory",parent);
+                if ( cc != null && cc.size() > 0 )
+                    categories.addAll(cc);                
+            }
         }
         
-        return categories;
+        if ( categories.size() > 0 ) 
+            pageContext.setAttribute("categoryList",categories);
     }
     
-    public static Collection getRelatedProducts(String parentId) {
-        if ( parentId == null )
-            return null;
-        
-        Collection products = null;
-        HashMap ifm = new HashMap();
-        ifm.put("productCategoryId",parentId);
-        
+    public static void getRelatedProducts(PageContext pageContext, String parentId) {                
+        ArrayList products = new ArrayList();
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-        List category = (List) helper.findByAnd("ProductCategory",ifm,null);
+        GenericValue category = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
+        
         if ( category != null ) {
-            GenericValue value = (GenericValue) category.get(0);
-            Debug.log("CatalogHelper: " + value.getEntityName());
-            products = helper.getRelated("PrimaryProduct",value);
-            Debug.log("CatalogHelper: " + products.size());
-        }
-        else {
-            Debug.log("CatalogHelper: List is null.");
-        }
+            Collection p = helper.getRelated("PrimaryProduct",category);
+            products.addAll(p);
+        }            
         
-        return products;
+        if ( products.size() > 0 )
+            pageContext.setAttribute("productList",products);
     }
     
-    public static GenericValue getProduct(String productId) {
-        if ( productId == null )
-            return null;
-        
+    public static void getProduct(PageContext pageContext, String productId) {    
+        GenericValue product = null;
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-        return helper.findByPrimaryKey("Product", 
-                UtilMisc.toMap("productId", productId));
+        product = helper.findByPrimaryKey("Product",UtilMisc.toMap("productId", productId));
+        if ( product != null )
+            pageContext.setAttribute("productValue",product);
     }
     
 }
