@@ -14,7 +14,7 @@
 
     <RedefinableHeader PublicationStatus="UNDER_REVISION">
         <Author>Andy Zeneski</Author>
-        <Version>1.5</Version>
+        <Version>1.6</Version>
         <Responsibles>
             <Responsible>admin</Responsible>
         </Responsibles>
@@ -66,7 +66,7 @@
             
 			<RedefinableHeader PublicationStatus="UNDER_REVISION">
         		<Author>OFBiz</Author>
-	        	<Version>1.5</Version>
+	        	<Version>1.6</Version>
         		<Responsibles>
 		          <Responsible>admin</Responsible>
         		</Responsibles>
@@ -92,7 +92,7 @@
             		<DataType>
             			<BasicType Type="STRING"/>
             		</DataType>
-            		<InitialValue>jaz@jflow.net,jonesde@ofbiz.org</InitialValue>
+            		<InitialValue>ofbiztest@yahoo.com</InitialValue>
             	</DataField>
             </DataFields>
 
@@ -195,7 +195,7 @@
                         		<ActualParameter>orderId</ActualParameter>
                         		<ActualParameter>statusId</ActualParameter>
                         	</ActualParameters>
-                        	<ExtendedAttributes>                          		
+                        	<ExtendedAttributes>                      		
                                 <ExtendedAttribute Name="statusId" Value="ORDER_APPROVED"/>
                                 <ExtendedAttribute Name="serviceName" Value="changeOrderStatus"/>                              
                                 <ExtendedAttribute Name="runAsUser" Value="admin"/>
@@ -207,6 +207,7 @@
                         		<ActualParameter>statusId</ActualParameter>
                         	</ActualParameters>
                         	<ExtendedAttributes>                          		
+                        		<ExtendedAttribute name="fromStatusId" Value="ITEM_PROCESSING"/>
                                 <ExtendedAttribute Name="statusId" Value="ITEM_APPROVED"/>
                                 <ExtendedAttribute Name="serviceName" Value="changeOrderItemStatus"/>                              
                                 <ExtendedAttribute Name="runAsUser" Value="admin"/>
@@ -260,6 +261,7 @@
                         		<ActualParameter>statusId</ActualParameter>
                         	</ActualParameters>
                         	<ExtendedAttributes>                          		
+                        		<ExtendedAttribute name="fromStatusId" Value="ITEM_PROCESSING"/>
                                 <ExtendedAttribute Name="statusId" Value="ITEM_REJECTED"/>
                                 <ExtendedAttribute Name="serviceName" Value="changeOrderItemStatus"/>                              
                                 <ExtendedAttribute Name="runAsUser" Value="admin"/>
@@ -381,7 +383,40 @@
                         <ExtendedAttribute Name="inheritPriority" Value="Y"/>
                     </ExtendedAttributes>
                 </Activity>                
-                                                          
+                      
+                <Activity Id="checkCompleteOrder" Name="Check Complte Order">
+                    <Description>Activity checks to make sure the order is ready to be complted</Description>
+                    <Limit>1</Limit>
+                    <Implementation>                    
+                        <Tool Id="checkBackOrders" Type="PROCEDURE">
+                        	<ActualParameters>                        		
+                        		<ActualParameter>orderId</ActualParameter>                        		
+                        	</ActualParameters>
+                        	<ExtendedAttributes>                                   	
+                                <ExtendedAttribute Name="serviceName" Value="checkOrderForBackOrders"/>                              
+                                <ExtendedAttribute Name="runAsUser" Value="admin"/>
+                            </ExtendedAttributes>
+                        </Tool>                                           
+                    </Implementation>
+                    <Performer>admin</Performer>
+                    <StartMode>
+                        <Automatic/>
+                    </StartMode>
+                    <FinishMode>
+                        <Automatic/>
+                    </FinishMode>
+                    <Priority>1</Priority>                    
+                    <TransitionRestrictions>
+                        <TransitionRestriction>
+                            <Join Type="XOR"/>
+                            <Split Type="XOR"/>
+                        </TransitionRestriction>
+                    </TransitionRestrictions>
+                    <ExtendedAttributes>
+                        <ExtendedAttribute Name="canStart" Value="N"/>
+                    </ExtendedAttributes>
+                </Activity>              
+                                                                          
                 <Activity Id="completeOrderEvent" Name="Complete Order Event">
                     <Description>Activity runs after an order is completed</Description>
                     <Limit>1</Limit>
@@ -403,7 +438,8 @@
                         		<ActualParameter>orderId</ActualParameter>
                         		<ActualParameter>statusId</ActualParameter>
                         	</ActualParameters>
-                        	<ExtendedAttributes>                          		
+                        	<ExtendedAttributes>           
+                        		<ExtendedAttribute name="fromStatusId" Value="ITEM_APPROVED"/>               		
                                 <ExtendedAttribute Name="statusId" Value="ITEM_COMPLETED"/>
                                 <ExtendedAttribute Name="serviceName" Value="changeOrderItemStatus"/>                              
                                 <ExtendedAttribute Name="runAsUser" Value="admin"/>
@@ -470,7 +506,7 @@
             </Activities>                         
 
             <Transitions>
-                <Transition Id="trans1" From="receiveOrder" To="approveOrder" Loop="NOLOOP" Name="Goto Order Approve">
+                <Transition Id="trans1.0" From="receiveOrder" To="approveOrder" Loop="NOLOOP" Name="Goto Order Approve">
                     <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_PROCESSING")]]></Condition>                                     	                    
                 </Transition>  
                 <Transition Id="trans1.1" From="receiveOrder" To="completeOrder" Loop="NOLOOP" Name="Goto Order Complete">
@@ -486,7 +522,7 @@
                     <Condition Type="OTHERWISE"/>                     
                 </Transition>                                  
                                                                                                            
-                <Transition Id="trans2" From="approveOrder" To="cancelOrder" Loop="NOLOOP" Name="Cancel Order">
+                <Transition Id="trans2.0" From="approveOrder" To="cancelOrder" Loop="NOLOOP" Name="Cancel Order">
                     <Condition Type="CONDITION"><![CDATA[approvalCode.equals("0")]]></Condition>        
                     <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
@@ -508,32 +544,39 @@
                     </ExtendedAttributes>                                            
                 </Transition>   
 
-                <Transition Id="trans3" From="approveOrderEvent" To="completeOrder" Loop="NOLOOP" Name="Complete Order">
+                <Transition Id="trans3.0" From="approveOrderEvent" To="completeOrder" Loop="NOLOOP" Name="Complete Order">
                     <Condition Type="OTHERWISE"/>
                 </Transition>    
                                 
-                <Transition Id="trans4" From="completeOrder" To="cancelOrder" Loop="NOLOOP" Name="Cancel Order">
+                <Transition Id="trans4.0" From="completeOrder" To="cancelOrder" Loop="NOLOOP" Name="Cancel Order">
                     <Condition Type="CONDITION"><![CDATA[approvalCode.equals("0")]]></Condition>        
                      <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="0"/>
                     </ExtendedAttributes>                                                     
                 </Transition>                             
-                <Transition Id="trans4.1" From="completeOrder" To="completeOrderEvent" Loop="NOLOOP" Name="Complete Order">
+                <Transition Id="trans4.1" From="completeOrder" To="checkCompleteOrder" Loop="NOLOOP" Name="Complete Order">
                     <Condition Type="CONDITION"><![CDATA[approvalCode.equals("3")]]></Condition>        
                      <!-- Extended Attributes are not used by the engine; this is for client application reference -->
                     <ExtendedAttributes>
                     	<ExtendedAttribute Name="approvalCode" Value="3"/>
                     </ExtendedAttributes>                                                                         
-                </Transition> 
+                </Transition>
                 
-                <Transition Id="trans5" From="orderNotReady" To="approveOrder" Loop="NOLOOP" Name="Goto Order Approve">
+                <Transition Id="trans5.0" From="checkCompleteOrder" To="orderNotReady" Loop="NOLOOP" Name="Order Not Ready To Be Completed">
+                    <Condition Type="CONDITION"><![CDATA[backOrderedItems.size() > 0]]></Condition>        
+                </Transition>        
+                <Transition Id="trans5.1" From="checkCompleteOrder" To="completeOrderEvent" Loop="NOLOOP" Name="Complete The Order">
+                    <Condition Type="OTHERWISE"/>
+                </Transition>                                
+                
+                <Transition Id="trans6.0" From="orderNotReady" To="approveOrder" Loop="NOLOOP" Name="Goto Order Approve">
                     <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_PROCESSING")]]></Condition>                                                            	                    
                 </Transition>  
-                <Transition Id="trans5.1" From="orderNotReady" To="completeOrder" Loop="NOLOOP" Name="Goto Order Complete">
+                <Transition Id="trans6.1" From="orderNotReady" To="completeOrder" Loop="NOLOOP" Name="Goto Order Complete">
                     <Condition Type="CONDITION"><![CDATA[orderStatusId.equals("ORDER_APPROVED")]]></Condition>                                                            	                    
                 </Transition>
-                <Transition Id="trans5.2" From="orderNotReady" To="receiveOrder" Loop="NOLOOP" Name="Order not ready for processing">
+                <Transition Id="trans6.2" From="orderNotReady" To="receiveOrder" Loop="NOLOOP" Name="Order not ready for processing">
                     <Condition Type="OTHERWISE"/>                     
                 </Transition>                                                                    
             </Transitions>
