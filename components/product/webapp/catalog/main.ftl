@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -53,21 +53,22 @@
                 <input type="text" size="20" maxlength="20" name="prodCatalogId" class="inputBox" value="">                
                 <input type="submit" value=" ${uiLabelMap.ProductEditCatalog}" class="smallSubmit">
               </form>
-              <div class="tabletext"> ${uiLabelMap.CommonOr}: <A href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductCreateNewCatalog}</A></div>
+              <div class="tabletext"> ${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewCatalog}</a></div>
             <br>            
               <div class="tabletext"> ${uiLabelMap.ProductEditCategoryWithCategoryId}:</div>
               <form method=POST action="<@ofbizUrl>/EditCategory</@ofbizUrl>" style="margin: 0;">
                 <input type="text" size="20" maxlength="20" name="productCategoryId" class="inputBox" value="">
                 <input type="submit" value="${uiLabelMap.ProductEditCategory}" class="smallSubmit">
               </form>
-              <div class="tabletext"> ${uiLabelMap.CommonOr}: <A href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductCreateNewCategory}</A></div>
+              <div class="tabletext"> ${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>/EditCategory</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewCategory}</a></div>
             <br>
               <div class="tabletext"> ${uiLabelMap.ProductEditProductWithProductId}:</div>
               <form method=POST action="<@ofbizUrl>/EditProduct</@ofbizUrl>" style="margin: 0;">
                 <input type="text" size="20" maxlength="20" name="productId" class="inputBox" value="">
                 <input type="submit" value=" ${uiLabelMap.ProductEditProduct}" class="smallSubmit">
               </form>
-              <div class="tabletext"> ${uiLabelMap.CommonOr}: <A href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductCreateNewProduct}</A></div>
+              <div class="tabletext"> ${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">${uiLabelMap.ProductCreateNewProduct}</a></div>
+              <div class="tabletext"> ${uiLabelMap.CommonOr}: <a href="<@ofbizUrl>/CreateVirtualWithVariantsForm</@ofbizUrl>" class="buttontext">Quick Create Virtual from Variants</a></div>
             <br>
               <div class="tabletext"> ${uiLabelMap.ProductFindProductWithIdValue}:</div>
               <form method=POST action="<@ofbizUrl>/FindProductById</@ofbizUrl>" style="margin: 0;">
@@ -76,8 +77,8 @@
               </form>
             <br>
             <br>
-            <div><A href="<@ofbizUrl>/UpdateAllKeywords</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</A></div>
-            <div><A href="<@ofbizUrl>/FastLoadCache</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductFastLoadCatalogIntoCache}</A></div>
+            <div><a href="<@ofbizUrl>/UpdateAllKeywords</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductAutoCreateKeywordsForAllProducts}</a></div>
+            <div><a href="<@ofbizUrl>/FastLoadCache</@ofbizUrl>" class="buttontext"> ${uiLabelMap.ProductFastLoadCatalogIntoCache}</a></div>
             <br>
             </#if>
             <div class="tabletext"> ${uiLabelMap.ProductCatalogManagerIsFor}.</div>
