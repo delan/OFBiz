@@ -20,7 +20,6 @@
  * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
  */
 package org.ofbiz.entity.util;
 
@@ -39,12 +38,14 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.ofbiz.base.util.Base64;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionUtil;
@@ -308,7 +309,18 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
             if (currentFieldName != null) {
                 if (currentFieldValue != null && currentFieldValue.length() > 0) {
                     if (currentValue.getModelEntity().isField(currentFieldName)) {
-                        currentValue.setString(currentFieldName, currentFieldValue);
+                        ModelEntity modelEntity = currentValue.getModelEntity();
+                        ModelField modelField = modelEntity.getField(currentFieldName);
+                        String type = modelField.getType();
+                        if (type != null && type.equals("blob")) {
+                            byte strData[] = new byte[currentFieldValue.length()];
+                            strData = currentFieldValue.getBytes();
+                            byte binData[] = new byte[currentFieldValue.length()];
+                            binData = Base64.base64Decode(strData);
+                            currentValue.setBytes(currentFieldName, binData);
+                        } else {
+                            currentValue.setString(currentFieldName, currentFieldValue);
+                        }
                     } else {
                         Debug.logWarning("Ignoring invalid field name [" + currentFieldName + "] found for the entity: " + currentValue.getEntityName() + " with value=" + currentFieldValue, module);
                     }
