@@ -1,5 +1,5 @@
 /*
- * $Id: ProductUtilServices.java,v 1.8 2004/01/27 09:03:37 jonesde Exp $
+ * $Id: ProductUtilServices.java,v 1.9 2004/01/27 09:06:19 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -58,7 +58,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ProductUtilServices {
@@ -321,7 +321,7 @@ public class ProductUtilServices {
     }
     
     protected static void duplicateRelated(GenericValue product, String title, String relatedEntityName, String productIdField, String variantProductId, Timestamp nowTimestamp, boolean removeOld, GenericDelegator delegator) throws GenericEntityException {
-        List relatedList = EntityUtil.filterByDate(product.getRelated(relatedEntityName), nowTimestamp);
+        List relatedList = EntityUtil.filterByDate(product.getRelated(title + relatedEntityName), nowTimestamp);
         Iterator relatedIter = relatedList.iterator();
         while (relatedIter.hasNext()) {
             GenericValue relatedValue = (GenericValue) relatedIter.next();
@@ -343,7 +343,7 @@ public class ProductUtilServices {
             newRelatedValue.create();
         }
         if (removeOld) {
-            product.removeRelated(relatedEntityName);
+            product.removeRelated(title + relatedEntityName);
         }
     }
     
