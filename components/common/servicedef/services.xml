@@ -15,6 +15,14 @@
         <description>Always returns error</description>
     </service>
 
+    <service name="forceGarbageCollection" engine="java"
+            location="org.ofbiz.common.CommonServices" invoke="forceGc">
+       <description>Force the JVM to run the GC</description>
+       <required-permissions join-type="AND">
+           <check-permission permission="UTIL_CACHE_EDIT"/>
+       </required-permissions>
+    </service>
+
     <service name="createNote" engine="java"
             location="org.ofbiz.common.CommonServices" invoke="createNote">
         <description>Create a new note record</description>
