@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEvents.java,v 1.1 2003/08/17 10:12:40 jonesde Exp $
+ * $Id: CommonEvents.java,v 1.2 2003/09/26 17:06:17 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,8 @@ import org.ofbiz.security.Security;
  * Common Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision: 1.2 $
  * @since      2.1
  */
 public class CommonEvents {
@@ -121,7 +122,7 @@ public class CommonEvents {
             }           
             responseString = "OK";
         }
-                                      
+
         try {
             PrintWriter out = response.getWriter();
             response.setContentType("text/plain");
@@ -130,8 +131,8 @@ public class CommonEvents {
         } catch (IOException e) {
             Debug.logError(e, "Problems writing servlet output!", module);
         }
-                
-        return "success";         
+        
+        return "success";
     }
     
     public static String setAppletFollower(HttpServletRequest request, HttpServletResponse response) {
@@ -166,11 +167,10 @@ public class CommonEvents {
             String pageUrl = request.getParameter("pageUrl");
             Map follow = (Map) appletSessions.get(followerSessionId);
             if (follow == null) follow = new HashMap();
-            follow.put("followPage", pageUrl);            
-            appletSessions.put(followerSessionId, follow);            
+            follow.put("followPage", pageUrl);
+            appletSessions.put(followerSessionId, follow);
         }
         return "success";                
-    }    
-    
-    
+    }
 }
+
