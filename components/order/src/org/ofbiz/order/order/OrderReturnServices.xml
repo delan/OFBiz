@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author     Andy Zeneski (jaz@ofbiz.org)
+ * @version    $Revision: 1.1 $
+ * @since      2.2
+-->
+
+<simple-methods>
+    <simple-method method-name="createReturnHeader" short-description="Create a ReturnHeader">
+        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="ReturnHeader"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <sequenced-id-to-env sequence-name="ReturnHeader" env-name="returnId"/>
+        <to-string field-name="returnId"/>
+        <env-to-field env-name="returnId" map-name="newEntity"/>
+        <field-to-result field-name="returnId" result-name="returnId"/>
+        
+        <if-empty field-name="entryDate" map-name="newEntity">
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="entryDate" map-name="newEntity"/>
+        </if-empty>        
+        
+        <if-empty field-name="statusId" map-name="newEntity">
+            <string-to-field string="RETURN_REQUESTED" field-name="statusId" map-name="newEntity"/>
+        </if-empty>  
+        
+        <create-value value-name="newEntity"/>      
+    </simple-method>
+    <simple-method method-name="updateReturnHeader" short-description="Update a ReturnHeader">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>      
+        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>
+        
+        <set-nonpk-fields map-name="parameters" value-name="returnHeader"/>
+        <store-value value-name="returnHeader"/>        
+    </simple-method>
+    
+    <simple-method method-name="createReturnItem" short-description="Create Return Item">
+        <check-permission permission="ORDERMGR" action="_CREATE"><fail-message message="Security Error: to run createReturnHeader you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="ReturnItem"/>
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="newEntity"/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupMap"/>
+        <string-to-list string="-returnItemSeqId" list-name="orderBy"/>
+        <find-by-and entity-name="ReturnItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
+        <if-empty field-name="currentItems">
+            <string-to-field string="1" field-name="returnItemSeqId" map-name="newEntity"/>                        
+        <else>
+           <first-from-list entry-name="newestItem" list-name="currentItems"/>
+           <calculate field-name="returnItemSeqId" map-name="newEntity" type="Integer">
+               <calcop field-name="returnItemSeqId" map-name="newestItem" operator="add">
+                   <number value="1"/>
+               </calcop>
+           </calculate>           
+        </else>        
+        </if-empty>
+        <to-string field-name="returnItemSeqId" map-name="newEntity" numeric-padding="5"/>
+        
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <field-to-result field-name="returnItemSeqId" map-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>       
+    <simple-method method-name="updateReturnItem" short-description="Update Return Item">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
+        
+        <set-nonpk-fields map-name="parameters" value-name="returnItem"/>
+        <store-value value-name="returnItem"/>          
+    </simple-method>
+    <simple-method method-name="removeReturnItem" short-description="Remove Return Item">
+        <check-permission permission="ORDERMGR" action="_DELETE"><fail-message message="Security Error: to run removeReturnItem you must have the ORDERMGR_DELETE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="headerPKMap"/>
+        <find-by-primary-key entity-name="ReturnHeader" map-name="headerPKMap" value-name="returnHeader"/>
+        <if-compare field-name="statusId" map-name="returnHeader" operator="not-equals" type="String" value="RETURN_REQUESTED">
+            <add-error><fail-message message="Cannot remove items once return is approved"/></add-error>
+            <check-errors/>
+        </if-compare>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <field-to-field field-name="returnItemSeqId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnItem" map-name="lookupPKMap" value-name="returnItem"/>
+                
+        <remove-value value-name="returnItem"/>         
+    </simple-method>
+    
+    <simple-method method-name="updateReturnStatusFromReceipt" short-description="Update Return Status From ShipmentReceipt">
+        <check-permission permission="ORDERMGR" action="_UPDATE"><fail-message message="Security Error: to run updateReturnHeader you must have the ORDERMGR_UPDATE or ORDERMGR_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <field-to-field field-name="returnId" map-name="parameters" to-map-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ReturnHeader" map-name="lookupPKMap" value-name="returnHeader"/>        
+        <find-by-and entity-name="ShipmentReceipt" map-name="lookupPKMap" list-name="shipmentReceipts"/>
+        <iterate list-name="shipmentReceipts" entry-name="receipt">
+          <if-empty field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
+            <calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap">
+              <number value="0"/>
+            </calculate>
+          </if-empty>
+          <calculate field-name="${receipt.returnItemSeqId}" map-name="totalsMap" type="Double">
+            <calcop field-name="${receipt.returnItemSeqId}" map-name="totalsMap" operator="add">
+              <calcop field-name="quantityAccepted" map-name="receipt" operator="get"/>
+              <calcop field-name="quantityRejected" map-name="receipt" operator="get"/>
+            </calcop>
+          </calculate>
+          <field-to-field field-name="returnId" map-name="receipt" to-map-name="newLookupMap"/>
+          <field-to-field field-name="returnItemSeqId" map-name="receipt" to-map-name="newLookupMap"/>          
+          <find-by-primary-key entity-name="ReturnItem" map-name="newLookupMap" value-name="returnItem"/>
+          <if-compare-field field-name="returnQuantity" map-name="returnItem" operator="greater-equals" to-field-name="${receipt.returnItemSeqId}" to-map-name="totalsMap" type="Double">
+            <!-- update the status for the item -->
+            <string-to-field field-name="statusId" map-name="returnItem" string="RETURN_RECEIVED"/>
+            <store-value value-name="returnItem"/>
+            <!-- create status change history -->
+            <make-value entity-name="ReturnStatus" value-name="newValue"/>
+            <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
+            <env-to-field env-name="returnStatusId" map-name="newValue"/>
+            
+            <field-to-field field-name="returnItemSeqId" map-name="returnItem" to-map-name="newValue"/>
+            <field-to-field field-name="returnId" map-name="returnItem" to-map-name="newValue"/>
+            <field-to-field field-name="statusId" map-name="returnItem" to-map-name="newValue"/>
+            
+            <now-timestamp-to-env env-name="nowTimestamp"/>
+            <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+            
+            <create-value value-name="newValue"/>
+          </if-compare-field>          
+        </iterate>
+        
+        <!-- check to see if all items have been received -->
+        <string-to-field string="true" field-name="allReceived"/>
+        <find-by-and entity-name="ReturnItem" map-name="lookupPKMap" list-name="allReturnItems"/>
+        <iterate list-name="allReturnItems" entry-name="item">
+          <if-compare field-name="statusId" map-name="item" operator="not-equals" value="RETURN_RECEIVED">
+            <string-to-field string="false" field-name="allReceived"/>  
+          </if-compare>
+        </iterate>
+        <if-compare field-name="allReceived" operator="equals" value="true">
+          <!-- update the return header -->
+          <string-to-field field-name="statusId" map-name="returnHeader" string="RETURN_RECEIVED"/>
+          <store-value value-name="returnHeader"/>
+          <!-- create the status history -->
+          <make-value entity-name="ReturnStatus" value-name="newValue"/>
+          <sequenced-id-to-env sequence-name="ReturnStatus" env-name="returnStatusId"/>
+          <env-to-field env-name="returnStatusId" map-name="newValue"/>
+            
+          <field-to-field field-name="returnId" map-name="returnHeader" to-map-name="newValue"/>
+          <field-to-field field-name="statusId" map-name="returnHeader" to-map-name="newValue"/>
+            
+          <now-timestamp-to-env env-name="nowTimestamp"/>
+          <env-to-field env-name="nowTimestamp" field-name="statusDatetime" map-name="newValue"/>
+            
+          <create-value value-name="newValue"/>          
+        </if-compare>
+        
+        <!-- return the current return header status -->
+        <field-to-result field-name="statusId" map-name="returnHeader" result-name="returnHeaderStatus"/>
+    </simple-method>
+</simple-methods>
