@@ -46,6 +46,7 @@
 
     <target name="prepare" depends="clean">
         <mkdir dir="${lib.dir}" />
+		<mkdir dir="${lib.dir}/META-INF" />
         <mkdir dir="${build.dir}" />
     </target>
 	
@@ -60,7 +61,12 @@
     <!-- ================================================================== -->
 
 
-    <target name="classes" depends="prepare">
+	<target name="tld" depends="prepare">
+		<copy file="${etc.dir}/taglib.tld"
+		      tofile="${lib.dir}/META-INF/taglib.tld" />
+	</target>
+	
+    <target name="classes" depends="tld">
         <javac srcdir="${src.dir}"
 		       classpath="${classpath}"
                destdir="${lib.dir}" />               

@@ -75,9 +75,9 @@
 
 	<target name="jar-meta-info" depends="classes">
 		<copy file="${src.dir}/META-INF/ejb-jar.xml"
-		      tofile="${lib.dir}/jar/META-INF/jboss.xml" />
-		<copy file="${src.dir}/META-INF/jboss.xml"
 		      tofile="${lib.dir}/jar/META-INF/ejb-jar.xml" />
+		<copy file="${src.dir}/META-INF/jboss.xml"
+		      tofile="${lib.dir}/jar/META-INF/jboss.xml" />
 		<copy file="${src.dir}/META-INF/jaws.xml"
 		      tofile="${lib.dir}/jar/META-INF/jaws.xml" />
 	</target>
@@ -105,9 +105,9 @@
 	
 	<target name="meta-info" depends="jar,war">
 		<copy file="${src.dir}/META-INF/ejb-jar.xml"
-		      tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
-		<copy file="${src.dir}/META-INF/jboss.xml"
 		      tofile="${lib.dir}/ejb/META-INF/ejb-jar.xml" />
+		<copy file="${src.dir}/META-INF/jboss.xml"
+		      tofile="${lib.dir}/ejb/META-INF/jboss.xml" />
 		<copy file="${src.dir}/META-INF/jaws.xml"
 		      tofile="${lib.dir}/ejb/META-INF/jaws.xml" />
 		<copy file="${src.dir}/META-INF/application.xml"
