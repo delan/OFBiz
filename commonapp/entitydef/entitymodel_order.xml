@@ -1112,16 +1112,16 @@
       <view-link entity-alias="OH" rel-entity-alias="OI">
       	<key-map field-name="orderId"/>
       </view-link>
-      <view-link entity-alias="OH" rel-entity-alias="OPP">
+      <view-link entity-alias="OH" rel-entity-alias="OPP" rel-optional="true">
       	<key-map field-name="orderId"/>
       </view-link>
-      <view-link entity-alias="OPP" rel-entity-alias="PMT">
+      <view-link entity-alias="OPP" rel-entity-alias="PMT" rel-optional="true">
       	<key-map field-name="paymentMethodTypeId"/>
       </view-link>
-      <view-link entity-alias="OH" rel-entity-alias="OSP">
+      <view-link entity-alias="OH" rel-entity-alias="OSP" rel-optional="true">
       	<key-map field-name="orderId"/>
       </view-link>
-      <view-link entity-alias="OSP" rel-entity-alias="SMT">
+      <view-link entity-alias="OSP" rel-entity-alias="SMT" rel-optional="true">
       	<key-map field-name="shipmentMethodTypeId"/>
       </view-link>
       <view-link entity-alias="OH" rel-entity-alias="OS">
