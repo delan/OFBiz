@@ -112,7 +112,13 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Marital Status</div></td>
       <td width="74%" align=left>
-        <input type="text" class='inputBox' size="30" maxlength="60" name="maritalStatus" value="${personData.maritalStatus?if_exists}"/>
+        <select name="maritalStatus" class='selectBox'>
+          <option>${personData.maritalStatus?if_exists}</option>
+          <option></option>
+          <option value="S">S - Single</option>
+          <option value="M">M - Married</option>
+          <option value="D">D - Divorced</option>
+        </select>
       </td>
     </tr>
     <tr>
