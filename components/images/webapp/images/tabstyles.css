@@ -1,5 +1,25 @@
 
-.centerarea {
+DIV.column-left-wide {
+float: left;
+width: 300px;
+background-color: #CCCCCC;
+border: black solid 2px;
+overflow: auto;
+}
+
+.treewrapper {
+margin-left: 10pt;
+}
+
+.treeitem {
+color: blue;
+font-family: Arial, Helvetica, sans-serif;
+font-size: 10pt;
+font-weight: bold;
+border: #888888 solid 1px;
+}
+
+DIV.centerarea {
 margin-left: 10px;
 margin-right: 10px;
 margin-top: 10px;

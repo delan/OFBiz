@@ -25,30 +25,61 @@
 
 <screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
-	<screen name="GlAccountTree">
+    <screen name="AssignGlAccount">
+        <section>
+            <actions>
+                <set field="title" value="Assign GlAccount"/>
+                <set field="titleProperty" value="PageTitleEditProduct"/>
+                <set field="tabButtonItem" value="EditProduct"/>
+                <set field="labelTitleProperty" value="Assign Account"/>
+    
+                <!-- set field="accountId" from-field="parameters.accountId"/>
+                <entity-one entity-name="Product" value-name="product"/ -->
+            </actions>
+            <widgets>
+                <decorator-screen name="GenericDecorator">
+                    <decorator-section name="body">
+                        <include-form name="AssignGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                        
+                        <!-- include the duplicate product form template -->
+                        <!-- platform-specific>
+                            <html><html-template location="component://product/webapp/catalog/product/EditProductDupForm.ftl"/></html>
+                        </platform-specific -->
+                    </decorator-section>
+                </decorator-screen>
+            </widgets>
+        </section>
+    </screen>
+      
+    <!-- screen name="GlAccountTree" -->
+    <screen name="GlAccountNavigate">
         <section>
             <actions>
                 <set field="title" value="Test AddGlAccount"/>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
                 <set field="tabButtonItem" value="EditProduct"/>
                 <set field="labelTitleProperty" value="ListAccounts"/>
-				<!-- parameters includes requestAttributes and parameter map -->
-				<!-- requestParameters is just the parameter map -->
+                <!-- parameters includes requestAttributes and parameter map -->
+                <!-- requestParameters is just the parameter map -->
                 <set field="glAccountId" from-field="requestParameters.glAccountId"/>
-			</actions>
-			<widgets>
+                <set field="trail" from-field="requestParameters.trail"/>
+
+                <entity-one entity-name="GlAccount" value-name="glAccount"/>
+            </actions>
+            <widgets>
                 <decorator-screen name="main" location="component://accounting/widget/CommonScreens.xml">/
-					<decorator-section name="body">
-                        
+                    <decorator-section name="body">
+                        <container style="column-left-wide">
+                            <include-tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml" /> 
+                        </container>
                         <include-form name="EditGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
-                        <include-tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml" /> 
-					
-                 	</decorator-section>
+                        <include-form name="AssignGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                     </decorator-section>
                 </decorator-screen>
-			</widgets>
+            </widgets>
         </section>
 
-	</screen>
+    </screen>
 
     <screen name="GenericDecorator">
         <section>
@@ -59,9 +90,9 @@
                 <entity-one entity-name="Product" value-name="product"/ -->
             </actions>
             <widgets>
-				<!-- main defines the regions of the HTML page -->
+                <!-- main defines the regions of the HTML page -->
                 <decorator-screen name="main" location="component://accounting/widget/CommonScreens.xml">
-				<!-- body is the primary display for this page and is called recursively -->
+                <!-- body is the primary display for this page and is called recursively -->
                     <decorator-section name="body">
                         <section>
                             <widgets>
@@ -79,8 +110,8 @@
                                     <link target="EditProduct" text="[${uiLabelMap.ProductNewProduct}]" style="buttontext"/>
                                     <link target="/ecommerce/control/product?product_id=${productId}" url-mode="raw" text="[${uiLabelMap.ProductProductPage}]" style="buttontext"/>
                                 </container -->
-								
-								<!-- Now call the SimpleScreen form -->
+                                
+                                <!-- Now call the SimpleScreen form -->
                                 <decorator-section-include name="body"/>
                             </widgets>
                             <fail-widgets>
@@ -95,18 +126,18 @@
 
 
 
-	<screen name="SimpleScreen">
-		<section>
-			<widgets>
-				<platform-specific>
-					<html><html-template location="chartofaccounts/SimpleForm.ftl"/></html>
+    <screen name="SimpleScreen">
+        <section>
+            <widgets>
+                <platform-specific>
+                    <html><html-template location="chartofaccounts/SimpleForm.ftl"/></html>
                 </platform-specific>
-			</widgets>
-		</section>
-	</screen>
-	
-	<screen name="AddGlAccount">
-		<section>
+            </widgets>
+        </section>
+    </screen>
+    
+    <screen name="AddGlAccount">
+        <section>
             <actions>
                 <set field="title" value="Test AddGlAccount"/>
                 <set field="titleProperty" value="PageTitleEditProduct"/>
@@ -116,24 +147,24 @@
 
             <widgets>
                 <decorator-screen name="main" location="component://product/widget/catalog/CommonScreens.xml">
-					<decorator-section name="body">
+                    <decorator-section name="body">
                         <include-form name="EditGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
                         
                         <!-- include-screen screen-name="ListGlAccounts" name="ListGlAccounts" / --> 
-					
+                    
                         <!-- tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml"/ --> 
-						
+                        
                         <!-- include the duplicate product form template -->
                         <!-- platform-specific>
                             <html><html-template location="component://product/webapp/catalog/product/EditProductDupForm.ftl"/></html>
                         </platform-specific -->
-                 	</decorator-section>
+                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
-	</screen>
-	
-	<!-- 
+    </screen>
+    
+    <!-- 
     <screen name="EditProduct">
         <section>
             <actions>
@@ -159,7 +190,7 @@
         </section>
     </screen>
 
-	-->
+    -->
 
     <screen name="SimpleScreen">
         <section>
@@ -171,19 +202,19 @@
     
                 <set field="productId" from-field="parameters.productId"/>
                 <!-- entity-one entity-name="Product" value-name="product"/ -->
-				<!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list-name="entityList" use-cache="true" >
-					<limit-range start="0" size="20" />
-				</entity-and -->
-				<entity-condition entity-name="GlAccount" list-name="entityList" use-cache="true" >
-					<condition-expr field-name="glAccountId" operator="greater" value="0" />
-					<limit-range start="0" size="10" />
-				</entity-condition>
+                <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list-name="entityList" use-cache="true" >
+                    <limit-range start="0" size="20" />
+                </entity-and -->
+                <entity-condition entity-name="GlAccount" list-name="entityList" use-cache="true" >
+                    <condition-expr field-name="glAccountId" operator="greater" value="0" />
+                    <limit-range start="0" size="10" />
+                </entity-condition>
 
             </actions>
             <widgets>
                 <decorator-screen name="GenericDecorator">
                     <decorator-section name="body">
-            			<include-form name="ListGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                        <include-form name="ListGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
                         
                         <!-- include the duplicate product form template -->
                         <!-- platform-specific>
@@ -195,45 +226,45 @@
         </section>
     </screen>
 
-	<screen name="ListGlAccounts">
-		<section>
+    <screen name="ListGlAccounts">
+        <section>
             <actions>
                 <set field="title" value="List Accounts"/>
                 <set field="titleProperty" value="List Accounts"/>
                 <set field="tabButtonItem" value="EditProduct"/>
                 <set field="labelTitleProperty" value="ListAccounts"/>
-				<!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list-name="entityList" use-cache="true" >
-					<limit-range start="0" size="20" />
-				</entity-and -->
-				<entity-condition entity-name="GlAccount" list-name="entityList" use-cache="true" >
-					<condition-expr field-name="glAccountId" operator="greater" value="0" />
-					<!--limit-range start="0" size="25" / -->
-				</entity-condition>
+                <!-- no longer works requies a fieldMap entity-and entity-name="GlAccount" list-name="entityList" use-cache="true" >
+                    <limit-range start="0" size="20" />
+                </entity-and -->
+                <entity-condition entity-name="GlAccount" list-name="entityList" use-cache="true" >
+                    <condition-expr field-name="glAccountId" operator="greater" value="0" />
+                    <!--limit-range start="0" size="25" / -->
+                </entity-condition>
 
-			</actions>
+            </actions>
             <widgets>
                 <decorator-screen name="GenericDecorator">
                     <decorator-section name="body">
-            			<include-form name="ListGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
+                        <include-form name="ListGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
                     </decorator-section>
                 </decorator-screen>
             </widgets>
         </section>
-	</screen>
+    </screen>
 
-	<screen name="GlAccountDetail">
-		<section>
+    <screen name="GlAccountDetail">
+        <section>
             <actions>
-				<entity-one entity-name="GlAccount" value-name="currentValue" use-cache="true">
-					<field-map env-name="glAccountId" />
-				</entity-one>
-			</actions>
+                <entity-one entity-name="GlAccount" value-name="currentValue" use-cache="true">
+                    <field-map env-name="glAccountId" />
+                </entity-one>
+            </actions>
             <widgets>
-            	<label text="Account Name: ${currentValue.accountName}"/>
+                <label text="Account Name: ${currentValue.accountName}"/>
             </widgets>
         </section>
-	</screen>
-	
+    </screen>
+    
     <screen name="CommonAccountDecorator">
         <section>
             <actions>

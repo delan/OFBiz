@@ -234,13 +234,19 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="SimpleScreen"/>
     </request-map>
-    <request-map uri="GlAccountTree">
+
+    <request-map uri="AssignGlAccount">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="GlAccountTree"/>
+        <response name="success" type="view" value="AssignGlAccount"/>
+    </request-map>
+
+    <request-map uri="GlAccountNavigate">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="GlAccountNavigate"/>
     </request-map>
     <request-map uri="ListGlobalGlAccount">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="listGlobalGlAccount"/>
+        <response name="success" type="view" value="ListGlobalGlAccount"/>
     </request-map>
     <request-map uri="FindGlobalGlAccount">
         <security https="true" auth="true"/>
@@ -455,7 +461,8 @@
     <view-map name="AddGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>
     <view-map name="FindGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccounts"/>
     <view-map name="ListGlobalGlAccounts" type="screen" page="component://accounting/widget/AccountingScreens.xml#ListGlAccounts"/>
-    <view-map name="GlAccountTree" type="screen" page="component://accounting/widget/AccountingScreens.xml#GlAccountTree"/>
+    <view-map name="GlAccountNavigate" type="screen" page="component://accounting/widget/AccountingScreens.xml#GlAccountNavigate"/>
+    <view-map name="AssignGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AssignGlAccount"/>
  
     <!-- view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#EditGlobalGlAccount"/ -->
     <view-map name="EditGlobalGlAccount" type="screen" page="component://accounting/widget/AccountingScreens.xml#AddGlAccount"/>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+
+    <Party partyId="MARKETING" partyTypeId="PARTY_GROUP" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:37:41.016" lastUpdatedTxStamp="2004-03-27 09:37:41.016" createdStamp="2004-03-27 09:37:41.016" createdTxStamp="2004-03-27 09:37:41.016"/>
+    <PartyRole partyId="MARKETING" roleTypeId="INTERNAL_ORGANIZATIO" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>
+
+    <Party partyId="ACCOUNTING" partyTypeId="PARTY_GROUP" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:37:41.016" lastUpdatedTxStamp="2004-03-27 09:37:41.016" createdStamp="2004-03-27 09:37:41.016" createdTxStamp="2004-03-27 09:37:41.016"/>
+    <PartyRole partyId="ACCOUNTING" roleTypeId="INTERNAL_ORGANIZATIO" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>
+
+    <Party partyId="SALES" partyTypeId="PARTY_GROUP" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:37:41.016" lastUpdatedTxStamp="2004-03-27 09:37:41.016" createdStamp="2004-03-27 09:37:41.016" createdTxStamp="2004-03-27 09:37:41.016"/>
+    <PartyRole partyId="SALES" roleTypeId="INTERNAL_ORGANIZATIO" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>
+
+    <Party partyId="DEV" partyTypeId="PARTY_GROUP" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:37:41.016" lastUpdatedTxStamp="2004-03-27 09:37:41.016" createdStamp="2004-03-27 09:37:41.016" createdTxStamp="2004-03-27 09:37:41.016"/>
+    <PartyRole partyId="DEV" roleTypeId="INTERNAL_ORGANIZATIO" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>
+
+    <Party partyId="TESTING" partyTypeId="PARTY_GROUP" createdDate="2004-03-27 09:37:40.989" createdByUserLogin="admin" lastModifiedDate="2004-03-27 09:37:40.989" lastModifiedByUserLogin="admin" lastUpdatedStamp="2004-03-27 09:37:41.016" lastUpdatedTxStamp="2004-03-27 09:37:41.016" createdStamp="2004-03-27 09:37:41.016" createdTxStamp="2004-03-27 09:37:41.016"/>
+    <PartyRole partyId="TESTING" roleTypeId="INTERNAL_ORGANIZATIO" lastUpdatedStamp="2004-03-27 09:37:41.142" lastUpdatedTxStamp="2004-03-27 09:37:41.142" createdStamp="2004-03-27 09:37:41.142" createdTxStamp="2004-03-27 09:37:41.142"/>
+
+
+</entity-engine-xml>
+

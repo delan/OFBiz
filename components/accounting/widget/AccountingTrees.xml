@@ -28,25 +28,25 @@
 <!--	<tree name="GlAccountTree">  -->
 <!-- 	<tree> -->
 
-	<tree name="GlAccountTree" root-node-name="node-root" render-style="expand-collapse" default-wrap-style="accountItem">  	
+	<tree name="GlAccountTree" entity-name="GlAccount" root-node-name="node-root" render-style="expand-collapse" default-wrap-style="accountItem">  	
 	<!-- tree name="GlAccountTree" root-node-name="node-root" render-style="expand-collapse" default-wrap-style="accountItem" -->  	
 		<node name="node-root">
-			<entity-one entity-name="GlAccount" use-cache="true">
+			<!-- entity-one entity-name="GlAccount" use-cache="true">
 				<field-map field-name="glAccountId" env-name="glAccountId" />
-			</entity-one>
+			</entity-one -->
 			<!-- include-screen name="GlAccountDetails" location="component://accounting/widget/AccountingScreens.xml" / -->	 
-			<label text="${glAccountId} ${}" />	 
+			<!-- label style="treeitem" text="${glAccountId}  ${}" / -->	 
 			<sub-node node-name="node-body">
 				<entity-and entity-name="GlAccount" >
-					<field-map field-name="parentGlAccountId" env-name="glAccountId" />
-				</entity-and>
-
+					<field-map field-name="parentGlAccountId" env-name="NA" />
+				</entity-and >
 			</sub-node>
 		</node>
-		<node name="node-body">
+		<node name="node-body" wrap-style="treewrapper">
 			<!-- include-screen name="GlAccountDetails" location="component://accounting/widget/AccountingScreens.xml" / -->	 
-			<label text="${glAccountId} ${accountName} ${postedBalance}" />	 
-			<sub-node node-name="node-body">
+			<!-- label style="treeitem" text="${glAccountId} ${accountName} ${postedBalance}" / -->	 
+			<link style="treeitem" target="GlAccountNavigate?glAccountId=${glAccountId}&amp;trail=${currentNodeTrailPiped}" text="${glAccountId} ${accountName} ${postedBalance}" />	 
+			<sub-node node-name="node-body" >
 				<entity-and entity-name="GlAccount" >
 					<field-map field-name="parentGlAccountId" env-name="glAccountId" />
 				</entity-and>
