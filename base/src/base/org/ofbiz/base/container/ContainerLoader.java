@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.4 2003/08/18 18:32:07 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.5 2003/08/20 02:33:13 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,15 +38,15 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.4 $
- * @since      2.2
+  *@version    $Revision: 1.5 $
+ * @since      3.0
  */
 public class ContainerLoader implements StartupLoader {
     
     public static final String module = ContainerLoader.class.getName();
-    public static final String CONTAINER_CONFIG = "container.xml";
+    public static final String CONTAINER_CONFIG = "ofbiz-containers.xml";
     
-    protected List containers = new LinkedList();    
+    protected List loadedContainers = new LinkedList();    
 
     /**
      * @see org.ofbiz.base.start.StartupLoader#load(java.lang.String)
@@ -67,9 +67,8 @@ public class ContainerLoader implements StartupLoader {
         if (containers != null) {
             Iterator i = containers.iterator();
             while (i.hasNext()) {
-                ContainerConfig.Container containerCfg = (ContainerConfig.Container) i.next();
-                Container container = loadContainer(containerCfg.className, configFileLocation);
-                //containers.add(loadContainer(containerCfg.className, configFileLocation));
+                ContainerConfig.Container containerCfg = (ContainerConfig.Container) i.next();                
+                loadedContainers.add(loadContainer(containerCfg.className, configFileLocation));
             }
         }                                    
     }
@@ -78,7 +77,7 @@ public class ContainerLoader implements StartupLoader {
      * @see org.ofbiz.base.start.StartupLoader#unload()
      */
     public void unload() throws StartupException {
-        Iterator i = containers.iterator();
+        Iterator i = loadedContainers.iterator();
         while (i.hasNext()) {
             Container container = (Container) i.next();
             try {
@@ -93,6 +92,7 @@ public class ContainerLoader implements StartupLoader {
         // load the component container class
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         if (loader == null) {
+            Debug.logWarning("Unable to get context classloader; using system", module);
             loader = ClassLoader.getSystemClassLoader();
         }
         Class componentClass = null;

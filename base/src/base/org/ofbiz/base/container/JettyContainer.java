@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.8 2003/08/19 21:14:26 jonesde Exp $
+ * $Id: JettyContainer.java,v 1.9 2003/08/20 02:33:13 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,8 +52,8 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.8 $
- * @since      2.2
+  *@version    $Revision: 1.9 $
+ * @since      3.0
  */
 public class JettyContainer implements Container {
     

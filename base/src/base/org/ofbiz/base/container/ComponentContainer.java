@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.8 2003/08/18 18:32:07 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.9 2003/08/20 02:33:13 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,8 +40,8 @@ import org.ofbiz.base.util.*;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.8 $
- * @since      2.2
+  *@version    $Revision: 1.9 $
+ * @since      3.0
  */
 public class ComponentContainer implements Container {
     
@@ -111,7 +111,7 @@ public class ComponentContainer implements Container {
             }
         }
 
-        // set the new classload on the current thread
+        // set the new classloader on the current thread
         ClassLoader cl = classPath.getClassLoader();
         Thread.currentThread().setContextClassLoader(cl);
         
