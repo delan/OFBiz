@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 -->
 
@@ -67,6 +67,15 @@
 <table border="0" width="100%" cellpadding="2">
   <tr>
     <td align=right>
+      <#-- Start Page Select Drop-Down -->
+      <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
+      <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+        <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+        <#list 1..viewIndexMax as curViewNum>
+          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+        </#list>
+      </select>
+      <#-- End Page Select Drop-Down -->
       <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
@@ -109,6 +118,15 @@
 <table border="0" width="100%" cellpadding="2">
   <tr>
     <td align=right>
+      <#-- Start Page Select Drop-Down -->
+      <#assign viewIndexMax = Static["java.lang.Math"].ceil(listSize?double / viewSize?double)>
+      <select name="pageSelect" class="selectBox" onChange="window.location=this[this.selectedIndex].value;">
+        <option value="#">Page ${viewIndex?int + 1} of ${viewIndexMax}</option>
+        <#list 1..viewIndexMax as curViewNum>
+          <option value="<@ofbizUrl>/category/~category_id=${productCategoryId}/~VIEW_SIZE=${viewSize}/~VIEW_INDEX=${curViewNum?int - 1}</@ofbizUrl>">Go to Page ${curViewNum}</option>
+        </#list>
+      </select>
+      <#-- End Page Select Drop-Down -->
       <b>
         <#if 0 < viewIndex?int>
           <a href="<@ofbizUrl>/category?category_id=${productCategoryId}&VIEW_SIZE=${viewSize}&VIEW_INDEX=${viewIndex?int - 1}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonPrevious}]</a> |
