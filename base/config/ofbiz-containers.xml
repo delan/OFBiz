@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.19 2004/05/25 23:03:43 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.20 2004/05/26 00:22:20 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -58,12 +58,13 @@
 
     <!-- load catalina (tomcat) and all web applications -->
     <container name="catalina-container" class="org.ofbiz.catalina.container.CatalinaContainer">
-        <property name="useNaming" value="false"/>
+        <property name="use-naming" value="false"/>
         <property name="debug" value="0"/>
         <property name="apps-cross-context" value="true"/>
         <property name="apps-distributable" value="true"/>        
         <property name="default-server" value="engine">
             <property name="default-host" value="0.0.0.0"/>
+            <property name="jvm-route" value="jvm1"/>
             <property name="access-log-pattern">
                 <property-value>%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"</property-value>
             </property>
@@ -71,6 +72,25 @@
             <property name="access-log-rotate" value="true"/>
             <property name="access-log-prefix" value="access_log."/>
             <property name="access-log-dir" value="logs"/>
+            <property name="default-server-cluster" value="cluster">
+                <property name="rep-valve-filter">
+                    <property-value>.*\.gif;.*\.js;.*\.jpg;.*\.htm;.*\.html;.*\.txt;</property-value>
+                </property>
+                <property name="manager-class" value="org.apache.catalina.cluster.session.DeltaManager"/>
+                <property name="debug" value="5"/>
+                <property name="expire-session" value="false"/>
+                <property name="use-dirty" value="true"/>
+                <property name="replication-mode=" value="pooled"/>
+                <property name="tcp-listen-host" value="0.0.0.0"/>
+                <property name="tcp-listen-port" value="4001"/>
+                <property name="tcp-sector-timeout" value="100"/>
+                <property name="tcp-thread-count" value="6"/>
+                <property name="mcast-bind-addr" value="0.0.0.0"/>
+                <property name="mcast-addr" value="10.0.0.0"/>
+                <property name="mcast-port" value="45564"/>
+                <property name="mcast-freq" value="500"/>
+                <property name="mcast-drop-time" value="3000"/>
+            </property>
         </property>
         <property name="ajp-connector" value="connector">
             <property name="type" value="ajp"/>

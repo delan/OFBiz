@@ -1,5 +1,5 @@
 /*
- * $Id: CatalinaContainer.java,v 1.5 2004/05/25 22:45:53 ajzeneski Exp $
+ * $Id: CatalinaContainer.java,v 1.6 2004/05/26 00:22:20 ajzeneski Exp $
  *
  */
 package org.ofbiz.catalina.container;
@@ -22,6 +22,7 @@ import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.component.ComponentConfig;
 
 import org.apache.catalina.startup.Embedded;
@@ -33,6 +34,13 @@ import org.apache.catalina.Host;
 import org.apache.catalina.Context;
 import org.apache.catalina.Connector;
 import org.apache.catalina.Loader;
+import org.apache.catalina.Cluster;
+import org.apache.catalina.Valve;
+import org.apache.catalina.cluster.tcp.SimpleTcpCluster;
+import org.apache.catalina.cluster.tcp.ReplicationValve;
+import org.apache.catalina.cluster.tcp.ReplicationListener;
+import org.apache.catalina.cluster.tcp.ReplicationTransmitter;
+import org.apache.catalina.cluster.mcast.McastService;
 import org.apache.catalina.valves.AccessLogValve;
 
 import org.apache.catalina.core.StandardContext;
@@ -93,7 +101,7 @@ import org.xml.sax.SAXException;
  *
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      May 21, 2004
  */
 public class CatalinaContainer implements Container {
@@ -121,33 +129,12 @@ public class CatalinaContainer implements Container {
         }
 
         // embedded properties
-        boolean useNaming = false;
-        ContainerConfig.Container.Property namingProp = cc.getProperty("useNaming");
-        if (namingProp != null) {
-            useNaming = "true".equalsIgnoreCase(namingProp.value);
-        }
+        boolean useNaming = getPropertyValue(cc, "use-naming", false);
+        int debug = getPropertyValue(cc, "debug", 0);
 
-        int debug = 0;
-        ContainerConfig.Container.Property debugProp = cc.getProperty("debug");
-        if (debugProp != null) {
-            try {
-                debug = Integer.parseInt(debugProp.value);
-            } catch (Exception e) {
-                debug = 0;
-            }
-        }
-
-        // default application behavior
-        ContainerConfig.Container.Property crossCtxProp = cc.getProperty("apps-cross-context");
-        if (crossCtxProp != null) {
-            crossContext = "true".equalsIgnoreCase(crossCtxProp.value);
-        }
-
-        ContainerConfig.Container.Property distributeProp = cc.getProperty("apps-distributable");
-        if (distributeProp != null) {
-            distribute = "true".equalsIgnoreCase(distributeProp.value);
-        }
-
+        this.crossContext = getPropertyValue(cc, "apps-cross-context", true);
+        this.distribute = getPropertyValue(cc, "apps-distributable", true);
+                
         // create the instance of Embedded
         embedded = new Embedded();
         embedded.setDebug(debug);
@@ -206,12 +193,21 @@ public class CatalinaContainer implements Container {
         StandardEngine engine = (StandardEngine) embedded.createEngine();
         engine.setName(engineName);
         engine.setDefaultHost(hostName);
+
+        // set the JVM Route property (JK/JK2)
+        String jvmRoute = getPropertyValue(engineConfig, "jvm-route", null);
+        if (jvmRoute != null) {
+            engine.setJvmRoute(jvmRoute);
+        }
+
+        // cache the engine
         engines.put(engine.getName(), engine);
 
         // create a default virtual host; others will be created as needed
         Host host = createHost(engine, hostName);
         hosts.put(engineName + "._DEFAULT", host);
 
+        // configure the access log valve
         ContainerConfig.Container.Property alp1 = engineConfig.getProperty("access-log-dir");
         AccessLogValve al = null;
         if (alp1 != null) {
@@ -247,6 +243,12 @@ public class CatalinaContainer implements Container {
             engine.addValve(al);
         }
 
+        // configure clustering
+        ContainerConfig.Container.Property clusterProps = engineConfig.getProperty("cluster");
+        if (clusterProps != null) {
+            createCluster(clusterProps, engine);
+        }
+
         embedded.addEngine(engine);
         return engine;
     }
@@ -261,6 +263,74 @@ public class CatalinaContainer implements Container {
         hosts.put(engine.getName() + hostName, host);
 
         return host;
+    }
+
+    protected Cluster createCluster(ContainerConfig.Container.Property clusterProps, Engine engine) throws ContainerException {
+        String defaultValveFilter = ".*.gif;.*.js;.*.jpg;.*.htm;.*.html;.*.txt;";
+
+        ReplicationValve clusterValve = new ReplicationValve();
+        clusterValve.setFilter(getPropertyValue(clusterProps, "rep-valve-filter", defaultValveFilter));
+
+        String mcb = getPropertyValue(clusterProps, "mcast-bind-addr", null);
+        String mca = getPropertyValue(clusterProps, "mcast-addr", null);
+        int mcp = getPropertyValue(clusterProps, "mcast-port", -1);
+        int mcd = getPropertyValue(clusterProps, "mcast-freq", 500);
+        int mcf = getPropertyValue(clusterProps, "mcast-drop-time", 3000);
+
+        if (mca == null || mcp == -1) {
+            throw new ContainerException("Cluster configuration requires mcast-addr and mcast-port properties");
+        }
+
+        McastService mcast = new McastService();
+        if (mcb != null) {
+            mcast.setMcastBindAddress(mcb);
+        }
+
+        mcast.setMcastAddr(mca);
+        mcast.setMcastPort(mcp);
+        mcast.setMcastDropTime(mcd);
+        mcast.setMcastFrequency(mcf);
+
+        String tla = getPropertyValue(clusterProps, "tcp-listen-host", "auto");
+        int tlp = getPropertyValue(clusterProps, "tcp-listen-port", 4001);
+        int tlt = getPropertyValue(clusterProps, "tcp-sector-timeout", 100);
+        int tlc = getPropertyValue(clusterProps, "tcp-thread-count", 6);
+        //String tls = getPropertyValue(clusterProps, "", "");
+
+        if (tlp == -1) {
+            throw new ContainerException("Cluster configuration requires tcp-listen-port property");
+        }
+
+        ReplicationListener listener = new ReplicationListener();
+        listener.setTcpListenAddress(tla);
+        listener.setTcpListenPort(tlp);
+        listener.setTcpSelectorTimeout(tlt);
+        listener.setTcpThreadCount(tlc);
+        //listener.setIsSenderSynchronized(false);
+
+        ReplicationTransmitter trans = new ReplicationTransmitter();
+        trans.setReplicationMode(getPropertyValue(clusterProps, "replication-mode", "pooled"));
+
+        String mgrClassName = getPropertyValue(clusterProps, "manager-class", "org.apache.catalina.cluster.session.DeltaManager");
+        int debug = getPropertyValue(clusterProps, "debug", 0);
+        boolean expireSession = getPropertyValue(clusterProps, "expire-session", false);
+        boolean useDirty = getPropertyValue(clusterProps, "use-dirty", true);
+
+        SimpleTcpCluster cluster = new SimpleTcpCluster();
+        cluster.setClusterName(clusterProps.name);
+        cluster.setManagerClassName(mgrClassName);
+        cluster.setDebug(debug);
+        cluster.setExpireSessionsOnShutdown(expireSession);
+        cluster.setUseDirtyFlag(useDirty);
+
+        cluster.setClusterReceiver(listener);
+        cluster.setClusterSender(trans);
+        cluster.setMembershipService(mcast);
+        cluster.addValve(clusterValve);
+        cluster.setPrintToScreen(true);
+        engine.setCluster(cluster);
+
+        return cluster;
     }
 
     protected Connector createConnector(ContainerConfig.Container.Property connectorProp) throws ContainerException {
@@ -525,5 +595,71 @@ public class CatalinaContainer implements Container {
         }
 
         return mimeTypes;
+    }
+
+    protected String getPropertyValue(ContainerConfig.Container parentProp, String name, String defaultValue) {
+        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
+        if (prop == null || UtilValidate.isEmpty(prop.value)) {
+            return defaultValue;
+        } else {
+            return prop.value;
+        }
+    }
+
+    protected int getPropertyValue(ContainerConfig.Container parentProp, String name, int defaultValue) {
+        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
+        if (prop == null || UtilValidate.isEmpty(prop.value)) {
+            return defaultValue;
+        } else {
+            int num = defaultValue;
+            try {
+                num = Integer.parseInt(prop.value);
+            } catch (Exception e) {
+                return defaultValue;
+            }
+            return num;
+        }
+    }
+
+    protected boolean getPropertyValue(ContainerConfig.Container parentProp, String name, boolean defaultValue) {
+        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
+        if (prop == null || UtilValidate.isEmpty(prop.value)) {
+            return defaultValue;
+        } else {
+            return "true".equalsIgnoreCase(prop.value);
+        }
+    }
+
+    protected String getPropertyValue(ContainerConfig.Container.Property parentProp, String name, String defaultValue) {
+        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
+        if (prop == null || UtilValidate.isEmpty(prop.value)) {
+            return defaultValue;
+        } else {
+            return prop.value;
+        }
+    }
+
+    protected int getPropertyValue(ContainerConfig.Container.Property parentProp, String name, int defaultValue) {
+        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
+        if (prop == null || UtilValidate.isEmpty(prop.value)) {
+            return defaultValue;
+        } else {
+            int num = defaultValue;
+            try {
+                num = Integer.parseInt(prop.value);
+            } catch (Exception e) {
+                return defaultValue;
+            }
+            return num;
+        }
+    }
+
+    protected boolean getPropertyValue(ContainerConfig.Container.Property parentProp, String name, boolean defaultValue) {
+        ContainerConfig.Container.Property prop = parentProp.getProperty(name);
+        if (prop == null || UtilValidate.isEmpty(prop.value)) {
+            return defaultValue;
+        } else {
+            return "true".equalsIgnoreCase(prop.value);
+        }
     }
 }
