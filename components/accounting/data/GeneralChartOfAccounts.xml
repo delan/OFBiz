@@ -491,13 +491,13 @@ according to which type of entity.
 
 <!-- COST OF GOODS SOLD -->
   <GlAccount parentGlAccountId="" glAccountId="500000" accountCode="500000" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="COST OF GOODS SOLD" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="500000" glAccountId="501000" accountCode="501000" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="MERCHANDISE PURCHASES - CATEGORY 1" description="" postedBalance="0.0"/>
   <GlAccount parentGlAccountId="500000" glAccountId="502000" accountCode="502000" 
-    glAccountClassId="INCOME" glAccountTypeId="" glResourceTypeId="MONEY"  
+    glAccountClassId="EXPENSE" glAccountTypeId="" glResourceTypeId="MONEY"  
     accountName="MERCHANDISE PURCHASES - CATEGORY 2" description="" postedBalance="0.0"/>
     
   <GlAccount parentGlAccountId="500000" glAccountId="510000" accountCode="510000" 
