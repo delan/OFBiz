@@ -514,19 +514,21 @@ public class BOMServices {
                 return ServiceUtil.returnError(UtilProperties.getMessage(resource, "ManufacturingPackageConfiguratorError", locale));
             }
             GenericValue orderShipment = org.ofbiz.entity.util.EntityUtil.getFirst(orderShipments);
-            if (!orderReadHelpers.containsKey(orderShipment.getString("orderId"))) {
+            if (orderShipment != null && !orderReadHelpers.containsKey(orderShipment.getString("orderId"))) {
                 orderReadHelpers.put(orderShipment.getString("orderId"), new OrderReadHelper(delegator, orderShipment.getString("orderId")));
             }
             OrderReadHelper orderReadHelper = (OrderReadHelper)orderReadHelpers.get(orderShipment.getString("orderId"));
-            Map orderShipmentReadMap = UtilMisc.toMap("orderShipment", orderShipment, "orderReadHelper", orderReadHelper);
-            String partyId = (orderReadHelper.getPlacingParty() != null? orderReadHelper.getPlacingParty().getString("partyId"): null); // FIXME: is it the customer?
-            if (partyId != null) {
-                if (!partyOrderShipments.containsKey(partyId)) {
-                    ArrayList orderShipmentReadMapList = new ArrayList();
-                    partyOrderShipments.put(partyId, orderShipmentReadMapList);
+            if (orderReadHelper != null) {
+                Map orderShipmentReadMap = UtilMisc.toMap("orderShipment", orderShipment, "orderReadHelper", orderReadHelper);
+                String partyId = (orderReadHelper.getPlacingParty() != null? orderReadHelper.getPlacingParty().getString("partyId"): null); // FIXME: is it the customer?
+                if (partyId != null) {
+                    if (!partyOrderShipments.containsKey(partyId)) {
+                        ArrayList orderShipmentReadMapList = new ArrayList();
+                        partyOrderShipments.put(partyId, orderShipmentReadMapList);
+                    }
+                    ArrayList orderShipmentReadMapList = (ArrayList)partyOrderShipments.get(partyId);
+                    orderShipmentReadMapList.add(orderShipmentReadMap);
                 }
-                ArrayList orderShipmentReadMapList = (ArrayList)partyOrderShipments.get(partyId);
-                orderShipmentReadMapList.add(orderShipmentReadMap);
             }
         }
         // For each party: try to expand the shipment item products 
