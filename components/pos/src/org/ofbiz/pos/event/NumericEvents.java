@@ -25,7 +25,6 @@
 package org.ofbiz.pos.event;
 
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.component.Input;
 import org.ofbiz.pos.screen.PosScreen;
 
@@ -82,54 +81,6 @@ public class NumericEvents {
 
     public static void triggerDZero(PosScreen pos) {
         pos.getInput().appendString("00");
-    }
-
-    // extended number events
-    public static void triggerClear(PosScreen pos) {
-        // clear the components
-        if (pos.getInput().getFunction("PAID") != null) {
-            pos.getInput().clear();
-            pos.showPage("main/pospanel");
-        } else if (pos.getInput().getFunction("TOTAL") == null) {
-            if (UtilValidate.isEmpty(pos.getInput().value())) {
-                pos.getInput().clear();
-            }
-        }
-
-        // refresh the current screen
-        pos.refresh();
-
-        // clear out the manual locks
-        if (!pos.isLocked()) {
-            pos.getInput().setLock(false);
-            pos.getButtons().setLock(false);
-        } else {
-            // just re-call set lock
-            pos.setLock(true);
-        }
-    }
-
-    public static void triggerQty(PosScreen pos) {
-        pos.getInput().setFunction("QTY");
-    }
-
-    public static void triggerEnter(PosScreen pos) {
-        // enter key maps to various different events; depending on the function
-        Input input = pos.getInput();
-        String[] lastFunc = input.getLastFunction();        
-        if (lastFunc != null) {
-            if ("MGRLOGIN".equals(lastFunc[0])) {
-                SecurityEvents.mgrLogin(pos);
-            } else if ("LOGIN".equals(lastFunc[0])) {
-                SecurityEvents.login(pos);
-            } else if ("CREDIT".equals(lastFunc[0]) || "MSRINFO".equals(lastFunc[0])) {
-                PaymentEvents.payCredit(pos);
-            } else if ("SKU".equals(lastFunc[0])) {
-                MenuEvents.addItem(pos);
-            }
-        } else if (input.value().length() > 0) {
-            MenuEvents.addItem(pos);
-        }
     }
 }
 

@@ -10,8 +10,8 @@
         <Button name="menuLock" x="510" y="0" w="100" h="60" style="posButton" content="LOCK" alignment="Center"/>
 
         <!-- col 2 -->
-        <Button name="" x="0" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
-        <Button name="" x="102" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
+        <Button name="SKU.GZ-1001" x="0" y="62" w="100" h="60" style="posButton" content="GIZMO 1" alignment="Center"/>
+        <Button name="SKU.GZ-5005" x="102" y="62" w="100" h="60" style="posButton" content="GIZMO 2" alignment="Center"/>
         <Button name="" x="204" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="306" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>
         <Button name="" x="408" y="62" w="100" h="60" style="posButton" content="" alignment="Center"/>

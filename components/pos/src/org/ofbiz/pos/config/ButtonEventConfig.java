@@ -93,6 +93,9 @@ public class ButtonEventConfig {
     }
 
     public static void invokeButtonEvent(String buttonName, PosScreen pos) throws ButtonEventNotFound, ButtonEventException {
+        if (buttonName.startsWith("SKU.")) {
+            buttonName = "menuSku";
+        }
         ButtonEventConfig bef = (ButtonEventConfig) buttonConfig.get(buttonName);
         if (bef == null) {
             throw new ButtonEventNotFound("No button definition found for button - " + buttonName);
