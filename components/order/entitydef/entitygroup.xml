@@ -67,6 +67,8 @@
     <entity-group group="org.ofbiz" entity="OrderItemTypeAttr" />
     <entity-group group="org.ofbiz" entity="OrderNotification" />
     <entity-group group="org.ofbiz" entity="OrderPaymentPreference" />
+    <entity-group group="org.ofbiz" entity="OrderPurchasePaymentSummary" />
+    <entity-group group="org.ofbiz" entity="OrderPurchaseProductSummary" />
     <entity-group group="org.ofbiz" entity="OrderReportView" />
     <entity-group group="org.ofbiz" entity="OrderRole" />
     <entity-group group="org.ofbiz" entity="OrderShipment" />
