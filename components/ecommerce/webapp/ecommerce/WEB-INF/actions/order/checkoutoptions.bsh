@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.18 $
+ *@version    $Revision: 1.19 $
  *@since      2.1
 */
 
@@ -30,7 +30,9 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.accounting.payment.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.order.shoppingcart.shipping.*;
 
+dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 cart = session.getAttribute("shoppingCart");
 userLogin = session.getAttribute("userLogin");
@@ -38,25 +40,18 @@ party = userLogin.getRelatedOne("Party");
 productStoreId = ProductStoreWorker.getProductStoreId(request);
 
 checkOutPaymentId = "";
-itemSizes = new LinkedList();
-featureIdSet = new HashSet();
-shipAddress = null;
-shipWeight = 0.00;
-shipTotal = 0.00;
+shippingEstWpr = null;
+
 if (cart != null) {
     if (cart.getPaymentMethodIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodIds().get(0);
     } else if (cart.getPaymentMethodTypeIds().size() > 0) {
         checkOutPaymentId = cart.getPaymentMethodTypeIds().get(0);
     }
-    shipCmId = cart.getShippingContactMechId();
-    if (shipCmId != null) {
-        shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shipCmId));
-    }
-    itemSizes = cart.getShippableSizes();
-    featureIdMap = cart.getFeatureIdQtyMap();
-    shipWeight = cart.getShippableWeight();
-    shipTotal = cart.getShippableTotal();
+
+    shippingEstWpr = new ShippingEstimateWrapper(dispatcher, cart);
+    context.put("shippingEstWpr", shippingEstWpr);
+    context.put("carrierShipmentMethodList", shippingEstWpr.getShippingMethods());
 }
 
 profiledefs = delegator.findByPrimaryKey("PartyProfileDefault", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "productStoreId", productStoreId));
@@ -66,8 +61,6 @@ context.put("shoppingCart", cart);
 context.put("userLogin", userLogin);
 context.put("productStoreId", productStoreId);
 context.put("checkOutPaymentId", checkOutPaymentId);
-//context.put("carrierShipmentMethodList", delegator.findByAndCache("ProductStoreShipmentMethView", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNumber")));
-context.put("carrierShipmentMethodList", ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId, shipAddress, itemSizes, featureIdMap, shipWeight, shipTotal));
 context.put("shippingContactMechList", ContactHelper.getContactMech(party, "SHIPPING_LOCATION", "POSTAL_ADDRESS", false));
 context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod", null, UtilMisc.toList("paymentMethodTypeId")), true));
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));

@@ -399,6 +399,29 @@
         <attribute name="shipmentCostEstimateId" type="String" mode="IN" optional="false"/>
     </service>
     
+    <service name="calcShipmentEstimateInterface" engine="interface" location="" invoke="">
+        <description>Interface for shipment estimate calc service</description>
+        <attribute name="serviceConfigProps" type="String" mode="IN" optional="true"/>
+        <attribute name="initialEstimateAmt" type="Double" mode="IN" optional="true"/>
+        <attribute name="shippingContactMechId" type="String" mode="IN" optional="false"/>
+        <attribute name="shipmentMethodTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="carrierPartyId" type="String" mode="IN" optional="false"/>
+        <attribute name="carrierRoleTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
+        <attribute name="shippableItemSizes" type="List" mode="IN" optional="false"/>
+        <attribute name="shippableFeatureMap" type="Map" mode="IN" optional="false"/>
+        <attribute name="shippableWeight" type="Double" mode="IN" optional="false"/>
+        <attribute name="shippableQuantity" type="Double" mode="IN" optional="false"/>
+        <attribute name="shippableTotal" type="Double" mode="IN" optional="false"/>
+        <attribute name="shippingEstimateAmount" type="Double" mode="OUT" optional="false"/>
+    </service>
+
+    <service name="calcShipmentCostEstimate" engine="java"
+            location="org.ofbiz.shipment.shipment.ShipmentServices" invoke="calcShipmentCostEstimate" auth="false">
+        <description>Generic Shipment Cost Estimate Calc Service - Use ShipmentCostEstimate Entities</description>
+        <implements service="calcShipmentEstimateInterface"/>
+    </service>
+
     <!-- Picking Related Services -->
     <service name="findOrdersToPickMove" engine="simple"
             location="org/ofbiz/shipment/shipment/PicklistServices.xml" invoke="findOrdersToPickMove">

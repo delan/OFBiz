@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      3.0
 */
 
@@ -29,7 +29,9 @@ import org.ofbiz.entity.*;
 import org.ofbiz.entity.util.*;
 import org.ofbiz.party.contact.*;
 import org.ofbiz.product.store.*;
+import org.ofbiz.order.shoppingcart.shipping.*;
 
+dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 cart = session.getAttribute("shoppingCart");
 userLogin = session.getAttribute("userLogin");
@@ -42,20 +44,14 @@ shipAddress = null;
 shipWeight = 0.00;
 shipTotal = 0.00;
 if (cart != null) {
-    shipCmId = cart.getShippingContactMechId();
-    if (shipCmId != null) {
-        shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", shipCmId));
-    }
-    itemSizes = cart.getShippableSizes();
-    featureIdMap = cart.getFeatureIdQtyMap();
-    shipWeight = cart.getShippableWeight();
-    shipTotal = cart.getShippableTotal();
+    shippingEstWpr = new ShippingEstimateWrapper(dispatcher, cart);
+    context.put("shippingEstWpr", shippingEstWpr);
+    context.put("carrierShipmentMethodList", shippingEstWpr.getShippingMethods());
 }
 
 context.put("shoppingCart", cart);
 context.put("userLogin", userLogin);
 context.put("productStoreId", productStoreId);
-context.put("carrierShipmentMethodList", ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId, shipAddress, itemSizes, featureIdMap, shipWeight, shipTotal));
 context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
 
 if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null)

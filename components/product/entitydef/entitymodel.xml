@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.98 $
+ * @version    $Revision: 1.99 $
  */
 -->
 
@@ -2819,6 +2819,8 @@
       <field name="excludeFeatureGroup" type="id"></field>
       <field name="includeGeoId" type="id"></field>
       <field name="excludeGeoId" type="id"></field>
+      <field name="serviceName" type="long-varchar"></field>
+      <field name="configProps" type="long-varchar"></field>  
       <field name="sequenceNumber" type="numeric"></field>
       <prim-key field="productStoreId"/>
       <prim-key field="shipmentMethodTypeId"/>
