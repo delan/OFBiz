@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: limited-containers.xml,v 1.2 2004/04/08 13:27:51 ajzeneski Exp $
+ *  $Id$
 -->
 
 <ofbiz-containers>
@@ -40,8 +40,9 @@
         <property name="use-initial-context" value="true"/>
         <property name="bound-name" value="RMIDispatcher"/>
         <property name="delegator-name" value="default"/>
-        <property name="client-factory" value="org.ofbiz.service.rmi.socket.CompressionClientSocketFactory"/>
-        <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
+        <property name="client-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLClientSocketFactory"/>
+        <property name="server-factory" value="org.ofbiz.service.rmi.socket.ssl.SSLServerSocketFactory"/>
+        <property name="ssl-client-auth" value="false"/>
     </container>
 
     <!-- load BeanShell remote telnet server -->
