@@ -1,6 +1,9 @@
 /*
  * $id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.2  2001/08/16 01:24:19  azeneski
  * Updated property tags to use the EntityValue by default.
  *
@@ -40,31 +43,31 @@ import javax.servlet.jsp.tagext.*;
  * Created on August 4, 2001, 8:21 PM
  */
 public class IterateNextTEI extends TagExtraInfo {
-
-    public IterateNextTEI () { 
-	super();
+    
+    public IterateNextTEI() {
+        super();
     }
-
-    public VariableInfo[] getVariableInfo (TagData data) {
+    
+    public VariableInfo[] getVariableInfo(TagData data) {
         String name = null;
         String className = null;
         
         name = data.getAttributeString("name");
         if ( name == null )
             name = "next";
-        	
-        className = data.getAttributeString("type");                
+        
+        className = data.getAttributeString("type");
         if ( className == null )
             className = "org.ofbiz.core.entity.GenericValue";
-                       	                                     
-	VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
-	VariableInfo[] result = { info };
-	return result;
+        
+        VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
+        VariableInfo[] result = { info };
+        return result;
     }
-
-    public boolean isValid (TagData data) {	
-	return true;
-    }         
+    
+    public boolean isValid(TagData data) {
+        return true;
+    }
 }
 
 

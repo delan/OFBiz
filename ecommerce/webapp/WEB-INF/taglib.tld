@@ -38,10 +38,16 @@
     <tagclass>org.ofbiz.core.taglib.IteratorTag</tagclass>
     <teiclass>org.ofbiz.core.taglib.IteratorTEI</teiclass>
     <bodycontent>JSP</bodycontent>
-    <info>Iterate through an embedded collection.</info>
+    <info>
+        Iterate through an embedded collection.
+        If expandMap (default false) is true then the iterator elements must implement 
+        the Map interface the the keys in the Map entries must be Strings. 
+        Each map entry will be put into the pageContext if this is set.
+    </info>
     <attribute><name>name</name><required>true</required></attribute>	
     <attribute><name>property</name><required>false</required></attribute>
     <attribute><name>type</name><required>false</required></attribute>
+    <attribute><name>expandMap</name><required>false</required></attribute>
   </tag>
 
   <tag>
@@ -52,6 +58,7 @@
     <info>Grab the next iteration of the parent iterator tag.</info>
     <attribute><name>name</name><required>false</required></attribute>	
     <attribute><name>type</name><required>false</required></attribute>
+    <attribute><name>expandMap</name><required>false</required></attribute>
   </tag>	
 
   <tag>
@@ -98,17 +105,22 @@
     <name>entityfield</name>
     <tagclass>org.ofbiz.core.taglib.EntityFieldTag</tagclass>
     <bodycontent>NONE</bodycontent>
-    <info>Displays a properly formatted internationalized string entity field.</info>
+    <info>
+        Displays a properly formatted localized string from a field in the entity in the specified attribute.
+        The prefix and suffix attribute contents will print before/after if the field is not null or empty.
+    </info>
     <attribute><name>attribute</name><required>true</required></attribute>
     <attribute><name>field</name><required>true</required></attribute>
     <attribute><name>default</name><required>false</required></attribute>
+    <attribute><name>prefix</name><required>false</required></attribute>
+    <attribute><name>suffix</name><required>false</required></attribute>
   </tag>
 
   <tag>
     <name>field</name>
     <tagclass>org.ofbiz.core.taglib.EntityFieldTag</tagclass>
     <bodycontent>NONE</bodycontent>
-    <info>Displays a properly formatted internationalized string entity field.</info>
+    <info>Displays a properly formatted string from field in the specified attribute.</info>
     <attribute><name>attribute</name><required>true</required></attribute>
     <attribute><name>type</name><required>true</required></attribute>
     <attribute><name>default</name><required>false</required></attribute>

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/09/28 22:56:44  jonesde
+ * Big update for fromDate PK use, organization stuff
+ *
  * Revision 1.3  2001/09/21 19:38:50  jonesde
  * Updated settings to work with PoolMan & Tomcat 4, the current default config
  * Includes updated JNDIContextFactory and default datasource get through JNDI
@@ -44,27 +47,27 @@ import javax.servlet.jsp.tagext.*;
  * Created on August 4, 2001, 8:21 PM
  */
 public class IteratorTEI extends TagExtraInfo {
-  
-  public IteratorTEI() {
-    super();
-  }
-  
-  public VariableInfo[] getVariableInfo(TagData data) {
-    String name = null;
-    String className = null;
     
-    name = data.getAttributeString("name");
-    className = data.getAttributeString("type");
-    //Debug.logInfo("IteratorTEI: "+className);
-    if(className == null) className = "org.ofbiz.core.entity.GenericValue";
-    //Debug.logInfo("IteratorTEI: "+className);
+    public IteratorTEI() {
+        super();
+    }
     
-    VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
-    VariableInfo[] result = { info };
-    return result;
-  }
-  
-  public boolean isValid(TagData data) {
-    return true;
-  }
+    public VariableInfo[] getVariableInfo(TagData data) {
+        String name = null;
+        String className = null;
+        
+        name = data.getAttributeString("name");
+        className = data.getAttributeString("type");
+        //Debug.logInfo("IteratorTEI: "+className);
+        if(className == null) className = "org.ofbiz.core.entity.GenericValue";
+        //Debug.logInfo("IteratorTEI: "+className);
+        
+        VariableInfo info = new VariableInfo(name, className, true, VariableInfo.NESTED);
+        VariableInfo[] result = { info };
+        return result;
+    }
+    
+    public boolean isValid(TagData data) {
+        return true;
+    }
 }

@@ -26,39 +26,74 @@ import org.ofbiz.core.entity.model.ModelFieldType;
 import org.ofbiz.core.util.Debug;
 
 /**
+ * <p><b>Title:</b> Tag to Print Localized Entity Fields
+ * <p><b>Description:</b> None
+ * <p>Copyright (c) 2001 The Open For Business Project (www.ofbiz.org) and repected authors.
+ * <p>Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * @author  Andy Zeneski (jaz@zsolv.com)
- * @version
+ * <p>The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@version 1.0
+ *@created 
  */
 public class EntityFieldTag extends TagSupport {
 
-    private String field = null;
-    private String type = null;
-    private String attribute = null;
-    private String defaultStr = "";
-
+    String field = null;
+    String type = null;
+    String attribute = null;
+    String defaultStr = "";
+    String prefix = null;
+    String suffix = null;
+    
     public String getAttribute() {
         return attribute;
+    }
+    public void setAttribute(String attribute) {
+        this.attribute = attribute;
     }
 
     public String getField() {
         return field;
     }
+    public void setField(String field) {
+        this.field = field;
+    }
 
     public String getType() {
         return type;
     }
-
     public void setType(String type) {
         this.type = type;
     }
 
-    public void setAttribute(String attribute) {
-        this.attribute = attribute;
+    public String getPrefix() {
+        return prefix;
+    }
+    public void setPrefix(String prefix) {
+        this.prefix = prefix;
     }
 
-    public void setField(String field) {
-        this.field = field;
+    public String getSuffix() {
+        return suffix;
+    }
+    public void setSuffix(String suffix) {
+        this.suffix = suffix;
     }
 
     public String getDefault() {
@@ -197,13 +232,18 @@ public class EntityFieldTag extends TagSupport {
 
         try {
             JspWriter out = pageContext.getOut();
-            out.print(fieldString);
+            if (fieldString.length() > 0) {
+                if (prefix != null) out.print(prefix);
+                out.print(fieldString);
+                if (suffix != null) out.print(suffix);
+            }
         } catch (IOException e) {
             throw new JspTagException(e.getMessage());
         }
 
         defaultStr = "";
+        prefix = "";
+        suffix = "";
         return (SKIP_BODY);
     }
 }
-
