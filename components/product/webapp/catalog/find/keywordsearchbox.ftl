@@ -21,10 +21,19 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
+
+<script language="JavaScript">
+ <!--
+     function changeCategory() {
+         document.forms["keywordsearchform"].elements["SEARCH_CATEGORY_ID"].value=document.forms["advancedsearchform"].elements["DUMMYCAT"].value;
+         document.forms["advancedsearchform"].elements["SEARCH_CATEGORY_ID"].value=document.forms["advancedsearchform"].elements["DUMMYCAT"].value;
+     }
+ //-->
+ </script>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
@@ -52,19 +61,9 @@
         <tr>
           <td>
             <form name="keywordsearchform" method="POST" action="<@ofbizUrl>/keywordsearch?VIEW_SIZE=25</@ofbizUrl>" style="margin: 0;">
-              <div class="tabletext">${uiLabelMap.ProductKeywords}: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50"></div>
+              <div class="tabletext">${uiLabelMap.ProductKeywords}: <input type="text" class="inputBox" name="SEARCH_STRING" size="20" maxlength="50" value="${requestParameters.SEARCH_STRING?if_exists}"></div>
               <div class="tabletext">
-                ${uiLabelMap.ProductCategoryId}:
-                <select class="selectBox" name="SEARCH_CATEGORY_ID">
-                    <option value="">- Any Category -</option>
-                    <#list productCategories as productCategory>
-                        <#assign displayDesc = productCategory.description?default("No Description")>
-                        <#if 18 < displayDesc?length>
-                            <#assign displayDesc = displayDesc[0..15] + "...">
-                        </#if>
-                        <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
-                    </#list>
-                </select>
+                ${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20" value="${requestParameters.SEARCH_CATEGORY_ID?if_exists}">
               </div>
               <div class="tabletext">
                 ${uiLabelMap.CommonAny}<input type=RADIO name="SEARCH_OPERATOR" value="OR" checked>
@@ -84,9 +83,13 @@
           <td>
             <form name="advancedsearchform" method="POST" action="<@ofbizUrl>/advancedsearch</@ofbizUrl>" style="margin: 0;">
               <div class="tabletext">
-                ${uiLabelMap.ProductCategoryId}:
-                <select class="selectBox" name="SEARCH_CATEGORY_ID">
-                    <option value="">- Any Category -</option>
+                ${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20" value="${requestParameters.SEARCH_CATEGORY_ID?if_exists}">
+              </div>
+              <div class="tabletext">
+                <a href="javascript:document.advancedsearchform.submit()" class="buttontext">${uiLabelMap.ProductAdvancedSearch}</a>
+              </div>
+                <select class="selectBox" name="DUMMYCAT" onChange="changeCategory()">
+                    <option value="">- Select a Category -</option>
                     <#list productCategories as productCategory>
                         <#assign displayDesc = productCategory.description?default("No Description")>
                         <#if 18 < displayDesc?length>
@@ -95,10 +98,6 @@
                         <option value="${productCategory.productCategoryId}">${displayDesc} [${productCategory.productCategoryId}]</option>
                     </#list>
                 </select>
-              </div>
-              <div class="tabletext">
-                <a href="javascript:document.advancedsearchform.submit()" class="buttontext">${uiLabelMap.ProductAdvancedSearch}</a>
-              </div>
             </form>
           </td>
         </tr>
