@@ -2,6 +2,9 @@
     Bugs
 ================================================================
 
+* What happens when you remove a field that has subtotals? See
+  Report.getSubtotalFieldsFor().
+
 * Paste problems:
 
     ** Paste command, when executed, doesn't get put on menu.
@@ -21,13 +24,13 @@
 
     ** Pasting needs to re-fit sections (and on undo, un-re-fit them).
 
-* Qaiser writes: "i do the same thing which you said , i initilized the
-  total report in init method. then in doGet i create a new parameter file
-  attach this paarmeter file with report , then i create a new Layoutengine
-  in doGet method attach this wioth report and run the report in the same
-  method. but i not always get the latest result , even you cannot write
-  some thing on the Printwrtiter which i attached with layout engine in
-  doGet method."
+* While using report from within a JSP or servlet, Qaiser writes: "i do the
+  same thing which you said , i initilized the total report in init method.
+  then in doGet i create a new parameter file attach this paarmeter file
+  with report , then i create a new Layoutengine in doGet method attach
+  this wioth report and run the report in the same method. but i not always
+  get the latest result , even you cannot write some thing on the
+  Printwrtiter which i attached with layout engine in doGet method."
 
 * When run command in field picker, what should happen to undo/redo?
 
@@ -54,64 +57,89 @@
     To Do 
 ================================================================
 
-* FAQ: column or report record counts: add a column to your query (using a
-  UserColumn) that always returns the number 1. Add that column to the
-  details section, then hide it.
+* usage (-f)
+* datavision.java
+* popup for export
+* docs (cmd line, list of le, le.html)
 
-  Finally, add a subtotal on that field for the group. Voila: the number of
-  records in the group!
+* Optionally repeat group header at top of every page (dinesh).
 
-* Carlos suggests a record number within groups.
+* If a usercolumn uses a COUNT, SUM, MIN, MAX one have to do a GROUP BY on
+  all the columns used. I have added a check to see if a usercolumn uses
+  the above and automatically adds the GROUP BY before the ORDER BY.
+  (Eddie)
 
-* Add Sergio to credits for pt_PT.
+* Web interface for translation submission.
 
-* Add pt_PT to properties script. Change default pt language.
+* Updated fr_FR translations.
 
-* Incorporate and test DB2 changes by Stefan Hansel
-  (thestefan@users.sourceforge.net). See file "jimm.datavision.sql to work
-  with DB/2.txt" in ../datavision-other.
+* Add "quit" to file menu of swing le when it is running standalone.
 
-* Report: use section walker in findField
+* Field background color.
 
-* Paste into drag targets (code windows, report).
+* Dragging table into report drags all columns.
 
-* Lazily instantiate tables' columns.
+* Arrow keys "nudge" selected fields. Peter Ciuffetti
+  <PeterC@KnowledgeSite.com>.
 
-* Add copyright to source files.
+* Status bar: basic format and position of selected item. Peter Ciuffetti
+  <PeterC@KnowledgeSite.com>.
 
-* Docs: java -Duser.language=fr user.region=FR ...
+* Style gallery; saves space in XML and makes user's formatting easier.
+  (Can already use shift-select; applies to all fields.) Peter Ciuffetti
+  <PeterC@KnowledgeSite.com>.
 
-  Tony writes: "The problem was that I use Java 1.2 which does not support
-  cyrillic. I have read a couple of articles for this problem.
+* Cut/Paste Format menu item. Peter Ciuffetti
+  <PeterC@KnowledgeSite.com>.
 
-  "I have a Java 1.3 installed and yes it works :-)))))
+* Add "hidden" field attribute to format window and format menu. Peter
+  Ciuffetti <PeterC@KnowledgeSite.com>.
 
-  "Just now I will download 1.4 which has a better support for cyrillic.
-  Maybe some people must know that when they go to use a cyrillic or other
-  not english language."
+* Dragging fields: stay within confines of page. Peter Ciuffetti
+  <PeterC@KnowledgeSite.com>.
 
-* Need a way to bind different shortcut and accel keys to menu items.
+* When opening app with no file, ask to open file instead of assuming new
+  report wanted. Peter Ciuffetti <PeterC@KnowledgeSite.com>.
 
-* New duplicate command? Necessary?
+* Most recent files opened list. Peter Ciuffetti
+  <PeterC@KnowledgeSite.com>.
+
+* GUI take paper margins into consideration (grey them? make section
+  smaller?) Eddie Carpenter <ecarpenter@itex.co.za>
+
+* Display field types (perhaps in popup). This will require bringing back
+  Column's typeString instance variable, which was commented out to reduce
+  memory requirements. (Tony)
 
 * Commands
 
   -- create/delete parameter/formula/user col
 
+* Carlos suggests a record number within groups. Problem: if you have two
+  groups and you insert a "rec # in group" special field, how will you know
+  which group's count is being displayed?
+
+* Incorporate and test DB2 changes by Stefan Hansel
+  (thestefan@users.sourceforge.net). See file "jimm.datavision.sql to work
+  with DB/2.txt" in ../datavision-other.
+
+* Paste into drag targets (code windows, report).
+
+* Lazily instantiate tables and their columns.
+
+* Add copyright to source files.
+
+* Need a way to bind different shortcut and accel keys to menu items.
+
+* New duplicate command? Necessary?
+
 * Persistent undo/redo between application runs.
 
-* User columns
-
-  -- Document
-  -- tests
+* User column tests.
 
 * Idea: use formula to present text interspersed with column data.
 
-* Disable image's format menu item (but not border).
-
 * All layout engines: take file object instead of writer?
-
-* Document new formula funcs.
 
 * Fix relative path names of images in generated HTML and in other layout
   engines. Copy images to report destination folder and output file name
@@ -144,17 +172,6 @@
 * Comments in new Swing classes.
 
 * PDF layout engine.
-
-* Page breaks. Conditionally? By group? Miguel Angel Rojas Aquino
-  <mrojas_aquino@flashmail.com>. Force new page break if a group doesn't
-  fit; keep group "unbreakable" (Jordi Llonch <jordi@laigu.net>).
-
-* Pass database connection to report? David Jones <jonesde@ofbiz.org>
-
-* Pass InputStream or URL to report instead of a filename. David Jones
-  <jonesde@ofbiz.org>
-
-* Docs: Add reference to field formatting in edit.html.
 
 * When placing a text widget, let ESC key cancel operation.
 
@@ -247,8 +264,6 @@
 * Factor out common code in GroupWin and SortWin?
 
 * "Are you sure?" when exporting over an existing file.
-
-* Page breaks after sections.
 
 * CharSepLE: make quotes around fields optional, at least for fields that
   don't contain quotes or separator characters.

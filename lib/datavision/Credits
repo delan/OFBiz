@@ -11,6 +11,9 @@ Language (Region)                 Translator(s)
 
 bg_BG Bulgarian (Bulgaria)        Tony Tomov <tomovtony@yahoo.com>
 
+de_DE German (Germany)            Herbert Dietlmeier
+                                  <Herbert.Dietlmeier@t-online.de>
+
 en_US English (USA)               Jim Menard <jimm@io.com>
 
 es_MX Spanish (Mexico)            Miguel Angel Rojas Aquino
@@ -122,8 +125,7 @@ David Jones <jonesde@ofbiz.org>
 
     Added DataVision to the OFBiz project (http://www.ofbiz.org/). Many
     suggestions including re-using external database connections and
-    passing URLs or InputStreams to the report instead of an XML file name
-    (neither implemented yet).
+    passing URLs or InputStreams to the report instead of an XML file name.
 
 Jennifer Taylor <jennifer.taylor@caris.com>
 
@@ -159,4 +161,23 @@ Ryan Delany <ryandelany@users.sourceforge.net>
 Stefan Hansel <thestefan@users.sourceforge.net>
 
     Reported group footer output bug: when a group footer is output, make
-    sure all of the footers before (above) it are also output.
+    sure all of the footers before (above) it are also output. Offered code
+    to fix. Reported subtotal bug created when previous bug fixed.
+
+Eddie Carpenter <ecarpenter@itex.co.za>
+
+    User Column bug report and page break ideas. Negative field dimensions
+    bug report. Realized we don't need to select the join's columns. Found
+    bugs with formulas containing user columns.
+
+Ertan Oezdil <eoezdil@javacoders.de>
+
+    Request that led to the DesignWin.setExitWhenLastWinClosed method.
+
+Gene Coldwell <coldwell@csptexas.com>
+
+    Contributed money.
+
+Dinesh Rajagopalan <dinesh_rajagopalan@rediffmail.com>
+
+    Found forumla string expression bug.

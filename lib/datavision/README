@@ -27,7 +27,8 @@ Documentation
 For quick-and-dirty installation instructions, see the file INSTALL.
 
 For complete documentation, see the docs directory. The User's Manual
-starts at docs/DataVision/DataVision.html.
+starts at docs/DataVision/DataVision.html and the FAQ starts at
+docs/faq/faq.html.
 
 Copying
 =======

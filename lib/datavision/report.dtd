@@ -96,7 +96,10 @@
 <!ELEMENT details	section*>
 
 <!ELEMENT section	(field|line)*>
-<!ATTLIST section	height		CDATA	#REQUIRED>
+<!ATTLIST section	height		CDATA	#REQUIRED
+			suppressed	(true|false)
+			pagebreak	(true|false)
+>
 
 <!ELEMENT field		(bounds|format|border)*>
 <!ATTLIST field		type		(column
