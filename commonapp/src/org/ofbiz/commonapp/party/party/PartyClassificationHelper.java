@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:45 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 public class PartyClassificationHelper
@@ -141,16 +141,6 @@ public class PartyClassificationHelper
     return partyClassification;
   }
 
-  /** Finds all PartyClassification entities, returning an Iterator
-   *@return    Iterator containing all PartyClassification entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all PartyClassification entities
    *@return    Collection containing all PartyClassification entities
    */
@@ -219,7 +209,7 @@ public class PartyClassificationHelper
   public static void removeByPartyId(String partyId)
   {
     if(partyId == null) return;
-    Iterator iterator = findByPartyIdIterator(partyId);
+    Iterator iterator = UtilMisc.toIterator(findByPartyId(partyId));
 
     while(iterator.hasNext())
     {
@@ -231,17 +221,6 @@ public class PartyClassificationHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  partyId                  Field of the PARTY_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByPartyIdIterator(String partyId)
-  {
-    Collection collection = findByPartyId(partyId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyClassification records by the following parameters:
@@ -268,7 +247,7 @@ public class PartyClassificationHelper
   public static void removeByPartyTypeId(String partyTypeId)
   {
     if(partyTypeId == null) return;
-    Iterator iterator = findByPartyTypeIdIterator(partyTypeId);
+    Iterator iterator = UtilMisc.toIterator(findByPartyTypeId(partyTypeId));
 
     while(iterator.hasNext())
     {
@@ -280,17 +259,6 @@ public class PartyClassificationHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByPartyTypeIdIterator(String partyTypeId)
-  {
-    Collection collection = findByPartyTypeId(partyTypeId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyClassification records by the following parameters:
@@ -317,7 +285,7 @@ public class PartyClassificationHelper
   public static void removeByPartyClassificationTypeId(String partyClassificationTypeId)
   {
     if(partyClassificationTypeId == null) return;
-    Iterator iterator = findByPartyClassificationTypeIdIterator(partyClassificationTypeId);
+    Iterator iterator = UtilMisc.toIterator(findByPartyClassificationTypeId(partyClassificationTypeId));
 
     while(iterator.hasNext())
     {
@@ -329,17 +297,6 @@ public class PartyClassificationHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  partyClassificationTypeId                  Field of the PARTY_CLASSIFICATION_TYPE_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByPartyClassificationTypeIdIterator(String partyClassificationTypeId)
-  {
-    Collection collection = findByPartyClassificationTypeId(partyClassificationTypeId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyClassification records by the following parameters:

@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:46 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 public class PartyClassificationTypeHelper
@@ -117,16 +117,6 @@ public class PartyClassificationTypeHelper
     return partyClassificationType;
   }
 
-  /** Finds all PartyClassificationType entities, returning an Iterator
-   *@return    Iterator containing all PartyClassificationType entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all PartyClassificationType entities
    *@return    Collection containing all PartyClassificationType entities
    */
@@ -193,7 +183,7 @@ public class PartyClassificationTypeHelper
   public static void removeByParentTypeId(String parentTypeId)
   {
     if(parentTypeId == null) return;
-    Iterator iterator = findByParentTypeIdIterator(parentTypeId);
+    Iterator iterator = UtilMisc.toIterator(findByParentTypeId(parentTypeId));
 
     while(iterator.hasNext())
     {
@@ -205,17 +195,6 @@ public class PartyClassificationTypeHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  parentTypeId                  Field of the PARENT_TYPE_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByParentTypeIdIterator(String parentTypeId)
-  {
-    Collection collection = findByParentTypeId(parentTypeId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyClassificationType records by the following parameters:
@@ -242,7 +221,7 @@ public class PartyClassificationTypeHelper
   public static void removeByHasTable(String hasTable)
   {
     if(hasTable == null) return;
-    Iterator iterator = findByHasTableIterator(hasTable);
+    Iterator iterator = UtilMisc.toIterator(findByHasTable(hasTable));
 
     while(iterator.hasNext())
     {
@@ -254,17 +233,6 @@ public class PartyClassificationTypeHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  hasTable                  Field of the HAS_TABLE column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByHasTableIterator(String hasTable)
-  {
-    Collection collection = findByHasTable(hasTable);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyClassificationType records by the following parameters:

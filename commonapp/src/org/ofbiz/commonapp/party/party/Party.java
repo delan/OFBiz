@@ -7,6 +7,11 @@ import java.math.*;
 import java.util.*;
 
 import org.ofbiz.commonapp.security.login.*;
+import org.ofbiz.commonapp.product.cost.*;
+import org.ofbiz.commonapp.product.price.*;
+import org.ofbiz.commonapp.product.inventory.*;
+import org.ofbiz.commonapp.product.storage.*;
+import org.ofbiz.commonapp.product.supplier.*;
 
 /**
  * <p><b>Title:</b> Party Entity
@@ -32,7 +37,7 @@ import org.ofbiz.commonapp.security.login.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:40 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 
@@ -74,5 +79,59 @@ public interface Party extends EJBObject
   public void removeUserLogins() throws RemoteException;
   /** Remove the  UserLogin keyed by member(s) of this class, and other passed parameters. */
   public void removeUserLogin(String userLoginId) throws RemoteException;
+
+  /** Get a collection of  CostComponent related entities. */
+  public Collection getCostComponents() throws RemoteException;
+  /** Get the  CostComponent keyed by member(s) of this class, and other passed parameters. */
+  public CostComponent getCostComponent(String costComponentId) throws RemoteException;
+  /** Remove  CostComponent related entities. */
+  public void removeCostComponents() throws RemoteException;
+  /** Remove the  CostComponent keyed by member(s) of this class, and other passed parameters. */
+  public void removeCostComponent(String costComponentId) throws RemoteException;
+
+  /** Get a collection of  PriceComponent related entities. */
+  public Collection getPriceComponents() throws RemoteException;
+  /** Get the  PriceComponent keyed by member(s) of this class, and other passed parameters. */
+  public PriceComponent getPriceComponent(String priceComponentId) throws RemoteException;
+  /** Remove  PriceComponent related entities. */
+  public void removePriceComponents() throws RemoteException;
+  /** Remove the  PriceComponent keyed by member(s) of this class, and other passed parameters. */
+  public void removePriceComponent(String priceComponentId) throws RemoteException;
+
+  /** Get a collection of  InventoryItem related entities. */
+  public Collection getInventoryItems() throws RemoteException;
+  /** Get the  InventoryItem keyed by member(s) of this class, and other passed parameters. */
+  public InventoryItem getInventoryItem(String inventoryItemId) throws RemoteException;
+  /** Remove  InventoryItem related entities. */
+  public void removeInventoryItems() throws RemoteException;
+  /** Remove the  InventoryItem keyed by member(s) of this class, and other passed parameters. */
+  public void removeInventoryItem(String inventoryItemId) throws RemoteException;
+
+  /** Get a collection of  PartyFacility related entities. */
+  public Collection getPartyFacilitys() throws RemoteException;
+  /** Get the  PartyFacility keyed by member(s) of this class, and other passed parameters. */
+  public PartyFacility getPartyFacility(String facilityId) throws RemoteException;
+  /** Remove  PartyFacility related entities. */
+  public void removePartyFacilitys() throws RemoteException;
+  /** Remove the  PartyFacility keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyFacility(String facilityId) throws RemoteException;
+
+  /** Get a collection of  ReorderGuideline related entities. */
+  public Collection getReorderGuidelines() throws RemoteException;
+  /** Get the  ReorderGuideline keyed by member(s) of this class, and other passed parameters. */
+  public ReorderGuideline getReorderGuideline(String reorderGuidelineId) throws RemoteException;
+  /** Remove  ReorderGuideline related entities. */
+  public void removeReorderGuidelines() throws RemoteException;
+  /** Remove the  ReorderGuideline keyed by member(s) of this class, and other passed parameters. */
+  public void removeReorderGuideline(String reorderGuidelineId) throws RemoteException;
+
+  /** Get a collection of  SupplierProduct related entities. */
+  public Collection getSupplierProducts() throws RemoteException;
+  /** Get the  SupplierProduct keyed by member(s) of this class, and other passed parameters. */
+  public SupplierProduct getSupplierProduct(String productId) throws RemoteException;
+  /** Remove  SupplierProduct related entities. */
+  public void removeSupplierProducts() throws RemoteException;
+  /** Remove the  SupplierProduct keyed by member(s) of this class, and other passed parameters. */
+  public void removeSupplierProduct(String productId) throws RemoteException;
 
 }

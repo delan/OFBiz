@@ -7,6 +7,11 @@ import java.math.*;
 import java.util.*;
 
 import org.ofbiz.commonapp.security.login.*;
+import org.ofbiz.commonapp.product.cost.*;
+import org.ofbiz.commonapp.product.price.*;
+import org.ofbiz.commonapp.product.inventory.*;
+import org.ofbiz.commonapp.product.storage.*;
+import org.ofbiz.commonapp.product.supplier.*;
 
 /**
  * <p><b>Title:</b> Party Entity
@@ -32,7 +37,7 @@ import org.ofbiz.commonapp.security.login.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:41 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 public class PartyBean implements EntityBean
@@ -97,6 +102,60 @@ public class PartyBean implements EntityBean
   public void removeUserLogins() { UserLoginHelper.removeByPartyId(partyId); }
   /** Remove the  UserLogin keyed by member(s) of this class, and other passed parameters. */
   public void removeUserLogin(String userLoginId) { UserLoginHelper.removeByPrimaryKey(userLoginId); }
+
+  /** Get a collection of  CostComponent related entities. */
+  public Collection getCostComponents() { return CostComponentHelper.findByPartyId(partyId); }
+  /** Get the  CostComponent keyed by member(s) of this class, and other passed parameters. */
+  public CostComponent getCostComponent(String costComponentId) { return CostComponentHelper.findByPrimaryKey(costComponentId); }
+  /** Remove  CostComponent related entities. */
+  public void removeCostComponents() { CostComponentHelper.removeByPartyId(partyId); }
+  /** Remove the  CostComponent keyed by member(s) of this class, and other passed parameters. */
+  public void removeCostComponent(String costComponentId) { CostComponentHelper.removeByPrimaryKey(costComponentId); }
+
+  /** Get a collection of  PriceComponent related entities. */
+  public Collection getPriceComponents() { return PriceComponentHelper.findByPartyId(partyId); }
+  /** Get the  PriceComponent keyed by member(s) of this class, and other passed parameters. */
+  public PriceComponent getPriceComponent(String priceComponentId) { return PriceComponentHelper.findByPrimaryKey(priceComponentId); }
+  /** Remove  PriceComponent related entities. */
+  public void removePriceComponents() { PriceComponentHelper.removeByPartyId(partyId); }
+  /** Remove the  PriceComponent keyed by member(s) of this class, and other passed parameters. */
+  public void removePriceComponent(String priceComponentId) { PriceComponentHelper.removeByPrimaryKey(priceComponentId); }
+
+  /** Get a collection of  InventoryItem related entities. */
+  public Collection getInventoryItems() { return InventoryItemHelper.findByPartyId(partyId); }
+  /** Get the  InventoryItem keyed by member(s) of this class, and other passed parameters. */
+  public InventoryItem getInventoryItem(String inventoryItemId) { return InventoryItemHelper.findByPrimaryKey(inventoryItemId); }
+  /** Remove  InventoryItem related entities. */
+  public void removeInventoryItems() { InventoryItemHelper.removeByPartyId(partyId); }
+  /** Remove the  InventoryItem keyed by member(s) of this class, and other passed parameters. */
+  public void removeInventoryItem(String inventoryItemId) { InventoryItemHelper.removeByPrimaryKey(inventoryItemId); }
+
+  /** Get a collection of  PartyFacility related entities. */
+  public Collection getPartyFacilitys() { return PartyFacilityHelper.findByPartyId(partyId); }
+  /** Get the  PartyFacility keyed by member(s) of this class, and other passed parameters. */
+  public PartyFacility getPartyFacility(String facilityId) { return PartyFacilityHelper.findByPrimaryKey(partyId, facilityId); }
+  /** Remove  PartyFacility related entities. */
+  public void removePartyFacilitys() { PartyFacilityHelper.removeByPartyId(partyId); }
+  /** Remove the  PartyFacility keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyFacility(String facilityId) { PartyFacilityHelper.removeByPrimaryKey(partyId, facilityId); }
+
+  /** Get a collection of  ReorderGuideline related entities. */
+  public Collection getReorderGuidelines() { return ReorderGuidelineHelper.findByPartyId(partyId); }
+  /** Get the  ReorderGuideline keyed by member(s) of this class, and other passed parameters. */
+  public ReorderGuideline getReorderGuideline(String reorderGuidelineId) { return ReorderGuidelineHelper.findByPrimaryKey(reorderGuidelineId); }
+  /** Remove  ReorderGuideline related entities. */
+  public void removeReorderGuidelines() { ReorderGuidelineHelper.removeByPartyId(partyId); }
+  /** Remove the  ReorderGuideline keyed by member(s) of this class, and other passed parameters. */
+  public void removeReorderGuideline(String reorderGuidelineId) { ReorderGuidelineHelper.removeByPrimaryKey(reorderGuidelineId); }
+
+  /** Get a collection of  SupplierProduct related entities. */
+  public Collection getSupplierProducts() { return SupplierProductHelper.findByPartyId(partyId); }
+  /** Get the  SupplierProduct keyed by member(s) of this class, and other passed parameters. */
+  public SupplierProduct getSupplierProduct(String productId) { return SupplierProductHelper.findByPrimaryKey(productId, partyId); }
+  /** Remove  SupplierProduct related entities. */
+  public void removeSupplierProducts() { SupplierProductHelper.removeByPartyId(partyId); }
+  /** Remove the  SupplierProduct keyed by member(s) of this class, and other passed parameters. */
+  public void removeSupplierProduct(String productId) { SupplierProductHelper.removeByPrimaryKey(productId, partyId); }
 
 
   /** Description of the Method

@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:48 MDT 2001
+ *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
 public class PartyTypeAttrHelper
@@ -141,16 +141,6 @@ public class PartyTypeAttrHelper
     return partyTypeAttr;
   }
 
-  /** Finds all PartyTypeAttr entities, returning an Iterator
-   *@return    Iterator containing all PartyTypeAttr entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all PartyTypeAttr entities
    *@return    Collection containing all PartyTypeAttr entities
    */
@@ -210,7 +200,7 @@ public class PartyTypeAttrHelper
   public static void removeByPartyTypeId(String partyTypeId)
   {
     if(partyTypeId == null) return;
-    Iterator iterator = findByPartyTypeIdIterator(partyTypeId);
+    Iterator iterator = UtilMisc.toIterator(findByPartyTypeId(partyTypeId));
 
     while(iterator.hasNext())
     {
@@ -222,17 +212,6 @@ public class PartyTypeAttrHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByPartyTypeIdIterator(String partyTypeId)
-  {
-    Collection collection = findByPartyTypeId(partyTypeId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyTypeAttr records by the following parameters:
@@ -259,7 +238,7 @@ public class PartyTypeAttrHelper
   public static void removeByName(String name)
   {
     if(name == null) return;
-    Iterator iterator = findByNameIterator(name);
+    Iterator iterator = UtilMisc.toIterator(findByName(name));
 
     while(iterator.hasNext())
     {
@@ -271,17 +250,6 @@ public class PartyTypeAttrHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  name                  Field of the NAME column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByNameIterator(String name)
-  {
-    Collection collection = findByName(name);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyTypeAttr records by the following parameters:

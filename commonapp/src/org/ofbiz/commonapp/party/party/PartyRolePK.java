@@ -4,7 +4,7 @@ package org.ofbiz.commonapp.party.party;
 import java.io.*;
 
 /**
- * <p><b>Title:</b> Party Type Attribute Entity
+ * <p><b>Title:</b> Party Role Entity
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -30,57 +30,57 @@ import java.io.*;
  *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
-public class PartyTypeAttrPK implements Serializable
+public class PartyRolePK implements Serializable
 {
 
 
   /**
-   *  The variable of the PARTY_TYPE_ID column of the PARTY_TYPE_ATTR table.
+   *  The variable of the PARTY_ID column of the PARTY_ROLE table.
    */
-  public String partyTypeId;
+  public String partyId;
 
   /**
-   *  The variable of the NAME column of the PARTY_TYPE_ATTR table.
+   *  The variable of the ROLE_TYPE_ID column of the PARTY_ROLE table.
    */
-  public String name;
+  public String roleTypeId;
 
 
   /**
-   *  Constructor for the PartyTypeAttrPK object
+   *  Constructor for the PartyRolePK object
    */
-  public PartyTypeAttrPK()
+  public PartyRolePK()
   {
   }
 
   /**
-   *  Constructor for the PartyTypeAttrPK object
+   *  Constructor for the PartyRolePK object
    *
 
-   *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
-   *@param  name                  Field of the NAME column.
+   *@param  partyId                  Field of the PARTY_ID column.
+   *@param  roleTypeId                  Field of the ROLE_TYPE_ID column.
    */
-  public PartyTypeAttrPK(String partyTypeId, String name)
+  public PartyRolePK(String partyId, String roleTypeId)
   {
 
-    this.partyTypeId = partyTypeId;
-    this.name = name;
+    this.partyId = partyId;
+    this.roleTypeId = roleTypeId;
   }
 
   /**
-   *  Determines the equality of two PartyTypeAttrPK objects, overrides the default equals
+   *  Determines the equality of two PartyRolePK objects, overrides the default equals
    *
-   *@param  obj  The object (PartyTypeAttrPK) to compare this two
+   *@param  obj  The object (PartyRolePK) to compare this two
    *@return      boolean stating if the two objects are equal
    */
   public boolean equals(Object obj)
   {
     if(this.getClass().equals(obj.getClass()))
     {
-      PartyTypeAttrPK that = (PartyTypeAttrPK)obj;
+      PartyRolePK that = (PartyRolePK)obj;
       return
 
-            this.partyTypeId.equals(that.partyTypeId) &&
-            this.name.equals(that.name) &&
+            this.partyId.equals(that.partyId) &&
+            this.roleTypeId.equals(that.roleTypeId) &&
             true; //This "true" is a dummy thing to take care of the last &&, just for laziness sake.
     }
     return false;
@@ -93,7 +93,7 @@ public class PartyTypeAttrPK implements Serializable
    */
   public int hashCode()
   {
-    return (partyTypeId + "::" + name).hashCode();
+    return (partyId + "::" + roleTypeId).hashCode();
   }
 
   /**
@@ -103,6 +103,6 @@ public class PartyTypeAttrPK implements Serializable
    */
   public String toString()
   {
-    return partyTypeId + "::" + name;
+    return partyId + "::" + roleTypeId;
   }
 }

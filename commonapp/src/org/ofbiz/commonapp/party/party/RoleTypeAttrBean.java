@@ -8,7 +8,7 @@ import java.util.*;
 
 
 /**
- * <p><b>Title:</b> Party Type Attribute Entity
+ * <p><b>Title:</b> Role Type Attribute Entity
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -34,51 +34,51 @@ import java.util.*;
  *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
-public class PartyTypeAttrBean implements EntityBean
+public class RoleTypeAttrBean implements EntityBean
 {
-  /** The variable for the PARTY_TYPE_ID column of the PARTY_TYPE_ATTR table. */
-  public String partyTypeId;
-  /** The variable for the NAME column of the PARTY_TYPE_ATTR table. */
+  /** The variable for the ROLE_TYPE_ID column of the ROLE_TYPE_ATTR table. */
+  public String roleTypeId;
+  /** The variable for the NAME column of the ROLE_TYPE_ATTR table. */
   public String name;
 
   EntityContext entityContext;
   boolean ejbIsModified = false;
 
-  /** Sets the EntityContext attribute of the PartyTypeAttrBean object
+  /** Sets the EntityContext attribute of the RoleTypeAttrBean object
    *@param  entityContext  The new EntityContext value
    */
   public void setEntityContext(EntityContext entityContext) { this.entityContext = entityContext; }
 
-  /** Get the primary key PARTY_TYPE_ID column of the PARTY_TYPE_ATTR table. */
-  public String getPartyTypeId() { return partyTypeId; }
+  /** Get the primary key ROLE_TYPE_ID column of the ROLE_TYPE_ATTR table. */
+  public String getRoleTypeId() { return roleTypeId; }
 
-  /** Get the primary key NAME column of the PARTY_TYPE_ATTR table. */
+  /** Get the primary key NAME column of the ROLE_TYPE_ATTR table. */
   public String getName() { return name; }
 
-  /** Sets the values from ValueObject attribute of the PartyTypeAttrBean object
+  /** Sets the values from ValueObject attribute of the RoleTypeAttrBean object
    *@param  valueObject  The new ValueObject value 
    */
-  public void setValueObject(PartyTypeAttr valueObject)
+  public void setValueObject(RoleTypeAttr valueObject)
   {
   }
 
-  /** Gets the ValueObject attribute of the PartyTypeAttrBean object
+  /** Gets the ValueObject attribute of the RoleTypeAttrBean object
    *@return    The ValueObject value
    */
-  public PartyTypeAttr getValueObject()
+  public RoleTypeAttr getValueObject()
   {
     if(this.entityContext != null)
     {
-      return new PartyTypeAttrValue((PartyTypeAttr)this.entityContext.getEJBObject(), partyTypeId, name);
+      return new RoleTypeAttrValue((RoleTypeAttr)this.entityContext.getEJBObject(), roleTypeId, name);
     }
     else { return null; }
   }
 
 
-  /** Get the  PartyType entity corresponding to this entity. */
-  public PartyType getPartyType() { return PartyTypeHelper.findByPrimaryKey(partyTypeId); }
-  /** Remove the  PartyType entity corresponding to this entity. */
-  public void removePartyType() { PartyTypeHelper.removeByPrimaryKey(partyTypeId); }
+  /** Get the  RoleType entity corresponding to this entity. */
+  public RoleType getRoleType() { return RoleTypeHelper.findByPrimaryKey(roleTypeId); }
+  /** Remove the  RoleType entity corresponding to this entity. */
+  public void removeRoleType() { RoleTypeHelper.removeByPrimaryKey(roleTypeId); }
 
   /** Get a collection of  PartyAttribute related entities. */
   public Collection getPartyAttributes() { return PartyAttributeHelper.findByName(name); }
@@ -89,35 +89,35 @@ public class PartyTypeAttrBean implements EntityBean
   /** Remove the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
   public void removePartyAttribute(String partyId) { PartyAttributeHelper.removeByPrimaryKey(partyId, name); }
 
-  /** Get a collection of  PartyClassification related entities. */
-  public Collection getPartyClassifications() { return PartyClassificationHelper.findByPartyTypeId(partyTypeId); }
-  /** Get the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
-  public PartyClassification getPartyClassification(String partyId) { return PartyClassificationHelper.findByPrimaryKey(partyId, partyTypeId); }
-  /** Remove  PartyClassification related entities. */
-  public void removePartyClassifications() { PartyClassificationHelper.removeByPartyTypeId(partyTypeId); }
-  /** Remove the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
-  public void removePartyClassification(String partyId) { PartyClassificationHelper.removeByPrimaryKey(partyId, partyTypeId); }
+  /** Get a collection of  PartyRole related entities. */
+  public Collection getPartyRoles() { return PartyRoleHelper.findByRoleTypeId(roleTypeId); }
+  /** Get the  PartyRole keyed by member(s) of this class, and other passed parameters. */
+  public PartyRole getPartyRole(String partyId) { return PartyRoleHelper.findByPrimaryKey(partyId, roleTypeId); }
+  /** Remove  PartyRole related entities. */
+  public void removePartyRoles() { PartyRoleHelper.removeByRoleTypeId(roleTypeId); }
+  /** Remove the  PartyRole keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyRole(String partyId) { PartyRoleHelper.removeByPrimaryKey(partyId, roleTypeId); }
 
 
   /** Description of the Method
-   *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
+   *@param  roleTypeId                  Field of the ROLE_TYPE_ID column.
    *@param  name                  Field of the NAME column.
    *@return                      Description of the Returned Value
    *@exception  CreateException  Description of Exception
    */
-  public org.ofbiz.commonapp.party.party.PartyTypeAttrPK ejbCreate(String partyTypeId, String name) throws CreateException
+  public org.ofbiz.commonapp.party.party.RoleTypeAttrPK ejbCreate(String roleTypeId, String name) throws CreateException
   {
-    this.partyTypeId = partyTypeId;
+    this.roleTypeId = roleTypeId;
     this.name = name;
     return null;
   }
 
   /** Description of the Method
-   *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
+   *@param  roleTypeId                  Field of the ROLE_TYPE_ID column.
    *@param  name                  Field of the NAME column.
    *@exception  CreateException  Description of Exception
    */
-  public void ejbPostCreate(String partyTypeId, String name) throws CreateException {}
+  public void ejbPostCreate(String roleTypeId, String name) throws CreateException {}
 
   /** Called when the entity bean is removed.
    *@exception  RemoveException  Description of Exception

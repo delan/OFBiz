@@ -7,7 +7,7 @@ import java.util.*;
 import java.math.*;
 
 /**
- * <p><b>Title:</b> Party Entity
+ * <p><b>Title:</b> Role Type Entity
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -30,16 +30,35 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 27 01:18:23 MDT 2001
+ *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
 
-public interface PartyHome extends EJBHome
+public interface RoleTypeHome extends EJBHome
 {
 
-  public Party create(String partyId) throws RemoteException, CreateException;
-  public Party findByPrimaryKey(java.lang.String primaryKey) throws RemoteException, FinderException;
+  public RoleType create(String roleTypeId, String parentTypeId, String hasTable, String description) throws RemoteException, CreateException;
+  public RoleType create(String roleTypeId) throws RemoteException, CreateException;
+  public RoleType findByPrimaryKey(java.lang.String primaryKey) throws RemoteException, FinderException;
   public Collection findAll() throws RemoteException, FinderException;
 
+
+  /**
+   *  Finds RoleTypes by the following fields:
+   *
+
+   *@param  parentTypeId                  Field for the PARENT_TYPE_ID column.
+   *@return      Collection containing the found RoleTypes
+   */
+  public Collection findByParentTypeId(String parentTypeId) throws RemoteException, FinderException;
+
+  /**
+   *  Finds RoleTypes by the following fields:
+   *
+
+   *@param  hasTable                  Field for the HAS_TABLE column.
+   *@return      Collection containing the found RoleTypes
+   */
+  public Collection findByHasTable(String hasTable) throws RemoteException, FinderException;
 
 }

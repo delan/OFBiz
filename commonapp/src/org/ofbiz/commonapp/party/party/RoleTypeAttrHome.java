@@ -7,7 +7,7 @@ import java.util.*;
 import java.math.*;
 
 /**
- * <p><b>Title:</b> Party Entity
+ * <p><b>Title:</b> Role Type Attribute Entity
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -30,16 +30,34 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 27 01:18:23 MDT 2001
+ *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
 
-public interface PartyHome extends EJBHome
+public interface RoleTypeAttrHome extends EJBHome
 {
 
-  public Party create(String partyId) throws RemoteException, CreateException;
-  public Party findByPrimaryKey(java.lang.String primaryKey) throws RemoteException, FinderException;
+  public RoleTypeAttr create(String roleTypeId, String name) throws RemoteException, CreateException;
+  public RoleTypeAttr findByPrimaryKey(org.ofbiz.commonapp.party.party.RoleTypeAttrPK primaryKey) throws RemoteException, FinderException;
   public Collection findAll() throws RemoteException, FinderException;
 
+
+  /**
+   *  Finds RoleTypeAttrs by the following fields:
+   *
+
+   *@param  roleTypeId                  Field for the ROLE_TYPE_ID column.
+   *@return      Collection containing the found RoleTypeAttrs
+   */
+  public Collection findByRoleTypeId(String roleTypeId) throws RemoteException, FinderException;
+
+  /**
+   *  Finds RoleTypeAttrs by the following fields:
+   *
+
+   *@param  name                  Field for the NAME column.
+   *@return      Collection containing the found RoleTypeAttrs
+   */
+  public Collection findByName(String name) throws RemoteException, FinderException;
 
 }

@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:43 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 public class PartyHelper
@@ -115,16 +115,6 @@ public class PartyHelper
     catch(ObjectNotFoundException onfe) { }
     catch(Exception fe) { Debug.logError(fe); }
     return party;
-  }
-
-  /** Finds all Party entities, returning an Iterator
-   *@return    Iterator containing all Party entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
   }
 
   /** Finds all Party entities

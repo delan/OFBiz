@@ -8,9 +8,9 @@ import javax.ejb.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Party Type Entity
+ * <p><b>Title:</b> Role Type Entity
  * <p><b>Description:</b> None
- * <p>The Helper class from the PartyType Entity EJB; acts as a proxy for the Home interface
+ * <p>The Helper class from the RoleType Entity EJB; acts as a proxy for the Home interface
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -33,57 +33,57 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 27 01:18:23 MDT 2001
+ *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
-public class PartyTypeHelper
+public class RoleTypeHelper
 {
 
-  /** A static variable to cache the Home object for the PartyType EJB */
-  private static PartyTypeHome partyTypeHome = null;
+  /** A static variable to cache the Home object for the RoleType EJB */
+  private static RoleTypeHome roleTypeHome = null;
 
-  /** Initializes the partyTypeHome, from a JNDI lookup, with a cached result, checking for null each time. 
-   *@return The PartyTypeHome instance for the default EJB server
+  /** Initializes the roleTypeHome, from a JNDI lookup, with a cached result, checking for null each time. 
+   *@return The RoleTypeHome instance for the default EJB server
    */
-  public static PartyTypeHome getPartyTypeHome()
+  public static RoleTypeHome getRoleTypeHome()
   {
-    if(partyTypeHome == null) //don't want to block here
+    if(roleTypeHome == null) //don't want to block here
     {
-      synchronized(PartyTypeHelper.class) 
+      synchronized(RoleTypeHelper.class) 
       { 
         //must check if null again as one of the blocked threads can still enter 
-        if(partyTypeHome == null) //now it's safe
+        if(roleTypeHome == null) //now it's safe
         {
           JNDIContext myJNDIContext = new JNDIContext();
           InitialContext initialContext = myJNDIContext.getInitialContext();
           try
           {
-            Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.party.party.PartyTypeHome");
-            partyTypeHome = (PartyTypeHome)MyNarrow.narrow(homeObject, PartyTypeHome.class);
+            Object homeObject = MyNarrow.lookup(initialContext, "org.ofbiz.commonapp.party.party.RoleTypeHome");
+            roleTypeHome = (RoleTypeHome)MyNarrow.narrow(homeObject, RoleTypeHome.class);
           }
           catch(Exception e1) { Debug.logError(e1); }
-          Debug.logInfo("partyType home obtained " + partyTypeHome);
+          Debug.logInfo("roleType home obtained " + roleTypeHome);
         }
       }
     }
-    return partyTypeHome;
+    return roleTypeHome;
   }
 
 
 
 
-  /** Remove the PartyType corresponding to the primaryKey
+  /** Remove the RoleType corresponding to the primaryKey
    *@param  primaryKey  The primary key of the entity to remove.
    */
   public static void removeByPrimaryKey(java.lang.String primaryKey)
   {
     if(primaryKey == null) return;
-    PartyType partyType = findByPrimaryKey(primaryKey);
+    RoleType roleType = findByPrimaryKey(primaryKey);
     try
     {
-      if(partyType != null)
+      if(roleType != null)
       {
-        partyType.remove();
+        roleType.remove();
       }
     }
     catch(Exception e) { Debug.logWarning(e); }
@@ -91,93 +91,93 @@ public class PartyTypeHelper
   }
 
 
-  /** Find a PartyType by its Primary Key
+  /** Find a RoleType by its Primary Key
    *@param  primaryKey  The primary key to find by.
-   *@return             The PartyType corresponding to the primaryKey
+   *@return             The RoleType corresponding to the primaryKey
    */
-  public static PartyType findByPrimaryKey(java.lang.String primaryKey)
+  public static RoleType findByPrimaryKey(java.lang.String primaryKey)
   {
-    PartyType partyType = null;
-    Debug.logInfo("PartyTypeHelper.findByPrimaryKey: Field is:" + primaryKey);
+    RoleType roleType = null;
+    Debug.logInfo("RoleTypeHelper.findByPrimaryKey: Field is:" + primaryKey);
 
     if(primaryKey == null) { return null; }
 
 
     try
     {
-      partyType = (PartyType)MyNarrow.narrow(getPartyTypeHome().findByPrimaryKey(primaryKey), PartyType.class);
-      if(partyType != null)
+      roleType = (RoleType)MyNarrow.narrow(getRoleTypeHome().findByPrimaryKey(primaryKey), RoleType.class);
+      if(roleType != null)
       {
-        partyType = partyType.getValueObject();
+        roleType = roleType.getValueObject();
       
       }
     }
     catch(ObjectNotFoundException onfe) { }
     catch(Exception fe) { Debug.logError(fe); }
-    return partyType;
+    return roleType;
   }
 
-  /** Finds all PartyType entities
-   *@return    Collection containing all PartyType entities
+  /** Finds all RoleType entities
+   *@return    Collection containing all RoleType entities
    */
   public static Collection findAll()
   {
     Collection collection = null;
-    Debug.logInfo("PartyTypeHelper.findAll");
+    Debug.logInfo("RoleTypeHelper.findAll");
 
-    try { collection = (Collection)MyNarrow.narrow(getPartyTypeHome().findAll(), Collection.class); }
+    try { collection = (Collection)MyNarrow.narrow(getRoleTypeHome().findAll(), Collection.class); }
     catch(ObjectNotFoundException onfe) { }
     catch(Exception fe) { Debug.logError(fe); }
     return collection;
   }
 
-  /** Creates a PartyType
-   *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
+  /** Creates a RoleType
+   *@param  roleTypeId                  Field of the ROLE_TYPE_ID column.
    *@param  parentTypeId                  Field of the PARENT_TYPE_ID column.
    *@param  hasTable                  Field of the HAS_TABLE column.
    *@param  description                  Field of the DESCRIPTION column.
    *@return                Description of the Returned Value
    */
-  public static PartyType create(String partyTypeId, String parentTypeId, String hasTable, String description)
+  public static RoleType create(String roleTypeId, String parentTypeId, String hasTable, String description)
   {
-    PartyType partyType = null;
-    Debug.logInfo("PartyTypeHelper.create: partyTypeId: " + partyTypeId);
-    if(partyTypeId == null) { return null; }
+    RoleType roleType = null;
+    Debug.logInfo("RoleTypeHelper.create: roleTypeId: " + roleTypeId);
+    if(roleTypeId == null) { return null; }
 
-    try { partyType = (PartyType)MyNarrow.narrow(getPartyTypeHome().create(partyTypeId, parentTypeId, hasTable, description), PartyType.class); }
+    try { roleType = (RoleType)MyNarrow.narrow(getRoleTypeHome().create(roleTypeId, parentTypeId, hasTable, description), RoleType.class); }
     catch(CreateException ce)
     {
-      Debug.logError("Could not create partyType with partyTypeId: " + partyTypeId);
+      Debug.logError("Could not create roleType with roleTypeId: " + roleTypeId);
       Debug.logError(ce);
-      partyType = null;
+      roleType = null;
     }
     catch(Exception fe) { Debug.logError(fe); }
-    return partyType;
+    return roleType;
   }
 
-  /** Updates the corresponding PartyType
-   *@param  partyTypeId                  Field of the PARTY_TYPE_ID column.
+  /** Updates the corresponding RoleType
+   *@param  roleTypeId                  Field of the ROLE_TYPE_ID column.
    *@param  parentTypeId                  Field of the PARENT_TYPE_ID column.
    *@param  hasTable                  Field of the HAS_TABLE column.
    *@param  description                  Field of the DESCRIPTION column.
    *@return                Description of the Returned Value
    */
-  public static PartyType update(String partyTypeId, String parentTypeId, String hasTable, String description) throws java.rmi.RemoteException
+  public static RoleType update(String roleTypeId, String parentTypeId, String hasTable, String description) throws java.rmi.RemoteException
   {
-    if(partyTypeId == null) { return null; }
-    PartyType partyType = findByPrimaryKey(partyTypeId);
+    if(roleTypeId == null) { return null; }
+    RoleType roleType = findByPrimaryKey(roleTypeId);
     //Do not pass the value object to set on creation, we only want to populate it not attach it to the passed object
-    PartyType partyTypeValue = new PartyTypeValue();
+    RoleType roleTypeValue = new RoleTypeValue();
 
-    if(parentTypeId != null) { partyTypeValue.setParentTypeId(parentTypeId); }
-    if(hasTable != null) { partyTypeValue.setHasTable(hasTable); }
-    if(description != null) { partyTypeValue.setDescription(description); }
+    if(parentTypeId != null) { roleTypeValue.setParentTypeId(parentTypeId); }
+    if(hasTable != null) { roleTypeValue.setHasTable(hasTable); }
+    if(description != null) { roleTypeValue.setDescription(description); }
 
-    partyType.setValueObject(partyTypeValue);
-    return partyType;
+    roleType.setValueObject(roleTypeValue);
+    return roleType;
   }
 
-  /** Removes/deletes the specified  PartyType
+  /** Removes/deletes the specified  RoleType
    *@param  parentTypeId                  Field of the PARENT_TYPE_ID column.
    */
   public static void removeByParentTypeId(String parentTypeId)
@@ -189,15 +189,15 @@ public class PartyTypeHelper
     {
       try
       {
-        PartyType partyType = (PartyType) iterator.next();
-        Debug.logInfo("Removing partyType with parentTypeId:" + parentTypeId);
-        partyType.remove();
+        RoleType roleType = (RoleType) iterator.next();
+        Debug.logInfo("Removing roleType with parentTypeId:" + parentTypeId);
+        roleType.remove();
       }
       catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /** Finds PartyType records by the following parameters:
+  /** Finds RoleType records by the following parameters:
    *@param  parentTypeId                  Field of the PARENT_TYPE_ID column.
    *@return      Description of the Returned Value
    */
@@ -208,14 +208,14 @@ public class PartyTypeHelper
     Collection collection = null;
     if(parentTypeId == null) { return null; }
 
-    try { collection = (Collection) MyNarrow.narrow(getPartyTypeHome().findByParentTypeId(parentTypeId), Collection.class); }
+    try { collection = (Collection) MyNarrow.narrow(getRoleTypeHome().findByParentTypeId(parentTypeId), Collection.class); }
     catch(ObjectNotFoundException onfe) { }
     catch(Exception fe) { Debug.logError(fe); }
 
     return collection;
   }
 
-  /** Removes/deletes the specified  PartyType
+  /** Removes/deletes the specified  RoleType
    *@param  hasTable                  Field of the HAS_TABLE column.
    */
   public static void removeByHasTable(String hasTable)
@@ -227,15 +227,15 @@ public class PartyTypeHelper
     {
       try
       {
-        PartyType partyType = (PartyType) iterator.next();
-        Debug.logInfo("Removing partyType with hasTable:" + hasTable);
-        partyType.remove();
+        RoleType roleType = (RoleType) iterator.next();
+        Debug.logInfo("Removing roleType with hasTable:" + hasTable);
+        roleType.remove();
       }
       catch(Exception e) { Debug.logError(e); }
     }
   }
 
-  /** Finds PartyType records by the following parameters:
+  /** Finds RoleType records by the following parameters:
    *@param  hasTable                  Field of the HAS_TABLE column.
    *@return      Description of the Returned Value
    */
@@ -246,7 +246,7 @@ public class PartyTypeHelper
     Collection collection = null;
     if(hasTable == null) { return null; }
 
-    try { collection = (Collection) MyNarrow.narrow(getPartyTypeHome().findByHasTable(hasTable), Collection.class); }
+    try { collection = (Collection) MyNarrow.narrow(getRoleTypeHome().findByHasTable(hasTable), Collection.class); }
     catch(ObjectNotFoundException onfe) { }
     catch(Exception fe) { Debug.logError(fe); }
 

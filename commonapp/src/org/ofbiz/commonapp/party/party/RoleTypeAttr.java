@@ -8,7 +8,7 @@ import java.util.*;
 
 
 /**
- * <p><b>Title:</b> Party Type Attribute Entity
+ * <p><b>Title:</b> Role Type Attribute Entity
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -31,29 +31,29 @@ import java.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 27 01:18:23 MDT 2001
+ *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
 
-public interface PartyTypeAttr extends EJBObject
+public interface RoleTypeAttr extends EJBObject
 {
-  /** Get the primary key of the PARTY_TYPE_ID column of the PARTY_TYPE_ATTR table. */
-  public String getPartyTypeId() throws RemoteException;
+  /** Get the primary key of the ROLE_TYPE_ID column of the ROLE_TYPE_ATTR table. */
+  public String getRoleTypeId() throws RemoteException;
   
-  /** Get the primary key of the NAME column of the PARTY_TYPE_ATTR table. */
+  /** Get the primary key of the NAME column of the ROLE_TYPE_ATTR table. */
   public String getName() throws RemoteException;
   
 
-  /** Get the value object of this PartyTypeAttr class. */
-  public PartyTypeAttr getValueObject() throws RemoteException;
-  /** Set the values in the value object of this PartyTypeAttr class. */
-  public void setValueObject(PartyTypeAttr partyTypeAttrValue) throws RemoteException;
+  /** Get the value object of this RoleTypeAttr class. */
+  public RoleTypeAttr getValueObject() throws RemoteException;
+  /** Set the values in the value object of this RoleTypeAttr class. */
+  public void setValueObject(RoleTypeAttr roleTypeAttrValue) throws RemoteException;
 
 
-  /** Get the  PartyType entity corresponding to this entity. */
-  public PartyType getPartyType() throws RemoteException;
-  /** Remove the  PartyType entity corresponding to this entity. */
-  public void removePartyType() throws RemoteException;  
+  /** Get the  RoleType entity corresponding to this entity. */
+  public RoleType getRoleType() throws RemoteException;
+  /** Remove the  RoleType entity corresponding to this entity. */
+  public void removeRoleType() throws RemoteException;  
 
   /** Get a collection of  PartyAttribute related entities. */
   public Collection getPartyAttributes() throws RemoteException;
@@ -64,13 +64,13 @@ public interface PartyTypeAttr extends EJBObject
   /** Remove the  PartyAttribute keyed by member(s) of this class, and other passed parameters. */
   public void removePartyAttribute(String partyId) throws RemoteException;
 
-  /** Get a collection of  PartyClassification related entities. */
-  public Collection getPartyClassifications() throws RemoteException;
-  /** Get the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
-  public PartyClassification getPartyClassification(String partyId) throws RemoteException;
-  /** Remove  PartyClassification related entities. */
-  public void removePartyClassifications() throws RemoteException;
-  /** Remove the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
-  public void removePartyClassification(String partyId) throws RemoteException;
+  /** Get a collection of  PartyRole related entities. */
+  public Collection getPartyRoles() throws RemoteException;
+  /** Get the  PartyRole keyed by member(s) of this class, and other passed parameters. */
+  public PartyRole getPartyRole(String partyId) throws RemoteException;
+  /** Remove  PartyRole related entities. */
+  public void removePartyRoles() throws RemoteException;
+  /** Remove the  PartyRole keyed by member(s) of this class, and other passed parameters. */
+  public void removePartyRole(String partyId) throws RemoteException;
 
 }

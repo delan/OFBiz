@@ -31,7 +31,7 @@ import java.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:45 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 
@@ -62,19 +62,19 @@ public interface PartyClassificationType extends EJBObject
   public void setValueObject(PartyClassificationType partyClassificationTypeValue) throws RemoteException;
 
 
-  /** Get the  PartyClassificationType entity corresponding to this entity. */
-  public PartyClassificationType getPartyClassificationType() throws RemoteException;
-  /** Remove the  PartyClassificationType entity corresponding to this entity. */
-  public void removePartyClassificationType() throws RemoteException;  
+  /** Get the Parent PartyClassificationType entity corresponding to this entity. */
+  public PartyClassificationType getParentPartyClassificationType() throws RemoteException;
+  /** Remove the Parent PartyClassificationType entity corresponding to this entity. */
+  public void removeParentPartyClassificationType() throws RemoteException;  
 
-  /** Get a collection of  PartyClassificationType related entities. */
-  public Collection getPartyClassificationTypes() throws RemoteException;
-  /** Get the  PartyClassificationType keyed by member(s) of this class, and other passed parameters. */
-  public PartyClassificationType getPartyClassificationType(String partyClassificationTypeId) throws RemoteException;
-  /** Remove  PartyClassificationType related entities. */
-  public void removePartyClassificationTypes() throws RemoteException;
-  /** Remove the  PartyClassificationType keyed by member(s) of this class, and other passed parameters. */
-  public void removePartyClassificationType(String partyClassificationTypeId) throws RemoteException;
+  /** Get a collection of Child PartyClassificationType related entities. */
+  public Collection getChildPartyClassificationTypes() throws RemoteException;
+  /** Get the Child PartyClassificationType keyed by member(s) of this class, and other passed parameters. */
+  public PartyClassificationType getChildPartyClassificationType(String partyClassificationTypeId) throws RemoteException;
+  /** Remove Child PartyClassificationType related entities. */
+  public void removeChildPartyClassificationTypes() throws RemoteException;
+  /** Remove the Child PartyClassificationType keyed by member(s) of this class, and other passed parameters. */
+  public void removeChildPartyClassificationType(String partyClassificationTypeId) throws RemoteException;
 
   /** Get a collection of  PartyClassification related entities. */
   public Collection getPartyClassifications() throws RemoteException;

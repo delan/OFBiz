@@ -6,6 +6,8 @@ import javax.ejb.*;
 import java.util.*;
 import org.ofbiz.core.util.*;
 
+import org.ofbiz.commonapp.product.price.*;
+import org.ofbiz.commonapp.product.supplier.*;
 
 /**
  * <p><b>Title:</b> Party Type Entity
@@ -31,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:46 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 public class PartyTypeValue implements PartyType
@@ -133,14 +135,14 @@ public class PartyTypeValue implements PartyType
   /** Remove the Parent PartyType entity corresponding to this entity. */
   public void removeParentPartyType() { PartyTypeHelper.removeByPrimaryKey(parentTypeId); }
 
-  /** Get a collection of Children PartyType related entities. */
-  public Collection getChildrenPartyTypes() { return PartyTypeHelper.findByParentTypeId(partyTypeId); }
-  /** Get the Children PartyType keyed by member(s) of this class, and other passed parameters. */
-  public PartyType getChildrenPartyType(String partyTypeId) { return PartyTypeHelper.findByPrimaryKey(partyTypeId); }
-  /** Remove Children PartyType related entities. */
-  public void removeChildrenPartyTypes() { PartyTypeHelper.removeByParentTypeId(partyTypeId); }
-  /** Remove the Children PartyType keyed by member(s) of this class, and other passed parameters. */
-  public void removeChildrenPartyType(String partyTypeId) { PartyTypeHelper.removeByPrimaryKey(partyTypeId); }
+  /** Get a collection of Child PartyType related entities. */
+  public Collection getChildPartyTypes() { return PartyTypeHelper.findByParentTypeId(partyTypeId); }
+  /** Get the Child PartyType keyed by member(s) of this class, and other passed parameters. */
+  public PartyType getChildPartyType(String partyTypeId) { return PartyTypeHelper.findByPrimaryKey(partyTypeId); }
+  /** Remove Child PartyType related entities. */
+  public void removeChildPartyTypes() { PartyTypeHelper.removeByParentTypeId(partyTypeId); }
+  /** Remove the Child PartyType keyed by member(s) of this class, and other passed parameters. */
+  public void removeChildPartyType(String partyTypeId) { PartyTypeHelper.removeByPrimaryKey(partyTypeId); }
 
   /** Get a collection of Sibling PartyType related entities. */
   public Collection getSiblingPartyTypes() { return PartyTypeHelper.findByParentTypeId(parentTypeId); }
@@ -168,6 +170,24 @@ public class PartyTypeValue implements PartyType
   public void removePartyClassifications() { PartyClassificationHelper.removeByPartyTypeId(partyTypeId); }
   /** Remove the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
   public void removePartyClassification(String partyId) { PartyClassificationHelper.removeByPrimaryKey(partyId, partyTypeId); }
+
+  /** Get a collection of  PriceComponent related entities. */
+  public Collection getPriceComponents() { return PriceComponentHelper.findByPartyTypeId(partyTypeId); }
+  /** Get the  PriceComponent keyed by member(s) of this class, and other passed parameters. */
+  public PriceComponent getPriceComponent(String priceComponentId) { return PriceComponentHelper.findByPrimaryKey(priceComponentId); }
+  /** Remove  PriceComponent related entities. */
+  public void removePriceComponents() { PriceComponentHelper.removeByPartyTypeId(partyTypeId); }
+  /** Remove the  PriceComponent keyed by member(s) of this class, and other passed parameters. */
+  public void removePriceComponent(String priceComponentId) { PriceComponentHelper.removeByPrimaryKey(priceComponentId); }
+
+  /** Get a collection of  MarketInterest related entities. */
+  public Collection getMarketInterests() { return MarketInterestHelper.findByPartyTypeId(partyTypeId); }
+  /** Get the  MarketInterest keyed by member(s) of this class, and other passed parameters. */
+  public MarketInterest getMarketInterest(String productCategoryId) { return MarketInterestHelper.findByPrimaryKey(productCategoryId, partyTypeId); }
+  /** Remove  MarketInterest related entities. */
+  public void removeMarketInterests() { MarketInterestHelper.removeByPartyTypeId(partyTypeId); }
+  /** Remove the  MarketInterest keyed by member(s) of this class, and other passed parameters. */
+  public void removeMarketInterest(String productCategoryId) { MarketInterestHelper.removeByPrimaryKey(productCategoryId, partyTypeId); }
 
 
   //These are from the EJBObject interface, and must at least have thrower implementations, although we do more if the EJBObject is set...

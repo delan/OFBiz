@@ -6,6 +6,8 @@ import javax.ejb.*;
 import java.math.*;
 import java.util.*;
 
+import org.ofbiz.commonapp.product.price.*;
+import org.ofbiz.commonapp.product.supplier.*;
 
 /**
  * <p><b>Title:</b> Party Type Entity
@@ -31,7 +33,7 @@ import java.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:46 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 
@@ -67,14 +69,14 @@ public interface PartyType extends EJBObject
   /** Remove the Parent PartyType entity corresponding to this entity. */
   public void removeParentPartyType() throws RemoteException;  
 
-  /** Get a collection of Children PartyType related entities. */
-  public Collection getChildrenPartyTypes() throws RemoteException;
-  /** Get the Children PartyType keyed by member(s) of this class, and other passed parameters. */
-  public PartyType getChildrenPartyType(String partyTypeId) throws RemoteException;
-  /** Remove Children PartyType related entities. */
-  public void removeChildrenPartyTypes() throws RemoteException;
-  /** Remove the Children PartyType keyed by member(s) of this class, and other passed parameters. */
-  public void removeChildrenPartyType(String partyTypeId) throws RemoteException;
+  /** Get a collection of Child PartyType related entities. */
+  public Collection getChildPartyTypes() throws RemoteException;
+  /** Get the Child PartyType keyed by member(s) of this class, and other passed parameters. */
+  public PartyType getChildPartyType(String partyTypeId) throws RemoteException;
+  /** Remove Child PartyType related entities. */
+  public void removeChildPartyTypes() throws RemoteException;
+  /** Remove the Child PartyType keyed by member(s) of this class, and other passed parameters. */
+  public void removeChildPartyType(String partyTypeId) throws RemoteException;
 
   /** Get a collection of Sibling PartyType related entities. */
   public Collection getSiblingPartyTypes() throws RemoteException;
@@ -102,5 +104,23 @@ public interface PartyType extends EJBObject
   public void removePartyClassifications() throws RemoteException;
   /** Remove the  PartyClassification keyed by member(s) of this class, and other passed parameters. */
   public void removePartyClassification(String partyId) throws RemoteException;
+
+  /** Get a collection of  PriceComponent related entities. */
+  public Collection getPriceComponents() throws RemoteException;
+  /** Get the  PriceComponent keyed by member(s) of this class, and other passed parameters. */
+  public PriceComponent getPriceComponent(String priceComponentId) throws RemoteException;
+  /** Remove  PriceComponent related entities. */
+  public void removePriceComponents() throws RemoteException;
+  /** Remove the  PriceComponent keyed by member(s) of this class, and other passed parameters. */
+  public void removePriceComponent(String priceComponentId) throws RemoteException;
+
+  /** Get a collection of  MarketInterest related entities. */
+  public Collection getMarketInterests() throws RemoteException;
+  /** Get the  MarketInterest keyed by member(s) of this class, and other passed parameters. */
+  public MarketInterest getMarketInterest(String productCategoryId) throws RemoteException;
+  /** Remove  MarketInterest related entities. */
+  public void removeMarketInterests() throws RemoteException;
+  /** Remove the  MarketInterest keyed by member(s) of this class, and other passed parameters. */
+  public void removeMarketInterest(String productCategoryId) throws RemoteException;
 
 }

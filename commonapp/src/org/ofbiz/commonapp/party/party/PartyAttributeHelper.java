@@ -33,7 +33,7 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 12:02:47 MDT 2001
+ *@created    Fri Jul 27 01:18:23 MDT 2001
  *@version    1.0
  */
 public class PartyAttributeHelper
@@ -141,16 +141,6 @@ public class PartyAttributeHelper
     return partyAttribute;
   }
 
-  /** Finds all PartyAttribute entities, returning an Iterator
-   *@return    Iterator containing all PartyAttribute entities
-   */
-  public static Iterator findAllIterator()
-  {
-    Collection collection = findAll();
-    if(collection != null) return collection.iterator();
-    else return null;
-  }
-
   /** Finds all PartyAttribute entities
    *@return    Collection containing all PartyAttribute entities
    */
@@ -213,7 +203,7 @@ public class PartyAttributeHelper
   public static void removeByPartyId(String partyId)
   {
     if(partyId == null) return;
-    Iterator iterator = findByPartyIdIterator(partyId);
+    Iterator iterator = UtilMisc.toIterator(findByPartyId(partyId));
 
     while(iterator.hasNext())
     {
@@ -225,17 +215,6 @@ public class PartyAttributeHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  partyId                  Field of the PARTY_ID column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByPartyIdIterator(String partyId)
-  {
-    Collection collection = findByPartyId(partyId);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyAttribute records by the following parameters:
@@ -262,7 +241,7 @@ public class PartyAttributeHelper
   public static void removeByName(String name)
   {
     if(name == null) return;
-    Iterator iterator = findByNameIterator(name);
+    Iterator iterator = UtilMisc.toIterator(findByName(name));
 
     while(iterator.hasNext())
     {
@@ -274,17 +253,6 @@ public class PartyAttributeHelper
       }
       catch(Exception e) { Debug.logError(e); }
     }
-  }
-
-  /** Description of the Method
-   *@param  name                  Field of the NAME column.
-   *@return      Description of the Returned Value
-   */
-  public static Iterator findByNameIterator(String name)
-  {
-    Collection collection = findByName(name);
-    if(collection != null) { return collection.iterator(); }
-    else { return null; }
   }
 
   /** Finds PartyAttribute records by the following parameters:

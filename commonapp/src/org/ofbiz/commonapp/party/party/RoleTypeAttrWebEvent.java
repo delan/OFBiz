@@ -9,7 +9,7 @@ import org.ofbiz.commonapp.security.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Party Type Entity
+ * <p><b>Title:</b> Role Type Attribute Entity
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -32,13 +32,13 @@ import org.ofbiz.core.util.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 27 01:18:23 MDT 2001
+ *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
 
-public class PartyTypeWebEvent
+public class RoleTypeAttrWebEvent
 {
-  /** An HTTP WebEvent handler that updates a PartyType entity
+  /** An HTTP WebEvent handler that updates a RoleTypeAttr entity
    *
    * @param request The HTTP request object for the current JSP or Servlet request.
    * @param response The HTTP response object for the current JSP or Servlet request.
@@ -47,7 +47,7 @@ public class PartyTypeWebEvent
    * @exception java.rmi.RemoteException Standard RMI Remote Exception
    * @exception java.io.IOException Standard IO Exception
    */
-  public static String updatePartyType(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
+  public static String updateRoleTypeAttr(HttpServletRequest request, HttpServletResponse response) throws javax.servlet.ServletException, java.rmi.RemoteException, java.io.IOException
   {
     // a little check to reprocessing the web event in error cases - would cause infinate loop
     if(request.getAttribute("ERROR_MESSAGE") != null) return "success";
@@ -57,20 +57,21 @@ public class PartyTypeWebEvent
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0)
     {
-      request.getSession().setAttribute("ERROR_MESSAGE", "updatePartyType: Update Mode was not specified, but is required.");
-      Debug.logWarning("updatePartyType: Update Mode was not specified, but is required.");
+      request.getSession().setAttribute("ERROR_MESSAGE", "updateRoleTypeAttr: Update Mode was not specified, but is required.");
+      Debug.logWarning("updateRoleTypeAttr: Update Mode was not specified, but is required.");
     }
     
     //check permissions before moving on...
-    if(!Security.hasEntityPermission("PARTY_TYPE", "_" + updateMode, request.getSession()))
+    if(!Security.hasEntityPermission("ROLE_TYPE_ATTR", "_" + updateMode, request.getSession()))
     {
-      request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " PartyType (PARTY_TYPE_" + updateMode + " or PARTY_TYPE_ADMIN needed).");
+      request.getSession().setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " RoleTypeAttr (ROLE_TYPE_ATTR_" + updateMode + " or ROLE_TYPE_ATTR_ADMIN needed).");
       return "success";
     }
 
     //get the primary key parameters...
   
-    String partyTypeId = request.getParameter("PARTY_TYPE_PARTY_TYPE_ID");  
+    String roleTypeId = request.getParameter("ROLE_TYPE_ATTR_ROLE_TYPE_ID");  
+    String name = request.getParameter("ROLE_TYPE_ATTR_NAME");  
 
   
 
@@ -78,26 +79,24 @@ public class PartyTypeWebEvent
     if(updateMode.equals("DELETE"))
     {
       //Remove associated/dependent entries from other tables here
-      //Delete actual PartyType last, just in case database is set up to do a cascading delete, caches won't get cleared
-      PartyTypeHelper.removeByPrimaryKey(partyTypeId);
+      //Delete actual RoleTypeAttr last, just in case database is set up to do a cascading delete, caches won't get cleared
+      RoleTypeAttrHelper.removeByPrimaryKey(roleTypeId, name);
       return "success";
     }
 
     //get the non-primary key parameters
   
-    String parentTypeId = request.getParameter("PARTY_TYPE_PARENT_TYPE_ID");  
-    String hasTable = request.getParameter("PARTY_TYPE_HAS_TABLE");  
-    String description = request.getParameter("PARTY_TYPE_DESCRIPTION");  
 
   
 
     //if the updateMode is CREATE, check to see if an entity with the specified primary key already exists
     if(updateMode.compareTo("CREATE") == 0)
-      if(PartyTypeHelper.findByPrimaryKey(partyTypeId) != null) errMsg = errMsg + "<li>PartyType already exists with PARTY_TYPE_ID:" + partyTypeId + "; please change.";
+      if(RoleTypeAttrHelper.findByPrimaryKey(roleTypeId, name) != null) errMsg = errMsg + "<li>RoleTypeAttr already exists with ROLE_TYPE_ID, NAME:" + roleTypeId + ", " + name + "; please change.";
 
     //Validate parameters...
   
-    if(!UtilValidate.isNotEmpty(partyTypeId)) errMsg = errMsg + "<li>PARTY_TYPE_ID isNotEmpty failed: " + UtilValidate.isNotEmptyMsg;
+    if(!UtilValidate.isNotEmpty(roleTypeId)) errMsg = errMsg + "<li>ROLE_TYPE_ID isNotEmpty failed: " + UtilValidate.isNotEmptyMsg;
+    if(!UtilValidate.isNotEmpty(name)) errMsg = errMsg + "<li>NAME isNotEmpty failed: " + UtilValidate.isNotEmptyMsg;
 
     if(errMsg.length() > 0)
     {
@@ -108,26 +107,26 @@ public class PartyTypeWebEvent
 
     if(updateMode.equals("CREATE"))
     {
-      PartyType partyType = PartyTypeHelper.create(partyTypeId, parentTypeId, hasTable, description);
-      if(partyType == null)
+      RoleTypeAttr roleTypeAttr = RoleTypeAttrHelper.create(roleTypeId, name);
+      if(roleTypeAttr == null)
       {
-        request.getSession().setAttribute("ERROR_MESSAGE", "Creation of PartyType failed. PARTY_TYPE_ID: " + partyTypeId);
+        request.getSession().setAttribute("ERROR_MESSAGE", "Creation of RoleTypeAttr failed. ROLE_TYPE_ID, NAME: " + roleTypeId + ", " + name);
         return "success";
       }
     }
     else if(updateMode.equals("UPDATE"))
     {
-      PartyType partyType = PartyTypeHelper.update(partyTypeId, parentTypeId, hasTable, description);
-      if(partyType == null)
+      RoleTypeAttr roleTypeAttr = RoleTypeAttrHelper.update(roleTypeId, name);
+      if(roleTypeAttr == null)
       {
-        request.getSession().setAttribute("ERROR_MESSAGE", "Update of PartyType failed. PARTY_TYPE_ID: " + partyTypeId);
+        request.getSession().setAttribute("ERROR_MESSAGE", "Update of RoleTypeAttr failed. ROLE_TYPE_ID, NAME: " + roleTypeId + ", " + name);
         return "success";
       }
     }
     else
     {
-      request.getSession().setAttribute("ERROR_MESSAGE", "updatePartyType: Update Mode specified (" + updateMode + ") was not valid.");
-      Debug.logWarning("updatePartyType: Update Mode specified (" + updateMode + ") was not valid.");
+      request.getSession().setAttribute("ERROR_MESSAGE", "updateRoleTypeAttr: Update Mode specified (" + updateMode + ") was not valid.");
+      Debug.logWarning("updateRoleTypeAttr: Update Mode specified (" + updateMode + ") was not valid.");
     }
 
     return "success";

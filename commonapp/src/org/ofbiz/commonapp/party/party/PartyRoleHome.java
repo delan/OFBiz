@@ -7,7 +7,7 @@ import java.util.*;
 import java.math.*;
 
 /**
- * <p><b>Title:</b> Party Entity
+ * <p><b>Title:</b> Party Role Entity
  * <p><b>Description:</b> None
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -30,16 +30,44 @@ import java.math.*;
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 27 01:18:23 MDT 2001
+ *@created    Fri Jul 27 01:18:24 MDT 2001
  *@version    1.0
  */
 
-public interface PartyHome extends EJBHome
+public interface PartyRoleHome extends EJBHome
 {
 
-  public Party create(String partyId) throws RemoteException, CreateException;
-  public Party findByPrimaryKey(java.lang.String primaryKey) throws RemoteException, FinderException;
+  public PartyRole create(String partyId, String roleTypeId, String partyRoleId) throws RemoteException, CreateException;
+  public PartyRole create(String partyId, String roleTypeId) throws RemoteException, CreateException;
+  public PartyRole findByPrimaryKey(org.ofbiz.commonapp.party.party.PartyRolePK primaryKey) throws RemoteException, FinderException;
   public Collection findAll() throws RemoteException, FinderException;
 
+
+  /**
+   *  Finds PartyRoles by the following fields:
+   *
+
+   *@param  partyId                  Field for the PARTY_ID column.
+   *@return      Collection containing the found PartyRoles
+   */
+  public Collection findByPartyId(String partyId) throws RemoteException, FinderException;
+
+  /**
+   *  Finds PartyRoles by the following fields:
+   *
+
+   *@param  roleTypeId                  Field for the ROLE_TYPE_ID column.
+   *@return      Collection containing the found PartyRoles
+   */
+  public Collection findByRoleTypeId(String roleTypeId) throws RemoteException, FinderException;
+
+  /**
+   *  Finds PartyRoles by the following fields:
+   *
+
+   *@param  partyRoleId                  Field for the PARTY_ROLE_ID column.
+   *@return      Collection containing the found PartyRoles
+   */
+  public Collection findByPartyRoleId(String partyRoleId) throws RemoteException, FinderException;
 
 }
