@@ -72,8 +72,8 @@ public class KeywordSearch {
         
         ArrayList pbkList = new ArrayList(100);
 
-        String keywords[] = makeKeywordList(keywordsString);
-        List keywordList = fixKeywords(keywords, anyPrefix, anySuffix, intraKeywordOperator);
+        List keywordFirstPass = makeKeywordList(keywordsString);
+        List keywordList = fixKeywords(keywordFirstPass, anyPrefix, anySuffix, intraKeywordOperator);
         if (keywordList.size() == 0) {
             return null;
         }
@@ -149,21 +149,19 @@ public class KeywordSearch {
         return null;
     }
 
-    protected static String[] makeKeywordList(String keywordsString) {
+    protected static List makeKeywordList(String keywordsString) {
         StringTokenizer tokenizer = new StringTokenizer(keywordsString);
 
-        LinkedList list = new LinkedList();
+        List keywords = new ArrayList(10);
         String curToken;
         while (tokenizer.hasMoreTokens()) {
             curToken = tokenizer.nextToken();
-            list.add(curToken);
+            keywords.add(curToken);
         }
-        String[] keywords = new String[list.size()];
-        keywords = (String[]) list.toArray(keywords);
         return keywords;
     }
 
-    protected static List fixKeywords(String keywords[], boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
+    protected static List fixKeywords(List keywords, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
         if (keywords == null) {
             return null;
         }
@@ -175,29 +173,53 @@ public class KeywordSearch {
             stopWordBag = UtilProperties.getPropertyValue("general", "stop.word.bag.or");
         }
         
-        List list = new LinkedList();
+        boolean removeStems = UtilProperties.propertyValueEquals("general", "remove.stems", "true");
+        String stemBag = UtilProperties.getPropertyValue("general", "stem.bag");
+        List stemList = new ArrayList(10);
+        if (UtilValidate.isNotEmpty(stemBag)) {
+            String curToken;
+            StringTokenizer tokenizer = new StringTokenizer(stemBag, ": ");
+            while (tokenizer.hasMoreTokens()) {
+                curToken = tokenizer.nextToken();
+                stemList.add(curToken);
+            }
+        }
+        
+        List fixedKeywords = new ArrayList(keywords.size());
         String str = null;
-        for (int i = 0; i < keywords.length; i++) {
-            if ((str = keywords[i]) != null) {
-                //do some cleanup, and replace wildcards
-                str = str.replace('*', '%');
-                str = str.replace('?', '_');
-                str = str.toLowerCase();
-                if (stopWordBag.indexOf(":" + str + ":") >= 0) continue;
+        Iterator kwiter = keywords.iterator();
+        while (kwiter.hasNext()) {
+            str = (String) kwiter.next();
+            
+            //do some cleanup, and replace wildcards
+            str = str.replace('*', '%');
+            str = str.replace('?', '_');
+            str = str.toLowerCase();
+            if (stopWordBag.indexOf(":" + str + ":") >= 0) continue;
 
-                StringBuffer strSb = new StringBuffer();
-                if (anyPrefix) strSb.append('%');
-                strSb.append(str);
-                if (anySuffix) strSb.append('%');
-                str = strSb.toString();
-                
-                if(!list.contains(str)) {
-                    list.add(str);
+            //if enabled, remove stems in stem.bag
+            if (anySuffix && removeStems) {
+                Iterator stemIter = stemList.iterator();
+                while (stemIter.hasNext()) {
+                    String stem = (String) stemIter.next();
+                    if (str.endsWith(stem)) {
+                        str = str.substring(0, str.length() - stem.length());
+                    }
                 }
+            }
+
+            StringBuffer strSb = new StringBuffer();
+            if (anyPrefix) strSb.append('%');
+            strSb.append(str);
+            if (anySuffix) strSb.append('%');
+            str = strSb.toString();
+
+            if(!fixedKeywords.contains(str)) {
+                fixedKeywords.add(str);
             }
         }
 
-        return list;
+        return fixedKeywords;
     }
 
     protected static String getSearchSQL(List keywords, List params, boolean useCategory, String intraKeywordOperator) {
