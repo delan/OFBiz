@@ -87,6 +87,7 @@
     <service name="setPartyProfileDefaults" engine="simple"
             location="org/ofbiz/party/party/PartyServices.xml" invoke="setPartyProfileDefaults" auth="true">
         <description>Sets the party (customer) profile defaults</description>
+        <attribute name="productStoreId" type="String" mode="IN" optional="false"/>
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
         <attribute name="defaultShipAddr" type="String" mode="IN" optional="true"/>
         <attribute name="defaultPayMeth" type="String" mode="IN" optional="true"/>
