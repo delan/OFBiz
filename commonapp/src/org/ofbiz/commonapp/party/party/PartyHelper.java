@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.8  2001/09/12 17:26:32  epabst
+ * updated
+ *
  * Revision 1.7  2001/09/12 17:14:33  epabst
  * added helpers
  *
@@ -39,21 +42,26 @@ import org.ofbiz.core.util.*;
  *@created Sep 12, 2001
  */
 public class PartyHelper {  
+    public static String formatPartyId(String partyId, GenericDelegator delegator) {
+        if (UtilValidate.isEmpty(partyId)) return "(none)";
+        GenericValue person = null;
+        try {
+            person = delegator.findByPrimaryKey("Person", UtilMisc.toMap("partyId", partyId));
+        } catch (GenericEntityException gee) { Debug.logWarning(gee); }
+        if (person != null) {
+            return getPersonName(person);
+        } else {
+            return partyId;
+        }
+    }
+    
     public static String getPersonName(GenericValue person) {
         StringBuffer result = new StringBuffer(20);
         if(person!=null){
-            result.append(appendSpace(person.getString("firstName")));
-            result.append(appendSpace(person.getString("middleName")));
-            result.append(appendSpace(person.getString("lastName")));
+            result.append(UtilFormatOut.ifNotEmpty(person.getString("firstName"), "", " "));
+            result.append(UtilFormatOut.ifNotEmpty(person.getString("middleName"), "", " "));
+            result.append(UtilFormatOut.checkNull(person.getString("lastName")));
         }
         return result.toString().trim();
-    }
-    
-    private static String appendSpace(String string) {
-        if ((string != null) && (string.length() > 0)) {
-            return string + " ";
-        } else {
-            return "";
-        }
     }
 }
