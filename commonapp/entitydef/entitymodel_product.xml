@@ -1658,6 +1658,9 @@
       <relation type="many" rel-entity-name="FacilityRole">
         <key-map field-name="facilityId"/>
       </relation>
+      <relation type="many" rel-entity-name="FacilityLocation">
+        <key-map field-name="facilityId"/>
+      </relation>
       <relation type="many" rel-entity-name="WorkEffort">
         <key-map field-name="facilityId"/>
       </relation>
@@ -1829,6 +1832,22 @@
         <key-map field-name="facilityGroupTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="FacilityLocation"
+            package-name="org.ofbiz.commonapp.product.storage"
+            title="Facility Location Entity">
+      <field name="facilityId" type="id-ne"></field>
+      <field name="locationSeqId" type="id-ne"></field>
+      <field name="areaId" type="id"></field>
+      <field name="aisleId" type="id"></field>
+      <field name="sectionId" type="id"></field>
+      <field name="levelId" type="id"></field>
+      <field name="positionId" type="id"></field>
+      <prim-key field="facilityId"/>
+      <prim-key field="locationSeqId"/>
+      <relation type="one" fk-name="FACILITY_LOC_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
     <entity entity-name="FacilityRole"
             package-name="org.ofbiz.commonapp.product.storage"
             title="Facility Role Entity">
@@ -1838,10 +1857,10 @@
       <prim-key field="facilityId"/>
       <prim-key field="partyId"/>
       <prim-key field="roleTypeId"/>
-      <relation type="one" rel-entity-name="Facility">
+      <relation type="one" fk-name="FACILITY_RLE_FAC" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
-      <relation type="one" fk-name="FACILITY_RLE_PARTY" rel-entity-name="Party">
+      <relation type="one" fk-name="FACILITY_RLE_PRTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="one" fk-name="FACILITY_RLE_ROLE" rel-entity-name="RoleType">

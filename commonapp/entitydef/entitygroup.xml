@@ -660,6 +660,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupRole" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupRollup" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityGroupType" />
+    <entity-group group="org.ofbiz.commonapp" entity="FacilityLocation" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityRole" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityType" />
     <entity-group group="org.ofbiz.commonapp" entity="FacilityTypeAttr" />
