@@ -40,6 +40,7 @@ import javax.servlet.http.*;
 import org.jpublish.JPublishContext;
 import org.jpublish.Page;
 import org.jpublish.Repository;
+import org.jpublish.SiteContext;
 import org.jpublish.util.JPublishContextMap;
 
 import com.anthonyeden.lib.config.*;
@@ -79,6 +80,7 @@ public class FreeMarkerGenerator extends AbstractGenerator {
         HttpServletResponse response = (HttpServletResponse) inContext.get("response");
         ServletContext servletContext = (ServletContext) inContext.get("application");
         Page page = (Page) inContext.get("page");
+        SiteContext site = (SiteContext) inContext.get("site");
 
         //System.out.println("=========== Running generate ===========");
 
@@ -86,7 +88,9 @@ public class FreeMarkerGenerator extends AbstractGenerator {
             synchronized(this) {
                 if (config == null) {
                     config = freemarker.template.Configuration.getDefaultConfiguration();
-                    config.setServletContextForTemplateLoading(servletContext, "/");
+                    //nice thought, but doesn't do auto reloading with this: config.setServletContextForTemplateLoading(servletContext, "/");
+                    config.setDirectoryForTemplateLoading(site.getRealPageRoot());
+                    Debug.logInfo("Site page root: " + site.getRealPageRoot().getAbsolutePath());
                     config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
                 }
             }
@@ -107,10 +111,13 @@ public class FreeMarkerGenerator extends AbstractGenerator {
         try {
             Template parsedTemplate = null;
             try {
+                //parsedTemplate = config.getTemplate(page.getContentPath(), request.getLocale());
                 parsedTemplate = config.getTemplate(page.getContentPath(), request.getLocale());
             } catch (IOException e) {
                 throw new WSPException(e);
             }
+            parsedTemplate.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
+            
             Writer writer = new OutputStreamWriter(inOutput ,"UTF-8");
             
             try {

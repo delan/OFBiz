@@ -61,7 +61,12 @@ public class FreeMarkerViewHandler implements ViewHandler {
     public void init(ServletContext context) throws ViewHandlerException {
         this.servletContext = context;
         config = Configuration.getDefaultConfiguration();
-        config.setServletContextForTemplateLoading(context, "/");
+        //nice thought, but doesn't do auto reloading with this: config.setServletContextForTemplateLoading(context, "/");
+        try {
+            config.setDirectoryForTemplateLoading(new File(context.getRealPath("/")));
+        } catch (java.io.IOException e) {
+            throw new ViewHandlerException("Could not create file for webapp root path", e);
+        }
         config.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
     }    
     
@@ -81,6 +86,7 @@ public class FreeMarkerViewHandler implements ViewHandler {
         } catch (IOException e) {
             throw new ViewHandlerException("Cannot open template file: " + page, e);
         }
+        template.setObjectWrapper(ObjectWrapper.BEANS_WRAPPER);
         
         // process the template & flush the output
         try {
