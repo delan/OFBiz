@@ -1,5 +1,5 @@
 /*
- * $Id: FindServices.java,v 1.4 2003/12/06 09:33:15 jonesde Exp $
+ * $Id: FindServices.java,v 1.5 2004/02/16 21:36:51 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,16 +28,18 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.ListIterator;
 import java.util.List;
 import java.util.Map;
 
 import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
-import org.ofbiz.entity.condition.*;
+import org.ofbiz.entity.condition.EntityComparisonOperator;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityJoinOperator;
+import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
@@ -48,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  * FindServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
  */
 public class FindServices {
@@ -297,10 +299,9 @@ public class FindServices {
                 fieldValue = dayStart(fieldValue, 1);
                 fieldOp = (EntityOperator) entityOperators.get("lessThan");
             }
-            String rhs = fieldValue.toString();
+            // String rhs = fieldValue.toString();
             cond = new EntityExpr(fieldName, (EntityComparisonOperator) fieldOp, fieldValue);
             tmpList.add(cond);
-
         }
         EntityConditionList exprList = new EntityConditionList(tmpList, (EntityJoinOperator) entOp);
         EntityListIterator listIt = null;
@@ -309,10 +310,9 @@ public class FindServices {
             /* Retrieve entities  - an iterator over all the values*/
             try {
                 listIt = delegator.findListIteratorByCondition(entityName, exprList,
-                        null, null, null, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
+                        null, null, null, new EntityFindOptions(false, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("Error finding iterator: " + e.getMessage());
-
             }
         } else {
             try {
@@ -322,14 +322,13 @@ public class FindServices {
                 EntityExpr pkExpr = new EntityExpr(pkName, EntityOperator.LIKE, "%");
                 */
                 listIt = delegator.findListIteratorByCondition(entityName, null,
-                        null, null, null, new EntityFindOptions(true, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
+                        null, null, null, new EntityFindOptions(false, EntityFindOptions.TYPE_SCROLL_INSENSITIVE, EntityFindOptions.CONCUR_READ_ONLY, true));
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError("Error finding all: " + e.getMessage());
-
             }
         }
 
-        Map results = new HashMap();
+        Map results = ServiceUtil.returnSuccess();
         results.put("listIt", listIt);
         return results;
     }
