@@ -180,8 +180,28 @@ public class OrderServices {
     public static Map setOrderStatus(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        // Lets consider an entity to log state changes for orders
-        // implement me
+        String orderId = (String) context.get("orderId");
+        String statusId = (String) context.get("statusId");        
+        try {
+            GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader",UtilMisc.toMap("orderId",orderId));
+            orderHeader.set("statusId",statusId);
+            Map fields = new HashMap();
+            fields.put("orderStatusId", delegator.getNextSeqId("OrderStatus").toString());
+            fields.put("statusId", statusId);
+            fields.put("orderId", orderId);
+            fields.put("statusDatetime", UtilDateTime.nowTimestamp());
+            GenericValue orderStatus = delegator.makeValue("OrderStatus",fields);
+            Collection c = new ArrayList();
+            c.add(orderHeader);
+            c.add(orderStatus);
+            delegator.storeAll(c);            
+        }
+        catch ( GenericEntityException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could change order status (" + e.getMessage() + ").");
+            return result;
+        }
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
     
@@ -189,8 +209,20 @@ public class OrderServices {
     public static Map addRoleType(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        // This would be for adding a party/role to an order after it has been created
-        // implement me
+        String orderId = (String) context.get("orderId");
+        String partyId = (String) context.get("partyId");
+        String roleTypeId = (String) context.get("roleTypeId");
+        Map fields = UtilMisc.toMap("orderId",orderId,"partyId",partyId,"roleTypeId",roleTypeId);
+        try {
+            GenericValue value = delegator.makeValue("OrderRole",fields);
+            delegator.create(value);
+        }
+        catch ( GenericEntityException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not add role to order (" + e.getMessage() + ").");
+            return result;
+        }
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
     
@@ -198,8 +230,20 @@ public class OrderServices {
     public static Map removeRoleType(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
-        // This would be for removing a party/role to an order after it has been created
-        // implement me
+        String orderId = (String) context.get("orderId");
+        String partyId = (String) context.get("partyId");
+        String roleTypeId = (String) context.get("roleTypeId");
+        Map fields = UtilMisc.toMap("orderId",orderId,"partyId",partyId,"roleTypeId",roleTypeId);
+        try {
+            GenericValue value = delegator.findByPrimaryKey("OrderRole",fields);
+            value.remove();
+        }
+        catch( GenericEntityException e ) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not remove role from order (" + e.getMessage() + ").");
+            return result;
+        }
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
     
