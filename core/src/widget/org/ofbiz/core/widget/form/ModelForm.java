@@ -26,7 +26,12 @@ package org.ofbiz.core.widget.form;
 import java.util.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.model.ModelEntity;
+import org.ofbiz.core.entity.model.ModelField;
+import org.ofbiz.core.service.GenericServiceException;
 import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ModelParam;
+import org.ofbiz.core.service.ModelService;
 import org.ofbiz.core.util.*;
 
 import bsh.EvalError;
@@ -117,7 +122,7 @@ public class ModelForm {
         while (autoFieldsServiceElementIter.hasNext()) {
             Element autoFieldsServiceElement = (Element) autoFieldsServiceElementIter.next();
             AutoFieldsService autoFieldsService = new AutoFieldsService(autoFieldsServiceElement);
-            this.addAutoFieldsFromService(autoFieldsService);
+            this.addAutoFieldsFromService(autoFieldsService, dispatcher);
         }
 
         // auto-fields-entity
@@ -126,7 +131,7 @@ public class ModelForm {
         while (autoFieldsEntityElementIter.hasNext()) {
             Element autoFieldsEntityElement = (Element) autoFieldsEntityElementIter.next();
             AutoFieldsEntity autoFieldsEntity = new AutoFieldsEntity(autoFieldsEntityElement);
-            this.addAutoFieldsFromEntity(autoFieldsEntity);
+            this.addAutoFieldsFromEntity(autoFieldsEntity, delegator);
         }
 
         // read in add field defs, add/override one by one using the fieldList and fieldMap
@@ -150,21 +155,28 @@ public class ModelForm {
         }
     }
     
-    /** add/override modelFormField using the fieldList and fieldMap */
-    public void addUpdateField(ModelFormField modelFormField) {
+    /** 
+     * add/override modelFormField using the fieldList and fieldMap
+     * 
+     * @return The same ModelFormField, or if merged with an existing field, the existing field.
+     */
+    public ModelFormField addUpdateField(ModelFormField modelFormField) {
         if (modelFormField.getUseWhen() != null && modelFormField.getUseWhen().length() > 0) {
             // is a conditional field, add to the List but don't worry about the Map
             this.fieldList.add(modelFormField);
+            return modelFormField;
         } else {
             // not a conditional field, see if a named field exists in Map
             ModelFormField existingField = (ModelFormField) this.fieldMap.get(modelFormField.getName());
             if (existingField != null) {
                 // does exist, update the field by doing a merge/override
-                existingField.mergeOverrideModelFormField(modelFormField); 
+                existingField.mergeOverrideModelFormField(modelFormField);
+                return existingField; 
             } else {
                 // does not exist, add to List and Map
                 this.fieldList.add(modelFormField);
                 this.fieldMap.put(modelFormField.getName(), modelFormField);
+                return modelFormField;
             }
         }
     }
@@ -173,16 +185,73 @@ public class ModelForm {
         altTargets.add(altTarget);
     }
     
-    public void addAutoFieldsFromService(AutoFieldsService autoFieldsService) {
+    public void addAutoFieldsFromService(AutoFieldsService autoFieldsService, LocalDispatcher dispatcher) {
         autoFieldsServices.add(autoFieldsService);
-        // TODO: read service def and auto-create fields
-    }
-
-    public void addAutoFieldsFromEntity(AutoFieldsEntity autoFieldsEntity) {
-        autoFieldsEntities.add(autoFieldsEntity);
-        // TODO: read entity def and auto-create fields
+        
+        // read service def and auto-create fields
+        ModelService modelService = null;
+        try {
+            modelService = dispatcher.getDispatchContext().getModelService(autoFieldsService.serviceName);
+        } catch (GenericServiceException e) {
+            String errmsg = "Error finding Service with name " + autoFieldsService.serviceName + " for auto-fields-service in a form widget";
+            Debug.logError(e, errmsg);
+            throw new IllegalArgumentException(errmsg);
+        }
+        
+        List modelParams = modelService.getInModelParamList();
+        Iterator modelParamIter = modelParams.iterator();
+        while (modelParamIter.hasNext()) {
+            ModelParam modelParam = (ModelParam) modelParamIter.next();
+            if (modelParam.formDisplay) {
+                ModelFormField modelFormField = this.addFieldFromServiceParam(modelService, modelParam);
+                if (UtilValidate.isNotEmpty(autoFieldsService.mapName)) {
+                    modelFormField.setMapName(autoFieldsService.mapName);
+                }
+            }
+        }
     }
     
+    public ModelFormField addFieldFromServiceParam(ModelService modelService, ModelParam modelParam) {
+        // create field def from service param def
+        ModelFormField newFormField = new ModelFormField(this);
+        newFormField.setName(modelParam.name);
+        newFormField.setServiceName(modelService.name);
+        newFormField.setAttributeName(modelParam.name);
+        newFormField.setFieldInfo(new ModelFormField.TextField(newFormField));
+        newFormField.setTitle(modelParam.formLabel);
+        
+        return this.addUpdateField(newFormField);
+    }
+
+    public void addAutoFieldsFromEntity(AutoFieldsEntity autoFieldsEntity, GenericDelegator delegator) {
+        autoFieldsEntities.add(autoFieldsEntity);
+        // read entity def and auto-create fields
+        ModelEntity modelEntity = delegator.getModelEntity(autoFieldsEntity.entityName);
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Error finding Entity with name " + autoFieldsEntity.entityName + " for auto-fields-entity in a form widget");
+        }
+        
+        Iterator modelFieldIter = modelEntity.getFieldsIterator();
+        while (modelFieldIter.hasNext()) {
+            ModelField modelField = (ModelField) modelFieldIter.next();
+            ModelFormField modelFormField = this.addFieldFromEntityField(modelEntity, modelField);
+            if (UtilValidate.isNotEmpty(autoFieldsEntity.mapName)) {
+                modelFormField.setMapName(autoFieldsEntity.mapName);
+            }
+        }
+    }
+    
+    public ModelFormField addFieldFromEntityField(ModelEntity modelEntity, ModelField modelField) {
+        // create field def from entity field def
+        ModelFormField newFormField = new ModelFormField(this);
+        newFormField.setName(modelField.getName());
+        newFormField.setEntityName(modelEntity.getEntityName());
+        newFormField.setFieldName(modelField.getName());
+        newFormField.setFieldInfo(new ModelFormField.TextField(newFormField));
+        
+        return this.addUpdateField(newFormField);
+    }
+
     public LocalDispatcher getDispacher() {
         return this.dispatcher;
     }
@@ -207,6 +276,13 @@ public class ModelForm {
 
     public Map getDefaultMap(Map context) {
         return (Map) defaultMapName.get(context);
+    }
+
+    /**
+     * @return
+     */
+    public String getDefaultServiceName() {
+        return this.defaultServiceName;
     }
 
     /**

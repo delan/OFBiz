@@ -172,40 +172,61 @@ public class ModelFormField {
     }
 
     /**
-     * @param info
+     * @param fieldInfo
      */
-    public void setModelForm(FieldInfo fieldInfo) {
+    public void setFieldInfo(FieldInfo fieldInfo) {
         this.fieldInfo = fieldInfo;
     }
     
-    /**
+    /** 
+     * Gets the name of the Service Attribute (aka Parameter) that corresponds 
+     * with this field. This can be used to get additional information about the field.
+     * Use the getServiceName() method to get the Entity name that the field is in.
+     *  
      * @return
      */
     public String getAttributeName() {
-        return attributeName;
+        if (UtilValidate.isNotEmpty(this.attributeName)) {
+            return this.attributeName;
+        } else {
+            return this.name;
+        }
     }
 
     /**
      * @return
      */
     public String getEntityName() {
-        return entityName;
+        if (UtilValidate.isNotEmpty(this.entityName)) {
+            return this.entityName;
+        } else {
+            return this.modelForm.getDefaultEntityName();
+        }
     }
 
     /**
+     * @see org.ofbiz.core.widget.form.ModelFormField.getMapName()
      * @return
      */
     public String getEntryName() {
-        return entryAcsr.getOriginalName();
+        if (!entryAcsr.isEmpty()) {
+            return entryAcsr.getOriginalName();
+        } else {
+            return this.name;
+        }
     }
 
     public String getEntry(Map context) {
         Map dataMap = this.getMap(context);
+        if (dataMap == null) {
+            dataMap = context;
+        }
         Object retVal = null;
-        if (dataMap != null) {
+        if (!this.entryAcsr.isEmpty()) {
             retVal = this.entryAcsr.get(dataMap);
         } else {
-            retVal = this.entryAcsr.get(dataMap);
+            // if no extry name was specified, use the field's name
+            retVal = dataMap.get(this.name);
         }
         
         if (retVal != null) {
@@ -224,17 +245,34 @@ public class ModelFormField {
     }
 
     /**
+     * Gets the name of the Entity Field that corresponds 
+     * with this field. This can be used to get additional information about the field.
+     * Use the getEntityName() method to get the Entity name that the field is in.
+     * 
      * @return
      */
     public String getFieldName() {
-        return fieldName;
+        if (UtilValidate.isNotEmpty(this.fieldName)) {
+            return this.fieldName;
+        } else {
+            return this.name;
+        }
     }
 
-    /**
+    /** Get the name of the Map in the form context that contains the entry, 
+     * available from the getEntryName() method. This entry is used to 
+     * pre-populate the field widget when not in an error condition. In an
+     * error condition the parameter name is used to get the value from the
+     * parameters Map.
+     * 
      * @return
      */
     public String getMapName() {
-        return mapAcsr.getOriginalName();
+        if (!this.mapAcsr.isEmpty()) {
+            return this.mapAcsr.getOriginalName();
+        } else {
+            return this.modelForm.getDefaultMapName();
+        }
     }
 
     /**
@@ -245,10 +283,17 @@ public class ModelFormField {
     }
 
     /**
-     * @return
+     * Get the name to use for the parameter for this field in the form interpreter.
+     * For HTML forms this is the request parameter name.
+     * 
+     * @return 
      */
     public String getParameterName() {
-        return parameterName;
+        if (UtilValidate.isNotEmpty(this.parameterName)) {
+            return this.parameterName;
+        } else {
+            return this.name;
+        }
     }
 
     /**
@@ -273,21 +318,53 @@ public class ModelFormField {
      * @return
      */
     public String getServiceName() {
-        return serviceName;
+        if (UtilValidate.isNotEmpty(this.serviceName)) {
+            return this.serviceName;
+        } else {
+            return this.modelForm.getDefaultServiceName();
+        }
     }
 
     /**
      * @return
      */
     public String getTitle(Map context) {
-        return title.expandString(context);
+        if (!title.isEmpty()) {
+            return title.expandString(context);
+        } else {
+            // create a title from the name of this field; expecting a Java method/field style name, ie productName or productCategoryId
+            if (this.name == null || this.name.length() == 0) {
+                // this should never happen, ie name is required
+                return "";
+            }
+            
+            StringBuffer autoTitleBuffer = new StringBuffer();
+            
+            // always use upper case first letter...
+            autoTitleBuffer.append(Character.toUpperCase(this.name.charAt(0)));
+
+            // just put spaces before the upper case letters            
+            for (int i = 1; i < this.name.length(); i++) {
+                char curChar = this.name.charAt(i);
+                if (Character.isUpperCase(curChar)) {
+                    autoTitleBuffer.append(' ');
+                }
+                autoTitleBuffer.append(curChar);
+            }
+            
+            return autoTitleBuffer.toString();
+        }
     }
 
     /**
      * @return
      */
     public String getTitleStyle() {
-        return titleStyle;
+        if (UtilValidate.isNotEmpty(this.titleStyle)) {
+            return this.titleStyle;
+        } else {
+            return this.modelForm.getDefaultTitleStyle();
+        }
     }
 
     /**
@@ -308,7 +385,11 @@ public class ModelFormField {
      * @return
      */
     public String getWidgetStyle() {
-        return widgetStyle;
+        if (UtilValidate.isNotEmpty(this.widgetStyle)) {
+            return this.widgetStyle;
+        } else {
+            return this.modelForm.getDefaultWidgetStyle();
+        }
     }
 
     /**
@@ -597,8 +678,8 @@ public class ModelFormField {
         
         protected DisplayField() { super(); }
 
-        public DisplayField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public DisplayField(ModelFormField modelFormField) {
+            super("display", modelFormField);
         }
 
         public DisplayField(Element element, ModelFormField modelFormField) {
@@ -651,8 +732,8 @@ public class ModelFormField {
         
         protected HyperlinkField() { super(); }
 
-        public HyperlinkField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public HyperlinkField(ModelFormField modelFormField) {
+            super("hyperlink", modelFormField);
         }
 
         public HyperlinkField(Element element, ModelFormField modelFormField) {
@@ -723,8 +804,8 @@ public class ModelFormField {
         
         protected TextField() { super(); }
 
-        public TextField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public TextField(ModelFormField modelFormField) {
+            super("text", modelFormField);
         }
 
         public TextField(Element element, ModelFormField modelFormField) {
@@ -789,8 +870,8 @@ public class ModelFormField {
         
         protected TextareaField() { super(); }
 
-        public TextareaField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public TextareaField(ModelFormField modelFormField) {
+            super("textarea", modelFormField);
         }
 
         public TextareaField(Element element, ModelFormField modelFormField) {
@@ -853,8 +934,8 @@ public class ModelFormField {
         
         protected DateTimeField() { super(); }
 
-        public DateTimeField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public DateTimeField(ModelFormField modelFormField) {
+            super("date-time", modelFormField);
         }
 
         public DateTimeField(Element element, ModelFormField modelFormField) {
@@ -887,8 +968,8 @@ public class ModelFormField {
         
         protected DropDownField() { super(); }
 
-        public DropDownField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public DropDownField(ModelFormField modelFormField) {
+            super("drop-down", modelFormField);
         }
 
         public DropDownField(Element element, ModelFormField modelFormField) {
@@ -941,8 +1022,8 @@ public class ModelFormField {
     public static class CheckField extends FieldInfoWithOptions {
         protected CheckField() { super(); }
 
-        public CheckField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public CheckField(ModelFormField modelFormField) {
+            super("check", modelFormField);
         }
 
         public CheckField(Element element, ModelFormField modelFormField) {
@@ -957,8 +1038,8 @@ public class ModelFormField {
     public static class RadioField extends FieldInfoWithOptions {
         protected RadioField() { super(); }
 
-        public RadioField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public RadioField(ModelFormField modelFormField) {
+            super("radio", modelFormField);
         }
 
         public RadioField(Element element, ModelFormField modelFormField) {
@@ -976,8 +1057,8 @@ public class ModelFormField {
         
         protected SubmitField() { super(); }
 
-        public SubmitField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public SubmitField(ModelFormField modelFormField) {
+            super("submit", modelFormField);
         }
 
         public SubmitField(Element element, ModelFormField modelFormField) {
@@ -1022,8 +1103,8 @@ public class ModelFormField {
     public static class ResetField extends FieldInfo {
         protected ResetField() { super(); }
 
-        public ResetField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public ResetField(ModelFormField modelFormField) {
+            super("reset", modelFormField);
         }
 
         public ResetField(Element element, ModelFormField modelFormField) {
@@ -1038,8 +1119,8 @@ public class ModelFormField {
     public static class HiddenField extends FieldInfo {
         protected HiddenField() { super(); }
 
-        public HiddenField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public HiddenField(ModelFormField modelFormField) {
+            super("hidden", modelFormField);
         }
 
         public HiddenField(Element element, ModelFormField modelFormField) {
@@ -1054,8 +1135,8 @@ public class ModelFormField {
     public static class IgnoredField extends FieldInfo {
         protected IgnoredField() { super(); }
 
-        public IgnoredField(String fieldTypeName, ModelFormField modelFormField) {
-            super(fieldTypeName, modelFormField);
+        public IgnoredField(ModelFormField modelFormField) {
+            super("ignored", modelFormField);
         }
 
         public IgnoredField(Element element, ModelFormField modelFormField) {
