@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceEcaAction.java,v 1.1 2003/08/17 05:12:39 ajzeneski Exp $
+ * $Id: ServiceEcaAction.java,v 1.2 2003/11/13 21:13:45 ajzeneski Exp $
  *
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,18 +29,17 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.service.DispatchContext;
-import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
+import org.ofbiz.service.*;
 import org.ofbiz.base.util.UtilValidate;
 import org.w3c.dom.Element;
+
+import javax.transaction.xa.XAException;
 
 /**
  * ServiceEcaAction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ServiceEcaAction {
@@ -78,6 +77,18 @@ public class ServiceEcaAction {
             actionResult = dispatcher.runSync(this.serviceName, actionContext);
         } else if (serviceMode.equals("async")) {
             dispatcher.runAsync(serviceName, actionContext, persist);
+        } else if (serviceMode.equals("_rollback") || serviceMode.equals("_commit")) {
+            ServiceXaWrapper xaw = new ServiceXaWrapper(dctx);
+            if (serviceMode.equals("_rollback")) {
+                xaw.setRollbackService(this.serviceName, context); // using the actual context so we get updates
+            } else if (serviceMode.equals("_commit")) {
+                xaw.setCommitService(this.serviceName, context); // using the actual context so we get updates
+            }
+            try {
+                xaw.enlist();
+            } catch (XAException e) {
+                throw new GenericServiceException("Unable to enlist ServiceXaWrapper with transaction", e);
+            }
         }
 
         // put the results in to the defined map

@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.7 2003/10/30 22:04:52 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.8 2003/11/13 21:13:45 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -213,6 +213,10 @@ public class ServiceDispatcher {
         try {
             // get eventMap once for all calls for speed, don't do event calls if it is null
             Map eventMap = ServiceEcaUtil.getServiceEventMap(service.name);
+
+            // setup global transaction ECA listeners
+            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "global-rollback", ctx, context, null, false);
+            if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "global-commit", ctx, context, null, false);
 
             // pre-auth ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "auth", ctx, context, null, false);
