@@ -42,33 +42,35 @@
     URL catalogPropertiesURL = application.getResource("/WEB-INF/catalog.properties");
 
     boolean tryEntity = true;
-    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
+    boolean isCreate = "true".equals(request.getParameter("isCreate"));
 
     String productId = request.getParameter("productId");
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-    if(product == null) tryEntity = false;
+    if (product == null) tryEntity = false;
+    if (isCreate && !tryEntity) product = null;
 
     Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
     Collection productTypeCol = delegator.findAll("ProductType", UtilMisc.toList("description"));
 
     GenericValue primaryProductCategory = null;
     String primProdCatIdParam = request.getParameter("primaryProductCategoryId");
-    if(product != null && tryEntity) {
+    if (product != null && tryEntity) {
         primaryProductCategory = product.getRelatedOne("PrimaryProductCategory");
-    } else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0) {
+    } else if (primProdCatIdParam != null && primProdCatIdParam.length() > 0) {
         primaryProductCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
     }
 
     GenericValue productType = null;
     String productTypeIdParam = request.getParameter("productTypeId");
-    if(product != null && tryEntity) {
+    if (product != null && tryEntity) {
         productType = product.getRelatedOne("ProductType");
         pageContext.setAttribute("product", product);
-    } else if(productTypeIdParam != null && productTypeIdParam.length() > 0) {
+    } else if (productTypeIdParam != null && productTypeIdParam.length() > 0) {
         productType = delegator.findByPrimaryKey("ProductType", UtilMisc.toMap("productTypeId", productTypeIdParam));
     }
 
-    if("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
+    if("true".equalsIgnoreCase((String) request.getParameter("tryEntity"))) tryEntity = true;
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
 
@@ -91,6 +93,7 @@
   <%if(productId != null){%>
     <h3>Could not find product with ID "<%=productId%>".</h3>
     <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;' name="productForm">
+    <input type=HIDDEN name='isCreate' value='true'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext"><b>Product ID</b></div></td>
@@ -101,6 +104,7 @@
     </tr>
   <%}else{%>
     <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;' name="productForm">
+    <input type=HIDDEN name='isCreate' value='true'>
     <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
       <td align=right><div class="tabletext"><b>Product ID</b></div></td>
