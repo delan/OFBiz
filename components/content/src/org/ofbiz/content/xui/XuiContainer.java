@@ -24,8 +24,6 @@
  */
 package org.ofbiz.content.xui;
 
-import java.util.HashMap;
-import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 
@@ -49,10 +47,10 @@ import org.ofbiz.service.LocalDispatcher;
 public abstract class XuiContainer implements Container {
 
     public static final String module = XuiContainer.class.getName();
-    protected static Map sessions = new HashMap();
+    protected static XuiSession session = null;
 
     protected XuiScreen initialScreen = null;
-    protected XuiSession session = null;
+
     protected String startupFile = null;
     protected String configFile = null;
 
@@ -101,7 +99,6 @@ public abstract class XuiContainer implements Container {
 
         // create and cache the session
         session = new XuiSession(xuiSessionId, delegator, dispatcher, this);
-        sessions.put(xuiSessionId, session);
 
         // configure the rest of the container
         this.configure(cc);
@@ -119,10 +116,6 @@ public abstract class XuiContainer implements Container {
     public void stop() throws ContainerException {
     }
 
-    public XuiSession getSession() {
-        return this.session;
-    }
-
     /**
      * @return String the name of the container name property
      */
@@ -138,8 +131,8 @@ public abstract class XuiContainer implements Container {
      */
     public abstract void configure(ContainerConfig.Container cc) throws ContainerException;
 
-    public static XuiSession getSession(String sessionId) {
-        return (XuiSession) sessions.get(sessionId);
+    public static XuiSession getSession() {
+        return session;
     }
 
     class XuiScreen extends XApplet {
