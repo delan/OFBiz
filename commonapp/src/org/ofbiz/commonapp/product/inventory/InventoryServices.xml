@@ -210,38 +210,40 @@
                 </if-compare>
                 <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                     <if-not-empty field-name="availableToPromise" map-name="inventoryItem">
-                        <!-- reduce atp on inventoryItem -->
-                        <if-compare-field field-name="quantityNotReserved" map-name="parameters" operator="greater" type="Double"
-                                to-field-name="availableToPromise" to-map-name="inventoryItem">
-                            <field-to-field field-name="availableToPromise" map-name="inventoryItem" to-field-name="deductAmount" to-map-name="parameters"/>
-                            <else>
-                                <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="deductAmount"/>
-                            </else>
-                        </if-compare-field>
-                        <call-bsh><![CDATA[inventoryItem.put("availableToPromise", new Double(((Double) inventoryItem.get("availableToPromise")).doubleValue() - ((Double) parameters.get("deductAmount")).doubleValue())); ]]></call-bsh>
-                        <store-value value-name="inventoryItem"/>
+                        <!-- reduce atp on inventoryItem if 0 less than availableToPromise, if not the code at the end of this method will handle it -->
+                        <if-compare value="0.0" operator="less" type="Double" to-field-name="availableToPromise" to-map-name="inventoryItem">
+                            <if-compare-field field-name="quantityNotReserved" map-name="parameters" operator="greater" type="Double"
+                                    to-field-name="availableToPromise" to-map-name="inventoryItem">
+                                <field-to-field field-name="availableToPromise" map-name="inventoryItem" to-field-name="deductAmount" to-map-name="parameters"/>
+                                <else>
+                                    <field-to-field field-name="quantityNotReserved" map-name="parameters" to-field-name="deductAmount"/>
+                                </else>
+                            </if-compare-field>
+                            <call-bsh><![CDATA[inventoryItem.put("availableToPromise", new Double(((Double) inventoryItem.get("availableToPromise")).doubleValue() - ((Double) parameters.get("deductAmount")).doubleValue())); ]]></call-bsh>
+                            <store-value value-name="inventoryItem"/>
 
-                        <!-- clear the by and caches -->        
-                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapOne"/>
-                        <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
+                            <!-- clear the by and caches -->        
+                            <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapOne"/>
+                            <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapOne"/>
 
-                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
-                        <field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
-                        <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapTwo"/>
+                            <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
+                            <field-to-field field-name="facilityId" map-name="inventoryItem" to-map-name="clearCacheMapTwo"/>
+                            <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapTwo"/>
 
-                        <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
-                        <field-to-field field-name="containerId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
-                        <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
+                            <field-to-field field-name="productId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
+                            <field-to-field field-name="containerId" map-name="inventoryItem" to-map-name="clearCacheMapThree"/>
+                            <clear-cache-line entity-name="InventoryItem" map-name="clearCacheMapThree"/>
 
-                        <!-- create OrderItemInventoryRes record -->
-                        <make-value entity-name="OrderItemInventoryRes" value-name="newOiirEntity"/>
-                        <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
-                        <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
-                        <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="newOiirEntity"/>
-                        <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
-                        <create-value value-name="newOiirEntity"/>
+                            <!-- create OrderItemInventoryRes record -->
+                            <make-value entity-name="OrderItemInventoryRes" value-name="newOiirEntity"/>
+                            <field-to-field field-name="orderId" map-name="parameters" to-map-name="newOiirEntity"/>
+                            <field-to-field field-name="orderItemSeqId" map-name="parameters" to-map-name="newOiirEntity"/>
+                            <field-to-field field-name="inventoryItemId" map-name="inventoryItem" to-map-name="newOiirEntity"/>
+                            <field-to-field field-name="deductAmount" map-name="parameters" to-field-name="quantity" to-map-name="newOiirEntity"/>
+                            <create-value value-name="newOiirEntity"/>
 
-                        <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(((Double) parameters.get("quantityNotReserved")).doubleValue() - ((Double) parameters.get("deductAmount")).doubleValue())); ]]></call-bsh>
+                            <call-bsh><![CDATA[ parameters.put("quantityNotReserved", new Double(((Double) parameters.get("quantityNotReserved")).doubleValue() - ((Double) parameters.get("deductAmount")).doubleValue())); ]]></call-bsh>
+                        </if-compare>
                     </if-not-empty>
                     
                     <!-- keep track of the last non-serialized inventory item and corresponding order item inv res for use if inventory is not required for purchase -->
