@@ -81,7 +81,7 @@ public class Msr extends GenericDevice {
                     decodedData[5] = msr.getAccountNumber();
                                        
                     // fix expDate (reversed)
-                    decodedData[6] = msr.getExpirationDate().substring(2) + msr.getExpirationDate().substring(0, 1);
+                    decodedData[6] = msr.getExpirationDate().substring(2) + msr.getExpirationDate().substring(0, 2);
 
                     msr.clearInput();
                 } catch (jpos.JposException e) {
