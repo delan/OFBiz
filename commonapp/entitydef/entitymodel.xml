@@ -1556,6 +1556,9 @@
       <relation type="one" fk-name="USER_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+      <relation type="one" fk-name="USER_SESSION" rel-entity-name="UserLoginSession">
+        <key-map field-name="userLoginId"/>
+      </relation>
       <relation type="many" rel-entity-name="UserLoginSecurityGroup">
         <key-map field-name="userLoginId"/>
       </relation>
@@ -1588,6 +1591,18 @@
       <relation type="one" fk-name="USER_LH_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+    </entity>
+    <entity entity-name="UserLoginSession"
+            package-name="org.ofbiz.commonapp.security.login"
+            never-cache="true"
+            title="User Login History Entity">
+      <field name="userLoginId" type="id-vlong-ne"></field>      
+      <field name="savedDate" type="date-time"></field>    
+      <field name="sessionData" type="very-long"></field>   
+      <prim-key field="userLoginId"/>     
+      <relation type="one" fk-name="USER_SESSION_USER" rel-entity-name="UserLogin">
+        <key-map field-name="userLoginId"/>
+      </relation>     
     </entity>
 
   <!-- ========================================================= -->

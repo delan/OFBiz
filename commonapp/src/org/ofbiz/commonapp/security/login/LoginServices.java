@@ -21,27 +21,32 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.security.login;
 
-
 import java.util.*;
+import java.io.IOException;
 import java.sql.Timestamp;
+
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.ofbiz.core.util.*;
+import org.xml.sax.SAXException;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
-
+import org.ofbiz.core.serialize.*;
 
 /**
  * <b>Title:</b> Login Services
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    January 26, 2002
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class LoginServices {
+	
+	public static final String module = LoginServices.class.getName();
 
     /** Login service to authenticate username and password
      * @return Map of results including (userLogin) GenericValue object
@@ -136,6 +141,25 @@ public class LoginServices {
                             }
 
                             successfulLogin = "Y";
+                            
+                            // get the UserLoginSession
+                            GenericValue userLoginSession = null;
+                            Map userLoginSessionMap = null;
+                            try {
+                            	userLoginSession = userLogin.getRelatedOne("UserLoginSession");
+                            	Object o = XmlSerializer.deserialize(userLoginSession.getString("sessionData"), delegator);
+                            	if (o instanceof Map)
+                            		userLoginSessionMap = (Map) o;
+                            } catch (GenericEntityException ge) {
+                            	Debug.logWarning(ge, "Cannot get UserLoginSession for UserLogin ID: " + 
+                            			userLogin.getString("userLoginId"), module);
+                            } catch (Exception e) {
+                            	Debug.logWarning(e, "Problems deserializing UserLoginSession", module);                            
+                            }
+                            
+                            // return the UserLoginSession Map
+                            if (userLoginSessionMap != null)
+                            	result.put("userLoginSession", userLoginSessionMap);
 
                             result.put("userLogin", userLogin);
                             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);

@@ -680,6 +680,7 @@
 
     <entity-group group="org.ofbiz.commonapp" entity="UserLogin" />
     <entity-group group="org.ofbiz.commonapp" entity="UserLoginHistory" />
+    <entity-group group="org.ofbiz.commonapp" entity="UserLoginSession" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.security.securitygroup -->

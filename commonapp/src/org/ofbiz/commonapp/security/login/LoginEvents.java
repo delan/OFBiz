@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.security.login;
-
 
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -44,8 +42,8 @@ import org.ofbiz.commonapp.party.contact.ContactHelper;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
  * @author     <a href="mailto:therrick@yahoo.com">Tom Herrick</a>
- * @version    1.0
- * @created    Oct 19, 2001
+ * @version    $Revision$
+ * @since      2.0
  */
 public class LoginEvents {
 
@@ -195,11 +193,16 @@ public class LoginEvents {
 
         if (ModelService.RESPOND_SUCCESS.equals(result.get(ModelService.RESPONSE_MESSAGE))) {
             GenericValue userLogin = (GenericValue) result.get("userLogin");
+            Map userLoginSession = (Map) result.get("userLoginSession");
 
             if (userLogin != null) {
                 session.setAttribute(SiteDefs.USER_LOGIN, userLogin);
                 // let the visit know who the user is
                 VisitHandler.setUserLogin(session, userLogin, false);
+            }
+            
+            if (userLoginSession != null) {
+            	session.setAttribute("userLoginSession", userLoginSession);
             }
         } else {
             String errMsg = (String) result.get(ModelService.ERROR_MESSAGE);
@@ -208,7 +211,7 @@ public class LoginEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, errMsg);
             return "error";
         }
-
+                
         request.setAttribute(SiteDefs.LOGIN_PASSED, "TRUE");
         // make sure the autoUserLogin is set to the same and that the client cookie has the correct userLoginId
         return autoLoginSet(request, response);

@@ -11,6 +11,7 @@
 		<attribute name="login.password" type="String" mode="IN"/>
 		<attribute name="isServiceAuth" type="Boolean" mode="IN" optional="true"/>
 		<attribute name="userLogin" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+		<attribute name="userLoginSession" type="java.util.Map" mode="OUT" optional="true"/>
 	</service>
 	<service name="createUserLogin" engine="java" location="org.ofbiz.commonapp.security.login.LoginServices" invoke="createUserLogin" auth="false">
 		<description>Create a UserLogin</description>

@@ -30,6 +30,7 @@ import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
+import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.stats.*;
 
@@ -72,6 +73,25 @@ public class ControlEventListener implements HttpSessionListener {
                 Debug.logError(e, "Could not update visit for session destuction: " + visit, module);
             }
         }
+        
+        // store the UserLoginSession
+        String userLoginSessionString = getUserLoginSession(session);
+        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+        if (userLogin != null && userLoginSessionString != null) {
+        	GenericValue userLoginSession = null;
+            try {
+                userLoginSession = userLogin.getRelatedOne("UserLoginSession");            
+            
+        		if (userLoginSession == null) {
+        			userLoginSession = userLogin.getDelegator().makeValue("UserLoginSession", 
+        					UtilMisc.toMap("userLoginId", userLogin.getString("userLoginId"))); 
+        			userLogin.getDelegator().create(userLoginSession);       		
+        		}
+        		userLoginSession.set("savedDate", UtilDateTime.nowTimestamp());
+        		userLoginSession.set("sessionData", userLoginSessionString);
+        		userLoginSession.store();
+        	} catch (GenericEntityException e) {}
+        }
 
         countDestroySession();
 
@@ -106,5 +126,19 @@ public class ControlEventListener implements HttpSessionListener {
     public static void countActivateSession() {
         totalActiveSessions++;
         totalPassiveSessions--;
+    }
+    
+    private String getUserLoginSession(HttpSession session) {    	
+    	Map userLoginSession = (Map) session.getAttribute("userLoginSession");
+    	
+    	String sessionData = null;
+    	if (userLoginSession != null && userLoginSession.size() > 0) {
+    		try {
+    			sessionData = XmlSerializer.serialize(userLoginSession);
+    		} catch (Exception e) {
+    			Debug.logWarning(e, "Problems serializing UserLoginSession", module);
+    		}
+    	}
+    	return sessionData;
     }
 }
