@@ -405,38 +405,31 @@ public class PosTransaction {
 
     public void appendPaymentDataModel(XModel model) {
         if (cart != null) {
-            Iterator pm = cart.getPaymentMethods().iterator();
-            while (pm.hasNext()) {
-                GenericValue paymentMethod = (GenericValue) pm.next();
+            int paymentInfoSize = cart.selectedPayments();
+            for (int i = 0; i < paymentInfoSize; i++) {
+                ShoppingCart.CartPaymentInfo inf = (ShoppingCart.CartPaymentInfo) cart.getPaymentInfo(i);
+                GenericValue paymentInfoObj = inf.getValueObject(session.getDelegator());
+
                 GenericValue paymentMethodType = null;
-                try {
-                    paymentMethodType = paymentMethod.getRelatedOne("PaymentMethodType");
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, module);
+                GenericValue paymentMethod = null;
+                if ("PaymentMethod".equals(paymentInfoObj.getEntityName())) {
+                    paymentMethod = paymentInfoObj;
+                    try {
+                        paymentMethodType = paymentMethod.getRelatedOne("PaymentMethodType");
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, module);
+                    }
+                } else {
+                    paymentMethodType = paymentInfoObj;
                 }
-                String paymentId = paymentMethod.getString("paymentMethodId");
+
                 String desc = paymentMethodType != null ? paymentMethodType.getString("description") : "??";
-                Double payAmt = cart.getPaymentAmount(paymentId);
                 double amount = 0;
-                if (payAmt == null) {
+                if (inf.amount == null) {
                     amount = cart.getGrandTotal() - cart.getPaymentTotal();
                 } else {
-                    amount = payAmt.doubleValue();
+                    amount = inf.amount.doubleValue();
                 }
-
-                XModel paymentLine = Journal.appendNode(model, "tr", "", "");
-                Journal.appendNode(paymentLine, "td", "sku", "");
-                Journal.appendNode(paymentLine, "td", "desc", desc);
-                Journal.appendNode(paymentLine, "td", "qty", "-");
-                Journal.appendNode(paymentLine, "td", "price", UtilFormatOut.formatPrice(-1 * amount));
-            }
-
-            Iterator pt = cart.getPaymentMethodTypes().iterator();
-            while (pt.hasNext()) {
-                GenericValue paymentMethodType = (GenericValue) pt.next();
-                String paymentId = paymentMethodType.getString("paymentMethodTypeId");
-                String desc = paymentMethodType.getString("description");
-                double amount = cart.getPaymentAmount(paymentId).doubleValue();
 
                 XModel paymentLine = Journal.appendNode(model, "tr", "", "");
                 Journal.appendNode(paymentLine, "td", "sku", "");
