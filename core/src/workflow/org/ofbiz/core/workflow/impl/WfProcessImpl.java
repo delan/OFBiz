@@ -219,29 +219,34 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
     // Queues the next activities for processing
     private void queueNext(WfActivity fromActivity) throws WfException {
         List nextTrans = getTransFrom(fromActivity);
-        Iterator i = nextTrans.iterator();
-        while ( i.hasNext() ) {
-            GenericValue trans = (GenericValue) i.next();
-            
-            // Get the activity definition
-            GenericValue toActivity = null;
-            try {
-                toActivity = trans.getRelatedOne("ToWorkflowActivity");
+        if ( nextTrans.size() > 0 ) {                                                
+            Iterator i = nextTrans.iterator();
+            while ( i.hasNext() ) {
+                GenericValue trans = (GenericValue) i.next();
+                
+                // Get the activity definition
+                GenericValue toActivity = null;
+                try {
+                    toActivity = trans.getRelatedOne("ToWorkflowActivity");
+                }
+                catch ( GenericEntityException e ) {
+                    throw new WfException(e.getMessage(),e);
+                }
+                
+                // check for a join
+                String join = "WJT_AND"; // default join is AND
+                if ( toActivity.get("joinTypeEnumId") != null )
+                    join = toActivity.getString("joinTypeEnumId");
+                
+                // activate if XOR or test the join transition(s)
+                if ( join.equals("WJT_XOR") )
+                    startActivity(toActivity);
+                else
+                    joinTransition(toActivity, trans);
             }
-            catch ( GenericEntityException e ) {
-                throw new WfException(e.getMessage(),e);
-            }
-            
-            // check for a join
-            String join = "WJT_AND"; // default join is AND
-            if ( toActivity.get("joinTypeEnumId") != null )
-                join = toActivity.getString("joinTypeEnumId");
-            
-            // activate if XOR or test the join transition(s)
-            if ( join.equals("WJT_XOR") )
-                startActivity(toActivity);
-            else
-                joinTransition(toActivity, trans);
+        }
+        else {
+            this.finishProcess();
         }
     }
     
@@ -383,5 +388,17 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
             return ( ((Number)o).doubleValue()  == 0 ) ? false : true;
         else
             return ( !o.toString().equalsIgnoreCase("true") ) ? false : true;
+    }
+    
+    // Complete this workflow
+    private void finishProcess() throws WfException {        
+        changeState("closed.completed");
+        WfEventAudit audit = WfFactory.newWfEventAudit(this,null);     // this will need to be updated
+        try {
+            requester.receiveEvent(audit);
+        }
+        catch ( InvalidPerformer e ) {
+            throw new WfException(e.getMessage(),e);
+        }
     }
 }

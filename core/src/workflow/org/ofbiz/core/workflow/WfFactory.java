@@ -152,4 +152,12 @@ public class WfFactory {
             throw new WfException("Value object for WfResource definition cannot be null");
         return new WfResourceImpl(value);
     }
+    
+    /** Creates a new {@link WfEventAudit} instance.
+     * @throws WfException
+     * @return An instance of the WfEventAudit Interface.
+     */
+    public static WfEventAudit newWfEventAudit(WfExecutionObject object, String type) throws WfException {                
+        return new WfEventAuditImpl(object,type);
+    }    
 }

@@ -110,8 +110,7 @@ public class WfProcessMgrImpl implements WfProcessMgr {
         if (requester == null)
             throw new RequesterRequired();
         
-        // test if the requestor is OK: how?
-        String key = null;  // work on this...
+        // test if the requestor is OK: how?        
         WfProcess process = WfFactory.newWfProcess(processDef,this);
         
         try {
