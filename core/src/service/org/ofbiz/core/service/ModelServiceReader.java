@@ -285,6 +285,7 @@ public class ModelServiceReader {
         // these default to true; if anything but true, make false    
         service.auth = "true".equalsIgnoreCase(serviceElement.getAttribute("auth"));
         service.export = "true".equalsIgnoreCase(serviceElement.getAttribute("export"));
+        service.debug = "true".equalsIgnoreCase(serviceElement.getAttribute("debug"));
         
         // this defaults to true; if anything but false, make it true
         service.validate = !"false".equalsIgnoreCase(serviceElement.getAttribute("validate"));

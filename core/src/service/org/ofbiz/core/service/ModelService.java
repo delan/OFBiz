@@ -92,6 +92,9 @@ public class ModelService {
 
     /** Can this service be exported via RPC, RMI, SOAP, etc */
     public boolean export;
+    
+    /** Enable verbose debugging when calling this service */
+    public boolean debug;
 
     /** Validate the context info for this service */
     public boolean validate;

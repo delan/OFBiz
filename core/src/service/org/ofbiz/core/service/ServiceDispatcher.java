@@ -165,6 +165,7 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
+        boolean debugging = checkDebug(service, 1, true);
         if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service " + service.name + " [" + service.location +
                 "/" + service.invoke + "] (" + service.engineName + ")", module);
@@ -303,6 +304,7 @@ public class ServiceDispatcher {
             // pre-return ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "return", ctx, ecaContext, result, isError);
 
+            checkDebug(service, 0, debugging);
             return result;
         } catch (GenericServiceException e) {
             try {
@@ -310,6 +312,7 @@ public class ServiceDispatcher {
             } catch (GenericTransactionException te) {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
+            checkDebug(service, 0, debugging);
             throw e;
         }
     }
@@ -323,6 +326,7 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
+        boolean debugging = checkDebug(service, 1, true);
         if (Debug.verboseOn()) {
             Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service " + service.name + " [" + service.location + "/" + service.invoke +
                 "] (" + service.engineName + ")", module);
@@ -426,12 +430,14 @@ public class ServiceDispatcher {
             
             // pre-return ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "return", ctx, context, null, false);
+            checkDebug(service, 0, debugging);
         } catch (GenericServiceException e) {
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
+            checkDebug(service, 0, debugging);
             throw e;
         }
     }
@@ -447,6 +453,7 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService service, Map context, GenericRequester requester, boolean persist) throws GenericServiceException {
+        boolean debugging = checkDebug(service, 1, true);
         // check the locale
         this.checkLocale(context);
         
@@ -485,6 +492,7 @@ public class ServiceDispatcher {
         }
 
         engine.runAsync(localName, service, context, requester, persist);
+        checkDebug(service, 0, debugging);
     }
 
     /**
@@ -497,6 +505,7 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runAsync(String localName, ModelService service, Map context, boolean persist) throws GenericServiceException {
+        boolean debugging = checkDebug(service, 1, true);
         // check the locale
         this.checkLocale(context);
         
@@ -535,6 +544,7 @@ public class ServiceDispatcher {
         }
 
         engine.runAsync(localName, service, context, persist);
+        checkDebug(service, 0, debugging);
     }
 
     /**
@@ -692,5 +702,32 @@ public class ServiceDispatcher {
         if (newLocale == null)
             newLocale = Locale.getDefault();
         context.put("locale", newLocale);
-    }        
+    } 
+    
+    // mode 1 = beginning (turn on) mode 0 = end (turn off)    
+    private boolean checkDebug(ModelService model, int mode, boolean enable) {
+        boolean debugOn = Debug.verboseOn();        
+        switch (mode) {
+            case 0:                
+                if (model.debug && enable && debugOn) {
+                    // turn it off
+                    Debug.set(Debug.VERBOSE, false);
+                    Debug.logVerbose("Verbose logging turned IN", module);
+                    return true;
+                }               
+                break;
+            case 1:
+                if (model.debug && enable && !debugOn) {
+                    // turn it on
+                    Debug.set(Debug.VERBOSE, true);
+                    Debug.logInfo("Verbose logging turned OFF", module);
+                    return true;                  
+                }
+                break;
+            default:
+                Debug.logError("Invalid mode for checkDebug should be (0 or 1)", module);
+        }
+        return false;
+    }
+
 }
