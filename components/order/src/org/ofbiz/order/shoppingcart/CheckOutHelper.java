@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.23 2004/06/28 20:17:59 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.24 2004/07/09 05:43:08 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,6 +47,8 @@ import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.condition.EntityFunction;
+import org.ofbiz.entity.condition.EntityFieldValue;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.order.order.OrderChangeHelper;
 import org.ofbiz.order.order.OrderReadHelper;
@@ -64,7 +66,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.23 $
+ * @version    $Revision: 1.24 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -784,7 +786,7 @@ public class CheckOutHelper {
     	}
         String shippingAddress = UtilFormatOut.checkNull(shippingAddressObj.getString("address1")).toUpperCase();
         List exprs = UtilMisc.toList(new EntityExpr(
-                new EntityExpr("blacklistString", true, EntityOperator.EQUALS, shippingAddress, true), EntityOperator.AND,
+                new EntityExpr(new EntityFunction.UPPER("blacklistString"), EntityOperator.EQUALS, new EntityFunction.UPPER(shippingAddress)), EntityOperator.AND,
                 new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
         String errMsg=null;
 
@@ -813,7 +815,7 @@ public class CheckOutHelper {
                 if (billingAddress != null) {
                     String address = UtilFormatOut.checkNull(billingAddress.getString("address1").toUpperCase());
                     exprs.add(new EntityExpr(
-                            new EntityExpr("blacklistString", true, EntityOperator.EQUALS, address, true), EntityOperator.AND,
+                            new EntityExpr(new EntityFunction.UPPER("blacklistString"), EntityOperator.EQUALS, new EntityFunction.UPPER(address)), EntityOperator.AND,
                             new EntityExpr("orderBlacklistTypeId", EntityOperator.EQUALS, "BLACKLIST_ADDRESS")));
                 }
             }
