@@ -11,13 +11,23 @@
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="createShipment" auth="true">
         <description>Create Shipment</description>
         <auto-attributes include="pk" mode="OUT" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+        	<exclude field-name="createdDate"/>
+        	<exclude field-name="createdByUserLogin"/>
+        	<exclude field-name="lastModifiedDate"/>
+        	<exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
     </service>
     <service name="updateShipment" default-entity-name="Shipment" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipment" auth="true">
         <description>Update Shipment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
-        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true">
+        	<exclude field-name="createdDate"/>
+        	<exclude field-name="createdByUserLogin"/>
+        	<exclude field-name="lastModifiedDate"/>
+        	<exclude field-name="lastModifiedByUserLogin"/>
+        </auto-attributes>
     </service>
     <service name="deleteShipment" default-entity-name="Shipment" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="deleteShipment" auth="true">
@@ -109,6 +119,7 @@
         <description>Create ShipmentRouteSegment</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="shipmentRouteSegmentId" mode="INOUT" optional="true"/>
     </service>
     <service name="updateShipmentRouteSegment" default-entity-name="ShipmentRouteSegment" engine="simple"
             location="org/ofbiz/commonapp/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentRouteSegment" auth="true">

@@ -97,23 +97,8 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
 		<!-- if no shipmentItemSeqId, generate one based on existing items, ie one greater than the current higher number -->
-        <if-empty field-name="shipmentItemSeqId" map-name="newEntity">
-			<string-to-list string="-shipmentItemSeqId" list-name="orderBy"/>
-			<find-by-and entity-name="ShipmentItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"/>
-			<if-empty field-name="currentItems">
-				<string-to-field string="1" field-name="shipmentItemSeqId" map-name="newEntity"/>
-			<else>
-			   <first-from-list entry-name="newestItem" list-name="currentItems"/>
-			   <calculate field-name="shipmentItemSeqId" map-name="newEntity" type="Integer">
-				   <calcop field-name="shipmentItemSeqId" map-name="newestItem" operator="add">
-					   <number value="1"/>
-				   </calcop>
-			   </calculate>
-			</else>
-			</if-empty>
-			<to-string field-name="shipmentItemSeqId" map-name="newEntity" numeric-padding="5"/>
-			<field-to-result field-name="shipmentItemSeqId" map-name="newEntity" result-name="shipmentItemSeqId"/>
-        </if-empty>
+		<make-next-seq-id value-name="newEntity" seq-field-name="shipmentItemSeqId" numeric-padding="5" increment-by="1"/>
+		<field-to-result field-name="shipmentItemSeqId" map-name="newEntity" result-name="shipmentItemSeqId"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>
@@ -153,23 +138,8 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
 
 		<!-- if no shipmentPackageSeqId, generate one based on existing items, ie one greater than the current higher number -->
-        <if-empty field-name="shipmentPackageSeqId" map-name="newEntity">
-			<string-to-list string="-shipmentPackageSeqId" list-name="orderBy"/>
-			<find-by-and entity-name="ShipmentPackage" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"/>
-			<if-empty field-name="currentItems">
-				<string-to-field string="1" field-name="shipmentPackageSeqId" map-name="newEntity"/>
-			<else>
-			   <first-from-list entry-name="newestItem" list-name="currentItems"/>
-			   <calculate field-name="shipmentPackageSeqId" map-name="newEntity" type="Integer">
-				   <calcop field-name="shipmentPackageSeqId" map-name="newestItem" operator="add">
-					   <number value="1"/>
-				   </calcop>
-			   </calculate>
-			</else>
-			</if-empty>
-			<to-string field-name="shipmentPackageSeqId" map-name="newEntity" numeric-padding="5"/>
-			<field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
-        </if-empty>
+		<make-next-seq-id value-name="newEntity" seq-field-name="shipmentPackageSeqId" numeric-padding="5" increment-by="1"/>
+		<field-to-result field-name="shipmentPackageSeqId" map-name="newEntity" result-name="shipmentPackageSeqId"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>
@@ -281,6 +251,10 @@
         <make-value value-name="newEntity" entity-name="ShipmentRouteSegment"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+		<!-- if no shipmentRouteSegmentSeqId, generate one based on existing items, ie one greater than the current higher number -->
+		<make-next-seq-id value-name="newEntity" seq-field-name="shipmentRouteSegmentId" numeric-padding="5" increment-by="1"/>
+		<field-to-result field-name="shipmentRouteSegmentId" map-name="newEntity" result-name="shipmentRouteSegmentId"/>
         
         <create-value value-name="newEntity"/>
     </simple-method>
