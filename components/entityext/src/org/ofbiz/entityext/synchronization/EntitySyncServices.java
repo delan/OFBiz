@@ -296,8 +296,8 @@ public class EntitySyncServices {
                     
                     // anything to store locally?
                     if (startDate != null && (!UtilValidate.isEmpty((Collection) result.get("valuesToCreate")) || 
-                            !UtilValidate.isEmpty((Collection) result.get("valuesToCreate")) ||
-                            !UtilValidate.isEmpty((Collection) result.get("valuesToCreate")))) {
+                            !UtilValidate.isEmpty((Collection) result.get("valuesToStore")) ||
+                            !UtilValidate.isEmpty((Collection) result.get("keysToRemove")))) {
                         
                         // yep, we got more data
                         gotMoreData = true;
