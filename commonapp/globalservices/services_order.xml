@@ -350,12 +350,12 @@
     <!-- Shopping List Services -->
     <service name="shoppingListInterface" engine="interface" location="" invoke="">
         <description>Shopping List Interface</description>
-        <attribute name="shoppingListTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="shoppingListTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="parentShoppingListId" type="String" mode="IN" optional="true"/>
-        <attribute name="partyId" type="String" mode="IN" optional="false"/>
-        <attribute name="listName" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>
+        <attribute name="listName" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
-        <attribute name="isPublic" type="Boolean" mode="IN" optional="false"/>        
+        <attribute name="isPublic" type="String" mode="IN" optional="true"/>        
     </service>
     <service name="createShoppingList" engine="simple" auth="true"
             location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingList">
@@ -386,6 +386,7 @@
             location="org/ofbiz/commonapp/order/shoppinglist/ShoppingListServices.xml" invoke="createShoppingListItem">
         <description>Create a shopping list item</description>
         <implements service="shoppingListItemInterface"/>
+        <attribute name="shoppingListId" type="String" mode="INOUT" optional="true"/>
         <attribute name="shoppingListItemSeqId" type="String" mode="OUT" optional="false"/>
     </service>
     <service name="updateShoppingListItem" engine="simple" auth="true"

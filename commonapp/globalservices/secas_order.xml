@@ -12,11 +12,17 @@
     </eca>
     <eca service="createOrderAdjustment" event="commit">        
         <action service="resetGrandTotal" mode="sync"/>
-    </eca>    
+    </eca>  
+
+    <!-- ShoppingList ECAs --> 
+    <eca service="createShoppingListItem" event="in-validate">
+        <condition field-name="shoppingListId" operator="is-empty"/>
+        <action service="createShoppingList" mode="sync" result-to-context="true"/>
+    </eca>
     
-    <!-- Requirement / CustRequestItem assoication event -->
+    <!-- Requirement / CustRequestItem association event -->
     <eca service="createRequirement" event="commit">
-    	<condition field-name="custRequestId" operator="is-not-null"/>
+    	<condition field-name="custRequestId" operator="is-not-empty"/>
     	<condition field-name="custRequestItemSeqId" operator="is-not-null"/>
     	<action service="associatedRequirementWithRequestItem" mode="sync"/>
     </eca>

@@ -31,10 +31,10 @@
     <simple-method method-name="createShoppingList" short-description="Create a ShoppingList">
     	<if>
     	    <condition>
-  	            <or>
+  	            <and>
     	            <not><if-empty field-name="partyId" map-name="parameters"/></not>
     	            <not><if-has-permission permission="PARTYMGR" action="_CREATE"/></not>
-    	        </or>
+    	        </and>
     	    </condition>
     	    <then>
     	        <add-error><fail-message message="Security Error: to run createShoppingList for another party you must have the PARTYMGR_CREATE or PARTYMGR_ADMIN permission"/></add-error>
@@ -44,6 +44,22 @@
 
         <make-value value-name="newEntity" entity-name="ShoppingList"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <if-empty field-name="partyId" map-name="newEntity">
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="newEntity"/>
+        </if-empty>
+        
+        <if-empty field-name="shoppingListTypeId" map-name="newEntity">
+            <string-to-field string="SLT_WISH_LIST" field-name="shoppingListTypeId" map-name="newEntity"/>
+        </if-empty>
+                
+        <if-empty field-name="listName" map-name="newEntity">
+            <string-to-field string="New Shopping List" field-name="listName" map-name="newEntity"/>
+        </if-empty>
+        
+        <if-empty field-name="isPublic" map-name="newEntity">
+            <string-to-field string="N" field-name="isPublic" map-name="newEntity"/>
+        </if-empty>        
         
         <sequenced-id-to-env sequence-name="ShoppingList" env-name="shoppingListId"/>
         <to-string field-name="shoppingListId"/>
@@ -82,7 +98,7 @@
         <call-simple-method method-name="checkShoppingListItemSecurity"/>
         <check-errors/> 
 
-        <make-value value-name="newEntity" entity-name="ShoppingList"/>
+        <make-value value-name="newEntity" entity-name="ShoppingListItem"/>
         <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="newEntity"/>
         
         <field-to-field field-name="shoppingListId" map-name="parameters" to-map-name="lookupMap"/>
@@ -90,19 +106,22 @@
         <find-by-and entity-name="ShoppingListItem" list-name="currentItems" map-name="lookupMap" order-by-list-name="orderBy"></find-by-and>
         <if-empty field-name="currentItems">
             <string-to-field string="1" field-name="shoppingListItemSeqId" map-name="newEntity"/>            
+            <log level="error" message="Setting seqID to 1"/>
         <else>
            <first-from-list entry-name="newestItem" list-name="currentItems"/>
            <calculate field-name="shoppingListItemSeqId" map-name="newEntity" type="Integer">
-               <calcop field-name="shoppingListItemSeqId" map-name="newEntity" operator="add">
+               <calcop field-name="shoppingListItemSeqId" map-name="newestItem" operator="add">
                    <number value="1"/>
                </calcop>
            </calculate>
            <to-string field-name="shoppingListItemSeqId" map-name="newEntity"/>
+           <log level="error" message="Calc seqID is ${newEntity.shoppingListItemSeqId}"/>
         </else>
         </if-empty>
                         
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-result field-name="shoppingListItemSeqId" map-name="newEntity"/>                                        
+        <field-to-result field-name="shoppingListId" map-name="newEntity"/>                                        
         <create-value value-name="newEntity"/>
     </simple-method>
     
@@ -134,10 +153,10 @@
     <simple-method method-name="checkShoppingListSecurity" short-description="Checks security on a ShoppingList">
     	<if>
     	    <condition>
-  	            <or>
+  	            <and>
     	            <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-map-name="parameters"/></not>
     	            <not><if-has-permission permission="PARTYMGR" action="_${permissionAction}"/></not>
-    	        </or>
+    	        </and>
     	    </condition>
     	    <then>
     	        <add-error><fail-message message="Security Error: to run ${parentMethodName} for another party you must have the PARTYMGR_${permissionAction} or PARTYMGR_ADMIN permission"/></add-error>
@@ -150,10 +169,10 @@
     	<find-by-primary-key entity-name="ShoppingList" map-name="lookupSLMap" value-name="shoppingList"/>
    	    <if>
     	    <condition>
-  	            <or>
+  	            <and>
     	            <not><if-compare-field field-name="partyId" map-name="userLogin" operator="equals" to-map-name="shoppingList"/></not>
     	            <not><if-has-permission permission="PARTYMGR" action="_${permissionAction}"/></not>
-    	        </or>
+    	        </and>
     	    </condition>
     	    <then>
     	        <add-error><fail-message message="Security Error: to run ${parentMethodName} for another party you must have the PARTYMGR_${permissionAction} or PARTYMGR_ADMIN permission"/></add-error>
