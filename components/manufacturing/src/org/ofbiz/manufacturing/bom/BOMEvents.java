@@ -1,5 +1,5 @@
 /*
- * $Id: BOMEvents.java,v 1.2 2003/11/25 15:25:17 jacopo Exp $
+ * $Id: BOMEvents.java,v 1.3 2004/02/16 11:20:04 jacopo Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.security.Security;
  * Product Information Related Events
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class BOMEvents {
@@ -108,6 +108,7 @@ public class BOMEvents {
             errMsg += "<li>From Date is missing.";
         // Will the new node create loops in the bill of materials tree?
         try {
+            // FIXME: fromDate should be provided instead of null
             GenericValue dupAncestor = BOMHelper.searchDuplicatedAncestor(productId, productIdTo, productAssocTypeId, null, delegator);
             if (dupAncestor != null) {
                 errMsg += "<li>The link could cause conflicts because of the following link: " + dupAncestor.getString("productId") + " --> " + dupAncestor.getString("productIdTo");
