@@ -101,6 +101,12 @@ definitions, checking them with the current database, and generating text based 
       <li><a href="<ofbiz:url>/viewdatafile</ofbiz:url>" class='buttontext'>View Data File</A>
     </ul>
   <%}%>
+  <%if(security.hasPermission("WORKFLOW_MAINT", session)){%>
+    <li><div class='tabletext'>Workflow Utilities</div>
+    <ul>
+      <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class='buttontext'>Read XPDL File</A>
+    </ul>
+  <%}%>
 </ul>
 
 <DIV class='tabletext'>NOTE: If you have not already run the installation data loading script, <a href="<ofbiz:url>/install</ofbiz:url>" class='buttontext'>click here</a> to run it.</DIV>
