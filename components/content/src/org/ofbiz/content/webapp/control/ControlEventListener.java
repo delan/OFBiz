@@ -37,6 +37,7 @@ import org.ofbiz.content.stats.VisitHandler;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.serialize.XmlSerializer;
+import org.ofbiz.entity.transaction.TransactionUtil;
 
 /**
  * HttpSessionListener that gathers and tracks various information and statistics
@@ -74,22 +75,21 @@ public class ControlEventListener implements HttpSessionListener {
         HttpSession session = event.getSession();
         
         // Finalize the Visit
-        GenericValue visit = VisitHandler.getVisit(session);
-        if (visit != null) {
-            visit.set("thruDate", new Timestamp(session.getLastAccessedTime()));
-            try {
+        boolean beganTransaction = false;
+        try {
+            beganTransaction = TransactionUtil.begin();
+        
+            GenericValue visit = VisitHandler.getVisit(session);
+            if (visit != null) {
+                visit.set("thruDate", new Timestamp(session.getLastAccessedTime()));
                 visit.store();
-            } catch (GenericEntityException e) {
-                Debug.logError(e, "Could not update visit for session destuction: " + visit, module);
             }
-        }
 
-        // Store the UserLoginSession
-        String userLoginSessionString = getUserLoginSession(session);
-        GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
-        if (userLogin != null && userLoginSessionString != null) {
-            GenericValue userLoginSession = null;
-            try {
+            // Store the UserLoginSession
+            String userLoginSessionString = getUserLoginSession(session);
+            GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
+            if (userLogin != null && userLoginSessionString != null) {
+                GenericValue userLoginSession = null;
                 userLoginSession = userLogin.getRelatedOne("UserLoginSession");
 
                 if (userLoginSession == null) {
@@ -100,12 +100,28 @@ public class ControlEventListener implements HttpSessionListener {
                 userLoginSession.set("savedDate", UtilDateTime.nowTimestamp());
                 userLoginSession.set("sessionData", userLoginSessionString);
                 userLoginSession.store();
-            } catch (GenericEntityException e) {}
-        }
+            }
 
-        countDestroySession();
-        Debug.logInfo("Destroying session: " + session.getId(), module);
-        this.logStats(session, visit);
+            countDestroySession();
+            Debug.logInfo("Destroying session: " + session.getId(), module);
+            this.logStats(session, visit);
+        } catch (GenericEntityException e) {
+            try {
+                // only rollback the transaction if we started one...
+                TransactionUtil.rollback(beganTransaction);
+            } catch (GenericEntityException e2) {
+                Debug.logError(e2, "[GenericDelegator] Could not rollback transaction: " + e2.toString(), module);
+            }
+
+            Debug.logError(e, "Error in session destuction information persistence", module);
+        } finally {
+            // only commit the transaction if we started one... this will throw an exception if it fails
+            try {
+                TransactionUtil.commit(beganTransaction);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Could not commit transaction for update visit for session destuction", module);
+            }
+        }
     }
 
     public void logStats(HttpSession session, GenericValue visit) {
