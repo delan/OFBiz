@@ -130,8 +130,7 @@
     <!-- Compilation of the core component                                  -->
     <!-- ================================================================== -->
     <target name="tld" depends="prepare">
-        <copy file="${etc.dir}/taglib.tld"
-            tofile="${build.dir}/webapp/META-INF/taglib.tld" />
+        <copy file="${etc.dir}/ofbiz.tld" tofile="${build.dir}/webapp/META-INF/ofbiz.tld" />
     </target>
 
     <target name="classes" depends="tld">
