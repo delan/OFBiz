@@ -25,8 +25,6 @@
 */
 
 importPackage(Packages.java.lang);
-importPackage(Packages.java.net);
-importPackage(Packages.java.util);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
 importPackage(Packages.org.ofbiz.core.service);
@@ -70,7 +68,7 @@ if (catResult != null) {
 var contentPathPrefix = CatalogWorker.getContentPathPrefix(request); 
 request.setAttribute("contentPathPrefix", contentPathPrefix);
 
-// ittle routine to see if any members have a quantity > 0 assigned
+// little routine to see if any members have a quantity > 0 assigned
 var members = request.getAttribute("productCategoryMembers");
 /*
 if (members != null && members.size() > 0) {

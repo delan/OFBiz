@@ -25,8 +25,6 @@
 */
 
 importPackage(Packages.java.lang);
-importPackage(Packages.java.net);
-importPackage(Packages.java.util);
 importPackage(Packages.org.ofbiz.core.util);
 importPackage(Packages.org.ofbiz.core.entity);
 importPackage(Packages.org.ofbiz.core.service);
