@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -213,7 +213,7 @@
                     <a target='_blank' href='${openAddress}' class='buttontext'>(${uiLabelMap.CommonOpenNewWindow})</a>
                   </div>
               <#else>
-                  <div class="tabletext">${contactMech.infoString}</div>
+                  <div class="tabletext">${contactMech.infoString?if_exists}</div>
               </#if>
               <div class="tabletext">(${uiLabelMap.CommonUpdated}:&nbsp;${partyContactMech.fromDate.toString()})</div>
               <#if partyContactMech.thruDate?exists><div class='tabletext'><b>${uiLabelMap.CommonDelete}:&nbsp;${partyContactMech.thruDate.toString()}</b></div></#if>
