@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFinderUtil.java,v 1.1 2004/07/15 22:17:34 jonesde Exp $
+ * $Id: EntityFinderUtil.java,v 1.2 2004/07/24 09:43:27 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class EntityFinderUtil {
@@ -266,7 +266,11 @@ public class EntityFinderUtil {
         public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr) {
             int start = getStart(context);
             int size = getSize(context);
-            listAcsr.put(context, results.subList(start, start + size));
+            
+            int end = start + size;
+            if (end > results.size()) end = results.size();
+            
+            listAcsr.put(context, results.subList(start, end));
         }
     }
     public static class LimitView implements OutputHandler {
@@ -316,7 +320,12 @@ public class EntityFinderUtil {
         public void handleOutput(List results, Map context, FlexibleMapAccessor listAcsr) {
             int index = this.getIndex(context);
             int size = this.getSize(context);
-            listAcsr.put(context, results.subList(index * size, index * size + size));
+            
+            int begin = index * size;
+            int end = index * size + size;
+            if (end > results.size()) end = results.size();
+            
+            listAcsr.put(context, results.subList(begin, end));
         }
     }
     public static class UseIterator implements OutputHandler {
