@@ -516,4 +516,20 @@ public class SQLProcessor {
         
         _ind ++;
     }
+
+    /**
+     * Set the next binding variable of the currently active prepared statement.
+     *
+     * @param field
+     *
+     * @throws SQLException
+     */
+    public void setValue(Boolean field) throws SQLException {
+        if (field != null)
+            _ps.setBoolean(_ind, field.booleanValue());
+        else
+            _ps.setNull(_ind, Types.BOOLEAN);
+        
+        _ind ++;
+    }
 }

@@ -310,6 +310,7 @@ public class SqlJdbcUtil {
                     case 6: entity.set(curField.getName(), new Long(rs.getLong(ind))); break;
                     case 7: entity.set(curField.getName(), new Float(rs.getFloat(ind))); break;
                     case 8: entity.set(curField.getName(), new Double(rs.getDouble(ind))); break;
+                    case 9: entity.set(curField.getName(), new Boolean(rs.getBoolean(ind))); break;
                 }
             }
         } catch (SQLException sqle) {
@@ -354,6 +355,7 @@ public class SqlJdbcUtil {
                 case 6: sqlP.setValue((java.lang.Long) field); break;
                 case 7: sqlP.setValue((java.lang.Float) field); break;
                 case 8: sqlP.setValue((java.lang.Double) field); break;
+                case 9: sqlP.setValue((java.lang.Boolean) field); break;
             }
         } catch (SQLException sqle) {
             throw new GenericDataSourceException( "SQL Exception while setting value: ", sqle);
@@ -378,6 +380,8 @@ public class SqlJdbcUtil {
         fieldTypeMap.put( "Float",              new Integer( 7 ));
         fieldTypeMap.put( "java.lang.Double",   new Integer( 8 ));
         fieldTypeMap.put( "Double",             new Integer( 8 ));
+        fieldTypeMap.put( "java.lang.Boolean",  new Integer( 9 ));
+        fieldTypeMap.put( "Boolean",            new Integer( 9 ));
     }
 
     public static int getType(String fieldType) throws GenericNotImplementedException {

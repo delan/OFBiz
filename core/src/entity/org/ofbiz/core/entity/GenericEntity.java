@@ -187,13 +187,30 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
      * @param setIfNull Specifies whether or not to set the value if it is null
      */
     public synchronized Object set(String name, Object value, boolean setIfNull) {
-        if (getModelEntity().getField(name) == null) {
+        ModelField modelField = getModelEntity().getField(name);
+        if (modelField == null) {
             throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName);
             //Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...");
         }
         if (value != null || setIfNull) {
             if (value instanceof Boolean) {
-                value = ((Boolean) value).booleanValue() ? "Y" : "N";
+                //if this is a Boolean check to see if we should convert from an indicator or just leave as is
+                ModelFieldType type = null;
+                try {
+                    type = getDelegator().getEntityFieldType(getModelEntity(), modelField.getType());
+                } catch (GenericEntityException e) {
+                    Debug.logWarning(e);
+                }
+                if (type == null) throw new IllegalArgumentException("Type " + modelField.getType() + " not found");
+                
+                try {
+                    int fieldType = SqlJdbcUtil.getType(type.getJavaType());
+                    if (fieldType != 9) {
+                        value = ((Boolean) value).booleanValue() ? "Y" : "N";
+                    }
+                } catch (GenericNotImplementedException e) {
+                    throw new IllegalArgumentException(e.getMessage());
+                }
             }
             Object old = fields.put(name, value);
             modified = true;
@@ -232,6 +249,7 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
                 case 6: set(name, Long.valueOf(value)); break;
                 case 7: set(name, Float.valueOf(value)); break;
                 case 8: set(name, Double.valueOf(value)); break;
+                case 9: set(name, Boolean.valueOf(value)); break;
             }
         } catch (GenericNotImplementedException ex) {
             throw new IllegalArgumentException(ex.getMessage());
@@ -239,18 +257,24 @@ public class GenericEntity extends Observable implements Map, Serializable, Comp
     }
 
     public Boolean getBoolean(String name) {
-        String value = getString(name);
-        Boolean result;
-        if (value == null) {
-            result = null;
-        } else if ("Y".equals(value)) {
-            result = Boolean.TRUE;
-        } else if ("N".equals(value)) {
-            result = Boolean.FALSE;
-        } else {
-            throw new IllegalArgumentException("getBoolean could not map '" + value + "' to Boolean type");
+        Object obj = get(name);
+        if (obj == null) {
+            return null;
         }
-        return result;
+        if (obj instanceof Boolean) {
+            return (Boolean) obj;
+        } else if (obj instanceof String) {
+            String value = (String) obj;
+            if ("Y".equals(value)) {
+                return Boolean.TRUE;
+            } else if ("N".equals(value)) {
+                return Boolean.FALSE;
+            } else {
+                throw new IllegalArgumentException("getBoolean could not map the String '" + value + "' to Boolean type");
+            }
+        } else {
+            throw new IllegalArgumentException("getBoolean could not map the object '" + obj.toString() + "' to Boolean type, unknown object type: " + obj.getClass().getName());
+        }
     }
 
     //might be nice to add some ClassCastException handling... and auto conversion? hmmm...
