@@ -25,12 +25,12 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  $Id: widget-screen.dtd,v 1.18 2004/08/14 07:37:24 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.19 2004/08/18 16:15:49 byersa Exp $
 -->
 
 <!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific | link | image">
 
-<!ENTITY % AllConditionals "and | xor | or | not | if-has-permission | if-validate-method | if-compare | if-compare-field | if-regexp | if-empty">
+<!ENTITY % AllConditionals "and | xor | or | not | if-has-permission | if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-entity-permission">
 
 <!ENTITY % AllActions "set | property-map  | property-to-field | script | service | entity-one | entity-and | entity-condition">
 
@@ -57,6 +57,14 @@
     <!ATTLIST if-has-permission
         permission CDATA #REQUIRED
         action CDATA #IMPLIED
+    >
+
+    <!ELEMENT if-entity-permission EMPTY>
+    <!-- entity-id and target-operation can have multiple pipe separated values. Don't use spaces. -->
+    <!ATTLIST if-entity-permission
+        entity-name CDATA #REQUIRED
+        entity-id CDATA #REQUIRED
+        target-operation CDATA #REQUIRED
     >
 
     <!-- if-validate-method calls a static Java method that takes a String and returns a boolean -->
