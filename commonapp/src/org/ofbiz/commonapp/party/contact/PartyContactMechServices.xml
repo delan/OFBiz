@@ -31,10 +31,11 @@
 <simple-methods>
 	<simple-method method-name="createPartyContactMech" short-description="Create a PartyContactMech">
 		<make-value value-name="newValue" entity-name="PartyContactMech"/>
-        <if-empty field-name="partyId">
-            <field-to-field field-name="userLogin.partyId" to-field-name="partyId"/>
+		<make-value entity-name="PartyContactMech" value-name="newPartyContactMech"/>
+    	<if-empty map-name="parameters" field-name="partyId">
+            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-field-name="userLogin.partyId" operator="not-equals">
+        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
@@ -62,10 +63,11 @@
     </simple-method>
     
     <simple-method method-name="updatePartyContactMech" short-description="Update a PartyContactMech">
-    	<if-empty field-name="partyId">
-            <field-to-field field-name="userLogin.partyId" to-field-name="partyId"/>
+		<make-value entity-name="PartyContactMech" value-name="newPartyContactMech"/>
+    	<if-empty map-name="parameters" field-name="partyId">
+            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-field-name="userLogin.partyId" operator="not-equals">
+        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
@@ -122,10 +124,11 @@
     </simple-method>	
     
     <simple-method method-name="deletePartyContactMech" short-description="Delete a PartyContactMech">
-    	<if-empty field-name="partyId">
-            <field-to-field field-name="userLogin.partyId" to-field-name="partyId"/>
+		<make-value entity-name="PartyContactMech" value-name="newPartyContactMech"/>
+    	<if-empty map-name="parameters" field-name="partyId">
+            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-field-name="userLogin.partyId" operator="not-equals">
+        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_DELETE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
@@ -166,10 +169,11 @@
     
     <simple-method method-name="updatePartyPostalAddress" short-description="Update a PostalAddress for party">
 		<make-value entity-name="PartyContactMech" value-name="newPartyContactMech"/>
-    	<if-empty field-name="partyId">
-            <field-to-field field-name="userLogin.partyId" to-field-name="partyId"/>
+		<make-value entity-name="PartyContactMech" value-name="newPartyContactMech"/>
+    	<if-empty map-name="parameters" field-name="partyId">
+            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-field-name="userLogin.partyId" operator="not-equals">
+        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
@@ -213,10 +217,10 @@
     
     <simple-method method-name="updatePartyTelecomNumber" short-description="Update a TelecomNumber for party">
 		<make-value entity-name="PartyContactMech" value-name="newPartyContactMech"/>
-    	<if-empty field-name="partyId">
-            <field-to-field field-name="userLogin.partyId" to-field-name="partyId"/>
+    	<if-empty map-name="parameters" field-name="partyId">
+            <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-field-name="userLogin.partyId" operator="not-equals">
+        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
