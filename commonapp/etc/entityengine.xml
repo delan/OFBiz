@@ -30,7 +30,7 @@ access. For a detailed description see the core/docs/entityconfig.html file.
     <delegator name="default" entity-model-reader="main" entity-group-reader="main">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localpostgres"/>
     </delegator>
-    <delegator name="sap" entity-model-reader="main" entity-group-reader="main">
+    <delegator name="other" entity-model-reader="main" entity-group-reader="main">
         <group-map group-name="org.ofbiz.commonapp" datasource-name="localsapdb"/>
     </delegator>
 
@@ -160,7 +160,8 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             field-type-name="sapdb"
             check-on-start="true"
             add-missing-on-start="true"
-            fk-style="name_fk">
+            fk-style="name_fk"
+            use-fk-initially-deferred="false">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
         <inline-jdbc
