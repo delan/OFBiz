@@ -31,6 +31,9 @@ import org.ofbiz.core.util.*;
 
 delegator = request.getAttribute("delegator");
 
+facilityId = request.getParameter("facilityId");
+context.put("facilityId", facilityId);
+
 // get the order types
 orderTypes = delegator.findAll("OrderType", UtilMisc.toList("description"));
 context.put("orderTypes", orderTypes);

@@ -33,6 +33,9 @@ import org.ofbiz.core.util.*;
 dispatcher = request.getAttribute("dispatcher");
 userLogin = session.getAttribute("userLogin");
 
+facilityId = request.getParameter("facilityId");
+context.put("facilityId", facilityId);
+
 orderHeaderList = null;
 if (true) {
     paramList = paramList + "&lookupFlag=" + lookupFlag;
@@ -127,7 +130,7 @@ if (true) {
 }
 
 // if orderHeaderList is null or empty the service will get all approved orders
-inMap = UtilMisc.toMap("orderHeaderList", orderHeaderList, "userLogin", userLogin);
+inMap = UtilMisc.toMap("orderHeaderList", orderHeaderList, "userLogin", userLogin, "facilityId", facilityId);
 outMap = dispatcher.runSync("getPicklistData", inMap);
      
 context.put("inventoryItemInfoList", outMap.get("inventoryItemInfoList"));

@@ -25,8 +25,24 @@
  *@since      2.2
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
+<#if facilityId?has_content>
+  <div class='tabContainer'>
+    <a href="<@ofbizUrl>/EditFacility?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Facility</a>
+    <a href="<@ofbizUrl>/EditFacilityGroups?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Groups</a>
+    <a href="<@ofbizUrl>/FindFacilityLocations?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Locations</a>
+    <a href="<@ofbizUrl>/EditFacilityRoles?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Roles</a>
+    <a href="<@ofbizUrl>/EditFacilityInventoryItems?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Items</a>
+    <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Receive</a>
+    <a href="<@ofbizUrl>/FindFacilityTransfers?facilityId=${facilityId}</@ofbizUrl>" class="tabButton">Inventory&nbsp;Xfers</a>
+    <a href="<@ofbizUrl>/PicklistOptions?facilityId=${facilityId}</@ofbizUrl>" class="tabButtonSelected">Picklist</a>
+  </div>
+</#if>
+
 <form method='post' name="PicklistOptions" action="<@ofbizUrl>/Picklist</@ofbizUrl>">
+  <#if requestParameters.facilityId?exists>
+    <input type="hidden" name="facilityId" value="requestParameters.facilityId"/>
+  </#if>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <tr>
     <td width='100%'>
@@ -55,14 +71,14 @@
                     <#if currentRole?has_content>
                     <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
                     <option value="${currentRole.roleTypeId}">---</option>
-                    </#if>                                     
-                    <option value="ANY">Any Role Type</option>                   
+                    </#if>
+                    <option value="ANY">Any Role Type</option>
                     <#list roleTypes as roleType>
                       <option value="${roleType.roleTypeId}">${roleType.description}</option>
                     </#list>
                   </select>
                 </td>
-              </tr>                                      
+              </tr>
               <tr>
                 <td width='25%' align='right'><div class='tableheadtext'>Party ID:</div></td>
                 <td width='5%'>&nbsp;</td>

@@ -72,6 +72,7 @@
 	<a href="<ofbiz:url>/ReceiveInventory?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Inventory&nbsp;Receive</a>
     <a href="<ofbiz:url>/FindFacilityTransfers?facilityId=<%=facilityId%></ofbiz:url>" class="tabButtonSelected">Inventory&nbsp;Xfers</a>
     <a href="<ofbiz:url>/ReceiveReturn?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Receive Return</a>
+    <a href="<ofbiz:url>/PicklistOptions?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Picklist</a>
   </div>
 <%}%>
 

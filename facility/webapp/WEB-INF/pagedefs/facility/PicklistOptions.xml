@@ -2,6 +2,6 @@
 <page>
     <template>main</template>
     <property name="title">Pick List Options</property>
-    <property name="headerItem">picklist</property>
-    <page-action name="/shipment/PicklistOptions.bsh"/> 
+    <property name="headerItem">facility</property>
+    <page-action name="/facility/PicklistOptions.bsh"/> 
 </page>

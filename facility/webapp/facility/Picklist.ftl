@@ -24,7 +24,7 @@
  *@since      2.2
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>
+<#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
 <table border=0 width="100%" cellspacing="0" cellpadding="0" class="boxoutside">
   <tr>
