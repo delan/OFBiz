@@ -178,9 +178,10 @@ public class PayPalEvents {
         Map parametersMap = UtilMisc.getParameterMap(request);
         parametersMap.put("cmd", "_notify-validate");  
         
-        // send off the confirm request
+        // send off the confirm request 
         HttpClient hclient = new HttpClient(confirmUrl, parametersMap);
         String confirmResp = null;
+        /* -- this does not work, use the code below
         try {
             confirmResp = hclient.post();
             Debug.logError("PayPal Verification Response: " + confirmResp, module);
@@ -188,6 +189,7 @@ public class PayPalEvents {
             Debug.logError(e, "Problems connection to PayPal confirm URL", module);
             return "error";
         }
+        */
         
         // second verify, without using HttpClient -- testing
         try {                
@@ -301,25 +303,7 @@ public class PayPalEvents {
                                 
         return "success";
     }
-    
-    private static boolean setPaymentPreferences(GenericDelegator delegator, String orderId, ServletRequest request) {
-        List paymentPrefs = null;
-        try {
-            Map paymentFields = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_RECEIVED");
-            paymentPrefs = delegator.findByAnd("OrderPaymentPreference", paymentFields);
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Cannot get payment preferences for order #" + orderId, module);
-        }
-        if (paymentPrefs != null && paymentPrefs.size() > 0) {
-            Iterator i = paymentPrefs.iterator();
-            while (i.hasNext()) {
-                GenericValue pref = (GenericValue) i.next();
-                setPaymentPreference(pref, request);
-            }
-        }
-        return false;
-    }  
-    
+        
     /** Event called when customer cancels a paypal order */
     public static String cancelPayPalOrder(HttpServletRequest request, HttpServletResponse response) {
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
@@ -366,6 +350,28 @@ public class PayPalEvents {
         return "success";        
     }    
     
+    private static boolean setPaymentPreferences(GenericDelegator delegator, String orderId, ServletRequest request) {
+        Debug.logVerbose("Setting payment prefrences..", module);
+        List paymentPrefs = null;
+        try {
+            Map paymentFields = UtilMisc.toMap("orderId", orderId, "statusId", "PAYMENT_NOT_RECEIVED");
+            paymentPrefs = delegator.findByAnd("OrderPaymentPreference", paymentFields);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get payment preferences for order #" + orderId, module);
+            return false;
+        }
+        if (paymentPrefs != null && paymentPrefs.size() > 0) {
+            Iterator i = paymentPrefs.iterator();
+            while (i.hasNext()) {
+                GenericValue pref = (GenericValue) i.next();
+                boolean okay = setPaymentPreference(pref, request);
+                if (!okay)
+                    return false;
+            }
+        }
+        return true;
+    }  
+        
     private static boolean setPaymentPreference(GenericValue paymentPreference, ServletRequest request) {
         String paymentDate = request.getParameter("payment_date");  
         String paymentType = request.getParameter("payment_type");      
