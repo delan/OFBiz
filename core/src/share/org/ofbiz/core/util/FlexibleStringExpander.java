@@ -88,6 +88,19 @@ public class FlexibleStringExpander {
      * @return The original String expanded by replacing varaible place holders.
      */
     public static String expandString(String original, Map context) {
+        // start by checking to see if expansion is necessary for better performance
+        // this is also necessary for the nested stuff since this will be the stopping point for nested expansions
+        int start = original.indexOf("${");
+        if (start == -1) {
+            return original;
+        } else {
+            if (original.indexOf("}", start) == -1) {
+                //no ending for the start, so we also have a stop condition
+                Debug.logWarning("Found a ${ without a closing } (curly-brace) in the String: " + original);
+                return original;  
+            }
+        }
+        
         StringBuffer expanded = new StringBuffer();
         ParseElementHandler handler = new OnTheFlyHandler(expanded, context);
         parseString(original, handler);
