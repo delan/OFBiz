@@ -59,7 +59,7 @@ public class EntityFieldTag extends TagSupport {
         // Get the ValueObject from PageContext.
         GenericValue valueObject = (GenericValue) pageContext.findAttribute(attribute);
         if ( valueObject == null ) {
-            throw new JspTagException("Attribute not found in page context.");
+            return (SKIP_BODY);  
         }
         
         // Get the Delegator from the ValueObject.        
