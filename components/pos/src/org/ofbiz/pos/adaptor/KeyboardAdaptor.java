@@ -1,5 +1,5 @@
 /*
- * $Id: KeyboardAdaptor.java,v 1.3 2004/08/15 21:26:40 ajzeneski Exp $
+ * $Id: KeyboardAdaptor.java,v 1.4 2004/08/15 22:43:04 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.pos.component.Input;
  * KeyboardAdaptor - Handles reading keyboard input
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.2
  */
 public class KeyboardAdaptor {
@@ -108,6 +108,10 @@ public class KeyboardAdaptor {
         private long lastKey = -1;
         private KeyReader reader = null;
 
+        public KeyboardListener() {
+            this.reader = new KeyReader(this);
+        }
+
         private void receiveKey(int keycode, char keychar) {
             lastKey = System.currentTimeMillis();
             keyCharData.add(new Character(keychar));
@@ -158,8 +162,7 @@ public class KeyboardAdaptor {
             }
         }
 
-        public void run() {
-            this.reader = new KeyReader(this);
+        public void run() {            
             while (running) {
                 long now = System.currentTimeMillis();
                 if ((now - lastKey) >= MAX_WAIT) {
