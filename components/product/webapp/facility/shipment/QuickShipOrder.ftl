@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      3.0
 -->
 
@@ -128,7 +128,7 @@ function setWeight(weight) {
             <#-- display the links for label/packing slip -->
             <#assign allDone = "yes">
             <center>
-              <a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId&shipmentPackageSeqId=00001}</@ofbizUrl>" target="_blank" class="buttontext">Shipping Label</a><br>
+              <a href="<@ofbizUrl>/viewShipmentPackageRouteSegLabelImage?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}&shipmentPackageSeqId=00001</@ofbizUrl>" target="_blank" class="buttontext">Shipping Label</a><br>
               <a href="<@ofbizUrl>/ShipmentManifestReport.pdf?shipmentId=${requestParameters.shipmentId}&shipmentRouteSegmentId=${requestParameters.shipmentRouteSegmentId}</@ofbizUrl>" target="_blank" class="buttontext">Packing Slip</a>
             </center>                
           </#if>
