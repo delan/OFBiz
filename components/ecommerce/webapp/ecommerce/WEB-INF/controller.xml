@@ -409,14 +409,14 @@
     <request-map uri="updateShippingAddress">
         <security https="true" auth="true"/>
         <event type="service" invoke="setCartShippingAddress"/>
-        <response name="success" type="view" value="checkoutoptions"/>
-        <response name="error" type="request" value="checkouterror"/>
+        <response name="success" type="view" value="splitship"/>
+        <response name="error" type="request" value="splitship"/>
     </request-map>
     <request-map uri="updateShippingOptions">
         <security https="true" auth="true"/>
         <event type="service" invoke="setCartShippingOptions"/>
-        <response name="success" type="view" value="checkoutoptions"/>
-        <response name="error" type="request" value="checkouterror"/>
+        <response name="success" type="view" value="splitship"/>
+        <response name="error" type="request" value="splitship"/>
     </request-map>
 
     <request-map uri="calcShipping">
