@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.40 2004/08/11 21:05:13 byersa Exp $
+ * $Id: ContentWorker.java,v 1.41 2004/08/12 05:29:37 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -68,7 +68,7 @@ import bsh.EvalError;
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.40 $
+ * @version $Revision: 1.41 $
  * @since 2.2
  * 
  *  
@@ -465,9 +465,9 @@ public class ContentWorker {
 
         GenericDelegator delegator = currentContent.getDelegator();
         List assocList = getAssociations(currentContent, linkDir, assocTypes, fromDate, thruDate);
-        if (Debug.infoOn()) Debug.logInfo("assocList:" + assocList, "");
         if (assocList == null || assocList.size() == 0)
             return assocList;
+        if (Debug.infoOn()) Debug.logInfo("assocList:" + assocList.size() + " contentId:" + currentContent.getString("contentId"), "");
 
         List contentList = new ArrayList();
         String contentIdName = "contentId";
@@ -481,7 +481,8 @@ public class ContentWorker {
         while (assocIt.hasNext()) {
             assoc = (GenericValue) assocIt.next();
             String contentId = (String) assoc.get(contentIdName);
-            content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
+            if (Debug.infoOn()) Debug.logInfo("contentId:" + contentId, "");
+            content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
             if (contentTypes != null && contentTypes.size() > 0) {
                 contentTypeId = (String) content.get("contentTypeId");
                 if (contentTypes.contains(contentTypeId)) {
@@ -492,6 +493,7 @@ public class ContentWorker {
             }
 
         }
+        if (Debug.infoOn()) Debug.logInfo("contentList:" + contentList.size() , "");
         return contentList;
 
     }
@@ -562,6 +564,7 @@ public class ContentWorker {
             thruDate = UtilDateTime.toTimestamp(strThruDate);
         }
         List assocs = getContentAssocsWithId(delegator, origContentId, fromDate, thruDate, linkDir, assocTypes);
+        //if (Debug.infoOn()) Debug.logInfo(" origContentId:" + origContentId + " linkDir:" + linkDir + " assocTypes:" + assocTypes, "");
         return assocs;
     }
 
@@ -611,7 +614,9 @@ public class ContentWorker {
             exprList.add(thruExprList);
         }
         EntityConditionList assocExprList = new EntityConditionList(exprList, EntityOperator.AND);
+        if (Debug.infoOn()) Debug.logInfo(" assocExprList:" + assocExprList , "");
         List relatedAssocs = delegator.findByCondition("ContentAssoc", assocExprList, new ArrayList(), UtilMisc.toList("-fromDate"));
+        if (Debug.infoOn()) Debug.logInfo(" relatedAssoc:" + relatedAssocs.size() , "");
         for (int i = 0; i < relatedAssocs.size(); i++) {
             GenericValue a = (GenericValue) relatedAssocs.get(i);
 
