@@ -44,6 +44,7 @@ public class JavaEventHandler implements EventHandler {
 
     private String eventPath = null;
     private String eventMethod = null;
+    private Class eventClass = null;
 
     /** Initialize the required parameters
      *@param eventPath The path or location of this event
@@ -52,6 +53,11 @@ public class JavaEventHandler implements EventHandler {
     public void initialize(String eventPath, String eventMethod) {
         this.eventPath = eventPath;
         this.eventMethod = eventMethod;
+        try {
+            this.eventClass = Class.forName(eventPath);
+        } catch (ClassNotFoundException e) {
+            Debug.logError(e, "Error loading class with name: " + eventPath + ", will not be able to run event...");
+        }
         Debug.logVerbose("[Set path/method]: " + eventPath + " / " + eventMethod, module);
     }
 
@@ -74,8 +80,7 @@ public class JavaEventHandler implements EventHandler {
 
         Debug.logVerbose("[Processing]: JAVA Event", module);
         try {
-            Class c = Class.forName(eventPath);
-            Method m = c.getMethod(eventMethod, paramTypes);
+            Method m = eventClass.getMethod(eventMethod, paramTypes);
             String eventReturn = (String) m.invoke(null, params);
             Debug.logVerbose("[Event Return]: " + eventReturn, module);
             return eventReturn;

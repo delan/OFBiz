@@ -46,6 +46,8 @@ import org.ofbiz.core.service.GenericServiceException;
  */
 public class GenericEngineFactory {
 
+    protected static Map engines = new HashMap();
+    
     /** Gets the GenericEngine instance that corresponds to given the name
      *@param engineName Name of the engine
      *@return GenericEngine that corresponds to the engineName
@@ -66,16 +68,27 @@ public class GenericEngineFactory {
 
         String className = engineElement.getAttribute("class");
 
-        Class[] paramTypes = new Class[]{ServiceDispatcher.class};
-        Object[] params = new Object[]{dispatcher};
-        GenericEngine engine = null;
-        try {
-            Class c = Class.forName(className);
-            Constructor cn = c.getConstructor(paramTypes);
-            engine = (GenericEngine) cn.newInstance(params);
-        } catch (Exception e) {
-            throw new GenericServiceException(e.getMessage(), e);
+        GenericEngine engine = (GenericEngine) engines.get(engineName);
+        if (engine == null) {
+            synchronized (GenericEngineFactory.class) {
+                engine = (GenericEngine) engines.get(engineName);
+                if (engine == null) {
+                    Class[] paramTypes = new Class[]{ServiceDispatcher.class};
+                    Object[] params = new Object[]{dispatcher};
+                    try {
+                        Class c = Class.forName(className);
+                        Constructor cn = c.getConstructor(paramTypes);
+                        engine = (GenericEngine) cn.newInstance(params);
+                    } catch (Exception e) {
+                        throw new GenericServiceException(e.getMessage(), e);
+                    }
+                    if (engine != null) {
+                        engines.put(engineName, engine);
+                    }
+                }
+            }
         }
+        
         return engine;
     }
 }

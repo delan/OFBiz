@@ -25,7 +25,7 @@
 package org.ofbiz.core.util;
 
 import java.text.*;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * Utilities for analyzing and converting Object types in Java - takes advantage of a lot of reflection and other stuff
@@ -38,20 +38,32 @@ import java.util.Locale;
 public class ObjectType {
     public static final String module = ObjectType.class.getName();
 
+    protected static Map classCache = new HashMap();
+    
     /** Loads a class with the current thread's context classloader
      * @param className The name of the class to load
      */
     public static Class loadClass(String className) throws ClassNotFoundException {
-        ClassLoader loader = null;
-        Class c = null;
-        try {
-            loader = Thread.currentThread().getContextClassLoader();
-            c = loader.loadClass(className);
-        } catch (Exception e) {
-            c = Class.forName(className);
+        Class theClass = (Class) classCache.get(className);
+        if (theClass == null) {
+            synchronized (ObjectType.class) {
+                theClass = (Class) classCache.get(className);
+                if (theClass == null) {
+                    try {
+                        ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                        theClass = loader.loadClass(className);
+                    } catch (Exception e) {
+                        theClass = Class.forName(className);
+                    }
+                    if (theClass != null) {
+                        if (Debug.verboseOn()) Debug.logVerbose("Loaded Class: " + theClass.getName(), module);
+                        classCache.put(className, theClass);
+                    }
+                }
+            }
         }
-        Debug.logVerbose("Loaded Class: " + c.getName(), module);
-        return c;
+        
+        return theClass;
     }
 
     /** Returns an instance of the specified class
@@ -61,7 +73,7 @@ public class ObjectType {
             InstantiationException, IllegalAccessException {
         Class c = loadClass(className);
         Object o = c.newInstance();
-        Debug.logVerbose("Instantiated object: " + o.toString(), module);
+        if (Debug.verboseOn()) Debug.logVerbose("Instantiated object: " + o.toString(), module);
         return o;
     }
 

@@ -53,7 +53,7 @@ public class ObjectTag extends TagSupport {
     }
 
     public void setType(String type) throws ClassNotFoundException {
-        this.type = Class.forName(type);
+        this.type = ObjectType.loadClass(type);
     }
 
     public String getName() {

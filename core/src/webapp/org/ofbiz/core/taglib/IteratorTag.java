@@ -63,7 +63,7 @@ public class IteratorTag extends BodyTagSupport {
     }
 
     public void setType(String type) throws ClassNotFoundException {
-        this.type = Class.forName(type);
+        this.type = ObjectType.loadClass(type);
     }
 
     public void setLimit(int limit) {
