@@ -89,4 +89,36 @@
 
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>	
+
+	<form name="CreateProductStoreCatalog" type="single" 
+		target="createProductStoreCatalog" title=""
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="createProductStoreCatalog"/>
+		<field name="productStoreId" map-name="productStore"><hidden/></field>
+		<field name="prodCatalogId" title="Catalog" widget-style="selectBox">
+			<drop-down>
+				<entity-options entity-name="ProdCatalog" description="${catalogName}">
+					<entity-order-by field-name="catalogName"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+	</form>
+	<form name="UpdateProductStoreCatalog" type="list"
+		target="updateProductStoreCatalog" title="" list-name="productStoreCatalogDatas"
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="updateProductStoreCatalog" map-name="productStoreCatalog"/>
+		<field name="productStoreId"><hidden/></field>
+		<field name="prodCatalogId" title="Catalog [ID]" widget-style="buttontext">
+			<hyperlink target-type="intra-app" target="EditProdCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}"
+				description="${prodCatalog.catalogName} [${productStoreCatalog.prodCatalogId}]"/>
+		</field>
+		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
+		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
+		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+			<hyperlink target="deleteProductStoreCatalog?prodCatalogId=${productStoreCatalog.prodCatalogId}&amp;productStoreId=${productStoreCatalog.productStoreId}&amp;fromDate=${productStoreCatalog.fromDate}"
+				description="[Delete]" also-hidden="false"/>
+		</field>
+	</form>
 </forms>

@@ -49,20 +49,21 @@ String productPromoId = request.getParameter("productPromoId");
 if (productPromoId != null) context.put("productPromoId", productPromoId);
 
 GenericValue productPromo = delegator.findByPrimaryKey("ProductPromo", UtilMisc.toMap("productPromoId", productPromoId));    
-Collection prodCatalogPromoAppls = null;
+Collection productStorePromoAppls = null;
 boolean tryEntity = true;
 
 if (productPromo == null) {
     tryEntity = false;
 } else {
     context.put("productPromo", productPromo);    
-    prodCatalogPromoAppls = productPromo.getRelated("ProdCatalogPromoAppl", null, UtilMisc.toList("sequenceNum", "productPromoId"));
-    if (prodCatalogPromoAppls != null) context.put("prodCatalogPromoAppls", prodCatalogPromoAppls);
+    productStorePromoAppls = productPromo.getRelated("ProductStorePromoAppl", null, UtilMisc.toList("sequenceNum", "productPromoId"));
+    if (productStorePromoAppls != null) context.put("productStorePromoAppls", productStorePromoAppls);
 }
 
-Collection prodCatalogs = delegator.findAll("ProdCatalog", UtilMisc.toList("catalogName"));
-if (prodCatalogs != null) context.put("prodCatalogs", prodCatalogs);
+Collection productStores = delegator.findAll("ProductStore", UtilMisc.toList("catalogName"));
+if (productStores != null) context.put("productStores", productStores);
 
 if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
 
 context.put("tryEntity", tryEntity);
+

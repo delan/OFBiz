@@ -28,6 +28,8 @@
   <#if productStoreId?has_content>
     <div class='tabContainer'>
       <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Store</a>
+      <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Promos</a>
+      <a href="<@ofbizUrl>/EditProductStoreCatalogs?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Catalogs</a>
       <a href="<@ofbizUrl>/ProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">WebSites</a>
       <a href="<@ofbizUrl>/ProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Sales Tax</a>
       <a href="<@ofbizUrl>/ProductStoreShipSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">Shipping</a>

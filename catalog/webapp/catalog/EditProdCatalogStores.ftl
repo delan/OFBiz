@@ -29,21 +29,20 @@
 <#if prodCatalogId?has_content>
   <div class='tabContainer'>
   <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Catalog</a>
-  <a href="<@ofbizUrl>/EditProdCatalogWebSites?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">WebSites</a>
+  <a href="<@ofbizUrl>/EditProdCatalogStores?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">Stores</a>
   <a href="<@ofbizUrl>/EditProdCatalogParties?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Parties</a>
   <a href="<@ofbizUrl>/EditProdCatalogCategories?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Categories</a>
-  <a href="<@ofbizUrl>/EditProdCatalogPromos?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Promotions</a>
   </div>
 </#if>
 
-<div class="head1">Web Sites <span class='head2'>for <#if (prodCatalog.catalogName)?has_content>"${prodCatalog.catalogName}"</#if> [ID:${prodCatalogId?if_exists}]</span></div>
+<div class="head1">Stores <span class='head2'>for <#if (prodCatalog.catalogName)?has_content>"${prodCatalog.catalogName}"</#if> [ID:${prodCatalogId?if_exists}]</span></div>
 <a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[New ProdCatalog]</a>
 <br>
 <br>
 <#if prodCatalogId?has_content>
-${updateProdCatalogToWebSiteWrapper.renderFormString()}
+${updateProductStoreCatalogWrapper.renderFormString()}
 <br>
-${addProdCatalogToWebSiteWrapper.renderFormString()}
+${createProductStoreCatalogWrapper.renderFormString()}
 </#if>
 <br>
 

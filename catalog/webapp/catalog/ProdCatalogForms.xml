@@ -85,34 +85,34 @@
 				description="[Delete]" also-hidden="false"/>
 		</field>
 	</form>
-	<form name="AddProdCatalogToWebSite" type="single" 
-		target="addProdCatalogToWebSite" title=""
+	<form name="CreateProductStoreCatalog" type="single" 
+		target="createProdCatalogStore" title=""
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="addProdCatalogToWebSite"/>
+		<auto-fields-service service-name="createProductStoreCatalog"/>
 		<field name="prodCatalogId" map-name="prodCatalog"><hidden/></field>
-		<field name="webSiteId" title="Web Site" widget-style="selectBox">
+		<field name="productStoreId" title="Store" widget-style="selectBox">
 			<drop-down>
-				<entity-options entity-name="WebSite" description="${siteName}">
-					<entity-order-by field-name="siteName"/>
+				<entity-options entity-name="ProductStore" description="${storeName}">
+					<entity-order-by field-name="storeName"/>
 				</entity-options>
 			</drop-down>
 		</field>
 		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
 	</form>
-	<form name="UpdateProdCatalogToWebSite" type="list"
-		target="updateProdCatalogToWebSite" title="" list-name="webSiteCatalogDatas"
+	<form name="UpdateProductStoreCatalog" type="list"
+		target="updateProdCatalogStore" title="" list-name="productStoreCatalogDatas"
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="updateProdCatalogToWebSite" map-name="webSiteCatalog"/>
+		<auto-fields-service service-name="updateProductStoreCatalog" map-name="productStoreCatalog"/>
 		<field name="prodCatalogId"><hidden/></field>
-		<field name="webSiteId" title="WebSite [ID]" widget-style="buttontext">
-			<hyperlink target-type="inter-app" target="/content/control/EditWebSite?webSiteId=${webSiteCatalog.webSiteId}"
-				description="${webSite.siteName} [${webSiteCatalog.webSiteId}]"/>
+		<field name="productStoreId" title="Store [ID]" widget-style="buttontext">
+			<hyperlink target-type="intra-app" target="EditProductStore?productStoreId=${productStoreCatalog.productStoreId}"
+				description="${productStoreCatalog.storeName} [${productStoreCatalog.productStoreId}]"/>
 		</field>
 		<field name="fromDate" title="From Date &amp;amp; Time" widget-style="tabletext"><display/></field>
 		<field name="thruDate" title="Thru Date &amp;amp; Time"></field>
 		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
 		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="removeProdCatalogFromWebSite?prodCatalogId=${webSiteCatalog.prodCatalogId}&amp;webSiteId=${webSiteCatalog.webSiteId}&amp;fromDate=${webSiteCatalog.fromDate}"
+			<hyperlink target="deleteProdCatalogStore?prodCatalogId=${productStoreCatalog.prodCatalogId}&amp;productStoreId=${productStoreCatalog.productStoreId}&amp;fromDate=${productStoreCatalog.fromDate}"
 				description="[Delete]" also-hidden="false"/>
 		</field>
 	</form>

@@ -39,27 +39,27 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
 
 String prodCatalogId = request.getParameter("prodCatalogId");
 GenericValue prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
-List webSiteCatalogs = null;
-List webSiteCatalogDatas = new LinkedList();
+List productStoreCatalogs = null;
+List productStoreCatalogDatas = new LinkedList();
 if (prodCatalog != null) {
-    webSiteCatalogs = prodCatalog.getRelated("WebSiteCatalog", null, UtilMisc.toList("sequenceNum", "webSiteId"));
-    Iterator webSiteCatalogIter = webSiteCatalogs.iterator();
-    while (webSiteCatalogIter.hasNext()) {
-        GenericValue webSiteCatalog = (GenericValue) webSiteCatalogIter.next();
-        Map webSiteCatalogData = new HashMap();
-        webSiteCatalogData.put("webSiteCatalog", webSiteCatalog);
-        webSiteCatalogData.put("webSite", webSiteCatalog.getRelatedOne("WebSite"));
-        webSiteCatalogDatas.add(webSiteCatalogData);
+    productStoreCatalogs = prodCatalog.getRelated("ProductStoreCatalog", null, UtilMisc.toList("sequenceNum", "productStoreId"));
+    Iterator productStoreCatalogIter = productStoreCatalogs.iterator();
+    while (productStoreCatalogIter.hasNext()) {
+        GenericValue productStoreCatalog = (GenericValue) productStoreCatalogIter.next();
+        Map productStoreCatalogData = new HashMap();
+        productStoreCatalogData.put("productStoreCatalog", productStoreCatalog);
+        productStoreCatalogData.put("productStore", productStoreCatalog.getRelatedOne("ProductStore"));
+        productStoreCatalogDatas.add(productStoreCatalogData);
     }
 }
 
-HtmlFormWrapper updateProdCatalogToWebSiteWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "UpdateProdCatalogToWebSite", request, response);
-updateProdCatalogToWebSiteWrapper.putInContext("webSiteCatalogDatas", webSiteCatalogDatas);
+HtmlFormWrapper updateProductStoreCatalogWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "UpdateProductStoreCatalog", request, response);
+updateProductStoreCatalogWrapper.putInContext("productStoreCatalogDatas", productStoreCatalogDatas);
 
-HtmlFormWrapper addProdCatalogToWebSiteWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "AddProdCatalogToWebSite", request, response);
-addProdCatalogToWebSiteWrapper.putInContext("prodCatalog", prodCatalog);
+HtmlFormWrapper createProductStoreCatalogWrapper = new HtmlFormWrapper("/catalog/ProdCatalogForms.xml", "CreateProductStoreCatalog", request, response);
+createProductStoreCatalogWrapper.putInContext("prodCatalog", prodCatalog);
 
 context.put("prodCatalogId", prodCatalogId);
 context.put("prodCatalog", prodCatalog);
-context.put("updateProdCatalogToWebSiteWrapper", updateProdCatalogToWebSiteWrapper);
-context.put("addProdCatalogToWebSiteWrapper", addProdCatalogToWebSiteWrapper);
+context.put("updateProductStoreCatalogWrapper", updateProductStoreCatalogWrapper);
+context.put("createProductStoreCatalogWrapper", createProductStoreCatalogWrapper);

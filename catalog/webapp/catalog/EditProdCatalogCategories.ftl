@@ -29,10 +29,9 @@
     <#if prodCatalogId?has_content>
         <div class="tabContainer">
         <a href="<@ofbizUrl>/EditProdCatalog?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Catalog</a>
-        <a href="<@ofbizUrl>/EditProdCatalogWebSites?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">WebSites</a>
+        <a href="<@ofbizUrl>/EditProdCatalogStores?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Stores</a>
         <a href="<@ofbizUrl>/EditProdCatalogParties?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Parties</a>
         <a href="<@ofbizUrl>/EditProdCatalogCategories?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButtonSelected">Categories</a>
-        <a href="<@ofbizUrl>/EditProdCatalogPromos?prodCatalogId=${prodCatalogId}</@ofbizUrl>" class="tabButton">Promotions</a>
         </div>
     </#if>
     <div class="head1">Categories <span class="head2">for <#if prodCatalogId?has_content>${prodCatalogId}</#if>

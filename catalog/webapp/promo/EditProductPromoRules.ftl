@@ -30,7 +30,7 @@
         <div class="tabContainer">
         <a href="<@ofbizUrl>/EditProductPromo?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButton">Promo</a>
         <a href="<@ofbizUrl>/EditProductPromoRules?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButtonSelected">Rules</a>
-        <a href="<@ofbizUrl>/EditProductPromoCatalogs?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButton">Catalogs</a>
+        <a href="<@ofbizUrl>/EditProductPromoStores?productPromoId=${productPromoId}</@ofbizUrl>" class="tabButton">Stores</a>
         </div>
     </#if>
     

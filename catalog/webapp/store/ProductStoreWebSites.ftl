@@ -28,6 +28,8 @@
   <#if productStoreId?has_content>
     <div class='tabContainer'>
       <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Store</a>
+      <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Promos</a>
+      <a href="<@ofbizUrl>/EditProductStoreCatalogs?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Catalogs</a>
       <a href="<@ofbizUrl>/ProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">WebSites</a>
       <a href="<@ofbizUrl>/ProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Sales Tax</a>
       <a href="<@ofbizUrl>/ProductStoreShipSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Shipping</a>
@@ -47,7 +49,7 @@
     <#if storeWebSites?has_content>
       <#list storeWebSites as webSite>
         <tr> 
-          <td><span class="tabletext">${webSite.siteName} [${webSite.webSiteId}]</div></td>
+          <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${webSite.siteName} [${webSite.webSiteId}]</a></td>
           <td><span class="tabletext">${webSite.httpHost?default('&nbsp;')}</span></td>
           <td><span class="tabletext">${webSite.httpPort?default('&nbsp;')}</span></td>
         </tr>
