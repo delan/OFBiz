@@ -287,7 +287,7 @@ public class DatabaseUtil {
 
                 if (addMissing) {
                     // create the table
-                    String errMsg = createTable(entity, modelEntities, false, datasourceInfo.usePkConstraintNames, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, datasourceInfo.alwaysUseConstraintKeyword);
+                    String errMsg = createTable(entity, modelEntities, false, datasourceInfo.usePkConstraintNames, datasourceInfo.constraintNameClipLength, datasourceInfo.fkStyle, datasourceInfo.useFkInitiallyDeferred, datasourceInfo.alwaysUseConstraintKeyword, datasourceInfo.tableType);
                     if (errMsg != null && errMsg.length() > 0) {
                         message = "Could not create table \"" + entity.getTableName(datasourceInfo) + "\": " + errMsg;
                         Debug.logError(message, module);
@@ -1262,7 +1262,7 @@ public class DatabaseUtil {
 
     /* ====================================================================== */
 
-    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred, boolean alwaysUseConstraintKeyword) {
+    public String createTable(ModelEntity entity, Map modelEntities, boolean addFks, boolean usePkConstraintNames, int constraintNameClipLength, String fkStyle, boolean useFkInitiallyDeferred, boolean alwaysUseConstraintKeyword, String tableType) {
         if (entity == null) {
             return "ModelEntity was null and is required to create a table";
         }
@@ -1349,6 +1349,13 @@ public class DatabaseUtil {
         }
 
         sqlBuf.append(")");
+        
+        // if there is a tableType, add the TYPE arg here
+        if (UtilValidate.isNotEmpty(tableType)) {
+            sqlBuf.append(" TYPE ");
+            sqlBuf.append(tableType);
+        }
+        
         if (Debug.verboseOn()) Debug.logVerbose("[createTable] sql=" + sqlBuf.toString(), module);
         try {
             stmt = connection.createStatement();
