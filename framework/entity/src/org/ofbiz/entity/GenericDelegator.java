@@ -28,15 +28,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.cache.UtilCache;
@@ -106,14 +107,14 @@ public class GenericDelegator implements DelegatorInterface {
 
     /** the delegatorCache will now be a HashMap, allowing reload of definitions,
      * but the delegator will always be the same object for the given name */
-    protected static Map delegatorCache = new HashMap();
+    protected static Map delegatorCache = FastMap.newInstance();
     protected String delegatorName = null;
     protected DelegatorInfo delegatorInfo = null;
 
     protected Cache cache = null;
 
     // keeps a list of field key sets used in the by and cache, a Set (of Sets of fieldNames) for each entityName
-    protected Map andCacheFieldSets = new HashMap();
+    protected Map andCacheFieldSets = FastMap.newInstance();
 
     protected DistributedCacheClear distributedCacheClear = null;
     protected EntityEcaHandler entityEcaHandler = null;
@@ -163,7 +164,7 @@ public class GenericDelegator implements DelegatorInterface {
         cache = new Cache(delegatorName);
 
         // do the entity model check
-        List warningList = new LinkedList();
+        List warningList = FastList.newInstance();
         Debug.logImportant("Doing entity definition check...", module);
         ModelEntityChecker.checkEntities(this, warningList);
         if (warningList.size() > 0) {
@@ -341,7 +342,7 @@ public class GenericDelegator implements DelegatorInterface {
      */
     public List getModelEntitiesByGroup(String groupName) {
         Iterator enames = UtilMisc.toIterator(getModelGroupReader().getEntityNamesByGroup(groupName));
-        List entities = new LinkedList();
+        List entities = FastList.newInstance();
 
         if (enames == null || !enames.hasNext())
             return entities;
@@ -361,7 +362,7 @@ public class GenericDelegator implements DelegatorInterface {
      */
     public Map getModelEntityMapByGroup(String groupName) {
         Iterator enames = UtilMisc.toIterator(getModelGroupReader().getEntityNamesByGroup(groupName));
-        Map entities = new HashMap();
+        Map entities = FastMap.newInstance();
 
         if (enames == null || !enames.hasNext()) {
             return entities;
@@ -925,7 +926,7 @@ public class GenericDelegator implements DelegatorInterface {
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         }
 
-        Map fields = new HashMap();
+        Map fields = FastMap.newInstance();
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
@@ -1364,20 +1365,19 @@ public class GenericDelegator implements DelegatorInterface {
             //TODO: add eca eval calls
             //TODO: maybe this should use the internal findBy methods
             if (primaryKeys == null) return null;
-            List results = new LinkedList();
+            List results = FastList.newInstance();
     
             // from the delegator level this is complicated because different GenericPK
             // objects in the list may correspond to different helpers
-            HashMap pksPerHelper = new HashMap();
+            Map pksPerHelper = FastMap.newInstance();
             Iterator pkiter = primaryKeys.iterator();
-    
             while (pkiter.hasNext()) {
                 GenericPK curPK = (GenericPK) pkiter.next();
                 String helperName = this.getEntityHelperName(curPK.getEntityName());
                 List pks = (List) pksPerHelper.get(helperName);
     
                 if (pks == null) {
-                    pks = new LinkedList();
+                    pks = FastList.newInstance();
                     pksPerHelper.put(helperName, pks);
                 }
                 pks.add(curPK);
@@ -1430,11 +1430,11 @@ public class GenericDelegator implements DelegatorInterface {
             //TODO: maybe this should use the internal findBy methods
             if (primaryKeys == null)
                 return null;
-            List results = new LinkedList();
+            List results = FastList.newInstance();
     
             // from the delegator level this is complicated because different GenericPK
             // objects in the list may correspond to different helpers
-            HashMap pksPerHelper = new HashMap();
+            Map pksPerHelper = FastMap.newInstance();
             Iterator pkiter = primaryKeys.iterator();
     
             while (pkiter.hasNext()) {
@@ -1451,7 +1451,7 @@ public class GenericDelegator implements DelegatorInterface {
                     List pks = (List) pksPerHelper.get(helperName);
     
                     if (pks == null) {
-                        pks = new LinkedList();
+                        pks = FastList.newInstance();
                         pksPerHelper.put(helperName, pks);
                     }
                     pks.add(curPK);
@@ -1493,7 +1493,7 @@ public class GenericDelegator implements DelegatorInterface {
      *@return    List containing all Generic entities
      */
     public List findAll(String entityName) throws GenericEntityException {
-        return this.findByAnd(entityName, new HashMap(), null);
+        return this.findByAnd(entityName, FastMap.newInstance(), null);
     }
 
     /** Finds all Generic entities
@@ -1502,7 +1502,7 @@ public class GenericDelegator implements DelegatorInterface {
      *@return    List containing all Generic entities
      */
     public List findAll(String entityName, List orderBy) throws GenericEntityException {
-        return this.findByAnd(entityName, new HashMap(), orderBy);
+        return this.findByAnd(entityName, FastMap.newInstance(), orderBy);
     }
 
     /** Finds all Generic entities, looking first in the cache
@@ -1722,7 +1722,7 @@ public class GenericDelegator implements DelegatorInterface {
     }
 
     public List findByLike(String entityName, Map fields, List orderBy) throws GenericEntityException {
-        List likeExpressions = new LinkedList();
+        List likeExpressions = FastList.newInstance();
         if (fields != null) {
             Iterator fieldEntries = fields.entrySet().iterator();
             while (fieldEntries.hasNext()) {
@@ -2081,7 +2081,8 @@ public class GenericDelegator implements DelegatorInterface {
 
         // put the byAndFields (if not null) into the hash map first,
         // they will be overridden by value's fields if over-specified this is important for security and cleanliness
-        Map fields = byAndFields == null ? new HashMap() : new HashMap(byAndFields);
+        Map fields = FastMap.newInstance();
+        if (byAndFields != null) fields.putAll(byAndFields);
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
@@ -2109,7 +2110,8 @@ public class GenericDelegator implements DelegatorInterface {
 
         // put the byAndFields (if not null) into the hash map first,
         // they will be overridden by value's fields if over-specified this is important for security and cleanliness
-        Map fields = byAndFields == null ? new HashMap() : new HashMap(byAndFields);
+        Map fields = FastMap.newInstance();
+        if (byAndFields != null) fields.putAll(byAndFields);
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
@@ -2135,7 +2137,7 @@ public class GenericDelegator implements DelegatorInterface {
             throw new GenericModelException("Could not find relation for relationName: " + relationName + " for value " + value);
         }
 
-        Map fields = new HashMap();
+        Map fields = FastMap.newInstance();
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
@@ -2157,7 +2159,7 @@ public class GenericDelegator implements DelegatorInterface {
             throw new GenericModelException("Relation is not a 'one' or a 'one-nofk' relation: " + relationName + " of entity " + value.getEntityName());
         }
 
-        Map fields = new HashMap();
+        Map fields = FastMap.newInstance();
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
@@ -2180,7 +2182,7 @@ public class GenericDelegator implements DelegatorInterface {
             throw new GenericModelException("Relation is not a 'one' or a 'one-nofk' relation: " + relationName + " of entity " + value.getEntityName());
         }
 
-        Map fields = new HashMap();
+        Map fields = FastMap.newInstance();
         for (int i = 0; i < relation.getKeyMapsSize(); i++) {
             ModelKeyMap keyMap = relation.getKeyMap(i);
             fields.put(keyMap.getRelFieldName(), value.get(keyMap.getFieldName()));
@@ -2392,7 +2394,7 @@ public class GenericDelegator implements DelegatorInterface {
 
     public List makeValues(Document document) {
         if (document == null) return null;
-        List values = new LinkedList();
+        List values = FastList.newInstance();
 
         Element docElement = document.getDocumentElement();
 

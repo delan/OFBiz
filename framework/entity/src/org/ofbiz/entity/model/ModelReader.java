@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -24,14 +24,15 @@
 package org.ofbiz.entity.model;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
@@ -110,9 +111,9 @@ public class ModelReader {
 
     public ModelReader(String modelName) throws GenericEntityException {
         this.modelName = modelName;
-        entityResourceHandlers = new LinkedList();
-        resourceHandlerEntities = new HashMap();
-        entityResourceHandlerMap = new HashMap();
+        entityResourceHandlers = FastList.newInstance();
+        resourceHandlerEntities = FastMap.newInstance();
+        entityResourceHandlerMap = FastMap.newInstance();
 
         EntityModelReaderInfo entityModelReaderInfo = EntityConfigUtil.getEntityModelReaderInfo(modelName);
 
@@ -151,8 +152,8 @@ public class ModelReader {
                     numRelations = 0;
                     numAutoRelations = 0;
 
-                    entityCache = new HashMap();
-                    List tempViewEntityList = new LinkedList();
+                    entityCache = FastMap.newInstance();
+                    List tempViewEntityList = FastList.newInstance();
 
                     UtilTimer utilTimer = new UtilTimer();
                     
@@ -201,7 +202,7 @@ public class ModelReader {
                                     Collection resourceHandlerEntityNames = (Collection) resourceHandlerEntities.get(entityResourceHandler);
 
                                     if (resourceHandlerEntityNames == null) {
-                                        resourceHandlerEntityNames = new LinkedList();
+                                        resourceHandlerEntityNames = FastList.newInstance();
                                         resourceHandlerEntities.put(entityResourceHandler, resourceHandlerEntityNames);
                                     }
                                     resourceHandlerEntityNames.add(entityName);
@@ -281,7 +282,7 @@ public class ModelReader {
                             // for entities auto-create many relationships for all type one relationships
                             
                             // just in case we add a new relation to the same entity, keep in a separate list and add them at the end
-                            List newSameEntityRelations = new LinkedList();
+                            List newSameEntityRelations = FastList.newInstance();
                             
                             Iterator relationsIter = curModelEntity.getRelationsIterator();
                             while (relationsIter.hasNext()) {
@@ -301,7 +302,7 @@ public class ModelReader {
                                         newRel.setRelEntityName(curModelEntity.getEntityName());
                                         newRel.setTitle(targetTitle);
                                         newRel.setAutoRelation(true);
-                                        Set curEntityKeyFields = new HashSet();
+                                        Set curEntityKeyFields = FastSet.newInstance();
                                         for (int kmn = 0; kmn < modelRelation.getKeyMapsSize(); kmn++) {
                                             ModelKeyMap curkm = modelRelation.getKeyMap(kmn);
                                             ModelKeyMap newkm = new ModelKeyMap();
@@ -390,7 +391,7 @@ public class ModelReader {
      *  entityResourceHandlerMap Map after the initial load to make them consistent again.
      */
     public void rebuildResourceHandlerEntities() {
-        resourceHandlerEntities = new HashMap();
+        resourceHandlerEntities = FastMap.newInstance();
         Iterator entityResourceIter = entityResourceHandlerMap.entrySet().iterator();
 
         while (entityResourceIter.hasNext()) {
@@ -399,7 +400,7 @@ public class ModelReader {
             Collection resourceHandlerEntityNames = (Collection) resourceHandlerEntities.get(entry.getValue());
 
             if (resourceHandlerEntityNames == null) {
-                resourceHandlerEntityNames = new LinkedList();
+                resourceHandlerEntityNames = FastList.newInstance();
                 resourceHandlerEntities.put(entry.getValue(), resourceHandlerEntityNames);
             }
             resourceHandlerEntityNames.add(entry.getKey());

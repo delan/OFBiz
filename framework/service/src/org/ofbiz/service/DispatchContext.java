@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -27,13 +27,14 @@ package org.ofbiz.service;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.wsdl.WSDLException;
+
+import javolution.util.FastMap;
 
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.config.GenericConfigException;
@@ -81,7 +82,7 @@ public class DispatchContext implements Serializable {
         this.readers = readers;
         this.loader = loader;
         this.dispatcher = dispatcher;
-        this.attributes = new HashMap();                
+        this.attributes = FastMap.newInstance();                
     }
 
     public void loadReaders() {
@@ -294,7 +295,7 @@ public class DispatchContext implements Serializable {
     }
 
     private Map addReaders(Collection readerURLs) {
-        Map serviceMap = new HashMap();
+        Map serviceMap = FastMap.newInstance();
 
         if (readerURLs == null)
             return null;
@@ -340,7 +341,7 @@ public class DispatchContext implements Serializable {
     }
 
     private Map addGlobal() {
-        Map globalMap = new HashMap();
+        Map globalMap = FastMap.newInstance();
 
         Element rootElement = null;
 

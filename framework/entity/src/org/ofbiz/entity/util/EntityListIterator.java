@@ -26,9 +26,10 @@ package org.ofbiz.entity.util;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+
+import javolution.util.FastList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralRuntimeException;
@@ -402,7 +403,7 @@ public class EntityListIterator implements ListIterator {
                 // do a quick check to see if the ResultSet is empty
                 resultSet.beforeFirst();
             }
-            List list = new LinkedList();
+            List list = FastList.newInstance();
             Object nextValue = null;
 
             while ((nextValue = this.next()) != null) {
@@ -430,7 +431,7 @@ public class EntityListIterator implements ListIterator {
     public List getPartialList(int start, int number) throws GenericEntityException {
         try {
             if (number == 0) return new ArrayList();
-            List list = new ArrayList(number);
+            List list = FastList.newInstance();
 
             // if can't reposition to desired index, throw exception
             if (!resultSet.absolute(start)) {

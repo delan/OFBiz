@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,6 +25,7 @@ package org.ofbiz.webtools;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -126,10 +127,11 @@ public class GenericWebEvent {
         GenericValue findByEntity = delegator.makeValue(entityName, null);
 
         // get the primary key parameters...
-        for (int fnum = 0; fnum < entity.getPksSize(); fnum++) {
-            ModelField field = entity.getPk(fnum);
-            ModelFieldType type = null;
+        Iterator pksIter = entity.getPksIterator();
+        while (pksIter.hasNext()) {
+            ModelField field = (ModelField) pksIter.next();
 
+            ModelFieldType type = null;
             try {
                 type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
@@ -137,8 +139,8 @@ public class GenericWebEvent {
                 Map messageMap = UtilMisc.toMap("fieldType", field.getType());
                 errMsg += UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.fatal_error_param", messageMap, locale) + ".";
             }
-            String fval = request.getParameter(field.getName());
 
+            String fval = request.getParameter(field.getName());
             if (fval != null && fval.length() > 0) {
                 try {
                     findByEntity.setString(field.getName(), fval);
@@ -167,20 +169,20 @@ public class GenericWebEvent {
         }
 
         // get the non-primary key parameters
-        for (int fnum = 0; fnum < entity.getNopksSize(); fnum++) {
-            ModelField field = (ModelField) entity.getNopk(fnum);
-            ModelFieldType type = null;
+        Iterator nopksIter = entity.getNopksIterator();
+        while (nopksIter.hasNext()) {
+            ModelField field = (ModelField) nopksIter.next();
 
+            ModelFieldType type = null;
             try {
                 type = delegator.getEntityFieldType(entity, field.getType());
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
                 Map messageMap = UtilMisc.toMap("fieldType", field.getType());
                 errMsg += UtilProperties.getMessage(GenericWebEvent.err_resource, "genericWebEvent.fatal_error_param", messageMap, locale) + ".";
-
             }
+            
             String fval = request.getParameter(field.getName());
-
             if (fval != null && fval.length() > 0) {
                 try {
                     findByEntity.setString(field.getName(), fval);
@@ -214,8 +216,9 @@ public class GenericWebEvent {
         }
 
         // Validate parameters...
-        for (int fnum = 0; fnum < entity.getFieldsSize(); fnum++) {
-            ModelField field = entity.getField(fnum);
+        Iterator fieldIter = entity.getFieldsIterator();
+        while (fieldIter.hasNext()) {
+            ModelField field = (ModelField) fieldIter.next();
 
             for (int j = 0; j < field.getValidatorsSize(); j++) {
                 String curValidate = field.getValidator(j);

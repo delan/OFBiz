@@ -28,9 +28,7 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -39,6 +37,7 @@ import java.util.ResourceBundle;
 import java.util.TreeSet;
 
 import javolution.lang.Reusable;
+import javolution.util.FastList;
 import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Base64;
@@ -296,8 +295,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
     public boolean isPrimaryKey(boolean requireValue) {
         TreeSet fieldKeys = new TreeSet(this.fields.keySet());
-        for (int i = 0; i < getModelEntity().getPksSize(); i++) {
-            String fieldName = getModelEntity().getPk(i).getName();
+        Iterator pkIter = getModelEntity().getPksIterator();
+        while (pkIter.hasNext()) {
+            ModelField curPk = (ModelField) pkIter.next();
+            String fieldName = curPk.getName();
             if (requireValue) {
                 if (this.fields.get(fieldName) == null) return false;
             } else {
@@ -315,8 +316,10 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
     public boolean containsPrimaryKey(boolean requireValue) {
         TreeSet fieldKeys = new TreeSet(fields.keySet());
-        for (int i = 0; i < getModelEntity().getPksSize(); i++) {
-            String fieldName = getModelEntity().getPk(i).getName();
+        Iterator pkIter = getModelEntity().getPksIterator();
+        while (pkIter.hasNext()) {
+            ModelField curPk = (ModelField) pkIter.next();
+            String fieldName = curPk.getName();
             if (requireValue) {
                 if (this.fields.get(fieldName) == null) return false;
             } else {
@@ -627,7 +630,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     public GenericPK getPrimaryKey() {
-        Collection pkNames = new LinkedList();
+        Collection pkNames = FastList.newInstance();
         Iterator iter = this.getModelEntity().getPksIterator();
         while (iter != null && iter.hasNext()) {
             ModelField curField = (ModelField) iter.next();
@@ -731,7 +734,9 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      * @return java.util.Map
      */
     public Map getAllFields() {
-        return new HashMap(fields);
+        Map newMap = FastMap.newInstance();
+        newMap.putAll(this.fields);
+        return newMap;
     }
 
     /** Used by clients to specify exactly the fields they are interested in
@@ -1086,10 +1091,9 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         if (tempResult != 0) return tempResult;
 
         // both have same entityName, should be the same so let's compare PKs
-        int pksSize = getModelEntity().getPksSize();
-
-        for (int i = 0; i < pksSize; i++) {
-            ModelField curField = getModelEntity().getPk(i);
+        Iterator pkIter = getModelEntity().getPksIterator();
+        while (pkIter.hasNext()) {
+            ModelField curField = (ModelField) pkIter.next();
             Comparable thisVal = (Comparable) this.fields.get(curField.getName());
             Comparable thatVal = (Comparable) that.fields.get(curField.getName());
 
@@ -1110,10 +1114,9 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
         }
 
         // okay, if we got here it means the primaryKeys are exactly the SAME, so compare the rest of the fields
-        int nopksSize = getModelEntity().getNopksSize();
-
-        for (int i = 0; i < nopksSize; i++) {
-            ModelField curField = getModelEntity().getNopk(i);
+        Iterator nopkIter = getModelEntity().getNopksIterator();
+        while (nopkIter.hasNext()) {
+            ModelField curField = (ModelField) nopkIter.next();
             if (!curField.getIsAutoCreatedInternal()) {
                 Comparable thisVal = (Comparable) this.fields.get(curField.getName());
                 Comparable thatVal = (Comparable) that.fields.get(curField.getName());

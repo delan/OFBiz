@@ -23,13 +23,14 @@
  */
 package org.ofbiz.entity.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -84,23 +85,23 @@ public class ModelEntity extends ModelInfo implements Comparable {
     protected String dependentOn = "";
 
     /** A List of the Field objects for the Entity */
-    protected List fields = new ArrayList();
+    protected List fields = FastList.newInstance();
     protected Map fieldsMap = null;
 
     /** A List of the Field objects for the Entity, one for each Primary Key */
-    protected List pks = new ArrayList();
+    protected List pks = FastList.newInstance();
 
     /** A List of the Field objects for the Entity, one for each NON Primary Key */
-    protected List nopks = new ArrayList();
+    protected List nopks = FastList.newInstance();
 
     /** relations defining relationships between this entity and other entities */
-    protected List relations = new ArrayList();
+    protected List relations = FastList.newInstance();
 
     /** indexes on fields/columns in this entity */
-    protected List indexes = new ArrayList();
+    protected List indexes = FastList.newInstance();
 
     /** map of ModelViewEntities that references this model */
-    protected Map viewEntities = new HashMap();
+    protected Map viewEntities = FastMap.newInstance();
 
     /** An indicator to specify if this entity requires locking for updates */
     protected boolean doLock = false;
@@ -200,7 +201,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
         }
 
         // now that we have the pks and the fields, make the nopks vector
-        this.nopks = new ArrayList();
+        this.nopks = FastList.newInstance();
         for (int ind = 0; ind < this.fields.size(); ind++) {
             ModelField field = (ModelField) this.fields.get(ind);
             if (!field.isPk) this.nopks.add(field);
@@ -383,8 +384,8 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
 
     public void updatePkLists() {
-        pks = new ArrayList();
-        nopks = new ArrayList();
+        pks = FastList.newInstance();
+        nopks = FastList.newInstance();
         for (int i = 0; i < fields.size(); i++) {
             ModelField field = (ModelField) fields.get(i);
 
@@ -421,16 +422,29 @@ public class ModelEntity extends ModelInfo implements Comparable {
         return this.pks.size();
     }
 
+    /**
+     * @deprecated
+     */
     public ModelField getPk(int index) {
         return (ModelField) this.pks.get(index);
     }
 
+    public ModelField getOnlyPk() {
+        if (this.pks.size() == 1) {
+            return (ModelField) this.pks.get(0);
+        } else {
+            throw new IllegalArgumentException("Error in getOnlyPk, the [" + this.getEntityName() + "] entity has more than one pk!");
+        }
+    }
+    
     public Iterator getPksIterator() {
         return this.pks.iterator();
     }
 
     public List getPksCopy() {
-        return new ArrayList(this.pks);
+        List newList = FastList.newInstance();
+        newList.addAll(this.pks);
+        return newList;
     }
 
     public String getFirstPkFieldName() {
@@ -446,6 +460,9 @@ public class ModelEntity extends ModelInfo implements Comparable {
         return this.nopks.size();
     }
 
+    /**
+     * @deprecated
+     */
     public ModelField getNopk(int index) {
         return (ModelField) this.nopks.get(index);
     }
@@ -455,13 +472,18 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
 
     public List getNopksCopy() {
-        return new ArrayList(this.nopks);
+        List newList = FastList.newInstance();
+        newList.addAll(this.nopks);
+        return newList;
     }
 
     public int getFieldsSize() {
         return this.fields.size();
     }
 
+    /**
+     * @deprecated
+     */
     public ModelField getField(int index) {
         return (ModelField) this.fields.get(index);
     }
@@ -471,7 +493,9 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
 
     public List getFieldsCopy() {
-        return new ArrayList(this.fields);
+        List newList = FastList.newInstance();
+        newList.addAll(this.fields);
+        return newList;
     }
 
     /** The col-name of the Field, the alias of the field if this is on a view-entity */
@@ -497,7 +521,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
     
     protected synchronized void createFieldsMap() {
-        Map tempMap = new HashMap(fields.size());
+        Map tempMap = FastMap.newInstance();
         for (int i = 0; i < fields.size(); i++) {
             ModelField field = (ModelField) fields.get(i);
             tempMap.put(field.name, field);
@@ -563,7 +587,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
     }
 
     public List getFieldNamesFromFieldVector(List modelFields) {
-        List nameList = new ArrayList(modelFields.size());
+        List nameList = FastList.newInstance();
 
         if (modelFields == null || modelFields.size() <= 0) return nameList;
         for (int i = 0; i < modelFields.size(); i++) {
