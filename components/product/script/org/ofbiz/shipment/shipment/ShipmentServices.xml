@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.2
 -->
 <simple-methods>
@@ -1205,9 +1205,26 @@
             <field-to-field field-name="quantity" map-name="itemIssuance" to-map-name="shipItemContext"/>
             <call-service service-name="createShipmentPackageContent" in-map-name="shipItemContext">
                 <result-to-field result-name="shipmentPackageSeqId" field-name="${itemMap.trackingNum}" map-name="packageMap"/>
+                <result-to-field result-name="shipmentPackageSeqId" map-name="routeSegLookup"/>
             </call-service>
-            <!-- set the tracking number -->
-            <call-simple-method method-name="quickShipSetTrackingNumber"/>
+
+            <if-not-empty field-name="shipmentPackageSeqId" map-name="routeSegLookup">
+                <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="routeSegLookup"/>
+                <!-- quick ship orders should only have one route segment -->
+                <string-to-field string="00001" field-name="shipmentRouteSegmentId" map-name="routeSegLookup"/>
+
+                <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="routeSegLookup" value-name="packageRouteSegment"/>
+                <if-not-empty field-name="packageRouteSegment">
+                    <field-to-field field-name="trackingNum" map-name="itemMap" to-field-name="trackingCode" to-map-name="packageRouteSegment"/>
+                    <store-value value-name="packageRouteSegment"/>
+                </if-not-empty>
+                <if-empty field-name="packageRouteSegment">
+                    <log level="warning" message="No route segment found : ${routeSeqLookup}"/>
+                </if-empty>
+            </if-not-empty>
+            <if-empty field-name="shipmentPackageSeqId" map-name="routeSegLookup">
+                <log level="warning" message="No shipment package ID found; cannot update RouteSegment"/>                 
+            </if-empty>
         </iterate>
 
         <!-- update the shipment status to packed -->
@@ -1221,20 +1238,6 @@
             <call-service service-name="updateShipment" in-map-name="packedContext"/>
         </if-empty>
         <field-to-result field-name="shipmentId" map-name="shipment" result-name="shipmentId"/>
-    </simple-method>
-    <simple-method method-name="quickShipSetTrackingNumber" short-description="Updates the tracking number for a quick ship by item package">
-        <!-- quick ship orders should only have one route segment -->
-        <field-to-field field-name="shipmentId" map-name="itemIssuance" to-map-name="routeSeqLookup"/>
-        <field-to-field field-name="${itemMap.trackingNum}" map-name="packageMap" to-field-name="shipmentPackageSeqId" to-map-name="routeSeqLookup"/>
-        <string-to-field string="00001" field-name="shipmentRouteSegmentId" map-name="routeSeqLookup"/>
-        <find-by-primary-key entity-name="ShipmentPackageRouteSeg" map-name="routeSeqLookup" value-name="packageRouteSegment"/>
-        <if-not-empty field-name="packageRouteSegment">
-            <field-to-field field-name="trackingNum" map-name="itemMap" to-field-name="trackingCode" to-map-name="packageRouteSegment"/>
-            <store-value value-name="packageRouteSegment"/>
-        </if-not-empty>
-        <if-empty field-name="packageRouteSegment">
-            <log level="warning" message="No route segment found : ${routeSeqLookup}"/>
-        </if-empty>
     </simple-method>
 </simple-methods>
 
