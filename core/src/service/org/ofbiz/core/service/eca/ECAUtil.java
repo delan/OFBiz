@@ -33,19 +33,19 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 
 /**
- * ECAConfig
+ * ECAUtil
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @created    Jul 27, 2002
  * @version    1.0
  */
-public class ECAConfig {
+public class ECAUtil {
 
     public static final String SERVICE_ECA_XML_FILENAME = "secaconf.xml";
     protected static Map ECAMap = new HashMap();
 
     public static void readConfig() throws GenericConfigException {
-        Element rootElement = ResourceLoader.getXmlRootElement(ECAConfig.SERVICE_ECA_XML_FILENAME);
+        Element rootElement = ResourceLoader.getXmlRootElement(ECAUtil.SERVICE_ECA_XML_FILENAME);
         List ecaList = UtilXml.childElementList(rootElement, "eca");
         Iterator ecaIt = ecaList.iterator();
         while (ecaIt.hasNext()) {
