@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Edit Shipment</property>
-    <property name="headerItem">shipment</property>
-    <property name="tabButtonItem">EditShipment</property>
-    <page-action name="/shipment/EditShipment.bsh"/> 
-</page>

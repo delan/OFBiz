@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<page>
-    <template>main</template>
-    <property name="title">Find Facility Group</property>
-    <property name="headerItem">facilityGroup</property>
-    <page-action name="/group/FindFacilityGroup.bsh"/> 
-</page>
