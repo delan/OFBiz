@@ -257,10 +257,10 @@
       <relation type="one" fk-name="ORDER_DELSCH_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_DWE" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="ORDER_DELSCH_DWE" title="Delivery" rel-entity-name="WorkEffort">
         <key-map field-name="deliveryWorkEffortId" rel-field-name="workEffortId"/>
       </relation>
-      <relation type="one" fk-name="ORDER_DELSCH_PWE" rel-entity-name="WorkEffort">
+      <relation type="one" fk-name="ORDER_DELSCH_PWE" title="Pickup" rel-entity-name="WorkEffort">
         <key-map field-name="pickupWorkEffortId" rel-field-name="workEffortId"/>
       </relation>
     </entity>
@@ -1300,7 +1300,7 @@
       <relation type="one" fk-name="RTN_ITEM_TYPE" rel-entity-name="ReturnType">
         <key-map field-name="returnTypeId"/>
       </relation>      
-      <relation type="one" fk-name="RTN_ITEM_RTN" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="RTN_ITEM_ODR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
       <relation type="one" fk-name="RTN_ITEM_ODRIT" rel-entity-name="OrderItem">
