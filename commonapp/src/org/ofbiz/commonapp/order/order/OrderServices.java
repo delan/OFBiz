@@ -264,10 +264,12 @@ public class OrderServices {
             Iterator pmsIter = paymentMethods.iterator();
             while (pmsIter.hasNext()) {
                 GenericValue paymentMethod = (GenericValue) pmsIter.next();
-                toBeStored.add(delegator.makeValue("OrderPaymentPreference",
+				GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference",
                         UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
                                 "orderId", orderId, "paymentMethodTypeId", paymentMethod.get("paymentMethodTypeId"),
-                                "paymentMethodId", paymentMethod.get("paymentMethodId"))));
+                                "paymentMethodId", paymentMethod.get("paymentMethodId")));
+				paymentPreference.set("statusId", "PAYMENT_NOT_AUTHORIZED");
+                toBeStored.add(paymentPreference);
             }
         } 
 
