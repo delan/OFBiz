@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE containers PUBLIC "-//OFBiz//DTD Containers Config//EN" "http://www.ofbiz.org/dtds/containers.dtd">
+<!DOCTYPE ofbiz-containers PUBLIC "-//OFBiz//DTD Containers Config//EN" "http://www.ofbiz.org/dtds/containers.dtd">
 -->
 
 <!--
@@ -25,39 +25,48 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  Dynamic Containers Definition DTD
- *  $Id: ofbiz-containers.dtd,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ *  Dynamic OFBiz Containers Definition DTD
+ *  $Id: ofbiz-containers.dtd,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
 -->
 
-<!ELEMENT containers (web-container?, component-container)>
-<!ELEMENT web-container (server+)>
-<!ATTLIST web-container
-	class CDATA #REQUIRED
+<!ELEMENT ofbiz-containers (container+)>
+<!ELEMENT container>
+<!ATTLIST container
+    name CDATA #REQUIRED
+    class CDATA #REQUIRED
 >
-<!ELEMENT server (listener+)>
-<!ATTLIST server
-	name CDATA #REQUIRED
+<!ELEMENT property (property*)>
+<!ATTLIST property
+    name CDATA #REQUIRED
+    value CDATA #IMPLIED
 >
-<!ELEMENT listener EMPTY>
-<!ATTLIST listener
-	type ( default | sun-jsse | ibm-jsse | nio | ajp13 ) "default"
-	host CDATA #IMPLIED
-	port CDATA "8080"
-	min-threads CDATA "5"
-	max-threads CDATA "250"
-	max-idle-time CDATA "30000"
-	max-read-time CDATA "60000"
-	keystore CDATA #IMPLIED
-	password CDATA #IMPLIED
-	key-password CDATA #IMPLIED
-	require-client-cert ( true | false ) "false"	
->
-<!ELEMENT component-container (component+)>
-<!ATTLIST component-container
-	class CDATA #REQUIRED
->
-<!ELEMENT component EMPTY>
-<!ATTLIST component
-	name CDATA #REQUIRED
-	location CDATA #REQUIRED
->
+
+<!--
+
+Container properties are relative to the implementation class for details
+of which properties are available see the docs on the class defined.
+
+Example:
+
+<ofbiz-containers>
+    <container name="jetty-container" class="org.ofbiz.base.container.JettyContainer">
+        <property name="default-listener">
+          <property name="type" value="default"/>
+          <property name="host" value="0.0.0.0"/>
+          <property name="port" value="8080"/>
+          <property name="min-threads" value="5"/>
+          <property name="max-threads" value="250"/>
+          <property name="max-idle-time" value="30000"/>
+          <property name="max-read-time" value="60000"/>
+        </property>
+    </container>
+    <container name="component-container" class="org.ofbiz.base.container.ComponentContainer">
+        <property name="entity" value="${ofbiz.home}/components/entity/component.xml"/>
+        <property name="service" value="${ofbiz.home}/components/service/component.xml"/>
+        <property name="party" value="${ofbiz.home}/components/party/component.xml"/>
+    </container>
+</ofbiz-containers>
+
+-->
+
+        

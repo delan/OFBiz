@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,9 +47,10 @@ import org.ofbiz.base.util.Debug;
 
 /**
  * JettyContainer - Container implementation for Jetty
+ * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.1 $
+  *@version    $Revision: 1.2 $
  * @since      2.2
  */
 public class JettyContainer implements Container {
@@ -63,32 +64,26 @@ public class JettyContainer implements Container {
         log.disableLog();
         log.add(new Log4jSink());
 
-        // get the containers
-        ContainerConfig.ComponentContainer componentContainer = null;
-        ContainerConfig.WebContainer webContainer = null;
-        try { 
-            componentContainer = ContainerConfig.getComponentContainer(configFile);
-            webContainer = ContainerConfig.getWebContainer(configFile);
-        } catch (ContainerException e) {
-            throw new ContainerException(e);
-        }
-        
+        // get the container
+        ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFile);
+        ContainerConfig.Container jc = ContainerConfig.getContainer("jetty-container", configFile);
+                        
         // create the servers
-        Iterator sci = webContainer.servers.iterator();
+        Iterator sci = jc.properties.values().iterator();
         while (sci.hasNext()) {
-            ContainerConfig.WebContainer.Server sc = (ContainerConfig.WebContainer.Server) sci.next();
-            servers.put(sc.name, createServer(sc));                           
+            ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) sci.next();
+            servers.put(prop.name, createServer(prop));                                   
         }
         
         // load the applications
-        Iterator components = componentContainer.components.iterator();
+        Iterator components = cc.properties.values().iterator();
         while (components.hasNext()) {
-            ContainerConfig.ComponentContainer.Component comp = (ContainerConfig.ComponentContainer.Component) components.next();
+            ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) components.next();
             ComponentConfig component = null;
             try {
-                component = ComponentConfig.getComponentConfig(comp.name, comp.location);
+                component = ComponentConfig.getComponentConfig(prop.name, prop.value);
             } catch (ComponentException e) {
-                throw new ContainerException(e);                
+                Debug.logError("Unable to load component application [" + prop.name + "] component not found", module);                               
             }
             Iterator appInfos = component.getWebappInfos().iterator();
             while (appInfos.hasNext()) {
@@ -103,59 +98,117 @@ public class JettyContainer implements Container {
                             location = location + "/";
                         }
                         server.addWebApplication(appInfo.mountPoint, location);
-                    } catch (IOException e) {                        
-                        throw new ContainerException(e);
+                    } catch (IOException e) {
+                        Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);                        
                     }
                 }                    
             }                        
         }                
     }
     
-    private Server createServer(ContainerConfig.WebContainer.Server serverConfig) throws ContainerException {
+    private Server createServer(ContainerConfig.Container.Property serverConfig) throws ContainerException {
         Server server = new Server();
         
         // configure the listeners
-        Iterator listeners = serverConfig.listeners.iterator();
+        Iterator listeners = serverConfig.properties.values().iterator();
         while (listeners.hasNext()) {
-            ContainerConfig.WebContainer.Server.Listener listenerConf = 
-                    (ContainerConfig.WebContainer.Server.Listener) listeners.next();
+            ContainerConfig.Container.Property listenerProps = 
+                    (ContainerConfig.Container.Property) listeners.next();
             
-            if ("default".equals(listenerConf.type)) {
+            if ("default".equals(listenerProps.getProperty("type").value)) {
                 SocketListener listener = new SocketListener();
-                setListenerOptions(listener, listenerConf);
+                setListenerOptions(listener, listenerProps);
                 server.addListener(listener);                                               
-            } else if ("sun-jsse".equals(listenerConf.type)) {
+            } else if ("sun-jsse".equals(listenerProps.getProperty("type").value)) {
                 SunJsseListener listener = new SunJsseListener();
-                setListenerOptions(listener, listenerConf);
-                listener.setKeystore(listenerConf.keystore);
-                listener.setPassword(listenerConf.password);
-                listener.setKeyPassword(listenerConf.keyPassword);
+                setListenerOptions(listener, listenerProps);
+                if (listenerProps.getProperty("keystore") != null) {
+                    listener.setKeystore(listenerProps.getProperty("keystore").value);    
+                }
+                if (listenerProps.getProperty("password") != null) {
+                    listener.setKeystore(listenerProps.getProperty("password").value);    
+                }                
+                if (listenerProps.getProperty("key-password") != null) {
+                    listener.setKeystore(listenerProps.getProperty("key-password").value);    
+                }                                
                 server.addListener(listener);
-            } else if ("ibm-jsse".equals(listenerConf.type)) {
-                throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
-            } else if ("nio".equals(listenerConf.type)) {
-                throw new ContainerException("Listener not supported yet [" + listenerConf.type + "]");
-            } else if ("ajp13".equals(listenerConf.type)) {
+            } else if ("ibm-jsse".equals(listenerProps.getProperty("type").value)) {
+                throw new ContainerException("Listener not supported yet [" + listenerProps.getProperty("type").value + "]");
+            } else if ("nio".equals(listenerProps.getProperty("type").value)) {
+                throw new ContainerException("Listener not supported yet [" + listenerProps.getProperty("type").value + "]");
+            } else if ("ajp13".equals(listenerProps.getProperty("type").value)) {
                 AJP13Listener listener = new AJP13Listener();
-                setListenerOptions(listener, listenerConf);
+                setListenerOptions(listener, listenerProps);
                 server.addListener(listener);                
             }                       
         }
         return server;
     }  
     
-    private void setListenerOptions(ThreadedServer listener, ContainerConfig.WebContainer.Server.Listener listenerConf) throws ContainerException {
-        if (listenerConf.host != null && listenerConf.host.length() > 0) {
+    private void setListenerOptions(ThreadedServer listener, ContainerConfig.Container.Property listenerProps) throws ContainerException {
+        if (listenerProps.getProperty("host") != null) {
             try {
-                listener.setHost(listenerConf.host);
+                listener.setHost(listenerProps.getProperty("host").value);
             } catch (UnknownHostException e) {
                 throw new ContainerException(e);                       
             }
+        } else {
+            try {
+                listener.setHost("0.0.0.0");
+            } catch (UnknownHostException e) {
+                throw new ContainerException(e);
+            }          
         }
-        listener.setPort(listenerConf.port);
-        listener.setMinThreads(listenerConf.minThreads);
-        listener.setMaxThreads(listenerConf.maxThreads);
-        listener.setMaxIdleTimeMs(listenerConf.maxIdleTime);            
+        
+        if (listenerProps.getProperty("port") != null) {
+            int value = 8080;
+            try {
+                value = Integer.parseInt(listenerProps.getProperty("port").value);
+            } catch (NumberFormatException e) {
+                value = 8080;
+            }
+            if (value == 0) value = 8080;
+            
+            listener.setPort(value);
+        } else {
+            listener.setPort(8080);
+        }
+        
+        if (listenerProps.getProperty("min-threads") != null) {
+            int value = 0;
+            try {
+                value = Integer.parseInt(listenerProps.getProperty("min-threads").value);
+            } catch (NumberFormatException e) {
+                value = 0;
+            }
+            if (value > 0) {
+                listener.setMinThreads(value);
+            }
+        }
+        
+        if (listenerProps.getProperty("max-threads") != null) {
+            int value = 0;
+            try {
+                value = Integer.parseInt(listenerProps.getProperty("max-threads").value);
+            } catch (NumberFormatException e) {
+                value = 0;
+            }
+            if (value > 0) {
+                listener.setMaxThreads(value);
+            }
+        }
+        
+        if (listenerProps.getProperty("max-idle-time") != null) {
+            int value = 0;
+            try {
+                value = Integer.parseInt(listenerProps.getProperty("max-idle-time").value);
+            } catch (NumberFormatException e) {
+                value = 0;
+            }
+            if (value > 0) {
+                listener.setMaxIdleTimeMs(value);
+            }
+        }                    
     }  
     
     /**

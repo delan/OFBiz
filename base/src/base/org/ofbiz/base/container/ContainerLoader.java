@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,7 @@
  */
 package org.ofbiz.base.container;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.1 $
+  *@version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ContainerLoader implements StartupLoader {
@@ -55,26 +56,21 @@ public class ContainerLoader implements StartupLoader {
               
         // get the master container configuration file
         String configFileLocation = config.containerConfig;
-                
-        ContainerConfig.ComponentContainer componentContainer = null;
-        ContainerConfig.WebContainer webContainer = null;
-        try { 
-            componentContainer = ContainerConfig.getComponentContainer(configFileLocation);
-            webContainer = ContainerConfig.getWebContainer(configFileLocation);
-        } catch (ContainerException e) {
-            throw new StartupException(e);                        
-        }
         
-        if (componentContainer == null || componentContainer.containerClass == null) {
-            throw new StartupException("Cannot locate component containter to load");
-        }
-        if (webContainer == null || webContainer.containerClass == null) {
-            throw new StartupException("Cannot locate web container to load");
+        Collection containers = null;
+        try {
+            containers = ContainerConfig.getContainers(configFileLocation);
+        } catch (ContainerException e) {            
+            throw new StartupException(e);
         }
 
-        // load and cache the containers so we can stop then when needed
-        containers.add(loadContainer(componentContainer.containerClass, configFileLocation));
-        containers.add(loadContainer(webContainer.containerClass, configFileLocation));                
+        if (containers != null) {
+            Iterator i = containers.iterator();
+            while (i.hasNext()) {
+                ContainerConfig.Container container = (ContainerConfig.Container) i.next();
+                containers.add(loadContainer(container.className, configFileLocation));
+            }
+        }                                    
     }
 
     /**

@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerConfig.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id: ContainerConfig.java,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,13 +26,17 @@ package org.ofbiz.base.container;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.OrderedMap;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
@@ -43,57 +47,55 @@ import org.xml.sax.SAXException;
  * ContainerConfig - Container configuration for ofbiz.xml
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ContainerConfig {
     
     public static final String module = ContainerConfig.class.getName();
     
-    protected static ComponentContainer componentContainer = null;
-    protected static WebContainer webContainer = null;  
+    protected static Map containers = new HashMap();    
     
-    public static ComponentContainer getComponentContainer(String configFile) throws ContainerException {
-        if (componentContainer == null) {            
+    public static Container getContainer(String containerName, String configFile) throws ContainerException {
+        Container container = (Container) containers.get(containerName);
+        if (container == null) {            
             synchronized (ContainerConfig.class) {
-                if (componentContainer == null) {
+                container = (Container) containers.get(containerName);
+                if (container == null) {
                     if (configFile == null) {
                         throw new ContainerException("Container config file cannot be null");
                     }
                     new ContainerConfig(configFile);
-                }
-                
+                    container = (Container) containers.get(containerName);
+                }                
+            }
+            if (container == null) {
+                throw new ContainerException("No container found with the name : " + containerName);
             }            
         }
-        return componentContainer;
+        return container;
     }
     
-    public static WebContainer getWebContainer(String configFile) throws ContainerException {
-        if (webContainer == null) {            
-            synchronized (ContainerConfig.class) {
-                if (webContainer == null) {
+    public static Collection getContainers(String configFile) throws ContainerException {
+        if (containers.size() == 0) {
+            synchronized (ContainerConfig.class) {                
+                if (containers.size() == 0) {
                     if (configFile == null) {
                         throw new ContainerException("Container config file cannot be null");
                     }
-                    new ContainerConfig(configFile);
-                }
-                
+                    new ContainerConfig(configFile);                    
+                }                
+            }
+            if (containers.size() == 0) {
+                throw new ContainerException("No contaners loaded; problem with configuration");
             }            
         }
-        return webContainer;
-    }     
-    
+        return containers.values();
+    }
+            
     protected ContainerConfig() {}
     
-    protected ContainerConfig(String configFileLocation) throws ContainerException {
-        if (componentContainer != null) {
-            throw new ContainerException("Containers already loaded");
-        }
-        
-        if (webContainer != null) {
-            throw new ContainerException("Containers already loaded");
-        }
-        
+    protected ContainerConfig(String configFileLocation) throws ContainerException {        
         // load the config file
         URL xmlUrl = UtilURL.fromFilename(configFileLocation);
         if (xmlUrl == null) {
@@ -113,138 +115,60 @@ public class ContainerConfig {
         } 
         
         // root element
-        Element containers = containerDocument.getDocumentElement();
-        Iterator elementIter = null;
+        Element root = containerDocument.getDocumentElement();        
           
-        // components
-        Element componentElement = UtilXml.firstChildElement(containers, "component-container");
-        componentContainer = new ComponentContainer(componentElement);
-        
-        // servers
-        Element webElement = UtilXml.firstChildElement(containers, "web-container");        
-        webContainer = new WebContainer(webElement);                  
-    }
-        
-    public static class ComponentContainer {
-        public String containerClass;
-        public List components;
-        
-        public ComponentContainer(Element element) {
-            this.containerClass = element.getAttribute("class");
-            
-            Iterator elementIter = UtilXml.childElementList(element, "component").iterator();
-            while (elementIter.hasNext()) {
-                Element curElement = (Element) elementIter.next();
-                Component comp = new Component(curElement);
-                this.components.add(comp);
-            }            
-        }
-        
-        public static class Component {
-            public String name;
-            public String location;
-            
-            public Component(Element element) {
-                this.name = element.getAttribute("name");
-                this.location = element.getAttribute("location");                
-            }
-        }
+        // containers
+        Iterator elementIter = UtilXml.childElementList(root, "container").iterator();
+        while (elementIter.hasNext()) {
+            Element curElement = (Element) elementIter.next();
+            Container container = new Container(curElement);
+            containers.put(container.name, container);    
+        }                          
     }
     
-    public static class WebContainer {
-        public String containerClass;
-        public List servers;
-    
-        public WebContainer(Element element) {
-            this.containerClass = element.getAttribute("class");
-            this.servers = new LinkedList();
+    public static class Container {
+        public String name;
+        public String className;
+        public Map properties;
+        
+        public Container(Element element) {
+            this.name = element.getAttribute("name");
+            this.className = element.getAttribute("class");
             
-            Iterator elementIter = UtilXml.childElementList(element, "server").iterator();
+            properties = new OrderedMap();
+            Iterator elementIter = UtilXml.childElementList(element, "property").iterator();
             while (elementIter.hasNext()) {
                 Element curElement = (Element) elementIter.next();
-                Server server = new Server(curElement);
-                this.servers.add(server);
-            }            
+                Property property = new Property(curElement);
+                properties.put(property.name, property);
+            }                       
         }
         
-        public static class Server {
+        public Property getProperty(String name) {
+            return (Property) properties.get(name);
+        }
+        
+        public static class Property {
             public String name;
-            public List listeners; 
+            public String value;
+            public Map properties;
             
-            public Server(Element element) {
+            public Property(Element element) {
                 this.name = element.getAttribute("name");
-                this.listeners = new LinkedList();
+                this.value = element.getAttribute("value");
                 
-                Iterator elementIter = UtilXml.childElementList(element, "server").iterator();
+                properties = new OrderedMap();
+                Iterator elementIter = UtilXml.childElementList(element, "property").iterator();
                 while (elementIter.hasNext()) {
                     Element curElement = (Element) elementIter.next();
-                    Listener listener = new Listener(curElement);
-                    this.listeners.add(listener);    
-                }                
-            }   
-        
-            public static class Listener {
-                public String type;
-                public String host;                
-                public String keystore;
-                public String password;
-                public String keyPassword;
-                int minThreads;
-                int maxThreads;
-                int maxIdleTime;
-                int maxReadTime;
-                int port;
-                boolean requireClientCert;
-            
-                public Listener(Element element) {
-                    this.type = element.getAttribute("type");
-                    this.host = element.getAttribute("host");
-                    this.keystore = element.getAttribute("keystore");
-                    this.password = element.getAttribute("password");
-                    this.keyPassword = element.getAttribute("keyPassword");
-                    this.requireClientCert = UtilXml.checkBoolean("need-client-cert", false);
-                                       
-                    String minThreadsStr = element.getAttribute("min-threads");                                                                                
-                    try {
-                        this.minThreads = Integer.parseInt(minThreadsStr);
-                    } catch (NumberFormatException e) {
-                        Debug.logWarning(e, module);
-                        this.minThreads = 5;
-                    }
-                    
-                    String maxThreadsStr = element.getAttribute("max-threads");
-                    try {
-                        this.maxThreads = Integer.parseInt(maxThreadsStr);
-                    } catch (NumberFormatException e) {
-                        Debug.logWarning(e, module);
-                        this.maxThreads = 250;
-                    }
-                    
-                    String maxIdleStr = element.getAttribute("max-idle-time");
-                    try {
-                        this.maxIdleTime = Integer.parseInt(maxIdleStr);
-                    } catch (NumberFormatException e) {
-                        Debug.logWarning(e, module);
-                        this.maxIdleTime = 30000;
-                    }
-                    
-                    String maxReadStr = element.getAttribute("max-read-time");
-                    try {
-                        this.maxReadTime = Integer.parseInt(maxReadStr);
-                    } catch (NumberFormatException e) {
-                        Debug.logWarning(e, module);
-                        this.maxReadTime = 60000;
-                    }
-                    
-                    String portStr = element.getAttribute("port");
-                    try {
-                        this.port = Integer.parseInt(portStr);
-                    } catch (NumberFormatException e) {
-                        Debug.logWarning(e, module);
-                        this.port = 8080;
-                    }                                   
-                }
+                    Property property = new Property(curElement);
+                    properties.put(property.name, property);                    
+                }                    
             }
-        }  
-    }        
+            
+            public Property getProperty(String name) {
+                return (Property) properties.get(name);
+            }
+        }
+    }                        
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.1 2003/08/15 20:23:19 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,9 +33,16 @@ import org.ofbiz.base.util.*;
 
 /**
  * ComponentContainer - StartupContainer implementation for Components
+ * 
+ * Example ofbiz-container.xml configuration:
+ * <pre>
+ *   <container name="component-container" class="org.ofbiz.base.component.ComponentContainer">
+ *     <property name="[component-name]" value="[path-to-component-configuration]"/>
+ *   </container>
+ * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.1 $
+  *@version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ComponentContainer implements Container {
@@ -59,18 +66,18 @@ public class ComponentContainer implements Container {
         }
         
         // get the components
-        ContainerConfig.ComponentContainer cc = ContainerConfig.getComponentContainer(configFileLocation);
-        Iterator i = cc.components.iterator();
+        ContainerConfig.Container cc = ContainerConfig.getContainer("component-container", configFileLocation);        
+        Iterator i = cc.properties.values().iterator();
         while (i.hasNext()) {
-            ContainerConfig.ComponentContainer.Component comp = (ContainerConfig.ComponentContainer.Component) i.next();
+            ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) i.next();                        
             ComponentConfig config = null;
             try {
-                config = ComponentConfig.getComponentConfig(comp.name, comp.location); 
+                config = ComponentConfig.getComponentConfig(prop.name, prop.value); 
             } catch (ComponentException e) {
-                Debug.logError("Cannot load component : " + comp.name + " @ " + comp.location + " : " + e.getMessage(), module);                
+                Debug.logError("Cannot load component : " + prop.name + " @ " + prop.value + " : " + e.getMessage(), module);                
             }
             if (config == null) {
-                Debug.logError("Cannot load component : " + comp.name + " @ " + comp.location, module);
+                Debug.logError("Cannot load component : " + prop.name + " @ " + prop.value, module);
             } else {
                 loadComponent(config);
             }                                       
