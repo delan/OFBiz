@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.27 $
+ * @version    $Revision: 1.28 $
  */
 -->
 
@@ -1977,6 +1977,7 @@
       <field name="showToCustomer" type="indicator"></field>
       <field name="useLimitPerOrder" type="numeric"></field>
       <field name="useLimitPerCustomer" type="numeric"></field>
+      <field name="useLimitPerPromotion" type="numeric"></field>
       <prim-key field="productPromoId"/>
       <relation type="many" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
@@ -1997,17 +1998,17 @@
       <field name="productPromoId" type="id-ne"></field>
       <field name="productPromoRuleId" type="id-ne"></field>
       <field name="productPromoActionSeqId" type="id-ne"></field>
-      <field name="productPromoActionTypeId" type="id-ne"></field>
+      <field name="productPromoActionEnumId" type="id-ne"></field>
       <field name="orderAdjustmentTypeId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="amount" type="floating-point"></field>
       <field name="productId" type="id"></field>
       <field name="partyId" type="id"></field>
-      <field name="actionLimit" type="numeric"></field>
       <prim-key field="productPromoId"/>
       <prim-key field="productPromoRuleId"/>
       <prim-key field="productPromoActionSeqId"/>
-      <relation type="one" fk-name="PROD_PRACT_TYPE" rel-entity-name="ProductPromoActionType">
-        <key-map field-name="productPromoActionTypeId"/>
+      <relation type="one" fk-name="PROD_PRACT_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="productPromoActionEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PROD_PRACT_PR" rel-entity-name="ProductPromo">
         <key-map field-name="productPromoId"/>
@@ -2020,14 +2021,64 @@
         <key-map field-name="orderAdjustmentTypeId"/>
       </relation>
     </entity>
-    <entity entity-name="ProductPromoActionType"
+    <entity entity-name="ProductPromoCategory"
             package-name="org.ofbiz.product.promo"
-            title="Catalog Promotion Type Entity">
-      <field name="productPromoActionTypeId" type="id-ne"></field>
-      <field name="description" type="description"></field>
-      <prim-key field="productPromoActionTypeId"/>
-      <relation type="many" rel-entity-name="ProductPromoAction">
-        <key-map field-name="productPromoActionTypeId"/>
+            title="Product Promotion Category Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoActionSeqId" type="id-ne"></field>
+      <field name="productPromoCondSeqId" type="id-ne"></field>
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="productPromoApplEnumId" type="id-ne"></field>
+      <field name="includeSubCategories" type="indicator"></field>
+      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoActionSeqId"/>
+      <prim-key field="productPromoCondSeqId"/>
+      <prim-key field="productCategoryId"/>
+      <relation type="one" fk-name="PROD_PRCAT_PROMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCAT_PRCAT" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCAT_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="productPromoApplEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoCode"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Entity">
+      <field name="productPromoCodeId" type="id-ne"></field>
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="useLimitPerCode" type="numeric"></field>
+      <field name="useLimitPerCustomer" type="numeric"></field>
+      <prim-key field="productPromoCodeId"/>
+      <relation type="one" fk-name="PROD_PRCOD_PROMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoCodeEmail"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Email Entity">
+      <field name="productPromoCodeId" type="id-ne"></field>
+      <field name="emailAddress" type="id-ne"></field>
+      <prim-key field="productPromoCodeId"/>
+      <prim-key field="emailAddress"/>
+      <relation type="one" fk-name="PROD_PRCDE_PCD" rel-entity-name="ProductPromoCode">
+        <key-map field-name="productPromoCodeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoCodeParty"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Party Entity">
+      <field name="productPromoCodeId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <prim-key field="productPromoCodeId"/>
+      <prim-key field="partyId"/>
+      <relation type="one" fk-name="PROD_PRCDP_PCD" rel-entity-name="ProductPromoCode">
+        <key-map field-name="productPromoCodeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRCDP_PRTY" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPromoCond"
@@ -2054,6 +2105,28 @@
       </relation>
       <relation type="one" fk-name="PROD_PRCOND_OPENUM" title="Operator" rel-entity-name="Enumeration">
         <key-map field-name="operatorEnumId" rel-field-name="enumId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductPromoProduct"
+            package-name="org.ofbiz.product.promo"
+            title="Product Promotion Category Entity">
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="productPromoActionSeqId" type="id-ne"></field>
+      <field name="productPromoCondSeqId" type="id-ne"></field>
+      <field name="productId" type="id-ne"></field>
+      <field name="productPromoApplEnumId" type="id-ne"></field>
+      <prim-key field="productPromoId"/>
+      <prim-key field="productPromoActionSeqId"/>
+      <prim-key field="productPromoCondSeqId"/>
+      <prim-key field="productId"/>
+      <relation type="one" fk-name="PROD_PRPRD_PROMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRPRD_PROD" rel-entity-name="Product">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_PRPRD_ENUM" rel-entity-name="Enumeration">
+        <key-map field-name="productPromoApplEnumId" rel-field-name="enumId"/>
       </relation>
     </entity>
     <entity entity-name="ProductPromoRule"

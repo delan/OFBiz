@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -171,16 +171,16 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                                 <input type=hidden name="productPromoId" value="${(productPromoAction.productPromoId)?if_exists}">
                                 <input type=hidden name="productPromoRuleId" value="${(productPromoAction.productPromoRuleId)?if_exists}">
                                 <input type=hidden name="productPromoActionSeqId" value="${(productPromoAction.productPromoActionSeqId)?if_exists}">
-                                <select name="productPromoActionTypeId" size=1 class="selectBox">
-                                    <#if (productPromoAction.productPromoActionTypeId)?exists>
+                                <select name="productPromoActionEnumId" size=1 class="selectBox">
+                                    <#if (productPromoAction.productPromoActionEnumId)?exists>
                                     <#assign productPromoActionType = productPromoAction.getRelatedOneCache("ProductPromoActionType")>
-                                        <option value="${(productPromoAction.productPromoActionTypeId)?if_exists}"><#if productPromoActionType?exists>${(productPromoActionType.description)?if_exists}<#else>[${(productPromoAction.productPromoActionTypeId)?if_exists}]</#if></option>
-                                        <option value="${(productPromoAction.productPromoActionTypeId)?if_exists}">&nbsp;</option>
+                                        <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}"><#if productPromoActionType?exists>${(productPromoActionType.description)?if_exists}<#else>[${(productPromoAction.productPromoActionEnumId)?if_exists}]</#if></option>
+                                        <option value="${(productPromoAction.productPromoActionEnumId)?if_exists}">&nbsp;</option>
                                     <#else>
                                         <option value="">&nbsp;</option>
                                     </#if>
                                     <#list productPromoActionTypes as productPromoActionType>
-                                    <option value="${(productPromoActionType.productPromoActionTypeId)?if_exists}">${(productPromoActionType.description)?if_exists}</option>
+                                    <option value="${(productPromoActionType.productPromoActionEnumId)?if_exists}">${(productPromoActionType.description)?if_exists}</option>
                                     </#list>
                                 </select>
                                 <select name="orderAdjustmentTypeId" size=1 class="selectBox">
@@ -215,9 +215,9 @@ ${pages.get("/promo/PromoTabBar.ftl")}
                             <input type=hidden name="productPromoRuleId" value="${(productPromoRule.productPromoRuleId)?if_exists}">
                             <span class="tabletext"><b>${uiLabelMap.CommonNew}:</b>&nbsp;</span>
                             <input type=text size="5" name="productPromoActionSeqId" value="${maxActionSeqId?if_exists}" class="inputBox">
-                            <select name="productPromoActionTypeId" size=1 class="selectBox">
+                            <select name="productPromoActionEnumId" size=1 class="selectBox">
                                 <#list productPromoActionTypes as productPromoActionType>
-                                <option value="${(productPromoActionType.productPromoActionTypeId)?if_exists}">${(productPromoActionType.description)?if_exists}</option>
+                                <option value="${(productPromoActionType.productPromoActionEnumId)?if_exists}">${(productPromoActionType.description)?if_exists}</option>
                                 </#list>
                             </select>
                             <select name="orderAdjustmentTypeId" size=1 class="selectBox">

@@ -4,28 +4,6 @@
   <CostComponentType costComponentTypeId="ESTIMATED_MATERIALS_" description="Estimated Materials" hasTable="N" parentTypeId=""/>
   <CostComponentType costComponentTypeId="ESTIMATED_OTHER_COST" description="Estimated Other" hasTable="N" parentTypeId=""/>
 
-  <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
-  <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
-  <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>
-
-  <Enumeration description="Order Total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Product ID In Cart" enumCode="PRODUCT_ID_IC" enumId="PPIP_PRODUCT_ID_IC" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Product ID Added" enumCode="PRODUCT_ID" enumId="PPIP_PRODUCT_ID" sequenceId="03" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Category ID Product Added Is In" enumCode="CATEGORY_ID" enumId="PPIP_CATEGORY_ID" sequenceId="04" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Quantity Added" enumCode="QUANTITY_ADDED" enumId="PPIP_QUANTITY_ADDED" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="New Product Quantity" enumCode="NEW_PROD_QUANT" enumId="PPIP_NEW_PROD_QUANT" sequenceId="06" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Party" enumCode="PARTY_ID" enumId="PPIP_PARTY_ID" sequenceId="07" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PPIP_PARTY_GRP_MEM" sequenceId="07" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PPIP_PARTY_CLASS" sequenceId="08" enumTypeId="PROD_PROMO_IN_PARAM"/>
-  <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PPIP_ROLE_TYPE" sequenceId="09" enumTypeId="PROD_PROMO_IN_PARAM"/>
-
-  <Enumeration description="==" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="!=" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="&lt;" enumCode="LT" enumId="PPC_LT" sequenceId="03" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="&lt;=" enumCode="LTE" enumId="PPC_LTE" sequenceId="04" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="&gt;" enumCode="GT" enumId="PPC_GT" sequenceId="05" enumTypeId="PROD_PROMO_COND"/>
-  <Enumeration description="&gt;=" enumCode="GTE" enumId="PPC_GTE" sequenceId="06" enumTypeId="PROD_PROMO_COND"/>
-
   <EnumerationType description="Product Price Parent Enum Type" enumTypeId="PROD_PRICE" hasTable="N" parentTypeId=""/>
   <EnumerationType description="Product Price Input Parameter" enumTypeId="PROD_PRICE_IN_PARAM" hasTable="N" parentTypeId="PROD_PRICE"/>
   <EnumerationType description="Product Price Condition" enumTypeId="PROD_PRICE_COND" hasTable="N" parentTypeId="PROD_PRICE"/>
@@ -177,13 +155,37 @@
   <ProductGlAccountType description="Cost of Goods Sold" productGlAccountTypeId="COGS"/>
   <ProductGlAccountType description="Inventory" productGlAccountTypeId="INVENTORY"/>
 
-  <ProductPromoActionType description="Gift With Purchase" productPromoActionTypeId="PROMO_GWP"/>
-  <ProductPromoActionType description="Free Shipping" productPromoActionTypeId="PROMO_FREE_SHIPPING"/>
-  <ProductPromoActionType description="Item Percent Discount" productPromoActionTypeId="PROMO_ITEM_PERCENT"/>
-  <ProductPromoActionType description="Item Amount Flat" productPromoActionTypeId="PROMO_ITEM_AMOUNT"/>
-  <ProductPromoActionType description="Item Amount Per Quantity" productPromoActionTypeId="PROMO_ITEM_AMNTPQ"/>
-  <ProductPromoActionType description="Order Percent Discount" productPromoActionTypeId="PROMO_ORDER_PERCENT"/>
-  <ProductPromoActionType description="Order Amount Flat" productPromoActionTypeId="PROMO_ORDER_AMOUNT"/>
+  <EnumerationType description="Product Promotion Parent Enum Type" enumTypeId="PROD_PROMO" hasTable="N" parentTypeId=""/>
+
+  <EnumerationType description="Product Promotion Input Parameter" enumTypeId="PROD_PROMO_IN_PARAM" hasTable="N" parentTypeId="PROD_PROMO"/>
+  <Enumeration description="Order Total" enumCode="ORDER_TOTAL" enumId="PPIP_ORDER_TOTAL" sequenceId="01" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="X Quantity of Product" enumCode="PRODUCT_QUANT" enumId="PPIP_PRODUCT_QUANT" sequenceId="02" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="New Account" enumCode="NEW_ACCT" enumId="PPIP_NEW_ACCT" sequenceId="05" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Party" enumCode="PARTY_ID" enumId="PPIP_PARTY_ID" sequenceId="06" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Party Group Member" enumCode="PARTY_GROUP_MEMBER" enumId="PPIP_PARTY_GRP_MEM" sequenceId="07" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Party Classification" enumCode="PARTY_CLASS" enumId="PPIP_PARTY_CLASS" sequenceId="08" enumTypeId="PROD_PROMO_IN_PARAM"/>
+  <Enumeration description="Role Type" enumCode="ROLE_TYPE" enumId="PPIP_ROLE_TYPE" sequenceId="09" enumTypeId="PROD_PROMO_IN_PARAM"/>
+
+  <EnumerationType description="Product Promotion Condition" enumTypeId="PROD_PROMO_COND" hasTable="N" parentTypeId="PROD_PROMO"/>
+  <Enumeration description="==" enumCode="EQ" enumId="PPC_EQ" sequenceId="01" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="!=" enumCode="NEQ" enumId="PPC_NEQ" sequenceId="02" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="&lt;" enumCode="LT" enumId="PPC_LT" sequenceId="03" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="&lt;=" enumCode="LTE" enumId="PPC_LTE" sequenceId="04" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="&gt;" enumCode="GT" enumId="PPC_GT" sequenceId="05" enumTypeId="PROD_PROMO_COND"/>
+  <Enumeration description="&gt;=" enumCode="GTE" enumId="PPC_GTE" sequenceId="06" enumTypeId="PROD_PROMO_COND"/>
+
+  <EnumerationType description="Product Promotion Product/Category Application Type" enumTypeId="PROD_PROMO_PCAPPL" hasTable="N" parentTypeId="PROD_PROMO"/>
+  <Enumeration description="Include" enumCode="INCLUDE" enumId="PPPA_INCLUDE" sequenceId="01" enumTypeId="PROD_PROMO_PCAPPL"/>
+  <Enumeration description="Exclude" enumCode="EXCLUDE" enumId="PPPA_EXCLUDE" sequenceId="02" enumTypeId="PROD_PROMO_PCAPPL"/>
+  <Enumeration description="Always Include" enumCode="ALWAYS" enumId="PPPA_ALWAYS" sequenceId="03" enumTypeId="PROD_PROMO_PCAPPL"/>
+
+  <EnumerationType description="Product Promotion Action" enumTypeId="PROD_PROMO_ACTION" hasTable="N" parentTypeId="PROD_PROMO"/>
+  <Enumeration description="Gift With Purchase" enumCode="GWP" enumId="PROMO_GWP" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Free Shipping" enumCode="FREE_SHIPPING" enumId="PROMO_FREE_SHIPPING" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="X Product for Y% Discount" enumCode="PROD_DISC" enumId="PROMO_PROD_DISC" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="X Product for Y Price" enumCode="PROD_PRICE" enumId="PROMO_PROD_PRICE" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Order Percent Discount" enumCode="ORDER_PERCENT" enumId="PROMO_ORDER_PERCENT" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
+  <Enumeration description="Order Amount Flat" enumCode="ORDER_AMOUNT" enumId="PROMO_ORDER_AMOUNT" sequenceId="01" enumTypeId="PROD_PROMO_ACTION"/>
 
   <ProductPriceType description="List Price" productPriceTypeId="LIST_PRICE"/>
   <ProductPriceType description="Default Price" productPriceTypeId="DEFAULT_PRICE"/>

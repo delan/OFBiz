@@ -26,7 +26,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.12 $
+ *@version    $Revision: 1.13 $
  */
 -->
 
@@ -149,8 +149,12 @@
 
     <entity-group group="org.ofbiz" entity="ProductPromo" />
     <entity-group group="org.ofbiz" entity="ProductPromoAction" />
-    <entity-group group="org.ofbiz" entity="ProductPromoActionType" />
+    <entity-group group="org.ofbiz" entity="ProductPromoCategory" />
+    <entity-group group="org.ofbiz" entity="ProductPromoCode" />
+    <entity-group group="org.ofbiz" entity="ProductPromoCodeEmail" />
+    <entity-group group="org.ofbiz" entity="ProductPromoCodeParty" />
     <entity-group group="org.ofbiz" entity="ProductPromoCond" />
+    <entity-group group="org.ofbiz" entity="ProductPromoProduct" />
     <entity-group group="org.ofbiz" entity="ProductPromoRule" />
 
   <!-- ========================================================= -->
