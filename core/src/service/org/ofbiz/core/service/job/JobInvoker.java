@@ -48,14 +48,14 @@ public class JobInvoker implements Runnable {
     private int count = 0;
     private int wait = 0;
     private boolean run = false;
-    private boolean threadStopped = true;
 
     public JobInvoker(JobPoller jp) {
         this(jp, WAIT_TIME);
     }
 
     public JobInvoker(JobPoller jp, int wait) {
-        this.created = new Date();        
+        this.created = new Date();
+        this.run = true;
         this.count = 0;
         this.jp = jp;
         this.wait = wait;
@@ -63,10 +63,7 @@ public class JobInvoker implements Runnable {
         // get a new thread
         thread = new Thread(this);
         thread.setDaemon(false);
-        this.run = true;
-        this.threadStopped = false;
-        
-        if (Debug.verboseOn()) Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);        
+        if (Debug.verboseOn()) Debug.logVerbose("JobInoker: Starting Invoker Thread -- " + thread.getName(), module);
         thread.start();
     }
     
@@ -76,17 +73,7 @@ public class JobInvoker implements Runnable {
      * Tells the thread to stop after the next job.
      */
     public void stop() {
-        run = false;   
-        if (Debug.verboseOn()) Debug.logVerbose("JobInvoker: Stopping Invoker Thread -- " + thread.getName(), module);
-        while (!threadStopped) {
-            Debug.logInfo("Waiting for thread to stop.");
-            try {
-                Thread.sleep(500);
-            } catch(Exception e) {
-                Debug.logError(e, "Error putting job inovoker thread to sleep");
-            }
-        }        
-             
+        run = false;        
     }
 
     /**
@@ -136,7 +123,6 @@ public class JobInvoker implements Runnable {
                 jp.removeThread(this);
         }
         if (Debug.verboseOn()) Debug.logVerbose("Invoker: " + thread.getName() + " dead -- " + UtilDateTime.nowTimestamp(), module);
-        this.threadStopped = true;
     }
 
     private long getTTL() {
