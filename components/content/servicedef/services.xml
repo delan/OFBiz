@@ -638,4 +638,130 @@
         <description>Remove ElectronicText</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    
+    <!-- Survey Services -->
+    <service name="createSurvey" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="createSurvey"
+            default-entity-name="Survey" auth="true">
+        <description>Create a Survey</description>
+        <auto-attributes include="pk" mode="OUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSurvey" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="updateSurvey"
+            default-entity-name="Survey" auth="true">
+        <description>Update a Survey</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeSurvey" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="removeSurvey" 
+            default-entity-name="Survey" auth="true">
+        <description>Remove Survey</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SurveyApplType Services -->
+    <service name="createSurveyApplType" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="createSurveyApplType"
+            default-entity-name="SurveyApplType" auth="true">
+        <description>Create a SurveyApplType</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSurveyApplType" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="updateSurveyApplType"
+            default-entity-name="SurveyApplType" auth="true">
+        <description>Update a SurveyApplType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeSurveyApplType" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="removeSurveyApplType" 
+            default-entity-name="SurveyApplType" auth="true">
+        <description>Remove SurveyApplType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+
+    <!-- SurveyQuestion Services -->
+    <service name="createSurveyQuestion" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="createSurveyQuestion"
+            default-entity-name="SurveyQuestion" auth="true">
+        <description>Create a SurveyQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <override name="surveyQuestionSeqId" mode="OUT"/>
+    </service>
+    <service name="updateSurveyQuestion" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="updateSurveyQuestion"
+            default-entity-name="SurveyQuestion" auth="true">
+        <description>Update a SurveyQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="SurveyQuestion" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="removeSurveyQuestion" 
+            default-entity-name="SurveyQuestion" auth="true">
+        <description>Remove SurveyQuestion</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- SurveyQuestionType Services -->
+    <service name="createSurveyQuestionType" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="createSurveyQuestionType"
+            default-entity-name="SurveyQuestionType" auth="true">
+        <description>Create a SurveyQuestionType</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSurveyQuestionType" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="updateSurveyQuestionType"
+            default-entity-name="SurveyQuestionType" auth="true">
+        <description>Update a SurveyQuestionType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="SurveyQuestion" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="removeSurveyQuestionType" 
+            default-entity-name="SurveyQuestionType" auth="true">
+        <description>Remove SurveyQuestionType</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service> 
+   
+    <!-- SurveyTrigger Services -->
+    <service name="createSurveyTrigger" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="createSurveyTrigger"
+            default-entity-name="SurveyTrigger" auth="true">
+        <description>Create a SurveyTrigger</description>
+        <auto-attributes include="pk" mode="IN" optional="true"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="updateSurveyTrigger" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="updateSurveyQuestionType"
+            default-entity-name="SurveyTrigger" auth="true">
+        <description>Update a SurveyTrigger</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="SurveyTrigger" engine="simple"  
+            location="org/ofbiz/content/survey/SurveyServices.xml"
+            invoke="removeSurveyTrigger" 
+            default-entity-name="SurveyTrigger" auth="true">
+        <description>Remove SurveyTrigger</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
 </services>
