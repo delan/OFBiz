@@ -23,13 +23,17 @@
  */
 package org.ofbiz.commonapp.thirdparty.ups;
 
+import java.io.IOException;
 import java.util.*;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * ShipmentServices
@@ -46,6 +50,8 @@ public class UpsServices {
         String shipmentId = (String) context.get("shipmentId");
         String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
 
+        String shipmentConfirmResponseString = null;
+        
         try {
             GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
             if (shipment == null) {
@@ -170,21 +176,21 @@ public class UpsServices {
             
             // Child of Shipment: Shipper
             Element shipperElement = UtilXml.addChildElement(shipmentElement, "Shipper", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperElement, "Name", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperElement, "AttentionName", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperElement, "PhoneNumber", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperElement, "ShipperNumber", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperElement, "Name", originPostalAddress.getString("toName"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperElement, "AttentionName", originPostalAddress.getString("attnName"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperElement, "PhoneNumber", originPhoneNumber, shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperElement, "ShipperNumber", UtilProperties.getPropertyValue("shipment", "shipment.ups.shipper.number"), shipmentConfirmRequestDoc);
 
             Element shipperAddressElement = UtilXml.addChildElement(shipperElement, "Address", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperAddressElement, "AddressLine1", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperAddressElement, "AddressLine2", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperAddressElement, "AddressLine3", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperAddressElement, "City", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperAddressElement, "StateProvinceCode", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperAddressElement, "PostalCode", "", shipmentConfirmRequestDoc);
-            UtilXml.addChildElementValue(shipperAddressElement, "CountryCode", "", shipmentConfirmRequestDoc);
-            // How to determine this? Add to data model... UtilXml.addChildElement(shipperAddressElement, "ResidentialAddress", shipmentConfirmRequestDoc);
-            // TODO: fill Shipper element
+            UtilXml.addChildElementValue(shipperAddressElement, "AddressLine1", originPostalAddress.getString("address1"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "AddressLine2", originPostalAddress.getString("address2"), shipmentConfirmRequestDoc);
+            //UtilXml.addChildElementValue(shipperAddressElement, "AddressLine3", "", shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "City", originPostalAddress.getString("city"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "StateProvinceCode", originPostalAddress.getString("stateProvinceGeoId"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "PostalCode", originPostalAddress.getString("postalCode"), shipmentConfirmRequestDoc);
+            UtilXml.addChildElementValue(shipperAddressElement, "CountryCode", originCountryGeo.getString("geoCode"), shipmentConfirmRequestDoc);
+            // How to determine this? Add to data model...? UtilXml.addChildElement(shipperAddressElement, "ResidentialAddress", shipmentConfirmRequestDoc);
+
 
             // Child of Shipment: ShipTo
             Element shipToElement = UtilXml.addChildElement(shipmentElement, "ShipTo", shipmentConfirmRequestDoc);
@@ -218,8 +224,8 @@ public class UpsServices {
             Element paymentInformationElement = UtilXml.addChildElement(shipmentElement, "PaymentInformation", shipmentConfirmRequestDoc);
             Element prepaidElement = UtilXml.addChildElement(paymentInformationElement, "Prepaid", shipmentConfirmRequestDoc);
             Element billShipperElement = UtilXml.addChildElement(prepaidElement, "BillShipper", shipmentConfirmRequestDoc);
-            // TODO: fill in BillShipper AccountNumber element
-            UtilXml.addChildElementValue(billShipperElement, "AccountNumber", "", shipmentConfirmRequestDoc);
+            // fill in BillShipper AccountNumber element from properties file
+            UtilXml.addChildElementValue(billShipperElement, "AccountNumber", UtilProperties.getPropertyValue("shipment", "shipment.ups.bill.shipper.account.number"), shipmentConfirmRequestDoc);
 
             // Child of Shipment: Service
             Element serviceElement = UtilXml.addChildElement(shipmentElement, "Service", shipmentConfirmRequestDoc);
@@ -277,19 +283,128 @@ public class UpsServices {
                 }
             }
             
-            // TODO: create AccessRequest XML doc
+            // create AccessRequest XML doc
+            Document accessRequestDocument = createAccessRequestDocument();
+            
+            String accessRequestString = null;
+            try {
+                accessRequestString = UtilXml.writeXmlDocument(accessRequestDocument);
+            } catch (IOException e1) {
+                String ioeErrMsg = "Error writing the AccessRequest Document to a String: " + e1.toString();
+                Debug.logError(e1, ioeErrMsg);
+                return ServiceUtil.returnError(ioeErrMsg);
+            }
+            
             // TODO: connect to UPS server, send AccessRequest to auth
-            // TODO: send ShipmentConfirmRequest doc
-            // TODO: get ShipmentConfirmResponse doc back
-            // TODO: process ShipmentConfirmResponse, update data as needed 
+            // TODO: send ShipmentConfirmRequest String
+            // TODO: get ShipmentConfirmResponse String back
+            //shipmentConfirmResponseString = ?
 
+            Document shipmentConfirmResponseDocument = null;
+            try {
+                shipmentConfirmResponseDocument = UtilXml.readXmlDocument(shipmentConfirmResponseString, false);
+            } catch (SAXException e2) {
+                String excErrMsg = "Error parsing the ShipmentConfirmResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            } catch (ParserConfigurationException e2) {
+                String excErrMsg = "Error parsing the ShipmentConfirmResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            } catch (IOException e2) {
+                String excErrMsg = "Error parsing the ShipmentConfirmResponse: " + e2.toString();
+                Debug.logError(e2, excErrMsg);
+                return ServiceUtil.returnError(excErrMsg);
+            }
+
+            // process ShipmentConfirmResponse, update data as needed
+            Element shipmentConfirmResponseElement = shipmentConfirmResponseDocument.getDocumentElement();
+            
+            // handle Response element info
+            Element responseElement = UtilXml.firstChildElement(shipmentConfirmResponseElement, "Response");
+            Element responseTransactionReferenceElement = UtilXml.firstChildElement(responseElement, "TransactionReference");
+            String responseTransactionReferenceCustomerContext = UtilXml.childElementValue(responseTransactionReferenceElement, "CustomerContext");
+            String responseTransactionReferenceXpciVersion = UtilXml.childElementValue(responseTransactionReferenceElement, "XpciVersion");
+
+            String responseStatusCode = UtilXml.childElementValue(responseElement, "ResponseStatusCode");
+            String responseStatusDescription = UtilXml.childElementValue(responseElement, "ResponseStatusDescription");
+            List errorList = new LinkedList();
+            UpsServices.handleErrors(responseElement, errorList);
+
+            // handle ShipmentCharges element info
+            Element shipmentChargesElement = UtilXml.firstChildElement(shipmentConfirmResponseElement, "ShipmentCharges");
+
+            Element transportationChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "TransportationCharges");
+            String transportationCurrencyCode = UtilXml.childElementValue(transportationChargesElement, "CurrencyCode");
+            String transportationMonetaryValue = UtilXml.childElementValue(transportationChargesElement, "MonetaryValue");
+            
+            Element serviceOptionsChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "ServiceOptionsCharges");
+            String serviceOptionsCurrencyCode = UtilXml.childElementValue(serviceOptionsChargesElement, "CurrencyCode");
+            String serviceOptionsMonetaryValue = UtilXml.childElementValue(serviceOptionsChargesElement, "MonetaryValue");
+
+            Element totalChargesElement = UtilXml.firstChildElement(shipmentChargesElement, "TotalCharges");
+            String totalCurrencyCode = UtilXml.childElementValue(totalChargesElement, "CurrencyCode");
+            String totalMonetaryValue = UtilXml.childElementValue(totalChargesElement, "MonetaryValue");
+            
+            if (UtilValidate.isNotEmpty(totalCurrencyCode)) {
+                if (UtilValidate.isEmpty(shipmentRouteSegment.getString("currencyUomId"))) {
+                    shipmentRouteSegment.set("currencyUomId", totalCurrencyCode);
+                } else if(!totalCurrencyCode.equals(shipmentRouteSegment.getString("currencyUomId"))) {
+                    errorList.add("The Currency Unit of Measure returned [" + totalCurrencyCode + "] is not the same as the original [" + shipmentRouteSegment.getString("currencyUomId") + "], setting to the new one.");
+                    shipmentRouteSegment.set("currencyUomId", totalCurrencyCode);
+                }
+            }
+            
+            shipmentRouteSegment.set("actualTransportCost", Double.valueOf(transportationMonetaryValue));
+            shipmentRouteSegment.set("actualServiceCost", Double.valueOf(serviceOptionsMonetaryValue));
+            shipmentRouteSegment.set("actualCost", Double.valueOf(totalMonetaryValue));
+            
+            // handle BillingWeight element info
+            Element billingWeightElement = UtilXml.firstChildElement(shipmentConfirmResponseElement, "BillingWeight");
+            Element billingWeightUnitOfMeasurementElement = UtilXml.firstChildElement(billingWeightElement, "UnitOfMeasurement");
+            String billingWeightUnitOfMeasurement = UtilXml.childElementValue(billingWeightUnitOfMeasurementElement, "Code");
+            String billingWeight = UtilXml.childElementValue(billingWeightElement, "Weight");
+            // What to do with the billing weights that come back?
+
+            // store the ShipmentIdentificationNumber and ShipmentDigest
+            String shipmentIdentificationNumber = UtilXml.childElementValue(shipmentConfirmResponseElement, "ShipmentIdentificationNumber");
+            String shipmentDigest = UtilXml.childElementValue(shipmentConfirmResponseElement, "ShipmentDigest");
+            shipmentRouteSegment.set("trackingIdNumber", shipmentIdentificationNumber);
+            shipmentRouteSegment.set("trackingDigest", shipmentDigest);
+            
+            // write/store all modified value objects
+            shipmentRouteSegment.store();
+            
+            if ("1".equals(responseStatusCode)) {
+                StringBuffer successString = new StringBuffer("The UPS ShipmentConfirm succeeded");
+                if (errorList.size() > 0) {
+                    // this shouldn't happen much, but handle it anyway
+                    successString.append(", but the following occurred: ");
+                    Iterator errorListIter = errorList.iterator();
+                    while (errorListIter.hasNext()) {
+                        String errorMsg = (String) errorListIter.next();
+                        successString.append(errorMsg);
+                        if (errorListIter.hasNext()) {
+                            successString.append(", ");
+                        }
+                    }
+                }
+                return ServiceUtil.returnSuccess(successString.toString());
+            } else {
+                errorList.add(0, "The UPS ShipmentConfirm failed");
+                return ServiceUtil.returnError(errorList);
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e);
-            ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Confirm: " + e.toString());
+            if (shipmentConfirmResponseString != null) {
+                Debug.logError("Got XML ShipmentConfirmRespose: " + shipmentConfirmResponseString);
+                return ServiceUtil.returnError(UtilMisc.toList(
+                            "Error reading or writing Shipment data for UPS Shipment Confirm: " + e.toString(),
+                            "A ShipmentConfirmRespose was received: " + shipmentConfirmResponseString));
+            } else {
+                return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Confirm: " + e.toString());
+            }
         }
-
-        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        return result;
     }
     
     public static Map upsShipmentAccept(DispatchContext dctx, Map context) {
@@ -308,11 +423,100 @@ public class UpsServices {
             
         } catch (GenericEntityException e) {
             Debug.logError(e);
-            ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Accept: " + e.toString());
+            return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Shipment Accept: " + e.toString());
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
+    }
+    
+    public static Map upsVoidShipment(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = dctx.getDelegator();
+        String shipmentId = (String) context.get("shipmentId");
+        String shipmentRouteSegmentId = (String) context.get("shipmentRouteSegmentId");
+
+        try {
+            GenericValue shipment = delegator.findByPrimaryKey("Shipment", UtilMisc.toMap("shipmentId", shipmentId));
+            GenericValue shipmentRouteSegment = delegator.findByPrimaryKey("ShipmentRouteSegment", UtilMisc.toMap("shipmentId", shipmentId, "shipmentRouteSegmentId", shipmentRouteSegmentId));
+
+            if (!"UPS".equals(shipmentRouteSegment.getString("carrierPartyId"))) {
+                return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
+            }
+            
+        } catch (GenericEntityException e) {
+            Debug.logError(e);
+            return ServiceUtil.returnError("Error reading or writing Shipment data for UPS Void Shipment: " + e.toString());
+        }
+
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        return result;
+    }
+    
+    public static Document createAccessRequestDocument() {
+        Document accessRequestDocument = UtilXml.makeEmptyXmlDocument("AccessRequest");
+        Element accessRequestElement = accessRequestDocument.getDocumentElement();
+        UtilXml.addChildElementValue(accessRequestElement, "AccessLicenseNumber", UtilProperties.getPropertyValue("shipment", "shipment.ups.access.license.number"), accessRequestDocument);
+        UtilXml.addChildElementValue(accessRequestElement, "UserId", UtilProperties.getPropertyValue("shipment", "shipment.ups.access.user.id"), accessRequestDocument);
+        UtilXml.addChildElementValue(accessRequestElement, "Password", UtilProperties.getPropertyValue("shipment", "shipment.ups.access.password"), accessRequestDocument);
+        return accessRequestDocument;
+    }
+    
+    public static void handleErrors(Element responseElement, List errorList) {
+        List errorElements = UtilXml.childElementList(responseElement, "Error");
+        Iterator errorElementIter = errorElements.iterator();
+        while (errorElementIter.hasNext()) {
+            StringBuffer errorMessageBuf = new StringBuffer();
+            Element errorElement = (Element) errorElementIter.next();
+            
+            String errorSeverity = UtilXml.childElementValue(errorElement, "ErrorSeverity");
+            String errorCode = UtilXml.childElementValue(errorElement, "ErrorCode");
+            String errorDescription = UtilXml.childElementValue(errorElement, "ErrorDescription");
+            String minimumRetrySeconds = UtilXml.childElementValue(errorElement, "MinimumRetrySeconds");
+            
+            errorMessageBuf.append("An error occurred [code:");
+            errorMessageBuf.append(errorCode);
+            errorMessageBuf.append("] with severity ");
+            errorMessageBuf.append(errorSeverity);
+            errorMessageBuf.append(": ");
+            errorMessageBuf.append(errorDescription);
+            if (UtilValidate.isNotEmpty(minimumRetrySeconds)) {
+                errorMessageBuf.append("; you should wait ");
+                errorMessageBuf.append(minimumRetrySeconds);
+                errorMessageBuf.append(" seconds before retrying. ");
+            } else {
+                errorMessageBuf.append(". ");
+            }
+            
+            List errorLocationElements = UtilXml.childElementList(errorElement, "ErrorLocation");
+            Iterator errorLocationElementIter = errorLocationElements.iterator();
+            while (errorLocationElementIter.hasNext()) {
+                Element errorLocationElement = (Element) errorLocationElementIter.next();
+                String errorLocationElementName = UtilXml.childElementValue(errorLocationElement, "ErrorLocationElementName");
+                String errorLocationAttributeName = UtilXml.childElementValue(errorLocationElement, "ErrorLocationAttributeName");
+                
+                errorMessageBuf.append("The error was at Element [");
+                errorMessageBuf.append(errorLocationElementName);
+                errorMessageBuf.append("]");
+
+                if (UtilValidate.isNotEmpty(errorLocationAttributeName)) {
+                    errorMessageBuf.append(" in the attribute [");
+                    errorMessageBuf.append(errorLocationAttributeName);
+                    errorMessageBuf.append("]");
+                }
+                
+                List errorDigestElements = UtilXml.childElementList(errorLocationElement, "ErrorDigest");
+                Iterator errorDigestElementIter = errorDigestElements.iterator();
+                while (errorDigestElementIter.hasNext()) {
+                    Element errorDigestElement = (Element) errorDigestElementIter.next();
+                    errorMessageBuf.append(" full text: [");
+                    errorMessageBuf.append(UtilXml.elementValue(errorDigestElement));
+                    errorMessageBuf.append("]");
+                }
+            }
+            
+            errorList.add(errorMessageBuf.toString());
+        }
     }
 }
 
@@ -376,6 +580,14 @@ SE Serial No.
 SY Social Security No.
 ST Store No.
 TN Transaction Ref. No. 
+
+Error Codes
+First note that in the ref guide there are about 21 pages of error codes
+Here are some overalls:
+1 Success (no error)
+01xxxx XML Error
+02xxxx Architecture Error
+15xxxx Tracking Specific Error
 
  */
 
@@ -604,6 +816,44 @@ Shipment Accept Request/Response
     </ShipmentResults>
 </ShipmentAcceptResponse>
 
+=======================================
+Void Shipment Request/Response
+=======================================
+
+<VoidShipmentRequest>
+    <Request>
+        <TransactionReference>
+            <CustomerContext>Void</CustomerContext>
+            <XpciVersion>1.0001</XpciVersion>
+        </TransactionReference>
+        <RequestAction>Void</RequestAction>
+        <RequestOption>1</RequestOption>
+    </Request>
+    <ShipmentIdentificationNumber>1Z12345E1512345676</ShipmentIdentificationNumber>
+</VoidShipmentRequest>
+
+=======================================
+
+<?xml version="1.0"?>
+<VoidShipmentResponse>
+    <Response>
+        <TransactionReference>
+            <XpciVersion>1.0001</XpciVersion>
+        </TransactionReference>
+        <ResponseStatusCode>1</ResponseStatusCode>
+        <ResponseStatusDescription>Success</ResponseStatusDescription>
+    </Response>
+    <Status>
+        <StatusType>
+            <Code>1</Code>
+            <Description>Success</Description>
+        </StatusType>
+        <StatusCode>
+            <Code>1</Code>
+            <Description>Success</Description>
+        </StatusCode>
+    </Status>
+</VoidShipmentResponse>
 
  */
 

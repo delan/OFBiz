@@ -175,6 +175,11 @@
         <description>UPS Shipment Accept</description>
         <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
     </service>
+    <service name="upsVoidShipment" engine="simple"
+            location="org.ofbiz.commonapp.thirdparty.ups.UpsServices" invoke="upsVoidShipment" auth="true">
+        <description>UPS Shipment Accept</description>
+        <auto-attributes entity-name="ShipmentRouteSegment" include="pk" mode="IN" optional="false"/>
+    </service>
 
     <!-- ============================================================== -->
     <!-- ItemIssuance Services -->
