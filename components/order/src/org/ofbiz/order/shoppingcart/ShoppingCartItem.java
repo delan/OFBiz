@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartItem.java,v 1.2 2003/08/25 20:16:33 ajzeneski Exp $
+ * $Id: ShoppingCartItem.java,v 1.3 2003/10/30 19:29:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,11 +30,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -53,12 +49,13 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org.com">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class ShoppingCartItem implements java.io.Serializable {
 
     public static String module = ShoppingCartItem.class.getName();
+    public static final String resource = "OrderUiLabels";
     public static String[] attributeNames = { "shoppingListId", "shoppingListItemSeqId" };
     
     private transient GenericDelegator delegator = null;
@@ -121,7 +118,10 @@ public class ShoppingCartItem implements java.io.Serializable {
         }
 
         if (product == null) {
-            String excMsg = "Product not found, not adding to cart. [productId: " + productId + "]";
+            Map messageMap = UtilMisc.toMap("productId", productId );
+
+            String excMsg = UtilProperties.getMessage(resource, "item.product_not_found",
+                                          messageMap , cart.getLocale() );
 
             Debug.logWarning(excMsg, module);
             throw new CartItemModifyException(excMsg);

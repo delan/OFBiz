@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCartEvents.java,v 1.1 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: ShoppingCartEvents.java,v 1.2 2003/10/30 19:29:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,14 +27,13 @@ import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
-import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.base.util.*;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.catalog.CatalogWorker;
@@ -47,13 +46,14 @@ import org.ofbiz.service.ModelService;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ShoppingCartEvents {
-    
+
     public static String module = ShoppingCartEvents.class.getName();
-    
+    public static final String resource = "OrderUiLabels";
+
     private static final String NO_ERROR = "noerror";
     private static final String NON_CRITICAL_ERROR = "noncritical";
     private static final String ERROR = "error";
@@ -61,36 +61,37 @@ public class ShoppingCartEvents {
     /** Event to add an item to the shopping cart. */
     public static String addToCart(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");        
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         ShoppingCart cart = getCartObject(request);
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String controlDirective;
         Map result;
         String productId = null;
         String itemType = null;
-        String itemDescription = null; 
-        String productCategoryId = null; 
+        String itemDescription = null;
+        String productCategoryId = null;
         String priceStr = null;
         double price = 0.00;
-    
+
         String quantityStr = null;
         double quantity = 0;
         Map attributes = null;
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
-        
-        // Get the parameters as a MAP, remove the productId and quantity params.        
+        Locale locale = UtilHttp.getLocale(request);
+
+        // Get the parameters as a MAP, remove the productId and quantity params.
         Map paramMap = UtilHttp.getParameterMap(request);
-        
+
             // Get shoppingList info if passed
         String shoppingListId = request.getParameter("shoppingListId");
         String shoppingListItemSeqId = request.getParameter("shoppingListItemSeqId");
-        
+
         if (paramMap.containsKey("ADD_PRODUCT_ID")) {
             productId = (String) paramMap.remove("ADD_PRODUCT_ID");
         } else if (paramMap.containsKey("add_product_id")) {
             productId = (String) paramMap.remove("add_product_id");
         }
-        
+
         if (paramMap.containsKey("ADD_CATEGORY_ID")) {
             productCategoryId = (String) paramMap.remove("ADD_CATEGORY_ID");
         } else if (paramMap.containsKey("add_category_id")) {
@@ -99,20 +100,20 @@ public class ShoppingCartEvents {
         if (productCategoryId != null && productCategoryId.length() == 0) {
             productCategoryId = null;
         }
-        
-        
+
+
         if (productId == null) {
             // before returning error; check make sure we aren't adding a special item type
             if (paramMap.containsKey("ADD_ITEM_TYPE")) {
                 itemType = (String) paramMap.remove("ADD_ITEM_TYPE");
             } else if (paramMap.containsKey("add_item_type")) {
                 itemType = (String) paramMap.remove("add_item_type");
-            } else {            
-                request.setAttribute("_ERROR_MESSAGE_", "No product information passed, not adding anything to cart.");
+            } else {
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage(resource, "cart.addToCart.noProductInfoPassed", locale));
                 return "success"; // not critical return to same page
             }
         }
-    
+
         // check for an itemDescription
         if (paramMap.containsKey("ADD_ITEM_DESCRIPTION")) {
             itemDescription = (String) paramMap.remove("ADD_ITEM_DESCRIPTION");
@@ -122,7 +123,7 @@ public class ShoppingCartEvents {
         if (itemDescription != null && itemDescription.length() == 0) {
             itemDescription = null;
         }
-    
+
         // get the override price
         if (paramMap.containsKey("PRICE")) {
             priceStr = (String) paramMap.remove("PRICE");
@@ -132,7 +133,7 @@ public class ShoppingCartEvents {
         if (priceStr == null) {
             priceStr = "0.00";  // default price is 0.00
         }
-    
+
         // get the quantity
         if (paramMap.containsKey("QUANTITY")) {
             quantityStr = (String) paramMap.remove("QUANTITY");
@@ -142,15 +143,15 @@ public class ShoppingCartEvents {
         if (quantityStr == null) {
             quantityStr = "1";  // default quantity is 1
         }
-    
+
         // parse the price
         try {
             price = NumberFormat.getNumberInstance().parse(priceStr).doubleValue();
         } catch (Exception e) {
             Debug.logWarning(e, "Problems parsing price string: " + priceStr, module);
-            price = 0.00;   
+            price = 0.00;
         }
-    
+
         // parse the quantity
         try {
             quantity = NumberFormat.getNumberInstance().parse(quantityStr).doubleValue();
@@ -158,12 +159,12 @@ public class ShoppingCartEvents {
             Debug.logWarning(e, "Problems parsing quantity string: " + quantityStr, module);
             quantity = 1;
         }
-        
+
         // Translate the parameters and add to the cart
-        result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId, 
+        result = cartHelper.addToCart(catalogId, shoppingListId, shoppingListItemSeqId, productId, productCategoryId,
             itemType, itemDescription, price, quantity, paramMap);
         controlDirective = processResult(result, request);
-        
+
         //Determine where to send the browser
         if (controlDirective.equals(NON_CRITICAL_ERROR)) {
             return "success";
@@ -179,6 +180,8 @@ public class ShoppingCartEvents {
     public static String addToCartFromOrder(HttpServletRequest request, HttpServletResponse response) {
         String orderId = request.getParameter("order_id");
         String[] itemIds = request.getParameterValues("item_id");
+        Locale locale = UtilHttp.getLocale(request);
+
 
         ShoppingCart cart = getCartObject(request);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -187,12 +190,12 @@ public class ShoppingCartEvents {
         String catalogId = CatalogWorker.getCurrentCatalogId(request);
         Map result;
         String controlDirective;
-        
+
         boolean addAll = ("true".equals(request.getParameter("add_all")));
         result = cartHelper.addToCartFromOrder(catalogId, orderId, itemIds, addAll);
         controlDirective = processResult(result, request);
-    
-        //Determine where to send the browser 
+
+        //Determine where to send the browser
         if (controlDirective.equals(ERROR)) {
             return "error";
         } else {
@@ -212,6 +215,8 @@ public class ShoppingCartEvents {
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String controlDirective;
         Map result;
+        Locale locale = UtilHttp.getLocale(request);
+
 
         //Convert the params to a map to pass in
         Map paramMap = UtilHttp.getParameterMap(request);
@@ -241,16 +246,22 @@ public class ShoppingCartEvents {
         String controlDirective;
         Map result;
         Double totalQuantity;
+        Locale locale = UtilHttp.getLocale(request);
 
         result = cartHelper.addCategoryDefaults(catalogId, categoryId);
         controlDirective = processResult(result, request);
-        
-        //Determine where to send the browser 
+
+        //Determine where to send the browser
         if (controlDirective.equals(ERROR)) {
             return "error";
         } else {
             totalQuantity = (Double)result.get("totalQuantity");
-            request.setAttribute("_EVENT_MESSAGE_", "Added " + UtilFormatOut.formatQuantity(totalQuantity) + " items to the cart.");
+            Map messageMap = UtilMisc.toMap("totalQuantity", UtilFormatOut.formatQuantity(totalQuantity) );
+
+            request.setAttribute("_EVENT_MESSAGE_",
+                                  UtilProperties.getMessage(resource, "cart.add_category_defaults",
+                                          messageMap, locale ));
+
             return "success";
         }
     }
@@ -263,7 +274,9 @@ public class ShoppingCartEvents {
         String controlDirective;
         Map result;
         Map paramMap = UtilHttp.getParameterMap(request);
-        
+        Locale locale = UtilHttp.getLocale(request);
+
+
         //Delegate the cart helper
         result = cartHelper.deleteFromCart(paramMap);
         controlDirective = processResult(result, request);
@@ -279,14 +292,16 @@ public class ShoppingCartEvents {
     /** Update the items in the shopping cart. */
     public static String modifyCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        ShoppingCart cart = getCartObject(request);        
+        ShoppingCart cart = getCartObject(request);
         GenericValue userLogin = (GenericValue) session.getAttribute("userLogin");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Security security = (Security) request.getAttribute("security");
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(null, dispatcher, cart);
         String controlDirective;
         Map result;
-        
+        Locale locale = UtilHttp.getLocale(request);
+
+
         Map paramMap = UtilHttp.getParameterMap(request);
 
         String removeSelectedFlag = request.getParameter("removeSelected");
@@ -309,7 +324,7 @@ public class ShoppingCartEvents {
         cart.clear();
         return "success";
     }
-    
+
     /** Totally wipe out the cart, removes all stored info. */
     public static String destroyCart(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
@@ -324,23 +339,23 @@ public class ShoppingCartEvents {
     public static ShoppingCart getCartObject(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
         ShoppingCart cart = (ShoppingCart) session.getAttribute("shoppingCart");
-        
+
         if (cart == null) {
             cart = new WebShoppingCart(request);
             session.setAttribute("shoppingCart", cart);
         }
         return cart;
     }
-    
+
     /**
      * This should be called to translate the error messages of the
      * <code>ShoppingCartHelper</code> to an appropriately formatted
      * <code>String</code> in the request object and indicate whether
      * the result was an error or not and whether the errors were
      * critical or not
-     * 
-     * @param result    The result returned from the 
-     * <code>ShoppingCartHelper</code> 
+     *
+     * @param result    The result returned from the
+     * <code>ShoppingCartHelper</code>
      * @param request The servlet request instance to set the error messages
      * in
      * @return one of NON_CRITICAL_ERROR, ERROR or NO_ERROR.
@@ -362,7 +377,7 @@ public class ShoppingCartEvents {
             errMsg.append(result.get(ModelService.ERROR_MESSAGE));
             request.setAttribute("_ERROR_MESSAGE_", errMsg.toString());
         }
-        
+
         //See whether there was an error
         if (errMsg.length() > 0) {
             request.setAttribute("_ERROR_MESSAGE_", errMsg.toString());
@@ -370,8 +385,8 @@ public class ShoppingCartEvents {
                 return NON_CRITICAL_ERROR;
             } else {
                 return ERROR;
-            }   
-        } else {        
+            }
+        } else {
             return NO_ERROR;
         }
     }

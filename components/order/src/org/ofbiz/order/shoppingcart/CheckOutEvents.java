@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.14 2003/10/26 18:37:23 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.15 2003/10/30 19:29:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -60,7 +61,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.14 $
+ * @version    $Revision: 1.15 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -69,6 +70,7 @@ public class CheckOutEvents {
 
     public static String cartNotEmpty(HttpServletRequest request, HttpServletResponse response) {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        Locale locale = UtilHttp.getLocale(request);
 
         if (cart != null && cart.size() > 0) {
             return "success";
@@ -83,6 +85,8 @@ public class CheckOutEvents {
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute("userLogin");
         String orderId = request.getParameter("order_id");
         String itemSeqId = request.getParameter("item_seq");
+        Locale locale = UtilHttp.getLocale(request);
+
         Map fields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", itemSeqId, "statusId", "ITEM_CANCELLED", "userLogin", userLogin);
         Map result = null;
         try {
@@ -106,6 +110,7 @@ public class CheckOutEvents {
         return "error";
       }
 
+      Locale locale = UtilHttp.getLocale(request);
       String curPage = request.getParameter("checkoutpage");
       Debug.logInfo("CheckoutPage: " + curPage, module);
 
@@ -195,6 +200,8 @@ public class CheckOutEvents {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        Locale locale = UtilHttp.getLocale(request);
+
 
         CheckOutHelper checkOutHelper = new CheckOutHelper(dispatcher, delegator, cart);
         String billingAccountId = cart.getBillingAccountId();
@@ -251,6 +258,7 @@ public class CheckOutEvents {
     }
 
     public static Map getSelectedPaymentMethods(HttpServletRequest request) {
+        Locale locale = UtilHttp.getLocale(request);
         String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
         DecimalFormat formatter = new DecimalFormat(currencyFormat);
         Map selectedPaymentMethods = new HashMap();

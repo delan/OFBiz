@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.10 2003/10/22 23:03:40 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.11 2003/10/30 19:29:41 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,13 +24,7 @@
 package org.ofbiz.order.shoppingcart;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
@@ -49,7 +43,7 @@ import org.ofbiz.service.LocalDispatcher;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -85,6 +79,8 @@ public class ShoppingCart implements java.io.Serializable {
     private GenericValue userLogin = null;
     private GenericValue autoUserLogin = null;
 
+    private Locale locale;  // holds the locale from the user session
+
     /** don't allow empty constructor */
     protected ShoppingCart() {}
 
@@ -104,6 +100,7 @@ public class ShoppingCart implements java.io.Serializable {
         this.adjustments = new LinkedList(cart.getAdjustments());
         this.contactMechIdsMap = new HashMap(cart.getOrderContactMechIds());
         this.freeShippingProductPromoActions = new ArrayList(cart.getFreeShippingProductPromoActions());
+        this.locale = cart.getLocale();
 
         // clone the items
         List items = cart.items();
@@ -120,6 +117,9 @@ public class ShoppingCart implements java.io.Serializable {
         this.productStoreId = productStoreId;
         this.webSiteId = webSiteId;
         this.orderShipmentPreference = delegator.makeValue("OrderShipmentPreference", null);
+        // make sure locale is initialized if nothing other than from jvm
+        // for a web shopping cart this would be set later by the webShoppingCart methods
+        this.locale = Locale.getDefault();
     }
 
     public GenericDelegator getDelegator() {
@@ -136,6 +136,15 @@ public class ShoppingCart implements java.io.Serializable {
     public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
     }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public void setLocale(Locale locale) {
+        this.locale = locale;
+    }
+
 
     // =======================================================================
     // Methods for cart items
