@@ -1,5 +1,5 @@
 /*
- * $Id: UtilHttp.java,v 1.11 2004/04/10 13:54:27 ajzeneski Exp $
+ * $Id: UtilHttp.java,v 1.12 2004/06/04 12:33:17 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import javax.servlet.http.HttpSession;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.1
  */
 public class UtilHttp {
@@ -223,8 +223,16 @@ public class UtilHttp {
     public static String getCurrencyUom(HttpSession session) {
         String iso = (String) session.getAttribute("currencyUom");
         if (iso == null) {
-            // if none is set we will use the system default
-            Currency cur = Currency.getInstance(Locale.getDefault());
+            // if none is set we will use the configured default
+            try {
+                iso = UtilProperties.getPropertyValue("general", "currency.uom.id.default", "USD");
+            } catch (Exception e) {
+                Debug.logWarning("Error getting the general:currency.uom.id.default value: " + e.toString(), module);
+            }
+        }
+        if (iso == null) {
+            // if none is set we will use the default for whatever locale we can get...
+            Currency cur = Currency.getInstance(getLocale(session));
             iso = cur.getCurrencyCode();
         }
         return iso;
