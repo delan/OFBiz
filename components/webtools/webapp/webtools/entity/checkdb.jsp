@@ -26,7 +26,7 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.base.util.*" %>
-<%@ page import="org.ofbiz.entity.*" %>
+<%@ page import="org.ofbiz.entity.*, org.ofbiz.entity.util.*, org.ofbiz.entity.datasource.*" %>
 <%@ page import="org.ofbiz.entity.model.*" %>
 
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
