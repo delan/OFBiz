@@ -171,11 +171,15 @@ public class JotmXaPoolTest {
             }
             ModelEntity model = delegator.getModelEntity("JotmXapoolTest");
             DatabaseUtil dbUtil = new DatabaseUtil(helper.getHelperName());
-            dbUtil.createTable(model, null, false, false, 1, "", false);
+            String msg = dbUtil.createTable(model, null, false, false, 1, "", false);
+            if (msg == null) {
+                logger.info("Table '" + tableName + "' created.");    
+            } else {
+                logger.info(msg);
+            }
         } else {        
             throw new SQLException("No delegator available; cannot create");
-        }
-        logger.info("Table '" + tableName + "' created.");                    
+        }                           
     }
     
     /** Tests a loop of inserts using different connections and transaction */
