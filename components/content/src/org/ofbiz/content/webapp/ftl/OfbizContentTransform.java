@@ -1,5 +1,5 @@
 /*
- * $Id: OfbizContentTransform.java,v 1.3 2004/04/30 13:18:31 byersa Exp $
+ * $Id: OfbizContentTransform.java,v 1.4 2004/04/30 22:12:19 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 
 import freemarker.ext.beans.BeanModel;
-import freemarker.core.Environment;
+import freemarker.template.Environment;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 
@@ -43,7 +43,7 @@ import freemarker.template.TemplateTransformModel;
  * OfbizContentTransform - Freemarker Transform for content links
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.1
  */
 public class OfbizContentTransform implements TemplateTransformModel {
