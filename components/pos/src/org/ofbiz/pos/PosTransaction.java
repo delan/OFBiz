@@ -433,6 +433,7 @@ public class PosTransaction {
                 Journal.appendNode(line, "td", "desc", item.getDescription());
                 Journal.appendNode(line, "td", "qty", UtilFormatOut.formatQuantity(quantity));
                 Journal.appendNode(line, "td", "price", UtilFormatOut.formatPrice(subTotal));
+                Journal.appendNode(line, "td", "index", new Integer(cart.getItemIndex(item)).toString());
                 if (adjustment != 0) {
                     // append the promo info
                     XModel promo = Journal.appendNode(model, "tr", "", "");
@@ -497,6 +498,7 @@ public class PosTransaction {
                 Journal.appendNode(paymentLine, "td", "desc", desc);
                 Journal.appendNode(paymentLine, "td", "qty", "-");
                 Journal.appendNode(paymentLine, "td", "price", UtilFormatOut.formatPrice(-1 * amount));
+                Journal.appendNode(paymentLine, "td", "index", new Integer(i).toString());
             }
         }
     }
