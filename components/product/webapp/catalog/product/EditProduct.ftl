@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.10 $
+ *@version    $Revision: 1.11 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -35,6 +35,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
     <a href="<@ofbizUrl>/EditProduct</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProduct}]</a>
     <#if productId?has_content>
         <a href="/ecommerce/control/product?product_id=${productId}" class='buttontext' target='_blank'>[${uiLabelMap.ProductProductPage}]</a>
+        <a href="/ordermgr/control/findorders?productId=${productId}&orderTypeId=PURCHASE_ORDER&lookupFlag=Y&hideFields=Y&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class='buttontext' target='_blank'>[Purchase Orders]</a>
+        <a href="/ordermgr/control/findorders?productId=${productId}&orderTypeId=SALES_ORDER&lookupFlag=Y&hideFields=Y&externalLoginKey=${requestAttributes.externalLoginKey?if_exists}" class='buttontext' target='_blank'>[Sales Orders]</a>
     </#if>
     <br>
     <br>
