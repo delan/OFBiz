@@ -182,7 +182,6 @@
         service-result-name CDATA #IMPLIED
     >
 
-<!-- TODO: implement call-service-asynch -->
 <!--
 Calls a service asynchronously and ignores the result, so no return messages 
 are used; that doesn't mean no errors will result, but they would just be
