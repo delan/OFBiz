@@ -471,13 +471,15 @@ public class SimpleMethod {
             }
 
             String response = (String) methodContext.getEnv(eventResponseCodeName);
-            if (forceError) {
-                //override response code, always use error code
-                Debug.logInfo("Error messages found overriding response code for error; returning code [" + defaultErrorCode + "]");
-                response = defaultErrorCode;
-            } else if (response == null || response.length() == 0) {
-                Debug.logInfo("No response code string found, assuming success; returning code [" + defaultSuccessCode + "]");
-                response = defaultSuccessCode;
+            if (response == null || response.length() == 0) {
+                if (forceError) {
+                    //override response code, always use error code
+                    Debug.logInfo("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]");
+                    response = defaultErrorCode;
+                } else {
+                    Debug.logInfo("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]");
+                    response = defaultSuccessCode;
+                }
             }
             return response;
         } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
@@ -513,13 +515,15 @@ public class SimpleMethod {
             }
 
             String response = (String) methodContext.getEnv(serviceResponseMessageName);
-            if (forceError) {
-                //override response code, always use error code
-                Debug.logInfo("Error messages found overriding response code for error; returning code [" + defaultErrorCode + "]");
-                response = defaultErrorCode;
-            } else if (response == null || response.length() == 0) {
-                Debug.logInfo("No response code string found, assuming success; returning code [" + defaultSuccessCode + "]");
-                response = defaultSuccessCode;
+            if (response == null || response.length() == 0) {
+                if (forceError) {
+                    //override response code, always use error code
+                    Debug.logInfo("No response code string found, but error messages found so assuming error; returning code [" + defaultErrorCode + "]");
+                    response = defaultErrorCode;
+                } else {
+                    Debug.logInfo("No response code string or errors found, assuming success; returning code [" + defaultSuccessCode + "]");
+                    response = defaultSuccessCode;
+                }
             }
             methodContext.putResult(ModelService.RESPONSE_MESSAGE, response);
             return null;
