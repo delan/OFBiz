@@ -105,6 +105,8 @@ public class CategoryWorker {
      */
     public static void getRelatedProductCategoryMembers(PageContext pageContext, String attributePrefix,
                                                         String parentId, boolean limitView, int defaultViewSize) {
+        boolean useSessionCache = false;
+                                                            
         ServletRequest request = pageContext.getRequest();
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         if (attributePrefix == null)
@@ -132,11 +134,15 @@ public class CategoryWorker {
             return;
 
         String curFindString = "ProductCategoryByParentId:" + parentId;
+        ArrayList prodCatMembers = null;
+        String resultArrayName = null;
 
-        ArrayList prodCatMembers = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
-        String resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
-
-        if (prodCatMembers == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
+        if (useSessionCache) {
+            prodCatMembers = (ArrayList) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
+            resultArrayName = (String) pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
+        }
+        
+        if (!useSessionCache || prodCatMembers == null || resultArrayName == null || !curFindString.equals(resultArrayName)) { // || viewIndex == 0
             //since cache is invalid, should not use prodCatMembers
             prodCatMembers = null;
 
@@ -160,11 +166,12 @@ public class CategoryWorker {
                     Debug.logWarning(e.getMessage());
                     prodCatMemberCol = null;
                 }
-                if (prodCatMemberCol != null)
+                if (prodCatMemberCol != null) {
                     prodCatMembers = new ArrayList(prodCatMemberCol);
+                }
             }
 
-            if (prodCatMembers != null) {
+            if (useSessionCache && prodCatMembers != null) {
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", prodCatMembers);
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
             }
@@ -173,8 +180,9 @@ public class CategoryWorker {
         int lowIndex;
         int highIndex;
         int listSize = 0;
-        if (prodCatMembers != null)
+        if (prodCatMembers != null) {
             listSize = prodCatMembers.size();
+        }
 
         if (limitView) {
             lowIndex = viewIndex * viewSize + 1;
@@ -192,8 +200,9 @@ public class CategoryWorker {
         pageContext.setAttribute(attributePrefix + "highIndex", new Integer(highIndex));
         pageContext.setAttribute(attributePrefix + "listSize", new Integer(listSize));
         pageContext.setAttribute(attributePrefix + "categoryId", parentId);
-        if (prodCatMembers != null && prodCatMembers.size() > 0)
+        if (prodCatMembers != null && prodCatMembers.size() > 0) {
             pageContext.setAttribute(attributePrefix + "productCategoryMembers", prodCatMembers);
+        }
     }
 
     public static String getCatalogTopCategory(PageContext pageContext, String defaultTopCategory) {
