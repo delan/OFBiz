@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.7 $
+ *@version    $Revision: 1.8 $
  *@since      2.1
 */
 
@@ -54,20 +54,7 @@ context.put("placingCustomerPerson", userLogin == null ? null : userLogin.getRel
 context.put("shippingAddress", cart.getShippingAddress());
 
 paymentMethods = cart.getPaymentMethods();
-paymentMethod = null;
-if (paymentMethods != null && paymentMethods.size() > 0) {
-    paymentMethod = paymentMethods.get(0);
-    context.put("paymentMethod", paymentMethod);
-}
-
-if (paymentMethod != null && "CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-    creditCard = paymentMethod.getRelatedOneCache("CreditCard");
-    context.put("creditCard", creditCard);
-    context.put("formattedCardNumber", ContactHelper.formatCreditCard(creditCard));
-} else if (paymentMethod != null && "EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {
-    eftAccount = paymentMethod.getRelatedOneCache("EftAccount");
-    context.put("eftAccount", eftAccount);
-}
+context.put("paymentMethods", paymentMethods);
 
 paymentMethodTypeIds = cart.getPaymentMethodTypeIds();
 paymentMethodType = null;
@@ -85,16 +72,6 @@ payToPartyId = productStore.getString("payToPartyId");
 
 paymentAddress =  PaymentWorker.getPaymentAddress(delegator, payToPartyId);
 if (paymentAddress != null) context.put("paymentAddress", paymentAddress);
-
-billingAddress = null;
-if (paymentMethod != null) {
-    creditCard = paymentMethod.getRelatedOne("CreditCard");
-    if (creditCard != null) {
-        billingAddress = creditCard.getRelatedOne("PostalAddress");
-    }
-}
-if (billingAddress != null)
-    context.put("billingAddress", billingAddress);
 
 // TODO: FIXME!
 /*
