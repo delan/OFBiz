@@ -133,19 +133,19 @@
     </target>
 
     <target name="classes" depends="tld">
-    	<javac destdir="${build.dir}/share" classpath="${classpath}">
+    	<javac debug="on" destdir="${build.dir}/share" classpath="${classpath}">
     		<src path="${src.dir}/share" />
         </javac>
 		
-    	<javac destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
+    	<javac debug="on" destdir="${build.dir}/webapp" classpath="${classpath}:${build.dir}/share">
     		<src path="${src.dir}/webapp" />
         </javac>
     	
-    	<javac destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share:{$build.dir}/webapp">
+    	<javac debug="on" destdir="${build.dir}/workflow" classpath="${classpath}:${build.dir}/share:{$build.dir}/webapp">
     		<src path="${src.dir}/workflow" />    
         </javac>
 
-    	<javac destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share:{$build.dir}/webapp">
+    	<javac debug="on" destdir="${build.dir}/rules" classpath="${classpath}:${build.dir}/share:{$build.dir}/webapp">
     		<src path="${src.dir}/rules" />    
         </javac>
 

@@ -38,9 +38,11 @@ import org.ofbiz.core.util.*;
  */
 public class DispatchContext {
     
+    protected static final String GLOBAL_KEY = "global";
+    protected static UtilCache modelService = new UtilCache("ModelServices",0,0);
+    
     protected String name;
     protected String root;
-    protected Map modelServices;
     protected Map attributes;
     protected Collection readers;
     protected ClassLoader loader;
@@ -56,9 +58,13 @@ public class DispatchContext {
         this.readers = readers;
         this.loader = loader;
         this.dispatcher = dispatcher;
-        this.modelServices = new HashMap();
         this.attributes = new HashMap();
-        this.addReaders(readers);
+        Map localService = addReaders(readers);
+        if ( localService != null )
+            modelService.put(root,localService);
+        Map globalService = addGlobal();
+        if ( globalService != null )                    
+            modelService.put(GLOBAL_KEY, globalService);
     }
     
     /** Returns the service attribute for the given name, or null if there is no attribute by that name.
@@ -112,12 +118,42 @@ public class DispatchContext {
      *@return GenericServiceModel that corresponds to the serviceName
      */
     public ModelService getModelService(String serviceName) throws GenericServiceException {
-        if ( !modelServices.containsKey(serviceName) )
-            throw new GenericServiceException("Illegal service name.");
-        return (ModelService)modelServices.get(serviceName);
+        Map serviceMap = (Map) modelService.get(root);
+        if ( serviceMap == null ) {
+            synchronized(this) {
+                serviceMap = (Map) modelService.get(root);
+                if ( serviceMap == null ) {
+                    serviceMap = addReaders(readers);
+                    if ( serviceMap != null )
+                        modelService.put(root,serviceMap);
+                }
+            }
+        }
+        
+        if ( !serviceMap.containsKey(serviceName) )
+            return getGlobalModelService(serviceName);
+        return (ModelService)serviceMap.get(serviceName);
     }
     
-    /** Gets the LocalDispatcher used to create this context 
+    private ModelService getGlobalModelService(String serviceName) throws GenericServiceException {
+        Map serviceMap = (Map) modelService.get(GLOBAL_KEY);
+        if ( serviceMap == null ) {
+            synchronized(this) {
+                serviceMap = (Map) modelService.get(root);
+                if ( serviceMap == null ) {
+                    serviceMap = addGlobal();
+                    if ( serviceMap != null )
+                        modelService.put(GLOBAL_KEY,serviceMap);
+                }
+            }
+        }
+        
+        if ( !serviceMap.containsKey(serviceName) )
+            throw new GenericServiceException("Cannot locate service by name");
+        return (ModelService)serviceMap.get(serviceName);
+    }
+    
+    /** Gets the LocalDispatcher used to create this context
      *@return LocalDispatcher that was used to create this context
      */
     public LocalDispatcher getLocalDispatcher() {
@@ -131,26 +167,42 @@ public class DispatchContext {
         return dispatcher.getDelegator();
     }
     
-    private void addReaders(Collection readerURLs) {
+    private Map addReaders(Collection readerURLs) {
+        Map serviceMap = new HashMap();
         if ( readerURLs == null )
-            return;
+            return null;
         Iterator urlIter = readerURLs.iterator();
         while(urlIter.hasNext()) {
             URL readerURL = (URL)urlIter.next();
-            this.addReader(readerURL);
+            serviceMap.putAll(addReader(readerURL));
         }
+        return serviceMap;
     }
     
-    private void addReader(URL readerURL) {
+    private Map addReader(URL readerURL) {
         if ( readerURL == null )
-            return;
+            return null;
         ModelServiceReader reader = ModelServiceReader.getModelServiceReader(readerURL);
         if ( reader == null )
-            return;
+            return null;
         Map serviceMap = reader.getModelServices();
         if ( serviceMap == null )
-            return;
+            return null;
         else
-            modelServices.putAll(serviceMap);
+            return serviceMap;
+    }
+    
+    private Map addGlobal() {
+        Map globalMap = new HashMap();
+        String path = UtilProperties.getPropertyValue("servicesengine","global.paths");
+        if ( path == null )
+            return null;
+        List paths = StringUtil.split(path,";");
+        Iterator i = paths.iterator();
+        while ( i.hasNext() ) {
+            URL readerURL = UtilURL.fromFilename((String)i.next());
+            globalMap.putAll(addReader(readerURL));
+        }
+        return globalMap;
     }
 }
