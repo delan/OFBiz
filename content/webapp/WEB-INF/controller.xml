@@ -481,10 +481,12 @@
     <request-map uri="RedirectContent">
         <security auth="true" https="true"/>
         <event invoke="org/ofbiz/content/redirectContent.bsh" path="" type="bsf"/>
+        <response name="success" type="none"/>
     </request-map>
     <request-map uri="RedirectData">
         <security auth="true" https="true"/>
         <event invoke="org/ofbiz/content/redirectData.bsh" path="" type="bsf"/>
+        <response name="success" type="none"/>
     </request-map>
     <!-- end of request mappings -->
 
