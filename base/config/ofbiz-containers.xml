@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.16 2004/05/22 21:13:51 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.17 2004/05/22 22:44:04 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -45,7 +45,7 @@
         <property name="iiop-host" value="127.0.0.1"/>
         <property name="iiop-port" value="2000"/>
     </container>
-    
+
     <!-- RMI Service Dispatcher -->
     <container name="rmi-dispatcher" class="org.ofbiz.service.rmi.RmiServiceContainer">
         <property name="bound-name" value="RMIDispatcher"/>
@@ -56,22 +56,38 @@
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
     </container>
 
-    <!--
     <container name="catalina-container" class="org.ofbiz.catalina.container.CatalinaContainer">
         <property name="useNaming" value="false"/>
         <property name="debug" value="0"/>
         <property name="default-server" value="engine">
             <property name="default-host" value="0.0.0.0"/>
-            <property name="http-connector" value="connector">
-                <property name="type" value="http"/>
-                <property name="host" value="0.0.0.0"/>
-                <property name="port" value="8080"/>
-            </property>
+        </property>
+        <property name="ajp-connector" value="connector">
+            <property name="type" value="ajp"/>
+            <property name="host" value="0.0.0.0"/>
+            <property name="port" value="8009"/>
+            <property name="enable-lookups" value="true"/>
+        </property>
+        <property name="http-connector" value="connector">
+            <property name="type" value="http"/>
+            <property name="host" value="0.0.0.0"/>
+            <property name="port" value="8080"/>
+            <property name="enable-lookups" value="true"/>
+        </property>
+        <property name="https-connector" value="connector">
+            <property name="type" value="https"/>
+            <property name="host" value="0.0.0.0"/>
+            <property name="port" value="8443"/>
+            <property name="enable-lookups" value="true"/>
+            <property name="keystore" value="base/config/ofbizssl.jks"/>
+            <property name="password" value="changeit"/>
+            <property name="key-alias" value="ssl"/>
+            <property name="keystore-type" value="jks"/>
         </property>
     </container>
-    -->
 
     <!-- load jetty and all web applications -->
+    <!--
     <container name="jetty-container" class="org.ofbiz.jetty.container.JettyContainer">
         <property name="default-server">
             <property name="https-listener" value="listener">
@@ -81,7 +97,7 @@
                 <property name="min-threads" value="5"/>
                 <property name="max-threads" value="100"/>
                 <property name="max-idle-time" value="30000"/>
-                <property name="keystore" value="components/jetty/config/ofbizssl.jks"/>
+                <property name="keystore" value="base/config/ofbizssl.jks"/>
                 <property name="password" value="changeit"/>
                 <property name="key-password" value="changeit"/>
                 <property name="identify-listener" value="true"/>
@@ -117,6 +133,7 @@
             </property>
         </property>
     </container>
+    -->
 
     <!-- load BeanShell remote telnet server -->
     <container name="beanshell-container" class="org.ofbiz.base.container.BeanShellContainer">
