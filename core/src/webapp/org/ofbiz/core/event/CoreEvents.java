@@ -243,6 +243,36 @@ public class CoreEvents {
         return "success";
     }
 
+    /** Run a service.
+     *  Request Parameters which are used for this event:
+     *  SERVICE_NAME      - Name of the service to invoke
+     *
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @return Response code string
+     */
+    public static String runService(HttpServletRequest request, HttpServletResponse response)  {
+        // first do a security check
+        Security security = (Security) request.getAttribute("security");
+        if (!security.hasPermission("ENTITY_MAINT", request.getSession())) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>You are not authorized to use this function.");
+            return "error";
+        }
+
+        // get the service name 
+        String serviceName = request.getParameter("SERVICE_NAME");
+
+        // call the service via the ServiceEventHandler which 
+        // adapts an event to a service.
+        ServiceEventHandler seh = new ServiceEventHandler();
+        seh.initialize(null, serviceName);
+        try {
+            return seh.invoke(request, response);
+        } catch (EventHandlerException e) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>ServiceEventHandler threw an exception: " + e.getMessage());
+            return "error";
+        }
+    }
 }
 
 
