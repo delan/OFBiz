@@ -1,5 +1,5 @@
 /*
- * $Id: ShipmentEvents.java,v 1.1 2003/08/18 17:59:53 jonesde Exp $
+ * $Id: ShipmentEvents.java,v 1.2 2003/09/12 20:44:48 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,12 +24,12 @@
 package org.ofbiz.shipment.shipment;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -40,7 +40,7 @@ import org.ofbiz.entity.util.ByteWrapper;
  * ShippingEvents - Events used for processing shipping fees
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ShipmentEvents {
@@ -77,20 +77,15 @@ public class ShipmentEvents {
         }
         
         try {
-            // could set the content type, etc; but what to set it to?
-            
-            OutputStream outputStream = response.getOutputStream();
-            outputStream.write(byteWrapper.getBytes());
-            outputStream.flush();
-            outputStream.close();
-
-            return "success";
+            UtilHttp.streamContentToBrowser(response, byteWrapper.getBytes(), "image/gif");
         } catch (IOException e) {
             String errorMsg = "Error writing labelImage to OutputStream: " + e.toString();
             Debug.logError(e, errorMsg, module);
             request.setAttribute("_ERROR_MESSAGE_", errorMsg);
             return "error";
         }
+        
+        return "success";                                                
     }
 }
 
