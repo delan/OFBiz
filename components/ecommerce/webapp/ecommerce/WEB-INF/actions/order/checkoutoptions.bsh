@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 */
 
@@ -57,19 +57,26 @@ context.put("emailList",  ContactHelper.getContactMechByType(party, "EMAIL_ADDRE
 
 billingAccountRoleList = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", userLogin.getString("partyId"), "roleTypeId", "BILL_TO_CUSTOMER"));
 if (billingAccountRoleList != null && billingAccountRoleList.size() > 0) {
+    totalAvailable = 0.00;
+    sortedAccounts = new TreeMap();
     billingAcctIter = billingAccountRoleList.iterator();
-    billingAccountList = new ArrayList();
     while (billingAcctIter.hasNext()) {
         billingAccountRole = billingAcctIter.next();        
         billingAccountVO = billingAccountRole.getRelatedOne("BillingAccount");                        
         accountBalance = BillingAccountWorker.getBillingAccountBalance(billingAccountVO);
         
         billingAccount = new HashMap(billingAccountVO);
-        billingAccount.put("accountBalance", new Double(accountBalance));        
-        billingAccountList.add(billingAccount);
-    }            
-    context.put("selectedBillingAccountId", cart.getBillingAccountId());
-    context.put("billingAccountList", billingAccountList);
+        accountLimit = billingAccountVO.getDouble("accountLimit").doubleValue();
+        
+        billingAccount.put("accountBalance", new Double(accountBalance)); 
+        accountAvailable = accountLimit - accountBalance;
+        totalAvailable += accountAvailable;    
+        sortedAccounts.put(new Double(accountAvailable), billingAccount);
+    }
+    
+    billingAccountList = new ArrayList(sortedAccounts.values());
+    context.put("selectedBillingAccount", cart.getBillingAccountId());
+    context.put("billingAccountList", billingAccountList);     
 }
 
 if (cart.getShipmentMethodTypeId() != null && cart.getCarrierPartyId() != null)

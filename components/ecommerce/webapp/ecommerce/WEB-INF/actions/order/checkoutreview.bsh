@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.1
 */
 
@@ -96,9 +96,12 @@ if (paymentMethod != null) {
 if (billingAddress != null)
     context.put("billingAddress", billingAddress);
 
+// TODO: FIXME!
+/*
 billingAccount = cart.getBillingAccountId() != null ? delegator.findByPrimaryKey("BillingAccount", UtilMisc.toMap("billingAccountId", cart.getBillingAccountId())) : null;
 if (billingAccount != null)
     context.put("billingAccount", billingAccount);
+*/
 
 context.put("customerPoNumber", cart.getPoNumber());
 context.put("carrierPartyId", cart.getCarrierPartyId());
