@@ -1,0 +1,217 @@
+<html>
+<head>
+<title>The Open For Business Project: Rule Engine Guide</title>
+</head>
+<body>
+
+<h2 align="center">The Open For Business Project: Rule Engine Guide</h2>
+
+<br>Written By: David E. Jones
+<br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
+<br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
+<br>
+<A href="http://sf.net/projects/ofbiz"> <IMG src="http://sourceforge.net/sflogo.php?group_id=27173" border="0" alt="SourceForge Logo"></A> 
+<br>
+Founders and Lead Architects: David E. Jones &amp; Andy Zeneski <br>
+Last Updated: March 15, 2002<br>
+$Id$ <br>
+<hr>
+<br>
+<h3>Table of Contents</h3>
+
+<ul>
+  <li><a href="#Related_Documents">Related Documents</a>
+  <li><a href="#Introduction">Introduction</a>
+  <li><a href="#UIs">Rule Engine UIs</a>
+  <li><a href="#Logikus">Logikus Language</a>
+  <li><a href="#RuleML">RuleML Language</a>
+  <li><a href="#API:Logikus">API: Logikus Facade</a>
+</ul>
+
+<hr>
+
+<h3><a name="Related_Documents">Related Documents:</a></h3>
+<hr>
+<ul>
+  <li><a href="api/index.html">Core JavaDoc</a></li>
+  <li><a href="coreconfig.html">Core Configuration Guide</a></li>
+</ul>
+
+<hr>
+<h3><a name="Introduction">Introduction</a></h3>
+<hr>
+<p>The OFBiz Rule Engine is based on logic programming technologies that have existed for
+various decades. The most notable logic programming language is Prolog, although others do
+exist. Since the invention of Prolog many variations on the theme have appeared, and many
+exist now as business rule engines, constraint based optimization engine, etc.</p>
+
+<p>Some products in the market for Java compatible logic engines and variants include ILOG JRules and various
+other rule and constraint technologies (www.ilog.com), Blaze Advisor (www.blazesoft.com) 
+and YASU Tech QuickRules (www.yasutech.com). There are also a number of open source and 
+research efforts in place, most notable JESS from some guys at the Sandia National Labs. Two
+open source projects on SourceForge that deserve mention are under the projects names drools
+and info-sapient. Other interesting open source projects include Mandarax, and ...</p>
+
+<p>The basic idea behind a rule or logic language is that rather than specifying a set
+of instructions to run in a certain order like traditional imperative languages you specify
+facts and rules. A rule is simply an assertion with preconditions. If all of the preconditions
+are met then the assertion is added to the base of known facts, or the knowledge base. A
+fact is really just a rule with no preconditions so the assertion is always added to the
+knowledge base.</p>
+
+<p>The ruleset can be used in two different ways: forward chained and backward chained. Backward
+chaining is the original way that logic languages, including Prolog, operated. The popularity
+of forward chaining has increased over the years and is now more commonly referred to and 
+requested than backward chaining. The method of using a ruleset you choose will really depend 
+more on what you are trying to do than with the popularity of the options as different 
+applications are more suited to one or the other.</p>
+
+<p>Backward chaining involves a ruleset and a query. The query is the exact opposite of a fact, 
+it is a rule with no assertions, just a set of preconditions. When the query is run against the 
+ruleset the rule engine simply either proves the query as true or false, or it finds the facts
+that satisfy the constraints of the query. This can be very useful for constraint based searching
+and facts can be produced one at a time rather than waiting for all possible facts to be produced.
+Applying a fitness metric to the resulting facts can help in evaluating the facts and iteratively
+searching as long as desired to find better and better results.</p>
+
+<p>Forward chaining is a completely different way of using a ruleset. Rather than specifying a query
+to evaluate you simply run the ruleset against the current knowledge base, allowing it to assert
+the facts for each rule has it's preconditions satisfied. This is generally done iteratively until
+no rules have all of their preconditions satisfied. In other words, if a new fact is added to the
+knowledge base that suddenly makes all of the preconditions of another rule true, then that rule
+will also have it's assertion or postcondition added to the knowledge base.</p>
+
+<p>To make things more interesting, rather than just dealing with the testing and assertion of facts 
+integration with other programs can be done through sensors and effectors. This is basicly the process
+of specifying a method to call that will produce data when the fact is tested for a sensor, or specifying
+a method that will receive data when the fact is asserted for an effector.</p>
+
+<p>In the current incarnation of the OFBiz Rule Engine only backward chaining is supported.</p>
+
+<p>On top of the Rule Engine a method is needed of asserting facts and defining rules. If you
+are working directly with the API of the Rule Engine then these objects can be added that way.
+That can be useful for some circumstances, but would be REALLY tedious if it were the only way
+to create facts and rules. A much preferred method is to create a language for specifying facts
+and rules in a text file. There are two major types of these languages right now. One type is
+a free form language like Prolog (which Logikus is based on) and the other type is using an
+XML file. There is a standard in progress for XML rule files called RuleML. Both Logikus and RuleML
+are discussed below.</p>
+
+<p>An introduction to the OFBiz Rule Engine could not be complete without acknowledging the source
+of the original code base of the Rule Engine and the Logikus language. Even the name Logikus came
+from this source. It is based on the work done for the book Building Parsers in Java by Steven John
+Metsker, published by Addison Wesley. Mr. Metsker wrote the license to the code to be very open,
+similar to the OFBiz license. He basicly said that you can do whatever you want with it as long
+as you don't claim you wrote it. So, I repackaged the code as part of OFBiz and acknowledged him as
+the original author of the code and put a dual copyright at the top of each file from the book.
+I would like to express thanks here to Steven Metsker for creating an excellent book and a nice
+code base that has helped us a lot in getting started. I recomment the book to anyone who plans to
+seriously use or extend the OFBiz Rule Engine.</p>
+
+<hr>
+<h3><a name="UIs">Rule Engine UIs</a></h3>
+<hr>
+<p>In addition to using rulesets inside a program they can be run and tested through two user
+interfaces that exist as part of the Rule Engine. The first of these is a JSP in the WebTools
+webapp that has a textarea for the ruleset and an input box for the query. There is a link to
+this page from the main page of the WebTools app.</p>
+
+<p>The other user interface is a Java Swing application. This looks very similar to the JSP and
+can be run with the following command: <code>java -cp $CLASSPATH:ofbcore-rules.jar org.ofbiz.core.rules.LogikusIde</code></p>
+
+<hr>
+<h3><a name="Logikus">Logikus Language</a></h3>
+<hr>
+<p>The Logikus Language is described very well in Steven Metsker's book Building Parsers in Java.
+It is based on the Prolog syntax, for those who are familiar with that.</p>
+
+<p>There have been some changes made to Logikus as part of the OFBiz extensions to the language.
+The most notable of these changes is that functors and variables can be upper case or lower case.
+String constants must be enclosed in double quotes to differentiate between them and variables. This
+is different than traditional Prolog and the original Logikus where a word with a lower case first 
+letter is interpreted as a constant instead of a variable name. This change was made to make using 
+the language easier on Java developers, or developers familiar with most imperative languages.</p>
+
+<p>Other changes in the future will include a syntax for specifying that a function corresponds to
+an entity from the Entity Engine, and for using sensors and effectors.</p>
+
+<p>There are many examples of Logikus rulesets and queries in the core/docs/examples/rules directory.</p>
+
+<hr>
+<h3><a name="RuleML">RuleML Language</a></h3>
+<hr>
+<p>RuleML is an XML file type definition for specifying facts and rules. The website for RuleML
+contains links to many interesting resources and has some interesting information about rule and logic
+languages and their applications. The RuleML website is at 
+<a href="http://www.dfki.uni-kl.de/ruleml/">http://www.dfki.uni-kl.de/ruleml/</a>.</p>
+
+<p>An interesting open source project to look at to understand RuleML better is Mandarax. They have a 
+RuleML interpreter and a Swing app for editing rules.</p>
+
+<p>The RuleML interpreter for the OFBiz Rule Engine has not yet been written, but it is planned for.</p>
+
+<hr>
+<h3><a name="API:Logikus">API: Logikus Facade &amp; Engine Classes</a></h3>
+<hr>
+<p>To use Logikus rulesets and queries from your Java applications you can use the LogikusFacade
+class which provides some useful methods for parsing and executing rulesets, and then retrieving
+and evaluating the results. The full path of the class is org.ofbiz.core.rules.logikus.LogikusFacade.</p>
+
+<p>I will go through an example in here of parsing a Logikus file to create a Program class, and
+parsing a query to make a Query class, and then optionally adding rules or facts to the Program,
+and then running the Query against the Program and retrieving the results. This is a backward 
+chaining example.</p>
+
+<p>First, the main packages you will deal with are:</p>
+<ul>
+  <li>org.ofbiz.core.rules.logikus.*
+  <li>org.ofbiz.core.rules.parse.*
+  <li>org.ofbiz.core.rules.parse.tokens.*
+  <li>org.ofbiz.core.rules.engine.*
+</ul>
+
+<p>Next, create a <code>org.ofbiz.core.rules.engine.Program</code> object from a logikus ruleset
+by parsing the text of the ruleset with the following instruction:</p>
+<p><code>Program program = LogikusFacade.program(programText);</code></p>
+<p>Before parsing the query text and creating a Query object you can add other
+facts and rules to the program with the following method:</p>
+<p><code>program.addAxiom(axiom);</code></p>
+
+<p>Both the Fact object and Rule object implement the Axiom interface and can
+be added to a program as an axiom. For instructions on how to construct these
+objects see the JavaDocs for them. They are both in the <code>org.ofbiz.core.rules.engine</code> package.</p>
+
+<p>Now you can parse the query text and create a Query object with the following:</p>
+<p><code>Query query = LogikusFacade.query(queryText, program);</code></p>
+
+<p>Now everything is in place to get the engine running and finding results. The
+Query object has a method to get a pointer to the current set of variables that
+represent a result to the query. This object will always contain the current
+result from the query.</p>
+<p><code>Unification vars = query.variables();</code></p>
+
+<p>It works like the Enumeration class in that the variables can be used a number 
+of times for a single result and the next result will be retrieved when the 
+<code>canFindNextProof()</code> method is called, as follows:</p>
+<p><code>boolean moreProofs = query.canFindNextProof();</code></p>
+<p>or, maybe in a bit more useful form:</p>
+<p><code>while (query.canFindNextProof()) {</code></p>
+
+<p>The individual results can be retrieved from the Unification object if variables
+where specified in the query. If no variables where specified in the query the
+<code>canFindNextProof()</code> will return true, but the <code>vars.size()</code>
+method will return 0. This means that a proof was found, or the query was proved 
+to be true, but no variables needed unifying.</p>
+
+<p>When variables are unified in the result they can be retrieved from the 
+Unification with the following code:</p>
+<p><code>Variable var = vars.variableAt(i);</code></p>
+<p>or an enumeration of the variables can be pulled out as follows:</p>
+<p><code>Enumeration varEnum = vars.elements();</code></p>
+
+<p>The Variable and Unification objects have <code>toString()</code> methods
+for displaying their values. Other information about them is available in the
+JavaDocs.</p>
+
+</body>
+</html>
