@@ -151,6 +151,78 @@
             </if-compare>
         </if-compare>
     </simple-method>
+
+    <simple-method method-name="checkCreateStockRequirement" short-description="Create a Requirement if QOA goes under the minimum stock level">
+        <check-permission permission="ORDERMGR" action="_CREATE">
+            <fail-message message="Security Error: to run checkCreateStockRequirement you must have the ORDERMGR_CREATE or ORDERMGR_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+        
+        <!-- If the service is triggered by the updateItemIssuance service, get the ItemIssuance by the passed itemIssuanceId -->
+        <if-not-empty field-name="parameters.itemIssuanceId">
+            <entity-one entity-name="ItemIssuance" auto-field-map="true" value-name="itemIssuance"/>
+            <entity-one entity-name="InventoryItem" value-name="inventoryItem">
+                <field-map env-name="itemIssuance.inventoryItemId" field-name="inventoryItemId"/>
+            </entity-one>
+        <else>
+            <entity-one entity-name="InventoryItem" auto-field-map="true" value-name="inventoryItem"/>
+        </else>
+        </if-not-empty>
+
+        <!-- Get the Product and check if it is managed with the STOCK requirement method -->
+        <entity-one entity-name="Product" value-name="product">
+            <field-map env-name="inventoryItem.productId" field-name="productId"/>
+        </entity-one>
+        <field-to-field field-name="product.requirementMethodEnumId" to-field-name="requirementMethodId"/>
+        <if-empty field-name="requirementMethodId">
+            <!-- If the requirement method is not specified, try to get it from the product store -->
+            <entity-one entity-name="OrderHeader" auto-field-map="true" value-name="order"/>
+            <entity-one entity-name="ProductStore" value-name="productStore">
+                <field-map env-name="order.productStoreId" field-name="productStoreId"/>
+            </entity-one>
+            <field-to-field field-name="productStore.requirementMethodEnumId" to-field-name="requirementMethodId"/>
+        </if-empty>
+
+        <if-compare field-name="requirementMethodId" operator="equals" value="PRODRQM_STOCK">
+            <!-- Get the ProductFacility for the minimum stock level -->
+            <entity-one entity-name="ProductFacility" value-name="productFacility">
+                <field-map env-name="inventoryItem.productId" field-name="productId"/>
+                <field-map env-name="inventoryItem.facilityId" field-name="facilityId"/>
+            </entity-one>
+            <if-not-empty field-name="productFacility.minimumStock">
+                <!-- Get the product's total quantityOnHand in the facility -->
+                <field-to-field field-name="inventoryItem.productId" to-map-name="inputMap" to-field-name="productId"/>
+                <field-to-field field-name="inventoryItem.facilityId" to-map-name="inputMap" to-field-name="facilityId"/>
+                <call-service service-name="getInventoryAvailableByFacility" in-map-name="inputMap">
+                    <result-to-field field-name="quantityOnHandTotal" result-name="quantityOnHandTotal"/>
+                    <result-to-field field-name="availableToPromiseTotal" result-name="availableToPromiseTotal"/>
+                </call-service>
+                <clear-field field-name="inputMap"/>
+                <!-- If this new issuance will cause the quantityOnHandTotal to go below the minimumStock, create a new requirement -->
+                <if-compare-field field-name="quantityOnHandTotal" to-field-name="productFacility.minimumStock" operator="greater-equals" type="Double">
+                    <calculate field-name="newQuantityOnHand">
+                        <calcop field-name="quantityOnHandTotal" operator="subtract">
+                            <calcop operator="get" field-name="parameters.quantity"/>
+                        </calcop>
+                    </calculate>
+                    <if-compare-field field-name="newQuantityOnHand" to-field-name="productFacility.minimumStock" operator="less" type="Double">
+                        <field-to-field field-name="inventoryItem.productId" to-map-name="inputMap" to-field-name="productId"/>
+                        <if-not-empty field-name="productFacility.reorderQuantity">
+                            <field-to-field field-name="productFacility.reorderQuantity" to-map-name="inputMap" to-field-name="quantity"/>
+                        <else>
+                            <field-to-field field-name="parameters.quantity" to-map-name="inputMap" to-field-name="quantity"/>
+                        </else>
+                        </if-not-empty>
+                        <string-to-field string="PRODUCT_REQUIREMENT" map-name="inputMap" field-name="requirementTypeId"/>
+                        <call-service service-name="createRequirement" in-map-name="inputMap">
+                            <result-to-field field-name="parameters.requirementId" result-name="requirementId"/>
+                        </call-service>
+                        <field-to-result field-name="parameters.requirementId" result-name="requirementId"/>
+                    </if-compare-field>
+                </if-compare-field>
+            </if-not-empty>
+        </if-compare>
+    </simple-method>
     
 </simple-methods>
 
