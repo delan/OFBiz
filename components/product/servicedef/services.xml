@@ -995,7 +995,7 @@
             location="org/ofbiz/product/storage/FacilityContactMechServices.xml" invoke="updateFacilityTelecomNumber" auth="true">
         <description>Update a Telecommunications Number</description>        
         <auto-attributes entity-name="FacilityContactMech" include="all" mode="IN" optional="true"/>  
-        <auto-attributes entity-name="PostalAddress" include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="TelecomNumber" include="nonpk" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="INOUT" optional="false"/>   
     </service>    
     <service name="createFacilityEmailAddress" engine="simple"
