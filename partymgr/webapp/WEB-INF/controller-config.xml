@@ -18,21 +18,21 @@
     <request-map uri="checkLogin" edit="false">
       <description>Verify a user is logged in.</description>
       <security https="false" auth="false"/>
-      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="checkLogin" />
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" />
       <response name="success" type="view" value="name" />
       <response name="error" type="view" value="login" />
     </request-map>
 
     <request-map uri="login">
       <security https="true" auth="false"/>
-      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="login"/>
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="login"/>
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="login"/>
     </request-map>
 
     <request-map uri="logout">
       <security https="true" auth="true"/>
-      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="logout"/>
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout"/>
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="main"/>
     </request-map>
