@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.0
 -->
 <#assign states = Static["org.ofbiz.common.CommonWorkers"].getStateList(delegator)>
@@ -28,3 +28,15 @@
     <option value='${state.geoId}'>${state.geoName?default(state.geoId)}</option>
 </#list>
 
+<#-- Here is some alternate code to get states limited to a region
+<#if requestParameters.CUSTOMER_COUNTRY?exists>
+    <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,requestParameters.CUSTOMER_COUNTRY)>
+<#else>
+    <#assign stateAssocs = Static["org.ofbiz.common.CommonWorkers"].getAssociatedStateList(delegator,defaultCountryId)>
+</#if>
+
+<#list stateAssocs as stateAssoc>
+    <#assign state = delegator.getRelatedOne("AssocGeo", stateAssoc )>
+    <option value='${state.geoId}'>${state.geoName?default(state.geoId)}</option>
+</#list>
+-->
