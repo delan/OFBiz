@@ -45,6 +45,16 @@
 		}
 		return total;
 	}
+	
+	public static double calcItemCount(List items) {
+		double count = 0.0000;
+		Iterator i = items.iterator();
+		while (i.hasNext()) {
+			GenericValue item = (GenericValue) i.next();
+			count += (item.get("quantity") != null ? item.getDouble("quantity").doubleValue() : 0.0000);
+		}
+		return count;
+	}
 %>
 
 <% 
@@ -95,19 +105,66 @@
 	List yearCancelled = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_CANCELLED"));
 	List yearRejected = EntityUtil.filterByAnd(yearList, UtilMisc.toMap("statusId", "ORDER_REJECTED"));
 	
-	// order totals and item counts	
-	List dayItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
-	List dayHeaders = delegator.findByAnd("OrderHeader", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin)));
+	// order totals and item counts
+	List dayItemExpr = UtilMisc.toList(new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"), new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"), new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+	List dayItems = delegator.findByAnd("OrderHeaderAndItems", dayItemExpr);
+	List dayItemsPending = EntityUtil.filterByAnd(dayItems, UtilMisc.toMap("itemStatusId", "ITEM_ORDERED"));
+				
+	List dayHeaderExpr = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, dayBegin));
+	List dayHeaders = delegator.findByAnd("OrderHeader", dayHeaderExpr);
+	List dayHeadersPending = EntityUtil.filterByAnd(dayHeaders, UtilMisc.toMap("statusId", "ORDER_ORDERED"));	
+													
 	double dayItemTotal = calcItemTotal(dayHeaders);
-	List weekItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, weekBegin)));
-	List weekHeaders = delegator.findByAnd("OrderHeader", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, weekBegin)));
+	double dayItemCount = calcItemCount(dayItems);
+	double dayItemTotalPending = calcItemTotal(dayHeadersPending);
+	double dayItemCountPending = calcItemCount(dayItemsPending);
+	double dayItemTotalPaid = dayItemTotal - dayItemTotalPending;
+	double dayItemCountPaid = dayItemCount - dayItemCountPending;
+	
+	List weekItemExpr = UtilMisc.toList(new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"), new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"), new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, weekBegin));
+	List weekItems = delegator.findByAnd("OrderHeaderAndItems", weekItemExpr);
+	List weekItemsPending = EntityUtil.filterByAnd(weekItems, UtilMisc.toMap("itemStatusId", "ITEM_ORDERED"));
+			
+	List weekHeaderExpr = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, weekBegin));
+	List weekHeaders = delegator.findByAnd("OrderHeader", weekHeaderExpr);
+	List weekHeadersPending = EntityUtil.filterByAnd(weekHeaders, UtilMisc.toMap("statusId", "ORDER_ORDERED"));	
+			
 	double weekItemTotal = calcItemTotal(weekHeaders);
-	List monthItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin)));
-	List monthHeaders = delegator.findByAnd("OrderHeader", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin)));
+	double weekItemCount = calcItemCount(weekItems);
+	double weekItemTotalPending = calcItemTotal(weekHeadersPending);
+	double weekItemCountPending = calcItemCount(weekItemsPending);	
+	double weekItemTotalPaid = weekItemTotal - weekItemTotalPending;
+	double weekItemCountPaid = weekItemCount - weekItemCountPending;
+	
+	List monthItemExpr = UtilMisc.toList(new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"), new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"), new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin));
+	List monthItems = delegator.findByAnd("OrderHeaderAndItems", monthItemExpr);
+	List monthItemsPending = EntityUtil.filterByAnd(monthItems, UtilMisc.toMap("itemStatusId", "ITEM_ORDERED"));
+
+	List monthHeaderExpr = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, monthBegin));
+	List monthHeaders = delegator.findByAnd("OrderHeader", monthHeaderExpr);
+	List monthHeadersPending = EntityUtil.filterByAnd(monthHeaders, UtilMisc.toMap("statusId", "ORDER_ORDERED"));	
+
 	double monthItemTotal = calcItemTotal(monthHeaders);
-	List yearItems = delegator.findByAnd("OrderHeaderAndItems", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, yearBegin)));
-	List yearHeaders = delegator.findByAnd("OrderHeader", UtilMisc.toList(new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, yearBegin)));
+	double monthItemCount = calcItemCount(monthItems);
+	double monthItemTotalPending = calcItemTotal(monthHeadersPending);
+	double monthItemCountPending = calcItemCount(monthItemsPending);	
+	double monthItemTotalPaid = monthItemTotal - monthItemTotalPending;
+	double monthItemCountPaid = monthItemCount - monthItemCountPending;
+	
+	List yearItemExpr = UtilMisc.toList(new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_REJECTED"), new EntityExpr("itemStatusId", EntityOperator.NOT_EQUAL, "ITEM_CANCELLED"), new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, yearBegin));
+	List yearItems = delegator.findByAnd("OrderHeaderAndItems", yearItemExpr);
+	List yearItemsPending = EntityUtil.filterByAnd(yearItems, UtilMisc.toMap("itemStatusId", "ITEM_ORDERED"));
+	
+	List yearHeaderExpr = UtilMisc.toList(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_REJECTED"), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "ORDER_CANCELLED"), new EntityExpr("orderDate", EntityOperator.GREATER_THAN_EQUAL_TO, yearBegin));
+	List yearHeaders = delegator.findByAnd("OrderHeader", yearHeaderExpr);
+	List yearHeadersPending = EntityUtil.filterByAnd(yearHeaders, UtilMisc.toMap("statusId", "ORDER_ORDERED"));	
+
 	double yearItemTotal = calcItemTotal(yearHeaders);
+	double yearItemCount = calcItemCount(yearItems);
+	double yearItemTotalPending = calcItemTotal(yearHeadersPending);
+	double yearItemCountPending = calcItemCount(yearItemsPending);	
+	double yearItemTotalPaid = yearItemTotal - yearItemTotalPending;
+	double yearItemCountPaid = yearItemCount - yearItemCountPending;
 	
 	// order state report
 	List waitingPayment = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", "ORDER_ORDERED"));
@@ -121,7 +178,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='70%' >
-            <div class='boxhead'>&nbsp;Order Manager Main Page</div>
+            <div class='boxhead'>&nbsp;Order Statistics Page</div>
           </TD>
           <TD align=right width='30%'>            
               <FORM name="lookup" action="<ofbiz:url>/orderview</ofbiz:url>" method="GET">
@@ -139,7 +196,7 @@
         <tr>
           <td>
           
-            <div class='head3'>Order Statistics</div>
+            <!--<div class='head3'>Order Statistics</div>-->
             <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
               <TR>
                 <td>&nbsp;</td>
@@ -158,7 +215,7 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Gross Dollar Amounts (including adjustments)</div></td>
+                <td><div class="tabletext">Gross Dollar Amounts (includes adjustments and pending orders)</div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=dayItemTotal%></ofbiz:format></div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=weekItemTotal%></ofbiz:format></div></td>
                 <td><div class="tabletext"><ofbiz:format type="C"><%=monthItemTotal%></ofbiz:format></div></td>
@@ -166,13 +223,52 @@
               </tr>
               <tr>
                 <td>&nbsp;</td>
-                <td><div class="tabletext">Gross Items Sold (includes promotions)</div></td>
-                <td><div class="tabletext"><%=dayItems == null ? 0 : dayItems.size()%></div></td>
-                <td><div class="tabletext"><%=weekItems == null ? 0 : weekItems.size()%></div></td>
-                <td><div class="tabletext"><%=monthItems == null ? 0 : monthItems.size()%></div></td>
-                <td><div class="tabletext"><%=yearItems == null ? 0 : yearItems.size()%></div></td>
+                <td><div class="tabletext">Paid Dollar Amounts (includes adjustments)</div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=dayItemTotalPaid%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=weekItemTotalPaid%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=monthItemTotalPaid%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=yearItemTotalPaid%></ofbiz:format></div></td>
               </tr>
-              
+
+              <tr>
+                <td>&nbsp;</td>
+                <td><div class="tabletext">Pending Payment Dollar Amounts (includes adjustments)</div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=dayItemTotalPending%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=weekItemTotalPending%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=monthItemTotalPending%></ofbiz:format></div></td>
+                <td><div class="tabletext"><ofbiz:format type="C"><%=yearItemTotalPending%></ofbiz:format></div></td>
+              </tr>
+
+              <TR><TD colspan='8'><HR class='sepbar'></TD></TR>  
+              <tr>
+                <td colspan="7">
+                  <div class="tableheadtext">Orders Item Counts</div>
+                </td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td><div class="tabletext">Gross Items Sold (includes promotions and pending orders)</div></td>
+                <td><div class="tabletext"><%=dayItemCount%></div></td>
+                <td><div class="tabletext"><%=weekItemCount%></div></td>
+                <td><div class="tabletext"><%=monthItemCount%></div></td>
+                <td><div class="tabletext"><%=yearItemCount%></div></td>
+              </tr>
+              <tr>
+                <td>&nbsp;</td>
+                <td><div class="tabletext">Paid Items Sold (includes promotions)</div></td>
+                <td><div class="tabletext"><%=dayItemCountPaid%></div></td>
+                <td><div class="tabletext"><%=weekItemCountPaid%></div></td>
+                <td><div class="tabletext"><%=monthItemCountPaid%></div></td>
+                <td><div class="tabletext"><%=yearItemCountPaid%></div></td>
+              </tr>              
+              <tr>
+                <td>&nbsp;</td>
+                <td><div class="tabletext">Pending Payment Items Sold (includes promotions)</div></td>
+                <td><div class="tabletext"><%=dayItemCountPending%></div></td>
+                <td><div class="tabletext"><%=weekItemCountPending%></div></td>
+                <td><div class="tabletext"><%=monthItemCountPending%></div></td>
+                <td><div class="tabletext"><%=yearItemCountPending%></div></td>
+              </tr>              
               <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
               <tr>
                 <td colspan="7">
