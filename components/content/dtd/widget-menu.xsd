@@ -362,6 +362,11 @@
     </xs:attributeGroup>
     <xs:element name="if-entity-permission" substitutionGroup="AllConditionals">
         <xs:complexType>
+            <xs:choice minOccurs="0">
+                <xs:element minOccurs="0" maxOccurs="1" ref="permission-condition-getter"/>
+                <xs:element minOccurs="0" maxOccurs="1" ref="related-role-getter"/>
+                <xs:element minOccurs="0" maxOccurs="1" ref="auxiliary-value-getter"/>
+            </xs:choice>
             <xs:attributeGroup ref="attlist.if-entity-permission"/>
         </xs:complexType>
     </xs:element>
@@ -373,6 +378,42 @@
         <xs:attribute type="xs:string" name="target-operation" use="required">
             <xs:annotation><xs:documentation>Can have multiple pipe separated values, but don't use spaces.</xs:documentation></xs:annotation>
         </xs:attribute>
+    </xs:attributeGroup>
+    <xs:element name="permission-condition-getter">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.permission-condition-getter"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.permission-condition-getter">
+        <xs:attribute type="xs:string" name="entity-name" />
+        <xs:attribute type="xs:string" name="operation-field-name" />
+        <xs:attribute type="xs:string" name="role-field-name" />
+        <xs:attribute type="xs:string" name="auxiliary-field-name" />
+        <xs:attribute type="xs:string" name="status-field-name" />
+        <xs:attribute type="xs:string" name="privilege-field-name" />
+    </xs:attributeGroup>
+    <xs:element name="related-role-getter">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.related-role-getter"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.related-role-getter">
+        <xs:attribute type="xs:string" name="entity-name" />
+        <xs:attribute type="xs:string" name="role-entity-name" />
+        <xs:attribute type="xs:string" name="role-type-field-name" />
+        <xs:attribute type="xs:string" name="party-field-name" />
+        <xs:attribute type="xs:string" name="owner-entity-field-name" />
+        <xs:attribute type="xs:string" name="entity-id-name" />
+    </xs:attributeGroup>
+    <xs:element name="auxiliary-value-getter">
+        <xs:complexType>
+            <xs:attributeGroup ref="attlist.auxiliary-value-getter"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:attributeGroup name="attlist.auxiliary-value-getter">
+        <xs:attribute type="xs:string" name="entity-name" />
+        <xs:attribute type="xs:string" name="auxiliary-field-name" />
+        <xs:attribute type="xs:string" name="entity-id-name" />
     </xs:attributeGroup>
     <xs:element name="if-validate-method" substitutionGroup="AllConditionals">
         <xs:annotation><xs:documentation>Calls a static Java method that takes a String and returns a boolean.</xs:documentation></xs:annotation>

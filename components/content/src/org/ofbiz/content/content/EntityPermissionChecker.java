@@ -38,6 +38,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -68,10 +69,31 @@ public class EntityPermissionChecker {
     protected FlexibleStringExpander entityIdExdr;
     protected FlexibleStringExpander entityNameExdr;
     protected List targetOperationList;
+    protected ContentPermissionServices.PermissionConditionGetter permissionConditionGetter;
+    protected ContentPermissionServices.RelatedRoleGetter relatedRoleGetter;
+    protected ContentPermissionServices.AuxiliaryValueGetter auxiliaryValueGetter;
     
     public EntityPermissionChecker(Element element) {
         this.entityNameExdr = new FlexibleStringExpander(element.getAttribute("entity-name"));
         this.entityIdExdr = new FlexibleStringExpander(element.getAttribute("entity-id"));
+        Element permissionConditionElement = UtilXml.firstChildElement(element, "permission-condition-getter");
+        if (permissionConditionElement == null) {
+            permissionConditionGetter = new ContentPermissionServices.StdPermissionConditionGetter();   
+        } else {
+            permissionConditionGetter = new ContentPermissionServices.StdPermissionConditionGetter(permissionConditionElement);   
+        }
+        Element auxiliaryValueElement = UtilXml.firstChildElement(element, "auxiliary-value-getter");
+        if (auxiliaryValueElement == null) {
+            auxiliaryValueGetter = new ContentPermissionServices.StdAuxiliaryValueGetter();   
+        } else {
+            auxiliaryValueGetter = new ContentPermissionServices.StdAuxiliaryValueGetter(auxiliaryValueElement);   
+        }
+        Element relatedRoleElement = UtilXml.firstChildElement(element, "related-role-getter");
+        if (relatedRoleElement == null) {
+            relatedRoleGetter = new ContentPermissionServices.StdRelatedRoleGetter();   
+        } else {
+            relatedRoleGetter = new ContentPermissionServices.StdRelatedRoleGetter(relatedRoleElement);   
+        }
         String targetOperationString = new String(element.getAttribute("target-operation"));
         if (UtilValidate.isNotEmpty(targetOperationString)) {
             List operationsFromString = StringUtil.split(targetOperationString, "|");
@@ -80,6 +102,7 @@ public class EntityPermissionChecker {
             }
             targetOperationList.addAll(operationsFromString);
         }
+        permissionConditionGetter.setOperationList(targetOperationList);
 
         return;
     }
@@ -107,7 +130,8 @@ public class EntityPermissionChecker {
            delegator = (GenericDelegator)request.getAttribute("delegator");
         }
     	try {
-    		passed = ContentPermissionServices.checkPermissionMethod(delegator, userLogin, targetOperationList, entityName, entityIdList, null, null, null);
+            permissionConditionGetter.init(delegator);
+    		passed = ContentPermissionServices.checkPermissionMethod(delegator, userLogin,  entityName, entityIdList, auxiliaryValueGetter, relatedRoleGetter, permissionConditionGetter);
     	} catch(GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
     	}
