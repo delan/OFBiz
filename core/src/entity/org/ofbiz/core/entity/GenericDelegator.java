@@ -196,7 +196,7 @@ public class GenericDelegator {
         try {
             return getModelReader().getModelEntity(entityName);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Error loading entity definition from model", module);
+            Debug.logError(e, "Error getting entity definition from model", module);
             return null;
         }
     }
@@ -304,8 +304,9 @@ public class GenericDelegator {
         if (helperName == null || helperName.length() <= 0)
             return null;
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
-        if (modelFieldTypeReader == null)
+        if (modelFieldTypeReader == null) {
             throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.getEntityName() + " with helper name " + helperName);
+        }
         return modelFieldTypeReader.getModelFieldType(type);
     }
 
@@ -318,8 +319,9 @@ public class GenericDelegator {
         if (helperName == null || helperName.length() <= 0)
             return null;
         ModelFieldTypeReader modelFieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
-        if (modelFieldTypeReader == null)
+        if (modelFieldTypeReader == null) {
             throw new GenericEntityException("ModelFieldTypeReader not found for entity " + entity.getEntityName() + " with helper name " + helperName);
+        }
         return modelFieldTypeReader.getFieldTypeNames();
     }
 
@@ -611,10 +613,11 @@ public class GenericDelegator {
      */
     public List findByAnd(String entityName, Map fields, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        if (modelEntity == null) {
-            throw new GenericModelException("Could not find definition for entity name " + entityName);
-        }
-        GenericHelper helper = getEntityHelper(entityName);
+        return findByAnd(modelEntity, fields, orderBy);
+    }
+
+    public List findByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
+        GenericHelper helper = getEntityHelper(modelEntity);
 
         if (fields != null && !modelEntity.areFields(fields.keySet())) {
             throw new GenericModelException("At least one of the passed fields is not valid: " + fields.keySet().toString());
@@ -662,11 +665,14 @@ public class GenericDelegator {
      *@return List of GenericValue instances that match the query
      */
     public List findByAndCache(String entityName, Map fields, List orderBy) throws GenericEntityException {
-        List lst = this.getFromAndCache(entityName, fields);
+        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        
+        List lst = this.getFromAndCache(modelEntity, fields);
         if (lst == null) {
-            lst = findByAnd(entityName, fields, orderBy);
-            if (lst != null)
-                this.putInAndCache(entityName, fields, lst);
+            lst = findByAnd(modelEntity, fields, orderBy);
+            if (lst != null) {
+                this.putInAndCache(modelEntity, fields, lst);
+            }
         }
         return lst;
     }
@@ -697,10 +703,13 @@ public class GenericDelegator {
      */
     public List findByAnd(String entityName, List expressions, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericHelper helper = getEntityHelper(entityName);
+        return findByAnd(modelEntity, expressions, orderBy);
+    }
 
-        List list = null;
-        list = helper.findByAnd(modelEntity, expressions, orderBy);
+    protected List findByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
+        GenericHelper helper = getEntityHelper(modelEntity);
+
+        List list = helper.findByAnd(modelEntity, expressions, orderBy);
         absorbList(list);
         return list;
     }
@@ -1265,36 +1274,35 @@ public class GenericDelegator {
     }
 
     public GenericValue getFromPrimaryKeyCache(GenericPK primaryKey) {
-        if (primaryKey == null)
-            return null;
+        if (primaryKey == null) return null;
         return (GenericValue) primaryKeyCache.get(primaryKey);
     }
 
     public List getFromAllCache(String entityName) {
-        if (entityName == null)
-            return null;
+        if (entityName == null) return null;
         return (List) allCache.get(entityName);
     }
 
     public List getFromAndCache(String entityName, Map fields) {
-        if (entityName == null || fields == null)
-            return null;
+        if (entityName == null || fields == null) return null;
         ModelEntity entity = this.getModelEntity(entityName);
+        return getFromAndCache(entity, fields);
+    }
+
+    public List getFromAndCache(ModelEntity entity, Map fields) {
+        if (entity == null || fields == null) return null;
         GenericPK tempPK = new GenericPK(entity, fields);
-        if (tempPK == null)
-            return null;
+        if (tempPK == null) return null;
         return (List) andCache.get(tempPK);
     }
 
     public void putInPrimaryKeyCache(GenericPK primaryKey, GenericValue value) {
-        if (primaryKey == null || value == null)
-            return;
+        if (primaryKey == null || value == null) return;
         primaryKeyCache.put(primaryKey, value);
     }
 
     public void putAllInPrimaryKeyCache(List values) {
-        if (values == null)
-            return;
+        if (values == null) return;
         Iterator iter = values.iterator();
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
@@ -1303,32 +1311,31 @@ public class GenericDelegator {
     }
 
     public void putInAllCache(String entityName, List values) {
-        if (entityName == null || values == null)
-            return;
+        if (entityName == null || values == null) return;
         allCache.put(entityName, values);
     }
 
     public void putInAndCache(String entityName, Map fields, List values) {
-        if (entityName == null || fields == null || values == null)
-            return;
+        if (entityName == null || fields == null || values == null) return;
         ModelEntity entity = this.getModelEntity(entityName);
+        putInAndCache(entity, fields, values);
+    }
+
+    public void putInAndCache(ModelEntity entity, Map fields, List values) {
+        if (entity == null || fields == null || values == null) return;
         GenericPK tempPK = new GenericPK(entity, fields);
-        if (tempPK == null)
-            return;
+        if (tempPK == null) return;
         andCache.put(tempPK, values);
     }
 
-
     // ======= XML Related Methods ========
     public List readXmlDocument(URL url) throws SAXException, ParserConfigurationException, java.io.IOException {
-        if (url == null)
-            return null;
+        if (url == null) return null;
         return this.makeValues(UtilXml.readXmlDocument(url, false));
     }
 
     public List makeValues(Document document) {
-        if (document == null)
-            return null;
+        if (document == null) return null;
         List values = new LinkedList();
 
         Element docElement = document.getDocumentElement();
@@ -1350,8 +1357,9 @@ public class GenericDelegator {
                         values.add(value);
                 }
             } while ((curChild = curChild.getNextSibling()) != null);
-        } else
+        } else {
             Debug.logWarning("[GenericDelegator.makeValues] No child nodes found in document.", module);
+        }
 
         return values;
     }
@@ -1362,8 +1370,7 @@ public class GenericDelegator {
     }
 
     public GenericValue makeValue(Element element) {
-        if (element == null)
-            return null;
+        if (element == null) return null;
         String entityName = element.getTagName();
         //if a dash or colon is in the tag name, grab what is after it
         if (entityName.indexOf('-') > 0)
@@ -1430,9 +1437,7 @@ public class GenericDelegator {
     }
 
     protected void absorbList(List lst) {
-        if (lst == null) {
-            return;
-        }
+        if (lst == null) return;
         Iterator iter = lst.iterator();
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();

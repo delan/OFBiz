@@ -303,7 +303,12 @@ public class ModelReader {
         if (ec == null) {
             throw new GenericEntityConfException("ERROR: Unable to load Entity Cache");
         }
-        return (ModelEntity) ec.get(entityName);
+        
+        ModelEntity modelEntity = (ModelEntity) ec.get(entityName);
+        if (modelEntity == null) {
+            throw new GenericModelException("Could not find definition for entity name " + entityName);
+        }
+        return modelEntity;
     }
 
     /** Creates a Iterator with the entityName of each Entity defined in the specified XML Entity Descriptor file.
