@@ -130,14 +130,14 @@ access. For a detailed description see the core/docs/entityconfig.html file.
             add-missing-on-start="true">
         <sql-load-path path="commonapp/db" prepend-env="ofbiz.home"/>
         <sql-load-path path="ecommerce/etc" prepend-env="ofbiz.home"/>
-        <inline-jdbc
+        <!-- <inline-jdbc
                 jdbc-driver="org.postgresql.Driver"
                 jdbc-uri="jdbc:postgresql://127.0.0.1/ofbiz"
                 jdbc-username="ofbiz"
                 jdbc-password="ofbiz"
-                isolation-level="ReadCommitted"/>
+                isolation-level="ReadCommitted"/> -->
         <!-- <jndi-jdbc jndi-server-name="localjndi" jndi-name="java:/PostgresDataSource" isolation-level="ReadCommitted"/> -->
-        <!-- <tyrex-dataSource dataSource-name="localpostgres" isolation-level="ReadCommitted"/> -->
+        <tyrex-dataSource dataSource-name="localpostgres" isolation-level="ReadCommitted"/>
     </datasource>
 
     <datasource name="localoracle"
