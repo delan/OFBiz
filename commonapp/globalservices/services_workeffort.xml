@@ -11,6 +11,7 @@
             location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="createWorkEffort">
         <description>Create a WorkEffort Entity</description>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="workEffortParentId" type="String" mode="IN" optional="true"/>
         <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
         <attribute name="universalId" type="String" mode="IN" optional="true"/>
@@ -50,6 +51,7 @@
             location="org/ofbiz/commonapp/workeffort/workeffort/WorkEffortSimpleServices.xml" invoke="updateWorkEffort">
         <description>Update a WorkEffort Entity</description>
         <attribute name="workEffortId" type="String" mode="IN" optional="false"/>
+        <attribute name="workEffortPurposeTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="workEffortTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="workEffortParentId" type="String" mode="IN" optional="true"/>
         <attribute name="currentStatusId" type="String" mode="IN" optional="false"/>
