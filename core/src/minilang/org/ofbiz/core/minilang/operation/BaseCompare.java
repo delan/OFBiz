@@ -107,7 +107,7 @@ public abstract class BaseCompare extends SimpleMapOperation {
         }
 
         if ("contains".equals(operator)) {
-            if (!"String".equals(type)) {
+            if (!"String".equals(type) && !"PlainString".equals(type)) {
                 messages.add("Error in MiniLang XML file: cannot do a contains compare with a non-String type");
                 return null;
             }
