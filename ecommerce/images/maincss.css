@@ -84,7 +84,26 @@ font-family: Verdana, Arial, Helvetica, sans-serif;
 margin: 0px;
 font-size: small;
 font-weight: bold;
+text-decoration: none;
 color: #FFFFFF;
+}
+
+A.boxheadbutton {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: small;
+font-weight: bold;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+A.boxheadbutton:hover {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: small;
+font-weight: bold;
+text-decoration: none;
+color: red;
 }
 
 .boxoutside {
@@ -164,6 +183,30 @@ border: solid #3333CC 1px;
 }
 
 A.tabButtonSelected:hover {
+color: red;
+}
+
+.tableheadtext {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: black;
+}
+
+A.tableheadbutton {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: none;
+color: black;
+}
+
+A.tableheadbutton:hover {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+font-size: x-small;
+font-weight: bold;
+text-decoration: underline;
 color: red;
 }
 
