@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -20,24 +20,26 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.5 $
- *@since      2.2
+ *@version    $Revision: 1.1 $
+ *@since      3.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
-<#if sessionAttributes.lastViewedProducts?exists && sessionAttributes.lastViewedProducts?has_content>
+<#if sessionAttributes.lastViewedCategories?exists && sessionAttributes.lastViewedCategories?has_content>
   <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <tr>
       <td width='100%'>
         <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
           <tr>
             <td valign="middle" align="center">
-              <div class="boxhead">${uiLabelMap.EcommerceLastProducts}...</div>
+              <div class="boxhead">${uiLabelMap.EcommerceLastCategories}...</div>
             </td>
-            <#if 4 < sessionAttributes.lastViewedProducts?size>
+            <#--
+            <#if 4 < sessionAttributes.lastViewedCategories?size>
             <td valign="middle" align="right">
               <a href="<@ofbizUrl>/lastviewedproducts</@ofbizUrl>" class="lightbuttontextsmall">${uiLabelMap.CommonMore}</a>
             </td>
             </#if>
+            -->
           </tr>
         </table>
       </td>
@@ -49,18 +51,16 @@
             <td>
               <table width='100%' cellspacing="0" cellpadding="0" border="0">
                 <#assign count = 0>
-                <#list sessionAttributes.lastViewedProducts as productId>
-                  <#if count < 4>
-                    <tr>
-                      <td>
-                        ${setRequestAttribute("miniProdQuantity", "1")}
-                        ${setRequestAttribute("optProductId", productId)}
-                        ${setRequestAttribute("miniProdFormName", "lastviewed" + productId_index + "form")}
-                        ${pages.get("/catalog/miniproductsummary.ftl")}
-                      </td>
-                    </tr>
-                    <#if productId_has_next && count < 3>
-                      <tr><td><hr class='sepbar'></td></tr>
+                <#list sessionAttributes.lastViewedCategories as categoryId>
+                  <#if count < 9>
+                    <#assign category = delegator.findByPrimaryKeyCache("ProductCategory", Static["org.ofbiz.base.util.UtilMisc"].toMap("productCategoryId", categoryId))?if_exists>
+                    <#if category?has_content>
+                      <tr>
+                        <td>
+                          <span class="browsecategorytext">-&nbsp;</span>
+                          <a href="<@ofbizUrl>/category/~category_id=${categoryId}</@ofbizUrl>" class="browsecategorybutton">${category.description?if_exists}</a>
+                        </td>
+                      </tr>
                     </#if>
                   </#if>
                   <#assign count = count + 1>
