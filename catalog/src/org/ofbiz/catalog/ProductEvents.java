@@ -188,9 +188,7 @@ public class ProductEvents {
             return "error";
         }
 
-        Collection toBeStored = new LinkedList();
         GenericValue product = delegator.makeValue("Product", null);
-        toBeStored.add(product);
         product.set("productId", productId);
         product.set("productTypeId", productTypeId);
         product.set("primaryProductCategoryId", primaryProductCategoryId);
@@ -213,6 +211,7 @@ public class ProductEvents {
         product.set("taxable", taxable);
         product.set("autoCreateKeywords", autoCreateKeywords);
 
+        GenericValue newPCM = null;
         if (UtilValidate.isNotEmpty(primaryProductCategoryId)) {
             GenericValue dummyValue = null;
             try {
@@ -224,30 +223,32 @@ public class ProductEvents {
                 dummyValue = null;
             }
             if (dummyValue == null) {
-                toBeStored.add( delegator.makeValue("ProductCategoryMember",
-                        UtilMisc.toMap("productId", productId, "productCategoryId", primaryProductCategoryId, "fromDate", UtilDateTime.nowTimestamp())));
+                newPCM = delegator.makeValue("ProductCategoryMember",
+                        UtilMisc.toMap("productId", productId, "productCategoryId", primaryProductCategoryId, "fromDate", UtilDateTime.nowTimestamp()));
                 delegator.clearCacheLine("ProductCategoryMember", UtilMisc.toMap("productCategoryId", primaryProductCategoryId));
             }
         }
 
         if (updateMode.equals("CREATE")) {
             try {
-                delegator.storeAll(toBeStored);
+                product.create();
+                if (newPCM != null) newPCM.create();
             } catch (GenericEntityException e) {
-                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product (write error)");
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create product (write error): " + e.toString());
                 return "error";
             }
             if (product != null && !"n".equalsIgnoreCase(product.getString("autoCreateKeywords"))) {
                 try {
                     KeywordSearch.induceKeywords(product);
                 } catch (GenericEntityException e) {
-                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create keywords (write error).");
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not create keywords (write error): " + e.toString());
                     return "error";
                 }
             }
         } else if (updateMode.equals("UPDATE")) {
             try {
-                delegator.storeAll(toBeStored);
+                product.store();
+                if (newPCM != null) newPCM.create();
             } catch (GenericEntityException e) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "Could not update product (write error)");
                 Debug.logWarning("[ProductEvents.updateProduct] Could not update product (write error); message: " + e.getMessage());
