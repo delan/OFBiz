@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.15 2003/12/29 20:32:18 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.16 2003/12/30 19:58:48 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.15 $
+ * @version    $Revision: 1.16 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -437,7 +437,7 @@ public class OrderReadHelper {
                             if (lastQuantity == null) {
                                 lastQuantity = new Double(0);
                             }
-                            Double newQuantity = new Double(lastQuantity.doubleValue() + item.getDouble("quantity").doubleValue());
+                            Double newQuantity = new Double(lastQuantity.doubleValue() + getOrderItemQuantity(item).doubleValue());
                             featureMap.put(appl.getString("productFeatureId"), newQuantity);
                         }
                     }
@@ -460,7 +460,7 @@ public class OrderReadHelper {
                             if (lastQuantity == null) {
                                 lastQuantity = new Double(0);
                             }
-                            Double newQuantity = new Double(lastQuantity.doubleValue() + item.getDouble("quantity").doubleValue());
+                            Double newQuantity = new Double(lastQuantity.doubleValue() + getOrderItemQuantity(item).doubleValue());
                             featureMap.put(featureId, newQuantity);
                         }
                     }
@@ -511,7 +511,7 @@ public class OrderReadHelper {
                 }
                 if (product != null) {
                     if (ProductWorker.shippingApplies(product)) {
-                        shippableQuantity += item.getDouble("quantity").doubleValue();
+                        shippableQuantity += getOrderItemQuantity(item).doubleValue();
                     }
                 }
             }
@@ -916,13 +916,24 @@ public class OrderReadHelper {
     }
 
     public double getItemCanceledQuantity(GenericValue orderItem) {
-        double orderedQty = orderItem.getDouble("quantity").doubleValue();
-        double shippedQty = getItemShippedQuantity(orderItem);
-        double reservedQty = getItemReservedQuantity(orderItem);
-        return (orderedQty - shippedQty - reservedQty);
+        Double cancelQty = orderItem.getDouble("cancelQuantity");
+        if (cancelQty == null) cancelQty = new Double(0.0);
+        return cancelQty.doubleValue();
     }
 
     public double getTotalOrderItemsQuantity() {
+        List orderItems = getValidOrderItems();
+        double totalItems = 0;
+
+        for (int i = 0; i < orderItems.size(); i++) {
+            GenericValue oi = (GenericValue) orderItems.get(i);
+
+            totalItems += getOrderItemQuantity(oi).doubleValue();
+        }
+        return totalItems;
+    }
+
+    public double getTotalOrderItemsOrderedQuantity() {
         List orderItems = getValidOrderItems();
         double totalItems = 0;
 
@@ -1035,6 +1046,15 @@ public class OrderReadHelper {
         return orderHeader;
     }
 
+    public static Double getOrderItemQuantity(GenericValue orderItem) {
+        Double cancelQty = orderItem.getDouble("cancelQuantity");
+        Double orderQty = orderItem.getDouble("quantity");
+
+        if (cancelQty == null) cancelQty = new Double(0.0);
+        if (orderQty == null) orderQty = new Double(0.0);
+        return new Double(orderQty.doubleValue() - cancelQty.doubleValue());
+    }
+
     public static GenericValue getProductStoreFromOrder(GenericDelegator delegator, String orderId) {
         return getProductStoreFromOrder(getOrderHeader(delegator, orderId));
     }
@@ -1139,7 +1159,7 @@ public class OrderReadHelper {
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
     public static double getOrderItemSubTotal(GenericValue orderItem, List adjustments, boolean forTax, boolean forShipping) {
         Double unitPrice = orderItem.getDouble("unitPrice");
-        Double quantity = orderItem.getDouble("quantity");
+        Double quantity = getOrderItemQuantity(orderItem);
         double result = 0.0;
 
         if (unitPrice == null || quantity == null) {
@@ -1186,7 +1206,7 @@ public class OrderReadHelper {
 
     /** The passed adjustments can be all adjustments for the order, ie for all line items */
     public static double getOrderItemAdjustmentsTotal(GenericValue orderItem, List adjustments, boolean includeOther, boolean includeTax, boolean includeShipping, boolean forTax, boolean forShipping) {
-        return calcItemAdjustments(orderItem.getDouble("quantity"), orderItem.getDouble("unitPrice"),
+        return calcItemAdjustments(getOrderItemQuantity(orderItem), orderItem.getDouble("unitPrice"),
                 getOrderItemAdjustmentList(orderItem, adjustments),
                 includeOther, includeTax, includeShipping, false, false);
     }
@@ -1218,7 +1238,7 @@ public class OrderReadHelper {
     }
 
     public static double calcItemAdjustment(GenericValue itemAdjustment, GenericValue item) {
-        return calcItemAdjustment(itemAdjustment, item.getDouble("quantity"), item.getDouble("unitPrice"));
+        return calcItemAdjustment(itemAdjustment, getOrderItemQuantity(item), item.getDouble("unitPrice"));
     }
 
     public static double calcItemAdjustment(GenericValue itemAdjustment, Double quantity, Double unitPrice) {

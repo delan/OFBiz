@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.2
 -->
 
@@ -32,6 +32,12 @@
       <a href="/facility/control/ReceiveReturn?facilityId=${returnHeader.destinationFacilityId}&returnId=${returnHeader.returnId?if_exists}${requestAttributes.externalKeyParam}" class="tabButton">Receive Return</a>
     </#if>
 </div>
+<#else>
+  <div class="head1">Create New Return</div>
+  <#if requestParameters.returnId?has_content>
+    <div class="head2">No return found with return ID : ${requestParameters.returnId}</div>
+  </#if>
+  <br>
 </#if>
 
 <#if returnHeader?exists>
