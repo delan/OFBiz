@@ -19,13 +19,14 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author     Andy Zeneski (jaz@ofbiz.org);
  *@version    $Revision$
  *@since      2.2
  */
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.widgetimpl.*;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
@@ -36,7 +37,20 @@ if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-//webSites
-webSites = delegator.findAll("WebSite");
-context.put("webSites", webSites);
+String webSiteId = request.getParameter("webSiteId");
+GenericValue webSite = delegator.findByPrimaryKey("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
+List webSiteEmailSettings = null;
+if (webSite != null) {
+    webSiteEmailSettings = delegator.findByAnd("WebSiteEmailSetting", UtilMisc.toMap("webSiteId", webSiteId));    
+}
 
+HtmlFormWrapper updateWebSiteEmailWrapper = new HtmlFormWrapper("/website/WebSiteForms.xml", "updateWebSiteEmail", request, response);
+updateWebSiteEmailWrapper.putInContext("webSiteEmailSettings", webSiteEmailSettings);
+
+HtmlFormWrapper createWebSiteEmailWrapper = new HtmlFormWrapper("/website/WebSiteForms.xml", "createWebSiteEmail", request, response);
+createWebSiteEmailWrapper.putInContext("webSite", webSite);
+
+context.put("webSiteId", webSiteId);
+context.put("webSite", webSite);
+context.put("updateWebSiteEmailWrapper", updateWebSiteEmailWrapper);
+context.put("createWebSiteEmailWrapper", createWebSiteEmailWrapper);

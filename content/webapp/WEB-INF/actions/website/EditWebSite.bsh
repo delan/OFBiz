@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@version    $Revision$
- *@since      2.1
+ *@since      2.2
  */
 
 import org.ofbiz.core.util.*;

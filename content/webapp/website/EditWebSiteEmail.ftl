@@ -19,33 +19,33 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones (jonesde@ofbiz.org)
+ *@author     Andy Zeneski (jaz@ofbiz.org)
  *@version    $Revision$
  *@since      2.2
 -->
 
 <#if hasPermission>
 
-<div class="head1">Product Catalogs List</div>
-<div><a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[Create New WebSite]</a></div>
+<#if webSiteId?has_content>
+  <div class='tabContainer'>
+  <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">WebSite</a>
+  <a href="<@ofbizUrl>/EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Parties</a>
+  <a href="<@ofbizUrl>/EditWebSiteProdCatalogs?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Catalogs</a>
+  <a href="<@ofbizUrl>/EditWebSiteEmail?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">Email Settings</a>
+  </div>
+</#if>
+
+<div class="head1">Email Settings <span class='head2'>for <#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [ID:${webSiteId?if_exists}]</span></div>
+<a href="<@ofbizUrl>/EditWebSite</@ofbizUrl>" class="buttontext">[New WebSite]</a>
 <br>
-<table border="1" cellpadding="2" cellspacing="0">
-  <tr>
-    <td><div class="tabletext"><b>Site&nbsp;Name&nbsp;[ID]</b></div></td>
-    <td><div class="tabletext">&nbsp;</div></td>
-  </tr>
-<#list webSites as webSite>
-  <tr valign="middle">
-    <td><div class="tabletext">&nbsp;<a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">${webSite.siteName} [${webSite.webSiteId}]</a></div></td>
-    <td>
-      <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSite.webSiteId}</@ofbizUrl>" class="buttontext">
-      [Edit]</a>
-    </td>
-  </tr>
-</#list>
-</table>
+<br>
+<#if webSiteId?has_content>
+${updateWebSiteEmailWrapper.renderFormString()}
+<br>
+${createWebSiteEmailWrapper.renderFormString()}
+</#if>
 <br>
 
 <#else>
-  <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
+ <h3>You do not have permission to view this page. ("CONTENTMGR_VIEW" or "CONTENTMGR_ADMIN" needed)</h3>
 </#if>

@@ -83,59 +83,95 @@
     </request-map>    
 
     <!-- ================ WebSite Requests ================= -->
-    <request-map uri="FindWebSite"><security https="true" auth="true"/>
+    <request-map uri="FindWebSite">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="FindWebSite"/>
     </request-map>
 
-    <request-map uri="EditWebSite"><security https="true" auth="true"/>
+    <request-map uri="EditWebSite">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditWebSite"/>
     </request-map>
-    <request-map uri="createWebSite"><security https="true" auth="true"/>
+    <request-map uri="createWebSite">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="createWebSite"/>
     	<response name="success" type="view" value="EditWebSite"/>
     	<response name="error" type="view" value="EditWebSite"/>
     </request-map>
-    <request-map uri="updateWebSite"><security https="true" auth="true"/>
+    <request-map uri="updateWebSite">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateWebSite"/>
     	<response name="success" type="view" value="EditWebSite"/>
     	<response name="error" type="view" value="EditWebSite"/>
     </request-map>
 
+    <!-- ================ WebSite Email Requests ================== -->
+    <request-map uri="EditWebSiteEmail">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditWebSiteEmail"/>
+    </request-map>
+    <request-map uri="createWebSiteEmail">
+    	<security https="true" auth="true"/>
+        <event type="service" path="" invoke="createWebSiteEmailSetting"/>
+    	<response name="success" type="view" value="EditWebSiteEmail"/>
+    	<response name="error" type="view" value="EditWebSiteEmail"/>
+    </request-map>
+    <request-map uri="updateWebSiteEmail">
+    	<security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateWebSiteEmailSetting"/>
+    	<response name="success" type="view" value="EditWebSiteEmail"/>
+    	<response name="error" type="view" value="EditWebSiteEmail"/>
+    </request-map>
+    <request-map uri="removeWebSiteEmail">
+    	<security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeWebSiteEmailSetting"/>
+    	<response name="success" type="view" value="EditWebSiteEmail"/>
+    	<response name="error" type="view" value="EditWebSiteEmail"/>
+    </request-map>    
+        
     <!-- ================ WebSite Parties Requests ================= -->
-    <request-map uri="EditWebSiteParties"><security https="true" auth="true"/>
+    <request-map uri="EditWebSiteParties">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditWebSiteParties"/>
     </request-map>
-    <request-map uri="addWebSiteRole"><security https="true" auth="true"/>
+    <request-map uri="addWebSiteRole">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="addWebSiteRole"/>
     	<response name="success" type="view" value="EditWebSiteParties"/>
     	<response name="error" type="view" value="EditWebSiteParties"/>
     </request-map>
-    <request-map uri="updateWebSiteRole"><security https="true" auth="true"/>
+    <request-map uri="updateWebSiteRole">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateWebSiteRole"/>
     	<response name="success" type="view" value="EditWebSiteParties"/>
     	<response name="error" type="view" value="EditWebSiteParties"/>
     </request-map>
-    <request-map uri="removeWebSiteRole"><security https="true" auth="true"/>
+    <request-map uri="removeWebSiteRole">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="removeWebSiteRole"/>
     	<response name="success" type="view" value="EditWebSiteParties"/>
     	<response name="error" type="view" value="EditWebSiteParties"/>
     </request-map>
 
     <!-- ================ WebSite ProdCatalogs Requests ================= -->
-    <request-map uri="EditWebSiteProdCatalogs"><security https="true" auth="true"/>
+    <request-map uri="EditWebSiteProdCatalogs">
+    	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
     </request-map>
-    <request-map uri="addProdCatalogToWebSite"><security https="true" auth="true"/>
+    <request-map uri="addProdCatalogToWebSite">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="addProdCatalogToWebSite"/>
     	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
     	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
     </request-map>
-    <request-map uri="updateProdCatalogToWebSite"><security https="true" auth="true"/>
+    <request-map uri="updateProdCatalogToWebSite">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="updateProdCatalogToWebSite"/>
     	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
     	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
     </request-map>
-    <request-map uri="removeProdCatalogFromWebSite"><security https="true" auth="true"/>
+    <request-map uri="removeProdCatalogFromWebSite">
+    	<security https="true" auth="true"/>
         <event type="service" path="" invoke="removeProdCatalogFromWebSite"/>
     	<response name="success" type="view" value="EditWebSiteProdCatalogs"/>
     	<response name="error" type="view" value="EditWebSiteProdCatalogs"/>
@@ -149,6 +185,7 @@
 
     <view-map name="FindWebSite" type="jpublish" page="/website/FindWebSite.ftl"/>
     <view-map name="EditWebSite" type="jpublish" page="/website/EditWebSite.ftl"/>
+    <view-map name="EditWebSiteEmail" type="jpublish" page="/website/EditWebSiteEmail.ftl"/>
     <view-map name="EditWebSiteParties" type="jpublish" page="/website/EditWebSiteParties.ftl"/>
     <view-map name="EditWebSiteProdCatalogs" type="jpublish" page="/website/EditWebSiteProdCatalogs.ftl"/>
     <!-- end of view mappings -->

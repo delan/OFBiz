@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
- *@since      2.1
+ *@since      2.2
 -->
 
 <#if hasPermission>
@@ -31,6 +31,7 @@
   <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">WebSite</a>
   <a href="<@ofbizUrl>/EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Parties</a>
   <a href="<@ofbizUrl>/EditWebSiteProdCatalogs?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">Catalogs</a>
+  <a href="<@ofbizUrl>/EditWebSiteEmail?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Email Settings</a>
   </div>
 </#if>
 
