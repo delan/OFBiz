@@ -1,5 +1,5 @@
 /*
- * $Id: UtilXml.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UtilXml.java,v 1.2 2003/09/08 17:30:08 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -54,7 +54,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * Utilities methods to simplify dealing with JAXP & DOM XML parsing
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class UtilXml {
@@ -168,7 +168,7 @@ public class UtilXml {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 
         factory.setValidating(validate);
-        // factory.setNamespaceAware(true);
+        factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         if (validate) {
             LocalResolver lr = new LocalResolver(new DefaultHandler());
