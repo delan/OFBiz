@@ -1,31 +1,73 @@
 
 /* ===== eCommerce specific styles ===== */
 
+DIV.ecom-header {
+background: #ffffff;
+height: 100px;
+voice-family: "\"}\"";
+voice-family: inherit;
+height: 99px;
+/* border:1px solid #000; */
+}
+
+/* ecom-mainarea wraps what is below the header including the divs for left, main, right columns as applicable */
 DIV.ecom-mainarea {
 background-color: #FFFFFF;
 width: auto;
 }
 
 DIV.ecom-column-left {
-float: left;
-margin-right: 10px;
+position: absolute;
+left: 10px;
+top: 109px;
+/* the old way: float: left; margin-right: 10px; */
+
 width: 150px;
-}
-DIV.ecom-column-main {
-width: auto;
-text-align: left;
-valign: top;
+background: #ffffff;
+/* border:1px solid #000; */
 }
 DIV.ecom-column-right {
-float: right;
-margin-left: 10px;
+position: absolute;
+right: 10px;
+top: 109px;
+/* the old way: float: right; margin-left: 10px; */
+
 width: 200px;
+background: #ffffff;
+}
+
+
+DIV.ecom-column-main, DIV.ecom-column-main-leftonly, DIV.ecom-column-main-rightonly, DIV.ecom-nocolumns {
+background:#fff;
+text-align: left;
+vertical-align: top;
+}
+DIV.ecom-column-main {
+margin-left: 160px;
+margin-right: 210px;
+voice-family: "\"}\"";
+voice-family: inherit;
+margin-left: 161px;
+margin-right: 211px;
+}
+DIV.ecom-column-main-leftonly {
+margin-left: 160px;
+voice-family: "\"}\"";
+voice-family: inherit;
+margin-left: 161px;
+}
+DIV.ecom-column-main-rightonly {
+margin-right: 210px;
+voice-family: "\"}\"";
+voice-family: inherit;
+margin-right: 211px;
 }
 
 DIV.ecom-endcolumns {
   clear: both;
 }  
 
+/* ====== eCommerce "Screenlet" Styles ====== */
 DIV.ecom-screenlet {
 background-color: #FFFFFF;
 border: 1px solid #999999;
@@ -41,6 +83,33 @@ padding-left: 4px;
 DIV.ecom-screenlet-body {
 background-color: #FFFFFF;
 padding: 4px;
+}
+
+.boxhead {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: 8pt;
+font-weight: bold;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+A.boxheadbutton {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: 8pt;
+font-weight: bold;
+text-decoration: none;
+color: #FFFFFF;
+}
+
+A.boxheadbutton:hover {
+font-family: Verdana, Arial, Helvetica, sans-serif;
+margin: 0px;
+font-size: 8pt;
+font-weight: bold;
+text-decoration: none;
+color: red;
 }
 
 /* ===== General Styles ===== */
@@ -134,6 +203,8 @@ font-size: 8pt;
 font-family: Verdana, Arial, Helvetica, sans-serif;
 }
 
+
+
 .headerboxoutside {
 background-color: #FFFFFF;
 padding: 0;
@@ -155,32 +226,7 @@ border-style: solid;
 border-width: 0px 1px 1px 1px;
 }
 
-.boxhead {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-margin: 0px;
-font-size: 8pt;
-font-weight: bold;
-text-decoration: none;
-color: #FFFFFF;
-}
 
-A.boxheadbutton {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-margin: 0px;
-font-size: 8pt;
-font-weight: bold;
-text-decoration: none;
-color: #FFFFFF;
-}
-
-A.boxheadbutton:hover {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-margin: 0px;
-font-size: 8pt;
-font-weight: bold;
-text-decoration: none;
-color: red;
-}
 
 .boxoutside {
 background-color: #FFFFFF;
@@ -215,50 +261,6 @@ background-color: #dddddd;
 padding-right: 5px; padding-left: 5px;
 }
 
-.tabContainer {
-background-color: #FFFFFF;
-padding-top: 4px;
-margin-bottom: 10px;
-}
-
-A.tabButton {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10px;
-font-weight: bold;
-text-decoration: none;
-color: #000099;
-background-color: #D4D0C8;
-padding-right: 5px;
-padding-left: 5px;
-padding-top: 1px;
-padding-bottom: 1px;
-border: solid #000099 1px;
-}
-
-A.tabButton:hover {
-color: #FFFFFF;
-background-color: #000099;
-border: solid #000099 1px;
-}
-
-A.tabButtonSelected {
-font-family: Verdana, Arial, Helvetica, sans-serif;
-font-size: 10px;
-font-weight: bold;
-text-decoration: none;
-color: #FFFFFF;
-background-color: #000099;
-padding-right: 5px;
-padding-left: 5px;
-padding-top: 1px;
-padding-bottom: 1px;
-border: solid #000099 1px;
-}
-
-A.tabButtonSelected:hover {
-color: #FFFFFF;
-border: solid #000099 1px;
-}
 
 .tableheadtext {
 font-family: Verdana, Arial, Helvetica, sans-serif;

@@ -30,6 +30,7 @@
         <section>
             <actions>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main-rightonly"/>
 
                 <set field="title-property" value="PageTitleShoppingList"/>
                 <set field="headerItem" value="Shopping List"/>
