@@ -47,7 +47,6 @@ public final class BshUtil {
      * @throws EvalError
      */
     public static final Object eval(String expression, Map context) throws EvalError {
-        Interpreter bsh = new Interpreter();
         Object o = null;
         if (expression == null || expression.equals("")) {
             Debug.logError("BSH Evaluation error. Empty expression", module);
@@ -58,17 +57,9 @@ public final class BshUtil {
             Debug.logVerbose("Evaluating -- " + expression, module);
         if (Debug.verboseOn())
             Debug.logVerbose("Using Context -- " + context, module);
+
         try {
-            // Set the context for the condition
-            if (context != null) {
-                Set keySet = context.keySet();
-                Iterator i = keySet.iterator();
-                while (i.hasNext()) {
-                    Object key = i.next();
-                    Object value = context.get(key);
-                    bsh.set((String) key, value);
-                }
-            }
+            Interpreter bsh = makeInterpreter(context);
             // evaluate the expression
             o = bsh.eval(expression);
             if (Debug.verboseOn())
@@ -85,5 +76,21 @@ public final class BshUtil {
             throw e;
         }
         return o;
+    }
+    
+    public static Interpreter makeInterpreter(Map context) throws EvalError {
+        Interpreter bsh = new Interpreter();
+        // Set the context for the condition
+        if (context != null) {
+            Set keySet = context.keySet();
+            Iterator i = keySet.iterator();
+            while (i.hasNext()) {
+                Object key = i.next();
+                Object value = context.get(key);
+                bsh.set((String) key, value);
+            }
+        }
+        
+        return bsh;
     }
 }
