@@ -461,7 +461,7 @@ from the OFBiz baseline code. The final goal is to make it easy to merge your
 changes with future changes in the OFBiz baseline.</p>
 
 <p class='contenttext'>There are various ways to structure your internal
-CVS or other code repository. The most flexible, but laborious, way is to create
+CVS or other code repository. One very flexible, but laborious, way is to create
 a complete copy of the OFBiz CVS tree in a module in your own CVS repository.
 This could perhaps be called "ofbizbase".
 This should contain the revisions of the code that you are currently working with 
@@ -509,6 +509,39 @@ have the complete files to do a three way diff/merge. So, we don't recommend
 using minimal diff files that can be applied as part of preparation for the 
 build process. Just copy the file from ofbizbase to ofbizdiff and make the 
 changes you need as recommended above.</p>
+
+<p class='contenttext'><b><u>For Those Comfortable with CVS Branching/Merging</u></b></p>
+<p class='contenttext'>If you are comfortable with the branching and merging
+features in CVS you can use those very effectively to easily maintain you 
+differences from the OFBiz base source tree, and still keep up-to-date with
+the latest from OFBiz without too much trouble. CVS does three-way diff/merge
+operations all the time when doing updates, and this same feature can be used
+to do the three-way diff/merge described above, but in an automatic way that
+only requires your involvement for merge collisions.</p>
+
+<p class='contenttext'>To get started do a fresh checkout from the OFBiz CVS 
+repository (tip: checkout the "all" module), then remove all CVS directories 
+and import the tree into a new module in your local CVS repository. Tag this
+set of files with a name like OFBIZ_20030612 (adjust for the current date)
+and then change/add things as you please.</p>
+
+<p class='contenttext'>So, now you have a bona-fide branch of OFBiz with your
+own code mixed in, but there are a ton of cool new things in the latest OFBiz
+base code that you would LOVE to have. What do you do? Just do a checkout in
+a new location on your machine of your modified OFBiz module, but instead of
+checking out HEAD, check out the latest OFBIZ_YYYYMMDD tagged revisions. Next,
+do a fresh checkout from the OFBiz repository (again, use the "all" module) and
+then once again remove all CVS directories, then copy this new tree on top of
+the tree you just checked out. Now you have a checkout with only the changes
+between the current OFBiz source and the revisions that you have based your
+changes on. Now just commit the updated OFBiz files, creating a new branch.
+Now all you have to do is merge the branches, and remember to tag it again
+with a OFBIZ_YYYYMMDD tag once you have resolved all conflicts and committed
+the changes to the HEAD.</p>
+
+<p class='contenttext'>At any time to get a list of all files changed from the base, get
+a list of all tags on the module and compare the HEAD revisions with the 
+revisions tagged using the most recent OFBIZ_YYYYMMDD tag.</p>
 
 <hr class='sepbar'>
 <p class='contenttext'>For information about Open For Business contact David E. Jones at <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
