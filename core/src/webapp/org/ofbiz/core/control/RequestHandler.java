@@ -1,71 +1,18 @@
 /*
- * $Id$
- * $Log$
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.12  2001/09/26 03:34:43  azeneski
- * Fixed bug where request chaining fails if no event is invoked.
- *
- * Revision 1.11  2001/09/06 00:29:17  jonesde
- * Fixed small index out of bounds error.
- *
- * Revision 1.10  2001/09/05 13:29:57  jonesde
- * Moved the CURRENT_VIEW attribute from the session to the request, since it doesn't make sense in the session.
- *
- * Revision 1.9  2001/08/25 17:29:11  azeneski
- * Started migrating Debug.log to Debug.logInfo and Debug.logError
- *
- * Revision 1.8  2001/08/25 08:35:04  jonesde
- * Fixed bug where checkLogin always failed because return result was ignored.
- *
- * Revision 1.7  2001/08/25 01:42:01  azeneski
- * Seperated event processing, now is found totally in EventHandler.java
- * Updated all classes which deal with events to use to new handler.
- *
- * Revision 1.6  2001/07/19 14:15:58  azeneski
- * Moved org.ofbiz.core.control.RequestXMLReader to org.ofbiz.core.util.ConfigXMLReader
- * ConfigXMLReader is now used for all config files, not just the request mappings.
- * Updated RequestManager to use this new class.
- * Added getRequestManager() method to RequestHandler.
- *
- * Revision 1.5  2001/07/17 22:17:21  jonesde
- * Updates for improved login: no extra redirect, and can login staying on same page
- *
- * Revision 1.4  2001/07/17 08:51:37  jonesde
- * Updated for auth implementation & small fixes.
- *
- * Revision 1.3  2001/07/17 03:45:09  azeneski
- * Changed request and view config to NOT use the leading '/'. All request and
- * view mappings should now leave be 'request' instead of '/request'.
- *
- * Revision 1.2  2001/07/16 22:31:06  azeneski
- * Moved multi-site support to be handled by the webapp.
- *
- * Revision 1.1  2001/07/16 14:45:48  azeneski
- * Added the missing 'core' directory into the module.
- *
- * Revision 1.1  2001/07/15 16:36:42  azeneski
- * Initial Import
- *
+ * $Id$ 
  */
 
 package org.ofbiz.core.control;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.naming.InitialContext;
+import java.io.*;
+import java.util.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import javax.naming.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.event.*;
+import org.ofbiz.core.util.*;
 
-import org.ofbiz.core.event.EventHandler;
-import org.ofbiz.core.event.EventHandlerException;
-import org.ofbiz.core.util.SiteDefs;
-import org.ofbiz.core.util.Debug;
 
 /**
  * <p><b>Title:</b> RequestHandler.java

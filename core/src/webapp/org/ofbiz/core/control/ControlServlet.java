@@ -1,92 +1,19 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.2  2001/11/01 19:09:36  azeneski
- * Disabled Job Scheduler for re-design.
- *
- * Revision 1.1  2001/09/28 22:56:44  jonesde
- * Big update for fromDate PK use, organization stuff
- *
- * Revision 1.19  2001/09/26 01:35:49  azeneski
- * Modification to set context root in request object.
- *
- * Revision 1.18  2001/09/21 19:38:50  jonesde
- * Updated settings to work with PoolMan & Tomcat 4, the current default config
- * Includes updated JNDIContextFactory and default datasource get through JNDI
- *
- * Revision 1.17  2001/09/19 08:32:01  jonesde
- * Initial checkin of refactored entity engine.
- *
- * Revision 1.16  2001/09/19 00:22:58  jonesde
- * Fixed bug with server root path where it was getting lost in the session, now putting in each request.
- *
- * Revision 1.15  2001/09/14 19:06:05  epabst
- * created new session attribute called SiteDefs.SERVER_ROOT_URL that contains something like:
- * "http://myserver.com:1234"
- *
- * Revision 1.14  2001/09/06 03:30:27  azeneski
- * Removed control path debugging output.
- *
- * Revision 1.13  2001/08/28 02:21:45  azeneski
- * Moved helper and security to the request object rather then session. Added support for PoolMan connection pool.
- *
- * Revision 1.12  2001/08/25 17:29:11  azeneski
- * Started migrating Debug.log to Debug.logInfo and Debug.logError
- *
- * Revision 1.11  2001/08/25 01:42:01  azeneski
- * Seperated event processing, now is found totally in EventHandler.java
- * Updated all classes which deal with events to use to new handler.
- *
- * Revision 1.10  2001/08/24 17:14:34  azeneski
- * Removed plain text attribute and created a defination in SiteDefs.
- * NOTE: Need to update all pages/events which use the old name!
- *
- * Revision 1.9  2001/08/24 02:39:48  azeneski
- * Added logging of some initial client headers for application use.
- *
- * Revision 1.8  2001/08/22 14:07:43  jonesde
- * A few changes needed to get GenericWebEvent working
- *
- * Revision 1.7  2001/08/17 07:39:03  jonesde
- * Added initialization to ControlServlet, and put security and helper into the application scope (ServletContext). Other small changes to support this.
- *
- * Revision 1.6  2001/07/23 18:04:57  azeneski
- * Fixed runaway thread in the job scheduler.
- *
- * Revision 1.5  2001/07/19 20:50:22  azeneski
- * Added the job scheduler to 'core' module.
- *
- * Revision 1.4  2001/07/17 08:51:37  jonesde
- * Updated for auth implementation & small fixes.
- *
- * Revision 1.3  2001/07/17 03:01:51  azeneski
- * Fixed the double slash in CONTROL_PATH request attribute.
- *
- * Revision 1.2  2001/07/16 22:31:06  azeneski
- * Moved multi-site support to be handled by the webapp.
- *
- * Revision 1.1  2001/07/16 14:45:48  azeneski
- * Added the missing 'core' directory into the module.
- *
- * Revision 1.2  2001/07/15 23:27:36  azeneski
- * Removed old commented out references to SessionController from ControlServlet
- *
- * Revision 1.1  2001/07/15 16:36:42  azeneski
- * Initial Import
- *
  */
 
 package org.ofbiz.core.control;
 
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
+import java.lang.reflect.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-
-import org.ofbiz.core.util.SiteDefs;
-import org.ofbiz.core.util.Debug;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.security.*;
-import java.lang.reflect.Method;
+import org.ofbiz.core.util.*;
+
 
 /**
  * <p><b>Title:</b> ControlServlet.java
@@ -125,10 +52,8 @@ public class ControlServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         Debug.logInfo("[ControlServlet.init] Loading Control Servlet mounted on path " + config.getServletContext().getRealPath("/"));
-        // setup the request handler
-        getRequestHandler();
-        
-        //if exists, start PoolMan
+                        
+        // if exists, start PoolMan
         try {
             Class poolManClass = Class.forName("com.codestudio.sql.PoolMan");
             Method startMethod = poolManClass.getMethod("start", null);
@@ -139,19 +64,14 @@ public class ControlServlet extends HttpServlet {
             Debug.logWarning("[ControlServlet.init] WARNING: PoolMan not found");
         }
         
-        //initialize the entity & security stuff
-        String delegatorName = config.getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
-        if(delegatorName == null || delegatorName.length() <= 0) delegatorName = "default";
-        Debug.logInfo("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " + delegatorName);
-        GenericDelegator delegator = GenericDelegator.getGenericDelegator(delegatorName);
-        if(delegator == null)
-            Debug.logError("[ControlServlet.init] ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"");
-        Security security = new Security(delegator);
-        if(security == null)
-            Debug.logError("[ControlServlet.init] ERROR: security create failed for delegatorName \"" + delegatorName + "\"");
-        //add delegator and security to the context
-        getServletContext().setAttribute("delegator", delegator);
-        getServletContext().setAttribute("security", security);
+        // initialize the request handler
+        getRequestHandler();
+        // initialize the delegator
+        getDelegator();
+        // initialize security
+        getSecurity();
+        // initialize the services dispatcher
+        //getDispatcher();        
     }
     
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -223,4 +143,48 @@ public class ControlServlet extends HttpServlet {
         return rh;
     }
     
+    private ServiceDispatcher getDispatcher() {
+        ServiceDispatcher dispatcher = (ServiceDispatcher) getServletContext().getAttribute("dispatcher");
+        if ( dispatcher == null ) {
+            GenericDelegator delegator = getDelegator();
+            if ( delegator == null ) {
+                Debug.logError("[ControlServlet.init] ERROR: delegator not defined.");
+                return null;
+            }
+            Collection readers = null;
+            dispatcher = new ServiceDispatcher(delegator,readers);            
+            getServletContext().setAttribute("dispatcher",dispatcher);
+            if ( dispatcher == null )
+                Debug.logError("[ControlServlet.init] ERROR: dispatcher could not be initialized.");
+        }
+        return dispatcher;
+    }
+                
+    private GenericDelegator getDelegator() {
+        GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
+        if ( delegator == null ) {
+            String delegatorName = getServletContext().getInitParameter(SiteDefs.ENTITY_DELEGATOR_NAME);
+            if(delegatorName == null || delegatorName.length() <= 0)
+                delegatorName = "default";
+            Debug.logInfo("[ControlServlet.init] Getting Entity Engine Delegator with delegator name " + delegatorName);
+            delegator = GenericDelegator.getGenericDelegator(delegatorName);
+            getServletContext().setAttribute("delegator",delegator);
+            if(delegator == null)
+                Debug.logError("[ControlServlet.init] ERROR: delegator factory returned null for delegatorName \"" + delegatorName + "\"");
+        }
+        return delegator;
+    }
+    
+    private Security getSecurity() {
+        Security security = (Security) getServletContext().getAttribute("security");
+        if ( security == null ) {
+            GenericDelegator delegator = (GenericDelegator) getServletContext().getAttribute("delegator");
+            if ( delegator != null )
+                security = new Security(delegator);
+            getServletContext().setAttribute("security",security);
+            if ( security == null )
+                Debug.logError("[ControlServlet.init] ERROR: security create failed.");
+        }
+        return security;
+    }
 }

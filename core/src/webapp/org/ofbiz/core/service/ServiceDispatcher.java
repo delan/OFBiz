@@ -44,7 +44,7 @@ public class ServiceDispatcher {
     protected GenericDelegator delegator;
     protected JobManager jm;
     
-    ServiceDispatcher(GenericDelegator delegator, Collection readerURLs) {
+    public ServiceDispatcher(GenericDelegator delegator, Collection readerURLs) {
         this.addReaders(readerURLs);
         this.delegator = delegator;
         jm = new JobManager(this,null);
