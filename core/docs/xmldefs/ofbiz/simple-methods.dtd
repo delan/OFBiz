@@ -359,7 +359,7 @@ engine and facilitate related operations.
 <!ATTLIST make-value
     value-name CDATA #REQUIRED
     entity-name CDATA #REQUIRED
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
 >
 <!ELEMENT clone-value EMPTY>
 <!ATTLIST clone-value

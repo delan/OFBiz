@@ -54,7 +54,8 @@ public class MakeValue extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        methodContext.putEnv(valueName, methodContext.getDelegator().makeValue(entityName, (Map) methodContext.getEnv(mapName)));
+        Map ctxMap = (Map) (UtilValidate.isEmpty(mapName) ? null : methodContext.getEnv(mapName));
+        methodContext.putEnv(valueName, methodContext.getDelegator().makeValue(entityName, ctxMap));
         return true;
     }
 }
