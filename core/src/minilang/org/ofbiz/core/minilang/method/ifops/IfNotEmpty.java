@@ -42,13 +42,13 @@ public class IfNotEmpty extends MethodOperation {
     List subOps = new LinkedList();
     List elseSubOps = null;
 
-    String mapName;
-    String fieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
 
     public IfNotEmpty(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.mapName = element.getAttribute("map-name");
-        this.fieldName = element.getAttribute("field-name");
+        this.mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        this.fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
 
@@ -67,26 +67,24 @@ public class IfNotEmpty extends MethodOperation {
 
         Object fieldVal = null;
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", not running operations");
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", not running operations");
             } else {
-                fieldVal = fromMap.get(fieldName);
+                fieldVal = fieldAcsr.get(fromMap);
             }
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         if (fieldVal == null) {
-            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not running operations");
+            if (Debug.verboseOn()) Debug.logVerbose("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not running operations");
         }
 
         // only run subOps if element is not empty/null
         boolean runSubOps = false;
-
         if (fieldVal != null) {
             if (fieldVal instanceof String) {
                 String fieldStr = (String) fieldVal;
@@ -112,14 +110,14 @@ public class IfNotEmpty extends MethodOperation {
         }
 
         if (runSubOps) {
-            // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running if operations mapName=" + mapName + " fieldName=" + fieldName);
+            // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running if operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr);
             return SimpleMethod.runSubOps(subOps, methodContext);
         } else {
             if (elseSubOps != null) {
-                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running else operations mapName=" + mapName + " fieldName=" + fieldName);
+                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Running else operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr);
                 return SimpleMethod.runSubOps(elseSubOps, methodContext);
             } else {
-                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Not Running any operations mapName=" + mapName + " fieldName=" + fieldName);
+                // if (Debug.verboseOn()) Debug.logVerbose("IfNotEmpty: Not Running any operations mapAcsr=" + mapAcsr + " fieldAcsr=" + fieldAcsr);
                 return true;
             }
         }

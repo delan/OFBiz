@@ -44,19 +44,15 @@ public class CheckId extends MethodOperation {
     String propertyResource = null;
     boolean isProperty = false;
 
-    String fieldName;
-    String mapName;
-    String errorListName;
+    ContextAccessor fieldAcsr;
+    ContextAccessor mapAcsr;
+    ContextAccessor errorListAcsr;
 
     public CheckId(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.fieldName = element.getAttribute("field-name");
-        this.mapName = element.getAttribute("map-name");
-
-        errorListName = element.getAttribute("error-list-name");
-        if (errorListName == null || errorListName.length() == 0) {
-            errorListName = "error_list";
-        }
+        this.fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        this.mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        this.errorListAcsr = new ContextAccessor(element.getAttribute("error-list-name"), "error_list");
 
         //note: if no fail-message or fail-property then message will be null
         Element failMessage = UtilXml.firstChildElement(element, "fail-message");
@@ -75,26 +71,24 @@ public class CheckId extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         boolean isValid = true;
 
-        List messages = (List) methodContext.getEnv(errorListName);
-
+        List messages = (List) errorListAcsr.get(methodContext);
         if (messages == null) {
             messages = new LinkedList();
-            methodContext.putEnv(errorListName, messages);
+            errorListAcsr.put(methodContext, messages);
         }
 
         Object fieldVal = null;
-
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", running operations");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", running operations");
             } else {
-                fieldVal = fromMap.get(fieldName);
+                fieldVal = fieldAcsr.get(fromMap);
             }
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
         
         String fieldStr = fieldVal.toString();
@@ -131,13 +125,18 @@ public class CheckId extends MethodOperation {
         }
 
         if (!isValid) {
-            this.addMessage(messages, methodContext.getLoader(), "The ID value in the field [" + fieldName + "] was not valid", ": " + errorDetails.toString());
+            this.addMessage(messages, methodContext, "The ID value in the field [" + fieldAcsr + "] was not valid", ": " + errorDetails.toString());
         }
 
         return true;
     }
 
-    public void addMessage(List messages, ClassLoader loader, String defaultMessage, String errorDetails) {
+    public void addMessage(List messages, MethodContext methodContext, String defaultMessage, String errorDetails) {
+        ClassLoader loader = methodContext.getLoader();
+        
+        String message = methodContext.expandString(this.message);
+        String propertyResource = methodContext.expandString(this.propertyResource);
+        
         if (!isProperty && message != null) {
             messages.add(message + errorDetails);
         } else if (isProperty && propertyResource != null && message != null) {

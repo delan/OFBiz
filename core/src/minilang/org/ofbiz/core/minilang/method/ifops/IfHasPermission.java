@@ -26,6 +26,7 @@ package org.ofbiz.core.minilang.method.ifops;
 import java.util.*;
 
 import org.w3c.dom.*;
+
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
 import org.ofbiz.core.minilang.method.*;
@@ -56,7 +57,6 @@ public class IfHasPermission extends MethodOperation {
         SimpleMethod.readOperations(element, subOps, simpleMethod);
 
         Element elseElement = UtilXml.firstChildElement(element, "else");
-
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
@@ -73,10 +73,11 @@ public class IfHasPermission extends MethodOperation {
 
         // if no user is logged in, treat as if the user does not have permission: do not run subops
         GenericValue userLogin = methodContext.getUserLogin();
-
         if (userLogin != null) {
+            String permission = methodContext.expandString(this.permission);
+            String action = methodContext.expandString(this.action);
+            
             Security security = methodContext.getSecurity();
-
             if (action != null && action.length() > 0) {
                 // run hasEntityPermission
                 if (security.hasEntityPermission(permission, action, userLogin)) {

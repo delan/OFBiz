@@ -44,8 +44,8 @@ public class IfCompare extends MethodOperation {
     List subOps = new LinkedList();
     List elseSubOps = null;
 
-    String mapName;
-    String fieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
     String value;
 
     String operator;
@@ -54,8 +54,8 @@ public class IfCompare extends MethodOperation {
 
     public IfCompare(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.mapName = element.getAttribute("map-name");
-        this.fieldName = element.getAttribute("field-name");
+        this.mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        this.fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
         this.value = element.getAttribute("value");
 
         this.operator = element.getAttribute("operator");
@@ -63,9 +63,7 @@ public class IfCompare extends MethodOperation {
         this.format = element.getAttribute("format");
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
-
         Element elseElement = UtilXml.firstChildElement(element, "else");
-
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
@@ -75,20 +73,23 @@ public class IfCompare extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         // if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
-
+        
+        String value = methodContext.expandString(this.value);
+        String operator = methodContext.expandString(this.operator);
+        String type = methodContext.expandString(this.type);
+        String format = methodContext.expandString(this.format);
+        
         Object fieldVal = null;
-
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison");
             } else {
-                fieldVal = fromMap.get(fieldName);
+                fieldVal = fieldAcsr.get(fromMap);
             }
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         // always use an empty string by default
@@ -97,15 +98,13 @@ public class IfCompare extends MethodOperation {
         }
 
         List messages = new LinkedList();
-        Boolean resultBool = BaseCompare.doRealCompare(fieldVal, value, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
-
+        Boolean resultBool = BaseCompare.doRealCompare(fieldVal, value, operator, type, format, messages, null, methodContext.getLoader());
         if (messages.size() > 0) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {
                 StringBuffer fullString = new StringBuffer();
-
                 fullString.append("Error with comparison: ");
+                
                 Iterator miter = messages.iterator();
-
                 while (miter.hasNext()) {
                     fullString.append((String) miter.next());
                 }

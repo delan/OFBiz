@@ -42,18 +42,17 @@ public class IfEmpty extends MethodOperation {
     List subOps = new LinkedList();
     List elseSubOps = null;
 
-    String mapName;
-    String fieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
 
     public IfEmpty(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.mapName = element.getAttribute("map-name");
-        this.fieldName = element.getAttribute("field-name");
+        this.mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        this.fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
 
         Element elseElement = UtilXml.firstChildElement(element, "else");
-
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
@@ -69,17 +68,16 @@ public class IfEmpty extends MethodOperation {
         boolean runSubOps = false;
         Object fieldVal = null;
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", running operations");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", running operations");
             } else {
-                fieldVal = fromMap.get(fieldName);
+                fieldVal = fieldAcsr.get(fromMap);
             }
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         if (fieldVal == null) {

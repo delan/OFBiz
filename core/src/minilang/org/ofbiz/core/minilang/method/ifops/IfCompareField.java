@@ -44,10 +44,10 @@ public class IfCompareField extends MethodOperation {
     List subOps = new LinkedList();
     List elseSubOps = null;
 
-    String mapName;
-    String fieldName;
-    String toMapName;
-    String toFieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
+    ContextAccessor toMapAcsr;
+    ContextAccessor toFieldAcsr;
 
     String operator;
     String type;
@@ -55,15 +55,13 @@ public class IfCompareField extends MethodOperation {
 
     public IfCompareField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.mapName = element.getAttribute("map-name");
-        this.fieldName = element.getAttribute("field-name");
+        this.mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        this.fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
         
-        this.toMapName = element.getAttribute("to-map-name");
-        this.toFieldName = element.getAttribute("to-field-name");
-        // set fieldName to their defualt value of envName if empty
-        if (this.toFieldName == null || this.toFieldName.length() == 0) {
-            this.toFieldName = this.fieldName;
-        }
+        this.toMapAcsr = new ContextAccessor(element.getAttribute("to-map-name"));
+        // set fieldAcsr to their defualt value of fieldAcsr if empty
+        this.toFieldAcsr = new ContextAccessor(element.getAttribute("to-field-name"), this.fieldAcsr.toString());
+
         // do NOT default the to-map-name to the map-name because that
         //would make it impossible to compare from a map field to an 
         //environment field
@@ -84,37 +82,39 @@ public class IfCompareField extends MethodOperation {
         // if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
 
+        String operator = methodContext.expandString(this.operator);
+        String type = methodContext.expandString(this.type);
+        String format = methodContext.expandString(this.format);
+
         Object fieldVal1 = null;
         Object fieldVal2 = null;
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", using null for comparison");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using null for comparison");
             } else {
-                fieldVal1 = fromMap.get(fieldName);
+                fieldVal1 = fieldAcsr.get(fromMap);
             }
         } else {
             // no map name, try the env
-            fieldVal1 = methodContext.getEnv(fieldName);
+            fieldVal1 = fieldAcsr.get(methodContext);
         }
 
-        if (toMapName != null && toMapName.length() > 0) {
-            Map toMap = (Map) methodContext.getEnv(toMapName);
-
+        if (!toMapAcsr.isEmpty()) {
+            Map toMap = (Map) toMapAcsr.get(methodContext);
             if (toMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapName + ", using null for comparison");
+                if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapAcsr + ", using null for comparison");
             } else {
-                fieldVal2 = toMap.get(toFieldName);
+                fieldVal2 = toFieldAcsr.get(toMap);
             }
         } else {
             // no map name, try the env
-            fieldVal2 = methodContext.getEnv(toFieldName);
+            fieldVal2 = toFieldAcsr.get(methodContext);
         }
 
         List messages = new LinkedList();
-        Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, this.operator, this.type, this.format, messages, null, methodContext.getLoader());
+        Boolean resultBool = BaseCompare.doRealCompare(fieldVal1, fieldVal2, operator, type, format, messages, null, methodContext.getLoader());
 
         if (messages.size() > 0) {
             if (methodContext.getMethodType() == MethodContext.EVENT) {

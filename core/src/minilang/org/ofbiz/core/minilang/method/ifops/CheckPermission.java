@@ -48,21 +48,16 @@ public class CheckPermission extends MethodOperation {
 
     String permission;
     String action;
-    String errorListName;
+    ContextAccessor errorListAcsr;
 
     public CheckPermission(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         this.permission = element.getAttribute("permission");
         this.action = element.getAttribute("action");
-
-        errorListName = element.getAttribute("error-list-name");
-        if (errorListName == null || errorListName.length() == 0) {
-            errorListName = "error_list";
-        }
+        this.errorListAcsr = new ContextAccessor(element.getAttribute("error-list-name"), "error_list");
 
         Element failMessage = UtilXml.firstChildElement(element, "fail-message");
         Element failProperty = UtilXml.firstChildElement(element, "fail-property");
-
         if (failMessage != null) {
             this.message = failMessage.getAttribute("message");
             this.isProperty = false;
@@ -76,19 +71,19 @@ public class CheckPermission extends MethodOperation {
     public boolean exec(MethodContext methodContext) {
         boolean hasPermission = false;
 
-        List messages = (List) methodContext.getEnv(errorListName);
-
+        List messages = (List) errorListAcsr.get(methodContext);
         if (messages == null) {
             messages = new LinkedList();
-            methodContext.putEnv(errorListName, messages);
+            errorListAcsr.put(methodContext, messages);
         }
 
         // if no user is logged in, treat as if the user does not have permission: do not run subops
         GenericValue userLogin = methodContext.getUserLogin();
-
         if (userLogin != null) {
+            String permission = methodContext.expandString(this.permission);
+            String action = methodContext.expandString(this.action);
+            
             Security security = methodContext.getSecurity();
-
             if (action != null && action.length() > 0) {
                 // run hasEntityPermission
                 if (security.hasEntityPermission(permission, action, userLogin)) {
@@ -103,23 +98,28 @@ public class CheckPermission extends MethodOperation {
         }
 
         if (!hasPermission) {
-            this.addMessage(messages, methodContext.getLoader());
+            this.addMessage(messages, methodContext);
         }
 
         return true;
     }
 
-    public void addMessage(List messages, ClassLoader loader) {
+    public void addMessage(List messages, MethodContext methodContext) {
+        ClassLoader loader = methodContext.getLoader();
+        
+        String message = methodContext.expandString(this.message);
+        String propertyResource = methodContext.expandString(this.propertyResource);        
+        
         if (!isProperty && message != null) {
             messages.add(message);
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding message: " + message);
         } else if (isProperty && propertyResource != null && message != null) {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
-
-            if (propMsg == null || propMsg.length() == 0)
+            if (propMsg == null || propMsg.length() == 0) {
                 messages.add("Simple Method Permission error occurred, but no message was found, sorry.");
-            else
+            } else {
                 messages.add(propMsg);
+            }
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
         } else {
             messages.add("Simple Method Permission error occurred, but no message was found, sorry.");

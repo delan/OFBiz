@@ -43,22 +43,21 @@ public class IfValidateMethod extends MethodOperation {
     List subOps = new LinkedList();
     List elseSubOps = null;
 
-    String mapName;
-    String fieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
     String methodName;
     String className;
 
     public IfValidateMethod(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        this.mapName = element.getAttribute("map-name");
-        this.fieldName = element.getAttribute("field-name");
+        this.mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        this.fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
         this.methodName = element.getAttribute("method");
         this.className = element.getAttribute("class");
 
         SimpleMethod.readOperations(element, subOps, simpleMethod);
 
         Element elseElement = UtilXml.firstChildElement(element, "else");
-
         if (elseElement != null) {
             elseSubOps = new LinkedList();
             SimpleMethod.readOperations(elseElement, elseSubOps, simpleMethod);
@@ -69,20 +68,22 @@ public class IfValidateMethod extends MethodOperation {
         // if conditions fails, always return true; if a sub-op returns false 
         // return false and stop, otherwise return true
 
+        String methodName = methodContext.expandString(this.methodName);
+        String className = methodContext.expandString(this.className);
+
         String fieldString = null;
         Object fieldVal = null;
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", using empty string for comparison");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison");
             } else {
-                fieldVal = fromMap.get(fieldName);
+                fieldVal = fieldAcsr.get(fromMap);
             }
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         if (fieldVal != null) {
@@ -94,14 +95,12 @@ public class IfValidateMethod extends MethodOperation {
         }
 
         // always use an empty string by default
-        if (fieldString == null)
-            fieldString = "";
+        if (fieldString == null) fieldString = "";
 
         Class[] paramTypes = new Class[] {String.class};
         Object[] params = new Object[] {fieldString};
 
         Class valClass;
-
         try {
             valClass = methodContext.getLoader().loadClass(className);
         } catch (ClassNotFoundException cnfe) {
@@ -110,7 +109,6 @@ public class IfValidateMethod extends MethodOperation {
         }
 
         Method valMethod;
-
         try {
             valMethod = valClass.getMethod(methodName, paramTypes);
         } catch (NoSuchMethodException cnfe) {
@@ -119,7 +117,6 @@ public class IfValidateMethod extends MethodOperation {
         }
 
         Boolean resultBool = Boolean.FALSE;
-
         try {
             resultBool = (Boolean) valMethod.invoke(null, params);
         } catch (Exception e) {
