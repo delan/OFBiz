@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
 -->
 <simple-methods>
@@ -1089,6 +1089,7 @@
             <call-service service-name="issueOrderItemInventoryResToShipment" in-map-name="issueContext">
                 <result-to-field result-name="itemIssuanceId" field-name="itemIssuanceId" map-name="itemMap"/>
             </call-service>
+            <clear-field field-name="issueContext"/>
         </iterate>
 
         <!-- place all issued items into a unique package per tracking num -->
