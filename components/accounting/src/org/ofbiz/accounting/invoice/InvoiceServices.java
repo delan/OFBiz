@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.2 2003/08/26 14:12:25 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.3 2003/08/26 16:08:03 ajzeneski Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.service.ServiceUtil;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -106,6 +106,21 @@ public class InvoiceServices {
         }
 
         OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        
+        // get the product store
+        GenericValue productStore = null;
+        try {
+            productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orh.getProductStoreId()));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to get ProductStore", module);
+            return ServiceUtil.returnError("Unable to get Product Store from order");
+        }
+        
+        // get the payToParty
+        String payToPartyId = productStore.getString("payToPartyId");
+        if (payToPartyId == null) {
+            return ServiceUtil.returnError("Unable to create invoice; no payToPartyId set for ProductStore Id : " + orh.getProductStoreId());
+        }
         
         // get some quantity totals
         double totalItemsInOrder = orh.getTotalOrderItemsQuantity();        
@@ -215,39 +230,20 @@ public class InvoiceServices {
             Debug.logError(e, "Trouble getting OrderPaymentPreference entity list", module);
         }
         
-        // create a Set of partyIds used for payments
-        Set paymentPartyIds = new HashSet();
-        if (paymentPreferences != null) {
-            Iterator ppi = paymentPreferences.iterator();
-            while (ppi.hasNext()) {
-                GenericValue pref = (GenericValue) ppi.next();
-                paymentPartyIds.add(pref.getString("paymentMethodTypeId"));
-            }
-        }
+        // create the bill-from role BILL_FROM_VENDOR as the partyId for the store
+        GenericValue payToRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
+        payToRole.set("partyId", payToPartyId);
+        payToRole.set("roleTypeId", "BILL_FROM_VENDOR");
+        toStore.add(payToRole);
         
-        // create the roles and contact mechs based on the paymentMethodType's partyId (from payment.properties)
-        Iterator partyIdIter = paymentPartyIds.iterator();
-        while (partyIdIter.hasNext()) {
-            String paymentMethodTypeId = (String) partyIdIter.next();    
-        
-            // create the bill-from role BILL_FROM_VENDOR as the partyId for the payment method
-            String paymentPartyId = PaymentWorker.getPaymentPartyId(delegator, orderHeader.getString("productStoreId"), paymentMethodTypeId);
-            if (paymentPartyId != null) {
-                GenericValue payToRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
-                payToRole.set("partyId", paymentPartyId);
-                payToRole.set("roleTypeId", "BILL_FROM_VENDOR");
-                toStore.add(payToRole);
-            }
-        
-            // create the bill-from (or pay-to) contact mech as the primary PAYMENT_LOCATION of the party from payment.properties
-            GenericValue payToAddress = PaymentWorker.getPaymentAddress(delegator, orderHeader.getString("productStoreId"), paymentMethodTypeId);
-            if (payToAddress != null) {
-                GenericValue payToCm = delegator.makeValue("InvoiceContactMech", 
-                    UtilMisc.toMap("invoiceId", invoiceId, "contactMechId", payToAddress.getString("contactMechId"), 
-                        "contactMechPurposeTypeId", "PAYMENT_LOCATION")); 
-                toStore.add(payToCm);    
-            }
-        }
+        // create the bill-from (or pay-to) contact mech as the primary PAYMENT_LOCATION of the party from the store
+        GenericValue payToAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId);
+        if (payToAddress != null) {
+            GenericValue payToCm = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
+            payToCm.set("contactMechId", payToAddress.getString("contactMechId")); 
+            payToCm.set("contactMechPurposeTypeId", "PAYMENT_LOCATION"); 
+            toStore.add(payToCm);    
+        }        
 
         // sequence for items - all OrderItems or InventoryReservations + all Adjustments
         int itemSeqId = 1;
@@ -387,8 +383,11 @@ public class InvoiceServices {
             }
         }
 
-        // get the shipping adjustment mode (P = Pro-Rate; F = First-Invoice)
-        String shippingMode = "P"; // TODO: get this setting from somewhere
+        // get the shipping adjustment mode (Y = Pro-Rate; N = First-Invoice)
+        String prorateShipping = productStore.getString("prorateShipping");
+        if (prorateShipping == null) {
+            prorateShipping = "Y"; 
+        }
         
         // create header adjustments as line items
         List headerAdjustments = orh.getOrderHeaderAdjustments();
@@ -396,7 +395,7 @@ public class InvoiceServices {
         while (headerAdjIter.hasNext()) {
             GenericValue adj = (GenericValue) headerAdjIter.next();
             if ("SHIPPING_CHARGES".equals(adj.getString("orderAdjustmentTypeId"))) {
-                if ("F".equalsIgnoreCase(shippingMode)) {
+                if ("N".equalsIgnoreCase(prorateShipping)) {
                     if (previousInvoiceFound) {
                         Debug.logInfo("Previous invoice found for this order [" + orderId + "]; shipping already billed", module);
                         continue;

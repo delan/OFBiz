@@ -1,5 +1,5 @@
 /*
- * $Id: OrderChangeHelper.java,v 1.1 2003/08/18 17:03:08 ajzeneski Exp $
+ * $Id: OrderChangeHelper.java,v 1.2 2003/08/26 16:08:03 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.workflow.client.WorkflowClient;
  * Order Helper - Helper Methods For Non-Read Actions
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class OrderChangeHelper {
@@ -157,27 +157,30 @@ public class OrderChangeHelper {
             Debug.logError(e, "Cannot get OrderHeader from payment preference", module);
         }
         
-        // get the store payment settings for the order
-        GenericValue storePaymentSetting = null;
-        String paymentConfig = null;
+        // get the store for the order
+        GenericValue productStore = null;        
         if (orderHeader != null) {
-            try {
-                List storePaymentSettings = delegator.findByAnd("ProductStorePaymentSetting", UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId"), "paymentMethodTypeId", orderPaymentPreference.getString("paymentMethodTypeId")));
-                storePaymentSetting = EntityUtil.getFirst(storePaymentSettings);
-                                    
-                if (storePaymentSetting != null)
-                    paymentConfig = storePaymentSetting.getString("paymentPropertiesPath");
+            try {                
+                productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", orderHeader.getString("productStoreId")));                                                   
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Cannot get the ProductStorePaymentSetting for the order header", module);
+                Debug.logError(e, "Cannot get the ProductStore for the order header", module);
             }
         } else {
             Debug.logWarning("No order header, cannot create payment", module);
             return null;
         }
         
-        // set the default payment config
-        if (paymentConfig == null) paymentConfig = "payment.properties";
-        String payToPartyId = UtilProperties.getPropertyValue(paymentConfig, "payment.general.payTo", "Company");
+        if (productStore == null) {
+            Debug.logWarning("No product store, cannot create payment", module);
+            return null;
+        }
+        
+        // set the payToPartyId       
+        String payToPartyId = productStore.getString("payToPartyId");
+        if (payToPartyId == null) {
+            Debug.logWarning("No payToPartyId set on ProductStore : " + productStore.getString("productStoreId"), module);
+            return null;
+        }
         
         // create the payment
         Long payId = delegator.getNextSeqId("Payment");

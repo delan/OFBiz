@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.8 2003/08/26 14:07:50 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.9 2003/08/26 16:08:03 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 
@@ -2049,16 +2049,22 @@ public class OrderServices {
                 } else {
                     propsFile = paymentSettings.getString("paymentPropertiesPath");
                 }
-                                
-                String daysStr = UtilProperties.getPropertyValue(propsFile, "payment.general.offline.cancel", "30");
-                int daysTillCancel = 30;
-                // convert days to int
+                
+                // need the store for the order
+                GenericValue productStore = null;
                 try {
-                    daysTillCancel = Integer.parseInt(daysStr);
-                } catch (NumberFormatException e) {
-                    Debug.logError("Problem parsing days string to cancel : " + daysStr + " using default 30 days", module);
-                    daysTillCancel = 30;
+                    productStore = orderHeader.getRelatedOne("ProductStore");
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Unable to get ProductStore from OrderHeader", module);
                 }
+                
+                // default days to cancel                
+                int daysTillCancel = 30;
+                
+                // get the value from the store
+                if (productStore != null && productStore.get("offlineCancelDays") != null) {
+                    daysTillCancel = productStore.getLong("offlineCancelDays").intValue();
+                }                
                 
                 if (daysTillCancel > 0) {
                     // 0 days means do not auto-cancel
