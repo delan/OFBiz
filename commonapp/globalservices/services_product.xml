@@ -85,7 +85,7 @@
     </service>
     <service name="getProductVariantTree" engine="java"
             location="org.ofbiz.commonapp.product.product.ProductServices" invoke="prodMakeFeatureTree">
-        <description>Gets a tree of product variants based on a list of features.</description>
+        <description>Gets a tree of product variants based on a virtual product and a list of features.</description>
         <attribute name="productId" type="String" mode="IN"/>
         <attribute name="featureOrder" type="java.util.List" mode="IN"/>
         <attribute name="variantTree" type="java.util.Map" mode="OUT"/>
@@ -99,8 +99,15 @@
     <service name="getAssociatedProducts" engine="java"
             location="org.ofbiz.commonapp.product.product.ProductServices" invoke="prodFindAssociatedByType">
         <description>Finds associated products by the defined type.</description>
-        <attribute name="productId" type="String" mode="IN"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productIdTo" type="String" mode="IN" optional="true"/>
         <attribute name="type" type="String" mode="IN"/>
         <attribute name="assocProducts" type="java.util.Collection" mode="OUT"/>
+    </service>
+    <service name="getProductFeatures" engine="java"
+            location="org.ofbiz.commonapp.product.product.ProductServices" invoke="prodGetFeatures">
+        <description>Gets a Collection of product features (ProductFeatureAndAppl) for a product.</description>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeatures" type="java.util.Collection" mode="OUT"/>
     </service>
 </services>
