@@ -28,7 +28,7 @@
 		target="fieldLookup" title="" default-map-name="lookup"
 		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
 		<auto-fields-service service-name="lookupParty" map-name="parameters"/>
-		<field name="submitButton" title="Lookup" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="Lookup" widget-style="smallSubmit"><submit button-type="button"/></field>
 		<field name="lookupService"><hidden value="lookupParty"/></field>
 		<field name="formName" ><hidden/></field>
 		<field name="id" ><hidden/></field>

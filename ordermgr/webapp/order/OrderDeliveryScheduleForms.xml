@@ -57,6 +57,6 @@
                 </entity-options>
             </drop-down>
         </field>
-        <field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
 </forms>

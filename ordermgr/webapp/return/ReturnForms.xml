@@ -54,7 +54,7 @@
 		</field>
 		
 		<field service-name="updateReturnHeader" name="fromPartyId" title="From Party"/>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 	
 	<form name="ReturnItems" type="multi" list-name="orderItems" target="createReturnItem" default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">

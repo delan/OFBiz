@@ -91,6 +91,6 @@
 		<field use-when="shipment!=null" name="lastModifiedDate" widget-style="tabletext"><display also-hidden="false" description="${shipment.lastModifiedDate}"/></field>
 		<field use-when="shipment!=null" name="lastModifiedByUserLogin" widget-style="tabletext"><display also-hidden="false" description="${shipment.lastModifiedByUserLogin}"/></field>
         
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
 	</form>
 </forms>
