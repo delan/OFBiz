@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.List;
 import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.service.ServiceDispatcher;
 
 /**
@@ -249,6 +250,18 @@ public interface WfExecutionObject  {
      * @throws WfException
      */
     public void setDispatcher(ServiceDispatcher dispatcher, String loader) throws WfException;
+    
+    /**
+     * Gets the GenericValue object of the definition.
+     * @returns GenericValue object of the definition.
+     */
+    public GenericValue getDefinitionObject();
+    
+    /**
+     * Gets the GenericValue object of the runtime workeffort.
+     * @returns GenericValue object of the runtime workeffort.
+     */
+    public GenericValue getRuntimeObject();
     
 } // interface WfExecutionObjectOperations
 

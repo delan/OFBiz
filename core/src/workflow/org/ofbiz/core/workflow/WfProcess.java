@@ -95,6 +95,21 @@ public interface WfProcess extends WfExecutionObject {
   public Map result() throws WfException, ResultNotAvailable;
   
   /**
+   * Receives activity results.
+   * @param activity WfActivity sending the results.
+   * @param results Map of the results.
+   * @throws WfException
+   */
+  public void receiveResults(WfActivity activity, Map results) throws WfException;
+  
+  /**
+   * Receives notification when an activity has completed.
+   * @param activity WfActivity which has completed.
+   * @throws WfException
+   */
+  public void activityComplete(WfActivity activity) throws WfException;
+  
+  /**
    * Starts the Workflow process
    * @throws WfException
    * @throws CannotStart

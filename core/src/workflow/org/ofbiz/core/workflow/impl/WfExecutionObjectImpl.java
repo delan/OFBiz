@@ -532,6 +532,22 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
             throw new WfException(e.getMessage(),e);
         }
     }
+
+    /**
+     * Gets the GenericValue object of the definition.
+     * @returns GenericValue object of the definition.
+     */
+    public GenericValue getDefinitionObject() {
+        return valueObject;
+    }
+    
+    /**
+     * Gets the GenericValue object of the runtime workeffort.
+     * @returns GenericValue object of the runtime workeffort.
+     */
+    public GenericValue getRuntimeObject() {
+        return dataObject;
+    }
     
     /**
      * Returns the type of execution object
