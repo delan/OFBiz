@@ -49,8 +49,9 @@ ${pages.get("/bom/BomTabBar.ftl")}
     <br>
     <br>
 
-    <form name="searchform" action="<@ofbizUrl>/UpdateProductBom</@ofbizUrl>" method=PUT >
+    <form name="searchform" action="<@ofbizUrl>/UpdateProductBom</@ofbizUrl>#topform" method=PUT >
     <input type=hidden name="UPDATE_MODE" value="">
+    <a name="topform"/>
     <table border="0" cellpadding="2" cellspacing="0">
         <tr>
             <td align=right><div class='tableheadtext'>${uiLabelMap.ManufacturingPartBOMType}:</div></td>
