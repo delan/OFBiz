@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
 
@@ -37,7 +37,7 @@
   </div>
 </#if>
 
-<div class="head1">${uiLabelMap.PartyPartiesFor}<span class='head2'> <#if (prodCatalog.catalogName)?has_content>"${prodCatalog.catalogName}"</#if> [ID:${prodCatalogId?if_exists}]</span></div>
+<div class="head1">${uiLabelMap.PartyPartiesFor}<span class='head2'> <#if (prodCatalog.catalogName)?has_content>"${prodCatalog.catalogName}"</#if> [${uiLabelMap.CommonId}:${prodCatalogId?if_exists}]</span></div>
 
 <a href="<@ofbizUrl>/EditProdCatalog</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewProdCatalog}]</a>
 <br>

@@ -262,9 +262,9 @@
     <!-- Special Category Function Services -->
     <!-- ================================================================ -->
     
-    <simple-method method-name="copyCategoryProductMembers" short-description="Remove ProductCategory From Category">
-		<string-to-field string="removeProductCategoryFromCategory" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
+    <simple-method method-name="copyCategoryProductMembers" short-description="copy CategoryProduct Members to a CategoryProductTo">
+		<string-to-field string="copyCategoryProductMembers" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
 		<!-- note the the user must be associated with the target category with the role limited permission -->
 		<string-to-field string="productCategoryIdTo" field-name="productCategoryIdName"/>
     	<call-simple-method method-name="checkCategoryRelatedPermission"/>

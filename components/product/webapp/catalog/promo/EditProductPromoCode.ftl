@@ -22,16 +22,16 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
 -->
 
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
 ${pages.get("/promo/PromoTabBar.ftl")}
-    <div class="head1">Promotion Code</div>
+    <div class="head1">${uiLabelMap.ProductPromotionCode}</div>
     <div>
-        <a href="<@ofbizUrl>/EditProductPromoCode?productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[New Promotion Code]</a>
+        <a href="<@ofbizUrl>/EditProductPromoCode?productPromoId=${productPromoId?if_exists}</@ofbizUrl>" class="buttontext">[${uiLabelMap.ProductNewPromotionCode}]</a>
     </div>
 
     ${productPromoCodeFormWrapper.renderFormString()}
@@ -39,28 +39,28 @@ ${pages.get("/promo/PromoTabBar.ftl")}
     <br/>
     <#if productPromoCode?exists>
         <#if productPromoCode.requireEmailOrParty?if_exists == "N">
-            <div class="tableheadtext">NOTE: The Require Email Or Party flag is set to N (No), so any email addresses or parties listed here will be ignored. To require an email address or party from these lists, set the flag to Y (Yes).</div>
+            <div class="tableheadtext">${uiLabelMap.ProductNoteRequireEmailParty}</div>
         </#if>
-        <div class="head3">Promo Code Emails</div>
+        <div class="head3">${uiLabelMap.ProductPromoCodeEmails}</div>
         <#list productPromoCodeEmails as productPromoCodeEmail>
             <div class="tabletext"><a href="<@ofbizUrl>/deleteProductPromoCodeEmail?productPromoCodeId=${productPromoCodeEmail.productPromoCodeId}&emailAddress=${productPromoCodeEmail.emailAddress}</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${productPromoCodeEmail.emailAddress}</div>
         </#list>
         <div class="tabletext">
             <form method="POST" action="<@ofbizUrl>/createProductPromoCodeEmail</@ofbizUrl>" style="margin: 0;">
                 <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId?if_exists}"/>
-                Add Email: <input type="text" size="40" name="emailAddress" class="inputBox">
+                ${uiLabelMap.ProductAddEmail} : <input type="text" size="40" name="emailAddress" class="inputBox">
                 <input type="submit" value="${uiLabelMap.CommonAdd}">
             </form>
         </div>
 
-        <div class="head3">Promo Code Parties</div>
+        <div class="head3">${uiLabelMap.ProductPromoCodeParties}</div>
         <#list productPromoCodeParties as productPromoCodeParty>
             <div class="tabletext"><a href="<@ofbizUrl>/deleteProductPromoCodeParty?productPromoCodeId=${productPromoCodeParty.productPromoCodeId}&partyId=${productPromoCodeParty.partyId}</@ofbizUrl>" class="buttontext">[X]</a>&nbsp;${productPromoCodeParty.partyId}</div>
         </#list>
         <div class="tabletext">
             <form method="POST" action="<@ofbizUrl>/createProductPromoCodeParty</@ofbizUrl>" style="margin: 0;">
                 <input type="hidden" name="productPromoCodeId" value="${productPromoCodeId?if_exists}"/>
-                Add Party ID: <input type="text" size="10" name="partyId" class="inputBox">
+                ${uiLabelMap.ProductAddPartyId} : <input type="text" size="10" name="partyId" class="inputBox">
                 <input type="submit" value="${uiLabelMap.CommonAdd}">
             </form>
         </div>

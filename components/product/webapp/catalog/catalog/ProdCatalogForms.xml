@@ -40,7 +40,7 @@
         <field name="catalogName" title="${uiLabelMap.ProductCatalogName}"><text size="30" maxlength="60"/></field>
         
         <field name="useQuickAdd" title="${uiLabelMap.ProductUseQuickAdd}" widget-style="selectBox">
-            <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y"/><option key="N"/></drop-down>
+            <drop-down allow-empty="false" no-current-selected-key="Y"><option key="Y" description="${uiLabelMap.CommonY}"/><option key="N" description="${uiLabelMap.CommonN}"/></drop-down>
         </field>
 
         <field name="styleSheet" title="${uiLabelMap.ProductStyleSheet}"><text size="60" maxlength="250"/></field>
