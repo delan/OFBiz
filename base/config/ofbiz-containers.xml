@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.18 2004/05/23 03:20:33 jonesde Exp $
+ *  $Id: ofbiz-containers.xml,v 1.19 2004/05/25 23:03:43 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -56,12 +56,21 @@
         <property name="server-factory" value="org.ofbiz.service.rmi.socket.CompressionServerSocketFactory"/>
     </container>
 
-<!--
+    <!-- load catalina (tomcat) and all web applications -->
     <container name="catalina-container" class="org.ofbiz.catalina.container.CatalinaContainer">
         <property name="useNaming" value="false"/>
         <property name="debug" value="0"/>
+        <property name="apps-cross-context" value="true"/>
+        <property name="apps-distributable" value="true"/>        
         <property name="default-server" value="engine">
             <property name="default-host" value="0.0.0.0"/>
+            <property name="access-log-pattern">
+                <property-value>%h %l %u %t "%r" %s %b "%{Referer}i" "%{User-Agent}i"</property-value>
+            </property>
+            <property name="access-log-resolve" value="true"/>
+            <property name="access-log-rotate" value="true"/>
+            <property name="access-log-prefix" value="access_log."/>
+            <property name="access-log-dir" value="logs"/>
         </property>
         <property name="ajp-connector" value="connector">
             <property name="type" value="ajp"/>
@@ -86,9 +95,9 @@
             <property name="keystore-type" value="jks"/>
         </property>
     </container>
--->
 
     <!-- load jetty and all web applications -->
+    <!--
     <container name="jetty-container" class="org.ofbiz.jetty.container.JettyContainer">
         <property name="default-server">
             <property name="https-listener" value="listener">
@@ -134,6 +143,7 @@
             </property>
         </property>
     </container>
+    -->
 
     <!-- load BeanShell remote telnet server -->
     <container name="beanshell-container" class="org.ofbiz.base.container.BeanShellContainer">
