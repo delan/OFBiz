@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.25 2004/01/21 16:17:57 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.26 2004/01/22 17:47:24 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.25 $
+ * @version    $Revision: 1.26 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -624,7 +624,7 @@ public class PaymentGatewayServices {
 
         // get the invoice amount (amount to bill)
         double invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice);
-        Debug.logInfo("Invoice total: " + invoiceTotal, module);
+        //Debug.logInfo("Invoice total: " + invoiceTotal, module);
 
         // now capture the order
         Map serviceContext = UtilMisc.toMap("userLogin", userLogin, "orderId", testOrderId, "invoiceId", invoiceId, "captureAmount", new Double(invoiceTotal));
@@ -708,10 +708,10 @@ public class PaymentGatewayServices {
         if (captureAmount == null) {
             captureAmount = new Double(remainingTotal);
         }
-        Debug.logInfo("Formatted Remaining total : " + remainingTotal, module);
+        //Debug.logInfo("Formatted Remaining total : " + remainingTotal, module);
 
         double amountToCapture = captureAmount.doubleValue();
-        Debug.logInfo("Expected Capture Amount : " + amountToCapture, module);
+        //Debug.logInfo("Expected Capture Amount : " + amountToCapture, module);
 
         // if we have a billing account get balance/limit and available
         GenericValue billingAccount = null;
@@ -751,10 +751,10 @@ public class PaymentGatewayServices {
             if (authAmount == null) authAmount = new Double(0.00);
             if (authAmount.doubleValue() == 0.00) {
                 // nothing to capture
-                Debug.log("Nothing to capture; authAmount = 0", module);
+                Debug.logInfo("Nothing to capture; authAmount = 0", module);
                 continue;
             }
-            Debug.log("Actual Auth amount : " + authAmount, module);
+            //Debug.log("Actual Auth amount : " + authAmount, module);
 
             // if the authAmount is more then the remaining total; just use remaining total
             if (authAmount.doubleValue() > remainingTotal) {
@@ -799,7 +799,7 @@ public class PaymentGatewayServices {
                 // add the invoiceId to the result for processing
                 captureResult.put("invoiceId", invoiceId);
 
-                Debug.log("Capture result : " + captureResult, module);
+                //Debug.log("Capture result : " + captureResult, module);
 
                 // process the capture's results
                 boolean processResult = false;
@@ -1185,7 +1185,7 @@ public class PaymentGatewayServices {
                     return ServiceUtil.returnError("Refund processor problems; see logs");
                 }
 
-                Debug.log("Called Electronic Refund Service : " + refundResponse, module);
+                //Debug.log("Called Electronic Refund Service : " + refundResponse, module);
 
                 // get the pay-from party
                 if (paymentConfig == null || paymentConfig.length() == 0) {
@@ -1245,7 +1245,7 @@ public class PaymentGatewayServices {
                         Debug.logError(e, "Problem creating Payment", module);
                         return ServiceUtil.returnError("Problem creating Payment");
                     }
-                    Debug.log("Payment created : " + paymentId, module);
+                    //Debug.log("Payment created : " + paymentId, module);
 
                     if (paymentId == null) {
                         return ServiceUtil.returnError("Create payment failed");

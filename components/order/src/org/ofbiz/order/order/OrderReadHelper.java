@@ -1,5 +1,5 @@
 /*
- * $Id: OrderReadHelper.java,v 1.19 2004/01/22 15:36:12 ajzeneski Exp $
+ * $Id: OrderReadHelper.java,v 1.20 2004/01/22 17:47:24 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Eric Pabst
  * @author     <a href="mailto:ray.barlow@whatsthe-point.com">Ray Barlow</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class OrderReadHelper {
@@ -1153,7 +1153,7 @@ public class OrderReadHelper {
         while (itemIter != null && itemIter.hasNext()) {
             GenericValue orderItem = (GenericValue) itemIter.next();
             double itemTotal = getOrderItemSubTotal(orderItem, adjustments);
-            Debug.log("Item : " + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + " = " + itemTotal, module);
+            //Debug.log("Item : " + orderItem.getString("orderId") + " / " + orderItem.getString("orderItemSeqId") + " = " + itemTotal, module);
             result += itemTotal;
         }
         return result;
