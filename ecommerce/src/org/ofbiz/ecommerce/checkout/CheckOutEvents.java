@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1.1.1  2001/08/24 01:01:44  azeneski
+ * Initial Import
+ *
  */
 
 package org.ofbiz.ecommerce.checkout;
@@ -81,9 +84,9 @@ public class CheckOutEvents {
         }
         else {            
             if ( sameBilling != null || addressType.equals("O") || addressType.equals("S") )            
-                session.setAttribute("SHIPPING_ADDRESS",address);
+                session.setAttribute("SHIPPING_LOCATION",address);
             if ( sameBilling != null || addressType.equals("O") || addressType.equals("B") )            
-                session.setAttribute("BILLING_ADDRESS",address);            
+                session.setAttribute("BILLING_LOCATION",address);            
             return "success";
         }
     }
