@@ -44,12 +44,13 @@
     }
 %>
 
+<br>
 <%if(productPromoId != null && productPromoId.length() > 0){%>
-  <hr class='sepbar'>
-  <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontextdisabled">[Promo]</a>
-  <a href="<ofbiz:url>/EditProductPromoRules?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Rules]</a>
-  <a href="<ofbiz:url>/EditProductPromoCatalogs?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Catalogs]</a>
-  <hr class='sepbar'>
+  <div class='tabContainer'>
+  <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButtonSelected">Promo</a>
+  <a href="<ofbiz:url>/EditProductPromoRules?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButton">Rules</a>
+  <a href="<ofbiz:url>/EditProductPromoCatalogs?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButton">Catalogs</a>
+  </div>
 <%}%>
 <div class="head1">Promotion <span class='head2'><%=UtilFormatOut.ifNotEmpty(productPromo==null?null:productPromo.getString("promoName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productPromoId)%>]</span></div>
 <a href="<ofbiz:url>/EditProductPromo</ofbiz:url>" class="buttontext">[New ProductPromo]</a>

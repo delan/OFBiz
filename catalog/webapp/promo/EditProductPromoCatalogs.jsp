@@ -52,12 +52,13 @@
     if ("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
 %>
 
+<br>
 <%if(productPromoId != null && productPromoId.length() > 0){%>
-  <hr class='sepbar'>
-  <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Promo]</a>
-  <a href="<ofbiz:url>/EditProductPromoRules?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontext">[Rules]</a>
-  <a href="<ofbiz:url>/EditProductPromoCatalogs?productPromoId=<%=productPromoId%></ofbiz:url>" class="buttontextdisabled">[Catalogs]</a>
-  <hr class='sepbar'>
+  <div class='tabContainer'>
+  <a href="<ofbiz:url>/EditProductPromo?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButton">Promo</a>
+  <a href="<ofbiz:url>/EditProductPromoRules?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButton">Rules</a>
+  <a href="<ofbiz:url>/EditProductPromoCatalogs?productPromoId=<%=productPromoId%></ofbiz:url>" class="tabButtonSelected">Catalogs</a>
+  </div>
 <%}%>
 
 <div class="head1">Catalogs <span class='head2'>for <%=UtilFormatOut.ifNotEmpty(productPromo==null?null:productPromo.getString("promoName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(productPromoId)%>]</span></div>
