@@ -58,7 +58,7 @@ public class DispatchContext implements Serializable {
     public static final String module = DispatchContext.class.getName();
 
     protected static final String GLOBAL_KEY = "global.services";
-    protected static UtilCache modelService = new UtilCache("service.ModelServices", 0, 0);
+    protected static UtilCache modelService = new UtilCache("service.ModelServices", 0, 0, false);
 
     protected transient LocalDispatcher dispatcher;
     protected ClassLoader loader;
@@ -213,8 +213,8 @@ public class DispatchContext implements Serializable {
                     serviceMap = addReaders(readers);
                     if (serviceMap != null) {
                         modelService.put(name, serviceMap);
+                        ServiceEcaUtil.reloadConfig();
                     }
-                    ServiceEcaUtil.reloadConfig();
                 }
             }
         }
@@ -239,8 +239,8 @@ public class DispatchContext implements Serializable {
                     serviceMap = addGlobal();
                     if (serviceMap != null) {
                         modelService.put(GLOBAL_KEY, serviceMap);
+                        ServiceEcaUtil.reloadConfig();
                     }
-                    ServiceEcaUtil.reloadConfig();
                 }
             }
         }
