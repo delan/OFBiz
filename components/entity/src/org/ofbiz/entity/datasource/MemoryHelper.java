@@ -1,5 +1,5 @@
 /*
- * $Id: MemoryHelper.java,v 1.2 2003/09/19 06:05:12 jonesde Exp $
+ * $Id: MemoryHelper.java,v 1.3 2003/11/15 19:01:43 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  * @author <a href="mailto:plightbo@.com">Pat Lightbody</a>
  */
 public class MemoryHelper implements GenericHelper {
-    
+
     public static final String module = MemoryHelper.class.getName();
     private static Map cache = new HashMap();
 
@@ -366,6 +366,10 @@ public class MemoryHelper implements GenericHelper {
                                                           EntityCondition havingEntityCondition, Collection fieldsToSelect, List orderBy, EntityFindOptions findOptions)
             throws GenericEntityException {
         return null;
+    }
+
+    public long findCountByCondition(ModelEntity modelEntity, EntityCondition whereEntityCondition, EntityCondition havingEntityCondition) throws GenericEntityException {
+        return 0;
     }
 
     public int removeByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
