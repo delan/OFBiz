@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1.1.1  2001/08/24 01:01:43  azeneski
+ * Initial Import
+ *
  */
 
 package org.ofbiz.ecommerce.catalog;
@@ -14,6 +17,7 @@ import java.util.Vector;
 
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilMisc;
 
 import org.ofbiz.core.entity.GenericPK;
 import org.ofbiz.core.entity.GenericEntity;
@@ -99,15 +103,10 @@ public class CatalogHelper {
     public static GenericValue getProduct(String productId) {
         if ( productId == null )
             return null;
-        HashMap ifm = new HashMap();
-        ifm.put("productId",productId);
         
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-        List productList = (List) helper.findByAnd("Product",ifm,null);
-        if ( productList == null )
-            return null;
-        
-        return (GenericValue) productList.get(0);
+        return helper.findByPrimaryKey("Product", 
+                UtilMisc.toMap("productId", productId));
     }
     
 }

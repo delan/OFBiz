@@ -1,6 +1,9 @@
 /*
  * $Id$
- * $Log$ 
+ * $Log$
+ * Revision 1.1.1.1  2001/08/24 01:01:42  azeneski
+ * Initial Import
+ * 
  */
 
 package org.ofbiz.ecommerce.shoppingcart;
@@ -48,14 +51,7 @@ public class ShoppingCartItem implements Serializable {
     
     /** Creates new ShoppingCartItem object. */
     public ShoppingCartItem(String productId, String description, double basePrice, double quantity) {
-        this.productId = productId;
-        this.description = description;
-        this.basePrice = basePrice;
-        this.quantity = quantity;
-        this.attributes = null;
-        this.discountAmount = 0.00;
-        this.itemComment = null;
-        this.type = 0;
+        this(productId, description, basePrice, quantity, null);
     }
     
     /** Creates new ShoppingCartItem object. */
@@ -146,11 +142,13 @@ public class ShoppingCartItem implements Serializable {
     
     /** Compares the specified object with this cart item. */
     public boolean equals(ShoppingCartItem item) {
-        if ( !item.getProductId().equals(productId) )
+        if ( item == null || !item.getProductId().equals(productId) )
             return false;
+        //XXX if one has attributes and the other doesn't, they may
+        //be considered equal.  Is this desired behavior?
         if ( item.getAttributes() != null && getAttributes() != null ) {
             if ( !item.getAttributes().equals(getAttributes()) )
-            return false;
+                return false;
         }
         return true;
     }

@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1.1.1  2001/08/24 01:01:43  azeneski
+ * Initial Import
+ *
  */
 
 package org.ofbiz.ecommerce.shoppingcart;
@@ -101,11 +104,9 @@ public class ShoppingCartEvents {
             attributes = new HashMap(paramMap);
         
         // Get the product 
-        HashMap fieldMap = new HashMap();
-        fieldMap.put("productId",productId);
         GenericHelper helper = GenericHelperFactory.getDefaultHelper();
-        List products = (List) helper.findByAnd("Product",fieldMap,null);
-        GenericEntity product = (GenericEntity) products.get(0);
+        GenericEntity product = helper.findByPrimaryKey("Product", 
+                UtilMisc.toMap("productId", productId));
         
         if ( product == null ) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE,"No product found.");
@@ -156,10 +157,10 @@ public class ShoppingCartEvents {
         Set names = paramMap.keySet();
         Iterator i = names.iterator();
         while ( i.hasNext() ) {
-            Object o = i.next();
-            if ( ((String)o).toUpperCase().startsWith("DELETE") ) {
+            String o = (String) i.next();
+            if ( o.toUpperCase().startsWith("DELETE") ) {
                 try {
-                    String indexStr = ((String)o).substring(((String)o).lastIndexOf('_')+1);
+                    String indexStr = o.substring(o.lastIndexOf('_')+1);
                     int index = Integer.parseInt(indexStr);
                     cart.removeCartItem(index);
                 }
@@ -177,14 +178,14 @@ public class ShoppingCartEvents {
         Set names = paramMap.keySet();
         Iterator i = names.iterator();
         while ( i.hasNext() ) {
-            Object o = i.next();
+            String o = (String) i.next();
             try {
-                String indexStr = ((String)o).substring(((String)o).lastIndexOf('_')+1);
+                String indexStr = o.substring(o.lastIndexOf('_')+1);
                 int index = Integer.parseInt(indexStr);
                 int quantity = Integer.parseInt((String) paramMap.get(o));
                 Debug.log("Got index: " + index + "  AND  quantity: " + quantity);
                 
-                if ( ((String)o).toUpperCase().startsWith("UPDATE") ) {
+                if ( o.toUpperCase().startsWith("UPDATE") ) {
                     if ( quantity == 0 ) {                        
                         deleteList.add(cart.findCartItem(index));
                         Debug.log("Added index: " + index + " to delete list.");
@@ -195,7 +196,7 @@ public class ShoppingCartEvents {
                     }
                 }
                 
-                if ( ((String)o).toUpperCase().startsWith("DELETE") ) {                    
+                if ( o.toUpperCase().startsWith("DELETE") ) {                    
                     deleteList.add(cart.findCartItem(index));                    
                     Debug.log("Added index: " + index + " to delete list.");
                 }
