@@ -59,8 +59,8 @@ public class WorkflowEngine implements GenericEngine {
      */
     public Map runSync(ModelService modelService, Map context) throws GenericServiceException {
         GenericResultWaiter waiter = new GenericResultWaiter();
-        runAsync(modelService,context,null);
-        return new HashMap();
+        runAsync(modelService,context,waiter);
+        return waiter.waitForResult();       
     }
     
     /** Run the service synchronously and IGNORE the result
@@ -83,7 +83,7 @@ public class WorkflowEngine implements GenericEngine {
      */
     public void runAsync(ModelService modelService, Map context, GenericRequester requester) throws GenericServiceException {
         // validate the context
-        if ( !modelService.validate(context, ModelService.IN_PARAM) )
+        if ( modelService.validate && !modelService.validate(context, ModelService.IN_PARAM) )
             throw new GenericServiceException("Context does not match expected requirements");
         
         // Build the requester

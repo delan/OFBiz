@@ -68,10 +68,15 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
         Object[] params = new Object[] { dctx, context };
         Object result = null;
         
+        // check the package and method names
         if ( modelService.location == null || modelService.invoke == null )
             throw new GenericServiceException("Cannot locate service to invoke");
         
-        // Get the classloader to use
+        // validate the context
+        if ( modelService.validate && !modelService.validate(context, ModelService.IN_PARAM) )
+            throw new GenericServiceException("Context does not match expected requirements");
+                
+        // get the classloader to use
         ClassLoader cl = null;
         if ( loader == null )
             cl = this.getClass().getClassLoader();
@@ -108,6 +113,10 @@ public final class StandardJavaEngine extends GenericAsyncEngine {
             throw new GenericServiceException("Initialization failed",eie);
         }
         
+        // validate the result
+        if ( modelService.validate && !modelService.validate((Map)result, ModelService.OUT_PARAM) )
+            throw new GenericServiceException("Result does not match expected requirements");
+            
         return result;
     }
     

@@ -162,6 +162,7 @@ public class ModelServiceReader {
         service.location = checkEmpty(serviceElement.getAttribute("location"));
         service.invoke = checkEmpty(serviceElement.getAttribute("invoke"));
         service.export = checkBoolean(serviceElement.getAttribute("export"));        
+        service.validate = checkBoolean(serviceElement.getAttribute("validate"));
         service.contextInfo = new HashMap();        
         
         createAttrDefs(serviceElement, "attribute", service.contextInfo);                
@@ -172,12 +173,11 @@ public class ModelServiceReader {
         NodeList attrList = baseElement.getElementsByTagName(parentNodeName);
         for ( int i = 0; i < attrList.getLength(); i++ ) {
             Element attribute = (Element) attrList.item(i);
-            ModelParam param = new ModelParam();
-            param.description = checkEmpty(attribute.getAttribute("description"));
+            ModelParam param = new ModelParam();            
             param.name = checkEmpty(attribute.getAttribute("name"));
             param.type = checkEmpty(attribute.getAttribute("type"));
             param.mode = checkEmpty(attribute.getAttribute("mode"));
-            param.optional = checkBoolean(attribute.getAttribute("optional"));
+            param.optional = checkBoolean(attribute.getAttribute("optional"));            
             contextMap.put(param.name,param);            
         }
     }

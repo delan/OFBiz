@@ -42,14 +42,22 @@ public class ModelService {
     
     /** The name of this service */
     public String name;
+    
     /** The name of the engine from engine.properties */
     public String engineName;
+    
     /** The package name or location of this service */
     public String location;
+    
     /** The method or function to invoke for this service */
     public String invoke;
+    
     /** Can this service be exported via RPC, RMI, SOAP, etc */
     public boolean export;
+    
+    /** Validate the context info for this service */
+    public boolean validate;
+    
     /** Context Information, a list of parameters required by the service */
     public Map contextInfo;
     

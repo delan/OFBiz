@@ -36,13 +36,14 @@ import java.util.*;
 public class ModelParam {
     
     /** Parameter name */
-    public String name;
-    /** Parameter description */
-    public String description;
+    public String name; 
+    
     /** Paramater type */
     public String type;
+    
     /** Parameter mode (IN/OUT/INOUT) */
     public String mode;     
+    
     /** Parameter required */
     boolean optional;            
 }
