@@ -1092,12 +1092,15 @@ public class ContentServices {
         String foContentId = (String)context.get("foContentId");
         String templateDataResourceId = (String)context.get("templateDataResourceId");
         Map fmContext = (Map)context.get("fmContext");
+        Map fmPrefixMap = (Map)context.get("fmPrefixMap");
         // configure logging for the FOP
         Logger logger = new Log4JLogger(Debug.getLogger(module));
         MessageHandler.setScreenLogger(logger);        
                           
         // Get input FO. Process thru template, if required.
         String processedFo = null;
+        // If the FO template is not already in the CMS, put it there,
+        // else, if the FTL template id is not there in the exisiting content, add it.
         if (UtilValidate.isEmpty(foContentId)) {
             if (UtilValidate.isEmpty(foFileIn)) {
                 return ServiceUtil.returnError("No FO file or contentId available.");
@@ -1108,6 +1111,7 @@ public class ContentServices {
             mapIn.put("contentTypeId", "DOCUMENT");
             mapIn.put("contentPurposeString", "SOURCE");
             mapIn.put("templateDataResourceId", templateDataResourceId);
+            mapIn.put("drDataTemplateTypeId", "FTL");
             try {
                 Map thisResult = dispatcher.runSync("persistContentAndAssoc", mapIn);
                 foContentId = (String)thisResult.get("contentId");
@@ -1136,11 +1140,19 @@ public class ContentServices {
                 return ServiceUtil.returnError(e.getMessage());
             }
         }
+        // not sure why this is here, will wait to see if it comes to me
         if (UtilValidate.isEmpty(templateDataResourceId)) {
         }
+        
+        // Now that the FO file is in the CMS and the FTL template Id is in place
+        // Get the processed FO file by running "renderContentAsText" file
         Map mapIn = new HashMap();
         mapIn.put("contentId", foContentId);
-        mapIn.put("templateContext", fmContext);
+        if (fmContext != null) {
+        	mapIn.put("templateContext", fmContext);
+        } else {
+        	mapIn.put("templateContext", fmPrefixMap);
+        }
         StringWriter sw = new StringWriter();
         mapIn.put("outWriter", sw);
         try {
@@ -1154,12 +1166,13 @@ public class ContentServices {
             Debug.logError(e, "Problem getting FO text", "ContentServices");
             return ServiceUtil.returnError("Problem getting FO text");
         }
+        
         // load the FOP driver
         Driver driver = new Driver();
         driver.setRenderer(Driver.RENDER_PDF);
         driver.setLogger(logger);
                                         
-        // read the XSL-FO XML Document
+        // get the XSL-FO XML in Document format
         Document xslfo = null;
         try {
             xslfo = UtilXml.readXmlDocument(processedFo);
@@ -1190,6 +1203,8 @@ public class ContentServices {
         ByteWrapper pdfByteWrapper = new ByteWrapper(out.toByteArray());
         result.put("pdfByteWrapper", pdfByteWrapper );
                   
+        // Put output into CMS if dataResourceTypeId is present
+        // else, just write it to a file
         if (UtilValidate.isNotEmpty(dataResourceTypeId)) {
             if (pdfByteWrapper != null) {
                 Map mapIn2 = new HashMap();
@@ -1208,17 +1223,35 @@ public class ContentServices {
                         return ServiceUtil.returnError("Could not add PDF conten - contentId is null.");
                     }
                 } catch (GenericServiceException e) {
-                    Debug.logError(e, "Problem adding FO content.", "ContentServices");
+                    Debug.logError(e, "Problem adding FO content.", module);
                     return ServiceUtil.returnError("Problem adding FO content.");
                 }
                 result.put("contentId", contentId);
             }
         } else {
             if (UtilValidate.isEmpty(pdfFileOut)) {
+                String outputPath = null;
+                String thisDataResourceTypeId = null;
+                String ofbizHome = System.getProperty("ofbiz.home");
+                int pos = pdfFileOut.indexOf("${OFBIZ_HOME}");
+                if (pos > 0 ) {
+                    outputPath =  pdfFileOut.substring(pos + 13);
+                    thisDataResourceTypeId = "OFBIZ_FILE";
+                } else {
+                    outputPath = pdfFileOut;   
+                    thisDataResourceTypeId = "LOCAL_FILE";
+                }
+                Map mapIn3 = new HashMap();
+                mapIn3.put("objectInfo", outputPath);
+                mapIn3.put("drDataResourceTypeId", thisDataResourceTypeId);
+                mapIn3.put("binData", pdfByteWrapper);
+                try {
+                    Map thisResult = dispatcher.runSync("createFile", mapIn3);
+                } catch (GenericServiceException e) {
+                    Debug.logError(e, "Problem writing FO content.", module);
+                    return ServiceUtil.returnError("Problem adding FO content.");
+                }
             }
-            String outputPath = "";
-            String rootDir = null;
-            String ofbizHome = System.getProperty("ofbiz.home");
         }
         return result;
     }

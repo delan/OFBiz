@@ -1618,6 +1618,7 @@
         <attribute name="foContentId" mode="IN" type="String" optional="true"/>
         <attribute name="templateDataResourceId" mode="IN" type="String" optional="true"/>
         <attribute name="fmContext" type="java.util.Map" mode="IN" optional="true"/>
+        <attribute name="fmPrefixMap" type="java.util.Map" mode="IN" optional="true" string-map-prefix="CTX_"/>
         <attribute name="pdfByteWrapper" type="org.ofbiz.entity.util.ByteWrapper" mode="OUT" optional="true"/>
     </service>
 </services>

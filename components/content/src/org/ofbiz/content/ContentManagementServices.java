@@ -420,6 +420,7 @@ public class ContentManagementServices {
                 }
 
                 result.put("dataResourceId", dataResourceId);
+                result.put("drDataResourceId", dataResourceId);
                 context.put("dataResourceId", dataResourceId);
                 content.put("dataResourceId", dataResourceId);
                 context.put("drDataResourceId", dataResourceId);
