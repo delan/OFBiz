@@ -27,14 +27,7 @@
  -->
 <simple-methods>
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
-        <if-has-permission permission="CATALOG" action="_CREATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run duplicateProduct" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run duplicateProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
         <!-- look up the old product and clone it -->

@@ -27,14 +27,8 @@
  -->
 <simple-methods>
     <simple-method method-name="createFacility" short-description="Create an Facility">
-        <if-has-permission permission="CATALOG" action="_CREATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run createFacility" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createFacility you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="newEntity" entity-name="Facility"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
@@ -47,14 +41,8 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateFacility" short-description="Update an Facility">
-        <if-has-permission permission="CATALOG" action="_UPDATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_UPDATE or CATALOG_ADMIN permission to run updateFacility" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateFacility you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="Facility" map-name="lookupPKMap" value-name="facility"/>
@@ -62,14 +50,8 @@
         <store-value value-name="facility"/>
     </simple-method>
     <simple-method method-name="deleteFacility" short-description="Delete an Facility">
-        <if-has-permission permission="CATALOG" action="_DELETE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_DELETE or CATALOG_ADMIN permission to run deleteFacility" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteFacility you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="Facility" map-name="lookupPKMap" value-name="facility"/>
@@ -77,28 +59,16 @@
     </simple-method>
 
     <simple-method method-name="addContactMechToFacility" short-description="Add ContactMech To Facility">
-        <if-has-permission permission="CATALOG" action="_CREATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run createFacilityContactMech" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addContactMechToFacility you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="newEntity" entity-name="FacilityContactMech"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="removeContactMechFromFacility" short-description="Remove ContactMech From Facility">
-        <if-has-permission permission="CATALOG" action="_DELETE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_DELETE or CATALOG_ADMIN permission to run deleteFacilityContactMech" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeContactMechFromFacility you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="lookupPKMap"/>
         <field-to-field field-name="contactMechId" map-name="parameters" to-map-name="lookupPKMap"/>
