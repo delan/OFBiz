@@ -49,13 +49,11 @@
 
 <ofbiz:unless name="person">
   <p class="head1">Add New Personal Information</p>
-    <FORM method=POST action='<ofbiz:url>/updateperson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">
-    <input type=hidden name="UPDATE_MODE" value="CREATE">
+    <FORM method=POST action='<ofbiz:url>/createPerson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">
 </ofbiz:unless>
 <ofbiz:if name="person">
   <p class="head1">Edit Personal Information</p>
-    <FORM method=POST action='<ofbiz:url>/updateperson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">
-    <input type=hidden name="UPDATE_MODE" value="UPDATE">
+    <FORM method=POST action='<ofbiz:url>/updatePerson/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editpersonform">
 </ofbiz:if>
 
 &nbsp;<a href='<ofbiz:url>/authview/<ofbiz:print attribute="donePage"/></ofbiz:url>' class="buttontext">[Done/Cancel]</a>

@@ -319,9 +319,15 @@
     	<response name="success" type="view" value="editperson"/>
     </request-map>
 
-    <request-map uri="updateperson">
+    <request-map uri="createPerson">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.commonapp.party.party.PartyEvents" invoke="updatePerson"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="createPerson"/>
+    	<response name="success" type="view" value="editperson"/>
+    	<response name="error" type="view" value="editperson"/>
+    </request-map>
+    <request-map uri="updatePerson">
+    	<security https="true" auth="true"/>
+        <event type="simple" path="org/ofbiz/commonapp/party/party/PartySimpleEvents.xml" invoke="updatePerson"/>
     	<response name="success" type="view" value="editperson"/>
     	<response name="error" type="view" value="editperson"/>
     </request-map>
@@ -333,7 +339,7 @@
 
     <request-map uri="updatepassword">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke=">changePassword"/>
+    	<event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="changePassword"/>
     	<response name="success" type="view" value="changepassword"/>
     	<response name="error" type="view" value="changepassword"/>
     </request-map>
@@ -349,11 +355,11 @@
 	    <event type="java" path="org.ofbiz.core.event.CoreEvents" invoke="changeDelegator"/>
 	    <response name="success" type="view" value="main"/>
 	    <response name="error" type="view" value="error"/>
-	</request-map>    
+    </request-map>    
 
-	<request-map uri="newaffiliate">
-	    <response name="success" type="view" value="newaffiliate"/>
-	</request-map>
+    <request-map uri="newaffiliate">
+        <response name="success" type="view" value="newaffiliate"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -389,4 +395,3 @@
     <view-map name="editperson" page="/customer/editperson.jsp"/>
     <!-- end of view mappings -->
 </site-conf>
-
