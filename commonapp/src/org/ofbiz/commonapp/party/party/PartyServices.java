@@ -571,6 +571,9 @@ public class PartyServices {
         GenericDelegator delegator = dctx.getDelegator();
         Collection parties = new LinkedList();
         String email = (String) context.get("email");
+        if (email.length() == 0)
+            return ServiceUtil.returnError("Required parameter 'email' cannot be empty.");
+
         try {
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("infoString", true, EntityOperator.LIKE, "%" + email.toUpperCase() + "%", true));
@@ -605,6 +608,9 @@ public class PartyServices {
         GenericDelegator delegator = dctx.getDelegator();
         Collection parties = new LinkedList();
         String userLoginId = (String) context.get("userLoginId");
+        if (userLoginId.length() == 0)
+            return ServiceUtil.returnError("Required parameter 'userLoginId' cannot be empty.");
+
         try {
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("userLoginId", true, EntityOperator.LIKE, "%" + userLoginId.toUpperCase() + "%", true));
@@ -646,6 +652,9 @@ public class PartyServices {
         if (lastName == null) {
             lastName = "";
         }
+        if (firstName.length() == 0 && lastName.length() == 0)
+            return ServiceUtil.returnError("Both 'lastName' and 'firstName' cannot be empty.");
+
         try {
             List exprs = new LinkedList();
             exprs.add(new EntityExpr("firstName", true, EntityOperator.LIKE, "%" + firstName.toUpperCase() + "%", true));
@@ -680,6 +689,8 @@ public class PartyServices {
         GenericDelegator delegator = dctx.getDelegator();
         Collection parties = new LinkedList();
         String groupName = (String) context.get("groupName");
+        if (groupName.length() == 0)
+            ServiceUtil.returnError("Required parameter 'groupName' cannot be empty.");
 
         try {
             List exprs = new LinkedList();

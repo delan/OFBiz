@@ -419,6 +419,8 @@ public class ProductServices {
             } catch (GenericEntityException e) {
                 throw new IllegalStateException("Problem reading relation: " + e.getMessage());
             }
+            if (Debug.verboseOn()) Debug.logVerbose("Features: " + features);
+
             // -------------------------------
             Iterator featuresIterator = features.iterator();
             while (featuresIterator.hasNext()) {
@@ -434,6 +436,7 @@ public class ProductServices {
                 }
             }
         }
+        if (Debug.verboseOn()) Debug.logVerbose("TempGroup: " + tempGroup);
 
         // Loop through the feature list and order the keys in the tempGroup
         List orderFeatureList = (List) featureList.get(orderKey);
