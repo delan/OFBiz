@@ -545,6 +545,7 @@
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="inventoryItemId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
+      <field name="statusId" type="id-ne"></field>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
       <prim-key field="inventoryItemId"/>
@@ -557,6 +558,9 @@
       </relation>
       <relation type="one" fk-name="ORDER_ITIR_INVITM" rel-entity-name="InventoryItem">
         <key-map field-name="inventoryItemId"/>
+      </relation>
+      <relation type="one" fk-name="ORDER_ITIR_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemPriceInfo"
