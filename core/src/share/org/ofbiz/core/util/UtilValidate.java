@@ -325,12 +325,12 @@ public class UtilValidate {
         }
     }
 
-    /** Returns true if string s is an integer > 0. */
+    /** Returns true if string s is an integer > 0. NOTE: using the Java Long object for greatest precision */
     public static boolean isPositiveInteger(String s) {
         if (isEmpty(s)) return defaultEmptyOK;
 
         try {
-            int temp = Integer.parseInt(s);
+            long temp = Long.parseLong(s);
             if (temp > 0) return true;
             return false;
         } catch (Exception e) {
