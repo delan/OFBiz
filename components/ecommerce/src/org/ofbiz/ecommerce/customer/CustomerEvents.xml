@@ -34,25 +34,28 @@
     	<call-class-method class-name="org.ofbiz.product.store.ProductStoreWorker" method-name="getProductStore" ret-field-name="productStore">
     	    <field field-name="request" type="javax.servlet.ServletRequest"/>
     	</call-class-method>
-        <if-empty field-name="allowPassword" map-name="productStore">
-            <string-to-field field-name="allowPassword" map-name="productStore" string="Y"/>
+
+        <env-to-env env-name="productStore.allowPassword" to-env-name="allowPassword"/>
+        <env-to-env env-name="productStore.defaultPassword" to-env-name="defaultPassword"/>
+        <if-empty field-name="allowPassword">
+            <string-to-field field-name="allowPassword" string="Y"/>
         </if-empty>
-        <if-empty field-name="defaultPassword" map-name="productStore">
-            <string-to-field field-name="defaultPassword" map-name="productStore" string="ungssblepswd"/>
-        </if-empty>    	
-    	      
+        <if-empty field-name="defaultPassword">
+            <string-to-field field-name="defaultPassword" string="ungssblepswd"/>
+        </if-empty>
+
         <property-to-field resource="security" property="username.lowercase" default="false" field-name="username_lowercase"/>
         <property-to-field resource="security" property="password.lowercase" default="false" field-name="password_lowercase"/>
 
         <now-timestamp-to-env env-name="nowStamp"/>
         <string-to-field string="CUSTOMER" field-name="roleTypeId" map-name="parameters"/>
 
-        <if-compare field-name="allowPassword" map-name="productStore" operator="not-equals" value="Y">
-            <field-to-field field-name="defaultPassword" map-name="productStore" to-field-name="PASSWORD" to-map-name="parameters"/>
-            <field-to-field field-name="defaultPassword" map-name="productStore" to-field-name="CONFIRM_PASSWORD" to-map-name="parameters"/>
+        <if-compare field-name="allowPassword" operator="not-equals" value="Y">
+            <field-to-field field-name="defaultPassword" to-field-name="PASSWORD" to-map-name="parameters"/>
+            <field-to-field field-name="defaultPassword" to-field-name="CONFIRM_PASSWORD" to-map-name="parameters"/>
             <string-to-field string="No hint set, accout not yet enabled" field-name="PASSWORD_HINT" map-name="parameters"/>
         </if-compare>
-        
+
         <!-- if username and/or password should be lowercased, do that now -->
         <if-compare field-name="username_lowercase" operator="equals" value="true">
             <call-object-method obj-field-name="USERNAME" obj-map-name="parameters" method-name="toLowerCase" ret-field-name="USERNAME" ret-map-name="parameters"/>
@@ -117,7 +120,7 @@
         </call-map-processor>
 
         <log level="info" message="UserLogin : ${userLogin}"/>
-        
+
         <!-- Create the PartyRole -->
         <field-to-field field-name="roleTypeId" map-name="parameters" to-map-name="partyRoleContext"/>
 
@@ -278,7 +281,7 @@
         <!-- get the visit from the session to get the visitId -->
         <session-to-field field-name="visit"/>
         <field-to-field field-name="visitId" map-name="visit" to-map-name="partyDataSource"/>
-                           
+
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <check-errors/>
 
@@ -287,7 +290,7 @@
             boolean useEncryption = "true".equals(org.ofbiz.base.util.UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
             if (useEncryption) { newUserLogin.set("currentPassword", org.ofbiz.securityext.login.HashEncrypt.getHash((String) newUserLogin.get("currentPassword"))); }
         ]]></call-bsh>
-        
+
         <set-service-fields map-name="personContext" service-name="createPersonAndUserLogin" to-map-name="personUserLoginContext"/>
         <set-service-fields map-name="newUserLogin" service-name="createPersonAndUserLogin" to-map-name="personUserLoginContext"/>
         <field-to-field field-name="currentPassword" map-name="newUserLogin" to-field-name="currentPasswordVerify" to-map-name="personUserLoginContext"/>
@@ -297,7 +300,7 @@
             <result-to-field field-name="createdUserLogin" result-name="newUserLogin"/>
         </call-service>
         <set-current-user-login value-name="createdUserLogin"/>
-        
+
         <!-- now that we have the partyId, put it where it needs to go... -->
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="partyDataSource"/>
         <field-to-field field-name="partyId" map-name="tempMap" to-map-name="userLoginContext"/>
@@ -379,7 +382,7 @@
         <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
 
         <!-- now finished, log in the user... -->
-        <if-compare field-name="allowPassword" map-name="productStore" operator="equals" value="Y">
+        <if-compare field-name="allowPassword" operator="equals" value="Y">
             <call-bsh><![CDATA[
                 org.ofbiz.securityext.login.LoginEvents.doBasicLogin(createdUserLogin, request);
                 org.ofbiz.securityext.login.LoginEvents.autoLoginSet(request, response);
