@@ -20,12 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Eric Pabst
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    May 22 2001
  *@version    1.0
 --%>
-
+    
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -81,8 +81,31 @@
                     <%-- now show status details per line item --%>
                     <%GenericValue currentItemStatus = orderItem.getRelatedOneCache("StatusItem");%>
                     <%if (currentItemStatus != null) pageContext.setAttribute("currentItemStatus", currentItemStatus);%>
-                    <td align="left" colspan="1">
+                    <td align="left" colspan="1">                    
+                        <%-- Item Status Changed --%>
+                        <%if (security.hasEntityPermission("ORDERMGR", "_UPDATE", session)) {%>
+                          <% if (orderItem.getString("statusId") != null && !orderItem.getString("statusId").equals("ITEM_COMPLETED") && !orderItem.getString("statusId").equals("ITEM_CANCELLED")) { %>
+                            <% List itemStatusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",orderItem.getString("statusId"))); %>
+                            <% pageContext.setAttribute("itemStatusChange", itemStatusChange); %>
+                            <form name="statusUpdate<%=orderItem.getString("orderItemSeqId")%>" method="post" action="<ofbiz:url>/changeOrderItemStatus?<%=qString%></ofbiz:url>">
+                               <input type="hidden" name="orderId" value="<%=orderItem.getString("orderId")%>"> 
+                               <input type="hidden" name="orderItemSeqId" value="<%=orderItem.getString("orderItemSeqId")%>">     
+                               <select name="statusId" style="font-size: x-small;">
+                                 <option value="<%=orderItem.getString("statusId")%>"><%=currentItemStatus == null ? orderItem.getString("statusId") : currentItemStatus.getString("description")%></option>
+                                 <option value="<%=orderItem.getString("statusId")%>">----</option>
+                                 <ofbiz:iterator name="status" property="itemStatusChange">
+                                   <%GenericValue changeStatusItem = status.getRelatedOneCache("ToStatusItem");%>
+                                   <option value="<%=status.getString("statusIdTo")%>"><%=changeStatusItem == null ? status.getString("statusIdTo") : changeStatusItem.getString("description")%></option>               
+                                 </ofbiz:iterator>
+                               </select>
+                               <a href="javascript:document.statusUpdate<%=orderItem.getString("orderItemSeqId")%>.submit();" class="buttontext">[Save]</a>
+                            </form>                                                                              					
+                          <%}%>
+                        <%} else {%>                                                                                  
                         <div class='tabletext'>Current: <ofbiz:entityfield attribute="currentItemStatus" field="description"/><%-- [<ofbiz:entityfield attribute="orderItem" field="statusId"/>]--%></div>
+                        <%}%>
+                        <%-- End of item status changes --%>       
+                        
                         <%Collection orderItemStatuses = orderReadHelper.getOrderItemStatuses(orderItem);%>
                         <%if (orderItemStatuses != null) pageContext.setAttribute("orderItemStatuses", orderItemStatuses);%>
                         <ofbiz:iterator name="orderItemStatus" property="orderItemStatuses">
@@ -93,7 +116,7 @@
                                 <ofbiz:entityfield attribute="loopStatusItem" field="description"/>
                                 <%-- [<ofbiz:entityfield attribute="orderItemStatus" field="statusId"/>] --%>
                             </div>
-                        </ofbiz:iterator>
+                        </ofbiz:iterator>                       
                     </td>
                     <td align="center" valign="top">
                         <div class="tabletext" nowrap><%=UtilFormatOut.formatQuantity(orderItem.getDouble("quantity"))%>&nbsp;</div>
@@ -170,11 +193,35 @@
                 <ofbiz:iterator name="orderHeaderAdjustment" property="orderHeaderAdjustments">
                     <%GenericValue adjustmentType = orderHeaderAdjustment.getRelatedOneCache("OrderAdjustmentType");%>
                     <tr>
-                        <td align="right" colspan="4"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderHeaderAdjustment.getString("comments"), ": ", "")%></div></td>
+                        <td align="right" colspan="4"><div class="tabletext"><b><%=adjustmentType.getString("description")%></b> <%=UtilFormatOut.ifNotEmpty(orderHeaderAdjustment.getString("comments"), ": ", "")%></div></td>                       
                         <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(OrderReadHelper.calcOrderAdjustment(orderHeaderAdjustment, orderSubTotal))%></div></td>
-                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>                        
                     </tr>
                 </ofbiz:iterator>
+                
+                <%-- Add new Adjustment --%>
+                <%if (security.hasEntityPermission("ORDERMGR", "_UPDATE", session)) {%>
+                <% List adjustmentTypes = delegator.findAll("OrderAdjustmentType", UtilMisc.toList("description")); %>
+                <% pageContext.setAttribute("adjustmentTypes", adjustmentTypes); %>
+                <tr>                  
+                  <form name="addAdjustmentForm" method="post" action="<ofbiz:url>/addOrderAdjustment?<%=qString%></ofbiz:url>">
+                    <input type="hidden" name="orderId" value="<%=orderId%>">
+                    <td align="right" colspan="4">
+                      <select name="orderAdjustmentTypeId" style="font-size: x-small;">
+                        <ofbiz:iterator name="type" property="adjustmentTypes">
+                          <option value="<%=UtilFormatOut.checkNull(type.getString("orderAdjustmentTypeId"))%>"><%=UtilFormatOut.checkNull(type.getString("description"))%></option>
+                        </ofbiz:iterator>
+                      </select>
+                    </td>
+                    <td align="right">
+                      <input type="text" name="amount" size="6" value="0.00" style="font-size: x-small;">
+                    </td>
+                    <td align="right">
+                      <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">[Add]</a>
+                    </td>
+                  </form>
+                </tr>
+                <%}%>
 
                 <tr><td colspan=1></td><td colspan="7"><hr class='sepbar'></td></tr>
                 <tr>
@@ -197,7 +244,7 @@
                 <%double taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);%>
                 <%taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);%>
                 <tr>
-                    <td align="right" colspan="5"><div class="tabletext"><b>Total Sales Tax</b></div></td>
+                    <td align="right" colspan="5"><div class="tabletext"><b>Total Sales Tax</b></div></td>                    
                     <td align="right" nowrap><div class="tabletext"><%=UtilFormatOut.formatPrice(taxAmount)%></div></td>
                 </tr>
                 <tr><td colspan=1></td><td colspan="7"><hr class='sepbar'></td></tr>

@@ -122,6 +122,18 @@
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="orderview"/>
     </request-map>
+    <request-map uri="changeOrderItemStatus">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="changeOrderItemStatus"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>        
+    <request-map uri="addOrderAdjustment">
+    	<security https="true" auth="true"/>
+    	<event type="service" invoke="createOrderAdjustment"/>
+    	<response name="success" type="view" value="orderview"/>
+    	<response name="error" type="view" value="orderview"/>
+    </request-map>
     <request-map uri="updateTrackingNumber">
         <security https="true" auth="true"/>
         <event type="service" invoke="updateTrackingNumber"/>

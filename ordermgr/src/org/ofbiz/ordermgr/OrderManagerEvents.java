@@ -219,7 +219,9 @@ public class OrderManagerEvents {
         double paymentTally = 0.00;
         while (pmti.hasNext()) {
             GenericValue paymentMethodType = (GenericValue) pmti.next();
-            String amountStr = request.getParameter(paymentMethodType.getString("paymentMethodTypeId"));
+            String paymentMethodTypeId = paymentMethodType.getString("paymentMethodTypeId");
+            String amountStr = request.getParameter(paymentMethodTypeId + "_amount");
+            String paymentReference = request.getParameter(paymentMethodTypeId + "_reference");
             if (!UtilValidate.isEmpty(amountStr)) {
                 double paymentTypeAmount = 0.00;
                 try {                                                                                
@@ -238,6 +240,7 @@ public class OrderManagerEvents {
                     paymentPreference.set("paymentMethodTypeId", paymentMethodType.getString("paymentMethodTypeId"));
                     paymentPreference.set("maxAmount", new Double(paymentTypeAmount));                    
                     paymentPreference.set("statusId", "PAYMENT_RECEIVED");
+                    paymentPreference.set("authRefNum", paymentReference);
                     paymentPreference.set("authDate", now);
                     paymentPreference.set("orderId", orderId);
                     toBeStored.add(paymentPreference);

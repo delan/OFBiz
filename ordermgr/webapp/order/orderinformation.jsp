@@ -209,6 +209,7 @@
                       <% if (!paymentMethodType.getString("paymentMethodTypeId").equals("EXT_OFFLINE")) { %>
                       <td align="right">
                         <div class="tabletext"><%=UtilFormatOut.formatPrice(orderPaymentPreference.getDouble("maxAmount"))%><%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatDate(orderPaymentPreference.getTimestamp("authDate")), "&nbsp;-&nbsp;", "")%></div>
+                        <div class="tabletext">&nbsp;<%if (orderPaymentPreference.getString("authRefNum") != null) { %>(Ref: <%=UtilFormatOut.checkNull(orderPaymentPreference.getString("authRefNum"))%>)<%}%></div>
                       </td>
                       <% } else { %>
                       <td align="right">
@@ -565,7 +566,7 @@
                        </td>
                     </tr>
                 <%}%>
-                <%--
+
                 <%if (security.hasEntityPermission("ORDERMGR", "_UPDATE", session)) {%>
                     <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <tr>
@@ -574,7 +575,7 @@
                       </td>
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
-                        <form name="trackingNumberUpdate" method="get" action="<ofbiz:url>/updateTrackingNumber</ofbiz:url>">
+                        <form name="trackingNumberUpdate" method="post" action="<ofbiz:url>/updateTrackingNumber?<%=qString%></ofbiz:url>">
                            <input type="hidden" name="orderId" value="<%=orderHeader.getString("orderId")%>">
                            <input type="text" style="font-size: x-small;" name="trackingNumber" value="<%=UtilFormatOut.checkNull(trackingNumber)%>">
                            <a href="javascript:document.trackingNumberUpdate.submit();" class="buttontext">[Save]</a>
@@ -582,8 +583,8 @@
                       </td>
                     </tr>
                 <%} else if (UtilValidate.isNotEmpty(trackingNumber)) {%>
-                --%>
-                <% if (UtilValidate.isNotEmpty(trackingNumber)) {%>
+                
+                <%--<% if (UtilValidate.isNotEmpty(trackingNumber)) {%>--%>
                     <tr><td colspan="7"><hr class="sepbar"></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">

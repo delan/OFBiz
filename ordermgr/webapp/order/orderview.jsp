@@ -63,10 +63,12 @@
     if (orderHeader != null) {
         pageContext.setAttribute("orderHeader", orderHeader);
         OrderReadHelper orderReadHelper = new OrderReadHelper(orderHeader);
-        List orderItems = orderReadHelper.getOrderItems();
+        List orderItems = orderReadHelper.getValidOrderItems();
         List orderAdjustments = orderReadHelper.getAdjustments();
         List orderHeaderAdjustments = orderReadHelper.getOrderHeaderAdjustments();
         double orderSubTotal = orderReadHelper.getOrderItemsSubTotal();
+        Debug.logError("Entity GT: " + orderHeader.getDouble("grandTotal"));
+        Debug.logError("ORH GT   : " + orderReadHelper.getOrderGrandTotal());
 
         List orderItemList = orderReadHelper.getOrderItems();
 
@@ -114,6 +116,15 @@
 
         ContactMechWorker.getOrderContactMechValueMaps(pageContext, orderId, "orderContactMechValueMaps");
 %>
+
+<% 
+	String qString = "";
+    if (orderId != null) qString = qString + "order_id=" + orderId;
+    if (workEffortId != null) qString = qString + "&workEffortId=" + workEffortId;
+    if (assignPartyId != null) qString = qString + "&partyId=" + assignPartyId;
+    if (assignRoleTypeId != null) qString = qString + "&roleTypeId=" + assignRoleTypeId;
+    if (fromDate != null) qString = qString + "&fromDate=" + fromDate;
+%>        
 
 <%@ include file="/order/orderinformation.jsp" %>
 <br>
