@@ -24,7 +24,7 @@
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
  * @author     David E. Jones (jonesde@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
 -->
 
@@ -91,8 +91,28 @@
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-field field-name="facilityId" map-name="parameters" to-map-name="newEntity"/>
         
-        <sequenced-id-to-env sequence-name="FacilityLocation" env-name="locationSeqId"/>
-        <to-string field-name="locationSeqId"/>
+        <string-to-field string="${parameters.areaId}${parameters.aisleId}${parameters.sectionId}${parameters.levelId}${parameters.positionId}" field-name="locationSeqId"/>
+        <!-- check to see if it exists already, if so try a simple suffix, then give up and use a sequenced id -->
+        <if-not-empty field-name="locationSeqId">
+        	<env-to-field env-name="locationSeqId" map-name="checkLocationSeqIdMap"/>
+        	<field-to-field field-name="facilityId" map-name="parameters" to-map-name="checkLocationSeqIdMap"/>
+        	<find-by-primary-key entity-name="FacilityLocation" map-name="checkLocationSeqIdMap" value-name="checkLocationSeqIdValue"/>
+        	<if-not-empty field-name="checkLocationSeqIdValue">
+        		<string-to-field string="${locationSeqId}_2" field-name="locationSeqId"/>
+				<env-to-field env-name="locationSeqId" map-name="checkLocationSeqIdMap"/>
+				<field-to-field field-name="facilityId" map-name="parameters" to-map-name="checkLocationSeqIdMap"/>
+				<find-by-primary-key entity-name="FacilityLocation" map-name="checkLocationSeqIdMap" value-name="checkLocationSeqIdValue"/>
+				<if-not-empty field-name="checkLocationSeqIdValue">
+					<string-to-field string="" field-name="locationSeqId"/>
+				</if-not-empty>
+        	</if-not-empty>
+        </if-not-empty>
+
+        <if-empty field-name="locationSeqId">
+			<sequenced-id-to-env sequence-name="FacilityLocation" env-name="locationSeqId"/>
+			<to-string field-name="locationSeqId"/>
+		</if-empty>
+        
         <env-to-field env-name="locationSeqId" map-name="newEntity"/>
         <field-to-result field-name="locationSeqId" result-name="locationSeqId"/>
         
