@@ -187,7 +187,8 @@
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">
         <description>Create a custRequest record</description>
         <implements service="interfaceCustRequest"/>
-        <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>
+        <attribute name="requestPartyId" type="String" mode="IN" optional="true"/>
+        <attribute name="custRequestId" type="String" mode="OUT" optional="false"/>        
     </service>
     <service name="updateCustRequest" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="updateCustRequest" auth="true">

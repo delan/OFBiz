@@ -67,6 +67,7 @@
                 </TR>
                 <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
                 <ofbiz:iterator name="custRequestAndRole" property="custRequestAndRoles">
+                  <% GenericValue roleType = delegator.findByPrimaryKeyCache("RoleType", UtilMisc.toMap("roleTypeId", custRequestAndRole.getString("roleTypeId"))); %>
                   <TR>
                     <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("priority"))%></DIV></TD>
                     <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestDate"))%></DIV></TD>
@@ -78,7 +79,7 @@
                     <TD><DIV class='tabletext'>&nbsp;</DIV></TD>
                     <% } %>
                     <%-- <TD><DIV class='tabletext'><ofbiz:entityfield attribute="custRequestAndRole" field="partyId"/></DIV></TD> --%>
-                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(custRequestAndRole.getString("roleTypeId"))%></DIV></TD>
+                    <TD><DIV class='tabletext'><%=UtilFormatOut.checkNull(roleType.getString("description"))%></DIV></TD>
                     <TD><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%></ofbiz:url>'>
                         <ofbiz:entityfield attribute="custRequestAndRole" field="custRequestName"/></a></DIV></TD>
                     <TD align=right><A class='buttontext' href='<ofbiz:url>/request?custRequestId=<%=UtilFormatOut.checkNull(custRequestAndRole.getString("custRequestId"))%></ofbiz:url>'>

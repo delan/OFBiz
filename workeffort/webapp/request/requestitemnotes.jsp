@@ -118,7 +118,7 @@
               <input type="hidden" name="custRequestItemSeqId" value="<%=custRequestItemSeqId%>">
               <table width="90%" border="0" cellpadding="2" cellspacing="0">
                 <tr>
-                  <td width="26%" align='right'>New Note</td>
+                  <td width="26%" align='right'><div class="tableheadtext">New Note</div></td>
                   <td width="74%">
                     <textarea name="note" rows="5" cols="70"></textarea>
                   </td>

@@ -108,12 +108,13 @@
                         <td colspan='12'><hr class="sepbar"></td>
                       </tr>
                       <ofbiz:iterator name="item" property="custRequestItems">
+                          <% GenericValue statusItem = item.getRelatedOne("StatusItem"); %>
                           <tr>
                             <td align="right"><div class="tabletext"><%=item.getString("custRequestItemSeqId")%></div></td>
                             <td>&nbsp;</td>
                             <td><a href="<ofbiz:url>/requestitem?custRequestId=<%=custRequestId%>&custRequestItemSeqId=<%=item.getString("custRequestItemSeqId")%></ofbiz:url>" class="buttontext"><%=UtilFormatOut.checkNull(item.getString("description"))%></a></td>
                             <td><div class="tabletext"><%=UtilFormatOut.checkNull(item.getString("priority"))%></div></td>
-                            <td><div class="tabletext"><%=UtilFormatOut.checkNull(item.getString("statusId"))%></div></td>
+                            <td><div class="tabletext"><%=UtilFormatOut.checkNull(statusItem.getString("description"))%></div></td>
                             <td><div class="tabletext"><%=UtilFormatOut.checkNull(item.getString("productId"))%></div></td>
                             <td align='right'><div class="tabletext"><%=UtilFormatOut.formatQuantity(item.getDouble("quantity"))%></div></td>
                             <td>&nbsp;&nbsp;</td>

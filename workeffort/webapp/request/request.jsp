@@ -47,6 +47,32 @@
    	// Get the request types
     Collection custRequestTypes = delegator.findAllCache("CustRequestType", UtilMisc.toList("description"));
     pageContext.setAttribute("custRequestTypes", custRequestTypes);   
+    
+    // get the current status item
+    GenericValue currentStatusItem = null;
+    if (custRequest != null) {
+    	currentStatusItem = custRequest.getRelatedOne("StatusItem");
+    	if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);
+    }
+    
+	// status items
+	if (custRequest != null && UtilValidate.isNotEmpty(custRequest.getString("statusId"))) {
+		List statusChange = delegator.findByAnd("StatusValidChange", UtilMisc.toMap("statusId", custRequest.getString("statusId")));	
+        if (statusChange != null) {
+        	List statusItems = new ArrayList();
+        	Iterator statusChangeIter = statusChange.iterator();
+        	while (statusChangeIter.hasNext()) {
+        		GenericValue curStatusChange = (GenericValue) statusChangeIter.next();
+        		GenericValue curStatusItem = delegator.findByPrimaryKey("StatusItem", UtilMisc.toMap("statusId", curStatusChange.get("statusIdTo")));
+        		if (curStatusItem != null) statusItems.add(curStatusItem);
+        	}
+			List statusItem = EntityUtil.orderBy(statusItems, UtilMisc.toList("sequenceId"));
+        	pageContext.setAttribute("statusItems", statusItems);
+        }
+    } else {
+    	List statusItems = delegator.findByAnd("StatusItem", UtilMisc.toMap("statusTypeId", "CUSTREQ_STTS"), UtilMisc.toList("sequenceId"));
+        if (statusItems != null) pageContext.setAttribute("statusItems", statusItems);
+    }	       	   	    
 %>
 
 <BR>
@@ -87,21 +113,21 @@
                     </ofbiz:if>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
-                        <td align="right">Request Date</td>
+                        <td align="right"><div class="tableheadtext">Request Date</div></td>
                         <td>
                           <input type="text" style="font-size: small;" size="23" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestDate" fullattrs="true"/>>
                           <a href="javascript:call_cal(document.custRequestForm.custRequestDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                         </td>
                       </tr>
                       <tr>
-                        <td align="right">Response Required Date</td>
+                        <td align="right"><div class="tableheadtext">Response Required Date</div></td>
                         <td>
                           <input type="text" style="font-size: small;" size="23" <ofbiz:inputvalue entityAttr="custRequest" field="responseRequiredDate" fullattrs="true"/>>
                           <a href="javascript:call_cal(document.custRequestForm.responseRequiredDate, null);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a>
                         </td>
                       </tr>
                       <tr>
-                        <td align="right">RequestType</td>
+                        <td align="right"><div class="tableheadtext">RequestType</div></td>
                         <td>
                           <select name="custRequestTypeId" style="font-size: small;">
                             <ofbiz:iterator name="custRequestType" property="custRequestTypes">
@@ -115,17 +141,47 @@
                         </td>
                       </tr>
                       <tr>
-                        <td align="right">Name</td>
+                        <td align="right"><div class="tableheadtext">Status</div></td>
+                        <td>
+					      <select name="statusId" style='font-size: small;'>
+					        <ofbiz:if name="custRequest">					        
+					        <option value='<%=custRequest.getString("statusId")%>'><%if (currentStatusItem != null) {%><%=currentStatusItem.getString("description")%><%} else {%><%=UtilFormatOut.ifNotEmpty(custRequest.getString("statusId"), "[", "]")%><%}%></option>
+					        <option value='<%=custRequest.getString("statusId")%>'>----</option>
+					        </ofbiz:if>
+					        <ofbiz:iterator name="statusItem" property="statusItems">
+					          <option value='<ofbiz:inputvalue entityAttr="statusItem" field="statusId"/>'><ofbiz:inputvalue entityAttr="statusItem" field="description"/></option>
+					        </ofbiz:iterator>
+					      </select>                                                                          
+                        </td>
+                      </tr>  
+                      <tr>
+                        <td align="right"><div class="tableheadtext">Priority</div></td>
+                        <td>
+                          <select name="priority" style="font-size: small;">
+                            <option>9</option>
+                            <option>8</option>
+                            <option>7</option>
+                            <option>6</option>
+                            <option>5</option>
+                            <option>4</option>
+                            <option>3</option>
+                            <option>2</option>
+                            <option>1</option>
+                          </select>
+                        </td>
+                      </tr>                                          
+                      <tr>
+                        <td align="right"><div class="tableheadtext">Name</div<</td>
                         <td><input type="text" style="font-size: small;" size="50" <ofbiz:inputvalue entityAttr="custRequest" field="custRequestName" fullattrs="true"/>></td>
                       </tr>
                       <tr>
-                        <td align="right">Description</td>
+                        <td align="right"><div class="tableheadtext">Description</div></td>
                         <td><input type="text" style="font-size: small;" size="50"  <ofbiz:inputvalue entityAttr="custRequest" field="description" fullattrs="true"/>></td>
                       </tr>
 
                       <ofbiz:unless name="custRequest">
                       <tr>
-                        <td align="right">Requesting Party</td>
+                        <td align="right"><div class="tableheadtext">Requesting Party</div></td>
                         <td><input type="text" name="requestPartyId" style="font-size: small;" size="50"></td>
                       </tr>
                       </ofbiz:unless>

@@ -101,7 +101,7 @@
                               <td><div class="tabletext"><%entityField.run("partyGroup", "groupName");%></div></td>
                             </ofbiz:if>
                             <td><div class="tabletext"><%=roleType.getString("description")%></div></td>
-                            <td align="right"><div class="tabletext"><a href="#" class="buttontext">[Remove]</a></td>
+                            <td align="right"><div class="tabletext"><a href="<ofbiz:url>/removerequestrole?custRequestId=<%=custRequestId%>&partyId=<%=role.getString("partyId")%>&roleTypeId=<%=role.getString("roleTypeId")%></ofbiz:url>" class="buttontext">[Remove]</a></td>
                           </tr>
                         </ofbiz:iterator>
                       </table>
@@ -113,7 +113,7 @@
                   <TD><HR class="sepbar"></TD>
                 </TR>
                 <TR>
-                  <TD><div class="head2">Add New:</div</TD>
+                  <TD><div class="head3">Add New:</div</TD>
                 </TR>
                 <TR>
                   <TD>
@@ -122,9 +122,9 @@
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
                         <tr>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
-                          <td align="right">Party ID</td>
+                          <td align="right"><div class="tableheadtext">Party ID</div></td>
                           <td><input type="text" name="partyId" style="font-size: small;" size="30"></td>
-                          <td align="right">Role Type ID</td>
+                          <td align="right"><div class="tableheadtext">Role Type ID</div></td>
                           <td>
                             <select name="roleTypeId" style="font-size: small;">
                               <option value="REQ_TAKER">Request Taker</option>

@@ -1466,6 +1466,7 @@
       <field name="statusId" type="id"></field>
       <field name="priority" type="numeric"></field>
       <field name="requiredByDate" type="date-time"></field>
+      <field name="productId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="maximumAmount" type="currency-amount"></field>
       <field name="description" type="description"></field>
@@ -1477,6 +1478,9 @@
       </relation>
       <relation type="one" fk-name="CUST_REQITM_RES" rel-entity-name="CustRequestResolution">
         <key-map field-name="custRequestResolutionId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQITM_PRD" rel-entity-name="Product">
+      	<key-map field-name="productId"/>
       </relation>
       <relation type="many" rel-entity-name="QuoteItem">
         <key-map field-name="custRequestId"/>
@@ -1824,7 +1828,7 @@
       <prim-key field="requirementId"/>
       <relation type="one-nofk" rel-entity-name="CustRequest">
         <key-map field-name="custRequestId"/>
-      </relation>
+      </relation> 
       <relation type="one" fk-name="REQ_CSREQ_CRITM" rel-entity-name="CustRequestItem">
         <key-map field-name="custRequestId"/>
         <key-map field-name="custRequestItemSeqId"/>
@@ -1833,6 +1837,33 @@
         <key-map field-name="requirementId"/>
       </relation>
     </entity>
+    <view-entity entity-name="RequirementCustRequestView"
+            package-name="org.ofbiz.commonapp.order.request"
+            title="Requirement Customer Request View Entity">
+      <member-entity entity-alias="RR" entity-name="RequirementCustRequest"/>
+      <member-entity entity-alias="RQ" entity-name="Requirement"/>
+      <member-entity entity-alias="RI" entity-name="CustRequestItem"/>
+      <alias entity-alias="RR" name="custRequestId"/>
+      <alias entity-alias="RR" name="custRequestItemSeqId"/>
+      <alias entity-alias="RR" name="requirementId"/>
+      <alias entity-alias="RQ" name="requirementTypeId"/>
+      <alias entity-alias="RQ" name="description"/>
+      <alias entity-alias="RQ" name="productId"/>
+      <alias entity-alias="RQ" name="estimatedBudget"/>
+      <alias entity-alias="RQ" name="quantity"/>
+      <alias entity-alias="RQ" name="requirementStartDate"/>
+      <alias entity-alias="RQ" name="requiredByDate"/>
+      <alias entity-alias="RI" name="statusId"/>
+      <alias entity-alias="RI" name="priority"/>
+      <alias entity-alias="RI" name="maximumAmount"/>
+      <view-link entity-alias="RR" rel-entity-alias="RQ">
+        <key-map field-name="requirementId"/>
+      </view-link>
+      <view-link entity-alias="RR" rel-entity-alias="RI">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
+      </view-link>
+    </view-entity>    
     <entity entity-name="RequirementRole"
             package-name="org.ofbiz.commonapp.order.request"
             title="Requirement Role Entity">
