@@ -18,6 +18,7 @@
   List featureOrder = new LinkedList((Collection) pageContext.getAttribute("featureSet"));
   Map variantTree = (Map) pageContext.getAttribute("variantTree");
   Map imageMap = (Map) pageContext.getAttribute("variantSample");
+  Set imageSet = imageMap.keySet();
   Debug.logInfo("Setup variables: " + featureOrder + " / " + variantTree + " / " + imageMap);
 %>
 
@@ -130,6 +131,7 @@ function getList(name, value) {
   if (currentOrderIndex < (OPT.length - 1)) {
     if (IMG[value] != null) {
       document.images['mainImage'].src = IMG[value];
+      document.addform.<%=topLevelName%>.selectedIndex = (value*1)+1;
     }
     eval("list" + OPT[currentOrderIndex+1] + value + "()");
     document.addform.add_product_id.value = 'NULL';
@@ -192,7 +194,9 @@ function addItem() {
 
         <form method="POST" action="<ofbiz:url>/additem<%=UtilFormatOut.ifNotEmpty((String)request.getAttribute(SiteDefs.CURRENT_VIEW), "/", "")%></ofbiz:url>" name="addform" style='margin: 0;'>
 
+          <%-- ================= --%>
           <%-- Variant Selection --%>
+          <%-- ================= --%>
           <ofbiz:if name="variantTree" size="0">
             <%Debug.logInfo("FeatureOrder: " + featureOrder.size() + " / " + featureOrder);%>
             <ofbiz:iterator name="currentType" property="featureSet" type="java.lang.String">
@@ -210,7 +214,9 @@ function addItem() {
             <input type='hidden' name="product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
             <input type='hidden' name="add_product_id" value='<ofbiz:entityfield attribute="productValue" field="productId"/>'>
           </ofbiz:unless>
+          <%-- ======================== --%>
           <%-- End of Variant Selection --%>
+          <%-- ======================== --%>
 
           <p>&nbsp;</p>
           <a href="javascript:addItem()" class="buttontext"><nobr>[Add to Cart]</nobr></a>&nbsp;
@@ -219,6 +225,31 @@ function addItem() {
           <%=UtilFormatOut.ifNotEmpty(request.getParameter("category_id"), "<input type='hidden' name='category_id' value='", "'>")%>
         </form>
         <script language="JavaScript">eval("list" + "<%=featureOrder.get(0)%>" + "()");</script>
+        <br>
+        
+        <%-- =============== --%>
+        <%-- Optional Images --%>
+        <%-- =============== --%>
+        <table cellspacing="0" cellpadding="0">
+          <tr>
+            <%int ii=0; Iterator imIt=imageSet.iterator();%>
+            <%while(imIt.hasNext()){%>
+            <%String featureDescription = (String) imIt.next();%>
+            <%String imageUrl = ((GenericValue)imageMap.get(featureDescription)).getString("smallImageUrl");%>
+            <%if (imageUrl != null && imageUrl.length() > 0){%>
+              <td>
+                <table cellspacing="0" cellpadding="0">
+                  <tr><td><a href="#"><img src="<%=imageUrl%>" border="0" width="60" height="60" onclick="javascript:getList('<%=featureOrder.get(0)%>','<%=ii%>');"></a></td></tr>
+                  <tr><td align="center" valign="top"><span class="tabletext"><%=featureDescription%></span></td></tr>
+                </table>
+              </td>
+            <%}ii++;}%>
+          </tr>
+        </table>
+        <%-- ====================== --%>
+        <%-- End of optional images --%>
+        <%-- ====================== --%>
+
       </td>
     </tr>
     <tr><td colspan="2"><hr class='sepbar'></td></tr>
