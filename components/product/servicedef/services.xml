@@ -171,7 +171,6 @@
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <auto-attributes include="nonpk" mode="IN" optional="true"/>
         <override name="fromDate" optional="true"/>
-        <override name="prodCatalogCategoryTypeId" optional="false"/>
     </service>
     <service name="updateProductCategoryToProdCatalog" default-entity-name="ProdCatalogCategory" engine="simple"
                 location="org/ofbiz/product/catalog/CatalogServices.xml" invoke="updateProductCategoryToProdCatalog" auth="true">

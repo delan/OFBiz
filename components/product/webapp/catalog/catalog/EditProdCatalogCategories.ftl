@@ -22,10 +22,9 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  -->
-
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#if hasPermission>
     <#if prodCatalogId?has_content>
@@ -95,7 +94,7 @@
                     </select>
                     <INPUT type=submit value="${uiLabelMap.CommonUpdate}">
                     <td align="center">
-                        <a href="<@ofbizUrl>/removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogCategory.prodCatalogId}&productCategoryId=${prodCatalogCategory.productCategoryId}&fromDate=${prodCatalogCategory.fromDate}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
+                        <a href="<@ofbizUrl>/removeProductCategoryFromProdCatalog?prodCatalogId=${prodCatalogCategory.prodCatalogId}&productCategoryId=${prodCatalogCategory.productCategoryId}&fromDate=${prodCatalogCategory.fromDate}&prodCatalogCategoryTypeId=${prodCatalogCategory.prodCatalogCategoryTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonDelete}]</a>
                     </td>
                     <td align="center">
                         <a href="<@ofbizUrl>/EditCategory?CATALOG_TOP_CATEGORY=${prodCatalogCategory.productCategoryId}&productCategoryId=${prodCatalogCategory.productCategoryId}</@ofbizUrl>" class="buttontext"> [${uiLabelMap.ProductMakeTop}]</a>
