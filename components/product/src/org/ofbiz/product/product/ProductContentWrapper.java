@@ -1,5 +1,5 @@
 /*
- * $Id: ProductContentWrapper.java,v 1.7 2004/01/08 07:39:42 jonesde Exp $
+ * $Id: ProductContentWrapper.java,v 1.8 2004/01/14 23:40:11 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.entity.util.EntityUtil;
  * Product Content Worker: gets product content to display
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      3.0
  */
 public class ProductContentWrapper {
@@ -132,6 +132,7 @@ public class ProductContentWrapper {
                 String candidateValue = product.getString(candidateFieldName);
                 if (UtilValidate.isNotEmpty(candidateValue)) {
                     outWriter.write(candidateValue);
+                    return;
                 }
             }
         }
