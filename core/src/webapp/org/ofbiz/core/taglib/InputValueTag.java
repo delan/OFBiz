@@ -90,7 +90,9 @@ public class InputValueTag extends TagSupport {
         String paramValue = null;
         boolean tryEntity = true;
 
-        Boolean tempBool = (Boolean) pageContext.getAttribute(tryEntityAttr);
+        Boolean tempBool = null;
+        if (tryEntityAttr != null) 
+            tempBool = (Boolean) pageContext.getAttribute(tryEntityAttr);
         if (tempBool != null)
             tryEntity = tempBool.booleanValue();
         if (tryEntity) {
@@ -113,12 +115,15 @@ public class InputValueTag extends TagSupport {
         if (inputValue == null) {
             inputValue = pageContext.getRequest().getParameter(param);
         }
+        if (inputValue == null || inputValue.length() == 0)
+            inputValue = defaultStr;
+        
+        //reset optionals
+        defaultStr = "";
+        tryEntityAttr = null;
 
         try {
-            if (inputValue != null && inputValue.length() > 0)
-                pageContext.getOut().print(inputValue);
-            else
-                pageContext.getOut().print(defaultStr);
+            pageContext.getOut().print(inputValue);
         } catch (IOException e) {
             throw new JspTagException(e.getMessage());
         }
@@ -126,6 +131,4 @@ public class InputValueTag extends TagSupport {
         return (SKIP_BODY);
     }
 }
-
-
 
