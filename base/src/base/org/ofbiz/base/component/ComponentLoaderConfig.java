@@ -44,7 +44,7 @@ import org.xml.sax.SAXException;
  * ComponentLoaderConfig - Component Loader configuration
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class ComponentLoaderConfig {
@@ -57,42 +57,51 @@ public class ComponentLoaderConfig {
     
     protected static List componentsToLoad = null;
     
-    public static List getComponentsToLoad(String configFile) throws ComponentException {
+    public static List getRootComponents(String configFile) throws ComponentException {
         if (componentsToLoad == null) {
             synchronized (ComponentLoaderConfig.class) {
                 if (componentsToLoad ==  null) {
-                    ComponentLoaderConfig.componentsToLoad = new LinkedList();           
                     if (configFile == null) {
                         configFile = COMPONENT_LOAD_XML_FILENAME;
                     }
-        
-                    URL xmlUrl = UtilURL.fromResource(configFile);        
-                    Document document = null;
-                    try {
-                        document = UtilXml.readXmlDocument(xmlUrl, true);
-                    } catch (SAXException e) {
-                        throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
-                    } catch (ParserConfigurationException e) {
-                        throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
-                    } catch (IOException e) {
-                        throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
-                    }
-        
-                    Element root = document.getDocumentElement();
-                    List toLoad = UtilXml.childElementList(root);
-                    if (toLoad != null && toLoad.size() > 0) {
-                        Iterator i = toLoad.iterator();
-                        while (i.hasNext()) {
-                            Element element = (Element) i.next();
-                            componentsToLoad.add(new ComponentDef(element));                
-                        }
-                    }        
+                    URL xmlUrl = UtilURL.fromResource(configFile);
+                    ComponentLoaderConfig.componentsToLoad = ComponentLoaderConfig.getComponentsFromConfig(xmlUrl);
                 }                
             }
         }
         return componentsToLoad;
     }
-        
+
+    public static List getComponentsFromConfig(URL configUrl) throws ComponentException {
+        if (configUrl == null) {
+            throw new ComponentException("Component config file does not exist: " + configUrl);
+        }
+
+        List componentsFromConfig = null;
+        Document document = null;
+        try {
+            document = UtilXml.readXmlDocument(configUrl, true);
+        } catch (SAXException e) {
+            throw new ComponentException("Error reading the component config file: " + configUrl, e);
+        } catch (ParserConfigurationException e) {
+            throw new ComponentException("Error reading the component config file: " + configUrl, e);
+        } catch (IOException e) {
+            throw new ComponentException("Error reading the component config file: " + configUrl, e);
+        }
+
+        Element root = document.getDocumentElement();
+        List toLoad = UtilXml.childElementList(root);
+        if (toLoad != null && toLoad.size() > 0) {
+            componentsFromConfig = new LinkedList();
+            Iterator i = toLoad.iterator();
+            while (i.hasNext()) {
+                Element element = (Element) i.next();
+                componentsFromConfig.add(new ComponentDef(element));
+            }
+        }
+        return componentsFromConfig;
+    }
+
     public static class ComponentDef {
         public String name;
         public String location;

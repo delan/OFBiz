@@ -50,7 +50,7 @@ import org.ofbiz.base.util.UtilValidate;
  * Follows examples from the ComponentContainers and Start classes
  *
  * @author     <a href="mailto:bgpalmer@computer.org">Brett G. Palmer</a> 
-  *@version    $Rev:$
+  *@version    $Rev$
  * @since      3.0
  */
 public class JXComponentLoader {
@@ -203,7 +203,7 @@ public class JXComponentLoader {
 			 // get the components to load
 			 List components = null;
 			 try {            
-				 components = ComponentLoaderConfig.getComponentsToLoad(null);
+				 components = ComponentLoaderConfig.getRootComponents(null);
 			 } catch (ComponentException e) {
 				 throw new ContainerException(e);            
 			 }
