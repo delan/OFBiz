@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Olivier Heintz (olivier.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
 -->
 
@@ -32,7 +32,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxtop">
         <tr>
           <td align=left width="90%" >
-            <div class="boxhead">&nbsp;${requestAttributes.uiLabelMap.AccountingMainPage}</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.AccountingMainPage}</div>
           </td>        
         </tr>
       </table>
@@ -43,7 +43,7 @@
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="boxbottom">
         <tr>
           <td>
-            <div class="tabletext">${requestAttributes.uiLabelMap.AccountingMainPageNote}</div>
+            <div class="tabletext">${uiLabelMap.AccountingMainPageNote}</div>
           </td>
         </tr>
       </table>

@@ -28,7 +28,7 @@
     <screen name="CommonFixedAssetDecorator">
         <section>
             <widgets>
-                <decorator-screen name="main" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for ACCOUNTING, _VIEW permission -->

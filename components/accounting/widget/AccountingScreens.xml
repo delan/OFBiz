@@ -67,7 +67,7 @@
                 <entity-one entity-name="GlAccount" value-name="glAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="main" location="component://accounting/widget/CommonScreens.xml">/
+                <decorator-screen name="main-decorator" location="component://accounting/widget/CommonScreens.xml">/
                     <decorator-section name="body">
                         <container style="column-left-wide">
                             <include-tree name="GlAccountTree" location="component://accounting/widget/AccountingTrees.xml" /> 
@@ -91,7 +91,7 @@
             </actions>
             <widgets>
                 <!-- main defines the regions of the HTML page -->
-                <decorator-screen name="main" location="component://accounting/widget/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://accounting/widget/CommonScreens.xml">
                 <!-- body is the primary display for this page and is called recursively -->
                     <decorator-section name="body">
                         <section>
@@ -146,7 +146,7 @@
             </actions>
 
             <widgets>
-                <decorator-screen name="main" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <include-form name="EditGlAccount" location="component://accounting/webapp/accounting/chartofaccounts/GlAccountForms.xml"/>
                         
@@ -275,7 +275,7 @@
                 <entity-one entity-name="GlAccount" value-name="glAccount"/>
             </actions>
             <widgets>
-                <decorator-screen name="main" location="component://product/widget/catalog/CommonScreens.xml">
+                <decorator-screen name="main-decorator" location="component://accounting/widget/CommonScreens.xml">
                     <decorator-section name="body">
                         <section>
                             <!-- do check for CATALOG, _VIEW permission -->
