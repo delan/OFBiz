@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.24 2004/02/06 06:57:33 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.25 2004/02/09 22:48:43 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -719,6 +719,7 @@ public class EntitySyncServices {
                     eli = delegator.findListIteratorByCondition("EntitySyncRemove", new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, keepAfterStamp), null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD));
                 }
             }
+            eli.close();
             
             return ServiceUtil.returnSuccess();
         } catch (GenericEntityException e) {
