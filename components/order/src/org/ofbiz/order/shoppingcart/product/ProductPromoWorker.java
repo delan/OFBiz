@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.46 2004/06/01 11:27:09 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.47 2004/06/27 03:27:42 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.46 $
+ * @version    $Revision: 1.47 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -75,6 +75,10 @@ public class ProductPromoWorker {
             cart = ShoppingCartEvents.getCartObject(req);
         } catch (ClassCastException cce) {
             Debug.logError("Not a HttpServletRequest, no shopping cart found.", module);
+            return null;
+        } catch (IllegalArgumentException e) {
+            Debug.logError(e, module);
+            return null;
         }
 
         boolean condResult = true;
