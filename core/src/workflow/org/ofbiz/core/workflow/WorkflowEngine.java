@@ -5,7 +5,9 @@
 package org.ofbiz.core.workflow;
 
 import java.util.*;
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.impl.*;
 
 /**
@@ -86,8 +88,7 @@ public class WorkflowEngine implements GenericEngine {
         WfRequester req = null;
         try {
             req = WfFactory.getWfRequester();        
-        }
-        catch ( WfException e ) {
+        } catch (WfException e) {
             throw new GenericServiceException(e.getMessage(),e);
         }
         
@@ -95,8 +96,7 @@ public class WorkflowEngine implements GenericEngine {
         WfProcessMgr mgr = null;
         try {
             mgr = WfFactory.getWfProcessMgr(dispatcher.getDelegator(),modelService.location,modelService.invoke);
-        }
-        catch ( WfException e ) {
+        } catch (WfException e) {
             throw new GenericServiceException(e.getMessage(),e);
         }
         
@@ -107,30 +107,43 @@ public class WorkflowEngine implements GenericEngine {
         }        
         catch ( NotEnabled ne ) {
             throw new GenericServiceException(ne.getMessage(),ne);
-        }
-        catch ( InvalidRequester ir ) {
+        } catch ( InvalidRequester ir ) {
             throw new GenericServiceException(ir.getMessage(),ir);
-        }
-        catch ( RequesterRequired rr ) {
+        } catch ( RequesterRequired rr ) {
             throw new GenericServiceException(rr.getMessage(),rr);
-        }
-        catch ( WfException wfe ) {
+        } catch ( WfException wfe ) {
             throw new GenericServiceException(wfe.getMessage(),wfe);
         }
         
         // Set the service dispatcher for the workflow
         try {
             process.setServiceLoader(loader);
-        }
-        catch ( WfException e ) {
+        } catch (WfException e) {
             throw new GenericServiceException(e.getMessage(),e);
         }
     
+        // Assign the owner of the process
+        if (context.containsKey("userLogin")) {
+            GenericValue userLogin = (GenericValue) context.remove("userLogin");
+            try {
+                Map fields = UtilMisc.toMap("partyId", userLogin.getString("partyId"),
+                        "roleTypeId", "WF_OWNER", "workEffortId", process.runtimeKey(),
+                        "fromDate", UtilDateTime.nowTimestamp());
+                try {
+                    GenericValue wepa = dispatcher.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
+                    dispatcher.getDelegator().create(wepa);
+                } catch ( GenericEntityException e ) {
+                    throw new GenericServiceException("Cannot set ownership of workflow");
+                }
+            } catch (WfException we) {
+                throw new GenericServiceException("Cannot get the workflow process runtime key");
+            }
+        }
+                                        
         // Register the process
         try {
             req.registerProcess(process,context,requester);
-        }
-        catch ( WfException wfe ) {
+        } catch (WfException wfe) {
             throw new GenericServiceException(wfe.getMessage(),wfe);
         }
     }
