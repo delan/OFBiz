@@ -181,7 +181,7 @@ public class BOMNode {
         try {
             double percScrapFactor = node.getDouble("scrapFactor").doubleValue();
             if (percScrapFactor >= 0 && percScrapFactor < 100) {
-                percScrapFactor = 1 - percScrapFactor / 100;
+                percScrapFactor = 1 + percScrapFactor / 100;
             } else {
                 percScrapFactor = 1;
             }
@@ -377,7 +377,7 @@ public class BOMNode {
         // in this breakdown.
         this.depth = depth;
         //this.quantity = Math.floor(quantity * quantityMultiplier / scrapFactor + 0.5);
-        this.quantity = quantity * quantityMultiplier / scrapFactor;
+        this.quantity = quantity * quantityMultiplier * scrapFactor;
         // First of all we visit the current node.
         arr.add(this);
         // Now (recursively) we visit the children.
