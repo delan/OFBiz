@@ -31,7 +31,7 @@
 
 <!-- ====================== Root Element ======================= -->
 <!ELEMENT entity-config ( resource-loader+, transaction-factory, delegator+,
-        entity-model-reader+, entity-group-reader+, field-type+, datasource+ )>
+        entity-model-reader+, entity-group-reader+, entity-eca-reader*, field-type+, datasource+ )>
 
 <!ELEMENT resource-loader EMPTY>
 <!ATTLIST resource-loader
@@ -61,6 +61,7 @@
     name CDATA #REQUIRED
     entity-model-reader CDATA #REQUIRED
     entity-group-reader CDATA #REQUIRED
+    entity-eca-reader CDATA #IMPLIED
     distributed-cache-clear-enabled ( true | false ) "false"
     distributed-cache-clear-class-name CDATA "org.ofbiz.core.extentity.EntityCacheServices"
     distributed-cache-clear-user-login-id CDATA "admin"
@@ -80,6 +81,11 @@
         loader CDATA #REQUIRED
         location CDATA #REQUIRED
     >
+
+<!ELEMENT entity-eca-reader ( resource* )>
+<!ATTLIST entity-eca-reader
+    name CDATA #REQUIRED
+>
 
 <!ELEMENT entity-group-reader EMPTY>
 <!ATTLIST entity-group-reader
