@@ -358,11 +358,18 @@ public class GenericDAO {
         //we don't want to select ALL fields, just the nonpk fields that are in the passed GenericEntity
         List partialFields = new ArrayList();
         
+        Set tempKeys = new TreeSet(keys);
         for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
             ModelField curField = modelEntity.getNopk(fi);
             
-            if (keys.contains(curField.getName()))
+            if (tempKeys.contains(curField.getName())) {
                 partialFields.add(curField);
+                tempKeys.remove(curField.getName());
+            }
+        }
+        
+        if (tempKeys.size() > 0) {
+            throw new GenericModelException("In partialSelect invalid field names specified: " + tempKeys.toString());
         }
         
         String sql = "SELECT ";
@@ -423,13 +430,7 @@ public class GenericDAO {
             selectFields = modelEntity.getFieldsCopy();
         }
         
-        GenericValue dummyValue;
-        
-        if (fields != null && fields.size() > 0) {
-            dummyValue = new GenericValue(modelEntity, fields);
-        } else {
-            dummyValue = new GenericValue(modelEntity);
-        }
+        GenericValue dummyValue = new GenericValue(modelEntity, fields);;
         
         String sql = "SELECT ";
         
@@ -811,13 +812,9 @@ public class GenericDAO {
         try {
             sqlP.prepareStatement(sql);
             
-            GenericValue dummyValue;
-            
+            GenericValue dummyValue = new GenericValue(modelEntity, fields);
             if (fields != null && fields.size() > 0) {
-                dummyValue = new GenericValue(modelEntity, fields);
                 SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
-            } else {
-                dummyValue = new GenericValue(modelEntity);
             }
             
             Debug.logVerbose("[GenericDAO.selectByLike] ps=" + sqlP.getPreparedStatement().toString(), module);
@@ -939,13 +936,10 @@ public class GenericDAO {
             sql = select.toString() + " " + from.toString() + " " + where.toString() + (order.toString().trim().length() > 0 ? order.toString() : "");
             sqlP.prepareStatement(sql);
             
-            GenericValue dummyValue;
+            GenericValue dummyValue = new GenericValue(modelEntity, fields);
             
             if (fields != null && fields.size() > 0) {
-                dummyValue = new GenericValue(modelEntity, fields);
                 SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
-            } else {
-                dummyValue = new GenericValue(modelEntity);
             }
             sqlP.executeQuery();
             
