@@ -41,6 +41,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   ModelReader reader = delegator.getModelReader();
   Map packages = new HashMap();
   TreeSet packageNames = new TreeSet();
+  TreeSet tableNames = new TreeSet();
 
   //put the entityNames TreeSets in a HashMap by packageName
   Collection ec = reader.getEntityNames();
@@ -49,6 +50,10 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
   while(ecIter.hasNext()) {
     String eName = (String)ecIter.next();
     ModelEntity ent = reader.getModelEntity(eName);
+
+    //make sure the table name is in the list of all table names, if not null
+    if (UtilValidate.isNotEmpty(ent.getTableName())) tableNames.add(ent.getTableName());
+
     TreeSet entities = (TreeSet)packages.get(ent.getPackageName());
     if(entities == null) {
       entities = new TreeSet();
@@ -214,6 +219,9 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
             warningString = warningString + "<li><div style=\"color: red;\">[RelationFkDuplicate]</div> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has a duplicate fk-name \"" + relation.getFkName() + "\".</li>";
           } else {
             fkNames.add(relation.getFkName());
+          }
+          if (tableNames.contains(relation.getFkName())) {
+            warningString = warningString + "<li><div style=\"color: red;\">[RelationFkTableDup]</div> Relation to <b>" + relation.getRelEntityName() + "</b> from entity <A href=\"#" + entity.getEntityName() + "\">" + entity.getEntityName() + "</A> has an fk-name \"" + relation.getFkName() + "\" that is also being used as a table name.</li>";
           }
       }
 

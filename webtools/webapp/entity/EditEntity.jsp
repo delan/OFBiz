@@ -94,6 +94,7 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
     String relEntityName = request.getParameter("relEntityName");
     String type = request.getParameter("type");
     String title = request.getParameter("title");
+    String fkName = request.getParameter("fkName");
     ModelRelation relation = new ModelRelation();
 
     ModelEntity relEntity = reader.getModelEntity(relEntityName);
@@ -103,6 +104,7 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
       relation.setRelEntityName(relEntityName);
       relation.setType(type);
       relation.setTitle(title);
+      relation.setFkName(fkName);
       relation.setMainEntity(entity);
       entity.addRelation(relation);
       if ("one".equals(type) || "one-nofk".equals(type)) {
@@ -119,10 +121,12 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     String type = request.getParameter("type");
     String title = request.getParameter("title");
+    String fkName = request.getParameter("fkName");
 
     ModelRelation relation = entity.getRelation(relNum);
     relation.setType(type);
     relation.setTitle(title);
+    relation.setFkName(fkName);
   } else if ("removeRelation".equals(event)) {
     int relNum = Integer.parseInt(request.getParameter("relNum"));
     if (relNum < entity.getRelationsSize() && relNum >= 0) entity.removeRelation(relNum);
@@ -358,6 +362,7 @@ The following errors occurred:
         <td align="left"><%=relation.getTitle()%><A class='listtext' href='<ofbiz:url>/view/EditEntity?entityName=<%=relation.getRelEntityName()%></ofbiz:url>'><%=relation.getRelEntityName()%></A></td>
         <td>
           <INPUT type=TEXT name='title' value='<%=relation.getTitle()%>'>
+          <INPUT type=TEXT name='fkName' value='<%=relation.getFkName()%>' size='18' maxlength='18'>
           <SELECT name='type'>
             <OPTION selected><%=relation.getType()%></OPTION>
             <OPTION>&nbsp;</OPTION>
@@ -408,7 +413,8 @@ The following errors occurred:
 
 <FORM method=POST action='<ofbiz:url>/view/EditEntity?entityName=<%=entityName%>&event=addRelation"%></ofbiz:url>'>
   Add new relation with <u>Title</u>, <u>Related Entity Name</u> and relation type.<BR>
-  <INPUT type=text size='40' maxlength='30' name='title'>
+  <INPUT type=text size='30' maxlength='30' name='title'>
+  <INPUT type=text size='20' maxlength='18' name='fkName'>
   <%-- <INPUT type=text size='40' maxlength='30' name='relEntityName'> --%>
   <SELECT name='relEntityName'>
     <OPTION selected>&nbsp;</OPTION>
