@@ -132,4 +132,13 @@
         <put section='title'>Edit Facility InventoryItems Page</put>
         <put section='content' content='/storage/EditFacilityInventoryItems.jsp'/>
     </define>
+    
+    <define id='FindProdCatalog' region='MAIN_REGION'>
+        <put section='title'>Edit ProdCatalog Page</put>
+        <put section='content' content='/catalog/FindProdCatalog.jsp'/>
+    </define>
+    <define id='EditProdCatalog' region='MAIN_REGION'>
+        <put section='title'>Edit ProdCatalog Page</put>
+        <put section='content' content='/catalog/EditProdCatalog.jsp'/>
+    </define>
 </regions>

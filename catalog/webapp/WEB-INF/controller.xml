@@ -290,6 +290,26 @@
     <request-map uri="EditFacilityInventoryItems"><security https="true" auth="true"/>
     	<response name="success" type="view" value="EditFacilityInventoryItems"/>
     </request-map>
+
+    <!-- ================ ProdCatalog REQUESTS ================= -->
+    <request-map uri="FindProdCatalog"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="FindProdCatalog"/>
+    </request-map>
+
+    <request-map uri="EditProdCatalog"><security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProdCatalog"/>
+    </request-map>
+    <request-map uri="CreateProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProdCatalog"/>
+    	<response name="success" type="view" value="EditProdCatalog"/>
+    	<response name="error" type="view" value="EditProdCatalog"/>
+    </request-map>
+    <request-map uri="UpdateProdCatalog"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProdCatalog"/>
+    	<response name="success" type="view" value="EditProdCatalog"/>
+    	<response name="error" type="view" value="EditProdCatalog"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -322,5 +342,8 @@
     <view-map name="FindFacility" type="region"/>
     <view-map name="EditFacility" type="region"/>
     <view-map name="EditFacilityInventoryItems" type="region"/>
+    
+    <view-map name="FindProdCatalog" type="region"/>
+    <view-map name="EditProdCatalog" type="region"/>
     <!-- end of view mappings -->
 </site-conf>
