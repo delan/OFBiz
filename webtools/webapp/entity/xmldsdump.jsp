@@ -68,7 +68,7 @@
     
     numberOfEntities = passedEntityNames.size();
     
-    PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter(filename)));
+    PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename), "UTF-8")));
     writer.println("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
     writer.println("<entity-engine-xml>");
 
