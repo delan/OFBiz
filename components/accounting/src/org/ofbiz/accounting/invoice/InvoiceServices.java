@@ -1,5 +1,5 @@
 /*
- * $Id: InvoiceServices.java,v 1.9 2004/04/04 16:33:11 ajzeneski Exp $
+ * $Id: InvoiceServices.java,v 1.10 2004/05/28 06:33:11 jonesde Exp $
  *
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.product.product.ProductWorker;
  * InvoiceServices - Services for creating invoices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  */
 public class InvoiceServices {
@@ -191,7 +191,9 @@ public class InvoiceServices {
                     GenericValue term = (GenericValue) billingAcctTermsIter.next();
                     GenericValue invoiceTerm = delegator.makeValue("InvoiceTerm", 
                         UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", "_NA_"));
-                    invoiceTerm.set("termType", term.get("termType"));
+                    String invoiceTermId = delegator.getNextSeqId("InvoiceTerm").toString();	               
+                    invoiceTerm.set("invoiceTermId", invoiceTermId);			
+                    invoiceTerm.set("termTypeId", term.get("termTypeId"));	
                     invoiceTerm.set("termValue", term.get("termValue"));
                     invoiceTerm.set("uomId", term.get("uomId"));
                     toStore.add(invoiceTerm);                                        
