@@ -47,7 +47,7 @@ public class EntityTypeUtil {
 
                 if (isType(related, targetType)) {
                     return true;
-                }// else keep looking
+                } // else keep looking
             } catch (GenericEntityException e) {
                 continue;
             }
@@ -64,7 +64,6 @@ public class EntityTypeUtil {
      }
      return false;
      }*/
-
 
     /* private static Object getTypeID(GenericValue typeValue) {
      Collection keys = typeValue.getAllKeys();
@@ -83,6 +82,37 @@ public class EntityTypeUtil {
             Debug.logWarning(e);
             return null;
         }
+    }
+
+    public static List getDescendantTypes(GenericValue typeValue) {
+        // assumes Child relation is "Child<entityName>"
+        List descendantTypes = new ArrayList();
+
+        // first get all childrenTypes ...
+        List childrenTypes = null;
+        try {
+            childrenTypes = typeValue.getRelatedCache("Child" + typeValue.getEntityName());
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e);
+            return null;
+        }
+        if (childrenTypes == null)
+            return null;
+
+        // ... and add them as direct descendants
+        descendantTypes.addAll(childrenTypes);
+
+        // then add all descendants of the children
+        Iterator childrenTypeIter = childrenTypes.iterator();
+        while (childrenTypeIter.hasNext()) {
+            GenericValue childType = (GenericValue) childrenTypeIter.next();
+            List childTypeDescendants = getDescendantTypes(childType);
+            if (childTypeDescendants != null) {
+                descendantTypes.addAll(childTypeDescendants);
+            }
+        }
+
+        return descendantTypes;
     }
 
     /**

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002, 2003 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -297,25 +297,29 @@ public class PartyServices {
             return result;
 
         GenericValue partyGroup = null;
+        GenericValue party = null;
 
         try {
             partyGroup = delegator.findByPrimaryKey("PartyGroup", UtilMisc.toMap("partyId", partyId));
+            party = partyGroup.getRelatedOne("Party");
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
-            return ServiceUtil.returnError("Could not update party group information (read failure): " + e.getMessage());
+            return ServiceUtil.returnError("Could not update party or party group information (read failure): " + e.getMessage());
         }
 
-        if (partyGroup == null) {
-            return ServiceUtil.returnError("Could not update party group information (partyGroup not found)");
+        if (partyGroup == null || party == null) {
+            return ServiceUtil.returnError("Could not update party or party group information (party or partyGroup not found)");
         }
 
         partyGroup.setNonPKFields(context);
+        party.setNonPKFields(context);
 
         try {
             partyGroup.store();
+            party.store();
         } catch (GenericEntityException e) {
             Debug.logWarning(e.getMessage());
-            return ServiceUtil.returnError("Could update party group information (write failure): " + e.getMessage());
+            return ServiceUtil.returnError("Could update party or party group information (write failure): " + e.getMessage());
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);

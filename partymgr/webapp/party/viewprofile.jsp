@@ -140,6 +140,9 @@
             <%}%>
           </ofbiz:if>
           <ofbiz:if name="lookupGroup">
+            <% GenericValue party = (GenericValue) pageContext.getAttribute("party"); %>
+            <% GenericValue lookupPartyType = party.getRelatedOneCache("PartyType"); %>
+            <% pageContext.setAttribute("groupType", lookupPartyType); %>
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Party Group Information</div>
             </td>
@@ -190,7 +193,7 @@
 </ofbiz:if>
 <ofbiz:unless name="lookupPerson">
   <ofbiz:if name="lookupGroup">
-    <div class="tabletext"><%entityField.run("lookupGroup", "groupName");%></div>
+    <div class="tabletext"><%entityField.run("lookupGroup", "groupName");%> (<%entityField.run("groupType", "description");%>)</div>
   </ofbiz:if>
   <ofbiz:unless name="lookupGroup">
     <div class="tabletext">Information Not Found</div>

@@ -45,22 +45,23 @@
         <attribute name="partyId" type="String" mode="IN" optional="true"/>
     </service>
 
-    <service name="createPartyGroup" engine="java"
-            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPartyGroup" auth="false">
-        <description>Create a PartyGroup</description>
-        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>
+    <service name="interfacePartyGroup" engine="interface" location="" invoke="">        
         <attribute name="partyTypeId" type="String" mode="IN" optional="true"/>
         <attribute name="groupName" type="String" mode="IN" optional="false"/>
         <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>    	
+    </service>
+    <service name="createPartyGroup" engine="java"
+            location="org.ofbiz.commonapp.party.party.PartyServices" invoke="createPartyGroup" auth="false">
+        <description>Create a PartyGroup</description>
+        <implements service="interfacePartyGroup"/>
+        <attribute name="partyId" type="String" mode="INOUT" optional="true"/>       
     </service>
     <service name="updatePartyGroup" engine="java"
             location="org.ofbiz.commonapp.party.party.PartyServices" invoke="updatePartyGroup" auth="true">
         <description>Update a PartyGroup</description>
-        <attribute name="partyId" type="String" mode="IN" optional="true"/>
-        <attribute name="groupName" type="String" mode="IN" optional="false"/>
-        <attribute name="federalTaxId" type="String" mode="IN" optional="true"/>
-        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <implements service="interfacePartyGroup"/>
+        <attribute name="partyId" type="String" mode="IN" optional="true"/>       
     </service>
 
     <service name="createAffiliate" engine="java"

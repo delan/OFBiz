@@ -1,37 +1,35 @@
-<%
-    /**
-     *  Title: Edit Party Group Page
-     *  Description: None
-     *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
-     *
-     *  Permission is hereby granted, free of charge, to any person obtaining a
-     *  copy of this software and associated documentation files (the "Software"),
-     *  to deal in the Software without restriction, including without limitation
-     *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
-     *  and/or sell copies of the Software, and to permit persons to whom the
-     *  Software is furnished to do so, subject to the following conditions:
-     *
-     *  The above copyright notice and this permission notice shall be included
-     *  in all copies or substantial portions of the Software.
-     *
-     *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-     *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-     *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-     *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-     *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
-     *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
-     *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-     *
-     *@author     Andy Zeneski
-     *@created    July 12, 2002
-     *@version    1.0
-     */
-%>
+<%--
+ *  Description: None
+ *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
+ *  to deal in the Software without restriction, including without limitation 
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included 
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *@author     Andy Zeneski 
+ *@version    $Revision$
+ *@since      2.0
+--%>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 
 <%@ page import="java.util.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.entity.EntityTypeUtil" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 
@@ -51,6 +49,8 @@
             GenericValue party = delegator.findByPrimaryKeyCache("Party", UtilMisc.toMap("partyId", partyId));
             GenericValue lookupGroup = party.getRelatedOneCache("PartyGroup");
             if (lookupGroup != null) pageContext.setAttribute("lookupGroup", lookupGroup);
+            GenericValue lookupPartyType = party.getRelatedOneCache("PartyType");
+            if (lookupPartyType != null) pageContext.setAttribute("lookupPartyType", lookupPartyType);
 
             boolean tryEntity = true;
             if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -67,6 +67,10 @@
 <ofbiz:unless name="lookupGroup">
   <p class="head1">Add New Group Information</p>
     <FORM method=POST action='<ofbiz:url>/createPartyGroup/<ofbiz:print attribute="donePage"/></ofbiz:url>' name="editgroupform">
+    <%
+        // remove session attribute "partyId" in case PartyGroup can not be created und returns to same page with "partyId" set
+        request.getSession().removeAttribute("partyId");
+    %>
 </ofbiz:unless>
 <ofbiz:if name="lookupGroup">
   <p class="head1">Edit Group Information</p>
@@ -86,6 +90,27 @@
       <td width="74%" align=left>
         <input type="text" class="inputBox" size="30" maxlength="30" <ofbiz:inputvalue field="groupName" entityAttr="lookupGroup" tryEntityAttr="tryEntity" fullattrs="true"/>>
       *</td>
+    </tr>
+    <tr>
+      <td width="26%" align=right><div class="tabletext">Party Group (Sub-) Type</div></td>
+      <td width="74%" align=left>
+        <select name="partyTypeId" class="selectBox">
+          <ofbiz:if name="lookupGroup">
+              <option value='<ofbiz:entityfield attribute="lookupPartyType" field="partyTypeId"/>' selected><ofbiz:entityfield attribute="lookupPartyType" field="description"/></option>
+              <option value='<ofbiz:entityfield attribute="lookupPartyType" field="partyTypeId"/>'>-----</option>
+          </ofbiz:if>
+          <option value='PARTY_GROUP'>Party Group</option>
+          <%
+                // determine all Subtypes of Partygroup-Type
+                GenericValue partyGroupType = delegator.findByPrimaryKey("PartyType", UtilMisc.toMap("partyTypeId", "PARTY_GROUP"));
+                List partyGroupSubTypes = EntityTypeUtil.getDescendantTypes(partyGroupType);
+                pageContext.setAttribute("partyGroupSubTypes", partyGroupSubTypes);
+          %>
+          <ofbiz:iterator name="partyGroupSubType" property="partyGroupSubTypes">
+            <option value='<ofbiz:entityfield attribute="partyGroupSubType" field="partyTypeId"/>'><ofbiz:entityfield attribute="partyGroupSubType" field="description"/></option>
+          </ofbiz:iterator>
+        </select>
+      </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Federal Tax Number</div></td>
