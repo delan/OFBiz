@@ -376,8 +376,10 @@ public class CSPaymentServices {
         try {
             if (reply.getReplyCode() > 0) {
                 paymentPreference.set("authRefNum", reply.getField("request_id"));
+                paymentPreference.set("statusId", "PAYMENT_AUTHORIZED");
                 result.put("authResponse", "SUCCESS");
             } else {
+                paymentPreference.set("statusId", "PAYMENT_DECLINED");
                 result.put("authResponse", "FAIL");
             }
             paymentPreference.set("authMessage", reply.getErrorMessage());

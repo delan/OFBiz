@@ -104,7 +104,7 @@ public class OrderServices {
         GenericValue order = delegator.makeValue("OrderHeader",
                 UtilMisc.toMap("orderId", orderId, "orderTypeId", "SALES_ORDER",
                         "orderDate", UtilDateTime.nowTimestamp(), "entryDate", UtilDateTime.nowTimestamp(),
-                        "statusId", "ORDERED", "billingAccountId", billingAccountId));
+                        "statusId", "ORDER_ORDERED", "billingAccountId", billingAccountId));
         toBeStored.add(order);
 
         //set the orderId on all adjustments; this list will include order and item adjustments...
@@ -187,7 +187,7 @@ public class OrderServices {
         // set the order status
         toBeStored.add(delegator.makeValue("OrderStatus",
                 UtilMisc.toMap("orderStatusId", delegator.getNextSeqId("OrderStatus").toString(),
-                        "statusId", "ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
+                        "statusId", "ORDER_ORDERED", "orderId", orderId, "statusDatetime", UtilDateTime.nowTimestamp())));
 
         // set the order payment preferences
         List paymentMethods = (List) context.get("paymentMethods");
@@ -288,8 +288,8 @@ public class OrderServices {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
                 result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not change order status; order cannot be found.");
             }
-            Debug.logInfo("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"));
-            Debug.logInfo("[OrderServices.setOrderStatus] : To Status : " + statusId);
+            Debug.logVerbose("[OrderServices.setOrderStatus] : From Status : " + orderHeader.getString("statusId"));
+            Debug.logVerbose("[OrderServices.setOrderStatus] : To Status : " + statusId);
             if (orderHeader.getString("statusId").equals(statusId)) {
                 result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
                 return result;
