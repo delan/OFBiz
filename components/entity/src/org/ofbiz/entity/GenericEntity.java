@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.19 2004/01/26 23:26:07 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.20 2004/01/28 01:04:51 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.19 $
+ *@version    $Revision: 1.20 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -833,13 +833,13 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                         value.replace(i, i+1, "...");
                         break;
                     case 0x12: // apostrophe
-                        value.replace(i, i+1, "'");
+                        value.replace(i, i+1, "&apos;");
                         break;
                     case 0x13: // left quote
-                        value.replace(i, i+1, "\"");
+                        value.replace(i, i+1, "&quot;");
                         break;
                     case 0x14: // right quote
-                        value.replace(i, i+1, "\"");
+                        value.replace(i, i+1, "&quot;");
                         break;
                     case 0x16: // big(?) dash -
                         value.replace(i, i+1, "-");
