@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.19 $
+ *@version    $Revision: 1.20 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -75,7 +75,7 @@
                   <#if price.isSale>
                     <span class="salePrice">${uiLabelMap.EcommerceOnSale}!</span>
                   </#if>
-                  <if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
+                  <#if (price.price?default(0) > 0 && product.requireAmount?default("N") == "N")>
                     ${uiLabelMap.EcommerceYourPrice}: <#if "Y" = product.isVirtual?if_exists> from </#if><span class="<#if price.isSale>salePrice<#else>normalPrice</#if>"><@ofbizCurrency amount=price.price isoCode=price.currencyUsed/></span>
                   </#if>
                 </b></nobr>

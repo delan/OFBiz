@@ -1,5 +1,5 @@
 /*
- * $Id: CheckPermissionTransform.java,v 1.11 2004/04/30 22:12:17 ajzeneski Exp $
+ * $Id: CheckPermissionTransform.java,v 1.12 2004/04/30 23:08:25 ajzeneski Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -36,7 +36,7 @@ import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.ModelService;
 
-import freemarker.template.Environment;
+import freemarker.core.Environment;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateTransformModel;
 import freemarker.template.TransformControl;
@@ -45,7 +45,7 @@ import freemarker.template.TransformControl;
  * CheckPermissionTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 3.0
  */
 public class CheckPermissionTransform implements TemplateTransformModel {

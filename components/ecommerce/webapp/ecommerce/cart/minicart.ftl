@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -81,7 +81,7 @@
                 </tr>
                 <tr>
                   <td colspan="3">
-                    <a href="<transform ofbizUrl>/view/showcart</transform>" class="buttontext">[${uiLabelMap.EcommerceViewCart}]</a>&nbsp;<a href="<transform ofbizUrl>/quickcheckout</transform>" class="buttontext">[${uiLabelMap.EcommerceCheckout}]</a>
+                    <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceViewCart}]</a>&nbsp;<a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="buttontext">[${uiLabelMap.EcommerceCheckout}]</a>
                   </td>
                 </tr>
               <#else>

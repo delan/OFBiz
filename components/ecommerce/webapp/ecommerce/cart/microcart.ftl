@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -40,9 +40,9 @@
   &nbsp;&nbsp;
 </div>
 <div class='insideHeaderDisabled'>
-  <a href="<transform ofbizUrl>/view/showcart</transform>" class="insideHeaderLink">[${uiLabelMap.EcommerceViewCart}]</a>
+  <a href="<@ofbizUrl>/view/showcart</@ofbizUrl>" class="insideHeaderLink">[${uiLabelMap.EcommerceViewCart}]</a>
   <#if (shoppingCartSize > 0)>
-    <a href="<transform ofbizUrl>/quickcheckout</transform>" class="insideHeaderLink">[${uiLabelMap.EcommerceCheckout}]</a>
+    <a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="insideHeaderLink">[${uiLabelMap.EcommerceCheckout}]</a>
   <#else>
     [${uiLabelMap.EcommerceCheckout}]
   </#if>

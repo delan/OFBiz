@@ -1,5 +1,5 @@
 /*
- * $Id: FreeMarkerWorker.java,v 1.21 2004/04/30 22:12:18 ajzeneski Exp $
+ * $Id: FreeMarkerWorker.java,v 1.22 2004/04/30 23:08:25 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.minilang.MiniLangException;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.Configuration;
-import freemarker.template.Environment;
+import freemarker.core.Environment;
 import freemarker.template.SimpleHash;
 import freemarker.template.SimpleScalar;
 import freemarker.template.Template;
@@ -69,7 +69,7 @@ import freemarker.template.TemplateModelException;
  * FreemarkerViewHandler - Freemarker Template Engine Util
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      3.0
  */
 public class FreeMarkerWorker {
