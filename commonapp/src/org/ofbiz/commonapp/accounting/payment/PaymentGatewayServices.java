@@ -293,9 +293,12 @@ public class PaymentGatewayServices {
     public static Map captureOrderPayments(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        String orderId = (String) context.get("orderId");        
+        String orderId = (String) context.get("orderId"); 
+        String invoiceId = (String) context.get("invoiceId");       
         Map result = new HashMap();               
 
+        Debug.log("Invoice ID: " + invoiceId, module);
+        
         // get the order header and payment preferences
         GenericValue orderHeader = null;
         List paymentPrefs = null;
@@ -340,6 +343,9 @@ public class PaymentGatewayServices {
                 Double captureAmount = (Double) captureResult.get("captureAmount");                                       
                 finished.add(captureResult);
                 
+                // add the invoiceId to the result for processing
+                captureResult.put("invoiceId", invoiceId);                
+                
                 // process the capture's results             
                 boolean processResult = false;
                 try {
@@ -378,8 +384,12 @@ public class PaymentGatewayServices {
         // get the payment settings i.e. serviceName and config properties file name
         GenericValue paymentSettings = getPaymentSettings(orh.getOrderHeader(), paymentPref);            
         if (paymentSettings != null) {
+            paymentConfig = paymentSettings.getString("paymentConfiguration");
             serviceName = paymentSettings.getString("paymentCaptureService");
-            paymentConfig = paymentSettings.getString("paymentConfiguration");                                
+            if (serviceName == null) {
+                Debug.logError("Service name is null for payment setting; cannot process", module);
+                return null;
+            }                                            
         } else {
             Debug.logError("Invalid payment settings entity, no payment settings found", module);
             return null;             
@@ -453,9 +463,12 @@ public class PaymentGatewayServices {
 
     private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {        
         Boolean captureResult = (Boolean) result.get("captureResult");
-        String payTo = (String) result.get("payToPartyId");
+        String invoiceId = (String) result.get("invoiceId");
+        String payTo = (String) result.get("payToPartyId");        
         LocalDispatcher dispatcher = dctx.getDispatcher();
 
+        Debug.log("Invoice ID: " + invoiceId, module);
+        
         if (payTo == null)
             payTo = "Company";
 
@@ -464,14 +477,17 @@ public class PaymentGatewayServices {
 
         if (result != null && captureResult.booleanValue()) {
             // captured
-            Long paymentId = delegator.getNextSeqId("Payment");
+            String paymentId = delegator.getNextSeqId("Payment").toString();
 
-            if (paymentId == null)
+            if (paymentId == null) {            
                 throw new GenericEntityException("Cannot get sequence ID for Payment entity.");
+            }
+            
+            String orderId = paymentPreference.getString("orderId");
             GenericValue orderRole = EntityUtil.getFirst(delegator.findByAnd("OrderRole",
-                        UtilMisc.toMap("orderId", paymentPreference.get("orderId"), "roleTypeId", "BILL_TO_CUSTOMER")));
+                        UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_TO_CUSTOMER")));
 
-            payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId.toString(),
+            payment = delegator.makeValue("Payment", UtilMisc.toMap("paymentId", paymentId,
                             "paymentTypeId", "RECEIPT", "paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"),
                             "paymentMethodId", paymentPreference.get("paymentMethodId"), "partyIdTo", payTo,
                             "partyIdFrom", orderRole.get("partyId")));
@@ -486,6 +502,46 @@ public class PaymentGatewayServices {
             }
             paymentPreference.set("statusId", "PAYMENT_SETTLED");
             paymentPreference.store();
+            
+            // create the PaymentApplication if invoiceId is available
+            if (invoiceId != null) {
+                Debug.log("Processing Invoice #" + invoiceId, module);
+                List itemBillings = null;
+                try {
+                    itemBillings = delegator.findByAnd("OrderItemBilling", UtilMisc.toMap("orderId", orderId, "invoiceId", invoiceId));
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot get OrderItemBilling records; not setting PaymentApplications", module);                    
+                }
+                if (itemBillings != null && itemBillings.size() > 0) {
+                    Iterator ibi = itemBillings.iterator();
+                    while (ibi.hasNext()) {
+                        GenericValue ib = (GenericValue) ibi.next();
+                        GenericValue invoice = null;
+                        try {
+                            invoice = ib.getRelatedOne("Invoice");
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Cannot get Invoice from OrderItemBilling entity", module);                            
+                        }
+                        
+                        String paId = delegator.getNextSeqId("PaymentApplication").toString();
+                        GenericValue pa = delegator.makeValue("PaymentApplication", null);
+                        pa.set("paymentApplicationId", paId);
+                        pa.set("paymentId", paymentId);
+                        pa.set("invoiceId", invoiceId);
+                        pa.set("invoiceItemSeqId", ib.get("invoiceItemSeqId"));
+                        pa.set("amountApplied", payment.get("amount"));
+                        if (invoice != null && invoice.get("billingAccountId") != null) {
+                            pa.set("billingAccountId", invoice.get("billingAccountId"));
+                        }
+                        
+                        try {
+                            delegator.create(pa);
+                        } catch (GenericEntityException e) {
+                            Debug.logError(e, "Problems creating PaymentApplication record", module);
+                        }
+                    }
+                }
+            }
 
         } else if (result != null && !captureResult.booleanValue()) {
             // problem with the capture lets get some needed info
