@@ -27,10 +27,10 @@ import java.io.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@author <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@created Sep 17, 2001
- *@version 1.0
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@created    October 20, 2001
+ *@version    1.0
  */
 public class GenericServiceException extends org.ofbiz.core.util.GeneralException {
     

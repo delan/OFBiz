@@ -32,9 +32,9 @@ import org.ofbiz.core.util.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author  Andy Zeneski (jaz@zsolv.com)
- * @version 1.0
- * Created on November 8, 2001
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@created    November 8, 2001
+ *@version    1.0
  */
 public class DispatchContext {
     

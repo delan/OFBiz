@@ -35,10 +35,10 @@ import org.ofbiz.core.util.*;
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * @author Andy Zeneski (jaz@zsolv.com)
- * @author David E. Jones (jonesde@ofbiz.org)
- * @created May 15, 2001
- * @version 1.0
+ *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ *@created    October 20, 2001
+ *@version    1.0
  */
 
 public class ModelServiceReader {

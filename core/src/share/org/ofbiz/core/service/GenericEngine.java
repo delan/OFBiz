@@ -32,7 +32,7 @@ import org.ofbiz.core.util.*;
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    Oct 20 2001
+ *@created    October 20, 2001
  *@version    1.0
  */
 public interface GenericEngine {
