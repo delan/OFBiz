@@ -44,7 +44,6 @@ if(phaseWorkEffortId == null) phaseWorkEffortId = (String)session.getAttribute("
 session.putValue("phaseWorkEffortId", phaseWorkEffortId);
 %>
 
-<BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

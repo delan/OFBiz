@@ -49,8 +49,6 @@
 
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 
-<BR>
-
 <TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside' width='45%'>
   <TR>
     <TD width='100%'>

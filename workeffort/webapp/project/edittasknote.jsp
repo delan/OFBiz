@@ -35,7 +35,7 @@
 <%@ page import="org.ofbiz.commonapp.common.status.*" %>
 <%String workEffortId = request.getParameter("workEffortId");%>
 <%GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);%>
-<BR>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

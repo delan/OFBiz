@@ -74,7 +74,6 @@
     }	       	   	    
 %>
 
-<BR>
 <div class='tabContainer'>
   <a href="<ofbiz:url>/request?custRequestId=<%=custRequestId%></ofbiz:url>" class="tabButtonSelected">Request</a>
   <a href="<ofbiz:url>/requestroles?custRequestId=<%=custRequestId%></ofbiz:url>" class="tabButton">Request Roles</a>

@@ -35,7 +35,6 @@
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "taskStatusItems", "CALENDAR_STATUS", "TASK_STATUS");%>
 
-<BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

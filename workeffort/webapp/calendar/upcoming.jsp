@@ -35,7 +35,6 @@
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%WorkEffortWorker.getWorkEffortEventsByDays(pageContext, "days", UtilDateTime.nowTimestamp(), 7);%>
 
-<BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

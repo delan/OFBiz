@@ -37,7 +37,6 @@
 <ofbiz:service name="getWorkEffortAssignedActivitiesByRole"></ofbiz:service>
 <ofbiz:service name="getWorkEffortAssignedActivitiesByGroup"></ofbiz:service>
 
-<BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

@@ -62,7 +62,6 @@
 
 %>
 
-<BR>
 <table border=0 cellspacing='0' cellpadding='0'><tr>
   <td width='45%' valign=top>
     <TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside' width='100%'>

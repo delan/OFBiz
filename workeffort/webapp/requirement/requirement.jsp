@@ -60,7 +60,6 @@
     if (requirementTypes != null && requirementTypes.size() > 0) pageContext.setAttribute("requirementTypes", requirementTypes);
 %>
 
-<BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

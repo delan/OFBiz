@@ -44,7 +44,6 @@
         new EntityExpr("roleTypeId", EntityOperator.EQUALS, "CAL_OWNER")));%>
 <%boolean isOwner = assignments.size() > 0;%>
 
-<BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

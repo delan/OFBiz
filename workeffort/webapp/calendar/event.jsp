@@ -34,7 +34,6 @@
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
 <%StatusWorker.getStatusItems(pageContext, "eventStatusItems", "EVENT_STATUS");%>
 
-<BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
@@ -84,7 +83,7 @@
                   <td width='26%' align=right><div class='tabletext'>Priority</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='priority'>
+                    <SELECT name='priority' class='selectBox'>
                       <OPTION><ofbiz:inputvalue field="priority" entityAttr="workEffort" tryEntityAttr="tryEntity"/></OPTION>
                       <OPTION value=''>--</OPTION>
                       <OPTION>1</OPTION> <OPTION>2</OPTION> <OPTION>3</OPTION>
@@ -97,7 +96,7 @@
                   <td width='26%' align=right><div class='tabletext'>Event Status</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
-                    <SELECT name='currentStatusId'>
+                    <SELECT name='currentStatusId' class='selectBox'>
                       <OPTION value='<ofbiz:entityfield field="statusId" attribute="currentStatusItem" default="CAL_TENTATIVE"/>'><ofbiz:entityfield field="description" attribute="currentStatusItem"/></OPTION>
                       <OPTION value=''>--</OPTION>
                       <ofbiz:iterator name="statusItem" property="eventStatusItems">
@@ -113,23 +112,23 @@
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Location</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='60' maxlength='255' <ofbiz:inputvalue field="locationDesc" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>></td>
+                  <td width='74%'><input type='text' class='inputBox' size='60' maxlength='255' <ofbiz:inputvalue field="locationDesc" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Description</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><TEXTAREA name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
+                  <td width='74%'><TEXTAREA class='textAreaBox' name='description' cols='50' rows='4'><ofbiz:inputvalue field="description" entityAttr="workEffort" tryEntityAttr="tryEntity"/></TEXTAREA>
                 </tr>
 
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' <ofbiz:inputvalue field="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' <ofbiz:inputvalue field="estimatedStartDate" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
                 <tr>
                   <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
                   <td>&nbsp;</td>
-                  <td width='74%'><input type='text' size='30' maxlength='30' <ofbiz:inputvalue field="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
+                  <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' <ofbiz:inputvalue field="estimatedCompletionDate" entityAttr="workEffort" tryEntityAttr="tryEntity" fullattrs="true"/>><span class='tabletext'>(YYYY-MM-DD hh:mm:ss)</span></td>
                 </tr>
 
                 <ofbiz:if name="workEffort">

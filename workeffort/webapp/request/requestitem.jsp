@@ -79,7 +79,6 @@
     }	       	   	
 %>
 
-<BR>
 <div class='tabContainer'>
   <a href="<ofbiz:url>/request?custRequestId=<%=custRequestId%></ofbiz:url>" class="tabButton">Request</a>
   <a href="<ofbiz:url>/requestroles?custRequestId=<%=custRequestId%></ofbiz:url>" class="tabButton">Request Roles</a>
@@ -144,7 +143,7 @@
                         <tr>
                           <td align="right"><div class="tableheadtext">Status</div></td>
                           <td>
-					        <select name="statusId" style='font-size: small;'>
+					        <select name="statusId" class='selectBox'>
 					          <ofbiz:if name="custRequestItem">					        
 					          <option value='<%=custRequestItem.getString("statusId")%>'><%if (currentStatusItem != null) {%><%=currentStatusItem.getString("description")%><%} else {%><%=UtilFormatOut.ifNotEmpty(custRequestItem.getString("statusId"), "[", "]")%><%}%></option>
 					          <option value='<%=custRequestItem.getString("statusId")%>'>----</option>
