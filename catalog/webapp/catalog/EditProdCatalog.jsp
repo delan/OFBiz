@@ -41,9 +41,6 @@
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
     String prodCatalogId = request.getParameter("prodCatalogId");
-    if (UtilValidate.isEmpty(prodCatalogId) && UtilValidate.isNotEmpty((String) request.getAttribute("prodCatalogId"))) {
-        prodCatalogId = (String) request.getAttribute("prodCatalogId");
-    }
     GenericValue prodCatalog = delegator.findByPrimaryKey("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
     GenericValue facility = null;
     if(prodCatalog == null) {
@@ -137,9 +134,9 @@
        </tr>
 
       <tr>
-        <td width="26%" align=right><div class="tabletext"><b>One Inventory Facility?</b></div></td>
+        <td width="26%" align=right><div class="tabletext">One Inventory Facility?</div></td>
         <td>&nbsp;</td>
-        <td width="24%">
+        <td width="74%">
           <SELECT name='oneInventoryFacility'>
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='oneInventoryFacility' default="Y"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
@@ -147,9 +144,9 @@
         </td>
       </tr>
       <tr>
-        <td width="26%" align=right><div class="tabletext"><b>Use Quick Add?</b></div></td>
+        <td width="26%" align=right><div class="tabletext">Use Quick Add?</div></td>
         <td>&nbsp;</td>
-        <td width="24%">
+        <td width="74%">
           <SELECT name='useQuickAdd'>
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='useQuickAdd' default="N"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>

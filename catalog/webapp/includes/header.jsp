@@ -45,6 +45,7 @@
           <td class="headerButtonRight"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Products</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/EditFeatureCategories</ofbiz:url>" class="buttontext">Features</a></td>
           <td class="headerButtonRight"><a href="<ofbiz:url>/FindFacility</ofbiz:url>" class="buttontext">Facilities</a></td>
+          <td class="headerButtonRight"><a href="<ofbiz:url>/FindProductPromo</ofbiz:url>" class="buttontext">Promos</a></td>
         </TR>
       </TABLE>
     </TD>
