@@ -216,18 +216,6 @@ public class GenericValue extends GenericEntity {
   public void removeRelated(String relationName) throws GenericEntityException {
     this.getDelegator().removeRelated(relationName, this); 
   }
-  /** PreStore the Entity instance so that on the next create or update, this will be updated in the same transaction
-   *@param entity GenericValue instance that will be set or created if modified
-   */
-  public void preStoreOther(GenericValue entity) { getOtherToStore().add(entity); }
-  /** PreStore the Entity instances so that on the next create or update, these will be updated in the same transaction
-   *@param entities Collection of GenericValue instances that will be set or created if modified
-   */
-  public void preStoreOthers(Collection entities) { getOtherToStore().addAll(entities); }
-  protected Collection getOtherToStore() { 
-    if(otherToStore == null) otherToStore = new LinkedList();
-    return otherToStore;
-  }
 
   /** Clones this GenericValue, this is a shallow clone & uses the default shallow HashMap clone
    *@return Object that is a clone of this GenericValue

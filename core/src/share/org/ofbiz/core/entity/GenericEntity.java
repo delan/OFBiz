@@ -62,8 +62,6 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
    *  current value on an update.
    */
   protected Map fields;
-  /** Map to store related entities that will be updated if modified when this entity is stored; populated with preStoreRelated(String, Collection). This is here so that it can be implicitly stored in the same transaction context. */
-  public Collection otherToStore = null;
   
   /** Contains the entityName of this entity, necessary for efficiency when creating EJBs */
   public String entityName = null;
