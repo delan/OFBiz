@@ -24,34 +24,35 @@
 package org.ofbiz.content.widget.screen;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.ArrayList;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.ObjectType;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.collections.FlexibleMapAccessor;
+import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.finder.ByAndFinder;
 import org.ofbiz.entity.finder.ByConditionFinder;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
-
 import org.w3c.dom.Element;
-import javax.servlet.*;
-import javax.servlet.http.*;
 
 
 /**
@@ -283,13 +284,26 @@ public abstract class ModelScreenAction {
 
             Locale locale = (Locale) context.get("locale");
             String resource = this.resourceExdr.expandString(context, locale);
-            Map propertyMap = UtilProperties.getResourceBundleMap(resource, locale);
-            this.mapNameAcsr.put(context, propertyMap);
+            
+            ResourceBundleMapWrapper existingPropMap = (ResourceBundleMapWrapper) this.mapNameAcsr.get(context);
+            if (existingPropMap == null) {
+                this.mapNameAcsr.put(context, UtilProperties.getResourceBundleMap(resource, locale));
+            } else {
+                existingPropMap.addBottomResourceBundle(resource);
+            }
 
             if (global) {
                 Map globalCtx = (Map) context.get("globalContext");
                 if (globalCtx != null) {
-                    this.mapNameAcsr.put(globalCtx, propertyMap);
+                    ResourceBundleMapWrapper globalExistingPropMap = (ResourceBundleMapWrapper) this.mapNameAcsr.get(globalCtx);
+                    if (globalExistingPropMap == null) {
+                        this.mapNameAcsr.put(globalCtx, UtilProperties.getResourceBundleMap(resource, locale));
+                    } else {
+                        // is it the same object? if not add it in here too...
+                        if (existingPropMap != globalExistingPropMap) {
+                            globalExistingPropMap.addBottomResourceBundle(resource);
+                        }
+                    }
                 }
             }
         }
