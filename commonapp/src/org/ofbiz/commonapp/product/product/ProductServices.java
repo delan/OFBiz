@@ -245,9 +245,26 @@ public class ProductServices {
 
         try {
             GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
-            result.put("product", product);
+            GenericValue mainProduct = product;
+            if (product.get("isVariant") != null && product.getString("isVariant").equalsIgnoreCase("Y")) {
+                Collection c = product.getRelatedByAndCache("AssocProductAssoc",
+                        UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"));
+                if (c != null) {
+                    Debug.logInfo("Found related: " + c);
+                    c = EntityUtil.filterByDate(c);
+                    Debug.logInfo("Found Filtered related: " + c);
+                    if (c.size() > 0) {
+                        GenericValue asV = (GenericValue) c.iterator().next();
+                        Debug.logInfo("ASV: " + asV);
+                        mainProduct = asV.getRelatedOneCache("MainProduct");
+                        Debug.logInfo("Main product = " + mainProduct);
+                    }
+                }
+            }
+            result.put("product", mainProduct);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (GenericEntityException e) {
+            e.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, "Problems reading product entity: " + e.getMessage());
         }
