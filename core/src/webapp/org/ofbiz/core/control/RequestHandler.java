@@ -80,6 +80,25 @@ public class RequestHandler implements Serializable {
             nextView = RequestHandler.getNextPageUri(chain);
             Debug.logInfo("[RequestHandler]: Chain in place: requestUri=" + requestUri + " nextView=" + nextView, module);
         } else {
+            // Check if we SHOULD be secure and are not. If we are posting let it pass to not lose data. (too late now anyway)
+            if (!request.isSecure() && rm.requiresHttps(requestUri) && !request.getMethod().equalsIgnoreCase("POST")) {
+                String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
+                if (UtilProperties.propertyValueEqualsIgnoreCase("url.properties", "port.https.enabled", "Y")) {
+                    StringBuffer newUrl = new StringBuffer();
+                    newUrl.append("https://");
+                    newUrl.append(request.getServerName());
+                    if (!port.equals("443"))
+                        newUrl.append(":" + port);
+                    newUrl.append((String)request.getAttribute(SiteDefs.CONTROL_PATH));
+                    newUrl.append(request.getPathInfo());
+                    if (request.getQueryString() != null)
+                        newUrl.append("?" + request.getQueryString());
+
+                    // if we are supposed to be secure, redirect secure.
+                    callRedirect(newUrl.toString(), request, response);
+                }
+            }
+
             // Invoke the pre-processor (but NOT in a chain)
             Collection preProcEvents = rm.getPreProcessor();
             if (preProcEvents != null) {

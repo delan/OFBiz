@@ -55,7 +55,6 @@ public class UrlTag extends BodyTagSupport {
         RequestManager rm = rh.getRequestManager();
 
         BodyContent body = getBodyContent();
-        String serverHost = request.getServerName();
 
         String baseURL = body.getString();
         String requestUri = RequestHandler.getRequestUri(baseURL);
@@ -65,11 +64,9 @@ public class UrlTag extends BodyTagSupport {
         if (rm.requiresHttps(requestUri) && useHttps) {
             String port = UtilProperties.getPropertyValue("url.properties", "port.https", "443");
             newURL.append("https://");
-            newURL.append(serverHost);
-            if (!port.equals("443")) {
-                newURL.append(":");
-                newURL.append(port);
-            }
+            newURL.append(request.getServerName());
+            if (!port.equals("443"))
+                newURL.append(":" + port);
         }
 
         Debug.logVerbose("UseHTTPS: " + useHttps + " -- URI: " + requestUri + " -> " + rm.requiresHttps(requestUri), module);
