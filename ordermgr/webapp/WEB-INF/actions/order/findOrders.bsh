@@ -144,12 +144,15 @@ if (lookupFlag != null) {
         minDate = request.getParameter("minDate");
         maxDate = request.getParameter("maxDate");
         
+        paramList = paramList + "&webSiteId=" + webSiteId;
+        if (!"ANY".equals(webSiteId)) {           
+            andExprs.add(new EntityExpr("webSiteId", EntityOperator.EQUALS, webSiteId));
+        }               
         paramList = paramList + "&roleTypeId=" + roleType;
         if (!"ANY".equals(roleType)) {
             entityName = "OrderHeaderAndRoles";
             andExprs.add(new EntityExpr("roleTypeId", EntityOperator.EQUALS, roleType));
-        }
-        
+        }        
         paramList = paramList + "&orderTypeId=" + orderType;        
         if (!"ANY".equals(orderType)) {            
             andExprs.add(new EntityExpr("orderTypeId", EntityOperator.EQUALS, orderType));
@@ -161,11 +164,7 @@ if (lookupFlag != null) {
         if (billAcct != null && billAcct.length() > 0) {
             paramList = paramList + "&billingAccountId=" + billAcct;
             andExprs.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billAcct));
-        }
-        if (webSiteId != null && webSiteId.length() > 0) {
-            paramList = paramList + "&webSiteId=" + webSiteId;
-            andExprs.add(new EntityExpr("webSiteId", EntityOperator.EQUALS, webSiteId));
-        }
+        }     
         if (createdBy != null && createdBy.length() > 0) {
             paramList = paramList + "&createdBy=" + createdBy;
             andExprs.add(new EntityExpr("createdBy", EntityOperator.EQUALS, createdBy));
