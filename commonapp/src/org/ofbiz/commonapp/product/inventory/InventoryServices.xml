@@ -218,6 +218,7 @@
         <make-value entity-name="OrderHeader" value-name="ohLookupMap"/>
         <set-pk-fields map-name="parameters" value-name="ohLookupMap"/>
         <find-by-primary-key entity-name="OrderHeader" map-name="ohLookupMap" value-name="orderHeader"/>
+        <log level="info" message="Order Header : ${orderHeader}"/>
 
         <!-- before we do the find, put together the orderBy list based on which reserveOrderEnumId is specified -->
         <if-compare value="INVRO_FIFO_EXP" operator="equals" field-name="reserveOrderEnumId" map-name="parameters">
