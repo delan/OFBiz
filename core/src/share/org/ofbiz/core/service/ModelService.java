@@ -44,6 +44,8 @@ public class ModelService {
     public static final String RESPOND_SUCCESS = "success";
     public static final String RESPOND_ERROR = "error";
     public static final String ERROR_MESSAGE ="errorMessage";
+    public static final String ERROR_MESSAGE_LIST ="errorMessageList";
+    public static final String SUCCESS_MESSAGE ="successMessage";
     
     /** The name of this service */
     public String name;
