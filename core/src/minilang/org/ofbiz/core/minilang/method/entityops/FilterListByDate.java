@@ -40,33 +40,38 @@ import org.ofbiz.core.entity.*;
  */
 public class FilterListByDate extends MethodOperation {
     
-    String listName;
-    String toListName;
-    String validDateName;
+    ContextAccessor listAcsr;
+    ContextAccessor toListAcsr;
+    ContextAccessor validDateAcsr;
     String fromFieldName;
     String thruFieldName;
-    boolean allSame;
+    String allSameStr;
 
     public FilterListByDate(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        listName = element.getAttribute("list-name");
-        toListName = element.getAttribute("to-list-name");
-        if (UtilValidate.isEmpty(toListName)) toListName = listName;
-        validDateName = element.getAttribute("valid-date-name");
+        listAcsr = new ContextAccessor(element.getAttribute("list-name"));
+        toListAcsr = new ContextAccessor(element.getAttribute("to-list-name"), element.getAttribute("list-name"));
+        validDateAcsr = new ContextAccessor(element.getAttribute("valid-date-name"));
 
         fromFieldName = element.getAttribute("from-field-name");
         if (UtilValidate.isEmpty(fromFieldName)) fromFieldName = "fromDate";
         thruFieldName = element.getAttribute("thru-field-name");
         if (UtilValidate.isEmpty(thruFieldName)) thruFieldName = "thruDate";
 
-        allSame = !"false".equals(element.getAttribute("all-same"));
+        allSameStr = element.getAttribute("all-same");
     }
 
     public boolean exec(MethodContext methodContext) {
-        if (UtilValidate.isNotEmpty(validDateName)) {
-            methodContext.putEnv(toListName, EntityUtil.filterByDate((List) methodContext.getEnv(listName), (java.sql.Timestamp) methodContext.getEnv(validDateName), fromFieldName, thruFieldName, true));
+        String fromFieldName = methodContext.expandString(this.fromFieldName);
+        String thruFieldName = methodContext.expandString(this.thruFieldName);
+        String allSameStr = methodContext.expandString(this.allSameStr);
+        
+        boolean allSame = !"false".equals(allSameStr);
+        
+        if (!validDateAcsr.isEmpty()) {
+            toListAcsr.put(methodContext, EntityUtil.filterByDate((List) listAcsr.get(methodContext), (java.sql.Timestamp) validDateAcsr.get(methodContext), fromFieldName, thruFieldName, true));
         } else {
-            methodContext.putEnv(toListName, EntityUtil.filterByDate((List) methodContext.getEnv(listName), UtilDateTime.nowTimestamp(), fromFieldName, thruFieldName, true));
+            toListAcsr.put(methodContext, EntityUtil.filterByDate((List) listAcsr.get(methodContext), UtilDateTime.nowTimestamp(), fromFieldName, thruFieldName, true));
         }
         return true;
     }

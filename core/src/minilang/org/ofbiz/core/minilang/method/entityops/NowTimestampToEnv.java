@@ -37,15 +37,15 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class NowTimestampToEnv extends MethodOperation {
     
-    String envName;
+    ContextAccessor envAcsr;
 
     public NowTimestampToEnv(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        envName = element.getAttribute("env-name");
+        envAcsr = new ContextAccessor(element.getAttribute("env-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        methodContext.putEnv(envName, new java.sql.Timestamp(System.currentTimeMillis()));
+        envAcsr.put(methodContext, new java.sql.Timestamp(System.currentTimeMillis()));
         return true;
     }
 }

@@ -41,21 +41,14 @@ public class Log extends MethodOperation {
     
     public static final String module = Log.class.getName();
 
-    int level;
+    String levelStr;
     String message;
     List methodStrings = null;
     
     public Log(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        message = element.getAttribute("message");
-        String levelStr = element.getAttribute("level");
-        Integer levelInt = Debug.getLevelFromString(levelStr);
-        if (levelInt == null) {
-            Debug.logWarning("Specified level [" + levelStr + "] was not valid, using INFO");
-            level = Debug.INFO;
-        } else {
-            level = levelInt.intValue();
-        }
+        this.message = element.getAttribute("message");
+        this.levelStr = element.getAttribute("level");
 
         List methodStringElements = UtilXml.childElementList(element, null);
         if (methodStringElements.size() > 0) {
@@ -77,6 +70,18 @@ public class Log extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
+        String levelStr = methodContext.expandString(this.levelStr);
+        String message = methodContext.expandString(this.message);
+        
+        int level;
+        Integer levelInt = Debug.getLevelFromString(levelStr);
+        if (levelInt == null) {
+            Debug.logWarning("Specified level [" + levelStr + "] was not valid, using INFO");
+            level = Debug.INFO;
+        } else {
+            level = levelInt.intValue();
+        }
+
         //bail out quick if the logging level isn't on, ie don't even create string
         if (!Debug.isOn(level)) {
             return true;

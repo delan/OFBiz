@@ -118,7 +118,7 @@ public class CheckPermission extends MethodOperation {
             if (propMsg == null || propMsg.length() == 0) {
                 messages.add("Simple Method Permission error occurred, but no message was found, sorry.");
             } else {
-                messages.add(propMsg);
+                messages.add(methodContext.expandString(propMsg));
             }
             // if (Debug.infoOn()) Debug.logInfo("[SimpleMapOperation.addMessage] Adding property message: " + propMsg);
         } else {

@@ -26,7 +26,6 @@ package org.ofbiz.core.minilang.method;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
-import org.ofbiz.core.minilang.method.*;
 
 /**
  * A type of MethodString that represents a String constant value
@@ -47,6 +46,9 @@ public class StringString extends MethodString {
     }
 
     public String getString(MethodContext methodContext) {
+        String value = methodContext.expandString(this.value);
+        String cdataValue = methodContext.expandString(this.cdataValue);
+        
         boolean valueExists = UtilValidate.isNotEmpty(value);
         boolean cdataValueExists = UtilValidate.isNotEmpty(cdataValue);
         

@@ -40,31 +40,38 @@ import org.ofbiz.core.entity.*;
  */
 public class FindByAnd extends MethodOperation {
     
-    String listName;
+    ContextAccessor listAcsr;
     String entityName;
-    String mapName;
-    String orderByListName;
+    ContextAccessor mapAcsr;
+    ContextAccessor orderByListAcsr;
     String delegatorName;
-    boolean useCache;
-    boolean useIterator;
+    String useCacheStr;
+    String useIteratorStr;
 
     public FindByAnd(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        listName = element.getAttribute("list-name");
+        listAcsr = new ContextAccessor(element.getAttribute("list-name"));
         entityName = element.getAttribute("entity-name");
-        mapName = element.getAttribute("map-name");
-        orderByListName = element.getAttribute("order-by-list-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        orderByListAcsr = new ContextAccessor(element.getAttribute("order-by-list-name"));
         delegatorName = element.getAttribute("delegator-name");
 
-        useCache = "true".equals(element.getAttribute("use-cache"));
-        useIterator = "true".equals(element.getAttribute("use-iterator"));
+        useCacheStr = element.getAttribute("use-cache");
+        useIteratorStr = element.getAttribute("use-iterator");
     }
 
     public boolean exec(MethodContext methodContext) {
+        String entityName = methodContext.expandString(this.entityName);
+        String delegatorName = methodContext.expandString(this.delegatorName);
+        String useCacheStr = methodContext.expandString(this.useCacheStr);
+        String useIteratorStr = methodContext.expandString(this.useIteratorStr);
+        
+        boolean useCache = "true".equals(useCacheStr);
+        boolean useIterator = "true".equals(useIteratorStr);
+        
         List orderByNames = null;
-
-        if (orderByListName != null && orderByListName.length() > 0) {
-            orderByNames = (List) methodContext.getEnv(orderByListName);
+        if (!orderByListAcsr.isEmpty()) {
+            orderByNames = (List) orderByListAcsr.get(methodContext);
         }
 
         GenericDelegator delegator = methodContext.getDelegator();
@@ -73,23 +80,18 @@ public class FindByAnd extends MethodOperation {
         }
 
         try {
-            if (this.useIterator) {
+            if (useIterator) {
                 EntityCondition whereCond = null;
-                if (mapName != null && mapName.length() > 0) {
-                    whereCond = new EntityFieldMap((Map) methodContext.getEnv(mapName), EntityOperator.AND);
+                if (!mapAcsr.isEmpty()) {
+                    whereCond = new EntityFieldMap((Map) mapAcsr.get(methodContext), EntityOperator.AND);
                 }
-                methodContext.putEnv(listName, delegator.findListIteratorByCondition(entityName, whereCond, null, null, orderByNames, null));
+                listAcsr.put(methodContext, delegator.findListIteratorByCondition(entityName, whereCond, null, null, orderByNames, null));
             } else {
-                if (this.useCache) {
-                    methodContext.putEnv(listName, delegator.findByAndCache(entityName, (Map) methodContext.getEnv(mapName), orderByNames));
+                if (useCache) {
+                    listAcsr.put(methodContext, delegator.findByAndCache(entityName, (Map) mapAcsr.get(methodContext), orderByNames));
                 } else {
-                    methodContext.putEnv(listName, delegator.findByAnd(entityName, (Map) methodContext.getEnv(mapName), orderByNames));
+                    listAcsr.put(methodContext, delegator.findByAnd(entityName, (Map) mapAcsr.get(methodContext), orderByNames));
                 }
-            }
-            if (this.useCache) {
-                methodContext.putEnv(listName, delegator.findByAndCache(entityName, (Map) methodContext.getEnv(mapName), orderByNames));
-            } else {
-                methodContext.putEnv(listName, delegator.findByAnd(entityName, (Map) methodContext.getEnv(mapName), orderByNames));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e);

@@ -46,32 +46,19 @@ public class Calculate extends MethodOperation {
     public static final int TYPE_LONG = 3;
     public static final int TYPE_INTEGER = 4;
 
-    String mapName;
-    String fieldName;
-    int type;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
+    String typeString;
     Calculate.SubCalc calcops[];
 
     public Calculate(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
 
-        String typeString = element.getAttribute("type");
-
-        if ("Double".equals(typeString)) {
-            type = Calculate.TYPE_DOUBLE;
-        } else if ("Float".equals(typeString)) {
-            type = Calculate.TYPE_FLOAT;
-        } else if ("Long".equals(typeString)) {
-            type = Calculate.TYPE_LONG;
-        } else if ("Integer".equals(typeString)) {
-            type = Calculate.TYPE_INTEGER;
-        } else {
-            type = Calculate.TYPE_DOUBLE;
-        }
+        typeString = element.getAttribute("type");
 
         List calcopElements = UtilXml.childElementList(element, null);
-
         calcops = new Calculate.SubCalc[calcopElements.size()];
         Iterator calcopIter = calcopElements.iterator();
         int i = 0;
@@ -93,6 +80,20 @@ public class Calculate extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
+        String typeString = methodContext.expandString(this.typeString);
+        int type;
+        if ("Double".equals(typeString)) {
+            type = Calculate.TYPE_DOUBLE;
+        } else if ("Float".equals(typeString)) {
+            type = Calculate.TYPE_FLOAT;
+        } else if ("Long".equals(typeString)) {
+            type = Calculate.TYPE_LONG;
+        } else if ("Integer".equals(typeString)) {
+            type = Calculate.TYPE_INTEGER;
+        } else {
+            type = Calculate.TYPE_DOUBLE;
+        }
+        
         double resultValue = 0;
 
         for (int i = 0; i < calcops.length; i++) {
@@ -106,31 +107,27 @@ public class Calculate extends MethodOperation {
         case TYPE_DOUBLE:
             resultObj = new Double(resultValue);
             break;
-
         case TYPE_FLOAT:
             resultObj = new Float(resultValue);
             break;
-
         case TYPE_LONG:
             resultObj = new Long(Math.round(resultValue));
             break;
-
         case TYPE_INTEGER:
             resultObj = new Integer((int) Math.round(resultValue));
             break;
         }
 
-        if (mapName != null && mapName.length() > 0) {
-            Map toMap = (Map) methodContext.getEnv(mapName);
-
+        if (!mapAcsr.isEmpty()) {
+            Map toMap = (Map) mapAcsr.get(methodContext);
             if (toMap == null) {
-                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map", module);
+                if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map", module);
                 toMap = new HashMap();
-                methodContext.putEnv(mapName, toMap);
+                mapAcsr.put(methodContext, toMap);
             }
-            toMap.put(fieldName, resultObj);
+            fieldAcsr.put(toMap, resultObj);
         } else {
-            methodContext.putEnv(fieldName, resultObj);
+            fieldAcsr.put(methodContext, resultObj);
         }
 
         return true;
@@ -140,28 +137,28 @@ public class Calculate extends MethodOperation {
         public double calcValue(MethodContext methodContext);
     }
 
-
     protected static class NumberOp implements SubCalc {
-        double value;
+        String valueStr;
 
         public NumberOp(Element element) {
             String valueStr = element.getAttribute("value");
+        }
 
+        public double calcValue(MethodContext methodContext) {
+            String valueStr = methodContext.expandString(this.valueStr);
+            double value;
             try {
                 value = Double.parseDouble(valueStr);
             } catch (Exception e) {
                 Debug.logError(e, "Could not parse the number string: " + valueStr, module);
                 throw new IllegalArgumentException("Could not parse the number string: " + valueStr);
             }
-        }
-
-        public double calcValue(MethodContext methodContext) {
+            
             // Debug.logInfo("calcValue number: " + value, module);
             return value;
         }
 
     }
-
 
     protected static class CalcOp implements SubCalc {
         public static final int OPERATOR_ADD = 1;
@@ -170,33 +167,17 @@ public class Calculate extends MethodOperation {
         public static final int OPERATOR_DIVIDE = 4;
         public static final int OPERATOR_NEGATIVE = 5;
 
-        String mapName;
-        String fieldName;
-        int operator;
+        ContextAccessor mapAcsr;
+        ContextAccessor fieldAcsr;
+        String operatorStr;
         Calculate.SubCalc calcops[];
 
         public CalcOp(Element element) {
-            mapName = element.getAttribute("map-name");
-            fieldName = element.getAttribute("field-name");
-
-            String operatorStr = element.getAttribute("operator");
-
-            if ("get".equals(operatorStr)) {
-                operator = CalcOp.OPERATOR_ADD;
-            } else if ("add".equals(operatorStr)) {
-                operator = CalcOp.OPERATOR_ADD;
-            } else if ("subtract".equals(operatorStr)) {
-                operator = CalcOp.OPERATOR_SUBTRACT;
-            } else if ("multiply".equals(operatorStr)) {
-                operator = CalcOp.OPERATOR_MULTIPLY;
-            } else if ("divide".equals(operatorStr)) {
-                operator = CalcOp.OPERATOR_DIVIDE;
-            } else if ("negative".equals(operatorStr)) {
-                operator = CalcOp.OPERATOR_NEGATIVE;
-            }
+            mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+            fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+            operatorStr = element.getAttribute("operator");
 
             List calcopElements = UtilXml.childElementList(element, null);
-
             calcops = new Calculate.SubCalc[calcopElements.size()];
             Iterator calcopIter = calcopElements.iterator();
             int i = 0;
@@ -218,24 +199,39 @@ public class Calculate extends MethodOperation {
         }
 
         public double calcValue(MethodContext methodContext) {
+            String operatorStr = methodContext.expandString(this.operatorStr);
+            int operator = CalcOp.OPERATOR_ADD;
+            if ("get".equals(operatorStr)) {
+                operator = CalcOp.OPERATOR_ADD;
+            } else if ("add".equals(operatorStr)) {
+                operator = CalcOp.OPERATOR_ADD;
+            } else if ("subtract".equals(operatorStr)) {
+                operator = CalcOp.OPERATOR_SUBTRACT;
+            } else if ("multiply".equals(operatorStr)) {
+                operator = CalcOp.OPERATOR_MULTIPLY;
+            } else if ("divide".equals(operatorStr)) {
+                operator = CalcOp.OPERATOR_DIVIDE;
+            } else if ("negative".equals(operatorStr)) {
+                operator = CalcOp.OPERATOR_NEGATIVE;
+            }
+            
             double resultValue = 0;
             boolean isFirst = true;
 
-            // if a fieldName was specified, get the field from the map or result and use it as the initial value
-            if (fieldName != null && fieldName.length() > 0) {
+            // if a fieldAcsr was specified, get the field from the map or result and use it as the initial value
+            if (!fieldAcsr.isEmpty()) {
                 Object fieldObj = null;
 
-                if (mapName != null && mapName.length() > 0) {
-                    Map fromMap = (Map) methodContext.getEnv(mapName);
-
+                if (!mapAcsr.isEmpty()) {
+                    Map fromMap = (Map) mapAcsr.get(methodContext);
                     if (fromMap == null) {
-                        if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapName + ", creating new map", module);
+                        if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", creating new map", module);
                         fromMap = new HashMap();
-                        methodContext.putEnv(mapName, fromMap);
+                        mapAcsr.put(methodContext, fromMap);
                     }
-                    fieldObj = fromMap.get(fieldName);
+                    fieldObj = fieldAcsr.get(fromMap);
                 } else {
-                    fieldObj = methodContext.getEnv(fieldName);
+                    fieldObj = fieldAcsr.get(methodContext);
                 }
 
                 if (fieldObj != null) {
@@ -251,7 +247,7 @@ public class Calculate extends MethodOperation {
                     if (operator == OPERATOR_NEGATIVE) resultValue = -resultValue;
                     isFirst = false;
                 } else {
-                    if (Debug.infoOn()) Debug.logInfo("Field not found with field-name " + fieldName + ", and map-name " + mapName + "using a default of 0", module);
+                    if (Debug.infoOn()) Debug.logInfo("Field not found with field-name " + fieldAcsr + ", and map-name " + mapAcsr + "using a default of 0", module);
                 }
             }
 
@@ -265,16 +261,13 @@ public class Calculate extends MethodOperation {
                     case OPERATOR_ADD:
                         resultValue += calcops[i].calcValue(methodContext);
                         break;
-
                     case OPERATOR_SUBTRACT:
                     case OPERATOR_NEGATIVE:
                         resultValue -= calcops[i].calcValue(methodContext);
                         break;
-
                     case OPERATOR_MULTIPLY:
                         resultValue *= calcops[i].calcValue(methodContext);
                         break;
-
                     case OPERATOR_DIVIDE:
                         resultValue /= calcops[i].calcValue(methodContext);
                         break;
@@ -282,7 +275,7 @@ public class Calculate extends MethodOperation {
                 }
                 // Debug.logInfo("sub total so far: " + resultValue);
             }
-            // Debug.logInfo("calcValue calcop: " + resultValue + "(field=" + fieldName + ", map=" + mapName + ")");
+            // Debug.logInfo("calcValue calcop: " + resultValue + "(field=" + fieldAcsr + ", map=" + mapAcsr + ")");
             return resultValue;
         }
     }

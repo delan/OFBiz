@@ -28,7 +28,6 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
-import org.ofbiz.core.minilang.method.*;
 
 /**
  * A type of MethodString that represents a String constant value
@@ -39,34 +38,31 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FieldString extends MethodString {
     
-    String fieldName;
-    String mapName;
+    ContextAccessor fieldAcsr;
+    ContextAccessor mapAcsr;
 
     public FieldString(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        fieldName = element.getAttribute("field-name");
-        mapName = element.getAttribute("map-name");
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
     }
 
     public String getString(MethodContext methodContext) {
         Object fieldVal = null;
-
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName + ", not getting string value");
+                Debug.logWarning("Map not found with name " + mapAcsr + ", not getting string value");
                 return "";
             }
-
-            fieldVal = fromMap.get(fieldName);
+            fieldVal = fieldAcsr.get(fromMap);
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         if (fieldVal == null) {
-            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not getting string value");
+            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not getting string value");
             return "";
         }
         

@@ -27,7 +27,6 @@ import org.w3c.dom.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
-import org.ofbiz.core.minilang.method.*;
 
 /**
  * A type of MethodObject that represents a String constant value to be used as an Object
@@ -57,6 +56,9 @@ public class StringObject extends MethodObject {
     }
     
     public Object getObject(MethodContext methodContext) {
+        String value = methodContext.expandString(this.value);
+        String cdataValue = methodContext.expandString(this.cdataValue);
+        
         boolean valueExists = UtilValidate.isNotEmpty(value);
         boolean cdataValueExists = UtilValidate.isNotEmpty(cdataValue);
         

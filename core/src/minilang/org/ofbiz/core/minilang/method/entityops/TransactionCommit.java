@@ -39,20 +39,17 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class TransactionCommit extends MethodOperation {
     
-    String beganTransactionName;
+    ContextAccessor beganTransactionAcsr;
 
     public TransactionCommit(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        beganTransactionName = element.getAttribute("began-transaction-name");
-        if (UtilValidate.isEmpty(beganTransactionName)) {
-            beganTransactionName = "beganTransaction";
-        }
+        beganTransactionAcsr = new ContextAccessor(element.getAttribute("began-transaction-name"), "beganTransaction");
     }
 
     public boolean exec(MethodContext methodContext) {
         boolean beganTransaction = false;
         
-        Boolean beganTransactionBoolean = (Boolean) methodContext.getEnv(beganTransactionName);
+        Boolean beganTransactionBoolean = (Boolean) beganTransactionAcsr.get(methodContext);
         if (beganTransactionBoolean != null) {
             beganTransaction = beganTransactionBoolean.booleanValue();
         }
@@ -67,7 +64,7 @@ public class TransactionCommit extends MethodOperation {
             return false;
         }
         
-        methodContext.removeEnv(beganTransactionName);
+        beganTransactionAcsr.remove(methodContext);
         return true;
     }
 }

@@ -38,16 +38,17 @@ import org.ofbiz.core.minilang.method.*;
 public class SequencedIdToEnv extends MethodOperation {
     
     String seqName;
-    String envName;
+    ContextAccessor envAcsr;
 
     public SequencedIdToEnv(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         seqName = element.getAttribute("sequence-name");
-        envName = element.getAttribute("env-name");
+        envAcsr = new ContextAccessor(element.getAttribute("env-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        methodContext.putEnv(envName, methodContext.getDelegator().getNextSeqId(seqName));
+        String seqName = methodContext.expandString(this.seqName);
+        envAcsr.put(methodContext, methodContext.getDelegator().getNextSeqId(seqName));
         return true;
     }
 }

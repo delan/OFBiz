@@ -39,14 +39,11 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class TransactionBegin extends MethodOperation {
     
-    String beganTransactionName;
+    ContextAccessor beganTransactionAcsr;
 
     public TransactionBegin(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        beganTransactionName = element.getAttribute("began-transaction-name");
-        if (UtilValidate.isEmpty(beganTransactionName)) {
-            beganTransactionName = "beganTransaction";
-        }
+        beganTransactionAcsr = new ContextAccessor(element.getAttribute("began-transaction-name"), "beganTransaction");
     }
 
     public boolean exec(MethodContext methodContext) {
@@ -61,7 +58,7 @@ public class TransactionBegin extends MethodOperation {
             return false;
         }
         
-        methodContext.putEnv(beganTransactionName, new Boolean(beganTransaction));
+        beganTransactionAcsr.put(methodContext, new Boolean(beganTransaction));
         return true;
     }
 }

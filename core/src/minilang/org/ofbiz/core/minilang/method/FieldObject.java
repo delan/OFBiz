@@ -28,7 +28,6 @@ import java.util.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.minilang.*;
-import org.ofbiz.core.minilang.method.*;
 
 /**
  * A type of MethodObject that represents an Object value in a certain location
@@ -39,14 +38,14 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FieldObject extends MethodObject {
     
-    String fieldName;
-    String mapName;
+    ContextAccessor fieldAcsr;
+    ContextAccessor mapAcsr;
     String type;
 
     public FieldObject(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        fieldName = element.getAttribute("field-name");
-        mapName = element.getAttribute("map-name");
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         type = element.getAttribute("type");
         if (UtilValidate.isEmpty(type)) {
             type = "String";
@@ -70,22 +69,20 @@ public class FieldObject extends MethodObject {
     public Object getObject(MethodContext methodContext) {
         Object fieldVal = null;
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
-
-            if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName + ", not getting Object value, returning null.");
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
+           if (fromMap == null) {
+                Debug.logWarning("Map not found with name " + mapAcsr + ", not getting Object value, returning null.");
                 return null;
             }
-
-            fieldVal = fromMap.get(fieldName);
+            fieldVal = fieldAcsr.get(fromMap);
         } else {
             // no map name, try the env
-            fieldVal = methodContext.getEnv(fieldName);
+            fieldVal = fieldAcsr.get(methodContext);
         }
 
         if (fieldVal == null) {
-            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldName + " in Map with name " + mapName + ", not getting Object value, returning null.");
+            if (Debug.infoOn()) Debug.logInfo("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr + ", not getting Object value, returning null.");
             return null;
         }
         

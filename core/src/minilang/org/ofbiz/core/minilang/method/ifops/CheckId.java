@@ -142,10 +142,11 @@ public class CheckId extends MethodOperation {
         } else if (isProperty && propertyResource != null && message != null) {
             String propMsg = UtilProperties.getPropertyValue(UtilURL.fromResource(propertyResource, loader), message);
 
-            if (propMsg == null || propMsg.length() == 0)
+            if (propMsg == null || propMsg.length() == 0) {
                 messages.add(defaultMessage + errorDetails);
-            else
-                messages.add(propMsg + errorDetails);
+            } else {
+                messages.add(methodContext.expandString(propMsg) + errorDetails);
+            }
         } else {
             messages.add(defaultMessage + errorDetails);
         }

@@ -39,18 +39,17 @@ import org.ofbiz.core.entity.*;
  */
 public class SetCurrentUserLogin extends MethodOperation {
     
-    String valueName;
+    ContextAccessor valueAcsr;
 
     public SetCurrentUserLogin(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
+        valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        GenericValue userLogin = (GenericValue) methodContext.getEnv(valueName);
-
+        GenericValue userLogin = (GenericValue) valueAcsr.get(methodContext);
         if (userLogin == null) {
-            Debug.logWarning("In SetCurrentUserLogin a value was not found with the specified valueName: " + valueName + ", not setting");
+            Debug.logWarning("In SetCurrentUserLogin a value was not found with the specified valueName: " + valueAcsr + ", not setting");
             return true;
         }
 

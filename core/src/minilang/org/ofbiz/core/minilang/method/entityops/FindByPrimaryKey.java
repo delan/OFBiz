@@ -40,33 +40,38 @@ import org.ofbiz.core.entity.*;
  */
 public class FindByPrimaryKey extends MethodOperation {
     
-    String valueName;
+    ContextAccessor valueAcsr;
     String entityName;
-    String mapName;
+    ContextAccessor mapAcsr;
     String delegatorName;
-    boolean useCache;
+    String useCacheStr;
 
     public FindByPrimaryKey(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        valueName = element.getAttribute("value-name");
+        valueAcsr = new ContextAccessor(element.getAttribute("value-name"));
         entityName = element.getAttribute("entity-name");
-        mapName = element.getAttribute("map-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
         delegatorName = element.getAttribute("delegator-name");
-
-        useCache = "true".equals(element.getAttribute("use-cache"));
+        useCacheStr = element.getAttribute("use-cache");
     }
 
     public boolean exec(MethodContext methodContext) {
+        String entityName = methodContext.expandString(this.entityName);
+        String delegatorName = methodContext.expandString(this.delegatorName);
+        String useCacheStr = methodContext.expandString(this.useCacheStr);
+        
+        boolean useCache = "true".equals(useCacheStr);
+
         GenericDelegator delegator = methodContext.getDelegator();
         if (delegatorName != null && delegatorName.length() > 0) {
             delegator = GenericDelegator.getGenericDelegator(delegatorName);
         }
 
         try {
-            if (this.useCache) {
-                methodContext.putEnv(valueName, delegator.findByPrimaryKeyCache(entityName, (Map) methodContext.getEnv(mapName)));
+            if (useCache) {
+                valueAcsr.put(methodContext, delegator.findByPrimaryKeyCache(entityName, (Map) mapAcsr.get(methodContext)));
             } else {
-                methodContext.putEnv(valueName, delegator.findByPrimaryKey(entityName, (Map) methodContext.getEnv(mapName)));
+                valueAcsr.put(methodContext, delegator.findByPrimaryKey(entityName, (Map) mapAcsr.get(methodContext)));
             }
         } catch (GenericEntityException e) {
             Debug.logError(e);

@@ -42,55 +42,61 @@ public class PropertyToField extends MethodOperation {
     
     String resource;
     String property;
-    String mapName;
-    String fieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
     String defaultVal;
     boolean noLocale;
-    String argListName;
+    ContextAccessor argListAcsr;
 
     public PropertyToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         resource = element.getAttribute("resource");
         property = element.getAttribute("property");
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
         defaultVal = element.getAttribute("default");
         // defaults to false, ie anything but true is false
         noLocale = "true".equals(element.getAttribute("no-locale"));
-        argListName = element.getAttribute("arg-list-name");
+        argListAcsr = new ContextAccessor(element.getAttribute("arg-list-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        String value = null;
+        String resource = methodContext.expandString(this.resource);
+        String property = methodContext.expandString(this.property);
         
+        String value = null;
         if (noLocale) {
             value = UtilProperties.getPropertyValue(resource, property);
         } else {
             value = UtilProperties.getMessage(resource, property, methodContext.getLocale());
         }
-
         if (value == null || value.length() == 0) {
             value = defaultVal;
         }
+        
+        // note that expanding the value string here will handle defaultValue and the string from 
+        //  the properties file; if we decide later that we don't want the string from the properties 
+        //  file to be expanded we should just expand the defaultValue at the beginning of this method.
+        value = methodContext.expandString(value);
 
-        if (UtilValidate.isNotEmpty(argListName)) {
-            List argList = (List) methodContext.getEnv(argListName);
+        if (!argListAcsr.isEmpty()) {
+            List argList = (List) argListAcsr.get(methodContext);
             if (argList != null && argList.size() > 0) {
                 value = MessageFormat.format(value, argList.toArray());
             }
         }
 
-        if (mapName != null && mapName.length() > 0) {
-            Map toMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map toMap = (Map) mapAcsr.get(methodContext);
 
             if (toMap == null) {
-                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapName + ", creating new map");
+                if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", creating new map");
                 toMap = new HashMap();
-                methodContext.putEnv(mapName, toMap);
+                mapAcsr.put(methodContext, toMap);
             }
-            toMap.put(fieldName, value);
+            fieldAcsr.put(toMap, value);
         } else {
-            methodContext.putEnv(fieldName, value);
+            fieldAcsr.put(methodContext, value);
         }
 
         return true;

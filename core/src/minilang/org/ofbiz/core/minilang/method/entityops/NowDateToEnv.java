@@ -37,15 +37,15 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class NowDateToEnv extends MethodOperation {
     
-    String envName;
+    ContextAccessor envAcsr;
 
     public NowDateToEnv(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        envName = element.getAttribute("env-name");
+        envAcsr = new ContextAccessor(element.getAttribute("env-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
-        methodContext.putEnv(envName, new java.sql.Date(System.currentTimeMillis()));
+        envAcsr.put(methodContext, new java.sql.Date(System.currentTimeMillis()));
         return true;
     }
 }
