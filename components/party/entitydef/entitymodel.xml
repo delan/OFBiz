@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  */
 -->
 
@@ -672,6 +672,9 @@
       <relation type="many" rel-entity-name="ShipmentContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
+      <index name="INFO_STRING_IDX">
+        <index-field name="infoString"/>
+      </index>
     </entity>
     <entity entity-name="ContactMechAttribute"
             package-name="org.ofbiz.party.contact"
@@ -883,6 +886,18 @@
       <relation type="one" fk-name="POST_ADDR_PCGEO" title="PostalCode" rel-entity-name="Geo">
         <key-map field-name="postalCodeGeoId" rel-field-name="geoId"/>
       </relation>
+      <index name="ADDRESS1_IDX">
+        <index-field name="address1"/>
+      </index>
+      <index name="ADDRESS2_IDX">
+        <index-field name="address2"/>
+      </index>
+      <index name="CITY_IDX">
+        <index-field name="city"/>
+      </index>
+      <index name="POSTAL_CODE_IDX">
+        <index-field name="postalCode"/>
+      </index>
     </entity>
     <entity entity-name="PostalAddressBoundary"
             package-name="org.ofbiz.party.contact"
@@ -909,6 +924,15 @@
       <relation type="one" fk-name="TEL_NUM_CMECH" rel-entity-name="ContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
+      <index name="COUNTRY_CODE_IDX">
+        <index-field name="countryCode"/>
+      </index>
+      <index name="AREA_CODE_IDX">
+        <index-field name="areaCode"/>
+      </index>
+      <index name="CONTACT_NUMBER_IDX">
+        <index-field name="contactNumber"/>
+      </index>
     </entity>
     <entity entity-name="ValidContactMechRole"
             package-name="org.ofbiz.party.contact"
@@ -1264,6 +1288,9 @@
       <relation type="many" title="From" rel-entity-name="Shipment">
         <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
       </relation>
+      <index name="EXTERNAL_ID_IDX">
+        <index-field name="externalId"/>
+      </index>
     </entity>
     <view-entity entity-name="PartyAndContactMech"
             package-name="org.ofbiz.party.party"
@@ -1492,6 +1519,9 @@
       <relation type="one" fk-name="PARTY_GRP_PARTY" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
+      <index name="GROUP_NAME_IDX">
+        <index-field name="groupName"/>
+      </index>
     </entity>
     <entity entity-name="PartyIcsAvsOverride"
             package-name="org.ofbiz.party.party"
@@ -1818,66 +1848,6 @@
         <key-map field-name="partyId"/>
       </view-link>
     </view-entity>
-    <view-entity entity-name="PartySearchView"
-            package-name="org.ofbiz.party.party"
-            title="Party Search View">
-      <member-entity entity-alias="PT" entity-name="Party"/>
-      <member-entity entity-alias="PR" entity-name="Person"/>
-      <member-entity entity-alias="PG" entity-name="PartyGroup"/>
-      <member-entity entity-alias="RT" entity-name="PartyRole"/>
-      <member-entity entity-alias="PC" entity-name="PartyContactMech"/>
-      <member-entity entity-alias="CM" entity-name="ContactMech"/>
-      <member-entity entity-alias="PA" entity-name="PostalAddress"/>
-      <member-entity entity-alias="TC" entity-name="TelecomNumber"/>
-      <member-entity entity-alias="UL" entity-name="UserLogin"/>
-      <alias entity-alias="PT" name="partyId"/>
-      <alias entity-alias="PT" name="partyTypeId"/>
-      <alias entity-alias="PT" name="externalId"/>
-      <alias entity-alias="PR" name="firstName"/>
-      <alias entity-alias="PR" name="lastName"/>
-      <alias entity-alias="PR" name="birthDate"/>
-      <alias entity-alias="PR" name="memberId"/>
-      <alias entity-alias="PG" name="groupName"/>
-      <alias entity-alias="PG" name="federalTaxId"/>
-      <alias entity-alias="RT" name="roleTypeId"/>
-      <alias entity-alias="PC" name="contactMechId"/>
-      <alias entity-alias="CM" name="contactMechTypeId"/>
-      <alias entity-alias="CM" name="infoString"/>
-      <alias entity-alias="PA" name="address1"/>
-      <alias entity-alias="PA" name="address2"/>
-      <alias entity-alias="PA" name="city"/>
-      <alias entity-alias="PA" name="stateProvinceGeoId"/>
-      <alias entity-alias="PA" name="countryGeoId"/>
-      <alias entity-alias="PA" name="postalCode"/>
-      <alias entity-alias="TC" name="countryCode"/>
-      <alias entity-alias="TC" name="areaCode"/>
-      <alias entity-alias="TC" name="contactNumber"/>
-      <alias entity-alias="UL" name="userLoginId"/>
-      <view-link entity-alias="PT" rel-entity-alias="PR" rel-optional="true">
-        <key-map field-name="partyId"/>
-      </view-link>
-      <view-link entity-alias="PT" rel-entity-alias="PG" rel-optional="true">
-        <key-map field-name="partyId"/>
-      </view-link>
-      <view-link entity-alias="PT" rel-entity-alias="PC" rel-optional="true">
-        <key-map field-name="partyId"/>
-      </view-link>
-      <view-link entity-alias="PC" rel-entity-alias="CM" rel-optional="true">
-        <key-map field-name="contactMechId"/>
-      </view-link>
-      <view-link entity-alias="CM" rel-entity-alias="PA" rel-optional="true">
-        <key-map field-name="contactMechId"/>
-      </view-link>
-      <view-link entity-alias="CM" rel-entity-alias="TC" rel-optional="true">
-        <key-map field-name="contactMechId"/>
-      </view-link>
-      <view-link entity-alias="PT" rel-entity-alias="UL" rel-optional="true">
-        <key-map field-name="partyId"/>
-      </view-link>
-      <relation type="one-nofk" rel-entity-name="PartyType">
-        <key-map field-name="partyTypeId"/>
-      </relation>
-    </view-entity>
     <entity entity-name="PartyType"
             package-name="org.ofbiz.party.party"
             title="Party Type Entity">
@@ -1951,6 +1921,12 @@
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="partyId"/>
       </relation>
+      <index name="FIRST_NAME_IDX">
+        <index-field name="firstName"/>
+      </index>
+      <index name="LAST_NAME_IDX">
+        <index-field name="lastName"/>
+      </index>
     </entity>
     <view-entity entity-name="PersonRoleView"
             package-name="org.ofbiz.party.party"
