@@ -28,9 +28,9 @@
             <div><a href='<ofbiz:url>/ChooseTopCategory</ofbiz:url>' class='buttontext'>Choose Top Category</a></div>
             <div style='margin-left: 10px;'>
               <%if(curCategoryId != null && curCategoryId.equals(currentTopCategory.getString("productCategoryId"))) {%>
-                <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;<%=currentTopCategory.getString("description")%> (<%=currentTopCategory.getString("productCategoryId")%>)</b></div>
+                <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;<%=currentTopCategory.getString("description")%> [<%=currentTopCategory.getString("productCategoryId")%>]</b></div>
               <%}else{%>
-                <div style='text-indent: -10px;'><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=currentTopCategory.getString("productCategoryId")%></ofbiz:url>" class='buttontext'>-&nbsp;<%=currentTopCategory.getString("description")%>  (<%=currentTopCategory.getString("productCategoryId")%>)</a></div>
+                <div style='text-indent: -10px;'><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=currentTopCategory.getString("productCategoryId")%></ofbiz:url>" class='buttontext'>-&nbsp;<%=currentTopCategory.getString("description")%>  [<%=currentTopCategory.getString("productCategoryId")%>]</a></div>
               <%}%>
               <div style='margin-left: 10px;'>
                 <ofbiz:iterator name="category" property="topLevelList">

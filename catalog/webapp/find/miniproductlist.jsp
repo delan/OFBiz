@@ -1,7 +1,7 @@
 
 <%@page import="org.ofbiz.commonapp.product.category.*"%>
 <%-- Get a list of all products in the current category. --%>
-<%CategoryWorker.getRelatedProducts(pageContext,"mini_",CategoryWorker.lastTrailItem(pageContext));%>
+<%CategoryWorker.getRelatedProducts(pageContext, "mini_", UtilFormatOut.checkNull(request.getParameter("PRODUCT_CATEGORY_ID")));%>
   <TABLE border=0 width='100%' cellpadding='<%=boxBorderWidth%>' cellspacing=0 bgcolor='<%=boxBorderColor%>'>
     <TR>
       <TD width='100%'>

@@ -8,10 +8,10 @@
 <%PageContext topPageContext = (PageContext)request.getAttribute("topPageContext");%>
 
   <%if(curcatid != null && curcatid.equals(category.getString("productCategoryId"))) {%>
-    <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;<%=category.getString("description")%> (<%=category.getString("productCategoryId")%>)</b></div>
+    <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;<%=category.getString("description")%> [<%=category.getString("productCategoryId")%>]</b></div>
   <%}else{%>
     <%String pstr = "";%><%if(pcategory != null) pstr = "&pcategory=" + pcategory.getString("productCategoryId");%>
-    <div style='text-indent: -10px;'><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=category.getString("productCategoryId")%><%=pstr%></ofbiz:url>" class='buttontext'>-&nbsp;<%=category.getString("description")%>  (<%=category.getString("productCategoryId")%>)</a></div>
+    <div style='text-indent: -10px;'><a href="<ofbiz:url>/EditCategory?PRODUCT_CATEGORY_ID=<%=category.getString("productCategoryId")%><%=pstr%></ofbiz:url>" class='buttontext'>-&nbsp;<%=category.getString("description")%>  [<%=category.getString("productCategoryId")%>]</a></div>
   <%}%>
 
   <%if(CategoryWorker.checkTrailItem(topPageContext,category.getString("productCategoryId")) || (curcatid != null && curcatid.equals(category.getString("productCategoryId")))) {%>
