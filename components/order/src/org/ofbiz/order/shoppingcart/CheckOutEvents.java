@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.36 2004/07/29 20:56:35 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.37 2004/07/31 05:06:30 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version $Revision: 1.36 $
+ * @version $Revision: 1.37 $
  * @since 2.0
  */
 public class CheckOutEvents {
@@ -458,7 +458,6 @@ public class CheckOutEvents {
     // Create order event - uses createOrder service for processing
     public static String createOrder(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
         ShoppingCart cart = ShoppingCartEvents.getCartObject(request);
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -653,6 +652,7 @@ public class CheckOutEvents {
         ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+
         Map paramMap = UtilHttp.getParameterMap(request);
         Boolean offlinePayments;
         String shippingContactMechId = null;
@@ -677,6 +677,12 @@ public class CheckOutEvents {
             // remove auto-login fields
             request.getSession().removeAttribute("autoUserLogin");
             request.getSession().removeAttribute("autoName");
+            // clear out the login fields from the cart
+            try {
+                cart.setAutoUserLogin(null, dispatcher);
+            } catch (CartItemModifyException e) {
+                Debug.logError(e, module);
+            }
         }
 
         // set the customer info
@@ -695,10 +701,20 @@ public class CheckOutEvents {
                         userLogin.set("partyId", partyId);
                     }
                     request.getSession().setAttribute("userLogin", userLogin);
-                    cart.setUserLogin(userLogin);
+                    try {
+                        cart.setUserLogin(userLogin, dispatcher);                        
+                    } catch (CartItemModifyException e) {
+                        Debug.logError(e, module);
+                    }
                     Debug.logInfo("Anonymous user-login has been activated", module);
                 }
             }
+        }
+
+        // flag anoymous checkout to bypass additional party settings
+        boolean isAnonymousCheckout = false;
+        if (userLogin != null && "anonymous".equals(userLogin.getString("userLoginId"))) {
+            isAnonymousCheckout = true;
         }
 
         // get the shipping method
@@ -722,6 +738,7 @@ public class CheckOutEvents {
         if (checkOutPaymentId == null) {
             checkOutPaymentId = (String) request.getAttribute("paymentMethodId");
         }
+
         singleUsePayment = request.getParameter("singleUsePayment");
         appendPayment = request.getParameter("appendPayment");
         boolean isSingleUsePayment = singleUsePayment != null && "Y".equalsIgnoreCase(singleUsePayment) ? true : false;
@@ -799,7 +816,7 @@ public class CheckOutEvents {
         if (requirePayment == null)
             requirePayment = "true";
         if (requireAdditionalParty == null)
-            requireAdditionalParty = "true";
+            requireAdditionalParty = isAnonymousCheckout ? "false" : "true";
 
         String shipContactMechId = cart.getShippingContactMechId();
         String customerPartyId = cart.getPartyId();
