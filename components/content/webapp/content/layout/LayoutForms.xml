@@ -210,7 +210,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         default-entity-name="ContentDataResourceView"
-        paginate="false"
         list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
         <field name="contentId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/>
@@ -230,7 +229,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         default-entity-name="ContentAssocDataResourceViewFrom"
-        paginate="false"
         list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
         <field name="contentId" title="View" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/>
@@ -247,7 +245,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         default-entity-name="ContentAssocDataResourceViewFrom"
-        paginate="false"
         list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
         <field name="contentId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target-type="plain" target="javascript:execRemoteCall('cloneLayout', '${drDataResourceId}', '${contentId}', 'TEMPLATE_MASTER', '')"/>
@@ -264,7 +261,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         list-name="mruList" 
-        paginate="false"
         target="" title="" type="list">
         <field name="replace" title="Replace" widget-style="buttontext" >
             <hyperlink also-hidden="false" target-type="plain" description="Replace[${dataResourceId}/${coContentId}]" 
@@ -577,7 +573,6 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="display"
         default-entity-name="ContentDataResourceViewTo"
-        paginate="false"
         list-name="entityList" target="" paginate-target="FindLayout" title="" type="list">
         <field name="contentId" title="Edit" widget-style="buttontext">
             <hyperlink also-hidden="false" description="${contentId}" target="EditLayout?contentId=${contentId}&amp;drDataResourceId=${drDataResourceId}"/>
