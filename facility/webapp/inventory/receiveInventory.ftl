@@ -279,6 +279,7 @@ function removeSelected() {
     <#-- general request fields -->
     <input type="hidden" name="facilityId" value="${requestParameters.facilityId?if_exists}">   
     <input type="hidden" name="purchaseOrderId" value="${requestParameters.purchaseOrderId?if_exists}">
+    <input type="hidden" name="initialSelected" value="Y">
     <input type="hidden" name="_useRowSubmit" value="Y">
     <#assign now = Static["org.ofbiz.core.util.UtilDateTime"].nowTimestamp().toString()>
     <#assign rowCount = 0>     
@@ -390,6 +391,11 @@ function removeSelected() {
               <div class="tabletext">No items in PO #${purchaseOrder.orderId} to receive.</div>
             </td>
           </tr>
+          <tr>
+            <td colspan="2" align="right">
+              <a href="<@ofbizUrl>/ReceiveInventory?facilityId=${requestParameters.facilityId?if_exists}</@ofbizUrl>" class="buttontext">Return To Receiving</a>
+            </td>
+          </tr>          
         <#else>        
           <tr>
             <td colspan="2" align="right">
