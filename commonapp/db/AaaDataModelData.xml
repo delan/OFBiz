@@ -487,8 +487,8 @@
 
   <RequirementType description="" hasTable="N" parentTypeId="" requirementTypeId="CUSTOMER_REQUIREMENT"/>
   <RequirementType description="" hasTable="N" parentTypeId="" requirementTypeId="INTERNAL_REQUIREMENT"/>
-  <RequirementType description="" hasTable="Y" parentTypeId="" requirementTypeId="PRODUCT_REQUIREMENT"/>
-  <RequirementType description="" hasTable="Y" parentTypeId="" requirementTypeId="WORK_REQUIREMENT"/>
+  <RequirementType description="" hasTable="N" parentTypeId="" requirementTypeId="PRODUCT_REQUIREMENT"/>
+  <RequirementType description="" hasTable="N" parentTypeId="" requirementTypeId="WORK_REQUIREMENT"/>
 
   <ServerHitType description="Request" hitTypeId="REQUEST"/>
   <ServerHitType description="Event" hitTypeId="EVENT"/>
