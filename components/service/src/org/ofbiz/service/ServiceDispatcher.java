@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.6 2003/10/30 20:30:34 ajzeneski Exp $
+ * $Id: ServiceDispatcher.java,v 1.7 2003/10/30 22:04:52 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.service.job.JobManager;
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -72,10 +72,10 @@ public class ServiceDispatcher {
 
     public ServiceDispatcher(GenericDelegator delegator) {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
-        factory = new GenericEngineFactory(this);    
-        ServiceGroupReader.readConfig();        
+        factory = new GenericEngineFactory(this);
+        ServiceGroupReader.readConfig();
         ServiceEcaUtil.readConfig();
-        
+
         this.delegator = delegator;
         this.localContext = new HashMap();
         if (delegator != null) {
@@ -86,7 +86,7 @@ public class ServiceDispatcher {
             }
         }
         this.jm = new JobManager(this.delegator);
-        this.jlf = new JmsListenerFactory(this);        
+        this.jlf = new JmsListenerFactory(this);
     }
 
     /**
@@ -140,7 +140,7 @@ public class ServiceDispatcher {
         if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher.register] : Registered dispatcher: " + context.getName(), module);
         this.localContext.put(name, context);
     }
-        
+
     /**
      * De-Registers the loader with this ServiceDispatcher
      * @param local the LocalDispatcher to de-register
@@ -154,7 +154,7 @@ public class ServiceDispatcher {
              } catch (GenericServiceException e) {
                  Debug.logError(e, "Trouble shutting down ServiceDispatcher!", module);
              }
-         }                    
+         }
     }
 
     /**
@@ -176,11 +176,11 @@ public class ServiceDispatcher {
         // check the locale
         this.checkLocale(context);
 
-        // for isolated transactions        
+        // for isolated transactions
         TransactionManager tm = TransactionFactory.getTransactionManager();
         Transaction parentTransaction = null;
-        
-        // start the transaction        
+
+        // start the transaction
         boolean beganTrans = false;
         if (service.useTransaction) {
             try {
@@ -188,7 +188,7 @@ public class ServiceDispatcher {
             } catch (GenericTransactionException te) {
                 throw new GenericServiceException("Cannot start the transaction.", te.getNested());
             }
-            
+
             // isolate the transaction if defined
             if (service.requireNewTransaction && !beganTrans) {
                 try {
@@ -197,12 +197,12 @@ public class ServiceDispatcher {
                     Debug.logError(se, "Problems suspending current transaction", module);
                     throw new GenericServiceException("Problems suspending transaction, see logs");
                 }
-                
+
                 // now start a new transaction
                 try {
                     beganTrans = TransactionUtil.begin(service.transactionTimeout);
                 } catch (GenericTransactionException gte) {
-                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());                   
+                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());
                 }
             }
         }
@@ -226,7 +226,7 @@ public class ServiceDispatcher {
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
-            
+
             // pre-validate ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, null, false);
 
@@ -266,12 +266,12 @@ public class ServiceDispatcher {
 
             // pre-commit ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "commit", ctx, ecaContext, result, isError);
-            
+
             // if there was an error, rollback transaction, otherwise commit
             if (isError) {
                 // try to log the error
                 Debug.logError("Service Error [" + service.name + "]: " + result.get(ModelService.ERROR_MESSAGE), module);
-                
+
                 // rollback the transaction
                 try {
                     TransactionUtil.rollback(beganTrans);
@@ -283,23 +283,23 @@ public class ServiceDispatcher {
                 try {
                     TransactionUtil.commit(beganTrans);
                 } catch (GenericTransactionException e) {
-                    Debug.logError(e, "Could not commit transaction", module);      
-                    throw new GenericServiceException("Commit transaction failed");                              
-                }                               
+                    Debug.logError(e, "Could not commit transaction", module);
+                    throw new GenericServiceException("Commit transaction failed");
+                }
             }
-            
+
             // resume the parent transaction
-            if (parentTransaction != null) {            
+            if (parentTransaction != null) {
                 try {
                     tm.resume(parentTransaction);
                 } catch (InvalidTransactionException ite) {
-                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);                
+                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);
                 } catch (IllegalStateException ise) {
                     Debug.logError(ise, "Trouble resuming parent transaction", module);
-                    throw new GenericServiceException("Resume transaction exception, see logs");               
+                    throw new GenericServiceException("Resume transaction exception, see logs");
                 } catch (SystemException se) {
                     Debug.logError(se, "Trouble resuming parent transaction", module);
-                    throw new GenericServiceException("Resume transaction exception, see logs");                
+                    throw new GenericServiceException("Resume transaction exception, see logs");
                 }
             }
 
@@ -309,6 +309,7 @@ public class ServiceDispatcher {
             checkDebug(service, 0, debugging);
             return result;
         } catch (Throwable t) {
+            Debug.logError(t, "Service [" + service.name + "] threw an unexpected exception/error", module);
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
@@ -336,12 +337,12 @@ public class ServiceDispatcher {
 
         // check the locale
         this.checkLocale(context);
-        
-        // for isolated transactions        
+
+        // for isolated transactions
         TransactionManager tm = TransactionFactory.getTransactionManager();
         Transaction parentTransaction = null;
-        
-        // start the transaction        
+
+        // start the transaction
         boolean beganTrans = false;
         if (service.useTransaction) {
             try {
@@ -349,7 +350,7 @@ public class ServiceDispatcher {
             } catch (GenericTransactionException te) {
                 throw new GenericServiceException("Cannot start the transaction.", te.getNested());
             }
-            
+
             // isolate the transaction if defined
             if (service.requireNewTransaction && !beganTrans) {
                 try {
@@ -358,12 +359,12 @@ public class ServiceDispatcher {
                     Debug.logError(se, "Problems suspending current transaction", module);
                     throw new GenericServiceException("Problems suspending transaction, see logs");
                 }
-                
+
                 // now start a new transaction
                 try {
                     beganTrans = TransactionUtil.begin(service.transactionTimeout);
                 } catch (GenericTransactionException gte) {
-                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());                   
+                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());
                 }
             }
         }
@@ -386,7 +387,7 @@ public class ServiceDispatcher {
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
-            
+
             // pre-validate ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "in-validate", ctx, context, null, false);
 
@@ -416,24 +417,25 @@ public class ServiceDispatcher {
             }
 
             // resume the parent transaction
-            if (parentTransaction != null) {            
+            if (parentTransaction != null) {
                 try {
                     tm.resume(parentTransaction);
                 } catch (InvalidTransactionException ite) {
-                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);                
+                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);
                 } catch (IllegalStateException ise) {
                     Debug.logError(ise, "Trouble resuming parent transaction", module);
-                    throw new GenericServiceException("Resume transaction exception, see logs");               
+                    throw new GenericServiceException("Resume transaction exception, see logs");
                 } catch (SystemException se) {
                     Debug.logError(se, "Trouble resuming parent transaction", module);
-                    throw new GenericServiceException("Resume transaction exception, see logs");                
+                    throw new GenericServiceException("Resume transaction exception, see logs");
                 }
             }
-            
+
             // pre-return ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "return", ctx, context, null, false);
             checkDebug(service, 0, debugging);
         } catch (Throwable t) {
+            Debug.logError(t, "Service [" + service.name + "] threw an unexpected exception/error", module);
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
@@ -494,7 +496,7 @@ public class ServiceDispatcher {
                 }
             }
         }
-        
+
         // needed for events
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
 
@@ -558,6 +560,7 @@ public class ServiceDispatcher {
 
             checkDebug(service, 0, debugging);
         } catch (Throwable t) {
+            Debug.logError(t, "Service [" + service.name + "] threw an unexpected exception/error", module);
             try {
                 TransactionUtil.rollback(beganTrans);
             } catch (GenericTransactionException te) {
@@ -629,7 +632,7 @@ public class ServiceDispatcher {
     public DispatchContext getLocalContext(String name) {
         return (DispatchContext) localContext.get(name);
     }
-    
+
     /**
      * Gets the local dispatcher from a name
      * @param name of the LocalDispatcher to find.
@@ -647,15 +650,15 @@ public class ServiceDispatcher {
     public boolean containsContext(String name) {
         return localContext.containsKey(name);
     }
-    
+
     protected void shutdown() throws GenericServiceException {
         Debug.logInfo("Shutting down the service engine...", module);
         // shutdown JMS listeners
         jlf.closeListeners();
         // shutdown the job scheduler
-        jm.finalize();        
+        jm.finalize();
     }
-    
+
     // checks if parameters were passed for authentication
     private Map checkAuth(String localName, Map context, ModelService origService) throws GenericServiceException {
         String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");
@@ -708,54 +711,54 @@ public class ServiceDispatcher {
         // get the dispatch context and service model
         DispatchContext dctx = getLocalContext(localName);
         ModelService model = dctx.getModelService(service);
-        
+
         // get the service engine
         GenericEngine engine = getGenericEngine(model.engineName);
-       
+
         // invoke the service and get the UserLogin value object
         Map result = engine.runSync(localName, model, context);
         GenericValue value = (GenericValue) result.get("userLogin");
-        
+
         return value;
     }
-    
+
     // checks the locale object in the context
     private void checkLocale(Map context) {
         Object locale = context.get("locale");
         Locale newLocale = null;
-               
+
         if (locale != null) {
             if (locale instanceof Locale) {
                 return;
             } else if (locale instanceof String) {
                 // en_US = lang_COUNTRY
                 newLocale = UtilMisc.parseLocale((String) locale);
-            } 
+            }
         }
-        
+
         if (newLocale == null)
             newLocale = Locale.getDefault();
         context.put("locale", newLocale);
-    } 
-    
-    // mode 1 = beginning (turn on) mode 0 = end (turn off)    
+    }
+
+    // mode 1 = beginning (turn on) mode 0 = end (turn off)
     private boolean checkDebug(ModelService model, int mode, boolean enable) {
-        boolean debugOn = Debug.verboseOn();        
+        boolean debugOn = Debug.verboseOn();
         switch (mode) {
-            case 0:                
+            case 0:
                 if (model.debug && enable && debugOn) {
                     // turn it off
                     Debug.set(Debug.VERBOSE, false);
                     Debug.logInfo("Verbose logging turned OFF", module);
                     return true;
-                }               
+                }
                 break;
             case 1:
                 if (model.debug && enable && !debugOn) {
                     // turn it on
                     Debug.set(Debug.VERBOSE, true);
                     Debug.logInfo("Verbose logging turned ON", module);
-                    return true;                  
+                    return true;
                 }
                 break;
             default:
