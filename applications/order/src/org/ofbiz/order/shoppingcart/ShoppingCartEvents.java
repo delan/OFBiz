@@ -44,6 +44,7 @@ import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreSurveyWrapper;
@@ -836,6 +837,165 @@ public class ShoppingCartEvents {
          return "error";
       }
       return "success";
+  }
+
+  /** Add order term **/
+  public static String initializeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
+      GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+      //LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+      HttpSession session = request.getSession();
+      Security security = (Security) request.getAttribute("security");
+      GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
+      
+      ShoppingCart cart = getCartObject(request);
+      
+      //ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
+      
+      String orderMode = request.getParameter("orderMode");
+      if (orderMode != null) {
+          session.setAttribute("orderMode", orderMode);
+          cart.setOrderType(orderMode);
+      }
+      orderMode = (String)session.getAttribute("orderMode");
+      
+      String finalizeMode = (String)session.getAttribute("finalizeMode");
+      String updateParty = request.getParameter("updateParty");
+      
+      if (orderMode == null && finalizeMode != null) {
+          request.setAttribute("_ERROR_MESSAGE_", "Please select either sale or purchase order.");
+          return "error";
+      } else if (orderMode == null) {
+          return "error"; //?????
+      }
+      
+      if ("SALES_ORDER".equals(cart.getOrderType()) && UtilValidate.isEmpty(cart.getProductStoreId())) {
+          request.setAttribute("_ERROR_MESSAGE_", "A Product Store MUST be selected for a Sales Order.");
+          cart.clear();
+          session.removeAttribute("orderMode");
+          session.removeAttribute("agreementsMode");
+          return "error";
+      }
+      
+      // check the selected product store
+      String productStoreId = request.getParameter("productStoreId");
+      GenericValue productStore = null;
+      if (UtilValidate.isNotEmpty(productStoreId)) {
+          productStore = ProductStoreWorker.getProductStore(productStoreId, delegator);
+          if (productStore != null) {
+              
+              // check permission for taking the order
+              boolean hasPermission = false;
+              if ((cart.getOrderType().equals("PURCHASE_ORDER")) && (security.hasEntityPermission("ORDERMGR", "_PURCHASE_CREATE", session))) {
+                  hasPermission = true;
+              } else if (cart.getOrderType().equals("SALES_ORDER")) {
+                  if (security.hasEntityPermission("ORDERMGR", "_SALES_CREATE", session)) {
+                      hasPermission = true;
+                  } else {
+                      // if the user is a rep of the store, then he also has permission
+                      List storeReps = null;
+                      try {
+                          storeReps = delegator.findByAnd("ProductStoreRole", UtilMisc.toMap("productStoreId", productStore.getString("productStoreId"),
+                              "partyId", userLogin.getString("partyId"), "roleTypeId", "SALES_REP"));
+                      } catch(GenericEntityException gee) {
+                          //
+                      }
+                      storeReps = EntityUtil.filterByDate(storeReps);
+                      if (storeReps != null && storeReps.size() > 0) {
+                          hasPermission = true;
+                      }
+                  }
+              }
+              
+              if (hasPermission) {
+                  cart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
+                  //context.put("currencyUomId", cart.getCurrency());
+              } else {
+                  request.setAttribute("_ERROR_MESSAGE_", "You do not have permission to take orders for this store.");
+                  cart.clear();
+                  session.removeAttribute("orderMode");
+                  session.removeAttribute("agreementsMode");
+                  return "error";
+              }
+              cart.setProductStoreId(productStoreId);
+          } else {
+              cart.setProductStoreId(null);
+          }
+      }
+      
+      String salesChannelEnumId = request.getParameter("salesChannelEnumId");
+      if (UtilValidate.isNotEmpty(salesChannelEnumId)) {
+          cart.setChannelType(salesChannelEnumId);
+      }
+      
+      // set party info
+      String partyId = request.getParameter("supplierPartyId");
+      if (!UtilValidate.isEmpty(request.getParameter("partyId"))) {
+          partyId = request.getParameter("partyId");
+      }
+      String userLoginId = request.getParameter("userLoginId");
+      if (partyId != null || userLoginId != null) {
+          if ((partyId == null || partyId.length() == 0) && userLoginId != null && userLoginId.length() > 0) {
+              GenericValue thisUserLogin = null;
+              try {
+                  thisUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+              } catch(GenericEntityException gee) {
+                  //
+              }
+              if (thisUserLogin != null) {
+                  partyId = thisUserLogin.getString("partyId");
+              } else {
+                  partyId = userLoginId;
+              }
+          }
+          //Debug.log("1st PartyID - " + partyId);
+          if (partyId != null && partyId.length() > 0) {
+              GenericValue thisParty = null;
+              try{
+                  thisParty = delegator.findByPrimaryKey("Party", UtilMisc.toMap("partyId", partyId));
+              } catch(GenericEntityException gee) {
+                  //
+              }
+              //Debug.log("This party : " + thisParty);
+              if (thisParty == null) {
+                  request.setAttribute("_ERROR_MESSAGE_", "Could not locate the selected party.");
+                  //context.put("updateParty", "Y");
+                  return "error";
+              } else {
+                  cart.setOrderPartyId(partyId);
+              }
+          } else if (partyId != null && partyId.length() == 0) {
+              cart.setOrderPartyId("_NA_");
+              partyId = null;
+          }
+      } else {
+          partyId = cart.getPartyId();
+          if (partyId != null && partyId.equals("_NA_")) partyId = null;
+      }
+      
+      String agreementsMode = null;
+      if ("PURCHASE_ORDER".equals(cart.getOrderType())) {
+          // set agreementsMode, which tracks if the user has already set a currency or agreement (used in orderentry.ftl)
+          agreementsMode = request.getParameter("currencyUomId");
+          if (UtilValidate.isEmpty(agreementsMode)) {
+              agreementsMode = request.getParameter("agreementId");
+          }
+          if (UtilValidate.isNotEmpty(agreementsMode)) {
+              session.setAttribute("agreementsMode", agreementsMode.trim());
+          }
+      }
+      agreementsMode = (String)session.getAttribute("agreementsMode");
+
+      
+      
+      
+      // Routing
+      if (orderMode == null || updateParty != null) {
+          return "init";
+      }
+      if (orderMode.equals("PURCHASE_ORDER") && agreementsMode == null) {
+          return "agreements";
+      }
+      return "cart";
   }
 
 }
