@@ -9,7 +9,7 @@ import java.util.*;
 import java.net.*;
 import javax.servlet.*;
 
-import org.ofbiz.core.util.*
+import org.ofbiz.core.util.*;
 
 
 /**
