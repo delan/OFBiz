@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.7  2001/07/23 18:05:00  azeneski
+ * Fixed runaway thread in the job scheduler.
+ *
  * Revision 1.6  2001/07/19 20:50:22  azeneski
  * Added the job scheduler to 'core' module.
  *
@@ -92,4 +95,7 @@ public final class SiteDefs {
     
     /** Used in servlet request to store the job manager */
     public static final String JOB_MANAGER = "_JOB_MANAGER_";
+    
+    /** Used session object to locate the shopping cart */
+    public static final String SHOPPING_CART = "_SHOPPING_CART_";
 }
