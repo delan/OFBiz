@@ -167,6 +167,7 @@
         </if-compare-field>
 
         <!-- lookup existing value -->
+        <field-to-field field-name="productStoreId" map-name="parameters" to-map-name="defLookup"/>
         <field-to-field field-name="partyId" map-name="parameters" to-map-name="defLookup"/>
         <find-by-primary-key map-name="defLookup" value-name="ppDefs" entity-name="PartyProfileDefault"/>
         <if-empty field-name="ppDefs">

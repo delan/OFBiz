@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones (jonesde@ofbiz.org) 
- *@version    $Revision: 1.11 $
+ *@version    $Revision: 1.12 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -162,7 +162,7 @@
                         <#if contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION" && (profiledefs.defaultShipAddr)?default("") == contactMech.contactMechId>
                           <span class="buttontextdisabled">[Is Default]</span>
                         <#elseif contactMechPurposeType.contactMechPurposeTypeId == "SHIPPING_LOCATION">
-                          <a href='<@ofbizUrl>/setprofiledefault/viewprofile?defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">[Set Default]</a>
+                          <a href='<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultShipAddr=${contactMech.contactMechId}</@ofbizUrl>' class="buttontext">[Set Default]</a>
                         </#if>
                       <#else>
                         <b>${uiLabelMap.PartyPurposeTypeNotFound}: "${partyContactMechPurpose.contactMechPurposeTypeId}"</b>
@@ -346,7 +346,7 @@
                                 <#if (profiledefs.defaultPayMeth)?default("") == paymentMethod.paymentMethodId>
                                   <div class="buttontextdisabled">[Is Default]</span>
                                 <#else>
-                                  <div><a href='<@ofbizUrl>/setprofiledefautl/viewprofile?defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                  <div><a href='<@ofbizUrl>/setprofiledefault/viewprofile?productStoreId=${productStoreId}&defaultPayMeth=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                   [Set Default]</a></div>
                                 </#if>
                               </td>
@@ -399,6 +399,53 @@
       </table>
     </TD>
   </TR>
+</TABLE>
+
+<br>
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <form name="setdefaultshipmeth" action="<@ofbizUrl>/setprofiledefault/viewprofile</@ofbizUrl>" method="post">
+  <input type="hidden" name="productStoreId" value="${productStoreId}">
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Default Shipment Method</div>
+          </td>
+          <td valign="middle" align="right">
+            <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content><a href="javascript:document.setdefaultshipmeth.submit();" class="submenutextright">Set Default</a></#if>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+            <table width="100%" border="0" cellpadding="1">
+              <#if profiledefs?has_content && profiledefs.defaultShipAddr?has_content && carrierShipMethods?has_content>
+                <#list carrierShipMethods as shipMeth>
+                  <#assign shippingMethod = shipMeth.shipmentMethodTypeId + "@" + shipMeth.partyId>
+                  <tr>
+                    <td width="5%">&nbsp;</td>
+                    <td width="1">
+                      <div class="tabletext"><nobr><#if shipMeth.partyId != "_NA_">${shipMeth.partyId?if_exists}&nbsp;</#if>${shipMeth.description?if_exists}</nobr></div>
+                    </td>
+                    <td><input type="radio" name="defaultShipMeth" value="${shippingMethod}" <#if profiledefs.defaultShipMeth?default("") == shippingMethod>checked</#if>></td>
+                  </tr>
+                </#list>
+              <#else>
+                <div class="tabletext">Please select your default shipping address; then select a default shipping method.</div>
+              </#if>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  </form>
 </TABLE>
 
 <#if surveys?has_content>

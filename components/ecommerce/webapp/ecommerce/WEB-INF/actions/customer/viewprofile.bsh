@@ -34,6 +34,7 @@ import org.ofbiz.accounting.payment.PaymentWorker;
 dispatcher = request.getAttribute("dispatcher");
 delegator = request.getAttribute("delegator");
 productStoreId = ProductStoreWorker.getProductStoreId(request);
+context.put("productStoreId", productStoreId);
 
 userLogin = session.getAttribute("userLogin");
 if (userLogin != null) {
@@ -43,7 +44,7 @@ if (userLogin != null) {
     party = delegator.findByPrimaryKey("Party", partyIdMap);
     person = delegator.findByPrimaryKey("Person", partyIdMap);
     partyGroup = delegator.findByPrimaryKey("PartyGroup", partyIdMap);
-    profiledefs = delegator.findByPrimaryKey("PartyProfileDefault", partyIdMap);
+    profiledefs = delegator.findByPrimaryKey("PartyProfileDefault", UtilMisc.toMap("partyId", partyId, "productStoreId", productStoreId));
     
     showOld = "true".equals(request.getParameter("SHOW_OLD"));
      
@@ -59,6 +60,15 @@ if (userLogin != null) {
     
     context.put("partyContactMechValueMaps", partyContactMechValueMaps);
     context.put("paymentMethodValueMaps", paymentMethodValueMaps);
+
+    // shipping methods - for default selection
+    if (profiledefs != null && profiledefs.get("defaultShipAddr") != null) {
+        shipAddress = delegator.findByPrimaryKey("PostalAddress", UtilMisc.toMap("contactMechId", profiledefs.get("defaultShipAddr")));
+        if (shipAddress != null) {
+            carrierShipMeths = ProductStoreWorker.getAvailableStoreShippingMethods(delegator, productStoreId, shipAddress, UtilMisc.toList(new Double(1)), null, 0, 1);
+            context.put("carrierShipMethods", carrierShipMeths);
+        }
+    }
 
     profileSurveys = ProductStoreWorker.getProductSurveys(delegator, productStoreId, null, "CUSTOMER_PROFILE");
     context.put("surveys", profileSurveys);
