@@ -35,11 +35,13 @@ import org.ofbiz.core.util.*;
 /**
  * Recurrence Info Object
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @created    November 6, 2001
  * @version    1.0
  */
 public class RecurrenceInfo {
+    
+    public static final String module = RecurrenceInfo.class.getName();
 
     protected GenericValue info;
     protected Date startDate;
@@ -202,6 +204,11 @@ public class RecurrenceInfo {
         // Check for the first recurrence (StartTime is always the first recurrence)
         if (getCurrentCount() == 0 || fromTime == 0 || fromTime == startDate.getTime())
             return first();
+            
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("Date List Size: " + (rDateList == null ? 0 : rDateList.size()), module);
+            Debug.logVerbose("Rule List Size: " + (rRulesList == null ? 0 : rRulesList.size()), module);
+        }            
 
         // Check the rules and date list
         if (rDateList == null && rRulesList == null)
@@ -215,7 +222,6 @@ public class RecurrenceInfo {
 
         while (rulesIterator.hasNext()) {
             RecurrenceRule rule = (RecurrenceRule) rulesIterator.next();
-
             while (hasNext) {
                 nextRuleTime = getNextTime(rule, nextRuleTime);  // Gets the next recurrence time from the rule.
                 if (nextRuleTime == 0 || isValid(nextRuleTime))  // Tests the next recurrence against the rules.
@@ -227,7 +233,7 @@ public class RecurrenceInfo {
 
     private long getNextTime(RecurrenceRule rule, long fromTime) {
         long nextTime = rule.next(getStartTime(), fromTime, getCurrentCount());
-
+        if (Debug.verboseOn()) Debug.logVerbose("Next Time Before Date Check: " + nextTime, module);
         return checkDateList(rDateList, nextTime, fromTime);
     }
 

@@ -40,6 +40,8 @@ import org.ofbiz.core.util.*;
  * @version    1.0
  */
 public class RecurrenceRule {
+    
+    public static final String module = RecurrenceRule.class.getName();
 
     // **********************
     // * byXXX constants
@@ -267,9 +269,12 @@ public class RecurrenceRule {
         // Test the end time of the recurrence.
         if (getEndTime() <= RecurrenceUtil.now())
             return 0;
+        Debug.logVerbose("Rule NOT expired by end time.", module);
+        
         // Test the recurrence limit.
         if (getCount() != -1 && currentCount >= getCount())
             return 0;
+        Debug.logVerbose("Rule NOT expired by max count.", module);
 
         boolean isSeeking = true;
         long nextRuntime = 0;
@@ -279,7 +284,6 @@ public class RecurrenceRule {
 
         while (isSeeking && loopProtection < maxLoop) {
             Date nextRun = getNextFreq(startTime, seekTime);
-
             seekTime = nextRun.getTime();
             if (validByRule(nextRun)) {
                 isSeeking = false;
