@@ -1,6 +1,7 @@
 package org.ofbiz.entitygen;
 
 import java.util.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Entity Generator - Entity model class
@@ -244,11 +245,11 @@ public class Entity
     {
       KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
       if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "() + \"&\" + ";
-      else System.out.println("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((Field)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
+      else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((Field)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
     }
     KeyMap keyMap = relation.findKeyMapByRelated(((Field)flds.elementAt(i)).fieldName);
     if(keyMap != null) returnString = returnString + "\"" + tableName + "_" + ((Field)flds.elementAt(i)).columnName + "=\" + " + GenUtil.lowerFirstChar(relation.mainEntity.ejbName) + ".get" + GenUtil.upperFirstChar(keyMap.fieldName) + "()";
-    else System.out.println("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((Field)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
+    else Debug.logWarning("-- -- ENTITYGEN ERROR:httpRelationArgList: Related Key in Key Map not found for fieldName: " + ((Field)flds.elementAt(i)).fieldName + " related entity: " + relation.relatedEjbName + " main entity: " + relation.mainEntity.ejbName + " type: " + relation.relationType);
     return returnString;
   }
 

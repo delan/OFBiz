@@ -18,8 +18,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.ofbiz.core.util.UtilCache;
-import org.ofbiz.core.util.UtilTimer;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Entity Generator - Entity Definition Reader
@@ -87,7 +86,7 @@ public class DefReader
 
       entity = createEntity(findEntity(docElement, ejbName), docElement, null, docElementValues);
       if(entity != null) entityCache.put(defFileName + "::" + ejbName, entity);
-      else System.out.println("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
+      else Debug.logWarning("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
     }
     return entity;
   }
@@ -180,9 +179,9 @@ public class DefReader
       {
         entityCache.put(defFileName + "::" + ejbName, entity);
         //utilTimer.timerString("  After entityCache.put -- " + i + " --");
-        System.out.println("-- getEntity: Created entity for ejbName: " + ejbName);
+        Debug.logInfo("-- getEntity: Created entity for ejbName: " + ejbName);
       }
-      else System.out.println("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
+      else Debug.logWarning("-- -- ENTITYGEN ERROR:getEntity: Could not create entity for ejbName: " + ejbName);
     }
     utilTimer.timerString("FINISHED - Total Entities: " + i + " FINISHED");
     return ejbNames;    

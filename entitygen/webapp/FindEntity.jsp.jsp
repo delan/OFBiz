@@ -85,8 +85,8 @@
   String <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
   if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Array == null || <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName == null || curFindString.compareTo(<%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName) != 0 || viewIndex == 0)
   {
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- Current Array not found in session, getting new one...");
-    if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("-=-=-=-=- curFindString:" + curFindString + " <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName:" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName);
+    Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
+    Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName:" + <%=GenUtil.lowerFirstChar(entity.ejbName)%>ArrayName);
 
     if(searchType.compareTo("all") == 0) <%=GenUtil.lowerFirstChar(entity.ejbName)%>Collection = <%=entity.ejbName%>Helper.findAll();
 <%for(i=0;i<entity.finders.size();i++){%><%Finder finderDesc = (Finder)entity.finders.elementAt(i);%>
@@ -112,7 +112,7 @@
   int arraySize = 0;
   if(<%=GenUtil.lowerFirstChar(entity.ejbName)%>Array!=null) arraySize = <%=GenUtil.lowerFirstChar(entity.ejbName)%>Array.length;
   if(arraySize<highIndex) highIndex=arraySize;
-  if(UtilProperties.propertyValueEqualsIgnoreCase("debug", "print.info", "true")) System.out.println("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
+  //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
 <h3 style=margin:0;>Find <%=entity.ejbName%>s</h3>
 Note: you may use the '%' character as a wildcard, to replace any other letters.

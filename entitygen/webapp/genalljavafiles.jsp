@@ -1,4 +1,5 @@
 <%@ page import="org.ofbiz.entitygen.*" %>
+<%@ page import="org.ofbiz.core.util.*" %>
 <%@ page import="java.util.*" %>
 <%@ page import="java.io.*" %>
 <%
@@ -36,12 +37,12 @@
       %> <li>Successfully Retrieved URL: <%=url.toString() + "?" + params%> <%
       if(GenUtil.writeFile(filePath,fileName,codeString))
       {
-        System.out.println("Successfully Created file: " + filePath + sep + fileName);
+        Debug.logInfo("Successfully Created file: " + filePath + sep + fileName);
         %> <li>Successfully Created file: <%=filePath + sep + fileName%> <%
       }
       else
       {
-        System.out.println("Failed to Create file: " + filePath + sep + fileName);
+        Debug.logWarning("Failed to Create file: " + filePath + sep + fileName);
         %> <li>Failed to Create file: <%=filePath + sep + fileName%> <%
       }
     }
@@ -58,12 +59,12 @@
       %> <li>Successfully Retrieved URL: <%=url.toString() + "?" + params%> <%
       if(GenUtil.writeFile(filePath,fileName,codeString))
       {
-        System.out.println("Successfully Created file: " + filePath + sep + fileName);
+        Debug.logInfo("Successfully Created file: " + filePath + sep + fileName);
         %> <li>Successfully Created file: <%=filePath + sep + fileName%> <%
       }
       else
       {
-        System.out.println("Failed to Create file: " + filePath + sep + fileName);
+        Debug.logWarning("Failed to Create file: " + filePath + sep + fileName);
         %> <li>Failed to Create file: <%=filePath + sep + fileName%> <%
       }
     }
@@ -80,12 +81,12 @@
       %> <li>Successfully Retrieved URL: <%=url.toString() + "?" + params%> <%
       if(GenUtil.writeFile(filePath,fileName,codeString))
       {
-        System.out.println("Successfully Created file: " + filePath + sep + fileName);
+        Debug.logInfo("Successfully Created file: " + filePath + sep + fileName);
         %> <li>Successfully Created file: <%=filePath + sep + fileName%> <%
       }
       else
       {
-        System.out.println("Failed to Create file: " + filePath + sep + fileName);
+        Debug.logWarning("Failed to Create file: " + filePath + sep + fileName);
         %> <li>Failed to Create file: <%=filePath + sep + fileName%> <%
       }
     }
@@ -105,12 +106,12 @@
         %> <li>Successfully Retrieved URL: <%=url.toString() + "?" + params%> <%
         if(GenUtil.writeFile(filePath,fileName,codeString))
         {
-          System.out.println("Successfully Created file: " + filePath + sep + fileName);
+          Debug.logInfo("Successfully Created file: " + filePath + sep + fileName);
           %> <li>Successfully Created file: <%=filePath + sep + fileName%> <%
         }
         else
         {
-          System.out.println("Failed to Create file: " + filePath + sep + fileName);
+          Debug.logWarning("Failed to Create file: " + filePath + sep + fileName);
           %> <li>Failed to Create file: <%=filePath + sep + fileName%> <%
         }
       }
@@ -128,12 +129,12 @@
       %> <li>Successfully Retrieved URL: <%=url.toString() + "?" + params%> <%
       if(GenUtil.writeFile(filePath,fileName,codeString))
       {
-        System.out.println("Successfully Created file: " + filePath + sep + fileName);
+        Debug.logInfo("Successfully Created file: " + filePath + sep + fileName);
         %> <li>Successfully Created file: <%=filePath + sep + fileName%> <%
       }
       else
       {
-        System.out.println("Failed to Create file: " + filePath + sep + fileName);
+        Debug.logWarning("Failed to Create file: " + filePath + sep + fileName);
         %> <li>Failed to Create file: <%=filePath + sep + fileName%> <%
       }
     }
@@ -150,12 +151,12 @@
       %> <li>Successfully Retrieved URL: <%=url.toString() + "?" + params%> <%
       if(GenUtil.writeFile(filePath,fileName,codeString))
       {
-        System.out.println("Successfully Created file: " + filePath + sep + fileName);
+        Debug.logInfo("Successfully Created file: " + filePath + sep + fileName);
         %> <li>Successfully Created file: <%=filePath + sep + fileName%> <%
       }
       else
       {
-        System.out.println("Failed to Create file: " + filePath + sep + fileName);
+        Debug.logWarning("Failed to Create file: " + filePath + sep + fileName);
         %> <li>Failed to Create file: <%=filePath + sep + fileName%> <%
       }
     }
@@ -172,12 +173,12 @@
       %> <li>Successfully Retrieved URL: <%=url.toString() + "?" + params%> <%
       if(GenUtil.writeFile(filePath,fileName,codeString))
       {
-        System.out.println("Successfully Created file: " + filePath + sep + fileName);
+        Debug.logInfo("Successfully Created file: " + filePath + sep + fileName);
         %> <li>Successfully Created file: <%=filePath + sep + fileName%> <%
       }
       else
       {
-        System.out.println("Failed to Create file: " + filePath + sep + fileName);
+        Debug.logWarning("Failed to Create file: " + filePath + sep + fileName);
         %> <li>Failed to Create file: <%=filePath + sep + fileName%> <%
       }
     }

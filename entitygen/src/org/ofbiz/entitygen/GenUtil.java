@@ -2,6 +2,7 @@ package org.ofbiz.entitygen;
 
 import net.matuschek.http.*;
 import java.io.*;
+import org.ofbiz.core.util.*;
 
 /**
  * <p><b>Title:</b> Entity Generator - General Generator Utilities
@@ -133,10 +134,10 @@ public class GenUtil
     File testDir = new File(filePath);
     if(!testDir.exists())
     {
-      if(testDir.mkdirs()) System.out.println("Created directory: " + filePath);
+      if(testDir.mkdirs()) Debug.logInfo("Created directory: " + filePath);
       else 
       {
-        System.out.println("Directory creation failed for: " + filePath);
+        Debug.logInfo("Directory creation failed for: " + filePath);
         return false;
       }
     }

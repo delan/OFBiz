@@ -28,7 +28,14 @@ in the Foundation Technology Components document.</p>
 used to describe the data and attributes of the code generated to handle that
 data.</p>
 <h3><a name="XML Descriptor Files">XML Descriptor Files</a></h3>
-<p>The DTD for the entity generator descriptor files can be found <a href="entitygen.dtd">here</a>.</p>
+<p>The DTD for the entity generator descriptor files can be found <a href="entitygen.dtd">here</a>.
+Some good examples of the entity descriptor XML files are included in the
+commonapp module, in the ofbiz/commonapp/entitydef folder. The two main files
+there are commonapp.xml and datamodel.xml. commonapp.xml contains the entity
+definitions from datamodel.xml that are currently being used in the commonapp
+module. datamodel.xml is the complete data model for the Open For Business
+Project. This data model will evolve as the project continues and as the various
+applications that use it are implemented.</p>
 <p>The descriptor file defines an entity which has an Entity EJB, supporting
 Java code, and a corresponding relational database table. It uses Container
 Managed Persistence (CMP), and is meant to be used with one Entity Bean for one
@@ -87,7 +94,8 @@ Iterator instead of a Collection. Finders with multiple column-name tags
 generate the same code except that all of the column-name entries, converted to
 their default field name, or the field-name explicitly specified, will be in the
 name like this: findByColumnOneAndColumnTwo for two columns with field-names
-ColumnOne and ColumnTwo.</p>
+ColumnOne and ColumnTwo. If an ordering of the find results is desired, the SQL
+order definition string can be put in the order-by tag under the finder tag.</p>
 <p>The relation section can be used to define relationships between this entity
 and other entities. Each relation defines a type of relation which is either one
 or many depending on the cardinality of the related entity to this entity. The
@@ -168,7 +176,14 @@ synchronized.</p>
 file, but save it under a different name so that the original is maintained.
 When that is done you can use a diff/merge utility to get the changes you want
 from each of the two files. This works well for all types of files, and not just
-the Java files, including the SQL, JSP, and XML files.</p>
+the Java files, including the SQL, JSP, and XML files. To do this most
+effectively an original of each file should be saved before modifying it. This
+original file can be used along with the modified copy of the original and the
+newly regenerated file. These three files can be used with a 3 way diff utility
+like the Unix command diff3 to create a merged file with the custom changes and
+the changes in regenerated code both in place. Collisions will be marked and
+must be handled manually, but other than that the process is very automatic (as
+evidenced by its success in CVS).</p>
 <p>The thing to remember is that the real intention of the code generator is to
 get new things off the ground quickly, it is not an exhaustive all including
 code generator that completely models the code to be generated in the descriptor
