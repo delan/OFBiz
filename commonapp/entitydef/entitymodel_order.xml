@@ -177,7 +177,8 @@
       <field name="entryDate" type="date-time"></field>
       <field name="visitId" type="id"></field>
       <field name="statusId" type="id"></field>
-      <field name="billingAccountId" type="id"></field>	
+      <field name="billingAccountId" type="id"></field>
+      <field name="shippingInstructions" type="long-varchar"></field>	
       <prim-key field="orderId" />
       <relation type="one" rel-entity-name="OrderType">
         <key-map field-name="orderTypeId" />
