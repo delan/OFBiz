@@ -103,7 +103,7 @@
                         </td>
                         <td width="5">&nbsp;</td>
                         <td align="left" valign="top" width="80%">
-                          <div class="tabletext">${orderHeader.orderDate.toString()}</div>
+                          <div class="tabletext">${orderHeader.orderDate?string}</div>
                         </td>
                       </tr>
                     </#if>

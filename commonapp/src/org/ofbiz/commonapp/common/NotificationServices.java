@@ -218,11 +218,14 @@ public class NotificationServices {
                 return ServiceUtil.returnError("Problem finding template; see logs");
             }
                                     
-            Configuration config = Configuration.getDefaultConfiguration();
+            Configuration config = Configuration.getDefaultConfiguration();            
             config.setObjectWrapper(BeansWrapper.getDefaultInstance());
+            config.setSetting("datetime_format", "yyyy-MM-dd HH:mm:ss.SSS");
+            
             BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
             TemplateHashModel staticModels = wrapper.getStaticModels();
             templateData.put("Static", staticModels);
+                        
             
             InputStreamReader templateReader = new InputStreamReader(templateUrl.openStream());
             Template template = new Template(templateUrl.toExternalForm(), templateReader, config);            
