@@ -324,6 +324,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignNote" />
     <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignPrice" />
     <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignPromo" />
+    <entity-group group="org.ofbiz.commonapp" entity="MarketingCampaignRole" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.marketing.contact -->

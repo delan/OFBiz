@@ -122,6 +122,23 @@
         <key-map field-name="productPromoId"/>
       </relation>
     </entity>
+    <entity entity-name="MarketingCampaignRole"
+            package-name="org.ofbiz.commonapp.marketing.campaign"
+            title="Marketing Campaign Role Entity">
+      <field name="marketingCampaignId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <prim-key field="marketingCampaignId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <relation type="one" fk-name="MKTGCPN_ROLE_MC" rel-entity-name="MarketingCampaign">
+        <key-map field-name="marketingCampaignId"/>
+      </relation>
+      <relation type="one" fk-name="MKTGCPN_ROLE_PR" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.marketing.contact -->
