@@ -181,6 +181,8 @@
   <StatusItem description="Promised" sequenceId="03" statusCode="PROMISED" statusId="INV_PROMISED" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusItem description="Delivered" sequenceId="04" statusCode="DELIVERED" statusId="INV_DELIVERED" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusItem description="Being Transfered" sequenceId="10" statusCode="BEING_TRANSFERED" statusId="INV_BEING_TRANSFERED" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Returned" sequenceId="20" statusCode="RETURNED" statusId="INV_RETURNED" statusTypeId="INV_SERIALIZED_STTS"/>
+  <StatusItem description="Defective" sequenceId="21" statusCode="DEFECTIVE" statusId="INV_DEFECTIVE" statusTypeId="INV_SERIALIZED_STTS"/>
   <StatusValidChange condition="" statusId="INV_ON_ORDER" statusIdTo="INV_AVAILABLE" transitionName="Order Arrived"/>
   <StatusValidChange condition="" statusId="INV_AVAILABLE" statusIdTo="INV_PROMISED" transitionName="Promise"/>
   <StatusValidChange condition="" statusId="INV_AVAILABLE" statusIdTo="INV_BEING_TRANSFERED" transitionName="Item Being Transfered"/>
@@ -188,6 +190,8 @@
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_AVAILABLE" transitionName="Cancel Promise"/>
   <StatusValidChange condition="" statusId="INV_PROMISED" statusIdTo="INV_DELIVERED" transitionName="Deliver"/>
   <StatusValidChange condition="" statusId="INV_DELIVERED" statusIdTo="INV_AVAILABLE" transitionName="Return"/>
+  <StatusValidChange condition="" statusId="INV_RETURNED" statusIdTo="INV_AVAILABLE" transitionName="Return"/>
+  <StatusValidChange condition="" statusId="INV_RETURNED" statusIdTo="INV_DEFECTIVE" transitionName="Return"/>
 
   <!-- inventory transfer status -->
   <StatusType description="Inventory Transfer" hasTable="N" parentTypeId="" statusTypeId="INVENTORY_XFER_STTS"/>
