@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.32 2004/03/01 21:16:42 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.33 2004/03/05 19:45:53 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.32 $
+ * @version    $Revision: 1.33 $
  * @since      2.0
  */
 
@@ -629,6 +629,140 @@ public class OrderServices {
         return ServiceUtil.returnSuccess();
     }
 
+    /** Service for checking and re-clac the tax amount */
+    public static Map recalcOrderTax(DispatchContext ctx, Map context) {
+        LocalDispatcher dispatcher = ctx.getDispatcher();
+        GenericDelegator delegator = ctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        GenericValue userLogin = (GenericValue) context.get("userLogin");
+
+        // check and make sure we have permission to change the order
+        Security security = ctx.getSecurity();
+        if (!security.hasEntityPermission("ORDERMGR", "_UPDATE", userLogin)) {
+            GenericValue placingCustomer = null;
+            try {
+                Map placingCustomerFields = UtilMisc.toMap("orderId", orderId, "partyId", userLogin.getString("partyId"), "roleTypeId", "PLACING_CUSTOMER");
+                placingCustomer = delegator.findByPrimaryKey("OrderRole", placingCustomerFields);
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("ERROR: Cannot get OrderRole entity: " + e.getMessage());
+            }
+            if (placingCustomer == null)
+                return ServiceUtil.returnError("You do not have permission to change this order's status.");
+        }
+
+        // get the order header
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            return ServiceUtil.returnError("ERROR: Cannot get OrderHeader entity: " + e.getMessage());
+        }
+
+        if (orderHeader == null) {
+            return ServiceUtil.returnError("ERROR: No valid order header found for orderId : " + orderId);
+        }
+
+        // remove the tax adjustments
+        int removed = 0;
+        try {
+            removed = delegator.removeByAnd("OrderAdjustment", UtilMisc.toMap("orderId", orderId, "orderAdjustmentTypeId", "SALES_TAX"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Unable to remove SALES_TAX adjustments for order : " + orderId, module);
+            return ServiceUtil.returnError("Unable to remove SALES_TAX adjustments");
+        }
+        Debug.logInfo("Removed : " + removed + " SALES_TAX adjustments for order [" + orderId + "]", module);
+
+        OrderReadHelper orh = new OrderReadHelper(orderHeader);
+        List validOrderItems = orh.getValidOrderItems();
+        if (validOrderItems != null) {
+            // prepare the inital lists
+            List products = new ArrayList(validOrderItems.size());
+            List amounts = new ArrayList(validOrderItems.size());
+            List shipAmts = new ArrayList(validOrderItems.size());
+
+            // adjustments and total
+            List allAdjustments = orh.getAdjustments();
+            List orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(allAdjustments);
+            double orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(validOrderItems, allAdjustments);
+
+            // shipping amount
+            Double orderShipping = new Double(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
+
+            // build up the list of tax calc service parameters
+            for (int i = 0; i < validOrderItems.size(); i++) {
+                GenericValue orderItem = (GenericValue) validOrderItems.get(i);
+
+                try {
+                    products.add(i, orderItem.getRelatedOne("Product"));  // get the product entity
+                    amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments, true, false))); // get the item amount
+                    shipAmts.add(i, new Double(OrderReadHelper.getOrderItemAdjustmentsTotal(orderItem, allAdjustments, false, false, true))); // get the shipping amount
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Cannot read order item entity : " + orderItem, module);
+                    return ServiceUtil.returnError("Cannot read the order item entity");
+                }
+            }
+
+            // prepare the service context
+            Map serviceContext = UtilMisc.toMap("productStoreId", orh.getProductStoreId(), "itemProductList", products, "itemAmountList", amounts,
+                "itemShippingList", shipAmts, "orderShippingAmount", orderShipping, "shippingAddress", orh.getShippingAddress());
+
+            // invoke the calcTax service
+            Map serviceResult = null;
+            try {
+                serviceResult = dispatcher.runSync("calcTax", serviceContext);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("Problem occurred in tax service");
+            }
+
+            if (ServiceUtil.isError(serviceResult)) {
+                return ServiceUtil.returnError(ServiceUtil.getErrorMessage(serviceResult));
+            }
+
+            // the adjustments (returned in order) from the tax service
+            List orderAdj = (List) serviceResult.get("orderAdjustments");
+            List itemAdj = (List) serviceResult.get("itemAdjustments");
+
+            // the toStore List
+            List toStore = new ArrayList();
+
+            // set the order adjustments
+            if (orderAdj != null && orderAdj.size() > 0) {
+                Iterator oai = orderAdj.iterator();
+                while (oai.hasNext()) {
+                    GenericValue oa = (GenericValue) oai.next();
+                    oa.set("orderId", orderId);
+                    toStore.add(oa);
+                }
+            }
+
+            // set the item adjustments
+            if (itemAdj != null && itemAdj.size() > 0) {
+                for (int i = 0; i < validOrderItems.size(); i++) {
+                    GenericValue orderItem = (GenericValue) validOrderItems.get(i);
+                    List itemAdjustments = (List) itemAdj.get(i);
+                    Iterator ida = itemAdjustments.iterator();
+                    while (ida.hasNext()) {
+                        GenericValue ia = (GenericValue) ida.next();
+                        ia.set("orderId", orderId);
+                        ia.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
+                        toStore.add(ia);
+                    }
+                }
+            }
+
+            // store the new adjustments
+            try {
+                delegator.storeAll(toStore);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, module);
+                return ServiceUtil.returnError("Unable to update order tax information : " + orderId);
+            }
+        }
+
+        return ServiceUtil.returnSuccess();
+    }
+
     /** Service for checking and re-calc the shipping amount */
     public static Map recalcOrderShipping(DispatchContext ctx, Map context) {
         GenericDelegator delegator = ctx.getDelegator();
@@ -736,6 +870,19 @@ public class OrderServices {
                 return ServiceUtil.returnError("You do not have permission to change this order's status.");
         }
 
+        // get the order header
+        GenericValue orderHeader = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get OrderHeader record", module);
+        }
+        if (orderHeader == null) {
+            Debug.logError("OrderHeader came back as null", module);
+            return ServiceUtil.returnError("Cannot update null order header [" + orderId + "]");
+        }
+
+        // get the order items
         List orderItems = null;
         try {
             orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
@@ -775,7 +922,9 @@ public class OrderServices {
             } else if (allComplete) {
                 newStatus = "ORDER_COMPLETED";
             } else if (allApproved) {
-                newStatus = "ORDER_APPROVED";
+                if (!"ORDER_SENT".equals(orderHeader.getString("statusId"))) {
+                    newStatus = "ORDER_APPROVED";
+                }
             }
 
             // now set the new order status

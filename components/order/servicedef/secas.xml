@@ -7,6 +7,7 @@
         <condition field-name="statusId" operator="equals" value="ITEM_CANCELLED"/>
         <action service="cancelOrderInventoryReservation" mode="sync"/>
         <action service="recalcShippingTotal" mode="sync"/>
+        <action service="recalcTaxTotal" mode="sync"/>
         <action service="resetGrandTotal" mode="sync"/>
         <action service="checkOrderItemStatus" mode="sync"/>
         <action service="sendOrderChangeNotification" mode="async"/>

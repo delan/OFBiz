@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.38 2004/02/19 16:42:29 ajzeneski Exp $
+ * $Id: ShoppingCart.java,v 1.39 2004/03/05 19:45:54 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.38 $
+ * @version    $Revision: 1.39 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -720,6 +720,26 @@ public class ShoppingCart implements java.io.Serializable {
             }
         }
         return paymentMethods;
+    }
+
+    public List getGiftCards() {
+        List paymentMethods = this.getPaymentMethods();
+        List giftCards = new LinkedList();
+        if (paymentMethods != null) {
+            Iterator i = paymentMethods.iterator();
+            while (i.hasNext()) {
+                GenericValue pm = (GenericValue) i.next();
+                if ("GIFT_CARD".equals(pm.getString("paymentMethodTypeId"))) {
+                    try {
+                        GenericValue gc = pm.getRelatedOne("GiftCard");
+                        giftCards.add(gc);
+                    } catch (GenericEntityException e) {
+                        Debug.logError(e, "Unable to get gift card record from payment method : " + pm, module);
+                    }
+                }
+            }
+        }
+        return giftCards;
     }
 
     public GenericValue getShippingAddress() {

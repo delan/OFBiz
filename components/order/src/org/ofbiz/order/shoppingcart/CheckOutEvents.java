@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.24 2004/02/23 21:16:09 jonesde Exp $
+ * $Id: CheckOutEvents.java,v 1.25 2004/03/05 19:45:54 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.24 $
+ * @version    $Revision: 1.25 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -220,6 +220,15 @@ public class CheckOutEvents {
       return curPage;
     }
 
+    public static String setCheckOutError(HttpServletRequest request, HttpServletResponse response) {
+        String currentPage = request.getParameter("checkoutpage");
+        if (currentPage == null || currentPage.length() == 0) {
+            return "error";
+        } else {
+            return currentPage;
+        }
+    }
+
     public static String setPartialCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         String resp = setCheckOutOptions(request, response);
         request.setAttribute("_ERROR_MESSAGE_", null);
@@ -255,6 +264,9 @@ public class CheckOutEvents {
                 return "error";
             }
         }
+
+        // validate any gift card balances
+        CheckOutEvents.validateGiftCardAmounts(request);
 
         // update the selected payment methods amount with valid numbers
         if (paymentMethods != null) {
@@ -320,6 +332,47 @@ public class CheckOutEvents {
         }
         Debug.logInfo("Selected Payment Methods : " + selectedPaymentMethods, module);
         return selectedPaymentMethods;
+    }
+
+    private static void validateGiftCardAmounts(HttpServletRequest request) {
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+
+        // get the product store
+        GenericValue productStore = ProductStoreWorker.getProductStore(cart.getProductStoreId(), delegator);
+        if (productStore != null && "N".equalsIgnoreCase(productStore.getString("checkGcBalance"))) {
+            return;
+        }
+
+        // get the payment config
+        String paymentConfig = ProductStoreWorker.getProductStorePaymentProperties(delegator, cart.getProductStoreId(), "GIFT_CARD", null, true);
+
+        // get the gift card objects to check
+        Iterator i = cart.getGiftCards().iterator();
+        while (i.hasNext()) {
+            GenericValue gc = (GenericValue) i.next();
+            Map gcBalanceMap = null;
+            double gcBalance = 0.00;
+            try {
+                Map ctx = UtilMisc.toMap("paymentConfig", paymentConfig);
+                ctx.put("currency", cart.getCurrency());
+                ctx.put("cardNumber", gc.getString("cardNumber"));
+                ctx.put("pin", gc.getString("pinNumber"));                
+                gcBalanceMap = dispatcher.runSync("balanceInquireGiftCard", ctx);
+            } catch (GenericServiceException e) {
+                Debug.logError(e, module);
+            }
+            if (gcBalanceMap != null) {
+                Double bal = (Double) gcBalanceMap.get("balance");
+                if (bal != null) {
+                    gcBalance = bal.doubleValue();
+                }
+            }
+
+            // set the gift card bill-up to from the balance
+            cart.setPaymentMethodAmount(gc.getString("paymentMethodId"), new Double(gcBalance));
+        }
     }
 
     public static String setCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
@@ -738,6 +791,15 @@ public class CheckOutEvents {
             return "sales";
         } else {
             return "po";
+        }
+    }
+
+    public static String finalizeOrderEntryError(HttpServletRequest request, HttpServletResponse response) {
+        String finalizePage = request.getParameter("finalizeMode");
+        if (finalizePage == null || finalizePage.length() == 0) {
+            return "error";
+        } else {
+            return finalizePage;
         }
     }
 }
