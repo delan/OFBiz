@@ -69,6 +69,13 @@
     <eca service="sendOrderBackorderNotification" event="commit">
     	<action service="createOrderNotificationLog" mode="sync"/>
     </eca>
+    <eca service="sendOrderPayRetryNotification" event="in-validate">
+    	<action service="prepareOrderPayRetry" mode="sync" result-to-context="true"/>
+    	<action service="prepareOrderEmailData" mode="sync" result-to-context="false" result-map-name="templateData"/>
+    </eca>
+    <eca service="sendOrderPayRetryNotification" event="commit">
+    	<action service="createOrderNotificationLog" mode="sync"/>
+    </eca>
 
 	<!-- Order Delivery Schedule ECAs -->
     <eca service="createOrderDeliverySchedule" event="commit">
