@@ -71,7 +71,7 @@
         <attribute name="removeInventoryItems" type="String" mode="IN" optional="true"/>
     </service>
     <service name="indexProductKeywords" engine="simple"
-                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="indexProductKeywords" auth="true">
+                location="org/ofbiz/commonapp/product/product/ProductServices.xml" invoke="indexProductKeywords" auth="false">
         <description>Index the Keywords for a Product</description>
         <attribute name="productId" type="String" mode="IN" optional="false"/>
         <attribute name="productInstance" type="GenericValue" mode="IN" optional="true"/>
