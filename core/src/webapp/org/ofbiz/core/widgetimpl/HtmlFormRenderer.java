@@ -148,7 +148,11 @@ public class HtmlFormRenderer implements FormStringRenderer {
         }
         
         buffer.append(" href=\"");
-        this.appendOfbizUrl(buffer, "/" + hyperlinkField.getTarget(context));
+        if (hyperlinkField.getOfbizUrl()) {
+            this.appendOfbizUrl(buffer, "/" + hyperlinkField.getTarget(context));
+        } else {
+            buffer.append(hyperlinkField.getTarget(context));
+        }
         buffer.append("\"");
 
         buffer.append('>');

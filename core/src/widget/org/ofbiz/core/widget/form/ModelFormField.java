@@ -1035,6 +1035,7 @@ public class ModelFormField {
     
     public static class HyperlinkField extends FieldInfo {
         protected boolean alsoHidden = true;
+        protected boolean ofbizUrl = true;
         protected FlexibleStringExpander target;
         protected FlexibleStringExpander description;
         
@@ -1050,6 +1051,7 @@ public class ModelFormField {
             this.setDescription(element.getAttribute("description"));
             this.setTarget(element.getAttribute("target"));
             this.alsoHidden = !"false".equals(element.getAttribute("also-hidden"));
+            this.ofbizUrl = !"false".equals(element.getAttribute("ofbiz-url"));
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
@@ -1060,42 +1062,56 @@ public class ModelFormField {
          * @return
          */
         public boolean getAlsoHidden() {
-            return alsoHidden;
+            return this.alsoHidden;
+        }
+
+        /**
+         * @return
+         */
+        public boolean getOfbizUrl() {
+            return this.ofbizUrl;
         }
 
         /**
          * @return
          */
         public String getDescription(Map context) {
-            return description.expandString(context);
+            return this.description.expandString(context);
         }
 
         /**
          * @return
          */
         public String getTarget(Map context) {
-            return target.expandString(context);
+            return this.target.expandString(context);
         }
 
         /**
          * @param b
          */
         public void setAlsoHidden(boolean b) {
-            alsoHidden = b;
+            this.alsoHidden = b;
+        }
+
+        /**
+         * @param b
+         */
+        public void setOfbizUrl(boolean b) {
+            this.ofbizUrl = b;
         }
 
         /**
          * @param string
          */
         public void setDescription(String string) {
-            description = new FlexibleStringExpander(string);
+            this.description = new FlexibleStringExpander(string);
         }
 
         /**
          * @param string
          */
         public void setTarget(String string) {
-            target = new FlexibleStringExpander(string);
+            this.target = new FlexibleStringExpander(string);
         }
     }
     

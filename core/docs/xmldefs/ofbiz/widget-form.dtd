@@ -155,6 +155,7 @@
 <!ELEMENT hyperlink EMPTY>
 <!ATTLIST hyperlink
     also-hidden ( true | false ) "true"
+    ofbiz-url ( true | false ) "true"
     target CDATA #REQUIRED
     description CDATA #IMPLIED
 >
