@@ -68,10 +68,10 @@ public class LoginEvents {
             String username = request.getParameter("USERNAME");
             String password = request.getParameter("PASSWORD");
 
-            if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+            if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
                 username = username.toLowerCase();
             }
-            if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security", "password.lowercase")))) {
+            if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
                 password = password.toLowerCase();
             }
             
@@ -115,10 +115,10 @@ public class LoginEvents {
             if (username == null) username = (String) session.getAttribute("USERNAME");
             if (password == null) password = (String) session.getAttribute("PASSWORD");
 
-            if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+            if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
                 username = username.toLowerCase();
             }
-            if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security", "password.lowercase")))) {
+            if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
                 password = password.toLowerCase();
             }
 
@@ -173,10 +173,10 @@ public class LoginEvents {
         if (username == null) username = (String) session.getAttribute("USERNAME");
         if (password == null) password = (String) session.getAttribute("PASSWORD");
 
-        if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+        if ((username != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             username = username.toLowerCase();
         }
-        if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security", "password.lowercase")))) {
+        if ((password != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.lowercase")))) {
             password = password.toLowerCase();
         }
 
@@ -279,7 +279,7 @@ public class LoginEvents {
 
         String userLoginId = request.getParameter("USERNAME");
 
-        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             userLoginId = userLoginId.toLowerCase();
         }
 
@@ -334,11 +334,11 @@ public class LoginEvents {
             Debug.logWarning(e);
         }
 
-        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         String userLoginId = request.getParameter("USERNAME");
 
-        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             userLoginId = userLoginId.toLowerCase();
         }
 

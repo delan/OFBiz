@@ -43,7 +43,7 @@ public class HashEncrypt {
         };
 
     public static String getHash(String str) {
-        String hashType = UtilProperties.getPropertyValue("security", "password.encrypt.hash.type");
+        String hashType = UtilProperties.getPropertyValue("security.properties", "password.encrypt.hash.type");
 
         if (hashType == null || hashType.length() == 0) {
             Debug.logWarning("Password encrypt hash type is not specified in security.properties, use SHA");

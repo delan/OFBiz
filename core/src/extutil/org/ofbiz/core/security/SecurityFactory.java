@@ -64,7 +64,7 @@ public class SecurityFactory {
 
         // Make securityName a singleton
         if (securityName == null) {
-            String _securityName = UtilProperties.getPropertyValue("security", "security.context");
+            String _securityName = UtilProperties.getPropertyValue("security.properties", "security.context");
             securityName = _securityName;
         }
 

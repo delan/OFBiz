@@ -51,7 +51,7 @@ public class LoginServices {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
 
-        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         // if isServiceAuth is not specified, default to not a service auth
         boolean isServiceAuth = context.get("isServiceAuth") != null && ((Boolean) context.get("isServiceAuth")).booleanValue();
@@ -95,7 +95,7 @@ public class LoginServices {
                 }
 
                 if (userLogin != null) {
-                    String ldmStr = UtilProperties.getPropertyValue("security", "login.disable.minutes");
+                    String ldmStr = UtilProperties.getPropertyValue("security.properties", "login.disable.minutes");
                     long loginDisableMinutes = 30;
 
                     try {
@@ -123,7 +123,7 @@ public class LoginServices {
                         // if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
                         if (userLogin.get("currentPassword") != null &&
                             (realPassword.equals(userLogin.getString("currentPassword")) ||
-                                ("true".equals(UtilProperties.getPropertyValue("security", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
+                                ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain")) && password.equals(userLogin.getString("currentPassword"))))) {
                             Debug.logVerbose("[LoginServices.userLogin] : Password Matched");
 
                             // reset failed login count if necessry
@@ -185,7 +185,7 @@ public class LoginServices {
                             userLogin.set("successiveFailedLogins", currentFailedLogins);
 
                             // if failed logins over amount in properties file, disable account
-                            String mflStr = UtilProperties.getPropertyValue("security", "max.failed.logins");
+                            String mflStr = UtilProperties.getPropertyValue("security.properties", "max.failed.logins");
                             long maxFailedLogins = 3;
 
                             try {
@@ -211,10 +211,10 @@ public class LoginServices {
                             }
                         }
 
-                        if ("true".equals(UtilProperties.getPropertyValue("security", "store.login.history"))) {
+                        if ("true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history"))) {
                             boolean createHistory = true;
 
-                            if (isServiceAuth && !"true".equals(UtilProperties.getPropertyValue("security", "store.login.history.on.service.auth"))) {
+                            if (isServiceAuth && !"true".equals(UtilProperties.getPropertyValue("security.properties", "store.login.history.on.service.auth"))) {
                                 createHistory = false;
                             }
 
@@ -277,7 +277,7 @@ public class LoginServices {
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
         List errorMessageList = new LinkedList();
 
-        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         String userLoginId = (String) context.get("userLoginId");
         String partyId = (String) context.get("partyId");
@@ -353,7 +353,7 @@ public class LoginServices {
         Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
 
-        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
         boolean adminUser = false;
 
         String userLoginId = (String) context.get("userLoginId");
@@ -389,7 +389,7 @@ public class LoginServices {
         String newPasswordVerify = (String) context.get("newPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
 
-        if ("true".equals(UtilProperties.getPropertyValue("security", "password.lowercase"))) {
+        if ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.lowercase"))) {
             currentPassword = currentPassword.toLowerCase();
             newPassword = newPassword.toLowerCase();
             newPasswordVerify = newPasswordVerify.toLowerCase();
@@ -433,11 +433,11 @@ public class LoginServices {
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
         List errorMessageList = new LinkedList();
 
-        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         String userLoginId = (String) context.get("userLoginId");
 
-        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security", "username.lowercase")))) {
+        if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             userLoginId = userLoginId.toLowerCase();
         }
             
@@ -579,7 +579,7 @@ public class LoginServices {
     }
 
     public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List errorMessageList, boolean ignoreCurrentPassword) {
-        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security", "password.encrypt"));
+        boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         if (!ignoreCurrentPassword) {
             String realPassword = currentPassword;
@@ -589,7 +589,7 @@ public class LoginServices {
             }
             // if the password.accept.encrypted.and.plain property in security is set to true allow plain or encrypted passwords
             boolean passwordMatches = currentPassword != null && (realPassword.equals(userLogin.getString("currentPassword")) ||
-                    ("true".equals(UtilProperties.getPropertyValue("security", "password.accept.encrypted.and.plain")) && currentPassword.equals(userLogin.getString("currentPassword"))));
+                    ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain")) && currentPassword.equals(userLogin.getString("currentPassword"))));
 
             if ((currentPassword == null) || (userLogin != null && currentPassword != null && !passwordMatches)) {
                 errorMessageList.add("Old Password was not correct, please re-enter.");
@@ -605,7 +605,7 @@ public class LoginServices {
         int minPasswordLength = 0;
 
         try {
-            minPasswordLength = Integer.parseInt(UtilProperties.getPropertyValue("security", "password.length.min", "0"));
+            minPasswordLength = Integer.parseInt(UtilProperties.getPropertyValue("security.properties", "password.length.min", "0"));
         } catch (NumberFormatException nfe) {
             minPasswordLength = 0;
         }
