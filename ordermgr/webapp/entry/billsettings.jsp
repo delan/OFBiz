@@ -117,7 +117,7 @@
           <td>
           
 <ofbiz:if name="OFFLINE_PAYMENT">
-  <form method="post" action="#" name="billsetupform">
+  <form method="post" name="billsetupform">
     <input type="hidden" name="finalizeMode" value="offline_payments">
     <table width="100%" cellpadding="1" cellspacing="0" border="0">
       <%

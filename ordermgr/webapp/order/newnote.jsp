@@ -25,14 +25,14 @@
     String donePage = request.getParameter("DONE_PAGE");
     if(donePage == null || donePage.length() <= 0) 
     	donePage="orderview?order_id=" + orderId;
-    	if (workEffortId != null)
+    	if (workEffortId != null && workEffortId.length() > 0)
     		donePage = donePage + "&workEffortId=" + workEffortId;
-        if (partyId != null)
+        if (partyId != null && partyId.length() > 0)
         	donePage = donePage + "&partyId=" + partyId;
-        if (roleTypeId != null)
+        if (roleTypeId != null && roleTypeId.length() > 0)
         	donePage = donePage + "&roleTypeId=" + roleTypeId;
-        if (fromDate != null)
-        	donePage = donePage + "&fromDate=" + fromDate;
+        if (fromDate != null && fromDate.length() > 0)
+        	donePage = donePage + "&fromDate=" + fromDate;    
 %>
   <br>
   <p class="head1">Add Note</p>
@@ -41,16 +41,16 @@
   &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[Save]</a>
 
   <form method="post" action="<ofbiz:url>/createordernote/<%=donePage%></ofbiz:url>" name="createnoteform">
-  <input type="hidden" name="orderId" value="<%=orderId%>">
-  <table width="90%" border="0" cellpadding="2" cellspacing="0">
-    <tr>
-      <td width="26%" align=right><div class="tabletext">Note</div></td>
-      <td width="74%">
-        <textarea name="note" rows="5" cols="70"></textarea>
-      </td>
-      <td>*</td>
-    </tr>
-  </table>
+    <input type="hidden" name="orderId" value="<%=orderId%>">
+    <table width="90%" border="0" cellpadding="2" cellspacing="0">
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Note</div></td>
+        <td width="74%">
+          <textarea name="note" rows="5" cols="70"></textarea>
+        </td>
+        <td>*</td>
+      </tr>
+    </table>
   </form>
 
   &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>

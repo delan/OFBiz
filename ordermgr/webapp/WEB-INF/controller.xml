@@ -99,6 +99,14 @@
 		<response name="success" type="view" value="ordertasklist"/>
 		<response name="error" type="view" value="ordertasklist"/>
 	</request-map>  
+	
+	<request-map uri="releasehold">
+		<security https="true" auth="true"/>
+		<event type="service" path="" invoke="wfResumeActivity"/>
+		<response name="success" type="view" value="ordertasklist"/>
+		<response name="error" type="view" value="ordertasklist"/>
+	</request-map>  
+
 
 	<!-- Order Manager Edit Requests -->
     <request-map uri="changeOrderStatus">
@@ -112,6 +120,16 @@
         <event type="service" invoke="updateTrackingNumber"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="orderview"/>
+    </request-map>
+    <request-map uri="receivepayment">
+        <security https="true" auth="true"/>      
+        <response name="success" type="view" value="receivepayment"/>        
+    </request-map>    
+    <request-map uri="receiveOfflinePayments">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.ordermgr.OrderManagerEvents" invoke="receiveOfflinePayment"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="receivepayment"/>
     </request-map>
 
 	<!-- Order Note Requests -->
@@ -305,6 +323,7 @@
     <view-map name="orderlist" type="region"/>
     <view-map name="ordertasklist" type="region"/>
     <view-map name="createnewnote" type="region"/>
+    <view-map name="receivepayment" type="region"/>
     
     <view-map name="salesentry" type="region"/>
     <view-map name="keywordsearch" type="region"/>  

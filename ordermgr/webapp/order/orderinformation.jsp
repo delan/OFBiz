@@ -203,12 +203,19 @@
                     <%GenericValue paymentMethodType = orderPaymentPreference.getRelatedOneCache("PaymentMethodType");%>
                     <%if (paymentMethodType != null) pageContext.setAttribute("paymentMethodType", paymentMethodType);%>
                     <tr>
-                      <td valign="top">
+                      <td>
                         <div class="tabletext">&nbsp;<b><%=UtilFormatOut.checkNull(paymentMethodType.getString("description"))%></b></div>
                       </td>
-                      <td valign="top">
-                        <div class="tabletext">&nbsp;<%=UtilFormatOut.formatPrice(orderPaymentPreference.getDouble("maxAmount"))%></div>
+                      <% if (!paymentMethodType.getString("paymentMethodTypeId").equals("OFFLINE")) { %>
+                      <td align="right">
+                        <div class="tabletext"><%=UtilFormatOut.formatPrice(orderPaymentPreference.getDouble("maxAmount"))%><%=UtilFormatOut.ifNotEmpty(UtilFormatOut.formatDate(orderPaymentPreference.getTimestamp("authDate")), "&nbsp;-&nbsp;", "")%></div>
                       </td>
+                      <% } else { %>
+                      <td align="right">
+                        <% String rpqstr = "order_id=" + orderId + "&workEffortId=" + workEffortId + "&partyId=" + assignPartyId + "&roleTypeId=" + assignRoleTypeId + "&fromDate=" + fromDate; %>
+                        <a valign="top" href="<ofbiz:url>/receivepayment?<%=rpqstr%></ofbiz:url>" class="buttontext">[Receive Payment]</a>
+                      </td>
+                      <% } %>
                     </tr>
                   </ofbiz:unless>
                   <ofbiz:if name="paymentMethod"> 

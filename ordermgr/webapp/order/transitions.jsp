@@ -26,26 +26,20 @@
      */
 %>
 
-<%
-	if (delegate == null) {
-		fromDate = request.getParameter("fromFromDate");		
-	}
-	if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) { 
-		Debug.logInfo("Required parameters are here");   	
+<%	
+	String workEffortStatus = null;
+	if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) { 		
 		Map fields = UtilMisc.toMap("workEffortId", workEffortId, "partyId", assignPartyId, "roleTypeId", assignRoleTypeId, "fromDate", fromDate);
-	    GenericValue wepa = delegator.findByPrimaryKey("WorkEffortPartyAssignment", fields);
-	    Debug.logInfo("Got WorkEffortPartyAssignment :: " + wepa);
-	    if (wepa != null && wepa.get("statusId") != null && wepa.getString("statusId").equals("CAL_ACCEPTED")) {
-	    	Debug.logInfo("Status is accepted.");	   
+	    GenericValue wepa = delegator.findByPrimaryKey("WorkEffortPartyAssignment", fields);	    
+	    if (wepa != null && wepa.get("statusId") != null && wepa.getString("statusId").equals("CAL_ACCEPTED")) {	    	
     		GenericValue workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));      		
+    		workEffortStatus = workEffort.getString("currentStatusId");
+    		if (workEffortStatus != null) pageContext.setAttribute("workEffortStatus", workEffortStatus);
     		if (workEffort != null) {
-    			Debug.logInfo("Got WorkEffort");
-    			if ((delegate != null && delegate.equals("true")) || (workEffort.get("currentStatusId") != null && workEffort.getString("currentStatusId").equals("WF_RUNNING"))) {
-    				Debug.logInfo("Either start activity is true, or workeffort is running");
+    			if ((delegate != null && delegate.equals("true")) || (workEffortStatus != null && workEffortStatus.equals("WF_RUNNING"))) {    				
     				Map actFields = UtilMisc.toMap("packageId", workEffort.getString("workflowPackageId"), "packageVersion", workEffort.getString("workflowPackageVersion"), "processId", workEffort.getString("workflowProcessId"), "processVersion", workEffort.getString("workflowProcessVersion"), "activityId", workEffort.getString("workflowActivityId"));
     				GenericValue activity = delegator.findByPrimaryKey("WorkflowActivity", actFields);  
     				if (activity != null) {
-    					Debug.logInfo("Got activity definition");
     					List transitions = activity.getRelated("FromWorkflowTransition", null, UtilMisc.toList("-transitionId"));
     					if (transitions != null) pageContext.setAttribute("wfTransitions", transitions);
     				}
@@ -103,3 +97,45 @@
   </TR>
 </TABLE>
 </ofbiz:if>
+
+<ofbiz:unless name="wfTransitions">
+  <ofbiz:if name="workEffortStatus" value="WF_SUSPENDED">
+  <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+    <TR>
+      <TD width='100%'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+          <tr>
+            <td valign="middle" align="left">
+              <div class="boxhead">&nbsp;Processing Status</div>
+            </td>         
+          </tr>
+        </table>
+      </TD>
+    </TR>
+    <TR>
+      <TD width='100%'>
+        <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+          <tr>
+            <td>
+              <form action="<ofbiz:url>/releasehold</ofbiz:url>" method="post" name="activityForm">
+                <input type="hidden" name="workEffortId" value="<%=workEffortId%>">                        
+                <table width="98%">
+                  <tr>
+                    <td>
+                      <div class="tabletext">This order is currently in a 'Hold' state. The activity has been suspended.</div>
+                      <div class="tabletext">&nbsp;** Note: If this state is a result of an automated activity, releasing may not have an effect until all conditions are met.</div>                     
+                    </td>
+                    <td align="right" valign="center">                                        
+                      <a href="javascript:document.activityForm.submit()" class="buttontext">[Release Hold]</a>
+                    </td>
+                  </tr>
+                </table>
+              </form>                   
+            </td>
+          </tr>
+        </table>
+      </TD>
+    </TR>
+  </TABLE>  
+  </ofbiz:if>
+</ofbiz:unless>

@@ -48,6 +48,7 @@
     String assignRoleTypeId = request.getParameter("roleTypeId");
     String fromDate = request.getParameter("fromDate");
     String delegate = request.getParameter("delegate");
+    if (delegate != null) fromDate = request.getParameter("toFromDate");
     
     GenericValue orderHeader = null;
     GenericValue orderRole = null; 
@@ -72,7 +73,7 @@
         GenericValue billingAddress = orderReadHelper.getBillingAddress();
         GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
-        List orderPaymentPreferences = orderHeader.getRelated("OrderPaymentPreference");
+        List orderPaymentPreferences = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")));
         if(orderPaymentPreferences != null) {
             pageContext.setAttribute("orderPaymentPreferences", orderPaymentPreferences);
         }

@@ -12,6 +12,12 @@
 <%if(security.hasEntityPermission("TAXRATE", "_VIEW", session)) {%>
 
 <BR>
+
+<div class='tabContainer'>
+  <a href="<ofbiz:url>/shipsetup</ofbiz:url>" class='tabButton'>Ship&nbsp;Rate&nbsp;Setup</a>
+  <a href="<ofbiz:url>/taxsetup</ofbiz:url>" class='tabButtonSelected'>Tax&nbsp;Rate&nbsp;Setup</a>
+</div>
+
 <TABLE border=0 width='100%' cellpadding='0' cellspacing=0 class='boxoutside'>
   <TR>
     <TD width='100%'>

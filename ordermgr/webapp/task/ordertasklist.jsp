@@ -93,11 +93,17 @@
 <script language="JavaScript">
     function viewOrder(form) {
         if (form.taskStatus.value == "WF_NOT_STARTED") {
-            form.action = "<ofbiz:url>/acceptassignment</ofbiz:url>";
-        } else if (form.delegate.checked) {
-            form.action = "<ofbiz:url>/delegateassignment</ofbiz:url>";
+        	if (form.delegate.checked) {
+            	form.action = "<ofbiz:url>/acceptassignment</ofbiz:url>";
+            } else {
+            	form.action = "<ofbiz:url>/orderview</ofbiz:url>";
+            }	
         } else {
-            form.action = "<ofbiz:url>/orderview</ofbiz:url>";
+        	if (form.delegate.checked) {
+            	form.action = "<ofbiz:url>/delegateassignment</ofbiz:url>";
+        	} else {
+            	form.action = "<ofbiz:url>/orderview</ofbiz:url>";
+        	}
         }
         form.submit();
     }
@@ -143,7 +149,7 @@
                     <ofbiz:iterator name="task" property="partyTasks" type="org.ofbiz.core.entity.GenericValue" expandMap="true">
                       <TR>
                         <td>               
-                          <% String orderStr = "order_id=" + task.getString("orderId") + "&partyId=" + userLogin.getString("partyId") + "&roleTypeId=" + task.getString("roleTypeId") + "&workEffortId=" + task.getString("workEffortId") + "&fromFromDate=" + task.getString("fromDate"); %>           
+                          <% String orderStr = "order_id=" + task.getString("orderId") + "&partyId=" + userLogin.getString("partyId") + "&roleTypeId=" + task.getString("roleTypeId") + "&workEffortId=" + task.getString("workEffortId") + "&fromDate=" + task.getString("fromDate"); %>           
                           <a href="<ofbiz:url>/orderview?<%=orderStr%></ofbiz:url>" class="buttontext">
                             <ofbiz:print attribute="orderId"/>
                           </a>
@@ -209,7 +215,7 @@
                       <% java.sql.Timestamp now = UtilDateTime.nowTimestamp(); %>
                       <input type="hidden" name="partyId" value="<%=userLogin.getString("partyId")%>">
                       <input type="hidden" name="roleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
-                      <input type="hidden" name="fromDate" value="<%=now%>">
+                      <input type="hidden" name="fromDate" value="<ofbiz:print attribute="fromDate"/>">
                       <input type="hidden" name="fromPartyId" value="<ofbiz:print attribute="wepaPartyId"/>">
                       <input type="hidden" name="fromRoleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
                       <input type="hidden" name="fromFromDate" value="<ofbiz:print attribute="fromDate"/>">  

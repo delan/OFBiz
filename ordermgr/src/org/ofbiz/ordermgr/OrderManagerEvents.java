@@ -24,6 +24,7 @@
 package org.ofbiz.ordermgr;
 
 import java.net.*;
+import java.text.*;
 import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
@@ -31,6 +32,9 @@ import javax.servlet.http.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
+import org.ofbiz.core.workflow.WfException;
+import org.ofbiz.core.workflow.client.*;
+import org.ofbiz.commonapp.order.order.*;
 
 /**
  * Order Manager Events
@@ -42,14 +46,7 @@ import org.ofbiz.core.util.*;
 public class OrderManagerEvents {
     
     public static final String module = OrderManagerEvents.class.getName();
-    
-    public static String checkOfflinePayments(HttpServletRequest request, HttpServletResponse response) {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("OFFLINE_PAYMENTS") == null) 
-            return "false";
-        return "true";
-    }
-    
+        
     public static String processOfflinePayments(HttpServletRequest request, HttpServletResponse response) {
         HttpSession session = request.getSession();
         ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
@@ -91,6 +88,7 @@ public class OrderManagerEvents {
                     // update the preference to received
                     GenericValue ppref = (GenericValue) i.next();
                     ppref.set("statusId", "PAYMENT_RECEIVED");
+                    ppref.set("authDate", UtilDateTime.nowTimestamp());
                     toBeStored.add(ppref);
                     
                     // create a payment record
@@ -100,7 +98,7 @@ public class OrderManagerEvents {
                     payment.set("paymentMethodTypeId", ppref.getString("paymentMethodTypeId"));
                     payment.set("paymentPreferenceId", ppref.getString("orderPaymentPreferenceId"));
                     payment.set("amount", ppref.getDouble("maxAmount"));
-                    payment.set("effectiveDate", UtilDateTime.nowTimestamp());
+                    payment.set("effectiveDate", ppref.get("authDate"));
                     payment.set("comments", "Payment received offline and manually entered.");
                     payment.set("partyIdTo", "Company"); // change this to be dynamic
                     if (placingCustomer != null) {
@@ -149,6 +147,186 @@ public class OrderManagerEvents {
         return "success";
     }
     
-    
+    public static String receiveOfflinePayment(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession();
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");       
+        GenericValue userLogin = (GenericValue) session.getAttribute(SiteDefs.USER_LOGIN);
+
+        // load the order.properties file.
+        URL orderPropertiesUrl = null;
+        try {
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, module);
+        }
+                
+        // get some payment related strings from order.properties.
+        final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
+        final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
+
+        String orderId = request.getParameter("orderId");
+        String workEffortId = request.getParameter("workEffortId");
+        
+        // get the order header & payment preferences
+        GenericValue orderHeader = null;
+        List currentPaymentPrefs = null;
+        try {
+            orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));  
+            currentPaymentPrefs = delegator.findByAnd("OrderPaymentPreference", UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED")));      
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems reading order header from datasource.", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems reading order header information.");
+            return "error";
+        }
+        
+        OrderReadHelper orh = null;
+        if (orderHeader != null)
+            orh = new OrderReadHelper(orderHeader);
+        double grandTotal = orh.getOrderGrandTotal();
+            
+        // get the payment types to receive
+        List paymentMethodTypes = null;
+        
+        try {
+            List pmtFields = UtilMisc.toList(new EntityExpr("paymentMethodTypeId", EntityOperator.NOT_EQUAL, "OFFLINE"));
+            paymentMethodTypes = delegator.findByAnd("PaymentMethodType", pmtFields);                 
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems getting payment types", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems with PaymentType lookup.");
+            return "error";
+        }
+        
+        if (paymentMethodTypes == null) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems with PaymentType lookup.");
+            return "error";
+        }
+                
+        List toBeStored = new LinkedList();
+        GenericValue placingCustomer = null;
+        try {                            
+            List pRoles = delegator.findByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", "PLACING_CUSTOMER"));
+            if (pRoles != null && pRoles.size() > 0)
+                placingCustomer = EntityUtil.getFirst(pRoles);
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Problems looking up order payment preferences", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Error processing offline payments.");
+            return "error";            
+        }        
+        
+        Iterator pmti = paymentMethodTypes.iterator();
+        double paymentTally = 0.00;
+        while (pmti.hasNext()) {
+            GenericValue paymentMethodType = (GenericValue) pmti.next();
+            String amountStr = request.getParameter(paymentMethodType.getString("paymentMethodTypeId"));
+            if (!UtilValidate.isEmpty(amountStr)) {
+                double paymentTypeAmount = 0.00;
+                try {                                                                                
+                    paymentTypeAmount = NumberFormat.getNumberInstance().parse(amountStr).doubleValue();                                                           
+                } catch (java.text.ParseException pe) {
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems payment parsing amount.");
+                    return "error";
+                }
+                if (paymentTypeAmount > 0.00) {
+                    paymentTally += paymentTypeAmount;
+                    java.sql.Timestamp now = UtilDateTime.nowTimestamp();
+                    
+                    // create the OrderPaymentPreference
+                    Map prefFields = UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString());
+                    GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference", prefFields);
+                    paymentPreference.set("paymentMethodTypeId", paymentMethodType.getString("paymentMethodTypeId"));
+                    paymentPreference.set("maxAmount", new Double(paymentTypeAmount));                    
+                    paymentPreference.set("statusId", "PAYMENT_RECEIVED");
+                    paymentPreference.set("authDate", now);
+                    paymentPreference.set("orderId", orderId);
+                    toBeStored.add(paymentPreference);
+                    
+                    // create a payment record
+                    Map payFields = UtilMisc.toMap("paymentId", delegator.getNextSeqId("Payment").toString());
+                    GenericValue payment = delegator.makeValue("Payment", payFields);
+                    payment.set("paymentTypeId", "RECEIPT");
+                    payment.set("paymentMethodTypeId", paymentPreference.getString("paymentMethodTypeId"));
+                    payment.set("paymentPreferenceId", paymentPreference.getString("orderPaymentPreferenceId"));
+                    payment.set("amount", paymentPreference.getDouble("maxAmount"));
+                    payment.set("effectiveDate", now);
+                    payment.set("comments", "Payment received offline and manually entered.");
+                    payment.set("partyIdTo", "Company"); // change this to be dynamic
+                    if (placingCustomer != null) {
+                        payment.set("partyIdFrom", placingCustomer.getString("partyId"));
+                    } else {
+                        payment.set("partyIdFrom", "_NA_"); 
+                    }
+                    toBeStored.add(payment);                       
+                }
+            }
+        }
+                                                                      
+        // now finish up
+        if (paymentTally == grandTotal) {
+            // cancel the old payment preferences
+            if (currentPaymentPrefs != null && currentPaymentPrefs.size() > 0) {
+                Iterator cppi = currentPaymentPrefs.iterator();
+                while (cppi.hasNext()) {
+                    GenericValue ppf = (GenericValue) cppi.next();
+                    ppf.set("statusId", "PAYMENT_CANCELLED");
+                    toBeStored.add(ppf);
+                }
+            }
+            
+            // store the status changes and the newly created payment preferences and payments
+            try {
+                delegator.storeAll(toBeStored);
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Problems storing payment information", module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problem storing received payment information.");
+                return "error";
+            }
+        } else {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>The payment amount(s) do not match the order total.");
+            return "error";
+        }
+                
+        // update the status of the order and items
+        try {
+            // set the status on the order header
+            Map statusFields = UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS, "userLogin", userLogin);
+            Map statusResult = dispatcher.runSync("changeOrderStatus", statusFields);                               
+            if (statusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                Debug.logError("Problem adjust OrderHeader status : " + statusResult.get(ModelService.ERROR_MESSAGE), module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
+                return "error";                                                                       
+            }
+                        
+            // set the status on the order item(s)
+            Map itemStatusFields = UtilMisc.toMap("orderId", orderId, "statusId", ITEM_APPROVE_STATUS, "userLogin", userLogin);
+            Map itemStatusResult = dispatcher.runSync("changeOrderItemStatus", itemStatusFields);                        
+            if (itemStatusResult.containsKey(ModelService.ERROR_MESSAGE)) {
+                Debug.logError("Problem adjust OrderItem status : " + itemStatusResult.get(ModelService.ERROR_MESSAGE), module);
+                request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
+                return "error";
+            }                                                                                                                                                      
+        } catch (GenericServiceException e) {
+            Debug.logError(e, "Service invocation error on changing order/item status", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems adjusting the order status.");
+            return "error";                  
+        }
+        
+        // release the order workflow from 'Hold' status (resume workflow)
+        try {
+            DispatchContext dctx = dispatcher.getDispatchContext();
+            WorkflowClient client = new WorkflowClient(dctx);
+            // first send the new order status to the workflow
+            client.appendContext(workEffortId, UtilMisc.toMap("orderStatusId", HEADER_APPROVE_STATUS));
+            // next resume the activity
+            client.resume(workEffortId);                 
+        } catch (WfException e) {
+            Debug.logError(e, "Problem resuming workflow", module);
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problem resuming workflow!");
+            return "error";
+        }
+                    
+        return "success";
+    }    
 
 }

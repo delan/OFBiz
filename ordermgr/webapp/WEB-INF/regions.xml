@@ -63,6 +63,10 @@
     	<put section='title'>Order Task List</put>
     	<put section='content' content='/task/ordertasklist.jsp'/>
     </define>
+    <define id='receivepayment' region='MAIN_REGION'>
+    	<put section='title'>Receive Offline Payment</put>
+    	<put section='content' content='/order/receivepayment.jsp'/>
+    </define>    
 
 	<!-- sales entry screens -->
     <define id='salesentry' region='LEFT_ONLY_REGION'>
