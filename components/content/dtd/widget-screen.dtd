@@ -25,12 +25,12 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.3 2004/06/27 13:09:39 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.4 2004/06/28 17:51:14 jonesde Exp $
 -->
 
 <!ENTITY % AllWidgets "container | include-screen | decorator-screen | decorator-parent | composite-screen | composite-section | composite-parent | label | form | menu | tree | content | sub-content | platform-specific">
 
-<!ENTITY % AllActions "service | script">
+<!ENTITY % AllActions "script | service | entity-one | entity-many">
 
 
 <!ELEMENT screens ( screen+ )>
@@ -42,15 +42,48 @@
 
 <!ELEMENT actions ( (%AllActions;)* )>
 
-<!ELEMENT service EMPTY>
-<!ATTLIST service
-    name CDATA #REQUIRED
->
+    <!ELEMENT service ( field-map* )>
+    <!ATTLIST service
+        service-name CDATA #REQUIRED
+        out-field-name CDATA "dataFound"
+        auto-field-map ( true | false ) "true"
+    >
+    
+    <!ELEMENT entity-one ( field-map* )>
+    <!ATTLIST entity-one
+        entity-name CDATA #REQUIRED
+        cache ( true | false ) "true"
+        auto-field-map ( true | false ) "true"
+    >
+    
+    <!ELEMENT entity-many ( constraint*, order-by*, field-map+ )>
+    <!ATTLIST entity-many
+        entity-name CDATA #REQUIRED
+        cache ( true | false ) "true"
+        filter-by-date ( true | false | by-name ) "by-name"
+    >
 
-<!ELEMENT script EMPTY>
-<!ATTLIST script
-    location CDATA #REQUIRED
->
+    <!ELEMENT constraint EMPTY>
+    <!ATTLIST constraint
+        field-name CDATA #REQUIRED
+        value CDATA #REQUIRED
+    >
+    
+    <!ELEMENT order-by EMPTY>
+    <!ATTLIST order-by
+        field-name CDATA #REQUIRED
+    >
+    
+    <!ELEMENT field-map EMPTY>
+    <!ATTLIST field-map
+        field-name CDATA #REQUIRED
+        to-field-name CDATA #IMPLIED
+    >
+
+    <!ELEMENT script EMPTY>
+    <!ATTLIST script
+        location CDATA #REQUIRED
+    >
 
 <!ELEMENT container ( (%AllWidgets;)* )>
 <!ATTLIST container
