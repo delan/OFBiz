@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.22 $
+ *@version    $Revision: 1.23 $
  *@since      2.1
 -->
 <#-- variable setup -->
@@ -47,7 +47,11 @@ ${requestAttributes.virtualJavaScript?if_exists}
 
     function popupDetail() {
         var defaultDetailImage = "${firstDetailImage?default("_NONE_")}";
-        if (detailImageUrl == null) {
+        if (defaultDetailImage == null || defaultDetailImage == "null") {
+            defaultDetailImage = "_NONE_";
+        }
+
+        if (detailImageUrl == null || detailImageUrl == "null") {
             detailImageUrl = defaultDetailImage;
         }
 
@@ -87,7 +91,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
         <#assign productLargeImageUrl = firstLargeImage>
       </#if>
       <#if productLargeImageUrl?has_content>
-        <a href="#" onclick="javascript:popupDetail();"><img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='0' width='200' align='left'></a>
+        <a href="javascript:popupDetail();"><img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='0' width='200' align='left'></a>
       </#if>
     </td>
     <td align="right" valign="top">
@@ -147,7 +151,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
             <p>&nbsp;</p>
             <#list requestAttributes.featureSet as currentType>
               <div class="tabletext">
-                <select name="${currentType}" class="selectBox" onChange="getList(this.name, this.options[this.selectedIndex].value)">
+                <select name="FT${currentType}" class="selectBox" onchange="javascript:getList(this.name, (this.selectedIndex-1), 1);">
                   <option>${requestAttributes.featureTypes.get(currentType)}</option>
                 </select>
               </div>
@@ -250,9 +254,9 @@ ${requestAttributes.virtualJavaScript?if_exists}
                   <#assign imageUrl = "/images/defaultImage.jpg">
                 </#if>
                 <td align="center" valign="bottom">
-                  <a href="#"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);"></a>
+                  <a href="javascript:getList('FT${requestAttributes.featureOrderFirst}','${indexer}',1);"><img src="<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${imageUrl}</@ofbizContentUrl>" border="0" width="60" height="60"></a>
                   <br>
-                  <a href="#" class="buttontext" onclick="javascript:getList('${requestAttributes.featureOrderFirst}','${indexer}',1);">${key}</a>
+                  <a href="javascript:getList('FT${requestAttributes.featureOrderFirst}','${indexer}',1);" class="buttontext">${key}</a>
                 </td>
               </#if>
               <#assign indexer = indexer + 1>

@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.16 $
+ *@version    $Revision: 1.17 $
  *@since      2.1
  */
 
@@ -40,8 +40,8 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
     i = keySet.iterator();
     buf = new StringBuffer();
     buf.append("function list" + current + prefix + "() { ");
-    buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options.length = 1;");
-    buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[0] = new Option(\"" + featureTypes.get(current) + "\",\"\",true,true);");
+    buf.append("document.forms[\"addform\"].elements[\"FT" + current + "\"].options.length = 1;");
+    buf.append("document.forms[\"addform\"].elements[\"FT" + current + "\"].options[0] = new Option(\"" + featureTypes.get(current) + "\",\"\",true,true);");
     while (i.hasNext()) {
         key = i.next();
         value = map.get(key);
@@ -53,7 +53,7 @@ String buildNext(Map map, List order, String current, String prefix, Map feature
             optValue = prefix + "_" + ct;
         }
 
-        buf.append("document.forms[\"addform\"].elements[\"" + current + "\"].options[" + (ct + 1) + "] = new Option(\"" + key + "\",\"" + optValue + "\");");
+        buf.append("document.forms[\"addform\"].elements[\"FT" + current + "\"].options[" + (ct + 1) + "] = new Option(\"" + key + "\",\"" + optValue + "\");");
         ct++;
     }
     buf.append(" }");
@@ -211,14 +211,14 @@ if (product != null) {
 	            jsBuf.append("var OPT = new Array(" + featureOrder.size() + ");");
 	            jsBuf.append("var detailImageUrl = null;");
 	            for (li = 0; li < featureOrder.size(); li++) {
-	                jsBuf.append("OPT[" + li + "] = \"" + featureOrder.get(li) + "\";");
+	                jsBuf.append("OPT[" + li + "] = \"FT" + featureOrder.get(li) + "\";");
 	            }
 
 	            // build the top level
 	            topLevelName = featureOrder.get(0);
 	            jsBuf.append("function list" + topLevelName + "() {");
-	            jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options.length = 1;");
-	            jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[0] = new Option(\"" + featureTypes.get(topLevelName) + "\",\"\",true,true);");
+	            jsBuf.append("document.forms[\"addform\"].elements[\"FT" + topLevelName + "\"].options.length = 1;");
+	            jsBuf.append("document.forms[\"addform\"].elements[\"FT" + topLevelName + "\"].options[0] = new Option(\"" + featureTypes.get(topLevelName) + "\",\"\",true,true);");
 	            if (variantTree != null) {
 	                vTreeKeySet = variantTree.keySet();
 	                vti = vTreeKeySet.iterator();
@@ -259,7 +259,7 @@ if (product != null) {
 	                        largeImage = ContentUrlTag.getContentPrefix(request) + largeImage;
 	                    }
 
-	                    jsBuf.append("document.forms[\"addform\"].elements[\"" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
+	                    jsBuf.append("document.forms[\"addform\"].elements[\"FT" + topLevelName + "\"].options[" + (counter+1) + "] = new Option(\"" + key + "\",\"" + opt + "\");");
 	                    jsBuf.append("DET[" + counter + "] = \"" + detailImage +"\";");
 	                    jsBuf.append("IMG[" + counter + "] = \"" + largeImage +"\";");
 
@@ -312,7 +312,7 @@ if (product != null) {
 	            jsBuf.append("if (src == 1 && OPT.length == 1) { value2 = document.forms[\"addform\"].elements[name].options[(value*1)+1].value;");
 	            jsBuf.append("} if (currentOrderIndex < 0 || value == \"\") return; if (currentOrderIndex < (OPT.length - 1) || OPT.length == 1) {");
 	            jsBuf.append("if (IMG[value] != null) { if (document.images['mainImage'] != null) document.images['mainImage'].src = IMG[value];");
-	            jsBuf.append("detailImageUrl = DET[value]; document.addform." + topLevelName + ".selectedIndex = (value*1)+1;");
+	            jsBuf.append("detailImageUrl = DET[value]; document.addform.FT" + topLevelName + ".selectedIndex = (value*1)+1;");
 	            jsBuf.append("} if (OPT.length != 1) { eval(\"list\" + OPT[currentOrderIndex+1] + value + \"()\");");
 	            jsBuf.append("document.addform.add_product_id.value = 'NULL'; } else { if (value2 == 'NULL')");
 	            jsBuf.append("value2 = value; document.addform.add_product_id.value = value2;");
