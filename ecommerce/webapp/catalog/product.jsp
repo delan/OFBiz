@@ -9,14 +9,19 @@
 <ofbiz:service name="getProductFeatureSet">
     <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
 </ofbiz:service>
+<%Debug.logInfo("Got feature list..");%>
 <ofbiz:service name="getProductVariantTree">
     <ofbiz:param name='productId' value='<%=request.getParameter("product_id")%>'/>
-    <ofbiz:param name='featureOrder' attribute='featureset'/>
+    <ofbiz:param name='featureOrder' attribute='featureSet'/>
 </ofbiz:service>
+<%Debug.logInfo("Got tree..");%>
 
 <%
+  List featureOrder = new LinkedList((Collection) pageContext.getAttribute("featureSet"));
   Map variantTree = (Map) pageContext.getAttribute("variantTree");
+  Debug.logInfo("Setup variables: " + featureOrder + " / " + variantTree);
 %>
+
 
 <%!
     public static String buildNext(Map map, List order, String current, String prefix) {
