@@ -572,10 +572,10 @@
             never-cache="true"
             title="User Login History Entity">
       <field name="userLoginId" type="id-vlong-ne"></field>
+      <field name="visitId" type="id"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="partyId" type="id"></field>
-      <field name="referrerUrl" type="url"></field>
+      <field name="partyId" type="id"></field>    
       <field name="passwordUsed" type="short-varchar"></field>
       <field name="successfulLogin" type="indicator"></field>
       <prim-key field="userLoginId"/>

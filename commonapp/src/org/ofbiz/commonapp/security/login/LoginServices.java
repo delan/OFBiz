@@ -62,6 +62,9 @@ public class LoginServices {
         String password = (String) context.get("login.password");
 
         if (password == null) password = (String) context.get("password");
+        
+        // get the visitId for the history entity
+        String visitId = (String) context.get("visitId");
 
         String errMsg = "";
 
@@ -220,9 +223,9 @@ public class LoginServices {
 
                             if (createHistory) {
                                 try {
-                                    delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username,
+                                    delegator.create("UserLoginHistory", UtilMisc.toMap("userLoginId", username, "visitId", visitId,
                                             "fromDate", UtilDateTime.nowTimestamp(), "passwordUsed", password,
-                                            "partyId", userLogin.get("partyId"), "referrerUrl", "NotYetImplemented", "successfulLogin", successfulLogin));
+                                            "partyId", userLogin.get("partyId"), "successfulLogin", successfulLogin));
                                 } catch (GenericEntityException e) {
                                     Debug.logWarning(e);
                                 }

@@ -180,11 +180,14 @@ public class LoginEvents {
             password = password.toLowerCase();
         }
 
+        // get the visit id to pass to the userLogin for history
+        String visitId = VisitHandler.getVisitId(session);
+        
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         Map result = null;
 
         try {
-            result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password));
+            result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password, "visitId", visitId));
         } catch (GenericServiceException e) {
             Debug.logError(e, "Error calling userLogin service");
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<b>The following error occurred during login:</b><br>" + e.getMessage());
