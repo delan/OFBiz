@@ -578,7 +578,7 @@ public class GenericDelegator {
         GenericHelper helper = getEntityHelper(modelEntity);
 
         if (fields != null && !modelEntity.areFields(fields.keySet()))
-            throw new IllegalArgumentException("[GenericDelegator.findByAnd] At least of the passed fields is not valid: " + fields.keySet().toString());
+            throw new IllegalArgumentException("[GenericDelegator.findByAnd] At least one of the passed fields is not valid: " + fields.keySet().toString());
 
         Collection collection = null;
         collection = helper.findByAnd(modelEntity, fields, orderBy);
