@@ -103,6 +103,7 @@ public class EntitySyncServices {
                 esc.runPushSendData(valuesToCreate, valuesToStore, keysToRemove);
                 
                 esc.saveResultsReportedFromDataStore();
+                esc.advanceRunTimes();
             }
 
             esc.saveFinalSyncResults();
@@ -358,15 +359,13 @@ public class EntitySyncServices {
                 return ServiceUtil.returnError("Cannot do Entity Sync Pull because entitySyncId [] is set for Push Only.");
             }
 
+            // Part 1: if any results are passed, store the results for the given startDate, update EntitySync, etc
             // restore info from last pull, or if no results start new run
             esc.runPullStartOrRestoreSavedResults();
             Debug.logInfo("(2)Doing pullAndReportEntitySyncData split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
 
             // increment starting time to run until now
             while (esc.hasMoreTimeToSync()) {
-                // Part 1: if any results are passed, store the results for the given startDate, update EntitySync, etc
-                esc.saveResultsReportedFromDataStore();
-                
                 // make sure the following message is commented out before commit:
                 Debug.logInfo("(3-loop)Doing pullAndReportEntitySyncData split, currentRunStartTime=" + esc.currentRunStartTime + ", currentRunEndTime=" + esc.currentRunEndTime, module);
                 
@@ -397,6 +396,8 @@ public class EntitySyncServices {
                     return result;
                 } else {
                     // save the progress to EntitySync and EntitySyncHistory, and move on...
+                    esc.saveResultsReportedFromDataStore();
+                    esc.advanceRunTimes();
                 }
             }
             
