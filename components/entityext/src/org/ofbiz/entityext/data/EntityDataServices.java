@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.12 2004/02/06 19:46:34 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.13 2004/05/17 19:03:30 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,6 +31,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.security.Security;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.jdbc.DatabaseUtil;
 import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.model.ModelField;
 import org.ofbiz.base.util.GeneralException;
@@ -48,7 +49,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -330,4 +331,92 @@ public class EntityDataServices {
         return fieldNames;
     }
 
+    public static Map rebuildAllIndexesAndKeys(DispatchContext dctx, Map context) {
+        GenericDelegator delegator = dctx.getDelegator();
+        Security security = dctx.getSecurity();
+
+        // check permission
+         GenericValue userLogin = (GenericValue) context.get("userLogin");
+        if (!security.hasPermission("ENTITY_MAINT", userLogin)) {
+            return ServiceUtil.returnError("You do not have permission to run this service.");
+        }
+
+        String groupName = (String) context.get("groupName");
+        List messages = new ArrayList();
+
+        String helperName = delegator.getGroupHelperName(groupName);
+        DatabaseUtil dbUtil = new DatabaseUtil(helperName);
+        Map modelEntities = delegator.getModelEntityMapByGroup(groupName);
+        Set modelEntityNames = new TreeSet(modelEntities.keySet());
+
+        Iterator modelEntityNameIter = null;
+
+        // step 1 - remove FKs
+        Debug.logImportant("Removing all foreign keys", module);
+        modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deleteForeignKeys(modelEntity, modelEntities, messages);
+        }
+        modelEntityNameIter = null;
+
+        // step 2 - remove PKs
+        Debug.logImportant("Removing all primary keys", module);
+        modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+            String modelEntityName = (String) modelEntityNameIter.next();
+            ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.deletePrimaryKey(modelEntity, messages);
+        }
+        modelEntityNameIter = null;
+
+        // step 3 - remove indexes
+        Debug.logImportant("Removing all indexes", module);
+        modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+            String modelEntityName = (String) modelEntityNameIter.next();
+            ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            messages.add(dbUtil.deleteDeclaredIndices(modelEntity));
+        }
+        modelEntityNameIter = null;
+
+        // step 4 - create PKs
+        Debug.logImportant("Creating all primary keys", module);
+        modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+            String modelEntityName = (String) modelEntityNameIter.next();
+            ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.createPrimaryKey(modelEntity, messages);
+        }
+        modelEntityNameIter = null;
+
+        // step 5 - create FK indexes
+        Debug.logImportant("Creating all foreign key indexes", module);
+        modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            messages.add(dbUtil.createDeclaredIndices(modelEntity));
+        }
+        modelEntityNameIter = null;
+
+        // step 6 - create FKs
+        Debug.logImportant("Creating all foreign keys", module);
+        modelEntityNameIter = modelEntityNames.iterator();
+        while (modelEntityNameIter.hasNext()) {
+      	    String modelEntityName = (String) modelEntityNameIter.next();
+      	    ModelEntity modelEntity = (ModelEntity) modelEntities.get(modelEntityName);
+            dbUtil.createForeignKeys(modelEntity, modelEntities, messages);
+        }
+        modelEntityNameIter = null;
+
+        // step 7 - checkdb
+        Debug.logImportant("Running DB check with add missing enabled", module);
+        dbUtil.checkDb(modelEntities, messages, true);
+        
+        Map result = ServiceUtil.returnSuccess();
+        result.put("messages", messages);
+        return result;
+    }
 }

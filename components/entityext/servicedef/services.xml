@@ -80,6 +80,17 @@
         <implements service="clearCacheLineByPrimaryKey"/>
     </service>
 
+    <!-- Index/Key Services -->
+    <service name="rebuildEntityIndexesAndKeys" engine="java" auth="true" use-transaction="false"
+            location="org.ofbiz.entityext.data.EntityDataServices" invoke="rebuildAllIndexesAndKeys">
+        <description>Rebuilds all indexes/keys</description>
+        <required-permissions join-type="AND">
+            <check-permission permission="ENTITY_MAINT"/>
+        </required-permissions>
+        <attribute name="groupName" type="String" mode="IN" optional="false"/>
+        <attribute name="messages" type="List" mode="OUT" optional="false"/>
+    </service>
+
     <!-- Entity Delimited File Import Services -->
     <service name="importEntityFileDirectory" engine="java" auth="true" use-transaction="false"
             location="org.ofbiz.entityext.data.EntityDataServices" invoke="importDelimitedFromDirectory">
