@@ -486,7 +486,7 @@
       <field name="boxWidth" type="floating-point"></field>
       <field name="boxHeight" type="floating-point"></field>
       <prim-key field="shipmentBoxTypeId"/>
-      <relation type="one" fk-name="SHMT_BXTP_DUOM" rel-entity-name="Uom">
+      <relation type="one" fk-name="SHMT_BXTP_DUOM" title="Dimension" rel-entity-name="Uom">
         <key-map field-name="dimensionUomId" rel-field-name="uomId"/>
       </relation>
       <relation type="many" rel-entity-name="CarrierShipmentBoxType">
@@ -865,6 +865,9 @@
       <relation type="many" rel-entity-name="ShippingDocument">
         <key-map field-name="shipmentId"/>
         <key-map field-name="shipmentPackageSeqId"/>
+      </relation>
+      <relation type="many" rel-entity-name="CarrierShipmentBoxType">
+        <key-map field-name="shipmentBoxTypeId"/>
       </relation>
       <relation type="one" fk-name="SHPKG_WUOM" title="Weight" rel-entity-name="Uom">
         <key-map field-name="weightUomId" rel-field-name="uomId"/>
