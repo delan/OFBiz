@@ -66,13 +66,13 @@
 
   <GlXbrlClass description="US GAAP" glXbrlClassId="US_GAAP"/>
   <GlXbrlClass description="IAS" glXbrlClassId="IAS"/>
-  
+
   <GlFiscalType description="Actual" glFiscalTypeId="ACTUAL"/>
   <GlFiscalType description="Budget" glFiscalTypeId="BUDGET"/>
   <GlFiscalType description="Forecast" glFiscalTypeId="FORECAST"/>
   <GlFiscalType description="Plan" glFiscalTypeId="PLAN"/>
   <GlFiscalType description="Scenario" glFiscalTypeId="SCENARIO"/>
-   
+
   <InvoiceItemType description="Invoice Adjustment" hasTable="N" invoiceItemTypeId="INVOICE_ADJ" parentTypeId=""/>
   <InvoiceItemType description="Invoice Promotion" hasTable="N" invoiceItemTypeId="INV_PROMOTION_ADJ" parentTypeId="INVOICE_ADJ"/>
   <InvoiceItemType description="Invoice Discount" hasTable="N" invoiceItemTypeId="INV_DISCOUNT_ADJ" parentTypeId="INVOICE_ADJ"/>
@@ -83,7 +83,7 @@
   <InvoiceItemType description="Invoice Surcharge" hasTable="N" invoiceItemTypeId="INV_SURCHARGE_ADJ" parentTypeId="INVOICE_ADJ"/>
   <InvoiceItemType description="Invoice Additional Feature" hasTable="N" invoiceItemTypeId="INV_ADD_FEATURE" parentTypeId="INVOICE_ADJ"/>
   <InvoiceItemType description="Invoice Warranty" hasTable="N" invoiceItemTypeId="INV_WARRANTY_ADJ" parentTypeId="INVOICE_ADJ"/>
-    
+
   <InvoiceItemType description="Invoice Item Adjustment" hasTable="N" invoiceItemTypeId="INVOICE_ITM_ADJ" parentTypeId=""/>
   <InvoiceItemType description="Invoice Item Promotion" hasTable="N" invoiceItemTypeId="ITM_PROMOTION_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
   <InvoiceItemType description="Invoice Item Replacement" hasTable="N" invoiceItemTypeId="ITM_REPLACE_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
@@ -95,12 +95,12 @@
   <InvoiceItemType description="Invoice Item Surcharge" hasTable="N" invoiceItemTypeId="ITM_SURCHARGE_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
   <InvoiceItemType description="Invoice Item Additional Feature" hasTable="N" invoiceItemTypeId="ITM_ADD_FEATURE" parentTypeId="INVOICE_ITM_ADJ"/>
   <InvoiceItemType description="Invoice Item Warranty" hasTable="N" invoiceItemTypeId="ITM_WARRANTY_ADJ" parentTypeId="INVOICE_ITM_ADJ"/>
-      
+
   <InvoiceItemType description="Invoice Product Item" hasTable="N" invoiceItemTypeId="INV_PROD_ITEM" parentTypeId=""/>
   <InvoiceItemType description="Invoice Product-Feature Item" hasTable="N" invoiceItemTypeId="INV_PROD_FEATR_ITEM" parentTypeId=""/>
   <InvoiceItemType description="Invoice Work-Effort Item" hasTable="N" invoiceItemTypeId="INV_WE_ITEM" parentTypeId=""/>
-  <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="INV_TE_ITEM" parentTypeId=""/>    
- 
+  <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="INV_TE_ITEM" parentTypeId=""/>
+
   <InvoiceItemTypeMap invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="ITM_PROMOTION_ADJ"/>
   <InvoiceItemTypeMap invoiceItemMapKey="REPLACE_ADJUSTMENT" invoiceItemTypeId="ITM_REPLACE_ADJ"/>
   <InvoiceItemTypeMap invoiceItemMapKey="DISCOUNT_ADJUSTMENT" invoiceItemTypeId="ITM_DISCOUNT_ADJ"/>
@@ -110,18 +110,19 @@
   <InvoiceItemTypeMap invoiceItemMapKey="SHIPPING_CHARGES" invoiceItemTypeId="ITM_SHIPPING_CHARGES"/>
   <InvoiceItemTypeMap invoiceItemMapKey="SURCHARGE_ADJUSTMENT" invoiceItemTypeId="ITM_SURCHARGE_ADJ"/>
   <InvoiceItemTypeMap invoiceItemMapKey="ADDITIONAL_FEATURE" invoiceItemTypeId="ITM_ADD_FEATURE"/>
-  <InvoiceItemTypeMap invoiceItemMapKey="WARRANTY_ADJUSTMENT" invoiceItemTypeId="ITM_WARRANTY_ADJ"/>  
+  <InvoiceItemTypeMap invoiceItemMapKey="WARRANTY_ADJUSTMENT" invoiceItemTypeId="ITM_WARRANTY_ADJ"/>
 
   <InvoiceType description="Purchase" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
   <InvoiceType description="Sales" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>
 
   <PaymentMethodType description="Credit Card" paymentMethodTypeId="CREDIT_CARD"/>
+  <PaymentMethodType description="Gift Card" paymentMethodTypeId="GIFT_CARD"/>
   <PaymentMethodType description="Gift Certificate" paymentMethodTypeId="GIFT_CERTIFICATE"/>
   <PaymentMethodType description="Cash" paymentMethodTypeId="CASH"/>
   <PaymentMethodType description="Electronic Funds Transfer" paymentMethodTypeId="EFT_ACCOUNT"/>
   <PaymentMethodType description="Personal Check" paymentMethodTypeId="PERSONAL_CHECK"/>
   <PaymentMethodType description="Certified Check" paymentMethodTypeId="CERTIFIED_CHECK"/>
-  <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>  
+  <PaymentMethodType description="Money Order" paymentMethodTypeId="MONEY_ORDER"/>
   <PaymentMethodType description="Company Account" paymentMethodTypeId="COMPANY_ACCOUNT"/>
   <PaymentMethodType description="Billing Account" paymentMethodTypeId="EXT_BILLACT"/>
   <PaymentMethodType description="Cash On Delivery" paymentMethodTypeId="EXT_COD"/>
@@ -157,7 +158,7 @@
   <StatusItem description="Not Reconciled" sequenceId="01" statusCode="NOT_RECONCILED" statusId="AES_NOT_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
   <StatusItem description="Partly Reconciled" sequenceId="02" statusCode="PARTLY_RECONCILED" statusId="AES_PARTLY_RECON" statusTypeId="ACCTG_ENREC_STATUS"/>
   <StatusItem description="Reconciled" sequenceId="03" statusCode="RECONCILED" statusId="AES_RECONCILED" statusTypeId="ACCTG_ENREC_STATUS"/>
-  
+
   <!-- invoice status -->
   <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="INVOICE_STATUS"/>
   <StatusItem description="In-Process" sequenceId="01" statusCode="IN_PROCESS" statusId="INVOICE_IN_PROCESS" statusTypeId="INVOICE_STATUS"/>
@@ -171,19 +172,19 @@
   <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_PAID" transitionName="Invoice Paid"/>
   <StatusValidChange condition="" statusId="INVOICE_READY" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>
   <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_PAID" transitionName="Invoice Paid"/>
-  <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>    
-  
+  <StatusValidChange condition="" statusId="INVOICE_SENT" statusIdTo="INVOICE_CANCELLED" transitionName="Invoice Cancelled"/>
+
   <!-- payment status -->
   <StatusType description="Invoice" hasTable="N" parentTypeId="" statusTypeId="PMNT_STATUS"/>
-  <StatusItem description="Not Paid" sequenceId="01" statusCode="NOT_PAID" statusId="PMNT_NOT_PAID" statusTypeId="PMNT_STATUS"/>  
+  <StatusItem description="Not Paid" sequenceId="01" statusCode="NOT_PAID" statusId="PMNT_NOT_PAID" statusTypeId="PMNT_STATUS"/>
   <StatusItem description="Sent" sequenceId="03" statusCode="SENT" statusId="PMNT_SENT" statusTypeId="PMNT_STATUS"/>
   <StatusItem description="Received" sequenceId="04" statusCode="RECEIVED" statusId="PMNT_RECEIVED" statusTypeId="PMNT_STATUS"/>
   <StatusItem description="Confirmed" sequenceId="05" statusCode="CONFIRMED" statusId="PMNT_CONFIRMED" statusTypeId="PMNT_STATUS"/>
   <StatusItem description="Cancelled" sequenceId="10" statusCode="CANCELLED" statusId="PMNT_CANCELLED" statusTypeId="PMNT_STATUS"/>
-  
+
   <SettlementTerm settlementTermId="COD" termName="Cash Due on Delivery" termValue="0" uomId="TF_day"/>
   <SettlementTerm settlementTermId="NET_15" termName="Net Due in 15 Days" termValue="15" uomId="TF_day"/>
   <SettlementTerm settlementTermId="NET_30" termName="Net Due in 30 Days" termValue="30" uomId="TF_day"/>
   <SettlementTerm settlementTermId="NET_60" termName="Net Due in 60 Days" termValue="60" uomId="TF_day"/>
-  <SettlementTerm settlementTermId="NET_90" termName="Net Due in 90 Days" termValue="90" uomId="TF_day"/>    
+  <SettlementTerm settlementTermId="NET_90" termName="Net Due in 90 Days" termValue="90" uomId="TF_day"/>
 </entity-engine-xml>
