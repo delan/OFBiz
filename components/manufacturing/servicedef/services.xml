@@ -511,6 +511,12 @@
         <attribute mode="IN" name="orderItemSeqId" optional="true" type="String"/>
         <attribute mode="OUT" name="productionRunId" optional="false" type="String"/>
     </service>
+    <service name="approveRequirement" engine="java"
+            location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="approveRequirement" auth="true">
+        <description>Approves a requirement.</description>
+        <attribute mode="IN" name="requirementId" optional="false" type="String"/>
+        <attribute mode="IN" name="quantity" optional="true" type="Double"/>
+    </service>
     
     <service name="getNotAssembledComponents" engine="java"
                 location="org.ofbiz.manufacturing.bom.BOMServices" invoke="getNotAssembledComponents" auth="true">
