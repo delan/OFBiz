@@ -120,9 +120,14 @@ public class PosButton {
             return;
         }
         final String buttonName = ButtonEventConfig.getButtonName(event);
-        if (buttonName != null) {            
+        final ClassLoader cl = this.getClassLoader(pos);
+
+        if (buttonName != null) {
             final SwingWorker worker = new SwingWorker() {
                 public Object construct() {
+                    if (cl != null) {
+                        Thread.currentThread().setContextClassLoader(cl);
+                    }
                     try {
                         ButtonEventConfig.invokeButtonEvent(buttonName, pos, event);
                     } catch (ButtonEventConfig.ButtonEventNotFound e) {
@@ -137,5 +142,25 @@ public class PosButton {
         } else {
             Debug.logWarning("No button name found for buttonPressed event", module);
         }
+    }
+
+    private ClassLoader getClassLoader(PosScreen pos) {
+        ClassLoader cl = pos.getClassLoader();
+        if (cl == null) {
+            try {
+                cl = Thread.currentThread().getContextClassLoader();
+            } catch (Throwable t) {
+            }
+            if (cl == null) {
+                Debug.log("No context classloader available; using class classloader", module);
+                try {
+                    cl = this.getClass().getClassLoader();
+                } catch (Throwable t) {
+                    Debug.logError(t, module);
+                }
+            }
+        }
+        
+        return cl;
     }
 }

@@ -8,6 +8,7 @@
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.product" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.party.party" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.party.contact" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5500" entityOrPackage="org.ofbiz.pos.PosTerminal" applEnumId="ESIA_INCLUDE"/>
 
 <!-- PSS->POS Per Store Server to POS Terminal -->
     <EntityGroup entityGroupId="5501" entityGroupName="POS: Per Store Server to POS Terminal"/>
@@ -21,6 +22,7 @@
     <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.ofbiz.product.category" applEnumId="ESIA_INCLUDE"/>
     <!-- org.ofbiz.party.party may be needed for certain promotions -->
     <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.ofbiz.party.party" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5501" entityOrPackage="org.ofbiz.pos.PosTerminal" applEnumId="ESIA_INCLUDE"/>
 
 <!-- POS->PSS POS Terminal to Per Store Server -->
     <EntityGroup entityGroupId="5505" entityGroupName="POS: POS Terminal to Per Store Server"/>
@@ -31,7 +33,9 @@
     <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.order" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.accounting.invoice" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.accounting.payment" applEnumId="ESIA_INCLUDE"/>
-    <!-- NOTE: no inventory information will be on the POS terminal, so don't send any over --> 
+    <!-- NOTE: no inventory information will be on the POS terminal, so don't send any over -->
+    <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.pos.PosTerminalLog" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5505" entityOrPackage="org.ofbiz.pos.PosTerminalState" applEnumId="ESIA_INCLUDE"/>
 
 <!-- PSS->MCS Per Store Server to Central Server -->
     <EntityGroup entityGroupId="5506" entityGroupName="POS: Per Store Server to Central Server"/>
@@ -45,7 +49,9 @@
     <!-- include inventory and issuance info --> 
     <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.shipment.issuance" applEnumId="ESIA_INCLUDE"/>
     <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.product.inventory" applEnumId="ESIA_INCLUDE"/>
-    
+    <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.pos.PosTerminalLog" applEnumId="ESIA_INCLUDE"/>
+    <EntityGroupEntry entityGroupId="5506" entityOrPackage="org.ofbiz.pos.PosTerminalState" applEnumId="ESIA_INCLUDE"/>
+
 
 <!-- Some examples of EntitySync settings for pulling and pushing data around -->
     <!-- POS example meant to be used for pulling data from MCS to PSS -->

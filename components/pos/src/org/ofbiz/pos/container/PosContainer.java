@@ -32,8 +32,8 @@ import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.xui.XuiContainer;
 import org.ofbiz.content.xui.XuiSession;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.product.store.ProductStoreWorker;
 
 /**
@@ -49,7 +49,7 @@ public class PosContainer extends XuiContainer {
     }
 
     public void configure(ContainerConfig.Container cc) throws ContainerException {
-        XuiSession session = this.getSession();
+        XuiSession session = XuiContainer.getSession();
         GenericValue productStore = null;
         GenericValue facility = null;
 
