@@ -20,8 +20,8 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.1 2003/08/17 18:04:19 ajzeneski Exp $
+ *  This is the Open for Business Product Build Script.
+ *  $Id: build.xml,v 1.2 2003/08/18 22:00:55 jonesde Exp $
 -->
 
 <project name="OFBiz - Product Component" default="jar" basedir=".">
