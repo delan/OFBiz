@@ -18,7 +18,7 @@
     <property name="entityOperation">_CREATE</property>    
     <property name="addEntityOperation">_CREATE</property>    
     <property name="editEntityOperation">_UPDATE</property>    
-    <property name="targetOperation">CONTENT_RESPOND</property>    
+    <property name="targetOperation">HAS_USER_ROLE</property>    
     <property name="addTargetOperation">CONTENT_RESPOND</property>    
     <property name="requiredRoles">BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER</property>    
     <property name="contentPurposeTypeId">RESPONSE</property>    

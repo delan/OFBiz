@@ -2,7 +2,7 @@
 <div class="boxoutside" >
 <div class="head1">&nbsp;&nbsp;&nbsp;&nbsp;From Site:</div><br/>
 <div style="margin:10px;" >
-<@blog.renderAncestryPath trail=ancestorList?default([]) endIndexOffset=1 />
+<@blog.renderAncestryPath trail=ancestorList?default([]) endIndexOffset=0 />
 <#if trailList?exists && 1 < trailList?size >
 <div class="head1">&nbsp;&nbsp;From Parent Article:</div><br/>
 </#if>
@@ -18,7 +18,7 @@
     <@renderSubContentCache subContentId=thisContentId />
     </td>
     <td width="40" valign="bottom">
-<@checkPermission subContentId=subContentId targetOperation="CONTENT_CREATE|CONTENT_RESPOND" contentPurposeList="RESPONSE" >
+<@checkPermission subContentId=subContentId targetOperation="HAS_USER_ROLE" contentPurposeList="RESPONSE" >
 <a class="tabButton" href="<@ofbizUrl>/createforumresponse?contentIdTo=${subContentId}&amp;nodeTrailCsv=${context.nodeTrailCsv?if_exists}</@ofbizUrl>" >Respond</a>
 </@checkPermission>
 <br/>
@@ -77,8 +77,10 @@
     </#if>
      </@traverseSubContentCache >
 </@loopSubContentCache >
+<#--
 <@wrapSubContentCache subContentId=subContentId wrapTemplateId="WRAP_NEXT_PREV" >
 </@wrapSubContentCache >
+-->
 </table>
 </div>
 </div>
