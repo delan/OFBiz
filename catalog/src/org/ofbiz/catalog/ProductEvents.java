@@ -463,6 +463,12 @@ public class ProductEvents {
       return "error";
     }
 
+    //clear some cache entries
+    delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productId", productId));
+    delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productIdTo", productIdTo));
+    delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productAssocTypeId", productAssocTypeId));
+    delegator.clearCacheLine("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+    
     GenericValue tempProductAssoc = delegator.makeValue("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
     if(updateMode.equals("DELETE")) {
       GenericValue productAssoc = null;

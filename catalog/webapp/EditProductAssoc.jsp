@@ -230,6 +230,7 @@ try {
 <br>
 
 <%if(productId != null && product != null){%>
+<%java.util.Date nowDate = new java.util.Date();%>
 <hr>
 <p class="head2">Product Associations FROM this Product to...</p>
 
@@ -250,8 +251,10 @@ try {
       <tr valign="middle">
         <td><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productIdTo")%></a></td>
         <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
-        <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("fromDate"))%>&nbsp;</div></td>
-        <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("thruDate"))%>&nbsp;</div></td>
+        <td><div class='tabletext' <%=(listProductAssoc.getTimestamp("fromDate") != null && nowDate.before(listProductAssoc.getTimestamp("fromDate")))?"style='color: red;'":""%>>
+          <%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("fromDate"))%>&nbsp;</div></td>
+        <td><div class='tabletext' <%=(listProductAssoc.getTimestamp("thruDate") != null && nowDate.after(listProductAssoc.getTimestamp("thruDate")))?"style='color: red;'":""%>>
+          <%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("thruDate"))%>&nbsp;</div></td>
         <td><div class='tabletext'><%=listProductAssoc.getString("productAssocTypeId")%></div></td>
         <td>
           <a href="<ofbiz:url>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_ID_TO=<%=listProductAssoc.getString("productIdTo")%>&PRODUCT_ASSOC_TYPE_ID=<%=listProductAssoc.getString("productAssocTypeId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(listProductAssoc.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
@@ -294,6 +297,8 @@ try {
       </tr>
     <%}%>
   </table>
+<br>
+<div class='tabletext'>NOTE: <b style='color: red;'>Red</b> date/time entries denote that the current time is before the From Date or after the Thru Date. If the From Date is <b style='color: red;'>red</b>, assocication has not started yet; if Thru Date is <b style='color: red;'>red</b>, association has expired (<u>and should probably be deleted</u>).</div>
 <%}%>
 
 <%
