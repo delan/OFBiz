@@ -42,11 +42,14 @@
       File loadDir = new File(path);
       if(loadDir.exists() && loadDir.isDirectory()) {
         File[] files = loadDir.listFiles();
+        List tempFileList = new LinkedList();
         for(int i=0; i<files.length; i++) {
           if(files[i].getName().toLowerCase().endsWith(".sql") || files[i].getName().toLowerCase().endsWith(".xml")) {
-            fileList.add(files[i]);
+            tempFileList.add(files[i]);
           }
         }
+        Collections.sort(tempFileList);
+        fileList.addAll(tempFileList);
       }
     }
   }
