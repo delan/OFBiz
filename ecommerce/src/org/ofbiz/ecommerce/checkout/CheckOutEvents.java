@@ -285,15 +285,18 @@ public class CheckOutEvents {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
             return "error";
         }
-        String serverRoot = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);
-        if (serverRoot == null) {
-            Debug.logError("[CheckOutEvents.renderConfirmOrder] SERVER_ROOT_URL is null.");
-            request.setAttribute(SiteDefs.ERROR_MESSAGE, "Error generating order confirmation, but it was recorded and will be processed.");
-            return "error";
-        }
+
+        // build the server root string
+        StringBuffer serverRoot = new StringBuffer();
+        String server = UtilProperties.getPropertyValue("url.properties", "force.http.host", request.getServerName());
+        String port = UtilProperties.getPropertyValue("url.properties", "port.http", "80");
+        serverRoot.append("http://");
+        serverRoot.append(server);
+        if (!port.equals("80"))
+            serverRoot.append(":" + port);
 
         try {
-            java.net.URL url = new java.net.URL(serverRoot + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
+            java.net.URL url = new java.net.URL(serverRoot.toString() + controlPath + "/confirmorder?order_id=" + request.getAttribute("order_id") + "&security_code=" + ORDER_SECURITY_CODE);
             //as nice as it would be to run this through localhost, we can't because the page has to have the correct host so the urls will be created for the email, etc; we could do this and pass the base url in a parameter...
             //Debug.logInfo("Original URL: " + url);
             //url = new URL(url.getProtocol(), "127.0.0.1", url.getPort(), url.getFile());

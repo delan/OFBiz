@@ -124,6 +124,7 @@
     </request-map>
 
     <request-map uri="checkout">
+      <security https="true" auth="true"/>
 	  <event type="java" path="org.ofbiz.ecommerce.checkout.CheckOutEvents" invoke="cartNotEmpty"/>
       <response name="success" type="request" value="setOptions"/>
 	  <response name="error" type="view" value="showcart"/>
