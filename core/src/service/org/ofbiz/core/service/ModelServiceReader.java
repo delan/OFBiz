@@ -509,6 +509,11 @@ public class ModelServiceReader {
             }
                         
             Debug.log(service.name + " param(b): " + param.name + " = " + param.toString(), module);
+            
+            // set the overrideParam flag
+            param.overrideParam = true;
+            
+            // set only modified values
             if (attribute.getAttribute("type") != null && attribute.getAttribute("type").length() > 0) {                
                 param.name = UtilXml.checkEmpty(attribute.getAttribute("type"));
             }

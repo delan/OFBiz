@@ -60,6 +60,9 @@ public class ModelParam {
     /** Is this Parameter set internally? */
     public boolean internal = false;
     
+    /** Is this an override parameter? */
+    public boolean overrideParam = false;
+    
     public String toString() {
         StringBuffer buf = new StringBuffer();
         buf.append(name + "::");
