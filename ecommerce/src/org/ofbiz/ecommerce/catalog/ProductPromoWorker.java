@@ -200,7 +200,9 @@ public class ProductPromoWorker {
 
                 GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
                         UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", "amount", new Double(-discountAmount),
-                        "productPromoId", productPromoAction.get("productPromoId"), "productPromoRuleId", productPromoAction.get("productPromoRuleId")));
+                        "productPromoId", productPromoAction.get("productPromoId"), 
+                        "productPromoRuleId", productPromoAction.get("productPromoRuleId"), 
+                        "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
 
                 //if an orderAdjustmentTypeId was included, override the default
                 if (UtilValidate.isNotEmpty(productPromoAction.getString("orderAdjustmentTypeId"))) {
@@ -232,40 +234,29 @@ public class ProductPromoWorker {
             if (apply) {
                 cart.setFreeShippingInfo(UtilMisc.toMap("productPromoId", productPromoAction.getString("productPromoId"), 
                         "productPromoRuleId", productPromoAction.getString("productPromoRuleId"),
+                        "productPromoActionSeqId", productPromoAction.getString("productPromoActionSeqId"),
                         "orderAdjustmentTypeId", productPromoAction.getString("orderAdjustmentTypeId")));
             } else {
                 Map freeShippingInfo = cart.getFreeShippingInfo();
                 if (freeShippingInfo != null && freeShippingInfo.get("productPromoId") != null && freeShippingInfo.get("productPromoRuleId") != null ) {
                     if (productPromoAction.getString("productPromoId").equals(freeShippingInfo.get("productPromoId")) &&
-                            productPromoAction.getString("productPromoRuleId").equals(freeShippingInfo.get("productPromoRuleId"))) {
+                            productPromoAction.getString("productPromoRuleId").equals(freeShippingInfo.get("productPromoRuleId")) &&
+                            productPromoAction.getString("productPromoActionSeqId").equals(freeShippingInfo.get("productPromoActionSeqId"))) {
                         //free shipping was setup by this promo/rule, so go ahead and clear it
                         cart.setFreeShippingInfo(null);
                     }
                 }
             }
-        //TODO: perform other actions
-        /*
         } else if ("PROMO_ITEM_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            if (apply) {
-            } else {
-            }
+            doItemPromoAction(apply, productPromoAction, cartItem, "percentage", delegator);
         } else if ("PROMO_ITEM_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            if (apply) {
-            } else {
-            }
+            doItemPromoAction(apply, productPromoAction, cartItem, "amount", delegator);
         } else if ("PROMO_ITEM_AMNTPQ".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            if (apply) {
-            } else {
-            }
+            doItemPromoAction(apply, productPromoAction, cartItem, "amountPerQuantity", delegator);
         } else if ("PROMO_ORDER_PERCENT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            if (apply) {
-            } else {
-            }
+            doOrderPromoAction(apply, productPromoAction, cart, "percentage", delegator);
         } else if ("PROMO_ORDER_AMOUNT".equals(productPromoAction.getString("productPromoActionTypeId"))) {
-            if (apply) {
-            } else {
-            }
-         */
+            doOrderPromoAction(apply, productPromoAction, cart, "amount", delegator);
         } else {
             Debug.logError("An un-supported productPromoActionType was used: " + productPromoAction.getString("productPromoActionTypeId") + ", not performing any action");
         }
@@ -283,10 +274,80 @@ public class ProductPromoWorker {
                     GenericValue checkOrderAdjustment = (GenericValue) checkOrderAdjustments.next();
 
                     if (productPromoAction.getString("productPromoId").equals(checkOrderAdjustment.get("productPromoId")) &&
-                            productPromoAction.getString("productPromoRuleId").equals(checkOrderAdjustment.get("productPromoRuleId"))) {
+                            productPromoAction.getString("productPromoRuleId").equals(checkOrderAdjustment.get("productPromoRuleId")) &&
+                            productPromoAction.getString("productPromoActionSeqId").equals(checkOrderAdjustment.get("productPromoActionSeqId"))) {
                         return new Integer(i);
                     }
                 }
+            }
+        }
+        return null;
+    }
+
+    public static void doItemPromoAction(boolean apply, GenericValue productPromoAction, ShoppingCartItem cartItem, String quantityField, GenericDelegator delegator) {
+        if (apply) {
+            Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
+            if (adjLoc != null) {
+                Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
+                return;
+            }
+            
+            double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
+            GenericValue itemAdjustment = delegator.makeValue("OrderAdjustment",
+                    UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", quantityField, new Double(quantity),
+                    "productPromoId", productPromoAction.get("productPromoId"), 
+                    "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
+                    "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
+            //if an orderAdjustmentTypeId was included, override the default
+            if (UtilValidate.isNotEmpty(productPromoAction.getString("orderAdjustmentTypeId"))) {
+                itemAdjustment.set("orderAdjustmentTypeId", productPromoAction.get("orderAdjustmentTypeId"));
+            }
+
+            cartItem.addAdjustment(itemAdjustment);
+        } else {
+            Integer adjLoc = findAdjustment(productPromoAction, (List) cartItem.getAdjustments());
+            if (adjLoc != null) {
+                cartItem.removeAdjustment(adjLoc.intValue());
+            }
+        }
+    }
+    
+    public static void doOrderPromoAction(boolean apply, GenericValue productPromoAction, ShoppingCart cart, String quantityField, GenericDelegator delegator) {
+        if (apply) {
+            Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
+            if (adjLoc != null) {
+                Debug.logInfo("Not adding promo adjustment, already there; action: " + productPromoAction);
+                return;
+            }
+            
+            double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
+            GenericValue orderAdjustment = delegator.makeValue("OrderAdjustment",
+                    UtilMisc.toMap("orderAdjustmentTypeId", "PROMOTION_ADJUSTMENT", quantityField, new Double(quantity),
+                    "productPromoId", productPromoAction.get("productPromoId"), 
+                    "productPromoRuleId", productPromoAction.get("productPromoRuleId"),
+                    "productPromoActionSeqId", productPromoAction.get("productPromoActionSeqId")));
+            //if an orderAdjustmentTypeId was included, override the default
+            if (UtilValidate.isNotEmpty(productPromoAction.getString("orderAdjustmentTypeId"))) {
+                orderAdjustment.set("orderAdjustmentTypeId", productPromoAction.get("orderAdjustmentTypeId"));
+            }
+
+            cart.addAdjustment(orderAdjustment);
+        } else {
+            Integer adjLoc = findAdjustment(productPromoAction, (List) cart.getAdjustments());
+            if (adjLoc != null) {
+                cart.removeAdjustment(adjLoc.intValue());
+            }
+        }
+    }
+    
+    public static Integer findAdjustment(GenericValue productPromoAction, List adjustments) {
+        for (int i = 0; i < adjustments.size(); i++) {
+            GenericValue checkOrderAdjustment = (GenericValue) adjustments.get(i);
+
+            if (productPromoAction.getString("productPromoId").equals(checkOrderAdjustment.get("productPromoId")) &&
+                    productPromoAction.getString("productPromoRuleId").equals(checkOrderAdjustment.get("productPromoRuleId")) &&
+                    productPromoAction.getString("productPromoActionSeqId").equals(checkOrderAdjustment.get("productPromoActionSeqId"))) {
+                return new Integer(i);
             }
         }
         return null;

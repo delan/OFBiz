@@ -394,6 +394,9 @@ public class ShoppingCart implements java.io.Serializable {
     public void addAdjustment(GenericValue adjustment) {
         adjustments.add(adjustment);
     }
+    public void removeAdjustment(int index) {
+        adjustments.remove(index);
+    }
     /** go through the order adjustments and remove all adjustments with the given type */
     public void removeAdjustmentByType(String orderAdjustmentTypeId) {
         if (orderAdjustmentTypeId == null) return;
