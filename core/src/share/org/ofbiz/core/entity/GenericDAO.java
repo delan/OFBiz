@@ -88,14 +88,14 @@ public class GenericDAO {
                     connection.commit();
                 }  catch (SQLException sqle) {
                     try { if(manualTX) connection.rollback(); }
-                    catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
-                    throw new GenericDataSourceException("SQL Exception occured on commit of insert/storeAllOther", sqle);
+                    catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
+                    throw new GenericDataSourceException("SQL Exception occured on commit of insert", sqle);
                 }
             }
         } catch(GenericDataSourceException e) {
             try { if(manualTX) connection.rollback(); }
-            catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
-            throw new GenericDataSourceException("Exception occured in insert or storeAllOther", e);
+            catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.insert]: SQL Exception while rolling back insert. Error was:"); Debug.logWarning(sqle2); }
+            throw new GenericDataSourceException("Exception occured in insert", e);
         }  finally {
             try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
         }
@@ -171,14 +171,14 @@ public class GenericDAO {
                     connection.commit();
                 } catch (SQLException sqle) {
                     try { if(manualTX) connection.rollback(); }
-                    catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
-                    throw new GenericDataSourceException("SQL Exception occured on commit of update/storeAllOther", sqle);
+                    catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:"); Debug.logWarning(sqle2); }
+                    throw new GenericDataSourceException("SQL Exception occured on commit of update", sqle);
                 }
             }
         } catch(GenericDataSourceException e) {
             try { if(manualTX) connection.rollback(); }
-            catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update or storeAllOther. Error was:"); Debug.logWarning(sqle2); }
-            throw new GenericDataSourceException("Exception occured in update or storeAllOther", e);
+            catch(SQLException sqle2) { Debug.logWarning("[GenericDAO.customUpdate]: SQL Exception while rolling back update. Error was:"); Debug.logWarning(sqle2); }
+            throw new GenericDataSourceException("Exception occured in update", e);
         } finally {
             try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
         }
@@ -221,7 +221,7 @@ public class GenericDAO {
         }
     }
     
-    /** Store the passed entity - insert if does not exist, otherwise update; then call storeAllOther to do a deep store */
+    /** Store the passed entity - insert if does not exist, otherwise update */
     private void singleStore(GenericEntity entity, Connection connection) throws GenericEntityException {
         GenericPK tempPK = entity.getPrimaryKey();
         try {
