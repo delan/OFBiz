@@ -71,7 +71,7 @@ public class EnvToField extends MethodOperation {
                 toMap = new HashMap();
                 mapAcsr.put(methodContext, toMap);
             }
-            fieldAcsr.put(toMap, envVar);
+            fieldAcsr.put(toMap, envVar, methodContext);
         } else {
             // no to-map, so put in env
             fieldAcsr.put(methodContext, envVar);

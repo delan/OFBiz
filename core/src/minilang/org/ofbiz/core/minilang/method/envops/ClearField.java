@@ -61,7 +61,7 @@ public class ClearField extends MethodOperation {
                 mapAcsr.put(methodContext, toMap);
             }
 
-            fieldAcsr.remove(toMap);
+            fieldAcsr.remove(toMap, methodContext);
         } else {
             fieldAcsr.remove(methodContext);
         }

@@ -94,7 +94,7 @@ public class PropertyToField extends MethodOperation {
                 toMap = new HashMap();
                 mapAcsr.put(methodContext, toMap);
             }
-            fieldAcsr.put(toMap, value);
+            fieldAcsr.put(toMap, value, methodContext);
         } else {
             fieldAcsr.put(methodContext, value);
         }

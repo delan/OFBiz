@@ -75,7 +75,7 @@ public class FieldObject extends MethodObject {
                 Debug.logWarning("Map not found with name " + mapAcsr + ", not getting Object value, returning null.");
                 return null;
             }
-            fieldVal = fieldAcsr.get(fromMap);
+            fieldVal = fieldAcsr.get(fromMap, methodContext);
         } else {
             // no map name, try the env
             fieldVal = fieldAcsr.get(methodContext);

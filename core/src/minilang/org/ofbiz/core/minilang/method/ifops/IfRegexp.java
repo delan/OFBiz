@@ -87,7 +87,7 @@ public class IfRegexp extends MethodOperation {
             if (fromMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using empty string for comparison");
             } else {
-                fieldVal = fieldAcsr.get(fromMap);
+                fieldVal = fieldAcsr.get(fromMap, methodContext);
             }
         } else {
             // no map name, try the env

@@ -66,7 +66,7 @@ public class FieldToEnv extends MethodOperation {
                 return true;
             }
 
-            fieldVal = fieldAcsr.get(fromMap);
+            fieldVal = fieldAcsr.get(fromMap, methodContext);
         } else {
             // no map name, try the env
             fieldVal = fieldAcsr.get(methodContext);

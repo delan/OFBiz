@@ -72,7 +72,7 @@ public class IfNotEmpty extends MethodOperation {
             if (fromMap == null) {
                 if (Debug.verboseOn()) Debug.logVerbose("Map not found with name " + mapAcsr + ", not running operations");
             } else {
-                fieldVal = fieldAcsr.get(fromMap);
+                fieldVal = fieldAcsr.get(fromMap, methodContext);
             }
         } else {
             // no map name, try the env

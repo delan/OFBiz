@@ -39,18 +39,18 @@ import org.ofbiz.core.minilang.method.*;
  */
 public class FieldToRequest extends MethodOperation {
     
-    String mapName;
-    String fieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
     String requestName;
 
     public FieldToRequest(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
         requestName = element.getAttribute("request-name");
 
         if (requestName == null || requestName.length() == 0) {
-            requestName = fieldName;
+            requestName = element.getAttribute("field-name");
         }
     }
 
@@ -58,23 +58,20 @@ public class FieldToRequest extends MethodOperation {
         // only run this if it is in an EVENT context
         if (methodContext.getMethodType() == MethodContext.EVENT) {
             Object fieldVal = null;
-
-            if (mapName != null && mapName.length() > 0) {
-                Map fromMap = (Map) methodContext.getEnv(mapName);
-
+            if (!mapAcsr.isEmpty()) {
+                Map fromMap = (Map) mapAcsr.get(methodContext);
                 if (fromMap == null) {
-                    Debug.logWarning("Map not found with name " + mapName);
+                    Debug.logWarning("Map not found with name " + mapAcsr);
                     return true;
                 }
-
-                fieldVal = fromMap.get(fieldName);
+                fieldVal = fieldAcsr.get(fromMap, methodContext);
             } else {
                 // no map name, try the env
-                fieldVal = methodContext.getEnv(fieldName);
+                fieldVal = fieldAcsr.get(methodContext);
             }
 
             if (fieldVal == null) {
-                Debug.logWarning("Field value not found with name " + fieldName + " in Map with name " + mapName);
+                Debug.logWarning("Field value not found with name " + fieldAcsr + " in Map with name " + mapAcsr);
                 return true;
             }
 

@@ -61,9 +61,9 @@ public class ToString extends MethodOperation {
                 mapAcsr.put(methodContext, toMap);
             }
 
-            Object obj = toMap.get(fieldAcsr);
+            Object obj = fieldAcsr.get(toMap, methodContext);
             if (obj != null) {
-                fieldAcsr.put(toMap, obj.toString());
+                fieldAcsr.put(toMap, obj.toString(), methodContext);
             }
         } else {
             Object obj = fieldAcsr.get(methodContext);

@@ -55,7 +55,7 @@ public class FieldString extends MethodString {
                 Debug.logWarning("Map not found with name " + mapAcsr + ", not getting string value");
                 return "";
             }
-            fieldVal = fieldAcsr.get(fromMap);
+            fieldVal = fieldAcsr.get(fromMap, methodContext);
         } else {
             // no map name, try the env
             fieldVal = fieldAcsr.get(methodContext);

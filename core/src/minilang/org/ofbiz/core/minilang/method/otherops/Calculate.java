@@ -125,7 +125,7 @@ public class Calculate extends MethodOperation {
                 toMap = new HashMap();
                 mapAcsr.put(methodContext, toMap);
             }
-            fieldAcsr.put(toMap, resultObj);
+            fieldAcsr.put(toMap, resultObj, methodContext);
         } else {
             fieldAcsr.put(methodContext, resultObj);
         }
@@ -229,7 +229,7 @@ public class Calculate extends MethodOperation {
                         fromMap = new HashMap();
                         mapAcsr.put(methodContext, fromMap);
                     }
-                    fieldObj = fieldAcsr.get(fromMap);
+                    fieldObj = fieldAcsr.get(fromMap, methodContext);
                 } else {
                     fieldObj = fieldAcsr.get(methodContext);
                 }

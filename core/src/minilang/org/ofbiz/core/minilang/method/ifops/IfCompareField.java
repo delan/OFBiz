@@ -94,7 +94,7 @@ public class IfCompareField extends MethodOperation {
             if (fromMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("Map not found with name " + mapAcsr + ", using null for comparison");
             } else {
-                fieldVal1 = fieldAcsr.get(fromMap);
+                fieldVal1 = fieldAcsr.get(fromMap, methodContext);
             }
         } else {
             // no map name, try the env
@@ -106,7 +106,7 @@ public class IfCompareField extends MethodOperation {
             if (toMap == null) {
                 if (Debug.infoOn()) Debug.logInfo("To Map not found with name " + toMapAcsr + ", using null for comparison");
             } else {
-                fieldVal2 = toFieldAcsr.get(toMap);
+                fieldVal2 = toFieldAcsr.get(toMap, methodContext);
             }
         } else {
             // no map name, try the env

@@ -110,9 +110,10 @@ public class ContextAccessor {
     }
     
     /** Based on name get from Map or from List in Map */
-    public Object get(Map theMap) {
+    public Object get(Map theMap, MethodContext methodContext) {
         if (this.needsExpand) {
-            return theMap.get(name);
+            FlexibleMapAccessor fma = new FlexibleMapAccessor(methodContext.expandString(name));
+            return fma.get(theMap);
         } else {
             return fma.get(theMap);
         }
@@ -124,18 +125,20 @@ public class ContextAccessor {
      * If a "+" (plus sign) is included inside the square brackets before the index 
      * number the value will inserted/added at that point instead of set at the point.
      */
-    public void put(Map theMap, Object value) {
+    public void put(Map theMap, Object value, MethodContext methodContext) {
         if (this.needsExpand) {
-            theMap.put(name, value);
+            FlexibleMapAccessor fma = new FlexibleMapAccessor(methodContext.expandString(name));
+            fma.put(theMap, value);
         } else {
             fma.put(theMap, value);
         }
     }
     
     /** Based on name remove from Map or from List in Map */
-    public Object remove(Map theMap) {
+    public Object remove(Map theMap, MethodContext methodContext) {
         if (this.needsExpand) {
-            return theMap.remove(name);
+            FlexibleMapAccessor fma = new FlexibleMapAccessor(methodContext.expandString(name));
+            return fma.remove(theMap);
         } else {
             return fma.remove(theMap);
         }

@@ -71,7 +71,7 @@ public class FieldToField extends MethodOperation {
                 return true;
             }
 
-            fieldVal = fieldAcsr.get(fromMap);
+            fieldVal = fieldAcsr.get(fromMap, methodContext);
         } else {
             // no map name, try the env
             fieldVal = fieldAcsr.get(methodContext);
@@ -94,7 +94,7 @@ public class FieldToField extends MethodOperation {
                 toMap = new HashMap();
                 toMapAcsr.put(methodContext, toMap);
             }
-            toFieldAcsr.put(toMap, fieldVal);
+            toFieldAcsr.put(toMap, fieldVal, methodContext);
         } else {
             // no to-map, so put in env
             toFieldAcsr.put(methodContext, fieldVal);
