@@ -3,10 +3,44 @@
   <Party partyId="admin" partyTypeId="PERSON"/>
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
   <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
+  
+  <SecurityPermission description="Permission to View the Server Statistics pages." permissionId="SERVER_STATS_VIEW"/>
+  <SecurityPermission description="Permission to Use the Data File Maintenance pages." permissionId="DATAFILE_MAINT"/>
+  <SecurityPermission description="Permission to Use the Entity Maintenance pages." permissionId="ENTITY_MAINT"/>
+  <SecurityPermission description="Permission to Use the Rules Maintenance pages." permissionId="RULES_MAINT"/>
+  <SecurityPermission description="Permission to Use the Workflow Maintenance pages." permissionId="WORKFLOW_MAINT"/>
+  <SecurityPermission description="Permission to View a UtilCache instance." permissionId="UTIL_CACHE_VIEW"/>
+  <SecurityPermission description="Permission to Edit a UtilCache instance." permissionId="UTIL_CACHE_EDIT"/>
+  
+  <SecurityPermission description="Permission to do View operations on the Catalog." permissionId="CATALOG_VIEW"/>
+  <SecurityPermission description="Permission to do Create operations on the Catalog." permissionId="CATALOG_CREATE"/>
+  <SecurityPermission description="Permission to do Update operations on the Catalog." permissionId="CATALOG_UPDATE"/>
+  <SecurityPermission description="Permission to do Delete operations on the Catalog." permissionId="CATALOG_DELETE"/>
+  <SecurityPermission description="Permission to do ALL operations on the Catalog." permissionId="CATALOG_ADMIN"/>
+  
+  <SecurityPermission description="Permission to do View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
+  <SecurityPermission description="Permission to do Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
+  <SecurityPermission description="Permission to do Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
+  <SecurityPermission description="Permission to do Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
+  <SecurityPermission description="Permission to do ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
+  
+  <SecurityPermission description="Permission to do View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
+  <SecurityPermission description="Permission to do Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
+  <SecurityPermission description="Permission to do Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
+  <SecurityPermission description="Permission to do Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
+  <SecurityPermission description="Permission to do ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
+
+  <SecurityPermission description="Permission to do View operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_VIEW"/>
+  <SecurityPermission description="Permission to do Create operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_CREATE"/>
+  <SecurityPermission description="Permission to do Update operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_UPDATE"/>
+  <SecurityPermission description="Permission to do Delete operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_DELETE"/>
+  <SecurityPermission description="Permission to do ALL operations in the Work Effort Manager." permissionId="WORKEFFORTMGR_ADMIN"/>
+  
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
@@ -16,6 +50,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_UPDATE"/>
@@ -23,13 +58,11 @@
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="PARTYMGR_ADMIN"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_VIEW"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="RULES_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKFLOW_MAINT"/>
-  <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_CREATE"/>
@@ -38,28 +71,6 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKEFFORTMGR_ADMIN"/>
 
-  <SecurityPermission description="Permission to View the Server Statistics pages." permissionId="SERVER_STATS_VIEW"/>
-  <SecurityPermission description="Permission to Use the Data File Maintenance pages." permissionId="DATAFILE_MAINT"/>
-  <SecurityPermission description="Permission to Use the Entity Maintenance pages." permissionId="ENTITY_MAINT"/>
-  <SecurityPermission description="Permission to Use the Rules Maintenance pages." permissionId="RULES_MAINT"/>
-  <SecurityPermission description="Permission to Use the Workflow Maintenance pages." permissionId="WORKFLOW_MAINT"/>
-  <SecurityPermission description="Permission to View a UtilCache instance." permissionId="UTIL_CACHE_VIEW"/>
-  <SecurityPermission description="Permission to Edit a UtilCache instance." permissionId="UTIL_CACHE_EDIT"/>
-  <SecurityPermission description="Permission to do View operations on the Catalog." permissionId="CATALOG_VIEW"/>
-  <SecurityPermission description="Permission to do Create operations on the Catalog." permissionId="CATALOG_CREATE"/>
-  <SecurityPermission description="Permission to do Update operations on the Catalog." permissionId="CATALOG_UPDATE"/>
-  <SecurityPermission description="Permission to do Delete operations on the Catalog." permissionId="CATALOG_DELETE"/>
-  <SecurityPermission description="Permission to do ALL operations on the Catalog." permissionId="CATALOG_ADMIN"/>
-  <SecurityPermission description="Permission to do View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
-  <SecurityPermission description="Permission to do Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
-  <SecurityPermission description="Permission to do Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
-  <SecurityPermission description="Permission to do Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
-  <SecurityPermission description="Permission to do ALL operations in the Party Manager." permissionId="PARTYMGR_ADMIN"/>
-  <SecurityPermission description="Permission to do View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
-  <SecurityPermission description="Permission to do Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
-  <SecurityPermission description="Permission to do Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
-  <SecurityPermission description="Permission to do Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
-  <SecurityPermission description="Permission to do ALL operations in the Order Manager." permissionId="ORDERMGR_ADMIN"/>
   <UserLogin currentPassword="ofbiz" partyId="admin" passwordHint="" userLoginId="admin"/>
   <UserLogin currentPassword="ofbiz" partyId="" passwordHint="" userLoginId="flexadmin"/>
   <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin"/>

@@ -136,10 +136,10 @@
       <field name="countryNumber" type="short-varchar"></field>
       <field name="countryName" type="description"></field>
       <prim-key field="countryCode"/>
-      <relation type="one" rel-entity-name="CountryCapital">
+      <relation type="one-nofk" rel-entity-name="CountryCapital">
         <key-map field-name="countryCode"/>
       </relation>
-      <relation type="one" rel-entity-name="CountryTeleCode">
+      <relation type="one-nofk" rel-entity-name="CountryTeleCode">
         <key-map field-name="countryCode"/>
       </relation>
     </entity>
@@ -1272,7 +1272,7 @@
       <relation type="many" rel-entity-name="UserLoginHistory">
         <key-map field-name="userLoginId"/>
       </relation>
-      <relation type="one" rel-entity-name="Person">
+      <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
     </entity>

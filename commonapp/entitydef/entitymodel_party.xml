@@ -545,10 +545,10 @@
       <relation type="many" rel-entity-name="FacilityContactMech">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="PostalAddress">
+      <relation type="one-nofk" rel-entity-name="PostalAddress">
         <key-map field-name="contactMechId"/>
       </relation>
-      <relation type="one" rel-entity-name="TelecomNumber">
+      <relation type="one-nofk" rel-entity-name="TelecomNumber">
         <key-map field-name="contactMechId"/>
       </relation>
       <relation type="many" rel-entity-name="OrderContactMech">
@@ -882,10 +882,10 @@
       <relation type="many" rel-entity-name="PartyDataObject">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyGroup">
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Person">
+      <relation type="one-nofk" rel-entity-name="Person">
         <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="PaymentMethod">
@@ -930,7 +930,7 @@
       <relation type="many" rel-entity-name="WorkEffortPartyAssignment">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="Affiliate">
+      <relation type="one-nofk" rel-entity-name="Affiliate">
         <key-map field-name="partyId"/>
       </relation>
     </entity>
@@ -985,6 +985,12 @@
         <key-map field-name="partyClassificationGroupId" rel-field-name="parentTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyClassification">
+        <key-map field-name="partyClassificationGroupId"/>
+      </relation>
+      <relation type="many" rel-entity-name="MarketInterest">
+        <key-map field-name="partyClassificationGroupId"/>
+      </relation>
+      <relation type="many" rel-entity-name="PriceComponent">
         <key-map field-name="partyClassificationGroupId"/>
       </relation>
     </entity>
@@ -1223,12 +1229,6 @@
         <key-map field-name="partyTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyTypeAttr">
-        <key-map field-name="partyTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="PriceComponent">
-        <key-map field-name="partyTypeId"/>
-      </relation>
-      <relation type="many" rel-entity-name="MarketInterest">
         <key-map field-name="partyTypeId"/>
       </relation>
     </entity>

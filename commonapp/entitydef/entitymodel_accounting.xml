@@ -1146,10 +1146,13 @@
       <relation type="many" rel-entity-name="PaymentAttribute">
         <key-map field-name="paymentId"/>
       </relation>
-      <relation type="one" rel-entity-name="CreditCard">
+      <relation type="one" rel-entity-name="PaymentMethod">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" rel-entity-name="EftAccount">
+      <relation type="one-nofk" rel-entity-name="CreditCard">
+        <key-map field-name="paymentMethodId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="EftAccount">
         <key-map field-name="paymentMethodId"/>
       </relation>
     </entity>
@@ -1212,10 +1215,10 @@
       <relation type="one" rel-entity-name="PaymentMethodType">
         <key-map field-name="paymentMethodTypeId"/>
       </relation>
-      <relation type="one" rel-entity-name="CreditCard">
+      <relation type="one-nofk" rel-entity-name="CreditCard">
         <key-map field-name="paymentMethodId"/>
       </relation>
-      <relation type="one" rel-entity-name="EftAccount">
+      <relation type="one-nofk" rel-entity-name="EftAccount">
         <key-map field-name="paymentMethodId"/>
       </relation>
       <relation type="one" rel-entity-name="Party">

@@ -419,7 +419,7 @@
       <field name="parentCategoryId" type="id"></field>
       <field name="description" type="description"></field>
       <prim-key field="productFeatureCategoryId"/>
-      <relation type="one" rel-entity-name="ProductFeatureCategory">
+      <relation type="one" title="Parent" rel-entity-name="ProductFeatureCategory">
         <key-map field-name="parentCategoryId" rel-field-name="productFeatureCategoryId"/>
       </relation>
       <relation type="many" rel-entity-name="ProductFeature">
@@ -701,7 +701,7 @@
       <field name="priceComponentId" type="id-ne"></field>
       <field name="priceComponentTypeId" type="id"></field>
       <field name="partyId" type="id"></field>
-      <field name="partyTypeId" type="id"></field>
+      <field name="partyClassificationGroupId" type="id"></field>
       <field name="productId" type="id"></field>
       <field name="productFeatureId" type="id"></field>
       <field name="productCategoryId" type="id"></field>
@@ -732,8 +732,8 @@
       <relation type="one" rel-entity-name="Party">
         <key-map field-name="partyId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyType">
-        <key-map field-name="partyTypeId"/>
+      <relation type="one" rel-entity-name="PartyClassificationGroup">
+        <key-map field-name="partyClassificationGroupId"/>
       </relation>
       <relation type="one" rel-entity-name="Product">
         <key-map field-name="productId"/>
@@ -1285,17 +1285,17 @@
             package-name="org.ofbiz.commonapp.product.supplier"
             title="Market Interest Entity">
       <field name="productCategoryId" type="id-ne"></field>
-      <field name="partyTypeId" type="id-ne"></field>
+      <field name="partyClassificationGroupId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
       <prim-key field="productCategoryId"/>
-      <prim-key field="partyTypeId"/>
+      <prim-key field="partyClassificationGroupId"/>
       <prim-key field="fromDate"/>
       <relation type="one" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryId"/>
       </relation>
-      <relation type="one" rel-entity-name="PartyType">
-        <key-map field-name="partyTypeId"/>
+      <relation type="one" rel-entity-name="PartyClassificationGroup">
+        <key-map field-name="partyClassificationGroupId"/>
       </relation>
     </entity>
     <entity entity-name="ReorderGuideline"
