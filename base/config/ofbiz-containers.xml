@@ -26,7 +26,7 @@
 
 <ofbiz-containers xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
         xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/ofbiz-containers.xsd">
-    <!-- load the ofbiz components (always first) -->
+    <!-- load the ofbiz component container (always first) -->
     <container name="component-container" class="org.ofbiz.base.container.ComponentContainer"/>
 
     <!-- load the cached classloader container (always second) -->
@@ -66,7 +66,7 @@
         <property name="apps-cross-context" value="false"/>
         <property name="apps-distributable" value="false"/>
         <property name="apps-db-persistent-mgr" value="false"/>
-        <!-- one or more tomcat engines (servers); components map to this + host -->
+        <!-- one or more tomcat engines (servers); map to this + host -->
         <property name="default-server" value="engine">
             <property name="default-host" value="0.0.0.0"/>
             <property name="jvm-route" value="jvm1"/>

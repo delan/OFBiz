@@ -120,7 +120,7 @@ public class PosDialog {
             this.output.setEditable(false);
         }
 
-        // set the components
+        // set the page pieces
         Component[] coms = page.getComponents();
         for (int i = 0; i < coms.length; i++) {
             dialog.getContentPane().add(coms[i]);

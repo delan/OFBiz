@@ -45,13 +45,13 @@
             <fileset dir="${lib.dir}" includes="*.jar"/>
             <fileset dir="../../base/lib" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/entity/lib" includes="*.jar"/>
-            <fileset dir="../../components/entity/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/security/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/service/lib" includes="*.jar"/>
-            <fileset dir="../../components/service/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/minilang/build/lib" includes="*.jar"/>
-            <fileset dir="../../components/content/build/lib" includes="*.jar"/>
+            <fileset dir="../../applications/entity/lib" includes="*.jar"/>
+            <fileset dir="../../applications/entity/build/lib" includes="*.jar"/>
+            <fileset dir="../../applications/security/build/lib" includes="*.jar"/>
+            <fileset dir="../../applications/service/lib" includes="*.jar"/>
+            <fileset dir="../../applications/service/build/lib" includes="*.jar"/>
+            <fileset dir="../../applications/minilang/build/lib" includes="*.jar"/>
+            <fileset dir="../../applications/content/build/lib" includes="*.jar"/>
         </path>
     </target>
     

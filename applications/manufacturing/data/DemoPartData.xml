@@ -45,7 +45,7 @@
     <!-- ******************** -->  
     <!--     This is an example of virtual bill of materials for the "Giant Widget" product (WG-9943).
                 The Giant Widget is made of a frame (WG-FRAME), a coloured cover (WG-COVER),     
-                2 or 3 wheels (WG-WHEEL), 13 screws.    WG-COVER and WG-WHEEL are virtual components.    
+                2 or 3 wheels (WG-WHEEL), 13 screws.    WG-COVER and WG-WHEEL are virtual component/parts.    
                 WG-COVER is dinamically substituted with a coloured real cover by the configurator accordingly to    
                 the product features selected for the WG-9943 product (9000 = black, 9001 = silver).    
                 WG-WHEEL is dinamically substituted with real wheels by the configurator accordingly to    

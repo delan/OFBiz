@@ -101,7 +101,7 @@ public class ManagerEvents {
             }
         }
 
-        // refresh the other components
+        // refresh the others
         pos.refresh();
     }
 

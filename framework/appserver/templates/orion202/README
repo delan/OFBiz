@@ -9,7 +9,7 @@ To use Orion 2.0.2 with OFBiz 3.0 follow the following steps:
 1) generate the configuration files (auto-creates classpath and webapp settings)
 
 - From the OFBiz root directory:
-java -jar ofbiz.jar -start components/appservers/configure orion202
+java -jar ofbiz.jar -start framework/appservers/configure orion202
 
 2) Copy the newly created configuration files to orion config directory
 
@@ -33,4 +33,4 @@ how to get Orion to auto-load filters.
 *** Note this is an example configuration and SSL is not enabled by default.
 If you would like to contribute the SSL configuration please post it to the
 dev mailing list and we wil include the templates. Until then, you will also
-need to disable SSL in components/content/config/url.properties
+need to disable SSL in framework/webapp/config/url.properties

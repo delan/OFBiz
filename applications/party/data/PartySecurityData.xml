@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- Party Manager security -->
-    <!-- Target file: components/party/data/PartySecurityData.xml -->
+    <!-- Target file: applications/party/data/PartySecurityData.xml -->
     <SecurityPermission description="View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
     <SecurityPermission description="Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
     <SecurityPermission description="Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
@@ -20,7 +20,7 @@
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="PARTYMGR_NOTE"/>
 
     <!-- Security Management security -->
-    <!-- Target file: components/party/data/PartySecurityData.xml -->
+    <!-- Target file: applications/party/data/PartySecurityData.xml -->
     <SecurityPermission description="View operations in the Security Management Screens." permissionId="SECURITY_VIEW"/>
     <SecurityPermission description="Create operations in the Security Management Screens." permissionId="SECURITY_CREATE"/>
     <SecurityPermission description="Update operations in the Security Management Screens." permissionId="SECURITY_UPDATE"/>

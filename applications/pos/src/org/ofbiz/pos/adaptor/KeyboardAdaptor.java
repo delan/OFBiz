@@ -90,7 +90,7 @@ public class KeyboardAdaptor {
             KeyboardAdaptor.getInstance();
         }
 
-        // add the new components to listen on
+        // add the new ones to listen on
         if (adaptor != null && coms != null) {
             adaptor.addComponents(coms, recurse);
         }

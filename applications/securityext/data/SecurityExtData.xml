@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- OFBiz Core security -->
-    <!-- Target file: components/securityext/data/SecurityExtData.xml -->
+    <!-- Target file: applications/securityext/data/SecurityExtData.xml -->
     <Party partyId="_NA_" partyTypeId="PERSON"/>
     <Person partyId="_NA_"/>
     <PartyRole partyId="_NA_" roleTypeId="CARRIER"/>

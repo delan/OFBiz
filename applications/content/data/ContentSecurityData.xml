@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entity-engine-xml>
     <!-- Content Manager security -->
-    <!-- Target file: components/content/data/ContentSecurityData.xml -->
+    <!-- Target file: applications/content/data/ContentSecurityData.xml -->
     <SecurityPermission description="View operations in the Content Manager." permissionId="CONTENTMGR_VIEW"/>
     <SecurityPermission description="Create operations in the Content Manager." permissionId="CONTENTMGR_CREATE"/>
     <SecurityPermission description="Update operations in the Content Manager." permissionId="CONTENTMGR_UPDATE"/>
@@ -14,7 +14,7 @@
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_VIEW"/>
     <SecurityGroupPermission groupId="VIEWADMIN" permissionId="CONTENTMGR_VIEW"/>
     <!-- Control Applet security -->
-    <!-- Target file: components/content/data/ContentSecurityData.xml -->
+    <!-- Target file: applications/content/data/ContentSecurityData.xml -->
     <SecurityPermission description="Send to the Control Applet." permissionId="SEND_CONTROL_APPLET"/>
     <SecurityGroupPermission groupId="FULLADMIN" permissionId="SEND_CONTROL_APPLET"/>
     <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SEND_CONTROL_APPLET"/>

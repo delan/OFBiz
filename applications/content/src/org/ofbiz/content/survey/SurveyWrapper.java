@@ -24,6 +24,7 @@
 package org.ofbiz.content.survey;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -138,7 +139,9 @@ public class SurveyWrapper {
     protected Template getTemplate(String templatePath) {
         URL templateUrl = UtilURL.fromResource(templatePath);
         if (templateUrl == null) {
-            Debug.logError("Problem getting the template URL: " + templatePath + " not found", module);
+            String errMsg = "Problem getting the template for Survey from URL: " + templatePath;
+            Debug.logError(errMsg, module);
+            throw new IllegalArgumentException(errMsg);
         }
 
         Configuration config = null;
@@ -152,7 +155,8 @@ public class SurveyWrapper {
 
         Template template = null;
         try {
-            InputStreamReader templateReader = new InputStreamReader(templateUrl.openStream());
+            InputStream templateStream = templateUrl.openStream();
+            InputStreamReader templateReader = new InputStreamReader(templateStream);
             template = new Template(templateUrl.toExternalForm(), templateReader, config);
         } catch (IOException e) {
             Debug.logError(e, "Unable to get template from URL :" + templatePath, module);

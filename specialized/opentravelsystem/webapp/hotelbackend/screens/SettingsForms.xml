@@ -1,8 +1,7 @@
-<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="file:../../../../../components/content/dtd/widget-form.xsd">
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-form.xsd">
     <form name="main" type="single">
-        <field name="mainText"><
+        <field name="mainText">
             <text>this is the text</text>
         </field>
     </form>
-   
 </forms>

@@ -46,7 +46,7 @@
                pos/build.xml"/>
 
     <filelist id="test-builds" dir="."
-        files="base/build.xml,components/entity/build.xml"/>
+        files="base/build.xml,framework/entity/build.xml"/>
 
     <property name="site.dir" value="website"/>
 

@@ -93,7 +93,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         this.setEnabled(false);
         this.setVisible(false);
 
-        // setup the shared components
+        // setup the shared 
         this.session = XuiContainer.getSession();
         this.output = new Output(this);
         this.input = new Input(this);
@@ -130,7 +130,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         // buttons are different per screen
         this.buttons = new PosButton(this);
 
-        // make sure all components have the keyboard set
+        // make sure all have the keyboard set
         KeyboardAdaptor.attachComponents(this);
     }
 

@@ -367,15 +367,15 @@ public class ProductConfigWrapper implements Serializable {
     public class ConfigOption implements java.io.Serializable {
         double optionPrice = 0;
         Date availabilityDate = null;
-        List components = null; // lists of ProductConfigProduct
+        List componentList = null; // lists of ProductConfigProduct
         GenericValue configOption = null;
         boolean selected = false;
         boolean available = true;
         
         public ConfigOption(GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue option, String catalogId, String webSiteId, String currencyUomId, GenericValue autoUserLogin) throws Exception {
             configOption = option;
-            components = option.getRelated("ConfigOptionProductConfigProduct");
-            Iterator componentsIt = components.iterator();
+            componentList = option.getRelated("ConfigOptionProductConfigProduct");
+            Iterator componentsIt = componentList.iterator();
             while (componentsIt.hasNext()) {
                 double price = 0;
                 GenericValue oneComponent = (GenericValue)componentsIt.next();
@@ -426,7 +426,7 @@ public class ProductConfigWrapper implements Serializable {
         }
 
         public List getComponents() {
-            return components;
+            return componentList;
         }
         
         public boolean equals(Object obj) {

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<!--  $Id: config_deploy_maint.html,v 1.5 2004/08/05 06:59:43 jonesde Exp $ -->
+<!--  $Id$ -->
   <title>The Open For Business Project: General Setup</title>
 </head>
 <body>
@@ -380,7 +380,7 @@ database.<br>
 </p>
 <p>JDBC drivers in OFBiz:<br>
 </p>
-<p><span style="font-weight: bold;">ofbiz/components/entity/lib/jdbc</span><br>
+<p><span style="font-weight: bold;">ofbiz/framework/entity/lib/jdbc</span><br>
 </p>
 <hr>
 <h3><a name="Downloading_and_Installing_Java_-_java.sun.com">Downloading
@@ -518,7 +518,7 @@ JNDI servers.<br>
 <br>
 <span style="font-weight: bold;">entityengine.xml</span><br>
 <p>Database setup is done in the entityengine.xml file,
-entityengine.xml is located in the <span style="font-weight: bold;">ofbiz/components/entity/config</span>
+entityengine.xml is located in the <span style="font-weight: bold;">ofbiz/framework/entity/config</span>
 directory. There are many
 options there which are described in the Entity Engine Configuration
 Guide.</p>
@@ -574,7 +574,7 @@ up by specifying the corresponding fieldtypeXXX.xml (where XXX is the
 database
 name) file for the server in the entityengine.xml file. These
 fieldtypeXXX.xml
-files are located in the <b>ofbiz/components/entity/fieldtype</b>
+files are located in the <b>ofbiz/framework/entity/fieldtype</b>
 directory.</p>
 Default data can be loaded automatically once the server has been
 started by
@@ -662,7 +662,7 @@ N/A<br>
 <h5>Production Oriented Settings</h5>
 <span style="font-weight: bold;">URL Settings</span><br>
 <br>
-You can define URL settings with the <span style="font-weight: bold;">ofbiz/components/content/config/url.properties</span>.
+You can define URL settings with the <span style="font-weight: bold;">ofbiz/framework/webapp/config/url.properties</span>.
 The HTTPS port setting is as following:<br>
 <br>
 <pre># HTTPS Port (Secure port)<br>port.https.enabled=Y<br>port.https=8443<br>force.https.host=<br><br></pre>
@@ -688,7 +688,7 @@ another server.<br>
 <pre>content.url.prefix.secure=https://the_host_name<br>content.url.prefix.standard=http://the_host_name<br><br></pre>
 <br>
 Detailed settings of content component are in <span
- style="font-weight: bold;">ofbiz/components/content/config/content.properties</span>
+ style="font-weight: bold;">ofbiz/applications/content/config/content.properties</span>
 file. The current settings are as follows:<br>
 <br>
 <pre>owner.content.id=CONTENT_ROOT<br>img.request=/content/control/img/<br>img.request.param.name=imgId<br>#baseUrl=http://localhost:8080<br>disable.ftl.template.cache=true<br>permissionRecorderOn=true<br></pre>
