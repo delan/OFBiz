@@ -44,19 +44,23 @@ public class WebappPropertyToField extends MethodOperation {
     String resource;
     String property;
     String defaultVal;
-    String mapName;
-    String fieldName;
+    ContextAccessor mapAcsr;
+    ContextAccessor fieldAcsr;
 
     public WebappPropertyToField(Element element, SimpleMethod simpleMethod) {
         super(element, simpleMethod);
         resource = element.getAttribute("resource");
         property = element.getAttribute("property");
         defaultVal = element.getAttribute("default");
-        mapName = element.getAttribute("map-name");
-        fieldName = element.getAttribute("field-name");
+        mapAcsr = new ContextAccessor(element.getAttribute("map-name"));
+        fieldAcsr = new ContextAccessor(element.getAttribute("field-name"));
     }
 
     public boolean exec(MethodContext methodContext) {
+        String resource = methodContext.expandString(this.resource);
+        String property = methodContext.expandString(this.property);
+        String defaultVal = methodContext.expandString(this.defaultVal);
+                
         String fieldVal = null;
 
         // only run this if it is in an EVENT context
@@ -91,18 +95,18 @@ public class WebappPropertyToField extends MethodOperation {
             }
         }
 
-        if (mapName != null && mapName.length() > 0) {
-            Map fromMap = (Map) methodContext.getEnv(mapName);
+        if (!mapAcsr.isEmpty()) {
+            Map fromMap = (Map) mapAcsr.get(methodContext);
 
             if (fromMap == null) {
-                Debug.logWarning("Map not found with name " + mapName + " creating a new map");
+                Debug.logWarning("Map not found with name " + mapAcsr + " creating a new map");
                 fromMap = new HashMap();
-                methodContext.putEnv(mapName, fromMap);
+                mapAcsr.put(methodContext, fromMap);
             }
 
-            fromMap.put(fieldName, fieldVal);
+            fieldAcsr.put(fromMap, fieldVal, methodContext);
         } else {
-            methodContext.putEnv(fieldName, fieldVal);
+            fieldAcsr.put(methodContext, fieldVal);
         }
         return true;
     }
