@@ -123,31 +123,36 @@ public class CallObjectMethod extends MethodOperation {
     }
     
     public static boolean callMethod(SimpleMethod simpleMethod, MethodContext methodContext, List parameters, Class methodClass, Object methodObject, String methodName, String retFieldName, String retMapName) {
-        Object[] args = new Object[parameters.size()];
-        Class[] parameterTypes = new Class[parameters.size()];
+        Object[] args = null;
+        Class[] parameterTypes = null;
 
-        Iterator parameterIter = parameters.iterator();
-        int i = 0;
-        while (parameterIter.hasNext()) {
-            MethodObject methodObjectDef = (MethodObject) parameterIter.next();
-            args[i] = methodObjectDef.getObject(methodContext);
+        if (parameters != null) {
+            args = new Object[parameters.size()];
+            parameterTypes = new Class[parameters.size()];
             
-            Class typeClass = methodObjectDef.getTypeClass(methodContext.getLoader());
-            if (typeClass == null) {
-                String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Parameter type not found with name " + methodObjectDef.getTypeName() + "]";
-                Debug.logError(errMsg);
-                methodContext.setErrorReturn(errMsg, simpleMethod);
-                return false;
+            Iterator parameterIter = parameters.iterator();
+            int i = 0;
+            while (parameterIter.hasNext()) {
+                MethodObject methodObjectDef = (MethodObject) parameterIter.next();
+                args[i] = methodObjectDef.getObject(methodContext);
+
+                Class typeClass = methodObjectDef.getTypeClass(methodContext.getLoader());
+                if (typeClass == null) {
+                    String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Parameter type not found with name " + methodObjectDef.getTypeName() + "]";
+                    Debug.logError(errMsg);
+                    methodContext.setErrorReturn(errMsg, simpleMethod);
+                    return false;
+                }
+
+                parameterTypes[i] = typeClass;
+                i++;
             }
-            
-            parameterTypes[i] = typeClass;
-            i++;
         }
         
         try {
             Method method = methodClass.getMethod(methodName, parameterTypes);
             try {
-                Object retValue = method.invoke(null, args);
+                Object retValue = method.invoke(methodObject, args);
                 
                 //if retFieldName is empty, ignore return value
                 if (UtilValidate.isNotEmpty(retFieldName)) {

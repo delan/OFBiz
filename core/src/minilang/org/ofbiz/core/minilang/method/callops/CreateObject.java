@@ -98,25 +98,30 @@ public class CreateObject extends MethodOperation {
             return false;
         }
         
-        Object[] args = new Object[parameters.size()];
-        Class[] parameterTypes = new Class[parameters.size()];
+        Object[] args = null;
+        Class[] parameterTypes = null;
 
-        Iterator parameterIter = parameters.iterator();
-        int i = 0;
-        while (parameterIter.hasNext()) {
-            MethodObject methodObjectDef = (MethodObject) parameterIter.next();
-            args[i] = methodObjectDef.getObject(methodContext);
-            
-            Class typeClass = methodObjectDef.getTypeClass(methodContext.getLoader());
-            if (typeClass == null) {
-                String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Parameter type not found with name " + methodObjectDef.getTypeName() + "]";
-                Debug.logError(errMsg);
-                methodContext.setErrorReturn(errMsg, simpleMethod);
-                return false;
+        if (parameters != null) {
+            args = new Object[parameters.size()];
+            parameterTypes = new Class[parameters.size()];
+
+            Iterator parameterIter = parameters.iterator();
+            int i = 0;
+            while (parameterIter.hasNext()) {
+                MethodObject methodObjectDef = (MethodObject) parameterIter.next();
+                args[i] = methodObjectDef.getObject(methodContext);
+
+                Class typeClass = methodObjectDef.getTypeClass(methodContext.getLoader());
+                if (typeClass == null) {
+                    String errMsg = "ERROR: Could not complete the " + simpleMethod.getShortDescription() + " process [Parameter type not found with name " + methodObjectDef.getTypeName() + "]";
+                    Debug.logError(errMsg);
+                    methodContext.setErrorReturn(errMsg, simpleMethod);
+                    return false;
+                }
+
+                parameterTypes[i] = typeClass;
+                i++;
             }
-            
-            parameterTypes[i] = typeClass;
-            i++;
         }
         
         try {
