@@ -238,6 +238,17 @@
         <security https="true" auth="true"/>
         <response name="success" type="view" value="findBom"/>
     </request-map>
+    <request-map uri="EditProductBom">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductBom"/>
+    </request-map>
+    <request-map uri="UpdateProductBom">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.manufacturing.bom.BOMEvents" invoke="updateProductBom"/>
+        <response name="success" type="view" value="EditProductBom"/>
+        <response name="error" type="view" value="EditProductBom"/>
+    </request-map>
+
     
     <!-- end of request mappings -->
 
@@ -258,6 +269,7 @@
     <!-- BOM view mappings -->
     <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>
     <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>
+    <view-map name="EditProductBom" type="jpublish" page="/bom/EditProductBom.ftl"/>
 
     <!-- end of view mappings -->
 </site-conf>

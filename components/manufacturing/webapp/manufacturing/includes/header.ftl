@@ -22,7 +22,7 @@
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Jacopo Cappellato (tiz@sastau.it)
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
 -->
 
@@ -41,6 +41,7 @@
     <div class="col"><a href="<@ofbizUrl>/FindCalendar</@ofbizUrl>" class="${selectedLeftClassMap.calendar?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingCalendar}</a></div>
     <div class="col"><a href="<@ofbizUrl>/findParts</@ofbizUrl>" class="${selectedLeftClassMap.parts?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingParts}</a></div>
     <div class="col"><a href="<@ofbizUrl>/findBom</@ofbizUrl>" class="${selectedLeftClassMap.bom?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingBillOfMaterials}</a></div>
+    <div class="col"><a href="<@ofbizUrl>/EditProductBom</@ofbizUrl>" class="${selectedLeftClassMap.EditProductBom?default(unselectedLeftClassName)}">${uiLabelMap.ManufacturingEditProductBom}</a></div>
   </#if>  
   <#if requestAttributes.userLogin?has_content>
     <div class="col-right"><a href="<@ofbizUrl>/logout</@ofbizUrl>" class="${selectedRightClassMap.logout?default(unselectedRightClassName)}">${uiLabelMap.CommonLogout}</a></div>
