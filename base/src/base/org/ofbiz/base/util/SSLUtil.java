@@ -1,5 +1,5 @@
 /*
- * $Id: SSLUtil.java,v 1.3 2003/12/04 18:39:14 ajzeneski Exp $
+ * $Id: SSLUtil.java,v 1.4 2003/12/04 21:15:08 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,7 +34,7 @@ import javax.net.ssl.*;
  * KeyStoreUtil - Utilities for setting up SSL connections with specific client certificates
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class SSLUtil {
@@ -43,10 +43,6 @@ public class SSLUtil {
     private static boolean loadedProps = false;
 
     public static KeyManager[] getKeyManagers() throws IOException, GeneralSecurityException {
-        UtilTimer timer = new UtilTimer();
-        timer.setLog(true);
-        timer.timerString("Loading key managers...", module);
-
         // get the default TrustManagerFactory
         String alg = KeyManagerFactory.getDefaultAlgorithm();
         KeyManagerFactory factory = KeyManagerFactory.getInstance(alg);
@@ -59,8 +55,6 @@ public class SSLUtil {
 
         // get the KeyManagers
         KeyManager[] keyManagers = factory.getKeyManagers();
-
-        timer.timerString("Finished loading key managers.", module);
         return keyManagers;
     }
 
