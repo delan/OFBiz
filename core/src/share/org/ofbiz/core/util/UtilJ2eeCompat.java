@@ -43,6 +43,7 @@ public class UtilJ2eeCompat {
     public static final String RESIN = "Resin";
     public static final String REX_IP = "TradeCity";
     public static final String OC4J = "Oracle";
+    public static final String JRUN = "JRun";
     
     protected static Boolean doFlushOnRenderValue = null;
     protected static Boolean useOutputStreamNotWriterValue = null;
@@ -75,6 +76,9 @@ public class UtilJ2eeCompat {
                 usestream = false;
             } else if (serverInfo.indexOf(TOMCAT) >= 0) {
                 Debug.logImportant("Apache Tomcat detected, using response.getWriter to write text out instead of response.getOutputStream");
+                usestream = false;
+            } else if (serverInfo.indexOf(JRUN) >= 0) {
+                Debug.logImportant("JRun detected, using response.getWriter to write text out instead of response.getOutputStream");
                 usestream = false;
             }
             

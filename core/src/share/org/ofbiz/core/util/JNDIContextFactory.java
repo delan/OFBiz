@@ -77,7 +77,9 @@ public class JNDIContextFactory {
                             ic = new InitialContext(h);
                         }
                     } catch (Exception e) {
-                        throw new GenericConfigException("Error getting JNDI initial context for server name " + jndiServerName, e);
+                        String errorMsg = "Error getting JNDI initial context for server name " + jndiServerName;
+                        Debug.logError(e, errorMsg);
+                        throw new GenericConfigException(errorMsg, e);
                     }
 
                     if (ic != null) {

@@ -89,10 +89,11 @@ public class ConnectionFactory {
                     try {
                         if (Debug.infoOn()) Debug.logInfo("Doing JNDI lookup for name " + jndiName, module);
                         InitialContext ic = JNDIContextFactory.getInitialContext(jndiServerName);
-                        if (ic != null)
+                        if (ic != null) {
                             ds = ic.lookup(jndiName);
-                        else if (Debug.verboseOn())
-                            Debug.logVerbose("Initial Context returned was NULL.", module);
+                        } else {
+                            Debug.logWarning("Initial Context returned was NULL for server name " + jndiServerName, module);
+                        }
 
                         if (ds != null) {
                             if (Debug.verboseOn()) Debug.logVerbose("Got a Datasource object.", module);
@@ -133,7 +134,7 @@ public class ConnectionFactory {
                             Debug.logError("Datasource returned was NULL.", module);
                         }
                     } catch (NamingException ne) {
-                        if (Debug.verboseOn()) Debug.logVerbose("[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI. Trying normal database.", module);
+                        Debug.logWarning(ne, "[ConnectionFactory.getConnection] Failed to find DataSource named " + jndiName + " in JNDI server with name " + jndiServerName + ". Trying normal database.", module);
                     } catch (GenericConfigException gce) {
                         throw new GenericEntityException("Problems with the JNDI configuration.", gce.getNested());
                     }
