@@ -335,7 +335,8 @@
     <ProductPromo productPromoId="9014" promoName="Test buy X get Y at Z% discount" promoText="Buy 1 Big Gizmo [GZ-8544] or Massive Gizmo [GZ-7000] Get 1 Purple Gizmo [GZ-5005] At 50% off with promo code [9001] (must be associated with Party or Email), no limit" userEntered="Y" showToCustomer="Y" requireCode="Y" createdDate="2003-11-08 10:43:54.765" createdByUserLogin="admin" lastModifiedDate="2003-11-08 10:43:54.765" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9015" promoName="Test X products for $Y" promoText="Buy 4 items for $50 from Purple Gizmo [GZ-5005], Rainbow Gizmo [GZ-1004], Round Gizmo [GZ-2644] or Square Gizmo [GZ-2002] limit 2 per customer" userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerCustomer="2" createdDate="2003-11-08 11:00:08.058" createdByUserLogin="admin" lastModifiedDate="2003-11-08 11:00:08.058" lastModifiedByUserLogin="admin"/>
     <ProductPromo productPromoId="9016" promoName="Test $ off products in categories" promoText="Get $500 off any item in the Small Gizmos [101] category, limit 1 per order, 2 per customer, 3 for entire promotion promotion. Discount not to exceed the price of the item." userEntered="Y" showToCustomer="Y" requireCode="N" useLimitPerOrder="1" useLimitPerCustomer="2" useLimitPerPromotion="3" createdDate="2003-11-07 17:02:56.034" createdByUserLogin="admin" lastModifiedDate="2003-11-07 17:02:56.034" lastModifiedByUserLogin="admin"/>
-    <ProductPromo productPromoId="9017" promoName="Test Gift with Amount of Specific Product" promoText="Spend more than $150 on your favorite gizmos (all products in Gizmo [100] or sub-category) and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=GZ-1006&apos; class=&apos;buttontext&apos;&gt;Open Gizmo&lt;/a&gt;!" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0"/>
+    <ProductPromo productPromoId="9017" promoName="Test Gift with Amount of Specific Product" promoText="Buy $50 of your favorite gizmos (all products in Gizmo [100] or sub-category) get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=GZ-1006&apos; class=&apos;buttontext&apos;&gt;Open Gizmo&lt;/a&gt;! Limit 2 per order." userEntered="Y" useLimitPerOrder="2" createdDate="2001-05-13 12:00:00.0"/>
+    <ProductPromo productPromoId="9018" promoName="Test Gift with Amount (Not Counted) of Specific Product" promoText="Spend more than $150 on your favorite gizmos (all products in Gizmo [100] or sub-category) and get a free &lt;a href=&apos;/ecommerce/control/product?category_id=20111&amp;product_id=GZ-1006&apos; class=&apos;buttontext&apos;&gt;Open Gizmo&lt;/a&gt;!" userEntered="Y" useLimitPerOrder="1" createdDate="2001-05-13 12:00:00.0"/>
     <ProductPromoRule productPromoId="9000" productPromoRuleId="01" ruleName="Rule 1: Free Widget"/>
     <ProductPromoRule productPromoId="9010" productPromoRuleId="01" ruleName="Test Percent off rule"/>
     <ProductPromoRule productPromoId="9011" productPromoRuleId="01" ruleName="Test percent off order"/>
@@ -345,6 +346,7 @@
     <ProductPromoRule productPromoId="9015" productPromoRuleId="01" ruleName="Test multiple promotion"/>
     <ProductPromoRule productPromoId="9016" productPromoRuleId="01" ruleName="Dollar discount on Small Gizmos"/>
     <ProductPromoRule productPromoId="9017" productPromoRuleId="01" ruleName="GWP for Gizmos Only"/>
+    <ProductPromoRule productPromoId="9018" productPromoRuleId="01" ruleName="GWP for Gizmos Only Not Counted"/>
     <ProductPromoAction productPromoId="9000" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="WG-1111"/>
     <ProductPromoAction productPromoId="9010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_DISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="20.0"/>
     <ProductPromoAction productPromoId="9011" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_ORDER_PERCENT" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" amount="10.0"/>
@@ -354,16 +356,19 @@
     <ProductPromoAction productPromoId="9015" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_PRICE" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="4.0" amount="50.0"/>
     <ProductPromoAction productPromoId="9016" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_PROD_AMDISC" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" amount="500.0"/>
     <ProductPromoAction productPromoId="9017" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="GZ-1006"/>
+    <ProductPromoAction productPromoId="9018" productPromoRuleId="01" productPromoActionSeqId="01" productPromoActionEnumId="PROMO_GWP" orderAdjustmentTypeId="PROMOTION_ADJUSTMENT" quantity="1.0" productId="GZ-1006"/>
     <ProductPromoCond productPromoId="9000" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GT" condValue="100"/>
     <ProductPromoCond productPromoId="9012" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_ORDER_TOTAL" operatorEnumId="PPC_GTE" condValue="50"/>
     <ProductPromoCond productPromoId="9013" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_QUANT" operatorEnumId="PPC_EQ" condValue="3"/>
     <ProductPromoCond productPromoId="9014" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_QUANT" operatorEnumId="PPC_EQ" condValue="1"/>
     <ProductPromoCond productPromoId="9017" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_AMOUNT" operatorEnumId="PPC_GT" condValue="150"/>
+    <ProductPromoCond productPromoId="9018" productPromoRuleId="01" productPromoCondSeqId="01" inputParamEnumId="PPIP_PRODUCT_AMTNC" operatorEnumId="PPC_GT" condValue="150"/>
     <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="200" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
     <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="201" andGroupId="_NA_" productPromoApplEnumId="PPPA_EXCLUDE" includeSubCategories="Y"/>
     <ProductPromoCategory productPromoId="9013" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="20111" andGroupId="_NA_" productPromoApplEnumId="PPPA_ALWAYS" includeSubCategories="N"/>
     <ProductPromoCategory productPromoId="9016" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="101" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="N"/>
-    <ProductPromoCategory productPromoId="9017" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productCategoryId="100" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
+    <ProductPromoCategory productPromoId="9017" productPromoRuleId="01" productPromoActionSeqId="_NA_" productPromoCondSeqId="01" productCategoryId="100" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
+    <ProductPromoCategory productPromoId="9018" productPromoRuleId="01" productPromoActionSeqId="_NA_" productPromoCondSeqId="01" productCategoryId="100" andGroupId="_NA_" productPromoApplEnumId="PPPA_INCLUDE" includeSubCategories="Y"/>
     <ProductPromoProduct productPromoId="9010" productPromoRuleId="01" productPromoActionSeqId="01" productPromoCondSeqId="_NA_" productId="GZ-1005" productPromoApplEnumId="PPPA_INCLUDE"/>
     <ProductPromoProduct productPromoId="9010" productPromoRuleId="_NA_" productPromoActionSeqId="_NA_" productPromoCondSeqId="_NA_" productId="GZ-1006" productPromoApplEnumId="PPPA_INCLUDE"/>
     <ProductPromoProduct productPromoId="9014" productPromoRuleId="01" productPromoActionSeqId="01" productPromoCondSeqId="_NA_" productId="GZ-5005" productPromoApplEnumId="PPPA_INCLUDE"/>
@@ -384,6 +389,7 @@
     <ProductStorePromoAppl productStoreId="9000" productPromoId="9015" fromDate="2001-05-13 12:00:00.0" sequenceNum="2"/>
     <ProductStorePromoAppl productStoreId="9000" productPromoId="9016" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
     <ProductStorePromoAppl productStoreId="9000" productPromoId="9017" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
+    <ProductStorePromoAppl productStoreId="9000" productPromoId="9018" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
 
     <!-- a default pricing rule to play with; take 20% off all products in the PROMOTIONS category -->
     <ProductPriceRule productPriceRuleId="9000" ruleName="Test Rule 1" isSale="Y"/>
