@@ -100,7 +100,7 @@
     dependent-on CDATA #IMPLIED
     default-resource-name CDATA #IMPLIED
     never-cache ( true | false ) "false"
-    auto-clear-cache ( true | false )"true"
+    auto-clear-cache ( true | false ) "true"
     title CDATA #IMPLIED
     copyright CDATA #IMPLIED
     author CDATA #IMPLIED
