@@ -23,7 +23,6 @@
 
 package org.ofbiz.commonapp.order.shoppingcart;
 
-
 import java.text.*;
 import java.util.*;
 import javax.servlet.http.*;
@@ -41,8 +40,8 @@ import org.ofbiz.commonapp.order.order.OrderReadHelper;
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    1.0
- * @created    August 4, 2001
+ * @version    $Revision$
+ * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
 

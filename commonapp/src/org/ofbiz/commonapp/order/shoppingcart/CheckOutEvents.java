@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.commonapp.order.shoppingcart;
-
 
 import java.net.*;
 import java.util.*;
@@ -48,8 +46,8 @@ import org.ofbiz.commonapp.marketing.tracking.*;
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    1.0
- * @created    August 23, 2001
+ * @version    $Revision$
+ * @since      2.0
  */
 public class CheckOutEvents {
 
@@ -177,8 +175,12 @@ public class CheckOutEvents {
         if (distributorId != null) context.put("distributorId", distributorId);
         if (affiliateId != null) context.put("affiliateId", affiliateId);
         
+        // check for an order via order mgr
+        String partyId = session.getAttribute("orderPartyId") != null ? (String) session.getAttribute("orderPartyId") :
+        		userLogin.getString("partyId");
+        
         context.put("userLogin", userLogin);
-        context.put("partyId", userLogin.get("partyId"));
+        context.put("partyId", partyId);
         context.put("prodCatalogId", CatalogWorker.getCurrentCatalogId(request));
         context.put("visitId", VisitHandler.getVisitId(session));
 
