@@ -91,7 +91,7 @@
         <#assign product = component.getRelatedOne("ProductProduct")>
         <tr valign="middle">
           <td><div class="tabletext">${component.sequenceNum?if_exists}</div></td>
-          <td><div class="tabletext">${component.productId?if_exists} - ${product.description?if_exists}</div></td>
+          <td><div class="tabletext">${component.productId?if_exists} - ${product.internalName?if_exists}</div></td>
           <td><div class="tabletext">${component.quantity?if_exists}</div></td>
           <td><a href="<@ofbizUrl>/EditProductConfigOptions?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}#edit</@ofbizUrl>" class="buttontext">[Edit]</a>
           <td><a href="<@ofbizUrl>/deleteProductConfigProduct?configItemId=${requestParameters.configItemId}&configOptionId=${component.configOptionId}&productId=${component.productId}#edit</@ofbizUrl>" class="buttontext">[Remove]</a>

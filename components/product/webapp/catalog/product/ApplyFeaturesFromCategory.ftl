@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine Heintz (catherine.heintz@nereide.biz)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 
@@ -64,7 +64,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
     </table>
 </#if>
 <table border="1" cellpadding='2' cellspacing='0'>
-<form method='POST' action='<@ofbizUrl>/ApplyFeatureToProduct</@ofbizUrl>' name='selectAllForm'>
+<form method='POST' action='<@ofbizUrl>/ApplyFeaturesToProduct</@ofbizUrl>' name='selectAllForm'>
   <input type="hidden" name="_useRowSubmit" value="Y">
   <input type="hidden" name="_checkGlobalScope" value="Y">
   <input type=hidden name="productId" value="${productId}">

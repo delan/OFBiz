@@ -31,12 +31,16 @@
         <alt-target use-when="configItem==null" target="createProductConfigItem#edit"/>
         
         <auto-fields-service service-name="updateProductConfigItem"/>
-        
+        <field name="longDescription"><ignored/></field>
+        <field name="imageUrl"><ignored/></field>
         <field use-when="configItem!=null" name="configItemId" tooltip="This cannot be changed without re-creating the Config Item"><display/></field>
         <field use-when="configItem==null&amp;&amp;configItemId!=null" name="configItemId" tooltip="Could not find Config Item with ID [${configItemId}]"><display description="" also-hidden="false"/></field>
         <field use-when="configItem==null&amp;&amp;configItemId==null" name="configItemId"><ignored/></field>
         <field name="configItemTypeId" title="${uiLabelMap.ProductConfigItemType}" widget-style="selectBox">
-            <drop-down allow-empty="false"><option key="SINGLE" description="${uiLabelMap.ProductSingleChoice}"/><option key="MULTIPLE" description="${uiLabelMap.ProductMultiChoice}"/></drop-down>
+            <drop-down allow-empty="false">
+                <option key="SINGLE" description="${uiLabelMap.ProductSingleChoice}"/>
+                <option key="MULTIPLE" description="${uiLabelMap.ProductMultiChoice}"/>
+            </drop-down>
         </field>
        
         <field name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
@@ -71,8 +75,94 @@
         <field name="configItemId"><hidden value="${configItemId}"/></field>
         <field name="configOptionId"><hidden value="${configOptionId}"/></field>
         <field use-when="productConfigProduct!=null" name="productId"><display/></field>
+        <field use-when="productConfigProduct==null" name="productId" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="Product" description="${productId} - ${internalName}"> <!-- [${productTypeId}] -->
+                    <entity-order-by field-name="productId"/>
+                </entity-options>
+            </drop-down>
+        </field>
 
         <field use-when="productConfigProduct!=null" name="submitButton" title="Update" widget-style="smallSubmit"><submit button-type="button"/></field>
         <field name="submitButton" title="Create" widget-style="smallSubmit"><submit button-type="button"/></field>
     </form>
+    
+    <!-- ProdConfItemContent -->
+    <form name="AddProductConfigItemContentAssoc" type="single"
+            target="addContentToProductConfigItem" title="Add ProdConfItemContent (select Content Id, enter From Date):"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProdConfItemContent"/>
+        <field name="configItemId" title="${uiLabelMap.ProductConfigItemId}" map-name="productConfigItem"><hidden/></field>
+        <field name="contentId" title="${uiLabelMap.ProductContentId}" ></field>
+        <field name="confItemContentTypeId" title="${uiLabelMap.ProductProductConfigItemContentTypeId}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProdConfItemContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+         <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
+        <field name="submitButton" title="${uiLabelMap.CommonAdd}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="PrepareAddProductConfigItemContentAssoc" type="single"
+            target="prepareAddContentToProductConfigItem" title="Add ProdConfItemContent (select Content Id, enter From Date):"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <auto-fields-entity entity-name="ProdConfItemContent"/>
+        <field name="contentId"><ignored/></field>
+        <field name="fromDate"><ignored/></field>
+        <field name="thruDate"><ignored/></field>
+        <field name="configItemId" map-name="productConfigItem"><hidden/></field>
+        <field name="confItemContentTypeId" title="${uiLabelMap.ProductProductConfigItemContentTypeId}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProdConfItemContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <!-- <field name="description"><text size="40"/></field> -->
+        <field name="submitButton" title="${uiLabelMap.ProductPrepareCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+    <form name="UpdateProductConfigItemContentAssoc" type="list"
+            target="updateContentToProductConfigItem" title="" list-name="productContentDatas"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <!-- each entry in the list will be a Map with the entries: productContent and content -->
+        <auto-fields-service service-name="updateProductConfigItemContent" map-name="productContent"/>
+        <field name="configItemId"><hidden/></field>
+        <field name="contentId" title="${uiLabelMap.ProductContent_Id}" widget-style="buttontext">
+            <hyperlink target="EditProductConfigItemContentContent?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}"
+                description="${content.description} [${productContent.contentId}]"/>
+        </field>
+        <field name="confItemContentTypeId" title="${uiLabelMap.ProductProductContentTypeId}" widget-style="selectBox">
+            <drop-down>
+                <entity-options entity-name="ProdConfItemContentType" description="${description}">
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
+        <field name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+            <hyperlink target="removeContentFromProductConfigItem?configItemId=${productContent.configItemId}&amp;contentId=${productContent.contentId}&amp;confItemContentTypeId=${productContent.confItemContentTypeId}&amp;fromDate=${productContent.fromDate}"
+                description="[${uiLabelMap.CommonDelete}]" also-hidden="false"/>
+        </field>
+    </form>
+    <form name="EditProductConfigItemContentSimpleText" type="single"
+            target="updateSimpleTextContentForProductConfigItem" title="Update Simple Text Content for Product"
+            default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+        <alt-target use-when="contentId==null" target="createSimpleTextContentForProductConfigItem"/>
+        <auto-fields-entity entity-name="ProdConfItemContent" map-name="productContentData"/>
+        <field name="fromDate" title="${uiLabelMap.CommonFromDate}" ></field>
+        <field name="thruDate" title="${uiLabelMap.CommonThruDate}"></field>
+        <field name="description" title="${uiLabelMap.ProductDescription}" map-name="content"><text size="40"/></field>
+        <field name="localeString" title="${uiLabelMap.ProductLocaleString}" map-name="content"><text size="40"/></field>
+        <field use-when="contentId == null" name="contentId"><ignored/></field>
+        <field use-when="contentId != null" name="contentId" tooltip="${uiLabelMap.ProductNotModificationRecrationProductContentAssociation}" map-name="productContentData" ><display/></field>
+        <field name="text"  title="${uiLabelMap.ProductText}" map-name="textData" widget-style="textAreaBox" ><textarea cols="60" rows="7"/></field>
+        <field name="textDataResourceId" title="${uiLabelMap.ProductTextDataResourceId}" map-name="textData"><hidden/></field>
+        <field name="configItemId"><hidden/></field>
+        <field name="confItemContentTypeId"><hidden/></field>
+        <field use-when="contentId == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+        <field use-when="contentId != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
+    </form>
+
 </forms>

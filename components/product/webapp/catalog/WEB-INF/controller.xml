@@ -843,6 +843,12 @@
     </request-map>
     <request-map uri="ApplyFeatureToProduct">
         <security https="true" auth="true"/>
+        <event type="service" path="" invoke="applyFeatureToProduct"/>
+        <response name="success" type="view" value="EditProductFeatures"/>
+        <response name="error" type="view" value="EditProductFeatures"/>
+    </request-map>
+    <request-map uri="ApplyFeaturesToProduct">
+        <security https="true" auth="true"/>
         <event type="service-multi" path="" invoke="applyFeatureToProduct"/>
         <response name="success" type="view" value="EditProductFeatures"/>
         <response name="error" type="view" value="EditProductFeatures"/>
@@ -1681,7 +1687,63 @@
         <response name="success" type="view" value="EditProductConfigOptions"/>
         <response name="error" type="view" value="EditProductConfigOptions"/>
     </request-map>
+    <!-- ================ Product Content Requests ================= -->
+    <request-map uri="EditProductConfigItemContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductConfigItemContent"/>
+    </request-map>
+    <request-map uri="updateProductConfigItemContent">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductConfigItem"/>
+        <response name="success" type="view" value="EditProductConfigItemContent"/>
+        <response name="error" type="view" value="EditProductConfigItemContent"/>
+    </request-map>
+    <request-map uri="UploadProductConfigItemImage">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductConfigItemContent"/>
+    </request-map>
 
+    <!-- ================ Product Content Assoc Requests ================= -->
+    <request-map uri="EditProductConfigItemContentContent">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductConfigItemContentContent"/>
+    </request-map>
+    <request-map uri="prepareAddContentToProductConfigItem">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditProductConfigItemContentContent"/>
+    </request-map>
+    <request-map uri="addContentToProductConfigItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductConfigItemContent"/>
+        <response name="success" type="view" value="EditProductConfigItemContent"/>
+        <response name="error" type="view" value="EditProductConfigItemContent"/>
+    </request-map>
+    <request-map uri="updateContentToProductConfigItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductConfigItemContent"/>
+        <response name="success" type="view" value="EditProductConfigItemContent"/>
+        <response name="error" type="view" value="EditProductConfigItemContent"/>
+    </request-map>
+    <request-map uri="removeContentFromProductConfigItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductConfigItemContent"/>
+        <response name="success" type="view" value="EditProductConfigItemContent"/>
+        <response name="error" type="view" value="EditProductConfigItemContent"/>
+    </request-map>
+    <request-map uri="updateSimpleTextContentForProductConfigItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateSimpleTextContentForProductConfigItem"/>
+        <response name="success" type="view" value="EditProductConfigItemContentContent"/>
+        <response name="error" type="view" value="EditProductConfigItemContentContent"/>
+    </request-map>
+    <request-map uri="createSimpleTextContentForProductConfigItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createSimpleTextContentForProductConfigItem"/>
+        <response name="success" type="view" value="EditProductConfigItemContent"/>
+        <response name="error" type="view" value="EditProductConfigItemContentContent"/>
+    </request-map>
+
+    
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -1776,6 +1838,8 @@
     <view-map name="FindProductConfigItems" page="/config/FindProductConfigItems.ftl" type="jpublish"/>
     <view-map name="EditProductConfigItem" page="/config/EditProductConfigItem.ftl" type="jpublish"/>
     <view-map name="EditProductConfigOptions" page="/config/EditProductConfigOptions.ftl" type="jpublish"/>
+    <view-map name="EditProductConfigItemContent" type="jpublish" page="/config/EditProductConfigItemContent.ftl"/>
+    <view-map name="EditProductConfigItemContentContent" type="jpublish" page="/config/EditProductConfigItemContentContent.ftl"/>
 
     <!-- end of view mappings -->
 </site-conf>

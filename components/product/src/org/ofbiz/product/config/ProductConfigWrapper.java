@@ -27,8 +27,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
@@ -47,21 +49,30 @@ public class ProductConfigWrapper {
     public static final String module = ProductConfigWrapper.class.getName();
     
     protected GenericValue product = null; // the aggregated product
+    protected double basePrice = 0.0;
     protected List questions = null; // ProductConfigs
-    protected List options = null; // lists of ProductConfigOptions
+    //protected List options = null; // lists of ProductConfigOptions
     
     /** Creates a new instance of ProductConfigWrapper */
     public ProductConfigWrapper() {
     }
     
-    public ProductConfigWrapper(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, GenericValue autoUserLogin) throws Exception {
-        init(delegator, dispatcher, productId, catalogId, webSiteId, currencyUomId, autoUserLogin);
+    public ProductConfigWrapper(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
+        init(delegator, dispatcher, productId, catalogId, webSiteId, currencyUomId, locale, autoUserLogin);
     }
     
-    private void init(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, GenericValue autoUserLogin) throws Exception {
+    private void init(GenericDelegator delegator, LocalDispatcher dispatcher, String productId, String catalogId, String webSiteId, String currencyUomId, Locale locale, GenericValue autoUserLogin) throws Exception {
         product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+        // get the base price
+        Map fieldMap = UtilMisc.toMap("product", product, "prodCatalogId", catalogId, "webSiteId", webSiteId,
+                                      "currencyUomId", currencyUomId, "autoUserLogin", autoUserLogin);
+        Map priceMap = dispatcher.runSync("calculateProductPrice", fieldMap);
+        Double price = (Double)priceMap.get("price");
+        if (price != null) {
+            basePrice = price.doubleValue();
+        }        
         questions = new ArrayList();
-        options = new ArrayList();
+        //options = new ArrayList();
         List questionsValues = new ArrayList();
         if (product.getString("productTypeId") != null && product.getString("productTypeId").equals("AGGREGATED")) {
             questionsValues = delegator.findByAnd("ProductConfig", UtilMisc.toMap("productId", productId), UtilMisc.toList("sequenceNum"));
@@ -69,15 +80,17 @@ public class ProductConfigWrapper {
             Iterator questionsValuesIt = questionsValues.iterator();
             while (questionsValuesIt.hasNext()) {
                 ConfigItem oneQuestion = new ConfigItem((GenericValue)questionsValuesIt.next());
+                oneQuestion.setContent(locale, "text/html"); // TODO: mime-type shouldn't be hardcoded
                 questions.add(oneQuestion);
                 List configOptions = delegator.findByAnd("ProductConfigOption", UtilMisc.toMap("configItemId", oneQuestion.getConfigItemAssoc().getString("configItemId")), UtilMisc.toList("sequenceNum"));
                 Iterator configOptionsIt = configOptions.iterator();
-                List availableOptions = new ArrayList();
+                //List availableOptions = new ArrayList();
                 while (configOptionsIt.hasNext()) {
                     ConfigOption option = new ConfigOption(delegator, dispatcher, (GenericValue)configOptionsIt.next(), catalogId, webSiteId, currencyUomId, autoUserLogin);
-                    availableOptions.add(option);
+                    oneQuestion.addOption(option);
+                    //availableOptions.add(option);
                 }
-                options.add(availableOptions);
+                //options.add(availableOptions);
             }
         }
     }
@@ -86,17 +99,13 @@ public class ProductConfigWrapper {
         return questions;
     }
     
-    public List getOptions() {
-        return options;
-    }
-
     public GenericValue getProduct() {
         return product;
     }
     
     public void setSelected(int question, int option) throws Exception {
         ConfigItem ci = (ConfigItem)questions.get(question);
-        List avalOptions = (List)options.get(question);
+        List avalOptions = ci.getOptions();
         if (ci.isSingleChoice()) {
             for (int j = 0; j < avalOptions.size(); j++) {
                 ConfigOption oneOption = (ConfigOption)avalOptions.get(j);
@@ -116,12 +125,12 @@ public class ProductConfigWrapper {
         List selectedOptions = new ArrayList();
         for (int i = 0; i < questions.size(); i++) {
             ConfigItem ci = (ConfigItem)questions.get(i);
-            List availOptions = (List)options.get(i);
             if (ci.isStandard()) {
-                selectedOptions.addAll(availOptions);
+                selectedOptions.addAll(ci.getOptions());
             } else {
-                for (int j = 0; j < availOptions.size(); j++) {
-                    ConfigOption oneOption = (ConfigOption)availOptions.get(j);
+                Iterator availOptions = ci.getOptions().iterator();
+                while (availOptions.hasNext()) {
+                    ConfigOption oneOption = (ConfigOption)availOptions.next();
                     if (oneOption.isSelected()) {
                         selectedOptions.add(oneOption);
                     }
@@ -132,16 +141,11 @@ public class ProductConfigWrapper {
     }
     
     public double getTotalPrice() {
-        double totalPrice = 0.0;
+        double totalPrice = basePrice;
+        List options = getSelectedOptions();
         for (int i = 0; i < options.size(); i++) {
-            ConfigItem ci = (ConfigItem)questions.get(i);
-            List availOptions = (List)options.get(i);
-            for (int j = 0; j < availOptions.size(); j++) {
-                ConfigOption oneOption = (ConfigOption)availOptions.get(j);
-                if (oneOption.isSelected() || ci.isStandard()) {
-                    totalPrice += oneOption.getPrice();
-                }
-            }
+            ConfigOption oneOption = (ConfigOption)options.get(i);
+            totalPrice += oneOption.getPrice();
         }
         return totalPrice;
     }
@@ -151,9 +155,9 @@ public class ProductConfigWrapper {
         for (int i = 0; i < questions.size(); i++) {
             ConfigItem ci = (ConfigItem)questions.get(i);
             if (!ci.isStandard() && ci.isMandatory()) {
-                List availOptions = (List)options.get(i);
-                for (int j = 0; j < availOptions.size(); j++) {
-                    ConfigOption oneOption = (ConfigOption)availOptions.get(j);
+                Iterator availOptions = ci.getOptions().iterator();
+                while (availOptions.hasNext()) {
+                    ConfigOption oneOption = (ConfigOption)availOptions.next();
                     if (oneOption.isSelected()) {
                         completed = true;
                         break;
@@ -169,13 +173,24 @@ public class ProductConfigWrapper {
         return completed;
     }
     
-    class ConfigItem {
+    public class ConfigItem {
         GenericValue configItem = null;
         GenericValue configItemAssoc = null;
+        ProductConfigItemContentWrapper content = null;
+        List options = null;
         
         public ConfigItem(GenericValue questionAssoc) throws Exception {
             configItemAssoc = questionAssoc;
             configItem = configItemAssoc.getRelatedOne("ConfigItemProductConfigItem");
+            options = new ArrayList();
+        }
+        
+        public void setContent(Locale locale, String mimeTypeId) {
+            content = new ProductConfigItemContentWrapper(configItem, locale, mimeTypeId);
+        }
+        
+        public ProductConfigItemContentWrapper getContent() {
+            return content;
         }
         
         public GenericValue getConfigItem() {
@@ -198,6 +213,38 @@ public class ProductConfigWrapper {
             return configItemAssoc.getString("isMandatory") != null && configItemAssoc.getString("isMandatory").equals("Y");
         }
         
+        public void addOption(ConfigOption option) {
+            options.add(option);
+        }
+        
+        public List getOptions() {
+            return options;
+        }
+        
+        public String getQuestion() {
+            String question = "";
+            if (UtilValidate.isNotEmpty(configItemAssoc.getString("description"))) {
+                question = configItemAssoc.getString("description");
+            } else {
+                if (content != null) {
+                    question = content.get("DESCRIPTION");
+                } else {
+                    question = (configItem.getString("description") != null? configItem.getString("description"): "");
+                }
+            }
+            return question;
+        }
+        
+        public boolean isSelected() {
+            Iterator availOptions = getOptions().iterator();
+            while (availOptions.hasNext()) {
+                ConfigOption oneOption = (ConfigOption)availOptions.next();
+                if (oneOption.isSelected()) {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
     
     public class ConfigOption {

@@ -159,6 +159,11 @@
     <ProductContentType description="Image - Large" hasTable="N" parentTypeId="" productContentTypeId="LARGE_IMAGE_URL"/>
     <ProductContentType description="Image - Detail" hasTable="N" parentTypeId="" productContentTypeId="DETAIL_IMAGE_URL"/>
 
+    <ProdConfItemContentType description="Image" hasTable="N" parentTypeId="" confItemContentTypeId="IMAGE_URL"/>
+    <ProdConfItemContentType description="Description" hasTable="N" parentTypeId="" confItemContentTypeId="DESCRIPTION"/>
+    <ProdConfItemContentType description="Description - Long" hasTable="N" parentTypeId="" confItemContentTypeId="LONG_DESCRIPTION"/>
+    <ProdConfItemContentType description="Instructions" hasTable="N" parentTypeId="" confItemContentTypeId="INSTRUCTIONS"/>
+
     <ProductFeatureApplType description="Optional" hasTable="N" parentTypeId="" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
     <ProductFeatureApplType description="Required" hasTable="N" parentTypeId="" productFeatureApplTypeId="REQUIRED_FEATURE"/>
     <ProductFeatureApplType description="Selectable" hasTable="N" parentTypeId="" productFeatureApplTypeId="SELECTABLE_FEATURE"/>

@@ -570,8 +570,8 @@
         </field>
         <field name="configItemId" title="${uiLabelMap.ProductConfigItemId}" widget-style="selectBox">
             <drop-down>
-                <entity-options entity-name="ProductConfigItem" description="${description} [${configItemId}]"> <!-- [${productTypeId}] -->
-                    <entity-order-by field-name="description"/>
+                <entity-options entity-name="ProductConfigItem" description="${configItemName} [${configItemId}] (${description})"> <!-- [${productTypeId}] -->
+                    <entity-order-by field-name="configItemName"/>
                 </entity-options>
             </drop-down>
         </field>
@@ -584,7 +584,9 @@
         <field name="productId"><hidden/></field>
         <!-- TODO: get descriptions from IDs <display description="${roleType.description}"/> -->
         <field name="sequenceNum" title="${uiLabelMap.CommonSeqNum}" widget-style="tabletext"><display/></field>
-        <field name="configItemId" title="${uiLabelMap.ProductConfig}" widget-style="tabletext"><display-entity entity-name="ProductConfigItem" key-field-name="configItemId" description="${description} [${configItemId}]"/></field>
+        <field name="configItemId" title="${uiLabelMap.ProductConfig}" widget-style="tabletext">
+            <display-entity entity-name="ProductConfigItem" key-field-name="configItemId" description="${configItemName} [${configItemId}] (${description})"/>
+        </field>
         <field name="configTypeId" title="${uiLabelMap.ProductConfigTypeId}" widget-style="selectBox">
             <drop-down allow-empty="false">
                 <option key="STANDARD" description="${uiLabelMap.ProductStandard}" />

@@ -60,6 +60,16 @@
         <attribute name="productVariantId" type="String" mode="INOUT" optional="false"/>
     </service>
 
+    <service name="quickCreateVirtual" engine="java"
+            location="org.ofbiz.product.product.ProductServices" invoke="quickAddVariant">
+        <description>Create a new product variant</description>
+        <attribute name="productId" type="String" mode="OUT" optional="false"/>
+        <attribute name="variantProductIdsBag" type="String" mode="IN" optional="false"/>
+        <attribute name="productFeatureIdOne" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeatureIdTwo" type="String" mode="IN" optional="true"/>
+        <attribute name="productFeatureIdThree" type="String" mode="IN" optional="true"/>
+    </service>
+
     <service name="indexProductKeywords" engine="simple"
                 location="org/ofbiz/product/product/ProductServices.xml" invoke="indexProductKeywords" auth="false">
         <description>Index the Keywords for a Product</description>
@@ -610,4 +620,44 @@
         <description>Delete ProductConfigProduct</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
     </service>
+    <!-- Product Config Item content services -->  
+    <service name="createProductConfigItemContent" default-entity-name="ProdConfItemContent" engine="simple"
+                location="org/ofbiz/product/config/ProductConfigItemContentServices.xml" invoke="createProductConfigItemContent" auth="true">
+        <description>Add Content To ProductConfigItem</description>
+        <auto-attributes include="pk" mode="INOUT" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
+        <override name="fromDate" optional="true" />
+        <!--<override name="contentId" optional="true" mode="INOUT" />-->
+    </service>
+    <service name="updateProductConfigItemContent" default-entity-name="ProdConfItemContent" engine="simple"
+                location="org/ofbiz/product/config/ProductConfigItemContentServices.xml" invoke="updateProductConfigItemContent" auth="true">
+        <description>Update Content To ProductConfigItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes entity-name="Content" include="nonpk" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProductConfigItemContent" default-entity-name="ProdConfItemContent" engine="simple"
+                location="org/ofbiz/product/config/ProductConfigItemContentServices.xml" invoke="removeProductConfigItemContent" auth="true">
+        <description>Remove Content From ProductConfigItem</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+    </service>    
+    <service name="createSimpleTextContentForProductConfigItem" default-entity-name="ProdConfItemContent" engine="simple"
+            location="org/ofbiz/product/config/ProductConfigItemContentServices.xml" invoke="createSimpleTextContentForProductConfigItem" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" entity-name="Content" optional="true"/>
+        <attribute name="text" type="String" mode="IN" optional="false"/>
+        <override name="contentId" optional="true"/>
+    </service>
+    <service name="updateSimpleTextContentForProductConfigItem" default-entity-name="ProdConfItemContent" engine="simple"
+            location="org/ofbiz/product/config/ProductConfigItemContentServices.xml" invoke="updateSimpleTextContentForProductConfigItem" auth="true">
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <auto-attributes include="nonpk" mode="IN" optional="true"/>
+        <auto-attributes mode="IN" entity-name="Content" optional="true"/>
+        <attribute name="textDataResourceId" type="String" mode="IN" optional="true"/>
+        <attribute name="text" type="String" mode="IN" optional="true"/>
+    </service>
+
 </services>
