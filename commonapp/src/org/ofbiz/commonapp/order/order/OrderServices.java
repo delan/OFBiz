@@ -292,10 +292,8 @@ public class OrderServices {
 
         // set the order payment preferences
         List paymentMethods = (List) context.get("paymentMethods");
-
         if (paymentMethods != null && paymentMethods.size() > 0) {
             Iterator pmsIter = paymentMethods.iterator();
-
             while (pmsIter.hasNext()) {
                 GenericValue paymentMethod = (GenericValue) pmsIter.next();
                 GenericValue paymentPreference = delegator.makeValue("OrderPaymentPreference",
@@ -310,17 +308,24 @@ public class OrderServices {
 
         // set by payment method type ids as well
         List paymentMethodTypeIds = (List) context.get("paymentMethodTypeIds");
-
         if (paymentMethodTypeIds != null && paymentMethodTypeIds.size() > 0) {
-
             Iterator pmtsIter = paymentMethodTypeIds.iterator();
-
             while (pmtsIter.hasNext()) {
                 String paymentMethodTypeId = (String) pmtsIter.next();
-
                 toBeStored.add(delegator.makeValue("OrderPaymentPreference",
                         UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
                             "orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId)));
+            }
+        }
+
+        // store the trackingCodeOrder entities
+        List trackingCodeOrders = (List) context.get("trackingCodeOrders");
+        if (trackingCodeOrders != null && trackingCodeOrders.size() > 0) {
+            Iterator tkcdordIter = trackingCodeOrders.iterator();
+            while (tkcdordIter.hasNext()) {
+                GenericValue trackingCodeOrder = (GenericValue) tkcdordIter.next();
+                trackingCodeOrder.set("orderId", orderId);
+                toBeStored.add(trackingCodeOrder);
             }
         }
 

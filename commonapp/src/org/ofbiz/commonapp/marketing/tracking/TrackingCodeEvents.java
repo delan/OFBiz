@@ -129,4 +129,13 @@ public class TrackingCodeEvents {
         
         return "success";
     }
+    
+    /** Makes a list of TrackingCodeOrder entities to be attached to the current order; called by the createOrder event */
+    public static List makeTrackingCodeOrders(HttpServletRequest request) {
+        //TODO: go through the cookies and find any that start with TKCDB_ for billable tracking code cookies with isBillable=Y
+        
+        //TODO: next go through the TKCDT_ cookies and for each one that doesn't have a corresponding billable code add it to the list with isBillable=N
+        
+        return null;
+    }
 }

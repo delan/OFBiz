@@ -40,7 +40,7 @@ import org.ofbiz.commonapp.common.*;
 import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.commonapp.product.catalog.*;
-
+import org.ofbiz.commonapp.marketing.tracking.*;
 
 /**
  * Events used for processing checkout and orders.
@@ -167,11 +167,16 @@ public class CheckOutEvents {
 
         // store the order - build the context
         Map context = cart.makeCartMap(dispatcher, explodeOrderItems(request));
+
+        //get the TrackingCodeOrder List
+        List trackingCodeOrders = TrackingCodeEvents.makeTrackingCodeOrders(request);
+        context.put("trackingCodeOrders", trackingCodeOrders);
+        
         String distributorId = (String) session.getAttribute("_DISTRIBUTOR_ID_");
         String affiliateId = (String) session.getAttribute("_AFFILIATE_ID_");
-
         if (distributorId != null) context.put("distributorId", distributorId);
         if (affiliateId != null) context.put("affiliateId", affiliateId);
+        
         context.put("userLogin", userLogin);
         context.put("partyId", userLogin.get("partyId"));
         context.put("prodCatalogId", CatalogWorker.getCurrentCatalogId(request));

@@ -33,6 +33,7 @@
         <attribute name="orderContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemContactMechs" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderItemPriceInfos" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="trackingCodeOrders" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="OUT"/>
     </service>
 
