@@ -150,7 +150,10 @@
 </table>
 
 <script language="JavaScript">
-<!--
-  document.loginform.USERNAME.focus();
-//-->
+ <ofbiz:if name="autoUserLogin">
+   document.loginform.PASSWORD.focus();
+ </ofbiz:if>
+ <ofbiz:unless name="autoUserLogin">
+   document.loginform.USERNAME.focus();
+ </ofbiz:unless>
 </script>
