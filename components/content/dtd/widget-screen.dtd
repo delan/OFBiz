@@ -260,6 +260,7 @@
     <!ATTLIST include-form
         name CDATA #REQUIRED
         location CDATA #REQUIRED
+        share-scope ( true | false ) "false"
     >
     
     <!ELEMENT include-menu EMPTY>
@@ -272,6 +273,7 @@
     <!ATTLIST include-tree
         name CDATA #REQUIRED
         location CDATA #REQUIRED
+        share-scope ( true | false ) "false"
     >
     
     <!ELEMENT content EMPTY>

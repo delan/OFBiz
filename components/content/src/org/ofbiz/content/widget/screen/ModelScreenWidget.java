@@ -507,15 +507,25 @@ public abstract class ModelScreenWidget {
     public static class Form extends ModelScreenWidget {
         protected FlexibleStringExpander nameExdr;
         protected FlexibleStringExpander locationExdr;
+        protected FlexibleStringExpander shareScopeExdr;
         
         public Form(ModelScreen modelScreen, Element formElement) {
             super(modelScreen, formElement);
 
             this.nameExdr = new FlexibleStringExpander(formElement.getAttribute("name"));
             this.locationExdr = new FlexibleStringExpander(formElement.getAttribute("location"));
+            this.shareScopeExdr = new FlexibleStringExpander(formElement.getAttribute("share-scope"));
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+            boolean protectScope = !shareScope(context);
+            if (protectScope) {
+                if (!(context instanceof MapStack)) {
+                    context = new MapStack(context);
+                }
+                ((MapStack) context).push();
+            }
+            
             String name = this.getName(context);
             String location = this.getLocation(context);
             ModelForm modelForm = null;
@@ -569,20 +579,36 @@ public abstract class ModelScreenWidget {
         public String getLocation(Map context) {
             return this.locationExdr.expandString(context);
         }
+        
+        public boolean shareScope(Map context) {
+            String shareScopeString = this.shareScopeExdr.expandString(context);
+            // defaults to false, so anything but true is false
+            return "true".equals(shareScopeString);
+        }
     }
 
     public static class Tree extends ModelScreenWidget {
         protected FlexibleStringExpander nameExdr;
         protected FlexibleStringExpander locationExdr;
+        protected FlexibleStringExpander shareScopeExdr;
         
         public Tree(ModelScreen modelScreen, Element treeElement) {
             super(modelScreen, treeElement);
 
             this.nameExdr = new FlexibleStringExpander(treeElement.getAttribute("name"));
             this.locationExdr = new FlexibleStringExpander(treeElement.getAttribute("location"));
+            this.shareScopeExdr = new FlexibleStringExpander(treeElement.getAttribute("share-scope"));
         }
 
         public void renderWidgetString(Writer writer, Map context, ScreenStringRenderer screenStringRenderer) {
+            boolean protectScope = !shareScope(context);
+            if (protectScope) {
+                if (!(context instanceof MapStack)) {
+                    context = new MapStack(context);
+                }
+                ((MapStack) context).push();
+            }
+            
             String name = this.getName(context);
             String location = this.getLocation(context);
             ModelTree modelTree = null;
@@ -637,6 +663,12 @@ public abstract class ModelScreenWidget {
         
         public String getLocation(Map context) {
             return this.locationExdr.expandString(context);
+        }
+        
+        public boolean shareScope(Map context) {
+            String shareScopeString = this.shareScopeExdr.expandString(context);
+            // defaults to false, so anything but true is false
+            return "true".equals(shareScopeString);
         }
     }
 
