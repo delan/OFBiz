@@ -51,7 +51,7 @@
               <DIV class='tabletext'>For something interesting make sure you are logged in, try username:admin, password:ofbiz.</DIV>
               <BR>
             </ofbiz:unless>
-            <DIV class='tabletext'>NOTE: This application is currently empty, so don't bother looking for anything.</DIV>
+            <DIV class='tabletext'>NOTE: This application is currently in development. This page will change.</DIV
           </td>
         </tr>
       </table>
