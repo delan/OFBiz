@@ -1362,5 +1362,13 @@
     <attribute mode="OUT" name="badIndexList" optional="true" type="List"/>
     <attribute mode="OUT" name="goodIndexCount" optional="true" type="Integer"/>
   </service>
+  <service auth="true" engine="java" name="resequence" validate="true"
+        transaction-timout="72000" 
+        location="org.ofbiz.content.ContentManagementServices" invoke="resequence">
+    <description>Reorder sequence numbers in ContentAssoc entities for a given parent id</description>
+    <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
+    <attribute mode="IN" name="seqInc" optional="true" type="Integer"/>
+    <attribute mode="IN" name="typeList" optional="true" type="List"/>
+  </service>
 
 </services>
