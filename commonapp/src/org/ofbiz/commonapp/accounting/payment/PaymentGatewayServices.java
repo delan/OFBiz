@@ -368,6 +368,7 @@ public class PaymentGatewayServices {
         
         // get the invoice amount (amount to bill)
         double invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice);
+        Debug.log("Invoice total: " + invoiceTotal, module);
         
         // now capture the order
         Map serviceContext = UtilMisc.toMap("userLogin", userLogin, "orderId", testOrderId, "invoiceId", invoiceId, "captureAmount", new Double(invoiceTotal));
@@ -430,6 +431,7 @@ public class PaymentGatewayServices {
             captureAmount = new Double(orderTotal);
         }
         double amountToCapture = captureAmount.doubleValue();
+        Debug.log("Amount to capture : " + amountToCapture, module);
         
         // iterate over the prefs and capture each one until we meet our total
         List finished = new ArrayList();
@@ -440,11 +442,13 @@ public class PaymentGatewayServices {
             if (authAmount == null) authAmount = new Double(0.00);
             if (authAmount.doubleValue() == 0.00) {
                 // nothing to capture
+                Debug.log("Nothing to capture; authAmount = 0", module);
                 continue;
             }
+            Debug.log("Auth amount : " + authAmount, module);
             
             double amountThisCapture = 0.00;
-            if (authAmount.doubleValue() > amountToCapture) {
+            if (authAmount.doubleValue() >= amountToCapture) {
                 amountThisCapture = amountToCapture;
             } else if (payments.hasNext()){
                 amountThisCapture = authAmount.doubleValue();
@@ -477,6 +481,7 @@ public class PaymentGatewayServices {
                 // create any splits which are needed
                 if (authAmount.doubleValue() > amountThisCapture) {
                     // create a new payment preference and authorize it
+                    Debug.log("Creating payment preference split", module);
                     double newAmount = authAmount.doubleValue() - amountThisCapture;
                     String newPrefId = delegator.getNextSeqId("OrderPaymentPreference").toString();
                     GenericValue newPref = delegator.makeValue("OrderPaymentPreference", UtilMisc.toMap("orderPaymentPreferenceId", newPrefId));
@@ -485,6 +490,7 @@ public class PaymentGatewayServices {
                     newPref.set("paymentMethodId", paymentPref.get("paymentMethodId"));
                     newPref.set("maxAmount", paymentPref.get("maxAmount"));                    
                     newPref.set("statusId", "PAYMENT_NOT_AUTH");
+                    Debug.log("New preference : " + newPref, module);
                     try {
                         // create the new payment preference
                         delegator.create(newPref);
