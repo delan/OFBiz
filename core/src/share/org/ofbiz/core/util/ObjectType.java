@@ -181,7 +181,7 @@ public class ObjectType {
         if (obj instanceof java.lang.String) {
             fromType = "String";
             String str = (String) obj;
-            if ("String".equals(type)) {
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
                 return obj;
             }
 
@@ -189,7 +189,7 @@ public class ObjectType {
                 return null;
             }
             
-            if ("Double".equals(type)) {
+            if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 try {
                     NumberFormat nf = null;
                     if (locale == null)
@@ -201,7 +201,7 @@ public class ObjectType {
                 } catch (ParseException e) {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
                 }
-            } else if ("Float".equals(type)) {
+            } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
                 try {
                     NumberFormat nf = null;
                     if (locale == null)
@@ -213,7 +213,7 @@ public class ObjectType {
                 } catch (ParseException e) {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
                 }
-            } else if ("Long".equals(type)) {
+            } else if ("Long".equals(type) || "java.lang.Long".equals(type)) {
                 try {
                     NumberFormat nf = null;
                     if (locale == null)
@@ -226,7 +226,7 @@ public class ObjectType {
                 } catch (ParseException e) {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
                 }
-            } else if ("Integer".equals(type)) {
+            } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
                 try {
                     NumberFormat nf = null;
                     if (locale == null)
@@ -239,7 +239,7 @@ public class ObjectType {
                 } catch (ParseException e) {
                     throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
                 }
-            } else if ("Date".equals(type)) {
+            } else if ("Date".equals(type) || "java.sql.Date".equals(type)) {
                 if (format == null || format.length() == 0) {
                     try {
                         return java.sql.Date.valueOf(str);
@@ -255,7 +255,7 @@ public class ObjectType {
                         throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
                     }
                 }
-            } else if ("Time".equals(type)) {
+            } else if ("Time".equals(type) || "java.sql.Time".equals(type)) {
                 if (format == null || format.length() == 0) {
                     try {
                         return java.sql.Time.valueOf(str);
@@ -271,7 +271,7 @@ public class ObjectType {
                         throw new GeneralException("Could not convert " + str + " to " + type + ": ", e);
                     }
                 }
-            } else if ("Timestamp".equals(type)) {
+            } else if ("Timestamp".equals(type) || "java.sql.Timestamp".equals(type)) {
                 if (format == null || format.length() == 0) {
                     try {
                         return java.sql.Timestamp.valueOf(str);
@@ -293,20 +293,20 @@ public class ObjectType {
         } else if (obj instanceof java.lang.Double) {
             fromType = "Double";
             Double dbl = (Double) obj;
-            if ("String".equals(type)) {
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
                 if (locale == null)
                     nf = NumberFormat.getNumberInstance();
                 else
                     nf = NumberFormat.getNumberInstance(locale);
                 return nf.format(dbl.doubleValue());
-            } else if ("Double".equals(type)) {
+            } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 return obj;
-            } else if ("Float".equals(type)) {
+            } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
                 return new Float(dbl.floatValue());
-            } else if ("Long".equals(type)) {
+            } else if ("Long".equals(type) || "java.lang.Long".equals(type)) {
                 return new Long(Math.round(dbl.doubleValue()));
-            } else if ("Integer".equals(type)) {
+            } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
                 return new Integer((int) Math.round(dbl.doubleValue()));
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
@@ -335,20 +335,20 @@ public class ObjectType {
         } else if (obj instanceof java.lang.Long) {
             fromType = "Long";
             Long lng = (Long) obj;
-            if ("String".equals(type)) {
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
                 if (locale == null)
                     nf = NumberFormat.getNumberInstance();
                 else
                     nf = NumberFormat.getNumberInstance(locale);
                 return nf.format(lng.longValue());
-            } else if ("Double".equals(type)) {
+            } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 return new Double(lng.doubleValue());
-            } else if ("Float".equals(type)) {
+            } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
                 return new Float(lng.floatValue());
-            } else if ("Long".equals(type)) {
+            } else if ("Long".equals(type) || "java.lang.Long".equals(type)) {
                 return obj;
-            } else if ("Integer".equals(type)) {
+            } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
                 return new Integer(lng.intValue());
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
@@ -356,20 +356,20 @@ public class ObjectType {
         } else if (obj instanceof java.lang.Integer) {
             fromType = "Integer";
             Integer intgr = (Integer) obj;
-            if ("String".equals(type)) {
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
                 NumberFormat nf = null;
                 if (locale == null)
                     nf = NumberFormat.getNumberInstance();
                 else
                     nf = NumberFormat.getNumberInstance(locale);
                 return nf.format(intgr.longValue());
-            } else if ("Double".equals(type)) {
+            } else if ("Double".equals(type) || "java.lang.Double".equals(type)) {
                 return new Double(intgr.doubleValue());
-            } else if ("Float".equals(type)) {
+            } else if ("Float".equals(type) || "java.lang.Float".equals(type)) {
                 return new Float(intgr.floatValue());
-            } else if ("Long".equals(type)) {
+            } else if ("Long".equals(type) || "java.lang.Long".equals(type)) {
                 return new Long(intgr.longValue());
-            } else if ("Integer".equals(type)) {
+            } else if ("Integer".equals(type) || "java.lang.Integer".equals(type)) {
                 return obj;
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
@@ -377,18 +377,18 @@ public class ObjectType {
         } else if (obj instanceof java.sql.Date) {
             fromType = "Date";
             java.sql.Date dte = (java.sql.Date) obj;
-            if ("String".equals(type)) {
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
                 if (format == null || format.length() == 0) {
                     return dte.toString();
                 } else {
                     SimpleDateFormat sdf = new SimpleDateFormat(format);
                     return sdf.format(new java.util.Date(dte.getTime()));
                 }
-            } else if ("Date".equals(type)) {
+            } else if ("Date".equals(type) || "java.sql.Date".equals(type)) {
                 return obj;
-            } else if ("Time".equals(type)) {
+            } else if ("Time".equals(type) || "java.sql.Time".equals(type)) {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
-            } else if ("Timestamp".equals(type)) {
+            } else if ("Timestamp".equals(type) || "java.sql.Timestamp".equals(type)) {
                 return new java.sql.Timestamp(dte.getTime());
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
@@ -396,18 +396,18 @@ public class ObjectType {
         } else if (obj instanceof java.sql.Time) {
             fromType = "Time";
             java.sql.Time tme = (java.sql.Time) obj;
-            if ("String".equals(type)) {
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
                 if (format == null || format.length() == 0) {
                     return tme.toString();
                 } else {
                     SimpleDateFormat sdf = new SimpleDateFormat(format);
                     return sdf.format(new java.util.Date(tme.getTime()));
                 }
-            } else if ("Date".equals(type)) {
+            } else if ("Date".equals(type) || "java.sql.Date".equals(type)) {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
-            } else if ("Time".equals(type)) {
+            } else if ("Time".equals(type) || "java.sql.Time".equals(type)) {
                 return obj;
-            } else if ("Timestamp".equals(type)) {
+            } else if ("Timestamp".equals(type) || "java.sql.Timestamp".equals(type)) {
                 return new java.sql.Timestamp(tme.getTime());
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
@@ -415,18 +415,18 @@ public class ObjectType {
         } else if (obj instanceof java.sql.Timestamp) {
             fromType = "Timestamp";
             java.sql.Timestamp tme = (java.sql.Timestamp) obj;
-            if ("String".equals(type)) {
+            if ("String".equals(type) || "java.lang.String".equals(type)) {
                 if (format == null || format.length() == 0) {
                     return tme.toString();
                 } else {
                     SimpleDateFormat sdf = new SimpleDateFormat(format);
                     return sdf.format(new java.util.Date(tme.getTime()));
                 }
-            } else if ("Date".equals(type)) {
+            } else if ("Date".equals(type) || "java.sql.Date".equals(type)) {
                 return new java.sql.Date(tme.getTime());
-            } else if ("Time".equals(type)) {
+            } else if ("Time".equals(type) || "java.sql.Time".equals(type)) {
                 return new java.sql.Time(tme.getTime());
-            } else if ("Timestamp".equals(type)) {
+            } else if ("Timestamp".equals(type) || "java.sql.Timestamp".equals(type)) {
                 return obj;
             } else {
                 throw new GeneralException("Conversion from " + fromType + " to " + type + " not currently supported");
