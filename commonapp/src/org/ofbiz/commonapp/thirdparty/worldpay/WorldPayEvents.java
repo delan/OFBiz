@@ -294,7 +294,7 @@ public class WorldPayEvents {
         
         // now set some send-back parameters
         linkParms.setValue("M_controlPath", (String)request.getAttribute(SiteDefs.CONTROL_PATH));
-        linkParms.setValue("M_userLoginId", (String)request.getSession().getAttribute(SiteDefs.USER_LOGIN));
+        linkParms.setValue("M_userLoginId", userLogin.getString("userLoginId"));
         linkParms.setValue("M_orderProperties", orderPropertiesString);
         linkParms.setValue("M_ecommerceProperties", ecommercePropertiesString);
         linkParms.setValue("M_dispatchName", dispatcher.getName());
