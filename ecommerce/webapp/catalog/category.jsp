@@ -103,9 +103,8 @@
 </table>
 </ofbiz:if>
 
-<center>
+<!--
 <%
-
 java.util.Collection co = org.ofbiz.ecommerce.catalog.CatalogHelper.getTrail(pageContext); 
 java.util.Iterator it = co.iterator();
 while ( it.hasNext() ) {
@@ -114,8 +113,7 @@ while ( it.hasNext() ) {
 <p><%= s %><br></p>
 
 <% } %>
-</center>
-
+-->
 <%@ include file="/includes/rightcolumn.jsp" %>
 <%@ include file="/includes/footer.jsp" %>
 
