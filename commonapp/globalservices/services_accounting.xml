@@ -108,8 +108,12 @@
     </service>
 
     <service name="ccProcessor" engine="java"
-            location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="authorizePayment">
-            <!--location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor" auth="false">-->
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
+            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor"> -->
+            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysApproveProcessor"> -->
+            <!-- location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="alwaysDeclineProcessor"> -->
+            <!-- location="org.ofbiz.commonapp.thirdparty.verisign.PayflowPro" invoke="ccProcessor"> -->
+            <!-- location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="ccProcessor"> -->
         <description>Credit Card Processing</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processAmount" type="Double" mode="INOUT" optional="false"/>
