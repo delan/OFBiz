@@ -6,11 +6,54 @@
 <br>Last Updated: June 22, 2001
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#Release 2001.06.30">Release 2001.06.30</a>
   <li><a href="#Release 2001.06.22">Release 2001.06.22</a>
   <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
   <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
   <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
 </ul>
+
+<hr>
+<h3><a name="Release 2001.06.30">Release 2001.06.30</a></h3>
+<hr>
+<h4>Added Cache to Speed Up the Entity Code Generator</h4>
+<p>Entitygen now uses a cache for each entity definition it reads from the XML data descriptor file.
+This dramatically speeds up the generation of source code, especially for large
+definition files and generation of all files and snippets for each, or for all,
+entities.</p>
+
+<h4>Updated CommonApp for the new Data Model, and Tested/Refined the Data Model</h4>
+<p>The CommonApp module now uses the basic user login and security entities from
+the big Data Model. Also, the data model has been organized, expanded, debugged
+and partially tested. All files and snippets generate succesfully, and all Java
+files compile successfully and with the generated deployment descriptors they
+deploy successfully in JBoss. Even with all 401 of the entities, JBoss starts up
+in less than a minute on my 500Mhz Athlon. All SQL files run successfully in
+MySQL.</p>
+<p>The Data Model has been cleaned up and expanded. The datamodel-data.sql file
+is now cleaned up and works with the data model definition in the new
+datamodel.xml file. Part of this included adding tables to make the main
+entities extensible, and cleaning up the tables that are already there. Also,
+the Content module has been enhanced significantly to support very flexible
+content organization. Relations have been defined for the Content module, and
+for the entities which implement the extensibility of the main entities.&nbsp;</p>
+<p>All of this brings the total number of entities in the data model to 401. The
+datamodel.xml file is now almost 9,000 lines long and is about 540Kb large. With
+the speed ups and all of these entities it takes about 45 minutes to generate
+all of the files on my 500Mhz Athlon. It generates 2630 Java files, 1203 JSP
+files, and about 2Mb of snippets in 8 files. Running wc on these files shows a
+count of 954,865 lines, 3,074,034 words, and 35,290,606 characters.</p>
+<p>With this progress in place the Open For Business Data Model is now ready to
+be used as a basis for the various applications that we wish to build. As each
+application is built it will probably require various changes to the data model,
+but the basis is in place and is essentially bug free.</p>
+<h4>Bugs Fixed and Ease of Generated Entity Deployment Enhanced</h4>
+<p>A number of lurking bugs have been fixed in this release in the entitygen
+templates and some of the commonapp support code. While generating and test
+compiling and deploying all of the Data Model entities a number of bugs and
+omissions were found and corrected. Also, some small restructurings (especially
+with EntityWebEvent.java) and additions to the templates make deploying the
+generated entities into an application is much more simple.</p>
 
 <hr>
 <h3><a name="Release 2001.06.22">Release 2001.06.22</a></h3>
