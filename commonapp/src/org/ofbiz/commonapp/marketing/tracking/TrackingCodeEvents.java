@@ -49,10 +49,12 @@ public class TrackingCodeEvents {
 
     /** If TrackingCode monitoring is desired this event should be added to the list 
      * of events that run on every request. This event looks for the parameter 
-     * <code>autoTrackingCode</code>.
+     * <code>autoTrackingCode</code> or a shortened version: <code>atc</code>.
      */
     public static String checkTrackingCodeUrlParam(HttpServletRequest request, HttpServletResponse response) {
         String trackingCodeId = request.getParameter("autoTrackingCode");
+        if (UtilValidate.isEmpty(trackingCodeId)) trackingCodeId = request.getParameter("atc");
+        
         if (UtilValidate.isNotEmpty(trackingCodeId)) {
             //tracking code is specified on the request, get the TrackingCode value and handle accordingly
             GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
