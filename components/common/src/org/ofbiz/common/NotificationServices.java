@@ -1,5 +1,5 @@
 /*
- * $Id: NotificationServices.java,v 1.2 2003/08/20 01:16:16 ajzeneski Exp $
+ * $Id: NotificationServices.java,v 1.3 2003/11/07 01:05:43 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -80,7 +80,7 @@ import freemarker.template.TemplateHashModel;
  * An optional parameter available to all message templates is <code>baseUrl</code>
  * which can either be specified when the service is invoked or let the 
  * <code>NotificationService</code> attempt to resolve it as best it can, 
- * see {@link #setBaseUrl(Map) setBaseUrl(Map)} for details on how this is achieved.
+ * see {@link #setBaseUrl(GenericDelegator, String, Map) setBaseUrl(Map)} for details on how this is achieved.
  * <p>
  * The following example shows what a simple notification message template, 
  * associated with the above service, might contain: 
@@ -106,7 +106,7 @@ import freemarker.template.TemplateHashModel;
  *
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class NotificationServices {
