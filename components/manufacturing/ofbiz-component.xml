@@ -49,7 +49,10 @@
 
     <!-- service resources: model(s) [definitions], eca(s) and group definitions -->
     <service-resource type="model" loader="main" location="servicedef/services.xml"/>
+
+<!-- not used right now 
     <service-resource type="eca" loader="main" location="servicedef/secas.xml"/>
+-->
 
     <!-- web applications; will be mounted when using the embedded Jetty container -->
     <webapp name="manufacturing"
