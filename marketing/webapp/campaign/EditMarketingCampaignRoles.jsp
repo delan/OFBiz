@@ -69,7 +69,6 @@
     }
 %>
 
-<br>
 <%if(marketingCampaignId != null && marketingCampaignId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditMarketingCampaign?marketingCampaignId=<%=marketingCampaignId%></ofbiz:url>" class="tabButton">Campaign</a>
@@ -144,12 +143,12 @@
     <div class='head2'>Add Party in a Role:</div>
     <div class='tabletext'>
         Role Type:
-        <select name="roleTypeId" style='font-size: x-small;'>
+        <select name="roleTypeId" class='selectBox'>
             <ofbiz:iterator name="roleType" property="roleTypes">
                 <option value='<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>'><ofbiz:entityfield attribute="roleType" field="description"/><%--[<ofbiz:entityfield attribute="roleType" field="roleTypeId"/>]--%></option>
             </ofbiz:iterator>
         </select>
-        Party&nbsp;ID:&nbsp;<input type=text size='20' name='partyId' style='font-size: x-small;'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
+        Party&nbsp;ID:&nbsp;<input type=text size='20' name='partyId' class='inputBox'>&nbsp;<input type="submit" value="Add" style='font-size: x-small;'>
     </div>
 
 </form>

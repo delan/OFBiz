@@ -58,8 +58,7 @@
         if (fromDate != null && fromDate.length() > 0)
         	donePage = donePage + "&fromDate=" + fromDate;    
 %>
-
-  <br>
+ 
   <p class="head1">Receive Offline Payment(s)</p>
 
   &nbsp;<a href="<ofbiz:url>/authview/<%=donePage%></ofbiz:url>" class="buttontext">[Go&nbsp;Back]</a>

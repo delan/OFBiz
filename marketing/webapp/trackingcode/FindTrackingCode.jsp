@@ -36,7 +36,6 @@
     List trackingCodes = delegator.findAll("TrackingCode");
     if (trackingCodes != null) pageContext.setAttribute("trackingCodes", trackingCodes);
 %>
-<br>
 
 <div class="head1">TrackingCodes List</div>
 

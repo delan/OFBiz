@@ -36,7 +36,6 @@
     List marketingCampaigns = delegator.findAll("MarketingCampaign");
     if (marketingCampaigns != null) pageContext.setAttribute("marketingCampaigns", marketingCampaigns);
 %>
-<br>
 
 <div class="head1">MarketingCampaigns List</div>
 

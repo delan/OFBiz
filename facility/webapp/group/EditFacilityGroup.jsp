@@ -60,7 +60,6 @@
     if (facilityGroups != null) pageContext.setAttribute("facilityGroups", facilityGroups);
 %>
 
-<br>
 <%if(facilityGroupId != null && facilityGroupId.length() > 0) {%>
   <div class='tabContainer'>
     <a href="<ofbiz:url>/EditFacilityGroup?facilityGroupId=<%=facilityGroupId%></ofbiz:url>" class="tabButtonSelected">Facility Group</a>

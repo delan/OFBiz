@@ -48,7 +48,6 @@
     <%GenericValue shipmentMethodType = delegator.findByPrimaryKey("ShipmentMethodType", UtilMisc.toMap("shipmentMethodTypeId", shipmentMethodTypeId));%>
     <%if(shipmentMethodType != null) shipMethDescription = shipmentMethodType.getString("description");%>
 
-<br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
   <td width='50%' valign=top align=left>

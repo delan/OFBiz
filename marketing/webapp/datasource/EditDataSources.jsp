@@ -38,7 +38,6 @@
     List dataSourceTypes = delegator.findAll("DataSourceType", UtilMisc.toList("description"));
     if (dataSourceTypes != null) pageContext.setAttribute("dataSourceTypes", dataSourceTypes);
 %>
-<br>
 
 <div class="head1">Data Sources</div>
 
@@ -57,7 +56,7 @@
         <input type=hidden <ofbiz:inputvalue entityAttr="dataSource" field="dataSourceId" fullattrs="true"/>>
     <td><div class='tabletext'><ofbiz:entityfield attribute="dataSource" field="dataSourceId"/></div></td>
     <td>
-      <select name='dataSourceTypeId' size='1' style='size: x-small;'>
+      <select name='dataSourceTypeId' size='1' class='selectBox'>
         <%if (dataSource.get("dataSourceTypeId") != null) {%>
           <%GenericValue curDataSourceType = delegator.findByPrimaryKey("DataSourceType", UtilMisc.toMap("dataSourceTypeId", dataSource.get("dataSourceTypeId")));%>
           <%if (curDataSourceType != null) {%>
@@ -70,7 +69,7 @@
         </ofbiz:iterator>
       </select>
     </td>
-    <td><input type=text size='60' style='size: x-small;' <ofbiz:inputvalue entityAttr="dataSource" field="description" fullattrs="true"/>></td>
+    <td><input type=text size='60' class='inputBox' <ofbiz:inputvalue entityAttr="dataSource" field="description" fullattrs="true"/>></td>
     <td><INPUT type=submit value='Update' style='size: x-small;'></td>
     <td><a href='<ofbiz:url>/deleteDataSource?dataSourceId=<ofbiz:entityfield attribute="dataSource" field="dataSourceId"/></ofbiz:url>' class='buttontext'>Delete</a></td>
     </FORM>
@@ -85,12 +84,12 @@
   <table>
     <tr>
       <td><div class='tabletext'>ID:</div></td>
-      <td><input type=text size='20' name='dataSourceId' value='' style='size: x-small;'></td>
+      <td><input type=text size='20' name='dataSourceId' value='' class='inputBox'></td>
     </tr>
     <tr>
       <td><div class='tabletext'>Type:</div></td>
       <td>
-          <select name='dataSourceTypeId' size='1' style='size: x-small;'>
+          <select name='dataSourceTypeId' size='1' class='selectBox'>
             <ofbiz:iterator name="dataSourceType" property="dataSourceTypes">
               <option value='<%=dataSourceType.getString("dataSourceTypeId")%>'><%=dataSourceType.getString("description")%><%-- [<%=dropDownDataSource.getString("dataSourceId")%>]--%></option>
             </ofbiz:iterator>
@@ -99,7 +98,7 @@
     </tr>
     <tr>
       <td><div class='tabletext'>Description:</div></td>
-      <td><input type=text size='60' name='description' value='' style='size: x-small;'></td>
+      <td><input type=text size='60' name='description' value='' class='inputBox'></td>
     </tr>
     <tr>
       <td colspan='2'><input type="submit" value="Create"></td>

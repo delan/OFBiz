@@ -10,8 +10,6 @@
 
 <% pageContext.setAttribute("PageName", "Main Page"); %>
 
-<BR>
-
 <div class='tabContainer'>
   <%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>
   <a href="<ofbiz:url>/shipsetup</ofbiz:url>" class='tabButton'>Ship&nbsp;Rate&nbsp;Setup</a>

@@ -61,7 +61,6 @@
     function setLineThruDateParent(line) { eval('document.lineParentForm' + line + '.thruDate.value="<%=UtilDateTime.nowTimestamp().toString()%>"'); }
 </script>
 
-<br>
 <%if(facilityGroupId != null && facilityGroupId.length() > 0) {%>
   <div class='tabContainer'>
     <a href="<ofbiz:url>/EditFacilityGroup?facilityGroupId=<%=facilityGroupId%></ofbiz:url>" class="tabButton">Facility Group</a>

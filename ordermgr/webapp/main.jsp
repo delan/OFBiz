@@ -171,7 +171,7 @@
 	List waitingApproval = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", "ORDER_PROCESSING"));
 	List waitingComplete = delegator.findByAnd("OrderHeader", UtilMisc.toMap("statusId", "ORDER_APPROVED"));
 %>
-<BR>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>

@@ -34,7 +34,6 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
-<br>
 <div class='tabletext'>NOTE: These report are for demonstration purposes only. 
 They use the JasperReports reporting tool. They have not been polished yet, but 
 they are good examples of creating detailed reports that you have a lot of 

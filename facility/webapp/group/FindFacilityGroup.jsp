@@ -37,7 +37,6 @@
     Collection groups = delegator.findAll("FacilityGroup");
     if (groups != null) pageContext.setAttribute("facilityGroups", groups);
 %>
-<br>
 
 <div class="head1">Facility Group List</div>
 

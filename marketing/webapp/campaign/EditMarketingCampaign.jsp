@@ -59,7 +59,6 @@
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
 
-<br>
 <%if(marketingCampaignId != null && marketingCampaignId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditMarketingCampaign?marketingCampaignId=<%=marketingCampaignId%></ofbiz:url>" class="tabButtonSelected">Campaign</a>
@@ -94,13 +93,13 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Campaign Name</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="marketingCampaign" field="campaignName" fullattrs="true" tryEntityAttr="tryEntity"/> size="30" maxlength="250"></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="marketingCampaign" field="campaignName" fullattrs="true" tryEntityAttr="tryEntity"/> size="30" maxlength="250"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Parent Marketing Campaign</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <select name="parentCampaignId" size=1>
+          <select name="parentCampaignId" size=1 class='selectBox'>
             <ofbiz:if name="parentCampaign">
               <option selected value='<ofbiz:inputvalue entityAttr="marketingCampaign" field="parentCampaignId"/>'><ofbiz:inputvalue entityAttr="parentCampaign" field="campaignName"/><%--<ofbiz:entityfield attribute="parentCampaign" field="marketingCampaignId" prefix="[" suffix="]"/>--%></option>
             </ofbiz:if>
@@ -115,7 +114,7 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Campaign Summary</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><textarea cols="60" rows="7" name="campaignSummary" maxlength="2000" style='font-size: small;'><ofbiz:inputvalue entityAttr='marketingCampaign' field='campaignSummary' tryEntityAttr="tryEntity"/></textarea></td>
+        <td width="74%"><textarea cols="60" rows="7" name="campaignSummary" maxlength="2000"><ofbiz:inputvalue entityAttr='marketingCampaign' field='campaignSummary' tryEntityAttr="tryEntity"/></textarea></td>
       </tr>
 
   <tr>

@@ -98,7 +98,6 @@
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
 
-<br>
 <%if(facilityId != null && facilityId.length() > 0){%>
   <div class='tabContainer'>
     <a href="<ofbiz:url>/EditFacility?facilityId=<%=facilityId%></ofbiz:url>" class="tabButton">Facility</a>

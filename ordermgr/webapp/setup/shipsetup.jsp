@@ -12,8 +12,6 @@
 
 <%@ include file="shipsetuphelper.jsp" %>
 
-<BR>
-
 <div class='tabContainer'>
   <%if(security.hasEntityPermission("SHIPRATE", "_VIEW", session)) {%>
   <a href="<ofbiz:url>/shipsetup</ofbiz:url>" class='tabButtonSelected'>Ship&nbsp;Rate&nbsp;Setup</a>

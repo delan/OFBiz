@@ -65,7 +65,6 @@
     }
 %>
 
-<br>
 <%if(trackingCodeId != null && trackingCodeId.length() > 0){%>
   <div class='tabContainer'>
   <a href="<ofbiz:url>/EditTrackingCode?trackingCodeId=<%=trackingCodeId%></ofbiz:url>" class="tabButton">TrackingCode</a>

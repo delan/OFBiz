@@ -37,7 +37,6 @@
     Collection facilities = delegator.findAll("Facility");
     if (facilities != null) pageContext.setAttribute("facilities", facilities);
 %>
-<br>
 
 <div class="head1">Facilities List</div>
 
