@@ -3,14 +3,73 @@
 <br>Written By: David E. Jones
 <br>Email: <a href="mailto:jonesde@ofbiz.org">jonesde@ofbiz.org</a>
 <br>Open For Business Site: <a href="http://www.ofbiz.org/">http://www.ofbiz.org</a>
-<br>Last Updated: May 28, 2001
+<br>Last Updated: June 22, 2001
 <h3>Table of Contents</h3>
 <ul>
+  <li><a href="#Release 2001.06.22">Release 2001.06.22</a>
   <li><a href="#Release 2001.06.01">Release 2001.06.01</a>
   <li><a href="#Release 2001.05.28">Release 2001.05.28</a>
   <li><a href="#Release 2001.05.24">Release 2001.05.24</a>
 </ul>
 
+<hr>
+<h3><a name="Release 2001.06.22">Release 2001.06.22</a></h3>
+<hr>
+<p>It's been a while since the last release, but I assure you, this one will be
+worth the wait! Actually the biggest reason for the delay was my two week
+vacation to the United Kingdom, mostly Wales and Scotland. Enjoy this new stuff!</p>
+<h4>Auto Generate JSP and Java Files for One Entity or All Entities in a XML
+Data Descriptor File</h4>
+<p>Instead of right clicking on each file and saving from the entitygen main
+page, you can now specify a root directory and generate all Java or JSP files in
+directories under the root directory which correspond to the package name for
+each entity. The files are generated in a ready to use state (given no bugs in
+the templates or data definitions). This is done with a JSP which uses an open
+source library to retrieve the contents of a URL, and then saves those contents
+to the corresponding file under the specified root directory and package
+directory. The library used for this is from the open source project JoBo which
+can be found at <a href="http://www.matuschek.net/software/jobo/index.html">http://www.matuschek.net/software/jobo/index.html</a>.
+Thanks for making some cool stuff Daniel!</p>
+<h4>Extensive Data Model Introduced</h4>
+<p>This is a very exciting new part of the project. The file ofbiz/commonapp/entitydef/datamodel.xml
+contains definitions for about 288 entities covering common areas of business
+data. This effort stems from browsing a bookstore a finding two excellent books
+by Len Silverston called The Data Model Resource Book Revised Edition - Volumes
+1 &amp; 2, published by John Wiley &amp; Sons. This is a good starting point for
+any enterprise system development effort. Changes will be made to this model
+over time to expand and (hopefully) improve it. Industry specific models to be
+used along with the main model will also be added to the project over time. Many
+Thanks to Len Silverston. Anyone using these models will no doubt benefit from
+having a copy of his books on hand. These models include models for: parties
+(persons, companies, etc.) products &amp; catalogs, ordering, invoicing,
+shipping, accounting, human resources, work effort &amp; flow, and content
+management.</p>
+<p>Using the new automated code generator, it is easy to build the EJBs, JSPs
+and other code related to these entities. A few interesting stats: 292 entities,
+877 JSPs, 1606 Java Files, 9 snippet files (one for each type of snippet, just to get
+a size on them), totaling ~23 Mb, ~650,000 lines, ~2,100,000 words, ~23,800,000 characters. The XML definition
+file alone is about 4500 lines long. And yes, it does take my poor little
+500Mhz Athlon a while to generate all of this code (around 2.5 hours for all of it). I am
+not including all of this generated code right now, and I don't plan to until
+the definitions settle down more and some of this stuff is actually tested, if
+ever. I may create a separate distribution for it too.</p>
+<h4>Relation Support in ViewEntity.jsp</h4>
+<p>All generated ViewEntity.jsp files now take advantage of the relation
+definitions in the XML descriptor file. There are two types of relations: one
+and many. For a one relation, a view of the related entity similar to the normal
+view is created and a links as well. For a many relation, the corresponding
+finder is called and all results are listed in the page. This is a neat thing to
+see. You can now create an order entity, an order line item entity, and link
+them up to create a fully functional order entry system, or catalog browsing, or
+whatever you might want to do with relational entities. Note that the relations
+for the data model mentioned above are not yet finished. I can't wait untill
+they are!</p>
+<h4>A Few Other Small Changes</h4>
+<p>More data types are now supported in the generated JSP files for field entry
+and display, including primary key fields. Also, the ValueUpdate methods in the
+EntityHelper and EntityBean files are changes so that they only update a field
+when it is not null. This is an easy way to specify whether or not each field
+should be updated. To set a field to null, simply use the field specific setter.</p>
 <hr>
 <h3><a name="Release 2001.06.01">Release 2001.06.01</a></h3>
 <hr>
