@@ -1379,5 +1379,12 @@
     <attribute mode="IN" name="seqInc" optional="true" type="Integer"/>
     <attribute mode="IN" name="typeList" optional="true" type="List"/>
   </service>
+  <service auth="true" engine="java" name="changeLeafToNode" validate="true"
+        transaction-timout="72000" 
+        location="org.ofbiz.content.ContentManagementServices" invoke="changeLeafToNode">
+    <description>Moves dataResource to separate content associated with current content so that node can have only children, no content of its own</description>
+    <attribute mode="IN" name="contentId" optional="false" type="String"/>
+    <attribute mode="IN" name="userLogin" optional="true" type="GenericValue"/>
+  </service>
 
 </services>
