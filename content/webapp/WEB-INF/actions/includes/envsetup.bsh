@@ -48,9 +48,7 @@ String pageName		= page.getPageName();
 if(pageName.indexOf("/") != 0){
     pageName	= "/" + pageName;
 }
-// prepend the right path info to the page name to turn it into a request
-RequestHandler rh = (RequestHandler) application.getAttribute(SiteDefs.REQUEST_HANDLER);
-String thisPath		= rh.makeLink(request, response, pageName);
+String thisPath		= request.getRequestURI();
 
 String menuPath		= null;
 // Skip top level for now
