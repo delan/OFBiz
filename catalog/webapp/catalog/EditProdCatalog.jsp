@@ -121,6 +121,8 @@
         <td>&nbsp;</td>
         <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="prodCatalog" field="subtitle" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'></td>
       </tr>
+      
+      <tr><td colspan="3">&nbsp;</td></tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Inventory Facility</div></td>
         <td>&nbsp;</td>
@@ -201,7 +203,24 @@
           </SELECT>
         </td>
       </tr>
+      
+      <tr><td colspan="3">&nbsp;</td></tr>
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Style Sheet</div></td>
+        <td>&nbsp;</td>
+        <td width="74%" colspan='4'>
+            <input type="text" <ofbiz:inputvalue entityAttr='prodCatalog' field='styleSheet' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+        </td>
+      </tr> 
+      <tr>
+        <td width="26%" align=right><div class="tabletext">Header Logo</div></td>
+        <td>&nbsp;</td>
+        <td width="74%" colspan='4'>
+            <input type="text" <ofbiz:inputvalue entityAttr='prodCatalog' field='headerLogo' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+        </td>
+      </tr>             
 
+      <tr><td colspan="3">&nbsp;</td></tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Content Path Prefix</div></td>
         <td>&nbsp;</td>

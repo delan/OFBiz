@@ -180,6 +180,8 @@
         <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
+        <attribute name="styleSheet" type="String" mode="IN" optional="true"/>
+        <attribute name="headerLogo" type="String" mode="IN" optional="true"/>
         <attribute name="contentPathPrefix" type="String" mode="IN" optional="true"/>
         <attribute name="templatePathPrefix" type="String" mode="IN" optional="true"/>
     </service>
@@ -197,6 +199,8 @@
         <attribute name="reserveOrderEnumId" type="String" mode="IN" optional="true"/>
         <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="useQuickAdd" type="String" mode="IN" optional="true"/>
+        <attribute name="styleSheet" type="String" mode="IN" optional="true"/>        
+        <attribute name="headerLogo" type="String" mode="IN" optional="true"/>        
         <attribute name="contentPathPrefix" type="String" mode="IN" optional="true"/>
         <attribute name="templatePathPrefix" type="String" mode="IN" optional="true"/>
     </service>

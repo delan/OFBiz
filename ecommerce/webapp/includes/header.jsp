@@ -11,7 +11,9 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='headerboxtop'>
         <tr>
 		  <%if (session.getAttribute("overrideLogo") != null) {%>
-            <TD align=left width='1%'><IMG src='<%=session.getAttribute("overrideLogo")%>'></TD>         
+            <TD align=left width='1%'><IMG src='<%=session.getAttribute("overrideLogo")%>'></TD> 
+          <%} else if (CatalogWorker.getProdCatalog(pageContext) != null && CatalogWorker.getProdCatalog(pageContext).get("headerLogo") != null) {%>       
+          	<TD align=left width='1%'><IMG src='<%=CatalogWorker.getProdCatalog(pageContext).getString("headerLogo")%>'></TD> 
           <%} else if (UtilValidate.isNotEmpty((String) layoutSettings.get("headerImageUrl"))) {%>
             <TD align=left width='1%'><IMG src='<ofbiz:contenturl><%=(String) layoutSettings.get("headerImageUrl")%></ofbiz:contenturl>'></TD>
           <%}%>

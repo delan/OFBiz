@@ -1,4 +1,5 @@
 
+<%@ page import="org.ofbiz.commonapp.product.catalog.*"%>
 <%@ include file="/includes/envsetup.jsp" %>
 <%@ taglib uri='ofbizTags' prefix='ofbiz' %>
 <%@ taglib uri='regions' prefix='region' %>
@@ -9,8 +10,13 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title><%EntityField.run("layoutSettings", "companyName", pageContext);%>: <region:render section='title'/></title>
     <link rel='stylesheet' href='<ofbiz:contenturl>/images/maincss.css</ofbiz:contenturl>' type='text/css'>
-
-    <%-- Override CSS for tracking codes --%>
+    
+    <%-- Append CSS for catalog --%>
+    <%if (CatalogWorker.getProdCatalog(pageContext) != null && CatalogWorker.getProdCatalog(pageContext).get("styleSheet") != null) {%>
+    <link rel='stylesheet' href="<%=CatalogWorker.getProdCatalog(pageContext).getString("styleSheet")%>" type="text/css">
+    <%}%>
+     
+    <%-- Append CSS for tracking codes --%>
 	<%if (session.getAttribute("overrideCss") != null) {%>
 	<link rel='stylesheet' href="<%=session.getAttribute("overrideCss")%>" type="text/css">
     <%}%>
