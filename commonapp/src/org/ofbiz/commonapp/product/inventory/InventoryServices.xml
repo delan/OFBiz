@@ -327,6 +327,7 @@
 
                         <else>
                             <!-- no non-ser inv item, create a non-ser InventoryItem with availableToPromise = -quantityNotReserved -->
+                            <make-value entity-name="InventoryItem" value-name="newNonSerInventoryItem"/>
                             <sequenced-id-to-env sequence-name="InventoryItem" env-name="inventoryItemId"/>
                             <to-string field-name="inventoryItemId"/>
                             <env-to-field env-name="inventoryItemId" map-name="newNonSerInventoryItem"/>
