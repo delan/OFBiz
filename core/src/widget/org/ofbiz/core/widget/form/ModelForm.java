@@ -47,7 +47,7 @@ public class ModelForm {
     protected String tooltip;
     protected String listName;
     protected String listEntryName;
-    protected String defaultMapName;
+    protected FlexibleMapAccessor defaultMapName;
     protected String defaultEntityName;
     protected String defaultServiceName;
     protected String defaultTitleStyle;
@@ -87,7 +87,7 @@ public class ModelForm {
         this.tooltip = formElement.getAttribute("tooltip");
         this.listName = formElement.getAttribute("list-name");
         this.listEntryName = formElement.getAttribute("list-entry-name");
-        this.defaultMapName = formElement.getAttribute("default-map-name");
+        this.setDefaultMapName(formElement.getAttribute("default-map-name"));
         this.defaultEntityName = formElement.getAttribute("default-entity-name");
         this.defaultServiceName = formElement.getAttribute("default-service-name");
         this.defaultTitleStyle = formElement.getAttribute("default-title-style");
@@ -185,7 +185,11 @@ public class ModelForm {
      * @return
      */
     public String getDefaultMapName() {
-        return defaultMapName;
+        return defaultMapName.getOriginalName();
+    }
+
+    public Map getDefaultMap(Map context) {
+        return (Map) defaultMapName.get(context);
     }
 
     /**
@@ -263,7 +267,7 @@ public class ModelForm {
      * @param string
      */
     public void setDefaultMapName(String string) {
-        defaultMapName = string;
+        defaultMapName = new FlexibleMapAccessor(string);
     }
 
     /**

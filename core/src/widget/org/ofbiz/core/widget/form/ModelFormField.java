@@ -26,6 +26,8 @@ package org.ofbiz.core.widget.form;
 import java.util.*;
 import org.w3c.dom.*;
 import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
 import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.util.*;
 
@@ -43,18 +45,18 @@ public class ModelFormField {
     protected ModelForm modelForm;
 
     protected String name;
-    protected String mapName;
+    protected FlexibleMapAccessor mapAcsr;
     protected String entityName;
     protected String serviceName;
-    protected String entryName;
+    protected FlexibleMapAccessor entryAcsr;
     protected String parameterName;
     protected String fieldName;
     protected String attributeName;
     protected FlexibleStringExpander title;
-    protected String tooltip;
+    protected FlexibleStringExpander tooltip;
     protected String titleStyle;
     protected String widgetStyle;
-    protected int position = 1;
+    protected Integer position = null;
     protected String redWhen;
     protected String useWhen;
     
@@ -70,15 +72,15 @@ public class ModelFormField {
     public ModelFormField(Element fieldElement, ModelForm modelForm) {
         this.modelForm = modelForm;
         this.name = fieldElement.getAttribute("name");
-        this.mapName = fieldElement.getAttribute("map-name");
+        this.setMapName(fieldElement.getAttribute("map-name"));
         this.entityName = fieldElement.getAttribute("entity-name");
         this.serviceName = fieldElement.getAttribute("service-name");
-        this.entryName = UtilXml.checkEmpty(fieldElement.getAttribute("entry-name"), this.name);
+        this.setEntryName(UtilXml.checkEmpty(fieldElement.getAttribute("entry-name"), this.name));
         this.parameterName = UtilXml.checkEmpty(fieldElement.getAttribute("parameter-name"), this.name);
         this.fieldName = UtilXml.checkEmpty(fieldElement.getAttribute("field-name"), this.name);
         this.attributeName = UtilXml.checkEmpty(fieldElement.getAttribute("attribute-name"), this.name);
         this.setTitle(fieldElement.getAttribute("title"));
-        this.tooltip = fieldElement.getAttribute("tooltip");
+        this.setTooltip(fieldElement.getAttribute("tooltip"));
         this.titleStyle = fieldElement.getAttribute("title-style");
         this.widgetStyle = fieldElement.getAttribute("widget-style");
         this.redWhen = fieldElement.getAttribute("red-when");
@@ -86,11 +88,11 @@ public class ModelFormField {
         
         String positionStr = fieldElement.getAttribute("position");
         try {
-            position = Integer.parseInt(positionStr);
-        } catch (Exception e) {
             if (positionStr != null && positionStr.length() > 0) {
-                Debug.logError(e, "Could not convert position attribute of the field element to an integer: [" + positionStr + "], using the default of " + position);
+                position = Integer.valueOf(positionStr);
             }
+        } catch (Exception e) {
+            Debug.logError(e, "Could not convert position attribute of the field element to an integer: [" + positionStr + "], using the default of the form renderer");
         }
         
         // get sub-element and set fieldInfo
@@ -99,7 +101,9 @@ public class ModelFormField {
             String subElementName = subElement.getTagName();
             if (Debug.infoOn()) Debug.logInfo("Processing field " + this.name + " with type info tag " + subElementName);
             
-            if ("display".equals(subElementName)) {
+            if (UtilValidate.isEmpty(subElementName)) {
+                this.fieldInfo = null;
+            } else if ("display".equals(subElementName)) {
                 this.fieldInfo = new DisplayField(subElement, this);
             } else if ("hyperlink".equals(subElementName)) {
                 this.fieldInfo = new HyperlinkField(subElement, this);
@@ -130,7 +134,23 @@ public class ModelFormField {
     }
     
     public void mergeOverrideModelFormField(ModelFormField overrideFormField) {
-        // TODO: incorporate updates for values that are not null empty in the overrideFormField
+        // incorporate updates for values that are not empty in the overrideFormField
+        if (UtilValidate.isNotEmpty(overrideFormField.name)) this.name = overrideFormField.name;
+        if (!overrideFormField.mapAcsr.isEmpty()) this.mapAcsr = overrideFormField.mapAcsr;
+        if (UtilValidate.isNotEmpty(overrideFormField.entityName)) this.entityName = overrideFormField.entityName;
+        if (UtilValidate.isNotEmpty(overrideFormField.serviceName)) this.serviceName = overrideFormField.serviceName;
+        if (!overrideFormField.entryAcsr.isEmpty()) this.entryAcsr = overrideFormField.entryAcsr;
+        if (UtilValidate.isNotEmpty(overrideFormField.parameterName)) this.parameterName = overrideFormField.parameterName;
+        if (UtilValidate.isNotEmpty(overrideFormField.fieldName)) this.fieldName = overrideFormField.fieldName;
+        if (UtilValidate.isNotEmpty(overrideFormField.attributeName)) this.attributeName = overrideFormField.attributeName;
+        if (!overrideFormField.title.isEmpty()) this.title = overrideFormField.title;
+        if (!overrideFormField.tooltip.isEmpty()) this.tooltip = overrideFormField.tooltip;
+        if (UtilValidate.isNotEmpty(overrideFormField.titleStyle)) this.titleStyle = overrideFormField.titleStyle;
+        if (UtilValidate.isNotEmpty(overrideFormField.widgetStyle)) this.widgetStyle = overrideFormField.widgetStyle;
+        if (overrideFormField.position != null) this.position = overrideFormField.position;
+        if (UtilValidate.isNotEmpty(overrideFormField.redWhen)) this.redWhen = overrideFormField.redWhen;
+        if (UtilValidate.isNotEmpty(overrideFormField.useWhen)) this.useWhen = overrideFormField.useWhen;
+        if (overrideFormField.fieldInfo != null) this.fieldInfo = overrideFormField.fieldInfo;        
     }
 
     public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
@@ -176,7 +196,31 @@ public class ModelFormField {
      * @return
      */
     public String getEntryName() {
-        return entryName;
+        return entryAcsr.getOriginalName();
+    }
+
+    public String getEntry(Map context) {
+        Map dataMap = this.getMap(context);
+        Object retVal = null;
+        if (dataMap != null) {
+            retVal = this.entryAcsr.get(dataMap);
+        } else {
+            retVal = this.entryAcsr.get(dataMap);
+        }
+        
+        if (retVal != null) {
+            return retVal.toString();
+        } else {
+            return "";
+        }
+    }
+
+    public Map getMap(Map context) {
+        if (this.mapAcsr.isEmpty()) {
+            return this.modelForm.getDefaultMap(context);
+        } else {
+            return (Map) mapAcsr.get(context);
+        }
     }
 
     /**
@@ -190,7 +234,7 @@ public class ModelFormField {
      * @return
      */
     public String getMapName() {
-        return mapName;
+        return mapAcsr.getOriginalName();
     }
 
     /**
@@ -211,7 +255,11 @@ public class ModelFormField {
      * @return
      */
     public int getPosition() {
-        return position;
+        if (this.position == null) {
+            return 1;
+        } else {
+            return position.intValue();
+        }
     }
 
     /**
@@ -245,8 +293,8 @@ public class ModelFormField {
     /**
      * @return
      */
-    public String getTooltip() {
-        return tooltip;
+    public String getTooltip(Map context) {
+        return tooltip.expandString(context);
     }
 
     /**
@@ -281,7 +329,7 @@ public class ModelFormField {
      * @param string
      */
     public void setEntryName(String string) {
-        entryName = string;
+        entryAcsr = new FlexibleMapAccessor(string);
     }
 
     /**
@@ -295,7 +343,7 @@ public class ModelFormField {
      * @param string
      */
     public void setMapName(String string) {
-        mapName = string;
+        mapAcsr = new FlexibleMapAccessor(string);
     }
 
     /**
@@ -316,7 +364,7 @@ public class ModelFormField {
      * @param i
      */
     public void setPosition(int i) {
-        position = i;
+        position = new Integer(i);
     }
 
     /**
@@ -351,7 +399,7 @@ public class ModelFormField {
      * @param string
      */
     public void setTooltip(String string) {
-        tooltip = string;
+        tooltip = new FlexibleStringExpander(string);
     }
 
     /**
@@ -423,7 +471,17 @@ public class ModelFormField {
         public FieldInfoWithOptions(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
             
-            // TODO: read all option and entity-options sub-elements, maintaining order
+            // read all option and entity-options sub-elements, maintaining order
+            List childElements = UtilXml.childElementList(element, null);
+            Iterator childElementIter = childElements.iterator();
+            while (childElementIter.hasNext()) {
+                Element childElement = (Element) childElementIter.next();
+                if ("option".equals(childElement.getTagName())) {
+                    optionSources.add(new SingleOption(childElement));
+                } else if ("entity-options".equals(childElement.getTagName())) {
+                    optionSources.add(new EntityOptions(childElement));
+                }
+            }
         }
 
         public List getAllOptionValues(Map context, GenericDelegator delegator) {
@@ -481,34 +539,61 @@ public class ModelFormField {
     }
     
     public static class EntityOptions extends OptionSource {
-        /*
-    entity-name CDATA #REQUIRED
-    key-field-name CDATA #IMPLIED
-    description CDATA #REQUIRED
-    cache ( true | false ) "true"
-         * 
-         */
         protected String entityName;
         protected String keyFieldName;
-        protected String description;
+        protected FlexibleStringExpander description;
         protected boolean cache = true;
+        
+        protected Map constraintMap = null;
+        protected List orderByList = null; 
         
         public EntityOptions() {
         }
         
         public EntityOptions(Element entityOptionsElement) {
-            // TODO: add all setup code for entity-options attributes
-            // TODO: add all setup code for entity-options sub-elements
+            this.entityName = entityOptionsElement.getAttribute("entity-name");
+            this.keyFieldName = entityOptionsElement.getAttribute("key-field-name");
+            this.description = new FlexibleStringExpander(entityOptionsElement.getAttribute("description"));
+            this.cache = !"false".equals(entityOptionsElement.getAttribute("cache"));
+            
+            List constraintElements = UtilXml.childElementList(entityOptionsElement, "entity-constraint");
+            Iterator constraintElementIter = constraintElements.iterator();
+            while (constraintElementIter.hasNext()) {
+                Element constraintElement = (Element) constraintElementIter.next();
+                constraintMap.put(constraintElement.getAttribute("name"), constraintElement.getAttribute("value"));
+            }
+
+            List orderByElements = UtilXml.childElementList(entityOptionsElement, "entity-order-by");
+            Iterator orderByElementIter = constraintElements.iterator();
+            while (orderByElementIter.hasNext()) {
+                Element orderByElement = (Element) orderByElementIter.next();
+                orderByList.add(orderByElement.getAttribute("field-name"));
+            }
         }
         
         public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
-            // TODO: add key and description with string expansion, ie expanding ${} stuff
+            // add key and description with string expansion, ie expanding ${} stuff
+            try {
+                List values = null;
+                if (this.cache) {
+                    values = delegator.findByAndCache(this.entityName, this.constraintMap, this.orderByList);
+                } else {
+                    values = delegator.findByAnd(this.entityName, this.constraintMap, this.orderByList);
+                }
+                Iterator valueIter = values.iterator();
+                while (valueIter.hasNext()) {
+                    GenericValue value = (GenericValue) valueIter.next();
+                    optionValues.add(new OptionValue(value.get(this.keyFieldName).toString(), this.description.expandString(value)));
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error getting entity options in form");
+            }
         }
     }
     
     public static class DisplayField extends FieldInfo {
         protected boolean alsoHidden = true;
-        protected String description;
+        protected FlexibleStringExpander description;
         
         protected DisplayField() { super(); }
 
@@ -518,16 +603,8 @@ public class ModelFormField {
 
         public DisplayField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
-            
-            this.description = element.getAttribute("description");
-            String alsoHiddenStr = element.getAttribute("also-hidden");
-            try {
-                this.alsoHidden = Boolean.getBoolean(alsoHiddenStr);
-            } catch (Exception e) {
-                if (alsoHiddenStr != null && alsoHiddenStr.length() > 0) {
-                    Debug.logError("Could not parse the size value of the text element: [" + alsoHiddenStr + "], setting to default of " + alsoHidden);
-                }
-            }
+            this.setDescription(element.getAttribute("description"));
+            this.alsoHidden = !"false".equals(element.getAttribute("also-hidden"));
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
@@ -545,20 +622,10 @@ public class ModelFormField {
          * @return
          */
         public String getDescription(Map context) {
-            // TODO: put this logic in a method somewhere, ie out of this method, get the description
-            if (UtilValidate.isNotEmpty(this.description)) {
-                // TODO: expand the description
-                return this.description;
+            if (!this.description.isEmpty()) {
+                return this.description.expandString(context);
             } else {
-                // TODO: expand the map name
-                // TODO: if map name not specified on field, look for default name on form
-                Map dataMap = (Map) context.get(modelFormField.getMapName());
-                Object retVal = dataMap.get(modelFormField.getEntryName());
-                if (retVal != null) {
-                    return retVal.toString();
-                } else {
-                    return "";
-                }
+                return modelFormField.getEntry(context);
             }
         }
 
@@ -573,7 +640,7 @@ public class ModelFormField {
          * @param string
          */
         public void setDescription(String string) {
-            description = string;
+            description = new FlexibleStringExpander(string);
         }
     }
     
