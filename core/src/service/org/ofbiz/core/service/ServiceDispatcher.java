@@ -368,8 +368,7 @@ public class ServiceDispatcher {
         try {
             Element rootElement = ServiceConfigUtil.getXmlRootElement();
             NodeList nodeList = rootElement.getElementsByTagName("jms-service");
-            Debug.logInfo("[ServiceDispatcher] : Loading JMS Listeners.", module);
-            Debug.logInfo("NodeList length: " + nodeList.getLength());
+            if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher] : Loading JMS Listeners.", module);
             for (int i = 0; i < nodeList.getLength(); i++) {
                 try {
                     Element element = (Element) nodeList.item(i);
@@ -381,7 +380,6 @@ public class ServiceDispatcher {
                 } catch (Exception e) {
                     Debug.logError(e, "Uncaught exception.", module);
                 }
-                Debug.logInfo("Finished with node : " + i);
             }
         } catch (org.ofbiz.core.config.GenericConfigException gce) {
             Debug.logError(gce, "Cannot get serviceengine.xml root element.", module);

@@ -97,7 +97,7 @@ public class ServiceEventHandler implements EventHandler {
         if (model == null)
             throw new EventHandlerException("Problems getting the service model");
 
-        Debug.logVerbose("[Processing]: SERVICE Event", module);
+        if (Debug.verboseOn()) Debug.logVerbose("[Processing]: SERVICE Event", module);
         if (Debug.verboseOn()) Debug.logVerbose("[Using delegator]: " + dispatcher.getDelegator().getDelegatorName(), module);
 
         // we have a service and the model; build the context
@@ -138,7 +138,7 @@ public class ServiceEventHandler implements EventHandler {
               result = dispatcher.runSync(serviceName,serviceContext);
             }
         } catch (GenericServiceException e) {
-            throw new EventHandlerException("Service invocation error", e);
+            throw new EventHandlerException("Service invocation error", e.getNested());
         }
 
         String responseString = null;

@@ -77,6 +77,8 @@ public class GeneralException extends Exception {
 
     /** Returns the nested exception if there is one, null if there is not. */
     public Throwable getNested() {
+        if (nested == null)
+            return this;
         return nested;
     }
 

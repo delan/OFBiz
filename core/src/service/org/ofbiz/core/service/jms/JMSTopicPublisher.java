@@ -35,21 +35,21 @@ import org.ofbiz.core.util.*;
 import org.w3c.dom.Element;
 
 /**
- * JMSQueueSender - Send a message (P2P) to a queue.
+ * JMSTopicPublisher - Publish a message (Pub/Sub) to a topic.
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
- * @created    Jul 16, 2002
+ * @created    Jul 18, 2002
  * @version    1.0
  */
-public class JMSQueueSender extends AbstractJMSEngine {
+public class JMSTopicPublisher extends AbstractJMSEngine {
 
-    public static final String module = JMSQueueSender.class.getName();
+    public static final String module = JMSTopicPublisher.class.getName();
 
-    private QueueConnection connect = null;
-    private QueueSession session = null;
-    private QueueSender sender = null;
+    private TopicConnection connect = null;
+    private TopicSession session = null;
+    private TopicPublisher publisher = null;
 
-    public JMSQueueSender(ServiceDispatcher dispatcher) {
+    public JMSTopicPublisher(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
 
@@ -59,27 +59,27 @@ public class JMSQueueSender extends AbstractJMSEngine {
         String broker = serviceElement.getAttribute("broker");
         String userName = serviceElement.getAttribute("username");
         String password = serviceElement.getAttribute("password");
-        String queueName = serviceElement.getAttribute("topic-queue");
+        String topicName = serviceElement.getAttribute("topic-queue");
         String jndiName = serviceElement.getAttribute("jndi-name");
 
         try {
             InitialContext jndi = JNDIContextFactory.getInitialContext(jndiName);
-            QueueConnectionFactory factory = (QueueConnectionFactory) jndi.lookup(broker);
-            QueueConnection con = factory.createQueueConnection(userName, password);
+            TopicConnectionFactory factory = (TopicConnectionFactory) jndi.lookup(broker);
+            TopicConnection con = factory.createTopicConnection(userName, password);
             con.setClientID(userName);
             con.start();
 
-            QueueSession session = con.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-            Queue queue = (Queue) jndi.lookup(queueName);
-            QueueSender sender = session.createSender(queue);
+            TopicSession session = con.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
+            Topic topic = (Topic) jndi.lookup(topicName);
+            TopicPublisher publisher = session.createPublisher(topic);
 
             // create/send the message
             Message message = makeMessage(session, modelService, context);
-            sender.send(message);
-            if (Debug.verboseOn()) Debug.logVerbose("Sent JMS Message to " + queueName, module);
+            publisher.publish(message);
+            if (Debug.verboseOn()) Debug.logVerbose("Sent JMS Message to " + topicName, module);
 
             // close the connections
-            sender.close();
+            publisher.close();
             session.close();
             con.close();
 
