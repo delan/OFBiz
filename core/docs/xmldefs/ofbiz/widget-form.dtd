@@ -180,7 +180,7 @@
     type ( timestamp | date | time ) "timestamp"
 >
 
-<!-- this will look up options for the field in the given entity
+<!-- entity-options will look up options for the field in the given entity
     key-field-name: the value of the key-field-name will be the value passed 
     	to the server
     description: will be presented to the user with field values
@@ -206,6 +206,24 @@
     field-name CDATA #REQUIRED
 >
 
+<!-- list-options will create options based on data in a list
+	list-name: the name of the list to iterate through to get values
+	list-entry-name: if specified the list entry will be placed in the local 
+		context, otherwise each list entry must be a Map that will be expanded 
+		into the local context
+    key-name: the value of the key-name will be the value passed 
+    	to the server
+    description: will be presented to the user with field values
+    	substituted using the ${} syntax
+-->
+<!ELEMENT list-options EMPTY>
+<!ATTLIST list-options
+    list-name CDATA #REQUIRED
+    list-entry-name CDATA #IMPLIED
+    key-name CDATA #REQUIRED
+    description CDATA #IMPLIED
+>
+
 <!--
 	description: what the user will see in the widget; defaults to the value of the key attribute
 -->
@@ -219,14 +237,14 @@
 	no-current-selected-key: the key to mark as selected when there is no
 		current entry value
 -->
-<!ELEMENT drop-down ( (entity-options | option)* )>
+<!ELEMENT drop-down ( (entity-options | list-options | option)* )>
 <!ATTLIST drop-down
     allow-empty ( true | false ) "false"
     current ( first-in-list | selected ) "first-in-list"
     no-current-selected-key CDATA #IMPLIED
 >
 
-<!ELEMENT radio ( (entity-options | option)* )>
+<!ELEMENT radio ( (entity-options | list-options | option)* )>
 <!ATTLIST radio
     no-current-selected-key CDATA #IMPLIED
 >

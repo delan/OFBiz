@@ -842,6 +842,8 @@ public class ModelFormField {
                 Element childElement = (Element) childElementIter.next();
                 if ("option".equals(childElement.getTagName())) {
                     this.addOptionSource(new SingleOption(childElement, this));
+                } else if ("list-options".equals(childElement.getTagName())) {
+                    this.addOptionSource(new ListOptions(childElement, this));
                 } else if ("entity-options".equals(childElement.getTagName())) {
                     this.addOptionSource(new EntityOptions(childElement, this));
                 }
@@ -934,6 +936,44 @@ public class ModelFormField {
         
         public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
             optionValues.add(new OptionValue(key.expandString(context), description.expandString(context)));
+        }
+    }
+    
+    public static class ListOptions extends OptionSource {
+        protected FlexibleMapAccessor listAcsr;
+        protected String listEntryName;
+        protected FlexibleMapAccessor keyAcsr;
+        protected FlexibleStringExpander description;
+        
+        public ListOptions(String listName, String listEntryName, String keyName, String description, FieldInfo fieldInfo) {
+            this.listAcsr = new FlexibleMapAccessor(listName);
+            this.listEntryName = listEntryName;
+            this.keyAcsr = new FlexibleMapAccessor(keyName);
+            this.description = new FlexibleStringExpander(description);
+            this.fieldInfo = fieldInfo;
+        }
+        
+        public ListOptions(Element optionElement, FieldInfo fieldInfo) {
+            this.keyAcsr = new FlexibleMapAccessor(optionElement.getAttribute("key-name"));
+            this.description = new FlexibleStringExpander(optionElement.getAttribute("description"));
+            this.fieldInfo = fieldInfo;
+        }
+        
+        public void addOptionValues(List optionValues, Map context, GenericDelegator delegator) {
+            List dataList = (List) this.listAcsr.get(context);
+            if (dataList != null && dataList.size() != 0) {
+                Iterator dataIter = dataList.iterator();
+                while (dataIter.hasNext()) {
+                    Object data = dataIter.next();
+                    Map localContext = new HashMap(context);
+                    if (UtilValidate.isNotEmpty(this.listEntryName)) {
+                        localContext.put(this.listEntryName, data);
+                    } else {
+                        localContext.putAll((Map) data);
+                    }
+                    optionValues.add(new OptionValue((String) keyAcsr.get(localContext), description.expandString(localContext)));
+                }
+            }
         }
     }
     
