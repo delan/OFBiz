@@ -23,6 +23,7 @@
  */
 package org.ofbiz.entity.finder;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -167,8 +168,18 @@ public class EntityFinderUtil {
             if (value == null && valueExdr != null) {
                 value = valueExdr.expandString(context);
             }
-            // now to a type conversion for the target fieldName
-            value = modelEntity.convertFieldValue(fieldName, value, delegator);
+
+            String operatorName = operatorExdr.expandString(context);
+            EntityOperator operator = EntityOperator.lookup(operatorName);
+            if (operator == null) {
+                throw new IllegalArgumentException("Could not find an entity operator for the name: " + operatorName);
+            }
+
+            // don't convert the field to the desired type if this is an IN operator and we have a Collection
+            if (!(operator == EntityOperator.IN && value instanceof Collection)) {
+                // now to a type conversion for the target fieldName
+                value = modelEntity.convertFieldValue(fieldName, value, delegator);
+            }
             
             if (Debug.verboseOn()) Debug.logVerbose("Got value for fieldName [" + fieldName + "]: " + value, module);
 
@@ -177,12 +188,6 @@ public class EntityFinderUtil {
             }
             if (this.ignoreIfEmpty && ObjectType.isEmpty(value)) {
                 return null;
-            }
-            
-            String operatorName = operatorExdr.expandString(context);
-            EntityOperator operator = EntityOperator.lookup(operatorName);
-            if (operator == null) {
-                throw new IllegalArgumentException("Could not find an entity operator for the name: " + operatorName);
             }
             
             return new EntityExpr(fieldName, (EntityComparisonOperator) operator, value);
