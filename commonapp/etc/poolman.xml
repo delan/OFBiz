@@ -6,32 +6,32 @@
   
   <datasource>
     <dbname>MySql</dbname>
-	<jndiName>java:/MainDataSource</jndiName>
-	<driver>org.gjt.mm.mysql.Driver</driver>
-	<url>jdbc:mysql://localhost/ofbiz</url>
+    <jndiName>java:/MainDataSource</jndiName>
+    <driver>org.gjt.mm.mysql.Driver</driver>
+    <url>jdbc:mysql://localhost/ofbiz</url>
     <username>mysqldb</username>
-	<password>mysqldb</password>
-    <minimumSize>1</minimumSize>
-    <maximumSize>10</maximumSize>
+    <password>mysqldb</password>
+    <minimumSize>2</minimumSize>
+    <maximumSize>20</maximumSize>
     <connectionTimeout>600</connectionTimeout>
     <userTimeout>12</userTimeout>
     <shrinkBy>2</shrinkBy>
-    <debugging>true</debugging>
+    <debugging>false</debugging>
   </datasource>
 
   <datasource>
     <dbname>Hsql</dbname>
-	<jndiName>java:/MainDataSource</jndiName>
-	<driver>org.hsqldb.jdbcDriver</driver>
-	<url>jdbc:hsqldb:ofbiz</url>
+    <jndiName>java:/MainDataSourceHsql</jndiName>
+    <driver>org.hsqldb.jdbcDriver</driver>
+    <url>jdbc:hsqldb:ofbiz</url>
     <username>sa</username>
-	<password></password>
-    <minimumSize>1</minimumSize>
-    <maximumSize>10</maximumSize>
+    <password></password>
+    <minimumSize>2</minimumSize>
+    <maximumSize>20</maximumSize>
     <connectionTimeout>600</connectionTimeout>
     <userTimeout>12</userTimeout>
     <shrinkBy>2</shrinkBy>
-    <debugging>true</debugging>
+    <debugging>false</debugging>
   </datasource>
   
 </poolman>
