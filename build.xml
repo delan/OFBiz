@@ -43,6 +43,8 @@
     <filelist id="tests-subdirs" dir="."
         files="base/build.xml,components/entity/build.xml"/>
 
+    <property name="site.dir" value="website"/>
+
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
     <!-- ================================================================== -->
@@ -176,10 +178,10 @@
     <!-- WebSite Targets                                                    -->
     <!-- ================================================================== -->
 
-    <target name="build-website" depends="docs">
-        <property name="site.dir" value="website"/>
-        <antcall target="copy-apis"/>
+    <target name="build-website">
         <antcall target="copy-dtds"/>
+        <antcall target="docs"/>
+        <antcall target="copy-apis"/>
     </target>
 
     <target name="copy-apis">
