@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  */
 -->
 
@@ -397,6 +397,12 @@
         <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortFixedAssetAssign">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortGoodStandard">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WorkEffortInventoryAssign">
         <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="ShipmentStatus">
