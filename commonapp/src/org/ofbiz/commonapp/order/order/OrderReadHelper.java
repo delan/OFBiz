@@ -1,33 +1,25 @@
 /*
  * $Id$
- * $Log$
- * Revision 1.12  2001/10/17 06:52:02  jonesde
- * Finished round of reserved word replacements
  *
- * Revision 1.11  2001/09/28 21:51:21  jonesde
- * Big update for fromDate PK use, organization stuff
+ *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
- * Revision 1.10  2001/09/27 15:56:13  epabst
- * refactored code to use getRelatedByAnd, filterByDate
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
  *
- * Revision 1.9  2001/09/26 17:18:14  epabst
- * added getDistributorId() method
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
  *
- * Revision 1.8  2001/09/26 15:17:42  epabst
- * moved getFirst() method into new EntityUtil class
- *
- * Revision 1.7  2001/09/20 22:47:21  jonesde
- * Fixed illegal use of getRelatedOne
- *
- * Revision 1.6  2001/09/19 08:35:19  jonesde
- * Initial checkin of refactored entity engine.
- *
- * Revision 1.5  2001/09/18 20:42:25  jonesde
- * Fixed null pointer problems...
- *
- * Revision 1.4  2001/09/14 21:15:13  epabst
- * cleaned up
- *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 package org.ofbiz.commonapp.order.order;
@@ -38,41 +30,36 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.util.*;
 
 /**
- * <p><b>Title:</b> Order Reading Helper
- * <p><b>Description:</b> Utility class for easily extracting important information from orders
- * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
- *
- * <p>Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
- *  to deal in the Software without restriction, including without limitation
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
- *  and/or sell copies of the Software, and to permit persons to whom the
- *  Software is furnished to do so, subject to the following conditions:
- *
- * <p>The above copyright notice and this permission notice shall be included
- *  in all copies or substantial portions of the Software.
- *
- * <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
- *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * Utility class for easily extracting important information from orders
  *
  *@author     Eric Pabst
+ *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    Sept 7, 2001
  *@version    1.0
  */
 public class OrderReadHelper {
 
-    private GenericValue orderHeader;
-    private Double totalPrice;
+    protected GenericValue orderHeader = null;
+    protected Double totalPrice = null;
+    protected Collection orderItems = null;
 
+    protected OrderReadHelper() {}
+    
     public OrderReadHelper(GenericValue orderHeader) {
         this.orderHeader = orderHeader;
     }
 
+    public Collection getOrderItems() {
+        if (orderItems == null) {
+            try {
+                orderItems = orderHeader.getRelated("OrderItem");
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+        }
+        return orderItems;
+    }
+    
     public String getShippingMethod() {
         try {
             GenericValue shipmentPreference = null;
@@ -128,19 +115,6 @@ public class OrderReadHelper {
             Debug.logWarning(e);
         }
         return null;
-    }
-
-    public double getTotalPrice() {
-        if (totalPrice == null) {
-            double total = getOrderItemsTotal();
-            Iterator iter = getAdjustmentIterator();
-            while (iter.hasNext()) {
-                Adjustment adjustment = (Adjustment) iter.next();
-                total += adjustment.getAmount();
-            }
-            totalPrice = new Double(total);
-        }//else already set
-        return totalPrice.doubleValue();
     }
 
     public String getStatusString() {
@@ -207,33 +181,50 @@ public class OrderReadHelper {
         return null;
     }
 
+    public double getTotalPrice() {
+        if (totalPrice == null) {
+            double total = getOrderItemsTotal();
+            Iterator iter = getAdjustmentIterator(total);
+            while (iter.hasNext()) {
+                Adjustment adjustment = (Adjustment) iter.next();
+                total += adjustment.getAmount();
+            }
+            totalPrice = new Double(total);
+        }//else already set
+        return totalPrice.doubleValue();
+    }
+
     public double getOrderItemsTotal() {
         double result = 0.0;
-        Iterator itemIter = null;
-        try {
-            itemIter = UtilMisc.toIterator(orderHeader.getRelated("OrderItem"));
-        } catch (GenericEntityException e) {
-            Debug.logWarning(e);
-            itemIter = null;
-        }
 
+        Iterator itemIter = UtilMisc.toIterator(getOrderItems());
         while (itemIter != null && itemIter.hasNext()) {
             result += getOrderItemTotal((GenericValue) itemIter.next());
         }
         return result;
     }
 
-
     public double getOrderItemTotal(GenericValue orderItem) {
-        double result = orderItem.getDouble("unitPrice").doubleValue() * orderItem.getDouble("quantity").doubleValue();
+        Double unitPrice = orderItem.getDouble("unitPrice");
+        Double quantity = orderItem.getDouble("quantity");
+        if (unitPrice == null || quantity == null) {
+            Debug.logWarning("[getOrderItemTotal] unitPrice or quantity are null, return 0 for the item total price");
+            return 0.0;
+        }
+        double result = unitPrice.doubleValue() * quantity.doubleValue();
         //FIXME should include adjustments as well
         return result;
     }
 
     /** Iterator of OrderReadHelper.Adjustment */
     public Iterator getAdjustmentIterator() {
+        return this.getAdjustmentIterator(getOrderItemsTotal());
+    }
+    
+    /** Iterator of OrderReadHelper.Adjustment */
+    public Iterator getAdjustmentIterator(double basePrice) {
         try {
-            return new AdjustmentIterator(orderHeader.getRelated("OrderAdjustment"), getOrderItemsTotal());
+            return new AdjustmentIterator(orderHeader.getRelated("OrderAdjustment"), basePrice);
         } catch (GenericEntityException e) {
             Debug.logWarning(e);
             return null;
@@ -258,7 +249,7 @@ public class OrderReadHelper {
             GenericValue orderAdjustment = (GenericValue) orderAdjustmentIter.next();
             GenericValue orderAdjustmentType = null;
             try {
-                orderAdjustmentType = orderAdjustment.getRelatedOne("OrderAdjustmentType");
+                orderAdjustmentType = orderAdjustment.getRelatedOneCache("OrderAdjustmentType");
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
                 orderAdjustmentType = null;

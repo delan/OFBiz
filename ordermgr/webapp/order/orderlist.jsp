@@ -31,7 +31,7 @@
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <%@ page import="java.util.*" %>
-<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*" %>
+<%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.security.*, org.ofbiz.core.entity.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*, org.ofbiz.commonapp.party.contact.*" %>
 
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
@@ -90,33 +90,27 @@
           <tr class="viewOneTR1">
             <td width="25%"><div class="tabletext"><b>Date</b></div></td>
             <td width="15%"><div class="tabletext"><b>Order&nbsp;#</b></div></td>
-            <td width="25%"><div class="tabletext"><b>Amount</b></div></td>
+            <%-- <td width="25%"><div class="tabletext"><b>Amount</b></div></td> --%>
             <td width="25%"><div class="tabletext"><b>Status</b></div></td>
             <td width="10%"><div class="tabletext">&nbsp;</div></td>
           </tr>
           <%String rowClass = "viewManyTR2";%>
           <ofbiz:iterator name="orderHeader" property="orderHeaderList">
           
-	        <%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
-	        <%pageContext.setAttribute("totalPrice", new Double(order.getTotalPrice()));%>
-	        <%pageContext.setAttribute("orderStatus", order.getStatusString());%>
-            <%rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";%>
-
+          <%OrderReadHelper order = new OrderReadHelper(orderHeader); %>
+          <%//pageContext.setAttribute("totalPrice", new Double(order.getTotalPrice()));%>
+          <%String orderStatus = order.getStatusString();%>
+          <%rowClass = rowClass.equals("viewManyTR2") ? "viewManyTR1" : "viewManyTR2";%>
           <tr class="<%=rowClass%>">
+            <td><div class="tabletext"><nobr><%EntityField.run("orderHeader", "orderDate", pageContext);%></nobr></div></td>
+            <td><div class="tabletext"><%EntityField.run("orderHeader", "orderId", pageContext);%></div></td>
+            <%-- <td><div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div></td> --%>
             <td>
-              <div class="tabletext"><nobr><ofbiz:entityfield attribute="orderHeader" field="orderDate"/></nobr></div>
-            </td>
-            <td>
-              <div class="tabletext"><ofbiz:entityfield attribute="orderHeader" field="orderId"/></div>
-            </td>
-            <td>
-              <div class="tabletext"><ofbiz:field attribute="totalPrice" type="currency"/></div>
-            </td>
-            <td>
-              <div class="tabletext"><ofbiz:entityfield attribute="orderHeader" field="statusId"/></div>
+              <%-- <div class="tabletext"><%EntityField.run("orderHeader", "statusId", pageContext);%></div> --%>
+              <div class="tabletext"><%=orderStatus%></div>
             </td>
             <td align=right>
-              <a href="<ofbiz:url>/orderview?order_id=<ofbiz:entityfield attribute="orderHeader" field="orderId"/></ofbiz:url>" class='buttontext'>[View]</a>
+              <a href="<ofbiz:url>/orderview?order_id=<%EntityField.run("orderHeader", "orderId", pageContext);%></ofbiz:url>" class='buttontext'>[View]</a>
             </td>
           </tr>
           </ofbiz:iterator>
@@ -124,7 +118,6 @@
             <tr><td colspan="8"><div class='head3'>No Orders Found</div></td></tr>
           </ofbiz:unless>
         </table>
-
       </td>
     </tr>
   </table>

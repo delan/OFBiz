@@ -67,7 +67,7 @@
 <%
   OrderReadHelper order = new OrderReadHelper(orderHeader);
 
-  Collection orderItemList = orderHeader.getRelated("OrderItem");
+  Collection orderItemList = order.getOrderItems();
 
   GenericValue shippingAddress = order.getShippingAddress();
   GenericValue billingAddress = order.getBillingAddress(); 
