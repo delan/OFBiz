@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -25,15 +25,16 @@ package org.ofbiz.minilang;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import javolution.util.FastList;
+import javolution.util.FastMap;
 
 import org.ofbiz.base.location.FlexibleLocation;
 import org.ofbiz.base.util.Debug;
@@ -170,7 +171,7 @@ public class SimpleMethod {
     }
 
     protected static Map getAllSimpleMethods(URL xmlURL) throws MiniLangException {
-        Map simpleMethods = new HashMap();
+        Map simpleMethods = FastMap.newInstance();
 
         // read in the file
         Document document = null;
@@ -222,7 +223,7 @@ public class SimpleMethod {
     }
 
     protected static Map getAllDirectSimpleMethods(String name, String content) throws MiniLangException {
-        Map simpleMethods = new HashMap();
+        Map simpleMethods = FastMap.newInstance();
 
         // read in the file
         Document document = null;
@@ -258,7 +259,7 @@ public class SimpleMethod {
     }
 
     // Member fields begin here...
-    protected List methodOperations = new LinkedList();
+    protected List methodOperations = FastList.newInstance();
     protected Map parentSimpleMethodsMap;
     protected String methodName;
     protected String shortDescription;
@@ -741,6 +742,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.FieldToList(curOperElem, simpleMethod));
                 } else if ("list-to-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.ListToList(curOperElem, simpleMethod));
+                } else if ("order-map-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.minilang.method.envops.OrderMapList(curOperElem, simpleMethod));
                 } else if ("env-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.minilang.method.envops.EnvToEnv(curOperElem, simpleMethod));
                 } else if ("env-to-field".equals(nodeName)) {
