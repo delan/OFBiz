@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServices.java,v 1.3 2003/12/09 20:47:32 jonesde Exp $
+ * $Id: LoginServices.java,v 1.4 2004/04/07 07:07:37 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
+
 
 import javax.transaction.InvalidTransactionException;
 import javax.transaction.SystemException;
@@ -56,12 +58,13 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class LoginServices {
 
     public static final String module = LoginServices.class.getName();
+    public static final String resource = "SecurityextUiLabels";
 
     /** Login service to authenticate username and password
      * @return Map of results including (userLogin) GenericValue object
@@ -69,6 +72,7 @@ public class LoginServices {
     public static Map userLogin(DispatchContext ctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
+        Locale locale = (Locale) context.get("locale");
 
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
@@ -85,9 +89,9 @@ public class LoginServices {
 
         String errMsg = "";
         if (username == null || username.length() <= 0) {
-            errMsg = "Username missing.";
+            errMsg = UtilProperties.getMessage(resource,"loginservices.username_missing", locale);
         } else if (password == null || password.length() <= 0) {
-            errMsg = "Password missing";
+            errMsg = UtilProperties.getMessage(resource,"loginservices.password_missing", locale);
         } else {
             String realPassword = useEncryption ? HashEncrypt.getHash(password) : password;
 
@@ -195,7 +199,7 @@ public class LoginServices {
 
                             Debug.logInfo("[LoginServices.userLogin] : Password Incorrect", module);
                             // password invalid...
-                            errMsg = "Password incorrect.";
+                            errMsg = UtilProperties.getMessage(resource,"loginservices.password_incorrect", locale);
 
                             // increment failed login count
                             Long currentFailedLogins = userLogin.getLong("successiveFailedLogins");
@@ -298,22 +302,25 @@ public class LoginServices {
                             continue;
                         }
 
-                        errMsg = "The account for user login id \"" + username + "\" has been disabled";
+                        Map messageMap = UtilMisc.toMap("username", username);
+                        errMsg = UtilProperties.getMessage(resource,"loginservices.account_for_user_login_id_disabled",messageMap ,locale);
                         if (disabledDateTime != null) {
-                            errMsg += " since " + disabledDateTime + ".";
+                            messageMap = UtilMisc.toMap("disabledDateTime", disabledDateTime);
+                            errMsg += UtilProperties.getMessage(resource,"loginservices.since_datetime",messageMap ,locale);
                         } else {
                             errMsg += ".";
                         }
 
                         if (loginDisableMinutes > 0 && reEnableTime != null) {
-                            errMsg += " It will be re-enabled " + reEnableTime + ".";
+                            messageMap = UtilMisc.toMap("reEnableTime", reEnableTime);
+                            errMsg += UtilProperties.getMessage(resource,"loginservices.will_be_reenabled",messageMap ,locale);
                         } else {
-                            errMsg += " It is not scheduled to be re-enabled.";
+                            errMsg += UtilProperties.getMessage(resource,"loginservices.not_scheduled_to_be_reenabled",locale);
                         }
                     }
                 } else {
                     // userLogin record not found, user does not exist
-                    errMsg = "User not found.";
+                    errMsg = UtilProperties.getMessage(resource,"loginservices.user_not_found",locale);
                     Debug.logInfo("[LoginServices.userLogin] : Invalid User : " + errMsg, module);
                 }
             }
@@ -337,6 +344,7 @@ public class LoginServices {
         Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
         List errorMessageList = new LinkedList();
+        Locale locale = (Locale) context.get("locale");
 
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
@@ -345,6 +353,7 @@ public class LoginServices {
         String currentPassword = (String) context.get("currentPassword");
         String currentPasswordVerify = (String) context.get("currentPasswordVerify");
         String passwordHint = (String) context.get("passwordHint");
+        String errMsg = null;
 
         // security: don't create a user login if the specified partyId (if not empty) already exists
         // unless the logged in user has permission to do so (same partyId or PARTYMGR_CREATE)
@@ -362,16 +371,19 @@ public class LoginServices {
                     // <b>security check</b>: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
                     if (!partyId.equals(loggedInUserLogin.getString("partyId"))) {
                         if (!security.hasEntityPermission("PARTYMGR", "_CREATE", loggedInUserLogin)) {
-                            errorMessageList.add("Party with specified party ID exists and you do not have permission to create a user login with this party ID");
+
+                            errMsg = UtilProperties.getMessage(resource,"loginservices.party_with_specified_party_ID_exists_not_have_permission", locale);
+                            errorMessageList.add(errMsg);
                         }
                     }
                 } else {
-                    errorMessageList.add("You must be logged in and have permission to create a user login with a party ID for a party that already exists");
+                    errMsg = UtilProperties.getMessage(resource,"loginservices.must_be_logged_in_and_permission_create_login_party_ID_exists", locale);
+                    errorMessageList.add(errMsg);
                 }
             }
         }
 
-        checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList, true);
+        checkNewPassword(null, null, currentPassword, currentPasswordVerify, passwordHint, errorMessageList, true, locale);
 
         GenericValue userLoginToCreate = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         userLoginToCreate.set("passwordHint", passwordHint);
@@ -380,11 +392,15 @@ public class LoginServices {
 
         try {
             if (delegator.findByPrimaryKey(userLoginToCreate.getPrimaryKey()) != null) {
-                errorMessageList.add("Could not create login user: user with ID \"" + userLoginId + "\" already exists");
+                Map messageMap = UtilMisc.toMap("userLoginId", userLoginId);
+                errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_create_login_user_with_ID_exists", messageMap, locale);
+                errorMessageList.add(errMsg);
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
-            errorMessageList.add("Could not create login user (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_create_login_user_read_failure", messageMap, locale);
+            errorMessageList.add(errMsg);
         }
 
         if (errorMessageList.size() > 0) {
@@ -395,7 +411,9 @@ public class LoginServices {
             userLoginToCreate.create();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
-            return ServiceUtil.returnError("Could create login user (write failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_create_login_user_write_failure", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -412,11 +430,13 @@ public class LoginServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
 
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
         boolean adminUser = false;
 
         String userLoginId = (String) context.get("userLoginId");
+        String errMsg = null;
 
         if (userLoginId == null || userLoginId.length() == 0) {
             userLoginId = loggedInUserLogin.getString("userLoginId");
@@ -426,7 +446,8 @@ public class LoginServices {
         // NOTE: must check permission first so that admin users can set own password without specifying old password
         if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin)) {
             if (!userLoginId.equals(loggedInUserLogin.getString("userLoginId"))) {
-                return ServiceUtil.returnError("You do not have permission to update the password for this user login");
+                errMsg = UtilProperties.getMessage(resource,"loginservices.not_have_permission_update_password_for_user_login", locale);
+                return ServiceUtil.returnError(errMsg);
             }
         } else {
             adminUser = true;
@@ -437,11 +458,15 @@ public class LoginServices {
         try {
             userLoginToUpdate = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Could not change password (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_read_failure", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         if (userLoginToUpdate == null) {
-            return ServiceUtil.returnError("Could not change password, UserLogin with ID \"" + userLoginId + "\" does not exist");
+            Map messageMap = UtilMisc.toMap("userLoginId", userLoginId);
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_userlogin_with_id_not_exist", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         String currentPassword = (String) context.get("currentPassword");
@@ -459,7 +484,7 @@ public class LoginServices {
 
         if (newPassword != null && newPassword.length() > 0) {
             checkNewPassword(userLoginToUpdate, currentPassword, newPassword, newPasswordVerify,
-                passwordHint, errorMessageList, adminUser);
+                passwordHint, errorMessageList, adminUser, locale);
         }
 
         if (errorMessageList.size() > 0) {
@@ -472,7 +497,9 @@ public class LoginServices {
         try {
             userLoginToUpdate.store();
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Could not change password (write failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_write_failure", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -491,10 +518,12 @@ public class LoginServices {
         GenericDelegator delegator = ctx.getDelegator();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
         List errorMessageList = new LinkedList();
+        Locale locale = (Locale) context.get("locale");
 
         //boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         String userLoginId = (String) context.get("userLoginId");
+        String errMsg = null;
 
         if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             userLoginId = userLoginId.toLowerCase();
@@ -517,10 +546,12 @@ public class LoginServices {
             if (loggedInUserLogin != null) {
                 // security check: userLogin partyId must equal partyId, or must have PARTYMGR_CREATE permission
                 if (!partyId.equals(loggedInUserLogin.getString("partyId"))) {
-                    errorMessageList.add("Party with specified party ID exists and you do not have permission to create a user login with this party ID");
+                    errMsg = UtilProperties.getMessage(resource,"loginservices.party_with_party_id_exists_not_permission_create_user_login", locale);
+                    errorMessageList.add(errMsg);
                 }
             } else {
-                errorMessageList.add("You must be logged in and have permission to create a user login with a party ID for a party that already exists");
+                errMsg = UtilProperties.getMessage(resource,"loginservices.must_logged_in_have_permission_create_user_login_exists", locale);
+                errorMessageList.add(errMsg);
             }
         }
 
@@ -532,12 +563,16 @@ public class LoginServices {
             newUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
-            errorMessageList.add("Could not create login user (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_create_login_user_read_failure", messageMap, locale);
+            errorMessageList.add(errMsg);
         }
 
         if (newUserLogin != null) {
             if (!newUserLogin.get("partyId").equals(partyId)) {
-                errorMessageList.add("Could not create login user: user with ID \"" + userLoginId + "\" already exists");
+                Map messageMap = UtilMisc.toMap("userLoginId", userLoginId);
+                errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_create_login_user_with_ID_exists", messageMap, locale);
+                errorMessageList.add(errMsg);
             } else {
                 doCreate = false;
             }
@@ -563,7 +598,9 @@ public class LoginServices {
             }
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
-            return ServiceUtil.returnError("Couldn't create login user (write failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_create_login_user_write_failure", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         loggedInUserLogin.set("enabled", "N");
@@ -573,7 +610,9 @@ public class LoginServices {
             loggedInUserLogin.store();
         } catch (GenericEntityException e) {
             Debug.logWarning(e, "", module);
-            return ServiceUtil.returnError("Couldn't disable old login user (write failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_disable_old_login_user_write_failure", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
@@ -591,8 +630,10 @@ public class LoginServices {
         GenericDelegator delegator = ctx.getDelegator();
         Security security = ctx.getSecurity();
         GenericValue loggedInUserLogin = (GenericValue) context.get("userLogin");
+        Locale locale = (Locale) context.get("locale");
 
         String userLoginId = (String) context.get("userLoginId");
+        String errMsg = null;
 
         if (userLoginId == null || userLoginId.length() == 0) {
             userLoginId = loggedInUserLogin.getString("userLoginId");
@@ -600,7 +641,8 @@ public class LoginServices {
 
         // <b>security check</b>: must have PARTYMGR_UPDATE permission
         if (!security.hasEntityPermission("PARTYMGR", "_UPDATE", loggedInUserLogin) && !security.hasEntityPermission("SECURITY", "_UPDATE", loggedInUserLogin)) {
-            return ServiceUtil.returnError("You do not have permission to update the security info for this user login");
+            errMsg = UtilProperties.getMessage(resource,"loginservices.not_permission_update_security_info_for_user_login", locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         GenericValue userLoginToUpdate = null;
@@ -608,12 +650,18 @@ public class LoginServices {
         try {
             userLoginToUpdate = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Could not change password (read failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_read_failure", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         if (userLoginToUpdate == null) {
-            return ServiceUtil.returnError("Could not change password, UserLogin with ID \"" + userLoginId + "\" does not exist");
+            Map messageMap = UtilMisc.toMap("userLoginId", userLoginId);
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_userlogin_with_id_not_exist", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
+
+        // TODO: Ab hier weitere Übersetzungen einfügen
 
         boolean wasEnabled = !"N".equals(userLoginToUpdate.get("enabled"));
 
@@ -640,15 +688,19 @@ public class LoginServices {
         try {
             userLoginToUpdate.store();
         } catch (GenericEntityException e) {
-            return ServiceUtil.returnError("Could not change password (write failure): " + e.getMessage());
+            Map messageMap = UtilMisc.toMap("errorMessage", e.getMessage());
+            errMsg = UtilProperties.getMessage(resource,"loginservices.could_not_change_password_write_failure", messageMap, locale);
+            return ServiceUtil.returnError(errMsg);
         }
 
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         return result;
     }
 
-    public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List errorMessageList, boolean ignoreCurrentPassword) {
+    public static void checkNewPassword(GenericValue userLogin, String currentPassword, String newPassword, String newPasswordVerify, String passwordHint, List errorMessageList, boolean ignoreCurrentPassword, Locale locale) {
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
+
+        String errMsg = null;
 
         if (!ignoreCurrentPassword) {
             String realPassword = currentPassword;
@@ -661,14 +713,17 @@ public class LoginServices {
                     ("true".equals(UtilProperties.getPropertyValue("security.properties", "password.accept.encrypted.and.plain")) && currentPassword.equals(userLogin.getString("currentPassword"))));
 
             if ((currentPassword == null) || (userLogin != null && currentPassword != null && !passwordMatches)) {
-                errorMessageList.add("Old Password was not correct, please re-enter.");
+                errMsg = UtilProperties.getMessage(resource,"loginservices.old_password_not_correct_reenter", locale);
+                errorMessageList.add(errMsg);
             }
         }
 
         if (!UtilValidate.isNotEmpty(newPassword) || !UtilValidate.isNotEmpty(newPasswordVerify)) {
-            errorMessageList.add("Password or verify password missing.");
+            errMsg = UtilProperties.getMessage(resource,"loginservices.password_or_verify_missing", locale);
+            errorMessageList.add(errMsg);
         } else if (!newPassword.equals(newPasswordVerify)) {
-            errorMessageList.add("Password did not match verify password");
+            errMsg = UtilProperties.getMessage(resource,"loginservices.password_did_not_match_verify_password", locale);
+            errorMessageList.add(errMsg);
         }
 
         int minPasswordLength = 0;
@@ -681,13 +736,17 @@ public class LoginServices {
 
         if (newPassword != null) {
             if (!(newPassword.length() >= minPasswordLength)) {
-                errorMessageList.add("Password must be at least " + minPasswordLength + " characters long");
+                Map messageMap = UtilMisc.toMap("minPasswordLength", Integer.toString(minPasswordLength));
+                errMsg = UtilProperties.getMessage(resource,"loginservices.password_must_be_least_characters_long", messageMap, locale);
+                errorMessageList.add(errMsg);
             }
             if (userLogin != null && newPassword.equalsIgnoreCase(userLogin.getString("userLoginId"))) {
-                errorMessageList.add("Password may not equal the Username");
+                errMsg = UtilProperties.getMessage(resource,"loginservices.password_may_not_equal_username", locale);
+                errorMessageList.add(errMsg);
             }
             if (UtilValidate.isNotEmpty(passwordHint) && (passwordHint.toUpperCase().indexOf(newPassword.toUpperCase()) >= 0)) {
-                errorMessageList.add("Password hint may not contain the password");
+                errMsg = UtilProperties.getMessage(resource,"loginservices.password_hint_may_not_contain_password", locale);
+                errorMessageList.add(errMsg);
             }
         }
     }
