@@ -202,6 +202,7 @@ function addToList() {
               <table border='0' cellspacing='0' cellpadding='2'>
                 <tr>
                   <td><div class="tableheadtext">Item Type</div></td>
+                  <td><div class="tableheadtext">Product Category</div></td>
                   <td><div class="tableheadtext">Description</div></td>
                   <td><div class="tableheadtext">Quantity</div></td>
                   <td><div class="tableheadtext">Price</div></td>
@@ -212,6 +213,14 @@ function addToList() {
                     <select name="add_item_type" class="selectBox">
                       <option value="BULK_ORDER_ITEM">Bulk Item</option>
                       <option value="WORK_ORDER_ITEM">Work Item</option>
+                    </select>
+                  </td>
+                  <td>
+                    <select name="add_category_id" class="selectBox">
+                      <option></option>
+                      <#list productCategoryList as productCategory>
+                        <option value="${productCategory.productCategoryId}">${productCategory.description}</option>
+                      </#list>
                     </select>
                   </td>
                   <td><input type='text' class='inputBox' size='30' name="add_item_description" value="${requestParameters.add_product_id?if_exists}"></td>

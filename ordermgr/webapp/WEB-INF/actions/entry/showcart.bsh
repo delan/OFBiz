@@ -83,6 +83,10 @@ if (mode != null && mode.equals("SALES_ORDER")) {
 }
 context.put("contentPathPrefix", CatalogWorker.getContentPathPrefix(request));
 
+// get productCategory list
+productCategoryList = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+context.put("productCategoryList", productCategoryList);
+
 // set party info
 partyId = request.getParameter("partyId");
 userLoginId = request.getParameter("userLoginId");

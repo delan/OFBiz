@@ -68,6 +68,7 @@ public class ShoppingCartEvents {
         String productId = null;
         String itemType = null;
         String itemDescription = null; 
+        String productCategoryId = null;
      
         String priceStr = null;
         double price = 0.00;
@@ -89,6 +90,16 @@ public class ShoppingCartEvents {
             productId = (String) paramMap.remove("add_product_id");
         }
         
+        if (paramMap.containsKey("ADD_CATEGORY_ID")) {
+            productCategoryId = (String) paramMap.remove("ADD_CATEGORY_ID");
+        } else if (paramMap.containsKey("add_category_id")) {
+            productCategoryId = (String) paramMap.remove("add_category_id");
+        }
+        if (productCategoryId != null && productCategoryId.length() == 0) {
+            productCategoryId = null;
+        }
+        
+        
         if (productId == null) {
             // before returning error; check make sure we aren't adding a special item type
             if (paramMap.containsKey("ADD_ITEM_TYPE")) {
@@ -106,6 +117,9 @@ public class ShoppingCartEvents {
             itemDescription = (String) paramMap.remove("ADD_ITEM_DESCRIPTION");
         } else if (paramMap.containsKey("add_item_description")) {
             itemDescription = (String) paramMap.remove("add_item_description");
+        }
+        if (itemDescription != null && itemDescription.length() == 0) {
+            itemDescription = null;
         }
 
         // get the override price
@@ -167,7 +181,7 @@ public class ShoppingCartEvents {
             if (productId != null) {            
                 itemId = cart.addOrIncreaseItem(productId, quantity, null, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
             } else {
-                itemId = cart.addNonProductItem(delegator, itemType, itemDescription, price, quantity, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
+                itemId = cart.addNonProductItem(delegator, itemType, itemDescription, productCategoryId, price, quantity, attributes, CatalogWorker.getCurrentCatalogId(request), dispatcher);
             } 
             
             if (shoppingListId != null && shoppingListItemSeqId != null) {

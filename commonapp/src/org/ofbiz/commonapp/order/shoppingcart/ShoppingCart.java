@@ -156,8 +156,8 @@ public class ShoppingCart implements java.io.Serializable {
      * @return the new item index
      * @throws CartItemModifyException
      */
-    public int addNonProductItem(GenericDelegator delegator, String itemType, String description, double price, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
-        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), delegator, itemType, description, price, quantity, attributes, prodCatalogId, dispatcher, this, true));
+    public int addNonProductItem(GenericDelegator delegator, String itemType, String description, String categoryId, double price, double quantity, Map attributes, String prodCatalogId, LocalDispatcher dispatcher) throws CartItemModifyException {
+        return this.addItem(0, ShoppingCartItem.makeItem(new Integer(0), delegator, itemType, description, categoryId, price, quantity, attributes, prodCatalogId, dispatcher, this, true));
     }
 
     /** Add an item to the shopping cart. */
@@ -858,6 +858,7 @@ public class ShoppingCart implements java.io.Serializable {
                 orderItem.set("orderItemSeqId", orderItemSeqId);
                 orderItem.set("orderItemTypeId", item.getItemType());
                 orderItem.set("productId", item.getProductId());
+                orderItem.set("productCategoryId", item.getProductCategoryId());
                 orderItem.set("quantity", new Double(item.getQuantity()));
                 orderItem.set("unitPrice", new Double(item.getBasePrice()));
                 orderItem.set("unitListPrice", new Double(item.getListPrice()));
