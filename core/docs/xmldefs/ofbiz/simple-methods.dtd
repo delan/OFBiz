@@ -181,7 +181,7 @@
     <!ELEMENT result-to-field EMPTY>
     <!ATTLIST result-to-field
         result-name CDATA #REQUIRED
-        map-name CDATA #REQUIRED
+        map-name CDATA #IMPLIED
         field-name CDATA #IMPLIED
     >
     <!ELEMENT result-to-request EMPTY>

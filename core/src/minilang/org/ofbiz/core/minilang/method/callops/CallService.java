@@ -230,12 +230,16 @@ public class CallService extends MethodOperation {
             Iterator iter = resultToField.iterator();
             while (iter.hasNext()) {
                 ResultToFieldDef rtfDef = (ResultToFieldDef) iter.next();
-                Map tempMap = (Map) rtfDef.mapAcsr.get(methodContext);
-                if (tempMap == null) {
-                    tempMap = new HashMap();
-                    rtfDef.mapAcsr.put(methodContext, tempMap);
+                if (!rtfDef.mapAcsr.isEmpty()) {
+                    Map tempMap = (Map) rtfDef.mapAcsr.get(methodContext);
+                    if (tempMap == null) {
+                        tempMap = new HashMap();
+                        rtfDef.mapAcsr.put(methodContext, tempMap);
+                    }
+                    rtfDef.fieldAcsr.put(tempMap, result.get(rtfDef.resultName), methodContext);
+                } else {
+                    rtfDef.fieldAcsr.put(methodContext, result.get(rtfDef.resultName));
                 }
-                rtfDef.fieldAcsr.put(tempMap, result.get(rtfDef.resultName), methodContext);
             }
         }
 
