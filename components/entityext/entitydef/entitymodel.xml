@@ -84,6 +84,8 @@
       <field name="lastSuccessfulSynchTime" type="date-time"></field>
       <field name="lastHistoryStartDate" type="date-time"></field>
       <field name="syncSplitMillis" type="numeric"></field>
+      <field name="syncEndBufferMillis" type="numeric"></field>
+      <field name="maxRunningNoUpdateMillis" type="numeric"></field>
       <field name="targetServiceName" type="long-varchar"></field>
       <field name="targetDelegatorName" type="long-varchar"></field>
       <field name="keepRemoveInfoHours" type="floating-point"></field>

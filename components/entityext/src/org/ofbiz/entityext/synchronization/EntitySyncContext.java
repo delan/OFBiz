@@ -38,6 +38,7 @@ import java.util.Set;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
@@ -76,7 +77,10 @@ public class EntitySyncContext {
     public static final long defaultSyncSplitMillis = 10000;
     
     // default to 5 minutes
-    public static final long syncEndBufferMillis = 300000;
+    public static final long defaultSyncEndBufferMillis = 300000;
+
+    // default to 2 hours, 120m, 7200s
+    public static final long defaultMaxRunningNoUpdateMillis = 7200000;
 
     public GenericDelegator delegator;
     public LocalDispatcher dispatcher;
@@ -91,7 +95,10 @@ public class EntitySyncContext {
     public String targetDelegatorName;
     
     public Timestamp syncEndStamp;
-    public long splitMillis = defaultSyncSplitMillis;
+    public long syncSplitMillis = defaultSyncSplitMillis;
+    public long syncEndBufferMillis = defaultSyncEndBufferMillis;
+    public long maxRunningNoUpdateMillis = defaultMaxRunningNoUpdateMillis;
+    
     public Timestamp lastSuccessfulSynchTime;
     public List entityModelToUseList;
     public Set entityNameToUseSet;
@@ -163,7 +170,10 @@ public class EntitySyncContext {
             //ahead of another machine writing to the DB it will still work fine and not lose any data
             syncEndStamp = new Timestamp(System.currentTimeMillis() - syncEndBufferMillis);
             
-            this.splitMillis = getSplitMillis(entitySync);
+            this.syncSplitMillis = getSyncSplitMillis(entitySync);
+            this.syncEndBufferMillis = getSyncEndBufferMillis(entitySync);
+            this.maxRunningNoUpdateMillis = getMaxRunningNoUpdateMillis(entitySync);
+
             this.lastSuccessfulSynchTime = entitySync.getTimestamp("lastSuccessfulSynchTime");
             this.entityModelToUseList = this.makeEntityModelToUseList();
             this.entityNameToUseSet = this.makeEntityNameToUseSet();
@@ -179,6 +189,34 @@ public class EntitySyncContext {
         }
     }
     
+    /**
+     * To see if it is running check: 
+     *  - in the running status 
+     *  - AND when the entitySync was last updated, and if it was more than maxRunningNoUpdateMillis ago, then don't consider it to be running
+     * @return boolean representing if the EntitySync should be considered running
+     */
+    public boolean isEntitySyncRunning() {
+        boolean isInRunning = "ESR_RUNNING".equals(this.entitySync.getString("runStatusId"));
+        if (!isInRunning) {
+            return false;
+        }
+        
+        Timestamp esLastUpdated = this.entitySync.getTimestamp(ModelEntity.STAMP_FIELD);
+        if (esLastUpdated == null) {
+            // shouldn't ever happen, but just in case; assume is running if we don't know when it was last updated
+            return true;
+        }
+        long esLastUpdatedMillis = esLastUpdated.getTime();
+        long nowTimestampMillis = UtilDateTime.nowTimestamp().getTime();
+        long timeSinceUpdated = nowTimestampMillis - esLastUpdatedMillis;
+        if (timeSinceUpdated > this.maxRunningNoUpdateMillis) {
+            // it has been longer than the maxRunningNoUpdateMillis, so don't consider it running
+            return false;
+        }
+        
+        return true;
+    }
+    
     public boolean hasMoreTimeToSync() {
         return currentRunStartTime.before(syncEndStamp);
     }
@@ -188,7 +226,7 @@ public class EntitySyncContext {
     }
     
     protected Timestamp getNextRunEndTime() {
-        Timestamp nextRunEndTime = new Timestamp(this.currentRunStartTime.getTime() + splitMillis);
+        Timestamp nextRunEndTime = new Timestamp(this.currentRunStartTime.getTime() + syncSplitMillis);
         if (nextRunEndTime.after(this.syncEndStamp)) {
             nextRunEndTime = this.syncEndStamp;
         }
@@ -204,13 +242,31 @@ public class EntitySyncContext {
         this.splitStartTime = System.currentTimeMillis();
     }
     
-    protected static long getSplitMillis(GenericValue entitySync) {
+    protected static long getSyncSplitMillis(GenericValue entitySync) {
         long splitMillis = defaultSyncSplitMillis;
         Long syncSplitMillis = entitySync.getLong("syncSplitMillis");
         if (syncSplitMillis != null) {
             splitMillis = syncSplitMillis.longValue();
         }
         return splitMillis;
+    }
+    
+    protected static long getSyncEndBufferMillis(GenericValue entitySync) {
+        long syncEndBufferMillis = defaultSyncEndBufferMillis;
+        Long syncEndBufferMillisLong = entitySync.getLong("syncEndBufferMillis");
+        if (syncEndBufferMillisLong != null) {
+            syncEndBufferMillis = syncEndBufferMillisLong.longValue();
+        }
+        return syncEndBufferMillis;
+    }
+    
+    protected static long getMaxRunningNoUpdateMillis(GenericValue entitySync) {
+        long maxRunningNoUpdateMillis = defaultMaxRunningNoUpdateMillis;
+        Long maxRunningNoUpdateMillisLong = entitySync.getLong("maxRunningNoUpdateMillis");
+        if (maxRunningNoUpdateMillisLong != null) {
+            maxRunningNoUpdateMillis = maxRunningNoUpdateMillisLong.longValue();
+        }
+        return maxRunningNoUpdateMillis;
     }
     
     /** create history record, target service should run in own tx */
@@ -766,7 +822,7 @@ public class EntitySyncContext {
         }
         
         // check to see if this sync is already running, if so return error
-        if ("ESR_RUNNING".equals(entitySync.getString("runStatusId"))) {
+        if (this.isEntitySyncRunning()) {
             throw new SyncAbortException("Not running EntitySync [" + entitySyncId + "], an instance is already running.");
         }
         
@@ -838,7 +894,7 @@ public class EntitySyncContext {
     // ======================== PULL Methods ========================
     public void runPullStartOrRestoreSavedResults() throws SyncDataErrorException, SyncServiceErrorException, SyncAbortException {
         // if EntitySync.statusId is ESR_RUNNING, make sure startDate matches EntitySync.lastHistoryStartDate; or return error
-        if ("ESR_RUNNING".equals(entitySync.getString("runStatusId")) && this.startDate == null) {
+        if (isEntitySyncRunning() && this.startDate == null) {
             throw new SyncAbortException("Not running EntitySync [" + entitySyncId + "], an instance is already running and no startDate for the current run was passed.");
         }
         
