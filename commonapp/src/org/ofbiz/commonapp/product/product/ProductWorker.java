@@ -156,10 +156,10 @@ public class ProductWorker {
         if (categoryId == null) categoryId = "";
         String keywordString = (String) requestParameters.get("SEARCH_STRING");
 
-        Map featureByType = ParametricSearch.makeFeatureByTypeMap(request);
-        String featureByTypeString = ParametricSearch.makeFeatureByTypeString(featureByType);
+        Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(request);
+        String featureIdByTypeString = ParametricSearch.makeFeatureIdByTypeString(featureIdByType);
 
-        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + intraKeywordOperator + "::" + featureByTypeString;
+        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + intraKeywordOperator + "::" + featureIdByTypeString;
 
         ArrayList productIds = (ArrayList) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
@@ -169,8 +169,8 @@ public class ProductWorker {
             if (Debug.infoOn()) Debug.logInfo("curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
 
             // productIds will be pre-sorted
-            if (featureByType.size() > 0) {
-                productIds = ParametricSearch.parametricKeywordSearch(featureByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
+            if (featureIdByType.size() > 0) {
+                productIds = ParametricSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
             } else {
                 productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
             }
