@@ -123,7 +123,7 @@
 
   <ofbiz:if name="foundLocations">
     <br>
-    <span class="head1">Found:&nbsp;</span><span class="head2"><b><%=foundLocations.size()%></b>&nbsp;Location(s) for Facility</span>
+    <span class="head1">Found:&nbsp;</span><span class="head2"><b><%=foundLocations.size()%></b>&nbsp;Location(s) for&nbsp;<%=UtilFormatOut.ifNotEmpty(facility==null?null:facility.getString("facilityName"),"\"","\"")%> [ID:<%=UtilFormatOut.checkNull(facilityId)%>]</span>
     <table border='1' cellpadding='2' cellspacing='0'>
       <tr>
         <td><div class="tabletext"><b>Facility</b></div></td>
