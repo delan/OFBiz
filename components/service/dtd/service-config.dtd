@@ -40,6 +40,7 @@
 <!ATTLIST thread-pool
     send-to-pool CDATA #REQUIRED
     purge-job-days CDATA "30"
+    failed-retry-min CDATA "30"
     ttl CDATA #REQUIRED
     wait-millis CDATA #REQUIRED
     jobs CDATA #REQUIRED

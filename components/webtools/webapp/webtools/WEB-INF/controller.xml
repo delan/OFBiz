@@ -61,6 +61,12 @@
     <!-- End of Security Mappings -->
 
     <!-- Request Mappings -->
+    <request-map uri="httpService">
+        <event type="java" path="org.ofbiz.service.engine.HttpEngine" invoke="httpEngine"/>
+        <response name="success" type="none"/>
+        <response name="error" type="none"/>
+    </request-map>
+
     <request-map uri="SOAPService">
         <event type="soap"/>
         <response name="error" type="none"/>

@@ -1,5 +1,5 @@
 /*
- * $Id: PersistedServiceJob.java,v 1.3 2003/09/19 04:53:29 ajzeneski Exp $
+ * $Id: PersistedServiceJob.java,v 1.4 2003/11/05 22:41:55 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -41,6 +43,7 @@ import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.serialize.XmlSerializer;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericRequester;
+import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.service.calendar.RecurrenceInfo;
 import org.ofbiz.service.calendar.RecurrenceInfoException;
 import org.xml.sax.SAXException;
@@ -49,7 +52,7 @@ import org.xml.sax.SAXException;
  * Entity Service Job - Store => Schedule => Run
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
@@ -58,6 +61,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         
     private transient GenericDelegator delegator = null;
     private Timestamp storedDate = null;
+    private long nextRecurrence = -1;
 
     /**
      * Creates a new PersistedServiceJob
@@ -87,24 +91,17 @@ public class PersistedServiceJob extends GenericServiceJob {
      * @see org.ofbiz.service.job.GenericServiceJob#init()
      */
     protected void init() {
+        super.init();
+
+        // configure any addition recurrences
         GenericValue job = getJob();
         RecurrenceInfo recurrence = getRecurrence();
 
         try {
-            GenericValue newJob = new GenericValue(job);
-            
-            
             if (recurrence != null) {
                 recurrence.incrementCurrentCount();
                 long next = recurrence.next();
-                if (Debug.verboseOn()) Debug.logVerbose("Next runtime returned: " + next, module);
-                
-                if (next > runtime) {
-                    newJob.set("startDateTime", null);
-                    newJob.set("runTime", new java.sql.Timestamp(next));
-                    delegator.create(newJob);
-                    if (Debug.verboseOn()) Debug.logVerbose("Created next job entry: " + newJob, module);
-                }
+                createRecurrence(job, next);
             }
         } catch (GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
@@ -112,16 +109,53 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (Debug.verboseOn()) Debug.logVerbose(this.toString() + " -- Next runtime: " + runtime, module);
     }
 
+    private void createRecurrence(GenericValue job, long next) throws GenericEntityException {
+        if (Debug.verboseOn()) Debug.logVerbose("Next runtime returned: " + next, module);
+        GenericValue newJob = new GenericValue(job);
+        if (next > runtime) {
+            newJob.set("startDateTime", null);
+            newJob.set("runTime", new java.sql.Timestamp(next));
+            nextRecurrence = next;
+            delegator.create(newJob);
+            if (Debug.verboseOn()) Debug.logVerbose("Created next job entry: " + newJob, module);
+        }
+    }
+
     /**
      * @see org.ofbiz.service.job.GenericServiceJob#finish()
      */
     protected void finish() {
+        super.finish();
+
+        // set the finish date
         GenericValue job = getJob();
         job.set("finishDateTime", UtilDateTime.nowTimestamp());
         try {
             job.store();
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot update the datasource", module);
+        }
+    }
+
+    /**
+     * @see org.ofbiz.service.job.GenericServiceJob#failed(Exception)
+     */
+    protected void failed(Exception e) {
+        super.failed(e);
+
+        // if the job has not been re-scheduled; we need to re-schedule and run again
+        if (nextRecurrence == -1) {
+            // create a recurrence
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.MINUTE, ServiceConfigUtil.getFailedRetryMin());
+            long next = cal.getTimeInMillis();
+            GenericValue job = getJob();
+            try {
+                createRecurrence(job, next);
+            } catch (GenericEntityException gee) {
+                Debug.logError(gee, "ERROR: Unable to re-schedule job to re-run : " + job, module);
+            }
         }
     }
 
