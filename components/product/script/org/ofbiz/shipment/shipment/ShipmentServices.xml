@@ -1155,6 +1155,7 @@
         
         <field-to-result field-name="shipmentShipGroupFacilityList"/>
         <field-to-result field-name="successMessageList"/>
+        <log level="info" message="Finished quickShipEntireOrder:\nshipmentShipGroupFacilityList=${shipmentShipGroupFacilityList}\nsuccessMessageList=${successMessageList}"/>
     </simple-method>   
 
     <!-- quick ship order using multiple packages per tracking number -->
