@@ -171,8 +171,9 @@ public class ProductServices {
             }
             
             
-            //next check inventory for each item
-            if (org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productIdTo, 1.0, delegator, dispatcher)) {
+            //next check inventory for each item: if inventory is not required or is available
+            if (!org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryRequired(prodCatalogId, productIdTo, delegator) || 
+                    org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productIdTo, 1.0, delegator, dispatcher)) {
                 items.add(productIdTo);
             }
         }

@@ -211,7 +211,7 @@
                 <if-compare value="NON_SERIAL_INV_ITEM" operator="equals" field-name="inventoryItemTypeId" map-name="inventoryItem">
                     <if-not-empty field-name="availableToPromise" map-name="inventoryItem">
                         <!-- reduce atp on inventoryItem if 0 less than availableToPromise, if not the code at the end of this method will handle it -->
-                        <if-compare value="0.0" operator="less" type="Double" to-field-name="availableToPromise" to-map-name="inventoryItem">
+                        <if-compare value="0.0" operator="less" type="Double" field-name="availableToPromise" map-name="inventoryItem">
                             <if-compare-field field-name="quantityNotReserved" map-name="parameters" operator="greater" type="Double"
                                     to-field-name="availableToPromise" to-map-name="inventoryItem">
                                 <field-to-field field-name="availableToPromise" map-name="inventoryItem" to-field-name="deductAmount" to-map-name="parameters"/>

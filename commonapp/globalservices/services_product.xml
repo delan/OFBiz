@@ -22,6 +22,8 @@
         <attribute name="comments" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="longDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryMessage" type="String" mode="IN" optional="true"/>
+        <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="smallImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="mediumImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="largeImageUrl" type="String" mode="IN" optional="true"/>
@@ -55,6 +57,8 @@
         <attribute name="comments" type="String" mode="IN" optional="true"/>
         <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="longDescription" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryMessage" type="String" mode="IN" optional="true"/>
+        <attribute name="requireInventory" type="String" mode="IN" optional="true"/>
         <attribute name="smallImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="mediumImageUrl" type="String" mode="IN" optional="true"/>
         <attribute name="largeImageUrl" type="String" mode="IN" optional="true"/>

@@ -1028,6 +1028,8 @@
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
       <field name="longDescription" type="very-long"></field>
+      <field name="inventoryMessage" type="description"></field>
+      <field name="requireInventory" type="indicator"></field>
       <field name="smallImageUrl" type="url"></field>
       <field name="mediumImageUrl" type="url"></field>
       <field name="largeImageUrl" type="url"></field>

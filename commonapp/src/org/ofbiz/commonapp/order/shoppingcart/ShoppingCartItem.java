@@ -37,6 +37,7 @@ import org.ofbiz.commonapp.order.order.*;
  * <p><b>Description:</b> Shopping cart item object.
  *
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> 
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @version    1.1
  * @created    August 4, 2001
  */
@@ -165,10 +166,12 @@ public class ShoppingCartItem implements java.io.Serializable {
         
         //check inventory if new quantity is greater than old quantity; don't worry about inventory getting pulled out from under, that will be handled at checkout time
         if (quantity > this.quantity) {
-            if (!org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(this.prodCatalogId, productId, quantity, getDelegator(), dispatcher)) {
-                String excMsg = "Sorry, we do not have enough (you tried " + UtilFormatOut.formatQuantity(quantity) + ") of the product " + getProduct().getString("productName") + " (product ID: " + productId + ") in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.";
-                Debug.logWarning(excMsg);
-                throw new CartItemModifyException(excMsg);
+            if (org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryRequired(this.prodCatalogId, this.getProduct(), this.getDelegator())) {
+                if (!org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(this.prodCatalogId, productId, quantity, getDelegator(), dispatcher)) {
+                    String excMsg = "Sorry, we do not have enough (you tried " + UtilFormatOut.formatQuantity(quantity) + ") of the product " + getProduct().getString("productName") + " (product ID: " + productId + ") in stock, not adding to cart. Please try a lower quantity, try again later, or call customer service for more information.";
+                    Debug.logWarning(excMsg);
+                    throw new CartItemModifyException(excMsg);
+                }
             }
         }
         

@@ -324,8 +324,12 @@
             <input type='hidden' name="add_product_id" value='<%EntityField.run("product", "productId", pageContext);%>'>
 
             <%if (!CatalogWorker.isCatalogInventoryAvailable(request, productId, 1.0)) {%>
-                <div class='tabletext'><b>This item is out of stock.</b></div>
-                <%inStock = false;%>
+                <%if (CatalogWorker.isCatalogInventoryRequired(request, product)) {%>
+                    <div class='tabletext'><b>This item is out of stock.</b></div>
+                    <%inStock = false;%>
+                <%} else {%>
+                    <div class='tabletext'><b><%EntityField.run("product", "inventoryMessage", pageContext);%></b></div>
+                <%}%>
             <%}%>
           <%}%>
           <%-- ======================== --%>

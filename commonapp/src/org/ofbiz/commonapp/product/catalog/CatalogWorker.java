@@ -47,6 +47,45 @@ import org.ofbiz.commonapp.order.shoppingcart.*;
  */
 public class CatalogWorker {
 
+    public static boolean isCatalogInventoryRequired(String prodCatalogId, String productId, GenericDelegator delegator) {
+        GenericValue product = null;
+        if (productId != null) {
+            try {
+                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error looking up product with id " + productId + ", will check the ProdCatalog for inventory required");
+            }
+        }
+
+        return isCatalogInventoryRequired(prodCatalogId, product, delegator);
+    }
+    
+    public static boolean isCatalogInventoryRequired(String prodCatalogId, GenericValue product, GenericDelegator delegator) {
+        //look at the product first since it over-rides the prodCatalog setting; if empty or null use the prodCatalog setting
+        try {
+            if (product != null && UtilValidate.isNotEmpty(product.getString("requireInventory"))) {
+                if ("Y".equals(product.getString("requireInventory"))) {
+                    return true;
+                } else if ("N".equals(product.getString("requireInventory"))) {
+                    return false;
+                }
+            }
+            //otherwise, check the prodCatalog...
+            
+            GenericValue prodCatalog = delegator.findByPrimaryKeyCache("ProdCatalog", UtilMisc.toMap("prodCatalogId", prodCatalogId));
+            if (prodCatalog == null) {
+                Debug.logWarning("ProdCatalog not found with id " + prodCatalogId + ", returning false for inventory required check");
+                return false;
+            }
+
+            //default to false, so if anything but Y, return false
+            return "Y".equals(prodCatalog.getString("requireInventory"));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error looking up prodCatalog with id " + prodCatalogId + ", returning false for inventory required");
+            return false;
+        }
+    }
+    
     /** check inventory availability for the given catalog, product, quantity, etc */
     public static boolean isCatalogInventoryAvailable(String prodCatalogId, String productId, double quantity, GenericDelegator delegator, LocalDispatcher dispatcher) {
         GenericValue prodCatalog = null;
@@ -61,8 +100,8 @@ public class CatalogWorker {
             return false;
         }
         
-        //if prodCatalog is set to not check inventory, or if inventory is not required for purchase, break here
-        if ("N".equals(prodCatalog.getString("checkInventory")) || !"Y".equals(prodCatalog.getString("requireInventory"))) {
+        //if prodCatalog is set to not check inventory break here
+        if ("N".equals(prodCatalog.getString("checkInventory"))) {
             //note: if not set, defaults to yes, check inventory
             Debug.logInfo("Catalog with id " + prodCatalogId + ", is set to NOT check inventory, returning true for inventory available check");
             return true;
@@ -148,7 +187,12 @@ public class CatalogWorker {
                 serviceContext.put("orderId", orderId);
                 serviceContext.put("orderItemSeqId", orderItemSeqId);
                 serviceContext.put("quantity", quantity);
-                serviceContext.put("requireInventory", prodCatalog.get("requireInventory"));
+                
+                if (isCatalogInventoryRequired(prodCatalogId, productId, delegator)) {
+                    serviceContext.put("requireInventory", "Y");
+                } else {
+                    serviceContext.put("requireInventory", "N");
+                }
                 serviceContext.put("reserveOrderEnumId", prodCatalog.get("reserveOrderEnumId"));
                 serviceContext.put("userLogin", userLogin);
                 
@@ -423,6 +467,16 @@ public class CatalogWorker {
     /* ========================================================================================*/
     /* ================================ Catalog Inventory Check ===============================*/
 
+    public static boolean isCatalogInventoryRequired(ServletRequest request, GenericValue product) {
+        String prodCatalogId = getCurrentCatalogId(request);
+        if (prodCatalogId == null || prodCatalogId.length() == 0) {
+            Debug.logWarning("No current catalog id found, return false for inventory check");
+            return false;
+        }
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        return CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator);
+    }
+
     public static boolean isCatalogInventoryAvailable(ServletRequest request, String productId, double quantity) {
         String prodCatalogId = getCurrentCatalogId(request);
         if (prodCatalogId == null || prodCatalogId.length() == 0) {
@@ -431,7 +485,7 @@ public class CatalogWorker {
         }
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
-        return org.ofbiz.commonapp.product.catalog.CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productId, quantity, delegator, dispatcher);
+        return CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, productId, quantity, delegator, dispatcher);
     }
 
     /* ========================================================================================*/

@@ -102,7 +102,20 @@
         <ofbiz:iterator name="item" property="cartIter" type="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartItem">
           <tr><td colspan="7"><hr class='sepbar'></td></tr>
           <TR>
-            <TD><div class='tabletext'><%-- <b><%= cart.getItemIndex(item)%></b> - --%><a href='<ofbiz:url>/product?product_id=<%=item.getProductId()%></ofbiz:url>' class='buttontext'><%=item.getProductId()%> - <%=UtilFormatOut.checkNull(item.getName())%></a> : <%=UtilFormatOut.checkNull(item.getDescription())%></div></TD>
+            <TD>
+                <div class='tabletext'>
+                    <%-- <b><%= cart.getItemIndex(item)%></b> - --%>
+                    <a href='<ofbiz:url>/product?product_id=<%=item.getProductId()%></ofbiz:url>' class='buttontext'><%=item.getProductId()%> - 
+                    <%=UtilFormatOut.checkNull(item.getName())%></a> : 
+                    <%=UtilFormatOut.checkNull(item.getDescription())%>
+
+                    <%-- if inventory is not required check to see if it is out of stock and needs to have a message shown about that... --%>
+                    <%GenericValue itemProduct = item.getProduct();%>
+                    <%if (!CatalogWorker.isCatalogInventoryRequired(request, itemProduct) && !CatalogWorker.isCatalogInventoryAvailable(request, item.getProductId(), item.getQuantity())) {%>
+                        <b><%=UtilFormatOut.ifNotEmpty(itemProduct.getString("inventoryMessage"), "(", ")")%></b>
+                    <%}%>
+                </div>
+            </TD>
             <TD NOWRAP ALIGN="center">
               <div class='tabletext'>
                 <%if (item.getIsPromo()) {%>

@@ -112,13 +112,15 @@ public class OrderServices {
                 continue;
             }
 
-            if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
-                String invErrMsg = "The product ";
-                invErrMsg += product.getString("productName");
-                invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
-                Debug.logWarning(invErrMsg);
-                errorMessages.add(invErrMsg);
-                continue;
+            if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
+                if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
+                    String invErrMsg = "The product ";
+                    invErrMsg += product.getString("productName");
+                    invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
+                    Debug.logWarning(invErrMsg);
+                    errorMessages.add(invErrMsg);
+                    continue;
+                }
             }
         }
         
