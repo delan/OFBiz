@@ -8,8 +8,7 @@
     <RoleType roleTypeId="BLOG_USER" parentTypeId="BLOG" hasTable="N" description="Blog User"/>
     <RoleType roleTypeId="BLOG_GUEST" parentTypeId="BLOG" hasTable="N" description="Blog Guest"/>
     <RoleType roleTypeId="PERMISSION_GROUP" hasTable="N" description="Permission Group"/>
-    <RoleType roleTypeId="PERMISSION_GROUP_MBR" hasTable="N" description="Permission Group Member"/>
-    <RoleType roleTypeId="_OWNER_" hasTable="N" description="Owner"/>
+    <RoleType roleTypeId="PERMISSION_GROUP_MBR" hasTable="N" description="Permission Group Member"/>    
     <Party partyId="BLOG_USERS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_EDITORS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_ADMINS" partyTypeId="PARTY_GROUP"/>
@@ -94,16 +93,16 @@
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="_OWNER_" statusId="_NA_" privilegeEnumId="_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH_SELF" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_RESPOND" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="_00_"/>
 
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_UPDATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_UPDATE" roleTypeId="_OWNER_" statusId="BLOG_DRAFT" privilegeEnumId="_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_UPDATE" roleTypeId="OWNER" statusId="BLOG_DRAFT" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="SUBSCRIBE_BRONZE"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="_OWNER_" statusId="BLOG_DRAFT" privilegeEnumId="_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="OWNER" statusId="BLOG_DRAFT" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="_00_"/>
@@ -112,13 +111,13 @@
     <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_UPDATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_VIEW" roleTypeId="_NA_" statusId="BLOG_PUBLISHED" privilegeEnumId="_00_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="_NA_" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="USER" contentOperationId="CONTENT_UPDATE" roleTypeId="_OWNER_" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_OWNER_ROLE" roleTypeId="_OWNER_" statusId="_NA_" privilegeEnumId="_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="USER" contentOperationId="CONTENT_UPDATE" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_OWNER_ROLE" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_USER_ROLE" roleTypeId="BLOG_USER" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_AUTHOR_ROLE" roleTypeId="BLOG_AUTHOR" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_EDITOR_ROLE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_ADMIN_ROLE" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_PUBLISHER_ROLE" roleTypeId="BLOG_PUBLISHER" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE_SUB" roleTypeId="_OWNER_" statusId="_NA_" privilegeEnumId="_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE_SUB" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="_NA_" privilegeEnumId="_00_"/>
 </entity-engine-xml>

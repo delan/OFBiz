@@ -136,7 +136,7 @@
             	<set field="title" value="CMS Content Edit Page"/>
                 <set field="entityOperation" value="_UPDATE"/>
                 <set field="targetOperation" value="CONTENT_UPDATE|CONTENT_CREATE|CONTENT_CREATE_SUB"/>
-                <set field="requiredRoles" value="_OWNER_|BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER"/>
+                <set field="requiredRoles" value="OWNER|BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER"/>
                 <set field="contentPurposeTypeId" value="ARTICLE"/>
 			    <script location="component://content/widget/cms/cmseditaddprep.bsh"/>
 			</actions>

@@ -15,7 +15,7 @@
     <property name="permittedOperations">CONTENT_CREATE_SUB</property>    
     <property name="entityOperation">_UPDATE</property>    
     <property name="targetOperation">CONTENT_UPDATE|CONTENT_CREATE|CONTENT_CREATE_SUB</property>    
-    <property name="requiredRoles">_OWNER_|BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER</property>    
+    <property name="requiredRoles">OWNER|BLOG_AUTHOR|BLOG_EDITOR|BLOG_ADMIN|BLOG_PUBLISHER</property>    
     <property name="contentPurposeTypeId">ARTICLE</property>    
     <property name="contentAssocTypeId">SUB_CONTENT</property>    
     <property name="statusId">BLOG_PUBLISHED</property>    

@@ -170,7 +170,7 @@ public class ContentManagementEvents {
                 //if (Debug.infoOn()) Debug.logInfo("in updatePublishLinks, userLoginId:" + userLoginId + " authorId:" + authorId , module);
         List roleTypeList = null;
         if (authorId != null && userLoginId != null && authorId.equals(userLoginId)) {
-            roles = "_OWNER_";
+            roles = "OWNER";
             roleTypeList = StringUtil.split(roles, "|");
         }
         List targetOperationList = UtilMisc.toList("CONTENT_PUBLISH");
