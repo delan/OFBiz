@@ -43,16 +43,20 @@ import org.ofbiz.core.service.*;
  */
 public class GenericEngineFactory {
 
-    protected static Map engines = new HashMap();
+    protected ServiceDispatcher dispatcher = null;
+    protected Map engines = null;
+    
+    public GenericEngineFactory(ServiceDispatcher dispatcher) {
+        this.dispatcher = dispatcher;
+        engines = new HashMap();
+    }
 
     /** 
      * Gets the GenericEngine instance that corresponds to given the name
      *@param engineName Name of the engine
      *@return GenericEngine that corresponds to the engineName
      */
-    public static GenericEngine getGenericEngine(String engineName, ServiceDispatcher dispatcher)
-        throws GenericServiceException {
-
+    public GenericEngine getGenericEngine(String engineName) throws GenericServiceException {        
         Element rootElement = null;
 
         try {

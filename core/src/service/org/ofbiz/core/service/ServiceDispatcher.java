@@ -48,17 +48,17 @@ public class ServiceDispatcher {
     public static final String module = ServiceDispatcher.class.getName();
 
     protected static Map dispatchers = new HashMap();
-    protected GenericDelegator delegator;
-    protected Security security;
-    protected Map localContext;
-    protected JobManager jm;
-    protected JmsListenerFactory jlf;
+    protected GenericDelegator delegator = null;
+    protected GenericEngineFactory factory = null;
+    protected Security security = null;
+    protected Map localContext = null;
+    protected JobManager jm = null;
+    protected JmsListenerFactory jlf = null;
 
     public ServiceDispatcher(GenericDelegator delegator) {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
-        // read the group defs
-        ServiceGroupReader.readConfig();
-        // read the ecs defs
+        factory = new GenericEngineFactory(this);    
+        ServiceGroupReader.readConfig();        
         ECAUtil.readConfig();
         
         this.delegator = delegator;
@@ -443,7 +443,7 @@ public class ServiceDispatcher {
      * @return GenericEngine instance that corresponds to the engineName
      */
     public GenericEngine getGenericEngine(String engineName) throws GenericServiceException {
-        return GenericEngineFactory.getGenericEngine(engineName, this);
+        return factory.getGenericEngine(engineName);
     }
 
     /**
