@@ -68,6 +68,22 @@ public class PriceServices {
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
 
+        //if this product is variant, find the virtual product and apply checks to it as well
+        String virtualProductId = null;
+        if ("Y".equals(product.getString("isVariant"))) {
+            try {
+                Collection productAssocs = EntityUtil.filterByDate(delegator.findByAndCache("ProductAssoc", 
+                        UtilMisc.toMap("productIdTo", productId, "productAssocTypeId", "PRODUCT_VARIANT")));
+                GenericValue productAssoc = EntityUtil.getFirst(productAssocs);
+                if (productAssoc != null) {
+                    virtualProductId = productAssoc.getString("productId");
+                }
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error getting virtual product id from the database while calculating price", module);
+                return ServiceUtil.returnError("Error getting virtual product id from the database while calculating price: " + e.toString());
+            }
+        }
+        
         //NOTE: partyId CAN be null
         String partyId = (String) context.get("partyId");
         if (partyId == null && context.get("userLogin") != null) {
@@ -168,6 +184,19 @@ public class PriceServices {
                         productPriceRuleIds.add(productIdCond.getString("productPriceRuleId"));
                     }
                 }
+                
+                //by virtualProductId, if not null
+                if (virtualProductId != null) {
+                    Collection virtualProductIdConds = delegator.findByAndCache("ProductPriceCond", 
+                            UtilMisc.toMap("inputParamEnumId", "PRIP_PRODUCT_ID", "condValue", virtualProductId));
+                    if (virtualProductIdConds != null && virtualProductIdConds.size() > 0) {
+                        Iterator virtualProductIdCondsIter = virtualProductIdConds.iterator();
+                        while (virtualProductIdCondsIter.hasNext()) {
+                            GenericValue virtualProductIdCond = (GenericValue) virtualProductIdCondsIter.next();
+                            productPriceRuleIds.add(virtualProductIdCond.getString("productPriceRuleId"));
+                        }
+                    }
+                }
 
                 //by prodCatalogId
                 Collection prodCatalogIdConds = delegator.findByAndCache("ProductPriceCond", 
@@ -225,8 +254,17 @@ public class PriceServices {
                         totalConds++;
                         
                         if (!checkPriceCondition(productPriceCond, productId, prodCatalogId, partyId, quantity, delegator)) {
-                            allTrue = false;
-                            break;
+                            //if there is a virtualProductId, try that given that this one has failed
+                            if (virtualProductId != null) {
+                                if (!checkPriceCondition(productPriceCond, virtualProductId, prodCatalogId, partyId, quantity, delegator)) {
+                                    allTrue = false;
+                                    break;
+                                }
+                                //otherwise, okay, this one made it so carry on checking
+                            } else {
+                                allTrue = false;
+                                break;
+                            }
                         }
                         
                         //add condsDescription string entry
@@ -365,6 +403,7 @@ public class PriceServices {
             String partyId, double quantity, GenericDelegator delegator) throws GenericEntityException {
         Debug.logVerbose("Checking price condition: " + productPriceCond, module);
         int compare = 0;
+        
         if ("PRIP_PRODUCT_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
             compare = productId.compareTo(productPriceCond.getString("condValue"));
         } else if ("PRIP_PROD_CAT_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
