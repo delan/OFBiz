@@ -43,4 +43,40 @@ public class ModelFieldType
 
   /** Default Constructor */  
   public ModelFieldType() { }
+
+  /** A simple function to derive the max length of a String created from the field value, based on the sql-type
+   * @return max length of a String representing the Field value
+   */  
+  public int stringLength()
+  {
+    if(sqlType.indexOf("VARCHAR") >= 0)
+    {
+      if(sqlType.indexOf("(") > 0 && sqlType.indexOf(")") > 0)
+      {
+        String length = sqlType.substring(sqlType.indexOf("(") + 1, sqlType.indexOf(")"));
+        return Integer.parseInt(length);
+      }
+      else
+      {
+        return 255;
+      }
+    }
+    else if(sqlType.indexOf("CHAR") >= 0)
+    {
+      if(sqlType.indexOf("(") > 0 && sqlType.indexOf(")") > 0)
+      {
+        String length = sqlType.substring(sqlType.indexOf("(") + 1, sqlType.indexOf(")"));
+        return Integer.parseInt(length);
+      }
+      else
+      {
+        return 255;
+      }
+    }
+    else if(sqlType.indexOf("TEXT") >= 0)
+    {
+      return 5000;
+    }
+    return 20;
+  }
 }
