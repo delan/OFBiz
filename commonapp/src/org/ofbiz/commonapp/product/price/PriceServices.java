@@ -203,11 +203,6 @@ public class PriceServices {
                         continue;
                     }
 
-                    //check isSale
-                    if ("Y".equals(productPriceRule.getString("isSale"))) {
-                        isSale = true;
-                    }
-                    
                     //check all conditions
                     boolean allTrue = true;
                     StringBuffer condsDescription = new StringBuffer();
@@ -244,6 +239,11 @@ public class PriceServices {
                     boolean foundFlatOverride = false;
                     //if all true, perform all actions
                     if (allTrue) {
+                        //check isSale
+                        if ("Y".equals(productPriceRule.getString("isSale"))) {
+                            isSale = true;
+                        }
+
                         Collection productPriceActions = delegator.findByAndCache("ProductPriceAction", UtilMisc.toMap("productPriceRuleId", productPriceRuleId));
                         Iterator productPriceActionsIter = UtilMisc.toIterator(productPriceActions);
                         while (productPriceActionsIter != null && productPriceActionsIter.hasNext()) {
