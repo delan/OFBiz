@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
  */
 
@@ -49,10 +49,34 @@ productInventoryItems = delegator.findByAnd("InventoryItem",
         UtilMisc.toMap("productId", productId), 
         UtilMisc.toList("facilityId", "-receivedDate", "inventoryItemId"));
 
+// loop through the inventory items and get totals of ATP and QOH
+totalAvailableToPromise = 0;
+totalQuantityOnHand = 0;
+productInventoryItemIter = productInventoryItems.iterator();
+while (productInventoryItemIter.hasNext()) {
+	productInventoryItem = productInventoryItemIter.next();
+	if ("SERIALIZED_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
+		if ("INV_AVAILABLE".equals(productInventoryItem.getString("statusId"))) {
+			totalQuantityOnHand += 1;
+		} else if ("INV_PROMISED".equals(productInventoryItem.getString("statusId"))) {
+			totalAvailableToPromise += 1;
+		}
+	} else if ("NON_SERIAL_INV_ITEM".equals(productInventoryItem.getString("inventoryItemTypeId"))) {
+		if (productInventoryItem.get("availableToPromise") != null) {
+			totalAvailableToPromise += productInventoryItem.getDouble("availableToPromise").doubleValue();
+		}
+		if (productInventoryItem.get("quantityOnHand") != null) {
+			totalQuantityOnHand += productInventoryItem.getDouble("quantityOnHand").doubleValue();
+		}
+	}
+}
+
 showEmpty = "true".equals(request.getParameter("showEmpty"));
 
 context.put("productId", productId);
 context.put("product", product);
 context.put("productInventoryItems", productInventoryItems);
+context.put("totalAvailableToPromise", totalAvailableToPromise);
+context.put("totalQuantityOnHand", totalQuantityOnHand);
 context.put("showEmpty", showEmpty);
 
