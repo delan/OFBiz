@@ -99,7 +99,7 @@ HtmlFormWrapper listRoutingProductLinkWrapper = new HtmlFormWrapper("/routing/Ro
 if (allRoutingProductLinks != null) {
     listRoutingProductLinkWrapper.putInContext("allRoutingProductLinks", allRoutingProductLinks);
 }
-listRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+//listRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 listRoutingProductLinkWrapper.putInContext("byProduct", byProduct);
 context.put("listRoutingProductLinkWrapper",listRoutingProductLinkWrapper);
 context.put("allRoutingProductLinks",allRoutingProductLinks);
@@ -117,7 +117,7 @@ if (productId != null && workEffortId != null && fromDateString != null) {
     if (routingProductLink != null) { 
         HtmlFormWrapper updateRoutingProductLinkWrapper = new HtmlFormWrapper("/routing/RoutingTaskForms.xml", "UpdateRoutingProductLink", request, response);
         updateRoutingProductLinkWrapper.putInContext("routingProductLink", routingProductLink);
-        updateRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+  //      updateRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
         updateRoutingProductLinkWrapper.putInContext("byProduct", byProduct);
         updateRoutingProductLinkWrapper.putInContext("workEffortName", workEffortName);
         updateRoutingProductLinkWrapper.putInContext("internalName", routingProductLink.getRelatedOne("Product").getString("internalName"));
@@ -127,7 +127,7 @@ if (productId != null && workEffortId != null && fromDateString != null) {
 }
 
 HtmlFormWrapper addRoutingProductLinkWrapper = new HtmlFormWrapper("/routing/RoutingTaskForms.xml", "AddRoutingProductLink", request, response);
-addRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+//addRoutingProductLinkWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 addRoutingProductLinkWrapper.putInContext("byProduct", byProduct);
 addRoutingProductLinkWrapper.putInContext("statusId", "ROU_PROD_TEMPLATE");
 

@@ -27,24 +27,18 @@
     <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
 
+<#if byProduct?has_content>
+    <div class='tabletext'>
+        <a href="<@ofbizUrl>/EditProductBom?productId=${byProduct}&amp;productAssocTypeId=MANUF_COMPONENT</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductBom}]</a>
+    </div>
+</#if>
 
-	<div class="head1">${uiLabelMap.ManufacturingEditRoutingProductLink}&nbsp;
-	</div>
-        <#if byProduct?has_content>
-            <div class='tabletext'>
-                <a href="<@ofbizUrl>/EditProductBom?productId=${byProduct}&amp;productAssocTypeId=MANUF_COMPONENT</@ofbizUrl>" class="buttontext">[${uiLabelMap.ManufacturingProductBom}]</a>
-            </div>
-        </#if>
-        
-        ${addRoutingProductLinkWrapper.renderFormString()}
-		<hr class="sepbar">
-	<#if routingProductLink?has_content>
-			${updateRoutingProductLinkWrapper.renderFormString()}
-			<br>
-	</#if>
-	<#if allRoutingProductLinks?has_content>
-		${listRoutingProductLinkWrapper.renderFormString()}
-	</#if>
-
-
-	
+${addRoutingProductLinkWrapper.renderFormString()}
+<hr class="sepbar">
+<#if routingProductLink?has_content>
+    ${updateRoutingProductLinkWrapper.renderFormString()}
+    <br>
+</#if>
+<#if allRoutingProductLinks?has_content>
+    ${listRoutingProductLinkWrapper.renderFormString()}
+</#if>

@@ -26,9 +26,6 @@
 <#if (requestAttributes.uiLabelMap)?exists>
     <#assign uiLabelMap = requestAttributes.uiLabelMap>
 </#if>
-<#if (requestAttributes.locale)?exists>
-    <#assign locale = requestAttributes.locale>
-</#if>
 
 <script language="JavaScript">
 <!-- //
@@ -43,16 +40,14 @@ function addRoutingTask() {
 // -->
 </script>
 
-<div class="head1">${uiLabelMap.ManufacturingEditRoutingTaskAssoc}&nbsp;
-</div>
-<div class="tableheadtext">${routing.workEffortId}[${routing.workEffortName}]</div>
 <#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
 <form method="post" action="<@ofbizUrl>/AddRoutingTaskAssoc</@ofbizUrl>" name="addtaskassocform">
-    <input type="hidden" name="workEffortIdFrom" value="${requestParameters.workEffortIdFrom}">
+    <input type="hidden" name="workEffortId" value="${workEffortId}">
+    <input type="hidden" name="workEffortIdFrom" value="${workEffortId}">
     <input type="hidden" name="workEffortAssocTypeId" value="ROUTING_COMPONENT">
     <input type="hidden" name="copyTask" value="N">
     <input type="hidden" name="addTask" value="Y">
-    <table width="100%" cellpadding="2" cellspacing="0" border="0" class="boxoutside">
+    <table cellpadding="2" cellspacing="0" border="0" class="boxoutside">
         <tr>
             <td align="right">
                 <div class="tableheadtext">${uiLabelMap.ManufacturingRoutingTaskId}</div>
@@ -98,93 +93,5 @@ function addRoutingTask() {
     </table>
 </form>
 <br>
-<table width="100%" cellpadding="2" cellspacing="0" border="0">
-        <tr valign=top>
-			<#if routingTask?has_content>
-		        <td width="50%" >
-				      <table width='100%' border='0' cellspacing='0' cellpadding='0' class="boxoutside">
-				       <tr   class="boxtop">
-				          <td align=center class="boxhead">${uiLabelMap.ManufacturingEditRoutingTaskAssocDateValidity}</td>
-				        </tr>
-				        <tr>          
-				          <td>
-								${updateRoutingTaskAssocWrapper.renderFormString()}
-				          </td>
-				        </tr>
-				      </table>
-				</td>
-          		<td width="50%" >
-<#--   RoutingTask  Edition -->
-					   <form name="routingTaskform" method="post" action="<@ofbizUrl>/UpdateRoutingTaskForRouting</@ofbizUrl>">
-					    	<input type="hidden" name="workEffortId" value="${routingTask.workEffortId}">
-					   		<input type="hidden" name="workEffortIdFrom" value="${requestParameters.workEffortIdFrom}">
-					  <table width="100%" border="0" cellpadding="2" cellspacing="0" class="boxoutside">
-						<tr   class="boxtop">
-							<td align=center class=boxhead colspan=3>${uiLabelMap.ManufacturingEditRoutingTaskId}&nbsp;:&nbsp;${routingTask.workEffortId}</td>
-						</tr>
-					    <tr>
-					      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingTaskName}</div></td>
-					      <td width="5">&nbsp;</td>
-					      <td width="74%"><input type="text" class="inputBox" size="30" name="workEffortName" value="${routingTask.workEffortName?if_exists}"></td>
-					    </tr>
-					    <tr>
-					      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingTaskPurpose}</div></td>
-					      <td width="5">&nbsp;</td>
-					      <td width="74%">
-					         <select class="selectBox" name="workEffortPurposeTypeId">
-					          <#list allTaskPurposeTypes as taskPurposeType>
-					          <option value="${taskPurposeType.workEffortPurposeTypeId}" <#if routingTask?has_content && routingTask.workEffortPurposeTypeId?default("") == taskPurposeType.workEffortPurposeTypeId>SELECTED</#if>>${(taskPurposeType.get("description", locale))?if_exists}</option>
-					          </#list>
-					        </select>
-					    </tr>
-					    <tr>
-					      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
-					      <td width="5">&nbsp;</td>
-					      <td width="74%"><input type="text" class="inputBox" size="40" name="description" value="${routingTask.description?if_exists}"></td>
-					    </tr>
-					    <tr>
-					      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingMachineGroup}</div></td>
-					      <td width="5">&nbsp;</td>
-					      <td width="74%">
-					         <select class="selectBox" name="fixedAssetId">
-							  <option></option>
-					          <#list machineGroups as machineGroup>
-					          <option value="${machineGroup.fixedAssetId}" <#if routingTask?has_content && routingTask.fixedAssetId?default("") == machineGroup.fixedAssetId>SELECTED</#if>>${(machineGroup.get("fixedAssetName", locale))?if_exists}</option>
-					          </#list>
-					        </select>
-					    </tr>
-					    <tr>
-					      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingTaskEstimatedSetupMillis}</div></td>
-					      <td width="5">&nbsp;</td>
-					      <td width="74%"><input type="text" class="inputBox" size="10" name="estimatedSetupMillis" value="${routingTask.estimatedSetupMillis?default(0)}"></td>
-					    </tr>
-					    <tr>
-					      <td width='26%' align='right' valign='top'><div class="tableheadtext">${uiLabelMap.ManufacturingTaskEstimatedMilliSeconds}</div></td>
-					      <td width="5">&nbsp;</td>
-					      <td width="74%"><input type="text" class="inputBox" size="10" name="estimatedMilliSeconds" value="${routingTask.estimatedMilliSeconds?default(0)}"></td>
-					    </tr>
-					    <tr>
-					      <td width="26%" align="right" valign="top">
-					      <td width="5">&nbsp;</td>
-					      <td width="74%"><input type="submit" value="${uiLabelMap.CommonUpdate}" class="smallSubmit"></td>
-					    </tr>
-					  </table>
-					</form>
-<#--   End of  RoutingTask Edition  -->
-		       </td>
-	      </#if> <#-- routingTask?has_content -->
-       </tr>
-</table>
-</#if> <#-- security.hasEntityPermission("MANUFACTURING", "_CREATE", session) -->
-<#if security.hasEntityPermission("MANUFACTURING", "_VIEW", session)>
-	<br>
-	<hr class="sepbar">
-	<#if allRoutingTasks?has_content>
-		${listRoutingTaskAssocWrapper.renderFormString()}
-	</#if>
-
-<#else>
- 	<h3>${uiLabelMap.ManufacturingMachinePermissionError}</h3>
 </#if>
-
 	
