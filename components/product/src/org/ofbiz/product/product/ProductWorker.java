@@ -1,5 +1,5 @@
 /*
- * $Id: ProductWorker.java,v 1.3 2003/08/25 19:59:55 ajzeneski Exp $
+ * $Id: ProductWorker.java,v 1.4 2003/10/18 05:13:07 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -47,7 +47,7 @@ import org.ofbiz.product.feature.ParametricSearch;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ProductWorker {
@@ -154,7 +154,7 @@ public class ProductWorker {
      *@param categoryId The keyword search group name for this search
      */
     public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId) {
-        getKeywordSearchProducts(pageContext, attributePrefix, categoryId, false, false, "OR");
+        getKeywordSearchProducts(pageContext, attributePrefix, categoryId, false, false, false);
     }
                 
     /**
@@ -166,19 +166,14 @@ public class ProductWorker {
      *@param attributePrefix A prefix to put on each attribute name in the pageContext
      *@param categoryId The keyword search group name for this search
      */    
-    public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
-        getKeywordSearchProducts(pageContext.getRequest(), attributePrefix, categoryId, anyPrefix, anySuffix, intraKeywordOperator);
+    public static void getKeywordSearchProducts(PageContext pageContext, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
+        getKeywordSearchProducts(pageContext.getRequest(), attributePrefix, categoryId, anyPrefix, anySuffix, isAnd);
     } 
        
-    public static void getKeywordSearchProducts(ServletRequest request, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, String intraKeywordOperator) {
+    public static void getKeywordSearchProducts(ServletRequest request, String attributePrefix, String categoryId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         Map requestParameters = UtilHttp.getParameterMap(httpRequest);
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-
-        if (intraKeywordOperator == null || (!"AND".equalsIgnoreCase(intraKeywordOperator) && !"OR".equalsIgnoreCase(intraKeywordOperator))) {
-            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR", module);
-            intraKeywordOperator = "OR";
-        }
 
         int viewIndex = 0;
 
@@ -202,7 +197,7 @@ public class ProductWorker {
         Map featureIdByType = ParametricSearch.makeFeatureIdByTypeMap(request);
         String featureIdByTypeString = ParametricSearch.makeFeatureIdByTypeString(featureIdByType);
 
-        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + intraKeywordOperator + "::" + featureIdByTypeString;
+        String curFindString = "KeywordSearch:" + keywordString + "::" + categoryId + "::" + anyPrefix + "::" + anySuffix + "::" + isAnd + "::" + featureIdByTypeString;
 
         ArrayList productIds = (ArrayList) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String) httpRequest.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
@@ -213,9 +208,9 @@ public class ProductWorker {
 
             // productIds will be pre-sorted
             if (featureIdByType.size() > 0) {
-                productIds = ParametricSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
+                productIds = ParametricSearch.parametricKeywordSearch(featureIdByType, keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
             } else {
-                productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, intraKeywordOperator);
+                productIds = KeywordSearch.productsByKeywords(keywordString, delegator, categoryId, VisitHandler.getVisitId(httpRequest.getSession()), anyPrefix, anySuffix, isAnd);
             }
             
 

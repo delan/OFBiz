@@ -34,8 +34,7 @@
 
 <%String searchCategoryId = request.getParameter("SEARCH_CATEGORY_ID");%>
 <%String searchOperator = request.getParameter("SEARCH_OPERATOR");%>
-<%if (!"AND".equalsIgnoreCase(searchOperator) && !"OR".equalsIgnoreCase(searchOperator)) { searchOperator = "OR"; }%>
-<%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId, true, true, searchOperator);%>
+<%ProductWorker.getKeywordSearchProducts(pageContext, "", searchCategoryId, true, true, "AND".equalsIgnoreCase(searchOperator));%>
 <ofbiz:object name="viewIndex" property="viewIndex" type='java.lang.Integer' />
 <ofbiz:object name="viewSize" property="viewSize" type='java.lang.Integer' />
 <ofbiz:object name="lowIndex" property="lowIndex" type='java.lang.Integer' />
