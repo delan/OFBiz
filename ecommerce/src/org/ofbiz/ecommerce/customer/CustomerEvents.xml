@@ -238,8 +238,9 @@
                 <call-map-processor in-map-name="parameters" out-map-name="dummymap">
                     <simple-map-processor name="checkRequiredEmailFormat">
                         <process field="CUSTOMER_EMAIL">
-                            <not-empty><fail-message message="E-mail address is missing"/></not-empty>
-                            <validate-method method="isEmail"><fail-message message="Email address not formatted correctly, must be like: name@domain"/></validate-method>
+                            <validate-method method="isEmail">
+                                <fail-message message="E-mail address not formatted correctly, must be like: name@domain"/>
+                            </validate-method>
                         </process>
                     </simple-map-processor>
                </call-map-processor>
