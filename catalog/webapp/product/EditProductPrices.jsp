@@ -42,7 +42,7 @@
     String productId = request.getParameter("productId");
     GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
     if (product == null) useValues = false;
-    Collection productPrices = product.getRelated("ProductPrice", null, UtilMisc.toList("productPriceTypeId", "currencyUomId", "fromDate"));
+    Collection productPrices = product.getRelated("ProductPrice", null, UtilMisc.toList("facilityGroupId", "productPriceTypeId", "currencyUomId", "fromDate"));
     if (productPrices != null) pageContext.setAttribute("productPrices", productPrices);
 
     Collection productPriceTypes = delegator.findAllCache("ProductPriceType", UtilMisc.toList("description"));
@@ -50,6 +50,9 @@
 
     Collection currencyUoms = delegator.findByAndCache("Uom", UtilMisc.toMap("uomTypeId", "CURRENCY_MEASURE"), UtilMisc.toList("description"));
     if (currencyUoms != null) pageContext.setAttribute("currencyUoms", currencyUoms);
+
+    Collection facilityGroups = delegator.findByAndCache("FacilityGroup", null, UtilMisc.toList("facilityGroupName"));
+    if (facilityGroups != null) pageContext.setAttribute("facilityGroups", facilityGroups);
 
     if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
 %>
@@ -89,6 +92,7 @@
   <tr>
     <td><div class="tabletext"><b>Price&nbsp;Type</b></div></td>
     <td><div class="tabletext"><b>Currency</b></div></td>
+    <td><div class="tabletext"><b>Facility Group</b></div></td>
     <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
     <td align="center"><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time,&nbsp;Price</b></div></td>
     <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -98,9 +102,11 @@
   <%line++;%>
   <%GenericValue currencyUom = productPrice.getRelatedOneCache("CurrencyUom");%>
   <%GenericValue productPriceType = productPrice.getRelatedOneCache("ProductPriceType");%>
+  <%GenericValue facilityGroup = productPrice.getRelatedOneCache("FacilityGroup");%>
   <tr valign="middle">
     <td><div class='tabletext'><%if (productPriceType != null) {%><%=productPriceType.getString("description")%><%} else {%>[<ofbiz:inputvalue entityAttr="productPrice" field="productPriceTypeId"/>]<%}%></div></td>
     <td><div class='tabletext'><%if (currencyUom != null) {%><%=currencyUom.getString("description")%><%}%> [<ofbiz:inputvalue entityAttr="productPrice" field="currencyUomId"/>]</div></td>
+    <td><div class='tabletext'><%if (facilityGroup != null) {%><%=facilityGroup.getString("facilityGroupName")%><%} else {%>[<ofbiz:inputvalue entityAttr="productPrice" field="facilityGroupId"/>]<%}%></div></td>
     <td>
         <%boolean hasntStarted = false;%>
         <%if (productPrice.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productPrice.getTimestamp("fromDate"))) { hasntStarted = true; }%>
@@ -115,6 +121,7 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="productPriceTypeId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="currencyUomId" fullattrs="true"/>>
+            <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="facilityGroupId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productPrice" field="fromDate" fullattrs="true"/>>
             <input type=text size='22' <ofbiz:inputvalue entityAttr="productPrice" field="thruDate" fullattrs="true"/> style='font-size: x-small;<%if (hasExpired) {%> color: red;<%}%>'>
             <a href='#' onclick='setLineThruDate("<%=line%>")' class='buttontext'>[Now]</a>
@@ -123,7 +130,7 @@
         </FORM>
     </td>
     <td align="center">
-      <a href='<ofbiz:url>/deleteProductPrice?productId=<ofbiz:entityfield attribute="productPrice" field="productId"/>&productPriceTypeId=<ofbiz:entityfield attribute="productPrice" field="productPriceTypeId"/>&currencyUomId=<ofbiz:entityfield attribute="productPrice" field="currencyUomId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productPrice.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
+      <a href='<ofbiz:url>/deleteProductPrice?productId=<ofbiz:entityfield attribute="productPrice" field="productId"/>&productPriceTypeId=<ofbiz:entityfield attribute="productPrice" field="productPriceTypeId"/>&currencyUomId=<ofbiz:entityfield attribute="productPrice" field="currencyUomId"/>&facilityGroupId=<ofbiz:entityfield attribute="productPrice" field="facilityGroupId"/>&fromDate=<%=UtilFormatOut.encodeQueryValue(productPrice.getTimestamp("fromDate").toString())%></ofbiz:url>' class="buttontext">
       [Delete]</a>
     </td>
   </tr>
@@ -150,6 +157,13 @@
             <ofbiz:iterator name="currencyUom" property="currencyUoms">
                 <%boolean isDefault = defaultCurrencyUomId.equals(currencyUom.getString("uomId"));%>
                 <option value='<ofbiz:entityfield attribute="currencyUom" field="uomId"/>' <%if (isDefault) {%>selected<%}%>><ofbiz:entityfield attribute="currencyUom" field="description"/> [<ofbiz:entityfield attribute="currencyUom" field="uomId"/>]</option>
+            </ofbiz:iterator>
+        </select>
+        Facility Group:
+        <select name="facilityGroupId" style='font-size: x-small;'>
+            <ofbiz:iterator name="facilityGroup" property="facilityGroups">
+                <%boolean isDefault = "_NA_".equals(facilityGroup.getString("facilityGroupId"));%>
+                <option value='<ofbiz:entityfield attribute="facilityGroup" field="facilityGroupId"/>' <%if (isDefault) {%>selected<%}%>><ofbiz:entityfield attribute="facilityGroup" field="facilityGroupName"/><%-- [<ofbiz:entityfield attribute="facilityGroup" field="facilityGroupId"/>]--%></option>
             </ofbiz:iterator>
         </select>
     </div>

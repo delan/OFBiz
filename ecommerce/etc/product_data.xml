@@ -69,44 +69,44 @@
     longDescription="A small round gizmo with multi-colored lights. Works great in the dark. Small and compact."
     primaryProductCategoryId="101" productId="GZ-2644" productTypeId="FINISHED_GOOD"
     productName="Round Gizmo" quantityIncluded="100.0" weight="7.0"/>
-  <ProductPrice productId="GZ-2644" price="48.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="GZ-2644" price="47.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="GZ-2644" price="48.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="GZ-2644" price="47.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
     
   <Product description="Big Gizmo w/ Legs"
     longDescription="A large gizmo with legs. Walks on its own. Does not require a power supply."
     primaryProductCategoryId="102" productId="GZ-8544" productTypeId="FINISHED_GOOD"
     productName="Big Gizmo" quantityIncluded="100.0" weight="12.0"/>
-  <ProductPrice productId="GZ-8544" price="270.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="GZ-8544" price="269.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="GZ-8544" price="270.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="GZ-8544" price="269.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
     
   <Product description="Micro Widget - Chrome Colored"
     longDescription="This micro chrome widget makes a perfect gift. This one is so small that it floats in air."
     primaryProductCategoryId="20111" productId="WG-1111" productTypeId="FINISHED_GOOD"
     productName="Micro Chrome Widget" quantityIncluded="50.0" weight="2.0"/>
-  <ProductPrice productId="WG-1111" price="60.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-1111" price="59.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="WG-1111" price="60.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="WG-1111" price="59.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
     
   <Product description="Tiny Chrome Widget"
     longDescription="This tiny chrome widget makes a perfect gift. The shine will last forever. No pollishing required."
     primaryProductCategoryId="201" productId="WG-5569" productTypeId="FINISHED_GOOD"
     productName="Tiny Chrome Widget" quantityIncluded="50.0" weight="4.0"/>
-  <ProductPrice productId="WG-5569" price="60.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-5569" price="59.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="WG-5569" price="60.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="WG-5569" price="59.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
     
   <Product description="Giant Widget with Wheels"
     longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
     primaryProductCategoryId="202" productId="WG-9943" productTypeId="FINISHED_GOOD" isVirtual="Y"
     productName="Giant Widget" quantityIncluded="10.0" weight="22.0"/>
-  <ProductPrice productId="WG-9943" price="550.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-9943" price="549.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="WG-9943" price="550.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="WG-9943" price="549.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
     
   <Product description="Black Giant Widget with 3 Wheels"
     longDescription="This giant widget is mobile. It will seat one person safely. The wheels will never rust or break. Quite a unique item."
     primaryProductCategoryId="202" productId="WG-9943-B3" productTypeId="FINISHED_GOOD" isVariant="Y"
     productName="Giant Widget B3" quantityIncluded="10.0" weight="22.0"/>
   <!-- not adding prices for each variant because they inherit from the virtual
-  <ProductPrice productId="WG-9943-B3" price="550.0" productPriceTypeId="LIST_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
-  <ProductPrice productId="WG-9943-B3" price="549.99" productPriceTypeId="DEFAULT_PRICE" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="WG-9943-B3" price="550.0" productPriceTypeId="LIST_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
+  <ProductPrice productId="WG-9943-B3" price="549.99" productPriceTypeId="DEFAULT_PRICE" facilityGroupId="_NA_" currencyUomId="USD" fromDate="2001-01-01 12:00:00.0"/>
   -->
     
   <Product description="Black Giant Widget with 4 Wheels"

@@ -62,7 +62,7 @@
   <FacilityType description="Room" facilityTypeId="ROOM" hasTable="N" parentTypeId=""/>
   <FacilityType description="Warehouse" facilityTypeId="WAREHOUSE" hasTable="N" parentTypeId=""/>
 
-  <FacilityGroup description="Not Applicable" facilityGroupId="_NA_" facilityGroupTypeId="" primaryParentGroupId=""/>
+  <FacilityGroup facilityGroupName="Not Applicable" description="Not Applicable" facilityGroupId="_NA_" facilityGroupTypeId="" primaryParentGroupId=""/>
 
   <GoodIdentificationType description="ISBN" goodIdentificationTypeId="ISBN" hasTable="N" parentTypeId=""/>
   <GoodIdentificationType description="Manufacturer Number" goodIdentificationTypeId="MANUFACTURER_ID_NO" hasTable="N" parentTypeId=""/>

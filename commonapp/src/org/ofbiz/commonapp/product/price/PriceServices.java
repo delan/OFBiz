@@ -54,6 +54,7 @@ public class PriceServices {
      *   <li>productId
      *   <li>partyId
      *   <li>prodCatalogId
+     *   <li>facilityGroupId
      *   <li>quantity
      * </ul>
      */
@@ -74,6 +75,9 @@ public class PriceServices {
         GenericValue product = (GenericValue) context.get("product");
         String productId = product.getString("productId");
         String prodCatalogId = (String) context.get("prodCatalogId");
+        
+        String facilityGroupId = (String) context.get("facilityGroupId");
+        if (UtilValidate.isEmpty(facilityGroupId)) facilityGroupId = "_NA_";
 
         // if currency uom is null get from properties file, if still null assume USD (USD: American Dollar) for now
         String currencyUomId = (String) context.get("currencyUomId");
@@ -105,7 +109,7 @@ public class PriceServices {
 
         if (virtualProductId != null) {
             try {
-                virtualProductPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", virtualProductId, "currencyUomId", currencyUomId), UtilMisc.toList("-fromDate"));
+                virtualProductPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", virtualProductId, "currencyUomId", currencyUomId, "facilityGroupId", facilityGroupId), UtilMisc.toList("-fromDate"));
             } catch (GenericEntityException e) {
                 Debug.logError(e, "An error occurred while getting the product prices", module);
             }
@@ -137,7 +141,7 @@ public class PriceServices {
         List productPrices = null;
 
         try {
-            productPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", productId, "currencyUomId", currencyUomId), UtilMisc.toList("-fromDate"));
+            productPrices = delegator.findByAndCache("ProductPrice", UtilMisc.toMap("productId", productId, "currencyUomId", currencyUomId, "facilityGroupId", facilityGroupId), UtilMisc.toList("-fromDate"));
         } catch (GenericEntityException e) {
             Debug.logError(e, "An error occurred while getting the product prices", module);
         }
