@@ -436,6 +436,11 @@ public class ModelViewEntity extends ModelEntity {
     
     protected ModelConversion getOrCreateModelConversion(String aliasName) {
         ModelEntity member = getMemberModelEntity(aliasName);
+        if (member == null) {
+            Debug.logWarning("No member found for aliasName - " + aliasName, module);
+            throw new RuntimeException("Cannot create View Entity");
+        }
+        
         Map aliasConversions = (HashMap) conversions.get(member.getEntityName());
         if (aliasConversions == null) {
             aliasConversions = new HashMap();
