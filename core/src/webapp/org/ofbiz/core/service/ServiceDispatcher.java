@@ -69,32 +69,43 @@ public class ServiceDispatcher {
      *@return Map of name, value pairs composing the result
      */
     public Map runSync(String serviceName, Map context) throws GenericServiceException {
-        return null;
+        ModelService service = getModelService(serviceName);
+        GenericEngine engine = getGenericEngine(service.engineName);
+        return engine.runSync(service, context);        
     }
     
     /** Run the service synchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException {
+    public void runSyncIgnore(String serviceName, Map context) throws GenericServiceException {        
+        ModelService service = getModelService(serviceName);
+        GenericEngine engine = getGenericEngine(service.engineName);
+        engine.runSyncIgnore(service, context);
     }
     
     /** Run the service asynchronously, passing an instance of GenericRequester that will receive the result
      *@param context Map of name, value pairs composing the context
      *@param requester Object implementing GenericRequester interface which will receive the result
      */
-    public void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context, GenericRequester requester) throws GenericServiceException {        
+        ModelService service = getModelService(serviceName);
+        GenericEngine engine = getGenericEngine(service.engineName);
+        engine.runAsync(service, context, requester);
     }
     
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public void runAsync(String serviceName, Map context) throws GenericServiceException {
+    public void runAsync(String serviceName, Map context) throws GenericServiceException {        
+        ModelService service = getModelService(serviceName);
+        GenericEngine engine = getGenericEngine(service.engineName);
+        engine.runAsync(service, context);
     }
     
     /** Run the service asynchronously and IGNORE the result
      *@param context Map of name, value pairs composing the context
      */
-    public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException {
+    public GenericResultWaiter runAsyncWait(String serviceName, Map context) throws GenericServiceException {        
         GenericResultWaiter waiter = new GenericResultWaiter();
         this.runAsync(serviceName, context, waiter);
         return waiter;
@@ -104,10 +115,21 @@ public class ServiceDispatcher {
      *@param serviceName Name of the service
      *@return GenericServiceModel that corresponds to the serviceName
      */
-    public ModelService getModelService(String serviceName) {
+    public ModelService getModelService(String serviceName) throws GenericServiceException {
+        if ( !modelServices.containsKey(serviceName) )
+            throw new GenericServiceException("Illegal service name.");        
         return (ModelService)modelServices.get(serviceName);
     }
     
+    /** Gets the GenericEngine instance that corresponds to the given name
+     *@param engineName Name of the engine
+     *@return GenericEngine instance that corresponds to the engineName
+     */
+    public GenericEngine getGenericEngine(String engineName) throws GenericServiceException {        
+        GenericEngine engine = GenericEngineFactory.getGenericEngine(engineName,this);
+        return engine;
+    }
+                            
     /** Gets the JobManager associated with this dispatcher
      *@return JobManager that is associated with this dispatcher
      */
