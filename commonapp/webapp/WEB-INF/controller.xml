@@ -11,9 +11,12 @@
     <handler name="service" type="request" class="org.ofbiz.core.event.ServiceEventHandler"/>
     <handler name="simple" type="request" class="org.ofbiz.core.event.SimpleEventHandler"/>
 
-	<handler name="ftl" type="view" class="org.ofbiz.core.ftl.FreemarkerViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.core.view.JspViewHandler"/>
+    <handler name="ftl" type="view" class="org.ofbiz.core.ftl.FreeMarkerViewHandler"/>
     <handler name="region" type="view" class="org.ofbiz.core.view.RegionViewHandler"/>
     <handler name="velocity" type="view" class="org.ofbiz.core.view.VelocityViewHandler"/>
+    <handler name="http" type="view" class="org.ofbiz.core.view.HttpViewHandler"/>
+    <handler name="wsp" type="view" class="org.ofbiz.core.view.WspViewHandler"/>
 
     <!-- Security Mappings -->
     <request-map uri="checkLogin" edit="false">
