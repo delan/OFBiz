@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySyncServices.java,v 1.20 2003/12/16 07:11:24 jonesde Exp $
+ * $Id: EntitySyncServices.java,v 1.21 2003/12/17 03:39:04 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,13 +31,11 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericDelegator;
@@ -64,7 +62,7 @@ import org.xml.sax.SAXException;
  * Entity Engine Sync Services
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      3.0
  */
 public class EntitySyncServices {
@@ -108,6 +106,8 @@ public class EntitySyncServices {
             if (UtilValidate.isEmpty(targetServiceName)) {
                 return ServiceUtil.returnError("Not running EntitySync [" + entitySyncId + "], no targetServiceName is specified, where do we send the data?");
             }
+            
+            String targetDelegatorName = entitySync.getString("targetDelegatorName");
             
             // check to see if this sync is already running, if so return error
             if ("ESR_RUNNING".equals(entitySync.getString("runStatusId"))) {
@@ -211,11 +211,15 @@ public class EntitySyncServices {
                     EntityCondition findValCondition = new EntityConditionList(UtilMisc.toList(
                             new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.GREATER_THAN_EQUAL_TO, currentRunStartTime), 
                             new EntityExpr(ModelEntity.STAMP_TX_FIELD, EntityOperator.LESS_THAN, currentRunEndTime)), EntityOperator.AND);
-                    EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_FIELD));
+                    EntityListIterator eli = delegator.findListIteratorByCondition(modelEntity.getEntityName(), findValCondition, null, UtilMisc.toList(ModelEntity.STAMP_TX_FIELD, ModelEntity.STAMP_FIELD));
                     GenericValue nextValue = null;
                     //long valuesPerEntity = 0;
                     while ((nextValue = (GenericValue) eli.next()) != null) {
-                        // find first value in valuesToStore list, starting with the current insertBefore value, that has a STAMP_FIELD after the nextValue.STAMP_FIELD
+                        // sort by the tx stamp and then the record stamp 
+                        // find first value in valuesToStore list, starting with the current insertBefore value, that has a STAMP_TX_FIELD after the nextValue.STAMP_TX_FIELD, then do the same with STAMP_FIELD
+                        while (insertBefore < valuesToStore.size() && ((GenericValue) valuesToStore.get(insertBefore)).getTimestamp(ModelEntity.STAMP_TX_FIELD).before(nextValue.getTimestamp(ModelEntity.STAMP_TX_FIELD))) {
+                            insertBefore++;
+                        }
                         while (insertBefore < valuesToStore.size() && ((GenericValue) valuesToStore.get(insertBefore)).getTimestamp(ModelEntity.STAMP_FIELD).before(nextValue.getTimestamp(ModelEntity.STAMP_FIELD))) {
                             insertBefore++;
                         }
@@ -261,7 +265,11 @@ public class EntitySyncServices {
                 
                 // call service named on EntitySync, IFF there is actually data to send over
                 if (totalRowsPerSplit > 0) {
-                    Map remoteStoreResult = dispatcher.runSync(targetServiceName, UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin));
+                    Map targetServiceMap = UtilMisc.toMap("entitySyncId", entitySyncId, "valuesToStore", valuesToStore, "keysToRemove", keysToRemove, "userLogin", userLogin);
+                    if (UtilValidate.isNotEmpty(targetDelegatorName)) {
+                        targetServiceMap.put("delegatorName", targetDelegatorName);
+                    }
+                    Map remoteStoreResult = dispatcher.runSync(targetServiceName, targetServiceMap);
                     if (ServiceUtil.isError(remoteStoreResult)) {
                         String errorMsg = "Error running EntitySync [" + entitySyncId + "], call to store service [" + targetServiceName + "] failed.";
                         List errorList = new LinkedList();
@@ -470,6 +478,13 @@ public class EntitySyncServices {
      */
     public static Map storeEntitySyncData(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
+        String overrideDelegatorName = (String) context.get("delegatorName");
+        if (UtilValidate.isNotEmpty(overrideDelegatorName)) {
+            delegator = GenericDelegator.getGenericDelegator(overrideDelegatorName);
+            if (delegator == null) {
+                return ServiceUtil.returnError("Could not find delegator with specified name " + overrideDelegatorName);
+            }
+        }
         //LocalDispatcher dispatcher = dctx.getDispatcher();
         
         String entitySyncId = (String) context.get("entitySyncId");
