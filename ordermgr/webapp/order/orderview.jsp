@@ -80,6 +80,7 @@
         String carrierPartyId = null;
         String shipmentMethodTypeId = null;
         String shippingInstructions = null;
+        String trackingNumber = null;
         Boolean maySplit = null;
         String giftMessage = null;
         Boolean isGift = null;
@@ -90,6 +91,7 @@
             carrierPartyId = shipmentPreference.getString("carrierPartyId");
             shipmentMethodTypeId = shipmentPreference.getString("shipmentMethodTypeId");
             shippingInstructions = shipmentPreference.getString("shippingInstructions");
+            trackingNumber = shipmentPreference.getString("trackingNumber");
             maySplit = shipmentPreference.getBoolean("maySplit");
             giftMessage = shipmentPreference.getString("giftMessage");
             isGift = shipmentPreference.getBoolean("isGift");
@@ -106,6 +108,8 @@
 
         Collection notes = delegator.findByAnd("OrderHeaderNoteView", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("-noteDateTime"));
         if (notes != null && notes.size() > 0) pageContext.setAttribute("notes", notes);
+
+        ContactMechWorker.getOrderContactMechValueMaps(pageContext, orderId, "orderContactMechValueMaps");
 %>
 
 <%@ include file="/order/orderinformation.jsp" %>

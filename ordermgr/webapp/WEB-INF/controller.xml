@@ -76,6 +76,13 @@
         <response name="error" type="view" value="orderview"/>
     </request-map>
 
+    <request-map uri="updateTrackingNumber">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateTrackingNumber"/>
+        <response name="success" type="view" value="orderview"/>
+        <response name="error" type="view" value="orderview"/>
+    </request-map>
+
     <request-map uri="createnewnote">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="createnewnote"/>

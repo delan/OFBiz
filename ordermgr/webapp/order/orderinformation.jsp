@@ -28,6 +28,9 @@
  *@version    1.0
  */
 %>
+
+<%EntityField entityField = new EntityField(pageContext);%>
+
 <br>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
  <tr>
@@ -38,17 +41,18 @@
     if (currentStatus != null) pageContext.setAttribute("currentStatus", currentStatus);
     List orderHeaderStatuses = orderReadHelper.getOrderHeaderStatuses();
     if (orderHeaderStatuses != null) pageContext.setAttribute("orderHeaderStatuses", orderHeaderStatuses);
+
+    String partyId = orderRole.getString("partyId");
+    GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));
+    String distributorId = orderReadHelper != null ? orderReadHelper.getDistributorId() : null;
+    String affiliateId = orderReadHelper != null ? orderReadHelper.getAffiliateId() : null;
+    if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);
+    if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);
+    //if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);
+    if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);
+    if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);
+    if (isGift != null) pageContext.setAttribute("isGift", isGift);
 %>
-<%String partyId = orderRole.getString("partyId");%>
-<%GenericValue userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));%>    
-<%String distributorId = orderReadHelper != null ? orderReadHelper.getDistributorId() : null;%>
-<%String affiliateId = orderReadHelper != null ? orderReadHelper.getAffiliateId() : null;%>
-<%if (distributorId != null) pageContext.setAttribute("distributorId", distributorId);%>
-<%if (billingAccount != null) pageContext.setAttribute("billingAccount", billingAccount);%>
-<%--if (billingAddress != null) pageContext.setAttribute("billingAddress", billingAddress);--%>
-<%if (shippingAddress != null) pageContext.setAttribute("shippingAddress", shippingAddress);%>
-<%if (maySplit != null) pageContext.setAttribute("maySplit", maySplit);%>
-<%if (isGift != null) pageContext.setAttribute("isGift", isGift);%>
 
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -69,22 +73,7 @@
         <tr>
           <td>
               <table width="100%" border="0" cellpadding="1" cellspacing='0'>
-                <tr>
-                  <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Name</b></div>
-                  </td>
-                  <td width="5">&nbsp;</td>
-                  <td NOWRAP align="left" valign="top" width="80%">
-                    <div class="tabletext">
-                    <%if(userPerson!=null){%>
-                      <%=PartyHelper.getPersonName(userPerson)%>
-                    <%}%>        
-                    &nbsp;(<a href="/partymgr/control/viewprofile?party_id=<%=partyId%>" class="buttontext"><%=partyId%></a>)
-                    </div>
-                  </td>
-                </tr>
                 <%if (security.hasEntityPermission("ORDERMGR", "_UPDATE", session)) {%>
-                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Change Status</b></div>
@@ -224,6 +213,8 @@
                     <%pageContext.setAttribute("outputted", "true");%>
                     <%if ("CREDIT_CARD".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
                         <%GenericValue creditCard = paymentMethod.getRelatedOne("CreditCard");%>
+                        <%GenericValue payment = EntityUtil.getFirst(delegator.findByAnd("Payment", UtilMisc.toMap("paymentPreferenceId", orderPaymentPreference.getString("orderPaymentPreferenceId"))));%>
+                        <%if (payment != null) pageContext.setAttribute("payment", payment);%>
                         <%if (creditCard != null) {%>
                             <%pageContext.setAttribute("creditCard", creditCard);%>
                             <%GenericValue pmBillingAddress = creditCard.getRelatedOne("PostalAddress");%>
@@ -242,10 +233,21 @@
                                       <%EntityField.run("creditCard", "cardType", pageContext);%>
                                       <%EntityField.run("creditCard", "cardNumber", pageContext);%>
                                       <%EntityField.run("creditCard", "expireDate", pageContext);%>
+                                      &nbsp;[<%EntityField.run("orderPaymentPreference", "statusId", pageContext);%>]
                                   <%} else {%>
                                     <%=ContactHelper.formatCreditCard(creditCard)%>
                                   <%}%>
                               </div>
+                              <div class="tabletext">
+                                <%if (orderPaymentPreference.get("authDate") != null) {%>
+                                  Authorized&nbsp;:&nbsp;<%EntityField.run("orderPaymentPreference", "authDate", pageContext);%>
+                                  &nbsp;&nbsp;(<b>Ref:</b>&nbsp;<%EntityField.run("orderPaymentPreference", "authRefNum", pageContext);%>)
+                                <%}%>
+                                <%if (payment != null && payment.get("effectiveDate") != null) {%>
+                                  Billed&nbsp;:&nbsp;<%EntityField.run("payment", "effectiveDate", pageContext);%>
+                                  &nbsp;&nbsp;(<b>Ref:</b>&nbsp;<%EntityField.run("payment", "paymentRefNum", pageContext);%>)
+                                <%}%>
+
                           </td>
                         </tr>
                     <%} else if ("EFT_ACCOUNT".equals(paymentMethod.getString("paymentMethodTypeId"))) {%>
@@ -273,6 +275,7 @@
                     <%}%>
                   </ofbiz:if>
                   <ofbiz:if name="pmBillingAddress">
+                    <tr><td>&nbsp;</td><td>&nbsp;</td><td colspan="5"><hr class='sepbar'></td></tr>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Address</b></div>
@@ -280,7 +283,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                           <div class="tabletext">
-                              <%EntityField.run("pmBillingAddress", "toName", "<b>To:</b> ", "<br>", pageContext);%> 
+                              <%EntityField.run("pmBillingAddress", "toName", "<b>To:</b> ", "<br>", pageContext);%>
                               <%EntityField.run("pmBillingAddress", "attnName", "<b>Attn:</b> ", "<br>", pageContext);%> 
                               <%EntityField.run("pmBillingAddress", "address1", pageContext);%><br>
                               <%EntityField.run("pmBillingAddress", "address2", "", "<br>", pageContext);%> 
@@ -362,10 +365,9 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Shipping Information</div>
+            <div class="boxhead">&nbsp;Contact Information</div>
           </td>
           <td valign="middle" align="right">
-            <%--<a href="javascript:void(0);" class="lightbuttontext">[Edit]</a>--%>
           </td>
         </tr>
       </table>
@@ -377,26 +379,115 @@
         <tr>
           <td>
               <table width="100%" border="0" cellpadding="1" cellspacing='0'>
-                <ofbiz:if name="shippingAddress">
                 <tr>
                   <td align="right" valign="top" width="15%">
-                    <div class="tabletext">&nbsp;<b>Destination</b></div>
+                    <div class="tabletext">&nbsp;<b>Name</b></div>
                   </td>
                   <td width="5">&nbsp;</td>
-                  <td align="left" valign="top" width="80%">
-                      <div class="tabletext">
-                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
-                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
-                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
-                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", ", ")%>
-                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
-                      <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
-                      </div>
+                  <td NOWRAP align="left" valign="top" width="80%">
+                    <div class="tabletext">
+                    <%if(userPerson!=null){%>
+                      <%=PartyHelper.getPersonName(userPerson)%>
+                    <%}%>
+                    &nbsp;(<a href="/partymgr/control/viewprofile?party_id=<%=partyId%>" class="buttontext"><%=partyId%></a>)
+                    </div>
                   </td>
                 </tr>
-                <tr><td colspan="7"><hr class='sepbar'></td></tr>
-                </ofbiz:if>
+                <ofbiz:iterator name="orderContactMechValueMap" property="orderContactMechValueMaps" type="java.util.Map" expandMap="true">
+                  <%GenericValue contactMech = (GenericValue) pageContext.getAttribute("contactMech");%>
+                  <%GenericValue contactMechPurpose = (GenericValue) pageContext.getAttribute("contactMechPurposeType");%>
+                  <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                  <tr>
+                    <td align="right" valign="top" width="15%">
+                      <div class="tabletext">&nbsp;<b><%=UtilFormatOut.checkNull(contactMechPurpose.getString("description"))%></b></div>
+                    </td>
+                    <td width="5">&nbsp;</td>
+                    <td align="left" valign="top" width="80%">
+                      <div class="tabletext">
+
+              <%if ("POSTAL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {%>
+                  <div class="tabletext">
+                    <%entityField.run("postalAddress", "toName", "<b>To:</b> ", "<br>");%>
+                    <%entityField.run("postalAddress", "attnName", "<b>Attn:</b> ", "<br>");%>
+                    <%entityField.run("postalAddress", "address1");%><br>
+                    <%entityField.run("postalAddress", "address2", "", "<br>");%>
+                    <%entityField.run("postalAddress", "city");%>,
+                    <%entityField.run("postalAddress", "stateProvinceGeoId");%>
+                    <%entityField.run("postalAddress", "postalCode");%>
+                    <%entityField.run("postalAddress", "countryGeoId", "<br>", "");%>
+                  </div>
+                  <%GenericValue postalAddress = (GenericValue) pageContext.getAttribute("postalAddress");%>
+                  <%if (postalAddress != null && (UtilValidate.isEmpty(postalAddress.getString("countryGeoId")) || postalAddress.getString("countryGeoId").equals("USA"))) {%>
+                    <%String addr1 = UtilFormatOut.checkNull(postalAddress.getString("address1"));%>
+                    <%if (addr1.indexOf(' ') > 0) {%>
+                      <%String addressNum = addr1.substring(0, addr1.indexOf(' '));%>
+                      <%String addressOther = addr1.substring(addr1.indexOf(' ')+1);%>
+                      <a target='_blank' href='http://www.whitepages.com/find_person_results.pl?fid=a&s_n=<%=addressNum%>&s_a=<%=addressOther%>&c=<%=UtilFormatOut.checkNull(postalAddress.getString("city"))%>&s=<%=UtilFormatOut.checkNull(postalAddress.getString("stateProvinceGeoId"))%>&x=29&y=18' class='buttontext'>(lookup:whitepages.com)</a>
+                    <%}%>
+                  <%}%>
+              <%} else if ("TELECOM_NUMBER".equals(contactMech.getString("contactMechTypeId"))) {%>
+                  <div class="tabletext">
+                    <%entityField.run("telecomNumber", "countryCode");%>
+                    <%entityField.run("telecomNumber", "areaCode", "", "-");%><%entityField.run("telecomNumber", "contactNumber");%>
+                    <%entityField.run("partyContactMech", "extension", "ext&nbsp;", "");%>
+                    <%GenericValue telecomNumber = (GenericValue) pageContext.getAttribute("telecomNumber");%>
+                    <%if (telecomNumber != null && (UtilValidate.isEmpty(telecomNumber.getString("countryCode")) || telecomNumber.getString("countryCode").equals("011"))) {%>
+                      <a target='_blank' href='http://www.anywho.com/qry/wp_rl?npa=<%=UtilFormatOut.checkNull(telecomNumber.getString("areaCode"))%>&telephone=<%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>&btnsubmit.x=20&btnsubmit.y=8' class='buttontext'>(lookup:anywho.com)</a>
+                      <a target='_blank' href='http://whitepages.com/find_person_results.pl?fid=p&ac=<%=UtilFormatOut.checkNull(telecomNumber.getString("areaCode"))%>&s=&p=<%=UtilFormatOut.checkNull(telecomNumber.getString("contactNumber"))%>&pt=b&x=40&y=9' class='buttontext'>(lookup:whitepages.com)</a>
+                    <%}%>
+                  </div>
+              <%} else if ("EMAIL_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {%>
+                  <div class="tabletext">
+                    <%entityField.run("contactMech", "infoString");%>
+                    <a href='mailto:<%entityField.run("contactMech", "infoString");%>' class='buttontext'>(send&nbsp;email)</a>
+                  </div>
+              <%} else if ("WEB_ADDRESS".equals(contactMech.getString("contactMechTypeId"))) {%>
+                  <div class="tabletext">
+                    <%entityField.run("contactMech", "infoString");%>
+                    <%String openAddress = UtilFormatOut.checkNull(contactMech.getString("infoString"));%>
+                    <%if(!openAddress.startsWith("http") && !openAddress.startsWith("HTTP")) openAddress = "http://" + openAddress;%>
+                    <a target='_blank' href='<%=openAddress%>' class='buttontext'>(open&nbsp;page&nbsp;in&nbsp;new&nbsp;window)</a>
+                  </div>
+              <%} else {%>
+                  <div class="tabletext">
+                    <%entityField.run("contactMech", "infoString");%>
+                  </div>
+              <%}%>
+
+                      </div>
+                    </td>
+                  </tr>
+                </ofbiz:iterator>
+              </table>
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+</TABLE>
+
+<br>
+
+<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
+        <tr>
+          <td valign="middle" align="left">
+            <div class="boxhead">&nbsp;Shipment Information</div>
+          </td>
+          <td valign="middle" align="right">
+          </td>
+        </tr>
+      </table>
+    </TD>
+  </TR>
+  <TR>
+    <TD width='100%'>
+      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
+        <tr>
+          <td>
+              <table width="100%" border="0" cellpadding="1" cellspacing='0'>
                 <tr>
                   <td align="right" valign="top" width="15%">
                     <div class="tabletext">&nbsp;<b>Method</b></div>
@@ -463,6 +554,33 @@
                        </td>
                     </tr>
                 <%}%>
+                <%if (security.hasEntityPermission("ORDERMGR", "_UPDATE", session)) {%>
+                    <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Tracking Number</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <form name="trackingNumberUpdate" method="get" action="<ofbiz:url>/updateTrackingNumber</ofbiz:url>">
+                           <input type="hidden" name="orderId" value="<%=orderHeader.getString("orderId")%>">
+                           <input type="text" style="font-size: x-small;" name="trackingNumber" value="<%=UtilFormatOut.checkNull(trackingNumber)%>">
+                           <a href="javascript:document.trackingNumberUpdate.submit();" class="buttontext">[Save]</a>
+                        </form>
+                      </td>
+                    </tr>
+                <%} else if (UtilValidate.isNotEmpty(trackingNumber)) {%>
+                    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+                    <tr>
+                      <td align="right" valign="top" width="15%">
+                        <div class="tabletext">&nbsp;<b>Tracking Number</b></div>
+                      </td>
+                      <td width="5">&nbsp;</td>
+                      <td align="left" valign="top" width="80%">
+                        <div class="tabletext"><%=UtilFormatOut.checkNull(trackingNumber)%></div>
+                      </td>
+                    </tr>
+                  <%}%>
               </table>
           </td>
         </tr>
