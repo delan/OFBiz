@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.14 2004/07/18 03:07:43 doogie Exp $
+ * $Id: EntityUtil.java,v 1.15 2004/07/21 06:37:22 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.entity.condition.EntityDateFilterCondition;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityFieldMap;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.condition.OrderByItem;
+import org.ofbiz.entity.condition.OrderByList;
 import org.ofbiz.entity.model.ModelField;
 
 /**
@@ -340,7 +340,7 @@ public class EntityUtil {
 
         List result = new ArrayList(values);
         if (Debug.verboseOn()) Debug.logVerbose("Sorting " + values.size() + " values, orderBy=" + orderBy.toString(), module);
-        Collections.sort(result, new OrderByComparator(orderBy));
+        Collections.sort(result, new OrderByList(orderBy));
         return result;
     }
 
@@ -408,78 +408,6 @@ public class EntityUtil {
             }
         }
         return result;
-    }
-
-    static class OrderByComparator extends OrderByItem implements Comparator {
-
-        private ModelField modelField = null;
-        private Comparator next = null;
-
-        OrderByComparator(List orderBy) {
-            this(orderBy, 0);
-        }
-
-        private OrderByComparator(List orderBy, int startIndex) {
-            super();
-            if (orderBy == null) throw new IllegalArgumentException("orderBy may not be empty");
-            if (startIndex >= orderBy.size()) throw new IllegalArgumentException("startIndex may not be greater than or equal to orderBy size");
-            parse(((String) orderBy.get(startIndex)));
-            if (startIndex + 1 < orderBy.size()) {
-                this.next = new OrderByComparator(orderBy, startIndex + 1);
-            }// else keep null
-        }
-
-        public int compare(java.lang.Object obj, java.lang.Object obj1) {
-            int result = compareAsc((GenericEntity) obj, (GenericEntity) obj1);
-
-            if (descending && result != 0) {
-                result = -result;
-            }
-            if ((result == 0) && (next != null)) {
-                return next.compare(obj, obj1);
-            } else {
-                return result;
-            }
-        }
-
-        private int compareAsc(GenericEntity obj, GenericEntity obj2) {
-            if (this.modelField == null) {
-                this.modelField = obj.getModelEntity().getField(field);
-                if (this.modelField == null) {
-                    throw new IllegalArgumentException("The field " + field + " could not be found in the entity " + obj.getEntityName());
-                }
-            }
-            Object value = obj.dangerousGetNoCheckButFast(this.modelField);
-            Object value2 = obj2.dangerousGetNoCheckButFast(this.modelField);
-
-            // null is defined as the largest possible value
-            if (value == null) return value2 == null ? 0 : 1;
-            if (value2 == null) return value == null ? 0 : -1;
-            if (value instanceof String) {
-                if (caseSensitivity == LOWER) {
-                    value = ((String) value).toLowerCase();
-                    value2 = ((String) value2).toLowerCase();
-                } else if (caseSensitivity == UPPER) {
-                    value = ((String) value).toUpperCase();
-                    value2 = ((String) value2).toUpperCase();
-                }
-            }
-            int result = ((Comparable) value).compareTo(value2);
-
-            // if (Debug.infoOn()) Debug.logInfo("[OrderByComparator.compareAsc] Result is " + result + " for [" + value + "] and [" + value2 + "]", module);
-            return result;
-        }
-
-        public boolean equals(java.lang.Object obj) {
-            if ((obj != null) && (obj instanceof OrderByComparator)) {
-                OrderByComparator that = (OrderByComparator) obj;
-
-                return this.field.equals(that.field) && (this.descending == that.descending)
-                    && UtilValidate.areEqual(this.next, that.next);
-            } else {
-                return false;
-            }
-        }
     }
 
     public static List findDatedInclusionEntity(GenericDelegator delegator, String entityName, Map search) throws GenericEntityException {
