@@ -2,7 +2,7 @@
 <!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
 
 <!--
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -23,11 +23,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Johan Isacsson
+ * @author     David E. Jones
  * @version    $Revision$
  * @since      2.2
 -->
 
-<!-- Services refactored and converted from java services -->
 <simple-methods>
 	<simple-method method-name="createPartyContactMech" short-description="Create a PartyContactMech">
 		<make-value value-name="newValue" entity-name="PartyContactMech"/>
@@ -35,7 +35,7 @@
     	<if-empty map-name="parameters" field-name="partyId">
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
+        <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_CREATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
@@ -67,7 +67,7 @@
     	<if-empty map-name="parameters" field-name="partyId">
             <field-to-field map-name="userLogin" field-name="partyId" to-map-name="parameters"/>
         </if-empty>
-        <if-compare-field field-name="partyId" to-map-name="userLogin" operator="not-equals">
+        <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_UPDATE"><fail-message message="You do not have permission to perform this operation for this party."/></check-permission>
         </if-compare-field>
         <check-errors/>
