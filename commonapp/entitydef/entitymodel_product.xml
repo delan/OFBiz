@@ -278,6 +278,33 @@
         <key-map field-name="productCategoryId"/>
       </relation>
     </entity>
+    <entity entity-name="ProductCategoryRole"
+            package-name="org.ofbiz.commonapp.product.category"
+            title="Product Category Role Entity">
+      <field name="productCategoryId" type="id-ne"></field>
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="comments" type="comment"></field>
+      <prim-key field="productCategoryId"/>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CRLE_PTYRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_CRLE_CATEGORY" rel-entity-name="ProductCategory">
+        <key-map field-name="productCategoryId"/>
+      </relation>
+    </entity>
     <entity entity-name="ProductCategoryRollup"
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Rollup Entity">
