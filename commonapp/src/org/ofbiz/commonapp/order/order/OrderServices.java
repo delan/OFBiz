@@ -175,7 +175,7 @@ public class OrderServices {
         }
 
         // set the item price info
-        List orderItemPriceInfo = (List) context.get("orderItemPriceInfo");
+        List orderItemPriceInfo = (List) context.get("orderItemPriceInfos");
         if (orderItemPriceInfo != null && orderItemPriceInfo.size() > 0) {
             Iterator oipii = orderItemPriceInfo.iterator();
             while (oipii.hasNext()) {

@@ -35,7 +35,7 @@
         <attribute name="paymentMethods" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="paymentMethodTypeIds" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderContactMechs" type="java.util.List" mode="IN" optional="true"/>
-        <attribute name="orderItemPriceInfo" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderItemPriceInfos" type="java.util.List" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="OUT"/>
     </service>
 
