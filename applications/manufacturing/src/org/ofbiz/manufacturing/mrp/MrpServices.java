@@ -618,10 +618,51 @@ public class MrpServices {
                             return ServiceUtil.returnError("Problem, can not find the product for a event, for more detail look at the log");
                         }
                         stockTmp = findProductMrpQoh(product, dispatcher);
+                        if (productFacility != null) {
+                            reorderQuantity = (productFacility.getDouble("reorderQuantity") != null? productFacility.getDouble("reorderQuantity").doubleValue(): -1);
+                            minimumStock = (productFacility.getDouble("minimumStock") != null? productFacility.getDouble("minimumStock").doubleValue(): 0);
+                            daysToShip = (productFacility.getLong("daysToShip") != null? productFacility.getLong("daysToShip").intValue(): 0);
+                        } else {
+                            minimumStock = 0;
+                            daysToShip = 0;
+                            reorderQuantity = -1;
+                        }
+                        // -----------------------------------------------------
                         // The components are also loaded thru the configurator
                         Map serviceResponse = null;
                         try {
                             serviceResponse = dispatcher.runSync("getManufacturingComponents", UtilMisc.toMap("productId", product.getString("productId"), "quantity", new Double(positiveEventQuantity)));
+                        } catch (Exception e) {
+                            return ServiceUtil.returnError("Problem, can not find the product for a event, for more detail look at the log");
+                        }
+                        components = (List)serviceResponse.get("components");
+                        if (components != null && components.size() > 0) {
+                            BOMNode node = ((BOMNode)components.get(0)).getParentNode();
+                            isbuild = node.isManufactured();
+                        } else {
+                            isbuild = false;
+                        }
+                        // #####################################################
+
+                        oldProductId = productId;
+                    }
+                    
+                    stockTmp = stockTmp + eventQuantity;
+                    if(stockTmp < minimumStock){
+                        double qtyToStock = minimumStock - stockTmp;
+                        //need to buy or build the product as we have not enough stock
+                        eventDate = inventoryEventForMRP.getTimestamp("eventDate");
+                        // to be just before the requirement
+                        eventDate.setTime(eventDate.getTime()-1);
+                        ProposedOrder proposedOrder = new ProposedOrder(product, facilityId, isbuild, eventDate, qtyToStock);
+                        // calculate the ProposedOrder quantity and update the quantity object property.
+                        proposedOrder.calculateQuantityToSupply(reorderQuantity, iteratorListInventoryEventForMRP);
+                        
+                        // -----------------------------------------------------
+                        // The components are also loaded thru the configurator
+                        Map serviceResponse = null;
+                        try {
+                            serviceResponse = dispatcher.runSync("getManufacturingComponents", UtilMisc.toMap("productId", product.getString("productId"), "quantity", new Double(proposedOrder.getQuantity())));
                         } catch (Exception e) {
                             return ServiceUtil.returnError("Problem, can not find the product for a event, for more detail look at the log");
                         }
@@ -642,28 +683,8 @@ public class MrpServices {
                         } else {
                             isbuild = false;
                         }
-                        if (productFacility != null) {
-                            reorderQuantity = (productFacility.getDouble("reorderQuantity") != null? productFacility.getDouble("reorderQuantity").doubleValue(): -1);
-                            minimumStock = (productFacility.getDouble("minimumStock") != null? productFacility.getDouble("minimumStock").doubleValue(): 0);
-                            daysToShip = (productFacility.getLong("daysToShip") != null? productFacility.getLong("daysToShip").intValue(): 0);
-                        } else {
-                            minimumStock = 0;
-                            daysToShip = 0;
-                            reorderQuantity = -1;
-                        }
-                        oldProductId = productId;
-                    }
-                    
-                    stockTmp = stockTmp + eventQuantity;
-                    if(stockTmp < minimumStock){
-                        double qtyToStock = minimumStock - stockTmp;
-                        //need to buy or build the product as we have not enough stock
-                        eventDate = inventoryEventForMRP.getTimestamp("eventDate");
-                        // to be just before the requirement
-                        eventDate.setTime(eventDate.getTime()-1);
-                        ProposedOrder proposedOrder = new ProposedOrder(product, facilityId, isbuild, eventDate, qtyToStock);
-                        // calculate the ProposedOrder quantity and update the quantity object property.
-                        proposedOrder.calculateQuantityToSupply(reorderQuantity, iteratorListInventoryEventForMRP);
+                        // #####################################################
+                        
                         // calculate the ProposedOrder requirementStartDate and update the requirementStartDate object property.
                         Map routingTaskStartDate = proposedOrder.calculateStartDate(daysToShip, routing, dispatcher);
                         if (isbuild) {
