@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.2 2003/08/16 23:08:19 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,6 +26,7 @@ package org.ofbiz.base.component;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
@@ -50,7 +51,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  */
 public class ComponentConfig {
@@ -160,6 +161,22 @@ public class ComponentConfig {
         return cc.isFileResourceLoader(resourceLoaderName);
     }
 
+    public static InputStream getStream(String componentName, String resourceLoaderName, String location) throws ComponentException {
+        ComponentConfig cc = ComponentConfig.getComponentConfig(componentName);
+        if (cc == null) {
+            throw new ComponentException("Could not find component with name: " + componentName);
+        }
+        return cc.getStream(resourceLoaderName, location);
+    }
+    
+    public static String getFullLocation(String componentName, String resourceLoaderName, String location) throws ComponentException {
+        ComponentConfig cc = ComponentConfig.getComponentConfig(componentName);
+        if (cc == null) {
+            throw new ComponentException("Could not find component with name: " + componentName);
+        }
+        return cc.getFullLocation(resourceLoaderName, location);
+    }
+    
     // ========== component info fields ==========
     protected String globalName = null;
     protected String rootLocation = null;    
@@ -218,7 +235,7 @@ public class ComponentConfig {
         elementIter = UtilXml.childElementList(ofbizComponentElement, "classpath").iterator();
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
-            ClasspathInfo classpathInfo = new ClasspathInfo(curElement);
+            ClasspathInfo classpathInfo = new ClasspathInfo(this, curElement);
             this.classpathInfos.add(classpathInfo);
         }
         
@@ -226,7 +243,7 @@ public class ComponentConfig {
         elementIter = UtilXml.childElementList(ofbizComponentElement, "entity-resource").iterator();
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
-            EntityResourceInfo entityResourceInfo = new EntityResourceInfo(curElement);
+            EntityResourceInfo entityResourceInfo = new EntityResourceInfo(this, curElement);
             this.entityResourceInfos.add(entityResourceInfo);
         }
         
@@ -234,7 +251,7 @@ public class ComponentConfig {
         elementIter = UtilXml.childElementList(ofbizComponentElement, "service-resource").iterator();
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
-            ServiceResourceInfo serviceResourceInfo = new ServiceResourceInfo(curElement);
+            ServiceResourceInfo serviceResourceInfo = new ServiceResourceInfo(this, curElement);
             this.serviceResourceInfos.add(serviceResourceInfo);
         }
         
@@ -242,7 +259,7 @@ public class ComponentConfig {
         elementIter = UtilXml.childElementList(ofbizComponentElement, "webapp").iterator();
         while (elementIter.hasNext()) {
             Element curElement = (Element) elementIter.next();
-            WebappInfo webappInfo = new WebappInfo(curElement);
+            WebappInfo webappInfo = new WebappInfo(this, curElement);
             this.webappInfos.add(webappInfo);
         }
         
@@ -258,6 +275,24 @@ public class ComponentConfig {
             throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
         }
         return "file".equals(resourceLoaderInfo.type) || "component".equals(resourceLoaderInfo.type);
+    }
+       
+    public InputStream getStream(String resourceLoaderName, String location) throws ComponentException {
+        ResourceLoaderInfo resourceLoaderInfo = (ResourceLoaderInfo) resourceLoaderInfos.get(resourceLoaderName);
+        if (resourceLoaderInfo == null) {
+            throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
+        }
+        //TODO: implement this
+        return null;
+    }
+       
+    public String getFullLocation(String resourceLoaderName, String location) throws ComponentException {
+        ResourceLoaderInfo resourceLoaderInfo = (ResourceLoaderInfo) resourceLoaderInfos.get(resourceLoaderName);
+        if (resourceLoaderInfo == null) {
+            throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
+        }
+        //TODO: implement this
+        return null;
     }
        
     public List getClasspathInfos() {
@@ -308,20 +343,26 @@ public class ComponentConfig {
     }
     
     public static class ResourceInfo {
+        public ComponentConfig componentConfig;
         public String loader;
         public String location;
 
-        public ResourceInfo(Element element) {
+        public ResourceInfo(ComponentConfig componentConfig, Element element) {
+            this.componentConfig = componentConfig;
             this.loader = element.getAttribute("loader");
             this.location = element.getAttribute("location");
         }
+        
+        ComponentResourceHandler createResourceHandler() {
+            return new ComponentResourceHandler(componentConfig.getGlobalName(), loader, location);
+    	}
     }
 
     public static class ClasspathInfo extends ResourceInfo {
         public String type;
 
-        public ClasspathInfo(Element element) {
-            super(element);
+        public ClasspathInfo(ComponentConfig componentConfig, Element element) {
+            super(componentConfig, element);
             this.type = element.getAttribute("type");
         }
     }
@@ -330,8 +371,8 @@ public class ComponentConfig {
         public String type;
         public String readerName;
 
-        public EntityResourceInfo(Element element) {
-            super(element);
+        public EntityResourceInfo(ComponentConfig componentConfig, Element element) {
+            super(componentConfig, element);
             this.type = element.getAttribute("type");
             this.readerName = element.getAttribute("reader-name");
         }
@@ -340,8 +381,8 @@ public class ComponentConfig {
     public static class ServiceResourceInfo extends ResourceInfo {
         public String type;
 
-        public ServiceResourceInfo(Element element) {
-            super(element);
+        public ServiceResourceInfo(ComponentConfig componentConfig, Element element) {
+            super(componentConfig, element);
             this.type = element.getAttribute("type");
         }
     }
@@ -352,8 +393,8 @@ public class ComponentConfig {
         public String server;
         public String mountPoint;
 
-        public WebappInfo(Element element) {
-            super(element);
+        public WebappInfo(ComponentConfig componentConfig, Element element) {
+            super(componentConfig, element);
             this.name = element.getAttribute("name");
             this.title = element.getAttribute("title");
             this.server = element.getAttribute("server");

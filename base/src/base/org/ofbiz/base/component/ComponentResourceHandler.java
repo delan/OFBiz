@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentResourceHandler.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: ComponentResourceHandler.java,v 1.2 2003/08/16 23:08:19 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -36,7 +36,7 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ComponentResourceHandler implements ResourceHandler {
@@ -78,8 +78,7 @@ public class ComponentResourceHandler implements ResourceHandler {
     }
 
     public InputStream getStream() throws GenericConfigException {
-        // TODO: implement this
-        return null;
+        return ComponentConfig.getStream(componentName, loaderName, location);
     }
 
     public boolean isFileResource() throws GenericConfigException {
@@ -87,8 +86,7 @@ public class ComponentResourceHandler implements ResourceHandler {
     }
 
     public String getFullLocation() throws GenericConfigException {
-        // TODO: implement this
-        return null;
+        return ComponentConfig.getFullLocation(componentName, loaderName, location);
     }
 
     public boolean equals(Object obj) {
