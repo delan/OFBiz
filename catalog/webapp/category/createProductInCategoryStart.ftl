@@ -28,21 +28,20 @@
 
 <div class="head1">Create Product in Category <span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]</span></div>
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>/EditProductCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[Edit ProductCategory]</a>
+    <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[Back to Edit Category]</a>
 </#if>
 
 <form name="createProductInCategoryCheckExistingForm" method="POST" action="<@ofbizUrl>/createProductInCategoryCheckExisting</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
-    <table border="0" wdith="100%">
+    <table width="100%" cellpadding="1" cellspacing="0" border="1">
         <#list productFeaturesByTypeMap.keySet() as productFeatureTypeId>
             <#assign findPftMap = Static["org.ofbiz.core.util.UtilMisc"].toMap("productFeatureTypeId", productFeatureTypeId)>
             <#assign productFeatureType = delegator.findByPrimaryKeyCache("ProductFeatureType", findPftMap)>
             <#assign productFeatures = productFeaturesByTypeMap[productFeatureTypeId]>
             <tr>
-                <td>
+                <td width="15%">
                     <div class="tabletext">${productFeatureType.description}:</div>
                 </td>
-                <td>$nbsp;</td>
                 <td>
                     <div class="tabletext">
                         <select class="selectBox" name="pft_${productFeatureTypeId}">
@@ -57,23 +56,19 @@
             </tr>
         </#list>
         <tr>
-            <td><div class="tabletext">Product Name:</div></td>
-            <td>$nbsp;</td>
+            <td width="15%"><div class="tabletext">Product Name:</div></td>
             <td><input type="text" name="productName" size="30" maxlength="60" class="inputBox"/></td>
         </tr>
         <tr>
-            <td><div class="tabletext">Short Description:</div></td>
-            <td>$nbsp;</td>
+            <td width="15%"><div class="tabletext">Short Description:</div></td>
             <td><input type="text" name="shortDescription" size="60" maxlength="250" class="inputBox"/></td>
         </tr>
         <tr>
-            <td><div class="tabletext">Default Price:</div></td>
-            <td>$nbsp;</td>
+            <td width="15%"><div class="tabletext">Default Price:</div></td>
             <td><input type="text" name="defaultPrice" size="8" class="inputBox"/></td>
         </tr>
         <tr>
-            <td><div class="tabletext">Average Cost:</div></td>
-            <td>$nbsp;</td>
+            <td width="15%"><div class="tabletext">Average Cost:</div></td>
             <td><input type="text" name="averageCost" size="8" class="inputBox"/></td>
         </tr>
         <tr>

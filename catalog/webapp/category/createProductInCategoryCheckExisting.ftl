@@ -28,7 +28,7 @@
 
 <div class="head1">Create Product in Category <span class="head2"><#if (productCategory.description)?has_content>"${productCategory.description}"</#if> [ID:${productCategoryId?if_exists}]</span></div>
 <#if productCategoryId?has_content>
-    <a href="<@ofbizUrl>/EditProductCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[Edit ProductCategory]</a>
+    <a href="<@ofbizUrl>/EditCategory?productCategoryId=${productCategoryId}</@ofbizUrl>" class="buttontext">[Back to Edit Category]</a>
 </#if>
 
 <div class="head1">
@@ -46,29 +46,32 @@
 </div>
 
 <#if products?has_content>
+    <table width="100%" cellpadding="1" cellspacing="0" border="1">
     <#list products as product>
-        <div class="tabletext">
-            ${product.productName?default("-no name-")} [${product.productId}]
-            <a href="<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[This is it]</a>
-        </div>
+        <tr>
+            <td><div class="tabletext">${product.productName?default("-no name-")} [${product.productId}]</div></td>
+            <td width="10%"><a href="<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>" class="buttontext">[This is it]</a></td>
+        </tr>
     </#list>
+    </table>
 <#else>
     <div class="head3">&nbsp;No existing products found.</div>
 </#if>
 
+<hr class="sepbar"/>
+
 <form name="createProductInCategoryForm" method="POST" action="<@ofbizUrl>/createProductInCategory</@ofbizUrl>" style="margin: 0;">
     <input type="hidden" name="productCategoryId" value="${productCategoryId}">
-    <table border="0" wdith="100%">
+    <table width="100%" cellpadding="1" cellspacing="0" border="1">
         <#list productFeatureAndTypeDatas?if_exists as productFeatureAndTypeData>
             <#assign productFeatureType = productFeatureAndTypeData.productFeatureType>
             <#assign productFeature = productFeatureAndTypeData.productFeature>
             <#assign productFeatureTypeId = productFeatureType.productFeatureTypeId>
             <input type="hidden" name="pft_${productFeatureType.productFeatureTypeId}" value="${productFeature.productFeatureId}"/>
             <tr>
-                <td>
+                <td width="15%">
                     <div class="tabletext">${productFeatureType.description}</div>
                 </td>
-                <td>$nbsp;</td>
                 <td>
                     <div class="tabletext">
                         ${productFeature.description}
@@ -84,42 +87,38 @@
             </tr>
         </#list>
         <tr>
-            <td><div class="tabletext">Product Name:</div></td>
-            <td>$nbsp;</td>
+            <td width="15%"><div class="tabletext">Product Name:</div></td>
             <td>
                 <input type="hidden" name="productName" value="${requestParameters.productName?if_exists}"/>
-                <div class="tabletext">${requestParameters.productName?if_exists}</div>
+                <div class="tabletext">&nbsp;${requestParameters.productName?default("&nbsp;")}</div>
             </td>
         </tr>
         <tr>
-            <td><div class="tabletext">Short Description:</div></td>
-            <td>$nbsp;</td>
+            <td width="15%"><div class="tabletext">Short Description:</div></td>
             <td>
                 <input type="hidden" name="shortDescription" value="${requestParameters.shortDescription?if_exists}"/>
-                <div class="tabletext">${requestParameters.shortDescription?if_exists}</div>
+                <div class="tabletext">&nbsp;${requestParameters.shortDescription?default("&nbsp;")}</div>
             </td>
         </tr>
         <tr>
-            <td><div class="tabletext">Default Price:</div></td>
-            <td>$nbsp;</td>
+            <td width="15%"><div class="tabletext">Default Price:</div></td>
             <td>
                 <input type="hidden" name="defaultPrice" value="${requestParameters.defaultPrice?if_exists}"/>
-                <div class="tabletext">${requestParameters.defaultPrice?if_exists}</div>
+                <div class="tabletext">&nbsp;${requestParameters.defaultPrice?default("&nbsp;")}</div>
             </td>
         </tr>
         <tr>
-            <td><div class="tabletext">Average Cost:</div></td>
-            <td>$nbsp;</td>
+            <td width="15%"><div class="tabletext">Average Cost:</div></td>
             <td>
                 <input type="hidden" name="averageCost" value="${requestParameters.averageCost?if_exists}"/>
-                <div class="tabletext">${requestParameters.averageCost?if_exists}</div>
+                <div class="tabletext">&nbsp;${requestParameters.averageCost?default("&nbsp;")}</div>
             </td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td colspan="3">
                 <div class="tabletext">
-                    New Product ID: <input type="text" name="productId" value=""/>
-                    <input type="submit" value="Create New Product"/>
+                    New Product ID: <input type="text" name="productId" value="" class="inputBox"/>
+                    <input type="submit" value="Create New Product" class="standardSubmit"/>
                 </div>
             </td>
         </tr>
