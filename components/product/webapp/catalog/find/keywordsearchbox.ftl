@@ -59,8 +59,9 @@
                 ${uiLabelMap.ProductCategoryId}: <input type="text" class="inputBox" name="SEARCH_CATEGORY_ID" size="20" maxlength="20" value="${requestParameters.SEARCH_CATEGORY_ID?if_exists}">
               </div>
               <div class="tabletext">
-                ${uiLabelMap.CommonAny}<input type="RADIO" name="SEARCH_OPERATOR" value="OR" checked/>
-                ${uiLabelMap.CommonAll}<input type="RADIO" name="SEARCH_OPERATOR" value="AND"/>
+                No Contains<input type="CHECKBOX" name="SEARCH_CONTAINS" value="N" <#if requestParameters.SEARCH_CONTAINS?if_exists == "N">checked="true"</#if>/>
+                ${uiLabelMap.CommonAny}<input type="RADIO" name="SEARCH_OPERATOR" value="OR" <#if requestParameters.SEARCH_OPERATOR?if_exists != "AND">checked="true"</#if>/>
+                ${uiLabelMap.CommonAll}<input type="RADIO" name="SEARCH_OPERATOR" value="AND" <#if requestParameters.SEARCH_OPERATOR?if_exists == "AND">checked="true"</#if>/>
                 &nbsp;<a href="javascript:document.keywordsearchform.submit()" class="buttontext">${uiLabelMap.CommonFind}</a>
               </div>
             </form>

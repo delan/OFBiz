@@ -98,6 +98,7 @@ public class KeywordIndex {
         keywords.put(product.getString("productId").toLowerCase(), new Long(pidWeight));
 
         addWeightedKeywordSourceString(product, "productName", strings);
+        addWeightedKeywordSourceString(product, "internalName", strings);
         addWeightedKeywordSourceString(product, "brandName", strings);
         addWeightedKeywordSourceString(product, "description", strings);
         addWeightedKeywordSourceString(product, "longDescription", strings);
