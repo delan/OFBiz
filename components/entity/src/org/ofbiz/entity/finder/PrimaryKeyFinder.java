@@ -1,5 +1,5 @@
 /*
- * $Id: PrimaryKeyFinder.java,v 1.2 2004/08/09 23:52:24 jonesde Exp $
+ * $Id: PrimaryKeyFinder.java,v 1.3 2004/08/14 00:58:53 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -35,13 +35,14 @@ import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.model.ModelEntity;
 import org.w3c.dom.Element;
 
 /**
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class PrimaryKeyFinder {
@@ -70,6 +71,7 @@ public class PrimaryKeyFinder {
 
     public void runFind(Map context, GenericDelegator delegator) throws GeneralException {
         String entityName = this.entityNameExdr.expandString(context);
+        ModelEntity modelEntity = delegator.getModelEntity(entityName);
         
         String useCacheString = this.useCacheExdr.expandString(context);
         // default to false
@@ -88,6 +90,8 @@ public class PrimaryKeyFinder {
             entityContext.putAll(tempVal);
         }
         EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, entityContext);
+        // then convert the types...
+        modelEntity.convertFieldMapInPlace(entityContext, delegator);
         
         // get the list of fieldsToSelect from selectFieldExpanderList
         Set fieldsToSelect = EntityFinderUtil.makeFieldsToSelect(selectFieldExpanderList, context);

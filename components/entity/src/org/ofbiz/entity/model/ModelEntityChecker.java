@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntityChecker.java,v 1.1 2004/06/20 07:09:19 jonesde Exp $
+ * $Id: ModelEntityChecker.java,v 1.2 2004/08/14 00:58:53 jonesde Exp $
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.GenericEntityException;
  * Generic Entity - Entity Definition Checker
  * 
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones </a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @since 3.1
  */
 public class ModelEntityChecker {
@@ -135,7 +135,6 @@ public class ModelEntityChecker {
                     }
                 }
                 if (entity.getRelationsSize() > 0) {
-                    // TODO: not displaying indexes, but do some checks on them anyway
                     Iterator indexIter = entity.getIndexesIterator();
                     while (indexIter.hasNext()) {
                         ModelIndex index = (ModelIndex) indexIter.next();

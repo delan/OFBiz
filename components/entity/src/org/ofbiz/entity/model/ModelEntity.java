@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.19 2004/07/17 07:05:08 doogie Exp $
+ * $Id: ModelEntity.java,v 1.20 2004/08/14 00:58:53 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable {
@@ -1063,24 +1063,40 @@ public class ModelEntity extends ModelInfo implements Comparable {
         return this.getEntityName().compareTo(otherModelEntity.getEntityName());
     }
     
+    public void convertFieldMapInPlace(Map inContext, GenericDelegator delegator) {
+        Iterator modelFields = this.getFieldsIterator();
+        while (modelFields.hasNext()) {
+            ModelField modelField = (ModelField) modelFields.next();
+            String fieldName = modelField.getName();
+            Object oldValue = inContext.get(fieldName);
+            if (oldValue != null) {
+                inContext.put(fieldName, this.convertFieldValue(modelField, oldValue, delegator));
+            }
+        }
+    }
+    
     public Object convertFieldValue(String fieldName, Object value, GenericDelegator delegator) {
         ModelField modelField = this.getField(fieldName);
         if (modelField == null) {
             String errMsg = "Could not convert field value: could not find an entity field for the name: [" + fieldName + "] on the [" + this.getEntityName() + "] entity.";
             throw new IllegalArgumentException(errMsg);
         }
+        return convertFieldValue(modelField, value, delegator);
+    }
+    
+    public Object convertFieldValue(ModelField modelField, Object value, GenericDelegator delegator) {
         String fieldJavaType = null;
         try {
             fieldJavaType = delegator.getEntityFieldType(this, modelField.getType()).getJavaType();
         } catch (GenericEntityException e) {
-            String errMsg = "Could not convert field value: could not find Java type for the field: [" + fieldName + "] on the [" + this.getEntityName() + "] entity: " + e.toString();
+            String errMsg = "Could not convert field value: could not find Java type for the field: [" + modelField.getName() + "] on the [" + this.getEntityName() + "] entity: " + e.toString();
             Debug.logError(e, errMsg, module);
             throw new IllegalArgumentException(errMsg);
         }
         try {
             return ObjectType.simpleTypeConvert(value, fieldJavaType, null, null);
         } catch (GeneralException e) {
-            String errMsg = "Could not convert field value for the field: [" + fieldName + "] on the [" + this.getEntityName() + "] entity to the [" + fieldJavaType + "] type for the value [" + value + "]: " + e.toString();
+            String errMsg = "Could not convert field value for the field: [" + modelField.getName() + "] on the [" + this.getEntityName() + "] entity to the [" + fieldJavaType + "] type for the value [" + value + "]: " + e.toString();
             Debug.logError(e, errMsg, module);
             throw new IllegalArgumentException(errMsg);
         }

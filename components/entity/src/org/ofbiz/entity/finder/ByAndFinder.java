@@ -1,5 +1,5 @@
 /*
- * $Id: ByAndFinder.java,v 1.2 2004/07/31 12:17:40 jonesde Exp $
+ * $Id: ByAndFinder.java,v 1.3 2004/08/14 00:58:53 jonesde Exp $
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -44,6 +44,7 @@ import org.ofbiz.entity.finder.EntityFinderUtil.LimitRange;
 import org.ofbiz.entity.finder.EntityFinderUtil.LimitView;
 import org.ofbiz.entity.finder.EntityFinderUtil.OutputHandler;
 import org.ofbiz.entity.finder.EntityFinderUtil.UseIterator;
+import org.ofbiz.entity.model.ModelEntity;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
 import org.w3c.dom.Element;
@@ -52,7 +53,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a and
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.1
  */
 public class ByAndFinder {
@@ -121,6 +122,7 @@ public class ByAndFinder {
         String filterByDateStr = this.filterByDateStrExdr.expandString(context);
         String distinctStr = this.distinctStrExdr.expandString(context);
         String delegatorName = this.delegatorNameExdr.expandString(context);
+        ModelEntity modelEntity = delegator.getModelEntity(entityName);
         
         boolean useCache = "true".equals(useCacheStr);
         boolean filterByDate = "true".equals(filterByDateStr);
@@ -143,6 +145,8 @@ public class ByAndFinder {
         // create the by and map
         Map entityContext = new HashMap();
         EntityFinderUtil.expandFieldMapToContext(this.fieldMap, context, entityContext);
+        // then convert the types...
+        modelEntity.convertFieldMapInPlace(entityContext, delegator);
         
         
         // get the list of fieldsToSelect from selectFieldExpanderList
