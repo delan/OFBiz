@@ -23,11 +23,7 @@
  */
 package org.ofbiz.minilang.method.entityops;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.SimpleMethod;
@@ -83,49 +79,8 @@ public class MakeNextSeqId extends MethodOperation {
         }
 
         GenericValue value = (GenericValue) valueAcsr.get(methodContext);
-        if (UtilValidate.isEmpty(value.getString(seqFieldName))) {
-            String sequencedIdPrefix = methodContext.getDelegator().getSequencedIdPrefix();
-
-            value.remove(seqFieldName);
-            GenericValue lookupValue = methodContext.getDelegator().makeValue(value.getEntityName(), null);
-            lookupValue.setPKFields(value);
-            try {
-                // get values in whatever order, we will go through all of them to find the highest value
-                List allValues = methodContext.getDelegator().findByAnd(value.getEntityName(), lookupValue, null);
-                //Debug.logInfo("Get existing values from entity " + value.getEntityName() + " with lookupValue: " + lookupValue + ", and the seqFieldName: " + seqFieldName + ", and the results are: " + allValues, module);
-                Iterator allValueIter = allValues.iterator();
-                int highestSeqVal = 1;
-                while (allValueIter.hasNext()) {
-                    GenericValue curValue = (GenericValue) allValueIter.next();
-                    String currentSeqId = curValue.getString(seqFieldName);
-                    if (currentSeqId != null) {
-                        if (UtilValidate.isNotEmpty(sequencedIdPrefix)) {
-                            if (currentSeqId.startsWith(sequencedIdPrefix)) {
-                                currentSeqId = currentSeqId.substring(sequencedIdPrefix.length());
-                            } else {
-                                continue;
-                            }
-                        }
-                        try {
-                            int seqVal = Integer.parseInt(currentSeqId);
-                            if (seqVal > highestSeqVal) {
-                                highestSeqVal = seqVal;
-                            }
-                        } catch (Exception e) {
-                            Debug.logWarning("Error in make-next-seq-id converting SeqId [" + currentSeqId + "] to a number: " + e.toString(), module);
-                        }
-                    }
-                }
-
-                String newSeqId = sequencedIdPrefix + UtilFormatOut.formatPaddedNumber(highestSeqVal + incrementBy, numericPadding);
-
-                value.set(seqFieldName, newSeqId);
-            } catch (Exception e) {
-                Debug.logError(e, "Error making next seqId", module);
-                return true;
-           }
-        }
-
+        methodContext.getDelegator().setNextSubSeqId(value, seqFieldName, numericPadding, incrementBy);
+        
         return true;
     }
 }
