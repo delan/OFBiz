@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
 import org.ofbiz.content.widget.WidgetWorker;
@@ -776,6 +777,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         this.appendWhitespace(buffer);
 
+        Map inputFields = (Map)context.get("requestParameters");
+        String queryString = UtilHttp.urlEncodeArgs(inputFields);
+        context.put("_QBESTRING_", queryString);
         this.renderNextPrev(buffer, context, modelForm);
     }
 
@@ -1525,7 +1529,7 @@ public class HtmlFormRenderer implements FormStringRenderer {
             return;
         }
 
-        String str = (String) context.get("queryString");
+        String str = (String) context.get("_QBESTRING_");
         String queryString = stripViewParamsFromQueryString(str);
         ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
         RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
