@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFieldValue.java,v 1.6 2004/07/21 03:03:33 doogie Exp $
+ * $Id: EntityFieldValue.java,v 1.7 2004/07/21 06:32:06 doogie Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.entity.model.ModelField;
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  *@since      1.0
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  */
 public class EntityFieldValue extends EntityConditionValue {
 
@@ -75,7 +75,7 @@ public class EntityFieldValue extends EntityConditionValue {
 
     public void validateSql(ModelEntity modelEntity) throws GenericModelException {
         ModelField field = getModelField(modelEntity);
-        if (field != null)
+        if (field == null)
             throw new GenericModelException("Field with name " + fieldName + " not found in the " + modelEntity.getEntityName() + " Entity");
     }
 
