@@ -221,6 +221,11 @@ public class DataServices {
         return createFileMethod(dctx, context);
     }
 
+    public static Map createFileNoPerm(DispatchContext dctx, Map context) {
+        context.put("skipPermissionCheck", "true");        
+        return createFileMethod(dctx, context);
+    }
+
     public static Map createFileMethod(DispatchContext dctx, Map context) {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
