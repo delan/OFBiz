@@ -52,9 +52,14 @@ public class TransactionUtil implements javax.transaction.Status {
 
         if (ut != null) {
             try {
-                if (ut.getStatus() == TransactionUtil.STATUS_ACTIVE) {
+                int currentStatus = ut.getStatus();
+                if (currentStatus == TransactionUtil.STATUS_ACTIVE) {
                     Debug.logVerbose("[TransactionUtil.begin] active transaction in place, so no transaction begun", module);
                     return false;
+                } else if (currentStatus == TransactionUtil.STATUS_MARKED_ROLLBACK) {
+                    Debug.logVerbose("[TransactionUtil.begin] active transaction marked for rollback in place, so no transaction begun", module);
+                    throw new GenericTransactionException("The current transaction is marked for rollback, should stop immediately.");
+                    //return false;
                 }
                 ut.begin();
                 Debug.logVerbose("[TransactionUtil.begin] transaction begun", module);
@@ -111,6 +116,7 @@ public class TransactionUtil implements javax.transaction.Status {
                     Debug.logInfo("[TransactionUtil.commit] Not committing transaction, status is STATUS_NO_TRANSACTION", module);
                 }
             } catch (RollbackException e) {
+                if (Debug.infoOn()) Thread.dumpStack();
                 //This is Java 1.4 only, but useful for certain debuggins: Throwable t = e.getCause() == null ? e : e.getCause();
                 throw new GenericTransactionException("Roll back error, could not commit transaction, was rolled back instead", e);
             } catch (HeuristicMixedException e) {
@@ -149,7 +155,7 @@ public class TransactionUtil implements javax.transaction.Status {
                 int status = ut.getStatus();
 
                 if (status != STATUS_NO_TRANSACTION) {
-                    //Thread.dumpStack();
+                    if (Debug.infoOn()) Thread.dumpStack();
                     ut.rollback();
                     Debug.logInfo("[TransactionUtil.rollback] transaction rolled back", module);
                 } else {
@@ -173,7 +179,7 @@ public class TransactionUtil implements javax.transaction.Status {
                 int status = ut.getStatus();
 
                 if (status != STATUS_NO_TRANSACTION) {
-                    //Thread.dumpStack();
+                    if (Debug.infoOn()) Thread.dumpStack();
                     ut.setRollbackOnly();
                     Debug.logInfo("[TransactionUtil.setRollbackOnly] transaction roll back only set", module);
                 } else {
