@@ -1,6 +1,6 @@
-<!-- Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org -->
+<!-- Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org -->
 <#--
- *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
  *  copy of this software and associated documentation files (the "Software"), 
@@ -22,7 +22,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -32,7 +32,7 @@ ${pages.get("/includes/header.ftl")}
  <tr>
   ${pages.get("/templates/leftbar.ftl")}
   <td width='100%' valign='top' align='left'>
-    ${pages.get("/includes/errormsg.ftl")}
+    ${common.get("/includes/errormsg.ftl")}
     ${pages.get(page.path)}
   </td>
  </tr>
