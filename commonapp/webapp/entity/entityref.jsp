@@ -23,14 +23,17 @@
  * @version 1.0
 -->
 
+<%@ page import="org.ofbiz.core.util.*" %>
+
 <HTML>
 <HEAD>
 <TITLE>Entity Reference Chart</TITLE>
 </HEAD>
+<%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%
 	String search = null;
-	String list = "entityref_list.jsp";
-	String main = "entityref_main.jsp";
+	String list = controlPath + "/view/entityref_list";
+	String main = controlPath + "/view/entityref_main";
 	search = (String) request.getParameter("search");
 	if ( search != null ) {
 		list = list + "?search=" + search;

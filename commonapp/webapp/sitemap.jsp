@@ -42,7 +42,13 @@
 <ul>
   <li><a href="<%=response.encodeURL(controlPath + "/main")%>" class="buttontext">Main</a>
   <%if(security.hasPermission("ENTITY_MAINT", session)){%>
-    <li><a href="<%=response.encodeURL(controlPath + "/entitymaint")%>" class='buttontext'>Entity Maintenance</A>
+    <li>Entity Maintenance Utilities
+    <ul>
+      <li><a href="<%=response.encodeURL(controlPath + "/entitymaint")%>" class='buttontext'>Entity Data Maintenance</A>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/entityref")%>" class='buttontext'>Entity Reference</A>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/tablesMySql")%>" class='buttontext'>MySQL Table Creation SQL</A>
+      <li><a href="<%=response.encodeURL(controlPath + "/view/dataMySql")%>" class='buttontext'>MySQL Auto Data SQL</A>
+    </ul>
   <%}%>
   <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
     <li><a href="<%=response.encodeURL(controlPath + "/FindUtilCache")%>" class='buttontext'>Cache Maintenance</A>

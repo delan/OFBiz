@@ -47,6 +47,14 @@
     <request-map><uri>sitemap</uri><secure>false</secure><auth>false</auth><success>view:sitemap</success></request-map>
     <request-map><uri>entitymaint</uri><secure>true</secure><auth>true</auth><success>view:entitymaint</success></request-map>
 
+    <request-map><uri>FindGeneric</uri><secure>true</secure><auth>true</auth><success>view:FindGeneric</success></request-map>
+    <request-map><uri>ViewGeneric</uri><secure>true</secure><auth>true</auth><success>view:ViewGeneric</success></request-map>
+    <request-map>
+        <uri>UpdateGeneric</uri><secure>true</secure><auth>true</auth>
+        <event-type>java</event-type><event-path>org.ofbiz.core.event.GenericWebEvent</event-path><event-invoke>updateGeneric</event-invoke>
+        <success>view:ViewGeneric</success><error>view:ViewGeneric</error>
+    </request-map>
+
     <request-map><uri>FindUtilCache</uri><secure>true</secure><auth>true</auth><success>view:FindUtilCache</success></request-map>
     <request-map>
         <uri>FindUtilCacheClear</uri><secure>true</secure><auth>true</auth>
@@ -78,25 +86,19 @@
     <view-map><view>error</view><mapped-page>/error/error.jsp</mapped-page></view-map>
     <view-map><view>main</view><mapped-page>/main.jsp</mapped-page></view-map>
     <view-map><view>sitemap</view><mapped-page>/sitemap.jsp</mapped-page></view-map>
-    <view-map><view>entitymaint</view><mapped-page>/entitymaint.jsp</mapped-page></view-map>
+
+    <view-map><view>entitymaint</view><mapped-page>/entity/entitymaint.jsp</mapped-page></view-map>
+    <view-map><view>entityref</view><mapped-page>/entity/entityref.jsp</mapped-page></view-map>
+    <view-map><view>entityref_list</view><mapped-page>/entity/entityref_list.jsp</mapped-page></view-map>
+    <view-map><view>entityref_main</view><mapped-page>/entity/entityref_main.jsp</mapped-page></view-map>
+    <view-map><view>FindGeneric</view><mapped-page>/entity/FindGeneric.jsp</mapped-page></view-map>
+    <view-map><view>ViewGeneric</view><mapped-page>/entity/ViewGeneric.jsp</mapped-page></view-map>
+
+    <view-map><view>tablesMySql</view><mapped-page>/entity/tablesMySql.jsp</mapped-page></view-map>
+    <view-map><view>dataMySql</view><mapped-page>/entity/dataMySql.jsp</mapped-page></view-map>
 
     <view-map><view>EditUtilCache</view><mapped-page>/cache/EditUtilCache.jsp</mapped-page></view-map>
     <view-map><view>FindUtilCache</view><mapped-page>/cache/FindUtilCache.jsp</mapped-page></view-map>
     <view-map><view>FindUtilCacheElements</view><mapped-page>/cache/FindUtilCacheElements.jsp</mapped-page></view-map>
     <!-- end of view mappings -->
-
-    <!-- Generated Request Mappings -->
-    <request-map><uri>FindUserLogin</uri><secure>true</secure><auth>true</auth><success>view:FindUserLogin</success></request-map>
-    <request-map><uri>ViewUserLogin</uri><secure>true</secure><auth>true</auth><success>view:ViewUserLogin</success></request-map>
-    <request-map>
-        <uri>UpdateUserLogin</uri><secure>true</secure><auth>true</auth>
-        <event-type>java</event-type><event-path>org.ofbiz.commonapp.security.login.UserLoginWebEvent</event-path><event-invoke>updateUserLogin</event-invoke>
-        <success>view:ViewUserLogin</success><error>view:ViewUserLogin</error>
-    </request-map>
-    <!-- End of Generated Request Mappings -->
-
-    <!-- Generated View Mappings -->
-    <view-map><view>FindUserLogin</view><mapped-page>/security/login/FindUserLogin.jsp</mapped-page></view-map>
-    <view-map><view>ViewUserLogin</view><mapped-page>/security/login/ViewUserLogin.jsp</mapped-page></view-map>
-    <!-- End of Generated View Mappings -->
 </site-conf>
