@@ -244,33 +244,19 @@ public class OrderServices {
         String orderId = (String) context.get("orderId");
         String partyId = (String) context.get("partyId");
         String roleTypeId = (String) context.get("roleTypeId");
-        Map fields = UtilMisc.toMap("orderId",orderId,"partyId",partyId,"roleTypeId",roleTypeId);
-        
-        GenericValue testValue = null;
-        try {
-            testValue = delegator.findByPrimaryKey("OrderRole",fields);
-        }
-        catch ( GenericEntityException e ) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not add role to order (" + e.getMessage() + ").");
-            return result;
-        }
-        
-        if ( testValue != null && testValue.get("orderId").equals(orderId) ) {
-            if (!testValue.getString("partyId").equals(partyId)) {
-                try {
-                    testValue.set("partyId", partyId);
-                    testValue.store();
-                } catch (GenericEntityException e) {
-                    result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-                    result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not update role to order (" + e.getMessage() + ").");
-                    return result;
-                }
+        String removeOld = (String) context.get("removeOld");
+
+        if (removeOld != null && removeOld.equalsIgnoreCase("true")) {
+            try {
+                delegator.removeByAnd("OrderRole", UtilMisc.toMap("orderId", orderId, "roleTypeId", roleTypeId));
+            } catch (GenericEntityException e) {
+                result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+                result.put(ModelService.ERROR_MESSAGE,"ERROR: Could not remove old roles (" + e.getMessage() + ").");
+                return result;
             }
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-            return result;
         }
 
+        Map fields = UtilMisc.toMap("orderId",orderId, "partyId", partyId, "roleTypeId",roleTypeId);
         try {
             GenericValue value = delegator.makeValue("OrderRole",fields);
             delegator.create(value);

@@ -190,6 +190,7 @@
     <service name="addOrderRole" engine="java"
     location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">
         <description>Adds a RoleType to an order</description>
+        <attribute name="removeOld" type="String" mode="IN" optional="true"/>
         <attribute name="orderId" type="String" mode="IN"/>
         <attribute name="partyId" type="String" mode="IN"/>
         <attribute name="roleTypeId" type="String" mode="IN"/>
