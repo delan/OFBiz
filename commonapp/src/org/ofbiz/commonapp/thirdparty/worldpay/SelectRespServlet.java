@@ -62,6 +62,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         String delegatorName = request.getParameter("M_delegatorName");
         String dispatchName = request.getParameter("M_dispatchName");
         
+        Debug.logInfo("Gor orderProps: " + orderPropertiesString);
         Debug.logInfo("Got websiteId: " + webSiteId, module);
         Debug.logInfo("Got delegatorName:" + delegatorName, module);
         Debug.logInfo("Got dispatchName:" + dispatchName, module);
@@ -92,7 +93,7 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
         String transStatus = request.getParameter(SelectDefs.SEL_transStatus);
         
         // store some stuff for calling existing events
-        request.setAttribute("servletContext", sctx);
+        //request.setAttribute("servletContext", sctx);
         request.setAttribute("delegator", delegator);
         request.setAttribute("dispatcher", dispatcher);
         request.setAttribute("order_id", orderId);
