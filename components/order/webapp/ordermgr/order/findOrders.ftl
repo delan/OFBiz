@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.2
 -->
 
@@ -290,13 +290,26 @@ document.lookuporder.order_id.focus();
             <#assign orh = Static["org.ofbiz.order.order.OrderReadHelper"].getHelper(orderHeader)>
             <#assign statusItem = orderHeader.getRelatedOneCache("StatusItem")>
             <#assign orderType = orderHeader.getRelatedOneCache("OrderType")>
-            <#assign placingParty = orh.getPlacingParty()?if_exists>
+            <#if orderType.orderTypeId == "PURCHASE_ORDER">
+              <#assign displayParty = orh.getSupplierAgent()?if_exists>
+            <#else>
+              <#assign displayParty = orh.getPlacingParty()?if_exists>
+            </#if>
+            <#assign partyId = displayParty.partyId?default("_NA_")>
             <tr class='${rowClass}'>
               <td><div class='tabletext'>${orderType.description?default(orderType.orderTypeId?default(""))}</div></td>
               <td><a href="<@ofbizUrl>/orderview?order_id=${orderHeader.orderId}</@ofbizUrl>" class='buttontext'>${orderHeader.orderId}</a></td>
               <td>
+                <div class="tabletext">
+                  <#if displayParty?has_content>
+                    ${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(displayParty, true)}
+                  <#else>
+                    N/A
+                  </#if>
+                </div>
+                <#--
                 <div class='tabletext'>
-                <#assign partyId = "_NA_">
+
                 <#if placingParty?has_content>
                   <#assign partyId = placingParty.partyId>
                   <#if placingParty.getEntityName() == "Person">
@@ -316,6 +329,7 @@ document.lookuporder.order_id.focus();
                   N/A
                 </#if>
                 </div>
+                -->
               </td>
               <td align="right"><div class="tabletext">${orh.getTotalOrderItemsQuantity()?string.number}</div></td>
               <td align="right"><div class="tabletext">${orh.getOrderReturnedQuantity()?string.number}</div></td>

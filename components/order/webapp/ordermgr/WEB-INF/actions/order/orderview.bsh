@@ -1,26 +1,26 @@
 /*
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a 
- *  copy of this software and associated documentation files (the "Software"), 
- *  to deal in the Software without restriction, including without limitation 
- *  the rights to use, copy, modify, merge, publish, distribute, sublicense, 
- *  and/or sell copies of the Software, and to permit persons to whom the 
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
  *  Software is furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included 
+ *  The above copyright notice and this permission notice shall be included
  *  in all copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS 
- *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
- *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
- *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
- *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 */
 
@@ -59,28 +59,10 @@ context.put("fromDate", fromDate);
 context.put("delegate", delegate);
 
 orderHeader = null;
-orderRole = null;
 if (orderId != null && orderId.length() > 0) {
     orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
 }
 
-if (orderHeader != null) {
-    orderRoles = orderHeader.getRelated("OrderRole", UtilMisc.toMap("roleTypeId", "PLACING_CUSTOMER"), null);
-    orderRole = EntityUtil.getFirst(orderRoles);
-}
-
-partyId = null;
-if (orderRole != null) {
-    partyId = orderRole.getString("partyId");
-}
-context.put("partyId", partyId);
-
-userPerson = null;
-if (partyId != null) {
-    userPerson = delegator.findByPrimaryKey("Person",UtilMisc.toMap("partyId",orderRole.getString("partyId")));
-}
-context.put("userPerson", userPerson);
-    
 if (orderHeader != null) {
     // set hasPermission, must always exist if the orderHeader != null
     // hasPermission if: has ORDERMGR_VIEW, ORDERMGR_ROLE_VIEW & associated with order, or is associated in the SUPPLIER_AGENT role
@@ -104,7 +86,7 @@ if (orderHeader != null) {
     }
     context.put("hasPermission", hasPermission);
     context.put("canViewInternalDetails", canViewInternalDetails);
-    
+
     orderReadHelper = new OrderReadHelper(orderHeader);
     orderItems = orderReadHelper.getValidOrderItems();
     orderAdjustments = orderReadHelper.getAdjustments();
@@ -117,18 +99,35 @@ if (orderHeader != null) {
     context.put("orderHeaderAdjustments", orderHeaderAdjustments);
     context.put("orderSubTotal", orderSubTotal);
     context.put("currencyUomId", orderReadHelper.getCurrency());
-   
+
+    // get the order type
+    orderType = orderHeader.getString("orderTypeId");
+    context.put("orderType", orderType);
+
+    // get the display party
+    displayParty = null;
+    if ("PURCHASE_ORDER".equals(orderType)) {
+        displayParty = orderReadHelper.getSupplierAgent();
+    } else {
+        displayParty = orderReadHelper.getPlacingParty();
+    }
+    if (displayParty != null) {
+        partyId = displayParty.getString("partyId");
+        context.put("displayParty", displayParty);
+        context.put("partyId", partyId);
+    }
+
     otherAdjAmount = OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, true, false, false);
     context.put("otherAdjAmount", otherAdjAmount);
-    
+
     shippingAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, false, true);
     shippingAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true);
     context.put("shippingAmount", shippingAmount);
-    
+
     taxAmount = OrderReadHelper.getAllOrderItemsAdjustmentsTotal(orderItems, orderAdjustments, false, true, false);
     taxAmount += OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, true, false);
     context.put("taxAmount", taxAmount);
-    
+
     grandTotal = OrderReadHelper.getOrderGrandTotal(orderItems, orderAdjustments);
     context.put("grandTotal", grandTotal);
 
@@ -137,19 +136,19 @@ if (orderHeader != null) {
 
     shippingAddress = orderReadHelper.getShippingAddress();
     context.put("shippingAddress", shippingAddress);
-    
+
     billingAddress = orderReadHelper.getBillingAddress();
     context.put("billingAddress", billingAddress);
-    
+
     distributorId = orderReadHelper.getDistributorId();
     context.put("distributorId", distributorId);
-    
+
     affiliateId = orderReadHelper.getAffiliateId();
     context.put("affiliateId", affiliateId);
-    
+
     billingAccount = orderHeader.getRelatedOne("BillingAccount");
     context.put("billingAccount", billingAccount);
-    
+
     // get a list of all shipments, and a list of ItemIssuances per order item
     allShipmentsMap = new HashMap();
     primaryShipments = orderHeader.getRelated("PrimaryShipment");
@@ -169,7 +168,7 @@ if (orderHeader != null) {
                 allShipmentsMap.put(iiShipment.get("shipmentId"), iiShipment);
             }
         }
-        
+
         perItemList = itemIssuancesPerItem.get(itemIssuance.get("orderItemSeqId"));
         if (perItemList == null) {
             perItemList = new LinkedList();
@@ -179,7 +178,7 @@ if (orderHeader != null) {
     }
     context.put("allShipments", allShipmentsMap.values());
     context.put("itemIssuancesPerItem", itemIssuancesPerItem);
-    
+
     // get a list of all invoices
     allInvoices = new OrderedSet();
     orderBilling = delegator.findByAnd("OrderItemBilling", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("invoiceId"));
@@ -192,7 +191,7 @@ if (orderHeader != null) {
 
     oppFields = UtilMisc.toList(new EntityExpr("orderId", EntityOperator.EQUALS, orderId), new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "PAYMENT_CANCELLED"));
     orderPaymentPreferences = delegator.findByAnd("OrderPaymentPreference", oppFields);
-    context.put("orderPaymentPreferences", orderPaymentPreferences);  
+    context.put("orderPaymentPreferences", orderPaymentPreferences);
 
     shipmentPreference = null;
     carrierPartyId = null;
@@ -215,7 +214,7 @@ if (orderHeader != null) {
         maySplit = shipmentPreference.getString("maySplit");
         giftMessage = shipmentPreference.getString("giftMessage");
         isGift = shipmentPreference.getString("isGift");
-    } 
+    }
     context.put("shipmentPreference", shipmentPreference);
     context.put("carrierPartyId", carrierPartyId);
     context.put("shipmentMethodTypeId", shipmentMethodTypeId);
@@ -235,21 +234,21 @@ if (orderHeader != null) {
 
     statusChange = delegator.findByAnd("StatusValidChange",UtilMisc.toMap("statusId",orderHeader.getString("statusId")));
     context.put("statusChange", statusChange);
-    
+
     currentStatus = orderHeader.getRelatedOne("StatusItem");
     context.put("currentStatus", currentStatus);
-    
+
     orderHeaderStatuses = orderReadHelper.getOrderHeaderStatuses();
     context.put("orderHeaderStatuses", orderHeaderStatuses);
-    
+
     adjustmentTypes = delegator.findAll("OrderAdjustmentType", UtilMisc.toList("description"));
-    context.put("orderAdjustmentTypes", adjustmentTypes);    
+    context.put("orderAdjustmentTypes", adjustmentTypes);
 
     notes = delegator.findByAnd("OrderHeaderNoteView", UtilMisc.toMap("orderId", orderId), UtilMisc.toList("-noteDateTime"));
-    context.put("orderNotes", notes);   
+    context.put("orderNotes", notes);
 
     cmvm = ContactMechWorker.getOrderContactMechValueMaps(delegator, orderId);
-    context.put("orderContactMechValueMaps", cmvm);       
+    context.put("orderContactMechValueMaps", cmvm);
 }
 
 paramString = "";
@@ -258,30 +257,30 @@ if (workEffortId != null) paramString = paramString + "&workEffortId=" + workEff
 if (assignPartyId != null) paramString = paramString + "&partyId=" + assignPartyId;
 if (assignRoleTypeId != null) paramString = paramString + "&roleTypeId=" + assignRoleTypeId;
 if (fromDate != null) paramString = paramString + "&fromDate=" + fromDate;
-context.put("paramString", paramString);  
+context.put("paramString", paramString);
 
- 
+
 workEffortStatus = null;
-if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) {        
+if (workEffortId != null && assignPartyId != null && assignRoleTypeId != null && fromDate != null) {
     fields = UtilMisc.toMap("workEffortId", workEffortId, "partyId", assignPartyId, "roleTypeId", assignRoleTypeId, "fromDate", fromDate);
     wepa = delegator.findByPrimaryKey("WorkEffortPartyAssignment", fields);
-        
-    if (wepa != null && wepa.get("statusId") != null && wepa.getString("statusId").equals("CAL_ACCEPTED")) {            
-        workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));           
+
+    if (wepa != null && wepa.get("statusId") != null && wepa.getString("statusId").equals("CAL_ACCEPTED")) {
+        workEffort = delegator.findByPrimaryKey("WorkEffort", UtilMisc.toMap("workEffortId", workEffortId));
         workEffortStatus = workEffort.getString("currentStatusId");
         if (workEffortStatus != null) {
             context.put("workEffortStatus", workEffortStatus);
             if (workEffortStatus.equals("WF_RUNNING") || workEffortStatus.equals("WF_SUSPENDED"))
                 context.put("inProcess", new Boolean(true));
         }
-        
+
         if (workEffort != null) {
-            if ((delegate != null && delegate.equals("true")) || (workEffortStatus != null && workEffortStatus.equals("WF_RUNNING"))) {                 
+            if ((delegate != null && delegate.equals("true")) || (workEffortStatus != null && workEffortStatus.equals("WF_RUNNING"))) {
                 actFields = UtilMisc.toMap("packageId", workEffort.getString("workflowPackageId"), "packageVersion", workEffort.getString("workflowPackageVersion"), "processId", workEffort.getString("workflowProcessId"), "processVersion", workEffort.getString("workflowProcessVersion"), "activityId", workEffort.getString("workflowActivityId"));
-                activity = delegator.findByPrimaryKey("WorkflowActivity", actFields);  
+                activity = delegator.findByPrimaryKey("WorkflowActivity", actFields);
                 if (activity != null) {
                     transitions = activity.getRelated("FromWorkflowTransition", null, UtilMisc.toList("-transitionId"));
-                    context.put("wfTransitions", transitions);                    
+                    context.put("wfTransitions", transitions);
                 }
             }
         }
