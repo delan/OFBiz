@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones
  *@author     Brad Steiner
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      2.2
  */
 
@@ -95,11 +95,11 @@ context.put("product", product);
 HtmlFormWrapper updateProductContentWrapper = null;
 
 //Email
-if("FULFILLMENT_EMAIL".equals(productContentTypeId)) {
+if ("FULFILLMENT_EMAIL".equals(productContentTypeId)) {
     emailData = new HashMap();
-    if(contentId != null && content != null) {
+    if (contentId != null && content != null) {
         subjectDr = content.getRelatedOne("DataResource");
-        if(subjectDr != null) {
+        if (subjectDr != null) {
             subject = subjectDr.getRelatedOne("ElectronicText");
             emailData.put("subject", subject.get("textData"));
             emailData.put("subjectDataResourceId", subject.get("dataResourceId"));
@@ -107,8 +107,8 @@ if("FULFILLMENT_EMAIL".equals(productContentTypeId)) {
         serviceCtx = UtilMisc.toMap("userLogin", userLogin, "contentId", contentId, "mapKeys", UtilMisc.toList("plainBody", "htmlBody"));
         result = dispatcher.runSync("findAssocContent", serviceCtx);
         contentAssocs = result.get("contentAssocs");
-        if(contentAssocs != null) {
-            for(java.util.Iterator iterator = contentAssocs.iterator(); iterator.hasNext(); ) {
+        if (contentAssocs != null) {
+            for (java.util.Iterator iterator = contentAssocs.iterator(); iterator.hasNext(); ) {
                 contentAssoc  = iterator.next();
                 bodyContent = contentAssoc.getRelatedOne("ToContent");
                 bodyDr = bodyContent.getRelatedOne("DataResource");
@@ -122,11 +122,11 @@ if("FULFILLMENT_EMAIL".equals(productContentTypeId)) {
     updateProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProductContentEmail", request, response);
     updateProductContentWrapper.putInContext("emailData", emailData);
     context.put("emailData", emailData);
-} else if("DIGITAL_DOWNLOAD".equals(productContentTypeId)) {
+} else if ("DIGITAL_DOWNLOAD".equals(productContentTypeId)) {
     downloadData = new HashMap();
-    if(contentId != null && content != null) {
+    if (contentId != null && content != null) {
         downloadDr = content.getRelatedOne("DataResource");
-        if(subjectDr != null) {
+        if (subjectDr != null) {
             download = downloadDr.getRelatedOne("OtherDataResource");
             downloadData.put("file", download.get("dataResourceContent"));
             downloadData.put("fileDataResourceId", download.get("dataResourceId"));
@@ -134,15 +134,14 @@ if("FULFILLMENT_EMAIL".equals(productContentTypeId)) {
     }
     updateProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProductContentDownload", request, response);
     updateProductContentWrapper.putInContext("downloadData", downloadData);
-}
-else if("FULFILLMENT_EXTERNAL".equals(productContentTypeId)) {
+} else if ("FULFILLMENT_EXTERNAL".equals(productContentTypeId)) {
     updateProductContentWrapper = new HtmlFormWrapper("/product/ProductForms.xml", "EditProductContentExternal", request, response);
 } else {
     //Assume it is a generic simple text content
     textData = new HashMap();
-    if(contentId != null && content != null) {
+    if (contentId != null && content != null) {
         textDr = content.getRelatedOne("DataResource");
-        if(textDr != null) {
+        if (textDr != null) {
             text = textDr.getRelatedOne("ElectronicText");
             textData.put("text", text.get("textData"));
             textData.put("textDataResourceId", text.get("dataResourceId"));
