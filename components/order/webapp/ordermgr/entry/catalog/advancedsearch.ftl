@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -88,6 +88,7 @@
             <option value="SortProductField:productName">${uiLabelMap.ProductProductName}</option>
             <option value="SortProductField:totalQuantityOrdered">Popularity by Orders</option>
             <option value="SortProductField:totalTimesViewed">Popularity by Views</option>
+            <option value="SortProductField:averageCustomerRating">Customer Rating</option>
             <option value="SortProductPrice:LIST_PRICE">List Price</option>
             <option value="SortProductPrice:DEFAULT_PRICE">Default Price</option>
           </select>

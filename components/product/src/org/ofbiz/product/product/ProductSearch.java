@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.34 2004/05/11 13:13:59 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.35 2004/05/12 16:40:38 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -60,7 +60,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.34 $
+ * @version    $Revision: 1.35 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -1035,6 +1035,8 @@ public class ProductSearch {
                 return "Popularity by Orders";
             } else if ("totalTimesViewed".equals(this.fieldName)) {
                 return "Popularity by Views";
+            } else if ("averageCustomerRating".equals(this.fieldName)) {
+                return "Customer Rating";
             }
             return this.fieldName;
         }

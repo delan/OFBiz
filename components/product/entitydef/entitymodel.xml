@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.83 $
+ * @version    $Revision: 1.84 $
  */
 -->
 
@@ -1590,6 +1590,7 @@
       <field name="isVariant" type="indicator"></field>
       <field name="totalQuantityOrdered" type="floating-point"></field>
       <field name="totalTimesViewed" type="numeric"></field>
+      <field name="averageCustomerRating" type="floating-point"></field>
       <field name="billOfMaterialLevel" type="numeric"></field>
       <field name="createdDate" type="date-time"></field>
       <field name="createdByUserLogin" type="id-vlong"></field>
@@ -1954,6 +1955,14 @@
           <key-map field-name="statusId"/>
         </relation>
     </entity>
+    <view-entity entity-name="ProductReviewAvgCalc"
+            package-name="org.ofbiz.product.product"
+            title="ProductReview Average Rating Calculation View Entity">
+      <member-entity entity-alias="PROD_REV" entity-name="ProductReview"/>
+      <alias entity-alias="PROD_REV" name="productId" group-by="true"/>
+      <alias entity-alias="PROD_REV" name="productRatingAvg" field="productRating" function="avg"/>
+      <alias entity-alias="PROD_REV" name="productRatingCount" field="productRating" function="count"/>
+    </view-entity>
     <entity entity-name="ProductSearchConstraint"
             package-name="org.ofbiz.product.product"
             never-cache="true"
