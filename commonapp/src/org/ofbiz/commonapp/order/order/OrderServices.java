@@ -59,7 +59,7 @@ public class OrderServices {
         if (result.size() > 0) {
             return result;
         }
-        
+
         // check to make sure we have something to order
         List orderItems = (List) context.get("orderItems");
         if (orderItems.size() < 1) {
@@ -76,7 +76,7 @@ public class OrderServices {
         while (itemIter.hasNext()) {
             //if the item is out of stock, return an error to that effect
             GenericValue orderItem = (GenericValue) itemIter.next();
-            
+
             GenericValue product = null;
             try {
                 product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.get("productId")));
@@ -93,10 +93,10 @@ public class OrderServices {
                 errorMessages.add(errMsg);
                 continue;
             }
-            
+
             //check to see if introductionDate hasn't passed yet
             if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
-                String excMsg = "Tried to order the Product " + product.getString("productName") + 
+                String excMsg = "Tried to order the Product " + product.getString("productName") +
                         " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale.";
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
@@ -105,7 +105,7 @@ public class OrderServices {
 
             //check to see if salesDiscontinuationDate has passed
             if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
-                String excMsg = "Tried to order the Product " + product.getString("productName") + 
+                String excMsg = "Tried to order the Product " + product.getString("productName") +
                         " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale.";
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
@@ -123,13 +123,13 @@ public class OrderServices {
                 }
             }
         }
-        
+
         if (errorMessages.size() > 0) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE_LIST, errorMessages);
             return result;
         }
-        
+
         // create the order object
         String orderId = delegator.getNextSeqId("OrderHeader").toString();
         String billingAccountId = (String) context.get("billingAccountId");
@@ -182,7 +182,7 @@ public class OrderServices {
                 toBeStored.add(oicm);
             }
         }
-        
+
         // set the shipment preferences
         List orderShipmentPreferences = (List) context.get("orderShipmentPreferences");
         if (orderShipmentPreferences != null && orderShipmentPreferences.size() > 0) {
@@ -197,7 +197,7 @@ public class OrderServices {
                 toBeStored.add(orderShipmentPreference);
             }
         }
-        
+
         // set the order items
         Iterator oi = orderItems.iterator();
         while (oi.hasNext()) {
@@ -271,7 +271,7 @@ public class OrderServices {
 				paymentPreference.set("statusId", "PAYMENT_NOT_AUTHORIZED");
                 toBeStored.add(paymentPreference);
             }
-        } 
+        }
 
         // set by payment method type ids as well
         List paymentMethodTypeIds = (List) context.get("paymentMethodTypeIds");
@@ -280,7 +280,7 @@ public class OrderServices {
             Iterator pmtsIter = paymentMethodTypeIds.iterator();
             while (pmtsIter.hasNext()) {
                 String paymentMethodTypeId = (String) pmtsIter.next();
-                
+
                 toBeStored.add(delegator.makeValue("OrderPaymentPreference",
                         UtilMisc.toMap("orderPaymentPreferenceId", delegator.getNextSeqId("OrderPaymentPreference").toString(),
                                 "orderId", orderId, "paymentMethodTypeId", paymentMethodTypeId)));
@@ -299,8 +299,8 @@ public class OrderServices {
                 Iterator invDecItemIter = orderItems.iterator();
                 while (invDecItemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) invDecItemIter.next();
-                    
-                    Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId, 
+
+                    Double inventoryNotReserved = CatalogWorker.reserveCatalogInventory(prodCatalogId,
                             orderItem.getString("productId"), orderItem.getDouble("quantity"),
                             orderItem.getString("orderId"), orderItem.getString("orderItemSeqId"),
                             userLogin, delegator, dispatcher);
@@ -320,7 +320,7 @@ public class OrderServices {
                         resErrorMessages.add(invErrMsg);
                     }
                 }
-                
+
                 if (resErrorMessages.size() > 0) {
                     TransactionUtil.rollback(beganTransaction);
                     result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
@@ -663,19 +663,22 @@ public class OrderServices {
             GenericValue product = (GenericValue) itemProductList.get(i);
             Double itemAmount = (Double) itemAmountList.get(i);
             Double shippingAmount = (Double) itemShippingList.get(i);
-            Double taxAmount = getTaxAmount(product, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
-            itemAdjustments.add(i, taxAmount);
+            Double taxAmount = getTaxAmount(delegator, product, stateCode, itemAmount.doubleValue(), shippingAmount.doubleValue());
+            itemAdjustments.add(UtilMisc.toList(delegator.makeValue("OrderAdjustment",
+                    UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", stateCode))));
         }
-        if (orderShippingAmount.doubleValue() > 0)
-            orderAdjustments.add(getTaxAmount(null, stateCode, 0.00, orderShippingAmount.doubleValue()));
+        if (orderShippingAmount.doubleValue() > 0) {
+            Double taxAmount = getTaxAmount(delegator, null, stateCode, 0.00, orderShippingAmount.doubleValue());
+            orderAdjustments.add(delegator.makeValue("OrderAdjustment",
+                    UtilMisc.toMap("amount", taxAmount, "orderAdjustmentTypeId", "SALES_TAX", "comments", stateCode)));
+        }
 
         Map result = UtilMisc.toMap("orderAdjustments", orderAdjustments, "itemAdjustments", itemAdjustments);
         return result;
 
     }
 
-    private static Double getTaxAmount(GenericValue item, String stateCode, double itemAmount, double shippingAmount) {
-        GenericDelegator delegator = item.getDelegator();
+    private static Double getTaxAmount(GenericDelegator delegator, GenericValue item, String stateCode, double itemAmount, double shippingAmount) {
         Map lookupMap = null;
         if (item != null)
             lookupMap = UtilMisc.toMap("stateProvinceGeoId", stateCode, "taxCategory", item.get("taxCategory"));
@@ -694,11 +697,11 @@ public class OrderServices {
                 return new Double(0.00);
             }
             GenericValue taxLookup = (GenericValue) filteredList.get(0);
-            double taxRate = taxLookup.getDouble("salesTaxPercentage").doubleValue();
+            double taxRate = taxLookup.get("salesTaxPercentage") != null ? taxLookup.getDouble("salesTaxPercentage").doubleValue() : 0;
             double taxable = 0.00;
-            if (item.getBoolean("taxable").booleanValue())
+            if (item != null && (item.get("taxable") == null || (item.get("taxable") != null && item.getBoolean("taxable").booleanValue())))
                 taxable += itemAmount;
-            if (taxLookup.getBoolean("taxShipping").booleanValue())
+            if (taxLookup != null && (taxLookup.get("taxShipping") == null || (taxLookup.get("taxShipping") != null && taxLookup.getBoolean("taxShipping").booleanValue())))
                 taxable += shippingAmount;
             return new Double(taxable * taxRate);
         } catch (GenericEntityException e) {

@@ -86,6 +86,18 @@
         <attribute name="note" type="String" mode="IN"/>
     </service>
 
+    <service name="simpleTaxCalc" engine="java"
+            location="org.ofbiz.commonapp.order.order.OrderServices" invoke="simpleTaxCalc">
+        <description>Simple Tax Calc</description>
+        <attribute name="itemProductList" type="java.util.List" mode="IN"/>
+        <attribute name="itemAmountList" type="java.util.List" mode="IN"/>
+        <attribute name="itemShippingList" type="java.util.List" mode="IN" optional="true"/>
+        <attribute name="orderShippingAmount" type="Double" mode="IN" optional="true"/>
+        <attribute name="shippingAddress" type="org.ofbiz.core.entity.GenericValue" mode="IN"/>
+        <attribute name="orderAdjustments" type="java.util.List" mode="OUT"/>
+        <attribute name="itemAdjustments" type="java.util.List" mode="OUT"/>
+    </service>
+
     <!-- Customer Request Services -->
     <service name="createCustRequest" engine="simple"
             location="org/ofbiz/commonapp/order/request/CustRequestServices.xml" invoke="createCustRequest" auth="true">

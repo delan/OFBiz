@@ -406,7 +406,7 @@ public class CheckOutEvents {
         if (orderPropertiesUrl == null)
             throw new GeneralException("Cannot get reference to order.properties.");
 
-        String taxService = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.service", "NONE");
+        String taxService = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.tax.service", "NONE");
         if ("NONE".equals(taxService))
             return;
 
@@ -416,6 +416,10 @@ public class CheckOutEvents {
         if (shipAddress == null)
             throw new GeneralException("Shipping address is not set in the shopping cart.");
 
+        // remove old tax adjustments
+        cart.removeAdjustmentByType("SALES_TAX");
+
+        // get the tax adjustments
         List taxReturn = getTaxAdjustments(dispatcher, taxService, items, adjs, shipAddress);
         Debug.logVerbose("ReturnList: " + taxReturn);
 
@@ -468,7 +472,7 @@ public class CheckOutEvents {
 
         Map serviceResult = null;
         try {
-            serviceResult = dispatcher.runSync("taxwareCalcTax", serviceContext);
+            serviceResult = dispatcher.runSync(taxService, serviceContext);
         } catch (GenericServiceException e) {
             Debug.logError(e);
             throw new GeneralException("Problem occured in tax service (" + e.getMessage() + ")", e);
