@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDevice.java,v 1.2 2004/08/19 18:49:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import jpos.JposException;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev$
  * @since      3.2
  */
 public abstract class GenericDevice implements JposDevice {

@@ -1,5 +1,5 @@
 /*
- * $Id: PosTransaction.java,v 1.3 2004/08/17 19:51:26 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev$
  * @since      3.1
  */
 public class PosTransaction {

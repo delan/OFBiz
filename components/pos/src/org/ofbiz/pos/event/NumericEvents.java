@@ -1,5 +1,5 @@
 /*
- * $Id: NumericEvents.java,v 1.3 2004/08/15 21:26:42 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.pos.screen.PosScreen;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev$
  * @since      3.1
  */
 public class NumericEvents {

@@ -1,5 +1,5 @@
 /*
- * $Id: DataEventAdaptor.java,v 1.1 2004/08/06 20:55:08 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import jpos.events.DataEvent;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    Rev
  * @since      Aug 6, 2004
  */
 public class DataEventAdaptor implements jpos.events.DataListener {

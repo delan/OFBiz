@@ -1,5 +1,5 @@
 /*
- * $Id: ScannerKybService.java,v 1.5 2004/08/07 03:32:07 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.pos.adaptor.KeyboardReceiver;
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev$
  * @since      3.2
  */
 public class ScannerKybService extends BaseKybService implements jpos.services.ScannerService18, KeyboardReceiver {
