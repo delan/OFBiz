@@ -10,27 +10,28 @@
 <%GenericValue userLogin = (GenericValue)session.getAttribute(SiteDefs.USER_LOGIN);%>
 <%GenericValue person = userLogin==null?null:userLogin.getRelatedOne("Person");%>
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
+<%String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);%>
 
-<%String pageName = (String)pageContext.getAttribute("PageName");%>
+<%String pageName = UtilFormatOut.checkNull((String)pageContext.getAttribute("PageName"));%>
 
-<%String companyName = UtilProperties.getPropertyValue("ecommerce", "company.name");%>
-<%String companySubtitle = UtilProperties.getPropertyValue("ecommerce", "company.subtitle");%>
-<%String headerImageUrl = UtilProperties.getPropertyValue("ecommerce", "header.image.url");%>
+<%String companyName = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.name");%>
+<%String companySubtitle = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.subtitle");%>
+<%String headerImageUrl = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.image.url");%>
 
-<%String headerBoxBorderColor = UtilProperties.getPropertyValue("ecommerce", "header.box.border.color", "black");%>
-<%String headerBoxBorderWidth = UtilProperties.getPropertyValue("ecommerce", "header.box.border.width", "1");%>
-<%String headerBoxTopColor = UtilProperties.getPropertyValue("ecommerce", "header.box.top.color", "#678475");%>
-<%String headerBoxBottomColor = UtilProperties.getPropertyValue("ecommerce", "header.box.bottom.color", "#cccc99");%>
-<%String headerBoxBottomColorAlt = UtilProperties.getPropertyValue("ecommerce", "header.box.bottom.color.alt", "#eeeecc");%>
-<%String headerBoxTopPadding = UtilProperties.getPropertyValue("ecommerce", "header.box.top.padding", "4");%>
-<%String headerBoxBottomPadding = UtilProperties.getPropertyValue("ecommerce", "header.box.bottom.padding", "2");%>
+<%String headerBoxBorderColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.box.border.color", "black");%>
+<%String headerBoxBorderWidth = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.box.border.width", "1");%>
+<%String headerBoxTopColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.box.top.color", "#678475");%>
+<%String headerBoxBottomColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.box.bottom.color", "#cccc99");%>
+<%String headerBoxBottomColorAlt = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.box.bottom.color.alt", "#eeeecc");%>
+<%String headerBoxTopPadding = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.box.top.padding", "4");%>
+<%String headerBoxBottomPadding = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.box.bottom.padding", "2");%>
 
-<%String boxBorderColor = UtilProperties.getPropertyValue("ecommerce", "box.border.color", "black");%>
-<%String boxBorderWidth = UtilProperties.getPropertyValue("ecommerce", "box.border.width", "1");%>
-<%String boxTopColor = UtilProperties.getPropertyValue("ecommerce", "box.top.color", "#678475");%>
-<%String boxBottomColor = UtilProperties.getPropertyValue("ecommerce", "box.bottom.color", "white");%>
-<%String boxTopPadding = UtilProperties.getPropertyValue("ecommerce", "box.top.padding", "4");%>
-<%String boxBottomPadding = UtilProperties.getPropertyValue("ecommerce", "box.bottom.padding", "4");%>
+<%String boxBorderColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.border.color", "black");%>
+<%String boxBorderWidth = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.border.width", "1");%>
+<%String boxTopColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.top.color", "#678475");%>
+<%String boxBottomColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.bottom.color", "white");%>
+<%String boxTopPadding = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.top.padding", "4");%>
+<%String boxBottomPadding = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.bottom.padding", "4");%>
 
 <html>
 <head>
@@ -70,7 +71,7 @@ function mClk(src){
         <tr>
           <%if(headerImageUrl != null && headerImageUrl.length() > 0) {%>
             <TD align=left width='1%'>
-              <IMG height='50' src='<%=headerImageUrl%>' alt='<%=UtilProperties.getPropertyValue("ecommerce", "company.name")%>'>
+              <IMG height='50' src='<%=headerImageUrl%>' alt='<%=companyName%>'>
             </TD>
           <%}%>
           <TD align=left>
@@ -114,7 +115,7 @@ function mClk(src){
             <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/logout/main</ofbiz:url>" class="buttontext">Logout</a></td>
           <%}%>
           <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/main</ofbiz:url>" class="buttontext">Main</a></td>
-          <%-- <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/catalog?catalog_id=<%=UtilProperties.getPropertyValue("ecommerce", "catalog.id.default")%></ofbiz:url>" class="buttontext">Catalog</a></td> --%>
+          <%-- <td bgcolor="<%=headerBoxBottomColor%>" onmouseover='mOvr(this,"<%=headerBoxBottomColorAlt%>");' onmouseout='mOut(this,"<%=headerBoxBottomColor%>");' onclick="mClk(this);" class="headerButtonLeft"><a href="<ofbiz:url>/catalog?catalog_id=<%=UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "catalog.id.default")%></ofbiz:url>" class="buttontext">Catalog</a></td> --%>
           <%if(person==null){%>
             <TD bgcolor="<%=headerBoxBottomColor%>" width="90%" align=center class='headerCenter'>Welcome!</TD>
           <%}else{%>

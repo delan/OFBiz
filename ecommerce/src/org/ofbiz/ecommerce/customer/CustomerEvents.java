@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.29  2001/09/26 18:41:44  epabst
+ * renamed getActive to filterByDate()
+ * renamed getContactMech to getContactMechByPurpose/ByType
+ *
  * Revision 1.28  2001/09/26 17:13:57  epabst
  * fixed bug where using wrong overload to find PRIMARY_EMAIL
  *
@@ -140,6 +144,7 @@ public class CustomerEvents {
    */
   public static String createCustomer(HttpServletRequest request, HttpServletResponse response) {
     GenericValue newUserLogin = null;
+    String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
     
     String errMsg = "";
     GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
@@ -216,7 +221,7 @@ public class CustomerEvents {
     }
     
     GenericValue tempUserLogin = delegator.makeValue("UserLogin", UtilMisc.toMap("userLoginId", username, "partyId", username));
-    if (UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) {
+    if(UtilProperties.propertyValueEqualsIgnoreCase(contextRoot + "/WEB-INF/ecommerce.properties", "create.allow.password", "true")) {
       errMsg += setPassword(tempUserLogin, password, confirmPassword, passwordHint);
     }
     
@@ -228,7 +233,7 @@ public class CustomerEvents {
     }
     
     //UserLogin with username does not exist: create new user...
-    if(!UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) password = UtilProperties.getPropertyValue("ecommerce", "default.customer.password", "ungssblepswd");
+    if(!UtilProperties.propertyValueEqualsIgnoreCase(contextRoot + "/WEB-INF/ecommerce.properties", "create.allow.password", "true")) password = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "default.customer.password", "ungssblepswd");
     
     Timestamp now = UtilDateTime.nowTimestamp();
     
@@ -307,7 +312,7 @@ public class CustomerEvents {
       return "error";
     }
     
-    if(UtilProperties.propertyValueEqualsIgnoreCase("ecommerce", "create.allow.password", "true")) request.getSession().setAttribute(SiteDefs.USER_LOGIN, newUserLogin);
+    if(UtilProperties.propertyValueEqualsIgnoreCase(contextRoot + "/WEB-INF/ecommerce.properties", "create.allow.password", "true")) request.getSession().setAttribute(SiteDefs.USER_LOGIN, newUserLogin);
     return "success";
   }
   
@@ -1108,6 +1113,7 @@ public class CustomerEvents {
    */
   public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
     GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
+    String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
     
     String userLoginId = request.getParameter("USERNAME");
     
@@ -1146,15 +1152,15 @@ public class CustomerEvents {
       return "error";
     }
     
-    final String SMTP_SERVER = UtilProperties.getPropertyValue("ecommerce", "smtp.relay.host");
-    final String LOCAL_MACHINE = UtilProperties.getPropertyValue("ecommerce", "smtp.local.machine");
-    final String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue("ecommerce", "password.send.email");
+    final String SMTP_SERVER = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "smtp.relay.host");
+    final String LOCAL_MACHINE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "smtp.local.machine");
+    final String PASSWORD_SENDER_EMAIL = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "password.send.email");
     
     String content = "Username: " + userLoginId + "\nPassword: " + UtilFormatOut.checkNull(supposedUserLogin.getString("currentPassword"));
     try {
       SendMailSMTP mail = new SendMailSMTP(SMTP_SERVER, PASSWORD_SENDER_EMAIL, emails.toString(), content);
       mail.setLocalMachine(LOCAL_MACHINE);
-      mail.setSubject(SiteDefs.SITE_NAME + " Password Reminder");
+      mail.setSubject(UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.name", "") + " Password Reminder");
       //mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
       mail.setMessage(content);
       mail.send();

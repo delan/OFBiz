@@ -120,14 +120,6 @@
 -->
         <delete file="${lib.dir}/ofbcore-share.jar" />
 
-        <delete file="${etc.dir}/ecommerce.properties" />
-<!--
-        <delete file="${lib.dir}/ofbecom.jar" />
-        <delete file="${lib.dir}/ofbcatalog.jar" />
-        <delete file="${lib.dir}/ofbpartymgr.jar" />
-        <delete file="${lib.dir}/ofbordermgr.jar" />
--->
-
         <delete file="${j2eedeploy.dir}/ofbcore-ejb.jar" />    
 
         <delete file="${j2eedeploy.dir}/commonapp-ext.war" />
@@ -292,19 +284,6 @@
         <copy file="core/lib/ofbcore-share.jar"
             toFile="${lib.dir}/ofbcore-share.jar" />        
 
-        <copy file="ecommerce/etc/ecommerce.properties"
-            toFile="${etc.dir}/ecommerce.properties" />
-<!--
-        <copy file="ecommerce/lib/ofbecom.jar"
-            toFile="${lib.dir}/ofbecom.jar" />
-    
-        <copy file="catalog/lib/ofbcatalog.jar"
-            toFile="${lib.dir}/ofbcatalog.jar" />
-        <copy file="partymgr/lib/ofbpartymgr.jar"
-            toFile="${lib.dir}/ofbpartymgr.jar" />
-        <copy file="ordermgr/lib/ofbordermgr.jar"
-            toFile="${lib.dir}/ofbordermgr.jar" />
--->
     </target>
 
     <target name="ejbdeploy" depends="deploy">

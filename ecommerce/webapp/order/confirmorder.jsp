@@ -43,16 +43,18 @@
 
 <% pageContext.setAttribute("PageName", "confirmorder");%>
 
-<%String companyName = UtilProperties.getPropertyValue("ecommerce", "company.name");%>
-<%String companySubtitle = UtilProperties.getPropertyValue("ecommerce", "company.subtitle");%>
-<%String headerImageUrl = UtilProperties.getPropertyValue("ecommerce", "header.image.url");%>
+<%String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);%>
 
-<%String boxBorderColor = UtilProperties.getPropertyValue("ecommerce", "box.border.color", "black");%>
-<%String boxBorderWidth = UtilProperties.getPropertyValue("ecommerce", "box.border.width", "1");%>
-<%String boxTopColor = UtilProperties.getPropertyValue("ecommerce", "box.top.color", "#678475");%>
-<%String boxBottomColor = UtilProperties.getPropertyValue("ecommerce", "box.bottom.color", "white");%>
-<%String boxTopPadding = UtilProperties.getPropertyValue("ecommerce", "box.top.padding", "4");%>
-<%String boxBottomPadding = UtilProperties.getPropertyValue("ecommerce", "box.bottom.padding", "4");%>
+<%String companyName = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.name");%>
+<%String companySubtitle = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.subtitle");%>
+<%String headerImageUrl = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "header.image.url");%>
+
+<%String boxBorderColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.border.color", "black");%>
+<%String boxBorderWidth = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.border.width", "1");%>
+<%String boxTopColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.top.color", "#678475");%>
+<%String boxBottomColor = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.bottom.color", "white");%>
+<%String boxTopPadding = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.top.padding", "4");%>
+<%String boxBottomPadding = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "box.bottom.padding", "4");%>
 
 <%GenericValue userLogin = null;%>
 
@@ -93,7 +95,7 @@
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" />
 <% 
-   final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.securityCode");
+   final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.securityCode");
    String securityCode = request.getParameter("security_code");
    if (UtilValidate.isNotEmpty(ORDER_SECURITY_CODE)) {
        if (ORDER_SECURITY_CODE.equals(securityCode)) {

@@ -1,6 +1,10 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.19  2001/09/26 18:41:44  epabst
+ * renamed getActive to filterByDate()
+ * renamed getContactMech to getContactMechByPurpose/ByType
+ *
  * Revision 1.18  2001/09/26 17:13:27  epabst
  * store the distributorId for an order
  *
@@ -270,7 +274,8 @@ public class CheckOutEvents {
   }
   
   public static String renderConfirmOrder(HttpServletRequest request, HttpServletResponse response) {
-    final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.securityCode");
+    String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
+    final String ORDER_SECURITY_CODE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.securityCode");
     
     String controlPath = (String)request.getAttribute(SiteDefs.CONTROL_PATH);
     if(controlPath == null) {
@@ -299,12 +304,13 @@ public class CheckOutEvents {
   }
   
   public static String emailOrder(HttpServletRequest request, HttpServletResponse response) {
+    String contextRoot=(String)request.getAttribute(SiteDefs.CONTEXT_ROOT);
     try {
-      final String SMTP_SERVER = UtilProperties.getPropertyValue("ecommerce", "smtp.relay.host");
-      final String LOCAL_MACHINE = UtilProperties.getPropertyValue("ecommerce", "smtp.local.machine");
-      final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.email");
-      final String ORDER_BCC = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.email.bcc");
-      final String ORDER_CC = UtilProperties.getPropertyValue("ecommerce", "order.confirmation.email.cc");
+      final String SMTP_SERVER = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "smtp.relay.host");
+      final String LOCAL_MACHINE = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "smtp.local.machine");
+      final String ORDER_SENDER_EMAIL = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.email");
+      final String ORDER_BCC = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.email.bcc");
+      final String ORDER_CC = UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "order.confirmation.email.cc");
       GenericValue userLogin = (GenericValue)request.getSession().getAttribute(SiteDefs.USER_LOGIN);
       StringBuffer emails = new StringBuffer((String) request.getAttribute("orderAdditionalEmails"));
       GenericValue party = null;
@@ -329,7 +335,7 @@ public class CheckOutEvents {
           mail.setRecipientBCC(ORDER_BCC);
         }
         String orderId = (String) request.getAttribute("order_id");
-        mail.setSubject(SiteDefs.SITE_NAME + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
+        mail.setSubject(UtilProperties.getPropertyValue(contextRoot + "/WEB-INF/ecommerce.properties", "company.name", "") + " Order" + UtilFormatOut.ifNotEmpty(orderId, " #", "") + " Confirmation");
         mail.setExtraHeader("MIME-Version: 1.0\nContent-type: text/html; charset=us-ascii\n");
         mail.setMessage(content);
         mail.send();
