@@ -42,7 +42,7 @@ import com.cybersource.ws.client.FaultException;
  * CyberSource WS Integration Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
  */
 public class IcsPaymentServices {
@@ -57,6 +57,10 @@ public class IcsPaymentServices {
     public static Map ccAuth(DispatchContext dctx, Map context) {
         // generate the request/properties
         Properties props = buildCsProperties(context);
+        if (props == null) {
+            return ServiceUtil.returnError("ERROR: Getting Cybersource property configuration");
+        }
+        
         Map request = buildAuthRequest(context);
         request.put("merchantID", props.get("merchantID"));
 
@@ -85,13 +89,24 @@ public class IcsPaymentServices {
 
     public static Map ccCapture(DispatchContext dctx, Map context) {
         GenericValue orderPaymentPreference = (GenericValue) context.get("orderPaymentPreference");
-        GenericValue authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        
+        //lets see if there is a auth transaction already in context
+        GenericValue authTransaction = (GenericValue) context.get("authTrans");
+        
+        if(authTransaction == null){
+        	authTransaction = PaymentGatewayServices.getAuthTransaction(orderPaymentPreference);
+        }
+
         if (authTransaction == null) {
             return ServiceUtil.returnError("No authorization transaction found for the OrderPaymentPreference; cannot capture");
         }
 
         // generate the request/properties
         Properties props = buildCsProperties(context);
+        if (props == null) {
+            return ServiceUtil.returnError("ERROR: Getting Cybersource property configuration");
+        }
+
         Map request = buildCaptureRequest(context, authTransaction);
         request.put("merchantID", props.get("merchantID"));
 
@@ -122,6 +137,10 @@ public class IcsPaymentServices {
 
         // generate the request/properties
         Properties props = buildCsProperties(context);
+        if (props == null) {
+            return ServiceUtil.returnError("ERROR: Getting Cybersource property configuration");
+        }
+
         Map request = buildReleaseRequest(context, authTransaction);
         request.put("merchantID", props.get("merchantID"));
 
@@ -152,6 +171,10 @@ public class IcsPaymentServices {
 
         // generate the request/properties
         Properties props = buildCsProperties(context);
+        if (props == null) {
+            return ServiceUtil.returnError("ERROR: Getting Cybersource property configuration");
+        }
+
         Map request = buildRefundRequest(context, authTransaction);
         request.put("merchantID", props.get("merchantID"));
 
@@ -176,6 +199,10 @@ public class IcsPaymentServices {
     public static Map ccCredit(DispatchContext dctx, Map context) {
         // generate the request/properties
         Properties props = buildCsProperties(context);
+        if (props == null) {
+            return ServiceUtil.returnError("ERROR: Getting Cybersource property configuration");
+        }
+
         Map request = buildCreditRequest(context);
         request.put("merchantID", props.get("merchantID"));
 
@@ -213,6 +240,16 @@ public class IcsPaymentServices {
 
         String keysPath = UtilProperties.getPropertyValue(configString, "payment.cybersource.keysDir");
         String keysFile = UtilProperties.getPropertyValue(configString, "payment.cybersource.keysFile");
+
+        // some property checking
+        if (UtilValidate.isEmpty(merchantId)) {
+            Debug.logWarning("The merchantId property in [" + configString + "] is not configured", module);
+            return null;
+        }
+        if (UtilValidate.isEmpty(keysPath)) {
+            Debug.logWarning("The keysDir property in [" + configString + "] is not configured", module);
+            return null;
+        }
 
         // create some properties for CS Client
         Properties props = new Properties();

@@ -65,7 +65,7 @@ import org.ofbiz.service.ServiceUtil;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -916,6 +916,10 @@ public class PaymentGatewayServices {
     }
 
     private static Map capturePayment(LocalDispatcher dispatcher, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount) {
+    	return capturePayment(dispatcher,userLogin, orh, paymentPref, amount, null);
+    }
+    
+    private static Map capturePayment(LocalDispatcher dispatcher, GenericValue userLogin, OrderReadHelper orh, GenericValue paymentPref, double amount, GenericValue authTrans) {
         // look up the payment configuration settings
         String serviceName = null;
         String paymentConfig = null;
@@ -945,6 +949,10 @@ public class PaymentGatewayServices {
         captureContext.put("paymentConfig", paymentConfig);
         captureContext.put("captureAmount", new Double(amount));
         captureContext.put("currency", orh.getCurrency());
+
+        if (authTrans != null) {
+            captureContext.put("authTrans", authTrans);
+        }
 
         Debug.logInfo("Capture [" + serviceName + "] : " + captureContext, module);
 
@@ -1045,6 +1053,11 @@ public class PaymentGatewayServices {
         }
         paymentPreference.store();
     }
+    
+    private static GenericValue processAuthRetryResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {
+        processAuthResult(dctx, result, userLogin, paymentPreference, paymentSettings);
+        return getAuthTransaction(paymentPreference);
+    }
 
     private static void processCaptureResult(DispatchContext dctx, Map result, GenericValue userLogin, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {
         processCaptureResult(dctx, result, userLogin, paymentPreference, paymentSettings, false);
@@ -1116,7 +1129,7 @@ public class PaymentGatewayServices {
 
             String orderId = paymentPreference.getString("orderId");
             GenericValue orderRole = EntityUtil.getFirst(delegator.findByAnd("OrderRole",
-                        UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_TO_CUSTOMER")));
+                    UtilMisc.toMap("orderId", orderId, "roleTypeId", "BILL_TO_CUSTOMER")));
 
             Map paymentCtx = UtilMisc.toMap("paymentTypeId", "RECEIPT");
             paymentCtx.put("paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"));
@@ -1155,26 +1168,33 @@ public class PaymentGatewayServices {
                 Debug.logError(e, "Problems getting OrderHeader; cannot re-auth the payment", module);
             }
 
+            if (amount != null && (double) amount.doubleValue() == new Double(0.00).doubleValue()) {
+                amount = paymentPreference.getDouble("maxAmount");
+                Debug.log("resetting payment amount from 0.00 to correctMax amount", module);
+            }
+            Debug.log("reauth with amount: " + amount, module);
             if (orh != null) {
                 // first lets re-auth the card
                 Map authPayRes = authPayment(dispatcher, userLogin, orh, paymentPreference, amount.doubleValue(), true);
+                Debug.log("authPayRes: " + authPayRes, module);
                 if (authPayRes != null) {
-                    Boolean authResp = (Boolean) result.get("authResult");
-                    Boolean capResp = (Boolean) result.get("captureResult");
+                    Boolean authResp = (Boolean) authPayRes.get("authResult");
+                    Boolean capResp = (Boolean) authPayRes.get("captureResult");
                     if (authResp != null) {
-                        processAuthResult(dctx, authPayRes, userLogin, paymentPreference, paymentSettings);
+                        GenericValue authTrans = processAuthRetryResult(dctx, authPayRes, userLogin, paymentPreference, paymentSettings);
+
                         if (authResp.booleanValue()) {
                             // first make sure we didn't already capture - probably not
                             if (capResp != null && capResp.booleanValue()) {
                                 processCaptureResult(dctx, result, userLogin, paymentPreference, paymentSettings);
                             } else {
                                 // lets try to capture the funds now
-                                Map capPayRes = capturePayment(dispatcher, userLogin, orh, paymentPreference, amount.doubleValue());
+                                Map capPayRes = capturePayment(dispatcher, userLogin, orh, paymentPreference, amount.doubleValue(), authTrans);
                                 if (capPayRes != null) {
-                                    Boolean capPayResp = (Boolean) result.get("captureResult");
+                                    Boolean capPayResp = (Boolean) capPayRes.get("captureResult");
                                     if (capPayResp != null && capPayResp.booleanValue()) {
                                         // it was successful
-                                        processCaptureResult(dctx, result, userLogin, paymentPreference, paymentSettings);
+                                        processCaptureResult(dctx, capPayRes, userLogin, paymentPreference, paymentSettings);
                                     } else {
                                         // not successful; log it
                                         Debug.logError("Capture of authorized payment failed: " + paymentPreference, module);
@@ -1475,13 +1495,14 @@ public class PaymentGatewayServices {
     public static GenericValue getAuthTransaction(GenericValue orderPaymentPreference) {
         GenericValue authTrans = null;
         try {
-            List order = UtilMisc.toList("transactionDate");
+            List order = UtilMisc.toList("-transactionDate");
             List transactions = orderPaymentPreference.getRelated("PaymentGatewayResponse", null, order);
 
             List exprs = UtilMisc.toList(new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_AUTH"),
                     new EntityExpr("paymentServiceTypeEnumId", EntityOperator.EQUALS, "PRDS_PAY_REAUTH"));
 
             List authTransactions = EntityUtil.filterByOr(transactions, exprs);
+
             authTrans = EntityUtil.getFirst(authTransactions);
         } catch (GenericEntityException e) {
             Debug.logError(e, "ERROR: Problem getting authorization information from PaymentGatewayResponse", module);
