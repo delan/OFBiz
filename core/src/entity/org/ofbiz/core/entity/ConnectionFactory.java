@@ -46,7 +46,7 @@ public class ConnectionFactory {
     //Debug module name
     public static final String module = ConnectionFactory.class.getName();
 
-    static UtilCache dsCache = new UtilCache("entity.JndiDataSources", 0, 0);
+    protected static UtilCache dsCache = new UtilCache("entity.JndiDataSources", 0, 0);
 
     public static Connection getConnection(String helperName) throws SQLException, GenericEntityException {
         //Debug.logVerbose("Getting a connection", module);
@@ -171,12 +171,6 @@ public class ConnectionFactory {
                 Element inlineJdbcElement = datasourceInfo.datasourceTypeElement;
                 //If JNDI sources are not specified, or found, try Tyrex
                 try {
-                    // For Tyrex 0.9.8.5
-                    Class.forName("tyrex.resource.jdbc.xa.EnabledDataSource").newInstance();
-                    // For Tyrex 0.9.7.0
-                    //Class.forName("tyrex.jdbc.xa.EnabledDataSource").newInstance();
-                    //Debug.logInfo("Found Tyrex Driver...");
-
                     Connection con = TyrexConnectionFactory.getConnection(helperName, inlineJdbcElement);
                     if (con != null)
                         return con;
