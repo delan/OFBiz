@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.21 2004/08/17 17:54:06 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.22 2004/08/19 18:41:41 doogie Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.21 $
+ * @version    $Revision: 1.22 $
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable {
@@ -148,6 +148,7 @@ public class ModelEntity extends ModelInfo implements Comparable {
         if ((this.doLock || !this.noAutoStamp) && !this.isField(STAMP_FIELD)) {
             ModelField newField = reader.createModelField(STAMP_FIELD, "date-time", null, false);
             newField.setIsAutoCreatedInternal(true);
+            newField.setModelEntity(this);
             this.fields.add(newField);
         }
         if (!this.noAutoStamp && !this.isField(STAMP_TX_FIELD)) {
