@@ -19,7 +19,9 @@ margin-right: 10px;
 width: 150px;
 }
 DIV.ecom-column-main {
-width: auto;
+margin-left: 10;
+margin-right: 1;
+width: 55%;
 text-align: left;
 valign: top;
 }
@@ -198,7 +200,7 @@ border-width: 1px 1px 1px 1px;
 }
 
 .boxtop {
-background-color: #336699;
+background-color: #000099;
 padding-top: 1px;
 padding-bottom: 1px;
 padding-right: 4px;
