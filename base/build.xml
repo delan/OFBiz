@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Base Build Script.
- *  $Id: build.xml,v 1.4 2003/08/17 08:36:04 ajzeneski Exp $
+ *  $Id: build.xml,v 1.5 2003/08/17 17:50:18 ajzeneski Exp $
 -->
 
 <project name="OFBiz - Base" default="jar" basedir=".">
@@ -70,7 +70,7 @@
     </target>
     
     <target name="prepare-docs" depends="init">
-        <mkdir dir="${build.dir}/javadocs" />        
+        <mkdir dir="${build.dir}/javadocs"/>        
     </target>
     
     <!-- ================================================================== -->
@@ -94,7 +94,7 @@
         </javac>
         <!-- also put the DTDs in the jar file... -->
         <copy todir="${build.dir}/classes/base">
-            <fileset dir="${dtd.dir}" includes="*.dtd" />            
+            <fileset dir="${dtd.dir}" includes="*.dtd"/>
             <fileset dir="${src.dir}/base" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>        
     </target>
@@ -118,5 +118,5 @@
         </javadoc>
     </target>
     
-    <target name="all" depends="jar,docs" />   
+    <target name="all" depends="jar,docs"/>   
 </project>
