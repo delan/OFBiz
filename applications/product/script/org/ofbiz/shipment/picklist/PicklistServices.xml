@@ -516,7 +516,7 @@
     </simple-method>
 
     <!-- ========================================================= -->
-    <!-- =========== Persisted Picklist Services ================= -->
+    <!-- ======= Persisted Picklist Maintenance Services ========= -->
     <!-- ========================================================= -->
     <simple-method method-name="createPicklistFromOrders" short-description="Create Picklist From Orders">
         <check-permission permission="FACILITY" action="_CREATE">
@@ -776,6 +776,9 @@
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
     
+    <!-- ========================================================= -->
+    <!-- =========== Picklist Report/Display Services ============ -->
+    <!-- ========================================================= -->
     <simple-method method-name="getPicklistDisplayInfo" short-description="Get Picklist Display Info">
         <check-permission permission="FACILITY" action="_VIEW">
             <fail-message message="Security Error: to run deletePicklistRole you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
@@ -790,16 +793,88 @@
             </condition-list>
             <order-by field-name="picklistDate"/>
         </entity-condition>
-        
+
         <iterate entry-name="picklist" list-name="picklistList">
-            <call-simple-method method-name="getPicklistSingleDisplayInfoInline"/>
+            <call-simple-method method-name="getPicklistSingleInfoInline"/>
             <field-to-list field-name="picklistInfo" list-name="picklistInfoList"/>
         </iterate>
         
         <field-to-result field-name="picklistInfoList"/>
     </simple-method>
 
-    <simple-method method-name="getPicklistSingleDisplayInfoInline" short-description="getPicklistSingleDisplayInfoInline">
+    <simple-method method-name="getPickAndPackReportInfo" short-description="getPickAndPackReportInfo">
+        <!-- 
+            Creates:
+              1. Standard picklistInfo Map from the getPicklistSingleInfoInline simple-method (see comment there for details)
+              2. inventoryItemAndLocationInfoList (inventoryItemAndLocation, picklistItemInfoList (picklistItem, orderItem, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
+        -->
+        <check-permission permission="FACILITY" action="_VIEW">
+            <fail-message message="Security Error: to run getPickAndPackReportInfo you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <!-- Get the general information for the picklist, this will be used for the pack sheets -->
+        <entity-one entity-name="Picklist" value-name="picklist" auto-field-map="true"/>
+        <call-simple-method method-name="getPicklistSingleInfoInline"/>
+        <field-to-result field-name="picklistInfo"/>
+        
+        <!-- Assemble the information per facility location for the pick sheet -->
+        <iterate entry-name="picklistBinInfo" list-name="picklistInfo.picklistBinInfoList">
+            <iterate entry-name="picklistItemInfo" list-name="picklistBinInfo.picklistItemInfoList">
+                <!-- 
+                    In this iteration through the items we want 2 things:
+                      1. A map with all inventoryItemAndLocation records by inventoryItemId, so that we have one unique 
+                         instance per inventoryItem, this will be put into a list and sorted by facility location fields
+                      2. A Map containing a List of PicklistItemInfo records keyed by the inventoryItemId 
+                -->
+                <env-to-env env-name="picklistItemInfo.inventoryItemAndLocation" to-env-name="inventoryItemAndLocationByInventoryItemIdMap.${picklistItemInfo.inventoryItemAndLocation.inventoryItemId}"/>
+                <!-- handle case where an InventoryItem is not associated with a location: handled automatically since the FacilityLocation is optional in the view-entity -->
+
+                <clear-field field-name="picklistItemInfoTempList"/>
+                <env-to-env env-name="picklistItemInfoListByInventoryItemIdMap.${picklistItemInfo.inventoryItemAndLocation.inventoryItemId}" to-env-name="picklistItemInfoTempList"/>
+                <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
+                <env-to-env env-name="picklistItemInfoTempList" to-env-name="picklistItemInfoListByInventoryItemIdMap.${picklistItemInfo.inventoryItemAndLocation.inventoryItemId}"/>
+            </iterate>
+        </iterate>
+
+        <!-- make a inventoryItemAndLocationList from the inventoryItemAndLocationByInventoryItemIdMap, which was used to guarantee uniqueness of InventoryItems -->
+        <iterate-map map-name="inventoryItemAndLocationByInventoryItemIdMap" key-name="locationSeqId" value-name="inventoryItemAndLocationList[]"/>
+
+        <!-- order the facilityLocations -->
+        <string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+sectionId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
+        <string-to-list string="+productId" list-name="facilityLocsOrdLst"/> <!-- This is here just in case there is no FacilityLocation -->
+        <string-to-list string="+datetimeReceived" list-name="facilityLocsOrdLst"/>
+        <order-value-list list-name="inventoryItemAndLocationList" order-by-list-name="facilityLocsOrdLst"/>
+        
+        <!-- Now we have an ordered list of InventoryItems, create an inventoryItemAndLocationInfoList -->
+        <iterate entry-name="inventoryItemAndLocation" list-name="inventoryItemAndLocationList">
+            <clear-field field-name="inventoryItemAndLocationInfo"/>
+            <env-to-env env-name="inventoryItemAndLocation" to-env-name="inventoryItemAndLocationInfo.inventoryItemAndLocation"/>
+            <env-to-env env-name="picklistItemInfoListByInventoryItemIdMap.${inventoryItemAndLocation.inventoryItemId}" to-env-name="inventoryItemAndLocationInfo.picklistItemInfoList"/>
+            <env-to-env env-name="inventoryItemAndLocationInfo" to-env-name="inventoryItemAndLocationInfoList[]"/>
+        </iterate>
+        
+        <field-to-result field-name="inventoryItemAndLocationInfoList"/>
+    </simple-method>
+
+    <simple-method method-name="getPicklistSingleInfoInline" short-description="getPicklistSingleInfoInline">
+        <!--
+            Creates picklistInfo Map containing:
+             - picklist
+             - statusItem
+             - statusValidChangeToDetailList
+             - picklistRoleInfoList (picklistRole, partyNameView, roleType)
+             - picklistStatusHistoryInfoList (picklistStatusHistory, statusItem, statusItemTo)
+             - picklistBinInfoList
+               - picklistBin
+               - primaryOrderHeader
+               - primaryOrderItemShipGroup
+               - picklistItemInfoList (picklistItem, orderItem, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList) 
+        -->
         <!-- expects a picklist GenericValue to be in the context, and creates a picklistInfo Map -->
         <clear-field field-name="picklistRoleInfoList"/>
         <get-related value-name="picklist" relation-name="PicklistRole" list-name="picklistRoleList"/>
@@ -853,8 +928,5 @@
         <env-to-env env-name="picklistBinInfoList" to-env-name="picklistInfo.picklistBinInfoList"/>
         <get-related-one value-name="picklist" relation-name="StatusItem" to-value-name="picklistInfo.statusItem" use-cache="true"/>
         <get-related value-name="picklist" relation-name="StatusValidChangeToDetail" list-name="picklistInfo.statusValidChangeToDetailList"/>
-    </simple-method>
-
-    <simple-method method-name="getPickAndPackReportInfo" short-description="getPickAndPackReportInfo">
     </simple-method>
 </simple-methods>
