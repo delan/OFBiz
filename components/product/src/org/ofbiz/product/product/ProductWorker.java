@@ -249,7 +249,6 @@ public class ProductWorker {
         if (variantProduct == null) {
             return new HashSet();
         }
-        
         if (!"Y".equals(variantProduct.getString("isVariant"))) {
             throw new IllegalArgumentException("Cannot get distinguishing features for a product that is not a variant (ie isVariant!=Y).");
         }

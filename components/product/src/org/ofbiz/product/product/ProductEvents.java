@@ -861,9 +861,14 @@ public class ProductEvents {
                 if (numberSpecified != null) {
                     prodFeature.set("numberSpecified", numberSpecified);
                 }
+                // if there is a productFeatureCategory with the same id as the productFeatureType, use that category.
+                // otherwise, use a default category from the configuration
                 if (delegator.findByPrimaryKey("ProductFeatureCategory",
                         UtilMisc.toMap("productFeatureCategoryId", productFeatureTypeId)) != null) {
                     prodFeature.set("productFeatureCategoryId", productFeatureTypeId);
+                } else {
+                    prodFeature.set("productFeatureCategoryId", UtilProperties.getPropertyValue("catalog",
+                            "default.product.feature.category.id"));
                 }
                 prodFeature.create();
 
@@ -942,12 +947,23 @@ public class ProductEvents {
                         if ((description != null) && (productFeatureTypeId != null)) {
                             // doesn't exist, so create it and its relation
                             productFeatureId = delegator.getNextSeqId("ProductFeature");
-                            productFeature = delegator.create("ProductFeature",
+                            productFeature = delegator.makeValue("ProductFeature",
                                     UtilMisc.toMap("productFeatureId", productFeatureId,
                                             "productFeatureTypeId", productFeatureTypeId,
                                             "lastUpdatedStamp", nowTimestamp,
                                             "createdStamp", nowTimestamp,
                                             "description", description));
+
+                            // if there is a productFeatureCategory with the same id as the productFeatureType, use that category.
+                            // otherwise, use a default category from the configuration
+                            if (delegator.findByPrimaryKey("ProductFeatureCategory",
+                                    UtilMisc.toMap("productFeatureCategoryId", productFeatureTypeId)) != null) {
+                                productFeature.set("productFeatureCategoryId", productFeatureTypeId);
+                            } else {
+                                productFeature.set("productFeatureCategoryId", UtilProperties.getPropertyValue("catalog",
+                                        "default.product.feature.category.id"));
+                            }
+                            productFeature = productFeature.create();
 
                             delegator.create("ProductFeatureAppl",
                                     UtilMisc.toMap("productId", productId0,
