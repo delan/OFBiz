@@ -416,6 +416,8 @@ public class SimpleMethod {
                     methodOperations.add(new CheckErrors(curOperElem, this));
                 } else if ("call-service".equals(nodeName)) {
                     methodOperations.add(new CallService(curOperElem, this));
+                } else if ("call-bsh".equals(nodeName)) {
+                    methodOperations.add(new CallBsh(curOperElem, this));
                 } else if ("field-to-request".equals(nodeName)) {
                     methodOperations.add(new FieldToRequest(curOperElem, this));
                 } else if ("field-to-session".equals(nodeName)) {
