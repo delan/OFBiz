@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -57,7 +57,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <tr valign="middle">
                 <form method=POST action='<@ofbizUrl>/UpdateFeatureToProductApplication</@ofbizUrl>' name='lineForm${line}'>
                 <input type=hidden name="productId" value="${(productFeatureAndAppl.productId)?if_exists}">
-                <input type=hidden value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
+                <input type=hidden name="productFeatureId" value="${(productFeatureAndAppl.productFeatureId)?if_exists}">
                 <input type=hidden name="fromDate" value="${(productFeatureAndAppl.fromDate)?if_exists}">
                 <td><div class='tabletext'>${(productFeatureAndAppl.description)?if_exists}</div></td>
                 <td><div class='tabletext'>${(productFeatureAndAppl.productFeatureTypeId)?if_exists}</div></td>                
@@ -87,7 +87,7 @@ ${pages.get("/product/ProductTabBar.ftl")}
                 </td>
                 </form>
                 <td>
-                <a href='<@ofbizUrl>/RemoveFeatureFromProduct?productId=${(productFeatureAndAppl.productId)?if_exists}>&productFeatureId=${(productFeatureAndAppl.productFeatureId)?if_exists}>&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())})</@ofbizUrl>' class="buttontext">
+                <a href='<@ofbizUrl>/RemoveFeatureFromProduct?productId=${(productFeatureAndAppl.productId)?if_exists}&productFeatureId=${(productFeatureAndAppl.productFeatureId)?if_exists}&fromDate=${Static["org.ofbiz.base.util.UtilFormatOut"].encodeQueryValue(productFeatureAndAppl.getTimestamp("fromDate").toString())}</@ofbizUrl>' class="buttontext">
                 [Delete]</a>
                 </td>
             </tr>
