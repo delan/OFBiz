@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
 -->
 
@@ -257,4 +257,35 @@
         </if-empty>                
         <store-value value-name="lookedUpValue"/>
     </simple-method>      	   
+    
+        <!-- Product Store Keyword Override Services -->
+    <simple-method method-name="createProductStoreKeywordOvrd" short-description="Create a ProductStoreKeywordOvrd">
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run removeProductStoreRole you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="ProductStoreKeywordOvrd"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateProductStoreKeywordOvrd" short-description="Update a ProductStoreKeywordOvrd">
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run removeProductStoreRole you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="ProductStoreKeywordOvrd"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeProductStoreKeywordOvrd" short-description="Remove a ProductStoreKeywordOvrd">
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductStoreRole you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+        
+        <make-value value-name="newEntity" entity-name="ProductStoreKeywordOvrd"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
 </simple-methods>

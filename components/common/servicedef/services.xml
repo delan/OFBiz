@@ -168,4 +168,18 @@
         <attribute name="inputFields" type="java.util.Map" mode="IN" optional="false"/>
         <attribute name="listIt" type="org.ofbiz.entity.util.EntityListIterator" mode="OUT" optional="true"/>
     </service>
+    
+    <!-- Keyword Thesaurus services -->
+    <service name="createKeywordThesaurus" default-entity-name="KeywordThesaurus" engine="simple"
+                location="org/ofbiz/common/CommonServices.xml" invoke="createKeywordThesaurus" auth="true">
+        <description>Create a Keyword Thesaurus</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+    </service>
+    <service name="deleteKeywordThesaurus" default-entity-name="KeywordThesaurus" engine="simple"
+                location="org/ofbiz/common/CommonServices.xml" invoke="deleteKeywordThesaurus" auth="true">
+        <description>Delete a Keyword Thesaurus</description>
+        <auto-attributes include="pk" mode="IN" optional="false"/>
+        <override name="alternateKeyword" optional="true" />
+    </service>
+   
 </services>

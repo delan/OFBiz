@@ -1133,7 +1133,49 @@
         <event type="service" path="" invoke="removeProductStoreEmailSetting"/>
         <response name="success" type="view" value="EditProductStoreEmails"/>
         <response name="error" type="view" value="EditProductStoreEmails"/>
+    </request-map>     
+    
+    <!-- ================ Keyword Thesaurus Requests ================= -->
+    <request-map uri="editKeywordThesaurus">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="EditKeywordThesaurus"/>
+    </request-map>  
+    <request-map uri="createKeywordThesaurus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createKeywordThesaurus"/>
+        <response name="success" type="view" value="EditKeywordThesaurus"/>
+        <response name="error" type="view" value="EditKeywordThesaurus"/>
+    </request-map>  
+    <request-map uri="deleteKeywordThesaurus">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteKeywordThesaurus"/>
+        <response name="success" type="view" value="EditKeywordThesaurus"/>
+        <response name="error" type="view" value="EditKeywordThesaurus"/>
+    </request-map> 
+    
+    <!-- ================ Product Store Keyword Override ============= --> 
+    <request-map uri="editProductStoreKeywordOvrd">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductStoreKeywordOvrd" />	
     </request-map>
+    <request-map uri="createProductStoreKeywordOvrd">
+    	<security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductStoreKeywordOvrd"/>
+        <response name="success" type="view" value="EditProductStoreKeywordOvrd"/>
+        <response name="error" type="view" value="EditProductStoreKeywordOvrd"/>
+    </request-map>
+    <request-map uri="deleteProductStoreKeywordOvrd">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="deleteProductStoreKeywordOvrd"/>
+        <response name="success" type="view" value="EditProductStoreKeywordOvrd"/>
+        <response name="error" type="view" value="EditProductStoreKeywordOvrd"/>
+    </request-map> 
+    <request-map uri="updateProductStoreKeywordOvrd">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductStoreKeywordOvrd"/>
+        <response name="success" type="view" value="EditProductStoreKeywordOvrd"/>
+        <response name="error" type="view" value="EditProductStoreKeywordOvrd"/>
+    </request-map> 
 
     <!-- end of request mappings -->
 
@@ -1207,5 +1249,8 @@
     <view-map name="EditProductStoreTaxSetup" type="jpublish" page="/store/EditProductStoreTaxSetup.ftl"/>
     <view-map name="EditProductStorePaySetup" type="jpublish" page="/store/EditProductStorePaySetup.ftl"/>
     <view-map name="EditProductStoreWebSites" type="jpublish" page="/store/EditProductStoreWebSites.ftl"/>
+    <view-map name="EditProductStoreKeywordOvrd" type="jpublish" page="/store/EditProductStoreKeywordOvrd.ftl"/>
+    
+    <view-map name="EditKeywordThesaurus" type="jpublish" page="/thesaurus/EditKeywordThesaurus.ftl"/>
     <!-- end of view mappings -->
 </site-conf>
