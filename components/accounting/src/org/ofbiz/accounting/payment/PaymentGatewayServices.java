@@ -1,5 +1,5 @@
 /*
- * $Id: PaymentGatewayServices.java,v 1.31 2004/05/14 19:16:22 ajzeneski Exp $
+ * $Id: PaymentGatewayServices.java,v 1.32 2004/05/25 18:40:59 ajzeneski Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -69,7 +69,7 @@ import org.ofbiz.security.Security;
  * PaymentGatewayServices
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.31 $
+ * @version    $Revision: 1.32 $
  * @since      2.0
  */
 public class PaymentGatewayServices {
@@ -1337,15 +1337,13 @@ public class PaymentGatewayServices {
             } else if ("APPROVED".equals(authResp)) {
                 // approved; update the order status
                 OrderChangeHelper.approveOrder(dispatcher, userLogin, orderId);
-            }
-
-            // service completed; we either were approved or declined
-            // send off a notification to inform the customer of the result
-            // TODO add notification code
+            }            
         }
 
-        // retry complete; return success
-        return ServiceUtil.returnSuccess();
+        Map result = ServiceUtil.returnSuccess();
+        result.put("processResult", authResp);
+
+        return result;
     }
 
     public static Map retryFailedAuths(DispatchContext dctx, Map context) {

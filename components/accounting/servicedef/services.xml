@@ -367,6 +367,7 @@
             location="org.ofbiz.accounting.payment.PaymentGatewayServices" invoke="retryFailedOrderAuth" auth="true">
         <description>Retries failed authorizations due to processor/connection problems for an order</description>
         <attribute name="orderId" type="String" mode="IN" optional="false"/>
+        <attribute name="processResult" type="String" mode="OUT" optional="true"/>
     </service>
 
     <service name="authOrderPayments" engine="java"
