@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -205,11 +204,13 @@ public class UtilHttp {
                 } else {
                     valueStr = value.toString();
                 }
-                        
-                if (buf.length() > 0) buf.append('&');
-                buf.append(URLEncoder.encode(name));
-                buf.append('=');
-                buf.append(URLEncoder.encode(valueStr));
+                
+                if (valueStr != null && valueStr.length() > 0) {
+                    if (buf.length() > 0) buf.append('&');
+                    buf.append(URLEncoder.encode(name));
+                    buf.append('=');
+                    buf.append(URLEncoder.encode(valueStr));
+                }
             }
         }
         return buf.toString();
