@@ -47,6 +47,9 @@ import org.ofbiz.commonapp.product.catalog.*;
 
 public class OrderServices {
 
+    public static final String module = OrderServices.class.getName();
+    public static final String resource = OrderServices.class.getPackage().getName() + ".PackageMessages";
+
     /** Service for creating a new order */
     public static Map createOrder(DispatchContext ctx, Map context) {
         Map result = new HashMap();
@@ -54,6 +57,7 @@ public class OrderServices {
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Security security = ctx.getSecurity();
         List toBeStored = new LinkedList();
+        Locale locale = (Locale) context.get("locale");
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         // check security
@@ -68,7 +72,7 @@ public class OrderServices {
 
         if (orderItems.size() < 1) {
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: There are no items to order");
+            result.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource, "items.none", locale));
             return result;
         }
 
@@ -87,16 +91,14 @@ public class OrderServices {
             try {
                 product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", orderItem.get("productId")));
             } catch (GenericEntityException e) {
-                String errMsg = "Could not find the product with ID [" + orderItem.get("productId") + "], cannot be purchased.";
-
+                String errMsg = UtilProperties.getMessage(resource, "product.not_found", new Object[] { orderItem.get("productId") }, locale);
                 Debug.logError(e, errMsg);
                 errorMessages.add(errMsg);
                 continue;
             }
 
             if (product == null) {
-                String errMsg = "Could not find the product with ID [" + orderItem.get("productId") + "], cannot be purchased.";
-
+                String errMsg = UtilProperties.getMessage(resource, "product.not_found", new Object[] { orderItem.get("productId") }, locale);
                 Debug.logError(errMsg);
                 errorMessages.add(errMsg);
                 continue;
@@ -104,9 +106,7 @@ public class OrderServices {
 
             // check to see if introductionDate hasn't passed yet
             if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
-                String excMsg = "Tried to order the Product " + getProductName(product, orderItem) +
-                    " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale.";
-
+                String excMsg = UtilProperties.getMessage(resource, "product.not_yet_for_sale", new Object[] { getProductName(product, orderItem), product.getString("productId") }, locale);
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
                 continue;
@@ -114,9 +114,7 @@ public class OrderServices {
 
             // check to see if salesDiscontinuationDate has passed
             if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
-                String excMsg = "Tried to order the Product " + getProductName(product, orderItem) +
-                    " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale.";
-
+                String excMsg = UtilProperties.getMessage(resource, "product.no_longer_for_sale", new Object[] { getProductName(product, orderItem), product.getString("productId") }, locale);
                 Debug.logWarning(excMsg);
                 errorMessages.add(excMsg);
                 continue;
@@ -124,10 +122,7 @@ public class OrderServices {
 
             if (CatalogWorker.isCatalogInventoryRequired(prodCatalogId, product, delegator)) {
                 if (!CatalogWorker.isCatalogInventoryAvailable(prodCatalogId, orderItem.getString("productId"), orderItem.getDouble("quantity").doubleValue(), delegator, dispatcher)) {
-                    String invErrMsg = "The product ";
-
-                    invErrMsg += getProductName(product, orderItem);
-                    invErrMsg += " with ID " + orderItem.getString("productId") + " is no longer in stock. Please try reducing the quantity or removing the product from this order.";
+                    String invErrMsg = UtilProperties.getMessage(resource, "product.out_of_stock", new Object[] { getProductName(product, orderItem), orderItem.getString("productId") }, locale);
                     Debug.logWarning(invErrMsg);
                     errorMessages.add(invErrMsg);
                     continue;
