@@ -543,6 +543,13 @@ public class OrderReadHelper {
             Map newMap = new HashMap(gv);            
             double itemAdjTotal = getOrderItemAdjustmentsTotal(gv, orderAdjustments, true, false, false);
             double itemSubTotal = getOrderItemSubTotal(gv, orderAdjustments);
+            GenericValue statusItem = null;
+            try {
+                statusItem = gv.getRelatedOne("StatusItem");
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "", module);
+            }
+            newMap.put("currentStatus", statusItem != null ? statusItem.getString("description") : "Not Available");
             newMap.put("itemAdjTotal", new Double(itemAdjTotal));
             newMap.put("itemSubTotal", new Double(itemSubTotal));
             newMap.put("itemAdjustments", getOrderItemAdjustmentDisplay(gv, getOrderItemAdjustmentList(gv, orderAdjustments)));

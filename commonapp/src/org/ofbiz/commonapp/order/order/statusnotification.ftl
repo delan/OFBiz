@@ -87,7 +87,7 @@
                       <td width="5">&nbsp;</td>
                       <td align="left" valign="top" width="80%">
                         <#if orderHeader?has_content>                                                
-                          <div class="tabletext">${statusString?default("N/A")}</div>
+                          <div class="tabletext"><#if !orderItemSeqId?exists><font color='red'></#if>${statusString?default("N/A")}</div>
                         <#else>
                           <div class="tabletext"><b>Not Yet Ordered</b></div>
                         </#if>
@@ -398,7 +398,8 @@
           <td>
             <table width="100%" border="0" cellpadding="0">
               <tr align='left' valign='bottom'>
-                <td width="65%" align="left"><span class="tableheadtext"><b>Product</b></span></td>
+                <td width="45%" align="left"><span class="tableheadtext"><b>Product</b></span></td>
+                <td width="20%" align="left"><span class="tableheadtext"><b>Status</b></span></td>
                 <td width="5%" align="right"><span class="tableheadtext"><b>Quantity</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Unit Price</b></span></td>
                 <td width="10%" align="right"><span class="tableheadtext"><b>Adjustments</b></span></td>
@@ -414,6 +415,9 @@
                   <#else>                  
                     <td valign="top">
                       <div class="tableheadtext">${orderItem.productId} - ${orderItem.itemDescription}</div>
+                    </td>
+                    <td valign="top">
+                      <div class="tabletext"><#if orderItemSeqId?exists && orderItemSeqId == orderItem.orderItemSeqId><font color='red'></#if>${orderItem.currentStatus}</div>
                     </td>
                     <td align="right" valign="top">
                       <div class="tabletext" nowrap>${orderItem.quantity?string.number}</div>
@@ -446,6 +450,7 @@
                     </td>
                     <td>&nbsp;</td>
                     <td>&nbsp;</td>
+                    <td>&nbsp;</td>
                     <td align="right">
                       <div class="tabletext" style='font-size: xx-small;'>${orderItemAdjustment.itemAdjTotal?string.currency}</div>                      
                     </td>
@@ -460,27 +465,27 @@
 
               <tr><td colspan="8"><hr class='sepbar'></td></tr>
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Subtotal</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>Subtotal</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderSubTotal?string.currency}</div></td>
               </tr>              
               <#list headerAdjustmentsToShow as orderHeaderAdjustment>                
                 <tr>
-                  <td align="right" colspan="4"><div class="tabletext"><b>${orderHeaderAdjustment.typeDescription}</b></div></td>
+                  <td align="right" colspan="5"><div class="tabletext"><b>${orderHeaderAdjustment.typeDescription}</b></div></td>
                   <td align="right" nowrap><div class="tabletext">${orderHeaderAdjustment.adjustmentCalc?string.currency}</div></td>
                 </tr>
               </#list>                 
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Shipping and Handling</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>Shipping and Handling</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderShippingTotal?string.currency}</div></td>
               </tr>              
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Sales Tax</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>Sales Tax</b></div></td>
                 <td align="right" nowrap><div class="tabletext">${orderTaxTotal?string.currency}</div></td>
               </tr>
               
               <tr><td colspan=2></td><td colspan="8"><hr class='sepbar'></td></tr>
               <tr>
-                <td align="right" colspan="4"><div class="tabletext"><b>Grand Total</b></div></td>
+                <td align="right" colspan="5"><div class="tabletext"><b>Grand Total</b></div></td>
                 <td align="right" nowrap>
                   <div class="tabletext">${orderGrandTotal?string.currency}</div>
                 </td>
