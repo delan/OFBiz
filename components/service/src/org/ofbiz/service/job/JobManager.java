@@ -61,7 +61,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class JobManager {
@@ -369,7 +369,7 @@ public class JobManager {
 
         // create the recurrence
         String infoId = null;
-        if (frequency > -1 && count > 1) {
+        if (frequency > -1 && count != 0) {
             try {
                 RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
                 infoId = info.primaryKey();
