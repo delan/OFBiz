@@ -1563,6 +1563,7 @@
       <alias entity-alias="PASC" name="assocProductCount" field="productId" function="count-distinct"/>
       <alias entity-alias="PASCPRC" name="assocPriceTypeId" field="productPriceTypeId"/>
       <alias entity-alias="PASCPRC" name="assocCurrencyUomId" field="currencyUomId"/>
+      <alias entity-alias="PASCPRC" name="assocFacilityGroupId" field="facilityGroupId"/>
       <alias entity-alias="PASCPRC" name="assocPriceFromDate" field="fromDate"/>
       <alias entity-alias="PASCPRC" name="assocPriceThruDate" field="thruDate"/>
       <alias entity-alias="PASCPRC" name="assocMinPrice" field="price" function="min"/>
