@@ -43,6 +43,7 @@ import org.ofbiz.core.minilang.method.*;
 public class PropertyToField extends MethodOperation {
     String resource;
     String property;
+    String defaultVal;
     String mapName;
     String fieldName;
 
@@ -50,12 +51,17 @@ public class PropertyToField extends MethodOperation {
         super(element, simpleMethod);
         resource = element.getAttribute("resource");
         property = element.getAttribute("property");
+        defaultVal = element.getAttribute("default");
         mapName = element.getAttribute("map-name");
         fieldName = element.getAttribute("field-name");
     }
 
     public boolean exec(MethodContext methodContext) {
         String value = UtilProperties.getPropertyValue(resource, property);
+        
+        if (value == null || value.length() == 0) {
+            value = defaultVal;
+        }
         
         if (mapName != null && mapName.length() > 0) {
             Map toMap = (Map) methodContext.getEnv(mapName);

@@ -290,6 +290,7 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!ATTLIST property-to-field
     resource CDATA #REQUIRED
     property CDATA #REQUIRED
+    default CDATA #IMPLIED
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
 >
