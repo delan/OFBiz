@@ -33,9 +33,9 @@
     
     <simple-method method-name="createProductCategory" short-description="Create an ProductCategory">
         <check-permission permission="CATALOG" action="_CREATE">
-        	<alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
-        	<fail-message message="Security Error: to run createProductCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
-        </check-permission>		
+            <alt-permission permission="CATALOG_ROLE" action="_CREATE"/>
+            <fail-message message="Security Error: to run createProductCategory you must have the CATALOG_CREATE or CATALOG_ADMIN permission, or the limited CATALOG_ROLE_CREATE permission"/>
+        </check-permission>        
         <check-errors/>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>
@@ -69,24 +69,24 @@
 
         <!-- if the user has the role limited position, add this category to the limit category/ies -->
         <if-has-permission permission="CATALOG_ROLE" action="_CREATE">
-        	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupCategoryRolesMap"/>
-        	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupCategoryRolesMap"/>
-        	<find-by-and entity-name="ProductCategoryRole" map-name="lookupCategoryRolesMap" list-name="productCategoryRoles"/>
-        	<filter-list-by-date list-name="productCategoryRoles" valid-date-name="nowTimestamp"/>
-        	<iterate entry-name="productCategoryRole" list-name="productCategoryRoles">
-        		<!-- add this new product to the category -->
-		        <make-value value-name="newLimitRollup" entity-name="ProductCategoryRollup"/>
-        		<field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="newLimitRollup"/>
-        		<field-to-field field-name="productCategoryId" map-name="productCategoryRole" to-field-name="parentProductCategoryId" to-map-name="newLimitRollup"/>
-		        <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newLimitRollup"/>
-		        <create-value value-name="newLimitRollup"/>
-        	</iterate>
+            <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupCategoryRolesMap"/>
+            <string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupCategoryRolesMap"/>
+            <find-by-and entity-name="ProductCategoryRole" map-name="lookupCategoryRolesMap" list-name="productCategoryRoles"/>
+            <filter-list-by-date list-name="productCategoryRoles" valid-date-name="nowTimestamp"/>
+            <iterate entry-name="productCategoryRole" list-name="productCategoryRoles">
+                <!-- add this new product to the category -->
+                <make-value value-name="newLimitRollup" entity-name="ProductCategoryRollup"/>
+                <field-to-field field-name="productCategoryId" map-name="newEntity" to-map-name="newLimitRollup"/>
+                <field-to-field field-name="productCategoryId" map-name="productCategoryRole" to-field-name="parentProductCategoryId" to-map-name="newLimitRollup"/>
+                <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newLimitRollup"/>
+                <create-value value-name="newLimitRollup"/>
+            </iterate>
         </if-has-permission>
     </simple-method>
     <simple-method method-name="updateProductCategory" short-description="Update an ProductCategory">
-		<string-to-field string="updateProductCategory" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="updateProductCategory" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -116,11 +116,11 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="addProductToCategory" short-description="Add Product to Category">
-    	<!-- note that the security semantics require the user to have the general admin permission,
-    		or the role limited permission and association with the category, not the product -->
-		<string-to-field string="addProductToCategory" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <!-- note that the security semantics require the user to have the general admin permission,
+            or the role limited permission and association with the category, not the product -->
+        <string-to-field string="addProductToCategory" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductCategoryMember"/>
@@ -135,11 +135,11 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductToCategory" short-description="Update Product to Category Application">
-    	<!-- note that the security semantics require the user to have the general admin permission,
-    		or the role limited permission and association with the category, not the product -->
-		<string-to-field string="updateProductToCategory" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <!-- note that the security semantics require the user to have the general admin permission,
+            or the role limited permission and association with the category, not the product -->
+        <string-to-field string="updateProductToCategory" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProductCategoryMember"/>
@@ -149,12 +149,19 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removeProductFromCategory" short-description="Remove Product From Category">
-    	<!-- note that the security semantics require the user to have the general admin permission,
-    		or the role limited permission and association with the category, not the product -->
-		<string-to-field string="removeProductFromCategory" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <!-- note that the security semantics require the user to have the general admin permission,
+            or the role limited permission and association with the category, not the product -->
+        <string-to-field string="removeProductFromCategory" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
+
+        <!-- If the associated category was the primary category for the product, clear that field -->
+        <entity-one entity-name="Product" value-name="product" auto-field-map="true"/>
+        <if-compare-field field-name="product.primaryProductCategoryId" operator="equals" to-field-name="parameters.productCategoryId">
+            <clear-field field-name="product.primaryProductCategoryId"/>
+            <store-value value-name="product"/>
+        </if-compare-field>
 
         <make-value value-name="lookupPKMap" entity-name="ProductCategoryMember"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
@@ -167,9 +174,9 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="addPartyToCategory" short-description="Add Party to Category">
-		<string-to-field string="addPartyToCategory" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="addPartyToCategory" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductCategoryRole"/>
@@ -184,9 +191,9 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updatePartyToCategory" short-description="Update Party to Category Application">
-		<string-to-field string="updatePartyToCategory" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="updatePartyToCategory" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProductCategoryRole"/>
@@ -196,9 +203,9 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removePartyFromCategory" short-description="Remove Party From Category">
-		<string-to-field string="removePartyFromCategory" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="removePartyFromCategory" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProductCategoryRole"/>
@@ -212,11 +219,11 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="addProductCategoryToCategory" short-description="Add ProductCategory to Category">
-		<string-to-field string="addProductCategoryToCategory" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
-		<!-- note the the user must be associated with the parent category with the role limited permission -->
-		<string-to-field string="parentProductCategoryId" field-name="productCategoryIdName"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="addProductCategoryToCategory" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <!-- note the the user must be associated with the parent category with the role limited permission -->
+        <string-to-field string="parentProductCategoryId" field-name="productCategoryIdName"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductCategoryRollup"/>
@@ -231,11 +238,11 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductCategoryToCategory" short-description="Update ProductCategory to Category Application">
-		<string-to-field string="updateProductCategoryToCategory" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
-		<!-- note the the user must be associated with the parent category with the role limited permission -->
-		<string-to-field string="parentProductCategoryId" field-name="productCategoryIdName"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="updateProductCategoryToCategory" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <!-- note the the user must be associated with the parent category with the role limited permission -->
+        <string-to-field string="parentProductCategoryId" field-name="productCategoryIdName"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProductCategoryRollup"/>
@@ -245,11 +252,11 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="removeProductCategoryFromCategory" short-description="Remove ProductCategory From Category">
-		<string-to-field string="removeProductCategoryFromCategory" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
-		<!-- note the the user must be associated with the parent category with the role limited permission -->
-		<string-to-field string="parentProductCategoryId" field-name="productCategoryIdName"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="removeProductCategoryFromCategory" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <!-- note the the user must be associated with the parent category with the role limited permission -->
+        <string-to-field string="parentProductCategoryId" field-name="productCategoryIdName"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProductCategoryRollup"/>
@@ -263,11 +270,11 @@
     <!-- ================================================================ -->
     
     <simple-method method-name="copyCategoryProductMembers" short-description="copy CategoryProduct Members to a CategoryProductTo">
-		<string-to-field string="copyCategoryProductMembers" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
-		<!-- note the the user must be associated with the target category with the role limited permission -->
-		<string-to-field string="productCategoryIdTo" field-name="productCategoryIdName"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="copyCategoryProductMembers" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <!-- note the the user must be associated with the target category with the role limited permission -->
+        <string-to-field string="productCategoryIdTo" field-name="productCategoryIdName"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <field-to-field field-name="productCategoryId" map-name="parameters" to-map-name="lookupMap"/>
@@ -306,9 +313,9 @@
     </simple-method>
 
     <simple-method method-name="expireAllCategoryProductMembers" short-description="Remove ProductCategory From Category">
-		<string-to-field string="expireAllCategoryProductMembers" field-name="callingMethodName"/>
-		<string-to-field string="UPDATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="expireAllCategoryProductMembers" field-name="callingMethodName"/>
+        <string-to-field string="UPDATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <if-not-empty field-name="thruDate" map-name="parameters">
@@ -327,9 +334,9 @@
         </iterate>
     </simple-method>
     <simple-method method-name="removeExpiredCategoryProductMembers" short-description="Remove ProductCategory From Category">
-		<string-to-field string="removeExpiredCategoryProductMembers" field-name="callingMethodName"/>
-		<string-to-field string="DELETE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="removeExpiredCategoryProductMembers" field-name="callingMethodName"/>
+        <string-to-field string="DELETE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
 
         <if-not-empty field-name="validDate" map-name="parameters">
@@ -353,9 +360,9 @@
     <!-- Special Category Related Create Services -->
     <!-- ================================================================ -->
     <simple-method method-name="createProductInCategory" short-description="Create a Product in a Category along with special information such as features">
-		<string-to-field string="createProductInCategory" field-name="callingMethodName"/>
-		<string-to-field string="CREATE" field-name="checkAction"/>
-    	<call-simple-method method-name="checkCategoryRelatedPermission"/>
+        <string-to-field string="createProductInCategory" field-name="callingMethodName"/>
+        <string-to-field string="CREATE" field-name="checkAction"/>
+        <call-simple-method method-name="checkCategoryRelatedPermission"/>
         <check-errors/>
         
         <if-empty field-name="currencyUomId" map-name="parameters">
@@ -423,50 +430,50 @@
         </if-compare>
     </simple-method>    
     
-	<!-- a methods to centralize product security code, meant to be called in-line with 
-		call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
+    <!-- a methods to centralize product security code, meant to be called in-line with 
+        call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
     <simple-method method-name="checkCategoryRelatedPermission" short-description="Check Product Category Related Permission">
-    	<if-empty field-name="callingMethodName">
-    		<string-to-field string="this operation" field-name="callingMethodName"/>
-    	</if-empty>
-    	<if-empty field-name="checkAction">
-    		<string-to-field string="UPDATE" field-name="checkAction"/>
-    	</if-empty>
-    	<if-empty field-name="productCategoryIdName">
-    		<string-to-field string="productCategoryId" field-name="productCategoryIdName"/>
-    	</if-empty>
+        <if-empty field-name="callingMethodName">
+            <string-to-field string="this operation" field-name="callingMethodName"/>
+        </if-empty>
+        <if-empty field-name="checkAction">
+            <string-to-field string="UPDATE" field-name="checkAction"/>
+        </if-empty>
+        <if-empty field-name="productCategoryIdName">
+            <string-to-field string="productCategoryId" field-name="productCategoryIdName"/>
+        </if-empty>
     
-    	<!-- find all role-categories that this category is a member of -->
-    	<if>
-    		<condition>
-    			<not><if-has-permission permission="CATALOG" action="_${checkAction}"/></not>
-    		</condition>
-    		<then>
-		    	<field-to-field field-name="${productCategoryIdName}" map-name="parameters" to-field-name="productCategoryId" to-map-name="lookupRoleCategoriesMap"/>
-		    	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
-		    	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
-		    	<find-by-and entity-name="ProductCategoryRollupAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
-		    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
-		    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
-    		</then>
+        <!-- find all role-categories that this category is a member of -->
+        <if>
+            <condition>
+                <not><if-has-permission permission="CATALOG" action="_${checkAction}"/></not>
+            </condition>
+            <then>
+                <field-to-field field-name="${productCategoryIdName}" map-name="parameters" to-field-name="productCategoryId" to-map-name="lookupRoleCategoriesMap"/>
+                <field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
+                <string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
+                <find-by-and entity-name="ProductCategoryRollupAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
+                <filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
+                <filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
+            </then>
         </if>
         <log level="verbose" message="Checking category permission, roleCategories=${roleCategories}"/>
-    	<if>
-    		<condition>
-    			<not>
-    				<or>
-    					<if-has-permission permission="CATALOG" action="_${checkAction}"/>
-    					<and>
-    						<if-has-permission permission="CATALOG_ROLE" action="_${checkAction}"/>
-    						<not><if-empty field-name="roleCategories"/></not>
-    					</and>
-    				</or>
-    			</not>
-    		</condition>
-    		<then>
-		        <log level="verbose" message="Permission check failed, user does not have permission"/>
-    			<add-error><fail-message message="Security Error: to run ${callingMethodName} you must have the CATALOG_${checkAction} or CATALOG_ADMIN permission or have the CATALOG_ROLE_${checkAction} permission and be associated with a category containing this category."/></add-error>
-    		</then>
+        <if>
+            <condition>
+                <not>
+                    <or>
+                        <if-has-permission permission="CATALOG" action="_${checkAction}"/>
+                        <and>
+                            <if-has-permission permission="CATALOG_ROLE" action="_${checkAction}"/>
+                            <not><if-empty field-name="roleCategories"/></not>
+                        </and>
+                    </or>
+                </not>
+            </condition>
+            <then>
+                <log level="verbose" message="Permission check failed, user does not have permission"/>
+                <add-error><fail-message message="Security Error: to run ${callingMethodName} you must have the CATALOG_${checkAction} or CATALOG_ADMIN permission or have the CATALOG_ROLE_${checkAction} permission and be associated with a category containing this category."/></add-error>
+            </then>
         </if>
     </simple-method>
 </simple-methods>
