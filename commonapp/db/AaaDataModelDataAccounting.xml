@@ -99,6 +99,16 @@
   <InvoiceItemType description="Invoice Product-Feature Item" hasTable="N" invoiceItemTypeId="INV_PROD_FEATR_ITEM" parentTypeId=""/>
   <InvoiceItemType description="Invoice Work-Effort Item" hasTable="N" invoiceItemTypeId="INV_WE_ITEM" parentTypeId=""/>
   <InvoiceItemType description="Invoice Time-Entry Item" hasTable="N" invoiceItemTypeId="INV_TE_ITEM" parentTypeId=""/>    
+ 
+  <InvoiceItemTypeMap invoiceItemMapKey="PROMOTION_ADJUSTMENT" invoiceItemTypeId="ITM_PROMOTION_ADJ"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="DISCOUNT_ADJUSTMENT" invoiceItemTypeId="ITM_DISCOUNT_ADJ"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="FEE" invoiceItemTypeId="ITM_FEE"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="MISCELLANEOUS_CHARGE" invoiceItemTypeId="ITM_MISC_CHARGE"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="SALES_TAX" invoiceItemTypeId="ITM_SALES_TAX"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="SHIPPING_CHARGES" invoiceItemTypeId="ITM_SHIPPING_CHARGES"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="SURCHARGE_ADJUSTMENT" invoiceItemTypeId="ITM_SURCHARGE_ADJ"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="ADDITIONAL_FEATURE" invoiceItemTypeId="ITM_ADD_FEATURE"/>
+  <InvoiceItemTypeMap invoiceItemMapKey="WARRANTY_ADJUSTMENT" invoiceItemTypeId="ITM_WARRANTY_ADJ"/>  
 
   <InvoiceType description="Purchase" hasTable="N" invoiceTypeId="PURCHASE_INVOICE" parentTypeId=""/>
   <InvoiceType description="Sales" hasTable="N" invoiceTypeId="SALES_INVOICE" parentTypeId=""/>

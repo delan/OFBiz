@@ -822,6 +822,19 @@
         <key-map field-name="invoiceItemTypeId"/>
       </relation>
     </entity>
+    <entity entity-name="InvoiceItemTypeMap"
+            package-name="org.ofbiz.commonapp.accounting.invoice"
+            title="Invoice Item Type Map Entity">
+      <field name="invoiceItemMapKey" type="id-ne"></field>
+      <field name="invoiceItemTypeId" type="id-ne"></field>
+      <prim-key field="invoiceItemMapKey"/>
+      <relation type="one" fk-name="INVOICE_ITEM_MAP" rel-entity-name="InvoiceItemType">
+        <key-map field-name="invoiceItemTypeId"/>
+      </relation>     
+      <relation type="many" rel-entity-name="InvoiceItem">
+        <key-map field-name="invoiceItemTypeId"/>
+      </relation>
+    </entity>    
     <entity entity-name="InvoiceRole"
             package-name="org.ofbiz.commonapp.accounting.invoice"
             title="Invoice Role Entity">
