@@ -1,5 +1,5 @@
 /*
- * $Id: RequestHandler.java,v 1.6 2003/10/28 09:41:34 jonesde Exp $
+ * $Id: RequestHandler.java,v 1.7 2003/11/19 19:31:03 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import org.ofbiz.entity.GenericValue;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     Dustin Caldwell
- * @version    $Revision: 1.6 $
+ * @version    $Revision: 1.7 $
  * @since      2.0
  */
 public class RequestHandler implements Serializable {
@@ -606,5 +606,16 @@ public class RequestHandler implements Serializable {
         }
         
         return encodedUrl;              
-    }    
+    }
+
+    public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url) {
+        return makeUrl(request, response, url, false, false, false);
+    }
+
+    public static String makeUrl(HttpServletRequest request, HttpServletResponse response, String url, boolean fullPath, boolean secure, boolean encode) {
+        ServletContext ctx = (ServletContext) request.getAttribute("servletContext");
+        RequestHandler rh = (RequestHandler) ctx.getAttribute("_REQUEST_HANDLER_");
+        return rh.makeLink(request, response, url, fullPath, secure, encode);
+    }
+
 }
