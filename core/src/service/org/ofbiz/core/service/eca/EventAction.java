@@ -64,7 +64,7 @@ public class EventAction {
         Map result = null;
         LocalDispatcher dispatcher = dctx.getDispatcher();
         if (serviceMode.equals("sync")) {
-            result = dispatcher.runSync(this.serviceName, context);
+            result = dispatcher.runSync(this.serviceName, actionContext);
         } else if (serviceMode.equals("async")) {
             dispatcher.runAsync(serviceName, context);
         }
