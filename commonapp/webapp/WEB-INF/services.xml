@@ -4,11 +4,13 @@
   <vendor>OFBiz</vendor>
   <version>1.0</version>
 	
-  <service name="testSvc" engine="staticJava" location="ServiceTest" invoke="testOne">
+  <service name="testScv" engine="staticJava" location="ServiceTest" invoke="testOne">
     <attribute name="message" type="String" mode="IN"/>	  
     <attribute name="resp" type="String" mode="OUT"/>
   </service>
 
+  <service name="assignApprover" engine="staticJava" location="ServiceTest" invoke="testOne"/>    
+  
   <service name="processOrder" engine="workflow" location="TEST" invoke="ProcessOrder">
     <attribute name="orderId" type="String" mode="IN"/>
     <attribute name="orderStatusId" type="String" mode="OUT"/>
