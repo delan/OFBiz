@@ -86,9 +86,27 @@ public class ShoppingCartItem implements java.io.Serializable {
     public static ShoppingCartItem makeItem(Integer cartLocation, GenericValue product, double quantity, HashMap features, HashMap attributes, String prodCatalogId, LocalDispatcher dispatcher, ShoppingCart cart, boolean doPromotions) throws CartItemModifyException {
         ShoppingCartItem newItem = new ShoppingCartItem(product, features, attributes, prodCatalogId);
 
+        //check to see if product is virtual
         if ("Y".equals(product.getString("isVirtual"))) {
             String excMsg = "Tried to add the Virtual Product " + product.getString("productName") + 
                     " (productId: " + product.getString("productId") + ") to the cart, not adding.";
+            Debug.logWarning(excMsg);
+            throw new CartItemModifyException(excMsg);
+        }
+
+        java.sql.Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
+        //check to see if introductionDate hasn't passed yet
+        if (product.get("introductionDate") != null && nowTimestamp.before(product.getTimestamp("introductionDate"))) {
+            String excMsg = "Tried to add the Product " + product.getString("productName") + 
+                    " (productId: " + product.getString("productId") + ") to the cart. This product has not yet been made available for sale, so not adding.";
+            Debug.logWarning(excMsg);
+            throw new CartItemModifyException(excMsg);
+        }
+        
+        //check to see if salesDiscontinuationDate has passed
+        if (product.get("salesDiscontinuationDate") != null && nowTimestamp.after(product.getTimestamp("salesDiscontinuationDate"))) {
+            String excMsg = "Tried to add the Product " + product.getString("productName") + 
+                    " (productId: " + product.getString("productId") + ") to the cart. This product is no longer available for sale, so not adding.";
             Debug.logWarning(excMsg);
             throw new CartItemModifyException(excMsg);
         }

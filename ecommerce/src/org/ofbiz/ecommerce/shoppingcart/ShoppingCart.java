@@ -1,20 +1,6 @@
 /*
  * $Id$
- */
-
-package org.ofbiz.ecommerce.shoppingcart;
-
-import java.text.*;
-import java.util.*;
-
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.commonapp.order.order.OrderReadHelper;
-
-/**
- * <p><b>Title:</b> ShoppingCart.java
- * <p><b>Description:</b> Shopping Cart Object.
+ *
  * <p>Copyright (c) 2001 The Open For Business Project and repected authors.
  * <p>Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -33,6 +19,21 @@ import org.ofbiz.commonapp.order.order.OrderReadHelper;
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+package org.ofbiz.ecommerce.shoppingcart;
+
+import java.text.*;
+import java.util.*;
+
+import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
+import org.ofbiz.commonapp.order.order.OrderReadHelper;
+
+/**
+ * <p><b>Title:</b> ShoppingCart.java
+ * <p><b>Description:</b> Shopping Cart Object.
  *
  * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
@@ -405,19 +406,31 @@ public class ShoppingCart implements java.io.Serializable {
     /** go through the order adjustments and remove all adjustments with the given type */
     public void removeAdjustmentByType(String orderAdjustmentTypeId) {
         if (orderAdjustmentTypeId == null) return;
-        List adjs = this.getAdjustments();
+        
+        //make a list of adjustment lists including the cart adjustments and the cartItem adjustments for each item
+        List adjsLists = new LinkedList();
+        if (this.getAdjustments() != null) {
+            adjsLists.add(this.getAdjustments());
+        }
         Iterator cartIterator = this.iterator();
         while (cartIterator.hasNext()) {
             ShoppingCartItem item = (ShoppingCartItem) cartIterator.next();
-            adjs.addAll(item.getAdjustments());
+            if (item.getAdjustments() != null) {
+                adjsLists.add(item.getAdjustments());
+            }
         }
-        if (adjs != null) {
-            for (int i = 0; i < adjs.size(); ) {
-                GenericValue orderAdjustment = (GenericValue) adjs.get(i);
-                if (orderAdjustmentTypeId.equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
-                    adjs.remove(i);
-                } else {
-                    i++;
+        
+        Iterator adjsListsIter = adjsLists.iterator();
+        while (adjsListsIter.hasNext()) {
+            List adjs = (List) adjsListsIter.next();
+            if (adjs != null) {
+                for (int i = 0; i < adjs.size(); ) {
+                    GenericValue orderAdjustment = (GenericValue) adjs.get(i);
+                    if (orderAdjustmentTypeId.equals(orderAdjustment.getString("orderAdjustmentTypeId"))) {
+                        adjs.remove(i);
+                    } else {
+                        i++;
+                    }
                 }
             }
         }
