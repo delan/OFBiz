@@ -25,12 +25,12 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.8 2004/07/10 04:56:43 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.9 2004/07/15 02:11:58 jonesde Exp $
 -->
 
 <!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific">
 
-<!ENTITY % AllActions "script | service | entity-one | entity-and | entity-condition">
+<!ENTITY % AllActions "set | script | service | entity-one | entity-and | entity-condition">
 
 
 <!ELEMENT screens ( screen+ )>
@@ -42,10 +42,17 @@
 
 <!ELEMENT actions ( (%AllActions;)* )>
 
+    <!ELEMENT set EMPTY>
+    <!ATTLIST set
+        field CDATA #REQUIRED
+        from-field CDATA #IMPLIED
+        value CDATA #IMPLIED
+    >
+    
     <!ELEMENT service ( field-map* )>
     <!ATTLIST service
         service-name CDATA #REQUIRED
-        out-field-name CDATA "dataFound"
+        result-map-name CDATA #IMPLIED
         auto-field-map ( true | false ) "true"
     >
     
