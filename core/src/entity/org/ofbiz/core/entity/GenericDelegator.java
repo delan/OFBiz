@@ -1345,6 +1345,11 @@ public class GenericDelegator {
                 //now we have a map of values for this field set for this entity, so clear the by and line...
                 GenericPK dummyPK = new GenericPK(value.getModelEntity(), fieldValues);
                 andCache.remove(dummyPK);
+                
+                if (originalFieldValues != null && !originalFieldValues.equals(fieldValues)) {
+                    GenericPK dummyPKOriginal = new GenericPK(value.getModelEntity(), originalFieldValues);
+                    andCache.remove(dummyPKOriginal);
+                }
             }
             
         }
