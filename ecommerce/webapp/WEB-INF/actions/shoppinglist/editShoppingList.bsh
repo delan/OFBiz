@@ -44,7 +44,8 @@ context.put("shoppingListTypes", shoppingListTypes);
 // get the shoppingListId for this reqest
 parameterMap = UtilHttp.getParameterMap(request);
 shoppingListId = parameterMap.get("shoppingListId");
-if (shoppingListId == null) shoppingListId = request.getAttribute("shoppingListId");
+if (shoppingListId == null || shoppingListId.equals("")) 
+    shoppingListId = request.getAttribute("shoppingListId");
  
 // if we passed a shoppingListId get the shopping list info
 if (shoppingListId != null) {
