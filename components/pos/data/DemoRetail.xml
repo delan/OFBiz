@@ -51,10 +51,15 @@
 
     <ProductStoreCatalog productStoreId="9100" prodCatalogId="DemoCatalog" fromDate="2001-05-13 12:00:00.0" sequenceNum="1"/>
 
-    <Facility facilityId="MyRetailStore" productStoreId="9100"/>
+    <Facility facilityId="MyRetailStore" productStoreId="9100" />
 
+    <!-- use this one when the scheduled PUSH service is enabled
+    <PosTerminal posTerminalId="pos-1" facilityId="MyRetailStore" pushEntitySyncId="5505"/>
+    -->
+
+    <!-- use this one when the scheduled PUSH service is not enabled -->
     <PosTerminal posTerminalId="pos-1" facilityId="MyRetailStore"/>
-    
+
     <!-- NOTE: this should be commented out for testing the POS without inventory, but should be included on PSS and MCS machines to handle inventory issuance -->
     <!-- <InventoryItem facilityId="MyRetailStore" inventoryItemId="9100" inventoryItemTypeId="NON_SERIAL_INV_ITEM" productId="GZ-1001"/>
     <InventoryItemDetail inventoryItemId="9100" inventoryItemDetailSeqId="0001" availableToPromiseDiff="20" quantityOnHandDiff="20"/> -->
