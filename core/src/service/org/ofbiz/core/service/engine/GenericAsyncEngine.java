@@ -44,7 +44,7 @@ import org.ofbiz.core.util.*;
  */
 public abstract class GenericAsyncEngine implements GenericEngine {
 
-    protected ServiceDispatcher dispatcher;
+    protected ServiceDispatcher dispatcher = null;
     
     protected GenericAsyncEngine(ServiceDispatcher dispatcher) {
         this.dispatcher = dispatcher;       

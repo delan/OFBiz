@@ -27,23 +27,24 @@ package org.ofbiz.core.service.engine;
 import java.net.*;
 import java.util.*;
 
-import bsh.*;
-
-import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
+import org.ofbiz.core.util.*;
+
+import com.ibm.bsf.*;
 
 /**
- * BeanShell Script Service Engine
+ * BSF Service Engine
  *
- * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
  * @version    $Revision$
- * @since      2.0
+ * @since      2.1
  */
-public final class BeanShellEngine extends GenericAsyncEngine {
-
-    public static UtilCache scriptCache = new UtilCache("BeanShellScripts", 0, 0);
-
-    public BeanShellEngine(ServiceDispatcher dispatcher) {
+public class BSFEngine extends GenericAsyncEngine {
+    
+    public static final String module = BSFEngine.class.getName();
+    public static UtilCache scriptCache = new UtilCache("BSFScripts", 0, 0);
+            
+    public BSFEngine(ServiceDispatcher dispatcher) {
         super(dispatcher);
     }
     
@@ -53,7 +54,7 @@ public final class BeanShellEngine extends GenericAsyncEngine {
     public void runSyncIgnore(String localName, ModelService modelService, Map context) throws GenericServiceException {
         Map result = runSync(localName, modelService, context);
     }
-  
+    
     /**
      * @see org.ofbiz.core.service.engine.GenericEngine#runSync(java.lang.String, org.ofbiz.core.service.ModelService, java.util.Map)
      */
@@ -64,8 +65,8 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             throw new GenericServiceException("Service did not return expected result");
         return (Map) result;
     }
-
-    // Invoke the BeanShell Script.
+    
+    // Invoke the BSF Script.
     private Object serviceInvoker(String localName, ModelService modelService, Map context) throws GenericServiceException {
         if (modelService.location == null || modelService.invoke == null)
             throw new GenericServiceException("Cannot locate service to invoke");
@@ -80,7 +81,29 @@ public final class BeanShellEngine extends GenericAsyncEngine {
             cl = this.getClass().getClassLoader();
         else
             cl = dctx.getClassLoader();
-
+         
+        // create the manager object and set the classloader    
+        BSFManager mgr = new BSFManager();
+        mgr.setClassLoader(cl);
+        
+        // set the input parameters
+        Set keySet = context.keySet();
+        Iterator i = keySet.iterator();
+        while (i.hasNext()) {
+            String key = (String) i.next();
+            Object value = context.get(key);
+            mgr.registerBean(key, value);
+        }
+        mgr.registerBean("response", new HashMap());
+        
+        // pre-load the engine to make sure we were called right
+        com.ibm.bsf.BSFEngine bsfEngine = null;        
+        try {
+            bsfEngine = mgr.loadScriptingEngine(modelService.engineName);
+        } catch (BSFException e) {
+            throw new GenericServiceException("Problems loading com.ibm.bsf.BSFEngine: " + modelService.engineName, e);
+        }
+        
         // source the script into a string
         String script = (String) scriptCache.get(localName + "_" + modelService.location);
 
@@ -106,26 +129,15 @@ public final class BeanShellEngine extends GenericAsyncEngine {
                     scriptCache.put(localName + "_" + modelService.location, script);
                 }
             }
-        }
-
-        Interpreter bsh = new Interpreter();
-
-        Map result = null;
-
+        }               
+        
+        // now invoke the script
         try {
-            bsh.set("dctx", dctx); // set the dispatch context
-            bsh.set("context", context); // set the parameter context used for both IN and OUT
-            bsh.eval(script);
-            Object bshResult = bsh.get("result");
-
-            if ((bshResult != null) && (bshResult instanceof Map))
-                context.putAll((Map) bshResult);
-            result = modelService.makeValid(context, ModelService.OUT_PARAM);
-        } catch (EvalError e) {
-            throw new GenericServiceException("BeanShell script threw an exception", e);
+            bsfEngine.exec(modelService.location, 0, 0, script);
+        } catch (BSFException e) {
+            throw new GenericServiceException("Script invocation error", e);
         }
-        return result;
+        
+        return mgr.lookupBean("response");                                            
     }
-
 }
-

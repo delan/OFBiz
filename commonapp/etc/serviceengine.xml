@@ -19,8 +19,11 @@
     <engine name="group" class="org.ofbiz.core.service.group.ServiceGroupEngine"/>    
     <engine name="http" class="org.ofbiz.core.service.engine.HttpEngine"/>
     <engine name="interface" class="org.ofbiz.core.service.engine.InterfaceEngine"/>
+    <engine name="jacl" class="org.ofbiz.core.service.engine.BSFEngine"/>
     <engine name="java" class="org.ofbiz.core.service.engine.StandardJavaEngine"/>
-    <engine name="jms" class="org.ofbiz.core.service.jms.JmsServiceEngine"/>    
+    <engine name="javascript" class="org.ofbiz.core.service.engine.BSFEngine"/>
+    <engine name="jms" class="org.ofbiz.core.service.jms.JmsServiceEngine"/> 
+    <engine name="jpython" class="org.ofbiz.core.service.engine.BSFEngine"/>
     <engine name="route" class="org.ofbiz.core.service.engine.RouteEngine"/>
     <engine name="simple" class="org.ofbiz.core.minilang.SimpleServiceEngine"/>
     <engine name="soap" class="org.ofbiz.core.service.engine.SOAPClientEngine"/>
