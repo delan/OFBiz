@@ -108,8 +108,7 @@ public class Start implements Runnable {
         ArrayList xargs = new ArrayList();
         xargs.add(conf.configFile);
         for (int i = 0; i < args.length; i++) {
-            xargs.add(args[i]);
-            System.out.println("Arg " + i + ": " + args[i]);
+            xargs.add(args[i]);            
         }
         ClassLoader cl = classPath.getClassLoader();
         
@@ -151,6 +150,7 @@ public class Start implements Runnable {
         Iterator dirIt = conf.dirList.iterator();
         while (dirIt.hasNext()) {
             String pathStr = (String) dirIt.next();
+            System.out.println("Loading " + pathStr + "...");
             classPath.addComponent(pathStr);                        
         }
         
