@@ -240,7 +240,7 @@
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;Special Offers</div>
             </td>
-            <td valign="middle" align="right">&nbsp;</td>
+            <#--<td valign="middle" align="right">&nbsp;</td>-->
           </tr>
         </table>
       </TD>
@@ -273,7 +273,7 @@
   </TABLE>
 </#if>
 
-<#if associatedProducts?has_content>
+<#if associatedProducts?has_content && associatedProducts != "null">
   <BR>
   <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
     <TR>
@@ -283,7 +283,7 @@
             <td valign="middle" align="left">
               <div class="boxhead">&nbsp;You might also be interested in:</div>
             </td>
-            <td valign="middle" align="right">&nbsp;</td>
+            <#--<td valign="middle" align="right">&nbsp;</td>-->
           </tr>
         </table>
       </TD>
