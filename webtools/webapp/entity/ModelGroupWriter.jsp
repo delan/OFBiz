@@ -82,19 +82,19 @@
   while(ecIter.hasNext()) {
     String eName = (String)ecIter.next();
     ModelEntity ent = reader.getModelEntity(eName);
-    TreeSet entities = (TreeSet)packages.get(ent.packageName);
+    TreeSet entities = (TreeSet) packages.get(ent.getPackageName());
     if(entities == null) {
       entities = new TreeSet();
-      packages.put(ent.packageName, entities);
-      packageNames.add(ent.packageName);
+      packages.put(ent.getPackageName(), entities);
+      packageNames.add(ent.getPackageName());
     }
     entities.add(eName);
   }%>
 <entitygroup><%
   Iterator piter = packageNames.iterator();
   while(piter.hasNext()) {
-    String pName = (String)piter.next();
-    TreeSet entities = (TreeSet)packages.get(pName);
+    String pName = (String) piter.next();
+    TreeSet entities = (TreeSet) packages.get(pName);
 %>
 
   <!-- ========================================================= -->
@@ -102,10 +102,10 @@
   <!-- ========================================================= -->
 <%
     Iterator i = entities.iterator();
-    while ( i.hasNext() ) {
+    while (i.hasNext()) {
       String entityName = (String)i.next();
       String groupName = groupReader.getEntityGroupName(entityName);
-      if(groupName == null) groupName = "";
+      if (groupName == null) groupName = "";
 %>	
     <entity-group group="<%=groupName%>" entity="<%=entityName%>" /><%
     }

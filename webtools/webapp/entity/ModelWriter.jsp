@@ -1,16 +1,15 @@
 <%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%
 
-if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("originalFileName") != null) {
-  if("true".equals(request.getParameter("savetofile"))) {
+if (security.hasPermission("ENTITY_MAINT", session) || request.getParameter("originalFileName") != null) {
+  if ("true".equals(request.getParameter("savetofile"))) {
     //save to the file specified in the ModelReader config
-    String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);
-    String serverRootUrl=(String)request.getAttribute(SiteDefs.SERVER_ROOT_URL);
+    String controlPath = (String) request.getAttribute(SiteDefs.CONTROL_PATH);
+    String serverRootUrl = (String) request.getAttribute(SiteDefs.SERVER_ROOT_URL);
     ModelReader modelReader = delegator.getModelReader();
 
-    Map fileNameEntities = modelReader.fileNameEntities;
-    Iterator filenameIter = fileNameEntities.keySet().iterator();
-    while(filenameIter.hasNext()) {
-      String filename = (String)filenameIter.next();
+    Iterator filenameIter = modelReader.getFileNameEntitiesKeyIterator();
+    while (filenameIter.hasNext()) {
+      String filename = (String) filenameIter.next();
 
       java.net.URL url = new java.net.URL(serverRootUrl + controlPath + "/view/ModelWriter");
       HashMap params = new HashMap();
@@ -23,7 +22,7 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
 
       BufferedReader post = new BufferedReader(new InputStreamReader(in));
       String line = null;
-      while((line = post.readLine()) != null) {
+      while ((line = post.readLine()) != null) {
         newFileWriter.write(line);
         newFileWriter.write("\n");
       }
@@ -84,22 +83,21 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
   Collection ec = null;
 
   String originalFileName = request.getParameter("originalFileName");
-  if(originalFileName != null) {
-    ec = (Collection)reader.fileNameEntities.get(originalFileName);
-  }
-  else {
+  if (originalFileName != null) {
+    ec = reader.getFileNameEntities(originalFileName);
+  } else {
     ec = reader.getEntityNames();
   }
 
   Iterator ecIter = ec.iterator();
   while(ecIter.hasNext()) {
-    String eName = (String)ecIter.next();
+    String eName = (String) ecIter.next();
     ModelEntity ent = reader.getModelEntity(eName);
-    TreeSet entities = (TreeSet)packages.get(ent.packageName);
-    if(entities == null) {
+    TreeSet entities = (TreeSet) packages.get(ent.getPackageName());
+    if (entities == null) {
       entities = new TreeSet();
-      packages.put(ent.packageName, entities);
-      packageNames.add(ent.packageName);
+      packages.put(ent.getPackageName(), entities);
+      packageNames.add(ent.getPackageName());
     }
     entities.add(eName);
   }%>
@@ -137,39 +135,39 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
     while ( i.hasNext() ) {
       String entityName = (String)i.next();
       ModelEntity entity = reader.getModelEntity(entityName);
-      if(entity instanceof ModelViewEntity) {
+      if (entity instanceof ModelViewEntity) {
         ModelViewEntity viewEntity = (ModelViewEntity)entity;
 %>	
     <view-entity entity-name="<%=entity.getEntityName()%>" 
-            package-name="<%=entity.packageName%>"<%if(entity.dependentOn.length() > 0){%>
-            dependent-on="<%=entity.dependentOn%>"<%}%><%if(!title.equals(entity.title)){%>
-            title="<%=entity.title%>"<%}%><%if(!copyright.equals(entity.copyright)){%>
-            copyright="<%=entity.copyright%>"<%}%><%if(!author.equals(entity.author)){%>
-            author="<%=entity.author%>"<%}%><%if(!version.equals(entity.version)){%>
-            version="<%=entity.version%>"<%}%>><%if(!description.equals(entity.description)){%>
-      <description><%=entity.description%></description><%}%><%
+            package-name="<%=entity.getPackageName()%>"<%if (entity.getDependentOn().length() > 0) {%>
+            dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (!title.equals(entity.getTitle())) {%>
+            title="<%=entity.getTitle()%>"<%}%><%if (!copyright.equals(entity.getCopyright())) {%>
+            copyright="<%=entity.getCopyright()%>"<%}%><%if (!author.equals(entity.getAuthor())) {%>
+            author="<%=entity.getAuthor()%>"<%}%><%if (!version.equals(entity.getVersion())) {%>
+            version="<%=entity.getVersion()%>"<%}%>><%if (!description.equals(entity.getDescription())) {%>
+      <description><%=entity.getDescription()%></description><%}%><%
   Iterator meIter = viewEntity.getMemberEntityNames().entrySet().iterator();
   while(meIter.hasNext()) {
     Map.Entry entry = (Map.Entry)meIter.next();%>	
       <member-entity entity-alias="<%=(String)entry.getKey()%>" entity-name="<%=(String)entry.getValue()%>" /><%
   }
-  for(int y=0; y<viewEntity.aliases.size(); y++) {
-    ModelViewEntity.ModelAlias alias = (ModelViewEntity.ModelAlias)viewEntity.aliases.get(y);%>
-      <alias entity-alias="<%=alias.entityAlias%>" name="<%=alias.name%>"<%if(!alias.name.equals(alias.field)){
-      %> field="<%=alias.field%>"<%}%><%if(alias.isPk){%> prim-key="true"<%}%> /><%
+  for (int y = 0; y < viewEntity.getAliasesSize(); y++) {
+    ModelViewEntity.ModelAlias alias = viewEntity.getAlias(y);%>
+      <alias entity-alias="<%=alias.getEntityAlias()%>" name="<%=alias.getName()%>"<%if (!alias.getName().equals(alias.getField())){
+      %> field="<%=alias.getField()%>"<%}%><%if (alias.getIsPk()) {%> prim-key="true"<%}%> /><%
   }
-  for(int r=0; r<viewEntity.viewLinks.size(); r++) {
-    ModelViewEntity.ModelViewLink viewLink = (ModelViewEntity.ModelViewLink)viewEntity.viewLinks.get(r);%>
-      <view-link entity-alias="<%=viewLink.entityAlias%>" rel-entity-alias="<%=viewLink.relEntityAlias%>"><%for(int km=0; km<viewLink.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)viewLink.keyMaps.get(km);%>
-        <key-map field-name="<%=keyMap.fieldName%>"<%if(!keyMap.fieldName.equals(keyMap.relFieldName)){%> rel-field-name="<%=keyMap.relFieldName%>"<%}%> /><%}%>
+  for (int r = 0; r < viewEntity.getViewLinksSize(); r++) {
+    ModelViewEntity.ModelViewLink viewLink = viewEntity.getViewLink(r);%>
+      <view-link entity-alias="<%=viewLink.getEntityAlias()%>" rel-entity-alias="<%=viewLink.getRelEntityAlias()%>"><%for (int km = 0; km < viewLink.getKeyMapsSize(); km++){ ModelKeyMap keyMap = viewLink.getKeyMap(km);%>
+        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%> /><%}%>
       </view-link><%
   }
-  if(entity.relations != null && entity.relations.size() > 0) {
-    for(int r=0; r<entity.relations.size(); r++) {
-      ModelRelation relation = (ModelRelation) entity.relations.get(r);%>
-      <relation type="<%=relation.type%>"<%if(relation.title.length() > 0){%> title="<%=relation.title%>"<%}
-              %> rel-entity-name="<%=relation.relEntityName%>"><%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
-        <key-map field-name="<%=keyMap.fieldName%>"<%if(!keyMap.fieldName.equals(keyMap.relFieldName)){%> rel-field-name="<%=keyMap.relFieldName%>"<%}%> /><%}%>
+  if (entity.getRelationsSize() > 0) {
+    for (int r = 0; r < entity.getRelationsSize(); r++) {
+      ModelRelation relation = entity.getRelation(r);%>
+      <relation type="<%=relation.getType()%>"<%if (relation.getTitle().length() > 0) {%> title="<%=relation.getTitle()%>"<%}
+              %> rel-entity-name="<%=relation.getRelEntityName()%>"><%for (int km = 0; km < relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = relation.getKeyMap(km);%>
+        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%> /><%}%>
       </relation><%
     }
   }%>
@@ -177,34 +175,34 @@ if(security.hasPermission("ENTITY_MAINT", session) || request.getParameter("orig
       }
       else {
 %>
-    <entity entity-name="<%=entity.getEntityName()%>"<%if(!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getTableName()))){
+    <entity entity-name="<%=entity.getEntityName()%>"<%if (!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getTableName()))){
           %> table-name="<%=entity.getTableName()%>"<%}%> 
-            package-name="<%=entity.packageName%>"<%if(entity.dependentOn.length() > 0){%>
-            dependent-on="<%=entity.dependentOn%>"<%}%><%if(!title.equals(entity.title)){%>
-            title="<%=entity.title%>"<%}%><%if(!copyright.equals(entity.copyright)){%>
-            copyright="<%=entity.copyright%>"<%}%><%if(!author.equals(entity.author)){%>
-            author="<%=entity.author%>"<%}%><%if(!version.equals(entity.version)){%>
-            version="<%=entity.version%>"<%}%>><%if(!description.equals(entity.description)){%>
-      <description><%=entity.description%></description><%}%><%
-  for(int y = 0; y < entity.fields.size(); y++) {
-    ModelField field = (ModelField) entity.fields.get(y);%>
-      <field name="<%=field.name%>"<%if(!field.name.equals(ModelUtil.dbNameToVarName(field.colName))){
-      %> col-name="<%=field.colName%>"<%}%> type="<%=field.type%>"><%
-    for(int v = 0; v<field.validators.size(); v++) {
-      String valName = (String)field.validators.get(v);
+            package-name="<%=entity.getPackageName()%>"<%if (entity.getDependentOn().length() > 0) {%>
+            dependent-on="<%=entity.getDependentOn()%>"<%}%><%if (!title.equals(entity.getTitle())) {%>
+            title="<%=entity.getTitle()%>"<%}%><%if (!copyright.equals(entity.getCopyright())) {%>
+            copyright="<%=entity.getCopyright()%>"<%}%><%if (!author.equals(entity.getAuthor())) {%>
+            author="<%=entity.getAuthor()%>"<%}%><%if (!version.equals(entity.getVersion())) {%>
+            version="<%=entity.getVersion()%>"<%}%>><%if (!description.equals(entity.getDescription())) {%>
+      <description><%=entity.getDescription()%></description><%}%><%
+  for (int y = 0; y < entity.getFieldsSize(); y++) {
+    ModelField field = entity.getField(y);%>
+      <field name="<%=field.getName()%>"<%if (!field.getName().equals(ModelUtil.dbNameToVarName(field.getColName()))){
+      %> col-name="<%=field.getColName()%>"<%}%> type="<%=field.getType()%>"><%
+    for (int v = 0; v<field.getValidatorsSize(); v++) {
+      String valName = field.getValidator(v);
       %><validate name="<%=valName%>" /><%
     }%></field><%
   }
-  for(int y = 0; y < entity.pks.size(); y++) {
-    ModelField field = (ModelField) entity.pks.get(y);%>	
-      <prim-key field="<%=field.name%>" /><%
+  for (int y = 0; y < entity.getPksSize(); y++) {
+    ModelField field = entity.getPk(y);%>	
+      <prim-key field="<%=field.getName()%>" /><%
   }
-  if(entity.relations != null && entity.relations.size() > 0) {
-    for(int r=0; r<entity.relations.size(); r++) {
-      ModelRelation relation = (ModelRelation) entity.relations.get(r);%>
-      <relation type="<%=relation.type%>"<%if(relation.title.length() > 0){%> title="<%=relation.title%>"<%}
-              %> rel-entity-name="<%=relation.relEntityName%>"><%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
-        <key-map field-name="<%=keyMap.fieldName%>"<%if(!keyMap.fieldName.equals(keyMap.relFieldName)){%> rel-field-name="<%=keyMap.relFieldName%>"<%}%> /><%}%>
+  if (entity.getRelationsSize() > 0) {
+    for (int r=0; r<entity.getRelationsSize(); r++) {
+      ModelRelation relation = entity.getRelation(r);%>
+      <relation type="<%=relation.getType()%>"<%if (relation.getTitle().length() > 0) {%> title="<%=relation.getTitle()%>"<%}
+              %> rel-entity-name="<%=relation.getRelEntityName()%>"><%for (int km = 0; km < relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = relation.getKeyMap(km);%>
+        <key-map field-name="<%=keyMap.getFieldName()%>"<%if (!keyMap.getFieldName().equals(keyMap.getRelFieldName())) {%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%> /><%}%>
       </relation><%
     }
   }%>

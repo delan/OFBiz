@@ -136,36 +136,36 @@ ERRORS:
 <% 
   Iterator ecIter = newEntList.iterator();
   while(ecIter.hasNext()) {
-    ModelEntity entity = (ModelEntity)ecIter.next();
+    ModelEntity entity = (ModelEntity) ecIter.next();
 %>
     <entity entity-name="<%=entity.getEntityName()%>"<%if(!entity.getEntityName().equals(ModelUtil.dbNameToClassName(entity.getTableName()))){
           %> table-name="<%=entity.getTableName()%>"<%}%> 
-            package-name="<%=entity.packageName%>"<%if(entity.dependentOn.length() > 0){%>
-            dependent-on="<%=entity.dependentOn%>"<%}%><%if(!title.equals(entity.title)){%>
-            title="<%=entity.title%>"<%}%><%if(!copyright.equals(entity.copyright)){%>
-            copyright="<%=entity.copyright%>"<%}%><%if(!author.equals(entity.author)){%>
-            author="<%=entity.author%>"<%}%><%if(!version.equals(entity.version)){%>
-            version="<%=entity.version%>"<%}%>><%if(!description.equals(entity.description)){%>
-      <description><%=entity.description%></description><%}%><%
-  for(int y = 0; y < entity.fields.size(); y++) {
-    ModelField field = (ModelField) entity.fields.elementAt(y);%>
-      <field name="<%=field.name%>"<%if(!field.name.equals(ModelUtil.dbNameToVarName(field.colName))){
-      %> col-name="<%=field.colName%>"<%}%> type="<%=field.type%>"><%
-    for(int v = 0; v<field.validators.size(); v++) {
-      String valName = (String)field.validators.get(v);
+            package-name="<%=entity.getPackageName()%>"<%if(entity.getDependentOn().length() > 0){%>
+            dependent-on="<%=entity.getDependentOn()%>"<%}%><%if(!title.equals(entity.getTitle())){%>
+            title="<%=entity.getTitle()%>"<%}%><%if(!copyright.equals(entity.getCopyright())){%>
+            copyright="<%=entity.getCopyright()%>"<%}%><%if(!author.equals(entity.getAuthor())){%>
+            author="<%=entity.getAuthor()%>"<%}%><%if(!version.equals(entity.getVersion())){%>
+            version="<%=entity.getVersion()%>"<%}%>><%if(!description.equals(entity.getDescription())){%>
+      <description><%=entity.getDescription()%></description><%}%><%
+  for (int y = 0; y < entity.getFieldsSize(); y++) {
+    ModelField field = entity.getField(y);%>
+      <field name="<%=field.getName()%>"<%if(!field.getName().equals(ModelUtil.dbNameToVarName(field.getColName()))){
+      %> col-name="<%=field.getColName()%>"<%}%> type="<%=field.getType()%>"><%
+    for (int v = 0; v<field.getValidatorsSize(); v++) {
+      String valName = (String) field.getValidator(v);
       %><validate name="<%=valName%>" /><%
     }%></field><%
   }
-  for(int y = 0; y < entity.pks.size(); y++) {
-    ModelField field = (ModelField) entity.pks.elementAt(y);%>	
-      <prim-key field="<%=field.name%>" /><%
+  for (int y = 0; y < entity.getPksSize(); y++) {
+    ModelField field = entity.getPk(y);%>	
+      <prim-key field="<%=field.getName()%>" /><%
   }
-  if(entity.relations != null && entity.relations.size() > 0) {
-    for(int r=0; r<entity.relations.size(); r++) {
-      ModelRelation relation = (ModelRelation) entity.relations.elementAt(r);%>
-      <relation type="<%=relation.type%>"<%if(relation.title.length() > 0){%> title="<%=relation.title%>"<%}
-              %> rel-entity-name="<%=relation.relEntityName%>"><%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
-        <key-map field-name="<%=keyMap.fieldName%>"<%if(!keyMap.fieldName.equals(keyMap.relFieldName)){%> rel-field-name="<%=keyMap.relFieldName%>"<%}%> /><%}%>
+  if (entity.getRelationsSize() > 0) {
+    for (int r = 0; r < entity.getRelationsSize(); r++) {
+      ModelRelation relation = entity.getRelation(r);%>
+      <relation type="<%=relation.getType()%>"<%if(relation.getTitle().length() > 0){%> title="<%=relation.getTitle()%>"<%}
+              %> rel-entity-name="<%=relation.getRelEntityName()%>"><%for(int km=0; km<relation.getKeyMapsSize(); km++){ ModelKeyMap keyMap = relation.getKeyMap(km);%>
+        <key-map field-name="<%=keyMap.getFieldName()%>"<%if(!keyMap.getFieldName().equals(keyMap.getRelFieldName())){%> rel-field-name="<%=keyMap.getRelFieldName()%>"<%}%> /><%}%>
       </relation><%
     }
   }%>
