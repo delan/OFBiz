@@ -461,6 +461,14 @@
                 </entity-options>
             </drop-down>
         </field>
+        <field name="currencyUomId">
+            <drop-down allow-empty="false" no-current-selected-key="${defaultCurrencyUomId}">
+                <entity-options entity-name="Uom" key-field-name="uomId" description="${description} [${uomId}]">
+                    <entity-constraint name="uomTypeId" value="CURRENCY_MEASURE"/>
+                    <entity-order-by field-name="description"/>
+                </entity-options>
+            </drop-down>
+        </field>
         <field use-when="supplierProduct == null" name="submitButton" title="${uiLabelMap.CommonCreate}" widget-style="standardSubmit"><submit button-type="button"/></field>
         <field use-when="supplierProduct != null" name="submitButton" title="${uiLabelMap.CommonUpdate}" widget-style="standardSubmit"><submit button-type="button"/></field>
     </form>
@@ -475,6 +483,7 @@
         <field name="supplierProductId" service-name="updateSupplierProduct"><display/></field>
         <field name="currencyUomId" service-name="updateSupplierProduct"><display/></field>
         <field name="lastPrice" service-name="updateSupplierProduct"><display/></field>
+        <field name="currencyUomId" service-name="updateSupplierProduct" title="Currency"><display/></field>
 
         <field name="updateLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink target="EditProductSuppliers?productId=${productId}&amp;partyId=${partyId}"
