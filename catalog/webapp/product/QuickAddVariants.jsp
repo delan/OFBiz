@@ -95,7 +95,7 @@
         <td><div class="tabletext"><b><%=featureType%></b></div></td>
     </ofbiz:iterator>
     <td><div class="tabletext"><b>New Product ID and Create!</b></div></td>
-    <td><div class="tabletext"><b>Already Exists?</b></div></td>
+    <td><div class="tabletext"><b>Existing Variant IDs:</b></div></td>
   </tr>
 
 <%boolean carryIncrement = false;%>
@@ -172,7 +172,7 @@
                             }
 
                             if (hasAllFeatures) {
-                                %><%=productAssoc.getString("productIdTo")%>,&nbsp;<%
+                                %>"<b><%=productAssoc.getString("productIdTo")%></b>"&nbsp;<%
                             }
                         }
                     }
