@@ -156,8 +156,10 @@ public class RequestHandler implements Serializable {
         Debug.logInfo("Next View after eventReturn: " + nextView);
         
         // check for a chain request. 
-        if ( nextView != null && nextView.startsWith("request:") )
+        if ( nextView != null && nextView.startsWith("request:") ) {
+            nextView = (String) (StringUtil.split(nextView,":").get(1));
             chainRequest = true;
+        }
                             
         // check for a no dispatch return (meaning the return was processed by the event
         if ( nextView != null && nextView.startsWith("none:") )
