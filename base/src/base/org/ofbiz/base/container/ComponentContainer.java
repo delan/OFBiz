@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.5 2003/08/17 01:44:14 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.6 2003/08/17 03:11:28 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.*;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.5 $
+  *@version    $Revision: 1.6 $
  * @since      2.2
  */
 public class ComponentContainer implements Container {
@@ -128,8 +128,7 @@ public class ComponentContainer implements Container {
             for (int i = 0; i < subs.length; i++) {
                 try {
                     File componentPath = new File(parentPath.getCanonicalPath() + "/" + subs[i]);
-                    if (componentPath.isDirectory() && !subs[i].equals("CVS")) {
-                        Debug.logInfo("Testing " + subs[i], module);
+                    if (componentPath.isDirectory() && !subs[i].equals("CVS")) {                        
                         // make sure we have a component configuraton file
                         String componentLocation = componentPath.getCanonicalPath();
                         File configFile = new File(componentLocation + "/ofbiz-component.xml");

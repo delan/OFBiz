@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  OFBiz Containers
- *  $Id: ofbiz-containers.xml,v 1.2 2003/08/17 01:43:06 ajzeneski Exp $
+ *  $Id: ofbiz-containers.xml,v 1.3 2003/08/17 03:11:29 ajzeneski Exp $
 -->
 
 <ofbiz-containers>
@@ -33,7 +33,7 @@
 	<!-- load jetty and all web applications -->
 	<container name="jetty-container" class="org.ofbiz.base.container.JettyContainer">
 		<property name="default-server">
-			<property name="default-listener">
+			<property name="default-listener" value="listener">
 				<property name="type" value="default"/>
 				<property name="host" value="0.0.0.0"/>
 				<property name="port" value="8080"/>
@@ -41,6 +41,14 @@
 				<property name="max-threads" value="100"/>
 				<property name="max-idle-time" value="30000"/>
 				<property name="low-resource-persist-time" value="5000"/>
+			</property>
+			<property name="request-log" value="request-log">
+				<property name="filename" value="logs/yyyy_mm_dd.request.log"/>
+				<property name="buffered" value="false"/>
+				<property name="append" value="true"/>
+				<property name="extended" value="true"/>
+				<property name="timezone" value="GMT"/>
+				<property name="retain-days" value="90"/>
 			</property>
 		</property>
 	</container>	

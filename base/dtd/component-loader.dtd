@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   To refer to this DTD in your XML file, use the following declaration:
-<!DOCTYPE component-loader PUBLIC "-//OFBiz//DTD Component Config//EN" "http://www.ofbiz.org/dtds/component-loader.dtd">
+<!DOCTYPE component-loader PUBLIC "-//OFBiz//DTD Component Loader//EN" "http://www.ofbiz.org/dtds/component-loader.dtd">
 -->
 
 <!--
@@ -24,10 +24,10 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: component-loader.dtd,v 1.1 2003/08/15 23:08:22 ajzeneski Exp $
+ *  $Id: component-loader.dtd,v 1.2 2003/08/17 03:11:28 ajzeneski Exp $
 -->
 
-<!ELEMENT component-loader (load-component|load-components)*>
+<!ELEMENT component-loader ( load-component | load-components )*>
 <!ELEMENT load-component EMPTY>
 <!ATTLIST load-component
     component-name CDATA #REQUIRED

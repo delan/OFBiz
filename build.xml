@@ -1,0 +1,134 @@
+<?xml version="1.0"?>
+
+<!--
+ *  Copyright (c) 2001-2003 The Open For Business Project and respected authors.
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ *  This is the Open for Business Main build script.
+ *  $Id: build.xml,v 1.1 2003/08/17 03:11:29 ajzeneski Exp $
+-->
+
+<project name="OFBiz Main Build" default="build" basedir=".">
+
+    <!-- ================================================================== -->
+    <!-- Initialization of all property settings                            -->
+    <!-- ================================================================== -->
+
+    <target name="ofbiz-init">        
+        <property environment="env"/>        
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- Removes all created files and directories                          -->
+    <!-- ================================================================== -->
+
+    <target name="clean" depends="sub-clean">
+        <delete>
+            <fileset dir="logs" includes="*"/>
+        </delete>
+    </target>
+    
+    <target name="sub-clean" depends="">
+        <echo message="[clean] ========== Starting Clean =========="/>
+        
+        <echo message="[clean]" />
+        <echo message="[clean] ========================================="/>
+        <echo message="[clean] ========== Cleaning base tools =========="/>
+        <echo message="[clean] ========================================="/>        
+        <ant dir="base" target="clean" inheritAll="false"/>        
+        <echo message="[clean]" />
+        <echo message="[clean] ==============================================="/>
+        <echo message="[clean] ========== Cleaning entity component =========="/>
+        <echo message="[clean] ==============================================="/>                
+        <ant dir="components/entity" target="clean" inheritAll="false"/>        
+
+        <delete file="ofbiz.jar"/>
+        <echo message="[clean] ========== Done Cleaning =========="/>
+    </target>
+    
+    <target name="cleanextras" depends="">
+        <delete><fileset dir="." includes="**/.nbattrs,**/*~,**/*.#*" /></delete>
+    </target>    
+
+    <!-- ================================================================== -->
+    <!-- Build Components                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="build" depends="ofbiz-init">
+        <echo message="[build] ========== Start Building (Compile) =========="/>
+        
+        <echo message="[build]" />
+        <echo message="[build] ========================================="/>
+        <echo message="[build] ========== Building base tools =========="/>
+        <echo message="[build] ========================================="/>
+        <ant dir="base" inheritAll="false" />
+        <!-- copy the ofbiz.jar file -->
+        <copy todir="${basedir}">
+          <fileset dir="base/build/lib" includes="ofbiz.jar"/>
+        </copy>
+        
+        <echo message="[build]" />
+        <echo message="[build] ==============================================="/>
+        <echo message="[build] ========== Building entity component =========="/>
+        <echo message="[build] ==============================================="/>
+        <ant dir="components/entity" inheritAll="false" />
+                        
+        <echo message="[build] ========== Done Building (Compile) ==========" />
+    </target>
+
+    <!-- ================================================================== -->
+    <!-- Build JavaDocs                                                     -->
+    <!-- ================================================================== -->
+
+    <target name="docs" depends="">
+        <echo message="[docs] ========== Start Building (JavaDoc) =========="/>
+        
+        <echo message="[docs]" />
+        <echo message="[docs] ========================================="/>
+        <echo message="[docs] ========== Building base tools =========="/>
+        <echo message="[docs] ========================================="/>
+        <ant dir="base" target="docs" inheritAll="false" />
+        
+        <echo message="[docs]" />
+        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ========== Building entity component =========="/>
+        <echo message="[docs] ==============================================="/>
+        <ant dir="components/entity" target="docs" inheritAll="false" />
+        
+        <echo message="[docs] ========== Done Building (JavaDocs) ==========" />              
+    </target>
+    
+    <!-- ================================================================== -->
+    <!-- CVS Targets                                                        -->
+    <!-- ================================================================== -->
+    <target name="cvs-update">
+        <cvs command="update -P -d"/>
+    </target>    
+    
+    <!-- ================================================================== -->
+    <!-- Start OFBiz                                                        -->
+    <!-- ================================================================== -->
+    
+    <target name="run" depends="build">
+        <java jar="ofbiz.jar" fork="true"/>
+    </target>
+    
+</project>
+
