@@ -38,7 +38,7 @@ import javax.naming.NamingException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.catalina.Cluster;
-import org.apache.catalina.Connector;
+import org.apache.catalina.connector.Connector;
 import org.apache.catalina.Context;
 import org.apache.catalina.Engine;
 import org.apache.catalina.Host;
@@ -54,15 +54,12 @@ import org.apache.catalina.core.StandardContext;
 import org.apache.catalina.core.StandardEngine;
 import org.apache.catalina.core.StandardServer;
 import org.apache.catalina.core.StandardWrapper;
-import org.apache.catalina.logger.LoggerBase;
 import org.apache.catalina.realm.MemoryRealm;
 import org.apache.catalina.session.PersistentManager;
 import org.apache.catalina.session.StandardManager;
 import org.apache.catalina.startup.Embedded;
 import org.apache.catalina.valves.AccessLogValve;
 import org.apache.catalina.valves.RequestDumperValve;
-import org.apache.coyote.tomcat5.CoyoteConnector;
-import org.apache.coyote.tomcat5.CoyoteServerSocketFactory;
 import org.ofbiz.base.component.ComponentConfig;
 import org.ofbiz.base.container.ClassLoaderContainer;
 import org.ofbiz.base.container.Container;
@@ -168,7 +165,7 @@ public class CatalinaContainer implements Container {
 
         // embedded properties
         boolean useNaming = ContainerConfig.getPropertyValue(cc, "use-naming", false);
-        int debug = ContainerConfig.getPropertyValue(cc, "debug", 0);
+        //int debug = ContainerConfig.getPropertyValue(cc, "debug", 0);
 
         // grab some global context settings
         this.delegator = GenericDelegator.getGenericDelegator(ContainerConfig.getPropertyValue(cc, "delegator-name", "default"));
@@ -187,9 +184,9 @@ public class CatalinaContainer implements Container {
 
         // create the instance of Embedded
         embedded = new Embedded();
-        embedded.setDebug(debug);
+        //embedded.setDebug(debug);
         embedded.setUseNaming(useNaming);
-        embedded.setLogger(new DebugLogger());
+        //embedded.setLogger(new DebugLogger());
 
         // create the engines
         List engineProps = cc.getPropertiesWithValue("engine");
@@ -395,14 +392,14 @@ public class CatalinaContainer implements Container {
         trans.setReplicationMode(ContainerConfig.getPropertyValue(clusterProps, "replication-mode", "pooled"));
 
         String mgrClassName = ContainerConfig.getPropertyValue(clusterProps, "manager-class", "org.apache.catalina.cluster.session.DeltaManager");
-        int debug = ContainerConfig.getPropertyValue(clusterProps, "debug", 0);
+        //int debug = ContainerConfig.getPropertyValue(clusterProps, "debug", 0);
         boolean expireSession = ContainerConfig.getPropertyValue(clusterProps, "expire-session", false);
         boolean useDirty = ContainerConfig.getPropertyValue(clusterProps, "use-dirty", true);
 
         SimpleTcpCluster cluster = new SimpleTcpCluster();
         cluster.setClusterName(clusterProps.name);
         cluster.setManagerClassName(mgrClassName);
-        cluster.setDebug(debug);
+        //cluster.setDebug(debug);
         cluster.setExpireSessionsOnShutdown(expireSession);
         cluster.setUseDirtyFlag(useDirty);
 
@@ -424,132 +421,21 @@ public class CatalinaContainer implements Container {
             throw new ContainerException("Cannot create Connector without Embedded instance!");
         }
 
-        String conType = ContainerConfig.getPropertyValue(connectorProp, "type", "http");
-        String conAddr = ContainerConfig.getPropertyValue(connectorProp, "host", "0.0.0.0");
-        int conPort = ContainerConfig.getPropertyValue(connectorProp, "port", 8080);
-        int debug = ContainerConfig.getPropertyValue(connectorProp, "debug", 0);
-
-        // create the connector
-        CoyoteConnector connector = (CoyoteConnector) embedded.createConnector(conAddr, conPort, conType);
-        connector.setDebug(debug);
-
-        boolean enableLookups = ContainerConfig.getPropertyValue(connectorProp, "enable-lookups", true);
-        connector.setEnableLookups(enableLookups);
-
-        boolean enableKeepAlive = ContainerConfig.getPropertyValue(connectorProp, "enable-keep-alive", true);
-        connector.setKeepAlive(enableKeepAlive);
-
-        int redirect = ContainerConfig.getPropertyValue(connectorProp, "redirect", -1);
-        if (redirect > 0) {
-            connector.setRedirectPort(redirect);
+        Connector connector = null;
+        if (connectorProp.properties != null && connectorProp.properties.size() > 0) {
+            try {
+                connector = new Connector();
+                Iterator i = connectorProp.properties.values().iterator();
+                while (i.hasNext()) {
+                    ContainerConfig.Container.Property prop = (ContainerConfig.Container.Property) i.next();
+                    connector.setAttribute(prop.name, prop.value);
+                }
+            } catch (Exception e) {
+                throw new ContainerException(e);
+            }
+            embedded.addConnector(connector);
         }
-
-        String proxyName = ContainerConfig.getPropertyValue(connectorProp, "proxy-name", null);
-        int proxyPort = ContainerConfig.getPropertyValue(connectorProp, "proxy-port", 0);
-        if (proxyName != null && proxyPort > 0) {
-            connector.setProxyName(proxyName);
-            connector.setProxyPort(proxyPort);
-        }
-
-        String compression = ContainerConfig.getPropertyValue(connectorProp, "compression", "off");
-        connector.setCompression(compression); // on, off, force
-
-        boolean allowTrace = ContainerConfig.getPropertyValue(connectorProp, "allow-trace", false);
-        connector.setAllowTrace(allowTrace);
-
-        int minProc = ContainerConfig.getPropertyValue(connectorProp, "min-processors", 5);
-        connector.setMinProcessors(minProc);
-
-        int maxProc = ContainerConfig.getPropertyValue(connectorProp, "max-processors", 20);
-        connector.setMaxProcessors(maxProc);
-
-        int maxKeepAlive = ContainerConfig.getPropertyValue(connectorProp, "max-keep-alive", 100);
-        connector.setMaxKeepAliveRequests(maxKeepAlive);
-
-        int maxHeaderSize = ContainerConfig.getPropertyValue(connectorProp, "max-header-size", 4096);
-        connector.setMaxHttpHeaderSize(maxHeaderSize);
-
-        int maxPostSize = ContainerConfig.getPropertyValue(connectorProp, "max-post-size", 2097152);
-        connector.setMaxPostSize(maxPostSize);
-
-        int bufferSize = ContainerConfig.getPropertyValue(connectorProp, "buffer-size", 2048);
-        connector.setBufferSize(bufferSize);
-
-        int acceptCount = ContainerConfig.getPropertyValue(connectorProp, "accept-count", 10);
-        connector.setAcceptCount(acceptCount);
-
-        int conLinger = ContainerConfig.getPropertyValue(connectorProp, "connection-linger", -1);
-        connector.setConnectionLinger(conLinger);
-
-        int conTimeout = ContainerConfig.getPropertyValue(connectorProp, "connection-timeout", 60000);
-        connector.setConnectionTimeout(conTimeout);
-
-        int uploadTimeout = ContainerConfig.getPropertyValue(connectorProp, "upload-timeout", 300000);
-        connector.setConnectionUploadTimeout(uploadTimeout);
-
-        int socketTimeout = ContainerConfig.getPropertyValue(connectorProp, "socket-timeout", 0);
-        connector.setServerSocketTimeout(socketTimeout);
-
-        if ("https".equals(conType)) {
-            configureSsl(connectorProp, connector);
-        }
-        embedded.addConnector(connector);
-
         return connector;
-    }
-
-    protected void configureSsl(ContainerConfig.Container.Property connectorProp, Connector connector) throws ContainerException {
-        if (connector == null || connectorProp == null || !connector.getSecure()) {
-            throw new ContainerException("Not an SSL (secure) connector!");
-        }
-
-        CoyoteServerSocketFactory sf = (CoyoteServerSocketFactory) connector.getFactory();
-
-        String keystore = ContainerConfig.getPropertyValue(connectorProp, "keystore", null);
-        String password = ContainerConfig.getPropertyValue(connectorProp, "password", null);
-        String storeType = ContainerConfig.getPropertyValue(connectorProp, "keystore-type", null);
-        String keyAlias = ContainerConfig.getPropertyValue(connectorProp, "key-alias", null);
-        String protocol = ContainerConfig.getPropertyValue(connectorProp, "ssl-protocol", null);
-        String ciphers = ContainerConfig.getPropertyValue(connectorProp, "ssl-ciphers", null);
-        String algorithm = ContainerConfig.getPropertyValue(connectorProp, "ssl-algorithm", null);
-        String clientAuth = ContainerConfig.getPropertyValue(connectorProp, "ssl-client-auth", null);
-
-        // keystore is requrired for SSL
-        if (keystore == null) {
-            throw new ContainerException("No keystore setting found for SSL connector!");
-        }
-        sf.setKeystoreFile(keystore);
-
-        // other 'optional' parameters
-        if (password != null) {
-            sf.setKeystorePass(password);
-        }
-
-        if (storeType != null) {
-            sf.setKeystoreType(storeType);
-        }
-
-        if (keyAlias != null) {
-            sf.setKeyAlias(keyAlias);
-        }
-
-        if (clientAuth != null) {
-            sf.setClientAuth(clientAuth);
-        }
-
-        if (protocol != null) {
-            sf.setProtocol(protocol);
-        }
-
-        if (ciphers != null) {
-            sf.setCiphers(ciphers);
-        }
-
-        if (algorithm != null) {
-            sf.setAlgorithm(algorithm);
-        }
-
-        connector.setFactory(sf);
     }
 
     protected Context createContext(ComponentConfig.WebappInfo appInfo) throws ContainerException {
@@ -738,12 +624,5 @@ public class CatalinaContainer implements Container {
         }
 
         return mimeTypes;
-    }
-
-    class DebugLogger extends LoggerBase {
-
-        public void log(String message) {
-            Debug.log(message, module);
-        }
     }
 }
