@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<screens xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+        xsi:noNamespaceSchemaLocation="http://www.ofbiz.org/dtds/widget-screen.xsd">
+    <screen name="common-decorator">
+        <section>
+            <actions>
+                <property-map resource="backendConfig" map-name="configMap" global="true"/>
+                <set field="productStoreId" to-scope="application" value="${configMap.productStoreId}" global="true"/>
+                <set field="prodCatalogId" to-scope="application" value="HotelDemoCtlg" global="true"/>
+                <set field="webSiteId" to-scope="application" value="HotelDemoStore" global="true"/>
+                <property-map resource="opentravelsystemUiLabels" map-name="uiLabelMap" global="true"/>
+                <set field="layoutSettings.companyName" from-field="uiLabelMap.opentravelsystemCompanyName" global="true"/>
+                <set field="layoutSettings.companySubtitle" from-field="uiLabelMap.opentravelsystemCompanySubtitle" global="true"/>
+                <set field="layoutSettings.headerImageUrl" value="/images/opentravelsystem_logo.jpg" global="true"/>
+                <!-- <set field="layoutSettings.headerMiddleBackgroundUrl" value="" global="true"/> -->
+                <!-- <set field="layoutSettings.headerRightBackgroundUrl" value="" global="true"/> -->
+                <set field="activeApp" value="hotelbackend" global="true"/>
+            </actions>
+            <widgets>
+                <!-- render header -->
+                <platform-specific><html><html-template location="component://opentravelsystem/includes/header.ftl"/></html></platform-specific>
+                <!-- render appbar -->
+                <platform-specific><html><html-template location="component://opentravelsystem/webapp/hotelbackend/includes/appbar.ftl"/></html></platform-specific>
+                <container style="centerarea">
+                        <container style="column-main">
+                            <decorator-section-include name="body"/>
+                        </container>
+                </container>
+                <!-- render footer -->
+                <platform-specific><html><html-template location="component://opentravelsystem/includes/footer.ftl"/></html></platform-specific>
+            </widgets>
+        </section>
+    </screen>
+
+</screens>
+
