@@ -5,6 +5,8 @@ import java.text.*;
 import java.net.*;
 import java.io.*;
 
+import org.ofbiz.core.util.*;
+
 /**
  * <p><b>Title:</b> 
  * <p><b>Description:</b> None
@@ -134,8 +136,8 @@ public class Record implements Serializable {
       //a common time only format for flat files is with no separators: HHmmss
       SimpleDateFormat sdf = new SimpleDateFormat(field.format);
       java.util.Date tempDate = sdf.parse(value);
-      java.sql.Date date = new java.sql.Date(tempDate.getTime());
-      set(name, date);
+      java.sql.Time time = new java.sql.Time(tempDate.getTime());
+      set(name, time);
     }
     else if(fieldType.equals("FixedPointDouble")) {
       //this custom type will parse a fixed point number according to the number 
@@ -166,8 +168,90 @@ public class Record implements Serializable {
     else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
       set(name, Double.valueOf(value));
     else {
-      throw new IllegalArgumentException("Java type " + fieldType + " not currently supported. Sorry.");
+      throw new IllegalArgumentException("Field type " + fieldType + " not currently supported. Sorry.");
     }
+  }
+  
+  public String getString(String name) {
+    if(name == null) return null;
+    ModelField field = getModelRecord().getModelField(name);
+    if(field == null) throw new IllegalArgumentException("Could not find model for field named \"" + name + "\"");
+
+    Object value = get(name);
+    String fieldType = field.type;
+    String str = null;
+    
+    //first the custom types that need to be parsed
+    if(fieldType.equals("CustomTimestamp")) {
+      //a common timestamp format for flat files is with no separators: yyyyMMddHHmmss
+      SimpleDateFormat sdf = new SimpleDateFormat(field.format);
+      java.sql.Timestamp timestamp = (java.sql.Timestamp)value;
+      str = sdf.format(new Date(timestamp.getTime()));
+    }
+    else if(fieldType.equals("CustomDate")) {
+      //a common date only format for flat files is with no separators: yyyyMMdd or MMddyyyy
+      SimpleDateFormat sdf = new SimpleDateFormat(field.format);
+      java.sql.Date date = (java.sql.Date)value;
+      str = sdf.format(new Date(date.getTime()));
+    }
+    else if(fieldType.equals("CustomTime")) {
+      //a common time only format for flat files is with no separators: HHmmss
+      SimpleDateFormat sdf = new SimpleDateFormat(field.format);
+      java.sql.Time time = (java.sql.Time)value;
+      str = sdf.format(new Date(time.getTime()));
+    }
+    else if(fieldType.equals("FixedPointDouble")) {
+      //this custom type will parse a fixed point number according to the number 
+      // of decimal places in the formatting string then place it in a Double
+      NumberFormat nf = NumberFormat.getNumberInstance();
+      double decimalPlaces = Double.parseDouble(field.format);
+      double multiplier = Math.pow(10.0, decimalPlaces);
+      double dnum = multiplier*((Double)value).doubleValue();
+      long number = Math.round(dnum);
+      str = padFrontZeros(Long.toString(number), field.length);
+      //Debug.logInfo("[Record.getString] FixedPointDouble: multiplier=" + multiplier + ", value=" + value + ", dnum=" + dnum + ", number=" + number + ", str=" + str);
+    }
+    //standard types
+    else if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
+      str = value.toString();
+    else if(fieldType.equals("java.sql.Timestamp") || fieldType.equals("Timestamp"))
+      str = value.toString();
+    else if(fieldType.equals("java.sql.Time") || fieldType.equals("Time"))
+      str = value.toString();
+    else if(fieldType.equals("java.sql.Date") || fieldType.equals("Date"))
+      str = value.toString();
+    //for all numbers, pad front with zeros if field length is specified
+    else if(fieldType.equals("java.lang.Integer") || fieldType.equals("Integer"))
+      str = padFrontZeros(value.toString(), field.length);
+    else if(fieldType.equals("java.lang.Long") || fieldType.equals("Long"))
+      str = padFrontZeros(value.toString(), field.length);
+    else if(fieldType.equals("java.lang.Float") || fieldType.equals("Float"))
+      str = padFrontZeros(value.toString(), field.length);
+    else if(fieldType.equals("java.lang.Double") || fieldType.equals("Double"))
+      str = padFrontZeros(value.toString(), field.length);
+    else {
+      throw new IllegalArgumentException("Field type " + fieldType + " not currently supported. Sorry.");
+    }
+    
+    if(str != null && field.length > 0 && str.length() < field.length) {
+      //pad the end with spaces
+      StringBuffer strBuf = new StringBuffer(str);
+      while(strBuf.length() < field.length) strBuf.append(' ');
+      str = strBuf.toString();
+    }
+    return str;
+  }
+  
+  String padFrontZeros(String str, int totalLength) {
+    if(totalLength > 0 && str.length() < totalLength) {
+      //pad the front with zeros
+      StringBuffer zeros = new StringBuffer();
+      int numZeros = totalLength-str.length();
+      for(int i=0; i<numZeros; i++) zeros.append('0');
+      zeros.append(str);
+      return zeros.toString();
+    }
+    else return str;
   }
   
   public Record getParentRecord() { return parentRecord; }

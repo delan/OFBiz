@@ -36,142 +36,253 @@ import org.ofbiz.core.util.*;
 
 public class DataFile {
   /** List of record in the file, contains Record objects */
-  public List records = new Vector();
+  public List records = null;
   /** Contains the definition for the file */
   public ModelDataFile modelDataFile;
-  /** Contains the original location of the file */
-  public URL fileUrl;
   
+  /** Creates a DataFile object which will contain the parsed objects for the specified datafile, using the specified definition.
+   * @param fileUrl The URL where the data file is located
+   * @param definitionUrl The location of the data file definition XML file
+   * @param dataFileName The data file model name, as specified in the definition XML file
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   * @return A new DataFile object with the specified file pre-loaded
+   */  
   public static DataFile readFile(URL fileUrl, URL definitionUrl, String dataFileName) throws DataFileException {
     ModelDataFileReader reader = ModelDataFileReader.getModelDataFileReader(definitionUrl);
     ModelDataFile modelDataFile = reader.getModelDataFile(dataFileName);
     if(modelDataFile == null) throw new IllegalArgumentException("Could not find file definition for data file named \"" + dataFileName + "\"");
-    DataFile dataFile = new DataFile(modelDataFile, fileUrl);
-    dataFile.loadDataFile();
+    DataFile dataFile = new DataFile(modelDataFile);
+    dataFile.readDataFile(fileUrl);
     return dataFile;
   }
   
-  protected DataFile(ModelDataFile modelDataFile, URL fileUrl) {
+  /** Construct a DataFile object setting the model, does not load it
+   * @param modelDataFile The model of the DataFile to instantiate
+   */  
+  public DataFile(ModelDataFile modelDataFile) {
     this.modelDataFile = modelDataFile;
-    this.fileUrl = fileUrl;
   }
   
-  public void loadDataFile() throws DataFileException {
-    if(modelDataFile == null) throw new IllegalStateException("DataFile model is null, cannot load file");
+  /** Loads (or reloads) the data file at the pre-specified location.
+   * @param fileUrl The URL that the file will be loaded from
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   */  
+  public void readDataFile(URL fileUrl) throws DataFileException {
     if(fileUrl == null) throw new IllegalStateException("File URL is null, cannot load file");
-    
+
     InputStream urlStream = null;
     try { urlStream = fileUrl.openStream(); }
     catch(IOException e) { throw new DataFileException("Error open URL: " + fileUrl.toString(), e); }
-    Stack parentStack = new Stack();
-
-    try {
-      if(ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(urlStream));
-        boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
-        Debug.logInfo("[DataFile.loadDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord);
-        
-        int lineNum = 1;
-        String line = null;
-        if(isFixedRecord) {
-          if(modelDataFile.recordLength <= 0) throw new DataFileException("Cannot read a fixed record length file if no record length is specified");
-
-          try {
-            char[] charData = new char[modelDataFile.recordLength + 1];
-            //Debug.logInfo("[DataFile.loadDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength);
-            if(br.read(charData, 0, modelDataFile.recordLength) == -1) {
-              line = null;
-              //Debug.logInfo("[DataFile.loadDataFile] found end of file, got -1");
-            }
-            else {
-              line = new String(charData);
-              //Debug.logInfo("[DataFile.loadDataFile] read line " + lineNum + " line is: \"" + line + "\"");
-            }
-          }
-          catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum-1)*modelDataFile.recordLength + " length " + modelDataFile.recordLength + ") from URL: " + fileUrl.toString(), e); }
-        }
-        else {
-          try { line = br.readLine(); }
-          catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " from URL: " + fileUrl.toString(), e); }
-        }
-
-        while(line != null) {
-          //first check to see if the file type has a line size, and if so if this line complies
-          if(!isFixedRecord && modelDataFile.recordLength > 0 && line.length() != modelDataFile.recordLength) {
-            throw new DataFileException("Line number " + lineNum + " was not the expected length; expected: " + modelDataFile.recordLength + ", got: " + line.length());
-          }
-
-          //find out which type of record it is - will throw an exception if not found
-          ModelRecord modelRecord = findModelForLine(line, lineNum, modelDataFile);
-
-          Record record = createRecord(line, lineNum, modelRecord);
-
-          //if no parent pop all and put in dataFile records list
-          if(modelRecord.parentRecord == null) {
-            parentStack.clear();
-            records.add(record);
-          }
-          //if parent equals top parent on stack, add to that parents child list, otherwise pop off parent and try again
-          else {
-            Record parentRecord = null;
-            while(parentStack.size() > 0) {
-              parentRecord = (Record)parentStack.peek();
-              if(parentRecord.recordName.equals(modelRecord.parentName)) {
-                break;
-              }
-              else {
-                parentStack.pop();
-                parentRecord = null;
-              }
-            }
-
-            if(parentRecord == null) {
-              throw new DataFileException("Expected Parent Record not found for line " + lineNum + "; record name of expected parent is " + modelRecord.parentName);
-            }
-
-            parentRecord.addChildRecord(record);
-          }
-
-          //if this record has children, put it on the parentStack
-          if(modelRecord.childRecords.size() > 0) {
-            parentStack.push(record);
-          }
-
-          lineNum++;
-          if(isFixedRecord) {
-            try {
-              char[] charData = new char[modelDataFile.recordLength];
-              //Debug.logInfo("[DataFile.loadDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength);
-              if(br.read(charData, 0, modelDataFile.recordLength) == -1) {
-                line = null;
-                //Debug.logInfo("[DataFile.loadDataFile] found end of file, got -1");
-              }
-              else {
-                line = new String(charData);
-                //Debug.logInfo("[DataFile.loadDataFile] read line " + lineNum + " line is: \"" + line + "\"");
-              }
-            }
-            catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum-1)*modelDataFile.recordLength + " length " + modelDataFile.recordLength + ") from URL: " + fileUrl.toString(), e); }
-          }
-          else {
-            try { line = br.readLine(); }
-            catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " from URL: " + fileUrl.toString(), e); }
-          }
-        }
-      }
-      else if(ModelDataFile.SEP_DELIMITED.equals(modelDataFile.separatorStyle)) {
-        throw new DataFileException("Delimited files not yet supported");
-      }
-      else {
-        throw new DataFileException("Separator style " + modelDataFile.separatorStyle + " not recognized.");
-      }
-    }
+    try { readDataFile(urlStream, fileUrl.toString()); }
     finally {
       try { urlStream.close(); }
       catch(IOException e) { Debug.logWarning(e); }
     }
   }
+
+  /** Populates (or reloads) the data file with the text of the given content
+   * @param content The text data to populate the DataFile with
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   */  
+  public void readDataFile(String content) throws DataFileException {
+    if(content == null || content.length() <= 0) throw new IllegalStateException("Content is empty, can't read file");
+
+    ByteArrayInputStream bis = new ByteArrayInputStream(content.getBytes());
+    readDataFile(bis, null);
+  }
   
+  /** Loads (or reloads) the data file from the given stream
+   * @param dataFileStream A stream containing the text data for the data file
+   * @param locationInfo Text information about where the data came from for exception messages
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   */  
+  public void readDataFile(InputStream dataFileStream, String locationInfo) throws DataFileException {
+    if(modelDataFile == null) throw new IllegalStateException("DataFile model is null, cannot load file");
+    if(locationInfo == null) locationInfo = "unknown";
+    
+    records = new Vector();
+    Stack parentStack = new Stack();
+
+    if(ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle) || ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle)) {
+      BufferedReader br = new BufferedReader(new InputStreamReader(dataFileStream));
+      boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
+      Debug.logInfo("[DataFile.readDataFile] separatorStyle is " + modelDataFile.separatorStyle + ", isFixedRecord: " + isFixedRecord);
+
+      int lineNum = 1;
+      String line = null;
+      if(isFixedRecord) {
+        if(modelDataFile.recordLength <= 0) throw new DataFileException("Cannot read a fixed record length file if no record length is specified");
+
+        try {
+          char[] charData = new char[modelDataFile.recordLength + 1];
+          //Debug.logInfo("[DataFile.readDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength);
+          if(br.read(charData, 0, modelDataFile.recordLength) == -1) {
+            line = null;
+            //Debug.logInfo("[DataFile.readDataFile] found end of file, got -1");
+          }
+          else {
+            line = new String(charData);
+            //Debug.logInfo("[DataFile.readDataFile] read line " + lineNum + " line is: \"" + line + "\"");
+          }
+        }
+        catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum-1)*modelDataFile.recordLength + " length " + modelDataFile.recordLength + ") from location: " + locationInfo, e); }
+      }
+      else {
+        try { line = br.readLine(); }
+        catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " from location: " + locationInfo, e); }
+      }
+
+      while(line != null) {
+        //first check to see if the file type has a line size, and if so if this line complies
+        if(!isFixedRecord && modelDataFile.recordLength > 0 && line.length() != modelDataFile.recordLength) {
+          throw new DataFileException("Line number " + lineNum + " was not the expected length; expected: " + modelDataFile.recordLength + ", got: " + line.length());
+        }
+
+        //find out which type of record it is - will throw an exception if not found
+        ModelRecord modelRecord = findModelForLine(line, lineNum, modelDataFile);
+
+        Record record = createRecord(line, lineNum, modelRecord);
+
+        //if no parent pop all and put in dataFile records list
+        if(modelRecord.parentRecord == null) {
+          parentStack.clear();
+          records.add(record);
+        }
+        //if parent equals top parent on stack, add to that parents child list, otherwise pop off parent and try again
+        else {
+          Record parentRecord = null;
+          while(parentStack.size() > 0) {
+            parentRecord = (Record)parentStack.peek();
+            if(parentRecord.recordName.equals(modelRecord.parentName)) {
+              break;
+            }
+            else {
+              parentStack.pop();
+              parentRecord = null;
+            }
+          }
+
+          if(parentRecord == null) {
+            throw new DataFileException("Expected Parent Record not found for line " + lineNum + "; record name of expected parent is " + modelRecord.parentName);
+          }
+
+          parentRecord.addChildRecord(record);
+        }
+
+        //if this record has children, put it on the parentStack
+        if(modelRecord.childRecords.size() > 0) {
+          parentStack.push(record);
+        }
+
+        lineNum++;
+        if(isFixedRecord) {
+          try {
+            char[] charData = new char[modelDataFile.recordLength];
+            //Debug.logInfo("[DataFile.readDataFile] reading line " + lineNum + " from position " + (lineNum-1)*modelDataFile.recordLength + ", length is " + modelDataFile.recordLength);
+            if(br.read(charData, 0, modelDataFile.recordLength) == -1) {
+              line = null;
+              //Debug.logInfo("[DataFile.readDataFile] found end of file, got -1");
+            }
+            else {
+              line = new String(charData);
+              //Debug.logInfo("[DataFile.readDataFile] read line " + lineNum + " line is: \"" + line + "\"");
+            }
+          }
+          catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " (index " + (lineNum-1)*modelDataFile.recordLength + " length " + modelDataFile.recordLength + ") from location: " + locationInfo, e); }
+        }
+        else {
+          try { line = br.readLine(); }
+          catch(IOException e) { throw new DataFileException("Error reading line #" + lineNum + " from location: " + locationInfo, e); }
+        }
+      }
+    }
+    else if(ModelDataFile.SEP_DELIMITED.equals(modelDataFile.separatorStyle)) {
+      throw new DataFileException("Delimited files not yet supported");
+    }
+    else {
+      throw new DataFileException("Separator style " + modelDataFile.separatorStyle + " not recognized.");
+    }
+  }
+  
+  /** Writes the records in this DataFile object to a text data file
+   * @param filename The filename to put the data into
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   */  
+  public void writeDataFile(String filename) throws DataFileException {
+    File outFile = new File(filename);
+    FileOutputStream fos = null;
+    try { fos = new FileOutputStream(outFile); }
+    catch(FileNotFoundException e) { throw new DataFileException("Could not open file " + filename, e); }
+
+    try { writeDataFile(fos); }
+    finally {
+      try { if(fos != null) fos.close(); }
+      catch(IOException e) { throw new DataFileException("Could not close file " + filename + ", may not have written correctly;", e); }
+    }
+  }
+
+  /** Returns the records in this DataFile object as a plain text data file content
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   * @return A String containing what would go into a data file as plain text
+   */  
+  public String writeDataFile() throws DataFileException {
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    writeDataFile(bos);
+    String outString = bos.toString();
+    try { if(bos != null) bos.close(); }
+    catch(IOException e) { Debug.logWarning(e); }
+    return outString;
+  }
+
+  /** Writes the records in this DataFile object to the given OutputStream
+   * @param outStream The Stream to put the data into
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   */  
+  public void writeDataFile(OutputStream outStream) throws DataFileException {
+    writeRecords(outStream, this.records);
+  }
+
+  protected void writeRecords(OutputStream outStream, List records) throws DataFileException {
+    boolean isFixedRecord = ModelDataFile.SEP_FIXED_RECORD.equals(modelDataFile.separatorStyle);
+    boolean isFixedLength = ModelDataFile.SEP_FIXED_LENGTH.equals(modelDataFile.separatorStyle);
+    boolean isDelimited = ModelDataFile.SEP_DELIMITED.equals(modelDataFile.separatorStyle);
+    
+    for(int r=0; r<records.size(); r++) {
+      Record record = (Record)records.get(r);
+      ModelRecord modelRecord = record.getModelRecord();
+      
+      StringBuffer lineBuf = new StringBuffer();
+      for(int f=0;f<modelRecord.fields.size(); f++) {
+        ModelField modelField = (ModelField)modelRecord.fields.get(f);
+        String data = record.getString(modelField.name);
+        
+        //Debug.logInfo("Got data \"" + data + "\" for field " + modelField.name + " in record " + modelRecord.name);
+        if(modelField.length > 0 && data.length() != modelField.length) 
+          throw new DataFileException("Got field length " + data.length() + " but expected field length is " + modelField.length + " for field \"" + modelField.name + "\" of record \"" + modelRecord.name + "\" data is: \"" + data + "\"");
+        
+        lineBuf.append(data);
+        if(isDelimited) lineBuf.append(modelDataFile.delimiter);
+      }
+      if((isFixedRecord || isFixedLength) && modelDataFile.recordLength > 0 && lineBuf.length() != modelDataFile.recordLength)
+        throw new DataFileException("Got record length " + lineBuf.length() + " but expected record length is " + modelDataFile.recordLength + " for record \"" + modelRecord.name + "\" data line is: \"" + lineBuf + "\"");
+      
+      if(isFixedLength || isDelimited) lineBuf.append('\n');
+      try { outStream.write(lineBuf.toString().getBytes()); }
+      catch(IOException e) { throw new DataFileException("Could not write to stream;", e); }
+      
+      if(record.getChildRecords() != null && record.getChildRecords().size() > 0) {
+        writeRecords(outStream, record.getChildRecords());
+      }
+    }
+  }
+  
+  /**
+   * @param line
+   * @param lineNum
+   * @param modelDataFile
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   * @return
+   */  
   protected ModelRecord findModelForLine(String line, int lineNum, ModelDataFile modelDataFile) throws DataFileException {
     //Debug.logInfo("[DataFile.findModelForLine] line: " + line);
     ModelRecord modelRecord = null;
@@ -186,6 +297,13 @@ public class DataFile {
     return modelRecord;
   }
   
+  /**
+   * @param line
+   * @param lineNum
+   * @param modelRecord
+   * @throws DataFileException Exception thown for various errors, generally has a nested exception
+   * @return
+   */  
   protected Record createRecord(String line, int lineNum, ModelRecord modelRecord) throws DataFileException {
     Record record = new Record(modelRecord);
     for(int i=0; i<modelRecord.fields.size(); i++) {
