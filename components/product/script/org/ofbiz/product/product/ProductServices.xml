@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  -->
 
@@ -453,7 +453,7 @@
         </if>
     </simple-method>
 
-    <simple-method method-name="createProductReview" short-description="Create an ProductReview">
+    <simple-method method-name="createProductReview" short-description="Create a ProductReview">
         <make-value value-name="newEntity" entity-name="ProductReview"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         <field-to-field field-name="userLoginId" map-name="userLogin" to-map-name="newEntity"/>
@@ -464,9 +464,14 @@
         <find-by-primary-key entity-name="ProductStore" map-name="storeLookup" value-name="productStore"/>
         <if-not-empty field-name="productStore">
             <if-compare field-name="autoApproveReviews" operator="equals" value="Y">
-                <string-to-field string="PRR_APPROVED" field-name="statusId" map-name="newEntity"/>
+                <string-to-field string="PRR_APPROVED" field-name="newEntity.statusId"/>
             </if-compare>
         </if-not-empty>
+        
+        <!-- auto approve the review if it is just a rating and has no review text -->
+        <if-empty field-name="parameters.productReview">
+            <string-to-field string="PRR_APPROVED" field-name="newEntity.statusId"/>
+        </if-empty>
 
         <!-- create the new ProductReview -->
         <sequenced-id-to-env sequence-name="ProductReview" env-name="productReviewId"/>
@@ -475,14 +480,14 @@
         <field-to-result field-name="productReviewId" result-name="productReviewId"/>
 
         <if-empty field-name="postedDateTime" map-name="newEntity">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
-            <env-to-field env-name="nowTimestamp" field-name="postedDateTime" map-name="newEntity"/>
+            <now-timestamp-to-env env-name="newEntity.postedDateTime"/>
         </if-empty>
 
         <create-value value-name="newEntity"/>
-    </simple-method>
 
-    <simple-method method-name="updateProductReview" short-description="Update ProductStoreCatalog">
+        <call-simple-method method-name="updateProductWithReviewRatingAvg"/>
+    </simple-method>
+    <simple-method method-name="updateProductReview" short-description="Update ProductReview">
         <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductReview you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
         <check-errors/>
 
@@ -491,5 +496,20 @@
         <find-by-primary-key map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
+
+        <call-simple-method method-name="updateProductWithReviewRatingAvg"/>
+    </simple-method>
+    <simple-method method-name="updateProductWithReviewRatingAvg" short-description="Update Product with new Review Rating Avg">
+    	<!-- this method is meant to be called in-line and depends in a productId parameter -->
+        <!-- update the review average on the Product entity -->
+        <env-to-env env-name="parameters.productId" to-env-name="getRatingAvgMap.productId"/>
+        <find-by-and entity-name="ProductReviewAvgCalc" map-name="getRatingAvgMap" list-name="productReviewAvgCalcList" use-cache="false"/>
+        <first-from-list list-name="productReviewAvgCalcList" entry-name="productReviewAvgCalc"/> <!-- should only be one -->
+        <log level="info" message="Got new average customer rating ${productReviewAvgCalc}"/>
+        
+        <make-value entity-name="Product" value-name="product"/>
+        <env-to-env env-name="parameters.productId" to-env-name="product.productId"/>
+        <env-to-env env-name="productReviewAvgCalc.productRatingAvg" to-env-name="product.averageCustomerRating"/>
+        <store-value value-name="product"/>
     </simple-method>
 </simple-methods>
