@@ -542,9 +542,9 @@ simple-map-processor process operations that validate incoming data
 
 <!ELEMENT if ( condition, then, else-if*, else? )>
 <!ELEMENT condition ( %IfConditions; )>
-<!ELEMENT then ( %SimpleMethodOperations; )>
+<!ELEMENT then ( (%SimpleMethodOperations;)* )>
 <!ELEMENT else-if ( condition, then )>
-<!ELEMENT else ( %SimpleMethodOperations; )>
+<!ELEMENT else ( (%SimpleMethodOperations;)* )>
 
 <!ELEMENT or ( (%IfConditions;)+ )>
 <!ELEMENT xor ( (%IfConditions;)+ )>
