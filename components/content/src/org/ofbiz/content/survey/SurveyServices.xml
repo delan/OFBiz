@@ -330,13 +330,13 @@
         </if-compare>
 
         <!-- if this is a single use and we have a partyId check for existing responses -->
-        <if-compare field-name="allowMultiple" operator="not-equals" value="N">
+        <if-compare field-name="allowMultiple" map-name="survey" operator="not-equals" value="Y">
             <if-not-empty field-name="partyId" map-name="parameters">
                 <field-to-field field-name="partyId" map-name="parameters" to-map-name="responseLookup"/>
                 <field-to-field field-name="surveyId" map-name="survey" to-map-name="responseLookup"/>
                 <find-by-and list-name="existingResponses" entity-name="SurveyResponse" map-name="responseLookup"/>
                 <if-not-empty field-name="existingResponses">
-                    <add-error><fail-message message="You have already responsed to this survey; multiple responses is not allowed"/></add-error>
+                    <add-error><fail-message message="You have already responded to this survey; multiple responses are not allowed"/></add-error>
                     <check-errors/>
                 </if-not-empty>
             </if-not-empty>
@@ -416,25 +416,53 @@
         </iterate>
         <check-errors/>
 
-        <!-- create the response -->
-        <make-value value-name="surveyResponse" entity-name="SurveyResponse"/>
-        <sequenced-id-to-env sequence-name="SurveyResponse" env-name="surveyResponseId"/>
-        <to-string field-name="surveyResponseId"/>
-        <env-to-field env-name="surveyResponseId" map-name="surveyResponse"/>
-        <set-nonpk-fields value-name="surveyResponse" map-name="parameters"/>
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+
+        <!-- create/update the response -->
+        <if-compare field-name="allowUpdate" map-name="survey" operator="equals" value="Y">
+          <if-not-empty field-name="surveyResponseId" map-name="parameters">
+              <make-value value-name="lookupRespMap" entity-name="SurveyResponse"/>
+              <find-by-primary-key map-name="lookupRespMap" value-name="surveyResponse"/>
+          </if-not-empty>
+        </if-compare>
+
+        <if-empty field-name="surveyResponse">
+            <make-value value-name="surveyResponse" entity-name="SurveyResponse"/>
+            <sequenced-id-to-env sequence-name="SurveyResponse" env-name="surveyResponseId"/>
+            <to-string field-name="surveyResponseId"/>
+            <env-to-field env-name="surveyResponseId" map-name="surveyResponse"/>
+            <set-nonpk-fields value-name="surveyResponse" map-name="parameters"/>
+            <create-value value-name="surveyResponse"/>
+        </if-empty>
 
         <if-empty field-name="responseDate" map-name="surveyResponse">
-            <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="responseDate" map-name="surveyResponse"/>
         </if-empty>
-        <create-value value-name="surveyResponse"/>
-        <field-to-result field-name="surveyResponseId" result-name="surveyResponseId"/>
+        <env-to-field env-name="nowTimestamp" field-name="lastModifiedDate" map-name="surveyResponse"/>
+
+        <store-value value-name="surveyResponse"/>
+        <field-to-result field-name="surveyResponseId" map-name="surveyResponse" result-name="surveyResponseId"/>
+
+        <!-- lookup any existing response answers -->
+        <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="lookupRespAns"/>
+        <find-by-and list-name="existingAnswers" entity-name="SurveyResponseAnswer" map-name="lookupRespAns"/>
+        <iterate entry-name="existingAnswers" list-name="existingAnswer">
+            <field-to-field field-name="existingAnswer" to-field-name="${existingAnswer.surveyQuestionId}" to-map-name="currentAnswers"/>
+        </iterate>
 
         <!-- create the response answers -->
         <iterate entry-name="question" list-name="questions">
-            <make-value value-name="responseAnswer" entity-name="SurveyResponseAnswer"/>
-            <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="responseAnswer"/>
-            <field-to-field field-name="surveyQuestionId" map-name="question" to-map-name="responseAnswer"/>
+            <if-not-empty field-name="currentAnswers">
+                <field-to-field field-name="${question.surveyQuestionId}" map-name="currentAnswers" to-field-name="responseAnswer"/>
+            </if-not-empty>
+
+            <if-empty field-name="responseAnswer">
+                <make-value value-name="responseAnswer" entity-name="SurveyResponseAnswer"/>
+                <field-to-field field-name="surveyResponseId" map-name="surveyResponse" to-map-name="responseAnswer"/>
+                <field-to-field field-name="surveyQuestionId" map-name="question" to-map-name="responseAnswer"/>
+                <create-value value-name="responseAnswer"/>
+            </if-empty>
+
             <if-not-empty field-name="${question.surveyQuestionId}" map-name="answers">
                 <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="BOOLEAN">
                     <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="booleanResponse" to-map-name="responseAnswer"/>
@@ -478,7 +506,9 @@
                 <if-compare field-name="surveyQuestionTypeId" map-name="question" operator="equals" value="OPTION">
                     <field-to-field field-name="${question.surveyQuestionId}" map-name="answers" to-field-name="surveyOptionSeqId" to-map-name="responseAnswer"/>
                 </if-compare>
-            <create-value value-name="responseAnswer"/>
+
+                <env-to-field env-name="nowTimestamp" field-name="answeredDate" map-name="responseAnswer"/>
+                <store-value value-name="responseAnswer"/>
             </if-not-empty>
         </iterate>
     </simple-method>

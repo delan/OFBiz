@@ -59,7 +59,7 @@
         <description>Generic Template Based Notification Service</description>
         <implements service="sendNotificationInterface"/>
     </service>
-    
+
     <!-- WebSite Services -->
     <service name="webSiteInterface" engine="interface" default-entity-name="WebSite" location="" invoke="">
         <description>WebSite Interface</description>
@@ -194,7 +194,7 @@
         <attribute mode="IN" name="targetOperationList" optional="true" type="java.util.List"/>
         <attribute mode="IN" name="contentPurposeList" optional="true" type="java.util.List"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
-        <attribute mode="IN" name="userLogin" optional="true" 
+        <attribute mode="IN" name="userLogin" optional="true"
                                      type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="IN" name="contentIdTo" optional="true" type="String"/>
         <attribute mode="IN" name="contentIdFrom" optional="true" type="String"/>
@@ -984,7 +984,7 @@
         <description>Create a Survey Response w/ Response Answers</description>
         <auto-attributes mode="IN" entity-name="SurveyResponse" include="nonpk" optional="true"/>
         <attribute name="answers" type="Map" mode="IN" optional="false" string-map-prefix="answers_"/>
-        <attribute name="surveyResponseId" type="String" mode="OUT" optional="false"/>
+        <attribute name="surveyResponseId" type="String" mode="INOUT" optional="true"/>
         <override name="surveyId" optional="false"/>
     </service>
 
@@ -1080,12 +1080,12 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
     </service>
 
-    <service name="getAssocAndContentAndDataResource" default-entity-name="ContentAssocDataResourceViewFrom" 
+    <service name="getAssocAndContentAndDataResource" default-entity-name="ContentAssocDataResourceViewFrom"
             engine="java"
-            location="org.ofbiz.content.content.ContentServicesComplex" 
+            location="org.ofbiz.content.content.ContentServicesComplex"
             invoke="getAssocAndContentAndDataResource" auth="false">
         <description>Get a ContentAssocDataResourceView</description>
-        <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all" 
+        <auto-attributes entity-name="ContentAssocDataResourceViewFrom" include="all"
             mode="OUT" optional="true">
             <exclude field-name="contentIdStart"/>
         </auto-attributes>
@@ -1116,9 +1116,9 @@
         <attribute mode="OUT" name="pickList" optional="true" type="java.util.List"/>
         <attribute mode="OUT" name="nodeMap" optional="true" type="java.util.Map"/>
     </service>
-    <service name="getSubContent" 
+    <service name="getSubContent"
             engine="java"
-            location="org.ofbiz.content.ContentManagementServices" 
+            location="org.ofbiz.content.ContentManagementServices"
             invoke="getSubContent" auth="false">
         <description>Get subContent of passed contentId/mapKey or subContentId</description>
         <attribute mode="IN" name="mapKey" optional="true" type="String"/>
@@ -1131,9 +1131,9 @@
         <attribute mode="OUT" name="content" optional="true" type="org.ofbiz.entity.GenericValue"/>
     </service>
     <!--
-    <service name="addMostRecent" 
+    <service name="addMostRecent"
             engine="java"
-            location="org.ofbiz.content.ContentManagementServices" 
+            location="org.ofbiz.content.ContentManagementServices"
             invoke="addMostRecent" auth="false">
         <description>Get subContent of passed contentId/mapKey or subContentId</description>
         <attribute mode="IN" name="suffix" optional="true" type="String"/>
@@ -1142,7 +1142,7 @@
     </service>
     -->
     <service name="persistContentAndAssoc" default-entity-name="Content" engine="java"
-            location="org.ofbiz.content.ContentManagementServices" 
+            location="org.ofbiz.content.ContentManagementServices"
             invoke="persistContentAndAssoc" auth="true">
         <description>Create a Content, DataResource and/or ContentAssoc</description>
         <auto-attributes entity-name="Content" include="all" mode="IN" optional="true">
@@ -1175,9 +1175,9 @@
         <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="java.util.List"/>
     </service>
-    <service name="deactivateAssocs" 
+    <service name="deactivateAssocs"
             engine="java"
-            location="org.ofbiz.content.content.ContentServices" 
+            location="org.ofbiz.content.content.ContentServices"
             invoke="deactivateAssocs" auth="false">
         <description>Supply thruDate to all ContentAssoc that come "before" current one</description>
         <attribute mode="IN" name="contentIdTo" optional="false" type="String"/>
@@ -1189,9 +1189,9 @@
     </service>
 
     <!-- SubContent Render Services -->
-    <service name="renderSubContentAsText" 
+    <service name="renderSubContentAsText"
             engine="java"
-            location="org.ofbiz.content.content.ContentServices" 
+            location="org.ofbiz.content.content.ContentServices"
             invoke="renderSubContentAsText" auth="false">
         <description>Get the subcontent and render</description>
         <attribute mode="IN" name="contentId" optional="true" type="String"/>
@@ -1203,14 +1203,14 @@
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
         <attribute mode="IN" name="userLogin" optional="true" type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="IN" name="fromDate" optional="true" type="java.sql.Timestamp"/>
-        <attribute mode="IN" name="subContentDataResourceView" optional="true" 
+        <attribute mode="IN" name="subContentDataResourceView" optional="true"
                              type="org.ofbiz.entity.GenericValue"/>
         <attribute mode="OUT" name="view" optional="true" type="org.ofbiz.entity.GenericValue"/>
     </service>
 
-    <service name="renderContentAsText" 
+    <service name="renderContentAsText"
             engine="java"
-            location="org.ofbiz.content.content.ContentServices" 
+            location="org.ofbiz.content.content.ContentServices"
             invoke="renderContentAsText" auth="false">
         <description>Get the subcontent and render</description>
         <attribute mode="IN" name="contentId" optional="false" type="String"/>
@@ -1218,13 +1218,13 @@
         <attribute mode="IN" name="templateContext" optional="true" type="java.lang.Object"/>
         <attribute mode="IN" name="locale" optional="true" type="String"/>
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="subContentDataResourceView" optional="true" 
+        <attribute mode="IN" name="subContentDataResourceView" optional="true"
                              type="org.ofbiz.entity.GenericValue"/>
     </service>
 
-    <service name="renderDataResourceAsText" 
+    <service name="renderDataResourceAsText"
             engine="java"
-            location="org.ofbiz.content.data.DataServices" 
+            location="org.ofbiz.content.data.DataServices"
             invoke="renderDataResourceAsText" auth="false">
         <description>Get the dataResource and render</description>
         <attribute mode="IN" name="dataResourceId" optional="false" type="String"/>
@@ -1232,7 +1232,7 @@
         <attribute mode="IN" name="templateContext" optional="false" type="java.lang.Object"/>
         <attribute mode="IN" name="locale" optional="true" type="String"/>
         <attribute mode="IN" name="mimeTypeId" optional="true" type="String"/>
-        <attribute mode="IN" name="subContentDataResourceView" optional="true" 
+        <attribute mode="IN" name="subContentDataResourceView" optional="true"
                              type="org.ofbiz.entity.GenericValue"/>
     </service>
 </services>
