@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE simple-methods PUBLIC "-//OFBiz//DTD Simple Methods//EN" "http://www.ofbiz.org/dtds/simple-methods.dtd">
+
+<!--
+ * Copyright (c) 2001 The Open For Business Project and repective authors.
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ *
+ * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version 1.0
+ * Created on October 19, 2002
+ -->
+<simple-methods>
+
+    <!-- MarketingCampaign methods -->
+    <simple-method method-name="createMarketingCampaign" short-description="Create an MarketingCampaign">
+        <check-permission permission="MARKETING" action="_CREATE"><fail-message message="Security Error: to run createMarketingCampaign you must have the MARKETING_CREATE or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="MarketingCampaign" value-name="newEntity"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <!-- MarketingCampaign uses a sequenced id, so get the next one now and set it... -->        
+        <sequenced-id-to-env sequence-name="MarketingCampaign" env-name="newSequencedId"/>
+        <env-to-field env-name="newSequencedId" field-name="marketingCampaignId" map-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="updateMarketingCampaign" short-description="Update an MarketingCampaign">
+        <check-permission permission="MARKETING" action="_UPDATE"><fail-message message="Security Error: to run updateMarketingCampaign you must have the MARKETING_UPDATE or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="MarketingCampaign" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="MarketingCampaign" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="deleteMarketingCampaign" short-description="Delete an MarketingCampaign">
+        <check-permission permission="MARKETING" action="_DELETE"><fail-message message="Security Error: to run deleteMarketingCampaign you must have the MARKETING_DELETE or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="MarketingCampaign" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="MarketingCampaign" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- MarketingCampaignPrice methods -->
+    <simple-method method-name="addPriceRuleToMarketingCampaign" short-description="Add PriceRule To MarketingCampaign">
+        <check-permission permission="MARKETING" action="_CREATE"><fail-message message="Security Error: to run addPriceRuleToMarketingCampaign you must have the MARKETING_CREATE or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="MarketingCampaignPrice" value-name="newEntity"/>
+        <!-- no non-pk fields in this entity, but there may be later... <set-nonpk-fields map-name="parameters" value-name="newEntity"/> -->
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="removePriceRuleFromMarketingCampaign" short-description="Remove PriceRule from MarketingCampaign">
+        <check-permission permission="MARKETING" action="_DELETE"><fail-message message="Security Error: to run removePriceRuleFromMarketingCampaign you must have the MARKETING_DELETE or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="MarketingCampaignPrice" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="MarketingCampaignPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <!-- MarketingCampaignPromo methods -->
+    <simple-method method-name="addPromoToMarketingCampaign" short-description="Add Promo To MarketingCampaign">
+        <check-permission permission="MARKETING" action="_CREATE"><fail-message message="Security Error: to run addPromoToMarketingCampaign you must have the MARKETING_CREATE or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="MarketingCampaignPromo" value-name="newEntity"/>
+        <!-- no non-pk fields in this entity, but there may be later... <set-nonpk-fields map-name="parameters" value-name="newEntity"/> -->
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+
+        <create-value value-name="newEntity"/>
+    </simple-method>
+    <simple-method method-name="removePromoFromMarketingCampaign" short-description="Remove Promo from MarketingCampaign">
+        <check-permission permission="MARKETING" action="_DELETE"><fail-message message="Security Error: to run removePromoFromMarketingCampaign you must have the MARKETING_DELETE or MARKETING_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+        <make-value entity-name="MarketingCampaignPromo" value-name="lookupPKMap"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="MarketingCampaignPromo" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+</simple-methods>

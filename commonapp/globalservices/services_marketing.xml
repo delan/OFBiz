@@ -6,7 +6,103 @@
     <vendor>OFBiz</vendor>
     <version>1.0</version>
 
-    <!-- Tracking Code Services -->
+    <!-- MarketingCampaign Services -->
+    <service name="interfaceMarketingCampaign" engine="interface" location="" invoke="">
+        <attribute name="parentCampaignId" type="String" mode="IN" optional="false"/>
+        <attribute name="campaignName" type="String" mode="IN" optional="true"/>
+        <attribute name="campaignSummary" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createMarketingCampaign" engine="simple"
+            location="org/ofbiz/commonapp/marketing/campaign/CampaignServices.xml" invoke="createMarketingCampaign" auth="true">
+        <description>Create a MarketingCampaign record</description>
+        <implements service="interfaceMarketingCampaign"/>
+        <attribute name="marketingCampaignId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateMarketingCampaign" engine="simple"
+            location="org/ofbiz/commonapp/marketing/campaign/CampaignServices.xml" invoke="updateMarketingCampaign" auth="true">
+        <description>Update a MarketingCampaign record</description>
+        <implements service="interfaceMarketingCampaign"/>
+        <attribute name="marketingCampaignId" type="String" mode="IN" optional="false"/>
+    </service>
+    
+    <!-- MarketingCampaignPrice Services -->
+    <service name="interfaceMarketingCampaignPrice" engine="interface" location="" invoke="">
+        <attribute name="marketingCampaignId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceRuleId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="addPriceRuleToMarketingCampaign" engine="simple"
+            location="org/ofbiz/commonapp/marketing/campaign/CampaignServices.xml" invoke="addPriceRuleToMarketingCampaign" auth="true">
+        <description>Add PriceRule to MarketingCampaign</description>
+        <implements service="interfaceMarketingCampaignPrice"/>
+    </service>
+    <service name="removePriceRuleFromMarketingCampaign" engine="simple"
+            location="org/ofbiz/commonapp/marketing/campaign/CampaignServices.xml" invoke="removePriceRuleFromMarketingCampaign" auth="true">
+        <description>Remove PriceRule from MarketingCampaign</description>
+        <implements service="interfaceMarketingCampaignPrice"/>
+    </service>
+    
+    <!-- MarketingCampaignPromo Services -->
+    <service name="interfaceMarketingCampaignPromo" engine="interface" location="" invoke="">
+        <attribute name="marketingCampaignId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPromoId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="addPromoToMarketingCampaign" engine="simple"
+            location="org/ofbiz/commonapp/marketing/campaign/CampaignServices.xml" invoke="addPromoToMarketingCampaign" auth="true">
+        <description>Add Promo to MarketingCampaign</description>
+        <implements service="interfaceMarketingCampaignPromo"/>
+    </service>
+    <service name="removePromoFromMarketingCampaign" engine="simple"
+            location="org/ofbiz/commonapp/marketing/campaign/CampaignServices.xml" invoke="removePromoFromMarketingCampaign" auth="true">
+        <description>Remove Promo from MarketingCampaign</description>
+        <implements service="interfaceMarketingCampaignPromo"/>
+    </service>
+
+    <!-- ContactList Services -->
+    <service name="interfaceContactList" engine="interface" location="" invoke="">
+        <attribute name="contactListTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactListName" type="String" mode="IN" optional="false"/>
+        <attribute name="marketingCampaignId" type="String" mode="IN" optional="true"/>
+        <attribute name="comments" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="createContactList" engine="simple"
+            location="org/ofbiz/commonapp/marketing/contact/ContactListServices.xml" invoke="createContactList" auth="true">
+        <description>Create a ContactList record</description>
+        <implements service="interfaceContactList"/>
+        <attribute name="contactListId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateContactList" engine="simple"
+            location="org/ofbiz/commonapp/marketing/contact/ContactListServices.xml" invoke="updateContactList" auth="true">
+        <description>Update a ContactList record</description>
+        <implements service="interfaceContactList"/>
+        <attribute name="contactListId" type="String" mode="IN" optional="false"/>
+    </service>
+        
+    <!-- ContactListParty Services -->
+    <service name="interfaceContactListPartyPk" engine="interface" location="" invoke="">
+        <attribute name="contactListId" type="String" mode="IN" optional="false"/>
+        <attribute name="partyId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+    <service name="addPartyToContactList" engine="simple"
+            location="org/ofbiz/commonapp/marketing/contact/ContactListServices.xml" invoke="addPartyToContactList" auth="true">
+        <description>Add Party to ContactList</description>
+        <implements service="interfaceContactListPartyPk"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="updatePartyToContactList" engine="simple"
+            location="org/ofbiz/commonapp/marketing/contact/ContactListServices.xml" invoke="updatePartyToContactList" auth="true">
+        <description>Update Party to ContactList Join</description>
+        <implements service="interfaceContactListPartyPk"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+    </service>
+    <service name="removePartyFromContactList" engine="simple"
+            location="org/ofbiz/commonapp/marketing/contact/ContactListServices.xml" invoke="removePartyFromContactList" auth="true">
+        <description>Remove Party from ContactList</description>
+        <implements service="interfaceContactListPartyPk"/>
+    </service>
+
+    <!-- TrackingCode Services -->
     <service name="interfaceTrackingCode" engine="interface" location="" invoke="">
         <attribute name="trackingCodeId" type="String" mode="IN" optional="false"/>
         <attribute name="trackingCodeTypeId" type="String" mode="IN" optional="false"/>
