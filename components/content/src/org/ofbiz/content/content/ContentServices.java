@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.5 2003/11/25 06:05:35 jonesde Exp $
+ * $Id: ContentServices.java,v 1.6 2003/12/05 20:59:53 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,25 +31,43 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.io.IOException;
+import java.io.Writer;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.UtilCache;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntity;
+import org.ofbiz.entity.GenericPK;
+import org.ofbiz.entity.condition.EntityCondition;
+import org.ofbiz.entity.condition.EntityConditionList;
+import org.ofbiz.entity.condition.EntityExpr;
+import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.ByteWrapper;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
+import org.ofbiz.service.ServiceUtil;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.service.ModelService;
+import org.ofbiz.content.data.DataServices;
+import org.ofbiz.content.content.ContentWorker;
+
 
 /**
  * ContentServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.2
  *
  *
@@ -79,10 +97,11 @@ public class ContentServices {
         List assocTypes = (List) context.get("contentAssocTypeList");
         List targetOperations = (List) context.get("targetOperationList");
         List contentList = null;
+        List contentTypes= (List) context.get("contentTypeList"); 
         try {
-            contentList = ContentWorker.getAssociatedContent(currentContent, toFrom, assocTypes,
-                    new ArrayList(), fromDate, thruDate);
-        } catch (GenericEntityException e) {
+            contentList = ContentWorker.getAssociatedContent(currentContent, toFrom, assocTypes, 
+                                           contentTypes, fromDate, thruDate );
+        } catch(GenericEntityException e) {
             return ServiceUtil.returnError("Error getting associated content: " + e.toString());
 
         }
@@ -95,6 +114,7 @@ public class ContentServices {
         Map serviceInMap = new HashMap();
         serviceInMap.put("userLogin", context.get("userLogin"));
         serviceInMap.put("targetOperationList", targetOperations);
+        serviceInMap.put("entityOperation", context.get("entityOperation")); 
         List permittedList = new ArrayList();
         Iterator it = contentList.iterator();
         Map permResults = null;
@@ -138,7 +158,7 @@ public class ContentServices {
         } else {
             direction = "To";
         }
-        Debug.logInfo("contentId(start):" + contentId, null);
+            //Debug.logInfo("contentId(start):" + contentId, null);
         if (contentId == null) contentId = "PUBLISH_ROOT";
         GenericValue content = null;
         try {
@@ -148,7 +168,7 @@ public class ContentServices {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
         }
-        Debug.logInfo("content(start):" + content, null);
+            //Debug.logInfo("content(start):" + content, null);
         String fromDateStr = (String) context.get("fromDateStr");
         String thruDateStr = (String) context.get("thruDateStr");
         Timestamp fromDate = null;
@@ -168,16 +188,21 @@ public class ContentServices {
         if (startContentAssocTypeId != null) startContentAssocTypeId = "PUBLISH";
         Map nodeMap = new HashMap();
         List pickList = new ArrayList();
-//Debug.logInfo("whenMap(start):" + whenMap,null);
+        //Debug.logInfo("whenMap(start):" + whenMap,null);
         ContentWorker.traverse(delegator, content, fromDate, thruDate, whenMap, 0, nodeMap,
                 startContentAssocTypeId, pickList, direction);
-//Debug.logInfo("After travers",null);
+        //Debug.logInfo("After travers",null);
 
         results.put("nodeMap", nodeMap);
         results.put("pickList", pickList);
         return results;
     }
 
+   /**
+    * Create a Content service.
+    * The work is done in a separate method so that complex services that need this
+    * functionality do not need to incur the reflection performance penalty.
+    */
     public static Map createContent(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
@@ -188,6 +213,11 @@ public class ContentServices {
         return result;
     }
 
+   /**
+    * Create a Content method.
+    * The work is done in this separate method so that complex services that need this
+    * functionality do not need to incur the reflection performance penalty.
+    */
     public static Map createContentMethod(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
@@ -213,6 +243,7 @@ public class ContentServices {
             content.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
             content.put("createdDate", createdDate);
             content.put("lastModifiedDate", lastModifiedDate);
+            //Debug.logInfo("in createContent, content:" + content, "");
             try {
                 content.create();
             } catch (GenericEntityException e) {
@@ -224,7 +255,12 @@ public class ContentServices {
     }
 
 
-    public static Map createAssocContent(DispatchContext dctx, Map context) {
+   /**
+    * Create a ContentAssoc service.
+    * The work is done in a separate method so that complex services that need this
+    * functionality do not need to incur the reflection performance penalty.
+    */
+    public static Map createContentAssoc(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
         targetOperations.add("CREATE_CONTENT");
@@ -234,6 +270,11 @@ public class ContentServices {
         return result;
     }
 
+   /**
+    * Create a ContentAssoc method.
+    * The work is done in this separate method so that complex services that need this
+    * functionality do not need to incur the reflection performance penalty.
+    */
     public static Map createContentAssocMethod(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
@@ -243,9 +284,9 @@ public class ContentServices {
         String contentIdFrom = (String) context.get("contentIdFrom");
         String contentIdTo = (String) context.get("contentIdTo");
         String contentId = (String) context.get("contentId");
-        Debug.logInfo("CREATING CONTENTASSOC contentIdFrom(1):" + contentIdFrom, null);
-        Debug.logInfo("CREATING CONTENTASSOC contentIdTo(1):" + contentIdTo, null);
-        Debug.logInfo("CREATING CONTENTASSOC contentId:" + contentId, null);
+        //Debug.logInfo("CREATING CONTENTASSOC contentIdFrom(1):" + contentIdFrom, null);
+        //Debug.logInfo("CREATING CONTENTASSOC contentIdTo(1):" + contentIdTo, null);
+        //Debug.logInfo("CREATING CONTENTASSOC contentId:" + contentId, null);
         int contentIdCount = 0;
         if (UtilValidate.isNotEmpty(contentIdFrom)) contentIdCount++;
         if (UtilValidate.isNotEmpty(contentIdTo)) contentIdCount++;
@@ -267,24 +308,19 @@ public class ContentServices {
         contentAssoc.put("contentAssocTypeId", context.get("contentAssocTypeId"));
         contentAssoc.put("contentAssocPredicateId", context.get("contentAssocPredicateIdFrom"));
         contentAssoc.put("dataSourceId", context.get("dataSourceId"));
-        String fromDateStr = (String) context.get("fromDate");
-        if (UtilValidate.isEmpty(fromDateStr)) {
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+        if (fromDate == null) {
             contentAssoc.put("fromDate", UtilDateTime.nowTimestamp());
         } else {
-            contentAssoc.setString("fromDate", (String) context.get("fromDate"));
+            contentAssoc.set("fromDate", fromDate);
         }
-        String thruDateStr = (String) context.get("thruDate");
-        if (UtilValidate.isEmpty(thruDateStr)) {
+        Timestamp thruDate = (Timestamp) context.get("thruDate");
+        if (thruDate == null) {
             contentAssoc.put("thruDate", null);
         } else {
-            contentAssoc.setString("thruDate", (String) context.get("thruDate"));
+            contentAssoc.set("thruDate", thruDate);
         }
-        String sequenceNumStr = (String) context.get("sequenceNum");
-        if (UtilValidate.isEmpty(sequenceNumStr)) {
-            contentAssoc.put("sequenceNum", null);
-        } else {
-            contentAssoc.setString("sequenceNum", sequenceNumStr);
-        }
+        contentAssoc.set("sequenceNum", context.get("sequenceNum"));
         contentAssoc.put("mapKey", context.get("mapKey"));
         String upperCoordinateStr = (String) context.get("upperCoordinate");
         if (UtilValidate.isEmpty(upperCoordinateStr)) {
@@ -330,7 +366,7 @@ public class ContentServices {
         permissionStatus = (String) permResults.get("permissionStatus");
 
 
-        Debug.logInfo("CREATING CONTENTASSOC:" + contentAssoc, null);
+        //Debug.logInfo("CREATING CONTENTASSOC:" + contentAssoc, null);
         if (permissionStatus != null && permissionStatus.equals("granted")) {
             try {
                 contentAssoc.create();
@@ -340,6 +376,8 @@ public class ContentServices {
         }
         result.put("contentIdTo", contentIdTo);
         result.put("contentIdFrom", contentIdFrom);
+        result.put("fromDate", contentAssoc.get("fromDate"));
+        result.put("contentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
         return result;
     }
 
@@ -358,6 +396,12 @@ public class ContentServices {
         return result;
     }
 
+   /**
+    * Update a Content method.
+    * The work is done in this separate method so that complex services that need this
+    * functionality do not need to incur the reflection performance penalty 
+    * of calling a service.
+    */
     public static Map updateContentMethod(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
@@ -393,7 +437,12 @@ public class ContentServices {
         return result;
     }
 
-    public static Map updateAssocContent(DispatchContext dctx, Map context) {
+   /**
+    * Update a ContentAssoc service.
+    * The work is done in a separate method so that complex services that need this
+    * functionality do not need to incur the reflection performance penalty.
+    */
+    public static Map updateContentAssoc(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_UPDATE");
         List targetOperations = new ArrayList();
         targetOperations.add("UPDATE_CONTENT");
@@ -403,6 +452,11 @@ public class ContentServices {
         return result;
     }
 
+   /**
+    * Update a ContentAssoc method.
+    * The work is done in this separate method so that complex services that need this
+    * functionality do not need to incur the reflection performance penalty.
+    */
     public static Map updateContentAssocMethod(DispatchContext dctx, Map context) {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
@@ -412,34 +466,26 @@ public class ContentServices {
         String contentIdFrom = (String) context.get("contentId");
         String contentIdTo = (String) context.get("contentIdTo");
         String contentId = (String) context.get("contentId");
+        String contentAssocTypeId = (String) context.get("contentAssocTypeId");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
 
         GenericValue contentAssoc = null;
         try {
             contentAssoc = delegator.findByPrimaryKey("ContentAssoc",
-                    UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo));
+                    UtilMisc.toMap("contentId", contentId, "contentIdTo", contentIdTo,
+                       "contentAssocTypeId", contentAssocTypeId, "fromDate", fromDate));
         } catch (GenericEntityException e) {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
         }
-        contentAssoc.put("contentAssocTypeId", context.get("contentAssocTypeId"));
         contentAssoc.put("contentAssocPredicateId", context.get("contentAssocPredicateIdFrom"));
         contentAssoc.put("dataSourceId", context.get("dataSourceId"));
-        String fromDateStr = (String) context.get("fromDate");
-        if (UtilValidate.isEmpty(fromDateStr)) {
-        } else {
-            contentAssoc.setString("fromDate", (String) context.get("fromDate"));
-        }
         String thruDateStr = (String) context.get("thruDate");
         if (UtilValidate.isEmpty(thruDateStr)) {
         } else {
             contentAssoc.setString("thruDate", (String) context.get("thruDate"));
         }
-        String sequenceNumStr = (String) context.get("sequenceNum");
-        if (UtilValidate.isEmpty(sequenceNumStr)) {
-            contentAssoc.put("sequenceNum", null);
-        } else {
-            contentAssoc.setString("sequenceNum", sequenceNumStr);
-        }
+        contentAssoc.set("sequenceNum", context.get("sequenceNum"));
         contentAssoc.put("mapKey", context.get("mapKey"));
         String upperCoordinateStr = (String) context.get("upperCoordinate");
         if (UtilValidate.isEmpty(upperCoordinateStr)) {
@@ -456,13 +502,13 @@ public class ContentServices {
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         String userLoginId = (String) userLogin.get("userLoginId");
-        String updatedByUserLogin = userLoginId;
+        String createdByUserLogin = userLoginId;
         String lastModifiedByUserLogin = userLoginId;
-        Timestamp updatedDate = UtilDateTime.nowTimestamp();
+        Timestamp createdDate = UtilDateTime.nowTimestamp();
         Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
-        contentAssoc.put("updatedByUserLogin", updatedByUserLogin);
+        contentAssoc.put("createdByUserLogin", createdByUserLogin);
         contentAssoc.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
-        contentAssoc.put("updatedDate", updatedDate);
+        contentAssoc.put("createdDate", createdDate);
         contentAssoc.put("lastModifiedDate", lastModifiedDate);
 
         String permissionStatus = null;
@@ -493,6 +539,158 @@ public class ContentServices {
             }
         }
         return result;
+    }
+        
+   /**
+    * Deactivates any active ContentAssoc (except the current one) that is associated with the
+    * passed in template/layout contentId and mapKey.
+    */
+    public static Map deactivateAssocs(DispatchContext dctx, Map context) {
+
+        GenericDelegator delegator = dctx.getDelegator();
+        String contentIdTo = (String)context.get("contentIdTo");
+        String mapKey = (String)context.get("mapKey");
+        String contentAssocTypeId = (String)context.get("contentAssocTypeId");
+        String activeContentId = (String)context.get("activeContentId");
+        Timestamp fromDate = (Timestamp)context.get("fromDate");
+        Map results = new HashMap();
+        try {
+            GenericValue activeAssoc = delegator.findByPrimaryKey("ContentAssoc",
+                     UtilMisc.toMap("contentId", activeContentId, "contentIdTo", contentIdTo,
+                                    "fromDate", fromDate, "contentAssocTypeId", contentAssocTypeId));
+            if (activeAssoc == null) {
+                return ServiceUtil.returnError("No association found for contentId="
+                                   + activeContentId + " and contentIdTo=" + contentIdTo
+                                    +  " and contentAssocTypeId=" + contentAssocTypeId
+                                    +  " and fromDate=" + fromDate);
+            }
+            String sequenceNum = (String)activeAssoc.get("sequenceNum");
+            List exprList = new ArrayList();
+            exprList.add(new EntityExpr("mapKey", EntityOperator.EQUALS, mapKey));
+            if (sequenceNum != null){
+                exprList.add(new EntityExpr("sequenceNum", EntityOperator.EQUALS, sequenceNum));
+            }
+            exprList.add(new EntityExpr("mapKey", EntityOperator.EQUALS, mapKey));
+            exprList.add(new EntityExpr("thruDate", EntityOperator.EQUALS, null));
+            exprList.add(new EntityExpr("contentIdTo", EntityOperator.EQUALS, contentIdTo));
+            exprList.add(new EntityExpr("contentAssocTypeId", EntityOperator.EQUALS, contentAssocTypeId));
+            exprList.add(new EntityExpr("contentId", EntityOperator.NOT_EQUAL, activeContentId));
+            EntityConditionList assocExprList = new EntityConditionList(exprList, EntityOperator.AND);
+            List relatedAssocs = delegator.findByCondition("ContentAssoc", assocExprList, 
+                                                 new ArrayList(), UtilMisc.toList("fromDate"));
+            Iterator it = relatedAssocs.iterator();
+            while (it.hasNext()) {
+                GenericValue val = (GenericValue)it.next();
+                val.set("thruDate", fromDate);
+                val.store();
+            }
+            results.put("deactivatedList", relatedAssocs);
+        } catch(GenericEntityException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+
+        return results;
+    }
+
+    /**
+     * Get and render subcontent associated with template id and mapkey.
+     * If subContentId is supplied, that content will be rendered without 
+     * searching for other matching content.
+     */
+    public static Map renderSubContentAsText(DispatchContext dctx, Map context) {
+
+        Map results = new HashMap();
+        HttpServletRequest request = (HttpServletRequest)dctx.getAttribute("request");
+        HttpServletResponse response = (HttpServletResponse)dctx.getAttribute("response");
+        
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Map templateContext = (Map) context.get("templateContext"); 
+        String contentId = (String) context.get("contentId"); 
+        Timestamp fromDate = (Timestamp) context.get("fromDate"); 
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        if (templateContext != null && UtilValidate.isEmpty(contentId)) {
+            contentId = (String)templateContext.get("contentId");
+        }
+        String mapKey = (String) context.get("mapKey"); 
+        if (templateContext != null && UtilValidate.isEmpty(mapKey)) {
+            mapKey = (String)templateContext.get("mapKey");
+        }
+        String subContentId = (String) context.get("subContentId"); 
+        if (templateContext != null && UtilValidate.isEmpty(subContentId)) {
+            subContentId = (String)templateContext.get("subContentId");
+        }
+        String mimeTypeId = (String) context.get("mimeTypeId"); 
+        if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
+            mimeTypeId = (String)templateContext.get("mimeTypeId");
+        }
+        Locale locale = (Locale) context.get("locale"); 
+        if (templateContext != null && locale == null) {
+            locale = (Locale)templateContext.get("locale");
+        }
+        GenericValue subContentDataResourceView = (GenericValue)context.get("subContentDataResourceView");
+        if (subContentDataResourceView!= null && subContentDataResourceView== null) {
+            subContentDataResourceView= (GenericValue)templateContext.get("subContentDataResourceView");
+        }
+        Writer out = (Writer) context.get("outWriter"); 
+
+        //Debug.logInfo("in renderSubContent(svc), contentId:" + contentId, "");
+        //Debug.logInfo("in renderSubContent(svc), subContentId:" + subContentId, "");
+        //Debug.logInfo("in renderSubContent(svc), mapKey:" + mapKey, "");
+        if (templateContext == null)
+            templateContext = new HashMap();
+
+        try {
+            results = ContentWorker.renderSubContentAsText(dispatcher, delegator, 
+                                  contentId, out, mapKey, subContentId, subContentDataResourceView,
+                                  templateContext, locale, mimeTypeId, userLogin, fromDate);
+        } catch(IOException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return results;
+
+    }
+
+    /**
+     * Get and render subcontent associated with template id and mapkey.
+     * If subContentId is supplied, that content will be rendered without 
+     * searching for other matching content.
+     */
+    public static Map renderContentAsText(DispatchContext dctx, Map context) {
+
+        Map results = new HashMap();
+        Security security = dctx.getSecurity();
+        GenericDelegator delegator = dctx.getDelegator();
+        LocalDispatcher dispatcher = dctx.getDispatcher();
+        Writer out = (Writer) context.get("outWriter"); 
+        Map templateContext = (Map) context.get("templateContext"); 
+        GenericValue userLogin = (GenericValue)context.get("userLogin");
+        String contentId = (String) context.get("contentId"); 
+        if (templateContext != null && UtilValidate.isEmpty(contentId)) {
+            contentId = (String)templateContext.get("contentId");
+        }
+        String mimeTypeId = (String) context.get("mimeTypeId"); 
+        if (templateContext != null && UtilValidate.isEmpty(mimeTypeId)) {
+            mimeTypeId = (String)templateContext.get("mimeTypeId");
+        }
+        Locale locale = (Locale) context.get("locale"); 
+        if (templateContext != null && locale == null) {
+            locale = (Locale)templateContext.get("locale");
+        }
+
+        if (templateContext == null)
+            templateContext = new HashMap();
+
+        GenericValue view = null;
+        try {
+            results = ContentWorker.renderContentAsText(delegator, contentId, out, 
+                          templateContext, view, locale, mimeTypeId);
+        } catch(IOException e) {
+            return ServiceUtil.returnError(e.getMessage());
+        }
+        return results;
+
     }
 
 }
