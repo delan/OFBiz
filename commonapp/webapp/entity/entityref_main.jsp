@@ -176,8 +176,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
 	</tr>
     <tr class='headertext'> 
       <td align="center">Relation</td>
-      <td align="center">Table</td>
-      <td align="center" colspan='3'>Type</td>	  
+      <td align="center" colspan='4'>Type</td>	  
       
     </tr>
 <%
@@ -231,8 +230,7 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
           <b><%=relation.title%></b><A href='#<%=relation.relEntityName%>' class='rlinktext'><%=relation.relEntityName%></A>
         </div>
       </td>
-      <td><div align="left" class='relationtext'><%= relation.relTableName %></div></td>
-      <td width="25%" colspan='3'><div align="left" class='relationtext'>
+      <td width="60%" colspan='4'><div align="left" class='relationtext'>
         <%=relation.type%>:<%if(relation.type.length()==3){%>&nbsp;<%}%>
         <%for(int km=0; km<relation.keyMaps.size(); km++){ ModelKeyMap keyMap = (ModelKeyMap)relation.keyMaps.get(km);%>
           <br>&nbsp;&nbsp;<%=km+1%>)&nbsp;

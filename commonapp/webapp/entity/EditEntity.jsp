@@ -103,7 +103,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
     if(relEntity == null) errorMsg = errorMsg + "<li> Related Entity \"" + relEntityName + "\" not found, not adding.";
     else {
       relation.relEntityName = relEntityName;
-      relation.relTableName = relEntity.tableName;
       relation.type = type;
       relation.title = title;
       relation.mainEntity = entity;
@@ -173,7 +172,6 @@ if(security.hasPermission("ENTITY_MAINT", session)) {
         relatedEnt.relations.add(newRel);
 
         newRel.relEntityName = entity.entityName;
-        newRel.relTableName = entity.tableName;
         newRel.title = relation.title;
         if(relation.type.equalsIgnoreCase("one")) newRel.type = "many";
         else newRel.type = "one";
@@ -247,7 +245,7 @@ Entity Name: <%=entityName%><br>
 Column Name: <%=entity.tableName%><br>
 
 <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateEntity")%>' style='margin: 0;'>
-  <INPUT type=text size='60' name='tableName' value='<%=entity.tableName%>'> (Table Name)
+  <INPUT type=text size='60' name='tableName' value='<%=UtilFormatOut.checkNull(entity.tableName)%>'> (Table Name)
   <BR>
   <INPUT type=text size='60' name='packageName' value='<%=entity.packageName%>'> (Package Name)
   <BR>
@@ -328,7 +326,6 @@ Column Name: <%=entity.tableName%><br>
     <tr bgcolor='#CCCCFF'>
       <FORM method=POST action='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + entityName + "&event=updateRelation&relNum=" + r)%>'>
         <td align="left"><%=relation.title%><A class='listtext' href='<%=response.encodeURL(controlPath + "/view/EditEntity?entityName=" + relation.relEntityName)%>'><%=relation.relEntityName%></A></td>
-        <td align="left"><b><%=relation.relTableName%></b></td>
         <td>
           <INPUT type=TEXT name='title' value='<%=relation.title%>'>
           <SELECT name='type'>
