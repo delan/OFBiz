@@ -1,5 +1,5 @@
 /*
- * $Id: XuiContainer.java,v 1.1 2004/07/09 03:03:48 ajzeneski Exp $
+ * $Id: XuiContainer.java,v 1.2 2004/07/09 03:13:14 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.GenericDelegator;
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class XuiContainer implements Container {
@@ -76,7 +76,7 @@ public class XuiContainer implements Container {
         }
 
         // load the XUI and render the initial screen
-        this.startup = ContainerConfig.getPropertyValue(cc, "startup-file", "startup.properties");
+        this.startup = ContainerConfig.getPropertyValue(cc, "startup-file", "xui.properties");
         this.initial = new XuiScreen();
         this.initial.setup(this.startup);
 
