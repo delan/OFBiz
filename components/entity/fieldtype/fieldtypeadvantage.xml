@@ -3,7 +3,7 @@
 
 <!--
 /**
- *  $Id: fieldtypeadvantage.xml,v 1.4 2004/07/27 06:09:48 ajzeneski Exp $
+ *  $Id$
  *  Title: Entity Generator Definitions for the General Data Model
  *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -66,8 +66,8 @@
     <field-type-def type="name" sql-type="Char(100)" java-type="String"></field-type-def>
     <field-type-def type="value" sql-type="Char(255)" java-type="String"></field-type-def>
 
-   <!-- Specialized Types -->
-    <field-type-def type="credit-card-number" sql-type="Char(40)" java-type="String"><validate method="isAnyCard" /></field-type-def>
+    <!-- Specialized Types -->
+    <field-type-def type="credit-card-number" sql-type="Char(255)" java-type="String"><validate method="isAnyCard" /></field-type-def>
     <field-type-def type="credit-card-date" sql-type="Char(20)" java-type="String"><validate method="isDateAfterToday" /></field-type-def>
     <field-type-def type="email" sql-type="Char(255)" java-type="String"><validate method="isEmail" /></field-type-def>
     <field-type-def type="url" sql-type="Char(255)" java-type="String"></field-type-def>
