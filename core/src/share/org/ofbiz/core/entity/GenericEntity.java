@@ -7,11 +7,7 @@ import java.util.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -20,11 +16,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-//needed for XML writing with Crimson
-//import org.apache.crimson.tree.*;
-//needed for XML writing with Xerces
-import org.apache.xml.serialize.*;
 
 /**
  * <p><b>Title:</b> Generic Entity Value Object
@@ -53,7 +44,7 @@ import org.apache.xml.serialize.*;
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     David E. Jones
+ *@author <a href='mailto:jonesde@ofbiz.org'>David E. Jones</a>
  *@created    Wed Aug 08 2001
  *@version    1.0
  */
@@ -84,7 +75,12 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
   /** Creates new GenericEntity */
   public GenericEntity() { this.entityName = null; this.modelEntity = null; this.fields = new HashMap(); }
   /** Creates new GenericEntity */
-  public GenericEntity(ModelEntity modelEntity) { this.entityName = modelEntity.entityName; this.modelEntity = modelEntity; this.fields = new HashMap(); }
+  public GenericEntity(ModelEntity modelEntity) {
+    if(modelEntity == null) throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
+    this.modelEntity = modelEntity;
+    this.entityName = modelEntity.entityName;
+    this.fields = new HashMap();
+  }
   /** Creates new GenericEntity from existing Map */
   public GenericEntity(ModelEntity modelEntity, Map fields) {
     if(modelEntity == null) throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
@@ -313,47 +309,15 @@ public class GenericEntity extends Observable implements Serializable, Comparabl
     return true;
   }
 
-  public static void writeXmlDocument(String filename, Document document) throws java.io.FileNotFoundException, java.io.IOException {
-    if(document == null) return;
-
-    File outFile = new File(filename);
-    FileOutputStream fos = null;
-    fos = new FileOutputStream(outFile);
-
-    //if(document instanceof XmlDocument) {
-      //Crimson writer
-      //XmlDocument xdoc = (XmlDocument) document;
-      //xdoc.write(fos);
-    //}
-    //else {
-      //Xerces writer
-      OutputFormat format = new OutputFormat(document);
-      format.setIndent(2);
-      XMLSerializer serializer = new XMLSerializer(fos, format);
-      serializer.asDOMSerializer();
-      serializer.serialize(document.getDocumentElement());
-    //}
-    if(fos != null) fos.close();
-  }
-  
+// ======= XML Related Methods ========  
   public static Document makeXmlDocument(Collection values) {
-    Document document = null;
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setValidating(true);
-    //factory.setNamespaceAware(true);
-    try {
-      DocumentBuilder builder = factory.newDocumentBuilder();
-      document = builder.newDocument();
-    }
-    catch(Exception e) { Debug.logError(e); }
-    
+    Document document = UtilXml.makeEmptyXmlDocument();
     if(document == null) return null;
     
     Element rootElement = document.createElement("entity-engine-xml");
     document.appendChild(rootElement);
     
     addToXmlDocument(values, document);
-    
     return document;
   }
 

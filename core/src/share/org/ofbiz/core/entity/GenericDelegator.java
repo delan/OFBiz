@@ -6,11 +6,7 @@ import java.net.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.model.*;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.FactoryConfigurationError;
 import javax.xml.parsers.ParserConfigurationException;
-
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -910,15 +906,7 @@ public class GenericDelegator {
 // ======= XML Related Methods ========  
   public Collection readXmlDocument(URL url) throws SAXException, ParserConfigurationException, java.io.IOException {
     if(url == null) return null;
-    
-    Document document = null;
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-    factory.setValidating(true);
-    //factory.setNamespaceAware(true);
-    DocumentBuilder builder = factory.newDocumentBuilder();
-    document = builder.parse(url.openStream());
-    
-    return this.makeValues(document);
+    return this.makeValues(UtilXml.readXmlDocument(url));
   }
 
   public Collection makeValues(Document document) {
@@ -968,7 +956,6 @@ public class GenericDelegator {
 
 
 // ======= Misc Methods ========  
-
 
   /** Get the next guaranteed unique seq id from the sequence with the given sequence name; if the named sequence doesn't exist, it will be created
    *@param seqName The name of the sequence to get the next seq id from
