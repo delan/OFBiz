@@ -2,8 +2,8 @@
 <!DOCTYPE service-group PUBLIC "-//OFBiz//DTD Service Group Config//EN" "http://www.ofbiz.org/dtds/service-group.dtd">
 
 <service-group>
-	<group name="testGroup" mode="all">
-		<service name="testScv"/>
-		<service name="testBsh"/>	
+	<group name="testGroup" send-mode="all">
+		<service name="testScv" mode="sync"/>
+		<service name="testBsh" mode="sync"/>	
 	</group>
 </service-group>
