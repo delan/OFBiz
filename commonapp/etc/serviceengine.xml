@@ -13,7 +13,7 @@
     <engine name="soap" class="org.ofbiz.core.service.SOAPClientEngine"/>
     <engine name="simple" class="org.ofbiz.core.minilang.SimpleServiceEngine"/>
 
-    <resource-loader name="mainfile" class="org.ofbiz.core.config.FileLoader" 
+    <resource-loader name="mainfile" class="org.ofbiz.core.config.FileLoader"
             prepend-env="ofbiz.home" prefix="/commonapp/globalservices/"/>
     <resource-loader name="maincp" class="org.ofbiz.core.config.ClasspathLoader"/>
     <resource-loader name="mainurl" class="org.ofbiz.core.config.UrlLoader"/>
@@ -22,6 +22,7 @@
     <global-services loader="mainfile" location="services_accounting.xml"/>
     <global-services loader="mainfile" location="services_order.xml"/>
     <global-services loader="mainfile" location="services_party.xml"/>
+    <global-services loader="mainfile" location="services_product.xml"/>
     <global-services loader="mainfile" location="services_workeffort.xml"/>
     <global-services loader="mainfile" location="services_workflow.xml"/>
 </service-config>
