@@ -28,8 +28,6 @@
  *@since      3.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
 <fo:layout-master-set>
     <fo:simple-page-master master-name="main" page-height="11in" page-width="8.5in"
             margin-top="0.5in" margin-bottom="1in" margin-left="1in" margin-right="1in">
@@ -231,49 +229,9 @@
     </#list>          
 </#if>
 
-    <#if insufficientQohList?has_content || wrongQuantityReservedList?has_content>
-        <fo:page-sequence master-reference="main">
-        <fo:flow flow-name="xsl-region-body" font-family="Helvetica">
-        <fo:block font-size="14pt">${uiLabelMap.ProductPickPackWarnings}</fo:block>
-        <#-- wrongQuantityReservedList: List of Maps with reservedQuantity and orderItemAndShipGroupAssoc -->
-        <#-- insufficientQohList: List of Maps with inventoryItem and quantityNeeded -->
-        <#assign rowColor = "white">
-        <#list insufficientQohList?if_exists as insufficientQoh>
-            <#assign inventoryItem = insufficientQoh.inventoryItem>
-            <#assign quantityNeeded = insufficientQoh.quantityNeeded>
-            <fo:block font-size="10pt">
-                  Inventory item with ID [${inventoryItem.inventoryItemId}] has ${inventoryItem.quantityOnHandTotal?if_exists} on hand but needs ${quantityNeeded} for a full pick.
-            </fo:block>
-            <#-- toggle the row color -->
-            <#if rowColor == "white">
-                <#assign rowColor = "#D4D0C8">
-            <#else>
-                <#assign rowColor = "white">
-            </#if>        
-        </#list>          
-        <#list wrongQuantityReservedList?if_exists as wrongQuantityReserved>
-            <#assign orderItemAndShipGroupAssoc = wrongQuantityReserved.orderItemAndShipGroupAssoc>
-            <#assign reservedQuantity = wrongQuantityReserved.reservedQuantity>
-            <#assign issuedQuantity = wrongQuantityReserved.issuedQuantity>
-            <#assign reservedIssuedQuantity = wrongQuantityReserved.reservedIssuedQuantity>
-            <fo:block font-size="10pt">
-                Order Item ${orderItemAndShipGroupAssoc.orderId}:${orderItemAndShipGroupAssoc.orderItemSeqId} is for ${orderItemAndShipGroupAssoc.quantity} of product ID [${orderItemAndShipGroupAssoc.productId}] but ${reservedQuantity} was reserved and ${issuedQuantity} has been issued. The total reserved and issued is ${reservedIssuedQuantity} which does not equal: ${orderItemAndShipGroupAssoc.quantity} the order item quantity.
-            </fo:block>
-            <#-- toggle the row color -->
-            <#if rowColor == "white">
-                <#assign rowColor = "#D4D0C8">
-            <#else>
-                <#assign rowColor = "white">
-            </#if>        
-        </#list>          
-        </fo:flow>
-        </fo:page-sequence>
-    </#if>
-
     <#else>
         <fo:block font-size="14pt">
             ${uiLabelMap.ProductFacilityViewPermissionError}
         </fo:block>
     </#if>
-
 </fo:root>

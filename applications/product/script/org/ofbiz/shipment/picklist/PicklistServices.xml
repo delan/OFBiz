@@ -806,7 +806,8 @@
         <!-- 
             Creates:
               1. Standard picklistInfo Map from the getPicklistSingleInfoInline simple-method (see comment there for details)
-              2. inventoryItemAndLocationInfoList (inventoryItemAndLocation, picklistItemInfoList (picklistItem, orderItem, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
+              2. facilityLocationInfoList (facilityLocation, picklistItemInfoList (picklistItem, orderItem, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
+              3. noLocationProductInfoList (product, picklistItemInfoList (picklistItem, orderItem, inventoryItemAndLocation, orderItemShipGrpInvRes, itemIssuanceList))
         -->
         <check-permission permission="FACILITY" action="_VIEW">
             <fail-message message="Security Error: to run getPickAndPackReportInfo you must have the FACILITY_VIEW or FACILITY_ADMIN permission"/>
@@ -823,22 +824,38 @@
             <iterate entry-name="picklistItemInfo" list-name="picklistBinInfo.picklistItemInfoList">
                 <!-- 
                     In this iteration through the items we want 2 things:
-                      1. A map with all inventoryItemAndLocation records by inventoryItemId, so that we have one unique 
+                      1. A Map with all FacilityLocation records by locationSeqId, so that we have one unique of each 
                          instance per inventoryItem, this will be put into a list and sorted by facility location fields
-                      2. A Map containing a List of PicklistItemInfo records keyed by the inventoryItemId 
+                         AND
+                         A Map containing a List of PicklistItemInfo records keyed by the locationSeqId
+                      2. A Map with key productId, value product
+                         AND
+                         A Map with a List of PicklistItemInfo records keyed by the productId
                 -->
-                <env-to-env env-name="picklistItemInfo.inventoryItemAndLocation" to-env-name="inventoryItemAndLocationByInventoryItemIdMap.${picklistItemInfo.inventoryItemAndLocation.inventoryItemId}"/>
-                <!-- handle case where an InventoryItem is not associated with a location: handled automatically since the FacilityLocation is optional in the view-entity -->
-
-                <clear-field field-name="picklistItemInfoTempList"/>
-                <env-to-env env-name="picklistItemInfoListByInventoryItemIdMap.${picklistItemInfo.inventoryItemAndLocation.inventoryItemId}" to-env-name="picklistItemInfoTempList"/>
-                <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
-                <env-to-env env-name="picklistItemInfoTempList" to-env-name="picklistItemInfoListByInventoryItemIdMap.${picklistItemInfo.inventoryItemAndLocation.inventoryItemId}"/>
+                <if-not-empty field-name="picklistItemInfo.inventoryItemAndLocation.locationSeqId">
+                    <make-value value-name="facilityLocation" entity-name="FacilityLocation" map-name="picklistItemInfo.inventoryItemAndLocation"/>
+                    <env-to-env env-name="facilityLocation" to-env-name="facilityLocationByLocationSeqIdMap.${facilityLocation.locationSeqId}"/>
+    
+                    <clear-field field-name="picklistItemInfoTempList"/>
+                    <env-to-env env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}" to-env-name="picklistItemInfoTempList"/>
+                    <field-to-list field-name="picklistItemInfo" list-name="picklistItemInfoTempList"/>
+                    <env-to-env env-name="picklistItemInfoTempList" to-env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}"/>
+                <else>
+                    <!-- TODO: handle case where an InventoryItem is not associated with a location -->
+                    <if-not-empty field-name="picklistItemInfo.orderItem.productId">
+                        
+                    <else>
+                        <!-- Uh oh, no productId, how did this happen? -->
+                        <log level="warning" message="No productId and no FacilityLocation, not showing in Picklist for PicklistItem: ${picklistItemInfo.picklistItem}"/>
+                    </else>
+                    </if-not-empty>
+                </else>
+                </if-not-empty>
             </iterate>
         </iterate>
 
-        <!-- make a inventoryItemAndLocationList from the inventoryItemAndLocationByInventoryItemIdMap, which was used to guarantee uniqueness of InventoryItems -->
-        <iterate-map map-name="inventoryItemAndLocationByInventoryItemIdMap" key-name="locationSeqId" value-name="inventoryItemAndLocationList[]"/>
+        <!-- make a inventoryItemAndLocationList from the facilityLocationByLocationSeqIdMap, which was used to guarantee uniqueness of InventoryItems -->
+        <iterate-map map-name="facilityLocationByLocationSeqIdMap" key-name="locationSeqId" value-name="facilityLocationList[]"/>
 
         <!-- order the facilityLocations -->
         <string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
@@ -846,19 +863,17 @@
         <string-to-list string="+sectionId" list-name="facilityLocsOrdLst"/>
         <string-to-list string="+levelId" list-name="facilityLocsOrdLst"/>
         <string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
-        <string-to-list string="+productId" list-name="facilityLocsOrdLst"/> <!-- This is here just in case there is no FacilityLocation -->
-        <string-to-list string="+datetimeReceived" list-name="facilityLocsOrdLst"/>
-        <order-value-list list-name="inventoryItemAndLocationList" order-by-list-name="facilityLocsOrdLst"/>
+        <order-value-list list-name="facilityLocationList" order-by-list-name="facilityLocsOrdLst"/>
         
         <!-- Now we have an ordered list of InventoryItems, create an inventoryItemAndLocationInfoList -->
-        <iterate entry-name="inventoryItemAndLocation" list-name="inventoryItemAndLocationList">
-            <clear-field field-name="inventoryItemAndLocationInfo"/>
-            <env-to-env env-name="inventoryItemAndLocation" to-env-name="inventoryItemAndLocationInfo.inventoryItemAndLocation"/>
-            <env-to-env env-name="picklistItemInfoListByInventoryItemIdMap.${inventoryItemAndLocation.inventoryItemId}" to-env-name="inventoryItemAndLocationInfo.picklistItemInfoList"/>
-            <env-to-env env-name="inventoryItemAndLocationInfo" to-env-name="inventoryItemAndLocationInfoList[]"/>
+        <iterate entry-name="facilityLocation" list-name="facilityLocationList">
+            <clear-field field-name="facilityLocationInfo"/>
+            <env-to-env env-name="facilityLocation" to-env-name="facilityLocationInfo.facilityLocation"/>
+            <env-to-env env-name="picklistItemInfoListByLocationSeqIdMap.${facilityLocation.locationSeqId}" to-env-name="facilityLocationInfo.picklistItemInfoList"/>
+            <env-to-env env-name="facilityLocationInfo" to-env-name="facilityLocationInfoList[]"/>
         </iterate>
         
-        <field-to-result field-name="inventoryItemAndLocationInfoList"/>
+        <field-to-result field-name="facilityLocationInfoList"/>
     </simple-method>
 
     <simple-method method-name="getPicklistSingleInfoInline" short-description="getPicklistSingleInfoInline">

@@ -524,13 +524,9 @@
         <response name="error" type="view" value="PicklistManage"/>
     </request-map>
 
-    <request-map uri="Picklist">
+    <request-map uri="PicklistReport.pdf">
         <security https="true" auth="true"/>
-        <response name="success" type="view" value="Picklist"/>
-    </request-map>
-    <request-map uri="Picklist.pdf">
-        <security https="true" auth="true"/>
-        <response name="success" type="view" value="Picklist.pdf"/>
+        <response name="success" type="view" value="PicklistReport.pdf"/>
     </request-map>
 
     <request-map uri="PickMoveStock">
@@ -841,10 +837,8 @@
 
     <view-map name="PicklistOptions" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PicklistOptions"/>
     <view-map name="PicklistManage" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PicklistManage"/>
-
-    <view-map name="Picklist" type="jpublish" page="/facility/Picklist.ftl"/>
-    <view-map name="Picklist.pdf" type="fop" page="/facility/Picklist.fo.ftl"/>
-    <view-map name="PickMoveStock" type="jpublish" page="/facility/PickMoveStock.ftl"/>
+    <view-map name="PickMoveStock" type="screen" page="component://product/widget/facility/FacilityScreens.xml#PickMoveStock"/>
+    <view-map name="PicklistReport.pdf" type="screenfop" page="component://product/widget/facility/FacilityScreens.xml#PicklistReport.fo"/>
 
     <view-map name="FindFacilityGroup" type="jpublish" page="/group/FindFacilityGroup.ftl"/>
     <view-map name="EditFacilityGroup" type="jpublish" page="/group/EditFacilityGroup.ftl"/>
