@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.2 2003/10/28 17:17:28 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.3 2003/11/05 00:05:53 byersa Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,8 +63,8 @@ import javax.servlet.http.HttpServletRequest;
  * DataResourceWorker Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
- * @since      2.2
+ * @version    $Revision: 1.3 $
+ * @since      3.0
  *
  * 
  */
@@ -72,6 +72,10 @@ public class DataResourceWorker {
 
     public static final String module = DataResourceWorker.class.getName();
 
+    /**
+     * Traverses the DataCategory parent/child structure and puts it in categoryNode.
+     * Returns non-null error string if there is an error.
+     */
     public static String getDataCategoryMap(GenericDelegator delegator, int depth,
                   Map categoryNode, List categoryTypeIds, boolean getAll) 
         throws GenericEntityException {
@@ -119,6 +123,10 @@ public class DataResourceWorker {
         return errorMsg;
     }
 
+    /**
+     * Finds the parents of DataCategory entity and puts them in a list,
+     * the start entity at the top.
+     */
     public static void getDataCategoryAncestry(GenericDelegator delegator, String dataCategoryId,
                                                List categoryTypeIds) 
         throws GenericEntityException {
@@ -135,6 +143,11 @@ public class DataResourceWorker {
     }
 
 
+    /**
+     * Takes a DataCategory structure and builds a list of maps,
+     * one value (id) is the dataCategoryId value and the other
+     * is an indented string suitable for use in a drop-down pick list.
+     */
     public static void buildList(HashMap nd, List lst, int depth) {
         String id = (String)nd.get("id");
         String nm = (String)nd.get("name");
@@ -154,11 +167,17 @@ public class DataResourceWorker {
         }
     }
 
+    /**
+     * Uploads image data from a form and stores it in ImageDataResource. 
+     * Expects key data in a field identitified by the "idField" value
+     * and the binary data to be in a field id'd by uploadField.
+     */
     public static String uploadAndStoreImage(HttpServletRequest request, 
                          String idField, String uploadField) {
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
 
+Debug.logInfo("in uploadAndStoreImage, idField:" + idField, "");
         String idFieldValue = null;
         DiskFileUpload fu = new DiskFileUpload();
         java.util.List lst = null;
@@ -184,6 +203,7 @@ public class DataResourceWorker {
 	    String fn = fi.getName();
 	    String fieldName = fi.getFieldName();
 	    String fieldStr = fi.getString();
+Debug.logInfo("in uploadAndStoreImage, fieldName:" + fieldName, "");
             if (fieldName.equals(idField)) idFieldValue = fieldStr;
             if (fieldName.equals(uploadField)) imageFi = fi;
         }
@@ -195,6 +215,7 @@ public class DataResourceWorker {
             return "error";
         }
 
+Debug.logInfo("in uploadAndStoreImage, idFieldValue:" + idFieldValue, "");
 
            
         byte[] imageBytes = imageFi.get();
@@ -274,6 +295,9 @@ public class DataResourceWorker {
         return permissionStatus;
     }
 
+    /**
+     * Gets image data from ImageDataResource and returns it as a byte array.
+     */
     public static byte[] acquireImage(HttpServletRequest request, String imgFieldName) {
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
@@ -300,6 +324,9 @@ public class DataResourceWorker {
 
     }
 
+    /**
+     * Returns the image type.
+     */
     public static String getImageType(HttpServletRequest request, String imgFieldName) {
 
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
