@@ -42,38 +42,32 @@ if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-String productId = request.getParameter("productId");
-if (productId != null) context.put("productId", productId);
-
-GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-if (product != null) context.put("product", product);
-
-List featureTypes = new ArrayList();
+productId = request.getParameter("productId");
+product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+featureTypes = new ArrayList();
 
 //just get the selectable features
-List productFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", 
+productFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", 
         UtilMisc.toMap("productId", productId, "productFeatureApplTypeId", "SELECTABLE_FEATURE"), 
         UtilMisc.toList("sequenceNum", "productFeatureApplTypeId", "productFeatureTypeId", "description")), true);
-if (productFeatureAndAppls != null) {
-    context.put("productFeatureAndAppls", productFeatureAndAppls);
 
+if (productFeatureAndAppls != null) {
     //get the list of unique feature types in the order they came from the db
-    Iterator productFeatureAndApplIter = productFeatureAndAppls.iterator();
+    productFeatureAndApplIter = productFeatureAndAppls.iterator();
     while (productFeatureAndApplIter.hasNext()) {
-        GenericValue productFeatureAndAppl = (GenericValue) productFeatureAndApplIter.next();
-        String featureType = productFeatureAndAppl.getString("productFeatureTypeId");
+        productFeatureAndAppl = productFeatureAndApplIter.next();
+        featureType = productFeatureAndAppl.getString("productFeatureTypeId");
         if (!featureTypes.contains(featureType)) {
             featureTypes.add(featureType);
         }
     }
 }
-if (featureTypes.size() > 0) context.put("featureTypes", featureTypes);
 
-int featureTypeSize = featureTypes.size();
+featureTypeSize = featureTypes.size();
 int[] indices = new int[featureTypeSize];
 
 //this will contain a list of ProductFeatureAndAppls for each feature type
-List featureTypeValues = new ArrayList();\
+featureTypeValues = new ArrayList();
 
 //for each feature type get the list of features
 for (int i = 0; i < featureTypes.size(); i++) {
@@ -81,4 +75,90 @@ for (int i = 0; i < featureTypes.size(); i++) {
     featureTypeValues.add(i, EntityUtil.filterByAnd(productFeatureAndAppls, UtilMisc.toMap("productFeatureTypeId", featureType)));
     indices[i] = 0;
 }
-if (featureTypeValues.size() > 0) context.put("featureTypeValues", featureTypeValues);
+
+context.put("productId", productId);
+context.put("product", product);
+context.put("productFeatureAndAppls", productFeatureAndAppls);
+context.put("featureTypes", featureTypes);
+context.put("featureTypeSize", featureTypeSize);
+context.put("featureTypeValues", featureTypeValues);
+
+featureCombinationInfos = new LinkedList();
+context.put("featureCombinationInfos", featureCombinationInfos);
+
+boolean carryIncrement = false;
+while (true) {
+	featureCombinationInfo = new HashMap();
+	featureCombinationInfos.add(featureCombinationInfo);
+	
+    curProductFeatureAndAppls = new ArrayList();
+    existingVariantProductIds = new ArrayList();
+    featureCombinationInfo.put("curProductFeatureAndAppls", curProductFeatureAndAppls);
+    featureCombinationInfo.put("existingVariantProductIds", existingVariantProductIds);
+    
+    for (int featureTypeIndex = 0; featureTypeIndex < featureTypeSize; featureTypeIndex++) {
+        featureValues = featureTypeValues.get(featureTypeIndex);%>
+        productFeatureAndAppl = featureValues.get(indices[featureTypeIndex]);
+        // add to list of features for this combination: productFeatureAndAppl
+        curProductFeatureAndAppls.add(productFeatureAndAppl);
+        // remember featureTypeIndex too? no, use list index for that...
+
+        //Use the cascading index method for recursion to iteration conversion
+        //here's the fun part: go through the types to increment and overflow
+        if (featureTypeIndex == 0) {
+            //always increment the 0 position
+            indices[featureTypeIndex]++;
+            if (indices[featureTypeIndex] >= featureValues.size()) {
+                indices[featureTypeIndex] = 0;
+                carryIncrement = true;
+            }
+        } else if (carryIncrement) {
+            //increment this position if the flag is set
+            indices[featureTypeIndex]++;
+            carryIncrement = false;
+
+            if (indices[featureTypeIndex] >= featureValues.size()) {
+                indices[featureTypeIndex] = 0;
+                carryIncrement = true;
+            }
+        }
+    }
+
+    // find PRODUCT_VARIANT associations that have these features as STANDARD_FEATUREs
+    productAssocs = EntityUtil.filterByDate(delegator.findByAnd("ProductAssoc", UtilMisc.toMap("productId", productId, "productAssocTypeId", "PRODUCT_VARIANT")), true);
+    if (productAssocs != null && productAssocs.size() > 0) {
+        Iterator productAssocIter = productAssocs.iterator();
+        while (productAssocIter.hasNext()) {
+            productAssoc = productAssocIter.next();
+            
+            //for each associated product, if it has all standard features, display it's productId
+            boolean hasAllFeatures = true;
+            Iterator curProductFeatureAndApplIter = curProductFeatureAndAppls.iterator();
+            while (curProductFeatureAndApplIter.hasNext()) {
+                productFeatureAndAppl = curProductFeatureAndApplIter.next();
+                findByMap = UtilMisc.toMap("productId", productAssoc.getString("productIdTo"), 
+                        "productFeatureTypeId", productFeatureAndAppl.get("productFeatureTypeId"),
+                        "description", productFeatureAndAppl.get("description"),
+                        "productFeatureApplTypeId", "STANDARD_FEATURE");
+                //Debug.log("Using findByMap: " + findByMap);
+
+                standardProductFeatureAndAppls = EntityUtil.filterByDate(delegator.findByAnd("ProductFeatureAndAppl", findByMap), true);
+                if (standardProductFeatureAndAppls == null || standardProductFeatureAndAppls.size() == 0) {
+                    //Debug.log("Does NOT have this standard feature");
+                    hasAllFeatures = false;
+                    break;
+                } else {
+                    //Debug.log("DOES have this standard feature");
+                }
+            }
+
+            if (hasAllFeatures) {
+            	// add to list of existing variants: productId=productAssoc.productIdTo
+            	existingVariantProductIds.add(productAssoc.get("productIdTo"));
+            }
+        }
+    }
+    // if carryIncrement is still set then the last value turned over, so we quit...
+    if (carryIncrement) { break; }
+}
+

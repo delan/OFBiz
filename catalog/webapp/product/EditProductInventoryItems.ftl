@@ -41,7 +41,7 @@
         <a href="<@ofbizUrl>/EditProductFacilities?productId=${productId}</@ofbizUrl>" class="tabButton">Facilities</a>
         <a href="<@ofbizUrl>/EditProductInventoryItems?productId=${productId}</@ofbizUrl>" class="tabButtonSelected">Inventory</a>
         <a href="<@ofbizUrl>/EditProductGlAccounts?productId=${productId}</@ofbizUrl>" class="tabButton">Accounts</a>
-        <#if product?exists && product.getString("isVirtual").equals("Y")>
+        <#if product?exists && product.isVirtual?if_exists == "Y">
             <a href="<@ofbizUrl>/QuickAddVariants?productId=${productId}</@ofbizUrl>" class="tabButton">Variants</a>
         </#if>
         </div>
