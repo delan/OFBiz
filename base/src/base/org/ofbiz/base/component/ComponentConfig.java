@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.8 2003/08/20 18:43:17 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.9 2003/08/20 19:40:57 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -51,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -61,6 +62,7 @@ public class ComponentConfig {
 
     // this is not a UtilCache because reloading may cause problems
     protected static Map componentConfigs = new OrderedMap();
+    protected static Map serverWebApps = new HashMap();
 
     public static ComponentConfig getComponentConfig(String globalName) throws ComponentException {
         // TODO: we need to look up the rootLocation from the container config, or this will blow up
@@ -178,19 +180,29 @@ public class ComponentConfig {
     }
     
     public static List getAppBarWebInfos(String serverName) {
-        List webInfos = new LinkedList();
-        Iterator i = getAllComponents().iterator();
-        while (i.hasNext()) {
-            ComponentConfig cc = (ComponentConfig) i.next();
-            Iterator wi = cc.getWebappInfos().iterator();
-            while (wi.hasNext()) {
-                ComponentConfig.WebappInfo wInfo = (ComponentConfig.WebappInfo) wi.next();
-                if (serverName.equals(wInfo.server) && wInfo.appBarDisplay) {
-                    webInfos.add(wInfo);
-                }
-            }            
+        List webInfos = (List) serverWebApps.get(serverName);
+        if (webInfos == null) {
+            synchronized(ComponentConfig.class) {                
+                if (webInfos == null) {
+                    Iterator i = getAllComponents().iterator();
+                    TreeMap tm = new TreeMap();
+                    while (i.hasNext()) {
+                        ComponentConfig cc = (ComponentConfig) i.next();
+                        Iterator wi = cc.getWebappInfos().iterator();
+                        while (wi.hasNext()) {
+                            ComponentConfig.WebappInfo wInfo = (ComponentConfig.WebappInfo) wi.next();
+                            if (serverName.equals(wInfo.server) && wInfo.appBarDisplay) {
+                                tm.put(wInfo.title, wInfo);
+                            }
+                        }
+                    }
+                    List webInfoList = new LinkedList(tm.values());
+                    serverWebApps.put(serverName, webInfoList);
+                    return webInfoList;                    
+                }    
+            }
         }
-        return webInfos;       
+        return webInfos;               
     }
     
     // ========== component info fields ==========
@@ -485,7 +497,7 @@ public class ComponentConfig {
             this.server = element.getAttribute("server");
             this.mountPoint = element.getAttribute("mount-point");
             this.location = element.getAttribute("location");
-            this.appBarDisplay = "true".equals(element.getAttribute("app-bar-display"));
+            this.appBarDisplay = !"false".equals(element.getAttribute("app-bar-display"));
             
             // default title is name w/ upper-cased first letter
             if (UtilValidate.isEmpty(this.title)) {                
@@ -507,6 +519,17 @@ public class ComponentConfig {
                 }
                 this.mountPoint = this.mountPoint + "*";   
             }
-        }               
+        } 
+        
+        public String getContextRoot() {
+            if (mountPoint.endsWith("/*")) {
+                return mountPoint.substring(0, mountPoint.length() - 2);
+            }
+            return mountPoint;
+        }
+        
+        public String getTitle() {
+            return title;
+        }
     }
 }
