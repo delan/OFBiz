@@ -73,6 +73,9 @@ public class UtilJ2eeCompat {
             } else if (serverInfo.indexOf(REX_IP) >= 0) {
                 Debug.logImportant("Trade City RexIP detected, using response.getWriter to write text out instead of response.getOutputStream");
                 usestream = false;
+            } else if (serverInfo.indexOf(TOMCAT) >= 0) {
+                Debug.logImportant("Apache Tomcat detected, using response.getWriter to write text out instead of response.getOutputStream");
+                usestream = false;
             }
             
             doFlushOnRenderValue = new Boolean(doflush);
