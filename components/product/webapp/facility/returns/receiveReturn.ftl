@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.8 $
+ *@version    $Revision: 1.9 $
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -84,7 +84,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
           </td>
           <td align="right">
             <span class="tableheadtext">${uiLabelMap.ProductSelectAll}</span>&nbsp;
-            <input type="checkbox" name="selectAll" value="${uiLabelMap.CommonY}" onclick="javascript:toggleAll(this);">
+            <input type="checkbox" name="selectAll" value="Y" onclick="javascript:toggleAll(this);">
           </td>
         </tr>
                
@@ -191,7 +191,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
               </table>
             </td>
             <td align="right">              
-              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="${uiLabelMap.CommonY}" onclick="javascript:checkToggle(this);">
+              <input type="checkbox" name="_rowSubmit_o_${rowCount}" value="Y" onclick="javascript:checkToggle(this);">
             </td>
           </tr>          
           <#assign rowCount = rowCount + 1>   
