@@ -131,11 +131,13 @@ public class Msr extends GenericDevice {
             case MSR_CREDIT_CARD:
                 PosScreen.currentScreen.getInput().setFunction("MSRINFO", msrStr.toString());
                 PosScreen.currentScreen.getOutput().print("Credit Card Read");
+                PosScreen.currentScreen.getInput().clearInput();
                 this.callEnter();
                 break;
             case MSR_GIFT_CARD:
                 PosScreen.currentScreen.getInput().setFunction("MSRINFO", msrStr.toString());
                 PosScreen.currentScreen.getOutput().print("Gift Card Read");
+                PosScreen.currentScreen.getInput().clearInput();
                 this.callEnter();
                 break;
             case MSR_UNKNOWN:
