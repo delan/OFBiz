@@ -355,13 +355,13 @@
             title="OrderItem And ShipGroupAssoc View Entity">
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
       <member-entity entity-alias="OISGA" entity-name="OrderItemShipGroupAssoc"/>
-      <alias-all entity-alias="OI"/>
-      <alias-all entity-alias="OISGA">
+      <alias-all entity-alias="OI">
         <exclude field="quantity"/>
         <exclude field="cancelQuantity"/>
       </alias-all>
-      <alias entity-alias="OISGA" name="shipGroupQuantity" field="quantity"/>
-      <alias entity-alias="OISGA" name="shipGroupCancelQuantity" field="cancelQuantity"/>
+      <alias-all entity-alias="OISGA"/>
+      <alias entity-alias="OI" name="orderItemQuantity" field="quantity"/>
+      <alias entity-alias="OI" name="orderItemCancelQuantity" field="cancelQuantity"/>
       <view-link entity-alias="OI" rel-entity-alias="OISGA">
         <key-map field-name="orderId"/>
         <key-map field-name="orderItemSeqId"/>

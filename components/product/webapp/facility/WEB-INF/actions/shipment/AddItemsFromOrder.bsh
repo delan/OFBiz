@@ -212,7 +212,7 @@ if (shipment != null && selectFromShipmentPlan != null) {
         }
 
         Map orderItemShipGroupAssocMap = new HashMap(orderItemShipGroupAssoc);
-        orderItemShipGroupAssocMap.put("shipGroupQuantity", orderItemShipGroupAssoc.getDouble("quantity"));
+        orderItemShipGroupAssocMap.put("quantity", orderItemShipGroupAssoc.getDouble("quantity"));
         orderItemData.put("orderItemAndShipGroupAssoc", orderItemShipGroupAssocMap);
         orderItemData.put("orderItemShipGrpInvResDatas", orderItemShipGrpInvResDatas);
         orderItemData.put("totalQuantityReserved", totalQuantityReserved);
