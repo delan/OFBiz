@@ -13,6 +13,8 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
 
+import org.ofbiz.core.pseudotag.*;
+
 /**
  * <p><b>Title:</b> InputValueTag
  * <p><b>Description:</b> Outputs a string for an input box from either an entity field or
@@ -93,54 +95,8 @@ public class InputValueTag extends TagSupport {
     }
 
     public int doStartTag() throws JspTagException {
-        String inputValue = null;
-        boolean tryEntity = true;
-        boolean fullattrs = false;
-
-        String paramName = param;
-        if (paramName == null || paramName.length() == 0)
-            paramName = field;
-
-        Boolean tempBool = null;
-        if (tryEntityAttr != null)
-            tempBool = (Boolean) pageContext.getAttribute(tryEntityAttr);
-        if (tempBool != null)
-            tryEntity = tempBool.booleanValue();
-
-        //if anything but true, it will be false, ie default is false
-        fullattrs = "true".equals(fullattrsStr);
-
-        if (tryEntity) {
-            Object entTemp = pageContext.getAttribute(entityAttr);
-            if (entTemp != null) {
-                if (entTemp instanceof GenericValue) {
-                    GenericValue entity = (GenericValue) entTemp;
-                    Object fieldVal = entity.get(field);
-                    if (fieldVal != null)
-                        inputValue = fieldVal.toString();
-                } else if (entTemp instanceof Map) {
-                    Map map = (Map) entTemp;
-                    Object fieldVal = map.get(field);
-                    if (fieldVal != null)
-                        inputValue = fieldVal.toString();
-                }
-            }
-        }
-        //if nothing found in entity, or if not checked, try a parameter
-        if (inputValue == null) {
-            inputValue = pageContext.getRequest().getParameter(paramName);
-        }
-
-        if (inputValue == null || inputValue.length() == 0)
-            inputValue = defaultStr;
-
         try {
-            if (fullattrs) {
-                pageContext.getOut().print("name='" + paramName + "' value='" +
-                        inputValue + "'");
-            } else {
-                pageContext.getOut().print(inputValue);
-            }
+            InputValue.run(field, param, entityAttr, tryEntityAttr, defaultStr, fullattrsStr, pageContext);
         } catch (IOException e) {
             throw new JspTagException(e.getMessage());
         }
