@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001-2005 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -609,26 +609,6 @@ public class GenericDAO {
 
     /* ====================================================================== */
     /* ====================================================================== */
-
-    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
-     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
-     *@param entityCondition The EntityCondition object that specifies how to constrain this query
-     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
-     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
-     *@return List of GenericValue objects representing the result
-     */
-    public List selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
-        EntityListIterator entityListIterator = null;
-
-        try {
-            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, null, fieldsToSelect, orderBy, null);
-            return entityListIterator.getCompleteList();
-        } finally {
-            if (entityListIterator != null) {
-                entityListIterator.close();
-            }
-        }
-    }
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
      *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
