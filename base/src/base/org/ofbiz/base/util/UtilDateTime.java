@@ -1,5 +1,5 @@
 /*
- * $Id: UtilDateTime.java,v 1.2 2004/03/25 20:20:58 ajzeneski Exp $
+ * $Id: UtilDateTime.java,v 1.3 2004/05/01 12:17:55 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,9 +23,17 @@
  */
 package org.ofbiz.base.util;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+
+import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.util.Debug;
 
 /**
  * Utility class for handling java.util.Date, the java.sql data/time classes and related
@@ -33,10 +41,92 @@ import java.util.Date;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:johan@ibibi.com">Johan Isacsson</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class UtilDateTime {
+    protected static String[] months = {
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November",
+        "December"
+    };
+
+    protected static String[][] timevals = {
+        { "1000", "millisecond" },
+        { "60", "second" },
+        { "60", "minute" },
+        { "24", "hour" },
+        { "168", "week" }
+    };
+
+    protected static DecimalFormat df = new DecimalFormat( "0.00;-0.00" );
+
+    public static double getInterval(Date from, Date thru) {
+        return thru != null ? thru.getTime() - from.getTime() : 0;
+    }
+
+    public static double getInterval(Timestamp from, Timestamp thru) {
+        return thru != null ? thru.getTime() - from.getTime() + (thru.getNanos() - from.getNanos()) / 1000000 : 0;
+    }
+
+    public static String formatInterval(Date from, Date thru, int count, Locale locale) {
+        return formatInterval(getInterval(from, thru), count, locale);
+    }
+
+    public static String formatInterval(Date from, Date thru, Locale locale) {
+        return formatInterval(from, thru, 2, locale);
+    }
+
+    public static String formatInterval(Timestamp from, Timestamp thru, int count, Locale locale) {
+        return formatInterval(getInterval(from, thru), count, locale);
+    }
+
+    public static String formatInterval(Timestamp from, Timestamp thru, Locale locale) {
+        return formatInterval(from, thru, 2, locale);
+    }
+
+    public static String formatInterval(long interval, int count, Locale locale) {
+        return formatInterval((double)interval, count, locale);
+    }
+
+    public static String formatInterval(long interval, Locale locale) {
+        return formatInterval(interval, 2, locale);
+    }
+
+    public static String formatInterval(double interval, Locale locale) {
+        return formatInterval(interval, 2, locale);
+    }
+
+    public static String formatInterval(double interval, int count, Locale locale) {
+        ArrayList parts = new ArrayList(timevals.length);
+        for (int i = 0; i < timevals.length; i++) {
+            int value = Integer.parseInt(timevals[i][0]);
+            double remainder = interval % value;
+            interval = interval / value;
+            parts.add(new Double(remainder));
+        }
+
+        Map uiDateTimeMap = UtilProperties.getResourceBundleMap("DateTimeLabels", locale);
+
+        StringBuffer sb = new StringBuffer();
+        for (int i = parts.size() - 1; i >= 0 && count > 0; i--) {
+            if (sb.length() > 0) sb.append(", ");
+            Double D = (Double)parts.get(i);
+            double d = D.doubleValue();
+            if ( d < 1 ) continue;
+            count--;
+            sb.append(count == 0 ? df.format(d) : Integer.toString(D.intValue()));
+            sb.append(' ');
+            String label;
+            if (D.intValue() == 1) {
+                label = (String) uiDateTimeMap.get(timevals[i][1] + ".singular");
+            } else {
+                label = (String) uiDateTimeMap.get(timevals[i][1] + ".plural");
+            }
+            sb.append(label);
+        }
+        return sb.toString();
+    }
 
     /** Return a Timestamp for right now
      * @return Timestamp for right now
