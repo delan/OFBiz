@@ -38,7 +38,7 @@
   <#if !smallImageUrl?has_content><#assign smallImageUrl = "/images/defaultImage.jpg"></#if>
   <#-- end variable setup -->
 
-  <table border="0" width="100%" cellpadding="0" cellspacing="0">
+  <table border="0" cellpadding="0" cellspacing="0">
     <tr>
       <td valign="top">
           <a href="<@ofbizUrl>/${targetRequestName}/<#if requestAttributes.categoryId?exists>~category_id=${requestAttributes.categoryId}/</#if>~product_id=${product.productId}</@ofbizUrl>">
