@@ -836,7 +836,7 @@ public class GenericDAO {
         
         if (whereString.length() > 0) {
             sqlBuffer.append(" WHERE ");
-            sqlBuffer.append(whereString);
+            sqlBuffer.append(whereString.toString());
         }
         
         sqlBuffer.append(makeOrderByClause(modelEntity, orderBy));
