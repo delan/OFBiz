@@ -1,5 +1,5 @@
 /*
- * $Id: HttpClient.java,v 1.2 2003/10/24 20:26:26 ajzeneski Exp $
+ * $Id: HttpClient.java,v 1.3 2003/11/03 18:04:39 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import java.util.Set;
  * Send HTTP GET/POST requests.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class HttpClient {
@@ -321,23 +321,8 @@ public class HttpClient {
     }
 
     private InputStream sendHttpRequestStream(String method) throws HttpClientException {                
-        // setup some SSL variables       
-        String protocol = UtilProperties.getPropertyValue("jsse.properties", "java.protocol.handler.pkgs", "NONE");
-        String proxyHost = UtilProperties.getPropertyValue("jsse.properties", "https.proxyHost", "NONE");
-        String proxyPort = UtilProperties.getPropertyValue("jsse.properties", "https.proxyPort", "NONE");        
-        String cypher = UtilProperties.getPropertyValue("jsse.properties", "https.cipherSuites", "NONE");
-        if (protocol != null && !protocol.equals("NONE")) {
-            System.setProperty("java.protocol.handler.pkgs", protocol);
-        }
-        if (proxyHost != null && !proxyHost.equals("NONE")) {
-            System.setProperty("https.proxyHost", proxyHost);
-        }
-        if (proxyPort != null && !proxyPort.equals("NONE")) {
-            System.setProperty("https.proxyPort", proxyPort);
-        }
-        if (cypher != null && !cypher.equals("NONE")) {
-            System.setProperty("https.cipherSuites", cypher);
-        }   
+        // setup some SSL variables
+        SSLUtil.loadJsseProperties();
             
         String arguments = null;
         InputStream in = null;                     

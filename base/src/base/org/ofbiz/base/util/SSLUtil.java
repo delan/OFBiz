@@ -1,5 +1,5 @@
 /*
- * $Id: SSLUtil.java,v 1.1 2003/10/29 21:21:58 ajzeneski Exp $
+ * $Id: SSLUtil.java,v 1.2 2003/11/03 18:04:40 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,10 +34,13 @@ import javax.net.ssl.*;
  * KeyStoreUtil - Utilities for setting up SSL connections with specific client certificates
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  */
 public class SSLUtil {
+
+    public static final String module = SSLUtil.class.getName();
+    private static boolean loadedProps = false;
 
     public static KeyManager[] getKeyManagers() throws IOException, GeneralSecurityException {
         // get the default TrustManagerFactory
@@ -94,5 +97,27 @@ public class SSLUtil {
         SSLContext context = SSLContext.getInstance("SSL");
         context.init(km, tm, null);
         return context.getSocketFactory();
+    }
+
+    public static synchronized void loadJsseProperties() {
+        if (!loadedProps) {
+            String protocol = UtilProperties.getPropertyValue("jsse.properties", "java.protocol.handler.pkgs", "NONE");
+            String proxyHost = UtilProperties.getPropertyValue("jsse.properties", "https.proxyHost", "NONE");
+            String proxyPort = UtilProperties.getPropertyValue("jsse.properties", "https.proxyPort", "NONE");
+            String cypher = UtilProperties.getPropertyValue("jsse.properties", "https.cipherSuites", "NONE");
+            if (protocol != null && !protocol.equals("NONE")) {
+                System.setProperty("java.protocol.handler.pkgs", protocol);
+            }
+            if (proxyHost != null && !proxyHost.equals("NONE")) {
+                System.setProperty("https.proxyHost", proxyHost);
+            }
+            if (proxyPort != null && !proxyPort.equals("NONE")) {
+                System.setProperty("https.proxyPort", proxyPort);
+            }
+            if (cypher != null && !cypher.equals("NONE")) {
+                System.setProperty("https.cipherSuites", cypher);
+            }
+            loadedProps = true;
+        }
     }
 }
