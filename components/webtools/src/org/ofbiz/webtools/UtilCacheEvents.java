@@ -28,14 +28,14 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.security.Security;
 
 /**
  * Contains events for the UtilCache class; must be external to access security resources
  * 
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UtilCacheEvents {
@@ -78,7 +78,7 @@ public class UtilCacheEvents {
 
             if (utilCache.getMaxSize() > 0) {
                 try {
-                    key = utilCache.keyLRUList.get(number);
+                    key = utilCache.cacheLineTable.getKeyFromMemory(number);
                 } catch (Exception e) {}
             } else {
                 // no LRU, try looping through the keySet to see if we find the specified index...
@@ -209,7 +209,7 @@ public class UtilCacheEvents {
 
         if (utilCache != null) {
             if (maxSize != null)
-                utilCache.setMaxSize(maxSize.longValue());
+                utilCache.setMaxSize(maxSize.intValue());
             if (expireTime != null)
                 utilCache.setExpireTime(expireTime.longValue());
             if (useSoftReferenceStr != null) {

@@ -22,8 +22,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
+
+import freemarker.core.Environment;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateTransformModel;
+import freemarker.template.TransformControl;
 
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.StringUtil;
@@ -34,11 +38,6 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.ModelService;
-
-import freemarker.core.Environment;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateTransformModel;
-import freemarker.template.TransformControl;
 
 /**
  * CheckPermissionTransform - Freemarker Transform for URLs (links)

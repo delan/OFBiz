@@ -28,7 +28,6 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
@@ -37,7 +36,7 @@ import org.ofbiz.base.util.Debug;
  * RequestManager - Manages request, config and view mappings.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RequestManager implements Serializable {

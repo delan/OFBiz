@@ -25,7 +25,6 @@
 package org.ofbiz.content.webapp.view;
 
 import java.io.IOException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,7 +37,7 @@ import org.ofbiz.base.util.HttpClientException;
  * ViewHandlerException - View Handler Exception
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class HttpViewHandler implements ViewHandler {

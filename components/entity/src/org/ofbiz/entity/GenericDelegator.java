@@ -39,10 +39,11 @@ import java.util.TreeSet;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.cache.CacheLine;
 import org.ofbiz.entity.cache.Cache;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
@@ -1840,7 +1841,7 @@ public class GenericDelegator implements DelegatorInterface {
     protected void clearCacheValues(UtilCache cache, String entityName, EntityCondition condition) {
         Iterator iterator = cache.cacheLineTable.values().iterator();
         while (iterator.hasNext()) {
-            UtilCache.CacheLine line = (UtilCache.CacheLine) iterator.next();
+            CacheLine line = (CacheLine) iterator.next();
             GenericValue value = (GenericValue) line.getValue();
             if (value != null && value.getEntityName().equals(entityName) && condition.entityMatches(value)) {
                 iterator.remove();

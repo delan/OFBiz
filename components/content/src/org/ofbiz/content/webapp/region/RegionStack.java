@@ -1,5 +1,5 @@
 /*
- * $Id: RegionStack.java,v 1.2 2003/09/14 05:36:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2003 Sun Microsystems Inc., published in "Advanced Java Server Pages" by Prentice Hall PTR
  * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
@@ -26,7 +26,6 @@
 package org.ofbiz.content.webapp.region;
 
 import java.util.Stack;
-
 import javax.servlet.ServletRequest;
 
 public class RegionStack {

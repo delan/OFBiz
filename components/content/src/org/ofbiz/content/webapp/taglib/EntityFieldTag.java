@@ -25,7 +25,6 @@
 package org.ofbiz.content.webapp.taglib;
 
 import java.io.IOException;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -39,7 +38,7 @@ import org.ofbiz.entity.GenericEntityException;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class EntityFieldTag extends TagSupport {

@@ -24,19 +24,19 @@
 
 package org.ofbiz.content.report;
 
-import dori.jasper.engine.JRDataSource;
-import dori.jasper.engine.JRException;
-import dori.jasper.engine.JRField;
-
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
+
+import dori.jasper.engine.JRDataSource;
+import dori.jasper.engine.JRException;
+import dori.jasper.engine.JRField;
 
 /**
  * <code>JRMapCollectionDataSource</code>
  * 
  * @author <a href="mailto:gielen@aixcept.de">Rene Gielen</a>
- * @version $Rev:$
+ * @version $Rev$
  */
 public class JRMapCollectionDataSource implements JRDataSource {
 

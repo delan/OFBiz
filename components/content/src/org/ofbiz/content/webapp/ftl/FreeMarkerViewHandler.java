@@ -28,15 +28,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.content.webapp.view.ViewHandler;
-import org.ofbiz.content.webapp.view.ViewHandlerException;
 
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.jsp.TaglibFactory;
@@ -48,12 +43,16 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.WrappingTemplateModel;
 
+import org.ofbiz.base.util.UtilHttp;
+import org.ofbiz.content.webapp.view.ViewHandler;
+import org.ofbiz.content.webapp.view.ViewHandlerException;
+
 
 /**
  * FreemarkerViewHandler - Freemarker Template Engine View Handler
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class FreeMarkerViewHandler implements ViewHandler {

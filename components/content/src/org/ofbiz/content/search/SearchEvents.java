@@ -26,7 +26,6 @@ package org.ofbiz.content.search;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -46,7 +45,7 @@ import org.ofbiz.service.ServiceUtil;
  * SearchEvents Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Rev:$
+ * @version $Rev$
  * @since 3.1
  * 
  *  

@@ -31,8 +31,10 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-
 import javax.servlet.http.HttpServletRequest;
+
+import freemarker.core.Environment;
+import freemarker.template.TemplateTransformModel;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
@@ -41,9 +43,6 @@ import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateTransformModel;
-
 //import com.clarkware.profiler.Profiler;
 /**
  * EditRenderSubContentCacheTransform - Freemarker Transform for URLs (links)
@@ -51,7 +50,7 @@ import freemarker.template.TemplateTransformModel;
  * This is an interactive FreeMarker tranform that allows the user to modify the contents that are placed within it.
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev:$
+ * @version $Rev$
  * @since 3.0
  */
 public class EditRenderSubContentCacheTransform implements TemplateTransformModel {

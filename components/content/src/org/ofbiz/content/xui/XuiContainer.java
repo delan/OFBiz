@@ -35,10 +35,10 @@ import org.ofbiz.base.container.Container;
 import org.ofbiz.base.container.ContainerConfig;
 import org.ofbiz.base.container.ContainerException;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.service.LocalDispatcher;
+import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.GenericDispatcher;
 import org.ofbiz.service.GenericServiceException;
-import org.ofbiz.entity.GenericDelegator;
+import org.ofbiz.service.LocalDispatcher;
 
 /**
  *

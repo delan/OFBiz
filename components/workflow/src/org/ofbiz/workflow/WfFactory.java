@@ -27,7 +27,8 @@ package org.ofbiz.workflow;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.DispatchContext;

@@ -26,7 +26,6 @@
 package org.ofbiz.content.webapp.region;
 
 import java.net.URL;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -35,7 +34,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  *
  * @author     David M. Geary in the book "Advanced Java Server Pages"
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class RegionTag extends TagSupport {

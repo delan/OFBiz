@@ -26,7 +26,6 @@ package org.ofbiz.content.widget.html;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,8 +33,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.taglib.ContentUrlTag;
-import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
+import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 import org.ofbiz.content.widget.tree.ModelTree;
 import org.ofbiz.content.widget.tree.TreeStringRenderer;
 

@@ -25,7 +25,6 @@
 package org.ofbiz.content.webapp.taglib;
 
 import java.io.IOException;
-
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -40,7 +39,7 @@ import org.ofbiz.content.webapp.pseudotag.InputValue;
  *     attribute is false, always tries to use the request parameter and ignores the entity field.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class InputValueTag extends TagSupport {

@@ -35,9 +35,16 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import com.anthonyeden.lib.config.Configuration;
+import com.anthonyeden.lib.config.ConfigurationException;
+import com.anthonyeden.lib.config.XMLConfiguration;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.entity.GenericValue;
+import org.ofbiz.security.Security;
 
 import org.jpublish.JPublishContext;
 import org.jpublish.Page;
@@ -46,19 +53,12 @@ import org.jpublish.Template;
 import org.jpublish.page.PageInstance;
 import org.jpublish.view.ViewRenderException;
 import org.jpublish.view.ViewRenderer;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.entity.GenericValue;
-import org.ofbiz.security.Security;
-
-import com.anthonyeden.lib.config.Configuration;
-import com.anthonyeden.lib.config.ConfigurationException;
-import com.anthonyeden.lib.config.XMLConfiguration;
 
 /**
  * Generic JPublish View Renderer - This is in testing; for use in wrapping other renderers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class GenericViewRenderer implements ViewRenderer {

@@ -32,20 +32,19 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.Comparator;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.fileupload.DiskFileUpload;
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileUploadException;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilHttp;
@@ -58,18 +57,19 @@ import org.ofbiz.content.email.NotificationServices;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.content.widget.html.HtmlScreenRenderer;
 import org.ofbiz.content.widget.screen.ModelScreen;
+import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
 import org.ofbiz.content.widget.screen.ScreenFactory;
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
-import org.ofbiz.content.widget.screen.ModelScreen.ScreenRenderer;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.xml.sax.SAXException;
 
-import freemarker.template.Template;
-import freemarker.template.TemplateException;
+import org.apache.commons.fileupload.DiskFileUpload;
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.xml.sax.SAXException;
 
 //import com.clarkware.profiler.Profiler;
 

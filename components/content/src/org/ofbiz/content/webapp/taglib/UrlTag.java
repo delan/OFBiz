@@ -25,7 +25,6 @@
 package org.ofbiz.content.webapp.taglib;
 
 import java.io.IOException;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -41,7 +40,7 @@ import org.ofbiz.content.webapp.control.RequestHandler;
  * UrlTag - Creates a URL string prepending the current control path.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class UrlTag extends BodyTagSupport {

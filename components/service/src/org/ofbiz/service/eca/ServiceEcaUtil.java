@@ -41,7 +41,7 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.config.ServiceConfigUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilXml;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 
 import org.w3c.dom.Element;
 

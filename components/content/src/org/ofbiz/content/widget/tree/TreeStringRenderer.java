@@ -23,9 +23,9 @@
  */
 package org.ofbiz.content.widget.tree;
 
-import java.util.Map;
-import java.io.Writer;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 import org.ofbiz.content.widget.screen.ScreenStringRenderer;
 
@@ -33,7 +33,7 @@ import org.ofbiz.content.widget.screen.ScreenStringRenderer;
  * Widget Library - Tree String Renderer interface
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public interface TreeStringRenderer {

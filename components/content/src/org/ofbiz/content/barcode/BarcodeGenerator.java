@@ -22,20 +22,21 @@
  */
 package org.ofbiz.content.barcode;
 
-import org.apache.avalon.framework.configuration.Configuration;
-import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
-import org.apache.avalon.framework.logger.Logger;
-import org.apache.avalon.framework.logger.Log4JLogger;
-import org.ofbiz.base.util.Debug;
-import org.krysalis.barcode.BarcodeUtil;
-import org.krysalis.barcode.BarcodeException;
-import org.w3c.dom.DocumentFragment;
-
 import java.io.ByteArrayInputStream;
 
-import nu.xom.converters.DOMConverter;
-import nu.xom.Nodes;
 import nu.xom.Node;
+import nu.xom.Nodes;
+import nu.xom.converters.DOMConverter;
+
+import org.ofbiz.base.util.Debug;
+
+import org.apache.avalon.framework.configuration.Configuration;
+import org.apache.avalon.framework.configuration.DefaultConfigurationBuilder;
+import org.apache.avalon.framework.logger.Log4JLogger;
+import org.apache.avalon.framework.logger.Logger;
+import org.krysalis.barcode.BarcodeException;
+import org.krysalis.barcode.BarcodeUtil;
+import org.w3c.dom.DocumentFragment;
 
 /**
  * Wrapper around Krysalis Barcode for generating barcodes.

@@ -27,7 +27,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
+import java.util.StringTokenizer;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,26 +40,7 @@ import org.ofbiz.content.widget.WidgetWorker;
 import org.ofbiz.content.widget.form.FormStringRenderer;
 import org.ofbiz.content.widget.form.ModelForm;
 import org.ofbiz.content.widget.form.ModelFormField;
-import org.ofbiz.content.widget.form.ModelFormField.CheckField;
-import org.ofbiz.content.widget.form.ModelFormField.DateFindField;
-import org.ofbiz.content.widget.form.ModelFormField.DateTimeField;
-import org.ofbiz.content.widget.form.ModelFormField.DisplayField;
-import org.ofbiz.content.widget.form.ModelFormField.DropDownField;
-import org.ofbiz.content.widget.form.ModelFormField.FileField;
-import org.ofbiz.content.widget.form.ModelFormField.HiddenField;
-import org.ofbiz.content.widget.form.ModelFormField.HyperlinkField;
-import org.ofbiz.content.widget.form.ModelFormField.IgnoredField;
-import org.ofbiz.content.widget.form.ModelFormField.ImageField;
-import org.ofbiz.content.widget.form.ModelFormField.LookupField;
-import org.ofbiz.content.widget.form.ModelFormField.PasswordField;
-import org.ofbiz.content.widget.form.ModelFormField.RadioField;
-import org.ofbiz.content.widget.form.ModelFormField.RangeFindField;
-import org.ofbiz.content.widget.form.ModelFormField.ResetField;
-import org.ofbiz.content.widget.form.ModelFormField.SubmitField;
-import org.ofbiz.content.widget.form.ModelFormField.TextField;
-import org.ofbiz.content.widget.form.ModelFormField.TextFindField;
-import org.ofbiz.content.widget.form.ModelFormField.TextareaField;
-import java.util.StringTokenizer;
+import org.ofbiz.content.widget.form.ModelFormField.*;
 
 
 /**

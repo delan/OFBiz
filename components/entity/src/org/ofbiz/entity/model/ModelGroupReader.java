@@ -42,7 +42,7 @@ import org.ofbiz.entity.config.DelegatorInfo;
 import org.ofbiz.entity.config.EntityConfigUtil;
 import org.ofbiz.entity.config.EntityGroupReaderInfo;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;

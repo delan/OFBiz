@@ -23,6 +23,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import freemarker.core.Environment;
+import freemarker.template.TemplateModelException;
+import freemarker.template.TemplateTransformModel;
+import freemarker.template.TransformControl;
+
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
@@ -34,16 +39,11 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 
-import freemarker.core.Environment;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateTransformModel;
-import freemarker.template.TransformControl;
-
 /**
  * LoopSubContentTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Rev:$
+ * @version $Rev$
  * @since 3.0
  */
 public class LoopSubContentTransform implements TemplateTransformModel {

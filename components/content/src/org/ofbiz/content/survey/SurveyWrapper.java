@@ -23,36 +23,36 @@
  */
 package org.ofbiz.content.survey;
 
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.entity.GenericDelegator;
-import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
-import org.ofbiz.entity.util.EntityUtil;
-import org.ofbiz.entity.util.EntityListIterator;
 import org.ofbiz.entity.util.EntityFindOptions;
-import org.ofbiz.base.util.UtilMisc;
-import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.GeneralException;
-import org.ofbiz.base.util.UtilURL;
-
-import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.net.URL;
-import java.io.InputStreamReader;
-import java.io.IOException;
-import java.io.Writer;
-import java.io.StringWriter;
-
-import freemarker.template.Template;
-import freemarker.template.Configuration;
-import freemarker.template.TemplateException;
-import freemarker.ext.beans.BeansWrapper;
+import org.ofbiz.entity.util.EntityListIterator;
+import org.ofbiz.entity.util.EntityUtil;
 
 /**
  * Survey Wrapper - Class to render survey forms

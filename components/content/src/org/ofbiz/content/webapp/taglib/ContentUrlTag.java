@@ -25,7 +25,6 @@
 package org.ofbiz.content.webapp.taglib;
 
 import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyContent;
@@ -42,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * ContentUrlTag - Creates a URL string prepending the content prefix from url.properties
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class ContentUrlTag extends BodyTagSupport {

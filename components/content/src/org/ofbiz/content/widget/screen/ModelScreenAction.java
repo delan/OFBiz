@@ -34,6 +34,7 @@ import java.util.Map;
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.GeneralException;
+import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
@@ -45,8 +46,8 @@ import org.ofbiz.entity.finder.ByConditionFinder;
 import org.ofbiz.entity.finder.PrimaryKeyFinder;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.ModelService;
+
 import org.w3c.dom.Element;
-import org.ofbiz.base.util.ObjectType;
 
 
 /**

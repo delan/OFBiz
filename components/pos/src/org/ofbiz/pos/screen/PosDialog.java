@@ -44,7 +44,8 @@ import net.xoetrope.xui.XPage;
 import net.xoetrope.xui.XResourceManager;
 
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 
 /**
  * 

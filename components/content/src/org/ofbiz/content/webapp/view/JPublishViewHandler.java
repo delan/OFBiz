@@ -27,7 +27,6 @@ package org.ofbiz.content.webapp.view;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +39,7 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
  * Handles JPublish type view rendering
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class JPublishViewHandler implements ViewHandler {

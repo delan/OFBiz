@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractEntityConditionCache.java,v 1.2 2004/07/13 11:29:46 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericPK;

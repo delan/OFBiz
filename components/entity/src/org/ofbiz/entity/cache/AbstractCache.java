@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCache.java,v 1.3 2004/07/13 11:34:05 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,7 @@
  */
 package org.ofbiz.entity.cache;
 
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.entity.GenericDelegator;
 
 public abstract class AbstractCache {

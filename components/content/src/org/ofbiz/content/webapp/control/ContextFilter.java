@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -42,12 +41,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
+import org.ofbiz.base.container.ContainerLoader;
+import org.ofbiz.base.start.StartupException;
 import org.ofbiz.base.util.CachedClassLoader;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
-import org.ofbiz.base.container.ContainerLoader;
-import org.ofbiz.base.start.StartupException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.security.Security;
 import org.ofbiz.security.SecurityConfigurationException;
@@ -59,7 +58,7 @@ import org.ofbiz.service.WebAppDispatcher;
  * ContextFilter - Restricts access to raw files and configures servlet objects.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.2
  */
 public class ContextFilter implements Filter {

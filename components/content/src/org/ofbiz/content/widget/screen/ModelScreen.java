@@ -26,12 +26,12 @@ package org.ofbiz.content.widget.screen;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
+
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
@@ -39,7 +39,7 @@ import org.xml.sax.SAXException;
  * Widget Library - Screen model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.1
  */
 public class ModelScreen {

@@ -33,6 +33,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import bsh.EvalError;
+import bsh.Interpreter;
+
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -48,10 +51,8 @@ import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ModelParam;
 import org.ofbiz.service.ModelService;
-import org.w3c.dom.Element;
 
-import bsh.EvalError;
-import bsh.Interpreter;
+import org.w3c.dom.Element;
 
 /**
  * Widget Library - Form model class

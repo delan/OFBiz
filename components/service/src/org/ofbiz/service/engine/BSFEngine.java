@@ -29,7 +29,7 @@ import java.util.Map;
 
 import org.ofbiz.base.util.HttpClient;
 import org.ofbiz.base.util.HttpClientException;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
@@ -43,7 +43,7 @@ import com.ibm.bsf.BSFManager;
  * BSF Service Engine
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.1
  */
 public class BSFEngine extends GenericAsyncEngine {

@@ -39,7 +39,8 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
+import org.ofbiz.base.util.cache.UtilCache;
 import org.ofbiz.pos.screen.PosScreen;
 
 import org.w3c.dom.Element;

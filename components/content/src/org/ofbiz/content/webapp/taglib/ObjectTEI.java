@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectTEI.java,v 1.3 2003/09/14 05:36:48 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2002-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,9 @@
  */
 package org.ofbiz.content.webapp.taglib;
 
-import javax.servlet.jsp.tagext.*;
+import javax.servlet.jsp.tagext.TagData;
+import javax.servlet.jsp.tagext.TagExtraInfo;
+import javax.servlet.jsp.tagext.VariableInfo;
 
 /**
  * ObjectTEI

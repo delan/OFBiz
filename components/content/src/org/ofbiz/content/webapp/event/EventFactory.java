@@ -26,7 +26,6 @@ package org.ofbiz.content.webapp.event;
 
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,7 +38,7 @@ import org.ofbiz.content.webapp.control.RequestManager;
  * EventFactory - Event Handler Factory
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      2.0
  */
 public class EventFactory {

@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 import org.ofbiz.base.util.collections.FlexibleProperties;
 import org.ofbiz.base.util.collections.ResourceBundleMapWrapper;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
+import org.ofbiz.base.util.cache.UtilCache;
 
 /**
  * Generic Property Accessor with Cache - Utilities for working with properties files

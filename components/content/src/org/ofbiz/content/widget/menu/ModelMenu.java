@@ -31,6 +31,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import bsh.EvalError;
+import bsh.Interpreter;
+
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilValidate;
@@ -38,10 +41,8 @@ import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.base.util.string.FlexibleStringExpander;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.service.LocalDispatcher;
-import org.w3c.dom.Element;
 
-import bsh.EvalError;
-import bsh.Interpreter;
+import org.w3c.dom.Element;
 
 /**
  * Widget Library - Menu model class
