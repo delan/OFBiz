@@ -748,6 +748,7 @@ public class ShoppingCartEvents {
     public static String selectAgreement(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        HttpSession session = request.getSession();
         ShoppingCart cart = getCartObject(request);
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String agreementId = request.getParameter("agreementId");
@@ -756,6 +757,7 @@ public class ShoppingCartEvents {
            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
            return "error";
         }
+        session.setAttribute("agreementsMode", agreementId.trim());
         return "success";
     }
 
@@ -763,6 +765,7 @@ public class ShoppingCartEvents {
     public static String setCurrency(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
         LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        HttpSession session = request.getSession();
         ShoppingCart cart = getCartObject(request);
         ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
         String currencyUomId = request.getParameter("currencyUomId");
@@ -771,6 +774,7 @@ public class ShoppingCartEvents {
            request.setAttribute("_ERROR_MESSAGE_", ServiceUtil.getErrorMessage(result));
            return "error";
         }
+        session.setAttribute("agreementsMode", currencyUomId.trim());
         return "success";
     }
 
@@ -839,40 +843,23 @@ public class ShoppingCartEvents {
       return "success";
   }
 
-  /** Add order term **/
+  /** Initialize order entry **/
   public static String initializeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
       GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-      //LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
       HttpSession session = request.getSession();
       Security security = (Security) request.getAttribute("security");
       GenericValue userLogin = (GenericValue)session.getAttribute("userLogin");
-      
-      ShoppingCart cart = getCartObject(request);
-      
-      //ShoppingCartHelper cartHelper = new ShoppingCartHelper(delegator, dispatcher, cart);
-      
-      String orderMode = request.getParameter("orderMode");
-      if (orderMode != null) {
-          session.setAttribute("orderMode", orderMode);
-          cart.setOrderType(orderMode);
-      }
-      orderMode = (String)session.getAttribute("orderMode");
-      
       String finalizeMode = (String)session.getAttribute("finalizeMode");
       String updateParty = request.getParameter("updateParty");
       
-      if (orderMode == null && finalizeMode != null) {
-          request.setAttribute("_ERROR_MESSAGE_", "Please select either sale or purchase order.");
-          return "error";
-      } else if (orderMode == null) {
-          return "error"; //?????
-      }
+      ShoppingCart cart = getCartObject(request);
       
-      if ("SALES_ORDER".equals(cart.getOrderType()) && UtilValidate.isEmpty(cart.getProductStoreId())) {
-          request.setAttribute("_ERROR_MESSAGE_", "A Product Store MUST be selected for a Sales Order.");
-          cart.clear();
-          session.removeAttribute("orderMode");
-          session.removeAttribute("agreementsMode");
+      String orderMode = request.getParameter("orderMode");
+      if (orderMode != null) {
+          cart.setOrderType(orderMode);
+          session.setAttribute("orderMode", orderMode);
+      } else {
+          request.setAttribute("_ERROR_MESSAGE_", "Please select either sale or purchase order.");
           return "error";
       }
       
@@ -908,7 +895,6 @@ public class ShoppingCartEvents {
               
               if (hasPermission) {
                   cart = ShoppingCartEvents.getCartObject(request, null, productStore.getString("defaultCurrencyUomId"));
-                  //context.put("currencyUomId", cart.getCurrency());
               } else {
                   request.setAttribute("_ERROR_MESSAGE_", "You do not have permission to take orders for this store.");
                   cart.clear();
@@ -921,7 +907,15 @@ public class ShoppingCartEvents {
               cart.setProductStoreId(null);
           }
       }
-      
+
+      if ("SALES_ORDER".equals(cart.getOrderType()) && UtilValidate.isEmpty(cart.getProductStoreId())) {
+          request.setAttribute("_ERROR_MESSAGE_", "A Product Store MUST be selected for a Sales Order.");
+          cart.clear();
+          session.removeAttribute("orderMode");
+          session.removeAttribute("agreementsMode");
+          return "error";
+      }
+
       String salesChannelEnumId = request.getParameter("salesChannelEnumId");
       if (UtilValidate.isNotEmpty(salesChannelEnumId)) {
           cart.setChannelType(salesChannelEnumId);
@@ -947,7 +941,6 @@ public class ShoppingCartEvents {
                   partyId = userLoginId;
               }
           }
-          //Debug.log("1st PartyID - " + partyId);
           if (partyId != null && partyId.length() > 0) {
               GenericValue thisParty = null;
               try{
@@ -955,10 +948,8 @@ public class ShoppingCartEvents {
               } catch(GenericEntityException gee) {
                   //
               }
-              //Debug.log("This party : " + thisParty);
               if (thisParty == null) {
                   request.setAttribute("_ERROR_MESSAGE_", "Could not locate the selected party.");
-                  //context.put("updateParty", "Y");
                   return "error";
               } else {
                   cart.setOrderPartyId(partyId);
@@ -972,23 +963,19 @@ public class ShoppingCartEvents {
           if (partyId != null && partyId.equals("_NA_")) partyId = null;
       }
       
-      String agreementsMode = null;
-      if ("PURCHASE_ORDER".equals(cart.getOrderType())) {
-          // set agreementsMode, which tracks if the user has already set a currency or agreement (used in orderentry.ftl)
-          agreementsMode = request.getParameter("currencyUomId");
-          if (UtilValidate.isEmpty(agreementsMode)) {
-              agreementsMode = request.getParameter("agreementId");
-          }
-          if (UtilValidate.isNotEmpty(agreementsMode)) {
-              session.setAttribute("agreementsMode", agreementsMode.trim());
-          }
-      }
-      agreementsMode = (String)session.getAttribute("agreementsMode");
+      return "success";
+  }
 
+  /** Route order entry **/
+  public static String routeOrderEntry(HttpServletRequest request, HttpServletResponse response) {
+      HttpSession session = request.getSession();
       
+      ShoppingCart cart = getCartObject(request);
       
-      
-      // Routing
+      String orderMode = (String)session.getAttribute("orderMode");
+      String agreementsMode = (String)session.getAttribute("agreementsMode");
+      String updateParty = request.getParameter("updateParty");
+              
       if (orderMode == null || updateParty != null) {
           return "init";
       }
@@ -997,5 +984,4 @@ public class ShoppingCartEvents {
       }
       return "cart";
   }
-
 }
