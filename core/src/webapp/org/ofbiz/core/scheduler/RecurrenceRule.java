@@ -2,7 +2,7 @@
  * $Id$
  */
 
-package webapp.org.ofbiz.core.scheduler;
+package org.ofbiz.core.scheduler;
 
 import java.util.*;
 import org.ofbiz.core.entity.*;
@@ -69,7 +69,7 @@ public class RecurrenceRule {
             throw new RecurrenceRuleException("No recurrence rule associated with this entity.");
         }
         catch ( RuntimeException re ) {
-            throw new RecurrenceRuleException("Invalid RecurrenceRule.",rre);
+            throw new RecurrenceRuleException("Invalid RecurrenceRule.",re);
         }
         try {
             eRule = info.getRelatedOne("ExceptionRecurrenceRule");
@@ -79,7 +79,7 @@ public class RecurrenceRule {
             eRule = null;
         }
         catch ( RuntimeException re ) {
-            throw new RecurrenceRuleException("Invalid RecurrenceRule.",rre);
+            throw new RecurrenceRuleException("Invalid RecurrenceRule.",re);
         }
         
         // Initialize the date/time lists.
@@ -104,9 +104,9 @@ public class RecurrenceRule {
         String freq = rule.getString("frequency");
         if ( !checkFreq(freq) )
             throw new RuntimeException("Recurrence FREQUENCY is a required parameter.");
-        if ( rule.getDate("until") != null && rule.getInteger("count") > 0 )
+        if ( rule.get("until") != null && rule.get("count") != null )
             throw new RuntimeException("Recurrence cannot have both UNTIL and COUNT properties.");
-        if ( rule.getInteger("interval") < 1 )
+        if ( rule.get("interval") != null && rule.getLong("interval").longValue() < 1 )
             throw new RuntimeException("Recurrence INTERVAL must be a positive integer.");
     }
     
