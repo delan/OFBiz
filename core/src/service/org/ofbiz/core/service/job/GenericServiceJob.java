@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.job;
-
 
 import java.util.*;
 
@@ -33,23 +31,23 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.engine.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Generic Service Job - A generic async-service Job.
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @created    March 3, 2002
- * @version    1.2
+ * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a> *
+ * @version    $Revision$
+ * @since      2.0
  */
 public class GenericServiceJob extends AbstractJob {
 
     public static final String module = GenericServiceJob.class.getName();
 
-    protected transient GenericRequester requester;
-    protected transient DispatchContext dctx;
-    private boolean trans;
-    private String service;
-    private Map context;
+    protected transient GenericRequester requester = null;
+    protected transient DispatchContext dctx = null;
+    
+    private boolean trans = false;
+    private String service = null;
+    private Map context = null;
 
     public GenericServiceJob(DispatchContext dctx, String jobName, String service, Map context, GenericRequester req) {
         this(dctx, jobName, service, context, req, true);
@@ -61,6 +59,7 @@ public class GenericServiceJob extends AbstractJob {
         this.service = service;
         this.context = context;
         this.requester = req;
+        this.trans = trans;
         runtime = new Date().getTime();
     }
 
@@ -106,16 +105,21 @@ public class GenericServiceJob extends AbstractJob {
                     throw new GenericServiceException("Cannot commit transaction.", te.getNested());
                 }
             }
-        } catch (Exception e) {
-            Debug.logError(e, "Service invocation error: " + e.getMessage(), module);
-            e.printStackTrace();
+        } catch (Exception e) {            
             if (trans && begunTransaction) {
                 try {
                     TransactionUtil.rollback();
                 } catch (GenericTransactionException te) {
                     Debug.logError(te, "Cannot rollback transaction", module);
                 }
-            }
+            } 
+            
+            // pass the exception back to the requester.
+            if (requester != null)
+                requester.receiveException(e);  
+            
+            // call the failed method
+            failed(e);         
         }
     }
 
@@ -131,6 +135,15 @@ public class GenericServiceJob extends AbstractJob {
      */
     protected void finish() {
         if (Debug.verboseOn()) Debug.logVerbose("Async-Service finished.", module);
+        runtime = 0;
+    }
+    
+    /**
+     * Method is called when the service fails due to an exception.
+     * @param e Exception thrown by the service engine.
+     */
+    protected void failed(Exception e) {
+        Debug.logError(e, "Async-Service failed.", module);
         runtime = 0;
     }
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,19 +22,16 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.job;
 
-
 import java.io.Serializable;
-
 
 /**
  * Job Interface
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @created    March 3, 2002
- * @version    1.2
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public interface Job extends Serializable {
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service.job;
-
 
 import java.io.*;
 import java.sql.*;
@@ -40,21 +38,26 @@ import org.ofbiz.core.serialize.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
-
 /**
  * Entity Service Job - Store => Schedule => Run
  *
- * @author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- * @created    March 3, 2002
- * @version    1.2
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a> 
+ * @version    $Revision$
+ * @since      2.0
  */
 public class PersistedServiceJob extends GenericServiceJob {
 
     public static final String module = PersistedServiceJob.class.getName();
-    private Timestamp storedDate;
+        
+    private transient GenericDelegator delegator = null;
+    private Timestamp storedDate = null;
 
-    private transient GenericDelegator delegator;
-
+    /**
+     * Creates a new PersistedServiceJob
+     * @param dctx 
+     * @param jobValue
+     * @param req 
+     */
     public PersistedServiceJob(DispatchContext dctx, GenericValue jobValue, GenericRequester req) {
         super(jobValue.getString("jobName"));
         this.delegator = dctx.getDelegator();
@@ -64,6 +67,9 @@ public class PersistedServiceJob extends GenericServiceJob {
         this.runtime = storedDate.getTime();
     }
 
+    /**
+     * @see org.ofbiz.core.service.job.GenericServiceJob#init()
+     */
     protected void init() {
         GenericValue job = getJob();
         RecurrenceInfo recurrence = getRecurrence();
@@ -89,9 +95,11 @@ public class PersistedServiceJob extends GenericServiceJob {
         if (Debug.verboseOn()) Debug.logVerbose(this.toString() + " -- Next runtime: " + runtime, module);
     }
 
+    /**
+     * @see org.ofbiz.core.service.job.GenericServiceJob#finish()
+     */
     protected void finish() {
         GenericValue job = getJob();
-
         job.set("finishDateTime", UtilDateTime.nowTimestamp());
         try {
             job.store();
@@ -100,17 +108,21 @@ public class PersistedServiceJob extends GenericServiceJob {
         }
     }
 
+    /**
+     * @see org.ofbiz.core.service.job.GenericServiceJob#getServiceName()
+     */
     protected String getServiceName() {
         GenericValue jobObj = getJob();
-
         if (jobObj == null || jobObj.get("serviceName") == null)
             return null;
         return jobObj.getString("serviceName");
     }
 
+    /**
+     * @see org.ofbiz.core.service.job.GenericServiceJob#getContext()
+     */
     protected Map getContext() {
         Map context = null;
-
         try {
             GenericValue jobObj = getJob();
             GenericValue contextObj = jobObj.getRelatedOne("RuntimeData");
@@ -133,6 +145,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         return context;
     }
 
+    // gets the job value object
     private GenericValue getJob() {
         try {
             Map fields = UtilMisc.toMap("jobName", getJobName(), "runTime", storedDate);
@@ -148,6 +161,7 @@ public class PersistedServiceJob extends GenericServiceJob {
         return null;
     }
 
+    // gets the recurrence info value object
     private RecurrenceInfo getRecurrence() {
         try {
             GenericValue job = getJob();

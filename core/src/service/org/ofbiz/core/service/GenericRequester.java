@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,25 +22,28 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service;
 
-
 import java.util.*;
-
 
 /**
  * Generic Requester Interface
  *
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    October 20, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> *
+ * @version    $Revision$
+ * @since      2.0
  */
 public interface GenericRequester {
 
-    /** Receive the result of an asynchronous service call
-     *@param result Map of name, value pairs composing the result
+    /** 
+     * Receive the result of an asynchronous service call
+     * @param result Map of name, value pairs composing the result
      */
     public void receiveResult(Map result);
+    
+    /**
+     * Receive an exception from an asynchronous service cell     * @param exception The exception which was received     */
+    public void receiveException(Exception exception);
 }
 
