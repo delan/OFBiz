@@ -9,6 +9,7 @@
     <classpathentry kind="src" path="components/entityext/src"/>
     <classpathentry kind="src" path="components/minilang/src"/>
     <classpathentry kind="src" path="components/common/src"/>
+    <classpathentry kind="src" path="components/workeffort/src"/>
     <classpathentry kind="src" path="components/workflow/src"/>
     <classpathentry kind="src" path="components/content/src"/>
     <classpathentry kind="src" path="components/securityext/src"/>
