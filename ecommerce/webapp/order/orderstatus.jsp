@@ -78,11 +78,16 @@
     GenericValue billingAccount = orderHeader.getRelatedOne("BillingAccount");
 
     GenericValue paymentMethod = null;
+    GenericValue paymentMethodType = null;
+    String paymentMethodTypeId = null;
     Iterator orderPaymentPreferences = UtilMisc.toIterator(orderHeader.getRelated("OrderPaymentPreference"));
     if(orderPaymentPreferences != null && orderPaymentPreferences.hasNext()) {
         GenericValue orderPaymentPreference = (GenericValue)orderPaymentPreferences.next();
         paymentMethod = orderPaymentPreference.getRelatedOne("PaymentMethod");
+        paymentMethodType = orderPaymentPreference.getRelatedOne("PaymentMethodType");
     }
+    if (paymentMethodType != null)
+        paymentMethodTypeId = paymentMethodType.getString("paymentMethodTypeId");
 
     GenericValue shipmentPreference = null;
     String carrierPartyId = null;
