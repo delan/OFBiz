@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,15 +22,14 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.service;
-
 
 import java.util.*;
 
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.eca.*;
+import org.ofbiz.core.service.group.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.service.jms.*;
 import org.ofbiz.core.service.config.*;
@@ -40,13 +39,12 @@ import org.ofbiz.core.security.*;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
 /**
  * Global Service Dispatcher
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@created    November 7, 2001
- *@version    1.0
+ *@version    $Revision$
  */
 public class ServiceDispatcher {
 
@@ -61,11 +59,14 @@ public class ServiceDispatcher {
 
     public ServiceDispatcher(GenericDelegator delegator) {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
+        // read the group defs
+        ServiceGroupReader.readConfig();
+        // read the ecs defs
         ECAUtil.readConfig();
+        
         this.delegator = delegator;
         this.localContext = new HashMap();
         if (delegator != null) {
-
             try {
                 this.security = SecurityFactory.getInstance(delegator);
             } catch (SecurityConfigurationException e) {

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,20 +22,18 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
-
 package org.ofbiz.core.service;
-
 
 import java.lang.*;
 import java.util.*;
-import org.ofbiz.core.util.*;
 
+import org.ofbiz.core.service.group.*;
+import org.ofbiz.core.util.*;
 
 /**
  * Generic Service Model Class
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
+ *@author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@created    October 20, 2001
  *@version    $Revision$
@@ -64,7 +62,7 @@ public class ModelService {
     /** The description of this service */
     public String description;
 
-    /** The name of the engine from engine.properties */
+    /** The name of the service engine */
     public String engineName;
 
     /** The namespace of this service */
@@ -433,26 +431,40 @@ public class ModelService {
         return inList;
     }
     
-    private void interfaceCheck() {       
-        if (!inheritedParameters && implServices.size() > 0 && reader != null) {
-            Map newInfo = new HashMap();
-            List newParams = new LinkedList();
-            Iterator implIter = implServices.iterator();
-            while (implIter.hasNext()) {
-                String serviceName = (String) implIter.next();
-                ModelService model = reader.getModelService(serviceName);
-                if (model != null) {
-                    newInfo.putAll(model.contextInfo);
-                    newParams.addAll(model.contextParamList);
-                }
+    private void interfaceCheck() {             
+        if (!inheritedParameters) {
+            // services w/ engine 'group' auto-implement the grouped services
+            if (this.engineName.equals("group") && implServices.size() == 0) {
+                GroupModel group = ServiceGroupReader.getGroupModel(this.name);
+                if (group != null) {
+                    List groupedServices = group.getServices();
+                    Iterator i = groupedServices.iterator();
+                    while (i.hasNext()) {
+                        String s = (String) i.next();
+                        implServices.add(s);
+                    }
+                }                
             }
-            // add in the added parameters
-            newInfo.putAll(this.contextInfo);
-            newParams.addAll(this.contextParamList);
-            
-            // overwrite the variables
-            this.contextInfo = new HashMap(newInfo);
-            this.contextParamList = new LinkedList(newParams);
+            if (implServices.size() > 0 && reader != null) {
+                Map newInfo = new HashMap();
+                List newParams = new LinkedList();
+                Iterator implIter = implServices.iterator();
+                while (implIter.hasNext()) {
+                    String serviceName = (String) implIter.next();
+                    ModelService model = reader.getModelService(serviceName);
+                    if (model != null) {
+                        newInfo.putAll(model.contextInfo);
+                        newParams.addAll(model.contextParamList);
+                    }
+                }
+                // add in the added parameters
+                newInfo.putAll(this.contextInfo);
+                newParams.addAll(this.contextParamList);
+                
+                // overwrite the variables
+                this.contextInfo = new HashMap(newInfo);
+                this.contextParamList = new LinkedList(newParams);
+            }
         }
     }
             

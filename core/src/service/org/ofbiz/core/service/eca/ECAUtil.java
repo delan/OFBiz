@@ -25,7 +25,6 @@
 
 package org.ofbiz.core.service.eca;
 
-
 import java.util.*;
 import org.w3c.dom.*;
 
@@ -34,21 +33,18 @@ import org.ofbiz.core.util.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.service.config.*;
 
-
 /**
  * ECAUtil
  *
  * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
  * @created    Jul 27, 2002
- * @version    1.0
+ * @version    $Revision$
  */
 public class ECAUtil {
 
     public static final String module = ECAUtil.class.getName();
-
-    // for now just use a Map because we aren't doing reloading right now anyway...
-    // public static UtilCache ecaCache = new UtilCache("service.ServiceECAs", 0, 0, false);
-    public static Map ecaCache = new HashMap();
+    
+    public static UtilCache ecaCache = new UtilCache("service.ServiceECAs", 0, 0, false);   
 
     public static void readConfig() {
         Element rootElement = null;
@@ -56,7 +52,7 @@ public class ECAUtil {
         try {
             rootElement = ServiceConfigUtil.getXmlRootElement();
         } catch (GenericConfigException e) {
-            Debug.logError(e, "Error getting Service Engine XML root element");
+            Debug.logError(e, "Error getting Service Engine XML root element", module);
             return;
         }
 
@@ -104,7 +100,7 @@ public class ECAUtil {
             ecaCache.put(serviceName, eventMap);
             numDefs++;
         }
-        Debug.logImportant("Loaded " + numDefs + " ECA definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName());
+        Debug.logImportant("Loaded " + numDefs + " ECA definitions from " + handler.getLocation() + " in loader " + handler.getLoaderName(), module);
     }
 
     public static Map getServiceEventMap(String serviceName) {
@@ -126,7 +122,7 @@ public class ECAUtil {
 
         Iterator i = conditions.iterator();
 
-        if (i.hasNext() && Debug.verboseOn()) Debug.logVerbose("Running ECA (" + event + ").");
+        if (i.hasNext() && Debug.verboseOn()) Debug.logVerbose("Running ECA (" + event + ").", module);
         while (i.hasNext()) {
             EventConditionAction eca = (EventConditionAction) i.next();
 
