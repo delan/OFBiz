@@ -81,12 +81,13 @@ public class GenericDAO {
             throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
         }
         
-        SQLProcessor sql = new SQLProcessor( helperName );
+        SQLProcessor sql = new SQLProcessor(helperName);
         
         try {
             singleInsert(entity, modelEntity, modelEntity.getFieldsCopy(), sql.getConnection());
         } catch (GenericDataSourceException e) {
             sql.rollback();
+            throw new GenericDataSourceException("Exception occured in insert", e);
         } finally {
             sql.close();
         }
@@ -107,10 +108,10 @@ public class GenericDAO {
         
         Debug.logVerbose("[GenericDAO.singleInsert] sql=" + sql + "\nEntity=" + entity, module);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName, connection );
+        SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
         try {
-            sqlP.prepareStatement( sql );
+            sqlP.prepareStatement(sql);
             SqlJdbcUtil.setValues(sqlP, fieldsToSave, entity, modelFieldTypeReader);
             sqlP.executeUpdate();
             entity.modified = false;
@@ -150,7 +151,7 @@ public class GenericDAO {
     }
     
     private void customUpdate(GenericEntity entity, ModelEntity modelEntity, List fieldsToSave) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             singleUpdate(entity, modelEntity, fieldsToSave, sqlP.getConnection());
@@ -195,7 +196,7 @@ public class GenericDAO {
         
         Debug.logVerbose("[GenericDAO.singleUpdate] sql=" + sql + "\nEntity=" + entity, module);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName, connection );
+        SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
         try {
             sqlP.prepareStatement(sql);
@@ -234,7 +235,7 @@ public class GenericDAO {
             return;
         }
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             Iterator entityIter = entities.iterator();
@@ -256,7 +257,7 @@ public class GenericDAO {
     /* ====================================================================== */
     
     public void select(GenericEntity entity) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             select(entity, sqlP.getConnection());
@@ -287,7 +288,7 @@ public class GenericDAO {
         
         Debug.logVerbose("[GenericDAO.select] sql=" + sql, module);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName, connection );
+        SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
         try {
             sqlP.prepareStatement(sql);
@@ -348,7 +349,7 @@ public class GenericDAO {
         sql += SqlJdbcUtil.makeFromClause(modelEntity);
         sql += SqlJdbcUtil.makeWhereClauseAnd(modelEntity, modelEntity.getPksCopy(), entity);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             sqlP.prepareStatement(sql);
@@ -418,7 +419,7 @@ public class GenericDAO {
         
         Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             sqlP.prepareStatement(sql);
@@ -490,7 +491,7 @@ public class GenericDAO {
         sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
         
         Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             sqlP.prepareStatement(sql);
@@ -589,7 +590,7 @@ public class GenericDAO {
         
         Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             sqlP.prepareStatement(sql);
@@ -696,7 +697,7 @@ public class GenericDAO {
         
         Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             sqlP.prepareStatement(sql);
@@ -779,7 +780,7 @@ public class GenericDAO {
         sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
         Debug.logVerbose("[GenericDAO.selectByLike] sql=" + sql, module);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             sqlP.prepareStatement(sql);
@@ -906,7 +907,7 @@ public class GenericDAO {
         
         String sql = "";
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             sql = select.toString() + " " + from.toString() + " " + where.toString() + (order.toString().trim().length() > 0 ? order.toString() : "");
@@ -945,7 +946,7 @@ public class GenericDAO {
     /* ====================================================================== */
     
     public void delete(GenericEntity entity) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             delete(entity, sqlP.getConnection());
@@ -970,7 +971,7 @@ public class GenericDAO {
         
         String sql = "DELETE FROM " + modelEntity.getTableName() + " WHERE " + SqlJdbcUtil.makeWhereStringAnd(modelEntity.getPksCopy(), entity);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName, connection );
+        SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
         try {
             sqlP.prepareStatement(sql);
@@ -983,7 +984,7 @@ public class GenericDAO {
     }
     
     public void deleteByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             deleteByAnd(modelEntity, fields, sqlP.getConnection());
@@ -1022,7 +1023,7 @@ public class GenericDAO {
         if (fields != null || fields.size() > 0)
             sql += " WHERE " + SqlJdbcUtil.makeWhereStringAnd(whereFields, dummyValue);
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             sqlP.prepareStatement(sql);
@@ -1043,7 +1044,7 @@ public class GenericDAO {
             return;
         }
         
-        SQLProcessor sqlP = new SQLProcessor( helperName );
+        SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
             Iterator iter = dummyPKs.iterator();

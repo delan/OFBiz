@@ -57,7 +57,7 @@ public class SQLProcessor {
     /// The SQL String used. Use for debugging only
     private String _sql;
     
-    /// Index to be used with preparedStatement.setValue( _ind, ...)
+    /// Index to be used with preparedStatement.setValue(_ind, ...)
     private int _ind;
     
     /// true in case of manual transactions
@@ -107,7 +107,7 @@ public class SQLProcessor {
             _connection.commit();
         } catch (SQLException sqle) {
             rollback();
-            throw new GenericDataSourceException( "SQL Exception occured on commit", sqle );
+            throw new GenericDataSourceException("SQL Exception occured on commit", sqle);
         }
     }
     
@@ -144,7 +144,7 @@ public class SQLProcessor {
             try {
                 _rs.close();
             } catch (SQLException sqle) {
-                Debug.logWarning( sqle.getMessage(), module );
+                Debug.logWarning(sqle.getMessage(), module);
             }
             
             _rs = null;
@@ -154,7 +154,7 @@ public class SQLProcessor {
             try {
                 _ps.close();
             } catch (SQLException sqle) {
-                Debug.logWarning( sqle.getMessage(), module );
+                Debug.logWarning(sqle.getMessage(), module);
             }
             
             _ps = null;
@@ -164,7 +164,7 @@ public class SQLProcessor {
             try {
                 _stmt.close();
             } catch (SQLException sqle) {
-                Debug.logWarning( sqle.getMessage(), module );
+                Debug.logWarning(sqle.getMessage(), module);
             }
             
             _stmt = null;
@@ -174,7 +174,7 @@ public class SQLProcessor {
             try {
                 _connection.close();
             } catch (SQLException sqle) {
-                Debug.logWarning( sqle.getMessage(), module );
+                Debug.logWarning(sqle.getMessage(), module);
             }
             
             _connection = null;
@@ -196,14 +196,14 @@ public class SQLProcessor {
         _manualTX = true;
         
         try {
-            _connection = ConnectionFactory.getConnection( helperName );
+            _connection = ConnectionFactory.getConnection(helperName);
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
         }
         
         //NOTE: the fancy ethernet type stuff is for the case where transactions not available
         try {
-            _connection.setAutoCommit( false );
+            _connection.setAutoCommit(false);
         } catch (SQLException sqle) {
             _manualTX = false;
         }
@@ -232,7 +232,7 @@ public class SQLProcessor {
      * @throws GenericEntityException
      */
     public void prepareStatement(String sql) throws GenericDataSourceException, GenericEntityException {
-        Debug.logVerbose( "[SQLProcessor.prepareStatement] sql=" + sql, module);
+        Debug.logVerbose("[SQLProcessor.prepareStatement] sql=" + sql, module);
         
         if (_connection == null)
             getConnection();
@@ -240,7 +240,7 @@ public class SQLProcessor {
         try {
             _sql = sql;
             _ind = 1;
-            _ps = _connection.prepareStatement( sql );
+            _ps = _connection.prepareStatement(sql);
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
         }
@@ -257,7 +257,7 @@ public class SQLProcessor {
      */
     public ResultSet executeQuery() throws GenericDataSourceException {
         try {
-            Debug.logVerbose( "[SQLProcessor.executeQuery] ps=" + _ps.toString(), module );
+            Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
             _rs = _ps.executeQuery();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
@@ -292,7 +292,7 @@ public class SQLProcessor {
         int rtn;
         
         try {
-            Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module );
+            Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module);
             rtn = _ps.executeUpdate();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
@@ -313,7 +313,7 @@ public class SQLProcessor {
         
         try {
             stmt = _connection.createStatement();
-            stmt.executeUpdate( sql );
+            stmt.executeUpdate(sql);
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
         } finally {
@@ -321,7 +321,7 @@ public class SQLProcessor {
                 try {
                     stmt.close();
                 } catch (SQLException sqle) {
-                    Debug.logWarning( "Unable to close 'statement': " + sqle.getMessage(), module );
+                    Debug.logWarning("Unable to close 'statement': " + sqle.getMessage(), module);
                 }
             }
         }
@@ -375,14 +375,14 @@ public class SQLProcessor {
         }
         
         try {
-            Debug.logVerbose( "[SQLProcessor.execQuery]: " + sql, module);
+            Debug.logVerbose("[SQLProcessor.execQuery]: " + sql, module);
             executeQuery(sql);
             
             // process the results by calling the listener for
             // each row...
             boolean keepGoing = true;
-            while( keepGoing && _rs.next()) {
-                keepGoing = aListener.processNextRow( _rs );
+            while(keepGoing && _rs.next()) {
+                keepGoing = aListener.processNextRow(_rs);
             }
             
             if (_manualTX) {
@@ -393,7 +393,7 @@ public class SQLProcessor {
             Debug.logWarning("[SQLProcessor.execQuery]: SQL Exception while executing the following:\n" +
             sql + "\nError was:", module);
             Debug.logWarning(sqle.getMessage(), module);
-            throw new GenericEntityException( "SQL Exception while executing the following:" + _sql, sqle);
+            throw new GenericEntityException("SQL Exception while executing the following:" + _sql, sqle);
         } finally {
             close();
         }
