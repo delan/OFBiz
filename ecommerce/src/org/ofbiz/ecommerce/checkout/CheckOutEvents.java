@@ -131,8 +131,10 @@ public class CheckOutEvents {
         
         // build the service context
         Map context = cart.makeCartMap();        
-        String distributorId = DistributorEvents.getDistributorId(request);
-        context.put("distributorId", distributorId);
+        String distributorId =  (String) request.getSession().getAttribute("_DISTRIBUTOR_ID_");
+        String affiliateId = (String) request.getSession().getAttribute("_AFFILIATE_ID_");
+        if ( distributorId != null ) context.put("distributorId", distributorId);
+        if ( affiliateId != null ) context.put("affiliateId", affiliateId);
         context.put("partyId", userLogin.get("partyId"));
         
         // invoke the service
