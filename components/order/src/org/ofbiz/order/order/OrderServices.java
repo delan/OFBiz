@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.10 2003/08/26 21:48:11 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.11 2003/08/27 13:53:25 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -71,7 +71,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      2.0
  */
 
@@ -2066,8 +2066,8 @@ public class OrderServices {
                 int daysTillCancel = 30;
                 
                 // get the value from the store
-                if (productStore != null && productStore.get("offlineCancelDays") != null) {
-                    daysTillCancel = productStore.getLong("offlineCancelDays").intValue();
+                if (productStore != null && productStore.get("daysToCancelNonPay") != null) {
+                    daysTillCancel = productStore.getLong("daysToCancelNonPay").intValue();
                 }                
                 
                 if (daysTillCancel > 0) {

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.2 2003/08/26 18:02:01 jonesde Exp $
+ * $Id: CheckOutHelper.java,v 1.3 2003/08/27 13:53:25 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -393,11 +393,11 @@ public class CheckOutHelper {
         return UtilMisc.toList(orderAdj, itemAdj);
     }
 
-    public Map processPayment(GenericValue productStore, GenericValue userLogin) throws GeneralException {
-        Map result;
-        
+    public Map processPayment(GenericValue productStore, GenericValue userLogin) throws GeneralException {                
         // Get some payment related strings
-        String DECLINE_MESSAGE = productStore.getString("declinedMessage");
+        String DECLINE_MESSAGE = productStore.getString("authDeclinedMessage");
+        String ERROR_MESSAGE = productStore.getString("authErrorMessage");
+        String RETRY_ON_ERROR = productStore.getString("retryFailedAuths");
 
         // Get the orderId from the cart.
         String orderId = this.cart.getOrderId();
@@ -430,10 +430,9 @@ public class CheckOutHelper {
             if (paymentResult != null && paymentResult.containsKey("processResult")) {
                 String authResp = (String) paymentResult.get("processResult");
 
-                if (!authResp.equals("APPROVED")) {
+                if (authResp.equals("FAILED")) {
                     // order was NOT approved
-                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
-                    result = ServiceUtil.returnError(DECLINE_MESSAGE);                    
+                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);                                      
                                        
                     boolean ok = OrderChangeHelper.rejectOrder(dispatcher, userLogin, orderId);
                     if (!ok) {
@@ -442,8 +441,8 @@ public class CheckOutHelper {
                         
                     // null out the orderId for next pass.
                     cart.setOrderId(null);
-                    return result;                                                               
-                } else {
+                    return ServiceUtil.returnError(DECLINE_MESSAGE);                                                               
+                } else if (authResp.equals("APPROVED")) {
                     // order WAS approved
                     if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
                                         
@@ -453,23 +452,39 @@ public class CheckOutHelper {
                         throw new GeneralException("Problem with order change; see above error");
                     }                                                                                         
                         
-                    result = ServiceUtil.returnSuccess();
-                    return result;       
+                    return ServiceUtil.returnSuccess();                           
+                } else if (authResp.equals("ERROR")) {
+                    // service failed
+                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);               
+                    if ("Y".equalsIgnoreCase(RETRY_ON_ERROR)) {                    
+                        return ServiceUtil.returnSuccess(ERROR_MESSAGE);
+                    } else {
+                        boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
+                        if (!ok) {
+                            throw new GeneralException("Problem with order change; see above error");
+                        }
+                        // null out orderId for next pass
+                        this.cart.setOrderId(null);
+                        return ServiceUtil.returnError(ERROR_MESSAGE);
+                    }                    
+                } else {
+                    // should never happen
+                    return ServiceUtil.returnError("Please contact customer service; payment return code unknown.");
                 }
             } else {
-                // result returned null or service failed
-                result = ServiceUtil.returnError("Problems with payment authorization. Please try again later.");                
-                if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);                    
-                                
-                // set the order and item status to cancelled and reverse inventory reservations
-                boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
-                if (!ok) {
-                    throw new GeneralException("Problem with order change; see above error");
-                }
-                                              
-                // null out the orderId for next pass.
-                this.cart.setOrderId(null);
-                return result;                                                                                        
+                // result returned null == service failed
+                if (Debug.verboseOn()) Debug.logVerbose("Payment auth failed due to processor trouble.", module);               
+                if ("Y".equalsIgnoreCase(RETRY_ON_ERROR)) {                    
+                    return ServiceUtil.returnSuccess(ERROR_MESSAGE);
+                } else {
+                    boolean ok = OrderChangeHelper.cancelOrder(dispatcher, userLogin, orderId);
+                    if (!ok) {
+                        throw new GeneralException("Problem with order change; see above error");
+                    }
+                    // null out orderId for next pass
+                    this.cart.setOrderId(null);
+                    return ServiceUtil.returnError(ERROR_MESSAGE);
+                }                                                                                               
             }
         } else if (this.cart.getBillingAccountId() != null || paymentMethodTypeId.contains("EXT_COD")) {
             // approve all billing account or COD transactions (would not be able to use account if limit is reached)
@@ -479,12 +494,10 @@ public class CheckOutHelper {
                 throw new GeneralException("Problem with order change; see above error");
             }   
             
-            result = ServiceUtil.returnSuccess();
-            return result;          
+            return ServiceUtil.returnSuccess();                      
         } else {
             // Handle NO payment gateway as a success.
-            result = ServiceUtil.returnSuccess();
-            return result;
+            return ServiceUtil.returnSuccess();            
         }
     }
     
@@ -550,7 +563,7 @@ public class CheckOutHelper {
     public Map failedBlacklistCheck(GenericValue userLogin, GenericValue productStore) {
         Map result;
     
-    	String REJECT_MESSAGE = productStore.getString("rejectedMessage");
+    	String REJECT_MESSAGE = productStore.getString("authFraudMessage");
 
         // Get the orderId from the cart.
         String orderId = this.cart.getOrderId();
