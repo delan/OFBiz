@@ -44,7 +44,7 @@
     GenericValue productCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", productCategoryId));
     if (productCategory == null) useValues = false;
 
-    Collection productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productId"));
+    List productCategoryMembers = productCategory.getRelated("ProductCategoryMember", null, UtilMisc.toList("sequenceNum", "productId"));
     if (activeOnly) {
         productCategoryMembers = EntityUtil.filterByDate(productCategoryMembers, true);
     }
@@ -52,7 +52,7 @@
         pageContext.setAttribute("productCategoryMembers", productCategoryMembers);
     }
 
-    Collection productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+    List productCategories = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
     if (productCategories != null) pageContext.setAttribute("productCategories", productCategories);
 
     if ("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
