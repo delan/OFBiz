@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author David E. Jones (jonesde@ofbiz.org)
- *@created    Tue Oct 02 15:22:50 MDT 2001
+ *@created    Tue Oct 02 22:00:55 MDT 2001
  *@version    1.0
  */
 -->
@@ -3116,6 +3116,9 @@
       </relation>
       <relation type="one" rel-entity-name="RoleType">
         <key-map field-name="roleTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="OrderItem">
+        <key-map field-name="orderId" />
       </relation>
     </entity>	
     <entity entity-name="OrderShipment" 
