@@ -1,5 +1,5 @@
 /*
- * $Id: KeyboardAdaptor.java,v 1.4 2004/08/15 22:43:04 ajzeneski Exp $
+ * $Id: KeyboardAdaptor.java,v 1.5 2004/08/15 22:52:27 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,27 +24,24 @@
  */
 package org.ofbiz.pos.adaptor;
 
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
 import java.awt.Component;
 import java.awt.Container;
-import java.util.List;
-import java.util.LinkedList;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
-
-import net.xoetrope.xui.XPage;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.collections.OrderedMap;
-import org.ofbiz.pos.component.Input;
 
 
 /**
  * KeyboardAdaptor - Handles reading keyboard input
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.2
  */
 public class KeyboardAdaptor {
