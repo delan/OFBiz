@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/07/23 18:05:00  azeneski
+ * Fixed runaway thread in the job scheduler.
+ *
  * Revision 1.1  2001/07/19 20:50:22  azeneski
  * Added the job scheduler to 'core' module.
  *
@@ -14,6 +17,7 @@ import java.util.Date;
 import java.util.Calendar;
 import java.lang.reflect.*;
 
+import org.ofbiz.core.util.HttpClient;
 import org.ofbiz.core.util.Debug;
 
 /**
@@ -158,12 +162,33 @@ public class Job implements Comparable, Serializable {
         runCount++;
         if ( eventType != null && eventPath != null && eventMethod != null ) {
             if ( eventType.compareToIgnoreCase("java") == 0 ) {
+                // Java Event implemented via reflection
                 try {
                     Class[] paramTypes = new Class[] {HashMap.class};
                     Object[] params = new Object[] {parameters};
                     Class c = Class.forName(eventPath);
                     Method m = c.getMethod(eventMethod, paramTypes);
                     eventResult = (String) m.invoke(null,params);
+                }
+                catch ( Exception e ) {
+                    Debug.log(e,"Job Event - Problems Processing Event.");
+                }
+            }
+            else if ( eventType.compareToIgnoreCase("get") == 0 ) {
+                // HTTP GET implemented via HttpClient
+                try {
+                    HttpClient http = new HttpClient(eventPath, parameters, headers);
+                    eventResult = http.get();
+                }
+                catch ( Exception e ) {
+                    Debug.log(e,"Job Event - Problems Processing Event.");
+                }
+            }
+            else if ( eventType.compareToIgnoreCase("post") == 0 ) {
+                // HTTP POST implemented via HttpClient
+                try {
+                    HttpClient http = new HttpClient(eventPath, parameters, headers);
+                    eventResult = http.post();
                 }
                 catch ( Exception e ) {
                     Debug.log(e,"Job Event - Problems Processing Event.");

@@ -1,6 +1,12 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.1  2001/07/19 14:15:59  azeneski
+ * Moved org.ofbiz.core.control.RequestXMLReader to org.ofbiz.core.util.ConfigXMLReader
+ * ConfigXMLReader is now used for all config files, not just the request mappings.
+ * Updated RequestManager to use this new class.
+ * Added getRequestManager() method to RequestHandler.
+ *
  */
 
 package org.ofbiz.core.util;
@@ -116,12 +122,14 @@ public class ConfigXMLReader {
                     for ( int subCount = 0; subCount < subList.getLength(); subCount++ ) {
                         Node subNode = subList.item(subCount);
                         NodeList children = subNode.getChildNodes();
-                        Node childNode = children.item(0);
-                        if ( childNode.getNodeValue() != null ) {
-                            if ( subNode.getNodeName().equals(URI) )
-                                uri = childNode.getNodeValue();
-                            else
-                                uriMap.put(subNode.getNodeName(),childNode.getNodeValue());
+                        if ( children.getLength() > 0 ) {                            
+                            Node childNode = children.item(0);
+                            if ( childNode.getNodeValue() != null ) {
+                                if ( subNode.getNodeName().equals(URI) )
+                                    uri = childNode.getNodeValue();
+                                else
+                                    uriMap.put(subNode.getNodeName(),childNode.getNodeValue());
+                            }
                         }
                     }
                     if ( uri != null )
@@ -202,12 +210,14 @@ public class ConfigXMLReader {
                     for ( int subCount = 0; subCount < subList.getLength(); subCount++ ) {
                         Node subNode = subList.item(subCount);
                         NodeList children = subNode.getChildNodes();
-                        Node childNode = children.item(0);
-                        if ( childNode.getNodeValue() != null ) {
-                            if ( subNode.getNodeName().equals(VIEW) )
-                                uri = childNode.getNodeValue();
-                            else
-                                uriMap.put(subNode.getNodeName(),childNode.getNodeValue());
+                        if ( children.getLength() > 0 ) {
+                            Node childNode = children.item(0);
+                            if ( childNode.getNodeValue() != null ) {
+                                if ( subNode.getNodeName().equals(VIEW) )
+                                    uri = childNode.getNodeValue();
+                                else
+                                    uriMap.put(subNode.getNodeName(),childNode.getNodeValue());
+                            }
                         }
                     }
                     if ( uri != null )
@@ -222,10 +232,10 @@ public class ConfigXMLReader {
     /** Gets a HashMap of scheduler mappings. */
     public static HashMap getSchedulerMap(String xml) {
         HashMap map = new HashMap();
-        Element root = loadDocument(xml);
+        Element root = loadDocument(xml);        
         if ( root != null ) {
             // schedule elements
-            NodeList list = root.getElementsByTagName(SCHEDULER_MAPPING);
+            NodeList list = root.getElementsByTagName(SCHEDULER_MAPPING);            
             for ( int rootCount = 0; rootCount < list.getLength(); rootCount++ ) {
                 Node node = list.item(rootCount);
                 if ( node instanceof Element ) {
@@ -234,28 +244,29 @@ public class ConfigXMLReader {
                     HashMap mainMap = new HashMap();       // for the main attributes
                     HashMap paramMap = new HashMap();     // for the parameter list
                     HashMap headerMap = new HashMap();    // for the header list
-                    String job = null;
-                    for ( int subCount = 0; subCount < subList.getLength(); subCount++ ) {
+                    String job = null;                    
+                    for ( int subCount = 0; subCount < subList.getLength(); subCount++ ) {                        
                         Node subNode = subList.item(subCount);                        
                         if ( subNode.getNodeName().equals(SCHEDULER_PARAMETERS) ) {
                             Element thisElement = (Element) subNode;
-                            paramMap.put(thisElement.getAttribute("name"),thisElement.getAttribute("value"));
+                            paramMap.put(thisElement.getAttribute("name"),thisElement.getAttribute("value"));                            
                         }
                         else if ( subNode.getNodeName().equals(SCHEDULER_HEADERS) ) {
                             Element thisElement = (Element) subNode;
-                            headerMap.put(thisElement.getAttribute("name"),thisElement.getAttribute("value"));
+                            headerMap.put(thisElement.getAttribute("name"),thisElement.getAttribute("value"));                            
                         }
                         else {
                             NodeList children = subNode.getChildNodes();
-                            Node childNode = children.item(0);
+                            if ( children.getLength() > 0 ) {
+                                Node childNode = children.item(0);                           
                             
-                            if ( childNode.getNodeValue() != null ) {
-                                
-                                if ( subNode.getNodeName().equals(SCHEDULER_JOB_NAME) ) {
-                                    job = childNode.getNodeValue();
-                                }
-                                else {
-                                    mainMap.put(subNode.getNodeName(),childNode.getNodeValue());
+                                if ( childNode.getNodeValue() != null ) {                                    
+                                    if ( subNode.getNodeName().equals(SCHEDULER_JOB_NAME) ) {
+                                        job = childNode.getNodeValue();
+                                    }
+                                    else {
+                                        mainMap.put(subNode.getNodeName(),childNode.getNodeValue());
+                                    }
                                 }
                             }
                         }
