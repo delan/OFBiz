@@ -60,6 +60,7 @@ public class ServiceMultiEventHandler implements EventHandler {
     
     public static final String module = ServiceMultiEventHandler.class.getName();
     
+    public static final String DELIMITER = "|";
     public static final String SYNC = "sync";
     public static final String ASYNC = "async";
 
@@ -162,7 +163,7 @@ public class ServiceMultiEventHandler implements EventHandler {
         
         // now loop throw the rows and prepare/invoke the service for each
         for (int i = 0; i < rowCount; i++) {
-            String thisSuffix = "|" + i;
+            String thisSuffix = DELIMITER + i;
             boolean rowSelected = request.getParameter("_rowSubmit" + thisSuffix) == null ? false :
                     "Y".equalsIgnoreCase(request.getParameter("_rowSubmit" + thisSuffix));
             
