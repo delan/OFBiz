@@ -190,7 +190,6 @@ try {
     <td>&nbsp;</td>
     <td width="74%">
       <div class='tabletext'><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.makeString(productAssoc.getTimestamp(fieldName)):request.getParameter(paramName))%>" size="30" maxlength="30">(YYYY-MM-DD HH:mm:SS.sss)</div>
-      <div class='tabletext'>(Will be set to now on delete)</div>
     </td>
   </tr>
   <tr>
@@ -237,6 +236,7 @@ try {
       <td><div class="tabletext"><b>To Product ID</b></div></td>
       <td><div class="tabletext"><b>Name</b></div></td>
       <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
+      <td><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
       <td><div class="tabletext"><b>Association&nbsp;Type</b></div></td>
       <td><div class="tabletext"><b>&nbsp;</b></div></td>
       <td><div class="tabletext"><b>&nbsp;</b></div></td>
@@ -248,7 +248,8 @@ try {
       <tr valign="middle">
         <td><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productIdTo")%></a></td>
         <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productIdTo")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
-        <td><div class='tabletext'><%=listProductAssoc.getTimestamp("fromDate")%></div></td>
+        <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("fromDate"))%>&nbsp;</div></td>
+        <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("thruDate"))%>&nbsp;</div></td>
         <td><div class='tabletext'><%=listProductAssoc.getString("productAssocTypeId")%></div></td>
         <td>
           <a href="<ofbiz:url>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=<%=productId%>&PRODUCT_ID_TO=<%=listProductAssoc.getString("productIdTo")%>&PRODUCT_ASSOC_TYPE_ID=<%=listProductAssoc.getString("productAssocTypeId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(listProductAssoc.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
@@ -270,6 +271,7 @@ try {
       <td><div class="tabletext"><b>Product ID</b></div></td>
       <td><div class="tabletext"><b>Name</b></div></td>
       <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
+      <td><div class="tabletext"><b>Thru&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
       <td><div class="tabletext"><b>Association&nbsp;Type</b></div></td>
       <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
@@ -280,7 +282,8 @@ try {
       <tr valign="middle">
         <td><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=listProductAssoc.getString("productId")%></a></td>
         <td><%if(listToProduct!=null){%><a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=listProductAssoc.getString("productId")%></ofbiz:url>" class="buttontext"><%=listToProduct.getString("productName")%></a><%}%>&nbsp;</td>
-        <td><div class='tabletext'><%=listProductAssoc.getTimestamp("fromDate")%></div></td>
+        <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("fromDate"))%>&nbsp;</div></td>
+        <td><div class='tabletext'><%=UtilFormatOut.makeString(listProductAssoc.getTimestamp("thruDate"))%>&nbsp;</div></td>
         <td><div class='tabletext'><%=listProductAssoc.getString("productAssocTypeId")%></div></td>
         <td>
           <a href="<ofbiz:url>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=<%=listProductAssoc.getString("productId")%>&PRODUCT_ID_TO=<%=listProductAssoc.getString("productIdTo")%>&PRODUCT_ASSOC_TYPE_ID=<%=listProductAssoc.getString("productAssocTypeId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(listProductAssoc.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
