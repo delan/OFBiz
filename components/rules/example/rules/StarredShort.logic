@@ -1,0 +1,25 @@
+/*
+This is a very simple example of a fact query.
+Try the following query:
+    starred("James Cagney", Title, Year)
+or for something a little more fun:
+    starred("James Cagney", Title, Year), >(Year, 1950)
+which should produce the following result:
+    Title = Mister Roberts, Year = 1955.0
+    Title = Ragtime, Year = 1981.0
+    no more results
+or for the same fun thing put inside a rule:
+    starredAfter("James Cagney", title, year, 1950)
+which should produce the following result (same as above except different var names):
+    title = Mister Roberts, year = 1955.0
+    title = Ragtime, year = 1981.0
+    no more results
+*/
+
+starred("James Cagney", "Mutiny on the Bounty", 1935);
+starred("James Cagney", "Yankee Doodle Dandy", 1942);
+starred("James Cagney", "Mister Roberts", 1955);
+starred("James Cagney", "Ragtime", 1981);
+
+starredAfter(actor, title, year, afterYear) :-
+    starred(actor, title, year), >(year, afterYear);
