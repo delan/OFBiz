@@ -6,4 +6,5 @@
     <property name="tabButtonItem">EditProductFeatures</property>
     <property name="leftbar">/templates/leftbar.ftl</property>
     <content-action name="/product/ApplyFeaturesFromCategory.bsh"/>
+    <content-action name="/product/ApplyFeaturesFromGroup.bsh"/>
 </page>
