@@ -1387,6 +1387,9 @@ public class PaymentGatewayServices {
                     Debug.logError(e, "Problem refunding payment through processor", module);
                     return ServiceUtil.returnError("Refund processor problems; see logs");
                 }
+                if (ServiceUtil.isError(refundResponse)) {
+                    return ServiceUtil.returnError(ServiceUtil.getErrorMessage(refundResponse));
+                }
 
                 //Debug.log("Called Electronic Refund Service : " + refundResponse, module);
 
