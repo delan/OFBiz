@@ -26,6 +26,8 @@
 importClass(Packages.java.util.HashMap);
 importClass(Packages.org.ofbiz.core.util.SiteDefs);
 importClass(Packages.org.ofbiz.core.util.UtilHttp);
+importClass(Packages.org.ofbiz.commonapp.accounting.payment.PaymentWorker);
+importClass(Packages.org.ofbiz.commonapp.party.contact.ContactMechWorker);
 
 var userLogin = session.getAttribute("userLogin");
 var person = null;
@@ -33,9 +35,10 @@ if (userLogin != null) {
     person = userLogin.getRelatedOne("Person");
 }
 
-<%PaymentWorker.getPaymentMethodAndRelated(pageContext, userLogin.getString("partyId"), 
-    "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity");%>
+PaymentWorker.getPaymentMethodAndRelated(request, userLogin.getString("partyId")) 
+//returns the following: "paymentMethod", "creditCard", "eftAccount", "paymentMethodId", "curContactMechId", "donePage", "tryEntity"
 
+    
 <%ContactMechWorker.getCurrentPostalAddress(pageContext, userLogin.getString("partyId"), 
     (String) pageContext.getAttribute("curContactMechId"), "curPartyContactMech", "curContactMech", 
     "curPostalAddress", "curPartyContactMechPurposes");%>
