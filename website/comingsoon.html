@@ -146,6 +146,11 @@ nailed down.</p>
 
 
 <ul>
+  <li class='contenttext'>Role & Task oriented special UIs for simpler management
+  <li class='contenttext'>Add transform to create links & other tools to handle site 
+    structure for managed content, including expanding tree widget kind of like the 
+    ProductCategory browser; would use hierarchical ContentAssocs for the data structure
+  <li class='contenttext'>Wiki style permissions for community content site (like blogs, forums, etc; just different permissions)
   <li class='contenttext'>Add versioning to the data resource entities so that previous revisions can 
   be maintained (planning on using a simple mechanism when revision control is 
   desired and a certain resource is updated the old data will be put into 
@@ -157,7 +162,9 @@ nailed down.</p>
   versions; the other options would be construct a new content structure that 
   will be published when finished so that the current stuff remains untouched 
   until all of the new stuff is in place)
-  <li class='contenttext'>Incorporate Lucene for text searching of content
+  <li class='contenttext'>Incorporate Lucene for text based searching of content
+  <li class='contenttext'>Meta-data base parametric searching of content
+  <li class='contenttext'>Searching for content related to products (including relationships with Product, ProductCategory, ProductFeature)
   <li class='contenttext'>Custom set of pages for public and private forums. These are 
   ad-hoc administered (with optional permissions) and (with optional permissions) browsed 
   content organized in threads or topics. The 
@@ -169,6 +176,7 @@ nailed down.</p>
   definitions like DTDs or XML Schemas. The document definition will be a piece of content and
   may have a workflow associated with it that is automatically started when content based on that
   doc type is created/updated/etc.
+  <li class='contenttext'>Web accessible mailing lists; basically a forum with email distribution & posting of messages/replies through email
 </ul>
 
 <hr class='sepbar'>
@@ -179,8 +187,21 @@ nailed down.</p>
 
 <ul>
   <li class='contenttext'>Call Center (Customer Service & Sales)
+  <ul>
+    <li class='contenttext'>In & Out Call Screen, ie from one spot handle calls that come up, either incoming or outgoing
+    <li class='contenttext'>Sales Oriented and Other Surveys, implementation of call scripts
+    <li class='contenttext'>Communication Event Build Out - track info about calls, emails, other events
+  </ul>
   <li class='contenttext'>Marketing
+  <ul>
+    <li class='contenttext'>Mass contact list management (email, phone, paper mail mass contacting)
+    <li class='contenttext'>Analysis Reports (for sales, web traffic, etc; something along the lines of what CoreMetrics does)
+  </ul>
   <li class='contenttext'>Sales Management
+  <ul>
+    <li class='contenttext'>Contact Management - Private & Group Contacts
+    <li class='contenttext'>Sales Pipeline/Workflow/Status Tracking
+  </ul>
 </ul>
 
 <hr class='sepbar'>
@@ -191,11 +212,29 @@ nailed down.</p>
 
 <ul>
   <li class='contenttext'>Build Out WorkEffort Pages, convert all to JP/BSH/FTL, etc
-  <li class='contenttext'>
-  <li class='contenttext'>
+  <li class='contenttext'>Availability Scheduling
+  <ul>
+    <li class='contenttext'>Use WorkEffort to schedule availability just like events, which denote specific reservations or "busy-ness"
+    <li class='contenttext'>Services to check availability & list availability according to constraints
+    <li class='contenttext'>In calendar view show availability in light blue, not available in light grey, scheduled/event time in dark blue
+  </ul>
+  <li class='contenttext'>Add FixedAsset scheduling (Facility scheduling mostly there already, but may need some extension)
+  <li class='contenttext'>Build out request, requirement, work effort, quote, and order pages and relationships
+  <li class='contenttext'>Create report showing tasks related to other artifacts: outstanding (not-complete); by priority, schedule, sponsorship (votes, etc), etc
+  <li class='contenttext'>Associate WorkEfforts to Products for collecting sponsorship, votes, etc (semi-auto create Product, WorkEffort, etc from request)
+  <li class='contenttext'>Software project management features to use with OFBiz... (whatever that means)
+  <li class='contenttext'>Time tracking (timesheets etc); associate with WorkEffort (and possibly request, requirements; maybe only through WE); associate with Order/Invoice;
+  <li class='contenttext'>Public &amp; Private WorkEfforts and Requests; on public calendars show the time as busy, but no details about the event
+  <li class='contenttext'>Other Project Management Stuff Needed for OFBiz Use
+  <ul>
+    <li class='contenttext'>Create "Projects" (maybe different than work efforts) with a home page, etc; public & private projects
+    <li class='contenttext'>Request (Issue) Assignment to parties associated with the project
+    <li class='contenttext'>My Issues/Tasks etc page
+    <li class='contenttext'>Allow per user customization of the issue/task/etc pages, save user settings in a database
+  </ul>
 </ul>
 
-	<hr class='sepbar'>
+<hr class='sepbar'>
 <h3><a name="Manufacturing">Manufacturing Management - Notes updated Feb 2004</a></h3>
 <hr class='sepbar'>
 
