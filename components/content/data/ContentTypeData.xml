@@ -71,4 +71,11 @@
   <SubscriptionType description="Newsgroup" hasTable="N" parentTypeId="" subscriptionTypeId="NEWSGROUP_SUBSCR"/>
   <SubscriptionType description="Other" hasTable="N" parentTypeId="" subscriptionTypeId="OTHER_SUBSCR"/>
   <SubscriptionType description="Product Info" hasTable="N" parentTypeId="" subscriptionTypeId="PRODUCT_INFO_SUBSCR"/>
+  
+  <SurveyApplType surveyApplTypeId="PORDER_PLACE" description="Purchase Order Placement"/>
+  <SurveyApplType surveyApplTypeId="PORDITM_PLACE" description="Purchase Order Item Placement"/>
+
+  <SurveyQuestionType surveyQuestionTypeId="BOOLEAN" description="Boolean (Yes/No)"/>
+  <SurveyQuestionType surveyQuestionTypeId="TEXT" description="Free-form Text"/>
+  <SurveyQuestionType surveyQuestionTypeId="OPTION" description="Selected Option"/>
 </entity-engine-xml>
