@@ -2,6 +2,6 @@
 <page>
     <template>main</template>
     <property name="title">Create New Party Detail</property>
-    <property name="title.property">PageTitleCreateNewPartyDetail</property>
+    <property name="title-property">PageTitleCreateNewPartyDetail</property>
     <property name="headerItem">create</property>    
 </page>

@@ -2,6 +2,6 @@
 <page>
     <template>main</template>
     <property name="title">Edit Gift Card</property>
-    <property name="title.property">PageTitleEditGiftCard</property>
+    <property name="title-property">PageTitleEditGiftCard</property>
     <content-action name="/party/editpaymentmethod.bsh"/>
 </page>

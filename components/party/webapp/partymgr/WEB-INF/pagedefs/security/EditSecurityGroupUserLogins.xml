@@ -2,7 +2,7 @@
 <page>
     <template>main</template>
     <property name="title">Edit Security Group UserLogins</property>
-    <property name="title.property">PageTitleEditSecurityGroupUserLogins</property>
+    <property name="title-property">PageTitleEditSecurityGroupUserLogins</property>
     <property name="headerItem">security</property>
     <property name="tabButtonItem">EditSecurityGroupUserLogins</property>
     <content-action name="/security/EditSecurityGroupUserLogins.bsh"/>

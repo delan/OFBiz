@@ -2,5 +2,5 @@
 <page>
     <template>main</template> 
     <property name="title">Login</property>
-    <property name="title.property">PageTitleLogin</property>
+    <property name="title-property">PageTitleLogin</property>
 </page>
