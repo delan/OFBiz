@@ -1,5 +1,5 @@
 /*
- * $Id: ProductEvents.java,v 1.11 2004/02/26 09:10:49 jonesde Exp $
+ * $Id: ProductEvents.java,v 1.12 2004/05/10 17:29:57 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,6 +23,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleStringExpander;
@@ -48,7 +49,7 @@ import org.ofbiz.service.LocalDispatcher;
  * Product Information Related Events
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 2.0
  */
 public class ProductEvents {
@@ -683,6 +684,34 @@ public class ProductEvents {
             UtilHttp.setLocale(request, productStore.getString("defaultLocaleString"));
             UtilHttp.setCurrencyUom(request, productStore.getString("defaultCurrencyUomId"));
         }
+        return "success";
+    }
+
+    /** Event to clear the last viewed categories */
+    public static String clearLastViewedCategories(HttpServletRequest request, HttpServletResponse response) {
+        // just store a new empty list in the session
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.setAttribute("lastViewedCategories", new LinkedList());
+        }
+        return "success";
+    }
+
+    /** Event to clear the last vieweed products */
+    public static String clearLastViewedProducts(HttpServletRequest request, HttpServletResponse response) {
+        // just store a new empty list in the session
+        HttpSession session = request.getSession();
+        if (session != null) {
+            session.setAttribute("lastViewedProducts", new LinkedList());
+        }
+        return "success";
+    }
+
+    /** Event to clear the last viewed history (products/categories/searchs) */
+    public static String clearAllLastViewed(HttpServletRequest request, HttpServletResponse response) {
+        ProductEvents.clearLastViewedCategories(request, response);
+        ProductEvents.clearLastViewedProducts(request, response);
+        ProductSearchSession.clearSearchOptionsHistoryList(request, response);
         return "success";
     }
 }
