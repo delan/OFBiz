@@ -264,14 +264,14 @@
     <service name="authOrderPayments" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="authOrderPayments" auth="false">
         <description>Process (authorizes) payments for an order</description>
-        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>
     </service>
     
     <service name="captureOrderPayments" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="captureOrderPayments" auth="true">
         <description>Captures (settles) pre-authorized order payments</description>       
-        <attribute name="orderId" type="String" mode="INOUT" optional="false"/>      
+        <attribute name="orderId" type="String" mode="IN" optional="false"/>      
         <attribute name="processResult" type="String" mode="OUT" optional="false"/>        
     </service>
 
@@ -330,7 +330,7 @@
         <attribute name="captureRefNum" type="String" mode="OUT" optional="true"/>
     </service>	
     
-    <!-- Credit Card Processors -->    
+    <!-- Credit Card Auth Processors -->    
     <service name="testCCProcessor" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
         <description>Credit Card Processing</description>
@@ -354,13 +354,20 @@
         <description>Credit Card Processing</description>
         <implements service="ccAuthInterface"/>
     </service>
-
+    
     <service name="cyberSourceCCProcessor" engine="java"            
             location="org.ofbiz.commonapp.thirdparty.cybersource.CSPaymentServices" invoke="ccProcessor">
         <description>Credit Card Processing</description>
         <implements service="ccAuthInterface"/>
     </service>
 
+    <!-- Credit Card Capture Services -->
+    <service name="testCCCapture" engine="java"
+            location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testCapture">
+        <description>Credit Card Test Capture</description>
+        <implements service="ccCaptureInterface"/>
+    </service>
+    
     <!-- EFT Processors -->        
     <service name="testEFTProcessor" engine="java"
             location="org.ofbiz.commonapp.accounting.payment.PaymentGatewayServices" invoke="testProcessor">
@@ -379,28 +386,6 @@
         <description>Credit Card Processing</description>
         <implements service="eftProcessInterface"/>
     </service>    
-
-    <!-- These are being depricated; and will be removed -->
-    <service name="authorizePayment" engine="java"
-        location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="authorizePayment" auth="false">
-        <description>Authorize Payment</description>
-        <attribute name="orderId" type="String" mode="IN" optional="false" />
-        <attribute name="currency" type="String" mode="IN" optional="true" />
-        <attribute name="authResponse" type="String" mode="OUT" optional="false" />
-    </service>
-
-    <service name="capturePayment" engine="java"
-        location="org.ofbiz.commonapp.accounting.payment.PaymentServices" invoke="capturePayment" auth="false">
-        <description>Capture Payment</description>
-        <attribute name="orderId" type="String" mode="IN" optional="false" />
-    </service>
-
-    <service name="captureAll" engine="simple"
-                location="org/ofbiz/commonapp/accounting/payment/PaymentSimpleMethods.xml" invoke="captureAll" auth="false">
-        <description>Capture all payments for orders with a given status</description>
-        <attribute name="orderStatusId" type="String" mode="IN" optional="false" />
-    </service>
-
 
 	<!-- ========= General Ledger Services ========= -->
 

@@ -227,8 +227,7 @@ public class PaymentGatewayServices {
             if (amountToBill < 0) {
                 Debug.logError("Something really weird happened. We processed more then expected! (" + orderId + ")", module);
                 result.put("processResult", "ERROR");
-            }
-            result.put("orderId", orderId);
+            }            
         }
         return result;
     }
@@ -241,7 +240,7 @@ public class PaymentGatewayServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String orderId = (String) context.get("orderId");        
-        Map result = new HashMap();        
+        Map result = new HashMap();               
 
         // get the order header and payment preferences
         GenericValue orderHeader = null;
@@ -352,10 +351,15 @@ public class PaymentGatewayServices {
             }
         }
         
-        // now re-auth and re-capture any failed attempts
-        // TODO: re-auth and re-capture all failed attempts
-        
-        return ServiceUtil.returnSuccess();    
+        if (failedAttempts.size() == 0) {
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put("processResult", "COMPLETE");
+            return result;
+        } else {                            
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            result.put("processResult", "FAILED");
+            return result;        
+        } 
     }
 
     private static boolean processResult(DispatchContext dctx, Map result, GenericValue paymentPreference, GenericValue paymentSettings) throws GeneralException {
@@ -420,8 +424,8 @@ public class PaymentGatewayServices {
                             "paymentTypeId", "RECEIPT", "paymentMethodTypeId", paymentPreference.get("paymentMethodTypeId"),
                             "paymentMethodId", paymentPreference.get("paymentMethodId"), "partyIdTo", payTo,
                             "partyIdFrom", orderRole.get("partyId")));
-            payment.set("paymentPreference", paymentPreference.get("orderPaymentPreferenceId"));
-            payment.set("amount", result.get("processAmount"));
+            payment.set("paymentPreferenceId", paymentPreference.get("orderPaymentPreferenceId"));
+            payment.set("amount", result.get("captureAmount"));
             payment.set("paymentRefNum", result.get("captureRefNum"));
             payment.set("effectiveDate", UtilDateTime.nowTimestamp());
             delegator.create(payment);
