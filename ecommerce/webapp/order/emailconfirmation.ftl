@@ -1,4 +1,3 @@
-<!-- Copyright (c) 2003 The Open For Business Project - www.ofbiz.org -->
 <#--
  *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +28,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <#-- this needs to be fully qualified to appear in email; the server must also be available -->
-    <link rel='stylesheet' href='http://localhost:8080/images/maincss.css' type='text/css'>      
+    <link rel='stylesheet' href='<@ofbizContentUrl>/images/maincss.css</@ofbizContentUrl>' type='text/css'>      
 </head>
 
 <body> 
@@ -39,14 +38,13 @@
 <p class="head1">Order Confirmation</p>
 <p>NOTE: This is a DEMO store-front.  Orders placed here will NOT be billed, and will NOT be fulfilled.</p>
 
-<#assign urlPrefix="http://localhost:8080/ecommerce/control">
 <#-- display the standard order status page header and items -->
-<#include "/orderheader.ftl">
+<#include "orderheader.ftl">
 <br>
-<#include "/orderitems.ftl">
+<#include "orderitems.ftl">
 <div align='right'>  
   <#-- change this to not display when no account was created -->
-  <a href="<@ofbizUrl>/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontextbig">[View&nbsp;Order]&nbsp;</a>
-  <a href="<@ofbizUrl>/main</@ofbizUrl>" class="buttontextbig">[Continue&nbsp;Shopping]</a>
+  <a href="<@ofbizUrl encode="true" fullPath="true">/orderstatus?order_id=${orderHeader.orderId}</@ofbizUrl>" class="buttontextbig">[View&nbsp;Order]&nbsp;</a>
+  <a href="<@ofbizUrl encode="true" fullPath="true">/main</@ofbizUrl>" class="buttontextbig">[Continue&nbsp;Shopping]</a>
 </div>
 </body>   
