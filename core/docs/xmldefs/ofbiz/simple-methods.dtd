@@ -273,7 +273,7 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!-- Environment specific operations -->    
 <!ELEMENT field-to-field EMPTY>
 <!ATTLIST field-to-field
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     to-map-name CDATA #IMPLIED
     to-field-name CDATA #IMPLIED
@@ -287,13 +287,13 @@ Error messages go on the error list and are handled with the check-errors tag.
 <!ELEMENT env-to-field EMPTY>
 <!ATTLIST env-to-field
     env-name CDATA #REQUIRED
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #IMPLIED
 >
 <!ELEMENT field-to-env EMPTY>
 <!ATTLIST field-to-env
     env-name CDATA #REQUIRED
-    map-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
     field-name CDATA #IMPLIED
 >
 <!ELEMENT string-to-field EMPTY>

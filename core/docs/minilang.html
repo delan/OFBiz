@@ -825,8 +825,9 @@ result field.</p>
     <td><b>Description</b></td>
 </tr>
 <tr>
-    <td>map-name</td><td>Y</td>
-    <td>The name of the map in the method environment the field will come from.</td>
+    <td>map-name</td><td>N</td>
+    <td>The name of the map in the method environment the field will come from. If
+    this is null or empty it will default to the method environment itself.</td>
 </tr>
 <tr>
     <td>field-name</td><td>Y</td>
@@ -835,7 +836,10 @@ result field.</p>
 <tr>
     <td>to-map-name</td><td>N</td>
     <td>The name of the map in the method environment the field will go to.
-    If empty will default to the map-name.</td>
+    If empty will default to the map-name. Note that if no map-name was specified
+    this will default to the method environment. So, you can copy from the environment
+    to the environment or from the environment to a map, but to copy from a map
+    to the environment you must use the field-to-env operation defined below.</td>
 </tr>
 <tr>
     <td>to-field-name</td><td>N</td>
@@ -881,7 +885,8 @@ result field.</p>
 </tr>
 <tr>
     <td>map-name</td><td>Y</td>
-    <td>The name of the map in the method environment the field will go to.</td>
+    <td>The name of the map in the method environment the field will go to. If empty
+    or not specified this will default to the method environment itself.</td>
 </tr>
 <tr>
     <td>field-name</td><td>N</td>
@@ -904,7 +909,8 @@ result field.</p>
 </tr>
 <tr>
     <td>map-name</td><td>Y</td>
-    <td>The name of the map in the method environment the field will come from.</td>
+    <td>The name of the map in the method environment the field will come from. If empty
+    or not specified this will default to the method environment itself.</td>
 </tr>
 <tr>
     <td>field-name</td><td>N</td>

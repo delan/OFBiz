@@ -58,20 +58,24 @@ public class EnvToField extends MethodOperation {
     }
 
     public boolean exec(MethodContext methodContext) {
-        Map toMap = (Map) methodContext.getEnv(mapName);
-        if (toMap == null) {
-            Debug.logVerbose("Map not found with name " + mapName + ", creating new map");
-            toMap = new HashMap();
-            methodContext.putEnv(mapName, toMap);
-        }
-
         Object envVar = methodContext.getEnv(envName);
         if (envVar == null) {
             Debug.logWarning("Environment field not found with name " + envName + ", not copying env field");
             return true;
         }
 
-        toMap.put(fieldName, envVar);
+        if (mapName != null && mapName.length() > 0) {
+            Map toMap = (Map) methodContext.getEnv(mapName);
+            if (toMap == null) {
+                Debug.logInfo("Map not found with name " + mapName + ", creating new map");
+                toMap = new HashMap();
+                methodContext.putEnv(mapName, toMap);
+            }
+            toMap.put(fieldName, envVar);
+        } else {
+            // no to-map, so put in env
+            methodContext.putEnv(fieldName, envVar);
+        }
         return true;
     }
 }
