@@ -1365,6 +1365,12 @@
       <relation type="many" rel-entity-name="SimpleSalesTaxLookup">
         <key-map field-name="taxCategory"/>
       </relation>
+      <relation type="many" rel-entity-name="ProductGlAccount">
+        <key-map field-name="productId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductFacility">
+        <key-map field-name="productId"/>
+      </relation>
     </entity>
     <entity entity-name="ProductAssoc"
             package-name="org.ofbiz.commonapp.product.product"
