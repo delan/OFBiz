@@ -59,6 +59,7 @@ import org.ofbiz.service.jms.JmsListenerFactory;
 import org.ofbiz.service.job.JobManager;
 import org.ofbiz.service.job.JobManagerException;
 import org.w3c.dom.Element;
+import org.apache.commons.collections.map.LRUMap;
 
 /**
  * Global Service Dispatcher
@@ -72,6 +73,7 @@ public class ServiceDispatcher {
     public static final String module = ServiceDispatcher.class.getName();
 
     protected static Map dispatchers = new HashMap();
+    protected static Map runLog = new LRUMap(200);
     protected static boolean enableJM = true;
     protected static boolean enableJMS = true;
     protected static boolean enableSvcs = true;
@@ -247,6 +249,10 @@ public class ServiceDispatcher {
         boolean isFailure = false;
         boolean isError = false;
 
+        // set up the running service log
+        RunningService rs = new RunningService(modelService, GenericEngine.SYNC_MODE);
+        runLog.put(rs, this);
+
         // check the locale
         Locale locale = this.checkLocale(context);
 
@@ -418,6 +424,7 @@ public class ServiceDispatcher {
             if (eventMap != null) ServiceEcaUtil.evalRules(modelService.name, eventMap, "return", ctx, ecaContext, result, isError, isFailure);
 
             checkDebug(modelService, 0, debugging);
+            rs.setEndStamp();
             return result;
         } catch (Throwable t) {
             Debug.logError(t, "Service [" + modelService.name + "] threw an unexpected exception/error", module);
@@ -428,6 +435,7 @@ public class ServiceDispatcher {
                 Debug.logError(te, "Cannot rollback transaction", module);
             }
             checkDebug(modelService, 0, debugging);
+            rs.setEndStamp();
             if (t instanceof ServiceAuthException) {
                 throw (ServiceAuthException) t;
             } else if (t instanceof ServiceValidationException) {
@@ -462,6 +470,10 @@ public class ServiceDispatcher {
         Map result = new HashMap();
         boolean isFailure = false;
         boolean isError = false;
+
+        // set up the running service log
+        RunningService rs = new RunningService(service, GenericEngine.ASYNC_MODE);
+        runLog.put(rs, this);
 
         // check the locale
         Locale locale = this.checkLocale(context);
@@ -874,6 +886,10 @@ public class ServiceDispatcher {
      */
     public static void enableSvcs(boolean enable) {
         ServiceDispatcher.enableSvcs = enable;
+    }
+
+    public static Map getServiceLogMap() {
+        return runLog;
     }
 
 }
