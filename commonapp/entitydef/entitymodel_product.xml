@@ -52,6 +52,7 @@
   <!--  - org.ofbiz.commonapp.product.product -->
   <!--  - org.ofbiz.commonapp.product.promo -->
   <!--  - org.ofbiz.commonapp.product.storage -->
+  <!--  - org.ofbiz.commonapp.product.store -->
   <!--  - org.ofbiz.commonapp.product.supplier -->
   <!-- ========================================================= -->
 
@@ -97,7 +98,7 @@
       <relation type="many" rel-entity-name="ProdCatalogRole">
         <key-map field-name="prodCatalogId"/>
       </relation>
-      <relation type="many" rel-entity-name="InventoryItemTempRes">
+      <relation type="many" rel-entity-name="ProductStoreCatalog">
         <key-map field-name="prodCatalogId"/>
       </relation>
     </entity>
@@ -972,20 +973,20 @@
             title="Inventory Item Temporary Reservation Entity">
       <field name="visitId" type="id-ne"></field>
       <field name="productId" type="id-ne"></field>
-      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="reservedDate" type="date-time"></field>
       <prim-key field="visitId"/>
       <prim-key field="productId"/>
-      <prim-key field="prodCatalogId"/>
+      <prim-key field="productStoreId"/>
       <relation type="one" fk-name="INV_ITEM_TR_VIS" rel-entity-name="Visit">
         <key-map field-name="visitId"/>
       </relation>
       <relation type="one" fk-name="INV_ITEM_TR_PROD" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
-      <relation type="one" fk-name="INV_ITEM_TR_PCAT" rel-entity-name="ProdCatalog">
-        <key-map field-name="prodCatalogId"/>
+      <relation type="one" fk-name="INV_ITEM_TR_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
       </relation>
     </entity>
     <entity entity-name="InventoryItemType"
@@ -2298,6 +2299,183 @@
       </relation>
       <relation type="many" rel-entity-name="Facility">
         <key-map field-name="facilityTypeId"/>
+      </relation>
+    </entity>
+
+  <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.product.store -->
+  <!-- ========================================================= -->
+
+    <entity entity-name="ProductStore"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="storeName" type="name"></field>
+      <field name="title" type="name"></field>
+      <field name="subtitle" type="description"></field>
+      <field name="inventoryFacilityId" type="id"></field>
+      <field name="oneInventoryFacility" type="indicator"></field>
+      <field name="checkInventory" type="indicator"></field>
+      <field name="reserveInventory" type="indicator"></field>
+      <field name="reserveOrderEnumId" type="id"></field>
+      <field name="requireInventory" type="indicator"></field>
+      <field name="styleSheet" type="url"></field>
+      <field name="headerLogo" type="url"></field>
+      <field name="contentPathPrefix" type="long-varchar"></field>
+      <field name="templatePathPrefix" type="long-varchar"></field>
+      <prim-key field="productStoreId"/>
+      <relation type="one" fk-name="PROD_STR_FACILITY" rel-entity-name="Facility">
+        <key-map field-name="inventoryFacilityId" rel-field-name="facilityId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_RORDENUM" title="ReserveOrder" rel-entity-name="Enumeration">
+        <key-map field-name="reserveOrderEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreFacility">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStorePromoAppl">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="WebSite">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreRole">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="ProductStoreCatalog">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="many" rel-entity-name="InventoryItemTempRes">
+        <key-map field-name="productStoreId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreFacility"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Inventory Facility Applicability Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="facilityId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="facilityId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PRDSTRFAC_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRFAC_FAC" rel-entity-name="Facility">
+        <key-map field-name="facilityId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStorePaymentSetting"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Payment Settings Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="paymentMethodTypeId" type="id-ne"></field>
+      <field name="paymentAuthService" type="value"></field>
+      <field name="paymentReAuthService" type="value"></field>
+      <field name="paymentCaptureService" type="value"></field>
+      <field name="paymentRefundService" type="value"></field>
+      <field name="paymentConfiguration" type="value"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="paymentMethodTypeId"/>
+      <relation type="one" fk-name="PRDS_PS_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDS_PS_PMNTTP" rel-entity-name="PaymentMethodType">
+        <key-map field-name="paymentMethodTypeId"/>
+      </relation>
+    </entity>
+    <view-entity entity-name="ProductStorePaymentSettingView"
+            package-name="org.ofbiz.commonapp.product.store"
+            never-cache="true"
+            title="Product Store Payment Settings View Entity">
+      <member-entity entity-alias="PS" entity-name="ProductStore"/>
+      <member-entity entity-alias="PSPS" entity-name="ProductStorePaymentSetting"/>
+      <member-entity entity-alias="PMT" entity-name="PaymentMethodType"/>
+      <alias entity-alias="PS" name="productStoreId"/>
+      <alias entity-alias="PS" name="storeName"/>
+      <alias entity-alias="PSPS" name="paymentAuthService"/>
+      <alias entity-alias="PSPS" name="paymentReAuthService"/>
+      <alias entity-alias="PSPS" name="paymentCaptureService"/>
+      <alias entity-alias="PSPS" name="paymentRefundService"/>
+      <alias entity-alias="PSPS" name="paymentConfiguration"/>
+      <alias entity-alias="PMT" name="paymentMethodTypeId"/>
+      <alias entity-alias="PMT" name="description"/>
+      <view-link entity-alias="PS" rel-entity-alias="PSPS">
+        <key-map field-name="productStoreId"/>
+      </view-link>
+      <view-link entity-alias="PSPS" rel-entity-alias="PMT">
+        <key-map field-name="paymentMethodTypeId"/>
+      </view-link>
+    </view-entity>
+    <entity entity-name="ProductStorePromoAppl"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Promotion Applicability Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="productPromoId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="productPromoId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PRDSTRPRMO_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRPRMO_PRMO" rel-entity-name="ProductPromo">
+        <key-map field-name="productPromoId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreRole"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Role Association Entity">
+      <field name="partyId" type="id-ne"></field>
+      <field name="roleTypeId" type="id-ne"></field>
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="partyId"/>
+      <prim-key field="roleTypeId"/>
+      <prim-key field="productStoreId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one-nofk" rel-entity-name="Party">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="RoleType">
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="Person">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="PartyGroup">
+        <key-map field-name="partyId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRRLE_PRLE" rel-entity-name="PartyRole">
+        <key-map field-name="partyId"/>
+        <key-map field-name="roleTypeId"/>
+      </relation>
+      <relation type="one" fk-name="PRDSTRRLE_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+    </entity>
+    <entity entity-name="ProductStoreCatalog"
+            package-name="org.ofbiz.commonapp.product.store"
+            title="Product Store Catalog Association Entity">
+      <field name="productStoreId" type="id-ne"></field>
+      <field name="prodCatalogId" type="id-ne"></field>
+      <field name="fromDate" type="date-time"></field>
+      <field name="thruDate" type="date-time"></field>
+      <field name="sequenceNum" type="numeric"></field>
+      <prim-key field="productStoreId"/>
+      <prim-key field="prodCatalogId"/>
+      <prim-key field="fromDate"/>
+      <relation type="one" fk-name="PS_CAT_PRDSTR" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
+      <relation type="one" fk-name="PS_CAT_CATALOG" rel-entity-name="ProdCatalog">
+        <key-map field-name="prodCatalogId"/>
       </relation>
     </entity>
 

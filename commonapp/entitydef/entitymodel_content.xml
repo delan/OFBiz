@@ -1154,6 +1154,7 @@
             title="Web Site Entity">
       <field name="webSiteId" type="id-ne"></field>
       <field name="siteName" type="name"></field>
+      <field name="productStoreId" type="id"></field>
       <field name="httpHost" type="long-varchar"></field>
       <field name="httpPort" type="very-short"></field>
       <field name="httpsHost" type="long-varchar"></field>
@@ -1162,6 +1163,9 @@
       <field name="standardContentPrefix" type="url"></field>
       <field name="secureContentPrefix" type="url"></field>      
       <prim-key field="webSiteId"/>
+      <relation type="one" fk-name="WEB_SITE_PRDS" rel-entity-name="ProductStore">
+        <key-map field-name="productStoreId"/>
+      </relation>
       <relation type="many" rel-entity-name="WebPage">
         <key-map field-name="webSiteId"/>
       </relation>

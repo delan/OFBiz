@@ -718,6 +718,18 @@
     <entity-group group="org.ofbiz.commonapp" entity="FacilityTypeAttr" />
 
   <!-- ========================================================= -->
+  <!-- org.ofbiz.commonapp.product.store -->
+  <!-- ========================================================= -->
+
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStore" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreFacility" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStorePaymentSetting" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStorePaymentSettingView" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStorePromoAppl" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="ProductStoreCatalog" />
+
+  <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.product.supplier -->
   <!-- ========================================================= -->
 
