@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
 
@@ -122,40 +122,39 @@
       </select>
     </td>                
   </tr>   
-  <tr>
-    <td width='14%'>&nbsp;</td>
-    <td width='6%'>&nbsp;</td>
-    <td width='6%'><hr class="sepbar"></td>   
-    <td width='74%'>&nbsp;</td>
-  </tr>       
-  <tr>
-    <td width='14%'>&nbsp;</td>
-    <td width='6%' align='right' nowrap><div class="tabletext">Return From Address:</div></td>
-    <td width='6%'>&nbsp;</td>
-    <td width='74%'>
-      <table border='0' cellpadding='1' cellspacing='0'>
-        <tr>
-          <td><input type='radio' name="orginContactMechId" value=""></td>
-          <td><div class='tabletext'>No Address</div></td>
-        </tr>       
-      </table>
-    </td>                
-  </tr> 
-  <tr>
-    <td width='14%'>&nbsp;</td>
-    <td width='6%'>&nbsp;</td>
-    <td width='6%'><hr class="sepbar"></td>   
-    <td width='74%'>&nbsp;</td>
-  </tr>  
-  <#if returnHeader?exists>     
-  <tr>
-    <td width='14%'>&nbsp;</td>
-    <td width='6%'>&nbsp;</td>
-    <td width='6%'>&nbsp;</td>   
-    <td width='74%'>
-      <input type="submit" class="standardButton" value="Update">      
-    </td>
-  </tr>     
+  <#if returnHeader?has_content>    
+    <tr>
+      <td width='14%'>&nbsp;</td>
+      <td width='6%' align='right' valign='top' nowrap><div class="tabletext">Return From Address:</div></td>
+      <td width='6%'>&nbsp;</td>
+      <td width='74%'>
+        <#if postalAddresses?has_content>
+          <#list postalAddresses as postalAddressInfo>
+            <#assign postalAddress = postalAddressInfo.postalAddress>           
+            <div class="tabletext">
+              <input type='radio' name="originContactMechId" value="${postalAddress.contactMechId}" <#if returnHeader.originContactMechId?default("") == postalAddress.contactMechId>checked</#if>>
+              <#if postalAddress.toName?has_content><b>To:</b>&nbsp;${postalAddress.toName}<br></#if>
+              <#if postalAddress.attnName?has_content>&nbsp;&nbsp;&nbsp;&nbsp;<b>Attn:</b>&nbsp;${postalAddress.attnName}<br></#if>
+              <#if postalAddress.address1?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address1}<br></#if>
+              <#if postalAddress.address2?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.address2}<br></#if>
+              <#if postalAddress.city?has_content>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.city}</#if>
+              <#if postalAddress.stateProvinceGeoId?has_content><br>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.stateProvinceGeoId}</#if>
+              <#if postalAddress.postalCode?has_content><br>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.postalCode}</#if>
+              <#if postalAddress.countryGeoId?has_content><br>&nbsp;&nbsp;&nbsp;&nbsp;${postalAddress.countryGeoId}</#if>                                                                                     
+            </div>
+          </#list>
+        </#if>          
+        <div class='tabletext'><input type='radio' name="originContactMechId" value="">No Address</div>
+      </td>                
+    </tr>     
+    <tr>
+      <td width='14%'>&nbsp;</td>
+      <td width='6%'>&nbsp;</td>
+      <td width='6%'>&nbsp;</td>   
+      <td width='74%'>
+        <input type="submit" class="standardButton" value="Update">      
+      </td>
+    </tr>     
   <#else>  
   <tr>
     <td width='14%'>&nbsp;</td>
