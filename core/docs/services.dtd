@@ -42,6 +42,6 @@
 	name CDATA #REQUIRED
 	type CDATA #REQUIRED
 	mode (IN|OUT|INOUT) #REQUIRED
-	check (true|false) #IMPLIED
+	optional (true|false) #IMPLIED
 >
 	
