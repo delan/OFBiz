@@ -265,6 +265,7 @@
       <field name="webSiteId" type="id"></field>
       <field name="productStoreId" type="id"></field>
       <field name="terminalId" type="id-long"></field>
+      <field name="transactionId" type="id-long"></field>
       <field name="needsInventoryIssuance" type="indicator"></field>
       <field name="remainingSubTotal" type="currency-amount"></field>
       <field name="grandTotal" type="currency-amount"></field>

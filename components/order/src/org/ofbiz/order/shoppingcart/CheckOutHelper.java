@@ -437,12 +437,14 @@ public class CheckOutHelper {
         String partyId = this.cart.getPartyId();
         String facilityId = this.cart.getFacilityId();
         String terminalId = this.cart.getTerminalId();
+        String transactionId = cart.getTransactionId();
         String productStoreId = cart.getProductStoreId();
 
         context.put("grandTotal", grandTotal);
         context.put("userLogin", userLogin);
         context.put("partyId", partyId);
         context.put("productStoreId", productStoreId);
+        context.put("transactionId", transactionId);
         context.put("originFacilityId", facilityId);
         context.put("visitId", visitId);
         context.put("terminalId", terminalId);

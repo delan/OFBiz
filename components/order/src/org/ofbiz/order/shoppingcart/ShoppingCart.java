@@ -364,6 +364,7 @@ public class ShoppingCart implements Serializable {
                         opp.set("statusId", "PAYMENT_RECEIVED");
                     }
                 }
+                Debug.log("Creating OrderPaymentPreference - " + opp, module);
                 values.add(opp);
             }
 
@@ -439,6 +440,7 @@ public class ShoppingCart implements Serializable {
     private String delegatorName = null;
 
     protected String productStoreId = null;
+    protected String transactionId = null;
     protected String facilityId = null;
     protected String webSiteId = null;
     protected String terminalId = null;
@@ -530,6 +532,14 @@ public class ShoppingCart implements Serializable {
 
     public void setProductStoreId(String productStoreId) {
         this.productStoreId = productStoreId;
+    }
+
+    public String getTransactionId() {
+        return this.transactionId;
+    }
+
+    public void setTransactionId(String transactionId) {
+        this.transactionId = transactionId;
     }
 
     public String getTerminalId() {
