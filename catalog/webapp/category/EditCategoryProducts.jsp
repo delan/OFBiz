@@ -36,7 +36,8 @@
 
 <%if (security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-    boolean activeOnly = "true".equals(request.getParameter("activeOnly"));
+    //default this to true, ie only show active
+    boolean activeOnly = !"false".equals(request.getParameter("activeOnly"));
 
     boolean useValues = true;
     if (request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
@@ -148,13 +149,21 @@
   <tr valign="middle">
     <td><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></a></td>
     <td><%if (product!=null) {%><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><%=product.getString("productName")%></a><%}%>&nbsp;</td>
-    <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/></div></td>
+    <td>
+        <%boolean hasntStarted = false;%>
+        <%if (productCategoryMember.getTimestamp("fromDate") != null && UtilDateTime.nowTimestamp().before(productCategoryMember.getTimestamp("fromDate"))) { hasntStarted = true; }%>
+        <div class='tabletext'<%if (hasntStarted) {%> style='color: red;'<%}%>>
+                <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/>
+        </div>
+    </td>
     <td align="center">
+        <%boolean hasExpired = false;%>
+        <%if (productCategoryMember.getTimestamp("thruDate") != null && UtilDateTime.nowTimestamp().after(productCategoryMember.getTimestamp("thruDate"))) { hasExpired = true; }%>
         <FORM method=POST action='<ofbiz:url>/updateCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%></ofbiz:url>'>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/>>
+            <input type=text size='22' <ofbiz:inputvalue entityAttr="productCategoryMember" field="thruDate" fullattrs="true"/><%if (hasExpired) {%> style='color: red;'<%}%>>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="sequenceNum" fullattrs="true"/>>
             <input type=text size='5' <ofbiz:inputvalue entityAttr="productCategoryMember" field="quantity" fullattrs="true"/>>
             <INPUT type=submit value='Update'>

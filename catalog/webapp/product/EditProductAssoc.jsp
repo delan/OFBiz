@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Edit Product Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    Sep 10 2001
  *@version    1.0
- */
-%>
+--%>
 <%@ page import="java.sql.*"%>
 <%@ page import="java.util.*, java.io.*" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>

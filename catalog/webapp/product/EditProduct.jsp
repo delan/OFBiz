@@ -1,7 +1,4 @@
-<%
-/**
- *  Title: Edit Product Page
- *  Description: None
+<%--
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a 
@@ -25,8 +22,7 @@
  *@author     David E. Jones
  *@created    Sep 10 2001
  *@version    1.0
- */
-%>
+--%>
 
 <%@ page import="java.util.*, java.io.*, java.net.URL" %>
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.entity.*" %>
@@ -34,8 +30,6 @@
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
-
-<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
@@ -73,6 +67,16 @@
     if("true".equalsIgnoreCase((String) request.getParameter("tryEntity"))) tryEntity = true;
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
+
+<SCRIPT language='JavaScript'>
+function insertNowTimestamp(field) {
+  eval('document.productForm.' + field + '.value="<%=UtilDateTime.nowTimestamp().toString()%>";');
+};
+function insertImageName(size,ext) {
+  eval('document.productForm.' + size + 'ImageUrl.value="<%=UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix")%>/product.<%=productId%>.' + size + '.' + ext + '";');
+};
+</SCRIPT>
+<table cellpadding=0 cellspacing=0 border=0 width="100%"><tr><td>&nbsp;&nbsp;</td><td>
 
 <br>
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
@@ -180,32 +184,6 @@
       </select>
     </td>
   </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">Manufacturer Party Id</div></td>
-    <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='manufacturerPartyId' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20"></td>
-  </tr>
-
-  <tr>
-    <td width="26%" align=right><div class="tabletext">Introduction Date</div></td>
-    <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='introductionDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20">(yyyy-mm-dd hh:MM:ss)</td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">Sales Discontinuation Date</div></td>
-    <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='salesDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20">(yyyy-mm-dd hh:MM:ss)</td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">Support Discontinuation Date</div></td>
-    <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20">(yyyy-mm-dd hh:MM:ss)</td>
-  </tr>
-  <tr>
-    <td width="26%" align=right><div class="tabletext">Comment</div></td>
-    <td>&nbsp;</td>
-    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='comments' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255"></td>
-  </tr>
 
   <tr>
     <td width="26%" align=right><div class="tabletext">Product Name</div></td>
@@ -228,11 +206,6 @@
     <td width="74%" colspan='5'><textarea cols="60" rows="5" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='product' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
 
-<SCRIPT language='JavaScript'>
-function insertImageName(size,ext) {
-  eval('document.forms.productForm.' + size + 'ImageUrl.value="<%=UtilProperties.getPropertyValue(catalogPropertiesURL, "image.url.prefix")%>/product.<%=productId%>.' + size + '.' + ext + '";');
-};
-</SCRIPT>
   <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Small Image URL</div></td>
     <td>&nbsp;</td>
@@ -292,6 +265,33 @@ function insertImageName(size,ext) {
         </div>
       <%}%>
     </td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Manufacturer Party Id</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='manufacturerPartyId' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20"></td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Introduction Date</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='introductionDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("introductionDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Sales Discontinuation Date</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='salesDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("salesDiscontinuationDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Support Discontinuation Date</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="22" maxlength="22"> <a href='#' onclick='insertNowTimestamp("supportDiscontinuationDate")' class='buttontext'>[Now]</a> (yyyy-MM-dd hh:mm:ss)</td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext">Comment</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='comments' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255"></td>
   </tr>
 
   <tr>
