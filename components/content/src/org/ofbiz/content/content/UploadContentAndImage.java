@@ -46,7 +46,7 @@ import javax.servlet.http.HttpSession;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -242,7 +242,7 @@ public class UploadContentAndImage {
             if (UtilValidate.isNotEmpty(section)) {
                 assocContext.put("contentIdTo", section);
                 assocContext.put("contentAssocPredicateId", "categorizes");
-                assocResults = dispatcher.runSync("persistContentAndAssoc", assocContext);
+                Map assocResults = dispatcher.runSync("persistContentAndAssoc", assocContext);
             }
 
             request.setAttribute("dataResourceId", ftlDataResourceId);
