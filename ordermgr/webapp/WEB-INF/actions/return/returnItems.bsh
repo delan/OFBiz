@@ -40,6 +40,7 @@ context.put("returnReasons", returnReasons);
 
 orderId = request.getParameter("orderId");
 if (orderId != null) {
-    orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+    fields = UtilMisc.toMap("orderId", orderId, "statusId", "ITEM_COMPLETED");
+    orderItems = delegator.findByAnd("OrderItem", fields);
     context.put("orderItems", orderItems);
 }
