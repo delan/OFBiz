@@ -39,7 +39,8 @@
 if (security.hasPermission("ENTITY_MAINT", session)) {
   String entityName = request.getParameter("entityName");
   ModelReader reader = delegator.getModelReader();
-  ModelEntity entity = reader.getModelEntity(entityName);
+  ModelEntity entity = null;
+  if (UtilValidate.isNotEmpty(entityName)) entity = reader.getModelEntity(entityName);
   ModelViewEntity modelViewEntity = null;
   if (entity instanceof ModelViewEntity) modelViewEntity = (ModelViewEntity)entity;
   TreeSet entSet = new TreeSet(reader.getEntityNames());
@@ -197,14 +198,15 @@ if (security.hasPermission("ENTITY_MAINT", session)) {
     }
 
     if (modelViewEntity != null) {
-      modelViewEntity.addMemberEntityName(alias, aliasedEntityName);
+      ModelViewEntity.ModelMemberEntity modelMemberEntity = new ModelViewEntity.ModelMemberEntity(alias, aliasedEntityName);
+      modelViewEntity.addMemberModelMemberEntity(modelMemberEntity);
     } else {
       errorMsg = errorMsg + "<li> Cannot run addMemberEntity on a non view-entity.";
     }
   } else if ("removeMemberEntity".equals(event)) {
     String alias = request.getParameter("alias");
     if (modelViewEntity != null) {
-      modelViewEntity.removeMemberEntityAlias(alias);
+      modelViewEntity.removeMemberModelMemberEntity(alias);
     } else {
       errorMsg = errorMsg + "<li> Cannot run removeMemberEntity on a non view-entity.";
     }
@@ -252,7 +254,7 @@ A.listtext:hover {color:red;}
 </FORM>
 <hr>
 <%if (entity == null) {%>
-  <H4>Entity not found with name "<%=entityName%>"</H4>
+  <H4>Entity not found with name "<%=UtilFormatOut.checkNull(entityName)%>"</H4>
 <%}else{%>
 
 <BR>
@@ -377,7 +379,7 @@ A.listtext:hover {color:red;}
 <B>VIEW MEMBER ENTITIES</B>
   <TABLE border='1' cellpadding='2' cellspacing='0'>
     <TR><TD>Entity Alias</TD><TD>Entity Name</TD><TD>&nbsp;</TD></TR>
-    <%Iterator memberEntityNamesIter = UtilMisc.toIterator(modelViewEntity.getMemberEntityNames().entrySet());%>
+    <%Iterator memberEntityNamesIter = UtilMisc.toIterator(modelViewEntity.getMemberModelMemberEntities().entrySet());%>
     <%while (memberEntityNamesIter != null && memberEntityNamesIter.hasNext()) {%>
       <%Map.Entry aliasEntry = (Map.Entry) memberEntityNamesIter.next();%>
       <TR>
