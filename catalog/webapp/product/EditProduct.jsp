@@ -39,40 +39,42 @@
 
 <%if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {%>
 <%
-  boolean useValues = true;
-  if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) useValues = false;
+    boolean tryEntity = true;
+    if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
 
-  String productId = request.getParameter("PRODUCT_ID");
-  GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
-  if(product == null) useValues = false;
+    String productId = request.getParameter("productId");
+    GenericValue product = delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", productId));
+    if(product == null) tryEntity = false;
 
-  Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
-  Collection productTypeCol = delegator.findAll("ProductType", UtilMisc.toList("description"));
+    Collection categoryCol = delegator.findAll("ProductCategory", UtilMisc.toList("description"));
+    Collection productTypeCol = delegator.findAll("ProductType", UtilMisc.toList("description"));
 
-  GenericValue primaryProductCategory = null;
-  String primProdCatIdParam = request.getParameter("PRIMARY_PRODUCT_CATEGORY_ID");
-  if(product != null && useValues) {
-    primaryProductCategory = product.getRelatedOne("PrimaryProductCategory");
-  } else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0) {
-    primaryProductCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
-  }
+    GenericValue primaryProductCategory = null;
+    String primProdCatIdParam = request.getParameter("primaryProductCategoryId");
+    if(product != null && tryEntity) {
+        primaryProductCategory = product.getRelatedOne("PrimaryProductCategory");
+    } else if(primProdCatIdParam != null && primProdCatIdParam.length() > 0) {
+        primaryProductCategory = delegator.findByPrimaryKey("ProductCategory", UtilMisc.toMap("productCategoryId", primProdCatIdParam));
+    }
 
-  GenericValue productType = null;
-  String productTypeIdParam = request.getParameter("productTypeId");
-  if(product != null && useValues) {
-    productType = product.getRelatedOne("ProductType");
-  } else if(productTypeIdParam != null && productTypeIdParam.length() > 0) {
-    productType = delegator.findByPrimaryKey("ProductType", UtilMisc.toMap("productTypeId", productTypeIdParam));
-  }
+    GenericValue productType = null;
+    String productTypeIdParam = request.getParameter("productTypeId");
+    if(product != null && tryEntity) {
+        productType = product.getRelatedOne("ProductType");
+        pageContext.setAttribute("product", product);
+    } else if(productTypeIdParam != null && productTypeIdParam.length() > 0) {
+        productType = delegator.findByPrimaryKey("ProductType", UtilMisc.toMap("productTypeId", productTypeIdParam));
+    }
 
-  if("true".equalsIgnoreCase((String)request.getParameter("useValues"))) useValues = true;
+    if("true".equalsIgnoreCase((String)request.getParameter("tryEntity"))) tryEntity = true;
+    pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 %>
 
 <br>
 <a href="<ofbiz:url>/EditProduct</ofbiz:url>" class="buttontext">[New Product]</a>
 <%if(productId != null && productId.length() > 0){%>
   <a href="/ecommerce/control/product?product_id=<%=productId%>" class='buttontext' target='_blank'>[Product Page]</a>
-  <a href="<ofbiz:url>/EditProduct?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Product]</a>
+  <a href="<ofbiz:url>/EditProduct?productId=<%=productId%></ofbiz:url>" class="buttontextdisabled">[Product]</a>
   <a href="<ofbiz:url>/EditProductCategories?productId=<%=productId%></ofbiz:url>" class="buttontext">[Categories]</a>
   <a href="<ofbiz:url>/EditProductKeyword?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Keywords]</a>
   <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Associations]</a>
@@ -83,50 +85,66 @@
 
 <div class="head1">Product with ID "<%=UtilFormatOut.checkNull(productId)%>"</div>
 
-<form action="<ofbiz:url>/UpdateProduct</ofbiz:url>" method=POST style='margin: 0;'>
-<table border='0' cellpadding='2' cellspacing='0'>
-
 <%if(product == null){%>
   <%if(productId != null){%>
     <h3>Could not find product with ID "<%=productId%>".</h3>
-    <input type=hidden name="UPDATE_MODE" value="CREATE">
+    <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;'>
+    <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
-      <td align=right><div class="tabletext">Product ID</div></td>
+      <td align=right><div class="tabletext"><b>Product ID</b></div></td>
       <td>&nbsp;</td>
-      <td>
-        <input type="text" name="PRODUCT_ID" size="20" maxlength="20" value="<%=productId%>">
+      <td width="74%" colspan='5'>
+        <input type="text" name="productId" size="20" maxlength="20" value="<%=productId%>">
       </td>
     </tr>
   <%}else{%>
-    <input type=hidden name="UPDATE_MODE" value="CREATE">
+    <form action="<ofbiz:url>/createProduct</ofbiz:url>" method=POST style='margin: 0;'>
+    <table border='0' cellpadding='2' cellspacing='0'>
     <tr>
-      <td align=right><div class="tabletext">Product ID</div></td>
+      <td align=right><div class="tabletext"><b>Product ID</b></div></td>
       <td>&nbsp;</td>
-      <td>
-        <input type="text" name="PRODUCT_ID" size="20" maxlength="20" value="">
+      <td width="74%" colspan='5'>
+        <input type="text" name="productId" size="20" maxlength="20" value="">
       </td>
     </tr>
   <%}%>
 <%}else{%>
-  <input type=hidden name="UPDATE_MODE" value="UPDATE">
-  <input type=hidden name="PRODUCT_ID" value="<%=productId%>">
+  <form action="<ofbiz:url>/updateProduct</ofbiz:url>" method=POST style='margin: 0;'>
+  <table border='0' cellpadding='2' cellspacing='0'>
+  <input type=hidden name="productId" value="<%=productId%>">
   <tr>
-    <td align=right><div class="tabletext">Product ID</div></td>
+    <td align=right><div class="tabletext"><b>Product ID</b></div></td>
     <td>&nbsp;</td>
-    <td>
+    <td width="74%" colspan='5'>
       <b><%=productId%></b> (This cannot be changed without re-creating the product.)
     </td>
   </tr>
 <%}%>
 
-  <%String fieldName; String paramName;%>
   <tr>
-    <%fieldName = "productTypeId";%><%paramName = "productTypeId";%>
+    <td width="26%" align=right><div class="tabletext"><b>Is VIRTUAL Product?</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%">
+      <SELECT name='autoCreateKeywords'>
+        <OPTION><ofbiz:inputvalue entityAttr='product' field='isVirtual' tryEntityAttr="tryEntity" default="N"/></OPTION>
+        <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
+      </SELECT>
+    </td>
+    <td width="26%" align=right><div class="tabletext"><b>Is VARIANT Product?</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%">
+      <SELECT name='autoCreateKeywords'>
+        <OPTION><ofbiz:inputvalue entityAttr='product' field='isVariant' tryEntityAttr="tryEntity" default="N"/></OPTION>
+        <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
+      </SELECT>
+    </td>
+  </tr>
+
+  <tr>
     <td width="26%" align=right><div class="tabletext">Product Type Id</div></td>
     <td>&nbsp;</td>
-    <td width="74%">
-      <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
-      <select name="<%=paramName%>" size=1>
+    <td width="74%" colspan='5'>
+      <select name="productTypeId" size=1>
         <%if(productType != null) {%>
           <option selected value='<%=productType.getString("productTypeId")%>'><%=productType.getString("description")%> [<%=productType.getString("productTypeId")%>]</option>
         <%}%>
@@ -140,12 +158,10 @@
     </td>
   </tr>
   <tr>
-    <%fieldName = "primaryProductCategoryId";%><%paramName = "PRIMARY_PRODUCT_CATEGORY_ID";%>
     <td width="26%" align=right><div class="tabletext">Primary Category Id</div></td>
     <td>&nbsp;</td>
-    <td width="74%">
-      <%-- <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"> --%>
-      <select name="<%=paramName%>" size=1>
+    <td width="74%" colspan='5'>
+      <select name="primaryProductCategoryId" size=1>
         <%if(primaryProductCategory != null) {%>
           <option selected value='<%=primaryProductCategory.getString("productCategoryId")%>'><%=primaryProductCategory.getString("description")%> [<%=primaryProductCategory.getString("productCategoryId")%>]</option>
         <%}%>
@@ -159,139 +175,147 @@
     </td>
   </tr>
   <tr>
-    <%fieldName = "manufacturerPartyId";%><%paramName = "MANUFACTURER_PARTY_ID";%>    
     <td width="26%" align=right><div class="tabletext">Manufacturer Party Id</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='manufacturerPartyId' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20"></td>
   </tr>
 
   <tr>
-    <%fieldName = "introductionDate";%><%paramName = "INTRODUCTION_DATE";%>    
     <td width="26%" align=right><div class="tabletext">Introduction Date</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='introductionDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20">(yyyy-mm-dd hh:MM:ss)</td>
   </tr>
   <tr>
-    <%fieldName = "salesDiscontinuationDate";%><%paramName = "SALES_DISCONTINUATION_DATE";%>    
     <td width="26%" align=right><div class="tabletext">Sales Discontinuation Date</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='salesDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20">(yyyy-mm-dd hh:MM:ss)</td>
   </tr>
   <tr>
-    <%fieldName = "supportDiscontinuationDate";%><%paramName = "SUPPORT_DISCONTINUATION_DATE";%>    
     <td width="26%" align=right><div class="tabletext">Support Discontinuation Date</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilDateTime.toDateString(product.getDate(fieldName)):request.getParameter(paramName))%>" size="10" maxlength="20">(MM/DD/YYYY)</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='supportDiscontinuationDate' tryEntityAttr="tryEntity" fullattrs="true"/> size="20" maxlength="20">(yyyy-mm-dd hh:MM:ss)</td>
   </tr>
   <tr>
-    <%fieldName = "comments";%><%paramName = "COMMENT";%>    
     <td width="26%" align=right><div class="tabletext">Comment</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255"></td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='comments' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255"></td>
   </tr>
 
   <tr>
-    <%fieldName = "productName";%><%paramName = "NAME";%>    
-    <td width="26%" align=right><div class="tabletext">Name</div></td>
+    <td width="26%" align=right><div class="tabletext">Product Name</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="30" maxlength="60"></td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='productName' tryEntityAttr="tryEntity" fullattrs="true"/> size="30" maxlength="60"></td>
   </tr>
   <tr>
-    <%fieldName = "description";%><%paramName = "DESCRIPTION";%>    
+    <td width="26%" align=right><div class="tabletext">Internal Name</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'><input type="text" <ofbiz:inputvalue entityAttr='product' field='internalName' tryEntityAttr="tryEntity" fullattrs="true"/> size="30" maxlength="60"></td>
+  </tr>
+  <tr>
     <td width="26%" align=right><div class="tabletext">Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="4" name="<%=paramName%>" maxlength="255"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
+    <td width="74%" colspan='5'><textarea cols="60" rows="2" name="description" maxlength="255"><ofbiz:inputvalue entityAttr='product' field='description' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
   <tr>
-    <%fieldName = "longDescription";%><%paramName = "LONG_DESCRIPTION";%>    
     <td width="26%" align=right valign=top><div class="tabletext">Long Description</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><textarea cols="60" rows="6" name="<%=paramName%>" maxlength="2000"><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%></textarea></td>
+    <td width="74%" colspan='5'><textarea cols="60" rows="5" name="longDescription" maxlength="2000"><ofbiz:inputvalue entityAttr='product' field='longDescription' tryEntityAttr="tryEntity"/></textarea></td>
   </tr>
 
   <tr>
-    <%fieldName = "smallImageUrl";%><%paramName = "SMALL_IMAGE_URL";%>    
     <td width="26%" align=right valign=top><div class="tabletext">Small Image URL</div></td>
     <td>&nbsp;</td>
-    <td width="74%">
-      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
+    <td width="74%" colspan='5'>
+      <input type="text" <ofbiz:inputvalue entityAttr='product' field='smallImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%>
     </td>
   </tr>
   <tr>
-    <%fieldName = "largeImageUrl";%><%paramName = "LARGE_IMAGE_URL";%>    
+    <td width="26%" align=right valign=top><div class="tabletext">Medium Image URL</div></td>
+    <td>&nbsp;</td>
+    <td width="74%" colspan='5'>
+      <input type="text" <ofbiz:inputvalue entityAttr='product' field='mediumImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
+      <%-- <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%> --%>
+    </td>
+  </tr>
+  <tr>
     <td width="26%" align=right valign=top><div class="tabletext">Large Image URL</div></td>
     <td>&nbsp;</td>
-    <td width="74%">
-      <input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="80" maxlength="255">
+    <td width="74%" colspan='5'>
+      <input type="text" <ofbiz:inputvalue entityAttr='product' field='largeImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
       <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=large&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Large Image]</a><%}%>
     </td>
   </tr>
-
   <tr>
-    <%fieldName = "listPrice";%><%paramName = "LIST_PRICE";%>
-    <td width="26%" align=right><div class="tabletext">List Price</div></td>
+    <td width="26%" align=right valign=top><div class="tabletext">Detail Image URL</div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-  <tr>
-    <%fieldName = "defaultPrice";%><%paramName = "DEFAULT_PRICE";%>
-    <td width="26%" align=right><div class="tabletext">Default Price</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
+    <td width="74%" colspan='5'>
+      <input type="text" <ofbiz:inputvalue entityAttr='product' field='detailImageUrl' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="255">
+      <%-- <%if(productId != null && productId.length() > 0) {%><p><a href="<ofbiz:url>/UploadImage?upload_file_type=small&PRODUCT_ID=<%=productId%></ofbiz:url>" class="buttontext">[Upload Small Image]</a><%}%> --%>
+    </td>
   </tr>
 
   <tr>
-    <%fieldName = "quantityUomId";%><%paramName = "QUANTITY_UOM_ID";%>    
-    <td width="26%" align=right><div class="tabletext">Quantity Uom Id</div></td>
+    <td width="26%" align=right><div class="tabletext"><b>List Price</b></div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-  <tr>
-    <%fieldName = "quantityIncluded";%><%paramName = "QUANTITY_INCLUDED";%>    
-    <td width="26%" align=right><div class="tabletext">Quantity Included</div></td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='listPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+    
+    <td width="26%" align=right><div class="tabletext"><b>Taxable?</b></div></td>
     <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-
-  <tr>
-    <%fieldName = "weightUomId";%><%paramName = "WEIGHT_UOM_ID";%>    
-    <td width="26%" align=right><div class="tabletext">Weight Uom Id</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-  <tr>
-    <%fieldName = "weight";%><%paramName = "WEIGHT";%>    
-    <td width="26%" align=right><div class="tabletext">Weight</div></td>
-    <td>&nbsp;</td>
-    <td width="74%"><input type="text" name="<%=paramName%>" value="<%=UtilFormatOut.checkNull(useValues?UtilFormatOut.formatQuantity(product.getDouble(fieldName)):request.getParameter(paramName))%>" size="20" maxlength="20"></td>
-  </tr>
-
-  <tr>
-    <%fieldName = "taxable";%><%paramName = "TAXABLE";%>    
-    <td width="26%" align=right><div class="tabletext">Taxable?</div></td>
-    <td>&nbsp;</td>
-    <td width="74%">
-      <SELECT name='<%=paramName%>'>
-        <OPTION><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>
-        <OPTION>&nbsp;</OPTION>
-        <OPTION>Y</OPTION>
-        <OPTION>N</OPTION>
+    <td width="24%">
+      <SELECT name='taxable'>
+        <OPTION><ofbiz:inputvalue entityAttr='product' field='taxable' tryEntityAttr="tryEntity"/></OPTION>
+        <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
     </td>
   </tr>
   <tr>
-    <%fieldName = "autoCreateKeywords";%><%paramName = "AUTO_CREATE_KEYWORDS";%>
-    <td width="26%" align=right><div class="tabletext">Allow Auto Create Keywords?</div></td>
+    <td width="26%" align=right><div class="tabletext"><b>Default Price</b></div></td>
     <td>&nbsp;</td>
-    <td width="74%">
-      <SELECT name='<%=paramName%>'>
-        <OPTION><%=UtilFormatOut.checkNull(useValues?product.getString(fieldName):request.getParameter(paramName))%>
-        <OPTION>&nbsp;</OPTION>
-        <OPTION>Y</OPTION>
-        <OPTION>N</OPTION>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='defaultPrice' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+    
+    <td width="26%" align=right><div class="tabletext"><b>Charge Shipping?</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%">
+      <SELECT name='chargeShipping'>
+        <OPTION><ofbiz:inputvalue entityAttr='product' field='chargeShipping' tryEntityAttr="tryEntity"/></OPTION>
+        <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
       </SELECT>
     </td>
+  </tr>
+  <tr>
+    <td width="26%" align=right><div class="tabletext">&nbsp;</div></td>
+    <td>&nbsp;</td>
+    <td width="24%">&nbsp;</td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Allow Auto Create Keywords?</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%">
+      <SELECT name='autoCreateKeywords'>
+        <OPTION><ofbiz:inputvalue entityAttr='product' field='autoCreateKeywords' tryEntityAttr="tryEntity"/></OPTION>
+        <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
+      </SELECT>
+    </td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Quantity Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='quantityUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Quantity Included</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='quantityIncluded' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+  </tr>
+
+  <tr>
+    <td width="26%" align=right><div class="tabletext"><b>Weight Uom Id</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='weightUomId' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
+
+    <td width="26%" align=right><div class="tabletext"><b>Weight</b></div></td>
+    <td>&nbsp;</td>
+    <td width="24%"><input type="text" <ofbiz:inputvalue entityAttr='product' field='weight' tryEntityAttr="tryEntity" fullattrs="true"/> size="10" maxlength="20"></td>
   </tr>
 
   <tr>
@@ -305,32 +329,37 @@
         <div class="head2">Duplicate Product</div>
         <%-- <form action="<ofbiz:url>/DuplicateProduct</ofbiz:url>" method=POST style='margin: 0;'>
             <INPUT type=hidden name='productId' value='<%=productId%>'>
-            <SPAN class='tabletext'>With New ID:</SPAN>&nbsp;<INPUT type=text size='20' maxlength='20' name='PRODUCT_ID'>&nbsp;
+            <SPAN class='tabletext'>With New ID:</SPAN>&nbsp;<INPUT type=text size='20' maxlength='20' name='productId'>&nbsp;
             <INPUT type=submit value='AutoDuplicate'>
         </form> --%>
         <%if (product != null) {%>
             <form action="<ofbiz:url>/EditProduct</ofbiz:url>" method=POST style='margin: 0;'>
-                <%-- <INPUT type=hidden name='PRODUCT_ID' value='<%=productId%>'> --%>
+                <%-- <INPUT type=hidden name='productId' value='<%=productId%>'> --%>
                 <INPUT type=hidden name='productTypeId' value='<%=UtilFormatOut.checkNull(product.getString("productTypeId"))%>'>
-                <INPUT type=hidden name='PRIMARY_PRODUCT_CATEGORY_ID' value='<%=UtilFormatOut.checkNull(product.getString("primaryProductCategoryId"))%>'>
-                <INPUT type=hidden name='MANUFACTURER_PARTY_ID' value='<%=UtilFormatOut.checkNull(product.getString("manufacturerPartyId"))%>'>
-                <INPUT type=hidden name='INTRODUCTION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("introductionDate")))%>'>
-                <INPUT type=hidden name='SALES_DISCONTINUATION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("salesDiscontinuationDate")))%>'>
-                <INPUT type=hidden name='SUPPORT_DISCONTINUATION_DATE' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("supportDiscontinuationDate")))%>'>
-                <INPUT type=hidden name='COMMENT' value='<%=UtilFormatOut.checkNull(product.getString("comments"))%>'>
-                <INPUT type=hidden name='NAME' value='<%=UtilFormatOut.checkNull(product.getString("productName"))%>'>
-                <INPUT type=hidden name='DESCRIPTION' value='<%=UtilFormatOut.checkNull(product.getString("description"))%>'>
-                <INPUT type=hidden name='LONG_DESCRIPTION' value='<%=UtilFormatOut.checkNull(product.getString("longDescription"))%>'>
-                <INPUT type=hidden name='SMALL_IMAGE_URL' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
-                <INPUT type=hidden name='LARGE_IMAGE_URL' value='<%=UtilFormatOut.checkNull(product.getString("largeImageUrl"))%>'>
-                <INPUT type=hidden name='LIST_PRICE' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("listPrice")))%>'>
-                <INPUT type=hidden name='DEFAULT_PRICE' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("defaultPrice")))%>'>
-                <INPUT type=hidden name='QUANTITY_UOM_ID' value='<%=UtilFormatOut.checkNull(product.getString("quantityUomId"))%>'>
-                <INPUT type=hidden name='QUANTITY_INCLUDED' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("quantityIncluded")))%>'>
-                <INPUT type=hidden name='WEIGHT_UOM_ID' value='<%=UtilFormatOut.checkNull(product.getString("weightUomId"))%>'>
-                <INPUT type=hidden name='WEIGHT' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("weight")))%>'>
-                <INPUT type=hidden name='TAXABLE' value='<%=UtilFormatOut.checkNull(product.getString("taxable"))%>'>
-                <INPUT type=hidden name='AUTO_CREATE_KEYWORDS' value='<%=UtilFormatOut.checkNull(product.getString("autoCreateKeywords"))%>'>
+                <INPUT type=hidden name='isVirtual' value='<%=UtilFormatOut.checkNull(product.getString("isVirtual"))%>'>
+                <INPUT type=hidden name='isVariant' value='<%=UtilFormatOut.checkNull(product.getString("isVariant"))%>'>
+                <INPUT type=hidden name='primaryProductCategoryId' value='<%=UtilFormatOut.checkNull(product.getString("primaryProductCategoryId"))%>'>
+                <INPUT type=hidden name='manufacturerPartyId' value='<%=UtilFormatOut.checkNull(product.getString("manufacturerPartyId"))%>'>
+                <INPUT type=hidden name='introductionDate' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("introductionDate")))%>'>
+                <INPUT type=hidden name='salesDiscontinuationDate' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("salesDiscontinuationDate")))%>'>
+                <INPUT type=hidden name='supportDiscontinuationDate' value='<%=UtilFormatOut.checkNull(UtilDateTime.toDateString(product.getDate("supportDiscontinuationDate")))%>'>
+                <INPUT type=hidden name='comments' value='<%=UtilFormatOut.checkNull(product.getString("comments"))%>'>
+                <INPUT type=hidden name='productName' value='<%=UtilFormatOut.checkNull(product.getString("productName"))%>'>
+                <INPUT type=hidden name='internalName' value='<%=UtilFormatOut.checkNull(product.getString("internalName"))%>'>
+                <INPUT type=hidden name='description' value='<%=UtilFormatOut.checkNull(product.getString("description"))%>'>
+                <INPUT type=hidden name='longDescription' value='<%=UtilFormatOut.checkNull(product.getString("longDescription"))%>'>
+                <INPUT type=hidden name='smallImageUrl' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
+                <INPUT type=hidden name='mediumImageUrl' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
+                <INPUT type=hidden name='largeImageUrl' value='<%=UtilFormatOut.checkNull(product.getString("largeImageUrl"))%>'>
+                <INPUT type=hidden name='detailImageUrl' value='<%=UtilFormatOut.checkNull(product.getString("smallImageUrl"))%>'>
+                <INPUT type=hidden name='listPrice' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("listPrice")))%>'>
+                <INPUT type=hidden name='defaultPrice' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("defaultPrice")))%>'>
+                <INPUT type=hidden name='quantityUomId' value='<%=UtilFormatOut.checkNull(product.getString("quantityUomId"))%>'>
+                <INPUT type=hidden name='quantityIncluded' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("quantityIncluded")))%>'>
+                <INPUT type=hidden name='weightUomId' value='<%=UtilFormatOut.checkNull(product.getString("weightUomId"))%>'>
+                <INPUT type=hidden name='weight' value='<%=UtilFormatOut.checkNull(UtilFormatOut.formatQuantity(product.getDouble("weight")))%>'>
+                <INPUT type=hidden name='taxable' value='<%=UtilFormatOut.checkNull(product.getString("taxable"))%>'>
+                <INPUT type=hidden name='autoCreateKeywords' value='<%=UtilFormatOut.checkNull(product.getString("autoCreateKeywords"))%>'>
                 <SPAN class='tabletext'>In New Create Form:</SPAN>&nbsp;
                 <INPUT type=submit value='FormDuplicate'>
             </form>

@@ -144,9 +144,13 @@
     	<security https="true" auth="true"/>
     	<response name="success" type="view" value="EditProduct"/>
     </request-map>
-    <request-map uri="UpdateProduct">
-    	<security https="true" auth="true"/>
-        <event type="java" path="org.ofbiz.catalog.ProductEvents" invoke="updateProduct"/>
+    <request-map uri="createProduct"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProduct"/>
+        <response name="success" type="view" value="EditProduct"/>
+        <response name="error" type="view" value="EditProduct"/>
+    </request-map>
+    <request-map uri="updateProduct"><security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProduct"/>
         <response name="success" type="view" value="EditProduct"/>
         <response name="error" type="view" value="EditProduct"/>
     </request-map>

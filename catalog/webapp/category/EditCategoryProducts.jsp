@@ -130,8 +130,8 @@
 <ofbiz:iterator name="productCategoryMember" property="productCategoryMembers" offset="<%=lowIndex%>" limit="<%=viewSize%>">
   <%GenericValue product = productCategoryMember.getRelatedOne("Product");%>
   <tr valign="middle">
-    <td><a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></a></td>
-    <td><%if (product!=null) {%><a href='<ofbiz:url>/EditProduct?PRODUCT_ID=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><%=product.getString("productName")%></a><%}%>&nbsp;</td>
+    <td><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></a></td>
+    <td><%if (product!=null) {%><a href='<ofbiz:url>/EditProduct?productId=<ofbiz:inputvalue entityAttr="productCategoryMember" field="productId"/></ofbiz:url>' class="buttontext"><%=product.getString("productName")%></a><%}%>&nbsp;</td>
     <td><div class='tabletext'><ofbiz:inputvalue entityAttr="productCategoryMember" field="fromDate"/></div></td>
     <td align="center">
         <FORM method=POST action='<ofbiz:url>/updateCategoryProductMember?VIEW_SIZE=<%=viewSize%>&VIEW_INDEX=<%=viewIndex%></ofbiz:url>'>
