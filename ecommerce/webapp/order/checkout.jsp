@@ -74,9 +74,9 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-      <a href="<ofbiz:url><%=prevPage%></ofbiz:url>" class="buttontextbig">&nbsp;[Back]</a></td>
+      <a href="<ofbiz:url><%=prevPage%></ofbiz:url>" class="buttontextbig">[Back]</a></td>
       <td align="right">
-        <a href="<ofbiz:url>/createorder</ofbiz:url>" class="buttontextbig">[Submit&nbsp;Order]&nbsp;</a>
+        <a href="<ofbiz:url>/processorder</ofbiz:url>" class="buttontextbig">[Submit&nbsp;Order]&nbsp;</a>
       </td>
     </tr>
   </table>

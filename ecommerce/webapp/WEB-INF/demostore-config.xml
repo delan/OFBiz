@@ -107,7 +107,13 @@
       <event-invoke>setCheckOutOptions</event-invoke> 
       <success>view:checkout</success>
       <error>view:checkoutoptions</error>
-    </request-map>		
+    </request-map>
+    <request-map>
+      <uri>processorder</uri>
+      <secure>true</secure>
+      <auth>false</auth>
+      <success>request:createorder</success>
+    </request-map>
     <request-map>
       <uri>createorder</uri><secure>true</secure><auth>true</auth>
       <event-type>java</event-type>
