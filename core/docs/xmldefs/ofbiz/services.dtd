@@ -44,9 +44,10 @@
 	auth (true|false) "false"
 	export (true|false) "false"
 	validate (true|false) "true"
-	default-entity-name CDATA #IMPLIED
+	default-entity-name CDATA #IMPLIED	
 	use-transaction (true|false) "true"
 	require-new-transaction (true|false) "false"
+	transaction-timout CDATA #IMPLIED
 >
 <!ELEMENT implements EMPTY>
 <!ATTLIST implements

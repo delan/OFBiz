@@ -102,6 +102,9 @@ public class ModelService {
     /** Require a new transaction for this service */
     public boolean requireNewTransaction;
     
+    /** Override the default transaction timeout, only works if we start the transaction */
+    public int transactionTimeout;
+    
     /** Set of services this service implements */
     public Set implServices = new OrderedSet();  
     

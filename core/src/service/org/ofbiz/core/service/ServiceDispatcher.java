@@ -181,7 +181,7 @@ public class ServiceDispatcher {
         boolean beganTrans = false;
         if (service.useTransaction) {
             try {
-                beganTrans = TransactionUtil.begin();
+                beganTrans = TransactionUtil.begin(service.transactionTimeout);
             } catch (GenericTransactionException te) {
                 throw new GenericServiceException("Cannot start the transaction.", te.getNested());
             }
@@ -197,7 +197,7 @@ public class ServiceDispatcher {
                 
                 // now start a new transaction
                 try {
-                    beganTrans = TransactionUtil.begin();
+                    beganTrans = TransactionUtil.begin(service.transactionTimeout);
                 } catch (GenericTransactionException gte) {
                     throw new GenericServiceException("Cannot start the transaction.", gte.getNested());                   
                 }
@@ -339,7 +339,7 @@ public class ServiceDispatcher {
         boolean beganTrans = false;
         if (service.useTransaction) {
             try {
-                beganTrans = TransactionUtil.begin();
+                beganTrans = TransactionUtil.begin(service.transactionTimeout);
             } catch (GenericTransactionException te) {
                 throw new GenericServiceException("Cannot start the transaction.", te.getNested());
             }
@@ -355,7 +355,7 @@ public class ServiceDispatcher {
                 
                 // now start a new transaction
                 try {
-                    beganTrans = TransactionUtil.begin();
+                    beganTrans = TransactionUtil.begin(service.transactionTimeout);
                 } catch (GenericTransactionException gte) {
                     throw new GenericServiceException("Cannot start the transaction.", gte.getNested());                   
                 }

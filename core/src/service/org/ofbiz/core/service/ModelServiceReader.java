@@ -291,6 +291,20 @@ public class ModelServiceReader {
         service.useTransaction = !"false".equalsIgnoreCase(serviceElement.getAttribute("use-transaction"));
         service.requireNewTransaction = !"false".equalsIgnoreCase(serviceElement.getAttribute("require-new-transaction"));
         
+        // get the timeout and convert to int       
+        String timeoutStr = UtilXml.checkEmpty(serviceElement.getAttribute("transactionTimeout"));
+        if (timeoutStr == null || timeoutStr.length() == 0) {
+            timeoutStr = "0";
+        }
+        int timeout = 0;
+        try {
+            timeout = Integer.parseInt(timeoutStr);
+        } catch (NumberFormatException e) {
+            Debug.logWarning(e, "Setting timeout to 0 (default)", module);
+            timeout = 0;            
+        }
+        service.transactionTimeout = timeout;
+                       
         service.description = getCDATADef(serviceElement, "description");
         service.nameSpace = getCDATADef(serviceElement, "namespace");  
               
