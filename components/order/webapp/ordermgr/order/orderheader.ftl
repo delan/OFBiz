@@ -521,7 +521,7 @@
                     <td>
 
                   <table width="100%" border="0" cellpadding="1" cellspacing="0">
-
+                    <#if shipGroup.contactMechId?has_content>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>Address</b></div>
@@ -533,7 +533,9 @@
                         </div>
                       </td>
                     </tr>
+                    </#if>
 
+                    <#if shipGroup.shipmentMethodTypeId?has_content>
                     <tr>
                       <td align="right" valign="top" width="15%">
                         <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonMethod}</b></div>
@@ -550,6 +552,15 @@
                         </#if>
                       </td>
                     </tr>
+                    </#if>
+
+                    <#if !shipGroup.contactMechId?has_content && !shipGroup.shipmentMethodTypeId?has_content>
+                    <#assign noShipment = "true">
+                    <tr>
+                      <td colspan="3" align="center"><div class="tableheadtext">Not Shipped</div></td>
+                    </tr>
+                    </#if>
+
                     <#-- tracking number -->
                     <#if shipGroup.trackingNumber?has_content || orderShipmentInfoSummaryList?has_content>
                       <tr><td colspan="7"><hr class='sepbar'></td></tr>
@@ -576,7 +587,7 @@
                         </td>
                       </tr>
                     </#if>
-                    <#if shipGroup.maySplit?has_content>
+                    <#if shipGroup.maySplit?has_content && noShipment?default("false") != "true">
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
@@ -609,7 +620,7 @@
                         </td>
                       </tr>
                     </#if>
-                    <#if shipGroup.isGift?has_content>
+                    <#if shipGroup.isGift?has_content && noShipment?default("false") != "true">>
                       <tr><td colspan="7"><hr class="sepbar"></td></tr>
                       <tr>
                         <td align="right" valign="top" width="15%">
