@@ -105,19 +105,37 @@ public class MethodContext {
 
     /**
      * This is a very simple constructor which assumes the needed objects (dispatcher, 
-     * delegator, security) are in the context. Will result in calling method as a service.
+     * delegator, security, request, response, etc) are in the context. 
+     * Will result in calling method as a service or event, as specified.
      */    
-    public MethodContext(Map context, ClassLoader loader) {
-        this.methodType = MethodContext.SERVICE;
+    public MethodContext(Map context, ClassLoader loader, int methodType) {
+        this.methodType = methodType;
         this.parameters = context;
         this.loader = loader;
         this.locale = (Locale) context.get("locale");
         this.dispatcher = (LocalDispatcher) context.get("dispatcher");
         this.delegator = (GenericDelegator) context.get("delegator");
         this.security = (Security) context.get("security");
-        this.results = new HashMap();
         this.userLogin = (GenericValue) context.get("userLogin");
 
+        if (methodType == this.EVENT) {
+            this.request = (HttpServletRequest) context.get("request");
+            this.response = (HttpServletResponse) context.get("response");
+            if (this.locale == null) this.locale = UtilHttp.getLocale(request);
+            
+            //make sure the delegator and other objects are in place, getting from 
+            // request if necessary; assumes this came through the ControlServlet
+            // or something similar
+            if (this.request != null) {
+                if (this.dispatcher == null) this.dispatcher = (LocalDispatcher) this.request.getAttribute("dispatcher");
+                if (this.delegator == null) this.delegator = (GenericDelegator) this.request.getAttribute("delegator");
+                if (this.security == null) this.security = (Security) this.request.getAttribute("security");
+                if (this.userLogin == null) this.userLogin = (GenericValue) this.request.getSession().getAttribute("userLogin");
+            }
+        } else if (methodType == this.SERVICE) {
+            this.results = new HashMap();
+        }
+        
         if (this.loader == null) {
             try {
                 this.loader = Thread.currentThread().getContextClassLoader();

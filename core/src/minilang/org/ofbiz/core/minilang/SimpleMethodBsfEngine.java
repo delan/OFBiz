@@ -30,7 +30,6 @@ import com.ibm.bsf.*;
 import com.ibm.bsf.util.*;
 
 import org.ofbiz.core.minilang.method.*;
-import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
 /**
@@ -38,7 +37,7 @@ import org.ofbiz.core.util.*;
  * It is an implementation of the BSFEngine class, allowing BSF aware
  * applications to use SimpleMethod as a scripting language.
  * 
- * <P>There should only be ONE simple-method in the XML file and it will be run as a service.
+ * <P>There should only be ONE simple-method in the XML file and it will be run as an event.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  */
@@ -50,7 +49,6 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
         super.initialize(mgr, lang, declaredBeans);
         
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        
         
         // declare the bsf manager for callbacks, etc.
         context.put("bsf", mgr);
@@ -85,11 +83,11 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
         //if (namesVec.size() != argsVec.size()) throw new BSFException("number of params/names mismatch");
         //if (!(funcBody instanceof String)) throw new BSFException("apply: function body must be a string");
         
-        throw new BSFException("The apply method is not yet supported for SimpleMethods");
+        throw new BSFException("The apply method is not yet supported for simple-methods");
     }
     
     public Object eval(String source, int lineNo, int columnNo, Object expr) throws BSFException {
-        if (!(expr instanceof String)) throw new BSFException("BeanShell expression must be a string");
+        if (!(expr instanceof String)) throw new BSFException("simple-method expression must be a string");
 
         //right now only supports one method per file, so get all methods and just run the first...
         Map simpleMethods = null;
@@ -105,9 +103,9 @@ public class SimpleMethodBsfEngine extends BSFEngineImpl {
         if (smNames.size() > 1) Debug.logWarning("Found more than one simple-method in the file, running the [" + methodName + "] method, you should remove all but one method from this file");
 
         SimpleMethod simpleMethod = (SimpleMethod) simpleMethods.get(methodName);
-        MethodContext methodContext = new MethodContext(context, null);
-        simpleMethod.exec(methodContext);
-        return methodContext.getResults();
+        MethodContext methodContext = new MethodContext(context, null, MethodContext.EVENT);
+        return simpleMethod.exec(methodContext);
+        //methodContext.getResults();
     }
     
     
