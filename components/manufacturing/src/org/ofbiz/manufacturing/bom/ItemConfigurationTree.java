@@ -32,6 +32,10 @@ import org.ofbiz.service.ServiceUtil;
      */    
  
 public class ItemConfigurationTree {
+    public static final int EXPLOSION = 0;
+    public static final int EXPLOSION_SINGLE_LEVEL = 1;
+    public static final int EXPLOSION_MANUFACTURING = 2;
+    public static final int IMPLOSION = 3;
     
     ItemConfigurationNode root;
     float rootQuantity;
@@ -51,7 +55,7 @@ public class ItemConfigurationTree {
      *
      */
     public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
-        this(productId, bomTypeId, inDate, true, delegator, dispatcher);
+        this(productId, bomTypeId, inDate, EXPLOSION, delegator, dispatcher);
     }
     
     /** Creates a new instance of ItemConfigurationTree by reading
@@ -62,14 +66,16 @@ public class ItemConfigurationTree {
      * @param bomTypeId The bill of materials type (e.g. manufacturing, engineering, ...)
      * @param inDate Validity date (if null, today is used).
      *
-     * @param explosion if true, a downward visit is performed (explosion);
-     * otherwise an upward visit is done (implosion).
+     * @param type if equals to EXPLOSION, a downward visit is performed (explosion);
+     * if equals to EXPLOSION_SINGLE_LEVEL, a single level explosion is performed;
+     * if equals to EXPLOSION_MANUFACTURING, a downward visit is performed (explosion), including only the product that needs manufacturing;
+     * if equals to IMPLOSION an upward visit is done (implosion);
      *
      * @param delegator The delegator used.
      * @throws GenericEntityException If a db problem occurs.
      *
      */
-    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, boolean explosion, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
+    public ItemConfigurationTree(String productId, String bomTypeId, Date inDate, int type, GenericDelegator delegator, LocalDispatcher dispatcher) throws GenericEntityException {
         // If the parameters are not valid, return.
         if (productId == null || bomTypeId == null || delegator == null || dispatcher == null) return;
         // If the date is null, set it to today.
@@ -119,10 +125,10 @@ public class ItemConfigurationTree {
         try {
             root = new ItemConfigurationNode(product);
             root.setProductForRules(productIdForRules);
-            if (explosion) {
-                root.loadChildren(bomTypeId, inDate, productFeatures, dispatcher);
-            } else {
+            if (type == IMPLOSION) {
                 root.loadParents(bomTypeId, inDate, productFeatures);
+            } else {
+                root.loadChildren(bomTypeId, inDate, productFeatures, type, dispatcher);
             }
         } catch(GenericEntityException gee) {
             root = null;

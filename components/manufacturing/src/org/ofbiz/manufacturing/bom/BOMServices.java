@@ -1,5 +1,5 @@
 /*
- * $Id: BOMServices.java,v 1.6 2004/05/11 10:51:15 jacopo Exp $
+ * $Id: BOMServices.java,v 1.7 2004/05/12 10:35:05 jacopo Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -246,7 +246,7 @@ public class BOMServices {
     }
 
     /** It reads the product's bill of materials,
-     * if necessary configure it, and it returns
+     * if necessary configures it, and it returns
      * an object (see {@link ItemConfigurationTree}
      * and {@link ItemConfigurationNode}) that represents a
      * configured bill of material tree.
@@ -264,9 +264,9 @@ public class BOMServices {
         String productId = (String) context.get("productId");
         String fromDateStr = (String) context.get("fromDate");
         String bomType = (String) context.get("bomType");
-        Boolean explosion = (Boolean) context.get("explosion");
-        if (explosion == null) {
-            explosion = new Boolean(true);
+        Integer type = (Integer) context.get("type");
+        if (type == null) {
+            type = new Integer(0);
         }
         
         Date fromDate = null;
@@ -282,7 +282,7 @@ public class BOMServices {
         
         ItemConfigurationTree tree = null;
         try {
-            tree = new ItemConfigurationTree(productId, bomType, fromDate, explosion.booleanValue(), delegator, dispatcher);
+            tree = new ItemConfigurationTree(productId, bomType, fromDate, type.intValue(), delegator, dispatcher);
         } catch(GenericEntityException gee) {
             return ServiceUtil.returnError("Error creating bill of materials tree: " + gee.getMessage());
         }

@@ -62,7 +62,7 @@ public class ItemConfigurationNode {
         this(delegator.findByPrimaryKey("Product", UtilMisc.toMap("productId", partId)));
     }
 
-    protected void loadChildren(String partBomTypeId, Date inDate, List productFeatures, LocalDispatcher dispatcher) throws GenericEntityException {
+    protected void loadChildren(String partBomTypeId, Date inDate, List productFeatures, int type, LocalDispatcher dispatcher) throws GenericEntityException {
         if (part == null) {
             throw new GenericEntityException("Part is null");
         }
@@ -97,7 +97,15 @@ public class ItemConfigurationNode {
             // If the node is null this means that the node has been discarded by the rules.
             if (oneChildNode != null) {
                 oneChildNode.setParentNode(this);
-                oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, dispatcher);
+                if (type == ItemConfigurationTree.EXPLOSION) {
+                    oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, ItemConfigurationTree.EXPLOSION, dispatcher);
+                } else {
+                    if (type == ItemConfigurationTree.EXPLOSION_MANUFACTURING) {
+                        if (!oneChildNode.isPurchased()) {
+                            oneChildNode.loadChildren(partBomTypeId, inDate, productFeatures, type, dispatcher);
+                        }
+                    }
+                }
             }
             childrenNodes.add(oneChildNode);
         }
@@ -236,26 +244,28 @@ public class ItemConfigurationNode {
                                 }
                             }
 
-                            Map context = new HashMap();
-                            context.put("productId", node.get("productIdTo"));
-                            context.put("selectedFeatures", selectedFeatures);
-                            Map storeResult = null;
-                            GenericValue variantProduct = null;
-                            try {
-                                storeResult = dispatcher.runSync("getProductVariant", context);
-                                List variantProducts = (List) storeResult.get("products");
-                                if (variantProducts.size() > 0) {
-                                    variantProduct = (GenericValue)variantProducts.get(0);
+                            if (selectedFeatures.size() > 0) {
+                                Map context = new HashMap();
+                                context.put("productId", node.get("productIdTo"));
+                                context.put("selectedFeatures", selectedFeatures);
+                                Map storeResult = null;
+                                GenericValue variantProduct = null;
+                                try {
+                                    storeResult = dispatcher.runSync("getProductVariant", context);
+                                    List variantProducts = (List) storeResult.get("products");
+                                    if (variantProducts.size() > 0) {
+                                        variantProduct = (GenericValue)variantProducts.get(0);
+                                    }
+                                } catch (GenericServiceException e) {
+                                    String service = e.getMessage();
+                                    System.out.println("ItemConfigurationNode.configurator(...): " + service);
                                 }
-                            } catch (GenericServiceException e) {
-                                String service = e.getMessage();
-                                System.out.println("ItemConfigurationNode.configurator(...): " + service);
-                            }
-                            if (variantProduct != null) {
-                                newNode = new ItemConfigurationNode(variantProduct);
-                                newNode.setSubstitutedNode(oneChildNode);
-                                newNode.setQuantityMultiplier(oneChildNode.getQuantityMultiplier());
-                                newNode.setScrapFactor(oneChildNode.getScrapFactor());
+                                if (variantProduct != null) {
+                                    newNode = new ItemConfigurationNode(variantProduct);
+                                    newNode.setSubstitutedNode(oneChildNode);
+                                    newNode.setQuantityMultiplier(oneChildNode.getQuantityMultiplier());
+                                    newNode.setScrapFactor(oneChildNode.getScrapFactor());
+                                }
                             }
 
                         }
@@ -397,12 +407,40 @@ public class ItemConfigurationNode {
     }
 
     public void createManufacturingOrder(String orderId, String orderItemSeqId, GenericDelegator delegator, LocalDispatcher dispatcher, GenericValue userLogin) throws GenericEntityException {
-        // FIXME: Not still implemented
+        if (isManufactured()) {
+            // FIXME: Not still implemented
+            // dispatcher.runSync("createProductionRun",...);
+            System.out.println("Production run created for " + getPart().getString("productId"));
+            ItemConfigurationNode oneChildNode = null;
+            for (int i = 0; i < childrenNodes.size(); i++) {
+                oneChildNode = (ItemConfigurationNode)childrenNodes.get(i);
+                if (oneChildNode != null) {
+                    oneChildNode.createManufacturingOrder(orderId, orderItemSeqId, delegator, dispatcher, userLogin);
+                }
+            }
+        }
     }
 
-    // FIXME: at now we create manufacturing orders for all the non leaf components.
-    protected boolean needsManufacturing() {
-        return children.size() > 0; 
+    protected boolean isPurchased() {
+        boolean isPurchased = false;
+        try {
+            List pfs = getPart().getRelatedCache("ProductFacility");
+            Iterator pfsIt = pfs.iterator();
+            GenericValue pf = null;
+            while(pfsIt.hasNext()) {
+                pf = (GenericValue)pfsIt.next();
+                if (pf.getDouble("minimumStock") != null && pf.getDouble("minimumStock").doubleValue() > 0) {
+                    isPurchased = true;
+                }
+            }
+        } catch(GenericEntityException gee) {
+            System.out.println("Error in ItemConfigurationNode.needsPurchased() " + gee);
+        }
+        return isPurchased;
+    }
+
+    protected boolean isManufactured() {
+        return childrenNodes.size() > 0 && !isPurchased();
     }
     
     protected boolean isVirtual() {
