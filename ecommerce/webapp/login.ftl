@@ -83,7 +83,7 @@
                           <td align='left'><input type="password" class='inputBox' name="PASSWORD" value="" size="20"></td>
                       </tr>
                       <tr>
-                        <td colspan="2" align="center"><input type="submit" value="Login"></td>
+                        <td colspan="2" align="center"><input type="submit" class="smallSubmit" value="Login"></td>
                       </tr>
                     </table>
                   </form>
@@ -113,7 +113,7 @@
                 <td valign='middle' align='center'>
                   <form method="POST" action="<@ofbizUrl>/forgotpassword${previousParams}</@ofbizUrl>" name="forgotpassword" style='margin: 0;'>
                     <span class="tabletext">Username:&nbsp;</span><input type="text" size="20" class='inputBox' name="USERNAME" value='<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>'>
-                    <div><input type="submit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" value="Email Password" name="EMAIL_PASSWORD"></div>
+                    <div><input type="submit" class="smallSubmit" value="Get Password Hint" name="GET_PASSWORD_HINT">&nbsp;<input type="submit" class="smallSubmit" value="Email Password" name="EMAIL_PASSWORD"></div>
                   </form>
                 </td>
               </tr>
@@ -143,7 +143,7 @@
                 <td>
                   <form method="POST" action="<@ofbizUrl>/newcustomer${previousParams}</@ofbizUrl>" style='margin: 0;'>
                     <div class="tabletext" align=center>You may create a new account here:</div>
-                    <div align='center'><input type="submit" value="Create"></div>
+                    <div align='center'><input type="submit" class="smallSubmit" value="Create"></div>
                   </form>
                 </td>
               </tr>
