@@ -320,21 +320,21 @@
   <ProductCategoryType description="Quick Add" hasTable="N" parentTypeId="" productCategoryTypeId="QUICKADD_CATEGORY"/>
   <ProductCategoryType description="Search" hasTable="N" parentTypeId="" productCategoryTypeId="SEARCH_CATEGORY"/>
   <ProductCategoryType description="Usage" hasTable="N" parentTypeId="" productCategoryTypeId="USAGE_CATEGORY"/>
-  <ProductFeatureApplType description="" hasTable="N" parentTypeId="" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
-  <ProductFeatureApplType description="" hasTable="N" parentTypeId="" productFeatureApplTypeId="REQUIRED_FEATURE"/>
-  <ProductFeatureApplType description="" hasTable="N" parentTypeId="" productFeatureApplTypeId="SELECTABLE_FEATURE"/>
-  <ProductFeatureApplType description="" hasTable="N" parentTypeId="" productFeatureApplTypeId="STANDARD_FEATURE"/>
-  <ProductFeatureIactnType description="" hasTable="N" parentTypeId="" productFeatureIactnTypeId="FEATURE_IACTN_DEPEND"/>
-  <ProductFeatureIactnType description="" hasTable="N" parentTypeId="" productFeatureIactnTypeId="FEATURE_IACTN_INCOMP"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="BILLING_FEATURE"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="BRAND"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="COLOR"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="HARDWARE_FEATURE"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="OTHER_FEATURE"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="PRODUCT_QUALITY"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="SIZE"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
-  <ProductFeatureType description="" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
+  <ProductFeatureApplType description="Optional" hasTable="N" parentTypeId="" productFeatureApplTypeId="OPTIONAL_FEATURE"/>
+  <ProductFeatureApplType description="Required" hasTable="N" parentTypeId="" productFeatureApplTypeId="REQUIRED_FEATURE"/>
+  <ProductFeatureApplType description="Selectable" hasTable="N" parentTypeId="" productFeatureApplTypeId="SELECTABLE_FEATURE"/>
+  <ProductFeatureApplType description="Standard" hasTable="N" parentTypeId="" productFeatureApplTypeId="STANDARD_FEATURE"/>
+  <ProductFeatureIactnType description="Dependencies" hasTable="N" parentTypeId="" productFeatureIactnTypeId="FEATURE_IACTN_DEPEND"/>
+  <ProductFeatureIactnType description="Incompatibility" hasTable="N" parentTypeId="" productFeatureIactnTypeId="FEATURE_IACTN_INCOMP"/>
+  <ProductFeatureType description="Billing Feature" hasTable="N" parentTypeId="" productFeatureTypeId="BILLING_FEATURE"/>
+  <ProductFeatureType description="Brand" hasTable="N" parentTypeId="" productFeatureTypeId="BRAND"/>
+  <ProductFeatureType description="Color" hasTable="N" parentTypeId="" productFeatureTypeId="COLOR"/>
+  <ProductFeatureType description="Hardware Feature" hasTable="N" parentTypeId="" productFeatureTypeId="HARDWARE_FEATURE"/>
+  <ProductFeatureType description="Other Feature" hasTable="N" parentTypeId="" productFeatureTypeId="OTHER_FEATURE"/>
+  <ProductFeatureType description="Product Quality" hasTable="N" parentTypeId="" productFeatureTypeId="PRODUCT_QUALITY"/>
+  <ProductFeatureType description="Size" hasTable="N" parentTypeId="" productFeatureTypeId="SIZE"/>
+  <ProductFeatureType description="Software Feature" hasTable="N" parentTypeId="" productFeatureTypeId="SOFTWARE_FEATURE"/>
+  <ProductFeatureType description="Dimension" hasTable="N" parentTypeId="" productFeatureTypeId="DIMENSION"/>
   <ProductType description="Virtual Product" hasTable="N" parentTypeId="" productTypeId="VIRTUAL_PRODUCT"/>
   <ProductType description="Service" hasTable="N" parentTypeId="" productTypeId="SERVICE"/>
   <ProductType description="Good" hasTable="N" parentTypeId="" productTypeId="GOOD"/>
