@@ -139,7 +139,6 @@ public class PaymentServices {
         newCc.set("cardNumber", context.get("cardNumber"));
         newCc.set("cardSecurityCode", context.get("cardSecurityCode"));
         newCc.set("expireDate", context.get("expireDate"));
-        newCc.set("contactMechId", context.get("contactMechId"));
 
         newPm.set("paymentMethodId", newPmId.toString());
         newPm.set("paymentMethodTypeId", "CREDIT_CARD");
@@ -147,7 +146,9 @@ public class PaymentServices {
 
         GenericValue newPartyContactMechPurpose = null;
         String contactMechId = (String) context.get("contactMechId");
-        if (contactMechId != null && contactMechId.length() > 0) {
+        if (contactMechId != null && contactMechId.length() > 0 && !contactMechId.equals("_NEW_")) {
+            //set the contactMechId on the credit card
+            newCc.set("contactMechId", context.get("contactMechId"));
             //add a PartyContactMechPurpose of BILLING_LOCATION if necessary
             String contactMechPurposeTypeId = "BILLING_LOCATION";
 

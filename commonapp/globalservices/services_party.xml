@@ -220,6 +220,7 @@
         <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
         <attribute name="postalCodeGeoId" type="String" mode="IN" optional="true"/>
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
         <attribute name="contactMechId" type="String" mode="OUT" optional="true"/>
     </service>
     <service name="updatePostalAddress" engine="java"
@@ -239,6 +240,7 @@
         <attribute name="countryGeoId" type="String" mode="IN" optional="true"/>
         <attribute name="postalCodeGeoId" type="String" mode="IN" optional="true"/>
         <attribute name="allowSolicitation" type="String" mode="IN" optional="true"/>
+        <attribute name="paymentMethodId" type="String" mode="IN" optional="true"/>
         <attribute name="newContactMechId" type="String" mode="OUT" optional="true"/>
     </service>
 

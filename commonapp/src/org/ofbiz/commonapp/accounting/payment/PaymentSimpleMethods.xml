@@ -30,7 +30,7 @@
  -->
 <simple-methods>
     <simple-method method-name="deletePaymentMethod" short-description="Delete Payment Method">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
                 processor-name="deletePaymentMethod" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="deletePaymentMethod" in-map-name="context">
@@ -39,28 +39,47 @@
 
     <!-- CreditCard events -->
     <simple-method method-name="createCreditCard" short-description="Create Credit Card">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
                 processor-name="createCreditCard" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createCreditCard" in-map-name="context">
             <default-message>Credit Card successfully created.</default-message>
-            <result-to-request result-name="paymentMethodId"/></call-service>
+            <result-to-request result-name="paymentMethodId"/>
+        </call-service>
+        <if-compare map-name="parameters" field-name="contactMechId" operator="equals" value="_NEW_">
+            <string-to-field string="address" field-name="_response_code_"/>
+            <string-to-field string="POSTAL_ADDRESS" field-name="preContactMechTypeId"/>
+            <string-to-field string="BILLING_LOCATION" field-name="contactMechPurposeTypeId"/>
+            <field-to-request field-name="DONE_PAGE"/>
+            <field-to-request field-name="preContactMechTypeId"/>
+            <field-to-request field-name="contactMechPurposeTypeId"/>
+        </if-compare>
+
     </simple-method>
     <simple-method method-name="updateCreditCard" short-description="Update Credit Card">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
                 processor-name="updateCreditCard" in-map-name="parameters" out-map-name="context"/>
         <!-- before check-errors also call createCreditCard, which completes the checking, etc for updateCreditCard -->
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
                 processor-name="createCreditCard" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updateCreditCard" in-map-name="context">
             <default-message>Credit Card Info successfully updated.</default-message>
-            <result-to-request result-name="newPaymentMethodId" request-name="paymentMethodId"/></call-service>
+            <result-to-request result-name="newPaymentMethodId" request-name="paymentMethodId"/>
+        </call-service>
+        <if-compare map-name="parameters" field-name="contactMechId" operator="equals" value="_NEW_">
+            <string-to-field string="address" field-name="_response_code_"/>
+            <string-to-field string="POSTAL_ADDRESS" field-name="preContactMechTypeId"/>
+            <string-to-field string="BILLING_LOCATION" field-name="contactMechPurposeTypeId"/>
+            <field-to-request field-name="DONE_PAGE"/>
+            <field-to-request field-name="preContactMechTypeId"/>
+            <field-to-request field-name="contactMechPurposeTypeId"/>
+        </if-compare>
     </simple-method>
 
     <!-- EftAccount events -->
     <simple-method method-name="createEftAccount" short-description="Create EFT Account">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
                 processor-name="createEftAccount" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createEftAccount" in-map-name="context">
@@ -68,14 +87,36 @@
             <result-to-request result-name="paymentMethodId"/></call-service>
     </simple-method>
     <simple-method method-name="updateEftAccount" short-description="Update EFT Account">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
                 processor-name="updateEftAccount" in-map-name="parameters" out-map-name="context"/>
         <!-- before check-errors also call createEftAccount, which completes the checking, etc for updateEftAccount -->
-        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/accounting/payment/PaymentMapProcs.xml"
                 processor-name="createEftAccount" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updateEftAccount" in-map-name="context">
             <default-message>EFT Account Info successfully updated.</default-message>
             <result-to-request result-name="newPaymentMethodId" request-name="paymentMethodId"/></call-service>
+    </simple-method>
+
+    <simple-method method-name="setPaymentMethodAddress" short-description="Set the initial payment method address">
+        <make-value value-name="lookupPKMap" entity-name="PaymentMethod"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="PaymentMethod" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <if-compare map-name="lookedUpValue" field-name="paymentMethodTypeId" operator="equals" value="CREDIT_CARD">
+            <find-by-primary-key entity-name="CreditCard" map-name="lookupPKMap" value-name="mainValue"/>
+            <clone-value value-name="mainValue" new-value-name="savedValue"/>
+            <set-nonpk-fields map-name="parameters" value-name="mainValue"/>
+            <if-compare-field field-name="mainValue" operator="not-equals" to-field-name="savedValue" type="Object">
+                <store-value value-name="mainValue"/>
+            </if-compare-field>
+        </if-compare>
+        <if-compare map-name="lookedUpValue" field-name="paymentMethodTypeId" operator="equals" value="EFT_ACCOUNT">
+            <find-by-primary-key entity-name="CreditCard" map-name="lookupPKMap" value-name="mainValue"/>
+            <clone-value value-name="mainValue" new-value-name="savedValue"/>
+            <set-nonpk-fields map-name="parameters" value-name="mainValue"/>
+            <if-compare-field field-name="mainValue" operator="not-equals" to-field-name="savedValue" type="Object">
+                <store-value value-name="mainValue"/>
+            </if-compare-field>
+        </if-compare>
     </simple-method>
 </simple-methods>

@@ -164,14 +164,14 @@ public class ContactMechWorker {
         if ("true".equals(request.getParameter("tryEntity"))) tryEntity = true;
 
         String donePage = request.getParameter("DONE_PAGE");
+        if (donePage == null) donePage = (String) request.getAttribute("DONE_PAGE");
         if (donePage == null || donePage.length() <= 0) donePage="viewprofile";
         pageContext.setAttribute(donePageAttr, donePage);
 
-        String contactMechTypeId = null;
-        if (request.getParameter("preContactMechTypeId") != null) {
-            contactMechTypeId = request.getParameter("preContactMechTypeId");
+        String contactMechTypeId = request.getParameter("preContactMechTypeId");
+        if (contactMechTypeId == null) contactMechTypeId = (String) request.getAttribute("preContactMechTypeId");
+        if (contactMechTypeId != null)
             tryEntity = false;
-        }
 
         String contactMechId = request.getParameter("contactMechId");
         if (request.getAttribute("contactMechId") != null)
@@ -253,7 +253,7 @@ public class ContactMechWorker {
         if (contactMech == null) {
             //create
             if ("POSTAL_ADDRESS".equals(contactMechTypeId)) {
-                if (request.getParameter("contactMechPurposeTypeId") != null) {
+                if (request.getParameter("contactMechPurposeTypeId") != null || request.getAttribute("contactMechPurposeTypeId") != null) {
                     requestName = "createPostalAddressAndPurpose";
                 } else {
                     requestName = "createPostalAddress";

@@ -31,7 +31,7 @@
 <simple-methods>
     <!-- ContactMech events -->
     <simple-method method-name="createContactMech" short-description="Create Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createContactMech" in-map-name="context">
@@ -39,9 +39,9 @@
             <result-to-request result-name="contactMechId"/></call-service>
     </simple-method>
     <simple-method method-name="updateContactMech" short-description="Update Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="contactMech" in-map-name="parameters" out-map-name="context"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="updateContactMech" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updateContactMech" in-map-name="context">
@@ -49,7 +49,7 @@
             <result-to-request result-name="newContactMechId" request-name="contactMechId"/></call-service>
     </simple-method>
     <simple-method method-name="deleteContactMech" short-description="Delete Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="deleteContactMech" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="deleteContactMech" in-map-name="context">
@@ -57,14 +57,15 @@
     </simple-method>
 
     <simple-method method-name="createPostalAddressAndPurpose" short-description="Create Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="addressContext"/>
         <check-errors/>
+        <field-to-field map-name="parameters" field-name="paymentMethodId" to-map-name="addressContext"/>
         <call-service service-name="createPostalAddress" in-map-name="addressContext">
             <default-message>Postal Address successfully created.</default-message>
             <result-to-field result-name="contactMechId" map-name="parameters"/>
             <result-to-request result-name="contactMechId"/></call-service>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="createPartyContactMechPurpose" in-map-name="parameters" out-map-name="purposeContext"/>
         <check-errors/>
         <call-service service-name="createPartyContactMechPurpose" in-map-name="purposeContext">
@@ -72,7 +73,7 @@
     </simple-method>
 
     <simple-method method-name="createPostalAddress" short-description="Create Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createPostalAddress" in-map-name="context">
@@ -80,18 +81,18 @@
             <result-to-request result-name="contactMechId"/></call-service>
     </simple-method>
     <simple-method method-name="updatePostalAddress" short-description="Update Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="updateContactMech" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updatePostalAddress" in-map-name="context">
             <default-message>Postal Address successfully updated.</default-message>
             <result-to-request result-name="newContactMechId" request-name="contactMechId"/></call-service>
     </simple-method>
-    
+
     <simple-method method-name="createTelecomNumber" short-description="Create Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createTelecomNumber" in-map-name="context">
@@ -99,18 +100,18 @@
             <result-to-request result-name="contactMechId"/></call-service>
     </simple-method>
     <simple-method method-name="updateTelecomNumber" short-description="Update Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="telecomNumber" in-map-name="parameters" out-map-name="context"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="updateContactMech" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updateTelecomNumber" in-map-name="context">
             <default-message>Telecom Number successfully updated.</default-message>
             <result-to-request result-name="newContactMechId" request-name="contactMechId"/></call-service>
     </simple-method>
-    
+
     <simple-method method-name="createEmailAddress" short-description="Create Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createEmailAddress" in-map-name="context">
@@ -118,19 +119,19 @@
             <result-to-request result-name="contactMechId"/></call-service>
     </simple-method>
     <simple-method method-name="updateEmailAddress" short-description="Update Contact Mechanism">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="emailAddress" in-map-name="parameters" out-map-name="context"/>
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="updateContactMech" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="updateEmailAddress" in-map-name="context">
             <default-message>Email Address successfully updated.</default-message>
             <result-to-request result-name="newContactMechId" request-name="contactMechId"/></call-service>
     </simple-method>
-    
+
     <!-- PartyContactMechPurpose events -->
     <simple-method method-name="createPartyContactMechPurpose" short-description="Create Party Contact Mechanism Purpose">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="createPartyContactMechPurpose" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="createPartyContactMechPurpose" in-map-name="context">
@@ -138,7 +139,7 @@
             <result-to-request result-name="workEffortId"/></call-service>
     </simple-method>
     <simple-method method-name="deletePartyContactMechPurpose" short-description="Delete Party Contact Mechanism Purpose">
-        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml" 
+        <call-map-processor xml-resource="org/ofbiz/commonapp/party/contact/ContactMechMapProcs.xml"
                 processor-name="deletePartyContactMechPurpose" in-map-name="parameters" out-map-name="context"/>
         <check-errors/>
         <call-service service-name="deletePartyContactMechPurpose" in-map-name="context">

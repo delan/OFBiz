@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
+
+<service-eca>
+    <eca service="createPostalAddress" event="commit">
+        <condition field-name="paymentMethodId" operator="is-not-null"/>
+        <action service="setPaymentMethodAddress" mode="sync"/>
+    </eca>
+</service-eca>
