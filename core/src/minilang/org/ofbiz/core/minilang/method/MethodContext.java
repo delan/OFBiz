@@ -55,6 +55,7 @@ public class MethodContext {
     LocalDispatcher dispatcher;
     GenericDelegator delegator;
     Security security;
+    GenericValue userLogin;
     
     HttpServletRequest request = null;
     
@@ -69,6 +70,7 @@ public class MethodContext {
         this.dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         this.delegator = (GenericDelegator) request.getAttribute("delegator");
         this.security = (Security) request.getAttribute("security");
+        this.userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
 
         if (this.loader == null)
             this.loader = Thread.currentThread().getContextClassLoader();
@@ -82,6 +84,7 @@ public class MethodContext {
         this.delegator = ctx.getDelegator();
         this.security = ctx.getSecurity();
         this.results = new HashMap();
+        this.userLogin = (GenericValue) this.getParameter("userLogin");
 
         if (this.loader == null)
             this.loader = Thread.currentThread().getContextClassLoader();
@@ -103,6 +106,9 @@ public class MethodContext {
     public Security getSecurity() { return this.security; }
     public HttpServletRequest getRequest() { return this.request; }
 
+    public GenericValue getUserLogin() { return this.userLogin; }
+    public void setUserLogin(GenericValue userLogin) { this.userLogin = userLogin; }
+    
     public Object getResult(String key) { return this.results.get(key); }
     public void putResult(String key, Object value) { this.results.put(key, value); }
     public Map getResults() { return this.results; }

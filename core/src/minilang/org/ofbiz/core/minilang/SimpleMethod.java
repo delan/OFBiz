@@ -297,12 +297,7 @@ public class SimpleMethod {
         }
 
         if (loginRequired) {
-            GenericValue userLogin = null;
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                userLogin = (GenericValue) methodContext.getRequest().getSession().getAttribute(SiteDefs.USER_LOGIN);
-            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                userLogin = (GenericValue) methodContext.getParameter("userLogin");
-            }
+            GenericValue userLogin = methodContext.getUserLogin();
             if (userLogin == null) {
                 String errMsg = "You must be logged in to complete the " + shortDescription + " process.";
                 if (methodContext.getMethodType() == MethodContext.EVENT) {
@@ -469,6 +464,8 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.NowDateToEnv(curOperElem, simpleMethod));
                 } else if ("sequenced-id-to-env".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.SequencedIdToEnv(curOperElem, simpleMethod));
+                } else if ("set-current-user-login".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.entityops.SetCurrentUserLogin(curOperElem, simpleMethod));
 
                 } else if ("find-by-primary-key".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.entityops.FindByPrimaryKey(curOperElem, simpleMethod));

@@ -65,12 +65,7 @@ public class CallServiceAsynch extends MethodOperation {
 
         // invoke the service
         if (includeUserLogin) {
-            GenericValue userLogin = null;
-            if (methodContext.getMethodType() == MethodContext.EVENT) {
-                userLogin = (GenericValue) methodContext.getRequest().getSession().getAttribute(SiteDefs.USER_LOGIN);
-            } else if (methodContext.getMethodType() == MethodContext.SERVICE) {
-                userLogin = (GenericValue) methodContext.getParameter("userLogin");
-            }
+            GenericValue userLogin = methodContext.getUserLogin();
             if (userLogin != null)
                 inMap.put("userLogin", userLogin);
         }

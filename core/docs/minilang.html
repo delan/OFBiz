@@ -1002,6 +1002,22 @@ in it and puts it in a field in the method environment.</p>
 the delegator) and puts it in the specified method environment field. The object
 will be a java.lang.Long, but can of course be converted to a String.</p>
 
+<p><b><u>set-current-user-login</u></b></p>
+<table cellpadding='2' cellspacing='0' border='1'>
+<tr>
+    <td><b>Attribute&nbsp;Name</b></td>
+    <td><b>Required?</b></td>
+    <td><b>Description</b></td>
+</tr>
+<tr>
+    <td>value-name</td><td>Y</td>
+    <td>The name of the method environment field that contains the UserLogin GenericValue object.</td>
+</tr>
+</table>
+<p>The set-current-user-login tag sets the UserLogin GenericValue object to be 
+used for authentication for the rest of the method. This is mostly used for 
+calling services, etc.</p>
+
 <p><b><u>find-by-primary-key</u></b></p>
 <table cellpadding='2' cellspacing='0' border='1'>
 <tr>
