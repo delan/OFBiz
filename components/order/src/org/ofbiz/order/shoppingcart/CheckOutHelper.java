@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutHelper.java,v 1.7 2003/09/04 19:23:52 ajzeneski Exp $
+ * $Id: CheckOutHelper.java,v 1.8 2003/09/11 18:27:58 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -63,7 +63,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class CheckOutHelper {
@@ -80,6 +80,174 @@ public class CheckOutHelper {
         this.cart = cart;
     }    
          
+    public Map setCheckOutShippingAddress( String shippingContactMechId ) {
+      List errorMessages = new ArrayList();
+      Map result;
+
+      if (this.cart != null && this.cart.size() > 0) {
+        errorMessages.addAll( setCheckOutShippingAddressInternal( shippingContactMechId ) );
+      } else {
+        errorMessages.add("There are no items in the cart.");
+      }
+
+      if (errorMessages.size() == 1) {
+          result = ServiceUtil.returnError(errorMessages.get(0).toString());
+      }else if (errorMessages.size() > 0) {
+          result = ServiceUtil.returnError(errorMessages);
+      } else {
+          result = ServiceUtil.returnSuccess();
+      }
+
+      return result;
+   }
+
+    private List setCheckOutShippingAddressInternal( String shippingContactMechId ) {
+      List errorMessages = new ArrayList();
+
+      // set the shipping address
+      if (UtilValidate.isNotEmpty(shippingContactMechId)) {
+        this.cart.setShippingContactMechId(shippingContactMechId);
+      } else {
+        errorMessages.add("Please Select a Shipping Destination");
+      }
+
+      return errorMessages;
+   }
+   
+    public Map setCheckOutShippingOptions( String shippingMethod, String correspondingPoId, 
+            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage, 
+            String isGift ) {
+      List errorMessages = new ArrayList();
+      Map result;
+
+      if (this.cart != null && this.cart.size() > 0) {
+        errorMessages.addAll( setCheckOutShippingOptionsInternal( shippingMethod, correspondingPoId, 
+            shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift ) );
+      } else {
+        errorMessages.add("There are no items in the cart.");
+      }
+
+      if (errorMessages.size() == 1) {
+          result = ServiceUtil.returnError(errorMessages.get(0).toString());
+      }else if (errorMessages.size() > 0) {
+          result = ServiceUtil.returnError(errorMessages);
+      } else {
+          result = ServiceUtil.returnSuccess();
+      }
+
+      return result;
+   }
+
+    private List setCheckOutShippingOptionsInternal( String shippingMethod, String correspondingPoId, 
+            String shippingInstructions, String orderAdditionalEmails, String maySplit, String giftMessage, 
+            String isGift ) {
+      List errorMessages = new ArrayList();
+
+      // set the general shipping options
+      if (UtilValidate.isNotEmpty(shippingMethod)) {
+          int delimiterPos = shippingMethod.indexOf('@');
+          String shipmentMethodTypeId = null;
+          String carrierPartyId = null;
+
+          if (delimiterPos > 0) {
+              shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
+              carrierPartyId = shippingMethod.substring(delimiterPos + 1);
+          }
+
+          this.cart.setShipmentMethodTypeId(shipmentMethodTypeId);
+          this.cart.setCarrierPartyId(carrierPartyId);
+      } else {
+          errorMessages.add("Please Select a Shipping Method");
+      }
+      this.cart.setShippingInstructions(shippingInstructions);
+      if (UtilValidate.isNotEmpty(maySplit)) {
+          cart.setMaySplit(Boolean.valueOf(maySplit));
+      } else {
+          errorMessages.add("Please Select a Splitting Preference");
+      }
+      this.cart.setGiftMessage(giftMessage);
+      if (UtilValidate.isNotEmpty(isGift)) {
+          cart.setIsGift(Boolean.valueOf(isGift));
+      } else {
+          errorMessages.add("Please Specify Whether or Not This Order is a Gift");
+      }
+
+      this.cart.setOrderAdditionalEmails(orderAdditionalEmails);
+
+      // set the PO number
+      if (UtilValidate.isNotEmpty(correspondingPoId)) {
+          this.cart.setPoNumber(correspondingPoId);
+      } else {
+          this.cart.setPoNumber("(none)");
+      }
+                                              
+      return errorMessages;
+   }
+   
+    public Map setCheckOutPayment( String checkOutPaymentId, String billingAccountId, Double billingAccountAmt ) {
+      List errorMessages = new ArrayList();
+      Map result;
+
+      if (this.cart != null && this.cart.size() > 0) {
+        errorMessages.addAll( setCheckOutPaymentInternal( checkOutPaymentId, billingAccountId, billingAccountAmt ) );
+      } else {
+        errorMessages.add("There are no items in the cart.");
+      }
+
+      if (errorMessages.size() == 1) {
+          result = ServiceUtil.returnError(errorMessages.get(0).toString());
+      }else if (errorMessages.size() > 0) {
+          result = ServiceUtil.returnError(errorMessages);
+      } else {
+          result = ServiceUtil.returnSuccess();
+      }
+
+      return result;
+   }
+
+    private List setCheckOutPaymentInternal( String checkOutPaymentId, String billingAccountId, Double billingAccountAmt ) {
+      List errorMessages = new ArrayList();
+
+      // set the billing account amount
+      if (billingAccountId != null && billingAccountAmt != null && !billingAccountId.equals("_NA")) {
+          cart.setBillingAccount(billingAccountId, billingAccountAmt.doubleValue());
+      } else {
+          cart.setBillingAccount(null, 0.00);
+      }          
+
+      // set the payment method option
+      if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
+          // clear out the old payments
+          this.cart.clearPaymentMethodTypeIds();
+          this.cart.clearPaymentMethodIds();
+           
+          // if we are EXT_BILLACT then we need to make sure we have enough credit
+          if ("EXT_BILLACT".equals(checkOutPaymentId)) {
+              double accountCredit = this.availableAccountBalance(cart.getBillingAccountId());                                                            
+              // make sure we have enough to cover
+              if (cart.getGrandTotal() > accountCredit) {
+                  errorMessages.add("Insufficient credit available on account.");
+              }
+          }
+          
+          // all payment method ids will be numeric, type ids will start with letter
+          if (Character.isLetter(checkOutPaymentId.charAt(0))) {
+              this.cart.addPaymentMethodTypeId(checkOutPaymentId);
+          } else {
+              Double paymentAmount = null;
+              if (billingAccountAmt != null) {
+                  paymentAmount = new Double(cart.getGrandTotal() - billingAccountAmt.doubleValue());
+              }
+              this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount);
+          }                
+                     
+      } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
+          errorMessages.add("Please select a method of billing.");
+      }
+
+      return errorMessages;
+   }
+   
     public Map setCheckOutOptions(String shippingMethod, String shippingContactMechId, String checkOutPaymentId,            
             String billingAccountId, Double billingAccountAmt, String correspondingPoId, String shippingInstructions, 
             String orderAdditionalEmails, String maySplit, String giftMessage, String isGift) {
@@ -94,88 +262,17 @@ public class CheckOutHelper {
                 checkOutPaymentId = "EXT_BILLACT"; 
             } 
             */
-            
-            // set the billing account amount
-            if (billingAccountId != null && billingAccountAmt != null && !billingAccountId.equals("_NA")) {
-                cart.setBillingAccount(billingAccountId, billingAccountAmt.doubleValue());
-            } else {
-                cart.setBillingAccount(null, 0.00);
-            }          
-            
-            if (UtilValidate.isNotEmpty(shippingMethod)) {
-                int delimiterPos = shippingMethod.indexOf('@');
-                String shipmentMethodTypeId = null;
-                String carrierPartyId = null;
 
-                if (delimiterPos > 0) {
-                    shipmentMethodTypeId = shippingMethod.substring(0, delimiterPos);
-                    carrierPartyId = shippingMethod.substring(delimiterPos + 1);
-                }
-
-                this.cart.setShipmentMethodTypeId(shipmentMethodTypeId);
-                this.cart.setCarrierPartyId(carrierPartyId);
-            } else {
-                errorMessages.add("Please Select a Shipping Method");
-            }
-            this.cart.setShippingInstructions(shippingInstructions);
-            if (UtilValidate.isNotEmpty(maySplit)) {
-                cart.setMaySplit(Boolean.valueOf(maySplit));
-            } else {
-                errorMessages.add("Please Select a Splitting Preference");
-            }
-            this.cart.setGiftMessage(giftMessage);
-            if (UtilValidate.isNotEmpty(isGift)) {
-                cart.setIsGift(Boolean.valueOf(isGift));
-            } else {
-                errorMessages.add("Please Specify Whether or Not This Order is a Gift");
-            }
-            
-            this.cart.setOrderAdditionalEmails(orderAdditionalEmails);
+            // set the general shipping options and method
+            errorMessages.addAll( setCheckOutShippingOptionsInternal( shippingMethod, correspondingPoId, 
+                shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift ) );
 
             // set the shipping address
-            if (UtilValidate.isNotEmpty(shippingContactMechId)) {
-                this.cart.setShippingContactMechId(shippingContactMechId);
-            } else {
-                errorMessages.add("Please Select a Shipping Destination");
-            }
+            errorMessages.addAll( setCheckOutShippingAddressInternal( shippingContactMechId ) );
 
             // set the payment method option
-            if (UtilValidate.isNotEmpty(checkOutPaymentId)) {
-                // clear out the old payments
-                this.cart.clearPaymentMethodTypeIds();
-                this.cart.clearPaymentMethodIds();
-                 
-                // if we are EXT_BILLACT then we need to make sure we have enough credit
-                if ("EXT_BILLACT".equals(checkOutPaymentId)) {
-                    double accountCredit = this.availableAccountBalance(cart.getBillingAccountId());                                                            
-                    // make sure we have enough to cover
-                    if (cart.getGrandTotal() > accountCredit) {
-                        errorMessages.add("Insufficient credit available on account.");
-                    }
-                }
-                
-                // all payment method ids will be numeric, type ids will start with letter
-                if (Character.isLetter(checkOutPaymentId.charAt(0))) {
-                    this.cart.addPaymentMethodTypeId(checkOutPaymentId);
-                } else {
-                    Double paymentAmount = null;
-                    if (billingAccountAmt != null) {
-                        paymentAmount = new Double(cart.getGrandTotal() - billingAccountAmt.doubleValue());
-                    }
-                    this.cart.setPaymentMethodAmount(checkOutPaymentId, paymentAmount);
-                }                
-                           
-            } else if (UtilValidate.isEmpty(checkOutPaymentId)) {
-                errorMessages.add("Please select a method of billing.");
-            }
-                                       
-            // set the PO number              
-            if (UtilValidate.isNotEmpty(correspondingPoId)) {
-                this.cart.setPoNumber(correspondingPoId);
-            } else {
-                this.cart.setPoNumber("(none)");
-            }            
-                                              
+            errorMessages.addAll( setCheckOutPaymentInternal( checkOutPaymentId, billingAccountId, billingAccountAmt ) );
+          
         } else {
             errorMessages.add("There are no items in the cart.");
         }
@@ -444,7 +541,7 @@ public class CheckOutHelper {
         if (paymentPreferences != null && paymentPreferences.size() > 0) {
             requireAuth = true;
         }
-                        
+        
         // Invoke payment processing.
         if (requireAuth) {
             Map paymentResult = null;

@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.1
 -->
 
@@ -78,7 +78,7 @@ function addToList() {
             <div class="boxhead">&nbsp;Quick Add</div>
           </td>
           <td valign="middle" align="right">
-            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="submenutext">Continue&nbsp;Shopping</a><#if (shoppingCartSize > 0)><a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="submenutextright">Checkout</a><#else><span class="submenutextrightdisabled">Checkout</span></#if>
+            <a href="<@ofbizUrl>/main</@ofbizUrl>" class="submenutext">Continue&nbsp;Shopping</a><#if (shoppingCartSize > 0)><a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="submenutextright">Checkout</a><#else><span class="submenutextrightdisabled">Checkout</span></#if>
           </td>
         </tr>
       </table>
@@ -305,7 +305,7 @@ function addToList() {
               <#if (shoppingCartSize > 0)>
                 <a href="javascript:document.cartform.submit()" class="lightbuttontext">[Recalculate&nbsp;Cart]</a>
                 <a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="lightbuttontext">[Empty&nbsp;Cart]</a>
-                <a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="lightbuttontext">[Checkout]</a>
+                <a href="<@ofbizUrl>/quickcheckout</@ofbizUrl>" class="lightbuttontext">[Checkout]</a>
               <#else>
                 [Recalculate&nbsp;Cart] [Empty&nbsp;Cart] [Checkout]
               </#if>

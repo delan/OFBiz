@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
@@ -34,7 +34,7 @@
   <table border="0" cellpadding="1" width="100%">
    <tr>
       <td colspan="4" align="left">
-        <a href="<@ofbizUrl>/checkoutoptions</@ofbizUrl>" class="buttontextbig">[Back&nbsp;to&nbsp;Options]</a>
+        <a href="<@ofbizUrl>/${requestAttributes.DONE_PAGE?default("quickcheckout")}</@ofbizUrl>" class="buttontextbig">[Back&nbsp;to&nbsp;Options]</a>
       </td>
       <td align="right">
         <a href="<@ofbizUrl>/processorder</@ofbizUrl>" class="buttontextbig">[Submit&nbsp;Order]&nbsp;</a>

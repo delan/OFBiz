@@ -1,5 +1,5 @@
 /*
- * $Id: CheckOutEvents.java,v 1.7 2003/09/04 19:23:52 ajzeneski Exp $
+ * $Id: CheckOutEvents.java,v 1.8 2003/09/11 18:27:58 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.ServiceUtil;
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:tristana@twibble.org">Tristan Austin</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public class CheckOutEvents {
@@ -97,6 +97,86 @@ public class CheckOutEvents {
     	return "success";
     }
 
+    public static String setCheckOutPages(HttpServletRequest request, HttpServletResponse response) {
+      if ( "error".equals( CheckOutEvents.cartNotEmpty( request, response ) ) == true )
+        return "error";
+
+      String curPage = request.getParameter("checkoutpage");
+      Debug.logInfo("CheckoutPage: " + curPage, module);
+
+      Map callResult = null;
+
+      ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute("shoppingCart"); 
+      LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+      GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+      CheckOutHelper checkOutHelper = new CheckOutHelper( dispatcher, delegator, cart );
+
+      if ( "shippingaddress".equals( curPage ) == true ) {
+        // Set the shipping address options
+        String shippingContactMechId = request.getParameter("shipping_contact_mech_id");
+        callResult = checkOutHelper.setCheckOutShippingAddress( shippingContactMechId );
+
+        ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+
+        if ( !( callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) ) {
+          // No errors so push the user onto the next page
+          curPage = "shippingoptions";
+        }
+      } else if ( "shippingoptions".equals( curPage ) == true ) {
+        // Set the general shipping options
+        String shippingMethod = request.getParameter("shipping_method");
+        String correspondingPoId = request.getParameter("corresponding_po_id");
+        String shippingInstructions = request.getParameter("shipping_instructions");
+        String orderAdditionalEmails = request.getParameter("order_additional_emails");
+        String maySplit = request.getParameter("may_split");
+        String giftMessage = request.getParameter("gift_message");
+        String isGift = request.getParameter("is_gift");
+        callResult = checkOutHelper.setCheckOutShippingOptions( shippingMethod, correspondingPoId, 
+            shippingInstructions, orderAdditionalEmails, maySplit, giftMessage, isGift );
+
+        ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+
+        if ( !( callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) ) {
+          // No errors so push the user onto the next page
+          curPage = "payment";
+        }
+      } else if ( "payment".equals( curPage ) == true ) {
+        // Set the payment options
+        String checkOutPaymentId = request.getParameter("checkOutPaymentId");            
+
+        // get the billing account and amount
+        String currencyFormat = UtilProperties.getPropertyValue("general.properties", "currency.decimal.format", "##0.00");
+        DecimalFormat formatter = new DecimalFormat(currencyFormat);
+        
+        String billingAccountId = request.getParameter("billingAccountId");
+        String billingAcctAmtStr = request.getParameter(billingAccountId + "_amount");                                               
+        Double billingAccountAmt = null;
+        // parse the amount to a decimal
+        if (billingAcctAmtStr != null) {
+            try {
+                billingAccountAmt = new Double(formatter.parse(billingAcctAmtStr).doubleValue());
+            } catch (ParseException e) {
+                Debug.logError(e, module);
+                request.setAttribute("_ERROR_MESSAGE_", "<li>Invalid amount set for Billing Account #" + billingAccountId);
+                return "error";
+            }
+        }
+
+        callResult = checkOutHelper.setCheckOutPayment( checkOutPaymentId, billingAccountId, billingAccountAmt );
+
+        ServiceUtil.getMessages(request, callResult, null, "<li>", "</li>", "<ul>", "</ul>", null, null);
+
+        if ( !( callResult.get(ModelService.RESPONSE_MESSAGE).equals(ModelService.RESPOND_ERROR)) ) {
+          // No errors so push the user onto the next page
+          curPage = "confirm";
+        }
+      } else {
+        curPage = "shippingaddress";
+      }
+
+      return curPage;
+    } 
+    
     public static String setPartialCheckOutOptions(HttpServletRequest request, HttpServletResponse response) {
         String resp = setCheckOutOptions(request, response);
         request.setAttribute("_ERROR_MESSAGE_", null);
