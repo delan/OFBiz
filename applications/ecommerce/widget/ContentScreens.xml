@@ -66,6 +66,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main-leftonly"/>
 
                 <set field="title" value="Content Page"/>
                 <set field="headerItem" value="main"/>
@@ -86,6 +87,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main"/>
 
                 <set field="title" value="View Blog"/>
                 <set field="headerItem" value="Blog"/>
@@ -108,6 +110,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main"/>
 
                 <set field="title" value="Search Sites"/>
                 <set field="headerItem" value="ContentMenu"/>
@@ -135,6 +138,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main"/>
 
                 <set field="title" value="View Content"/>
                 <set field="headerItem" value="Content"/>
@@ -153,4 +157,3 @@
         </section>
     </screen>
 </screens>
-

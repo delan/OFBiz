@@ -32,6 +32,8 @@
                 <property-map resource="EcommerceUiLabels" map-name="uiLabelMap" global="true"/>
                 <property-map resource="CommonUiLabels" map-name="uiLabelMap" global="true"/>
                 
+                <set field="MainColumnStyle" value="ecom-nocolumns" global="true"/>
+                
                 <script location="component://ecommerce/widget/EcommerceSetup.bsh"/>
             </actions>
             <widgets>
@@ -43,7 +45,7 @@
                     <include-screen name="${leftbarScreenName}" location="${leftbarScreenLocation}"/>
                     <include-screen name="${rightbarScreenName}" location="${rightbarScreenLocation}"/>
                 
-                    <container style="ecom-column-main">
+                    <container style="${MainColumnStyle}">
                         <!-- render messages -->
                         <platform-specific><html><html-template location="component://common/webcommon/includes/messages.ftl"/></html></platform-specific>
                         <decorator-section-include name="body"/>
@@ -107,6 +109,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main"/>
 
                 <set field="title" value="Main Page"/>
                 <set field="title-property" value="PageTitleMain"/>

@@ -93,9 +93,7 @@
 
 <body<#if includeHtmlArea> onLoad="init_all()"</#if>>
 
-<table border="0" width="100%" cellspacing="0" cellpadding="0" class="headerboxoutside">
-  <tr>
-    <td width="100%">
+<div class="ecom-header">
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxtop">
         <tr>
           <#if !productStore?exists>
@@ -118,10 +116,7 @@
           </td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td width="100%">
+
       <table width="100%" border="0" cellspacing="0" cellpadding="0" class="headerboxbottom">
         <tr>
           <#if userLogin?has_content && userLogin.userLoginId != "anonymous">
@@ -149,9 +144,4 @@
           <td class="headerButtonRight" nowrap><a href="<@ofbizUrl>/viewprofile</@ofbizUrl>" class="headerbuttontext">${uiLabelMap.CommonProfile}</a></td>
         </tr>
       </table>
-    </td>
-  </tr>
-</table>
-
-<br>
-
+</div>

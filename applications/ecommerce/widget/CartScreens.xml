@@ -66,6 +66,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main-leftonly"/>
 
                 <set field="title-property" value="PageTitleShoppingCart"/>
                 <set field="headerItem" value="Shopping Cart"/>
@@ -85,6 +86,7 @@
         <section>
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main-leftonly"/>
 
                 <set field="title" value="Show All Promotions"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showcart.bsh"/>
@@ -104,6 +106,7 @@
             <actions>
                 <set field="leftbarScreenName" value="leftbar"/>
                 <set field="rightbarScreenName" value="rightbar"/>
+                <set field="MainColumnStyle" value="ecom-column-main"/>
 
                 <set field="title" value="Show Promotion Details"/>
                 <script location="component://ecommerce/webapp/ecommerce/WEB-INF/actions/cart/showPromotionDetails.bsh"/>
