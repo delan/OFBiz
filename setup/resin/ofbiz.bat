@@ -87,11 +87,12 @@ set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-entity.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-service.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-extutil.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-extentity.jar
-set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-webapp.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-workflow.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-rules.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-datafile.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-minilang.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-widget.jar
+set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\core\lib\ofbcore-webapp.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\commonapp\lib\commonapp.jar
 set CLASSPATH=%CLASSPATH%;%OFBIZ_HOME%\commonapp\etc
 

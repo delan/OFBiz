@@ -101,10 +101,13 @@
         <delete file="${j2eedeploy.dir}/ofbcore-entity.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-service.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-extutil.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-extentity.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-workflow.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-rules.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-datafile.jar" />
         <delete file="${j2eedeploy.dir}/ofbcore-minilang.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-widget.jar" />
+        <delete file="${j2eedeploy.dir}/ofbcore-webapp.jar" />
 
         <delete file="${j2eedeploy.dir}/commonapp.jar" />
 
@@ -138,14 +141,17 @@
         <copy file="commonapp/etc/serviceengine.xml" toFile="${conf.dir}/serviceengine.xml" />
         <copy file="commonapp/etc/tyrexdomain.xml" toFile="${conf.dir}/tyrexdomain.xml" />
 
-        <copy file="core/lib/ofbcore-share.jar" toFile="${j2eedeploy.dir}/ofbcore-share.jar" />
-        <copy file="core/lib/ofbcore-entity.jar" toFile="${j2eedeploy.dir}/ofbcore-entity.jar" />
-        <copy file="core/lib/ofbcore-service.jar" toFile="${j2eedeploy.dir}/ofbcore-service.jar" />
-        <copy file="core/lib/ofbcore-extutil.jar" toFile="${j2eedeploy.dir}/ofbcore-extutil.jar" />
-        <copy file="core/lib/ofbcore-workflow.jar" toFile="${j2eedeploy.dir}/ofbcore-workflow.jar" />
-        <copy file="core/lib/ofbcore-rules.jar" toFile="${j2eedeploy.dir}/ofbcore-rules.jar" />
-        <copy file="core/lib/ofbcore-datafile.jar" toFile="${j2eedeploy.dir}/ofbcore-datafile.jar" />
-        <copy file="core/lib/ofbcore-minilang.jar" toFile="${j2eedeploy.dir}/ofbcore-minilang.jar" />
+        <copy file="core/lib/ofbcore-share.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-entity.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-service.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-extutil.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-extentity.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-workflow.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-rules.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-datafile.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-minilang.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-widget.jar" toDir="${j2eedeploy.dir}" />
+        <copy file="core/lib/ofbcore-webapp.jar" toDir="${j2eedeploy.dir}" />
 
         <copy file="commonapp/lib/commonapp.jar" toFile="${j2eedeploy.dir}/commonapp.jar" />
 

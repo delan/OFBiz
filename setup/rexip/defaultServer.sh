@@ -54,10 +54,13 @@ CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-share.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-entity.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-service.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-extutil.jar
+CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-extentity.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-workflow.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-rules.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-datafile.jar
 CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-minilang.jar
+CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-widget.jar
+CP=$CP:$OFBIZ_HOME/core/lib/ofbcore-webapp.jar
 CP=$CP:$OFBIZ_HOME/commonapp/lib/commonapp.jar
 CP=$CP:$OFBIZ_HOME/commonapp/etc
 

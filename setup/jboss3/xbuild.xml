@@ -381,10 +381,13 @@
         <copy file="core/lib/ofbcore-entity.jar"             toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-service.jar"            toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-extutil.jar"            toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-extentity.jar"          toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-workflow.jar"           toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-rules.jar"              toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-datafile.jar"           toDir="${ext.dir}/lib"/>
         <copy file="core/lib/ofbcore-minilang.jar"           toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-widget.jar"             toDir="${ext.dir}/lib"/>
+        <copy file="core/lib/ofbcore-webapp.jar"             toDir="${ext.dir}/lib"/>
         <copy file="commonapp/lib/commonapp.jar"             toDir="${ext.dir}/lib"/>
 
         <copy file="webtools/lib/webtools.war"               toDir="${ext.dir}/webapps"/>

@@ -99,6 +99,7 @@
         <mkdir dir="${build.dir}/service/META-INF" />
         <mkdir dir="${build.dir}/extutil/META-INF" />
         <mkdir dir="${build.dir}/webapp/META-INF" />
+        <mkdir dir="${build.dir}/widget/META-INF" />
 
         <mkdir dir="${build.dir}/ejb/META-INF" />
         <mkdir dir="${build.dir}/crypto/META-INF" />
@@ -199,6 +200,20 @@
           <fileset dir="${src.dir}/minilang" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
         </copy>
 
+    	<javac debug="on" deprecation="on" destdir="${build.dir}/widget">
+            <classpath>
+                <path refid="local.class.path"/>
+                <pathelement path="${build.dir}/share"/>
+                <pathelement path="${build.dir}/entity"/>
+                <pathelement path="${build.dir}/extutil"/>
+                <pathelement path="${build.dir}/service"/>
+            </classpath>
+            <src path="${src.dir}/widget" />
+        </javac>
+        <copy todir="${build.dir}/widget">
+          <fileset dir="${src.dir}/widget" includes="**/*.properties,**/*.xml,**/*.bsh,**/*.logic,**/*.js,**/*.jacl,**/*.py"/>
+        </copy>
+
     	<javac debug="on" deprecation="on" destdir="${build.dir}/webapp">
             <classpath>
                 <path refid="local.class.path"/>
@@ -278,11 +293,12 @@
         <jar jarfile="${lib.dir}/${name}-service${ofbiz.version}.jar" basedir="${build.dir}/service" />
         <jar jarfile="${lib.dir}/${name}-extutil${ofbiz.version}.jar" basedir="${build.dir}/extutil" />
         <jar jarfile="${lib.dir}/${name}-extentity${ofbiz.version}.jar" basedir="${build.dir}/extentity" />
-        <jar jarfile="${lib.dir}/${name}-webapp${ofbiz.version}.jar" basedir="${build.dir}/webapp" />
         <jar jarfile="${lib.dir}/${name}-workflow${ofbiz.version}.jar" basedir="${build.dir}/workflow" />
         <jar jarfile="${lib.dir}/${name}-rules${ofbiz.version}.jar" basedir="${build.dir}/rules" />
         <jar jarfile="${lib.dir}/${name}-datafile${ofbiz.version}.jar" basedir="${build.dir}/datafile" />
         <jar jarfile="${lib.dir}/${name}-minilang${ofbiz.version}.jar" basedir="${build.dir}/minilang" />
+        <jar jarfile="${lib.dir}/${name}-widget${ofbiz.version}.jar" basedir="${build.dir}/widget" />
+        <jar jarfile="${lib.dir}/${name}-webapp${ofbiz.version}.jar" basedir="${build.dir}/webapp" />
         <jar jarfile="../ofbiz.jar" manifest="${src.dir}/start/org/ofbiz/core/start/MANIFEST.MF" basedir="${build.dir}/start" />
         
         <!-- <jar jarfile="${lib.dir}/${name}-crypto${ofbiz.version}.jar" basedir="${build.dir}/crypto" /> -->
@@ -321,11 +337,12 @@
             <sourcepath path="${src.dir}/service" />
             <sourcepath path="${src.dir}/extutil" />
             <sourcepath path="${src.dir}/extentity" />
-            <sourcepath path="${src.dir}/webapp" />
             <sourcepath path="${src.dir}/workflow" />
             <sourcepath path="${src.dir}/rules" />
             <sourcepath path="${src.dir}/datafile" />
             <sourcepath path="${src.dir}/minilang" />
+            <sourcepath path="${src.dir}/widget" />
+            <sourcepath path="${src.dir}/webapp" />
             <!-- <sourcepath path="${src.dir}/ejb" /> -->
             <sourcepath path="${src.dir}/crypto" />
         </javadoc>
