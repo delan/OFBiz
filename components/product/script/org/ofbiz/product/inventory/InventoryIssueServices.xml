@@ -132,7 +132,7 @@
             <env-to-env env-name="orderHeader.originFacilityId" to-env-name="lookupFieldMap.facilityId"/>
             <find-by-and entity-name="InventoryItem" map-name="lookupFieldMap" list-name="inventoryItemList" order-by-list-name="orderByList"/>
     
-            <field-to-field field-name="quantity" map-name="parameters" to-field-name="quantityNotIssued"/>
+            <env-to-env env-name="orderItem.quantity" to-env-name="parameters.quantityNotIssued"/>
 
             <iterate entry-name="inventoryItem" list-name="inventoryItemList">
                 <!-- this is a little trick to get the InventoryItem value object without doing a query, possible since all fields on InventoryItem are also on InventoryItemAndLocation with the same names -->
