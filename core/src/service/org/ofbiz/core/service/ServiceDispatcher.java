@@ -218,7 +218,7 @@ public class ServiceDispatcher {
             Object userLogin = context.get("userLogin");
 
             if (service.auth && userLogin == null) {
-                throw new ServiceAuthException("User authorization is required for the " + service.name + " service");
+                throw new ServiceAuthException("User authorization is required for this service : " + service.name);
             }
 
             // setup the engine
@@ -232,7 +232,7 @@ public class ServiceDispatcher {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+                    throw new GenericServiceException("Context (in runSync : " + service.name + ") does not match expected requirements: ", e);
                 }
             }
 
@@ -257,7 +257,7 @@ public class ServiceDispatcher {
                 try {
                     service.validate(result, ModelService.OUT_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Result (in runSync) does not match expected requirements: ", e);
+                    throw new GenericServiceException("Result (in runSync : " + service.name + ") does not match expected requirements: ", e);
                 }
             }
 
@@ -376,7 +376,7 @@ public class ServiceDispatcher {
             Object userLogin = context.get("userLogin");
 
             if (service.auth && userLogin == null)
-                throw new ServiceAuthException("User authorization is required for this service");
+                throw new ServiceAuthException("User authorization is required for this service : " + service.name);
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
@@ -389,7 +389,7 @@ public class ServiceDispatcher {
                 try {
                     service.validate(context, ModelService.IN_PARAM);
                 } catch (ServiceValidationException e) {
-                    throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+                    throw new GenericServiceException("Context (in runSync : " + service.name + ") does not match expected requirements: ", e);
                 }
             }
 
@@ -462,7 +462,7 @@ public class ServiceDispatcher {
         Object userLogin = context.get("userLogin");
 
         if (service.auth && userLogin == null)
-            throw new ServiceAuthException("User authorization is required for this service");
+            throw new ServiceAuthException("User authorization is required for this service : " + service.name);
 
         // setup the engine
         GenericEngine engine = getGenericEngine(service.engineName);
@@ -475,7 +475,7 @@ public class ServiceDispatcher {
             try {
                 service.validate(context, ModelService.IN_PARAM);
             } catch (ServiceValidationException e) {
-                throw new GenericServiceException("Context (in runAsync) does not match expected requirements: ", e);
+                throw new GenericServiceException("Context (in runAsync : " + service.name + ") does not match expected requirements: ", e);
             }
         }
 
@@ -512,7 +512,7 @@ public class ServiceDispatcher {
         Object userLogin = context.get("userLogin");
 
         if (service.auth && userLogin == null)
-            throw new ServiceAuthException("User authorization is required for this service");
+            throw new ServiceAuthException("User authorization is required for this service : " + service.name);
 
         // setup the engine
         GenericEngine engine = getGenericEngine(service.engineName);
@@ -525,7 +525,7 @@ public class ServiceDispatcher {
             try {
                 service.validate(context, ModelService.IN_PARAM);
             } catch (ServiceValidationException e) {
-                throw new GenericServiceException("Context (in runSync) does not match expected requirements: ", e);
+                throw new GenericServiceException("Context (in runAsync : " + service.name + ") does not match expected requirements: ", e);
             }
         }
 
