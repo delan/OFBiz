@@ -1,3 +1,10 @@
+<#assign mapKey=wrapMapKey?if_exists/>
+<#assign subDataResourceId=wrapDataResourceId?if_exists/>
+<#assign subDataResourceTypeId=wrapDataResourceTypeId?if_exists/>
+<#assign contentIdTo=wrapContentIdTo?if_exists/>
+<#assign mimeTypeId=wrapMimeTypeId?if_exists/>
+<#assign subContentId=wrapSubContentId?if_exists/>
+
 mapKey:${mapKey?if_exists}
 <!--
 <table border="2" bordercolor="blue">
@@ -5,15 +12,6 @@ mapKey:${mapKey?if_exists}
 </table>
 -->
 
-<#assign subDataResourceId=drDataResourceId?if_exists/>
-<#if !subDataResourceId?exists || (0 == subDataResourceId?length)>
-    <#assign subDataResourceId=request.getAttribute("drDataResourceId")?if_exists/>
-</#if>
-<#assign subDataResourceTypeId=subDataResourceTypeId?if_exists/>
-<#if !subDataResourceTypeId?exists || (0 == subDataResourceTypeId?length)>
-    <#assign subDataResourceTypeId=request.getAttribute("subDataResourceTypeId")?if_exists/>
-<br/>
-</#if>
 <!--
 <div id="divTwo" style="border-color:red; border-width:thin; border-style:solid;">
 <div id="divOne" style="border-color:red; border-width:thin; border-style:solid;">
@@ -22,33 +20,19 @@ mapKey:${mapKey?if_exists}
 <div id="divOne" class="wrapInner">
 <@renderWrappedText />
 </div>
-<#assign contentIdTo=contentId?if_exists/>
-<#assign mimeTypeId=mimeTypeId?if_exists/>
-<#assign mapKey=mapKey?if_exists/>
-<#assign subContentId=subContentId?if_exists/>
-<#if !subContentId?exists || (0 == subContentId?length)>
-    <#assign subContentId=request.getAttribute("subContentId")?if_exists/>
-<br/>
-</#if>
 <a class="tabButton" href="javascript:lookupSubContent('<@ofbizUrl>/LookupSubContent</@ofbizUrl>', '${contentId?if_exists}','${mapKey?if_exists}',  '${subDataResourceTypeId?if_exists}', '${mimeTypeId?if_exists}') " > 
 &nbsp;&nbsp;&nbsp;&nbsp;Lookup&nbsp;&nbsp;&nbsp;&nbsp;
 </a>
 &nbsp;
 <#assign ofbizRequest=""/>
 <#assign httpParams="contentIdTo=" + contentIdTo?if_exists + "&mapKey=" + mapKey?if_exists />
-<#if subDataResourceTypeId == "ELECTRONIC_TEXT">
-    <#if mimeTypeId == "text/html">
-        <#assign ofbizRequest="EditLayoutHtml" />
-    <#else>
-        <#assign ofbizRequest="EditLayoutText" />
-    </#if>
+<#if subDataResourceTypeId == "IMAGE_OBJECT">
+    <#assign ofbizRequest="EditLayoutImage" />
 <#else>
-    <#if subDataResourceTypeId == "IMAGE_OBJECT">
-        <#assign ofbizRequest="EditLayoutImage" />
+    <#if subDataResourceTypeId == "URL_RESOURCE">
+        <#assign ofbizRequest="EditLayoutUrl" />
     <#else>
-        <#if subDataResourceTypeId == "URL_RESOURCE">
-            <#assign ofbizRequest="EditLayoutUrl" />
-        </#if>
+        <#assign ofbizRequest="EditLayoutSubContent" />
     </#if>
 </#if>
 <a class="tabButton" href="<@ofbizUrl>/${ofbizRequest}?${httpParams}&mode=add</@ofbizUrl>" >New</a>
