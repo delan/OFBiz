@@ -58,7 +58,14 @@ public class ModelReader {
   public int numRelations = 0;
   
   public String modelName;
-  public String entityFileName;
+  
+  //collection of filenames for entity definitions
+  public Collection entityFileNames;
+  
+  //contains a collection of entity names for each filename, populated as they are loaded
+  public Map fileNameEntities;
+  //for each entity contains a map to the filename that the entity came from
+  public Map entityFile;
   
   public static ModelReader getModelReader(String delegatorName) {
     String tempModelName = UtilProperties.getPropertyValue("servers", delegatorName + ".model.reader");
@@ -79,7 +86,25 @@ public class ModelReader {
   
   public ModelReader(String modelName) {
     this.modelName = modelName;
-    entityFileName = UtilProperties.getPropertyValue("servers", modelName + ".xml.entity");
+    entityFileNames = new LinkedList();
+    fileNameEntities = new HashMap();
+    entityFile = new HashMap();
+
+    String wholeFileNamesStr = UtilProperties.getPropertyValue("servers", modelName + ".xml.entity");
+    String fileNamesStr = wholeFileNamesStr;
+    fileNamesStr.trim();
+    
+    while(fileNamesStr.indexOf(';') > 0) {
+      String tempFileName = fileNamesStr.substring(0, fileNamesStr.indexOf(';'));
+      tempFileName.trim();
+      if(entityFileNames.contains(tempFileName)) {
+        Debug.logWarning("WARNING: Entity filename " + tempFileName + " is listed more than once in the entity file list: " + wholeFileNamesStr);
+      }
+      entityFileNames.add(tempFileName);
+      fileNamesStr = fileNamesStr.substring(fileNamesStr.indexOf(';')+1);
+      fileNamesStr.trim();
+    }
+    entityFileNames.add(fileNamesStr);
     
     //preload caches...
     getEntityCache();
@@ -99,44 +124,68 @@ public class ModelReader {
           entityCache = new HashMap();
           
           UtilTimer utilTimer = new UtilTimer();
-          utilTimer.timerString("Before getDocument");
-          Document document = getDocument(entityFileName);
-          if(document == null) { entityCache = null; return null; }
           
-          Hashtable docElementValues = null;
-          docElementValues = new Hashtable();
-          
-          utilTimer.timerString("Before getDocumentElement");
-          Element docElement = document.getDocumentElement();
-          if(docElement == null) { entityCache = null; return null; }
-          docElement.normalize();
-          Node curChild = docElement.getFirstChild();
-          
-          int i=0;
-          if(curChild != null) {
-            utilTimer.timerString("Before start of entity loop");
-            do {
-              if(curChild.getNodeType() == Node.ELEMENT_NODE && "entity".equals(curChild.getNodeName())) {
-                i++;
-                Element curEntity = (Element)curChild;
-                String entityName = checkEmpty(curEntity.getAttribute("entity-name"));
-                //utilTimer.timerString("  After entityEntityName -- " + i + " --");
-                //ModelEntity entity = createModelEntity(curEntity, docElement, utilTimer, docElementValues);
-                ModelEntity entity = createModelEntity(curEntity, docElement, null, docElementValues);
-                //utilTimer.timerString("  After createModelEntity -- " + i + " --");
-                if(entity != null) {
-                  entityCache.put(entityName, entity);
-                  //utilTimer.timerString("  After entityCache.put -- " + i + " --");
-                  Debug.logInfo("-- getModelEntity: #" + i + " Loaded entity: " + entityName);
+          Iterator fnIter = entityFileNames.iterator();
+          while(fnIter.hasNext()) {
+            String entityFileName = (String)fnIter.next();
+            
+            utilTimer.timerString("Before getDocument in file " + entityFileName);
+            Document document = getDocument(entityFileName);
+            if(document == null) { entityCache = null; return null; }
+
+            Hashtable docElementValues = null;
+            docElementValues = new Hashtable();
+
+            utilTimer.timerString("Before getDocumentElement in file " + entityFileName);
+            Element docElement = document.getDocumentElement();
+            if(docElement == null) { entityCache = null; return null; }
+            docElement.normalize();
+            Node curChild = docElement.getFirstChild();
+
+            int i=0;
+            if(curChild != null) {
+              utilTimer.timerString("Before start of entity loop in file " + entityFileName);
+              do {
+                if(curChild.getNodeType() == Node.ELEMENT_NODE && "entity".equals(curChild.getNodeName())) {
+                  i++;
+                  Element curEntity = (Element)curChild;
+                  String entityName = checkEmpty(curEntity.getAttribute("entity-name"));
+                  
+                  //add entityName to appropriate fileNameEntities collection
+                  Collection fileEntityNames = (Collection)fileNameEntities.get(entityFileName);
+                  if(fileEntityNames == null) {
+                    fileEntityNames = new LinkedList();
+                    fileNameEntities.put(entityFileName, fileEntityNames);
+                  }
+                  fileEntityNames.add(entityName);
+                  
+                  //check to see if entity with same name has already been read
+                  if(entityCache.containsKey(entityName)) {
+                    Debug.logWarning("WARNING: Entity " + entityName + " is defined more than once, most recent will over-write previous definition(s)");
+                    Debug.logWarning("WARNING: Entity " + entityName + " was found in file " + entityFileName + ", but was already defined in file " + (String)entityFile.get(entityName));
+                  }
+                  
+                  //add entityName, entityFileName pair to entityFile map
+                  entityFile.put(entityName, entityFileName);
+                  
+                  //utilTimer.timerString("  After entityEntityName -- " + i + " --");
+                  //ModelEntity entity = createModelEntity(curEntity, docElement, utilTimer, docElementValues);
+                  ModelEntity entity = createModelEntity(curEntity, docElement, null, docElementValues);
+                  //utilTimer.timerString("  After createModelEntity -- " + i + " --");
+                  if(entity != null) {
+                    entityCache.put(entityName, entity);
+                    //utilTimer.timerString("  After entityCache.put -- " + i + " --");
+                    Debug.logInfo("-- getModelEntity: #" + i + " Loaded entity: " + entityName);
+                  }
+                  else Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create entity for entityName: " + entityName);
+
                 }
-                else Debug.logWarning("-- -- ENTITYGEN ERROR:getModelEntity: Could not create entity for entityName: " + entityName);
-                
-              }
-            } while((curChild = curChild.getNextSibling()) != null);
+              } while((curChild = curChild.getNextSibling()) != null);
+            }
+            else Debug.logWarning("No child nodes found.");
+            utilTimer.timerString("Finished file " + entityFileName + " - Total Entities: " + i + " FINISHED");
           }
-          else Debug.logWarning("No child nodes found.");
-          utilTimer.timerString("FINISHED - Total Entities: " + i + " FINISHED");
-          Debug.logInfo("FINISHED LOADING ENTITIES; #entites=" + numEntities + " #fields=" + numFields + " #relations=" + numRelations);
+          Debug.logInfo("FINISHED LOADING ENTITIES - ALL FILES; #entites=" + numEntities + " #fields=" + numFields + " #relations=" + numRelations);
         }
       }
     }
