@@ -17,13 +17,8 @@ application.xml file or put orion and ofbiz as sibling directories.
 By the way, be sure to copy the tools.jar file from your JDK lib directory to
 the Orion root directory, it needs it there for compilation.
 
-NOTE: This configuration is not 100% complete. In other words, we haven't been
-able to get everything in OFBiz working under Orion. We've resolved most of the
-issues, but some remain. The main ones are: not being able to find the 
-java:comp/UserTransaction object in JNDI, and certain JSPs 
-(like productdetail.jsp) won't compile because of parsing and JSP to Java
-translation errors. The productdetail.jsp issue may be related to the JSP
-compiler getting confused by the JavaScript in the page, just a guess...
+NOTE: If Tyrex is on your classpath it will mess up the UserTransction JNDI 
+lookup. So, make sure it is not there.
 
 Hope that helps!
 
