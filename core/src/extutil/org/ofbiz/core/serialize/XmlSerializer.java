@@ -115,18 +115,24 @@ public class XmlSerializer {
             // - Collections -
             String elementName = null;
             //these ARE order sensitive; for instance Stack extends Vector, so if Vector were first we would lose the stack part
-            if (object instanceof ArrayList)
+            if (object instanceof ArrayList) {
                 elementName = "col-ArrayList";
-            else if (object instanceof LinkedList)
+            } else if (object instanceof LinkedList) {
                 elementName = "col-LinkedList";
-            else if (object instanceof Stack)
+            } else if (object instanceof Stack) {
                 elementName = "col-Stack";
-            else if (object instanceof Vector)
+            } else if (object instanceof Vector) {
                 elementName = "col-Vector";
-            else if (object instanceof TreeSet)
+            } else if (object instanceof TreeSet) {
                 elementName = "col-TreeSet";
-            else if (object instanceof HashSet) elementName = "col-HashSet";
-            if (elementName == null) return serializeCustom(object, document);
+            } else if (object instanceof HashSet) {
+                elementName = "col-HashSet";
+            } else {
+                //no specific type found, do general Collection, will deserialize as LinkedList
+                elementName = "col-Collection";
+            }
+            
+            //if (elementName == null) return serializeCustom(object, document);
 
             Collection value = (Collection) object;
             Element element = document.createElement(elementName);
@@ -146,18 +152,20 @@ public class XmlSerializer {
             // - Maps -
             String elementName = null;
             //these ARE order sensitive; for instance Properties extends Hashtable, so if Hashtable were first we would lose the Properties part
-            if (object instanceof UtilMisc.SimpleMap)
-                elementName = "map-HashMap";  // Simple map will work like a HashMap
-            else if (object instanceof HashMap)
+            if (object instanceof HashMap) {
                 elementName = "map-HashMap";
-            else if (object instanceof Properties)
+            } else if (object instanceof Properties) {
                 elementName = "map-Properties";
-            else if (object instanceof Hashtable)
+            } else if (object instanceof Hashtable) {
                 elementName = "map-Hashtable";
-            else if (object instanceof WeakHashMap)
+            } else if (object instanceof WeakHashMap) {
                 elementName = "map-WeakHashMap";
-            else if (object instanceof TreeMap) elementName = "map-TreeMap";
-            if (elementName == null) return serializeCustom(object, document);
+            } else if (object instanceof TreeMap) {
+                elementName = "map-TreeMap";
+            } else {
+                //serialize as a simple Map implementation if nothing else applies, these will deserialize as a HashMap
+                elementName = "map-Map";
+            }
 
             Element element = document.createElement(elementName);
             Map value = (Map) object;
@@ -245,17 +253,21 @@ public class XmlSerializer {
         } else if (tagName.startsWith("col-")) {
             // - Collections -
             Collection value = null;
-            if ("col-ArrayList".equals(tagName))
+            if ("col-ArrayList".equals(tagName)) {
                 value = new ArrayList();
-            else if ("col-LinkedList".equals(tagName))
+            } else if ("col-LinkedList".equals(tagName)) {
                 value = new LinkedList();
-            else if ("col-Stack".equals(tagName))
+            } else if ("col-Stack".equals(tagName)) {
                 value = new Stack();
-            else if ("col-Vector".equals(tagName))
+            } else if ("col-Vector".equals(tagName)) {
                 value = new Vector();
-            else if ("col-TreeSet".equals(tagName))
+            } else if ("col-TreeSet".equals(tagName)) {
                 value = new TreeSet();
-            else if ("col-HashSet".equals(tagName)) value = new HashSet();
+            } else if ("col-HashSet".equals(tagName)) {
+                value = new HashSet();
+            } else if ("col-Collection".equals(tagName)) {
+                value = new LinkedList();
+            }
 
             if (value == null) {
                 return deserializeCustom(element);
@@ -282,6 +294,8 @@ public class XmlSerializer {
                 value = new WeakHashMap();
             } else if ("map-TreeMap".equals(tagName)) {
                 value = new TreeMap();
+            } else if ("map-Map".equals(tagName)) {
+                value = new HashMap();
             }
 
             if (value == null) {
