@@ -40,7 +40,29 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <h4>Overview</h4>
 
-<P></P>
+<P>There have been a lot of incremental improvements in this release, and some 
+major additions as well. Considering what has been worked on you can all
+probably guess that we are starting to take a new direction with the project.
+The framework and many of the existing applications are maturing well and are
+quite stable.</P
+
+<P>So, we are doing a "stable" release and starting to push effort
+in the direction of filling in the gaps in the applications. Soon to come are
+major improvements to the Work Effort application and we'll be starting on the
+Accounting and Content Management (also includes knowledge management)
+applications. Other applications and components will receive attention and be
+incrementally improved, especially as they are more widely adopted.</P>
+
+<P>The Order Management and the order related pieces of
+e-commerce are incredibly improved. The Workflow Engine is now used for order
+management and will be used for many other processes in the future. The setup
+pages have been improved and better organized to make it easer to start taking
+orders. More reporting and statistics have been added, but these are just
+getting started. Expect a lot more reports in the near future.</P>
+
+<P>The Catalog Manager has been improved, but the most work in that area has
+been done on the Facility Manager which now handles shipping, receiving,
+inventory transfers and store, warehouse and inventory management.</P>
 
 <h4>New Features & Improvements</h4>
 <p>New features and improvements include:</p>
@@ -50,6 +72,8 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
     	<li>product catalogs can now have custom style sheets and logos
     	<li>added co-branding features utilizing tracking codes from the marketing component
     	<li>added support for WorldPay and PayPal payment processors
+        <li>parties can now have catalogs associated with in addition to the
+        ones associate with the website
     </ul>
     <li>Order Manager related
     <ul>
@@ -64,10 +88,19 @@ Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
     	<li>tracking codes can now be associated with a default product catalog
     	<li>tracking codes can now have overriding logo and css style sheet (co-branding)
     </ul>
+    <li>Catalog and Facility Manager related
+    <ul>
+    	<li>Facility pages have been moved to the Facility Manager
+        <li>Warehouse management features such as location maintenance have been added
+        <li>Inventory transfer functionality is implemented, with shipping and receiving coming
+    	<li>Product pricing can now be based on a facility group, allowing for
+        regional or store specific pricing
+        <li>a number of other improvements
+    </ul>
     <li>Common Application Components
     <ul>
     	<li>user login history is now linked to a visit for more information
-    	<li>added a user login session entity for persisiting user specific configurations (not used yet)
+    	<li>added a user login session entity for persisiting user specific configurations
     </ul>
     	
 </ul>
