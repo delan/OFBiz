@@ -6,6 +6,7 @@
 
   <SecurityGroup description="Full Admin group, has all general permissions." groupId="FULLADMIN"/>
   <SecurityGroup description="Flexible Admin group, has all granular permissions." groupId="FLEXADMIN"/>
+  <SecurityGroup description="Admin group for restricted order processing." groupId="ORDERPROC"/>
 
   <SecurityPermission description="View the Server Statistics pages." permissionId="SERVER_STATS_VIEW"/>
   <SecurityPermission description="Use the Data File Maintenance pages." permissionId="DATAFILE_MAINT"/>
@@ -32,6 +33,7 @@
   <SecurityPermission description="ALL operations on the Catalog." permissionId="CATALOG_ADMIN"/>
 
   <SecurityPermission description="View operations in the Party Manager." permissionId="PARTYMGR_VIEW"/>
+  <SecurityPermission description="Create new party notes." permissionId="PARTYMGR_NOTES"/>
   <SecurityPermission description="Create operations in the Party Manager." permissionId="PARTYMGR_CREATE"/>
   <SecurityPermission description="Update operations in the Party Manager." permissionId="PARTYMGR_UPDATE"/>
   <SecurityPermission description="Delete operations in the Party Manager." permissionId="PARTYMGR_DELETE"/>
@@ -39,6 +41,7 @@
 
   <SecurityPermission description="View operations in the Order Manager." permissionId="ORDERMGR_VIEW"/>
   <SecurityPermission description="Limited view operations in the Order Manager." permissionId="ORDERMGR_VIEW_ROLE"/>
+  <SecurityPermission description="Create new order notes." permissionId="ORDERMGR_NOTE"/>
   <SecurityPermission description="Create operations in the Order Manager." permissionId="ORDERMGR_CREATE"/>
   <SecurityPermission description="Update operations in the Order Manager." permissionId="ORDERMGR_UPDATE"/>
   <SecurityPermission description="Delete operations in the Order Manager." permissionId="ORDERMGR_DELETE"/>
@@ -139,12 +142,14 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_NOTE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="PARTYMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="PARTYMGR_ADMIN"/>
 
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_CREATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_NOTE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ORDERMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ORDERMGR_ADMIN"/>
 
@@ -199,7 +204,12 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ADMIN"/>
-
+  
+  <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_VIEW_ROLE"/>
+  <SecurityGroupPermission groupId="ORDERPROC" permissionId="ORDERMGR_NOTE"/>
+  <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_VIEW"/>
+  <SecurityGroupPermission groupId="ORDERPROC" permissionId="PARTYMGR_NOTE"/>
+  
   <UserLogin currentPassword="ofbiz" partyId="admin" passwordHint="" userLoginId="admin"/>
   <UserLogin currentPassword="ofbiz" partyId="" passwordHint="" userLoginId="flexadmin"/>
   <UserLoginSecurityGroup groupId="FULLADMIN" userLoginId="admin" fromDate="2001-01-01 12:00:00.0"/>
