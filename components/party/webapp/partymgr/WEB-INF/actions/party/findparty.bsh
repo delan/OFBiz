@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      3.0
  */
 
@@ -157,7 +157,7 @@ if (lookupFlag != null && lookupFlag.equalsIgnoreCase("Y")) {
     lastName = request.getParameter("lastName");
 
     // modify the dynamic view
-    if ((firstName != null && firstName.length() > 0) || (lastName != null && lastName.lenght() > 0)) {
+    if ((firstName != null && firstName.length() > 0) || (lastName != null && lastName.length() > 0)) {
         dynamicView.addMemberEntity("PE", "Person");
         dynamicView.addAlias("PE", "firstName");
         dynamicView.addAlias("PE", "lastName");
