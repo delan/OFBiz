@@ -22,10 +22,25 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.35 2004/04/23 07:23:21 ajzeneski Exp $
+ *  $Id: build.xml,v 1.36 2004/05/01 12:55:06 jonesde Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
+
+    <filelist id="ordered-subdirs" dir="components"
+        files="minerva/build.xml,jotm/build.xml,
+               entity/build.xml,jetty/build.xml,
+               security/build.xml,service/build.xml,entityext/build.xml,
+               datafile/build.xml,rules/build.xml,minilang/build.xml,
+               common/build.xml,workflow/build.xml,shark/build.xml,
+               content/build.xml,appservers/build.xml,party/build.xml,
+               workeffort/build.xml,product/build.xml,marketing/build.xml,
+               order/build.xml,manufacturing/build.xml,
+               accounting/build.xml,ecommerce/build.xml,
+               securityext/build.xml,webtools/build.xml"/>
+
+    <filelist id="tests-subdirs" dir="."
+        files="base/build.xml,components/entity/build.xml"/>
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -70,165 +85,17 @@
         </delete>
     </target>
 
+    <target name="tests">
+        <subant target="tests">
+            <filelist refid="tests-subdirs"/>
+        </subant>
+    </target>
+
     <target name="clean">
-        <echo message="[clean] ========== Starting Clean =========="/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ========================================="/>
-        <echo message="[clean] ========== Cleaning base tools =========="/>
-        <echo message="[clean] ========================================="/>
-        <ant dir="base" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning minerva component ============"/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/minerva" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning jotm component ============"/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/jotm" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning entity component ============"/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/entity" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning jetty component ============"/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/jetty" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning security component =========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/security" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning service component ==========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/service" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning entityext component ========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/entityext" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning datafile component =========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/datafile" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning rules component ============="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/rules" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning minilang component =========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/minilang" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning common component ============"/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/common" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning workflow component =========="/>
-        <echo message="[clean] ==========-======================================"/>
-        <ant dir="components/workflow" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ==============================================="/>
-        <echo message="[clean] ========== Cleaning shark component ==========="/>
-        <echo message="[clean] ==========-===================================="/>
-        <ant dir="components/shark" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================"/>
-        <echo message="[clean] ========== Cleaning content component =========="/>
-        <echo message="[clean] ================================================"/>
-        <ant dir="components/content" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========= Cleaning appservers component ========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/appservers" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning party component ============="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/party" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning workeffort component ========"/>
-        <echo message="[clean] ==========-======================================"/>
-        <ant dir="components/workeffort" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning product component ==========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/product" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning marketing component ========="/>
-        <echo message="[clean] ==========-======================================"/>
-        <ant dir="components/marketing" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning order component ============="/>
-        <echo message="[clean] ==========-======================================"/>
-        <ant dir="components/order" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ======= Cleaning manufacturing component ========"/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/manufacturing" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning accounting component ========"/>
-        <echo message="[clean] ==========-======================================"/>
-        <ant dir="components/accounting" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning ecommerce component ========="/>
-        <echo message="[clean] ==========-======================================"/>
-        <ant dir="components/ecommerce" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning securityext component ======="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/securityext" target="clean" inheritAll="false"/>
-
-        <echo message="[clean]"/>
-        <echo message="[clean] ================================================="/>
-        <echo message="[clean] ========== Cleaning webtools component =========="/>
-        <echo message="[clean] ================================================="/>
-        <ant dir="components/webtools" target="clean" inheritAll="false"/>
-
+        <subant target="clean">
+            <filelist dir="." files="base/build.xml"/>
+            <filelist refid="ordered-subdirs"/>
+        </subant>
         <delete file="ofbiz.jar"/>
         <echo message="[clean] ========== Done Cleaning =========="/>
     </target>
@@ -254,155 +121,9 @@
           <fileset dir="base/build/lib" includes="ofbiz.jar"/>
         </copy>
 
-        <echo message="[build]"/>
-        <echo message="[build] ==============================================="/>
-        <echo message="[build] ========= Building minerva component =========="/>
-        <echo message="[build] ==============================================="/>
-        <ant dir="components/minerva" inheritAll="false"/>
-
-        <echo message="[build]"/>
-        <echo message="[build] ==============================================="/>
-        <echo message="[build] ========== Building jotm component ==========="/>
-        <echo message="[build] ==============================================="/>
-        <ant dir="components/jotm" inheritAll="false"/>
-
-        <echo message="[build]"/>
-        <echo message="[build] ==============================================="/>
-        <echo message="[build] ========== Building entity component =========="/>
-        <echo message="[build] ==============================================="/>
-        <ant dir="components/entity" inheritAll="false"/>
-
-        <echo message="[build]"/>
-        <echo message="[build] ==============================================="/>
-        <echo message="[build] ========== Building jetty component ==========="/>
-        <echo message="[build] ==============================================="/>
-        <ant dir="components/jetty" inheritAll="false"/>
-
-        <echo message="[build]"/>
-        <echo message="[build] ================================================="/>
-        <echo message="[build] ========== Building security component =========="/>
-        <echo message="[build] ================================================="/>
-        <ant dir="components/security" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================"/>
-        <echo message="[build] ========== Building service component =========="/>
-        <echo message="[build] ================================================"/>
-        <ant dir="components/service" inheritAll="false"/>
-
-        <echo message="[build]"/>
-        <echo message="[build] ==============================================="/>
-        <echo message="[build] ========== Building entityext component ======="/>
-        <echo message="[build] ==============================================="/>
-        <ant dir="components/entityext" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================="/>
-        <echo message="[build] ========== Building minilang component =========="/>
-        <echo message="[build] ================================================="/>
-        <ant dir="components/minilang" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================="/>
-        <echo message="[build] ========== Building datafile component =========="/>
-        <echo message="[build] ================================================="/>
-        <ant dir="components/datafile" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================="/>
-        <echo message="[build] =========== Building rules component ============"/>
-        <echo message="[build] ================================================="/>
-        <ant dir="components/rules" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================="/>
-        <echo message="[build] =========== Building common component ==========="/>
-        <echo message="[build] ================================================="/>
-        <ant dir="components/common" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================="/>
-        <echo message="[build] ========== Building workflow component =========="/>
-        <echo message="[build] ================================================="/>
-        <ant dir="components/workflow" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ==============================================="/>
-        <echo message="[build] ========== Building shark component ==========="/>
-        <echo message="[build] ==============================================="/>
-        <ant dir="components/shark" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================"/>
-        <echo message="[build] ========== Building content component =========="/>
-        <echo message="[build] ================================================"/>
-        <ant dir="components/content" inheritAll="false"/>
-
-        <echo message="[build]"/>
-        <echo message="[build] ==============================================="/>
-        <echo message="[build] ========= Building appservers component ======="/>
-        <echo message="[build] ==============================================="/>
-        <ant dir="components/appservers" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] =============================================="/>
-        <echo message="[build] ========== Building party component =========="/>
-        <echo message="[build] =============================================="/>
-        <ant dir="components/party" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================="/>
-        <echo message="[build] ========= Building workeffort component ========="/>
-        <echo message="[build] ================================================="/>
-        <ant dir="components/workeffort" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================"/>
-        <echo message="[build] ========== Building product component =========="/>
-        <echo message="[build] ================================================"/>
-        <ant dir="components/product" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] =================================================="/>
-        <echo message="[build] ========== Building marketing component =========="/>
-        <echo message="[build] =================================================="/>
-        <ant dir="components/marketing" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] =============================================="/>
-        <echo message="[build] ========== Building order component =========="/>
-        <echo message="[build] =============================================="/>
-        <ant dir="components/order" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================"/>
-        <echo message="[build] ======= Building manufacturing component ======="/>
-        <echo message="[build] ================================================"/>
-        <ant dir="components/manufacturing" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ==================================================="/>
-        <echo message="[build] ========== Building accounting component =========="/>
-        <echo message="[build] ==================================================="/>
-        <ant dir="components/accounting" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] =================================================="/>
-        <echo message="[build] ========== Building ecommerce component =========="/>
-        <echo message="[build] =================================================="/>
-        <ant dir="components/ecommerce" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ===================================================="/>
-        <echo message="[build] ========== Building securityext component =========="/>
-        <echo message="[build] ===================================================="/>
-        <ant dir="components/securityext" inheritAll="false"/>
-
-        <echo message="[build]" />
-        <echo message="[build] ================================================="/>
-        <echo message="[build] ========== Building webtools component =========="/>
-        <echo message="[build] ================================================="/>
-        <ant dir="components/webtools" inheritAll="false"/>
+        <subant inheritall="false">
+            <filelist refid="ordered-subdirs"/>
+        </subant>
 
         <echo message="[build] ========== Done Building (Compile) =========="/>
     </target>
@@ -414,161 +135,10 @@
     <target name="docs" depends="">
         <echo message="[docs] ========== Start Building (JavaDoc) =========="/>
 
-        <echo message="[docs]"/>
-        <echo message="[docs] ========================================="/>
-        <echo message="[docs] ========== Building base tools =========="/>
-        <echo message="[docs] ========================================="/>
-        <ant dir="base" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================"/>
-        <echo message="[docs] ========== Building minerva component =========="/>
-        <echo message="[docs] ================================================"/>
-        <ant dir="components/minerva" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] =========== Building jotm component ==========="/>
-        <echo message="[docs] ==============================================="/>
-        <ant dir="components/jotm" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building entity component =========="/>
-        <echo message="[docs] ==============================================="/>
-        <ant dir="components/entity" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building jetty component ==========="/>
-        <echo message="[docs] ==============================================="/>
-        <ant dir="components/jetty" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========== Building security component =========="/>
-        <echo message="[docs] ================================================="/>
-        <ant dir="components/security" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================"/>
-        <echo message="[docs] ========== Building service component =========="/>
-        <echo message="[docs] ================================================"/>
-        <ant dir="components/service" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================"/>
-        <echo message="[docs] ========= Building entityext component ========="/>
-        <echo message="[docs] ================================================"/>
-        <ant dir="components/entityext" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========== Building minilang component =========="/>
-        <echo message="[docs] ================================================="/>
-        <ant dir="components/minilang" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========== Building datafile component =========="/>
-        <echo message="[docs] ================================================="/>
-        <ant dir="components/datafile" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building rules component ==========="/>
-        <echo message="[docs] ==============================================="/>
-        <ant dir="components/rules" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building common component =========="/>
-        <echo message="[docs] ==============================================="/>
-        <ant dir="components/common" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========== Building workflow component =========="/>
-        <echo message="[docs] ================================================="/>
-        <ant dir="components/workflow" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building shark component ==========="/>
-        <echo message="[docs] ==============================================="/>
-        <ant dir="components/shark" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================"/>
-        <echo message="[docs] ========== Building content component =========="/>
-        <echo message="[docs] ================================================"/>
-        <ant dir="components/content" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================"/>
-        <echo message="[docs] ======== Building appservers component ========="/>
-        <echo message="[docs] ================================================"/>
-        <ant dir="components/appservers" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] =============================================="/>
-        <echo message="[docs] ========== Building party component =========="/>
-        <echo message="[docs] =============================================="/>
-        <ant dir="components/party" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========= Building workeffort component ========="/>
-        <echo message="[docs] ================================================="/>
-        <ant dir="components/workeffort" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ========== Building product component ========="/>
-        <echo message="[docs] ==============================================="/>
-        <ant dir="components/product" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================"/>
-        <echo message="[docs] ========= Building marketing component ========="/>
-        <echo message="[docs] ================================================"/>
-        <ant dir="components/marketing" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] =============================================="/>
-        <echo message="[docs] ========== Building order component =========="/>
-        <echo message="[docs] =============================================="/>
-        <ant dir="components/order" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==============================================="/>
-        <echo message="[docs] ======= Building manufacturing component ======"/>
-        <echo message="[docs] ==============================================="/>
-        <ant dir="components/manufacturing" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ==================================================="/>
-        <echo message="[docs] ========== Building accounting component =========="/>
-        <echo message="[docs] ==================================================="/>
-        <ant dir="components/accounting" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] =================================================="/>
-        <echo message="[docs] ========== Building ecommerce component =========="/>
-        <echo message="[docs] =================================================="/>
-        <ant dir="components/ecommerce" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ===================================================="/>
-        <echo message="[docs] ========== Building securityext component =========="/>
-        <echo message="[docs] ===================================================="/>
-        <ant dir="components/securityext" target="docs" inheritAll="false"/>
-
-        <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========== Building webtools component =========="/>
-        <echo message="[docs] ================================================="/>
-        <ant dir="components/webtools" target="docs" inheritAll="false"/>
+        <subant target="docs">
+            <filelist dir="." files="base/build.xml"/>
+            <filelist refid="ordered-subdirs"/>
+        </subant>
 
         <echo message="[docs] ========== Done Building (JavaDocs) =========="/>
     </target>
