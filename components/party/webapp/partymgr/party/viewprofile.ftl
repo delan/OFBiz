@@ -406,7 +406,7 @@
                                   <td width="5">&nbsp;</td>
                                   <td align="right" valign="top" width='1%' nowrap>
                                     <#if security.hasEntityPermission("PAY_INFO", "_UPDATE", session)>
-                                        <div><a href='<@ofbizUrl>/editeftaccount?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
+                                        <div><a href='<@ofbizUrl>/editgiftcard?partyId=${party.partyId}&paymentMethodId=${paymentMethod.paymentMethodId}</@ofbizUrl>' class="buttontext">
                                         [${uiLabelMap.CommonUpdate}]</a></div>
                                     </#if>
                                   </td>
