@@ -12,6 +12,8 @@
     <classpathentry kind="src" path="components/workflow/src"/>
     <classpathentry kind="src" path="components/content/src"/>
     <classpathentry kind="src" path="components/securityext/src"/>
+    <classpathentry kind="src" path="components/product/src"/>
+    <classpathentry kind="src" path="components/party/src"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/carol.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/commons-cli.jar"/>
     <classpathentry kind="lib" path="components/entity/lib/jotm/jonas_timer.jar"/>

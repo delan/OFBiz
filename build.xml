@@ -22,7 +22,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Main build script.
- *  $Id: build.xml,v 1.7 2003/08/17 10:51:03 jonesde Exp $
+ *  $Id: build.xml,v 1.8 2003/08/17 18:05:09 ajzeneski Exp $
 -->
 
 <project name="OFBiz Main Build" default="build" basedir=".">
@@ -103,10 +103,16 @@
         <ant dir="components/content" target="clean" inheritAll="false"/>                                      
 
         <echo message="[clean]"/>
-        <echo message="[clean] ================================================"/>
+        <echo message="[clean] ===================================================="/>
         <echo message="[clean] ========== Cleaning securityext component =========="/>
-        <echo message="[clean] ==========-====================================="/>                
-        <ant dir="components/securityext" target="clean" inheritAll="false"/>                                      
+        <echo message="[clean] ==========-========================================="/>                
+        <ant dir="components/securityext" target="clean" inheritAll="false"/>
+        
+        <echo message="[clean]"/>
+        <echo message="[clean] =============================================="/>
+        <echo message="[clean] ========== Cleaning party component =========="/>
+        <echo message="[clean] ==========-==================================="/>                
+        <ant dir="components/party" target="clean" inheritAll="false"/>                                              
 
         <delete file="ofbiz.jar"/>
         <echo message="[clean] ========== Done Cleaning =========="/>
@@ -182,10 +188,16 @@
         <ant dir="components/content" inheritAll="false" />               
                                          
         <echo message="[build]" />
-        <echo message="[build] ================================================"/>
+        <echo message="[build] ===================================================="/>
         <echo message="[build] ========== Building securityext component =========="/>
-        <echo message="[build] ================================================"/>
-        <ant dir="components/securityext" inheritAll="false" />               
+        <echo message="[build] ===================================================="/>
+        <ant dir="components/securityext" inheritAll="false" />
+        
+        <echo message="[build]" />
+        <echo message="[build] =============================================="/>
+        <echo message="[build] ========== Building party component =========="/>
+        <echo message="[build] =============================================="/>
+        <ant dir="components/party" inheritAll="false" />
                                          
         <echo message="[build] ========== Done Building (Compile) ==========" />
     </target>
@@ -252,10 +264,16 @@
         <ant dir="components/common" target="docs" inheritAll="false"/>        
         
         <echo message="[docs]"/>
-        <echo message="[docs] ================================================="/>
-        <echo message="[docs] ========== Building common securityext =========="/>
-        <echo message="[docs] ================================================="/>
-        <ant dir="components/securityext" target="docs" inheritAll="false"/>        
+        <echo message="[docs] ===================================================="/>
+        <echo message="[docs] ========== Building securityext component =========="/>
+        <echo message="[docs] ===================================================="/>
+        <ant dir="components/securityext" target="docs" inheritAll="false"/>
+        
+        <echo message="[docs]"/>
+        <echo message="[docs] ==============================================="/>
+        <echo message="[docs] ========== Building party component =========="/>
+        <echo message="[docs] ==============================================="/>
+        <ant dir="components/party" target="docs" inheritAll="false"/>               
         
         <echo message="[docs] ========== Done Building (JavaDocs) ==========" />              
     </target>
