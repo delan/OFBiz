@@ -945,16 +945,17 @@ public class OrderServices {
     
     /** Service to email a customer with initial order confirmation */
     public static Map prepareOrderConfirmation(DispatchContext ctx, Map context) {
-        return prepareOrderEmail(ctx.getDelegator(), (String) context.get("orderId"), "WES_ODR_CONFIRM");
+        return prepareOrderEmail(ctx, (String) context.get("orderId"), "WES_ODR_CONFIRM");
     }
     
     /** Service to email a customer with order status changes */
     public static Map prepareOrderNotification(DispatchContext ctx, Map context) {  
-        return prepareOrderEmail(ctx.getDelegator(), (String) context.get("orderId"), "WES_ODR_CHANGE");         
+        return prepareOrderEmail(ctx, (String) context.get("orderId"), "WES_ODR_CHANGE");         
     }    
     
-    private static Map prepareOrderEmail(GenericDelegator delegator, String orderId, String emailType) {
-        Map result = new HashMap();                                         
+    private static Map prepareOrderEmail(DispatchContext ctx, String orderId, String emailType) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();                                         
         String ofbizHome = System.getProperty("ofbiz.home");
         
         // get the order header and website
@@ -1001,8 +1002,13 @@ public class OrderServices {
             }
         }  
         
+        // prepare the parsed subject
+        Map orderEmailData = prepareOrderEmailData(ctx, UtilMisc.toMap("orderId", orderId));
+        String subjectString = webSiteEmail.getString("subject");
+        subjectString = FlexibleStringExpander.expandString(subjectString, orderEmailData);
+        
         result.put("templateName", ofbizHome + webSiteEmail.get("templatePath"));
-        result.put("subject", webSiteEmail.get("subject"));
+        result.put("subject", subjectString);
         result.put("sendFrom", webSiteEmail.get("fromAddress"));        
         result.put("sendCc", webSiteEmail.get("ccAddress"));
         result.put("sendBcc", webSiteEmail.get("ccAddress"));

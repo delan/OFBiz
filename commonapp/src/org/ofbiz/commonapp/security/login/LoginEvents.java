@@ -46,6 +46,7 @@ import org.ofbiz.core.service.LocalDispatcher;
 import org.ofbiz.core.service.ModelService;
 import org.ofbiz.core.stats.VisitHandler;
 import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.FlexibleStringExpander;
 import org.ofbiz.core.util.GeneralException;
 import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilFormatOut;
@@ -364,12 +365,16 @@ public class LoginEvents {
      */
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");                      
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");                             
         String webSiteId = CatalogWorker.getWebSiteId(request);
+        
+        Map subjectData = new HashMap();
+        subjectData.put("webSiteId", webSiteId);
       
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
         String userLoginId = request.getParameter("USERNAME");
+        subjectData.put("userLoginId", userLoginId);
 
         if ((userLoginId != null) && ("true".equals(UtilProperties.getPropertyValue("security.properties", "username.lowercase")))) {
             userLoginId = userLoginId.toLowerCase();
@@ -459,10 +464,14 @@ public class LoginEvents {
         templateData.put("useEncryption", new Boolean(useEncryption));
         templateData.put("password", UtilFormatOut.checkNull(passwordToSend));
         
+        // prepare the parsed subject        
+        String subjectString = webSiteEmail.getString("subject");
+        subjectString = FlexibleStringExpander.expandString(subjectString, subjectData);
+                
         Map serviceContext = new HashMap();                        
         serviceContext.put("templateName", ofbizHome + webSiteEmail.get("templatePath"));
         serviceContext.put("templateData", templateData);
-        serviceContext.put("subject", webSiteEmail.get("subject"));
+        serviceContext.put("subject", subjectString);
         serviceContext.put("sendFrom", webSiteEmail.get("fromAddress"));        
         serviceContext.put("sendCc", webSiteEmail.get("ccAddress"));
         serviceContext.put("sendBcc", webSiteEmail.get("ccAddress"));
