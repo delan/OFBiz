@@ -83,8 +83,10 @@ public class UpsServices {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
             }
             
-            // TODO: add ShipmentRouteSegment carrierServiceStatusId, check before all UPS services
-            // TODO: set ShipmentRouteSegment carrierServiceStatusId after each UPS service applicable 
+            // add ShipmentRouteSegment carrierServiceStatusId, check before all UPS services
+            if (UtilValidate.isNotEmpty(shipmentRouteSegment.getString("carrierServiceStatusId")) && !"SHRSCS_NOT_STARTED".equals(shipmentRouteSegment.getString("carrierServiceStatusId"))) {
+                return ServiceUtil.returnError("ERROR: The Carrier Service Status for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is [" + shipmentRouteSegment.getString("carrierServiceStatusId") + "], but must be not-set or [SHRSCS_NOT_STARTED] to perform the UPS Shipment Confirm operation.");
+            }
             
             // Get Origin Info
             GenericValue originPostalAddress = shipmentRouteSegment.getRelatedOne("OriginPostalAddress");
@@ -438,6 +440,9 @@ public class UpsServices {
                 String shipmentDigest = UtilXml.childElementValue(shipmentConfirmResponseElement, "ShipmentDigest");
                 shipmentRouteSegment.set("trackingIdNumber", shipmentIdentificationNumber);
                 shipmentRouteSegment.set("trackingDigest", shipmentDigest);
+                
+                // set ShipmentRouteSegment carrierServiceStatusId after each UPS service applicable 
+                shipmentRouteSegment.put("carrierServiceStatusId", "SHRSCS_CONFIRMED");
             
                 // write/store all modified value objects
                 shipmentRouteSegment.store();
@@ -489,6 +494,11 @@ public class UpsServices {
 
             if (!"UPS".equals(shipmentRouteSegment.getString("carrierPartyId"))) {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
+            }
+            
+            // add ShipmentRouteSegment carrierServiceStatusId, check before all UPS services
+            if (!"SHRSCS_CONFIRMED".equals(shipmentRouteSegment.getString("carrierServiceStatusId"))) {
+                return ServiceUtil.returnError("ERROR: The Carrier Service Status for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is [" + shipmentRouteSegment.getString("carrierServiceStatusId") + "], but must be [SHRSCS_CONFIRMED] to perform the UPS Shipment Accept operation.");
             }
             
             List shipmentPackageRouteSegs = shipmentRouteSegment.getRelated("ShipmentPackageRouteSeg", null, UtilMisc.toList("+shipmentPackageSeqId"));
@@ -656,6 +666,9 @@ public class UpsServices {
                 // should compare to trackingIdNumber, should always be the same right?
                 shipmentRouteSegment.set("trackingIdNumber", shipmentIdentificationNumber);
 
+                // set ShipmentRouteSegment carrierServiceStatusId after each UPS service applicable 
+                shipmentRouteSegment.put("carrierServiceStatusId", "SHRSCS_ACCEPTED");
+            
                 // write/store modified value object
                 shipmentRouteSegment.store();
                 
@@ -752,6 +765,11 @@ public class UpsServices {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
             }
             
+            // add ShipmentRouteSegment carrierServiceStatusId, check before all UPS services
+            if (!"SHRSCS_CONFIRMED".equals(shipmentRouteSegment.getString("carrierServiceStatusId"))) {
+                return ServiceUtil.returnError("ERROR: The Carrier Service Status for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is [" + shipmentRouteSegment.getString("carrierServiceStatusId") + "], but must be [SHRSCS_CONFIRMED] to perform the UPS Void Shipment operation.");
+            }
+            
             if (UtilValidate.isEmpty(shipmentRouteSegment.getString("trackingIdNumber"))) {
                 return ServiceUtil.returnError("ERROR: The trackingIdNumber was not set for this Route Segment, meaning that a UPS shipment confirm has not been done.");
             }
@@ -838,30 +856,24 @@ public class UpsServices {
             List errorList = new LinkedList();
             UpsServices.handleErrors(responseElement, errorList);
 
-            // TODO: handle other response elements
-/*
+            // handle other response elements
+            Element statusElement = UtilXml.firstChildElement(voidShipmentResponseElement, "Status");
 
-<VoidShipmentResponse>
-    ...
-    <Status>
-        <StatusType>
-            <Code>1</Code>
-            <Description>Success</Description>
-        </StatusType>
-        <StatusCode>
-            <Code>1</Code>
-            <Description>Success</Description>
-        </StatusCode>
-    </Status>
-</VoidShipmentResponse>
- * 
- */
+            Element statusTypeElement = UtilXml.firstChildElement(statusElement, "StatusType");
+            String statusTypeCode = UtilXml.childElementValue(statusTypeElement, "Code");
+            String statusTypeDescription = UtilXml.childElementValue(statusTypeElement, "Description");
+
+            Element statusCodeElement = UtilXml.firstChildElement(statusElement, "StatusCode");
+            String statusCodeCode = UtilXml.childElementValue(statusCodeElement, "Code");
+            String statusCodeDescription = UtilXml.childElementValue(statusCodeElement, "Description");
 
             if ("1".equals(responseStatusCode)) {
-                Element shipmentResultsElement = UtilXml.firstChildElement(voidShipmentResponseElement, "ShipmentResults");
-
+                // set ShipmentRouteSegment carrierServiceStatusId after each UPS service applicable 
+                shipmentRouteSegment.put("carrierServiceStatusId", "SHRSCS_VOIDED");
+                shipmentRouteSegment.store();
+            
                 // -=-=-=- Okay, now done with that, just return any extra info...
-                StringBuffer successString = new StringBuffer("The UPS VoidShipment succeeded");
+                StringBuffer successString = new StringBuffer("The UPS VoidShipment succeeded; the StatusType is: [" + statusTypeCode + ":" + statusTypeDescription + "], the StatusCode is: [" + statusCodeCode + ":" + statusCodeDescription + "]");
                 if (errorList.size() > 0) {
                     // this shouldn't happen much, but handle it anyway
                     successString.append(", but the following occurred: ");
@@ -899,6 +911,11 @@ public class UpsServices {
 
             if (!"UPS".equals(shipmentRouteSegment.getString("carrierPartyId"))) {
                 return ServiceUtil.returnError("ERROR: The Carrier for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is not UPS.");
+            }
+            
+            // add ShipmentRouteSegment carrierServiceStatusId, check before all UPS services
+            if (!"SHRSCS_ACCEPTED".equals(shipmentRouteSegment.getString("carrierServiceStatusId"))) {
+                return ServiceUtil.returnError("ERROR: The Carrier Service Status for ShipmentRouteSegment " + shipmentRouteSegmentId + " of Shipment " + shipmentId + ", is [" + shipmentRouteSegment.getString("carrierServiceStatusId") + "], but must be [SHRSCS_ACCEPTED] to perform the UPS Track Shipment operation.");
             }
             
             if (UtilValidate.isEmpty(shipmentRouteSegment.getString("trackingIdNumber"))) {
