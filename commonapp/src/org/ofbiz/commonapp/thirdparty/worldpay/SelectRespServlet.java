@@ -57,9 +57,9 @@ public class SelectRespServlet extends SelectServlet implements SelectDefs {
     protected void doRequest(SelectServletRequest request, SelectServletResponse response) throws ServletException, IOException {
         Debug.logInfo("Request receive from worldpay..", module);
         
-        String webSiteId = getInitParameter("webSiteId");
-        String delegatorName = getInitParameter("entityDelegatorName");
-        String dispatchName = getInitParameter("localDispatcherName");
+        String webSiteId = request.getParameter("M_webSiteId");
+        String delegatorName = request.getParameter("M_delegatorName");
+        String dispatchName = request.getParameter("M_dispatchName");
         
         Debug.logInfo("Got websiteId: " + webSiteId, module);
         Debug.logInfo("Got delegatorName:" + delegatorName, module);

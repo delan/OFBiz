@@ -29,6 +29,7 @@ import java.util.*;
 import javax.servlet.http.*;
 
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.product.catalog.*;
 
@@ -52,6 +53,7 @@ public class WorldPayEvents {
     
     public static String worldPayRequest(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
         GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
         
         // we need the websiteId for the correct properties file
@@ -277,8 +279,12 @@ public class WorldPayEvents {
         if (hideContact != null && hideContact.toUpperCase().startsWith("Y")) {
             linkParms.setValue("hideContact", "Y"); // why is this not in SelectDefs??
         }
-            
         
+        // now set some send-back parameters
+        linkParms.setValue("M_dispatchName", dispatcher.getName());
+        linkParms.setValue("M_delegatorName", delegator.getDelegatorName());
+        linkParms.setValue("M_webSiteId", webSiteId);
+                    
         // redirect to worldpay
         try {
             response.sendRedirect(link.produce());
