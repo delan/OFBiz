@@ -183,6 +183,76 @@
         <response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
+<!-- Shoppinglist request mappings -->
+    <request-map uri="createEmptyShoppingList">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createShoppingList"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="updateShoppingList">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateShoppingList"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="addItemToShoppingList">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="createShoppingListItem"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="addBulkToShoppingList">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addBulkFromCart"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="addListToCart">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="addListToCart"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="updateShoppingListItem">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateShoppingListItem"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="removeFromShoppingList">
+        <security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeShoppingListItem"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="replaceShoppingListItem">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="replaceShoppingListItem"/>
+        <response name="success" type="view" value="editShoppingList"/>
+        <response name="error" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="editShoppingList">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="editShoppingList"/>
+    </request-map>
+
+    <request-map uri="restoreCartFromList">
+        <security https="true" auth="true"/>
+        <event type="java" path="org.ofbiz.order.shoppinglist.ShoppingListEvents" invoke="restoreAutoSaveList"/>
+        <response name="success" type="view" value="viewprofile"/>
+        <response name="error" type="view" value="viewprofile"/>
+    </request-map>
+<!-- End Shoppinglist request mappings -->
+
     <request-map uri="editcreditcard">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="editcreditcard"/>
@@ -594,9 +664,11 @@
 
     <view-map name="editcreditcard" type="region"/>
     <view-map name="editgiftcard" type="jpublish" page="/party/editgiftcard.ftl"/>
+    <view-map name="editShoppingList" type="jpublish" page="/party/editShoppingList.ftl"/>
     <view-map name="editeftaccount" type="region"/>
     <view-map name="editavsoverride" type="region"/>
     <view-map name="editlogin" type="region"/>
+
     <view-map name="EditUserLoginSecurityGroups" type="region"/>
     <view-map name="newcustomer" type="region"/>
     <view-map name="editperson" type="region"/>

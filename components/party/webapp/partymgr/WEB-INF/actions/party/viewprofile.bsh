@@ -22,12 +22,13 @@
  *@author     Johan Isacsson
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
  */
 
 import java.util.*;
 import org.ofbiz.entity.*;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.base.util.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
@@ -62,11 +63,25 @@ context.put("userLogins", userLogins);
 partyRoles = delegator.findByAnd("RoleTypeAndParty", UtilMisc.toMap("partyId", partyId));
 context.put("partyRoles", partyRoles);
 
+custRole = delegator.findByPrimaryKey("PartyRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "CUSTOMER"));
+if (custRole != null) {
+    context.put("isCustomer", custRole);
+}
+
 roles = delegator.findAll("RoleType", UtilMisc.toList("description", "roleTypeId"));
 context.put("roles", roles);
 
 relateTypes = delegator.findAll("PartyRelationshipType", UtilMisc.toList("description", "partyRelationshipTypeId"));
 context.put("relateTypes", relateTypes);
+
+savedCartList = EntityUtil.getFirst(delegator.findByAnd("ShoppingList",UtilMisc.toMap("partyId", partyId, "shoppingListTypeId","SLT_SPEC_PURP", "listName", "auto-save")));
+
+if (savedCartList != null){
+      savedCartListId = savedCartList.getString("shoppingListId");
+      context.put("savedCartListId", savedCartListId);
+      savedCartItems = savedCartList.getRelated("ShoppingListItem");
+      context.put("savedCartItems", savedCartItems);
+}
 
 notes = delegator.findByAnd("PartyNoteView", UtilMisc.toMap("targetPartyId", partyId), UtilMisc.toList("-noteDateTime"));
 context.put("notes", notes);
