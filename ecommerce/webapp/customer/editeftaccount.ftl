@@ -122,7 +122,7 @@
                 <#if curPostalAddress.attnName?exists><b>Attn:</b> ${curPostalAddress.attnName}<br></#if>
                 ${curPostalAddress.address1?if_exists}<br>
                 <#if curPostalAddress.address2?exists>${curPostalAddress.address2}<br></#if>
-                ${curPostalAddress.city}, ${curPostalAddress.stateProvinceGeoId} ${curPostalAddress.postalCode} 
+                ${curPostalAddress.city}<#if curPostalAddress.stateProvinceGeoId?has_content>,&nbsp;${curPostalAddress.stateProvinceGeoId}</#if>&nbsp;${curPostalAddress.postalCode} 
                 <#if curPostalAddress.countryGeoId?exists><br>${curPostalAddress.countryGeoId}</#if>
               </div>
               <div class="tabletext">(Updated:&nbsp;${(curPartyContactMech.fromDate.toString())?if_exists})</div>
@@ -165,7 +165,7 @@
                   <#if postalAddress.attnName?exists><b>Attn:</b> ${postalAddress.attnName}<br></#if>
                   ${postalAddress.address1?if_exists}<br>
                   <#if postalAddress.address2?exists>${postalAddress.address2}<br></#if>
-                  ${postalAddress.city}, ${postalAddress.stateProvinceGeoId} ${postalAddress.postalCode} 
+                  ${postalAddress.city}<#if postalAddress.stateProvinceGeoId?has_content>,&nbsp;${postalAddress.stateProvinceGeoId}</#if>&nbsp;${postalAddress.postalCode} 
                   <#if postalAddress.countryGeoId?exists><br>${postalAddress.countryGeoId}</#if>
                 </div>
                 <div class="tabletext">(Updated:&nbsp;${(partyContactMech.fromDate.toString())?if_exists})</div>
