@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.11 2003/08/22 22:43:59 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.12 2003/09/02 01:32:46 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -29,6 +29,7 @@ import java.net.UnknownHostException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -53,7 +54,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.11 $
+  *@version    $Revision: 1.12 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -93,18 +94,29 @@ public class JettyContainer implements Container {
                 Iterator appInfos = component.getWebappInfos().iterator();
                 while (appInfos.hasNext()) {
                     ComponentConfig.WebappInfo appInfo = (ComponentConfig.WebappInfo) appInfos.next();
+                    List virtualHosts = appInfo.getVirtualHosts();
                     Server server = (Server) servers.get(appInfo.server);
                     if (server == null) {
                         Debug.logWarning("Server with name [" + appInfo.server + "] not found; not mounting [" + appInfo.name + "]", module);
                     } else {
-                        try {                            
+                        try {
+                        	// set the root location (make sure we set the paths correctly)                           
                             String location = component.getRootLocation() + appInfo.location;
                             location = location.replace('\\', '/');
                             if (!location.endsWith("/")) {
                                 location = location + "/";
                             }
+                            
+                            // load the application
                             WebApplicationContext ctx = server.addWebApplication(appInfo.mountPoint, location);
                             ctx.setAttribute("_serverId", appInfo.server);
+                            
+                            // set the virtual hosts
+                            Iterator vh = virtualHosts.iterator();
+                            while (vh.hasNext()) {
+                            	ctx.addVirtualHost((String)vh.next());
+                            }
+                            
                         } catch (IOException e) {
                             Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);                        
                         }
