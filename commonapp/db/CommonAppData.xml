@@ -7,6 +7,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_DELETE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CATALOG_VIEW"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="RULES_MAINT"/>
@@ -23,6 +24,7 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_EDIT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="UTIL_CACHE_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="CATALOG_ADMIN"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="ENTITY_MAINT"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="RULES_MAINT"/>
@@ -35,6 +37,8 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="WORKEFFORTMGR_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="WORKEFFORTMGR_ADMIN"/>
+
+  <SecurityPermission description="Permission to View the Server Statistics pages." permissionId="SERVER_STATS_VIEW"/>
   <SecurityPermission description="Permission to Use the Data File Maintenance pages." permissionId="DATAFILE_MAINT"/>
   <SecurityPermission description="Permission to Use the Entity Maintenance pages." permissionId="ENTITY_MAINT"/>
   <SecurityPermission description="Permission to Use the Rules Maintenance pages." permissionId="RULES_MAINT"/>
