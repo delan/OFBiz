@@ -1619,8 +1619,11 @@
       <relation type="one" fk-name="PROD_DEPTH_UOM" title="Depth" rel-entity-name="Uom">
         <key-map field-name="depthUomId" rel-field-name="uomId"/>
       </relation>
-      <relation type="one" fk-name="PROD_RATE_ENUM" rel-entity-name="Enumeration">
+      <relation type="one" fk-name="PROD_RATE_ENUM" title="Rating" rel-entity-name="Enumeration">
         <key-map field-name="ratingTypeEnum" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_RQMT_ENUM" title="RequirementMethod" rel-entity-name="Enumeration">
+        <key-map field-name="requirementMethodEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PROD_CB_USERLOGIN" title="CreatedBy" rel-entity-name="UserLogin">
         <key-map field-name="createdByUserLogin" rel-field-name="userLoginId"/>
@@ -2648,6 +2651,9 @@
       </relation>
       <relation type="one" fk-name="PROD_STR_RORDENUM" title="ReserveOrder" rel-entity-name="Enumeration">
         <key-map field-name="reserveOrderEnumId" rel-field-name="enumId"/>
+      </relation>
+      <relation type="one" fk-name="PROD_STR_RQMTENUM" title="RequirementMethod" rel-entity-name="Enumeration">
+        <key-map field-name="requirementMethodEnumId" rel-field-name="enumId"/>
       </relation>
       <relation type="one" fk-name="PROD_STR_PAYTOPTY" rel-entity-name="Party">
         <key-map field-name="payToPartyId" rel-field-name="partyId"/>
