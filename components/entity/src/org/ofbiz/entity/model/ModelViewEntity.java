@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.4 2003/09/24 12:07:53 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.5 2003/10/14 22:34:46 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -116,6 +116,35 @@ public class ModelViewEntity extends ModelEntity {
         // before finishing, make sure the table name is null, this should help bring up errors early...
         this.tableName = null;
     }
+    
+    public ModelViewEntity(DynamicViewEntity dynamicViewEntity, ModelReader modelReader) {
+        this.entityName = dynamicViewEntity.getEntityName();
+        this.packageName = dynamicViewEntity.getPackageName();
+        this.title = dynamicViewEntity.getTitle();
+        this.defaultResourceName = dynamicViewEntity.getDefaultResourceName();
+        
+        // member-entities
+        Iterator modelMemberEntitiesEntryIter = dynamicViewEntity.getModelMemberEntitiesEntryIter();
+        while (modelMemberEntitiesEntryIter.hasNext()) {
+            Map.Entry entry = (Map.Entry) modelMemberEntitiesEntryIter.next();
+            this.addMemberModelMemberEntity((ModelMemberEntity) entry.getValue());
+        }
+        
+        // alias-alls
+        dynamicViewEntity.addAllAliasAllsToList(this.aliasAlls);
+        
+        // aliases
+        dynamicViewEntity.addAllAliasesToList(this.aliases);
+        
+        // view-links
+        dynamicViewEntity.addAllViewLinksToList(this.viewLinks);
+        
+        // relations
+        dynamicViewEntity.addAllRelationsToList(this.relations);
+        
+        // finalize stuff
+        this.populateFields(modelReader);
+    }
 
     public Map getMemberModelMemberEntities() {
         return this.memberModelMemberEntities;
@@ -132,7 +161,7 @@ public class ModelViewEntity extends ModelEntity {
     public ModelEntity getMemberModelEntity(String alias) {
         if (this.memberModelEntities == null) {
             this.memberModelEntities = new HashMap();
-            populateFields(this.getModelReader().entityCache);
+            populateFields(this.getModelReader());
         }
         return (ModelEntity) this.memberModelEntities.get(alias);
     }
@@ -228,7 +257,7 @@ public class ModelViewEntity extends ModelEntity {
         return returnString.toString();
     }    
 
-    public void populateFields(Map entityCache) {
+    public void populateFields(ModelReader modelReader) {
         if (this.memberModelEntities == null) {
             this.memberModelEntities = new HashMap();
         }
@@ -239,7 +268,7 @@ public class ModelViewEntity extends ModelEntity {
 
             ModelMemberEntity modelMemberEntity = (ModelMemberEntity) entry.getValue();
             String aliasedEntityName = modelMemberEntity.getEntityName();
-            ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
+            ModelEntity aliasedEntity = modelReader.getModelEntityNoCheck(aliasedEntityName);
             if (aliasedEntity == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " + aliasedEntityName, module);
                 continue;
@@ -247,7 +276,7 @@ public class ModelViewEntity extends ModelEntity {
             memberModelEntities.put(entry.getKey(), aliasedEntity);
         }
 
-        expandAllAliasAlls(entityCache);
+        expandAllAliasAlls(modelReader);
 
         for (int i = 0; i < aliases.size(); i++) {
             ModelAlias alias = (ModelAlias) aliases.get(i);
@@ -258,7 +287,7 @@ public class ModelViewEntity extends ModelEntity {
                 Debug.logError("No member entity with alias " + alias.entityAlias + " found in view-entity " + this.getEntityName() + "; this view-entity will NOT be usable...", module);
             }
             String aliasedEntityName = modelMemberEntity.getEntityName();
-            ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
+            ModelEntity aliasedEntity = modelReader.getModelEntityNoCheck(aliasedEntityName);
 
             if (aliasedEntity == null) {
                 Debug.logError("[ModelViewEntity.populateFields] ERROR: could not find ModelEntity for entity name: " + aliasedEntityName, module);
@@ -336,7 +365,7 @@ public class ModelViewEntity extends ModelEntity {
     /**
      * Go through all aliasAlls and create an alias for each field of each member entity
      */
-    private void expandAllAliasAlls(Map entityCache) {
+    private void expandAllAliasAlls(ModelReader modelReader) {
         Iterator aliasAllIter = aliasAlls.iterator();
         while (aliasAllIter.hasNext()) {
             ModelAliasAll aliasAll = (ModelAliasAll) aliasAllIter.next();
@@ -349,7 +378,7 @@ public class ModelViewEntity extends ModelEntity {
             }
 
             String aliasedEntityName = modelMemberEntity.getEntityName();
-            ModelEntity aliasedEntity = (ModelEntity) entityCache.get(aliasedEntityName);
+            ModelEntity aliasedEntity = modelReader.getModelEntityNoCheck(aliasedEntityName);
             if (aliasedEntity == null) {
                 Debug.logError("Entity referred to in member-entity " + aliasAll.getEntityAlias() + " not found, ignoring: " + aliasedEntityName, module);
                 continue;
@@ -444,6 +473,11 @@ public class ModelViewEntity extends ModelEntity {
 
         protected ModelAliasAll() {}
 
+        public ModelAliasAll(String entityAlias, String prefix) {
+            this.entityAlias = entityAlias;
+            this.prefix = prefix;
+        }
+
         public ModelAliasAll(Element aliasAllElement) {
             this.entityAlias = UtilXml.checkEmpty(aliasAllElement.getAttribute("entity-alias"));
             this.prefix = UtilXml.checkEmpty(aliasAllElement.getAttribute("prefix"));
@@ -488,12 +522,17 @@ public class ModelViewEntity extends ModelEntity {
             this.function = UtilXml.checkEmpty(aliasElement.getAttribute("function"));
         }
 
-        public ModelAlias(String entityAlias, String name, String field, Boolean isPk, boolean groupBy, String function) {
+        public ModelAlias(String entityAlias, String name, String field, String colAlias, Boolean isPk, Boolean groupBy, String function) {
             this.entityAlias = entityAlias;
             this.name = name;
             this.field = field;
+            this.colAlias = colAlias;
             this.isPk = isPk;
-            this.groupBy = groupBy;
+            if (groupBy != null) {
+                this.groupBy = groupBy.booleanValue();
+            } else {
+                this.groupBy = false;
+            }
             this.function = function;
         }
 
@@ -555,9 +594,12 @@ public class ModelViewEntity extends ModelEntity {
             }
         }
 
-        public ModelViewLink(String entityAlias, String relEntityAlias, List keyMaps) {
+        public ModelViewLink(String entityAlias, String relEntityAlias, Boolean relOptional, List keyMaps) {
             this.entityAlias = entityAlias;
             this.relEntityAlias = relEntityAlias;
+            if (relOptional != null) {
+                this.relOptional = relOptional.booleanValue();
+            }
             this.keyMaps.addAll(keyMaps);
         }
 

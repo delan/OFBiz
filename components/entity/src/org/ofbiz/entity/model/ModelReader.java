@@ -1,5 +1,5 @@
 /*
- * $Id: ModelReader.java,v 1.3 2003/08/17 08:46:58 jonesde Exp $
+ * $Id: ModelReader.java,v 1.4 2003/10/14 22:34:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Node;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class ModelReader {
@@ -253,8 +253,7 @@ public class ModelReader {
                     // loaded and populate the fields
                     for (int velInd = 0; velInd < tempViewEntityList.size(); velInd++) {
                         ModelViewEntity curViewEntity = (ModelViewEntity) tempViewEntityList.get(velInd);
-
-                        curViewEntity.populateFields(entityCache);
+                        curViewEntity.populateFields(this);
                     }
 
                     Debug.log("FINISHED LOADING ENTITIES - ALL FILES; #Entities=" + numEntities + " #ViewEntities=" +
@@ -320,6 +319,20 @@ public class ModelReader {
         if (modelEntity == null) {
             throw new GenericModelException("Could not find definition for entity name " + entityName);
         }
+        return modelEntity;
+    }
+
+    public ModelEntity getModelEntityNoCheck(String entityName) {
+        Map ec = null;
+        try {
+            ec = getEntityCache();
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Error getting entity cache", module);
+        }
+        if (ec == null) {
+            return null;
+        }
+        ModelEntity modelEntity = (ModelEntity) ec.get(entityName);
         return modelEntity;
     }
 

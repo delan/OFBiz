@@ -1,5 +1,5 @@
 /*
- * $Id: ModelRelation.java,v 1.1 2003/08/16 22:05:48 ajzeneski Exp $
+ * $Id: ModelRelation.java,v 1.2 2003/10/14 22:34:46 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class ModelRelation {
@@ -61,6 +61,15 @@ public class ModelRelation {
         type = "";
         relEntityName = "";
         fkName = "";
+    }
+
+    /** Default Constructor */
+    public ModelRelation(String type, String title, String relEntityName, String fkName, List keyMaps) {
+        this.title = title;
+        this.type = type;
+        this.relEntityName = relEntityName;
+        this.fkName = fkName;
+        this.keyMaps.addAll(keyMaps);
     }
 
     /** XML Constructor */
@@ -189,21 +198,6 @@ public class ModelRelation {
     }
 
     public String keyMapUpperString(String separator, String afterLast) {
-/*
-        String returnString = "";
-
-        if (keyMaps.size() < 1) {
-            return "";
-        }
-
-        int i = 0;
-
-        for (; i < keyMaps.size() - 1; i++) {
-            returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).fieldName) + separator;
-        }
-        returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).fieldName) + afterLast;
-        return returnString;
-*/
         if (keyMaps.size() < 1)
             return "";
 
@@ -226,21 +220,6 @@ public class ModelRelation {
     }
 
     public String keyMapRelatedUpperString(String separator, String afterLast) {
-/*
-        String returnString = "";
-
-        if (keyMaps.size() < 1) {
-            return "";
-        }
-
-        int i = 0;
-
-        for (; i < keyMaps.size() - 1; i++) {
-            returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).relFieldName) + separator;
-        }
-        returnString = returnString + ModelUtil.upperFirstChar(((ModelKeyMap) keyMaps.get(i)).relFieldName) + afterLast;
-        return returnString;
-*/
         if (keyMaps.size() < 1)
             return "";
 
@@ -261,32 +240,4 @@ public class ModelRelation {
 
         return returnString.toString();
     }
-
-    /*
-     public String keyMapColumnString(String separator, String afterLast) {
-     String returnString = "";
-     if(keyMaps.size() < 1) { return ""; }
-
-     int i = 0;
-     for(; i < keyMaps.size() - 1; i++) {
-     returnString = returnString + ((ModelKeyMap)keyMaps.get(i)).colName + separator;
-     }
-     returnString = returnString + ((ModelKeyMap)keyMaps.get(i)).colName + afterLast;
-     return returnString;
-     }
-     */
-
-    /*
-     public String keyMapRelatedColumnString(String separator, String afterLast) {
-     String returnString = "";
-     if(keyMaps.size() < 1) { return ""; }
-
-     int i = 0;
-     for(; i < keyMaps.size() - 1; i++) {
-     returnString = returnString + ((ModelKeyMap)keyMaps.get(i)).relColName + separator;
-     }
-     returnString = returnString + ((ModelKeyMap)keyMaps.get(i)).relColName + afterLast;
-     return returnString;
-     }
-     */
 }
