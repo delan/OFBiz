@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.2 2004/01/24 21:46:12 jonesde Exp $
+ * $Id: EntitySaxReader.java,v 1.3 2004/01/28 13:35:40 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.xml.sax.XMLReader;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
@@ -65,6 +65,7 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
     protected int valuesPerWrite = 100;
     protected int valuesPerMessage = 1000;
     protected int transactionTimeout = 7200;
+    boolean useTryInsertMethod = false;
 
     protected List valuesToWrite = new ArrayList(valuesPerWrite);
 
@@ -92,6 +93,10 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
     public int getTransactionTimeout() {
         return this.transactionTimeout;
+    }
+    
+    public void setUseTryInsertMethod(boolean value) {
+        this.useTryInsertMethod = value;
     }
 
     public void setTransactionTimeout(int transactionTimeout) throws GenericTransactionException {
@@ -197,10 +202,20 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
                 currentFieldName = null;
             } else {
                 try {
-                    valuesToWrite.add(currentValue);
-                    if (valuesToWrite.size() >= valuesPerWrite) {
-                        delegator.storeAll(valuesToWrite);
-                        valuesToWrite.clear();
+                    if (useTryInsertMethod) {
+                        // this technique is faster for data sets where most, if not all, values do not already exist in the database
+                        try {
+                            currentValue.create();
+                        } catch (GenericEntityException e1) {
+                            // create failed, try a store, if that fails too we have a real error and the catch outside of this should handle it
+                            currentValue.store();
+                        }
+                    } else {
+                        valuesToWrite.add(currentValue);
+                        if (valuesToWrite.size() >= valuesPerWrite) {
+                            delegator.storeAll(valuesToWrite);
+                            valuesToWrite.clear();
+                        }
                     }
                     numberRead++;
                     if ((numberRead % valuesPerMessage) == 0) {
