@@ -237,11 +237,8 @@
         default-title-style="tableheadtext"
         default-tooltip-style="tabletext" default-widget-style="inputBox"
         list-name="contentList" 
-        target="updateContentPurposeOperation" title="" type="list">
-        <auto-fields-service service-name="updateContentPurposeOperation"/>
-        <field name="submitButton" title="Update" widget-style="standardSubmit">
-            <submit button-type="button"/>
-        </field>
+        target="" title="" type="list">
+        <auto-fields-service service-name="updateContentPurposeOperation" default-field-type="display"/>
         <field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
             <hyperlink also-hidden="false" description="[Delete]" target="removeContentPurposeOperation?contentPurposeTypeId=${contentPurposeTypeId}&amp;contentOperationId=${contentOperationId}&amp;roleTypeId=${roleTypeId}&amp;statusId=${statusId}"/>
         </field>
