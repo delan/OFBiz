@@ -33,7 +33,8 @@ import org.ofbiz.core.entity.jdbc.*;
  * This class extends ModelEntity and provides additional information appropriate to view entities
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
  * @version    $Revision$
  * @since      2.0
  */
@@ -145,6 +146,17 @@ public class ModelViewEntity extends ModelEntity {
     public ModelAlias getAlias(int index) {
         return (ModelAlias) this.aliases.get(index);
     }
+    
+    public ModelAlias getAlias(String name) {
+        Iterator aliasIter = getAliasesIterator();
+        while (aliasIter.hasNext()) {
+            ModelAlias alias = (ModelAlias) aliasIter.next();
+            if (alias.name.equals(name)) {
+                return alias;
+            }
+        }
+        return null;
+    }
 
     public int getAliasesSize() {
         return this.aliases.size();
@@ -182,6 +194,32 @@ public class ModelViewEntity extends ModelEntity {
     public void addViewLink(ModelViewLink viewLink) {
         this.viewLinks.add(viewLink);
     }
+    
+    public String colNameString(List flds, String separator, String afterLast, boolean alias) {
+        StringBuffer returnString = new StringBuffer();
+
+        if (flds.size() < 1) {
+            return "";
+        }
+
+        Iterator fldsIt = flds.iterator();
+        while(fldsIt.hasNext()) {
+            ModelField field = (ModelField) fldsIt.next();
+            returnString.append(field.colName);
+            if (alias) {
+                ModelAlias modelAlias = this.getAlias(field.name);
+                if (modelAlias != null) {
+                    returnString.append(" AS " + modelAlias.colAlias);
+                }
+            }
+            if (fldsIt.hasNext()) {
+                returnString.append(separator);
+            }
+        }
+
+        returnString.append(afterLast);
+        return returnString.toString();
+    }    
 
     public void populateFields(Map entityCache) {
         if (this.memberModelEntities == null) {
@@ -314,6 +352,7 @@ public class ModelViewEntity extends ModelEntity {
         protected String entityAlias = "";
         protected String name = "";
         protected String field = "";
+        protected String colAlias = "";
         // this is a Boolean object for a tri-state: null, true or false
         protected Boolean isPk = null;
         protected boolean groupBy = false;
@@ -326,6 +365,7 @@ public class ModelViewEntity extends ModelEntity {
             this.entityAlias = UtilXml.checkEmpty(aliasElement.getAttribute("entity-alias"));
             this.name = UtilXml.checkEmpty(aliasElement.getAttribute("name"));
             this.field = UtilXml.checkEmpty(aliasElement.getAttribute("field"), this.name);
+            this.colAlias = UtilXml.checkEmpty(aliasElement.getAttribute("col-alias"), ModelUtil.javaNameToDbName(UtilXml.checkEmpty(this.name)));
             String primKeyValue = UtilXml.checkEmpty(aliasElement.getAttribute("prim-key"));
 
             if (UtilValidate.isNotEmpty(primKeyValue)) {
@@ -352,6 +392,10 @@ public class ModelViewEntity extends ModelEntity {
 
         public String getName() {
             return this.name;
+        }
+        
+        public String getColAlias() {
+            return this.colAlias;
         }
 
         public String getField() {

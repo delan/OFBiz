@@ -109,6 +109,7 @@
 	entity-alias CDATA #REQUIRED
 	name CDATA #REQUIRED
 	field CDATA #IMPLIED
+	col-alias CDATA #IMPLIED
 	prim-key CDATA #IMPLIED
 	group-by ( true | false ) "false"
 	function ( min | max | sum | avg | count | count-distinct | upper | lower ) #IMPLIED>

@@ -682,10 +682,7 @@ public class ModelEntity implements Comparable {
         Iterator fldsIt = flds.iterator();
         while(fldsIt.hasNext()) {
             ModelField field = (ModelField) fldsIt.next();
-            returnString.append(field.colName);
-            if (alias) {
-                returnString.append(" AS " + ModelUtil.javaNameToDbName(field.name));
-            }
+            returnString.append(field.colName);            
             if (fldsIt.hasNext()) {
                 returnString.append(separator);
             }
