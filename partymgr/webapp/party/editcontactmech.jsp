@@ -41,6 +41,12 @@
 <%ContactMechWorker.getContactMechAndRelated(pageContext, userLogin.getString("partyId"), "contactMech", "contactMechId", "partyContactMech", "partyContactMechPurposes",
     "contactMechTypeId", "contactMechType", "purposeTypes", "postalAddress", "telecomNumber", "requestName", "donePage", "tryEntity", "contactMechTypes");%>
 
+<%
+    String partyId = request.getParameter("party_id");
+    if (partyId == null) partyId = (String) request.getSession().getAttribute("partyId");
+    else request.getSession().setAttribute("partyId", partyId);
+%>
+
 <%if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && pageContext.getAttribute("partyContactMech") == null && pageContext.getAttribute("contactMech") != null){%>
   <p><h3>The contact information specified does not belong to you, you may not view or edit it.</h3></p>
   &nbsp;<a href="<ofbiz:url>/authview/"<ofbiz:print attribute="donePage"/></ofbiz:url>" class="buttontext">[Back]</a>
@@ -84,6 +90,7 @@
         <form method="post" action='<ofbiz:url>/<ofbiz:print attribute="requestName"/></ofbiz:url>' name="editcontactmechform">
         <input type=hidden name='DONE_PAGE' value='<ofbiz:print attribute="donePage"/>'>
         <input type=hidden name='contactMechTypeId' value='<ofbiz:print attribute="contactMechTypeId"/>'>
+        <input type=hidden name='partyId' value='<%=partyId%>'>
         <%=UtilFormatOut.ifNotEmpty(cmNewPurposeTypeId, "<input type='hidden' name='contactMechPurposeTypeId' value='", "'>")%>
     </ofbiz:unless>
     <ofbiz:if name="contactMech">
@@ -133,6 +140,7 @@
         <form method="post" action='<ofbiz:url>/<ofbiz:print attribute="requestName"/></ofbiz:url>' name="editcontactmechform">
         <input type=hidden name="DONE_PAGE" value='<ofbiz:print attribute="donePage"/>'>
         <input type=hidden name="contactMechId" value='<ofbiz:print attribute="contactMechId"/>'>
+        <input type=hidden name='partyId' value='<%=partyId%>'>
     </ofbiz:if>
 
   <%if ("POSTAL_ADDRESS".equals(pageContext.getAttribute("contactMechTypeId"))) {%>
