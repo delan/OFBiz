@@ -34,6 +34,8 @@
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%WorkEffortWorker.getWorkEffortAssignedTasks(pageContext, "tasks");%>
 <%WorkEffortWorker.getWorkEffortAssignedActivities(pageContext, "activities");%>
+<%WorkEffortWorker.getWorkEffortAssignedActivitiesByRole(pageContext, "roleActivities");%>
+<%WorkEffortWorker.getWorkEffortAssignedActivitiesByGroup(pageContext, "groupActivities");%>
 
 <% pageContext.setAttribute("PageName", "Task List Page"); %> 
 <%@ include file="/includes/envsetup.jsp" %>
@@ -57,44 +59,138 @@
       </table>
     </TD>
   </TR>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
-        <tr>
-          <td>
-              <div class='head3'>Assigned Workflow Activities</div>
-              <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
-                <TR>
-                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Activity Status</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>My Status</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Activity Name</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
-                </TR>
-                <TR><TD colspan='6'><HR class='sepbar'></TD></TR>
-                <ofbiz:iterator name="workEffort" property="activities">
-                  <TR>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
-                    <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
-                    <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
-                    <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId")));%>
-                    <%if (statusItem != null) pageContext.setAttribute("statusItem", statusItem);%>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
-                    <TD><DIV class='tabletext'><ofbiz:entityfield attribute="statusItem" field="description"/></DIV></TD>
-                    <TD><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
-                        <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
-                    <TD align=right><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
-                        Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
-                  </TR>
-                </ofbiz:iterator>
-              </TABLE>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
+  <ofbiz:if name="activities" size="0">
+      <TR>
+        <TD width='100%'>
+          <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+            <tr>
+              <td>
+                  <div class='head3'>Workflow Activities Assigned to User</div>
+                  <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
+                    <TR>
+                      <TD><DIV class='tabletext'><b>Start&nbsp;Date/Time</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Activity&nbsp;Status</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>My&nbsp;Status</b></DIV></TD>
+                      <%-- <TD><DIV class='tabletext'><b>Party&nbsp;ID</b></DIV></TD> --%>
+                      <TD><DIV class='tabletext'><b>Role&nbsp;ID</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Activity&nbsp;Name</b></DIV></TD>
+                      <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                    </TR>
+                    <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
+                    <ofbiz:iterator name="workEffort" property="activities">
+                      <TR>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
+                        <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
+                        <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
+                        <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId")));%>
+                        <%if (statusItem != null) pageContext.setAttribute("statusItem", statusItem);%>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="statusItem" field="description"/></DIV></TD>
+                        <%-- <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="partyId"/></DIV></TD> --%>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="roleTypeId"/></DIV></TD>
+                        <TD><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                            <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
+                        <TD align=right><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                            Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
+                      </TR>
+                    </ofbiz:iterator>
+                  </TABLE>
+              </td>
+            </tr>
+          </table>
+        </TD>
+      </TR>
+  </ofbiz:if>
+  <ofbiz:if name="roleActivities" size="0">
+      <TR>
+        <TD width='100%'>
+          <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+            <tr>
+              <td>
+                  <div class='head3'>Workflow Activities Assigned to User Role</div>
+                  <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
+                    <TR>
+                      <TD><DIV class='tabletext'><b>Start&nbsp;Date/Time</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Activity&nbsp;Status</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>My&nbsp;Status</b></DIV></TD>
+                      <%-- <TD><DIV class='tabletext'><b>Party&nbsp;ID</b></DIV></TD> --%>
+                      <TD><DIV class='tabletext'><b>Role&nbsp;ID</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Activity&nbsp;Name</b></DIV></TD>
+                      <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                    </TR>
+                    <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
+                    <ofbiz:iterator name="workEffort" property="roleActivities">
+                      <TR>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
+                        <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
+                        <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
+                        <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId")));%>
+                        <%if (statusItem != null) pageContext.setAttribute("statusItem", statusItem);%>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="statusItem" field="description"/></DIV></TD>
+                        <%-- <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="partyId"/></DIV></TD> --%>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="roleTypeId"/></DIV></TD>
+                        <TD><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                            <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
+                        <TD align=right><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                            Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
+                      </TR>
+                    </ofbiz:iterator>
+                  </TABLE>
+              </td>
+            </tr>
+          </table>
+        </TD>
+      </TR>
+  </ofbiz:if>
+  <ofbiz:if name="groupActivities" size="0">
+      <TR>
+        <TD width='100%'>
+          <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
+            <tr>
+              <td>
+                  <div class='head3'>Workflow Activities Assigned to User Group</div>
+                  <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
+                    <TR>
+                      <TD><DIV class='tabletext'><b>Start&nbsp;Date/Time</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Activity&nbsp;Status</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>My&nbsp;Status</b></DIV></TD>
+                      <TD><DIV class='tabletext'><b>Group&nbsp;Party&nbsp;ID</b></DIV></TD>
+                      <%-- <TD><DIV class='tabletext'><b>Role&nbsp;ID</b></DIV></TD> --%>
+                      <TD><DIV class='tabletext'><b>Activity&nbsp;Name</b></DIV></TD>
+                      <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                    </TR>
+                    <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
+                    <ofbiz:iterator name="workEffort" property="groupActivities">
+                      <TR>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="estimatedStartDate"/></DIV></TD>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="priority"/></DIV></TD>
+                        <%GenericValue currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("currentStatusId")));%>
+                        <%if (currentStatusItem != null) pageContext.setAttribute("currentStatusItem", currentStatusItem);%>
+                        <%GenericValue statusItem = delegator.findByPrimaryKeyCache("StatusItem", UtilMisc.toMap("statusId", workEffort.getString("statusId")));%>
+                        <%if (statusItem != null) pageContext.setAttribute("statusItem", statusItem);%>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="currentStatusItem" field="description"/></DIV></TD>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="statusItem" field="description"/></DIV></TD>
+                        <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="groupPartyId"/></DIV></TD>
+                        <%-- <TD><DIV class='tabletext'><ofbiz:entityfield attribute="workEffort" field="roleTypeId"/></DIV></TD> --%>
+                        <TD><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                            <ofbiz:entityfield attribute="workEffort" field="workEffortName"/></a></DIV></TD>
+                        <TD align=right><A class='buttontext' href='<ofbiz:url>/activity?workEffortId=<ofbiz:entityfield attribute="workEffort" field="workEffortId"/></ofbiz:url>'>
+                            Edit&nbsp;[<ofbiz:entityfield attribute="workEffort" field="workEffortId"/>]</a></DIV></TD>
+                      </TR>
+                    </ofbiz:iterator>
+                  </TABLE>
+              </td>
+            </tr>
+          </table>
+        </TD>
+      </TR>
+  </ofbiz:if>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellpadding='<%=boxBottomPadding%>' cellspacing='0' bgcolor='<%=boxBottomColor%>'>
