@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.9  2001/09/05 16:34:06  jonesde
+ * Added result set prev/next in cateogry
+ *
  * Revision 1.8  2001/09/05 04:04:44  azeneski
  * Updated. (not finished)
  *
@@ -159,23 +162,22 @@ public class CatalogHelper {
         
         String curFindString = "ProductCategoryByParentId:" + parentId;
         
-        ArrayList products = (ArrayList)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
+        ArrayList prodCatMembers = (ArrayList)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS");
         String resultArrayName = (String)pageContext.getSession().getAttribute("CACHE_SEARCH_RESULTS_NAME");
 
-        if(products == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
+        if(prodCatMembers == null || resultArrayName == null || curFindString.compareTo(resultArrayName) != 0 || viewIndex == 0) {
             Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
             Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " resultArrayName:" + resultArrayName);
             
             GenericValue category = helper.findByPrimaryKey("ProductCategory",UtilMisc.toMap("productCategoryId",parentId));
 
-            if ( category != null ) {
-                products = new ArrayList();
-                Collection p = helper.getRelated("PrimaryProduct",category);
-                products.addAll(p);
+            if(category != null) {
+                Collection prodCatMemberCol = category.getRelated("ProductCategoryMember");
+                prodCatMembers = new ArrayList(prodCatMemberCol);
             }
             
-            if(products != null) {
-                pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", products);
+            if(prodCatMembers != null) {
+                pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS", prodCatMembers);
                 pageContext.getSession().setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
             }
         }
@@ -183,12 +185,15 @@ public class CatalogHelper {
         int lowIndex = viewIndex*viewSize+1;
         int highIndex = (viewIndex+1)*viewSize;
         int listSize = 0;
-        if(products!=null) listSize = products.size();
+        if(prodCatMembers!=null) listSize = prodCatMembers.size();
         if(listSize<highIndex) highIndex=listSize;
         
         ArrayList someProducts = new ArrayList();
-        for(int ind=lowIndex; ind<=highIndex; ind++) {
-            someProducts.add(products.get(ind-1));
+        if(prodCatMembers != null) {
+          for(int ind=lowIndex; ind<=highIndex; ind++) {
+              GenericValue prodCatMember = (GenericValue)prodCatMembers.get(ind-1);
+              someProducts.add(helper.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", prodCatMember.get("productId"))));
+          }
         }
 
         pageContext.setAttribute(attributePrefix + "viewIndex", new Integer(viewIndex));
