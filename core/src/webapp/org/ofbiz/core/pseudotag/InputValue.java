@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -21,9 +21,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-
 package org.ofbiz.core.pseudotag;
-
 
 import java.io.*;
 import java.text.*;
@@ -33,17 +31,16 @@ import org.ofbiz.core.entity.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.util.*;
 
-
 /**
- * <p>InputValue Pseudo-Tag
- * <p>Outputs a string for an input box from either an entity field or
- *     a request parameter. Decides which to use by checking to see if the entityattr exist and
- *     using the specified field if it does. If the Boolean object referred to by the tryentityattr
- *     attribute is false, always tries to use the request parameter and ignores the entity field.
+ * InputValue Pseudo-Tag
+ * Outputs a string for an input box from either an entity field or
+ *  a request parameter. Decides which to use by checking to see if the entityattr exist and
+ *  using the specified field if it does. If the Boolean object referred to by the tryentityattr
+ *  attribute is false, always tries to use the request parameter and ignores the entity field.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    1.0
- * @created    February 1, 2002
+ * @version    $Revision$
+ * @since      2.0
  */
 public class InputValue {
 

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- * Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
+ * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
  * Permission is hereby granted, free of charge, to any person obtaining a
  * copy of this software and associated documentation files (the "Software"),
@@ -22,9 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  */
-
 package org.ofbiz.core.event;
-
 
 import java.util.*;
 import java.lang.reflect.*;
@@ -32,14 +30,13 @@ import javax.servlet.http.*;
 
 import org.ofbiz.core.util.*;
 
-
 /**
- * <p><b>Title:</b> JavaEventHandler - Static Method Java Event Handler
+ * JavaEventHandler - Static Method Java Event Handler
  *
- *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
- *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- *@created    December 7, 2001
- *@version    1.0
+ * @author     <a href="mailto:jaz@jflow.net">Andy Zeneski</a>
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @version    $Revision$
+ * @since      2.0
  */
 public class JavaEventHandler implements EventHandler {
 
@@ -47,13 +44,14 @@ public class JavaEventHandler implements EventHandler {
 
     private Map eventClassMap = new HashMap();
 
-    /** Invoke the web event
-     *@param eventPath The path or location of this event
-     *@param eventMethod The method to invoke
-     *@param request The servlet request object
-     *@param response The servlet response object
-     *@return String Result code
-     *@throws EventHandlerException
+    /** 
+     * Invoke the web event
+     * @param eventPath The path or location of this event
+     * @param eventMethod The method to invoke
+     * @param request The servlet request object
+     * @param response The servlet response object
+     * @return String Result code
+     * @throws EventHandlerException
      */
     public String invoke(String eventPath, String eventMethod, HttpServletRequest request, HttpServletResponse response) throws EventHandlerException {
         Class eventClass = (Class) this.eventClassMap.get(eventPath);
