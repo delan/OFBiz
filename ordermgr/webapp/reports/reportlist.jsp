@@ -30,9 +30,6 @@
 <%@ page import="org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.commonapp.order.order.*, org.ofbiz.commonapp.party.party.*, org.ofbiz.commonapp.party.contact.*" %>
 
-
-<%@ include file="/includes/ts_picker.js" %> 
-
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 <jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
@@ -75,11 +72,11 @@ these reports and helping to improve them.</div>
  <A
    TABINDEX="10"
    TARGET="_self"
-    HREF="javascript:show_calendar('document.list.fromDate', '<%=fromStr%>', 1);"
+    HREF="javascript:call_cal(document.list.fromDate, '<%=fromStr%>');"
    onfocus="checkForChanges = true;"
    onblur="checkForChanges = true;"
  >
-  <IMG SRC='/images/cal.gif' WIDTH='16' HEIGHT='16' BORDER='0' ALT='Click here for calendar'>
+  <IMG SRC='/images/cal.gif' WIDTH='16' HEIGHT='16' BORDER='0' ALT='Click here For Calendar'>
  </A>
 </TD>
 </TR>
@@ -89,11 +86,11 @@ these reports and helping to improve them.</div>
  <A
    TABINDEX="12"
    TARGET="_self"
-    HREF="javascript:show_calendar('document.list.toDate', '<%=toStr%>', 1);"
+    HREF="javascript:call_cal(document.list.toDate, '<%=toStr%>');"
    onfocus="checkForChanges = true;"
    onblur="checkForChanges = true;"
  >
-  <IMG SRC='/images/cal.gif' WIDTH='16' HEIGHT='16' BORDER='0' ALT='Click here for calendar'>
+  <IMG SRC='/images/cal.gif' WIDTH='16' HEIGHT='16' BORDER='0' ALT='Click here For Calendar'>
  </A>
 </TD>
 </TR>
