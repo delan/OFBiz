@@ -63,7 +63,7 @@ import org.ofbiz.service.calendar.RecurrenceRule;
 public class CoreEvents {
     
     public static final String module = CoreEvents.class.getName();
-    public static final String err_resource = "ContentErrorUiLabel";
+    public static final String err_resource = "ContentErrorUiLabels";
 
     /**
      * Return success event. Used as a place holder for events.
