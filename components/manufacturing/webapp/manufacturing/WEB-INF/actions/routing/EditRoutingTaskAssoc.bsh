@@ -35,6 +35,7 @@ security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
 
 String workEffortIdFrom = request.getParameter("workEffortIdFrom");
+context.put("routingId",workEffortIdFrom);
 String sequenceNum = request.getParameter("sequenceNum");
 String workEffortIdTo = request.getParameter("workEffortIdTo");
 String fromDateSt = request.getParameter("fromDate");

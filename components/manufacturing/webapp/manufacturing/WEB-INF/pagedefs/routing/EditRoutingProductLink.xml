@@ -3,6 +3,6 @@
     <template>main</template>
     <property name="titleProperty">PageTitleEditRoutingProductLink</property>
     <property name="headerItem">routing</property>   
-    <property name="tabButtonItem">routing</property>
-    <content-action name="/routing/EditWorkEffortGoodStandard.bsh"/> 
+    <property name="tabButtonItem">routingProductLink</property>
+    <content-action name="/routing/EditRoutingProductLink.bsh"/> 
 </page>

@@ -48,6 +48,7 @@ String byProduct = request.getParameter("byProduct");
 String routingTemplate = request.getParameter("routingTemplate");
 String productId = request.getParameter("productId");
 String workEffortId  = request.getParameter("workEffortId");
+context.put("routingId",workEffortId);
 String workEffortName = null;
 String statusId = null;
 List allRoutingProductLinks = null;

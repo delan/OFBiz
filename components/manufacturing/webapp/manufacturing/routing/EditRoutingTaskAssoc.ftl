@@ -40,7 +40,7 @@ function addRoutingTask() {
 
 
 
-${pages.get("/routing/RoutingTabBar.ftl")}
+${pages.get("/routing/RoutingDetailTabBar.ftl")}
 <#if security.hasEntityPermission("MANUFACTURING", "_CREATE", session)>
 <form method="post" action="<@ofbizUrl>/AddRoutingTaskAssoc</@ofbizUrl>" name="addtaskassocform">
    <input type="hidden" name="workEffortIdFrom" value="${requestParameters.workEffortIdFrom}">
