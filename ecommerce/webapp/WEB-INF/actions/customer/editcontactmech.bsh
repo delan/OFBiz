@@ -54,11 +54,11 @@ if (!security.hasEntityPermission("PARTYMGR", "_VIEW", session) && context.get("
 
 preContactMechTypeId = request.getParameter("preContactMechTypeId");
 if (preContactMechTypeId == null) preContactMechTypeId = request.getAttribute("preContactMechTypeId");
-context.put("preContactMechTypeId", preContactMechTypeId);
+if (preContactMechTypeId != null) context.put("preContactMechTypeId", preContactMechTypeId);
 
 paymentMethodId = request.getParameter("paymentMethodId");
 if (paymentMethodId == null) paymentMethodId = request.getAttribute("paymentMethodId");
-context.put("paymentMethodId", paymentMethodId);
+if (paymentMethodId != null) context.put("paymentMethodId", paymentMethodId);
 
 cmNewPurposeTypeId = request.getParameter("contactMechPurposeTypeId");
 if (cmNewPurposeTypeId == null) cmNewPurposeTypeId = request.getAttribute("contactMechPurposeTypeId");
@@ -69,8 +69,8 @@ if (cmNewPurposeTypeId != null) {
     } else {
         cmNewPurposeTypeId = null;
     }
+    context.put("cmNewPurposeTypeId", cmNewPurposeTypeId);
 }
-context.put("cmNewPurposeTypeId", cmNewPurposeTypeId);
 
 tryEntity = context.get("tryEntity");
 requestParameters = UtilHttp.getParameterMap(request);
@@ -78,21 +78,21 @@ requestParameters = UtilHttp.getParameterMap(request);
 contactMechData = context.get("contactMech");
 if (!tryEntity.booleanValue()) contactMechData = requestParameters;
 if (contactMechData == null) contactMechData = new HashMap();
-context.put("contactMechData", contactMechData);
+if (contactMechData != null) context.put("contactMechData", contactMechData);
 
 partyContactMechData = context.get("partyContactMech");
 if (!tryEntity.booleanValue()) partyContactMechData = requestParameters; 
 if (partyContactMechData == null) partyContactMechData = new HashMap();
-context.put("partyContactMechData", partyContactMechData);
+if (partyContactMechData != null) context.put("partyContactMechData", partyContactMechData);
 
 postalAddressData = context.get("postalAddress");
 if (!tryEntity.booleanValue()) postalAddressData = requestParameters; 
 if (postalAddressData == null) postalAddressData = new HashMap();
-context.put("postalAddressData", postalAddressData);
+if (postalAddressData != null) context.put("postalAddressData", postalAddressData);
 
 telecomNumberData = context.get("telecomNumber");
 if (!tryEntity.booleanValue()) telecomNumberData = requestParameters; 
 if (telecomNumberData == null) telecomNumberData = new HashMap();
-context.put("telecomNumberData", telecomNumberData);
+if (telecomNumberData != null) context.put("telecomNumberData", telecomNumberData);
 
 
