@@ -200,7 +200,7 @@ public class GenericDAO {
             entity.set(ModelEntity.STAMP_FIELD, UtilDateTime.nowTimestamp());
         }
 
-        String sql = "UPDATE " + modelEntity.getTableName(datasourceInfo) + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
+        String sql = "UPDATE " + modelEntity.getTableName(datasourceInfo) + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?", false) + " WHERE " +
             SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
 
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
@@ -471,7 +471,7 @@ public class GenericDAO {
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
 
         if (modelEntity.getNopksSize() > 0) {
-            sqlBuffer.append(modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", ""));
+            sqlBuffer.append(modelEntity.colNameString(modelEntity.getNopksCopy(), ", ", "", true));
         } else {
             sqlBuffer.append("*");
         }
@@ -544,7 +544,7 @@ public class GenericDAO {
         StringBuffer sqlBuffer = new StringBuffer("SELECT ");
 
         if (partialFields.size() > 0) {
-            sqlBuffer.append(modelEntity.colNameString(partialFields, ", ", ""));
+            sqlBuffer.append(modelEntity.colNameString(partialFields, ", ", "", true));
         } else {
             sqlBuffer.append("*");
         }
@@ -956,7 +956,7 @@ public class GenericDAO {
         }
 
         if (selectFields.size() > 0) {
-            sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
+            sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", "", true));
         } else {
             sqlBuffer.append("*");
         }
@@ -995,7 +995,7 @@ public class GenericDAO {
         // GROUP BY clause for view-entity
         if (modelEntity instanceof ModelViewEntity) {
             ModelViewEntity modelViewEntity = (ModelViewEntity) modelEntity;
-            String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "");
+            String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "", false);
 
             if (UtilValidate.isNotEmpty(groupByString)) {
                 sqlBuffer.append(" GROUP BY ");

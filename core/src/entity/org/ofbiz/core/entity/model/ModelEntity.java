@@ -669,23 +669,28 @@ public class ModelEntity implements Comparable {
     }
 
     public String colNameString(List flds) {
-        return colNameString(flds, ", ", "");
+        return colNameString(flds, ", ", "", false);
     }
 
-    public String colNameString(List flds, String separator, String afterLast) {
+    public String colNameString(List flds, String separator, String afterLast, boolean alias) {
         StringBuffer returnString = new StringBuffer();
 
         if (flds.size() < 1) {
             return "";
         }
 
-        int i = 0;
-
-        for (; i < flds.size() - 1; i++) {
-            returnString.append(((ModelField) flds.get(i)).colName);
-            returnString.append(separator);
+        Iterator fldsIt = flds.iterator();
+        while(fldsIt.hasNext()) {
+            ModelField field = (ModelField) fldsIt.next();
+            returnString.append(field.colName);
+            if (alias) {
+                returnString.append(" AS " + ModelUtil.javaNameToDbName(field.name));
+            }
+            if (fldsIt.hasNext()) {
+                returnString.append(separator);
+            }
         }
-        returnString.append(((ModelField) flds.get(i)).colName);
+
         returnString.append(afterLast);
         return returnString.toString();
     }

@@ -407,7 +407,7 @@ public class SqlJdbcUtil {
             sql.append(makeFromClause(modelEntity, datasourceInfo));
             sql.append(makeViewWhereClause(modelEntity, datasourceInfo.joinStyle));
             ModelViewEntity modelViewEntity = (ModelViewEntity)modelEntity;
-            String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "");
+            String groupByString = modelViewEntity.colNameString(modelViewEntity.getGroupBysCopy(), ", ", "", false);
             if (UtilValidate.isNotEmpty(groupByString)) {
                 sql.append(" GROUP BY ");
                 sql.append(groupByString);
