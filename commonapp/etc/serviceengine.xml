@@ -65,6 +65,7 @@
     <service-ecas loader="mainfile" location="secas_workeffort.xml"/>
     
     <!-- JMS Service Queue/Topic Configuration -->
+    <!--
     <jms-service name="serviceMessenger" send-mode="all">
         <server jndi-server-name="default"
                 jndi-name="jms/TopicConnectionFactory"
@@ -74,6 +75,7 @@
                 password="admin"
                 listen="true"/>
     </jms-service>
+    -->
 
 </service-config>
 
