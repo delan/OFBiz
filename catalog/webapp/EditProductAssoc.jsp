@@ -94,7 +94,7 @@ try {
     <tr>
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="FROM_DATE" size="20" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>"></td>
+      <td><input type="text" name="FROM_DATE" size="30" maxlength="40" value="<%=UtilFormatOut.makeString(fromDate)%>">(YYYY-MM-DD HH:mm:SS.sss)</td>
     </tr>
   <%}else{%>
     <input type=hidden name="UPDATE_MODE" value="CREATE">
@@ -116,7 +116,7 @@ try {
     <tr>
       <td align=right><div class="tabletext">From Date</div></td>
       <td>&nbsp;</td>
-      <td><input type="text" name="FROM_DATE" size="20" maxlength="40" value=""></td>
+      <td><input type="text" name="FROM_DATE" size="30" maxlength="40" value="">(YYYY-MM-DD HH:mm:SS.sss)</td>
     </tr>
   <%}%>
 <%}else{%>
@@ -234,7 +234,6 @@ try {
       <td><div class="tabletext"><b>From&nbsp;Date&nbsp;&amp;&nbsp;Time</b></div></td>
       <td><div class="tabletext"><b>Association&nbsp;Type</b></div></td>
       <td><div class="tabletext"><b>&nbsp;</b></div></td>
-      <td><div class="tabletext"><b>&nbsp;</b></div></td>
     </tr>
     <%Iterator tfIterator = UtilMisc.toIterator(product.getRelated("AssocProductAssoc"));%>
     <%while(tfIterator != null && tfIterator.hasNext()) {%>
@@ -248,10 +247,6 @@ try {
         <td>
           <a href="<ofbiz:url>/UpdateProductAssoc?UPDATE_MODE=DELETE&PRODUCT_ID=<%=listProductAssoc.getString("productId")%>&PRODUCT_ID_TO=<%=listProductAssoc.getString("productIdTo")%>&PRODUCT_ASSOC_TYPE_ID=<%=listProductAssoc.getString("productAssocTypeId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(listProductAssoc.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
           [Delete]</a>
-        </td>
-        <td>
-          <a href="<ofbiz:url>/EditProductAssoc?PRODUCT_ID=<%=listProductAssoc.getString("productId")%>&PRODUCT_ID_TO=<%=listProductAssoc.getString("productIdTo")%>&PRODUCT_ASSOC_TYPE_ID=<%=listProductAssoc.getString("productAssocTypeId")%>&FROM_DATE=<%=UtilFormatOut.encodeQueryValue(listProductAssoc.getTimestamp("fromDate").toString())%>&useValues=true</ofbiz:url>" class="buttontext">
-          [Edit]</a>
         </td>
       </tr>
     <%}%>

@@ -420,17 +420,10 @@ public class ProductEvents {
     GenericDelegator delegator = (GenericDelegator)request.getAttribute("delegator");
     Security security = (Security)request.getAttribute("security");
 
-    //-------------------
-    if(true) {
-      request.setAttribute("ERROR_MESSAGE", "This feature is not yet implemented.");
-      return "error";
-    }
-    //-------------------
-
     String updateMode = request.getParameter("UPDATE_MODE");
     if(updateMode == null || updateMode.length() <= 0) {
       request.setAttribute("ERROR_MESSAGE", "Update Mode was not specified, but is required.");
-      Debug.logWarning("[ProductEvents.updateProductKeyword] Update Mode was not specified, but is required");
+      Debug.logWarning("[ProductEvents.updateProductAssoc] Update Mode was not specified, but is required");
       return "error";
     }
 
@@ -439,48 +432,91 @@ public class ProductEvents {
       request.setAttribute("ERROR_MESSAGE", "You do not have sufficient permissions to "+ updateMode + " CATALOG (CATALOG_" + updateMode + " or CATALOG_ADMIN needed).");
       return "error";
     }
-
-    String productId = request.getParameter("PRODUCT_ID");
-    String keyword = request.getParameter("KEYWORD");
     
+    String productId = request.getParameter("PRODUCT_ID");
+    String productIdTo = request.getParameter("PRODUCT_ID_TO");
+    String productAssocTypeId = request.getParameter("PRODUCT_ASSOC_TYPE_ID");
+    String fromDateStr = request.getParameter("FROM_DATE");
+    Timestamp fromDate = null;
+    
+    if(UtilValidate.isNotEmpty(fromDateStr)) {
+      try { fromDate = Timestamp.valueOf(fromDateStr); }
+      catch(Exception e) { errMsg += "<li>From Date not formatted correctly."; }
+    }
     if(!UtilValidate.isNotEmpty(productId)) errMsg += "<li>Product ID is missing.";
-    if(!UtilValidate.isNotEmpty(keyword)) errMsg += "<li>Keyword is missing.";
+    if(!UtilValidate.isNotEmpty(productIdTo)) errMsg += "<li>Product ID To is missing.";
+    if(!UtilValidate.isNotEmpty(productAssocTypeId)) errMsg += "<li>Association Type ID is missing.";
+    if(!UtilValidate.isNotEmpty(fromDateStr)) errMsg += "<li>From Date is missing.";
+    if(errMsg.length() > 0) {
+      errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
+      request.setAttribute("ERROR_MESSAGE", errMsg);
+      return "error";
+    }
+
+    GenericValue tempProductAssoc = delegator.makeValue("ProductAssoc", UtilMisc.toMap("productId", productId, "productIdTo", productIdTo, "productAssocTypeId", productAssocTypeId, "fromDate", fromDate));
+    if(updateMode.equals("DELETE")) {
+      GenericValue productAssoc = null;
+      try { productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey()); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productAssoc = null; }
+      if(productAssoc == null) {
+        request.setAttribute("ERROR_MESSAGE", "Could not remove product association (does not exist)");
+        return "error";
+      }
+      try { productAssoc.remove(); }
+      catch(GenericEntityException e) {
+        request.setAttribute("ERROR_MESSAGE", "Could not remove product association (write error)");
+        Debug.logWarning("[ProductEvents.updateProductAssoc] Could not remove product association (write error); message: " + e.getMessage());
+        return "error";
+      }
+      return "success";
+    }
+    
+    String thruDateStr = request.getParameter("THRU_DATE");
+    String reason = request.getParameter("REASON");
+    String instruction = request.getParameter("INSTRUCTION");
+    String quantityStr = request.getParameter("QUANTITY");
+    Timestamp thruDate = null;
+    Double quantity = null;
+
+    if(UtilValidate.isNotEmpty(thruDateStr)) {
+      try { thruDate = Timestamp.valueOf(thruDateStr); }
+      catch(Exception e) { errMsg += "<li>Thru Date not formatted correctly."; }
+    }
+    if(UtilValidate.isNotEmpty(quantityStr)) {
+      try { quantity = Double.valueOf(quantityStr); }
+      catch(Exception e) { errMsg += "<li>Quantity not formatted correctly."; }
+    }
     if(errMsg.length() > 0) {
       errMsg = "<b>The following errors occured:</b><br><ul>" + errMsg + "</ul>";
       request.setAttribute("ERROR_MESSAGE", errMsg);
       return "error";
     }
     
+    tempProductAssoc.set("thruDate", thruDate);
+    tempProductAssoc.set("reason", reason);
+    tempProductAssoc.set("instruction", instruction);
+    tempProductAssoc.set("quantity", quantity);
+    
     if(updateMode.equals("CREATE")) {
-      GenericValue productKeyword = delegator.makeValue("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword));
-      GenericValue newValue = null;
-      try { newValue = delegator.findByPrimaryKey(productKeyword.getPrimaryKey()); }
-      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); newValue = null; }
-      
-      if(newValue != null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not create product-keyword entry (already exists)");
+      GenericValue productAssoc = null;
+      try { productAssoc = delegator.findByPrimaryKey(tempProductAssoc.getPrimaryKey()); }
+      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productAssoc = null; }
+      if(productAssoc == null) {
+        request.setAttribute("ERROR_MESSAGE", "Could not create product association (already exists)");
         return "error";
       }
-
-      try { productKeyword = productKeyword.create(); }
-      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productKeyword = null; }
-      if(productKeyword == null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not create product-keyword entry (write error)");
+      try { productAssoc = tempProductAssoc.create(); }
+      catch(GenericEntityException e) {
+        request.setAttribute("ERROR_MESSAGE", "Could not create product association (write error)");
+        Debug.logWarning("[ProductEvents.updateProductAssoc] Could not create product association (write error); message: " + e.getMessage());
         return "error";
       }
     }
-    else if(updateMode.equals("DELETE")) {
-      GenericValue productKeyword = null;
-      try { productKeyword = delegator.findByPrimaryKey("ProductKeyword", UtilMisc.toMap("productId", productId, "keyword", keyword)); }
-      catch(GenericEntityException e) { Debug.logWarning(e.getMessage()); productKeyword = null; }
-      if(productKeyword == null) {
-        request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (does not exist)");
-        return "error";
-      }
-      try { productKeyword.remove(); }
+    else if(updateMode.equals("UPDATE")) {
+      try { tempProductAssoc.store(); }
       catch(GenericEntityException e) {
-        request.setAttribute("ERROR_MESSAGE", "Could not remove product-keyword (write error)");
-        Debug.logWarning("[ProductEvents.updateProductKeyword] Could not remove product-keyword (write error); message: " + e.getMessage());
+        request.setAttribute("ERROR_MESSAGE", "Could not update product association (write error)");
+        Debug.logWarning("[ProductEvents.updateProductAssoc] Could not update product association (write error); message: " + e.getMessage());
         return "error";
       }
     }
