@@ -1,5 +1,5 @@
 /*
- * $Id: URLConnector.java,v 1.2 2003/10/24 20:26:26 ajzeneski Exp $
+ * $Id: URLConnector.java,v 1.3 2003/10/29 21:21:58 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,17 +29,13 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.GeneralSecurityException;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.KeyManager;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
+import javax.net.ssl.*;
 
 /**
  * URLConnector.java
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class URLConnector {
@@ -106,7 +102,7 @@ public class URLConnector {
                 if ("HTTPS".equalsIgnoreCase(url.getProtocol())) {
                     HttpsURLConnection scon = (HttpsURLConnection) con;
                     try {
-                        scon.setSSLSocketFactory(getSSLSocketFactory(clientCertAlias));
+                        scon.setSSLSocketFactory(SSLUtil.getSSLSocketFactory(clientCertAlias));
                     } catch (GeneralSecurityException gse) {
                         Debug.logError(gse, module);
                     }
@@ -131,16 +127,5 @@ public class URLConnector {
         if (con instanceof HttpURLConnection) {
             ((HttpURLConnection) con).disconnect();
         }
-    }
-    
-    // gets a aliased SSL socket factory
-    private static SSLSocketFactory getSSLSocketFactory(String alias) throws IOException, GeneralSecurityException {
-        KeyManager[] km = KeyStoreUtils.getKeyManagers(alias);
-        TrustManager[] tm = KeyStoreUtils.getTrustManagers();
-            
-        // may want to have this in the properties file
-        SSLContext context = SSLContext.getInstance("SSL");
-        context.init(km, tm, null);
-        return (SSLSocketFactory) context.getSocketFactory();        
     }
 }
