@@ -1,7 +1,7 @@
 
 <%
 /**
- *  Title: Party Type Attribute Entity
+ *  Title: Role Type Attribute Entity
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 27 01:37:03 MDT 2001
+ *@created    Fri Jul 27 01:37:04 MDT 2001
  *@version    1.0
  */
 %>
@@ -36,15 +36,15 @@
 
 
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
-<%pageContext.setAttribute("PageName", "ViewPartyTypeAttr"); %>
+<%pageContext.setAttribute("PageName", "ViewRoleTypeAttr"); %>
 
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 
-<%boolean hasViewPermission=Security.hasEntityPermission("PARTY_TYPE_ATTR", "_VIEW", session);%>
-<%boolean hasCreatePermission=Security.hasEntityPermission("PARTY_TYPE_ATTR", "_CREATE", session);%>
-<%boolean hasUpdatePermission=Security.hasEntityPermission("PARTY_TYPE_ATTR", "_UPDATE", session);%>
-<%boolean hasDeletePermission=Security.hasEntityPermission("PARTY_TYPE_ATTR", "_DELETE", session);%>
+<%boolean hasViewPermission=Security.hasEntityPermission("ROLE_TYPE_ATTR", "_VIEW", session);%>
+<%boolean hasCreatePermission=Security.hasEntityPermission("ROLE_TYPE_ATTR", "_CREATE", session);%>
+<%boolean hasUpdatePermission=Security.hasEntityPermission("ROLE_TYPE_ATTR", "_UPDATE", session);%>
+<%boolean hasDeletePermission=Security.hasEntityPermission("ROLE_TYPE_ATTR", "_DELETE", session);%>
 <%if(hasViewPermission){%>
 
 <%
@@ -52,11 +52,11 @@
   String rowClass2 = "viewOneTR2";
   String rowClass = "";
 
-  String partyTypeId = request.getParameter("PARTY_TYPE_ATTR_PARTY_TYPE_ID");  
-  String name = request.getParameter("PARTY_TYPE_ATTR_NAME");  
+  String roleTypeId = request.getParameter("ROLE_TYPE_ATTR_ROLE_TYPE_ID");  
+  String name = request.getParameter("ROLE_TYPE_ATTR_NAME");  
 
 
-  PartyTypeAttr partyTypeAttr = PartyTypeAttrHelper.findByPrimaryKey(partyTypeId, name);
+  RoleTypeAttr roleTypeAttr = RoleTypeAttrHelper.findByPrimaryKey(roleTypeId, name);
 %>
 
 <br>
@@ -74,44 +74,44 @@ function ShowViewTab(lname)
 </SCRIPT>
 <table cellpadding='0' cellspacing='0'><tr>  
   <td id=viewtab class=ontab>
-    <a href='javascript:ShowViewTab("view")' id=viewlnk class=onlnk>View PartyTypeAttr</a>
+    <a href='javascript:ShowViewTab("view")' id=viewlnk class=onlnk>View RoleTypeAttr</a>
   </td>
   <%if(hasUpdatePermission || hasCreatePermission){%>
   <td id=edittab class=offtab>
-    <a href='javascript:ShowViewTab("edit")' id=editlnk class=offlnk>Edit PartyTypeAttr</a>
+    <a href='javascript:ShowViewTab("edit")' id=editlnk class=offlnk>Edit RoleTypeAttr</a>
   </td>
   <%}%>
 </table>
 <div style='color: white; width: 100%; background-color: black; padding:3;'>
-  <b>View Entity: PartyTypeAttr with (PARTY_TYPE_ID, NAME: <%=partyTypeId%>, <%=name%>).</b>
+  <b>View Entity: RoleTypeAttr with (ROLE_TYPE_ID, NAME: <%=roleTypeId%>, <%=name%>).</b>
 </div>
 
-<a href="<%=response.encodeURL(controlPath + "/FindPartyTypeAttr")%>" class="buttontext">[Find PartyTypeAttr]</a>
+<a href="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr")%>" class="buttontext">[Find RoleTypeAttr]</a>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL(controlPath + "/ViewPartyTypeAttr")%>" class="buttontext">[Create New PartyTypeAttr]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewRoleTypeAttr")%>" class="buttontext">[Create New RoleTypeAttr]</a>
 <%}%>
-<%if(partyTypeAttr != null){%>
+<%if(roleTypeAttr != null){%>
   <%if(hasDeletePermission){%>
-    <a href="<%=response.encodeURL(controlPath + "/UpdatePartyTypeAttr?UPDATE_MODE=DELETE&" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeId + "&" + "PARTY_TYPE_ATTR_NAME=" + name)%>" class="buttontext">[Delete this PartyTypeAttr]</a>
+    <a href="<%=response.encodeURL(controlPath + "/UpdateRoleTypeAttr?UPDATE_MODE=DELETE&" + "ROLE_TYPE_ATTR_ROLE_TYPE_ID=" + roleTypeId + "&" + "ROLE_TYPE_ATTR_NAME=" + name)%>" class="buttontext">[Delete this RoleTypeAttr]</a>
   <%}%>
 <%}%>
 
-<%if(partyTypeAttr == null){%>
+<%if(roleTypeAttr == null){%>
 <div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
   <DIV id=viewarea style="VISIBILITY: visible; POSITION: absolute" width="100%">
 <table border="0" cellspacing="2" cellpadding="2">
-<%if(partyTypeAttr == null){%>
-<tr class="<%=rowClass1%>"><td><h3>Specified PartyTypeAttr was not found.</h3></td></tr>
+<%if(roleTypeAttr == null){%>
+<tr class="<%=rowClass1%>"><td><h3>Specified RoleTypeAttr was not found.</h3></td></tr>
 <%}else{%>
 
   <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
   <tr class="<%=rowClass%>">
-    <td><b>PARTY_TYPE_ID</b></td>
+    <td><b>ROLE_TYPE_ID</b></td>
     <td>
-      <%=UtilFormatOut.checkNull(partyTypeAttr.getPartyTypeId())%>
+      <%=UtilFormatOut.checkNull(roleTypeAttr.getRoleTypeId())%>
     </td>
   </tr>
 
@@ -119,19 +119,19 @@ function ShowViewTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>NAME</b></td>
     <td>
-      <%=UtilFormatOut.checkNull(partyTypeAttr.getName())%>
+      <%=UtilFormatOut.checkNull(roleTypeAttr.getName())%>
     </td>
   </tr>
 
-<%} //end if partyTypeAttr == null %>
+<%} //end if roleTypeAttr == null %>
 </table>
   </div>
-<%PartyTypeAttr partyTypeAttrSave = partyTypeAttr;%>
+<%RoleTypeAttr roleTypeAttrSave = roleTypeAttr;%>
 <%if(hasUpdatePermission || hasCreatePermission){%>
   <DIV id=editarea style="VISIBILITY: hidden; POSITION: absolute" width="100%">
 <%boolean showFields = true;%>
-<%if(partyTypeAttr == null && (partyTypeId != null || name != null)){%>
-    PartyTypeAttr with (PARTY_TYPE_ID, NAME: <%=partyTypeId%>, <%=name%>) not found.<br>
+<%if(roleTypeAttr == null && (roleTypeId != null || name != null)){%>
+    RoleTypeAttr with (ROLE_TYPE_ID, NAME: <%=roleTypeId%>, <%=name%>) not found.<br>
 <%}%>
 <%
   String lastUpdateMode = request.getParameter("UPDATE_MODE");
@@ -139,57 +139,57 @@ function ShowViewTab(lname)
       lastUpdateMode != null && !lastUpdateMode.equals("DELETE"))
   {
     //if we are updating and there is an error, don't use the EJB data for the fields, use parameters to get the old value
-    partyTypeAttr = null;
+    roleTypeAttr = null;
   }
 %>
-<form action="<%=response.encodeURL(controlPath + "/UpdatePartyTypeAttr")%>" method="POST" name="updateForm" style="margin:0;">
+<form action="<%=response.encodeURL(controlPath + "/UpdateRoleTypeAttr")%>" method="POST" name="updateForm" style="margin:0;">
   <input type="hidden" name="ON_ERROR_PAGE" value="<%=request.getServletPath()%>">
 <table cellpadding="2" cellspacing="2" border="0">
 
-<%if(partyTypeAttr == null){%>
+<%if(roleTypeAttr == null){%>
   <%if(hasCreatePermission){%>
-    You may create a PartyTypeAttr by entering the values you want, and clicking Update.
+    You may create a RoleTypeAttr by entering the values you want, and clicking Update.
     <input type="hidden" name="UPDATE_MODE" value="CREATE">
   
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
-      <td>PARTY_TYPE_ID</td>
+      <td>ROLE_TYPE_ID</td>
       <td>
-        <input class='editInputBox' type="text" size="20" maxlength="20" name="PARTY_TYPE_ATTR_PARTY_TYPE_ID" value="<%=UtilFormatOut.checkNull(partyTypeId)%>">
+        <input class='editInputBox' type="text" size="20" maxlength="20" name="ROLE_TYPE_ATTR_ROLE_TYPE_ID" value="<%=UtilFormatOut.checkNull(roleTypeId)%>">
       </td>
     </tr>
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>NAME</td>
       <td>
-        <input class='editInputBox' type="text" size="60" maxlength="60" name="PARTY_TYPE_ATTR_NAME" value="<%=UtilFormatOut.checkNull(name)%>">
+        <input class='editInputBox' type="text" size="60" maxlength="60" name="ROLE_TYPE_ATTR_NAME" value="<%=UtilFormatOut.checkNull(name)%>">
       </td>
     </tr>
   <%}else{%>
     <%showFields=false;%>
-    You do not have permission to create a PartyTypeAttr (PARTY_TYPE_ATTR_ADMIN, or PARTY_TYPE_ATTR_CREATE needed).
+    You do not have permission to create a RoleTypeAttr (ROLE_TYPE_ATTR_ADMIN, or ROLE_TYPE_ATTR_CREATE needed).
   <%}%>
 <%}else{%>
   <%if(hasUpdatePermission){%>
     <input type="hidden" name="UPDATE_MODE" value="UPDATE">
   
-      <input type="hidden" name="PARTY_TYPE_ATTR_PARTY_TYPE_ID" value="<%=partyTypeId%>">
+      <input type="hidden" name="ROLE_TYPE_ATTR_ROLE_TYPE_ID" value="<%=roleTypeId%>">
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
-      <td>PARTY_TYPE_ID</td>
+      <td>ROLE_TYPE_ID</td>
       <td>
-        <b><%=partyTypeId%></b> (This cannot be changed without re-creating the partyTypeAttr.)
+        <b><%=roleTypeId%></b> (This cannot be changed without re-creating the roleTypeAttr.)
       </td>
     </tr>
-      <input type="hidden" name="PARTY_TYPE_ATTR_NAME" value="<%=name%>">
+      <input type="hidden" name="ROLE_TYPE_ATTR_NAME" value="<%=name%>">
     <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%><tr class="<%=rowClass%>">
       <td>NAME</td>
       <td>
-        <b><%=name%></b> (This cannot be changed without re-creating the partyTypeAttr.)
+        <b><%=name%></b> (This cannot be changed without re-creating the roleTypeAttr.)
       </td>
     </tr>
   <%}else{%>
     <%showFields=false;%>
-    You do not have permission to update a PartyTypeAttr (PARTY_TYPE_ATTR_ADMIN, or PARTY_TYPE_ATTR_UPDATE needed).
+    You do not have permission to update a RoleTypeAttr (ROLE_TYPE_ATTR_ADMIN, or ROLE_TYPE_ATTR_UPDATE needed).
   <%}%>
-<%} //end if partyTypeAttr == null %>
+<%} //end if roleTypeAttr == null %>
 
 <%if(showFields){%>
 
@@ -202,13 +202,13 @@ function ShowViewTab(lname)
   </div>
 <%}%>
 </div>
-<%if((hasUpdatePermission || hasCreatePermission) && partyTypeAttr == null){%>
+<%if((hasUpdatePermission || hasCreatePermission) && roleTypeAttr == null){%>
   <SCRIPT language='JavaScript'>  
     ShowViewTab("edit");
   </SCRIPT>
 <%}%>
-<%-- Restore the partyTypeAttr for cases when removed to retain passed form values --%>
-<%partyTypeAttr = partyTypeAttrSave;%>
+<%-- Restore the roleTypeAttr for cases when removed to retain passed form values --%>
+<%roleTypeAttr = roleTypeAttrSave;%>
 
 <br>
 <SCRIPT language='JavaScript'>  
@@ -223,11 +223,11 @@ function ShowTab(lname)
   }
 }
 </SCRIPT>
-<%if(partyTypeAttr != null){%>
+<%if(roleTypeAttr != null){%>
 <table cellpadding='0' cellspacing='0'><tr>
-    <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
+    <%if(Security.hasEntityPermission("ROLE_TYPE", "_VIEW", session)){%>
       <td id=tab1 class=ontab>
-        <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> PartyType</a>
+        <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> RoleType</a>
       </td>
     <%}%>
     <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_VIEW", session)){%>
@@ -235,43 +235,43 @@ function ShowTab(lname)
         <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> PartyAttribute</a>
       </td>
     <%}%>
-    <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_VIEW", session)){%>
+    <%if(Security.hasEntityPermission("PARTY_ROLE", "_VIEW", session)){%>
       <td id=tab3 class=offtab>
-        <a href='javascript:ShowTab("tab3")' id=lnk3 class=offlnk> PartyClassification</a>
+        <a href='javascript:ShowTab("tab3")' id=lnk3 class=offlnk> PartyRole</a>
       </td>
     <%}%>
 </tr></table>
 <%}%>
   
 
-<%-- Start Relation for PartyType, type: one --%>
-<%if(partyTypeAttr != null){%>
-  <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
-    <%-- PartyType partyTypeRelated = PartyTypeHelper.findByPrimaryKey(partyTypeAttr.getPartyTypeId()); --%>
-    <%PartyType partyTypeRelated = partyTypeAttr.getPartyType();%>
+<%-- Start Relation for RoleType, type: one --%>
+<%if(roleTypeAttr != null){%>
+  <%if(Security.hasEntityPermission("ROLE_TYPE", "_VIEW", session)){%>
+    <%-- RoleType roleTypeRelated = RoleTypeHelper.findByPrimaryKey(roleTypeAttr.getRoleTypeId()); --%>
+    <%RoleType roleTypeRelated = roleTypeAttr.getRoleType();%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
-     <b></b> Related Entity: <b>PartyType</b> with (PARTY_TYPE_ID: <%=partyTypeAttr.getPartyTypeId()%>)
+     <b></b> Related Entity: <b>RoleType</b> with (ROLE_TYPE_ID: <%=roleTypeAttr.getRoleTypeId()%>)
     </div>
-    <%if(partyTypeAttr.getPartyTypeId() != null){%>
-      <a href="<%=response.encodeURL(controlPath + "/ViewPartyType?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyTypeAttr.getPartyTypeId())%>" class="buttontext">[View PartyType]</a>      
-    <%if(partyTypeRelated == null){%>
-      <%if(Security.hasEntityPermission("PARTY_TYPE", "_CREATE", session)){%>
-        <a href="<%=response.encodeURL(controlPath + "/ViewPartyType?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyTypeAttr.getPartyTypeId())%>" class="buttontext">[Create PartyType]</a>
+    <%if(roleTypeAttr.getRoleTypeId() != null){%>
+      <a href="<%=response.encodeURL(controlPath + "/ViewRoleType?" + "ROLE_TYPE_ROLE_TYPE_ID=" + roleTypeAttr.getRoleTypeId())%>" class="buttontext">[View RoleType]</a>      
+    <%if(roleTypeRelated == null){%>
+      <%if(Security.hasEntityPermission("ROLE_TYPE", "_CREATE", session)){%>
+        <a href="<%=response.encodeURL(controlPath + "/ViewRoleType?" + "ROLE_TYPE_ROLE_TYPE_ID=" + roleTypeAttr.getRoleTypeId())%>" class="buttontext">[Create RoleType]</a>
       <%}%>
     <%}%>
     <%}%>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
     <table border="0" cellspacing="2" cellpadding="2">
-    <%if(partyTypeRelated == null){%>
-    <tr class="<%=rowClass1%>"><td><h3>Specified PartyType was not found.</h3></td></tr>
+    <%if(roleTypeRelated == null){%>
+    <tr class="<%=rowClass1%>"><td><h3>Specified RoleType was not found.</h3></td></tr>
     <%}else{%>
 
   <%rowClass=(rowClass==rowClass1?rowClass2:rowClass1);%>
   <tr class="<%=rowClass%>">
-    <td><b>PARTY_TYPE_ID</b></td>
+    <td><b>ROLE_TYPE_ID</b></td>
     <td>
-      <%=UtilFormatOut.checkNull(partyTypeRelated.getPartyTypeId())%>
+      <%=UtilFormatOut.checkNull(roleTypeRelated.getRoleTypeId())%>
     </td>
   </tr>
 
@@ -279,7 +279,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>PARENT_TYPE_ID</b></td>
     <td>
-      <%=UtilFormatOut.checkNull(partyTypeRelated.getParentTypeId())%>
+      <%=UtilFormatOut.checkNull(roleTypeRelated.getParentTypeId())%>
     </td>
   </tr>
 
@@ -287,7 +287,7 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>HAS_TABLE</b></td>
     <td>
-      <%=UtilFormatOut.checkNull(partyTypeRelated.getHasTable())%>
+      <%=UtilFormatOut.checkNull(roleTypeRelated.getHasTable())%>
     </td>
   </tr>
 
@@ -295,27 +295,27 @@ function ShowTab(lname)
   <tr class="<%=rowClass%>">
     <td><b>DESCRIPTION</b></td>
     <td>
-      <%=UtilFormatOut.checkNull(partyTypeRelated.getDescription())%>
+      <%=UtilFormatOut.checkNull(roleTypeRelated.getDescription())%>
     </td>
   </tr>
 
-    <%} //end if partyTypeRelated == null %>
+    <%} //end if roleTypeRelated == null %>
     </table>
     </div>
   </div>
   <%}%>
 <%}%>
-<%-- End Relation for PartyType, type: one --%>
+<%-- End Relation for RoleType, type: one --%>
   
 
 <%-- Start Relation for PartyAttribute, type: many --%>
-<%if(partyTypeAttr != null){%>
+<%if(roleTypeAttr != null){%>
   <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_VIEW", session)){%>    
-    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyAttributeHelper.findByName(partyTypeAttr.getName())); --%>
-    <%Iterator relatedIterator = UtilMisc.toIterator(partyTypeAttr.getPartyAttributes());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyAttributeHelper.findByName(roleTypeAttr.getName())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(roleTypeAttr.getPartyAttributes());%>
   <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
-      <b></b> Related Entities: <b>PartyAttribute</b> with (NAME: <%=partyTypeAttr.getName()%>)
+      <b></b> Related Entities: <b>PartyAttribute</b> with (NAME: <%=roleTypeAttr.getName()%>)
     </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("PARTY_ATTRIBUTE", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("PARTY_ATTRIBUTE", "_UPDATE", session);%>
@@ -328,11 +328,11 @@ function ShowTab(lname)
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL(controlPath + "/ViewPartyAttribute?" + "PARTY_ATTRIBUTE_NAME=" + partyTypeAttr.getName())%>" class="buttontext">[Create PartyAttribute]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewPartyAttribute?" + "PARTY_ATTRIBUTE_NAME=" + roleTypeAttr.getName())%>" class="buttontext">[Create PartyAttribute]</a>
     <%}%>    
     <%String curFindString = "SEARCH_TYPE=Name";%>
-    <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyTypeAttr.getName();%>
-    <a href="<%=response.encodeURL(controlPath + "/FindPartyTypeAttr?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyAttribute]</a>
+    <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + roleTypeAttr.getName();%>
+    <a href="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyAttribute]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
@@ -381,7 +381,7 @@ function ShowTab(lname)
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyAttribute?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName() + "&" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeId + "&" + "PARTY_TYPE_ATTR_NAME=" + name + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyAttribute?" + "PARTY_ATTRIBUTE_PARTY_ID=" + partyAttributeRelated.getPartyId() + "&" + "PARTY_ATTRIBUTE_NAME=" + partyAttributeRelated.getName() + "&" + "ROLE_TYPE_ATTR_ROLE_TYPE_ID=" + roleTypeId + "&" + "ROLE_TYPE_ATTR_NAME=" + name + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -403,18 +403,18 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- End Relation for PartyAttribute, type: many --%>
   
 
-<%-- Start Relation for PartyClassification, type: many --%>
-<%if(partyTypeAttr != null){%>
-  <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_VIEW", session)){%>    
-    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyClassificationHelper.findByPartyTypeId(partyTypeAttr.getPartyTypeId())); --%>
-    <%Iterator relatedIterator = UtilMisc.toIterator(partyTypeAttr.getPartyClassifications());%>
+<%-- Start Relation for PartyRole, type: many --%>
+<%if(roleTypeAttr != null){%>
+  <%if(Security.hasEntityPermission("PARTY_ROLE", "_VIEW", session)){%>    
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyRoleHelper.findByRoleTypeId(roleTypeAttr.getRoleTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(roleTypeAttr.getPartyRoles());%>
   <DIV id=area3 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
-      <b></b> Related Entities: <b>PartyClassification</b> with (PARTY_TYPE_ID: <%=partyTypeAttr.getPartyTypeId()%>)
+      <b></b> Related Entities: <b>PartyRole</b> with (ROLE_TYPE_ID: <%=roleTypeAttr.getRoleTypeId()%>)
     </div>
-    <%boolean relatedCreatePerm = Security.hasEntityPermission("PARTY_CLASSIFICATION", "_CREATE", session);%>
-    <%boolean relatedUpdatePerm = Security.hasEntityPermission("PARTY_CLASSIFICATION", "_UPDATE", session);%>
-    <%boolean relatedDeletePerm = Security.hasEntityPermission("PARTY_CLASSIFICATION", "_DELETE", session);%>
+    <%boolean relatedCreatePerm = Security.hasEntityPermission("PARTY_ROLE", "_CREATE", session);%>
+    <%boolean relatedUpdatePerm = Security.hasEntityPermission("PARTY_ROLE", "_UPDATE", session);%>
+    <%boolean relatedDeletePerm = Security.hasEntityPermission("PARTY_ROLE", "_DELETE", session);%>
     <%
       String rowClassResultHeader = "viewManyHeaderTR";
       String rowClassResult1 = "viewManyTR1";
@@ -423,20 +423,18 @@ Displaying <%=relatedLoopCount%> entities.
     %>
       
     <%if(relatedCreatePerm){%>
-      <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassification?" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyTypeAttr.getPartyTypeId())%>" class="buttontext">[Create PartyClassification]</a>
+      <a href="<%=response.encodeURL(controlPath + "/ViewPartyRole?" + "PARTY_ROLE_ROLE_TYPE_ID=" + roleTypeAttr.getRoleTypeId())%>" class="buttontext">[Create PartyRole]</a>
     <%}%>    
-    <%String curFindString = "SEARCH_TYPE=PartyTypeId";%>
-    <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyTypeAttr.getPartyTypeId();%>
-    <a href="<%=response.encodeURL(controlPath + "/FindPartyTypeAttr?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyClassification]</a>
+    <%String curFindString = "SEARCH_TYPE=RoleTypeId";%>
+    <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + roleTypeAttr.getRoleTypeId();%>
+    <a href="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PartyRole]</a>
   <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
   
       <td><div class="tabletext"><b><nobr>PARTY_ID</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>PARTY_TYPE_ID</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>PARTY_CLASSIFICATION_TYPE_ID</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>FROM_DATE</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>THRU_DATE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>ROLE_TYPE_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PARTY_ROLE_ID</nobr></b></div></td>
       <td>&nbsp;</td>
       <%if(relatedDeletePerm){%>
         <td>&nbsp;</td>
@@ -449,76 +447,36 @@ Displaying <%=relatedLoopCount%> entities.
       while(relatedIterator != null && relatedIterator.hasNext())
       {
         relatedLoopCount++; //if(relatedLoopCount > 10) break;
-        PartyClassification partyClassificationRelated = (PartyClassification)relatedIterator.next();
-        if(partyClassificationRelated != null)
+        PartyRole partyRoleRelated = (PartyRole)relatedIterator.next();
+        if(partyRoleRelated != null)
         {
     %>
     <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
   
       <td>
         <div class="tabletext">
-      <%=UtilFormatOut.checkNull(partyClassificationRelated.getPartyId())%>
+      <%=UtilFormatOut.checkNull(partyRoleRelated.getPartyId())%>
         &nbsp;</div>
       </td>
   
       <td>
         <div class="tabletext">
-      <%=UtilFormatOut.checkNull(partyClassificationRelated.getPartyTypeId())%>
+      <%=UtilFormatOut.checkNull(partyRoleRelated.getRoleTypeId())%>
         &nbsp;</div>
       </td>
   
       <td>
         <div class="tabletext">
-      <%=UtilFormatOut.checkNull(partyClassificationRelated.getPartyClassificationTypeId())%>
+      <%=UtilFormatOut.checkNull(partyRoleRelated.getPartyRoleId())%>
         &nbsp;</div>
       </td>
   
       <td>
-        <div class="tabletext">
-      <%{
-        String dateString = null;
-        String timeString = null;
-        if(partyClassificationRelated != null)
-        {
-          java.util.Date date = partyClassificationRelated.getFromDate();
-          if(date  != null)
-          {
-            dateString = UtilDateTime.toDateString(date);
-            timeString = UtilDateTime.toTimeString(date);
-          }
-        }
-      %>
-      <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
-      <%}%>
-        &nbsp;</div>
-      </td>
-  
-      <td>
-        <div class="tabletext">
-      <%{
-        String dateString = null;
-        String timeString = null;
-        if(partyClassificationRelated != null)
-        {
-          java.util.Date date = partyClassificationRelated.getThruDate();
-          if(date  != null)
-          {
-            dateString = UtilDateTime.toDateString(date);
-            timeString = UtilDateTime.toTimeString(date);
-          }
-        }
-      %>
-      <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
-      <%}%>
-        &nbsp;</div>
-      </td>
-  
-      <td>
-        <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassification?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPartyRole?" + "PARTY_ROLE_PARTY_ID=" + partyRoleRelated.getPartyId() + "&" + "PARTY_ROLE_ROLE_TYPE_ID=" + partyRoleRelated.getRoleTypeId())%>" class="buttontext">[View]</a>
       </td>
       <%if(relatedDeletePerm){%>
         <td>
-          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyClassification?" + "PARTY_CLASSIFICATION_PARTY_ID=" + partyClassificationRelated.getPartyId() + "&" + "PARTY_CLASSIFICATION_PARTY_TYPE_ID=" + partyClassificationRelated.getPartyTypeId() + "&" + "PARTY_TYPE_ATTR_PARTY_TYPE_ID=" + partyTypeId + "&" + "PARTY_TYPE_ATTR_NAME=" + name + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyRole?" + "PARTY_ROLE_PARTY_ID=" + partyRoleRelated.getPartyId() + "&" + "PARTY_ROLE_ROLE_TYPE_ID=" + partyRoleRelated.getRoleTypeId() + "&" + "ROLE_TYPE_ATTR_ROLE_TYPE_ID=" + roleTypeId + "&" + "ROLE_TYPE_ATTR_NAME=" + name + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -526,8 +484,8 @@ Displaying <%=relatedLoopCount%> entities.
   <%}%>
 <%}else{%>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="7">
-<h3>No PartyClassifications Found.</h3>
+<td colspan="5">
+<h3>No PartyRoles Found.</h3>
 </td>
 </tr>
 <%}%>
@@ -537,13 +495,13 @@ Displaying <%=relatedLoopCount%> entities.
   </div>
   <%}%>
 <%}%>
-<%-- End Relation for PartyClassification, type: many --%>
+<%-- End Relation for PartyRole, type: many --%>
   
 
 
 <br>
 <%}else{%>
-  <h3>You do not have permission to view this page (PARTY_TYPE_ATTR_ADMIN, or PARTY_TYPE_ATTR_VIEW needed).</h3>
+  <h3>You do not have permission to view this page (ROLE_TYPE_ATTR_ADMIN, or ROLE_TYPE_ATTR_VIEW needed).</h3>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:47 MDT 2001
+ *@created    Fri Jul 27 01:37:03 MDT 2001
  *@version    1.0
  */
 %>
@@ -34,6 +34,8 @@
 <%@ page import="org.ofbiz.commonapp.security.*" %>
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
+<%@ page import="org.ofbiz.commonapp.product.price.*" %>
+<%@ page import="org.ofbiz.commonapp.product.supplier.*" %>
 
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
 <%pageContext.setAttribute("PageName", "ViewPartyType"); %>
@@ -96,7 +98,7 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(partyType == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
@@ -232,7 +234,7 @@ function ShowViewTab(lname)
 
 <br>
 <SCRIPT language='JavaScript'>  
-var numTabs=5;
+var numTabs=7;
 function ShowTab(lname) 
 {
   for(inc=1; inc <= numTabs; inc++)
@@ -252,7 +254,7 @@ function ShowTab(lname)
     <%}%>
     <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
       <td id=tab2 class=offtab>
-        <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk>Children PartyType</a>
+        <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk>Child PartyType</a>
       </td>
     <%}%>
     <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
@@ -270,6 +272,16 @@ function ShowTab(lname)
         <a href='javascript:ShowTab("tab5")' id=lnk5 class=offlnk> PartyClassification</a>
       </td>
     <%}%>
+    <%if(Security.hasEntityPermission("PRICE_COMPONENT", "_VIEW", session)){%>
+      <td id=tab6 class=offtab>
+        <a href='javascript:ShowTab("tab6")' id=lnk6 class=offlnk> PriceComponent</a>
+      </td>
+    <%}%>
+    <%if(Security.hasEntityPermission("MARKET_INTEREST", "_VIEW", session)){%>
+      <td id=tab7 class=offtab>
+        <a href='javascript:ShowTab("tab7")' id=lnk7 class=offlnk> MarketInterest</a>
+      </td>
+    <%}%>
 </tr></table>
 <%}%>
   
@@ -277,7 +289,8 @@ function ShowTab(lname)
 <%-- Start Relation for PartyType, type: one --%>
 <%if(partyType != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
-    <%PartyType partyTypeRelated = PartyTypeHelper.findByPrimaryKey(partyType.getParentTypeId());%>
+    <%-- PartyType partyTypeRelated = PartyTypeHelper.findByPrimaryKey(partyType.getParentTypeId()); --%>
+    <%PartyType partyTypeRelated = partyType.getParentPartyType();%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b>Parent</b> Related Entity: <b>PartyType</b> with (PARTY_TYPE_ID: <%=partyType.getParentTypeId()%>)
@@ -340,10 +353,11 @@ function ShowTab(lname)
 <%-- Start Relation for PartyType, type: many --%>
 <%if(partyType != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = PartyTypeHelper.findByParentTypeIdIterator(partyType.getPartyTypeId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyTypeHelper.findByParentTypeId(partyType.getPartyTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyType.getChildPartyTypes());%>
   <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
-      <b>Children</b> Related Entities: <b>PartyType</b> with (PARENT_TYPE_ID: <%=partyType.getPartyTypeId()%>)
+      <b>Child</b> Related Entities: <b>PartyType</b> with (PARENT_TYPE_ID: <%=partyType.getPartyTypeId()%>)
     </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("PARTY_TYPE", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("PARTY_TYPE", "_UPDATE", session);%>
@@ -441,7 +455,8 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- Start Relation for PartyType, type: many --%>
 <%if(partyType != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = PartyTypeHelper.findByParentTypeIdIterator(partyType.getParentTypeId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyTypeHelper.findByParentTypeId(partyType.getParentTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyType.getSiblingPartyTypes());%>
   <DIV id=area3 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b>Sibling</b> Related Entities: <b>PartyType</b> with (PARENT_TYPE_ID: <%=partyType.getParentTypeId()%>)
@@ -542,7 +557,8 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- Start Relation for PartyTypeAttr, type: many --%>
 <%if(partyType != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE_ATTR", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = PartyTypeAttrHelper.findByPartyTypeIdIterator(partyType.getPartyTypeId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyTypeAttrHelper.findByPartyTypeId(partyType.getPartyTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyType.getPartyTypeAttrs());%>
   <DIV id=area4 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>PartyTypeAttr</b> with (PARTY_TYPE_ID: <%=partyType.getPartyTypeId()%>)
@@ -629,7 +645,8 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- Start Relation for PartyClassification, type: many --%>
 <%if(partyType != null){%>
   <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = PartyClassificationHelper.findByPartyTypeIdIterator(partyType.getPartyTypeId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyClassificationHelper.findByPartyTypeId(partyType.getPartyTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyType.getPartyClassifications());%>
   <DIV id=area5 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>PartyClassification</b> with (PARTY_TYPE_ID: <%=partyType.getPartyTypeId()%>)
@@ -760,6 +777,385 @@ Displaying <%=relatedLoopCount%> entities.
   <%}%>
 <%}%>
 <%-- End Relation for PartyClassification, type: many --%>
+  
+
+<%-- Start Relation for PriceComponent, type: many --%>
+<%if(partyType != null){%>
+  <%if(Security.hasEntityPermission("PRICE_COMPONENT", "_VIEW", session)){%>    
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PriceComponentHelper.findByPartyTypeId(partyType.getPartyTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyType.getPriceComponents());%>
+  <DIV id=area6 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+    <div class=areaheader>
+      <b></b> Related Entities: <b>PriceComponent</b> with (PARTY_TYPE_ID: <%=partyType.getPartyTypeId()%>)
+    </div>
+    <%boolean relatedCreatePerm = Security.hasEntityPermission("PRICE_COMPONENT", "_CREATE", session);%>
+    <%boolean relatedUpdatePerm = Security.hasEntityPermission("PRICE_COMPONENT", "_UPDATE", session);%>
+    <%boolean relatedDeletePerm = Security.hasEntityPermission("PRICE_COMPONENT", "_DELETE", session);%>
+    <%
+      String rowClassResultHeader = "viewManyHeaderTR";
+      String rowClassResult1 = "viewManyTR1";
+      String rowClassResult2 = "viewManyTR2"; 
+      String rowClassResult = "";
+    %>
+      
+    <%if(relatedCreatePerm){%>
+      <a href="<%=response.encodeURL(controlPath + "/ViewPriceComponent?" + "PRICE_COMPONENT_PARTY_TYPE_ID=" + partyType.getPartyTypeId())%>" class="buttontext">[Create PriceComponent]</a>
+    <%}%>    
+    <%String curFindString = "SEARCH_TYPE=PartyTypeId";%>
+    <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyType.getPartyTypeId();%>
+    <a href="<%=response.encodeURL(controlPath + "/FindPartyType?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find PriceComponent]</a>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr class="<%=rowClassResultHeader%>">
+  
+      <td><div class="tabletext"><b><nobr>PRICE_COMPONENT_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PRICE_COMPONENT_TYPE_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PARTY_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PARTY_TYPE_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PRODUCT_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PRODUCT_FEATURE_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PRODUCT_CATEGORY_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>AGREEMENT_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>AGREEMENT_ITEM_SEQ_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>UOM_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>GEO_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>SALE_TYPE_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>ORDER_VALUE_BREAK_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>QUANTITY_BREAK_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>UTILIZATION_UOM_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>UTILIZATION_QUANTITY</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>FROM_DATE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>THRU_DATE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PRICE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PERCENT</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>COMMENT</nobr></b></div></td>
+      <td>&nbsp;</td>
+      <%if(relatedDeletePerm){%>
+        <td>&nbsp;</td>
+      <%}%>
+    </tr>
+    <%
+     int relatedLoopCount = 0;
+     if(relatedIterator != null && relatedIterator.hasNext())
+     {
+      while(relatedIterator != null && relatedIterator.hasNext())
+      {
+        relatedLoopCount++; //if(relatedLoopCount > 10) break;
+        PriceComponent priceComponentRelated = (PriceComponent)relatedIterator.next();
+        if(priceComponentRelated != null)
+        {
+    %>
+    <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getPriceComponentId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getPriceComponentTypeId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getPartyId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getPartyTypeId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getProductId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getProductFeatureId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getProductCategoryId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getAgreementId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getAgreementItemSeqId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getUomId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getGeoId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getSaleTypeId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getOrderValueBreakId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getQuantityBreakId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getUtilizationUomId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.formatQuantity(priceComponentRelated.getUtilizationQuantity())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%{
+        String dateString = null;
+        String timeString = null;
+        if(priceComponentRelated != null)
+        {
+          java.util.Date date = priceComponentRelated.getFromDate();
+          if(date  != null)
+          {
+            dateString = UtilDateTime.toDateString(date);
+            timeString = UtilDateTime.toTimeString(date);
+          }
+        }
+      %>
+      <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
+      <%}%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%{
+        String dateString = null;
+        String timeString = null;
+        if(priceComponentRelated != null)
+        {
+          java.util.Date date = priceComponentRelated.getThruDate();
+          if(date  != null)
+          {
+            dateString = UtilDateTime.toDateString(date);
+            timeString = UtilDateTime.toTimeString(date);
+          }
+        }
+      %>
+      <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
+      <%}%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.formatQuantity(priceComponentRelated.getPrice())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.formatQuantity(priceComponentRelated.getPercent())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(priceComponentRelated.getComment())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <a href="<%=response.encodeURL(controlPath + "/ViewPriceComponent?" + "PRICE_COMPONENT_PRICE_COMPONENT_ID=" + priceComponentRelated.getPriceComponentId())%>" class="buttontext">[View]</a>
+      </td>
+      <%if(relatedDeletePerm){%>
+        <td>
+          <a href="<%=response.encodeURL(controlPath + "/UpdatePriceComponent?" + "PRICE_COMPONENT_PRICE_COMPONENT_ID=" + priceComponentRelated.getPriceComponentId() + "&" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyTypeId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+        </td>
+      <%}%>
+    </tr>
+    <%}%>
+  <%}%>
+<%}else{%>
+<%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
+<td colspan="23">
+<h3>No PriceComponents Found.</h3>
+</td>
+</tr>
+<%}%>
+    </table>
+  </div>
+Displaying <%=relatedLoopCount%> entities.
+  </div>
+  <%}%>
+<%}%>
+<%-- End Relation for PriceComponent, type: many --%>
+  
+
+<%-- Start Relation for MarketInterest, type: many --%>
+<%if(partyType != null){%>
+  <%if(Security.hasEntityPermission("MARKET_INTEREST", "_VIEW", session)){%>    
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(MarketInterestHelper.findByPartyTypeId(partyType.getPartyTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyType.getMarketInterests());%>
+  <DIV id=area7 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
+    <div class=areaheader>
+      <b></b> Related Entities: <b>MarketInterest</b> with (PARTY_TYPE_ID: <%=partyType.getPartyTypeId()%>)
+    </div>
+    <%boolean relatedCreatePerm = Security.hasEntityPermission("MARKET_INTEREST", "_CREATE", session);%>
+    <%boolean relatedUpdatePerm = Security.hasEntityPermission("MARKET_INTEREST", "_UPDATE", session);%>
+    <%boolean relatedDeletePerm = Security.hasEntityPermission("MARKET_INTEREST", "_DELETE", session);%>
+    <%
+      String rowClassResultHeader = "viewManyHeaderTR";
+      String rowClassResult1 = "viewManyTR1";
+      String rowClassResult2 = "viewManyTR2"; 
+      String rowClassResult = "";
+    %>
+      
+    <%if(relatedCreatePerm){%>
+      <a href="<%=response.encodeURL(controlPath + "/ViewMarketInterest?" + "MARKET_INTEREST_PARTY_TYPE_ID=" + partyType.getPartyTypeId())%>" class="buttontext">[Create MarketInterest]</a>
+    <%}%>    
+    <%String curFindString = "SEARCH_TYPE=PartyTypeId";%>
+    <%curFindString = curFindString + "&SEARCH_PARAMETER1=" + partyType.getPartyTypeId();%>
+    <a href="<%=response.encodeURL(controlPath + "/FindPartyType?" + UtilFormatOut.encodeQuery(curFindString))%>" class="buttontext">[Find MarketInterest]</a>
+  <div style='width:100%;height:250px;overflow:auto;border-style:inset;'>
+  <table width="100%" cellpadding="2" cellspacing="2" border="0">
+    <tr class="<%=rowClassResultHeader%>">
+  
+      <td><div class="tabletext"><b><nobr>PRODUCT_CATEGORY_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>PARTY_TYPE_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>FROM_DATE</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>THRU_DATE</nobr></b></div></td>
+      <td>&nbsp;</td>
+      <%if(relatedDeletePerm){%>
+        <td>&nbsp;</td>
+      <%}%>
+    </tr>
+    <%
+     int relatedLoopCount = 0;
+     if(relatedIterator != null && relatedIterator.hasNext())
+     {
+      while(relatedIterator != null && relatedIterator.hasNext())
+      {
+        relatedLoopCount++; //if(relatedLoopCount > 10) break;
+        MarketInterest marketInterestRelated = (MarketInterest)relatedIterator.next();
+        if(marketInterestRelated != null)
+        {
+    %>
+    <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(marketInterestRelated.getProductCategoryId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%=UtilFormatOut.checkNull(marketInterestRelated.getPartyTypeId())%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%{
+        String dateString = null;
+        String timeString = null;
+        if(marketInterestRelated != null)
+        {
+          java.util.Date date = marketInterestRelated.getFromDate();
+          if(date  != null)
+          {
+            dateString = UtilDateTime.toDateString(date);
+            timeString = UtilDateTime.toTimeString(date);
+          }
+        }
+      %>
+      <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
+      <%}%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <div class="tabletext">
+      <%{
+        String dateString = null;
+        String timeString = null;
+        if(marketInterestRelated != null)
+        {
+          java.util.Date date = marketInterestRelated.getThruDate();
+          if(date  != null)
+          {
+            dateString = UtilDateTime.toDateString(date);
+            timeString = UtilDateTime.toTimeString(date);
+          }
+        }
+      %>
+      <%=UtilFormatOut.checkNull(dateString)%>&nbsp;<%=UtilFormatOut.checkNull(timeString)%>
+      <%}%>
+        &nbsp;</div>
+      </td>
+  
+      <td>
+        <a href="<%=response.encodeURL(controlPath + "/ViewMarketInterest?" + "MARKET_INTEREST_PRODUCT_CATEGORY_ID=" + marketInterestRelated.getProductCategoryId() + "&" + "MARKET_INTEREST_PARTY_TYPE_ID=" + marketInterestRelated.getPartyTypeId())%>" class="buttontext">[View]</a>
+      </td>
+      <%if(relatedDeletePerm){%>
+        <td>
+          <a href="<%=response.encodeURL(controlPath + "/UpdateMarketInterest?" + "MARKET_INTEREST_PRODUCT_CATEGORY_ID=" + marketInterestRelated.getProductCategoryId() + "&" + "MARKET_INTEREST_PARTY_TYPE_ID=" + marketInterestRelated.getPartyTypeId() + "&" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyTypeId + "&UPDATE_MODE=DELETE")%>" class="buttontext">[Delete]</a>
+        </td>
+      <%}%>
+    </tr>
+    <%}%>
+  <%}%>
+<%}else{%>
+<%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
+<td colspan="6">
+<h3>No MarketInterests Found.</h3>
+</td>
+</tr>
+<%}%>
+    </table>
+  </div>
+Displaying <%=relatedLoopCount%> entities.
+  </div>
+  <%}%>
+<%}%>
+<%-- End Relation for MarketInterest, type: many --%>
   
 
 

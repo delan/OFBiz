@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:47 MDT 2001
+ *@created    Fri Jul 27 01:37:02 MDT 2001
  *@version    1.0
  */
 %>
@@ -96,7 +96,7 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(partyClassificationType == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
@@ -247,12 +247,12 @@ function ShowTab(lname)
 <table cellpadding='0' cellspacing='0'><tr>
     <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_VIEW", session)){%>
       <td id=tab1 class=ontab>
-        <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk> PartyClassificationType</a>
+        <a href='javascript:ShowTab("tab1")' id=lnk1 class=onlnk>Parent PartyClassificationType</a>
       </td>
     <%}%>
     <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_VIEW", session)){%>
       <td id=tab2 class=offtab>
-        <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk> PartyClassificationType</a>
+        <a href='javascript:ShowTab("tab2")' id=lnk2 class=offlnk>Child PartyClassificationType</a>
       </td>
     <%}%>
     <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_VIEW", session)){%>
@@ -267,10 +267,11 @@ function ShowTab(lname)
 <%-- Start Relation for PartyClassificationType, type: one --%>
 <%if(partyClassificationType != null){%>
   <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_VIEW", session)){%>
-    <%PartyClassificationType partyClassificationTypeRelated = PartyClassificationTypeHelper.findByPrimaryKey(partyClassificationType.getParentTypeId());%>
+    <%-- PartyClassificationType partyClassificationTypeRelated = PartyClassificationTypeHelper.findByPrimaryKey(partyClassificationType.getParentTypeId()); --%>
+    <%PartyClassificationType partyClassificationTypeRelated = partyClassificationType.getParentPartyClassificationType();%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
-     <b></b> Related Entity: <b>PartyClassificationType</b> with (PARTY_CLASSIFICATION_TYPE_ID: <%=partyClassificationType.getParentTypeId()%>)
+     <b>Parent</b> Related Entity: <b>PartyClassificationType</b> with (PARTY_CLASSIFICATION_TYPE_ID: <%=partyClassificationType.getParentTypeId()%>)
     </div>
     <%if(partyClassificationType.getParentTypeId() != null){%>
       <a href="<%=response.encodeURL(controlPath + "/ViewPartyClassificationType?" + "PARTY_CLASSIFICATION_TYPE_PARTY_CLASSIFICATION_TYPE_ID=" + partyClassificationType.getParentTypeId())%>" class="buttontext">[View PartyClassificationType]</a>      
@@ -330,10 +331,11 @@ function ShowTab(lname)
 <%-- Start Relation for PartyClassificationType, type: many --%>
 <%if(partyClassificationType != null){%>
   <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = PartyClassificationTypeHelper.findByParentTypeIdIterator(partyClassificationType.getPartyClassificationTypeId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyClassificationTypeHelper.findByParentTypeId(partyClassificationType.getPartyClassificationTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyClassificationType.getChildPartyClassificationTypes());%>
   <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
-      <b></b> Related Entities: <b>PartyClassificationType</b> with (PARENT_TYPE_ID: <%=partyClassificationType.getPartyClassificationTypeId()%>)
+      <b>Child</b> Related Entities: <b>PartyClassificationType</b> with (PARENT_TYPE_ID: <%=partyClassificationType.getPartyClassificationTypeId()%>)
     </div>
     <%boolean relatedCreatePerm = Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_CREATE", session);%>
     <%boolean relatedUpdatePerm = Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_UPDATE", session);%>
@@ -431,7 +433,8 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- Start Relation for PartyClassification, type: many --%>
 <%if(partyClassificationType != null){%>
   <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = PartyClassificationHelper.findByPartyClassificationTypeIdIterator(partyClassificationType.getPartyClassificationTypeId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyClassificationHelper.findByPartyClassificationTypeId(partyClassificationType.getPartyClassificationTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyClassificationType.getPartyClassifications());%>
   <DIV id=area3 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>PartyClassification</b> with (PARTY_CLASSIFICATION_TYPE_ID: <%=partyClassificationType.getPartyClassificationTypeId()%>)

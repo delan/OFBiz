@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:46 MDT 2001
+ *@created    Fri Jul 27 01:37:02 MDT 2001
  *@version    1.0
  */
 %>
@@ -97,7 +97,7 @@ function ShowViewTab(lname)
 <%}%>
 
 <%if(partyClassification == null){%>
-<div style='width:100%;height:400px;overflow:visible;border-style:inset;'>
+<div style='width:100%;height:400px;overflow:visible;'>
 <%}else{%>
 <div style='width:100%;height:200px;overflow:auto;border-style:inset;'>
 <%}%>
@@ -369,7 +369,8 @@ function ShowTab(lname)
 <%-- Start Relation for Party, type: one --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY", "_VIEW", session)){%>
-    <%Party partyRelated = PartyHelper.findByPrimaryKey(partyClassification.getPartyId());%>
+    <%-- Party partyRelated = PartyHelper.findByPrimaryKey(partyClassification.getPartyId()); --%>
+    <%Party partyRelated = partyClassification.getParty();%>
   <DIV id=area1 style="VISIBILITY: visible; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b></b> Related Entity: <b>Party</b> with (PARTY_ID: <%=partyClassification.getPartyId()%>)
@@ -408,7 +409,8 @@ function ShowTab(lname)
 <%-- Start Relation for PartyType, type: one --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session)){%>
-    <%PartyType partyTypeRelated = PartyTypeHelper.findByPrimaryKey(partyClassification.getPartyTypeId());%>
+    <%-- PartyType partyTypeRelated = PartyTypeHelper.findByPrimaryKey(partyClassification.getPartyTypeId()); --%>
+    <%PartyType partyTypeRelated = partyClassification.getPartyType();%>
   <DIV id=area2 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b></b> Related Entity: <b>PartyType</b> with (PARTY_TYPE_ID: <%=partyClassification.getPartyTypeId()%>)
@@ -471,7 +473,8 @@ function ShowTab(lname)
 <%-- Start Relation for PartyClassificationType, type: one --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY_CLASSIFICATION_TYPE", "_VIEW", session)){%>
-    <%PartyClassificationType partyClassificationTypeRelated = PartyClassificationTypeHelper.findByPrimaryKey(partyClassification.getPartyClassificationTypeId());%>
+    <%-- PartyClassificationType partyClassificationTypeRelated = PartyClassificationTypeHelper.findByPrimaryKey(partyClassification.getPartyClassificationTypeId()); --%>
+    <%PartyClassificationType partyClassificationTypeRelated = partyClassification.getPartyClassificationType();%>
   <DIV id=area3 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
      <b></b> Related Entity: <b>PartyClassificationType</b> with (PARTY_CLASSIFICATION_TYPE_ID: <%=partyClassification.getPartyClassificationTypeId()%>)
@@ -534,7 +537,8 @@ function ShowTab(lname)
 <%-- Start Relation for PartyTypeAttr, type: many --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY_TYPE_ATTR", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = PartyTypeAttrHelper.findByPartyTypeIdIterator(partyClassification.getPartyTypeId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyTypeAttrHelper.findByPartyTypeId(partyClassification.getPartyTypeId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyClassification.getPartyTypeAttrs());%>
   <DIV id=area4 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>PartyTypeAttr</b> with (PARTY_TYPE_ID: <%=partyClassification.getPartyTypeId()%>)
@@ -621,7 +625,8 @@ Displaying <%=relatedLoopCount%> entities.
 <%-- Start Relation for PartyAttribute, type: many --%>
 <%if(partyClassification != null){%>
   <%if(Security.hasEntityPermission("PARTY_ATTRIBUTE", "_VIEW", session)){%>    
-    <%Iterator relatedIterator = PartyAttributeHelper.findByPartyIdIterator(partyClassification.getPartyId());%>
+    <%-- Iterator relatedIterator = UtilMisc.toIterator(PartyAttributeHelper.findByPartyId(partyClassification.getPartyId())); --%>
+    <%Iterator relatedIterator = UtilMisc.toIterator(partyClassification.getPartyAttributes());%>
   <DIV id=area5 style="VISIBILITY: hidden; POSITION: absolute" width="100%">
     <div class=areaheader>
       <b></b> Related Entities: <b>PartyAttribute</b> with (PARTY_ID: <%=partyClassification.getPartyId()%>)

@@ -1,7 +1,7 @@
 
 <%
 /**
- *  Title: Party Type Entity
+ *  Title: Role Type Attribute Entity
  *  Description: None
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Fri Jul 27 01:37:03 MDT 2001
+ *@created    Fri Jul 27 01:37:04 MDT 2001
  *@version    1.0
  */
 %>
@@ -36,15 +36,15 @@
 <%@ page import="org.ofbiz.commonapp.party.party.*" %>
 
 <%String controlPath=(String)request.getAttribute(SiteDefs.CONTROL_PATH);%>
-<%pageContext.setAttribute("PageName", "FindPartyType"); %>
+<%pageContext.setAttribute("PageName", "FindRoleTypeAttr"); %>
 
 <%@ include file="/includes/header.jsp" %>
 <%@ include file="/includes/onecolumn.jsp" %>
 
-<%boolean hasViewPermission=Security.hasEntityPermission("PARTY_TYPE", "_VIEW", session);%>
-<%boolean hasCreatePermission=Security.hasEntityPermission("PARTY_TYPE", "_CREATE", session);%>
-<%boolean hasUpdatePermission=Security.hasEntityPermission("PARTY_TYPE", "_UPDATE", session);%>
-<%boolean hasDeletePermission=Security.hasEntityPermission("PARTY_TYPE", "_DELETE", session);%>
+<%boolean hasViewPermission=Security.hasEntityPermission("ROLE_TYPE_ATTR", "_VIEW", session);%>
+<%boolean hasCreatePermission=Security.hasEntityPermission("ROLE_TYPE_ATTR", "_CREATE", session);%>
+<%boolean hasUpdatePermission=Security.hasEntityPermission("ROLE_TYPE_ATTR", "_UPDATE", session);%>
+<%boolean hasDeletePermission=Security.hasEntityPermission("ROLE_TYPE_ATTR", "_DELETE", session);%>
 <%if(hasViewPermission){%>
 <%
   String rowClassTop1 = "viewOneTR1";
@@ -64,8 +64,8 @@
   String curFindString = "SEARCH_TYPE=" + searchType + "&SEARCH_PARAMETER1=" + searchParam1 + "&SEARCH_PARAMETER2=" + searchParam2 + "&SEARCH_PARAMETER3=" + searchParam3;
   curFindString = UtilFormatOut.encodeQuery(curFindString);
 
-  Collection partyTypeCollection = null;
-  Object[] partyTypeArray = (Object[])session.getAttribute("CACHE_SEARCH_RESULTS");
+  Collection roleTypeAttrCollection = null;
+  Object[] roleTypeAttrArray = (Object[])session.getAttribute("CACHE_SEARCH_RESULTS");
 %>
 <%
 //--------------
@@ -82,29 +82,29 @@
   catch (NumberFormatException nfe) { viewSize = 10; }
 
 //--------------
-  String partyTypeArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
-  if(partyTypeArray == null || partyTypeArrayName == null || curFindString.compareTo(partyTypeArrayName) != 0 || viewIndex == 0)
+  String roleTypeAttrArrayName = (String)session.getAttribute("CACHE_SEARCH_RESULTS_NAME");
+  if(roleTypeAttrArray == null || roleTypeAttrArrayName == null || curFindString.compareTo(roleTypeAttrArrayName) != 0 || viewIndex == 0)
   {
     Debug.logInfo("-=-=-=-=- Current Array not found in session, getting new one...");
-    Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " partyTypeArrayName:" + partyTypeArrayName);
+    Debug.logInfo("-=-=-=-=- curFindString:" + curFindString + " roleTypeAttrArrayName:" + roleTypeAttrArrayName);
 
-    if(searchType.compareTo("all") == 0) partyTypeCollection = PartyTypeHelper.findAll();
+    if(searchType.compareTo("all") == 0) roleTypeAttrCollection = RoleTypeAttrHelper.findAll();
 
-    else if(searchType.compareTo("ParentTypeId") == 0) partyTypeCollection = PartyTypeHelper.findByParentTypeId(searchParam1);
+    else if(searchType.compareTo("RoleTypeId") == 0) roleTypeAttrCollection = RoleTypeAttrHelper.findByRoleTypeId(searchParam1);
 
-    else if(searchType.compareTo("HasTable") == 0) partyTypeCollection = PartyTypeHelper.findByHasTable(searchParam1);
+    else if(searchType.compareTo("Name") == 0) roleTypeAttrCollection = RoleTypeAttrHelper.findByName(searchParam1);
 
     else if(searchType.compareTo("primaryKey") == 0)
     {
-      partyTypeCollection = new LinkedList();
-      PartyType partyTypeTemp = PartyTypeHelper.findByPrimaryKey(searchParam1);
-      if(partyTypeTemp != null) partyTypeCollection.add(partyTypeTemp);
+      roleTypeAttrCollection = new LinkedList();
+      RoleTypeAttr roleTypeAttrTemp = RoleTypeAttrHelper.findByPrimaryKey(searchParam1, searchParam2);
+      if(roleTypeAttrTemp != null) roleTypeAttrCollection.add(roleTypeAttrTemp);
     }
-    if(partyTypeCollection != null) partyTypeArray = partyTypeCollection.toArray();
+    if(roleTypeAttrCollection != null) roleTypeAttrArray = roleTypeAttrCollection.toArray();
 
-    if(partyTypeArray != null)
+    if(roleTypeAttrArray != null)
     {
-      session.setAttribute("CACHE_SEARCH_RESULTS", partyTypeArray);
+      session.setAttribute("CACHE_SEARCH_RESULTS", roleTypeAttrArray);
       session.setAttribute("CACHE_SEARCH_RESULTS_NAME", curFindString);
     }
   }
@@ -112,20 +112,21 @@
   int lowIndex = viewIndex*viewSize+1;
   int highIndex = (viewIndex+1)*viewSize;
   int arraySize = 0;
-  if(partyTypeArray!=null) arraySize = partyTypeArray.length;
+  if(roleTypeAttrArray!=null) arraySize = roleTypeAttrArray.length;
   if(arraySize<highIndex) highIndex=arraySize;
   //Debug.logInfo("viewIndex=" + viewIndex + " lowIndex=" + lowIndex + " highIndex=" + highIndex + " arraySize=" + arraySize);
 %>
-<h3 style=margin:0;>Find PartyTypes</h3>
+<h3 style=margin:0;>Find RoleTypeAttrs</h3>
 Note: you may use the '%' character as a wildcard, to replace any other letters.
 <table cellpadding="2" cellspacing="2" border="0">
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
-    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyType")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr")%>" style=margin:0;>
       <td valign="top">Primary Key:</td>
       <td valign="top">
           <input type="hidden" name="SEARCH_TYPE" value="primaryKey">
         
           <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
+          <input type="text" name="SEARCH_PARAMETER2" value="" size="20">
           (Must be exact)
       </td>
       <td valign="top">
@@ -135,10 +136,10 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   </tr>
 
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
-    <td valign="top">ParentTypeId: </td>
-    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyType")%>" style=margin:0;>
+    <td valign="top">RoleTypeId: </td>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr")%>" style=margin:0;>
       <td valign="top">
-        <input type="hidden" name="SEARCH_TYPE" value="ParentTypeId">
+        <input type="hidden" name="SEARCH_TYPE" value="RoleTypeId">
       
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
@@ -149,10 +150,10 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   </tr>
 
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
-    <td valign="top">HasTable: </td>
-    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyType")%>" style=margin:0;>
+    <td valign="top">Name: </td>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr")%>" style=margin:0;>
       <td valign="top">
-        <input type="hidden" name="SEARCH_TYPE" value="HasTable">
+        <input type="hidden" name="SEARCH_TYPE" value="Name">
       
         <input type="text" name="SEARCH_PARAMETER1" value="" size="20">
       </td>
@@ -164,7 +165,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 
   <%rowClassTop=(rowClassTop==rowClassTop1?rowClassTop2:rowClassTop1);%><tr class="<%=rowClassTop%>">
     <td valign="top">Display All: </td>
-    <form method="post" action="<%=response.encodeURL(controlPath + "/FindPartyType")%>" style=margin:0;>
+    <form method="post" action="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr")%>" style=margin:0;>
       <td valign="top">
         <input type="hidden" name="SEARCH_TYPE" value="all">
       </td>
@@ -174,10 +175,10 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
     </form>
   </tr>
 </table>
-<b>PartyTypes found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
+<b>RoleTypeAttrs found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewPartyType")%>" class="buttontext">[Create New PartyType]</a>
+  <a href="<%=response.encodeURL("ViewRoleTypeAttr")%>" class="buttontext">[Create New RoleTypeAttr]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
@@ -185,13 +186,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL(controlPath + "/FindPartyType?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL(controlPath + "/FindPartyType?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -202,54 +203,42 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
   <table width="100%" cellpadding="2" cellspacing="2" border="0">
     <tr class="<%=rowClassResultHeader%>">
   
-      <td><div class="tabletext"><b><nobr>PARTY_TYPE_ID</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>PARENT_TYPE_ID</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>HAS_TABLE</nobr></b></div></td>
-      <td><div class="tabletext"><b><nobr>DESCRIPTION</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>ROLE_TYPE_ID</nobr></b></div></td>
+      <td><div class="tabletext"><b><nobr>NAME</nobr></b></div></td>
       <td>&nbsp;</td>
       <%if(hasDeletePermission){%>
         <td>&nbsp;</td>
       <%}%>
     </tr>
 <%
- if(partyTypeArray != null && partyTypeArray.length > 0)
+ if(roleTypeAttrArray != null && roleTypeAttrArray.length > 0)
  {
   int loopIndex;
-  //for(loopIndex=partyTypeArray.length-1; loopIndex>=0 ; loopIndex--)
+  //for(loopIndex=roleTypeAttrArray.length-1; loopIndex>=0 ; loopIndex--)
   for(loopIndex=lowIndex; loopIndex<=highIndex; loopIndex++)
   {
-    PartyType partyType = (PartyType)partyTypeArray[loopIndex-1];
-    if(partyType != null)
+    RoleTypeAttr roleTypeAttr = (RoleTypeAttr)roleTypeAttrArray[loopIndex-1];
+    if(roleTypeAttr != null)
     {
 %>
     <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
   
       <td>
         <div class="tabletext">
-      <%=UtilFormatOut.checkNull(partyType.getPartyTypeId())%>
+      <%=UtilFormatOut.checkNull(roleTypeAttr.getRoleTypeId())%>
         &nbsp;</div>
       </td>
       <td>
         <div class="tabletext">
-      <%=UtilFormatOut.checkNull(partyType.getParentTypeId())%>
+      <%=UtilFormatOut.checkNull(roleTypeAttr.getName())%>
         &nbsp;</div>
       </td>
       <td>
-        <div class="tabletext">
-      <%=UtilFormatOut.checkNull(partyType.getHasTable())%>
-        &nbsp;</div>
-      </td>
-      <td>
-        <div class="tabletext">
-      <%=UtilFormatOut.checkNull(partyType.getDescription())%>
-        &nbsp;</div>
-      </td>
-      <td>
-        <a href="<%=response.encodeURL(controlPath + "/ViewPartyType?" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyType.getPartyTypeId())%>" class="buttontext">[View]</a>
+        <a href="<%=response.encodeURL(controlPath + "/ViewRoleTypeAttr?" + "ROLE_TYPE_ATTR_ROLE_TYPE_ID=" + roleTypeAttr.getRoleTypeId() + "&" + "ROLE_TYPE_ATTR_NAME=" + roleTypeAttr.getName())%>" class="buttontext">[View]</a>
       </td>
       <%if(hasDeletePermission){%>
         <td>
-          <a href="<%=response.encodeURL(controlPath + "/UpdatePartyType?UPDATE_MODE=DELETE&" + "PARTY_TYPE_PARTY_TYPE_ID=" + partyType.getPartyTypeId() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
+          <a href="<%=response.encodeURL(controlPath + "/UpdateRoleTypeAttr?UPDATE_MODE=DELETE&" + "ROLE_TYPE_ATTR_ROLE_TYPE_ID=" + roleTypeAttr.getRoleTypeId() + "&" + "ROLE_TYPE_ATTR_NAME=" + roleTypeAttr.getName() + "&" + curFindString)%>" class="buttontext">[Delete]</a>
         </td>
       <%}%>
     </tr>
@@ -261,8 +250,8 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
  {
 %>
 <%rowClassResult=(rowClassResult==rowClassResult1?rowClassResult2:rowClassResult1);%><tr class="<%=rowClassResult%>">
-<td colspan="6">
-<h3>No PartyTypes Found.</h3>
+<td colspan="4">
+<h3>No RoleTypeAttrs Found.</h3>
 </td>
 </tr>
 <%}%>
@@ -274,13 +263,13 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
       <td align="left">
         <b>
         <% if(viewIndex > 0) { %>
-          <a href="<%=response.encodeURL(controlPath + "/FindPartyType?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
+          <a href="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex-1))%>" class="buttontext">[Previous]</a> |
         <% } %>
         <% if(arraySize > 0) { %>
           <%=lowIndex%> - <%=highIndex%> of <%=arraySize%>
         <% } %>
         <% if(arraySize>highIndex) { %>
-          | <a href="<%=response.encodeURL(controlPath + "/FindPartyType?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
+          | <a href="<%=response.encodeURL(controlPath + "/FindRoleTypeAttr?" + curFindString + "&VIEW_SIZE=" + viewSize + "&VIEW_INDEX=" + (viewIndex+1))%>" class="buttontext">[Next]</a>
         <% } %>
         </b>
       </td>
@@ -288,10 +277,10 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <% } %>
 </table>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL(controlPath + "/ViewPartyType")%>" class="buttontext">[Create PartyType]</a>
+  <a href="<%=response.encodeURL(controlPath + "/ViewRoleTypeAttr")%>" class="buttontext">[Create RoleTypeAttr]</a>
 <%}%>
 <%}else{%>
-  <h3>You do not have permission to view this page (PARTY_TYPE_ADMIN, or PARTY_TYPE_VIEW needed).</h3>
+  <h3>You do not have permission to view this page (ROLE_TYPE_ATTR_ADMIN, or ROLE_TYPE_ATTR_VIEW needed).</h3>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>

@@ -24,7 +24,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@created    Wed Jul 18 08:43:46 MDT 2001
+ *@created    Fri Jul 27 01:37:02 MDT 2001
  *@version    1.0
  */
 %>
@@ -194,7 +194,7 @@ Note: you may use the '%' character as a wildcard, to replace any other letters.
 <b>PartyClassifications found by:&nbsp; <%=searchType%> : <%=UtilFormatOut.checkNull(searchParam1)%> : <%=UtilFormatOut.checkNull(searchParam2)%> : <%=UtilFormatOut.checkNull(searchParam3)%></b>
 <br>
 <%if(hasCreatePermission){%>
-  <a href="<%=response.encodeURL("ViewPartyClassification.jsp")%>" class="buttontext">[Create New PartyClassification]</a>
+  <a href="<%=response.encodeURL("ViewPartyClassification")%>" class="buttontext">[Create New PartyClassification]</a>
 <%}%>
 <table border="0" width="100%" cellpadding="2">
 <% if(arraySize > 0) { %>
