@@ -2,6 +2,9 @@
 
 /*
  * $Log$
+ * Revision 1.7  2001/12/01 23:48:32  jonesde
+ * A bit of organization and a start at handling data types, etc
+ *
  * Revision 1.6  2001/12/01 03:37:10  jonesde
  * Finished activity stuff, now just a bunch of small elements to deal with
  *
@@ -273,30 +276,23 @@ public class XpdlReader {
             Element typeDeclarationElement = (Element) typeDeclarationsIter.next();
             GenericValue typeDeclarationValue = delegator.makeValue("WorkflowTypeDeclaration", null);
             values.add(typeDeclarationValue);
-            
+
             typeDeclarationValue.set("packageId", packageId);
             typeDeclarationValue.set("typeId", typeDeclarationElement.getAttribute("Id"));
             typeDeclarationValue.set("typeName", typeDeclarationElement.getAttribute("Name"));
-    
-            //(%Type;) - (RecordType | UnionType | EnumerationType | ArrayType | ListType | BasicType | PlainType | DeclaredType)
-    
+
+            //(%Type;)
+            readType(typeDeclarationElement, typeDeclarationValue);
+
             //Description?
             typeDeclarationValue.set("description", UtilXml.childElementValue(typeDeclarationElement, "Description"));
         }
     }
-    /*
-      <field name="packageId" type="id-long-ne"></field>
-      <field name="typeId" type="id-ne"></field>
-      <field name="typeName" type="name"></field>
-      <field name="description" type="description"></field>
-      <field name="dataTypeEnumId" type="id"></field>
-      <field name="arrayTypeMembersId" type="id"></field>	
-     */
-     
+
     // ----------------------------------------------------------------
     // Process
     // ----------------------------------------------------------------
-    
+
     protected void readWorkflowProcesses(List workflowProcesses, String packageId) throws DefinitionParserException {
         if (workflowProcesses == null || workflowProcesses.size() == 0)
             return;
@@ -757,10 +753,49 @@ public class XpdlReader {
     protected void readParticipants(List participants, GenericValue valueObject) throws DefinitionParserException {
         if (participants == null || participants.size() == 0)
             return;
+
+        Long nextSeqId = delegator.getNextSeqId("WorkflowParticipantList");
+        if (nextSeqId == null)
+            throw new DefinitionParserException("Could not get next sequence id from data source");
+        String participantListId = nextSeqId.toString();
+        valueObject.set("participantListId", participantListId);
+
         Iterator participantsIter = participants.iterator();
+        long index = 1;
         while (participantsIter.hasNext()) {
             Element participantElement = (Element) participantsIter.next();
-        //TODO: write method
+            String participantId = participantElement.getAttribute("Id");
+
+            //if participant doesn't exist, create it
+            GenericValue testValue = null;
+            try {
+                testValue = delegator.findByPrimaryKey("WorkflowParticipant", UtilMisc.toMap("participantId", participantId));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e);
+            }
+            if (testValue == null) {
+                GenericValue participantValue = delegator.makeValue("WorkflowParticipant", null);
+                values.add(participantValue);
+                participantValue.set("participantId", participantId);
+                participantValue.set("participantName", participantElement.getAttribute("Name"));
+
+                //ParticipantType
+                Element participantTypeElement = UtilXml.firstChildElement(participantElement, "ParticipantType");
+                if (participantTypeElement != null) {
+                    participantValue.set("participantTypeId", participantTypeElement.getAttribute("Type"));
+                }
+
+                //Description?
+                participantValue.set("description", UtilXml.childElementValue(participantElement, "Description"));
+            }
+
+            //regardless of whether the participant was created, create a participant list entry
+            GenericValue participantListValue = delegator.makeValue("WorkflowParticipantList", null);
+            values.add(participantListValue);
+            participantListValue.set("participantListId", participantListId);
+            participantListValue.set("participantId", participantId);
+            participantListValue.set("participantIndex", new Long(index));
+            index++;
         }
     }
 
@@ -770,7 +805,22 @@ public class XpdlReader {
         Iterator applicationsIter = applications.iterator();
         while (applicationsIter.hasNext()) {
             Element applicationElement = (Element) applicationsIter.next();
-        //TODO: write method
+            GenericValue applicationValue = delegator.makeValue("WorkflowApplication", null);
+            values.add(applicationValue);
+
+            String applicationId = applicationElement.getAttribute("Id");
+            applicationValue.set("packageId", packageId);
+            applicationValue.set("processId", processId);
+            applicationValue.set("applicationId", applicationId);
+            applicationValue.set("applicationName", applicationElement.getAttribute("Name"));
+
+            //Description?
+            applicationValue.set("description", UtilXml.childElementValue(applicationElement, "Description"));
+
+            //FormalParameters?
+            Element formalParametersElement = UtilXml.firstChildElement(applicationElement, "FormalParameters");
+            List formalParameters = UtilXml.childElementList(formalParametersElement, "FormalParameter");
+            readFormalParameters(formalParameters, packageId, processId, applicationId);
         }
     }
 
@@ -780,7 +830,36 @@ public class XpdlReader {
         Iterator dataFieldsIter = dataFields.iterator();
         while (dataFieldsIter.hasNext()) {
             Element dataFieldElement = (Element) dataFieldsIter.next();
-        //TODO: write method
+            GenericValue dataFieldValue = delegator.makeValue("WorkflowDataField", null);
+            values.add(dataFieldValue);
+
+            String dataFieldId = dataFieldElement.getAttribute("Id");
+            dataFieldValue.set("packageId", packageId);
+            dataFieldValue.set("processId", processId);
+            dataFieldValue.set("dataFieldId", dataFieldId);
+            dataFieldValue.set("dataFieldName", dataFieldElement.getAttribute("Name"));
+
+            //IsArray attr
+            dataFieldValue.set("isArray", ("TRUE".equals(dataFieldElement.getAttribute("IsArray")) ? "Y":"N"));
+
+            //DataType
+            Element dataTypeElement = UtilXml.firstChildElement(dataFieldElement, "DataType");
+            if (dataTypeElement != null) {
+                //(%Type;)
+                readType(dataTypeElement, dataFieldValue);
+            }
+
+            //InitialValue?
+            dataFieldValue.set("initialValue", UtilXml.childElementValue(dataFieldElement, "InitialValue"));
+
+            //Length?
+            String lengthStr = UtilXml.childElementValue(dataFieldElement, "Length");
+            if (lengthStr != null && lengthStr.length() > 0) {
+                dataFieldValue.set("lengthBytes", Long.valueOf(lengthStr));
+            }
+
+            //Description?
+            dataFieldValue.set("description", UtilXml.childElementValue(dataFieldElement, "Description"));
         }
     }
 
@@ -788,10 +867,73 @@ public class XpdlReader {
         if (formalParameters == null || formalParameters.size() == 0)
             return;
         Iterator formalParametersIter = formalParameters.iterator();
+        long index = 1;
         while (formalParametersIter.hasNext()) {
             Element formalParameterElement = (Element) formalParametersIter.next();
-        //TODO: write method
+            GenericValue formalParameterValue = delegator.makeValue("WorkflowFormalParam", null);
+            values.add(formalParameterValue);
+
+            String formalParamId = formalParameterElement.getAttribute("Id");
+            formalParameterValue.set("packageId", packageId);
+            formalParameterValue.set("processId", processId);
+            formalParameterValue.set("applicationId", applicationId);
+            formalParameterValue.set("formalParamId", formalParamId);
+            formalParameterValue.set("modeEnumId", "WPM_" + formalParameterElement.getAttribute("Mode"));
+
+            String indexStr = formalParameterElement.getAttribute("Index");
+            if (indexStr != null && indexStr.length() > 0)
+                formalParameterValue.set("indexNumber", Long.valueOf(indexStr));
+            else
+                formalParameterValue.set("indexNumber", new Long(index));
+            index++;
+
+            //DataType
+            Element dataTypeElement = UtilXml.firstChildElement(formalParameterElement, "DataType");
+            if (dataTypeElement != null) {
+                //(%Type;)
+                readType(dataTypeElement, formalParameterValue);
+            }
+
+            //Description?
+            formalParameterValue.set("description", UtilXml.childElementValue(formalParameterElement, "Description"));
         }
+    }
+
+    /** Reads information about "Type" entity member sub-elements; the value
+     * object passed must have two fields to contain Type information:
+     * <code>dataTypeEnumId</code> and <code>complexTypeInfoId</code>.
+     */
+    protected void readType(Element element, GenericValue value) {
+        //(%Type;) - (RecordType | UnionType | EnumerationType | ArrayType | ListType | BasicType | PlainType | DeclaredType)
+        Element typeElement = null;
+        if ((typeElement = UtilXml.firstChildElement(element, "RecordType")) != null) {
+            //TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "UnionType")) != null) {
+            //TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "EnumerationType")) != null) {
+            //TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "ArrayType")) != null) {
+            //TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "ListType")) != null) {
+            //TODO: write code for complex type
+        } else if ((typeElement = UtilXml.firstChildElement(element, "BasicType")) != null) {
+            value.set("dataTypeEnumId", "WDT_" + element.getAttribute("Type"));
+        } else if ((typeElement = UtilXml.firstChildElement(element, "PlainType")) != null) {
+            value.set("dataTypeEnumId", "WDT_" + element.getAttribute("Type"));
+        } else if ((typeElement = UtilXml.firstChildElement(element, "DeclaredType")) != null) {
+            //For DeclaredTypes complexTypeInfoId will actually be the type id
+            value.set("dataTypeEnumId", "WDT_DECLARED");
+            value.set("complexTypeInfoId", element.getAttribute("Id"));
+        }
+        /*
+        <entity entity-name="WorkflowComplexTypeInfo"
+          <field name="complexTypeInfoId" type="id-ne"></field>
+          <field name="memberParentInfoId" type="id"></field>
+          <field name="dataTypeEnumId" type="id"></field>
+          <field name="subTypeEnumId" type="id"></field>
+          <field name="arrayLowerIndex" type="numeric"></field>
+          <field name="arrayUpperIndex" type="numeric"></field>
+         */
     }
 
     // ---------------------------------------------------------
