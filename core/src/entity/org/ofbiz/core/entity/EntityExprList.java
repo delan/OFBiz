@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.entity.jdbc.*;
+import org.ofbiz.core.util.*;
 
 /**
  * Encapsulates simple expressions used for specifying queries
@@ -48,15 +49,43 @@ public class EntityExprList extends EntityCondition {
         this.operator = operator;
     }
     
-    public String makeWhereString(ModelEntity modelEntity) {
-        return SqlJdbcUtil.makeWhereStringFromExpressions(modelEntity, exprList, operator.getCode());
+    public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
+        Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
+        StringBuffer whereStringBuffer = new StringBuffer();
+        if (exprList != null && exprList.size() > 0) {
+            for (int i = 0; i < exprList.size(); i++) {
+                EntityExpr expr = (EntityExpr) exprList.get(i);
+                whereStringBuffer.append(expr.makeWhereString(modelEntity, entityConditionParams));
+                if (i < exprList.size() - 1) {
+                    whereStringBuffer.append(' ');
+                    whereStringBuffer.append(operator);
+                    whereStringBuffer.append(' ');
+                }
+            }
+        }
+        return whereStringBuffer.toString();
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
+        Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
         Iterator exprIter = exprList.iterator();
         while (exprIter.hasNext()) {
             EntityExpr entityExpr = (EntityExpr) exprIter.next();
             entityExpr.checkCondition(modelEntity);
         }
+    }
+    
+    public String toString() {
+        StringBuffer toStringBuffer = new StringBuffer();
+        toStringBuffer.append("[ExprList::");
+        if (exprList != null && exprList.size() > 0) {
+            for (int i = 0; i < exprList.size(); i++) {
+                EntityExpr expr = (EntityExpr) exprList.get(i);
+                toStringBuffer.append(expr.toString());
+                if (i > 0) toStringBuffer.append("::");
+            }
+        }
+        toStringBuffer.append(']');
+        return toStringBuffer.toString();
     }
 }

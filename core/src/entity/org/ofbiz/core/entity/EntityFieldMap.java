@@ -28,6 +28,7 @@ import java.io.*;
 import java.util.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.entity.jdbc.*;
+import org.ofbiz.core.util.*;
 
 /**
  * Encapsulates simple expressions used for specifying queries
@@ -48,7 +49,8 @@ public class EntityFieldMap extends EntityCondition {
         this.operator = operator;
     }
     
-    public String makeWhereString(ModelEntity modelEntity) {
+    public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
+        Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
         List whereFields = new ArrayList();
         if (fieldMap != null && fieldMap.size() > 0) {
             for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
@@ -59,13 +61,18 @@ public class EntityFieldMap extends EntityCondition {
                 }
             }
         }
-        return SqlJdbcUtil.makeWhereStringFromFields(whereFields, fieldMap, operator.getCode());
+        return SqlJdbcUtil.makeWhereStringFromFields(whereFields, fieldMap, operator.getCode(), entityConditionParams);
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
+        Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
         //make sure that all fields in the Map are valid
         if (fieldMap != null && !modelEntity.areFields(fieldMap.keySet())) {
             throw new GenericModelException("At least one of the passed fields is not valid: " + fieldMap.keySet().toString());
         }
+    }
+    
+    public String toString() {
+        return "[FieldMap::" + operator + "::" + fieldMap + "]";
     }
 }

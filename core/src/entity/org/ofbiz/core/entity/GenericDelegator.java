@@ -102,9 +102,9 @@ public class GenericDelegator {
             modelGroupReader = ModelGroupReader.getModelGroupReader(delegatorName);
         }
 
-        primaryKeyCache = new UtilCache("entity.FindByPrimaryKey." + delegatorName);
-        allCache = new UtilCache("entity.FindAll." + delegatorName);
-        andCache = new UtilCache("entity.FindByAnd." + delegatorName);
+        primaryKeyCache = new UtilCache("entity.FindByPrimaryKey." + delegatorName, 0, 0, true);
+        allCache = new UtilCache("entity.FindAll." + delegatorName, 0, 0, true);
+        andCache = new UtilCache("entity.FindByAnd." + delegatorName, 0, 0, true);
 
         //initialize helpers by group
         Iterator groups = UtilMisc.toIterator(getModelGroupReader().getGroupNames());
@@ -774,6 +774,13 @@ public class GenericDelegator {
         return collection;
     }
 
+    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
+     *@param entityName The Name of the Entity as defined in the entity model XML file
+     *@param entityCondition The EntityCondition object that specifies how to constrain this query
+     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@return Collection of GenericValue objects representing the result
+     */
     public Collection findByCondition(String entityName, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         if (entityCondition != null) entityCondition.checkCondition(modelEntity);
@@ -781,6 +788,13 @@ public class GenericDelegator {
         return helper.findByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
     }
     
+    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
+     *@param entityName The Name of the Entity as defined in the entity model XML file
+     *@param entityCondition The EntityCondition object that specifies how to constrain this query
+     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
+     */
     public EntityListIterator findListIteratorByCondition(String entityName, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
         ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
         if (entityCondition != null) entityCondition.checkCondition(modelEntity);

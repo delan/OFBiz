@@ -76,6 +76,11 @@ public class SqlJdbcUtil {
     
     /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
     public static String makeWhereStringFromFields(List modelFields, Map fields, String operator) {
+        return makeWhereStringFromFields(modelFields, fields, operator, null);
+    }
+    
+    /** Makes a WHERE clause String with "<col name>=?" if not null or "<col name> IS null" if null, all AND separated */
+    public static String makeWhereStringFromFields(List modelFields, Map fields, String operator, List entityConditionParams) {
         StringBuffer returnString = new StringBuffer("");
 
         if (modelFields.size() < 1) {
@@ -86,8 +91,12 @@ public class SqlJdbcUtil {
             ModelField modelField = (ModelField) iter.next();
 
             returnString.append(modelField.getColName());
-            if (fields.get(modelField.getName()) != null) {
+            Object fieldValue = fields.get(modelField.getName());
+            if (fieldValue != null) {
                 returnString.append("=?");
+                if (entityConditionParams != null) {
+                    entityConditionParams.add(new EntityConditionParam(modelField, fieldValue));
+                }
             } else {
                 returnString.append(" IS NULL");
             }
@@ -128,22 +137,6 @@ public class SqlJdbcUtil {
         return "";
     }
 
-    public static String makeWhereStringFromExpressions(ModelEntity modelEntity, List expressions, String operator) {
-        StringBuffer whereStringBuffer = new StringBuffer();
-        if (expressions != null && expressions.size() > 0) {
-            for (int i = 0; i < expressions.size(); i++) {
-                EntityExpr expr = (EntityExpr) expressions.get(i);
-                whereStringBuffer.append(expr.makeWhereString(modelEntity));
-                if (i < expressions.size() - 1) {
-                    whereStringBuffer.append(' ');
-                    whereStringBuffer.append(operator);
-                    whereStringBuffer.append(' ');
-                }
-            }
-        }
-        return whereStringBuffer.toString();
-    }
-    
     public static String makeViewWhereClause(ModelEntity modelEntity) {
         if (modelEntity instanceof ModelViewEntity) {
             StringBuffer whereString = new StringBuffer("");
@@ -327,25 +320,27 @@ public class SqlJdbcUtil {
         }
     }
     
-    public static void setValue(SQLProcessor sqlP, ModelField curField, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
-        Object field = entity.get(curField.getName());
-        //there should be no parameter for null fields, so we can just return and do nothing
-        
-        ModelFieldType mft = modelFieldTypeReader.getModelFieldType(curField.getType());
+    public static void setValue(SQLProcessor sqlP, ModelField modelField, GenericEntity entity, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
+        Object fieldValue = entity.get(modelField.getName());
+        setValue(sqlP, modelField, entity.getEntityName(), fieldValue, modelFieldTypeReader);
+    }
+    
+    public static void setValue(SQLProcessor sqlP, ModelField modelField, String entityName, Object fieldValue, ModelFieldTypeReader modelFieldTypeReader) throws GenericEntityException {
+        ModelFieldType mft = modelFieldTypeReader.getModelFieldType(modelField.getType());
         
         if (mft == null) {
-            throw new GenericModelException("GenericDAO.getValue: definition fieldType " + curField.getType() + " not found, cannot setValue for field " +
-            entity.getEntityName() + "." + curField.getName() + ".");
+            throw new GenericModelException("GenericDAO.getValue: definition fieldType " + modelField.getType() + " not found, cannot setValue for field " +
+            entityName + "." + modelField.getName() + ".");
         }
         
         String fieldType = mft.getJavaType();
         
-        if (field != null) {
-            Class fieldClass = field.getClass();
+        if (fieldValue != null) {
+            Class fieldClass = fieldValue.getClass();
             String fieldClassName = fieldClass.getName();
             
             if (!fieldClassName.equals(mft.getJavaType()) && fieldClassName.indexOf(mft.getJavaType()) < 0) {
-                Debug.logWarning("type of field " + entity.getEntityName() + "." + curField.getName() +
+                Debug.logWarning("type of field " + entityName + "." + modelField.getName() +
                 " is " + fieldClassName + ", was expecting " + mft.getJavaType() + "; this may " +
                 "indicate an error in the configuration or in the class, and may result " +
                 "in an SQL-Java data conversion error. Will use the real field type: " +
@@ -356,15 +351,15 @@ public class SqlJdbcUtil {
         
         try {
             switch (getType(fieldType)) {
-                case 1: sqlP.setValue((String) field); break;
-                case 2: sqlP.setValue((java.sql.Timestamp) field); break;
-                case 3: sqlP.setValue((java.sql.Time) field); break;
-                case 4: sqlP.setValue((java.sql.Date) field); break;
-                case 5: sqlP.setValue((java.lang.Integer) field); break;
-                case 6: sqlP.setValue((java.lang.Long) field); break;
-                case 7: sqlP.setValue((java.lang.Float) field); break;
-                case 8: sqlP.setValue((java.lang.Double) field); break;
-                case 9: sqlP.setValue((java.lang.Boolean) field); break;
+                case 1: sqlP.setValue((String) fieldValue); break;
+                case 2: sqlP.setValue((java.sql.Timestamp) fieldValue); break;
+                case 3: sqlP.setValue((java.sql.Time) fieldValue); break;
+                case 4: sqlP.setValue((java.sql.Date) fieldValue); break;
+                case 5: sqlP.setValue((java.lang.Integer) fieldValue); break;
+                case 6: sqlP.setValue((java.lang.Long) fieldValue); break;
+                case 7: sqlP.setValue((java.lang.Float) fieldValue); break;
+                case 8: sqlP.setValue((java.lang.Double) fieldValue); break;
+                case 9: sqlP.setValue((java.lang.Boolean) fieldValue); break;
             }
         } catch (SQLException sqle) {
             throw new GenericDataSourceException( "SQL Exception while setting value: ", sqle);

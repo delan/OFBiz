@@ -106,8 +106,6 @@ public class GenericDAO {
         String sql = "INSERT INTO " + modelEntity.getTableName() + " (" + modelEntity.colNameString(fieldsToSave) + ") VALUES (" +
         modelEntity.fieldsStringList(fieldsToSave, "?", ", ") + ")";
         
-        Debug.logVerbose("[GenericDAO.singleInsert] sql=" + sql + "\nEntity=" + entity, module);
-        
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
         try {
@@ -197,8 +195,6 @@ public class GenericDAO {
         
         String sql = "UPDATE " + modelEntity.getTableName() + " SET " + modelEntity.colNameString(fieldsToSave, "=?, ", "=?") + " WHERE " +
         SqlJdbcUtil.makeWhereStringFromFields(modelEntity.getPksCopy(), entity, "AND");
-        
-        Debug.logVerbose("[GenericDAO.singleUpdate] sql=" + sql + "\nEntity=" + entity, module);
         
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
@@ -312,8 +308,6 @@ public class GenericDAO {
         sql += SqlJdbcUtil.makeFromClause(modelEntity);
         sql += SqlJdbcUtil.makeWhereClause(modelEntity, modelEntity.getPksCopy(), entity, "AND");
         
-        Debug.logVerbose("[GenericDAO.select] sql=" + sql, module);
-        
         SQLProcessor sqlP = new SQLProcessor(helperName, connection);
         
         try {
@@ -407,298 +401,91 @@ public class GenericDAO {
     }
     
     public Collection selectByAnd(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        if (modelEntity == null)
+        if (modelEntity == null) {
             return null;
-        
-        Collection collection = new LinkedList();
-        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
-        List whereFields = new ArrayList();
-        List selectFields = new ArrayList();
-        
-        if (fields != null && fields.size() > 0) {
-            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
-                ModelField curField = modelEntity.getField(fi);
-                
-                if (fields.containsKey(curField.getName())) {
-                    whereFields.add(curField);
-                } else {
-                    selectFields.add(curField);
-                }
-            }
-        } else {
-            selectFields = modelEntity.getFieldsCopy();
         }
         
-        GenericValue dummyValue = new GenericValue(modelEntity, fields);
-        
-        String sql = "SELECT ";
-        
-        if (selectFields.size() > 0) {
-            sql += modelEntity.colNameString(selectFields, ", ", "");
-        } else {
-            sql += "*";
+        TreeSet fieldsToSelect = new TreeSet(modelEntity.getAllFieldNames());
+        EntityCondition entityCondition = null;
+        if (fields != null) {
+            entityCondition = new EntityFieldMap(fields, EntityOperator.AND);
         }
-        
-        sql += SqlJdbcUtil.makeFromClause(modelEntity);
-        sql += SqlJdbcUtil.makeWhereClause(modelEntity, whereFields, dummyValue, "AND");
-        sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
-        
-        Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
-        
-        SQLProcessor sqlP = new SQLProcessor(helperName);
-        
+
+        EntityListIterator entityListIterator = null;
         try {
-            sqlP.prepareStatement(sql);
-            if (fields != null && fields.size() > 0) {
-                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
-            }
-            Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + sqlP.getPreparedStatement().toString(), module);
-            sqlP.executeQuery();
-            
-            while (sqlP.next()) {
-                GenericValue value = new GenericValue(dummyValue);
-                
-                for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.get(j);
-                    
-                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
-                }
-                
-                value.modified = false;
-                collection.add(value);
-            }
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            return entityListIterator.getCompleteCollection();
         } finally {
-            sqlP.close();
+            if (entityListIterator != null) {
+                entityListIterator.close();
+            }
         }
-        
-        return collection;
     }
     
     public Collection selectByOr(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
-        if (modelEntity == null)
+        if (modelEntity == null) {
             return null;
-        
-        Collection collection = new LinkedList();
-        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
-        List whereFields = new ArrayList();
-        List selectFields = new ArrayList();
-        
-        if (fields != null && fields.size() > 0) {
-            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
-                ModelField curField = modelEntity.getField(fi);
-                
-                if (fields.containsKey(curField.getName()))
-                    whereFields.add(curField);
-                else
-                    selectFields.add(curField);
-            }
-        } else {
-            selectFields = modelEntity.getFieldsCopy();
         }
-        
-        GenericValue dummyValue;
-        
-        if (fields != null && fields.size() > 0)
-            dummyValue = new GenericValue(modelEntity, fields);
-        else
-            dummyValue = new GenericValue(modelEntity);
-        
-        String sql = "SELECT ";
-        
-        if (selectFields.size() > 0)
-            sql += modelEntity.colNameString(selectFields, ", ", "");
-        else
-            sql += "*";
-        
-        sql += SqlJdbcUtil.makeFromClause(modelEntity);
-        sql += SqlJdbcUtil.makeWhereClause(modelEntity, whereFields, dummyValue, "OR");
-        sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
-        
-        Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
-        SQLProcessor sqlP = new SQLProcessor(helperName);
-        
+
+        TreeSet fieldsToSelect = new TreeSet(modelEntity.getAllFieldNames());
+        EntityCondition entityCondition = null;
+        if (fields != null) {
+            entityCondition = new EntityFieldMap(fields, EntityOperator.OR);
+        }
+
+        EntityListIterator entityListIterator = null;
         try {
-            sqlP.prepareStatement(sql);
-            
-            if (fields != null && fields.size() > 0) {
-                SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
-            }
-            Debug.logVerbose("[GenericDAO.selectByOr] ps=" + sqlP.getPreparedStatement().toString(), module);
-            sqlP.executeQuery();
-            
-            while (sqlP.next()) {
-                GenericValue value = new GenericValue(dummyValue);
-                
-                for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.get(j);
-                    
-                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
-                }
-                
-                value.modified = false;
-                collection.add(value);
-            }
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            return entityListIterator.getCompleteCollection();
         } finally {
-            sqlP.close();
+            if (entityListIterator != null) {
+                entityListIterator.close();
+            }
         }
-        
-        return collection;
     }
     
     public Collection selectByAnd(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
-        if (modelEntity == null)
+        if (modelEntity == null) {
             return null;
-        
-        if (expressions == null)
+        }
+        if (expressions == null) {
             return null;
-        Collection collection = new LinkedList();
-        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
-        List selectFields = modelEntity.getFieldsCopy();
-        
-        StringBuffer sqlBuffer = new StringBuffer("SELECT ");
-        
-        if (selectFields.size() > 0) {
-            sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
-        } else {
-            sqlBuffer.append("*");
         }
-        sqlBuffer.append(" ");
-        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
-        
-        StringBuffer whereString = new StringBuffer(SqlJdbcUtil.makeWhereStringFromExpressions(modelEntity, expressions, "AND"));
-        String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
-        
-        if (viewClause.length() > 0) {
-            whereString.append(" AND ");
-            whereString.append(viewClause);
-        }
-        
-        if (whereString.length() > 0) {
-            sqlBuffer.append(" WHERE ");
-            sqlBuffer.append(whereString.toString());
-        }
-        
-        sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
-        String sql = sqlBuffer.toString();
-        
-        Debug.logVerbose("[GenericDAO.selectByAnd] sql=" + sql, module);
-        
-        SQLProcessor sqlP = new SQLProcessor(helperName);
-        
+
+        TreeSet fieldsToSelect = new TreeSet(modelEntity.getAllFieldNames());
+        EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.AND);
+
+        EntityListIterator entityListIterator = null;
         try {
-            sqlP.prepareStatement(sql);
-            GenericValue dummyValue = new GenericValue(modelEntity);
-            
-            if (expressions != null && expressions.size() > 0) {
-                for (int i = 0; i < expressions.size(); i++) {
-                    EntityExpr expr = (EntityExpr) expressions.get(i);
-                    
-                    if (expr.getRhs() != null) {
-                        ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-                        
-                        //set the field in the dummyValue so that the setValue method can get it out
-                        dummyValue.set(field.getName(), expr.getRhs());
-                        SqlJdbcUtil.setValue(sqlP, field, dummyValue, modelFieldTypeReader);
-                    }
-                }
-            }
-            Debug.logVerbose("[GenericDAO.selectByAnd] ps=" + sqlP.getPreparedStatement().toString(), module);
-            sqlP.executeQuery();
-            
-            while (sqlP.next()) {
-                GenericValue value = new GenericValue(modelEntity);
-                
-                for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.get(j);
-                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
-                }
-                
-                value.modified = false;
-                collection.add(value);
-            }
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            return entityListIterator.getCompleteCollection();
         } finally {
-            sqlP.close();
+            if (entityListIterator != null) {
+                entityListIterator.close();
+            }
         }
-        
-        return collection;
     }
     
     public Collection selectByOr(ModelEntity modelEntity, List expressions, List orderBy) throws GenericEntityException {
-        if (modelEntity == null)
+        if (modelEntity == null) {
             return null;
-        
-        if (expressions == null)
+        }
+        if (expressions == null) {
             return null;
-        Collection collection = new LinkedList();
-        //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
-        List selectFields = modelEntity.getFieldsCopy();
-        
-        StringBuffer sqlBuffer = new StringBuffer("SELECT ");
-        
-        if (selectFields.size() > 0)
-            sqlBuffer.append(modelEntity.colNameString(selectFields, ", ", ""));
-        else
-            sqlBuffer.append("*");
-        sqlBuffer.append(" ");
-        sqlBuffer.append(SqlJdbcUtil.makeFromClause(modelEntity));
-        
-        StringBuffer whereString = new StringBuffer(SqlJdbcUtil.makeWhereStringFromExpressions(modelEntity, expressions, "OR"));
-        String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
-        
-        if (viewClause.length() > 0) {
-            whereString.append(" AND ");
-            whereString.append(viewClause);
         }
-        
-        if (whereString.length() > 0) {
-            sqlBuffer.append(" WHERE ");
-            sqlBuffer.append(whereString.toString());
-        }
-        
-        sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
-        String sql = sqlBuffer.toString();
-        
-        Debug.logVerbose("[GenericDAO.selectByOr] sql=" + sql, module);
-        
-        SQLProcessor sqlP = new SQLProcessor(helperName);
-        
+
+        TreeSet fieldsToSelect = new TreeSet(modelEntity.getAllFieldNames());
+        EntityCondition entityCondition = new EntityExprList(expressions, EntityOperator.OR);
+
+        EntityListIterator entityListIterator = null;
         try {
-            sqlP.prepareStatement(sql);
-            GenericValue dummyValue = new GenericValue(modelEntity);
-            
-            if (expressions != null && expressions.size() > 0) {
-                for (int i = 0; i < expressions.size(); i++) {
-                    EntityExpr expr = (EntityExpr) expressions.get(i);
-                    
-                    if (expr.getRhs() != null) {
-                        ModelField field = (ModelField) modelEntity.getField((String) expr.getLhs());
-                        
-                        //set the field in the dummyValue so that the setValue method can get it out
-                        dummyValue.set(field.getName(), expr.getRhs());
-                        SqlJdbcUtil.setValue(sqlP, field, dummyValue, modelFieldTypeReader);
-                    }
-                }
-            }
-            Debug.logVerbose("[GenericDAO.selectByOr] ps=" + sqlP.getPreparedStatement().toString(), module);
-            sqlP.executeQuery();
-            
-            while (sqlP.next()) {
-                GenericValue value = new GenericValue(modelEntity);
-                
-                for (int j = 0; j < selectFields.size(); j++) {
-                    ModelField curField = (ModelField) selectFields.get(j);
-                    
-                    SqlJdbcUtil.getValue(sqlP.getResultSet(), j + 1, curField, value, modelFieldTypeReader);
-                }
-                
-                value.modified = false;
-                collection.add(value);
-            }
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            return entityListIterator.getCompleteCollection();
         } finally {
-            sqlP.close();
+            if (entityListIterator != null) {
+                entityListIterator.close();
+            }
         }
-        
-        return collection;
     }
     
     public Collection selectByLike(ModelEntity modelEntity, Map fields, List orderBy) throws GenericEntityException {
@@ -741,8 +528,6 @@ public class GenericDAO {
             sql += " WHERE " + modelEntity.colNameString(whereFields, " LIKE ? AND ", " LIKE ?");
         
         sql += SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy);
-        Debug.logVerbose("[GenericDAO.selectByLike] sql=" + sql, module);
-        
         SQLProcessor sqlP = new SQLProcessor(helperName);
         
         try {
@@ -753,8 +538,6 @@ public class GenericDAO {
             if (fields != null && fields.size() > 0) {
                 SqlJdbcUtil.setValuesWhereClause(sqlP, whereFields, dummyValue, modelFieldTypeReader);
             }
-            
-            Debug.logVerbose("[GenericDAO.selectByLike] ps=" + sqlP.getPreparedStatement().toString(), module);
             sqlP.executeQuery();
             
             while (sqlP.next()) {
@@ -982,10 +765,7 @@ public class GenericDAO {
         
         try {
             sql = select.toString() + " " + from.toString() + " " + where.toString() + (order.toString().trim().length() > 0 ? order.toString() : "");
-            Debug.logInfo("[selectByClause] SQL Statement: " + sql);
-
             sqlP.prepareStatement(sql);
-            
             
             GenericValue dummyValue = new GenericValue(modelEntity, fields);
             
@@ -1016,18 +796,40 @@ public class GenericDAO {
     
     /* ====================================================================== */
     
+    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param entityCondition The EntityCondition object that specifies how to constrain this query
+     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@return Collection of GenericValue objects representing the result
+     */
     public Collection selectByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
-        EntityListIterator entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
-
-        Collection collection = entityListIterator.getCompleteCollection();
-        entityListIterator.close();
-        
-        return collection;
+        EntityListIterator entityListIterator = null;
+        try {
+            entityListIterator = selectListIteratorByCondition(modelEntity, entityCondition, fieldsToSelect, orderBy);
+            return entityListIterator.getCompleteCollection();
+        } finally {
+            if (entityListIterator != null) {
+                entityListIterator.close();
+            }
+        }
     }
     
+    /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
+     *@param modelEntity The ModelEntity of the Entity as defined in the entity XML file
+     *@param entityCondition The EntityCondition object that specifies how to constrain this query
+     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@return EntityListIterator representing the result of the query: NOTE THAT THIS MUST BE CLOSED WHEN YOU ARE DONE WITH IT, AND DON'T LEAVE IT OPEN TOO LONG BEACUSE IT WILL MAINTAIN A DATABASE CONNECTION.
+     */
     public EntityListIterator selectListIteratorByCondition(ModelEntity modelEntity, EntityCondition entityCondition, Set fieldsToSelect, List orderBy) throws GenericEntityException {
         if (modelEntity == null) {
             return null;
+        }
+        
+        if (Debug.verboseOn()) {
+            //put this inside an if statement so that we don't have to generate the string when not used...
+            Debug.logVerbose("Doing selectListIteratorByCondition with entityCondition: " + entityCondition);
         }
         
         //make two ArrayLists of fields, one for fields to select and the other for where clause fields (to find by)
@@ -1035,8 +837,8 @@ public class GenericDAO {
         
         if (fieldsToSelect != null && fieldsToSelect.size() > 0) {
             Set tempKeys = new TreeSet(fieldsToSelect);
-            for (int fi = 0; fi < modelEntity.getNopksSize(); fi++) {
-                ModelField curField = modelEntity.getNopk(fi);
+            for (int fi = 0; fi < modelEntity.getFieldsSize(); fi++) {
+                ModelField curField = modelEntity.getField(fi);
 
                 if (tempKeys.contains(curField.getName())) {
                     selectFields.add(curField);
@@ -1045,7 +847,7 @@ public class GenericDAO {
             }
 
             if (tempKeys.size() > 0) {
-                throw new GenericModelException("In partialSelect invalid field names specified: " + tempKeys.toString());
+                throw new GenericModelException("In selectListIteratorByCondition invalid field names specified: " + tempKeys.toString());
             }
         } else {
             selectFields = modelEntity.getFieldsCopy();
@@ -1064,8 +866,9 @@ public class GenericDAO {
         
         StringBuffer whereString = new StringBuffer();
         String entityCondWhereString = "";
+        List entityConditionParams = new LinkedList();
         if (entityCondition != null) {
-            entityCondWhereString = entityCondition.makeWhereString(modelEntity);
+            entityCondWhereString = entityCondition.makeWhereString(modelEntity, entityConditionParams);
         }
         
         String viewClause = SqlJdbcUtil.makeViewWhereClause(modelEntity);
@@ -1089,12 +892,19 @@ public class GenericDAO {
         sqlBuffer.append(SqlJdbcUtil.makeOrderByClause(modelEntity, orderBy));
         String sql = sqlBuffer.toString();
         
-        Debug.logVerbose("[GenericDAO.selectListIteratorByCondition] sql=" + sql, module);
-        
         SQLProcessor sqlP = new SQLProcessor(helperName);
-        
-        
         sqlP.prepareStatement(sql);
+        if (Debug.verboseOn()) {
+            //put this inside an if statement so that we don't have to generate the string when not used...
+            Debug.logVerbose("Setting the entityConditionParams: " + entityConditionParams);
+        }
+        //set all of the values from the EntityCondition
+        Iterator entityConditionParamsIter = entityConditionParams.iterator();
+        while (entityConditionParamsIter.hasNext()) {
+            EntityConditionParam entityConditionParam = (EntityConditionParam) entityConditionParamsIter.next();
+            SqlJdbcUtil.setValue(sqlP, entityConditionParam.getModelField(), modelEntity.getEntityName(), entityConditionParam.getFieldValue(), modelFieldTypeReader);
+        }
+        
         sqlP.executeQuery();
 
         return new EntityListIterator(sqlP, modelEntity, selectFields, modelFieldTypeReader);

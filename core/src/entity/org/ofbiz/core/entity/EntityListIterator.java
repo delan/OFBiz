@@ -43,6 +43,7 @@ public class EntityListIterator implements ListIterator {
     protected List selectFields;
     protected ModelFieldTypeReader modelFieldTypeReader;
     protected boolean closed = false;
+    protected boolean haveMadeValue = false;
     
     public EntityListIterator(SQLProcessor sqlp, ModelEntity modelEntity, List selectFields, ModelFieldTypeReader modelFieldTypeReader) {
         this.sqlp = sqlp;
@@ -50,6 +51,24 @@ public class EntityListIterator implements ListIterator {
         this.modelEntity = modelEntity;
         this.selectFields = selectFields;
         this.modelFieldTypeReader = modelFieldTypeReader;
+    }
+
+    /** Sets the cursor position to just after the last result so that previous() will return the last result */
+    public void afterLast() throws GenericEntityException {
+        try {
+            resultSet.afterLast();
+        } catch (SQLException e) {
+            throw new GenericEntityException("Error setting the cursor to afterLast", e);
+        }
+    }
+    
+    /** Sets the cursor position to just before the first result so that next() will return the first result */
+    public void beforeFirst() throws GenericEntityException {
+        try {
+            resultSet.beforeFirst();
+        } catch (SQLException e) {
+            throw new GenericEntityException("Error setting the cursor to beforeFirst", e);
+        }
     }
     
     public void close() throws GenericEntityException {
@@ -59,6 +78,7 @@ public class EntityListIterator implements ListIterator {
         closed = true;
     }
     
+    /** NOTE: Calling this method does return the current value, but so does calling next() or previous(), so calling one of those AND this method will cause the value to be created twice */
     public GenericValue currentGenericValue() throws GenericEntityException {
         if (closed) throw new GenericResultSetClosedException("This EntityListIterator has been closed, this operation cannot be performed");
         
@@ -71,6 +91,7 @@ public class EntityListIterator implements ListIterator {
         }
 
         value.modified = false;
+        this.haveMadeValue = true;
         return value;
     }
     
@@ -84,30 +105,45 @@ public class EntityListIterator implements ListIterator {
         }
     }
     
+    /** PLEASE NOTE: Because of the nature of the JDBC ResultSet interface this method can be very inefficient; it is much better to just use next() until it returns null */
     public boolean hasNext() {
         try {
-            if (resultSet.isLast()) {
+            if (resultSet.isLast() || resultSet.isAfterLast()) {
                 return false;
             } else {
-                return true;
+                //do a quick game to see if the resultSet is empty:
+                // if we are not in the first or beforeFirst positions and we haven't made any values yet, the result set is empty so return false
+                if (!haveMadeValue && !resultSet.isBeforeFirst() && !resultSet.isFirst()) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
         } catch (SQLException e) {
             throw new GeneralRuntimeException("Error while checking to see if this is the last result", e);
         }
     }
     
+    /** PLEASE NOTE: Because of the nature of the JDBC ResultSet interface this method can be very inefficient; it is much better to just use previous() until it returns null */
     public boolean hasPrevious() {
         try {
-            if (resultSet.isFirst()) {
+            if (resultSet.isFirst() || resultSet.isBeforeFirst()) {
                 return false;
             } else {
-                return true;
+                //do a quick game to see if the resultSet is empty:
+                // in this case it's easy, if we haven't made any values yet, just return false
+                if (!haveMadeValue) {
+                    return false;
+                } else {
+                    return true;
+                }
             }
         } catch (SQLException e) {
             throw new GeneralRuntimeException("Error while checking to see if this is the first result", e);
         }
     }
-    
+
+    /** Moves the cursor to the next position and returns the GenericValue object for that position; if there is no next, returns null */
     public Object next() {
         try {
             if (resultSet.next()) {
@@ -122,6 +158,7 @@ public class EntityListIterator implements ListIterator {
         }
     }
     
+    /** Returns the index of the next result, but does not guarantee that there will be a next result */
     public int nextIndex() {
         try {
             return currentIndex() + 1;
@@ -130,6 +167,7 @@ public class EntityListIterator implements ListIterator {
         }
     }
     
+    /** Moves the cursor to the previous position and returns the GenericValue object for that position; if there is no previous, returns null */
     public Object previous() {
         try {
             if (resultSet.previous()) {
@@ -144,9 +182,10 @@ public class EntityListIterator implements ListIterator {
         }
     }
     
+    /** Returns the index of the previous result, but does not guarantee that there will be a previous result */
     public int previousIndex() {
         try {
-            return currentIndex() + 1;
+            return currentIndex() - 1;
         } catch (GenericEntityException e) {
             throw new GeneralRuntimeException("Error getting the current index", e);
         }
@@ -162,11 +201,18 @@ public class EntityListIterator implements ListIterator {
     
     public Collection getCompleteCollection() throws GenericEntityException {
         try {
+            //if the resultSet has been moved forward at all, move back to the beginning
+            if (!resultSet.isBeforeFirst()) {
+                resultSet.beforeFirst();
+            }
             Collection collection = new LinkedList();
-            while (this.hasNext()) {
-                collection.add(this.next());
+            Object nextValue = null;
+            while ((nextValue = this.next()) != null) {
+                collection.add(nextValue);
             }
             return collection;
+        } catch (SQLException e) {
+            throw new GeneralRuntimeException("Error getting results", e);
         } catch (GeneralRuntimeException e) {
             throw new GenericEntityException(e.getNonNestedMessage(), e.getNested());
         }

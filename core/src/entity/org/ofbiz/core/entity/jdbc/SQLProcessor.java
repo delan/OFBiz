@@ -255,7 +255,7 @@ public class SQLProcessor {
      */
     public ResultSet executeQuery() throws GenericDataSourceException {
         try {
-            Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
+            //Debug.logVerbose("[SQLProcessor.executeQuery] ps=" + _ps.toString(), module);
             _rs = _ps.executeQuery();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);
@@ -285,7 +285,7 @@ public class SQLProcessor {
      */
     public int executeUpdate() throws GenericDataSourceException {
         try {
-            Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module);
+            //Debug.logVerbose("[SQLProcessor.executeUpdate] ps=" + _ps.toString(), module);
             return _ps.executeUpdate();
         } catch (SQLException sqle) {
             throw new GenericDataSourceException("SQL Exception while executing the following:" + _sql, sqle);

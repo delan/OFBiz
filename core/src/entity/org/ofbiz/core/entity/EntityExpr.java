@@ -25,8 +25,10 @@
 package org.ofbiz.core.entity;
 
 import java.io.*;
+import java.util.*;
 import org.ofbiz.core.entity.model.*;
 import org.ofbiz.core.entity.jdbc.*;
+import org.ofbiz.core.util.*;
 
 /**
  * Encapsulates simple expressions used for specifying queries
@@ -108,7 +110,8 @@ public class EntityExpr extends EntityCondition {
         return rhs;
     }
     
-    public String makeWhereString(ModelEntity modelEntity) {
+    public String makeWhereString(ModelEntity modelEntity, List entityConditionParams) {
+        Debug.logVerbose("makeWhereString for entity " + modelEntity.getEntityName());
         StringBuffer whereStringBuffer = new StringBuffer();
         if (lhs instanceof String) {
             ModelField field = (ModelField) modelEntity.getField((String) this.getLhs());
@@ -137,6 +140,7 @@ public class EntityExpr extends EntityCondition {
                             rhs = ((String) rhs).toUpperCase();
                         }
                     }
+                    entityConditionParams.add(new EntityConditionParam(field, rhs));
                 }
             } else {
                 throw new IllegalArgumentException("ModelField with field name " + (String) this.getLhs() + " not found");
@@ -144,17 +148,18 @@ public class EntityExpr extends EntityCondition {
         } else if (lhs instanceof EntityCondition) {
             //then rhs MUST also be an EntityCondition
             whereStringBuffer.append('(');
-            whereStringBuffer.append(((EntityCondition) lhs).makeWhereString(modelEntity));
+            whereStringBuffer.append(((EntityCondition) lhs).makeWhereString(modelEntity, entityConditionParams));
             whereStringBuffer.append(") ");
             whereStringBuffer.append(this.getOperator().toString());
             whereStringBuffer.append(" (");
-            whereStringBuffer.append(((EntityCondition) rhs).makeWhereString(modelEntity));
+            whereStringBuffer.append(((EntityCondition) rhs).makeWhereString(modelEntity, entityConditionParams));
             whereStringBuffer.append(')');
         }
         return whereStringBuffer.toString();
     }
 
     public void checkCondition(ModelEntity modelEntity) throws GenericModelException {
+        Debug.logVerbose("checkCondition for entity " + modelEntity.getEntityName());
         if (lhs instanceof String) {
             if (modelEntity.getField((String) lhs) == null) {
                 throw new GenericModelException("Field with name " + lhs + " not found in the " + modelEntity.getEntityName() + " Entity");
@@ -163,5 +168,9 @@ public class EntityExpr extends EntityCondition {
             ((EntityCondition) lhs).checkCondition(modelEntity);
             ((EntityCondition) rhs).checkCondition(modelEntity);
         }        
+    }
+    
+    public String toString() {
+        return "[Expr::" + lhs + "::" + operator + "::" + rhs + "]";
     }
 }
