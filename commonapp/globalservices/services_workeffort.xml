@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE services 
-  PUBLIC "-//OFBiz//DTD Services Config//EN" 
-  "http://www.ofbiz.org/dtds/services.dtd">
+<!DOCTYPE services PUBLIC "-//OFBiz//DTD Services Config//EN" "http://www.ofbiz.org/dtds/services.dtd">
 
 <services>
   <description>Common Application Shared WorkEffort Services</description>
