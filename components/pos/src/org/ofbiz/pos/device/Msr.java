@@ -1,5 +1,5 @@
 /*
- * $Id: Msr.java,v 1.2 2004/08/06 23:45:31 ajzeneski Exp $
+ * $Id: Msr.java,v 1.3 2004/08/07 06:03:43 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -28,12 +28,13 @@ import jpos.JposException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.pos.adaptor.DataEventAdaptor;
+import org.ofbiz.pos.adaptor.ErrorEventAdaptor;
 import org.ofbiz.pos.screen.PosScreen;
 
 /**
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.2
  */
 public class Msr extends GenericDevice {
@@ -51,7 +52,7 @@ public class Msr extends GenericDevice {
         msr.setDecodeData(true);
         msr.setTracksToRead(2);
 
-        // create the new listner
+        // create the data listner
         msr.addDataListener(new DataEventAdaptor() {
 
             public void dataOccurred(jpos.events.DataEvent event) {
@@ -81,6 +82,21 @@ public class Msr extends GenericDevice {
                 processMsrData(decodedData, track1, track2);
             }
         });
+
+        // create the error listener
+        msr.addErrorListener(new ErrorEventAdaptor() {
+
+            public void errorOccurred(jpos.events.ErrorEvent event) {
+                Debug.log("Error Occurred : " + event.getErrorCodeExtended(), module);
+                // add in code to alert the user there was a card read error
+
+                try {
+                    msr.clearInput();
+                } catch (jpos.JposException e) {
+                    Debug.logError(e, module);
+                }
+            }
+        });
     }
 
     protected void processMsrData(String[] decodedData, byte[] track1, byte[] track2) {
@@ -91,7 +107,7 @@ public class Msr extends GenericDevice {
         msrStr.append("|");
         msrStr.append(decodedData[1]);
         msrStr.append("|");
-        msrStr.append(decodedData[2]);
+        msrStr.append(decodedData[3]);
         Debug.log("Msr Info : " + msrStr.toString(), module);
         screen.getInput().setFunction("CREDITINFO", msrStr.toString());
         screen.getOutput().print("Credit Card Read");

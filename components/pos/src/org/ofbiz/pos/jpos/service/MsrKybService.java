@@ -1,5 +1,5 @@
 /*
- * $Id: MsrKybService.java,v 1.2 2004/08/07 01:23:08 ajzeneski Exp $
+ * $Id: MsrKybService.java,v 1.3 2004/08/07 06:03:43 ajzeneski Exp $
  *
  * Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -24,19 +24,19 @@
  */
 package org.ofbiz.pos.jpos.service;
 
-import jpos.JposConst;
 import jpos.JposException;
 import jpos.MSRConst;
+import jpos.JposConst;
 import jpos.events.DataEvent;
 import jpos.events.ErrorEvent;
 
-import org.ofbiz.pos.adaptor.KeyboardReceiver;
 import org.ofbiz.pos.adaptor.KeyboardAdaptor;
+import org.ofbiz.pos.adaptor.KeyboardReceiver;
 
 /**
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.2
  */
 public class MsrKybService extends BaseKybService implements jpos.services.MSRService18, KeyboardReceiver {
@@ -51,9 +51,9 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     protected String surname = new String();
     protected String suffix = new String();
 
+    protected String[] accountNumber = new String[0];
+    protected String[] expireDate = new String[0];
     protected String serviceCode = new String();
-    protected String accountNumber = new String();
-    protected String expireDate = new String();
 
     protected byte[] track1DiscretionaryData = new byte[0];
     protected byte[] track2DiscretionaryData = new byte[0];
@@ -91,7 +91,7 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     }
 
     public String getAccountNumber() throws JposException {
-        return this.accountNumber;
+        return this.accountNumber[1];
     }
 
     public boolean getAutoDisable() throws JposException {
@@ -122,7 +122,7 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     }
 
     public String getExpirationDate() throws JposException {
-        return this.expireDate;
+        return this.expireDate[1];
     }
 
     public String getFirstName() throws JposException {
@@ -192,8 +192,8 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
         this.surname = new String();
         this.suffix = new String();
         this.serviceCode = new String();
-        this.accountNumber = new String();
-        this.expireDate = new String();
+        this.accountNumber = new String[0];
+        this.expireDate = new String[0];
         this.track1Data = new byte[0];
         this.track2Data = new byte[0];
         this.track1DiscretionaryData = new byte[0];
@@ -264,83 +264,93 @@ public class MsrKybService extends BaseKybService implements jpos.services.MSRSe
     }
 
     private void parseMsrString(String str) {
-        String track1 = str.substring(0, str.indexOf(";"));
-        String track2 = str.substring(str.indexOf(";"), str.length());
-
-        // track 1 data
-        int firstCarrot = track1.indexOf("^", 2);
-        int nextCarrot = track1.indexOf("^", firstCarrot + 1);
-
-        String tr1BegChar = track1.substring(0, 1);
-        String formatCode = track1.substring(1, 2);
-        String tr1AcctNum = track1.substring(2, firstCarrot);
-        String cardHolder = track1.substring(firstCarrot, nextCarrot);
-        String tr1ExpDate = track1.substring(nextCarrot, nextCarrot + 4);
-        String tr1OptData = track1.substring(nextCarrot + 4, track1.length() - 2);
-        String tr1EndChar = track1.substring(track1.length() - 2, track1.length() - 1);
-        String tr1LrcCode = track1.substring(track1.length() - 1, track1.length());
-
-        // track 2 data
-        String tr2BegChar = track2.substring(0, 1);
-        String tr2AcctNum = track2.substring(1, track2.indexOf("="));
-        String tr2ExpDate = track2.substring(track2.indexOf("="), track2.indexOf("=") + 4);
-        String tr2OptData = track2.substring(track2.indexOf("=") + 4, track2.length() - 2);
-        String tr2EndChar = track2.substring(track2.length() - 2, track2.length() - 1);
-        String tr2LrcCode = track2.substring(track2.length() - 1, track2.length());
-
-        // see if we need to remove the sentinels
-        if (this.sendSentinels) {
-            track1 = track1.substring(0, track1.length() - 1);
-            track2 = track2.substring(0, track2.length() - 1);
-        } else {
-            track1 = track1.substring(1, track1.length() - 2);
-            track2 = track2.substring(0, track2.length() - 2);
+        if (str.indexOf(";") == -1 || str.indexOf("^") == -1) {
+            ErrorEvent error = new ErrorEvent(this, JposConst.JPOS_E_FAILURE, -1,
+                    JposConst.JPOS_EL_INPUT, JposConst.JPOS_ER_CLEAR);
+            this.fireEvent(error);
+            return;
         }
 
-        if (this.parseDecodeData) {
-            // make sure the acct number on both tracks match
-            if (!tr1AcctNum.equals(tr2AcctNum)) {
-                // register error
-                ErrorEvent event = new ErrorEvent(this, JposConst.JPOS_E_FAILURE, JPOS_MSR_ACCT_ERR,
-                        JposConst.JPOS_EL_INPUT_DATA, JposConst.JPOS_ER_CLEAR);
-                this.fireEvent(event);
+        try {
+            // parse the tracks from the character string
+            String track1 = str.substring(0, str.indexOf(";"));
+            String track2 = str.substring((str.indexOf(";") + 1), str.length() - 1);
+
+            // track 1 data
+            int firstCarrot = track1.indexOf("^", 2);
+            int nextCarrot = track1.indexOf("^", firstCarrot + 1);
+
+            String tr1BegChar = track1.substring(0, 1);
+            String formatCode = track1.substring(1, 2);
+            String tr1AcctNum = track1.substring(2, firstCarrot);
+            String cardHolder = track1.substring(firstCarrot + 1, nextCarrot);
+            String tr1ExpDate = track1.substring(nextCarrot + 1, nextCarrot + 5);
+            String tr1OptData = track1.substring(nextCarrot + 4, track1.length() - 2);
+            String tr1EndChar = track1.substring(track1.length() - 2, track1.length() - 1);
+            String tr1LrcCode = track1.substring(track1.length() - 1, track1.length());
+
+            // track 2 data
+            String tr2BegChar = track2.substring(0, 1);
+            String tr2AcctNum = track2.substring(1, track2.indexOf("="));
+            String tr2ExpDate = track2.substring((track2.indexOf("=") + 1), track2.indexOf("=") + 5);
+            String tr2OptData = track2.substring(track2.indexOf("=") + 5, track2.length() - 2);
+            String tr2EndChar = track2.substring(track2.length() - 2, track2.length() - 1);
+            String tr2LrcCode = track2.substring(track2.length() - 1, track2.length());
+
+            // see if we need to remove the sentinels
+            if (this.sendSentinels) {
+                track1 = track1.substring(0, track1.length() - 1);
+                track2 = track2.substring(0, track2.length() - 1);
             } else {
-                this.accountNumber = tr1AcctNum;
+                track1 = track1.substring(1, track1.length() - 2);
+                track2 = track2.substring(0, track2.length() - 2);
             }
 
-            // make sure the expire date on both tracks match
-            if (!tr1ExpDate.equals(tr2ExpDate)) {
-                // register error
-                ErrorEvent event = new ErrorEvent(this, JposConst.JPOS_E_FAILURE, JPOS_MSR_EXPD_ERR,
-                        JposConst.JPOS_EL_INPUT_DATA, JposConst.JPOS_ER_CLEAR);
-                this.fireEvent(event);
-            } else {
-                this.expireDate = tr1ExpDate;
-            }
-
-            // set the sentinels
-            this.sentinels = new int[4];
-            this.sentinels[0] = (int) tr1BegChar.charAt(0);
-            this.sentinels[1] = (int) tr1EndChar.charAt(0);
-            this.sentinels[2] = (int) tr2BegChar.charAt(0);
-            this.sentinels[3] = (int) tr2EndChar.charAt(0);
-
-            // set the lrcs
-            this.lrc = new int[2];
-            this.lrc[0] = (int) tr1LrcCode.charAt(0);
-            this.lrc[1] = (int) tr2LrcCode.charAt(0);
-
-            // fill in the rest of the field data
-            this.track1DiscretionaryData = tr1OptData.getBytes();
-            this.track2DiscretionaryData = tr2OptData.getBytes();
+            // set the raw track data
             this.track1Data = track1.getBytes();
             this.track2Data = track2.getBytes();
-            this.serviceCode = formatCode;
-            this.firstname = cardHolder.substring(0, cardHolder.indexOf("/"));
-            this.surname = cardHolder.substring(cardHolder.indexOf("/"));
-            // not sure how to support title, middle initial, and suffix
+
+            // parse the decoded data
+            if (this.parseDecodeData) {
+                // set the sentinels
+                this.sentinels = new int[4];
+                this.sentinels[0] = (int) tr1BegChar.charAt(0);
+                this.sentinels[1] = (int) tr1EndChar.charAt(0);
+                this.sentinels[2] = (int) tr2BegChar.charAt(0);
+                this.sentinels[3] = (int) tr2EndChar.charAt(0);
+
+                // set the lrcs
+                this.lrc = new int[2];
+                this.lrc[0] = (int) tr1LrcCode.charAt(0);
+                this.lrc[1] = (int) tr2LrcCode.charAt(0);
+
+                // set the account number
+                this.accountNumber = new String[2];
+                this.accountNumber[0] = tr1AcctNum.trim();
+                this.accountNumber[1] = tr2AcctNum.trim();
+
+                // set the expiration date
+                this.expireDate = new String[2];
+                this.expireDate[0] = tr1ExpDate.trim();
+                this.expireDate[1] = tr2ExpDate.trim();
+
+                // track discretionar info
+                this.track1DiscretionaryData = tr1OptData.getBytes();
+                this.track2DiscretionaryData = tr2OptData.getBytes();
+                this.track1Data = track1.getBytes();
+                this.track2Data = track2.getBytes();
+
+                // other field data (i.e. name)
+                this.serviceCode = formatCode.trim();
+                this.surname = (cardHolder.substring(0, cardHolder.indexOf("/"))).trim();
+                this.firstname = (cardHolder.substring((cardHolder.indexOf("/") + 1))).trim();
+                // not sure how to support title, middle initial, and suffix
+            }
+        } catch (Exception e) {
+            ErrorEvent error = new ErrorEvent(this, JposConst.JPOS_E_FAILURE, -1,
+                    JposConst.JPOS_EL_INPUT, JposConst.JPOS_ER_CLEAR);
+            this.fireEvent(error);
+            return;    
         }
-
-
     }
 }
