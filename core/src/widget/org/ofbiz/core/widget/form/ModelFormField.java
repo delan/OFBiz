@@ -895,8 +895,8 @@ public class ModelFormField {
     
     public static class HyperlinkField extends FieldInfo {
         protected boolean alsoHidden = true;
-        protected String target;
-        protected String description;
+        protected FlexibleStringExpander target;
+        protected FlexibleStringExpander description;
         
         protected HyperlinkField() { super(); }
 
@@ -907,16 +907,9 @@ public class ModelFormField {
         public HyperlinkField(Element element, ModelFormField modelFormField) {
             super(element, modelFormField);
             
-            this.target = element.getAttribute("target");
-            this.description = element.getAttribute("description");
-            String alsoHiddenStr = element.getAttribute("also-hidden");
-            try {
-                this.alsoHidden = Boolean.getBoolean(alsoHiddenStr);
-            } catch (Exception e) {
-                if (alsoHiddenStr != null && alsoHiddenStr.length() > 0) {
-                    Debug.logError("Could not parse the size value of the text element: [" + alsoHiddenStr + "], setting to default of " + alsoHidden);
-                }
-            }
+            this.setDescription(element.getAttribute("description"));
+            this.setTarget(element.getAttribute("target"));
+            this.alsoHidden = !"false".equals(element.getAttribute("also-hidden"));
         }
 
         public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer) {
@@ -933,15 +926,15 @@ public class ModelFormField {
         /**
          * @return
          */
-        public String getDescription() {
-            return description;
+        public String getDescription(Map context) {
+            return description.expandString(context);
         }
 
         /**
          * @return
          */
-        public String getTarget() {
-            return target;
+        public String getTarget(Map context) {
+            return target.expandString(context);
         }
 
         /**
@@ -955,14 +948,14 @@ public class ModelFormField {
          * @param string
          */
         public void setDescription(String string) {
-            description = string;
+            description = new FlexibleStringExpander(string);
         }
 
         /**
          * @param string
          */
         public void setTarget(String string) {
-            target = string;
+            target = new FlexibleStringExpander(string);
         }
     }
     

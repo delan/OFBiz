@@ -222,6 +222,7 @@
                 <pathelement path="${build.dir}/extutil"/>
                 <pathelement path="${build.dir}/service"/>
                 <pathelement path="${build.dir}/minilang"/>
+                <pathelement path="${build.dir}/widget"/>
             </classpath>
             <src path="${src.dir}/webapp" />
         </javac>

@@ -151,7 +151,9 @@ public class ModelForm {
      * @param buffer The StringBuffer that the form text will be written to
      * @param context Map containing the form context; the following are 
      *   reserved words in this context: parameters (Map), isError (Boolean), 
-     *   itemIndex (Integer, for lists only, otherwise null), bshInterpreter
+     *   itemIndex (Integer, for lists only, otherwise null), bshInterpreter,
+     *   formName (String, optional alternate name for form, defaults to the 
+     *   value of the name attribute)
      * @param formStringRenderer An implementation of the FormStringRenderer 
      *   interface that is responsible for the actual text generation for 
      *   different form elements; implementing you own makes it possible to 
@@ -333,12 +335,17 @@ public class ModelForm {
         return this.name;
     }
     
-    public String getNameWithIndex(Map context) {
+    public String getCurrentFormName(Map context) {
         Integer itemIndex = (Integer) context.get("itemIndex");
+        String formName = (String) context.get("formName");
+        if (UtilValidate.isEmpty(formName)) {
+            formName = this.getName();
+        }
+        
         if (itemIndex != null) {
-            return this.name + itemIndex.intValue();
+            return formName + itemIndex.intValue();
         } else {
-            return this.name;
+            return formName;
         }
     }
 

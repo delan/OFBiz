@@ -21,13 +21,21 @@
  * OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
-package org.ofbiz.core.widget.form;
+package org.ofbiz.core.widgetimpl;
 
 import java.util.Map;
 
-import org.ofbiz.core.entity.GenericDelegator;
-import org.ofbiz.core.service.LocalDispatcher;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.ofbiz.core.control.RequestHandler;
+import org.ofbiz.core.taglib.ContentUrlTag;
+import org.ofbiz.core.util.SiteDefs;
 import org.ofbiz.core.util.UtilValidate;
+import org.ofbiz.core.widget.form.FormStringRenderer;
+import org.ofbiz.core.widget.form.ModelForm;
+import org.ofbiz.core.widget.form.ModelFormField;
 import org.ofbiz.core.widget.form.ModelFormField.CheckField;
 import org.ofbiz.core.widget.form.ModelFormField.DateTimeField;
 import org.ofbiz.core.widget.form.ModelFormField.DisplayField;
@@ -49,6 +57,28 @@ import org.ofbiz.core.widget.form.ModelFormField.TextareaField;
  * @since      2.2
  */
 public class HtmlFormRenderer implements FormStringRenderer {
+
+    HttpServletRequest request;
+    HttpServletResponse response;
+
+    protected HtmlFormRenderer() {}
+
+    public HtmlFormRenderer(HttpServletRequest request, HttpServletResponse response) {
+        this.request = request;
+        this.response = response;
+    }
+    
+    public void appendOfbizUrl(StringBuffer buffer, String location) {
+        ServletContext ctx = (ServletContext) this.request.getAttribute("servletContext");
+        RequestHandler rh = (RequestHandler) ctx.getAttribute(SiteDefs.REQUEST_HANDLER);
+        // make and append the link
+        buffer.append(rh.makeLink(this.request, this.response, location));
+    }
+    
+    public void appendContentUrl(StringBuffer buffer, String location) {
+        ContentUrlTag.appendContentPrefix(this.request, buffer);
+        buffer.append(location);
+    }
 
     /* (non-Javadoc)
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderDisplayField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.DisplayField)
@@ -78,8 +108,24 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderHyperlinkField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.HyperlinkField)
      */
     public void renderHyperlinkField(StringBuffer buffer, Map context, HyperlinkField hyperlinkField) {
-        // TODO Auto-generated method stub
+        ModelFormField modelFormField = hyperlinkField.getModelFormField();
 
+        buffer.append("<a");
+
+        if (UtilValidate.isNotEmpty(modelFormField.getWidgetStyle())) {
+            buffer.append(" class=\"");
+            buffer.append(modelFormField.getWidgetStyle());
+            buffer.append("\"");
+        }
+        
+        buffer.append(" href=\"");
+        this.appendOfbizUrl(buffer, hyperlinkField.getTarget(context));
+        buffer.append("\"");
+
+        buffer.append('>');
+        
+        buffer.append(hyperlinkField.getDescription(context));
+        buffer.append("</a>");
     }
 
     /* (non-Javadoc)
@@ -131,8 +177,37 @@ public class HtmlFormRenderer implements FormStringRenderer {
      * @see org.ofbiz.core.widget.form.FormStringRenderer#renderTextareaField(java.lang.StringBuffer, java.util.Map, org.ofbiz.core.widget.form.ModelFormField.TextareaField)
      */
     public void renderTextareaField(StringBuffer buffer, Map context, TextareaField textareaField) {
-        // TODO Auto-generated method stub
+        ModelFormField modelFormField = textareaField.getModelFormField();
+        
+        buffer.append("<textarea class=\"textAreaBox\"");
+        
+        String className = modelFormField.getWidgetStyle();
+        if (UtilValidate.isNotEmpty(className)) {
+            buffer.append(" class=\"");
+            buffer.append(className);
+            buffer.append('"');
+        }
+        
+        buffer.append(" name=\"");
+        buffer.append(modelFormField.getParameterName());
+        buffer.append('"');
 
+        buffer.append(" cols=\"");
+        buffer.append(textareaField.getCols());
+        buffer.append('"');
+        
+        buffer.append(" rows=\"");
+        buffer.append(textareaField.getRows());
+        buffer.append('"');
+        
+        buffer.append('>');
+        
+        String value = modelFormField.getEntry(context);
+        if (UtilValidate.isNotEmpty(value)) {
+            buffer.append(value);
+        }
+
+        buffer.append("<textarea/>");
     }
 
     /* (non-Javadoc)
@@ -170,10 +245,10 @@ public class HtmlFormRenderer implements FormStringRenderer {
         int size = 25;
         int maxlength = 30;
         
-        if ("date".equals(dateTimeField.type)) {
+        if ("date".equals(dateTimeField.getType())) {
             size = 10;
             maxlength = 12;
-        } else if ("time".equals(dateTimeField.type)) {
+        } else if ("time".equals(dateTimeField.getType())) {
             size = 12;
             maxlength = 15;
         }
@@ -188,14 +263,18 @@ public class HtmlFormRenderer implements FormStringRenderer {
 
         buffer.append("/>");
         
-        // add calendar pop-up button and seed data
-        buffer.append("<a href=\"javascript:call_cal(document.");
-        buffer.append(modelFormField.getModelForm().getNameWithIndex(context));
-        buffer.append('.');
-        buffer.append(modelFormField.getParameterName());
-        buffer.append(", '");
-        buffer.append(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context)));
-        buffer.append("<img src=\"/images/cal.gif\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
+        // add calendar pop-up button and seed data IF this is not a "time" type date-time
+        if (!"time".equals(dateTimeField.getType())) {
+            buffer.append("<a href=\"javascript:call_cal(document.");
+            buffer.append(modelFormField.getModelForm().getCurrentFormName(context));
+            buffer.append('.');
+            buffer.append(modelFormField.getParameterName());
+            buffer.append(", '");
+            buffer.append(modelFormField.getEntry(context, dateTimeField.getDefaultDateTimeString(context)));
+            buffer.append("<img src=\"");
+            this.appendContentUrl(buffer, "/images/cal.gif");
+            buffer.append("\" width=\"16\" height=\"16\" border=\"0\" alt=\"Calendar\"></a>");
+        }
     }
 
     /* (non-Javadoc)
@@ -227,8 +306,54 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderSubmitField(StringBuffer buffer, Map context, SubmitField submitField) {
         ModelFormField modelFormField = submitField.getModelFormField();
+        ModelForm modelForm = modelFormField.getModelForm();
         
-        if ("button".equals(submitField.buttonType)) {
+        if ("text-link".equals(submitField.getButtonType())) {
+            buffer.append("<a");
+        
+            String className = modelFormField.getWidgetStyle();
+            if (UtilValidate.isNotEmpty(className)) {
+                buffer.append(" class=\"");
+                buffer.append(className);
+                buffer.append('"');
+            }
+            
+            buffer.append(" href=\"javascript:document.");
+            buffer.append(modelForm.getCurrentFormName(context));
+            buffer.append(".submit()\">");
+
+            buffer.append(modelFormField.getTitle(context));
+
+            buffer.append("</a>");
+        } else if ("image".equals(submitField.getButtonType())) {
+            buffer.append("<input type=\"image\"");
+        
+            String className = modelFormField.getWidgetStyle();
+            if (UtilValidate.isNotEmpty(className)) {
+                buffer.append(" class=\"");
+                buffer.append(className);
+                buffer.append('"');
+            }
+        
+            buffer.append(" name=\"");
+            buffer.append(modelFormField.getParameterName());
+            buffer.append('"');
+        
+            String title = modelFormField.getTitle(context);
+            if (UtilValidate.isNotEmpty(title)) {
+                buffer.append(" alt=\"");
+                buffer.append(title);
+                buffer.append('"');
+            }
+            
+            buffer.append(" src=\"");
+            this.appendContentUrl(buffer, submitField.getImageLocation());
+            buffer.append('"');
+        
+            buffer.append("/>");
+        } else {
+            // default to "button"
+            
             buffer.append("<input type=\"submit\"");
         
             String className = modelFormField.getWidgetStyle();
@@ -250,15 +375,6 @@ public class HtmlFormRenderer implements FormStringRenderer {
             }
         
             buffer.append("/>");
-        } else if ("text-link".equals(submitField.buttonType)) {
-            // TODO: implement text-link submit buttons
-            Integer itemIndex = (Integer) context.get("itemIndex");
-            if (itemIndex != null) {
-                buffer.append(itemIndex.intValue());
-            }
-            
-        } else if ("image".equals(submitField.buttonType)) {
-            // TODO: implement image submit buttons
         }
     }
 
@@ -340,10 +456,9 @@ public class HtmlFormRenderer implements FormStringRenderer {
      */
     public void renderFormOpen(StringBuffer buffer, Map context, ModelForm modelForm) {
         buffer.append("<form method=\"POST\" action=\"");
-        // TODO: call ofbiz URL for target
-        buffer.append("/" + modelForm.getTarget(context));
+        this.appendOfbizUrl(buffer, "/" + modelForm.getTarget(context));
         buffer.append("\" name=\"");
-        buffer.append(modelForm.getNameWithIndex(context));
+        buffer.append(modelForm.getCurrentFormName(context));
         buffer.append("\">");
     }
 
