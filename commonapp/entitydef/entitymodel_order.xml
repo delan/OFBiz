@@ -66,6 +66,7 @@
       <field name="percentage" type="floating-point"></field>
       <field name="productPromoId" type="id"></field>
       <field name="productPromoRuleId" type="id"></field>
+      <field name="productPromoActionSeqId" type="id"></field>
       <prim-key field="orderAdjustmentId"/>
       <relation type="one" rel-entity-name="OrderAdjustmentType">
         <key-map field-name="orderAdjustmentTypeId"/>
@@ -89,6 +90,11 @@
       <relation type="one-nofk" rel-entity-name="ProductPromoRule">
         <key-map field-name="productPromoId"/>
         <key-map field-name="productPromoRuleId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="ProductPromoAction">
+        <key-map field-name="productPromoId"/>
+        <key-map field-name="productPromoRuleId"/>
+        <key-map field-name="productPromoActionId"/>
       </relation>
     </entity>
     <entity entity-name="OrderAdjustmentAttribute"
