@@ -202,7 +202,7 @@ public class UtilMisc {
      * @return The resulting Map
      */
     public static Map getParameterMap(HttpServletRequest request) {
-        HashMap paramMap = new HashMap();
+        HashMap paramMap = new OrderedMap();
         java.util.Enumeration e = request.getParameterNames();
         while (e.hasMoreElements()) {
             String name = (String) e.nextElement();
