@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.7 2003/11/03 13:13:14 jonesde Exp $
+ * $Id: GenericDelegator.java,v 1.8 2003/11/03 14:44:13 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -77,7 +77,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -890,6 +890,7 @@ public class GenericDelegator implements DelegatorInterface {
             }
             return lst;
         } else {
+            // automatically re-order the elements if this didn't come from the datasource directly
             return EntityUtil.orderBy(lst, orderBy);
         }
     }
@@ -1916,16 +1917,16 @@ public class GenericDelegator implements DelegatorInterface {
             return;
         }
 
+        // before going into the cache, make this value immutable
+        value.setImmutable();
         primaryKeyCache.put(primaryKey, value);
     }
 
     public void putAllInPrimaryKeyCache(List values) {
         if (values == null) return;
         Iterator iter = values.iterator();
-
         while (iter.hasNext()) {
             GenericValue value = (GenericValue) iter.next();
-
             this.putInPrimaryKeyCache(value.getPrimaryKey(), value);
         }
     }
@@ -1944,8 +1945,12 @@ public class GenericDelegator implements DelegatorInterface {
             return;
         }
 
-        // make the values immutable so that the list can be returned directly from the cache without copying and still be safe
-        // NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
+        // make the List and the values immutable so that the list can be returned directly from the cache without copying and still be safe
+        Iterator valueIter = values.iterator();
+        while (valueIter.hasNext()) {
+            GenericEntity genericEntity = (GenericEntity) valueIter.next();
+            genericEntity.setImmutable();
+        }
         allCache.put(entity.getEntityName(), Collections.unmodifiableList(values));
     }
 
@@ -1966,8 +1971,13 @@ public class GenericDelegator implements DelegatorInterface {
         GenericPK tempPK = new GenericPK(entity, fields);
 
         if (tempPK == null) return;
-        // make the values immutable so that the list can be returned directly from the cache without copying and still be safe
-        // NOTE that this makes the list immutable, but not the elements in it, those will still be changeable GenericValue objects...
+
+        // make the List and the values immutable so that the list can be returned directly from the cache without copying and still be safe
+        Iterator valueIter = values.iterator();
+        while (valueIter.hasNext()) {
+            GenericEntity genericEntity = (GenericEntity) valueIter.next();
+            genericEntity.setImmutable();
+        }
         andCache.put(tempPK, Collections.unmodifiableList(values));
 
         // now make sure the fieldName set used for this entry is in the

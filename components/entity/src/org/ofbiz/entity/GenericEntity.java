@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.9 2003/11/03 13:13:14 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.10 2003/11/03 14:44:13 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.9 $
+ *@version    $Revision: 1.10 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -90,6 +90,9 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
 
     /** Denotes whether or not this entity has been modified, or is known to be out of sync with the persistent record */
     protected boolean modified = false;
+
+    /** Used to specify whether or not this representation of the entity can be changed; generally cleared when this object comes from a cache */
+    protected boolean mutable = true;
 
     /** Creates new GenericEntity */
     public GenericEntity() {
@@ -139,7 +142,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     }
 
     public boolean isModified() {
-        return modified;
+        return this.modified;
     }
 
     public void synchronizedWithDatasource() {
@@ -149,6 +152,14 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     public void removedFromDatasource() {
         // seems kind of minimal, but should do for now...
         this.modified = true;
+    }
+
+    public boolean isMutable() {
+        return this.mutable;
+    }
+
+    public void setImmutable() {
+        this.mutable = false;
     }
 
     public String getEntityName() {
@@ -232,11 +243,14 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
      * @param setIfNull Specifies whether or not to set the value if it is null
      */
     public synchronized Object set(String name, Object value, boolean setIfNull) {
-        ModelField modelField = getModelEntity().getField(name);
+        if (!this.mutable) {
+            // comment this out to disable the mutable check
+            throw new IllegalStateException("This object has been flagged as immutable (unchangeable), probably because it came from an Entity Engine cache. Cannot set a value in an immutable entity object.");
+        }
 
+        ModelField modelField = getModelEntity().getField(name);
         if (modelField == null) {
             throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName);
-            // Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...", module);
         }
         if (value != null || setIfNull) {
             if (value instanceof Boolean) {
