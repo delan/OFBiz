@@ -31,10 +31,11 @@
 
 <!ELEMENT services (description?, vendor?, version?, created?, service+)>
 <!ELEMENT description ANY>
+<!ELEMENT namespace ANY>
 <!ELEMENT vendor (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT created (#PCDATA)>
-<!ELEMENT service (description?, attribute*)>
+<!ELEMENT service (description?, namespace?, attribute*)>
 <!ATTLIST service
 	name CDATA #REQUIRED
 	engine CDATA #REQUIRED
