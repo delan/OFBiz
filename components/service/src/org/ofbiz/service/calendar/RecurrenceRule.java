@@ -1,5 +1,5 @@
 /*
- * $Id: RecurrenceRule.java,v 1.2 2003/12/14 02:16:47 ajzeneski Exp $
+ * $Id: RecurrenceRule.java,v 1.3 2003/12/15 09:13:12 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.GenericValue;
  * Recurrence Rule Object
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class RecurrenceRule {
@@ -149,7 +149,7 @@ public class RecurrenceRule {
      *@return long Timestamp of the current date/time
      */
     private long now() {
-        return (new Date()).getTime();
+        return System.currentTimeMillis();
     }
 
     // Checks for a valid frequency property.
@@ -366,11 +366,11 @@ public class RecurrenceRule {
                 break;
 
             case DAILY:
-                cal.add(Calendar.DATE, getIntervalInt());
+                cal.add(Calendar.DAY_OF_MONTH, getIntervalInt());
                 break;
 
             case WEEKLY:
-                cal.add(Calendar.DATE, (7 * getIntervalInt()));
+                cal.add(Calendar.WEEK_OF_YEAR, getIntervalInt());
                 break;
 
             case MONTHLY:
@@ -432,35 +432,40 @@ public class RecurrenceRule {
                             if (dayPosCalc < 1)
                                 currentPos--;
                             if (modifier > 0) {
-                                if (currentPos == modifier)
+                                if (currentPos == modifier) {
                                     foundDay = true;
+                                }
                             } else if (modifier < 0) {
                                 int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                                 int firstDay = dayPosCalc > 0 ? dayPosCalc : dayPosCalc + 7;
                                 int totalDay = ((maxDay - firstDay) / 7) + 1;
                                 int thisDiff = (currentPos - totalDay) - 1;
 
-                                if (thisDiff == modifier)
+                                if (thisDiff == modifier) {
                                     foundDay = true;
+                                }
                             }
                         } else if (getFrequency() == YEARLY) {
                             // figure if we are the nth xDAY if this year
                             int currentPos = cal.get(Calendar.WEEK_OF_YEAR);
                             int dayPosCalc = cal.get(Calendar.DAY_OF_YEAR) - ((currentPos - 1) * 7);
 
-                            if (dayPosCalc < 1)
+                            if (dayPosCalc < 1) {
                                 currentPos--;
+                            }
                             if (modifier > 0) {
-                                if (currentPos == modifier)
+                                if (currentPos == modifier) {
                                     foundDay = true;
+                                }
                             } else if (modifier < 0) {
                                 int maxDay = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
                                 int firstDay = dayPosCalc > 0 ? dayPosCalc : dayPosCalc + 7;
                                 int totalDay = ((maxDay - firstDay) / 7) + 1;
                                 int thisDiff = (currentPos - totalDay) - 1;
 
-                                if (thisDiff == modifier)
+                                if (thisDiff == modifier) {
                                     foundDay = true;
+                                }
                             }
                         }
                     } else {
@@ -469,8 +474,9 @@ public class RecurrenceRule {
                     }
                 }
             }
-            if (!foundDay)
+            if (!foundDay) {
                 return false;
+            }
         }
         if (byMonthDayList != null && byMonthDayList.size() > 0) {
             Iterator iter = byMonthDayList.iterator();
@@ -482,17 +488,22 @@ public class RecurrenceRule {
 
                 try {
                     day = Integer.parseInt(dayStr);
-                } catch (NumberFormatException nfe) {}
+                } catch (NumberFormatException nfe) {
+                    Debug.logError(nfe, "Error parsing day string " + dayStr + ": " + nfe.toString(), module);
+                }
                 int maxDay = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
                 int currentDay = cal.get(Calendar.DAY_OF_MONTH);
 
-                if (day > 0 && day == currentDay)
+                if (day > 0 && day == currentDay) {
                     foundDay = true;
-                if (day < 0 && day == ((currentDay - maxDay) - 1))
+                }
+                if (day < 0 && day == ((currentDay - maxDay) - 1)) {
                     foundDay = true;
+                }
             }
-            if (!foundDay)
+            if (!foundDay) {
                 return false;
+            }
         }
         if (byYearDayList != null && byYearDayList.size() > 0) {
             Iterator iter = byYearDayList.iterator();
@@ -504,7 +515,9 @@ public class RecurrenceRule {
 
                 try {
                     day = Integer.parseInt(dayStr);
-                } catch (NumberFormatException nfe) {}
+                } catch (NumberFormatException nfe) {
+                    Debug.logError(nfe, "Error parsing day string " + dayStr + ": " + nfe.toString(), module);
+                }
                 int maxDay = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
                 int currentDay = cal.get(Calendar.DAY_OF_YEAR);
 
@@ -526,7 +539,9 @@ public class RecurrenceRule {
 
                 try {
                     week = Integer.parseInt(weekStr);
-                } catch (NumberFormatException nfe) {}
+                } catch (NumberFormatException nfe) {
+                    Debug.logError(nfe, "Error parsing week string " + weekStr + ": " + nfe.toString(), module);
+                }
                 int maxWeek = cal.getActualMaximum(Calendar.WEEK_OF_YEAR);
                 int currentWeek = cal.get(Calendar.WEEK_OF_YEAR);
 
@@ -548,9 +563,12 @@ public class RecurrenceRule {
 
                 try {
                     month = Integer.parseInt(monthStr);
-                } catch (NumberFormatException nfe) {}
-                if (month == cal.get(Calendar.MONTH))
+                } catch (NumberFormatException nfe) {
+                    Debug.logError(nfe, "Error parsing month string " + monthStr + ": " + nfe.toString(), module);
+                }
+                if (month == cal.get(Calendar.MONTH)) {
                     foundMonth = true;
+                }
             }
             if (!foundMonth)
                 return false;
@@ -587,7 +605,9 @@ public class RecurrenceRule {
                 (numberStr.charAt(0) != '+' && numberStr.charAt(0) != '-'))) {
             try {
                 number = Integer.parseInt(numberStr);
-            } catch (NumberFormatException nfe) {}
+            } catch (NumberFormatException nfe) {
+                Debug.logError(nfe, "Error parsing daily number string " + numberStr + ": " + nfe.toString(), module);
+            }
         }
         return number;
     }
@@ -599,8 +619,9 @@ public class RecurrenceRule {
         for (int i = 0; i < str.length(); i++) {
             String thisChar = str.substring(i, i);
 
-            if (!hasNumber(thisChar))
+            if (!hasNumber(thisChar)) {
                 sBuf.append(thisChar);
+            }
         }
         return sBuf.toString();
     }
@@ -667,5 +688,4 @@ public class RecurrenceRule {
             throw re;
         }
     }
-
 }
