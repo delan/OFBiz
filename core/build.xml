@@ -65,7 +65,7 @@
         <property name="api-jars"      value="${servlet.jar}:${jdbc.jar}:${mail.jar}" />
         <property name="xml-jars"      value="${jaxp.jar}" />
         <property name="classpath"     value="${env.CLASSPATH}:${lib.dir}:${api-jars}:${xml-jars}" />
-        <echo message="classpath: ${classpath}" />
+        <echo message="classpath: ${classpath}" />                
     </target>
 
     <target name="ejbinit">
@@ -102,7 +102,8 @@
     <target name="prepare" depends="clean-lib">
       <mkdir dir="${build.dir}" />
       <mkdir dir="${build.dir}/ejb/META-INF" />
-      <mkdir dir="${build.dir}/jar/META-INF" />
+      <mkdir dir="${build.dir}/jar/webapp/META-INF" />
+      <mkdir dir="${build.dir}/jar/share/META-INF" />
       <mkdir dir="${lib.dir}" />
     </target>
 	
@@ -116,21 +117,30 @@
     <!-- Compilation of the core component                                  -->
     <!-- ================================================================== -->
     <target name="tld" depends="prepare">
-<!--
         <copy file="${etc.dir}/taglib.tld"
-            tofile="${build.dir}/jar/META-INF/taglib.tld" />
--->	
+            tofile="${build.dir}/jar/webapp/META-INF/taglib.tld" />
     </target>
     <target name="classes" depends="tld">
-        <!-- deprecation="on" -->
-        <javac srcdir="${src.dir}" 
-            classpath="${classpath}"
-            destdir="${build.dir}/jar" />               
+    	<javac destdir="${build.dir}/jar/share" classpath="${classpath}">
+    		<src path="${src.dir}" />
+    		<exclude name="org/ofbiz/core/control/*" />
+    		<exclude name="org/ofbiz/core/event/*" />
+    		<exclude name="org/ofbiz/core/taglib/*" />
+    		<exclude name="org/ofbiz/core/scheduler/*" />
+    	</javac>
+    	<javac destdir="${build.dir}/jar/webapp" classpath="${classpath}">
+    		<src path="${src.dir}" />
+    		<exclude name="org/ofbiz/core/entity/*" />
+    		<exclude name="org/ofbiz/core/util/*" />
+    		<exclude name="org/ofbiz/core/security/*" />
+    	</javac>
     </target>
 
     <target name="jar" depends="classes">
-        <jar jarfile="${lib.dir}/${name}.jar"
-            basedir="${build.dir}/jar" />
+        <jar jarfile="${lib.dir}/${name}-share.jar"
+            basedir="${build.dir}/jar/share" />
+        <jar jarfile="${lib.dir}/${name}-webapp.jar"
+        	basedir="${build.dir}/jar/webapp" />
     </target>
 	
     <!-- ================================================================== -->
