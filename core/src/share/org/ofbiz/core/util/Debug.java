@@ -169,9 +169,12 @@ public final class Debug {
         }
     }
     
-    // leaving this one here for quick testing
+    // leaving these here
     public static void log(String msg) {
         log(Debug.ALWAYS, null, msg, noModuleModule);
+    }    
+    public static void log(Throwable t) {
+        log(Debug.ALWAYS, t, null, noModuleModule);
     }
 
     public static void log(String msg, String module) {
