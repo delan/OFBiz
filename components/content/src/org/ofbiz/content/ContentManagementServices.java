@@ -859,8 +859,8 @@ Debug.logInfo("updateSiteRoles, serviceContext(2):" + serviceContext, module);
             	ModelService modelService = dctx.getModelService("persistContentAndAssoc");
             	Map serviceIn = modelService.makeValid(contentClone, "IN");
             	serviceIn.put("userLogin", userLogin);
-            	serviceIn.put("caContentIdTo", contentId);
-            	serviceIn.put("caContentAssocTypeId", "SUB_CONTENT");
+            	serviceIn.put("contentIdTo", contentId);
+            	serviceIn.put("contentAssocTypeId", "SUB_CONTENT");
             	try {
                 	Map thisResult = dispatcher.runSync("persistContentAndAssoc", serviceIn);
             	} catch(ServiceAuthException e) {
