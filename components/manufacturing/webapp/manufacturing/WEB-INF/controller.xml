@@ -356,6 +356,10 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupVirtualProduct"/>
     </request-map>
+    <request-map uri="LookupProductFeature">
+        <security auth="true" https="true"/>
+        <response name="success" type="view" value="LookupProductFeature"/>
+    </request-map>
 
      <!-- MRP request mappings -->
     <request-map uri="FindProposedOrder">
@@ -528,6 +532,7 @@
     <view-map name="LookupVirtualProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVirtualProduct" type="screen"/>
     <view-map name="LookupRouting" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRouting" type="screen"/>
     <view-map name="LookupRoutingTask" page="component://manufacturing/widget/manufacturing/LookupScreens.xml#LookupRoutingTask" type="screen"/>
+    <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
     
     <!-- MRP view mappings -->
     <view-map name="FindProposedOrder" type="jpublish" page="/mrp/findProposedOrder.ftl"/>
