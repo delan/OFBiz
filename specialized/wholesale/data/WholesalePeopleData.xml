@@ -16,7 +16,6 @@
     <Party partyId="10025" partyTypeId="PERSON" lastUpdatedStamp="2004-01-23 13:54:01.898" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <Party partyId="10027" partyTypeId="PERSON" lastUpdatedStamp="2004-01-23 13:54:01.9" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
 
-    <PartyGroup partyId="10000" groupName="democo" federalTaxId="1234567890" lastUpdatedStamp="2004-01-22 10:37:59.118" lastUpdatedTxStamp="2004-01-22 10:37:59.018"/>
     <PartyGroup partyId="10013" groupName="customer a" federalTaxId="1313131313" comments="test customer a" lastUpdatedStamp="2004-01-23 13:54:01.529" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyGroup partyId="10014" groupName="customer b" federalTaxId="1414141414" comments="test customer b" lastUpdatedStamp="2004-01-23 13:54:01.603" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
     <PartyGroup partyId="10015" groupName="customer c" federalTaxId="1515151515" comments="test customer c" lastUpdatedStamp="2004-01-23 13:54:01.605" lastUpdatedTxStamp="2004-01-23 13:54:01.102"/>
