@@ -1,5 +1,5 @@
 /*
- * $Id: ProductPromoWorker.java,v 1.44 2004/02/25 05:16:20 jonesde Exp $
+ * $Id: ProductPromoWorker.java,v 1.45 2004/05/23 07:57:27 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -56,7 +56,7 @@ import org.ofbiz.service.LocalDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.44 $
+ * @version    $Revision: 1.45 $
  * @since      2.0
  */
 public class ProductPromoWorker {
@@ -67,30 +67,38 @@ public class ProductPromoWorker {
         List productPromos = new LinkedList();
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
 
+        // get the ShoppingCart out of the session.
+        HttpServletRequest req = null;
+        ShoppingCart cart = null;
         try {
-            GenericValue productStore = ProductStoreWorker.getProductStore(request);
+            req = (HttpServletRequest) request;
+            cart = ShoppingCartEvents.getCartObject(req);
+        } catch (ClassCastException cce) {
+            Debug.logError("Not a HttpServletRequest, no shopping cart found.", module);
+        }
+
+        boolean condResult = true;
+
+        try {
+            String productStoreId = cart.getProductStoreId();
+            GenericValue productStore = null;
+            try {
+                productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Error looking up store with id " + productStoreId, module);
+            }
+            if (productStore == null) {
+                Debug.logWarning("No store found with id " + productStoreId + ", not doing promotions", module);
+                return productPromos;
+            }
 
             if (productStore != null) {
-                String productStoreId = productStore.getString("productStoreId");
                 Iterator productStorePromoAppls = UtilMisc.toIterator(EntityUtil.filterByDate(productStore.getRelatedCache("ProductStorePromoAppl", UtilMisc.toMap("productStoreId", productStoreId), UtilMisc.toList("sequenceNum")), true));
-
                 while (productStorePromoAppls != null && productStorePromoAppls.hasNext()) {
                     GenericValue productStorePromoAppl = (GenericValue) productStorePromoAppls.next();
                     GenericValue productPromo = productStorePromoAppl.getRelatedOneCache("ProductPromo");
                     List productPromoRules = productPromo.getRelatedCache("ProductPromoRule", null, null);
 
-                    // get the ShoppingCart out of the session.
-                    HttpServletRequest req = null;
-                    ShoppingCart cart = null;
-
-                    try {
-                        req = (HttpServletRequest) request;
-                        cart = ShoppingCartEvents.getCartObject(req);
-                    } catch (ClassCastException cce) {
-                        Debug.logInfo("Not a HttpServletRequest, no shopping cart found.", module);
-                    }
-
-                    boolean condResult = true;
 
                     if (productPromoRules != null) {
                         Iterator promoRulesItr = productPromoRules.iterator();
@@ -893,6 +901,8 @@ public class ProductPromoWorker {
         String productPromoActionEnumId = productPromoAction.getString("productPromoActionEnumId");
 
         if ("PROMO_GWP".equals(productPromoActionEnumId)) {
+            String productStoreId = cart.getProductStoreId();
+            
             // the code was in there for this, so even though I don't think we want to restrict this, just adding this flag to make it easy to change; could make option dynamic, but now implied by the use limit
             boolean allowMultipleGwp = true;
             
@@ -901,21 +911,81 @@ public class ProductPromoWorker {
                 if (Debug.verboseOn()) Debug.logVerbose("Not adding promo item, already there; action: " + productPromoAction, module);
                 actionResultInfo.ranAction = false;
             } else {
-                GenericValue product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productPromoAction.get("productId")));
-                if (product == null) {
-                    String errMsg = "GWP Product not found with ID [" + productPromoAction.get("productId") + "] for ProductPromoAction [" + productPromoAction.get("productPromoId") + ":" + productPromoAction.get("productPromoRuleId") + ":" + productPromoAction.get("productPromoActionSeqId") + "]";
-                    Debug.logError(errMsg, module);
-                    throw new CartItemModifyException(errMsg);
-                }
-                
                 double quantity = productPromoAction.get("quantity") == null ? 0.0 : productPromoAction.getDouble("quantity").doubleValue();
                 
+                List optionProductIds = new LinkedList();
+                String productId = productPromoAction.getString("productId");
+                GenericValue product = null;
+                if (UtilValidate.isNotEmpty(productId)) {
+                    // Debug.logInfo("======== Got GWP productId [" + productId + "]", module);
+                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+                    if (product == null) {
+                        String errMsg = "GWP Product not found with ID [" + productId + "] for ProductPromoAction [" + productPromoAction.get("productPromoId") + ":" + productPromoAction.get("productPromoRuleId") + ":" + productPromoAction.get("productPromoActionSeqId") + "]";
+                        Debug.logError(errMsg, module);
+                        throw new CartItemModifyException(errMsg);
+                    }
+                    if ("Y".equals(product.getString("isVirtual"))) {
+                        List productAssocs = EntityUtil.filterByDate(product.getRelatedCache("MainProductAssoc", 
+                                UtilMisc.toMap("productAssocTypeId", "PRODUCT_VARIANT"), UtilMisc.toList("sequenceNum")), true);
+                        Iterator productAssocIter = productAssocs.iterator();
+                        while (productAssocIter.hasNext()) {
+                            GenericValue productAssoc = (GenericValue) productAssocIter.next();
+                            optionProductIds.add(productAssoc.get("productIdTo"));
+                        }
+                        productId = null;
+                        product = null;
+                        // Debug.logInfo("======== GWP productId [" + productId + "] is a virtual with " + productAssocs.size() + " variants", module);
+                    } else {
+                        // check inventory on this product, make sure it is available before going on
+                        //NOTE: even though the store may not require inventory for purchase, we will always require inventory for gifts
+                        if (!ProductStoreWorker.isStoreInventoryAvailable(productStoreId, productId, quantity, delegator, dispatcher)) {
+                            productId = null;
+                            product = null;
+                            Debug.logWarning("Not applying GWP because productId [" + productId + "] is out of stock for productPromoAction: " + productPromoAction, module);
+                        }
+                    }
+                }
+                
+                // support multiple gift options if products are attached to the action, or if the productId on the action is a virtual product
+                Set productIds = ProductPromoWorker.getPromoRuleActionProductIds(productPromoAction, delegator, nowTimestamp);
+                if (productIds != null) {
+                    optionProductIds.addAll(productIds);
+                }
+                
+                // make sure these optionProducts have inventory...
+                Iterator optionProductIdIter = optionProductIds.iterator();
+                while (optionProductIdIter.hasNext()) {
+                    String optionProductId = (String) optionProductIdIter.next();
+                    if (!ProductStoreWorker.isStoreInventoryAvailable(productStoreId, optionProductId, quantity, delegator, dispatcher)) {
+                        optionProductIdIter.remove();
+                    }                    
+                }
+                
+                // if product is null, get one from the productIds set
+                if (product == null && optionProductIds.size() > 0) {
+                    // get the first from an iterator and remove it since it will be the current one
+                    Iterator optionProductIdTempIter = optionProductIds.iterator();
+                    productId = (String) optionProductIdTempIter.next();
+                    optionProductIdTempIter.remove();
+                    product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+                }
+                    
+                if (product == null) {
+                    // no product found to add as GWP, just return
+                    return actionResultInfo;
+                }
+
                 // pass null for cartLocation to add to end of cart, pass false for doPromotions to avoid infinite recursion
                 ShoppingCartItem gwpItem = null;
                 try {
                     // just leave the prodCatalogId null, this line won't be associated with a catalog
                     String prodCatalogId = null;
                     gwpItem = ShoppingCartItem.makeItem(null, product, quantity, null, null, prodCatalogId, dispatcher, cart, false);
+                    if (optionProductIds.size() > 0) {
+                        gwpItem.setAlternativeOptionProductIds(optionProductIds);
+                    } else {
+                        gwpItem.setAlternativeOptionProductIds(null);
+                    }
                 } catch (CartItemModifyException e) {
                     int gwpItemIndex = cart.getItemIndex(gwpItem);
                     cart.removeCartItem(gwpItemIndex, dispatcher);
@@ -923,7 +993,7 @@ public class ProductPromoWorker {
                 }
 
                 double discountAmount = -(quantity * gwpItem.getBasePrice());
-                
+
                 doOrderItemPromoAction(productPromoAction, gwpItem, discountAmount, "amount", delegator);
                 
                 // set promo after create; note that to setQuantity we must clear this flag, setQuantity, then re-set the flag

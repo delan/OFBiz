@@ -24,7 +24,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.0
  -->
 
@@ -502,14 +502,14 @@
     <simple-method method-name="updateProductWithReviewRatingAvg" short-description="Update Product with new Review Rating Avg">
     	<!-- this method is meant to be called in-line and depends in a productId parameter -->
         <!-- update the review average on the Product entity -->
-        <env-to-env env-name="parameters.productId" to-env-name="getRatingAvgMap.productId"/>
-        <find-by-and entity-name="ProductReviewAvgCalc" map-name="getRatingAvgMap" list-name="productReviewAvgCalcList" use-cache="false"/>
-        <first-from-list list-name="productReviewAvgCalcList" entry-name="productReviewAvgCalc"/> <!-- should only be one -->
-        <log level="info" message="Got new average customer rating ${productReviewAvgCalc}"/>
-        
         <make-value entity-name="Product" value-name="product"/>
         <env-to-env env-name="parameters.productId" to-env-name="product.productId"/>
-        <env-to-env env-name="productReviewAvgCalc.productRatingAvg" to-env-name="product.averageCustomerRating"/>
+        <call-class-method class-name="ProductWorker" method-name="getAverageProductRating" ret-field-name="product.averageCustomerRating">
+            <field field-name="delegator" type="org.ofbiz.core.entity.GenericDelegator"/>
+            <field field-name="parameters.productId" type="java.lang.String"/>
+        </call-class-method>
+        <log level="info" message="Got new average customer rating ${product.averageCustomerRating}"/>
+        
         <store-value value-name="product"/>
     </simple-method>
 </simple-methods>
