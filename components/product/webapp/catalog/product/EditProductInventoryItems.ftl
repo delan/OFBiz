@@ -52,8 +52,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#assign incomingShipmentAndItemList = quantitySummary.incomingShipmentAndItemList?if_exists>
             <tr>
                 <td><div class="tabletext">${(facility.facilityName)?if_exists} [${facilityId?default("[No Facility]")}]</div></td>
-                <td><div class="tabletext"><#if totalAvailableToPromise?exists>${totalAvailableToPromise?string.number}<#else>&nbsp;</#if></div></td>
-                <td><div class="tabletext"><#if totalQuantityOnHand?exists>${totalQuantityOnHand?string.number}<#else>&nbsp;</#if></div></td>
+                <td><div class="tabletext"><#if totalAvailableToPromise?exists>${totalAvailableToPromise}<#else>&nbsp;</#if></div></td>
+                <td><div class="tabletext"><#if totalQuantityOnHand?exists>${totalQuantityOnHand}<#else>&nbsp;</#if></div></td>
                 <td>
                     <#if incomingShipmentAndItemList?has_content>
                         <#list incomingShipmentAndItemList as incomingShipmentAndItem>
