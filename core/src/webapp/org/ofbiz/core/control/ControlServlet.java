@@ -79,9 +79,6 @@ public class ControlServlet extends HttpServlet {
 
         // this will speed up the initial sessionId generation
         new java.security.SecureRandom().nextLong();
-        
-        ControlEventListener listener = new ControlEventListener((GenericDelegator) this.getServletContext().getAttribute("delegator"));
-        //okay, now we have a listener, how do we mount it?
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

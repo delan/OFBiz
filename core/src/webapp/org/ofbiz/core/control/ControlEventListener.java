@@ -49,17 +49,10 @@ public class ControlEventListener implements HttpSessionListener, HttpSessionAct
     protected static long totalActiveSessions = 0;
     protected static long totalPassiveSessions = 0;
     
-    protected GenericDelegator delegator = null;
-    
-    public ControlEventListener(GenericDelegator delegator) {
-        this.delegator = delegator;
-    }
+    public ControlEventListener() { }
     
     public void sessionCreated(HttpSessionEvent event) {
         HttpSession session = event.getSession();
-        if (session.getAttribute("delegator") == null) {
-            session.setAttribute("delegator", delegator);
-        }
         //get/create the visit
         //NOTE: don't create the visit here, just let the control servlet do it; GenericValue visit = VisitHandler.getVisit(session);
         
