@@ -18,21 +18,21 @@
     <request-map uri="checkLogin" edit="false">
       <description>Verify a user is logged in.</description>
       <security https="false" auth="false"/>
-      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="checkLogin" />
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="checkLogin" />
       <response name="success" type="view" value="name" />
       <response name="error" type="view" value="login" />
     </request-map>
 
     <request-map uri="login">
       <security https="true" auth="false"/>
-      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="login"/>
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="login"/>
       <response name="success" type="request" value="updatedistributor"/>
       <response name="error" type="view" value="login"/>
     </request-map>
 
     <request-map uri="logout">
       <security https="true" auth="true"/>
-      <event type="java" path="org.ofbiz.core.security.WebEventSecurity" invoke="logout"/>
+      <event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="logout"/>
       <response name="success" type="view" value="main"/>
       <response name="error" type="view" value="main"/>
     </request-map>
@@ -194,21 +194,21 @@
 
     <request-map uri="updatecontactmech">
 		<security https="true" auth="true"/>
-		<event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="updateContactMech"/>
+		<event type="java" path="org.ofbiz.commonapp.party.contact.ContactEvents" invoke="updateContactMech"/>
 		<response name="success" type="view" value="editcontactmech"/>
 		<response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="createpartycontactmechpurpose">
     	<security https="true" auth="true"/>
-		<event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="createPartyContactMechPurpose"/>
+		<event type="java" path="org.ofbiz.commonapp.party.contact.ContactEvents" invoke="createPartyContactMechPurpose"/>
 		<response name="success" type="view" value="editcontactmech"/>
 		<response name="error" type="view" value="editcontactmech"/>
     </request-map>
 
     <request-map uri="deletepartycontactmechpurpose">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="deletePartyContactMechPurpose"/>
+    	<event type="java" path="org.ofbiz.commonapp.party.contact.ContactEvents" invoke="deletePartyContactMechPurpose"/>
     	<response name="success" type="view" value="editcontactmech"/>
     	<response name="error" type="view" value="editcontactmech"/>
     </request-map>
@@ -220,7 +220,7 @@
 
     <request-map uri="updatecreditcard">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="updateCreditCardInfo"/>
+    	<event type="java" path="org.ofbiz.commonapp.party.contact.ContactEvents" invoke="updateCreditCardInfo"/>
     	<response name="success" type="view" value="editcreditcard"/>
     	<response name="error" type="view" value="editcreditcard"/>
     </request-map>
@@ -232,7 +232,7 @@
 
     <request-map uri="updateperson">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="updatePerson"/>
+    	<event type="java" path="org.ofbiz.commonapp.party.party.PartyEvents" invoke="updatePerson"/>
     	<response name="success" type="view" value="editperson"/>
     	<response name="error" type="view" value="editperson"/>
     </request-map>
@@ -244,14 +244,14 @@
 
     <request-map uri="updatepassword">
     	<security https="true" auth="true"/>
-    	<event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke=">changePassword"/>
+    	<event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke=">changePassword"/>
     	<response name="success" type="view" value="changepassword"/>
     	<response name="error" type="view" value="changepassword"/>
     </request-map>
 
     <request-map uri="forgotpassword">
     	<security https="true" auth="false"/>
-    	<event type="java" path="org.ofbiz.ecommerce.customer.CustomerEvents" invoke="forgotPassword"/>
+    	<event type="java" path="org.ofbiz.commonapp.security.login.LoginEvents" invoke="forgotPassword"/>
     	<response name="success" type="view" value="login"/>
     	<response name="error" type="view" value="login"/>
     </request-map>
