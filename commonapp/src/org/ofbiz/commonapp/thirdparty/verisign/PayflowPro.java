@@ -58,7 +58,7 @@ public class PayflowPro {
 
         // get the order header and payment preferences
         GenericValue orderHeader = null;
-        Collection paymentPrefs = null;
+        List paymentPrefs = null;
         try {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
             paymentPrefs = orderHeader.getRelatedOrderBy("OrderPaymentPreference", UtilMisc.toList("maxAmount"));

@@ -36,6 +36,7 @@ import org.ofbiz.core.service.*;
 import org.ofbiz.core.stats.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.commonapp.common.*;
+import org.ofbiz.commonapp.order.order.*;
 import org.ofbiz.commonapp.party.contact.*;
 import org.ofbiz.commonapp.product.catalog.*;
 
@@ -163,15 +164,8 @@ public class CheckOutEvents {
             Debug.logWarning(e, module);
         }
 
-        // Default Payment Info.
-        final String PAYMENT_SERVICE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.service", "NONE");
-        final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
-        final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
-        final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
-        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
-        final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.declined.message", "Error!");
-
-        final String HEADER_CANCEL_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_CANCELLED");
+        // Set rejected order status.
+        final String HEADER_CANCEL_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.cancelled.status", "ORDER_CANCELLED");
         final String ITEM_CANCEL_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.cancelled.status", "ITEM_CANCELLED");
 
         // remove this whenever creating an order so quick reorder cache will refresh/recalc
@@ -203,6 +197,8 @@ public class CheckOutEvents {
                     }
                 }
                 // blank out the orderId
+                if (cart.getOriginalOrderId() == null)
+                    cart.setOriginalOrderId(orderId);
                 cart.setOrderId(null);
             } catch (GenericServiceException gse) {
                 request.setAttribute(SiteDefs.ERROR_MESSAGE, "ERROR: Could not update the order status.");
@@ -254,90 +250,6 @@ public class CheckOutEvents {
         request.setAttribute("order_id", orderId);
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
 
-        // check the payment method type, if we are offline payment do not invoke the payment service.
-        boolean requireAuth = false;
-        List paymentMethodIds = cart.getPaymentMethodIds();
-        Iterator paymentMethodIter = paymentMethodIds.iterator();
-        while (paymentMethodIter.hasNext() && !requireAuth) {
-            String paymentMethodId = (String) paymentMethodIter.next();
-            if (!paymentMethodId.equals("OFFLINE"))
-                requireAuth = true;
-        }
-
-        // Invoke payment processing
-        if (requireAuth && PAYMENT_SERVICE != null && !PAYMENT_SERVICE.equalsIgnoreCase("NONE") &&
-                !PAYMENT_SERVICE.equalsIgnoreCase("")) {
-            Map paymentResult = null;
-            try {
-                paymentResult = dispatcher.runSync(PAYMENT_SERVICE, UtilMisc.toMap("orderId", orderId));
-            } catch (GenericServiceException e) {
-                Debug.logWarning(e, module);
-            }
-            if (Debug.verboseOn()) Debug.logVerbose("Finsished w/ Payment Service", module);
-            if (paymentResult != null && paymentResult.containsKey("authResponse")) {
-                String authResp = (String) paymentResult.get("authResponse");
-                if (!authResp.equals("SUCCESS")) {
-                    // order was NOT approved
-                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
-                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);
-                    Map statusRes = null;
-                    try {
-                        statusRes = dispatcher.runSync("changeOrderStatus",
-                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
-                        if (statusRes.containsKey("errorMessage"))
-                            Debug.logError("Order status service failed: (" + orderId + ") " + statusRes.get("errorMessage"), module);
-
-                        GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-                        if (orderHeader != null) {
-                            Collection orderItems = orderHeader.getRelated("OrderItem");
-                            if (orderItems != null && orderItems.size() > 0) {
-                                Iterator i = orderItems.iterator();
-                                while (i.hasNext()) {
-                                    GenericValue v = (GenericValue) i.next();
-                                    v.set("statusId", ITEM_DECLINE_STATUS);
-                                    v.store();
-                                }
-                            }
-                        }
-                    } catch (GenericEntityException ee) {
-                        Debug.logError(ee, "Problems adjusting order status. (" + orderId + ")", module);
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, "Problems adjusting order item status. (" + orderId + ")", module);
-                    }
-                    return "error";
-                } else {
-                    // order WAS approved
-                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
-                    Map statusRes = null;
-                    try {
-                        statusRes = dispatcher.runSync("changeOrderStatus",
-                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS));
-                        if (statusRes.containsKey("errorMessage"))
-                            Debug.logError("Order status service failed: (" + orderId + ") " + statusRes.get("errorMessage"), module);
-
-                        GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
-                        if (orderHeader != null) {
-                            Collection orderItems = orderHeader.getRelated("OrderItem");
-                            if (orderItems != null && orderItems.size() > 0) {
-                                Iterator i = orderItems.iterator();
-                                while (i.hasNext()) {
-                                    GenericValue v = (GenericValue) i.next();
-                                    v.set("statusId", ITEM_APPROVE_STATUS);
-                                    v.store();
-                                }
-                            }
-                        }
-                    } catch (GenericEntityException ee) {
-                        Debug.logError(ee, "Problems adjusting order status. (" + orderId + ")", module);
-                    } catch (GenericServiceException e) {
-                        Debug.logError(e, "Problems adjusting order item status. (" + orderId + ")", module);
-                    }
-                }
-            } else {
-                // result returned null or service failed
-                request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Problems with payment authorization. Your order has been saved and will be processed.");
-            }
-        }
 
         // only clear the cart if we are finished w/ the customer
         cart.clear();
@@ -516,5 +428,246 @@ public class CheckOutEvents {
             return "success"; //"error";
         }
         return "success";
+    }
+
+    // Event wrapper for the tax calc.
+    public static String calcTax(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            calcTax(request);
+        } catch (GeneralException e) {
+            request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
+            return "error";
+        }
+        return "success";
+    }
+
+    // Invoke the taxCalc
+    private static void calcTax(HttpServletRequest request) throws GeneralException {
+        ServletContext application = (ServletContext) request.getAttribute("servletContext");
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+
+        URL orderPropertiesUrl = null;
+        try {
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, module);
+        }
+        if (orderPropertiesUrl == null)
+            throw new GeneralException("Cannot get reference to order.properties.");
+
+        String taxService = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.service", "NONE");
+        if ("NONE".equals(taxService))
+            return;
+
+        List items = cart.makeOrderItems();
+        List adjs = cart.makeAllAdjustments();
+        GenericValue shipAddress = cart.getShippingAddress();
+        if (shipAddress == null)
+            throw new GeneralException("Shipping address is not set in the shopping cart.");
+
+        List taxReturn = getTaxAdjustments(dispatcher, taxService, items, adjs, shipAddress);
+        Debug.logVerbose("ReturnList: " + taxReturn);
+
+        List orderAdj = (List) taxReturn.get(0);
+        List itemAdj = (List) taxReturn.get(1);
+
+        // pass the order adjustments back
+        if (orderAdj != null) {
+            Iterator oai = orderAdj.iterator();
+            while (oai.hasNext())
+                cart.addAdjustment((GenericValue)oai.next());
+        }
+
+        // return the order item adjustments
+        List cartItems = cart.items();
+        for (int i = 0; i < cartItems.size(); i++) {
+            ShoppingCartItem item = (ShoppingCartItem) cartItems.get(i);
+            List itemAdjustments = (List) itemAdj.get(i);
+            Iterator ida = itemAdjustments.iterator();
+            while (ida.hasNext())
+                item.addAdjustment((GenericValue)ida.next());
+        }
+    }
+
+    // Calc the tax adjustments.
+    private static List getTaxAdjustments(LocalDispatcher dispatcher, String taxService, List orderItems,
+                                          List allAdjustments, GenericValue shipAddress) throws GeneralException {
+        List products = new ArrayList(orderItems.size());
+        List amounts = new ArrayList(orderItems.size());
+        List shipAmts = new ArrayList(orderItems.size());
+
+        double orderSubTotal = OrderReadHelper.getOrderItemsSubTotal(orderItems, allAdjustments);
+        List orderHeaderAdjustments = OrderReadHelper.getOrderHeaderAdjustments(allAdjustments);
+        Double cartShipping = new Double(OrderReadHelper.calcOrderAdjustments(orderHeaderAdjustments, orderSubTotal, false, false, true));
+
+        // build up the list of taxware parameters
+        for (int i = 0; i < orderItems.size(); i++) {
+            GenericValue orderItem = (GenericValue) orderItems.get(i);
+            try {
+                products.add(i, orderItem.getRelatedOne("Product"));  // get the product entity
+                amounts.add(i, new Double(OrderReadHelper.getOrderItemSubTotal(orderItem, allAdjustments))); // get the item amount
+                shipAmts.add(i, new Double(OrderReadHelper.getOrderItemAdjustments(orderItem, allAdjustments, false, false, true))); // get the shipping amount
+            } catch (GenericEntityException e) {
+                Debug.logError(e, "Cannot read order item entity (" + e.getMessage() + ")");
+                throw new GeneralException("Cannot read the order item entity", e);
+            }
+        }
+        Map serviceContext = UtilMisc.toMap("itemProductList", products, "itemAmountList", amounts,
+                "itemShippingList", shipAmts, "orderShippingAmount", cartShipping, "shippingAddress", shipAddress);
+
+        Map serviceResult = null;
+        try {
+            serviceResult = dispatcher.runSync("taxwareCalcTax", serviceContext);
+        } catch (GenericServiceException e) {
+            Debug.logError(e);
+            throw new GeneralException("Problem occured in tax service (" + e.getMessage() + ")", e);
+        }
+
+        // the adjustments (returned in order) from taxware.
+        List orderAdj = (List) serviceResult.get("orderAdjustments");
+        List itemAdj = (List) serviceResult.get("itemAdjustments");
+
+        return UtilMisc.toList(orderAdj, itemAdj);
+    }
+
+    // Event wrapper for processPayment.
+    public static String processPayment(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            if (processPayment(request))
+                return "success";
+            else
+                return "fail";
+        } catch (GeneralException e) {
+            Debug.logError(e);
+            return "error";
+        }
+    }
+
+    private static boolean processPayment(HttpServletRequest request) throws GeneralException {
+        HttpSession session = request.getSession();
+        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
+        ShoppingCart cart = (ShoppingCart) request.getSession().getAttribute(SiteDefs.SHOPPING_CART);
+
+        // Load the order.properties file.
+        URL orderPropertiesUrl = null;
+        try {
+            orderPropertiesUrl = application.getResource("/WEB-INF/order.properties");
+        } catch (MalformedURLException e) {
+            Debug.logWarning(e, module);
+        }
+
+        // Get some payment related strings from order.properties.
+        final String PAYMENT_SERVICE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.service", "NONE");
+        final String HEADER_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.approved.status", "ORDER_APPROVED");
+        final String ITEM_APPROVE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.approved.status", "ITEM_APPROVED");
+        final String HEADER_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.header.payment.declined.status", "ORDER_REJECTED");
+        final String ITEM_DECLINE_STATUS = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.item.payment.declined.status", "ITEM_REJECTED");
+        final String DECLINE_MESSAGE = UtilProperties.getPropertyValue(orderPropertiesUrl, "order.payment.declined.message", "Error! Set the declined message!");
+
+        // Get the orderId from the cart.
+        String orderId = cart.getOrderId();
+
+        // Check the payment method type, if we are offline payment do not invoke the payment service.
+        boolean requireAuth = false;
+        List paymentMethodIds = cart.getPaymentMethodIds();
+        Iterator paymentMethodIter = paymentMethodIds.iterator();
+        while (paymentMethodIter.hasNext() && !requireAuth) {
+            String paymentMethodId = (String) paymentMethodIter.next();
+            if (!paymentMethodId.equals("OFFLINE"))
+                requireAuth = true;
+        }
+
+        // Invoke payment processing.
+        if (requireAuth && PAYMENT_SERVICE != null && !PAYMENT_SERVICE.equalsIgnoreCase("NONE") &&
+                !PAYMENT_SERVICE.equalsIgnoreCase("")) {
+            Map paymentResult = null;
+            try {
+                // invoke the payment gateway service.
+                paymentResult = dispatcher.runSync(PAYMENT_SERVICE, UtilMisc.toMap("orderId", orderId));
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e, module);
+            }
+            if (Debug.verboseOn()) Debug.logVerbose("Finsished w/ Payment Service", module);
+            if (paymentResult != null && paymentResult.containsKey("authResponse")) {
+                String authResp = (String) paymentResult.get("authResponse");
+                if (!authResp.equals("SUCCESS")) {
+                    // order was NOT approved
+                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was NOT a success!", module);
+                    request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>" + DECLINE_MESSAGE);
+                    Map statusRes = null;
+                    try {
+                        // set the status on the order header
+                        statusRes = dispatcher.runSync("changeOrderStatus",
+                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_DECLINE_STATUS));
+                        if (statusRes.containsKey("errorMessage"))
+                            throw new GenericServiceException((String) statusRes.get("errorMessage"));
+
+                        // set the status on the order item(s)
+                        GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                        if (orderHeader != null) {
+                            Collection orderItems = orderHeader.getRelated("OrderItem");
+                            if (orderItems != null && orderItems.size() > 0) {
+                                Iterator i = orderItems.iterator();
+                                while (i.hasNext()) {
+                                    GenericValue v = (GenericValue) i.next();
+                                    v.set("statusId", ITEM_DECLINE_STATUS);
+                                    v.store();
+                                }
+                            }
+                        }
+                        // null out the orderId for next pass.
+                        cart.setOrderId(null);
+                        return false;
+                    } catch (GenericEntityException ee) {
+                        throw new GeneralException("Problems adjusting item status (" + orderId + ")", ee);
+                    } catch (GenericServiceException e) {
+                        throw new GeneralException("Problems adjusting order status (" + orderId + ")", e);
+                    }
+                } else {
+                    // order WAS approved
+                    if (Debug.verboseOn()) Debug.logVerbose("Payment auth was a success!", module);
+                    Map statusRes = null;
+                    try {
+                        // set the status on the order header
+                        statusRes = dispatcher.runSync("changeOrderStatus",
+                                UtilMisc.toMap("orderId", orderId, "statusId", HEADER_APPROVE_STATUS));
+                        if (statusRes.containsKey("errorMessage"))
+                            Debug.logError("Order status service failed: (" + orderId + ") " + statusRes.get("errorMessage"), module);
+
+                        // set the status on the order item(s)
+                        GenericValue orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));
+                        if (orderHeader != null) {
+                            Collection orderItems = orderHeader.getRelated("OrderItem");
+                            if (orderItems != null && orderItems.size() > 0) {
+                                Iterator i = orderItems.iterator();
+                                while (i.hasNext()) {
+                                    GenericValue v = (GenericValue) i.next();
+                                    v.set("statusId", ITEM_APPROVE_STATUS);
+                                    v.store();
+                                }
+                            }
+                        }
+                        return true;
+                    } catch (GenericEntityException ee) {
+                        throw new GeneralException("Problems adjusting item status (" + orderId + ")", ee);
+                    } catch (GenericServiceException e) {
+                        throw new GeneralException("Problems adjusting order status (" + orderId + ")", e);
+                    }
+                }
+            } else {
+                // result returned null or service failed
+                request.setAttribute(SiteDefs.EVENT_MESSAGE, "<li>Problems with payment authorization. Your order has been saved and will be processed.");
+
+                // even though the auth did not approve; we will handle this error as a success, but leave the order in the original status.
+                return true;
+            }
+        } else {
+            // Handle NO payment gateway as a success.
+            return true;
+        }
     }
 }

@@ -378,7 +378,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="Picklist" />	
     <entity-group group="org.ofbiz.commonapp" entity="PicklistItem" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductOrderItem" />	
-    <entity-group group="org.ofbiz.commonapp" entity="SalesTaxLookup" />	
+    <entity-group group="org.ofbiz.commonapp" entity="SimpleSalesTaxLookup" />	
     <entity-group group="org.ofbiz.commonapp" entity="WorkOrderItemFulfillment" />
 
   <!-- ========================================================= -->

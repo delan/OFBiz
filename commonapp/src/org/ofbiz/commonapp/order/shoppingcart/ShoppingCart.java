@@ -49,6 +49,7 @@ public class ShoppingCart implements java.io.Serializable {
     private List paymentMethodTypeIds = new LinkedList();
     private String poNumber = null;
     private String orderId = null;
+    private String originalOrderId = null;
     private String billingAccountId = null;
     
     private GenericValue orderShipmentPreference = null;
@@ -571,9 +572,17 @@ public class ShoppingCart implements java.io.Serializable {
     public String getOrderId() {
         return this.orderId;
     }
+    /** Returns the original order ID associated with this cart or null if no order has been created yet. */
+    public String getOriginalOrderId() {
+        return this.originalOrderId;
+    }
     /** Sets the orderId associated with this cart. */
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+    /** Sets the original orderId for this cart. */
+    public void setOriginalOrderId(String orderId) {
+        this.originalOrderId = orderId;
     }
 
     /** Removes a free shipping ProductPromoAction by trying to find one in the list with the same primary key. */
