@@ -176,9 +176,11 @@
             location="org.ofbiz.manufacturing.jobshopmgt.ProductionRunServices" invoke="createProductionRun" auth="true">
         <description>Create a Production Run</description>
         <attribute name="productId" type="String" mode="IN"/>
-        <attribute name="quantity" type="String" mode="IN"/>
+        <attribute name="pRQuantity" type="Double" mode="IN"/>
         <attribute name="startDate" type="java.sql.Timestamp" mode="IN"/>
         <attribute name="routingId" type="String" mode="IN"/>
+        <attribute name="workEffortName" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
         <attribute name="msgResult" type="List" mode="OUT" optional="false"/>
     </service>
 
