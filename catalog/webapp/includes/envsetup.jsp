@@ -31,7 +31,7 @@
     
     layoutSettings.put("companyName", "OFBiz: Catalog Manager");
     layoutSettings.put("companySubtitle", "Part of the Open For Business Family of Open Source Software");
-    layoutSettings.put("headerImageUrl", "/images/ofb_logo.gif");
+    layoutSettings.put("headerImageUrl", "/images/ofbiz_logo.jpg");
     layoutSettings.put("headerMiddleBackgroundUrl", null);
     layoutSettings.put("headerRightBackgroundUrl", null);
 %>

@@ -1,2 +1,3 @@
-<!-- this file is empty because we have no footer, if you want one though, add it here -->
-&nbsp;
+
+<br><br>
+<div align="center"><img src="/images/ofbiz_powered.gif" alt="Powered By OFBiz"></div>
