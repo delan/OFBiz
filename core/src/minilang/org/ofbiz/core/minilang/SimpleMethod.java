@@ -653,6 +653,10 @@ public class SimpleMethod {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToField(curOperElem, simpleMethod));
                 } else if ("field-to-list".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.FieldToList(curOperElem, simpleMethod));
+                } else if ("list-to-list".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.ListToList(curOperElem, simpleMethod));
+                } else if ("env-to-env".equals(nodeName)) {
+                    methodOperations.add(new org.ofbiz.core.minilang.method.envops.EnvToEnv(curOperElem, simpleMethod));
                 } else if ("env-to-field".equals(nodeName)) {
                     methodOperations.add(new org.ofbiz.core.minilang.method.envops.EnvToField(curOperElem, simpleMethod));
                 } else if ("field-to-env".equals(nodeName)) {
