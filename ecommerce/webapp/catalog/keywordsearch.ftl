@@ -25,8 +25,8 @@
 -->
 
 <div class='head1'>
-    Search Results for "${requestAttributes.keywordString?if_exists}"
-    where <#if requestParameters.SEARCH_OPERATOR?upper_case == "OR">any keyword<#else>all keywords</#if> matched.     
+    Search Results for "${keywordString?if_exists}"
+    where <#if searchOperator?default("or")?upper_case == "OR">any keyword<#else>all keywords</#if> matched.     
 </div>
 
 <#if !requestAttributes.searchProductList?has_content>
@@ -39,13 +39,13 @@
       <td align=right>
         <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch/${requestAttributes.prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+          <a href="<@ofbizUrl>/keywordsearch/${prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch/${requestAttributes.nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
+          | <a href="<@ofbizUrl>/keywordsearch/${nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
         </#if>
         </b>
       </td>
@@ -79,13 +79,13 @@
       <td align=right>
         <b>
         <#if 0 < requestAttributes.viewIndex?int>
-          <a href="<@ofbizUrl>/keywordsearch?${requestAttributes.prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
+          <a href="<@ofbizUrl>/keywordsearch?${prevStr}</@ofbizUrl>" class="buttontext">[Previous]</a> |
         </#if>
         <#if 0 < requestAttributes.listSize?int>
           <span class="tabletext">${requestAttributes.lowIndex} - ${requestAttributes.highIndex} of ${requestAttributes.listSize}</span>
         </#if>
         <#if requestAttributes.highIndex?int < requestAttributes.listSize?int>      
-          | <a href="<@ofbizUrl>/keywordsearch?${requestAttributes.nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
+          | <a href="<@ofbizUrl>/keywordsearch?${nextStr}</@ofbizUrl>" class="buttontext">[Next]</a>
         </#if>
         </b>
       </td>

@@ -43,9 +43,9 @@ viewSize = request.getAttribute("viewSize");
 baseSearchStr = "~SEARCH_STRING="+keywordString+"/~SEARCH_OPERATOR="+searchOperator+"/~SEARCH_CATEGORY_ID="+searchCategoryId+"/~VIEW_SIZE="+viewSize;
 nextStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()+1);
 prevStr = baseSearchStr+"/~VIEW_INDEX="+(viewIndex.intValue()-1);
-request.setAttribute("baseSearchStr", baseSearchStr);
-request.setAttribute("nextStr", nextStr);
-request.setAttribute("prevStr", prevStr);
 
-Debug.logError("Search results: " + request.getAttribute("searchProductList"));
+context.put("searchOperator", searchOperator);
+context.put("baseSearchStr", baseSearchStr);
+context.put("nextStr", nextStr);
+context.put("prevStr", prevStr);
 
