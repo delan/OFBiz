@@ -25,10 +25,10 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-screen.dtd,v 1.12 2004/07/18 10:09:33 jonesde Exp $
+ *  $Id: widget-screen.dtd,v 1.13 2004/07/27 20:30:24 byersa Exp $
 -->
 
-<!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific">
+<!ENTITY % AllWidgets "section | container | include-screen | decorator-screen | decorator-section-include | label | form | menu | tree | content | sub-content | platform-specific | link | image">
 
 <!ENTITY % AllActions "set | script | service | entity-one | entity-and | entity-condition">
 
@@ -200,6 +200,31 @@
     <!ATTLIST sub-content
         content-id CDATA #REQUIRED
         assoc-name CDATA #REQUIRED
+    >
+
+    <!ELEMENT image (#PCDATA)>
+    <!ATTLIST image
+        src CDATA #IMPLIED
+        id CDATA #IMPLIED
+        style CDATA #IMPLIED
+        width CDATA #IMPLIED
+        height CDATA #IMPLIED
+        border CDATA #IMPLIED
+        url-mode ( ofbiz | content | raw ) "ofbiz"
+    >
+
+    <!ELEMENT link (image?)>
+    <!ATTLIST link
+        text CDATA #IMPLIED
+        id CDATA #IMPLIED
+        style CDATA #IMPLIED
+        target CDATA #IMPLIED
+        target-window CDATA #IMPLIED
+        prefix CDATA #IMPLIED
+        url-mode ( ofbiz | content | raw ) "ofbiz"
+        full-path ( true | false ) "false"
+        secure ( true | false ) "false"
+        encode ( true | false ) "false"
     >
 
 <!-- ============== Platform Specific Elements =============== -->

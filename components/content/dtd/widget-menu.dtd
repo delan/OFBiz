@@ -25,7 +25,7 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
- *  $Id: widget-menu.dtd,v 1.5 2004/06/02 17:50:05 byersa Exp $
+ *  $Id: widget-menu.dtd,v 1.6 2004/07/27 20:30:24 byersa Exp $
 -->
 
 
@@ -79,6 +79,7 @@
     cell-width CDATA #IMPLIED
     disable-if-empty CDATA #IMPLIED
     disabled-title-style CDATA #IMPLIED
+    target-window CDATA #IMPLIED
 >
 
 <!--
