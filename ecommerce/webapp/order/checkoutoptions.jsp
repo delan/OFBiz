@@ -39,7 +39,7 @@
 <%@ include file="/includes/onecolumn.jsp" %>
 
 <%ShoppingCart cart = (ShoppingCart)session.getAttribute(SiteDefs.SHOPPING_CART); %>
-<%if (cart != null) pageContext.setAttribute("cart", cart);%>
+<%if ((cart != null) && (cart.size() > 0)) pageContext.setAttribute("cart", cart);%>
 <ofbiz:if name="cart">
     <%if (cart.getMaySplit() != null) pageContext.setAttribute("maySplit", cart.getMaySplit());%>
 </ofbiz:if>
@@ -207,25 +207,25 @@
     </tr>
     <ofbiz:iterator name="shippingPartyContactPurpose" property="shippingPartyContactPurposeList">
     <%GenericValue partyContactMech = shippingPartyContactPurpose.getRelatedOne("PartyContactMech");%>
-    <%GenericValue shippingLocation = partyContactMech.getRelatedOne("ContactMech").getRelatedOne("PostalAddress");%>
-    <%pageContext.setAttribute("shippingLocation", shippingLocation);%>
+    <%GenericValue shippingAddress = partyContactMech.getRelatedOne("ContactMech").getRelatedOne("PostalAddress");%>
+    <%pageContext.setAttribute("shippingAddress", shippingAddress);%>
     <%if(partyContactMech.get("thruDate") == null || partyContactMech.getTimestamp("thruDate").after(new java.util.Date())) {%>
-      <ofbiz:if name="shippingLocation">
+      <ofbiz:if name="shippingAddress">
       <tr>
         <td align="left" valign="top" width="1%" nowrap>
-            <%String shippingContactMechId = (String) shippingLocation.get("contactMechId");%>
+            <%String shippingContactMechId = (String) shippingAddress.get("contactMechId");%>
             <input type="radio" name="shipping_contact_mech_id" value="<%=shippingContactMechId%>"
               <ofbiz:if name="cart"><%=shippingContactMechId.equals(cart.getShippingContactMechId()) ? "CHECKED" : ""%></ofbiz:if>>
         </td>
         <td align="left" valign="top" width="99%" nowrap>
           <div class="tabletext">
-          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("toName"), "<b>To:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("address1"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("address2"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("city"), "", "<br>")%>
-          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingLocation.getString("postalCode"))%><br>
-          <%=UtilFormatOut.ifNotEmpty(shippingLocation.getString("countryGeoId"), "", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("toName"), "<b>To:</b> ", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("attnName"), "<b>Attn:</b> ", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address1"), "", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("address2"), "", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("city"), "", "<br>")%>
+          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("stateProvinceGeoId"), "", "&nbsp;")%> <%=UtilFormatOut.checkNull(shippingAddress.getString("postalCode"))%><br>
+          <%=UtilFormatOut.ifNotEmpty(shippingAddress.getString("countryGeoId"), "", "<br>")%>
 <%--          <a href="<ofbiz:url>/profileeditaddress?DONE_PAGE=checkoutoptions.jsp&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Update]</a>
           <a href="<ofbiz:url>/checkoutoptions?<%="event"%>=<%=EventConstants.DELETE_SHIPPING_LOCATION%>&<%=HttpRequestConstants.ADDRESS_KEY%>=<%=billingLocation.getAddressId()%></ofbiz:url>" class="buttontext">[Delete]</a> --%>
           </div>
@@ -321,7 +321,8 @@
     <%GenericValue billingAccount = billingAccountRole.getRelatedOne("BillingAccount");%>
     <tr>
       <td align="left" valign="top" width="1%" nowrap>
-          <input type="radio" name="billing_account_id" value="<%=billingAccount.getString("billingAccountId")%>">
+          <input type="radio" name="billing_account_id" value="<%=billingAccount.getString("billingAccountId")%>"
+            <ofbiz:if name="cart"><%=billingAccount.getString("billingAccountId").equals(cart.getBillingAccountId()) ? "CHECKED" : ""%></ofbiz:if>>
       </td>
       <td align="left" valign="top" width="99%" nowrap>
         <div class="tabletext">
