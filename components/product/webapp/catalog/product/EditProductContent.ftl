@@ -22,7 +22,7 @@
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Brad Steiner (bsteiner@thehungersite.com)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -30,9 +30,6 @@
 <SCRIPT language="JavaScript">
 function insertNowTimestamp(field) {
   eval('document.productForm.' + field + '.value="${nowTimestampString}";');
-};
-function insertImageName(size,ext) {
-  eval('document.productForm.' + size + 'ImageUrl.value="${Static["org.ofbiz.base.util.UtilProperties"].getPropertyValue(catalogPropertiesURL, "image.url.prefix")}/product.${productId}.' + size + '.' + ext + '";');
 };
 </SCRIPT>
 
@@ -149,8 +146,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:insertImageName('small', 'jpg');" class="buttontext">[.jpg]</a>
-                <a href="javascript:insertImageName('small', 'gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.smallImageUrl.value='${imageNameSmall}.jpg';" class="buttontext">[.jpg]</a>
+                <a href="javascript:document.productForm.smallImageUrl.value='${imageNameSmall}.gif';" class="buttontext">[.gif]</a>
                 </div>
             </#if>
             </td>
@@ -168,8 +165,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:insertImageName('medium', 'jpg');" class="buttontext">[.jpg]</a>
-                <a href="javascript:insertImageName('medium', 'gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.mediumImageUrl.value='${imageNameMedium}.jpg';" class="buttontext">[.jpg]</a>
+                <a href="javascript:document.productForm.mediumImageUrl.value='${imageNameMedium}.gif';" class="buttontext">[.gif]</a>
                 </div>
             </#if>
             </td>
@@ -187,8 +184,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:insertImageName('large', 'jpg');" class="buttontext">[.jpg]</a>
-                <a href="javascript:insertImageName('large', 'gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.largeImageUrl.value='${imageNameLarge}.jpg';" class="buttontext">[.jpg]</a>
+                <a href="javascript:document.productForm.largeImageUrl.value='${imageNameLarge}.gif';" class="buttontext">[.gif]</a>
                 </div>
             </#if>
             </td>
@@ -206,8 +203,8 @@ ${pages.get("/product/ProductTabBar.ftl")}
             <#if productId?has_content>
                 <div>
                 <span class="tabletext">${uiLabelMap.ProductInsertDefaultImageUrl}: </span>
-                <a href="javascript:insertImageName('detail', 'jpg');" class="buttontext">[.jpg]</a>
-                <a href="javascript:insertImageName('detail', 'gif');" class="buttontext">[.gif]</a>
+                <a href="javascript:document.productForm.detailImageUrl.value='${imageNameDetail}.jpg';" class="buttontext">[.jpg]</a>
+                <a href="javascript:document.productForm.detailImageUrl.value='${imageNameDetail}.gif';" class="buttontext">[.gif]</a>
                 </div>
             </#if>
             </td>
