@@ -181,4 +181,17 @@ public class StringUtil {
         return buf.toString();
     }
 
+    /** Make sure the string starts with a forward slash but does not end with one; converts back-slashes to forward-slashes; if in String is null or empty, returns zero length string. */
+    public static String cleanUpPathPrefix(String prefix) {
+        if (prefix == null || prefix.length() == 0) return "";
+        
+        StringBuffer cppBuff = new StringBuffer(prefix.replace('\\','/'));
+        if (cppBuff.charAt(0) != '/') {
+            cppBuff.insert(0, '/');
+        }
+        if (cppBuff.charAt(cppBuff.length()-1) == '/') {
+            cppBuff.deleteCharAt(cppBuff.length());
+        }
+        return cppBuff.toString();
+    }
 }
