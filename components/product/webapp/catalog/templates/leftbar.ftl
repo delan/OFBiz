@@ -21,17 +21,14 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.1 $
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
 
   <td width='950' valign='top' align='left'>
     ${pages.get("/find/keywordsearchbox.ftl")}
-    <br>
     ${pages.get("/find/sidecatalogs.ftl")}
-    <br>
     ${pages.get("/find/sidedeepcategory.ftl")}
-    <br>
     ${pages.get("/find/miniproductlist.ftl")}
   </td>
   <td width='5'>&nbsp;&nbsp;&nbsp;</td>

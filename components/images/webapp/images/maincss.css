@@ -181,10 +181,7 @@ padding-right: 5px; padding-left: 5px;
 .tabContainer {
 background-color: #FFFFFF;
 padding-top: 4px;
-padding-bottom: 4px;
-margin-bottom: 5px;
-border-top: solid #CCCCCC 1px;
-border-bottom: solid #CCCCCC 1px;
+margin-bottom: 10px;
 }
 
 A.tabButton {

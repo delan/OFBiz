@@ -21,7 +21,7 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.5 $
+ *@version    $Revision: 1.6 $
  *@since      2.1
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
@@ -53,52 +53,36 @@
   </#if>
 </#macro>
 
-<TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign=middle align=center>
-            <div class="boxhead">${uiLabelMap.ProductBrowseCategories}</div>
-          </td>
-          <td valign=middle align=right>
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="simple-right-small">
             <#if isOpen>
                 <a href='<@ofbizUrl>/main?BrowseCategoriesState=close</@ofbizUrl>' class='lightbuttontext'>&nbsp;_&nbsp;</a>
             <#else>
                 <a href='<@ofbizUrl>/main?BrowseCategoriesState=open</@ofbizUrl>' class='lightbuttontext'>&nbsp;[]&nbsp;</a>
             </#if>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
+        </div>
+        <div class="boxhead">${uiLabelMap.ProductBrowseCategories}</div>
+    </div>
 <#if isOpen>
-  <TR>
-    <TD width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-            <div><a href='<@ofbizUrl>/ChooseTopCategory</@ofbizUrl>' class='buttontext'>${uiLabelMap.ProductChooseTopCategory}</a></div>
-            <div style='margin-left: 10px;'>
-            <#if currentTopCategory?exists>
-              <#if curCategoryId?exists && curCategoryId == currentTopCategory.productCategoryId>
-                <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;${currentTopCategory.description?default("No Description")} [${currentTopCategory.productCategoryId}]</b></div>
-              <#else>
-                <div class='browsecategorytext'>-&nbsp;<a href="<@ofbizUrl>/EditCategory?productCategoryId=${currentTopCategory.productCategoryId}</@ofbizUrl>" class='browsecategorybutton'>${currentTopCategory.description?if_exists} [${currentTopCategory.productCategoryId}]</a></div>
-              </#if>
+    <div class="screenlet-body">
+        <div><a href='<@ofbizUrl>/ChooseTopCategory</@ofbizUrl>' class='buttontext'>${uiLabelMap.ProductChooseTopCategory}</a></div>
+        <div style='margin-left: 10px;'>
+        <#if currentTopCategory?exists>
+          <#if curCategoryId?exists && curCategoryId == currentTopCategory.productCategoryId>
+            <div class='tabletext' style='text-indent: -10px;'><b>-&nbsp;${currentTopCategory.description?default("No Description")} [${currentTopCategory.productCategoryId}]</b></div>
+          <#else>
+            <div class='browsecategorytext'>-&nbsp;<a href="<@ofbizUrl>/EditCategory?productCategoryId=${currentTopCategory.productCategoryId}</@ofbizUrl>" class='browsecategorybutton'>${currentTopCategory.description?if_exists} [${currentTopCategory.productCategoryId}]</a></div>
+          </#if>
+        </#if>
+          <div style='margin-left: 10px;'>
+            <#if topLevelList?exists>
+              <#list topLevelList as category>
+                <@categoryList parentCategory=category category=category/>
+              </#list>
             </#if>
-              <div style='margin-left: 10px;'>
-                <#if topLevelList?exists>
-                  <#list topLevelList as category>
-                    <@categoryList parentCategory=category category=category/>
-                  </#list>
-                </#if>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </table>
-    </TD>
-  </TR>
+          </div>
+        </div>
+    </div>
 </#if>
-</TABLE>
+</div>

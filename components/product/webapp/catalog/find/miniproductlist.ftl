@@ -21,71 +21,49 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Revision: 1.6 $
+ *@version    $Revision: 1.7 $
  *@since      2.1
 -->
 <#if (requestAttributes.uiLabelMap)?exists><#assign uiLabelMap = requestAttributes.uiLabelMap></#if>
 
-<table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
-        <tr>
-          <td valign="middle" align="center">
-            <div class="boxhead">Category&nbsp;Products</div>
-          </td>
-          <td valign="middle" align="right">
+<div class="screenlet">
+    <div class="screenlet-header">
+        <div class="simple-right-small">
             <#if isOpen>
                 <a href='<@ofbizUrl>/main?CategoryProductsState=close</@ofbizUrl>' class='lightbuttontext'>&nbsp;_&nbsp;</a>
             <#else>
                 <a href='<@ofbizUrl>/main?CategoryProductsState=open</@ofbizUrl>' class='lightbuttontext'>&nbsp;[]&nbsp;</a>
             </#if>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
+        </div>
+        <div class="boxhead">Category&nbsp;Products</div>
+    </div>
 <#if isOpen>
-  <tr>
-    <td width='100%'>
-      <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
-        <tr>
-          <td>
-          	<#if productCategory?exists>
-              <#if productCategoryMembers?has_content>
-                <table width='100%' cellspacing="0" cellpadding="1" border="0">
-                  <#assign upperBound = highIndex - 1>
-                  <#list productCategoryMembers[0..upperBound] as productCategoryMember>
-                    <#assign product = productCategoryMember.getRelatedOneCache("Product")>
-                    <tr>
-                      <td>
-                        <a href='<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>' class='buttontext'>
-                          ${product.internalName?default("No Internal Name")}
-                        </a>
-                        <div class='tabletext'>
-                          <b>${product.productId}</b>
-                        </div>
-                      </td>
-                    </tr>
-                  </#list>
-                  <#if (listSize > viewSize)>
-                    <tr>
-                      <td>
-                        <div class='tabletext'>NOTE: Only showing the first ${viewSize} of ${listSize} products. To view the rest, use the Products tab for this category.</div>
-                      </td>
-                    </tr>
-                  </#if>
-                </table>
-              <#else>
-                <div class='tabletext'>${uiLabelMap.ProductNoProductsInCategory}.</div>
+    <div class="screenlet-body">
+      	<#if productCategory?exists>
+          <#if productCategoryMembers?has_content>
+              <#assign upperBound = highIndex - 1>
+              <#list productCategoryMembers[0..upperBound] as productCategoryMember>
+                <#assign product = productCategoryMember.getRelatedOneCache("Product")>
+                  <div>
+                    <a href='<@ofbizUrl>/EditProduct?productId=${product.productId}</@ofbizUrl>' class='buttontext'>
+                      ${product.internalName?default("No Internal Name")}
+                    </a>
+                    <div class='tabletext'>
+                      <b>${product.productId}</b>
+                    </div>
+                  </div>
+              </#list>
+              <#if (listSize > viewSize)>
+                  <div>
+                    <div class='tabletext'>NOTE: Only showing the first ${viewSize} of ${listSize} products. To view the rest, use the Products tab for this category.</div>
+                  </div>
               </#if>
-            <#else>
-                <div class='tabletext'>${uiLabelMap.ProductNoCategorySpecified}.</div>
-            </#if>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
+          <#else>
+            <div class='tabletext'>${uiLabelMap.ProductNoProductsInCategory}.</div>
+          </#if>
+        <#else>
+            <div class='tabletext'>${uiLabelMap.ProductNoCategorySpecified}.</div>
+        </#if>
+    </div>
 </#if>
-</table>
+</div>

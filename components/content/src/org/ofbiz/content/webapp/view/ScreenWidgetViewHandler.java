@@ -1,5 +1,5 @@
 /*
- * $Id: ScreenWidgetViewHandler.java,v 1.4 2004/07/30 02:11:16 jonesde Exp $
+ * $Id: ScreenWidgetViewHandler.java,v 1.5 2004/08/03 16:33:30 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -62,7 +62,7 @@ import freemarker.ext.servlet.HttpSessionHashModel;
  * Handles view rendering for the Screen Widget
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class ScreenWidgetViewHandler implements ViewHandler {
@@ -135,6 +135,9 @@ public class ScreenWidgetViewHandler implements ViewHandler {
             context.put("autoUserLogin", session.getAttribute("autoUserLogin"));
             context.put("person", session.getAttribute("person"));
             context.put("partyGroup", session.getAttribute("partyGroup"));
+            
+            // some things also seem to require this, so here it is:
+            request.setAttribute("userLogin", userLogin);
             
             // ========== setup values that are specific to OFBiz webapps
             context.put("request", request);
