@@ -1447,6 +1447,9 @@
       <relation type="one" fk-name="GOOD_ID_PRODICT" rel-entity-name="Product">
         <key-map field-name="productId"/>
       </relation>
+      <index name="GOOD_ID_VALIDX" unique="false">
+          <index-field name="idValue"/>
+      </index>
     </entity>
     <view-entity entity-name="GoodIdentificationAndProduct"
                 package-name="org.ofbiz.product.product"
