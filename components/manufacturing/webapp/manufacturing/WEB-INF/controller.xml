@@ -389,6 +389,10 @@
     </request-map>
 
      <!-- MRP request mappings -->
+    <request-map uri="FindInventoryEventPlan">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindInventoryEventPlan"/>
+    </request-map>
     <request-map uri="RunningMrp">
         <security https="true" auth="true"/>
         <response name="success" type="view" value="RunningMrp"/>
@@ -442,6 +446,7 @@
     <!-- Lookup request mappings -->
     <view-map name="GenericLookup" page="/lookup/GenericLookup.ftl" type="jpublish"/>
     <!-- MRP view mappings -->
+    <view-map name="FindInventoryEventPlan" type="jpublish" page="/mrp/findInventoryEventPlan.ftl"/>
     <view-map name="RunningMrp" type="jpublish" page="/mrp/RunningMrp.ftl"/>
      <!-- JobShop Management request mappings -->
     <view-map name="CreateProductionRun" type="jpublish" page="/jobshopmgt/CreateProductionRun.ftl"/>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template> 
+    <property name="titleProperty">PageTitleFindInventoryEventPlan</property>
+    <property name="headerItem">mrp</property>   
+    <property name="tabButtonItem">findInventoryEventPlan</property>
+    <content-action name="/mrp/findInventoryEventPlan.bsh"/>
+</page>

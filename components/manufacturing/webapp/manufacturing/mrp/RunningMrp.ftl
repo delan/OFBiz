@@ -26,6 +26,7 @@
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign locale = requestAttributes.locale>
 
+${pages.get("/mrp/MrpTabBar.ftl")}
 
   <div class="head1">${uiLabelMap.ManufacturingRunningMrp}</div>
   <form name="runningMrpform" method="post" action="<@ofbizUrl>/RunningMrpGo</@ofbizUrl>">
