@@ -479,7 +479,6 @@
 	
     <entity-group group="org.ofbiz.commonapp" entity="ProductCategory" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryAttribute" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryClass" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryMember" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryRollup" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductCategoryType" />	
@@ -543,7 +542,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="ProductAssoc" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductAssocType" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductAttribute" />	
-    <entity-group group="org.ofbiz.commonapp" entity="ProductClass" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductDataObject" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductKeyword" />	
     <entity-group group="org.ofbiz.commonapp" entity="ProductType" />	

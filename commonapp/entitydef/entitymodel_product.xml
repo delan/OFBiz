@@ -62,19 +62,23 @@
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Entity">
       <field name="productCategoryId" type="id-ne"></field>
+      <field name="productCategoryTypeId" type="id"></field>
       <field name="primaryParentCategoryId" type="id"></field>
       <field name="description" type="description"></field>
       <field name="categoryImageUrl" type="long-varchar"></field>
       <field name="longDescription" type="very-long"></field>	
       <prim-key field="productCategoryId" />
-      <relation type="many" rel-entity-name="ProductCategoryClass">
-        <key-map field-name="productCategoryId" />
-      </relation>
       <relation type="many" rel-entity-name="ProductCategoryAttribute">
         <key-map field-name="productCategoryId" />
       </relation>
       <relation type="many" rel-entity-name="ProductCategoryMember">
         <key-map field-name="productCategoryId" />
+      </relation>
+      <relation type="one" rel-entity-name="ProductCategoryType">
+        <key-map field-name="productCategoryTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
+        <key-map field-name="productCategoryTypeId" />
       </relation>
       <relation type="one" title="PrimaryParent" rel-entity-name="ProductCategory">
         <key-map field-name="primaryParentCategoryId" rel-field-name="productCategoryId" />
@@ -116,29 +120,6 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="ProductCategoryClass" 
-            package-name="org.ofbiz.commonapp.product.category"
-            title="Product Category Classification Entity">
-      <field name="productCategoryId" type="id-ne"></field>
-      <field name="productCategoryTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>	
-      <prim-key field="productCategoryId" />	
-      <prim-key field="productCategoryTypeId" />	
-      <prim-key field="fromDate" />
-      <relation type="one" rel-entity-name="ProductCategory">
-        <key-map field-name="productCategoryId" />
-      </relation>
-      <relation type="one" rel-entity-name="ProductCategoryType">
-        <key-map field-name="productCategoryTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
-        <key-map field-name="productCategoryTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="ProductCategoryAttribute">
-        <key-map field-name="productCategoryId" />
-      </relation>
-    </entity>
     <entity entity-name="ProductCategoryMember" 
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Member Entity">
@@ -146,7 +127,8 @@
       <field name="productId" type="id-ne"></field>
       <field name="fromDate" type="date-time"></field>
       <field name="thruDate" type="date-time"></field>
-      <field name="comments" type="comment"></field>	
+      <field name="comments" type="comment"></field>
+      <field name="sequenceNum" type="numeric"></field>	
       <prim-key field="productCategoryId" />	
       <prim-key field="productId" />	
       <prim-key field="fromDate" />
@@ -161,7 +143,8 @@
             package-name="org.ofbiz.commonapp.product.category"
             title="Product Category Rollup Entity">
       <field name="productCategoryId" type="id-ne"></field>
-      <field name="parentProductCategoryId" type="id-ne"></field>	
+      <field name="parentProductCategoryId" type="id-ne"></field>
+      <field name="sequenceNum" type="numeric"></field>	
       <prim-key field="productCategoryId" />	
       <prim-key field="parentProductCategoryId" />
       <relation type="one" title="Current" rel-entity-name="ProductCategory">
@@ -197,7 +180,7 @@
       <relation type="many" rel-entity-name="ProductCategoryTypeAttr">
         <key-map field-name="productCategoryTypeId" />
       </relation>
-      <relation type="many" rel-entity-name="ProductCategoryClass">
+      <relation type="many" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryTypeId" />
       </relation>
     </entity>
@@ -214,7 +197,7 @@
       <relation type="many" rel-entity-name="ProductCategoryAttribute">
         <key-map field-name="attrName" />
       </relation>
-      <relation type="many" rel-entity-name="ProductCategoryClass">
+      <relation type="many" rel-entity-name="ProductCategory">
         <key-map field-name="productCategoryTypeId" />
       </relation>
     </entity>
@@ -872,6 +855,7 @@
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Entity">
       <field name="productId" type="id-ne"></field>
+      <field name="productTypeId" type="id"></field>
       <field name="primaryProductCategoryId" type="id"></field>
       <field name="manufacturerPartyId" type="id"></field>
       <field name="introductionDate" type="date"></field>
@@ -896,11 +880,14 @@
       <field name="chargeShipping" type="indicator"></field>
       <field name="autoCreateKeywords" type="indicator"></field>	
       <prim-key field="productId" />
-      <relation type="many" rel-entity-name="ProductClass">
-        <key-map field-name="productId" />
-      </relation>
       <relation type="many" rel-entity-name="ProductAttribute">
         <key-map field-name="productId" />
+      </relation>
+      <relation type="one" rel-entity-name="ProductType">
+        <key-map field-name="productTypeId" />
+      </relation>
+      <relation type="many" rel-entity-name="ProductTypeAttr">
+        <key-map field-name="productTypeId" />
       </relation>
       <relation type="one" title="Primary" rel-entity-name="ProductCategory">
         <key-map field-name="primaryProductCategoryId" rel-field-name="productCategoryId" />
@@ -1012,29 +999,6 @@
         <key-map field-name="attrName" />
       </relation>
     </entity>
-    <entity entity-name="ProductClass" 
-            package-name="org.ofbiz.commonapp.product.product"
-            title="Product Classification Entity">
-      <field name="productId" type="id-ne"></field>
-      <field name="productTypeId" type="id-ne"></field>
-      <field name="fromDate" type="date-time"></field>
-      <field name="thruDate" type="date-time"></field>	
-      <prim-key field="productId" />	
-      <prim-key field="productTypeId" />	
-      <prim-key field="fromDate" />
-      <relation type="one" rel-entity-name="Product">
-        <key-map field-name="productId" />
-      </relation>
-      <relation type="one" rel-entity-name="ProductType">
-        <key-map field-name="productTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="ProductTypeAttr">
-        <key-map field-name="productTypeId" />
-      </relation>
-      <relation type="many" rel-entity-name="ProductAttribute">
-        <key-map field-name="productId" />
-      </relation>
-    </entity>
     <entity entity-name="ProductDataObject" 
             package-name="org.ofbiz.commonapp.product.product"
             title="Product Data Object Entity">
@@ -1077,7 +1041,7 @@
       <relation type="many" rel-entity-name="ProductTypeAttr">
         <key-map field-name="productTypeId" />
       </relation>
-      <relation type="many" rel-entity-name="ProductClass">
+      <relation type="many" rel-entity-name="Product">
         <key-map field-name="productTypeId" />
       </relation>
     </entity>
@@ -1094,7 +1058,7 @@
       <relation type="many" rel-entity-name="ProductAttribute">
         <key-map field-name="attrName" />
       </relation>
-      <relation type="many" rel-entity-name="ProductClass">
+      <relation type="many" rel-entity-name="Product">
         <key-map field-name="productTypeId" />
       </relation>
     </entity>
