@@ -104,6 +104,8 @@ public class ECAUtil {
     }
 
     public static Map getServiceEventMap(String serviceName) {
+        if (ecaCache.size() == 0)
+            ECAUtil.readConfig();
         return (Map) ecaCache.get(serviceName);
     }
 
