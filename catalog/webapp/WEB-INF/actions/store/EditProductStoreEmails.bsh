@@ -31,26 +31,26 @@ import org.ofbiz.core.widgetimpl.*;
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");
 
-if(security.hasEntityPermission("CONTENTMGR", "_VIEW", session)) {
+if(security.hasEntityPermission("CATALOG", "_VIEW", session)) {
     context.put("hasPermission", Boolean.TRUE);
 } else {
     context.put("hasPermission", Boolean.FALSE);
 }
 
-String webSiteId = request.getParameter("webSiteId");
-GenericValue webSite = delegator.findByPrimaryKey("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
-List webSiteEmailSettings = null;
-if (webSite != null) {
-    webSiteEmailSettings = delegator.findByAnd("WebSiteEmailSetting", UtilMisc.toMap("webSiteId", webSiteId));    
+String productStoreId = request.getParameter("productStoreId");
+GenericValue productStore = delegator.findByPrimaryKey("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+List productStoreEmailSettings = null;
+if (productStore != null) {
+    productStoreEmailSettings = delegator.findByAnd("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", productStoreId));    
 }
 
-HtmlFormWrapper updateWebSiteEmailWrapper = new HtmlFormWrapper("/website/WebSiteForms.xml", "updateWebSiteEmail", request, response);
-updateWebSiteEmailWrapper.putInContext("webSiteEmailSettings", webSiteEmailSettings);
+HtmlFormWrapper updateProductStoreEmailForm = new HtmlFormWrapper("/store/ProductStoreForms.xml", "updateProductStoreEmail", request, response);
+updateProductStoreEmailForm.putInContext("productStoreEmailSettings", productStoreEmailSettings);
 
-HtmlFormWrapper createWebSiteEmailWrapper = new HtmlFormWrapper("/website/WebSiteForms.xml", "createWebSiteEmail", request, response);
-createWebSiteEmailWrapper.putInContext("webSite", webSite);
+HtmlFormWrapper createProductStoreEmailForm = new HtmlFormWrapper("/store/ProductStoreForms.xml", "createProductStoreEmail", request, response);
+createProductStoreEmailForm.putInContext("productStore", productStore);
 
-context.put("webSiteId", webSiteId);
-context.put("webSite", webSite);
-context.put("updateWebSiteEmailWrapper", updateWebSiteEmailWrapper);
-context.put("createWebSiteEmailWrapper", createWebSiteEmailWrapper);
+context.put("productStoreId", productStoreId);
+context.put("productStore", productStore);
+context.put("updateProductStoreEmailForm", updateProductStoreEmailForm);
+context.put("createProductStoreEmailForm", createProductStoreEmailForm);

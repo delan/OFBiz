@@ -891,7 +891,30 @@
     	<response name="success" type="view" value="EditProductStoreCatalogs"/>
     	<response name="error" type="view" value="EditProductStoreCatalogs"/>
     </request-map>
-
+    
+    <!-- ================ ProductStore Email Requests ================= -->
+    <request-map uri="EditProductStoreEmails">
+    	<security https="true" auth="true"/>
+    	<response name="success" type="view" value="EditProductStoreEmails"/>
+    </request-map>
+    <request-map uri="createProductStoreEmail">
+    	<security https="true" auth="true"/>
+        <event type="service" path="" invoke="createProductStoreEmailSetting"/>
+    	<response name="success" type="view" value="EditProductStoreEmails"/>
+    	<response name="error" type="view" value="EditProductStoreEmails"/>
+    </request-map>
+    <request-map uri="updateProductStoreEmail">
+    	<security https="true" auth="true"/>
+        <event type="service" path="" invoke="updateProductStoreEmailSetting"/>
+    	<response name="success" type="view" value="EditProductStoreEmails"/>
+    	<response name="error" type="view" value="EditProductStoreEmails"/>
+    </request-map>
+    <request-map uri="removeProductStoreEmail">
+    	<security https="true" auth="true"/>
+        <event type="service" path="" invoke="removeProductStoreEmailSetting"/>
+    	<response name="success" type="view" value="EditProductStoreEmails"/>
+    	<response name="error" type="view" value="EditProductStoreEmails"/>
+    </request-map>       
 
     <!-- end of request mappings -->
 
@@ -950,7 +973,8 @@
     <view-map name="EditProductPriceRules" type="jpublish" page="/price/EditProductPriceRules.ftl"/>
     
     <view-map name="FindProductStore" type="jpublish" page="/store/FindProductStore.ftl"/>
-    <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>    
+    <view-map name="EditProductStore" type="jpublish" page="/store/EditProductStore.ftl"/>
+    <view-map name="EditProductStoreEmails" type="jpublish" page="/store/EditProductStoreEmails.ftl"/>
     <view-map name="EditProductStorePromos" type="jpublish" page="/store/EditProductStorePromos.ftl"/>
     <view-map name="EditProductStoreCatalogs" type="jpublish" page="/store/EditProductStoreCatalogs.ftl"/>
     <view-map name="EditProductStoreShipSetup" type="jpublish" page="/store/EditProductStoreShipSetup.ftl"/>

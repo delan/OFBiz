@@ -47,24 +47,7 @@
         <description>Remove WebSite Role</description>
         <auto-attributes entity-name="WebSiteRole" include="pk" mode="IN" optional="false"/>     
     </service>
-    
-    <!-- WebSite Email Setting Services -->
-    <service name="createWebSiteEmailSetting" engine="simple"
-            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="createWebSiteEmail" auth="true">        
-        <description>Create a WebSite Email Setting</description>
-        <auto-attributes entity-name="WebSiteEmailSetting" include="all" mode="IN" optional="false"/>
-    </service>
-    <service name="updateWebSiteEmailSetting" engine="simple"
-            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="updateWebSiteEmail" auth="true">        
-        <description>Update a WebSite Email Setting</description>
-        <auto-attributes entity-name="WebSiteEmailSetting" include="all" mode="IN" optional="false"/>
-    </service>
-    <service name="removeWebSiteEmailSetting" engine="simple"
-            location="org/ofbiz/commonapp/content/website/WebSiteServices.xml" invoke="removeWebSiteEmail" auth="true">        
-        <description>Remove a WebSite Email Setting</description>
-        <auto-attributes entity-name="WebSiteEmailSetting" include="pk" mode="IN" optional="false"/>
-    </service>        
-        
+            
     <!--Contentservices.-->
     <service name="createContent" default-entity-name="Content" engine="simple"
             location="org/ofbiz/commonapp/content/content/ContentServices.xml" invoke="createContent" auth="true">

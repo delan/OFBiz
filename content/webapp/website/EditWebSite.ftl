@@ -29,8 +29,7 @@
 <#if webSiteId?has_content>
   <div class='tabContainer'>
   <a href="<@ofbizUrl>/EditWebSite?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButtonSelected">WebSite</a>
-  <a href="<@ofbizUrl>/EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Parties</a>
-  <a href="<@ofbizUrl>/EditWebSiteEmail?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Email Settings</a>
+  <a href="<@ofbizUrl>/EditWebSiteParties?webSiteId=${webSiteId}</@ofbizUrl>" class="tabButton">Parties</a> 
   </div>
 </#if>
 <div class="head1">Web Site <span class='head2'><#if (webSite.siteName)?has_content>"${webSite.siteName}"</#if> [ID:${webSiteId?if_exists}]</span></div>

@@ -116,13 +116,6 @@
   <Enumeration description="Cookie" enumCode="COOKIE" enumId="TKCDSRC_COOKIE" sequenceId="01" enumTypeId="TRACKINGCODE_SRC"/>
   <Enumeration description="URL Parameter" enumCode="URL_PARAM" enumId="TKCDSRC_URL_PARAM" sequenceId="01" enumTypeId="TRACKINGCODE_SRC"/>
 
-  <EnumerationType description="WebSite Email Notification" enumTypeId="WEBSITE_EMAIL" hasTable="N" parentTypeId=""/>
-  <Enumeration description="Confirmation" enumCode="ODR_CONFIRM" enumId="WES_ODR_CONFIRM" enumTypeId="WEBSITE_EMAIL" sequenceId="01"/>
-  <Enumeration description="Complete" enumCode="ODR_COMPLETE" enumId="WES_ODR_COMPLETE" enumTypeId="WEBSITE_EMAIL" sequenceId="02"/>
-  <Enumeration description="Back-Order" enumCode="ODR_BACKORDER" enumId="WES_ODR_BACKORDER" enumTypeId="WEBSITE_EMAIL" sequenceId="03"/>
-  <Enumeration description="Other Change" enumCode="ODR_CHANGE" enumId="WES_ODR_CHANGE" enumTypeId="WEBSITE_EMAIL" sequenceId="04"/>  
-  <Enumeration description="Retrieve Password" enumCode="PWD_RETRIEVE" enumId="WES_PWD_RETRIEVE" enumTypeId="WEBSITE_EMAIL" sequenceId="05"/>
-  
   <UomType description="Currency" hasTable="N" parentTypeId="" uomTypeId="CURRENCY_MEASURE"/>
   <UomType description="Time/Frequency" hasTable="N" parentTypeId="" uomTypeId="TIME_FREQ_MEASURE"/>
   <UomType description="Length" hasTable="N" parentTypeId="" uomTypeId="LENGTH_MEASURE"/>

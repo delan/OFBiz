@@ -18,6 +18,11 @@
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REAUTH" paymentService="alwaysApproveCCProcesso"/>
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="CREDIT_CARD" paymentServiceTypeEnumId="PRDS_PAY_REFUND" paymentService="testCCRefund"/>
   <ProductStorePaymentSetting productStoreId="9000" paymentMethodTypeId="EFT_ACCOUNT" paymentServiceTypeEnumId="PRDS_PAY_AUTH" paymentService="alwaysApproveEFTProcessor"/>  
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_COMPLETE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailcomplete.ftl" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_BACKORDER" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailbackorder.ftl" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailorderchange.ftl" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
+  <ProductStoreEmailSetting productStoreId="9000" emailType="PRDS_PWD_RETRIEVE" templatePath="/commonapp/src/org/ofbiz/commonapp/security/login/passwordemail.ftl" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
   
   <WebSite webSiteId="WebStore" siteName="eCommerce Web Site" productStoreId="9000"/>
   <WebSite webSiteId="OrderEntry" siteName="Order Entry Web Site" productStoreId="9000"/>
@@ -27,16 +32,6 @@
   <ProductStoreCatalog productStoreId="9000" prodCatalogId="DemoCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="1"/>
   <ProductStoreCatalog productStoreId="9000" prodCatalogId="TestCatalog" fromDate="2001-01-01 12:00:00.0" sequenceNum="2"/>
   
-  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="OFBiz Demo - Order Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_COMPLETE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailcomplete.ftl" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_BACKORDER" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailbackorder.ftl" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailorderchange.ftl" subject="OFBiz Demo - Order Change Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="WebStore" emailType="WES_PWD_RETRIEVE" templatePath="/commonapp/src/org/ofbiz/commonapp/security/login/passwordemail.ftl" subject="OFBiz Demo - Password Reminder (${userLoginId})" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CONFIRM" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailconfirmation.ftl" subject="OFBiz Demo Order - Confirmation #${orderId}" bccAddress="ofbiztest@yahoo.com" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_COMPLETE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailcomplete.ftl" subject="OFBiz Demo - Your Order Is Complete #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_BACKORDER" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailbackorder.ftl" subject="OFBiz Demo - Backorder Notification #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
-  <WebSiteEmailSetting webSiteId="OrderEntry" emailType="WES_ODR_CHANGE" templatePath="/commonapp/src/org/ofbiz/commonapp/order/order/emailorderchange.ftl" subject="OFBiz Demo - Order Change #${orderId}" fromAddress="ofbiztest@yahoo.com"/>
-   
   <ProductCategory description="Demo Browse Root"
     longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
   <ProductCategory description="Gizmos" longDescription="long description of Gizmos"

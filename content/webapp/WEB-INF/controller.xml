@@ -106,30 +106,6 @@
     	<response name="error" type="view" value="EditWebSite"/>
     </request-map>
 
-    <!-- ================ WebSite Email Requests ================== -->
-    <request-map uri="EditWebSiteEmail">
-    	<security https="true" auth="true"/>
-    	<response name="success" type="view" value="EditWebSiteEmail"/>
-    </request-map>
-    <request-map uri="createWebSiteEmail">
-    	<security https="true" auth="true"/>
-        <event type="service" path="" invoke="createWebSiteEmailSetting"/>
-    	<response name="success" type="view" value="EditWebSiteEmail"/>
-    	<response name="error" type="view" value="EditWebSiteEmail"/>
-    </request-map>
-    <request-map uri="updateWebSiteEmail">
-    	<security https="true" auth="true"/>
-        <event type="service" path="" invoke="updateWebSiteEmailSetting"/>
-    	<response name="success" type="view" value="EditWebSiteEmail"/>
-    	<response name="error" type="view" value="EditWebSiteEmail"/>
-    </request-map>
-    <request-map uri="removeWebSiteEmail">
-    	<security https="true" auth="true"/>
-        <event type="service" path="" invoke="removeWebSiteEmailSetting"/>
-    	<response name="success" type="view" value="EditWebSiteEmail"/>
-    	<response name="error" type="view" value="EditWebSiteEmail"/>
-    </request-map>    
-        
     <!-- ================ WebSite Parties Requests ================= -->
     <request-map uri="EditWebSiteParties">
     	<security https="true" auth="true"/>
@@ -824,8 +800,7 @@
     <view-map name="login" page="/login.ftl" type="jpublish"/>
     
     <view-map name="FindWebSite" page="/website/FindWebSite.ftl" type="jpublish"/>
-    <view-map name="EditWebSite" page="/website/EditWebSite.ftl" type="jpublish"/>
-    <view-map name="EditWebSiteEmail" page="/website/EditWebSiteEmail.ftl" type="jpublish"/>
+    <view-map name="EditWebSite" page="/website/EditWebSite.ftl" type="jpublish"/>    
     <view-map name="EditWebSiteParties" page="/website/EditWebSiteParties.ftl" type="jpublish"/>
     
     <view-map name="EditContentPurpose" page="/content/EditContentPurpose.ftl" type="jpublish"/>

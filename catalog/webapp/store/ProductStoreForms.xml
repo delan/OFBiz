@@ -121,4 +121,35 @@
 				description="[Delete]" also-hidden="false"/>
 		</field>
 	</form>
+	
+	<form name="createProductStoreEmail" type="single" 
+		target="createProductStoreEmail" title=""
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="createProductStoreEmailSetting"/>
+		<field name="productStoreId" map-name="productStore"><hidden/></field>
+		<field name="emailType" title="Email Type" widget-style="selectBox">
+			<drop-down>
+				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
+					<entity-constraint name="enumTypeId" value="PRDS_EMAIL"/>
+					<entity-order-by field-name="sequenceId"/>
+				</entity-options>
+			</drop-down>
+		</field>
+		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
+	</form>
+	<form name="updateProductStoreEmail" type="list"
+		target="updateProductStoreEmail" title="" list-name="productStoreEmailSettings"
+		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
+		<auto-fields-service service-name="updateProductStoreEmailSetting"/>
+		<field name="productStoreId"><hidden/></field>
+		<field name="emailType"><display description="${emailType}"/></field>		
+		<field name="templatePath"></field>
+		<field name="subject"></field>
+		<field name="fromAddress"></field>
+		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
+		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
+			<hyperlink target="removeProductStoreEmail?productStoreId=${procuctStoreId}&amp;emailType=${emailType}"
+				description="[Delete]" also-hidden="false"/>
+		</field>			
+	</form>		
 </forms>

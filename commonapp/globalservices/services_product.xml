@@ -1138,7 +1138,29 @@
             location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="deleteProductStorePaymentSetting" auth="true">
         <description>Delete ProductStorePaymentSetting</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>        
-    </service>        
+    </service> 
+        
+    <service name="createProductStoreEmailSetting" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="createProductStoreEmail" auth="true">        
+        <description>Create a Product Store Email Setting</description>
+        <auto-attributes entity-name="ProductStoreEmailSetting" include="all" mode="IN" optional="false"/>
+        <override name="ccAddress" optional="true"/>
+        <override name="bccAddress" optional="true"/>
+        <override name="contentType" optional="true"/>
+    </service>
+    <service name="updateProductStoreEmailSetting" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="updateProductStoreEmail" auth="true">        
+        <description>Update a Product Store Email Setting</description>
+        <auto-attributes entity-name="ProductStoreEmailSetting" include="all" mode="IN" optional="false"/>
+        <override name="ccAddress" optional="true"/>
+        <override name="bccAddress" optional="true"/>
+        <override name="contentType" optional="true"/>
+    </service>
+    <service name="removeProductStoreEmailSetting" engine="simple"
+            location="org/ofbiz/commonapp/product/store/ProductStoreServices.xml" invoke="removeProductStoreEmail" auth="true">        
+        <description>Remove a Product Store Email Setting</description>
+        <auto-attributes entity-name="ProductStoreEmailSetting" include="pk" mode="IN" optional="false"/>
+    </service>           
             	
     <!-- Product View Services -->
     <service name="getProduct" engine="java"

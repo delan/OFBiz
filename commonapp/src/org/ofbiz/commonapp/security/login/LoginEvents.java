@@ -36,6 +36,7 @@ import javax.servlet.http.HttpSession;
 
 import org.ofbiz.commonapp.party.contact.ContactHelper;
 import org.ofbiz.commonapp.product.catalog.CatalogWorker;
+import org.ofbiz.commonapp.product.store.ProductStoreWorker;
 import org.ofbiz.core.control.JPublishWrapper;
 import org.ofbiz.core.entity.GenericDelegator;
 import org.ofbiz.core.entity.GenericEntityException;
@@ -365,11 +366,11 @@ public class LoginEvents {
      */
     public static String emailPassword(HttpServletRequest request, HttpServletResponse response) {
         GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");                             
-        String webSiteId = CatalogWorker.getWebSiteId(request);
+        LocalDispatcher dispatcher = (LocalDispatcher) request.getAttribute("dispatcher");
+        String productStoreId = ProductStoreWorker.getProductStoreId(request);        
         
         Map subjectData = new HashMap();
-        subjectData.put("webSiteId", webSiteId);
+        subjectData.put("productStoreId", productStoreId);
       
         boolean useEncryption = "true".equals(UtilProperties.getPropertyValue("security.properties", "password.encrypt"));
 
@@ -443,15 +444,15 @@ public class LoginEvents {
             return "error";
         }
         
-        // get the WebSite settings
-        GenericValue webSiteEmail = null;
+        // get the ProductStore email settings
+        GenericValue productStoreEmail = null;
         try {
-            webSiteEmail = delegator.findByPrimaryKey("WebSiteEmailSetting", UtilMisc.toMap("webSiteId", webSiteId, "emailType", "WES_PWD_RETRIEVE"));
+            productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", productStoreId, "emailType", "PRDS_PWD_RETRIEVE"));
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem getting WebSiteEmailSetting", module);
+            Debug.logError(e, "Problem getting ProductStoreEmailSetting", module);
         }
         
-        if (webSiteEmail == null) {
+        if (productStoreEmail == null) {
             request.setAttribute(SiteDefs.ERROR_MESSAGE, "<li>Problems with configuration; please contact customer service.");
             return "error";
         }
@@ -465,16 +466,17 @@ public class LoginEvents {
         templateData.put("password", UtilFormatOut.checkNull(passwordToSend));
         
         // prepare the parsed subject        
-        String subjectString = webSiteEmail.getString("subject");
+        String subjectString = productStoreEmail.getString("subject");
         subjectString = FlexibleStringExpander.expandString(subjectString, subjectData);
                 
         Map serviceContext = new HashMap();                        
-        serviceContext.put("templateName", ofbizHome + webSiteEmail.get("templatePath"));
+        serviceContext.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
         serviceContext.put("templateData", templateData);
         serviceContext.put("subject", subjectString);
-        serviceContext.put("sendFrom", webSiteEmail.get("fromAddress"));        
-        serviceContext.put("sendCc", webSiteEmail.get("ccAddress"));
-        serviceContext.put("sendBcc", webSiteEmail.get("ccAddress"));
+        serviceContext.put("sendFrom", productStoreEmail.get("fromAddress"));        
+        serviceContext.put("sendCc", productStoreEmail.get("ccAddress"));
+        serviceContext.put("sendBcc", productStoreEmail.get("ccAddress"));
+        serviceContext.put("contentType", productStoreEmail.get("contentType"));
         serviceContext.put("sendTo", emails.toString());              
                                               
         try {

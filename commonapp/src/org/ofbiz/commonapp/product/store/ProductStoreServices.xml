@@ -117,5 +117,42 @@
 		<find-by-primary-key entity-name="ProductStorePaymentSetting" map-name="lookupPKMap" value-name="setting"/>
 		<set-nonpk-fields map-name="parameters" value-name="setting"/>
 		<remove-value value-name="setting"/>
-	</simple-method>	   
+	</simple-method>
+	
+    <!-- ProductStore Email Services -->
+    <simple-method method-name="createProductStoreEmail" short-description="Create Product Store Email Setting">
+        <check-permission permission="CATALOG" action="_CREATE">        	
+        	<fail-message message="Security Error: to run createProductStoreEmail you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="newEntity" entity-name="ProductStoreEmailSetting"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+        <set-pk-fields map-name="parameters" value-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
+    </simple-method>    
+    <simple-method method-name="updateProductStoreEmail" short-description="Update Product Store Email Setting">
+        <check-permission permission="CATALOG" action="_UPDATE">        	
+        	<fail-message message="Security Error: to run updateProductStoreEmail you must have the CATALOG_UPDATE or CAtALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupKeyValue" entity-name="ProductStoreEmailSetting"/>
+        <set-pk-fields map-name="parameters" value-name="lookupKeyValue"/>
+        <find-by-primary-key entity-name="ProductStoreEmailSetting" map-name="lookupKeyValue" value-name="lookedUpValue"/>
+        <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
+        <store-value value-name="lookedUpValue"/>
+    </simple-method>
+    <simple-method method-name="removeProductStoreEmail" short-description="Remove Product Store Email Setting">
+        <check-permission permission="CATALOG" action="_DELETE">
+        	<fail-message message="Security Error: to run removeProductStoreEmail you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/>
+        </check-permission>
+        <check-errors/>
+
+        <make-value value-name="lookupPKMap" entity-name="ProductStoreEmailSetting"/>
+        <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
+        <find-by-primary-key entity-name="ProductStoreEmailSetting" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <remove-value value-name="lookedUpValue"/>
+    </simple-method>  		   
 </simple-methods>

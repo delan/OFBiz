@@ -993,25 +993,25 @@ public class OrderServices {
     
     /** Service to email a customer with initial order confirmation */
     public static Map prepareOrderConfirmation(DispatchContext ctx, Map context) {
-        context.put("emailType", "WES_ODR_CONFIRM");
+        context.put("emailType", "PRDS_ODR_CONFIRM");
         return prepareOrderEmail(ctx, context);               
     }
     
     /** Service to email a customer with order changes */
     public static Map prepareOrderComplete(DispatchContext ctx, Map context) {
-        context.put("emailType", "WES_ODR_COMPLETE");
+        context.put("emailType", "PRDS_ODR_COMPLETE");
         return prepareOrderEmail(ctx, context);                      
     }
     
     /** Service to email a customer with order changes */
     public static Map prepareOrderBackorder(DispatchContext ctx, Map context) {
-        context.put("emailType", "WES_ODR_BACKORDER");
+        context.put("emailType", "PRDS_ODR_BACKORDER");
         return prepareOrderEmail(ctx, context);                    
     }           
     
     /** Service to email a customer with order changes */
     public static Map prepareOrderChange(DispatchContext ctx, Map context) {
-        context.put("emailType", "WES_ODR_CHANGE");
+        context.put("emailType", "PRDS_ODR_CHANGE");
         return prepareOrderEmail(ctx, context);                  
     }    
     
@@ -1022,7 +1022,7 @@ public class OrderServices {
         String emailType = (String) context.get("emailType");                                        
         String ofbizHome = System.getProperty("ofbiz.home");
         
-        // get the order header and website
+        // get the order header and store
         GenericValue orderHeader = null;        
         try {
             orderHeader = delegator.findByPrimaryKey("OrderHeader", UtilMisc.toMap("orderId", orderId));            
@@ -1030,17 +1030,17 @@ public class OrderServices {
             Debug.logError(e, "Problem getting OrderHeader", module);
         }
         
-        GenericValue webSiteEmail = null;
+        GenericValue productStoreEmail = null;
         if (orderHeader != null) {
             try {
-                webSiteEmail = delegator.findByPrimaryKey("WebSiteEmailSetting", UtilMisc.toMap("webSiteId", orderHeader.get("webSiteId"), "emailType", emailType));
+                productStoreEmail = delegator.findByPrimaryKey("ProductStoreEmailSetting", UtilMisc.toMap("productStoreId", orderHeader.get("productStoreId"), "emailType", emailType));
             } catch (GenericEntityException e) {
-                Debug.logError(e, "Problem getting the WebSiteEmailSetting", module);
+                Debug.logError(e, "Problem getting the ProductStoreEmailSetting", module);
             }
         }
         
-        if (webSiteEmail == null) {
-            return ServiceUtil.returnError("No valid email setting for website");
+        if (productStoreEmail == null) {
+            return ServiceUtil.returnError("No valid email setting for store");
         } 
                     
         // get the email addresses from the order contact mech(s)
@@ -1068,16 +1068,16 @@ public class OrderServices {
         
         // prepare the parsed subject
         Map orderEmailData = prepareOrderEmailData(ctx, UtilMisc.toMap("orderId", orderId));
-        String subjectString = webSiteEmail.getString("subject");
+        String subjectString = productStoreEmail.getString("subject");
         subjectString = FlexibleStringExpander.expandString(subjectString, orderEmailData);
         
-        result.put("templateName", ofbizHome + webSiteEmail.get("templatePath"));
+        result.put("templateName", ofbizHome + productStoreEmail.get("templatePath"));
         result.put("emailType", emailType);
         result.put("subject", subjectString);
-        result.put("contentType", webSiteEmail.get("contentType"));
-        result.put("sendFrom", webSiteEmail.get("fromAddress"));        
-        result.put("sendCc", webSiteEmail.get("ccAddress"));
-        result.put("sendBcc", webSiteEmail.get("bccAddress"));
+        result.put("contentType", productStoreEmail.get("contentType"));
+        result.put("sendFrom", productStoreEmail.get("fromAddress"));        
+        result.put("sendCc", productStoreEmail.get("ccAddress"));
+        result.put("sendBcc", productStoreEmail.get("bccAddress"));
         result.put("sendTo", emails.toString());
         result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);            
                    

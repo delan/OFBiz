@@ -30,46 +30,22 @@
       <a href="<@ofbizUrl>/EditProductStore?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Store</a>
       <a href="<@ofbizUrl>/EditProductStorePromos?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Promos</a>
       <a href="<@ofbizUrl>/EditProductStoreCatalogs?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Catalogs</a>
-      <a href="<@ofbizUrl>/EditProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">WebSites</a>
+      <a href="<@ofbizUrl>/EditProductStoreWebSites?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">WebSites</a>
       <a href="<@ofbizUrl>/EditProductStoreTaxSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Sales Tax</a>
       <a href="<@ofbizUrl>/EditProductStoreShipSetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Shipping</a>
       <a href="<@ofbizUrl>/EditProductStorePaySetup?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Payments</a>
-      <a href="<@ofbizUrl>/EditProductStoreEmails?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButton">Emails</a>
+      <a href="<@ofbizUrl>/EditProductStoreEmails?productStoreId=${productStoreId}</@ofbizUrl>" class="tabButtonSelected">Emails</a>
     </div>
   </#if>
-  <div class="head1">Product Store WebSites <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
+  <div class="head1">Product Store Email Settings <span class='head2'><#if (productStore.storeName)?has_content>"${productStore.storeName}"</#if> [ID:${productStoreId?if_exists}]</span></div>
   <a href="<@ofbizUrl>/EditProductStore</@ofbizUrl>" class="buttontext">[New Product Store]</a>
   <br>
-  <br> 
+  <br>   
   
-  <table border="1" cellpadding="2" cellspacing="0" width="100%">
-    <tr>
-      <td><span class="tableheadtext">WebSite [ID]</span></td>
-      <td><span class="tableheadtext">Host</span></td>
-      <td><span class="tableheadtext">Port</span></td>
-    </tr>
-    <#if storeWebSites?has_content>
-      <#list storeWebSites as webSite>
-        <tr> 
-          <td><a href="/content/control/EditWebSite?webSiteId=${webSite.webSiteId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext">${webSite.siteName} [${webSite.webSiteId}]</a></td>
-          <td><span class="tabletext">${webSite.httpHost?default('&nbsp;')}</span></td>
-          <td><span class="tabletext">${webSite.httpPort?default('&nbsp;')}</span></td>
-        </tr>
-      </#list>
-    </#if>
-  </table>
-  
+  ${updateProductStoreEmailForm.renderFormString()}
   <br>
-  <div class="head2">Set store on WebSite:</div>
-  <form name="addWebSite" action="<@ofbizUrl>/storeUpdateWebSite</@ofbizUrl>" method="post">
-    <input type="hidden" name="productStoreId" value="${productStoreId}">
-    <select class="selectBox" name="webSiteId">
-      <#list webSites as webSite>
-        <option value="${webSite.webSiteId}">${webSite.siteName} [${webSite.webSiteId}]</option>
-      </#list>
-    </select>
-    <input type="submit" class="smallSubmit" value="Set">
-  </form>
+  ${createProductStoreEmailForm.renderFormString()}
 <#else>
   <h3>You do not have permission to view this page. ("CATALOG_VIEW" or "CATALOG_ADMIN" needed)</h3>
 </#if>
+

@@ -86,36 +86,5 @@
 			<hyperlink target="removeWebSiteRole?webSiteId=${webSiteRole.webSiteId}&amp;partyId=${webSiteRole.partyId}&amp;roleTypeId=${webSiteRole.roleTypeId}&amp;fromDate=${webSiteRole.fromDate}"
 				description="[Delete]" also-hidden="false"/>
 		</field>
-	</form>
-	
-	<form name="createWebSiteEmail" type="single" 
-		target="createWebSiteEmail" title=""
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="createWebSiteEmailSetting"/>
-		<field name="webSiteId" map-name="webSite"><hidden/></field>
-		<field name="emailType" title="Email Type" widget-style="selectBox">
-			<drop-down>
-				<entity-options entity-name="Enumeration" key-field-name="enumId" description="${description}">
-					<entity-constraint name="enumTypeId" value="WEBSITE_EMAIL"/>
-					<entity-order-by field-name="sequenceId"/>
-				</entity-options>
-			</drop-down>
-		</field>
-		<field name="submitButton" title="Add" widget-style="standardSubmit"><submit button-type="button"/></field>
-	</form>
-	<form name="updateWebSiteEmail" type="list"
-		target="updateWebSiteEmail" title="" list-name="webSiteEmailSettings"
-		default-title-style="tableheadtext" default-widget-style="inputBox" default-tooltip-style="tabletext">
-		<auto-fields-service service-name="updateWebSiteEmailSetting"/>
-		<field name="webSiteId"><hidden/></field>
-		<field name="emailType"><display description="${emailType}"/></field>		
-		<field name="templatePath"></field>
-		<field name="subject"></field>
-		<field name="fromAddress"></field>
-		<field name="submitButton" title="Update" widget-style="standardSubmit"><submit button-type="button"/></field>
-		<field name="deleteLink" title="&amp;nbsp;" widget-style="buttontext">
-			<hyperlink target="removeWebSiteEmail?webSiteId=${webSiteId}&amp;emailType=${emailType}"
-				description="[Delete]" also-hidden="false"/>
-		</field>			
 	</form>	
 </forms>

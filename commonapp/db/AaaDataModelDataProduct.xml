@@ -62,6 +62,13 @@
   <Enumeration description="Payment Capture Service" enumCode="PAY_CAPTURE" enumId="PRDS_PAY_CAPTURE" sequenceId="04" enumTypeId="PRDS_PAYSVC"/>
   <Enumeration description="Payment Refund Service" enumCode="PAY_REFUND" enumId="PRDS_PAY_REFUND" sequenceId="05" enumTypeId="PRDS_PAYSVC"/>
   
+  <EnumerationType description="Product Store Email Notification" enumTypeId="PRDS_EMAIL" hasTable="N" parentTypeId=""/>
+  <Enumeration description="Confirmation" enumCode="ODR_CONFIRM" enumId="PRDS_ODR_CONFIRM" enumTypeId="PRDS_EMAIL" sequenceId="01"/>
+  <Enumeration description="Complete" enumCode="ODR_COMPLETE" enumId="PRDS_ODR_COMPLETE" enumTypeId="PRDS_EMAIL" sequenceId="02"/>
+  <Enumeration description="Back-Order" enumCode="ODR_BACKORDER" enumId="PRDS_ODR_BACKORDER" enumTypeId="PRDS_EMAIL" sequenceId="03"/>
+  <Enumeration description="Other Change" enumCode="ODR_CHANGE" enumId="PRDS_ODR_CHANGE" enumTypeId="PRDS_EMAIL" sequenceId="04"/>  
+  <Enumeration description="Retrieve Password" enumCode="PWD_RETRIEVE" enumId="PRDS_PWD_RETRIEVE" enumTypeId="PRDS_EMAIL" sequenceId="05"/>
+    
   <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
   <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
   <FacilityType description="Office" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
