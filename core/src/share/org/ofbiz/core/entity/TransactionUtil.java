@@ -104,11 +104,15 @@ public class TransactionUtil implements javax.transaction.Status {
     }
     
     /** Rolls back transaction in the current thread IF transactions are available 
-     *  AND if beganTransaction is true
+     *  AND if beganTransaction is true; if beganTransaction is not true, 
+     *  setRollbackOnly is called to insure that the transaction will be rolled back
      */
     public static void rollback(boolean beganTransaction) throws GenericTransactionException {
-        if (beganTransaction)
+        if (beganTransaction) {
             TransactionUtil.rollback();
+        } else {
+            TransactionUtil.setRollbackOnly();
+        }
     }
     
     /** Rolls back transaction in the current thread IF transactions are available */
