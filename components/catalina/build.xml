@@ -21,7 +21,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business Service Build Script.
- *  $Id: build.xml,v 1.1 2004/05/22 21:14:34 ajzeneski Exp $
+ *  $Id: build.xml,v 1.2 2004/05/22 22:43:03 ajzeneski Exp $
 -->
 
 <project name="Catalina" default="jar" basedir=".">
@@ -45,7 +45,7 @@
             <fileset dir="${lib.dir}/server" includes="*.jar"/>
             <fileset dir="${lib.dir}/common" includes="*.jar"/>
             <fileset dir="../../base/lib" includes="*.jar"/>
-            <fileset dir="../../base/lib/logging" includes="*.jar"/>
+            <fileset dir="../../base/lib/commons" includes="*.jar"/>
             <fileset dir="../../base/build/lib" includes="*.jar"/>
         </path>
     </target>
