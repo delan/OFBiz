@@ -47,6 +47,8 @@
 Founders and Lead Architects: David E. Jones &amp; Andy Zeneski<br>
 <hr>
 <br>
+<div><b><u>Basic Concepts</u></b></div>
+<br>
 The Open For Business Project is an open source project that provides tools
 and applications for business based on Sun's J2EE standard.  The project is intended to be open
 and used by a large group of people.  Because of that it is licensed using the
@@ -84,18 +86,47 @@ at the General Documents on the <a href='documents.html'>Documentation Page</a>.
 
 <p>For an introduction to the business and technical concepts behind Open For Business, check out the <a href='presentation/index.html'>OFBiz Overview Presentation.</a>
 
+<br>
+<div><b><u>Standards</u></b></div>
 <p>There are many standard components and specifications used in Open For Business
 to avoid re-inventing the wheel and to make it easier for people to become familiar with
-the tools and applications in the project. These standards include: <a href="http://www.w3c.org">XML</a>;
-<a href="http://java.sun.com/j2ee">J2EE</a>; <a href="http://www.dfki.uni-kl.de/ruleml/">RuleML</a>;
-<a href="http://www.wfmc.org/standards/docs.htm">WfMC</a>;
-<a href="http://www.bpmi.org">BPML</a>; <a href="http://www.ebxml.org">ebXML</a>;
-GAAP &amp; <a href="http://www.fasb.org/">FASB</a>; OMG's <a href="http://www.omg.org/technology/documents/formal/omg_business_specs.htm">Workflow</a>,
-<a href="http://www.omg.org/technology/documents/formal/omg_finance_specs.htm">GL,
-Party</a>, <a href="http://www.omg.org/technology/documents/formal/omg_mfg_specs.htm">Product</a>,
-etc; <a href="http://www.arapxml.net/">ArapXML</a>; <a href="http://developer.intuit.com/downloads/quickbooks/sdk/">qbXML</a>; and other leading standards
-that relate to the various tools, components and applications of The Open For
-Business Project.
+the tools and applications in the project. The standards and organizations supported by OFBiz include:</p>
+
+<ul>
+  <li><a href="http://www.w3c.org/">W3C</a>
+  <ul>
+    <li><a href="http://www.w3c.org/XML/">XML</a>
+    <li><a href="http://www.w3.org/TR/SOAP/">SOAP</a>
+    <li><a href="http://www.w3c.org/MarkUp/">HTML</a>
+  </ul>
+  <li><a href="http://www.sun.com/">Sun</a>
+  <ul>
+    <li><a href="http://java.sun.com/">Java</a>
+    <li><a href="http://java.sun.com/j2ee">J2EE</a>
+  </ul>
+  <li><a href="http://www.dfki.uni-kl.de/ruleml/">RuleML</a>
+  <li><a href="http://www.wfmc.org/">WfMC</a>
+  <ul>
+    <li><a href="http://www.wfmc.org/standards/docs.htm">XPDL</a>
+    <li><a href="http://www.wfmc.org/standards/docs.htm">Other Standards</a>
+  </ul>
+  <li><a href="http://www.bpmi.org/">BPML</a>
+  <li><a href="http://eccma.org/">ECCMA</a>
+  <ul>
+    <li><a href="http://eccma.org/unspsc/">UNSPSC</a>
+  </ul>
+  <li><a href="http://www.ebxml.org/">ebXML</a>
+  <li>GAAP &amp; <a href="http://www.fasb.org/">FASB</a>
+  <li><a href="http://www.omg.org/">OMG</a>
+  <ul>
+    <li><a href="http://www.omg.org/technology/documents/formal/omg_business_specs.htm">Workflow</a>
+    <li><a href="http://www.omg.org/technology/documents/formal/omg_finance_specs.htm">GL &amp; Party</a>
+    <li><a href="http://www.omg.org/technology/documents/formal/omg_mfg_specs.htm">Product</a>
+  </ul>
+  <li><a href="http://www.arapxml.net/">ArapXML</a>
+  <li><a href="http://developer.intuit.com/downloads/quickbooks/sdk/">qbXML</a>
+</ul>
+
 <p>To help us provide a strong data model foundation for the project we are
 using entity designs from various standards bodies, and the The Data Model
 Resource Book, Revised Edition, Volumes 1 &amp; 2 written by Len Silverston and
@@ -105,39 +136,46 @@ Open For Business uses a variation on the models in the book, but many concepts
 from the book are still recognizable, enough so that it is very worth it to buy
 these books.</p>
 
-<p>In addition to using widely accepted and detailed standards, Open For
-Business is also using design and architecture patterns that represent best
-practices which have been used and improved over the years. These patterns make
-the software more reliable and flexible. They also make it easier for developers
-to customize and enhance the software because developers familiar with the
-patterns and their common usage will easily recognize the organization of the
-software and be able to find and modify the desired components quickly.</p>
-
-<p>The patterns used in the project now include:</p>
-
+<br>
+<div><b><u>Open Source Projects</u></b></div>
+<p>The Open For Business Project also uses many other open source projects to take
+advantage of some of the great work that is being done in other parts of the open source community. 
+Some of these are used directly and would be somewhat difficult to replace while others are used through standard Sun
+or other interface specifications such as the Servlet API or JAXP. The open source projects used in OFBiz include:</p>
 
 <ul>
-  <li>General Patterns: Interface, Factory, Singleton, Double Checked Locking,
-    Composite, Facade, Mediator</li>
-  <li>Presentation Tier: Intercepting Filter, Front Controller, View Helper,
-    Dispatcher View, Composite View</li>
-  <li>Business Tier: Business Delegate, Value Object, Composite Entity, Value
-    Object Assembler, Service Locator, Data Transfer HashMap
-Generic Attribute Access</li>
-  <li>Integration Tier: Data Access Object</li>
+  <li><a href="http://www.apache.org/">Apache</a>
+  <ul>
+    <li><a href="http://xml.apache.org/">XML</a>
+    <ul>
+      <li><a href="http://xml.apache.org/xerces-j/index.html">Xerces</a>
+      <li><a href="http://xml.apache.org/xalan-j/index.html">Xalan</a>
+      <li><a href="http://xml.apache.org/axis/index.html">Axis</a>
+    </ul>
+    <li><a href="http://jakarta.apache.org/">Jakarta</a>
+    <ul>
+      <li><a href="http://jakarta.apache.org/ant/index.html">Ant</a>
+      <li><a href="http://jakarta.apache.org/tomcat/index.html">Tomcat 4</a>
+      <li><a href="http://jakarta.apache.org/log4j/index.html">Log4J</a>
+      <li><a href="http://jakarta.apache.org/oro/index.html">ORO</a>
+    </ul>
+  </ul>
+  <li><a href="http://www.exolab.org/">Exolab</a>
+  <ul>
+    <li><a href="http://castor.exolab.org/">Castor</a>
+    <li><a href="http://tyrex.exolab.org/">Tyrex</a>
+  </ul>
+  <li><a href="http://www.beanshell.org/">BeanShell</a>
+  <li><a href="http://www.jboss.org/">JBoss</a>
+  <li><a href="http://www.postgresql.org/">PostgreSQL</a>
+  <li><a href="http://www.mysql.org/">MySQL</a>
+  <li><a href="http://hsqldb.sf.net/">Hypersonic SQL</a>
 </ul>
-<p>Many other common patterns will be used throughout the project as they apply
-and as they can be implemented. For more information about these patterns visit
-the <a href="http://developer.java.sun.com/developer/technicalArticles/J2EE/patterns/">Sun
-J2EE Patterns page</a> and <a href="http://www.theserverside.com/resources/patterns_review.jsp">TheServerSide.com
-patterns resources page</a>. Sun has published a book based on the work on the
-above references Sun J2EE Patterns page called &quot;Core J2EE Patterns&quot;,
-which is an excellent reference. Information about some of the more general
-patterns can be found in the classic Gang of Four &quot;Design Patterns&quot;
-book (Addison Wesley), or the &quot;Patterns in Java&quot; books (Vols 1 &amp;
-2) by Mark Grand (Wiley).</p>
 
 
+
+<br>
+<div><b><u>Why is Open For Business Open Source?</u></b></div>
 <p>You may be asking yourself why is this project open source, and how the
 contributors to the project are going to make any money?  The answer is here in the
 <a href="whyopensource.html">Why Open Source?</a> document.</p>
