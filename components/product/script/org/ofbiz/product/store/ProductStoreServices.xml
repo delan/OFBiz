@@ -23,7 +23,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      2.2
 -->
 
@@ -220,9 +220,9 @@
         </check-permission>
         <check-errors/>
 
-        <make-value value-name="lookupPKMap" entity-name="removeProductStoreShipMeth"/>
+        <make-value value-name="lookupPKMap" entity-name="ProductStoreShipmentMeth"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="removeProductStoreShipMeth" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key entity-name="ProductStoreShipmentMeth" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
     </simple-method>
 

@@ -22,13 +22,15 @@
     <service name="createShipmentMethodType" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="createShipmentMethodType" auth="true">
         <description>Creates A ShipmentMethodType</description>      
-        <auto-attributes entity-name="ShipmentMethodType" mode="IN" optional="false"/>                    
+        <auto-attributes entity-name="ShipmentMethodType" mode="IN" optional="false"/>
+        <override name="sequenceNum" optional="true"/>
     </service>
     <service name="updateShipmentMethodType" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="updateShipmentMethodType" auth="true">
         <description>Updates A ShipmentMethodType</description>      
-        <auto-attributes entity-name="ShipmentMethodType" mode="IN" optional="false"/>                    
-    </service>    
+        <auto-attributes entity-name="ShipmentMethodType" mode="IN" optional="false"/>
+        <override name="sequenceNum" optional="true"/>
+    </service>
     
     <service name="quickShipEntireOrder" engine="simple"
             location="org/ofbiz/shipment/shipment/ShipmentServices.xml" invoke="quickShipEntireOrder" auth="true">
