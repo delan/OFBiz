@@ -373,6 +373,7 @@
     <request-map uri="EditElectronicText">
         <security auth="true" https="true"/>
         <response name="success" type="view" value="EditElectronicText"/>
+        <response name="error" type="view" value="main"/>
     </request-map>
     <request-map uri="EditHtmlText">
         <security auth="true" https="true"/>
@@ -389,6 +390,18 @@
         <event invoke="updateElectronicText" path="" type="service"/>
         <response name="success" type="view" value="EditElectronicText"/>
         <response name="error" type="view" value="EditElectronicText"/>
+    </request-map>
+    <request-map uri="addHtmlText">
+        <security auth="true" https="true"/>
+        <event invoke="createElectronicText" path="" type="service"/>
+        <response name="success" type="view" value="EditHtmlText"/>
+        <response name="error" type="view" value="EditHtmlText"/>
+    </request-map>
+    <request-map uri="updateHtmlText">
+        <security auth="true" https="true"/>
+        <event invoke="updateElectronicText" path="" type="service"/>
+        <response name="success" type="view" value="EditHtmlText"/>
+        <response name="error" type="view" value="EditHtmlText"/>
     </request-map>
     <request-map uri="removeElectronicText">
         <security auth="true" https="true"/>
@@ -543,17 +556,11 @@
 
     <request-map uri="gotoDataResource">
         <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf" />
         <!--
+        <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf" />
         <event invoke="org/ofbiz/content/clearCurrentDataResource.bsh" path="" type="bsf" />
         <response name="success" type="request" value="gotoDataResourceP2"/>
         -->
-        <response name="success" type="view" value="EditDataResource"/>
-        <response name="error" type="view" value="EditDataResource"/>
-    </request-map>
-    <request-map uri="gotoDataResourceP2">
-        <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf" />
         <response name="success" type="view" value="EditDataResource"/>
         <response name="error" type="view" value="EditDataResource"/>
     </request-map>
@@ -583,9 +590,10 @@
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="EditContent"/>
     </request-map>
-    <request-map uri="UpdateContent">
+    <request-map uri="updateContent">
         <security auth="true" https="true"/>
-        <event invoke="updateContent" path="" type="service"/>
+        <event invoke="updateContent"
+            path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="EditContent"/>
     </request-map>
@@ -593,12 +601,6 @@
         <security auth="true" https="true"/>
         <event invoke="createContentAndPurpose"
             path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
-        <response name="success" type="request" value="addLRUContent"/>
-        <response name="error" type="view" value="AddContent"/>
-    </request-map>
-    <request-map uri="addLRUContent">
-        <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf"/>
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="AddContent"/>
     </request-map>
@@ -609,17 +611,11 @@
     </request-map>
     <request-map uri="gotoContent">
         <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf" />
         <!--
+        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf" />
         <event invoke="org/ofbiz/content/clearCurrentContent.bsh" path="" type="bsf" />
         <response name="success" type="request" value="gotoContentP2"/>
         -->
-        <response name="success" type="view" value="EditContent"/>
-        <response name="error" type="view" value="EditContent"/>
-    </request-map>
-    <request-map uri="gotoContentP2">
-        <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf" />
         <response name="success" type="view" value="EditContent"/>
         <response name="error" type="view" value="EditContent"/>
     </request-map>
@@ -640,12 +636,6 @@
         <security auth="true" https="true"/>
         <event invoke="addContentAssoc" 
             path="org/ofbiz/content/content/ContentEvents.xml" type="simple"/>
-        <response name="success" type="request" value="addLRUContentAssoc"/>
-        <response name="error" type="view" value="EditContentAssoc"/>
-    </request-map>
-    <request-map uri="addLRUContentAssoc">
-        <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/lruadd.bsh" path="" type="bsf"/>
         <response name="success" type="view" value="EditContentAssoc"/>
         <response name="error" type="view" value="EditContentAssoc"/>
     </request-map>
@@ -684,14 +674,28 @@
     <request-map uri="updateDataResourceText">
         <security auth="true" https="true"/>
         <event invoke="updateDataResource" path="" type="service"/>
-        <response name="success" type="request" value="addLRUDataResource"/>
+        <response name="success" type="request" value="EditDataResource"/>
         <response name="error" type="view" value="EditDataResource"/>
     </request-map>
     <request-map uri="UpdateDataResource">
         <security auth="true" https="true"/>
         <event invoke="updateDataResource" path="" type="service"/>
-        <response name="success" type="request" value="addLRUDataResource"/>
+        <response name="success" type="view" value="EditDataResource"/>
         <response name="error" type="view" value="EditDataResource"/>
+    </request-map>
+    <request-map uri="updateDataResource">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="persistDataResource" />
+        <response name="success" type="request" value="EditDataResource"/>
+        <response name="error" type="view" value="EditDataResource"/>
+    </request-map>
+    <request-map uri="createDataResource">
+        <security auth="true" https="true"/>
+        <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="persistDataResource" />
+        <response name="success" type="request" value="EditDataResource"/>
+        <response name="ELECTRONIC_TEXT" type="view" value="EditElectronicText"/>
+        <response name="IMAGE_OBJECT" type="view" value="UploadImage"/>
+        <response name="error" type="view" value="AddDataResource"/>
     </request-map>
     <request-map uri="createDataResourceUpload">
         <security auth="true" https="true"/>
@@ -702,14 +706,8 @@
     <request-map uri="createDataResourceAndText">
         <security auth="true" https="true"/>
         <event invoke="createDataResourceAndText" path="" type="service"/>
-        <response name="success" type="request" value="addLRUDataResource"/>
+        <response name="success" type="view" value="EditDataResourceText"/>
         <response name="error" type="view" value="AddDataResourceText"/>
-    </request-map>
-    <request-map uri="addLRUDataResource">
-        <security auth="true" https="true"/>
-        <event invoke="org/ofbiz/content/lruaddDataResource.bsh" path="" type="bsf"/>
-        <response name="success" type="view" value="EditDataResource"/>
-        <response name="error" type="view" value="AddDataResource"/>
     </request-map>
     <request-map uri="EditDataResourceText">
         <security auth="true" https="true"/>
@@ -729,8 +727,8 @@
     <request-map uri="uploadImage">
         <security auth="true" https="true"/>
         <event type="java" path="org.ofbiz.content.data.DataEvents" invoke="uploadImage" />
-        <response name="success" type="request" value="EditDataResourceUpload"/>
-        <response name="error" type="view" value="EditDataResourceUpload"/>
+        <response name="success" type="request" value="UploadImage"/>
+        <response name="error" type="view" value="UploadImage"/>
     </request-map>
     <request-map uri="UploadImage">
         <security auth="true" https="true"/>
