@@ -89,6 +89,12 @@
   <SecurityPermission description="Delete operations in the Marketing Manager." permissionId="MARKETING_DELETE"/>
   <SecurityPermission description="ALL operations in the Marketing Manager." permissionId="MARKETING_ADMIN"/>
 
+  <SecurityPermission description="View operations in the Content Manager." permissionId="CONTENTMGR_VIEW"/>
+  <SecurityPermission description="Create operations in the Content Manager." permissionId="CONTENTMGR_CREATE"/>
+  <SecurityPermission description="Update operations in the Content Manager." permissionId="CONTENTMGR_UPDATE"/>
+  <SecurityPermission description="Delete operations in the Content Manager." permissionId="CONTENTMGR_DELETE"/>
+  <SecurityPermission description="ALL operations in the Content Manager." permissionId="CONTENTMGR_ADMIN"/>
+
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="SERVER_STATS_VIEW"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="DATAFILE_MAINT"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="ENTITY_MAINT"/>
@@ -180,6 +186,12 @@
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_UPDATE"/>
   <SecurityGroupPermission groupId="FLEXADMIN" permissionId="MARKETING_VIEW"/>
   <SecurityGroupPermission groupId="FULLADMIN" permissionId="MARKETING_ADMIN"/>
+
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_CREATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_DELETE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_UPDATE"/>
+  <SecurityGroupPermission groupId="FLEXADMIN" permissionId="CONTENTMGR_VIEW"/>
+  <SecurityGroupPermission groupId="FULLADMIN" permissionId="CONTENTMGR_ADMIN"/>
 
   <UserLogin currentPassword="ofbiz" partyId="admin" passwordHint="" userLoginId="admin"/>
   <UserLogin currentPassword="ofbiz" partyId="" passwordHint="" userLoginId="flexadmin"/>
