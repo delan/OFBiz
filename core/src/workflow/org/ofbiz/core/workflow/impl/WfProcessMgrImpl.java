@@ -138,8 +138,9 @@ public class WfProcessMgrImpl implements WfProcessMgr
      * @throws WfException
      * @return
      */
-    public int processMgrState() throws WfException {
-        return state;
+    public List processMgrStateType() throws WfException {
+        String[] list = { "enabled", "disabled" };
+        return Arrays.asList(list);
     }
     
     /**

@@ -68,7 +68,7 @@ public interface WfProcessMgr  {
    * @throws WfException
    * @return
    */
-  public int processMgrState() throws WfException;
+  public List processMgrStateType() throws WfException;
   
   /**
    * @param newState

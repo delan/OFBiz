@@ -7,6 +7,8 @@ package org.ofbiz.core.workflow.impl;
 import java.util.*;
 import java.sql.Timestamp;
 import org.ofbiz.core.entity.*;
+import org.ofbiz.core.serialize.*;
+import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 /**
@@ -39,11 +41,12 @@ import org.ofbiz.core.workflow.*;
  */
 public abstract class WfExecutionObjectImpl implements WfExecutionObject {
        
-    // The value object for this execution object (wfprocess,wfactivity)
+    // The value objects for this execution object (wfprocess,wfactivity)
     protected GenericValue valueObject;
+    protected GenericValue runtimeData;
         
     // Attributes of this object
-    protected Map context;     // TODO: move to a RuntimeData value object           
+    protected Map context;               
     protected List history;        
     
     /**
@@ -51,9 +54,46 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
      * @param valueObject The GenericValue object.     
      */
     public WfExecutionObjectImpl(GenericValue valueObject) {
-        this.valueObject = valueObject;        
-        context = new HashMap();
+        // set the value object
+        this.valueObject = valueObject;                
+        
+        // set the history
         history = new ArrayList();
+        
+        // set the context
+        String contextXML = null;
+        try {
+            runtimeData = valueObject.getRelatedOne("RuntimeData");
+            if ( runtimeData != null )
+                contextXML = runtimeData.getString("runtimeInfo");           
+        }
+        catch ( GenericEntityException e ) {
+            runtimeData = null;
+            context = null;
+            e.printStackTrace();            
+        }
+        if ( contextXML != null ) {
+            try {
+                Map ctxMap = (Map) XmlSerializer.deserialize(contextXML,valueObject.getDelegator());
+                setProcessContext(ctxMap);                
+            }
+            catch ( WfException e ) {
+                context = null;
+                e.printStackTrace();
+            }
+            catch ( GeneralException e ) {
+                context = null;
+                e.printStackTrace();
+            }
+            catch ( Exception e ) {
+                context = null;
+                e.printStackTrace();
+            }
+        }
+        else 
+            context = null;
+        
+        // set the state
         try {
             changeState("open.not_running.not_started");
         }
