@@ -1,5 +1,5 @@
 /*
- * $Id: CatalogWorker.java,v 1.3 2003/08/18 17:03:09 ajzeneski Exp $
+ * $Id: CatalogWorker.java,v 1.4 2003/08/26 18:45:06 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -42,6 +42,7 @@ import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.content.website.WebSiteWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
 import org.ofbiz.entity.GenericEntityException;
@@ -55,7 +56,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.0
  */
 public class CatalogWorker {
@@ -63,22 +64,11 @@ public class CatalogWorker {
     public static final String module = CatalogWorker.class.getName();
 
     public static String getWebSiteId(ServletRequest request) {
-        ServletContext application = ((ServletContext) request.getAttribute("servletContext"));
-
-        if (application == null) return null;
-        return application.getInitParameter("webSiteId");
+        return WebSiteWorker.getWebSiteId(request);
     }
     
     public static GenericValue getWebSite(ServletRequest request) {
-        String webSiteId = getWebSiteId(request);
-        GenericDelegator delegator = (GenericDelegator) request.getAttribute("delegator");
-
-        try {
-            return delegator.findByPrimaryKeyCache("WebSite", UtilMisc.toMap("webSiteId", webSiteId));
-        } catch (GenericEntityException e) {
-            Debug.logError(e, "Error looking up website with id " + webSiteId, module);
-        }
-        return null;
+        return WebSiteWorker.getWebSite(request);
     }
 
     public static List getStoreCatalogs(ServletRequest request) {
