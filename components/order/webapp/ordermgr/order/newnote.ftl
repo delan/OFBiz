@@ -20,21 +20,25 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
 
-<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>  
-  <p class="head1">Add Note</p>
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
-  &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[Save]</a>
+
+<#if security.hasEntityPermission("ORDERMGR", "_VIEW", session)>  
+  <p class="head1">${uiLabelMap.OrderAddNote}</p>
+
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+  &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
 
   <form method="post" action="<@ofbizUrl>/createordernote/${donePage}</@ofbizUrl>" name="createnoteform">
     <input type="hidden" name="orderId" value="${orderId?if_exists}">
     <table width="90%" border="0" cellpadding="2" cellspacing="0">
       <tr>
-        <td width="26%" align=right><div class="tabletext">Note</div></td>
+        <td width="26%" align=right><div class="tabletext">${uiLabelMap.OrderNote}</div></td>
         <td width="54%">
           <textarea name="note" class="textAreaBox" rows="5" cols="70"></textarea>
         </td>
@@ -43,9 +47,9 @@
     </table>
   </form>
 
-  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[Go&nbsp;Back]</a>
-  &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[Save]</a>
+  &nbsp;<a href="<@ofbizUrl>/authview/${donePage}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonGoBack}]</a>
+  &nbsp;<a href="javascript:document.createnoteform.submit()" class="buttontext">[${uiLabelMap.CommonSave}]</a>
   
 <#else>
-  <h3>You do not have permission to view this page. ("ORDERMGR_VIEW" or "ORDERMGR_ADMIN" needed)</h3>
+  <h3>${uiLabelMap.OrderViewPermissionError}</h3>
 </#if>
