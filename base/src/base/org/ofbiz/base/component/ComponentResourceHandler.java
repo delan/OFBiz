@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentResourceHandler.java,v 1.3 2003/08/20 05:55:59 ajzeneski Exp $
+ * $Id: ComponentResourceHandler.java,v 1.4 2003/08/20 23:01:41 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.base.component;
 
 import java.io.InputStream;
+import java.net.URL;
 
 import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.base.config.ResourceHandler;
@@ -36,7 +37,7 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      3.0
  */
 public class ComponentResourceHandler implements ResourceHandler {
@@ -79,6 +80,10 @@ public class ComponentResourceHandler implements ResourceHandler {
 
     public InputStream getStream() throws GenericConfigException {
         return ComponentConfig.getStream(componentName, loaderName, location);
+    }
+
+    public URL getURL() throws GenericConfigException {
+        return ComponentConfig.getURL(componentName, loaderName, location);
     }
 
     public boolean isFileResource() throws GenericConfigException {

@@ -1,5 +1,5 @@
 /*
- * $Id: MainResourceHandler.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: MainResourceHandler.java,v 1.2 2003/08/20 23:02:13 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -25,6 +25,7 @@
 package org.ofbiz.base.config;
 
 import java.io.InputStream;
+import java.net.URL;
 
 import org.ofbiz.base.util.UtilXml;
 import org.w3c.dom.Document;
@@ -34,7 +35,7 @@ import org.w3c.dom.Element;
  * Contains resource information and provides for loading data
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class MainResourceHandler implements ResourceHandler {
@@ -77,6 +78,10 @@ public class MainResourceHandler implements ResourceHandler {
 
     public InputStream getStream() throws GenericConfigException {
         return ResourceLoader.loadResource(this.xmlFilename, this.location, this.loaderName);
+    }
+
+    public URL getURL() throws GenericConfigException {
+        return ResourceLoader.getURL(this.xmlFilename, this.location, this.loaderName);
     }
 
     public boolean isFileResource() throws GenericConfigException {

@@ -1,5 +1,5 @@
 /*
- * $Id: UrlLoader.java,v 1.1 2003/08/15 20:23:20 ajzeneski Exp $
+ * $Id: UrlLoader.java,v 1.2 2003/08/20 23:02:13 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -31,12 +31,12 @@ import java.io.*;
  * Loads resources from a URL
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      2.0
  */
 public class UrlLoader extends ResourceLoader {
     
-    public InputStream loadResource(String location) throws GenericConfigException {
+    public URL getURL(String location) throws GenericConfigException {
         String fullLocation = fullLocation(location);
 
         URL url = null;
@@ -49,6 +49,13 @@ public class UrlLoader extends ResourceLoader {
         if (url == null) {
             throw new GenericConfigException("URL Resource not found: " + fullLocation);
         }
+        
+        return url;
+    }
+     
+    public InputStream loadResource(String location) throws GenericConfigException {
+        URL url = getURL(location);
+
         try {
             return url.openStream();
         } catch (java.io.IOException e) {

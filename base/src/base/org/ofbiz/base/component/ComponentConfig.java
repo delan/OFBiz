@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.9 2003/08/20 19:40:57 ajzeneski Exp $
+ * $Id: ComponentConfig.java,v 1.10 2003/08/20 23:01:41 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -169,6 +169,14 @@ public class ComponentConfig {
             throw new ComponentException("Could not find component with name: " + componentName);
         }
         return cc.getStream(resourceLoaderName, location);
+    }
+    
+    public static URL getURL(String componentName, String resourceLoaderName, String location) throws ComponentException {
+        ComponentConfig cc = ComponentConfig.getComponentConfig(componentName);
+        if (cc == null) {
+            throw new ComponentException("Could not find component with name: " + componentName);
+        }
+        return cc.getURL(resourceLoaderName, location);
     }
     
     public static String getFullLocation(String componentName, String resourceLoaderName, String location) throws ComponentException {
@@ -309,6 +317,15 @@ public class ComponentConfig {
     }
        
     public InputStream getStream(String resourceLoaderName, String location) throws ComponentException {
+        URL url = getURL(resourceLoaderName, location);
+        try {
+            return url.openStream();
+        } catch (java.io.IOException e) {
+            throw new ComponentException("Error opening resource at location [" + url.toExternalForm() + "]", e);
+        }
+    }
+    
+    public URL getURL(String resourceLoaderName, String location) throws ComponentException {
         ResourceLoaderInfo resourceLoaderInfo = (ResourceLoaderInfo) resourceLoaderInfos.get(resourceLoaderName);
         if (resourceLoaderInfo == null) {
             throw new ComponentException("Could not find resource-loader named: " + resourceLoaderName);
@@ -320,22 +337,14 @@ public class ComponentConfig {
             if (fileUrl == null) {
                 throw new ComponentException("File Resource not found: " + fullLocation);
             }
-            try {
-                return fileUrl.openStream();
-            } catch (java.io.IOException e) {
-                throw new ComponentException("Error opening file at location [" + fileUrl.toExternalForm() + "]", e);
-            }
+            return fileUrl;
         } else if ("classpath".equals(resourceLoaderInfo.type)) {
             String fullLocation = getFullLocation(resourceLoaderName, location);
             URL url = UtilURL.fromResource(fullLocation);
             if (url == null) {
                 throw new ComponentException("Classpath Resource not found: " + fullLocation);
             }
-            try {
-                return url.openStream();
-            } catch (java.io.IOException e) {
-                throw new ComponentException("Error opening classpath resource at location [" + url.toExternalForm() + "]", e);
-            }
+            return url;
         } else if ("url".equals(resourceLoaderInfo.type)) {
             String fullLocation = getFullLocation(resourceLoaderName, location);
             URL url = null;
@@ -347,11 +356,7 @@ public class ComponentConfig {
             if (url == null) {
                 throw new ComponentException("URL Resource not found: " + fullLocation);
             }
-            try {
-                return url.openStream();
-            } catch (java.io.IOException e) {
-                throw new ComponentException("Error opening URL resource at location [" + url.toExternalForm() + "]", e);
-            }
+            return url;
         } else {
             throw new ComponentException("The resource-loader type is not recognized: " + resourceLoaderInfo.type);
         }
