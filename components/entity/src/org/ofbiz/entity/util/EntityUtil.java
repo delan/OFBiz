@@ -1,5 +1,5 @@
 /*
- * $Id: EntityUtil.java,v 1.12 2004/07/17 20:29:53 doogie Exp $
+ * $Id: EntityUtil.java,v 1.13 2004/07/17 20:49:56 doogie Exp $
  *
  * <p>Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -312,50 +312,8 @@ public class EntityUtil {
             boolean include = false;
 
             while (exprIter.hasNext()) {
-                EntityExpr expr = (EntityExpr) exprIter.next();
-                Object lhs = value.get((String) expr.getLhs());
-                Object rhs = expr.getRhs();
-
-                int operatorId = expr.getOperator().getId();
-                switch (operatorId) {
-                    case EntityOperator.ID_EQUALS:
-                        if (EntityComparisonOperator.compareEqual(lhs, rhs)) {
-                            include = true;
-                        }
-                        break;
-                    case EntityOperator.ID_NOT_EQUAL:
-                        if (EntityComparisonOperator.compareNotEqual(lhs, rhs)) {
-                            include = true;
-                        }
-                        break;
-                    case EntityOperator.ID_GREATER_THAN:
-                        if (EntityComparisonOperator.compareGreaterThanEqualTo(lhs, rhs)) {
-                            include = true;
-                        }
-                        break;
-                    case EntityOperator.ID_GREATER_THAN_EQUAL_TO:
-                        if (EntityComparisonOperator.compareGreaterThan(lhs, rhs)) {
-                            include = true;
-                        }
-                        break;
-                    case EntityOperator.ID_LESS_THAN:
-                        if (EntityComparisonOperator.compareLessThan(lhs, rhs)) {
-                            include = true;
-                        }
-                        break;
-                    case EntityOperator.ID_LESS_THAN_EQUAL_TO:
-                        if (EntityComparisonOperator.compareLessThanEqualTo(lhs, rhs)) {
-                            include = true;
-                        }
-                        break;
-                    case EntityOperator.ID_LIKE:
-                        if (EntityComparisonOperator.compareLike(lhs, rhs)) {
-                            include = true;
-                        }
-                        break;
-                    default:
-                        throw new IllegalArgumentException("The " + expr.getOperator().getCode() + " with id " + expr.getOperator().getId() + " operator is not yet supported by filterByOr");
-                }
+                EntityCondition condition = (EntityCondition) exprIter.next();
+                include = condition.entityMatches(entity);
                 if (include) break;
             }
             if (include) {
