@@ -75,14 +75,14 @@
     <!-- Order Manager Task List Requests -->
     <request-map uri="acceptassignment">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
+        <event type="service" path="" invoke="wfAcceptRoleAssignment"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="ordertasklist"/>
     </request-map>
 
     <request-map uri="delegateassignment">
         <security https="true" auth="true"/>
-        <event type="simple" path="org/ofbiz/commonapp/workeffort/workeffort/WorkflowSimpleEvents.xml" invoke="acceptRoleAssignment"/>
+        <event type="service" path="" invoke="wfDelegateAndAcceptAssignmet"/>
         <response name="success" type="view" value="orderview"/>
         <response name="error" type="view" value="ordertasklist"/>
     </request-map>    

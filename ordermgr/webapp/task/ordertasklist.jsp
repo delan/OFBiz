@@ -155,11 +155,21 @@
                 <ofbiz:iterator name="task" property="roleTasks" type="org.ofbiz.core.entity.GenericValue" expandMap="true">
                   <form method="get" name="F<ofbiz:print attribute="workEffortId"/>">
                     <input type="hidden" name="order_id" value="<ofbiz:print attribute="orderId"/>">
-                    <input type="hidden" name="partyId" value="<%=userLogin.getString("partyId")%>">
-                    <input type="hidden" name="roleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
-                    <input type="hidden" name="fromDate" value="<ofbiz:print attribute="fromDate"/>">
                     <input type="hidden" name="workEffortId" value="<ofbiz:print attribute="workEffortId"/>">
                     <input type="hidden" name="taskStatus" value="<ofbiz:print attribute="currentStatusId"/>">
+                    <ofbiz:if name="currentStatusId" value="WF_NOT_STARTED">
+                      <input type="hidden" name="partyId" value="<%=userLogin.getString("partyId")%>">
+                      <input type="hidden" name="roleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
+                      <input type="hidden" name="fromDate" value="<ofbiz:print attribute="fromDate"/>">                      
+                    </ofbiz:if>
+                    <ofbiz:unless name="currentStatusId" value="WF_NOT_STARTED">
+                      <input type="hidden" name="fromPartyId" value="<ofbiz:print attribute="wepaPartyId"/>">
+                      <input type="hidden" name="fromRoleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
+                      <input type="hidden" name="fromFromDate" value="<ofbiz:print attribute="fromDate"/>">  
+                      <input type="hidden" name="toPartyId" value="<%=userLogin.getString("partyId")%>">                    
+                      <input type="hidden" name="toRoleTypeId" value="<ofbiz:print attribute="roleTypeId"/>">
+                      <input type="hidden" name="startActivity" value="true">
+                    </ofbiz:unless>
                     <tr>
                       <td>
                         <% String acceptString = "orderId=" + task.getString("orderId") + "&partyId=" + userLogin.getString("partyId") + "&roleTypeId=" + task.getString("roleTypeId") + "&workEffortId=" + task.getString("workEffortId") + "&fromDate=" + task.getString("fromDate"); %>
