@@ -96,9 +96,9 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="productCategoryId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
-            <select name='prodCatalogCategoryTypeId' size=1 style='font-size: x-small;'>
+            <input type='text' class='inputBox' size='20' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="thruDate" fullattrs="true"/> style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type='text' class='inputBox' size='5' <ofbiz:inputvalue entityAttr="prodCatalogCategory" field="sequenceNum" fullattrs="true"/>>
+            <select class='selectBox' name='prodCatalogCategoryTypeId' size=1>
                 <%if (prodCatalogCategory.get("prodCatalogCategoryTypeId") != null) {%>
                   <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'><%if (curProdCatalogCategoryType != null) {%><%=UtilFormatOut.checkNull(curProdCatalogCategoryType.getString("description"))%><%} else {%> [<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>]<%}%></option>
                   <option value='<%=prodCatalogCategory.getString("prodCatalogCategoryTypeId")%>'>---</option>
@@ -109,7 +109,7 @@
                   <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%> <%--[<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]--%></option>
                 </ofbiz:iterator>
             </select>
-            <INPUT type=submit value='Update' style='font-size: x-small;'>
+            <INPUT type=submit value='Update'>
         </FORM>
     </td>
     <td align="center">
@@ -130,18 +130,18 @@
 
   <div class='head2'>Add Catalog Product Category (select Category and Type, then enter optional From Date):</div>
   <br>
-  <select name="productCategoryId">
+  <select class='selectBox' name="productCategoryId">
   <ofbiz:iterator name="productCategory" property="productCategories">
     <option value='<ofbiz:entityfield attribute="productCategory" field="productCategoryId"/>'><ofbiz:entityfield attribute="productCategory" field="description"/> [<ofbiz:entityfield attribute="productCategory" field="productCategoryId"/>]</option>
   </ofbiz:iterator>
   </select>
-    <select name='prodCatalogCategoryTypeId' size=1>
+    <select class='selectBox' name='prodCatalogCategoryTypeId' size=1>
         <%--<option value=''>&nbsp;</option>--%>
         <ofbiz:iterator name="prodCatalogCategoryType" property="prodCatalogCategoryTypes">
           <option value='<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>'><%=prodCatalogCategoryType.getString("description")%> <%--[<%=prodCatalogCategoryType.getString("prodCatalogCategoryTypeId")%>]--%></option>
         </ofbiz:iterator>
     </select>
-  <input type=text size='20' name='fromDate'>
+  <input type='text' class='inputBox' size='20' name='fromDate'>
   <input type="submit" value="Add">
 </form>
 <%}%>

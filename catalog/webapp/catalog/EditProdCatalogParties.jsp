@@ -110,8 +110,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="partyId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="partyCatalog" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="partyCatalog" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="partyCatalog" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="partyCatalog" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="partyCatalog" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>

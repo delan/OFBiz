@@ -109,17 +109,17 @@
       <tr>
         <td width="26%" align=right><div class="tabletext">Name</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="prodCatalog" field="catalogName" fullattrs="true"/> size="30" maxlength="60" style='font-size: x-small;'></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="prodCatalog" field="catalogName" fullattrs="true"/> size="30" maxlength="60"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">Title</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="prodCatalog" field="title" fullattrs="true"/> size="30" maxlength="60" style='font-size: x-small;'></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="prodCatalog" field="title" fullattrs="true"/> size="30" maxlength="60"></td>
       </tr>
       <tr>
         <td width="26%" align=right><div class="tabletext">SubTitle</div></td>
         <td>&nbsp;</td>
-        <td width="74%"><input type="text" <ofbiz:inputvalue entityAttr="prodCatalog" field="subtitle" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'></td>
+        <td width="74%"><input type="text" class="inputBox" <ofbiz:inputvalue entityAttr="prodCatalog" field="subtitle" fullattrs="true"/> size="60" maxlength="250"></td>
       </tr>
       
       <tr><td colspan="3">&nbsp;</td></tr>
@@ -127,7 +127,7 @@
         <td width="26%" align=right><div class="tabletext">Inventory Facility</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-            <select name="inventoryFacilityId" style='font-size: x-small;'>
+            <select class='selectBox' name="inventoryFacilityId">
               <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="inventoryFacilityId"/>'><ofbiz:inputvalue entityAttr="facility" field="facilityName"/> <ofbiz:entityfield attribute="prodCatalog" field="inventoryFacilityId" prefix="[" suffix="]"/></option>
               <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="inventoryFacilityId"/>'>----</option>
               <ofbiz:iterator name="nextFacility" property="facilities">
@@ -144,7 +144,7 @@
         <td width="26%" align=right><div class="tabletext">One Inventory Facility?</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <SELECT name='oneInventoryFacility' style='font-size: x-small;'>
+          <select class='selectBox' name='oneInventoryFacility'>
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='oneInventoryFacility' default="Y"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>
@@ -154,7 +154,7 @@
         <td width="26%" align=right><div class="tabletext">Check Inventory?</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <SELECT name='checkInventory' style='font-size: x-small;'>
+          <select class='selectBox' name='checkInventory'>
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='checkInventory' default="Y"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>
@@ -164,7 +164,7 @@
         <td width="26%" align=right><div class="tabletext">Reserve Inventory?</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <SELECT name='reserveInventory' style='font-size: x-small;'>
+          <select class='selectBox' name='reserveInventory'>
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='reserveInventory' default="Y"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>
@@ -174,7 +174,7 @@
         <td width="26%" align=right><div class="tabletext">Reserve Order:</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <select name='reserveOrderEnumId' style='font-size: x-small;'>
+          <select class='selectBox' name='reserveOrderEnumId'>
               <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveOrderEnumId"/>'><ofbiz:inputvalue entityAttr="reserveOrderEnum" field="description"/> <%--<ofbiz:entityfield attribute="prodCatalog" field="reserveOrderEnumId" prefix="[" suffix="]"/>--%></option>
               <option value='<ofbiz:inputvalue entityAttr="prodCatalog" field="reserveOrderEnumId"/>'>----</option>
               <ofbiz:iterator name="newReserveOrderEnum" property="reserveOrderEnums">
@@ -187,7 +187,7 @@
         <td width="26%" align=right><div class="tabletext">Require Inventory for Purchase?</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <SELECT name='requireInventory' style='font-size: x-small;'>
+          <select class='selectBox' name='requireInventory'>
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='requireInventory' default="N"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>
@@ -197,7 +197,7 @@
         <td width="26%" align=right><div class="tabletext">Use Quick Add?</div></td>
         <td>&nbsp;</td>
         <td width="74%">
-          <SELECT name='useQuickAdd' style='font-size: x-small;'>
+          <select class='selectBox' name='useQuickAdd'>
             <OPTION><ofbiz:inputvalue entityAttr='prodCatalog' field='useQuickAdd' default="N"/></OPTION>
             <OPTION>&nbsp;</OPTION><OPTION>Y</OPTION><OPTION>N</OPTION>
           </SELECT>
@@ -209,14 +209,14 @@
         <td width="26%" align=right><div class="tabletext">Style Sheet</div></td>
         <td>&nbsp;</td>
         <td width="74%" colspan='4'>
-            <input type="text" <ofbiz:inputvalue entityAttr='prodCatalog' field='styleSheet' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+            <input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='prodCatalog' field='styleSheet' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
         </td>
       </tr> 
       <tr>
         <td width="26%" align=right><div class="tabletext">Header Logo</div></td>
         <td>&nbsp;</td>
         <td width="74%" colspan='4'>
-            <input type="text" <ofbiz:inputvalue entityAttr='prodCatalog' field='headerLogo' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+            <input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='prodCatalog' field='headerLogo' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
         </td>
       </tr>             
 
@@ -225,7 +225,7 @@
         <td width="26%" align=right><div class="tabletext">Content Path Prefix</div></td>
         <td>&nbsp;</td>
         <td width="74%" colspan='4'>
-            <input type="text" <ofbiz:inputvalue entityAttr='prodCatalog' field='contentPathPrefix' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+            <input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='prodCatalog' field='contentPathPrefix' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
             <br><span class='tabletext'>If specified will be prepended to image and other content paths. Should start with a slash but not end with one.</span>
         </td>
       </tr>
@@ -233,14 +233,14 @@
         <td width="26%" align=right><div class="tabletext">Template Path Prefix</div></td>
         <td>&nbsp;</td>
         <td width="74%" colspan='4'>
-            <input type="text" <ofbiz:inputvalue entityAttr='prodCatalog' field='templatePathPrefix' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250" style='font-size: x-small;'>
+            <input type="text" class="inputBox" <ofbiz:inputvalue entityAttr='prodCatalog' field='templatePathPrefix' tryEntityAttr="tryEntity" fullattrs="true"/> size="60" maxlength="250">
             <br><span class='tabletext'>If specified will be prepended to template paths. Should start with a slash but not end with one.</span>
         </td>
       </tr>
 
   <tr>
     <td colspan='2'>&nbsp;</td>
-    <td colspan='1' align=left><input type="submit" name="Update" value="Update" style='font-size: x-small;'></td>
+    <td colspan='1' align=left><input type="submit" name="Update" value="Update"></td>
   </tr>
 </table>
 </form>

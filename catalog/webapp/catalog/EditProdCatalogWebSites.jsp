@@ -93,8 +93,8 @@
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="prodCatalogId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="webSiteId" fullattrs="true"/>>
             <input type=hidden <ofbiz:inputvalue entityAttr="webSiteCatalog" field="fromDate" fullattrs="true"/>>
-            <input type=text size='20' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="thruDate" fullattrs="true"/> style='font-size: x-small; <%if (hasExpired) {%>color: red;<%}%>'>
-            <input type=text size='5' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="sequenceNum" fullattrs="true"/> style='font-size: x-small;'>
+            <input type=text size='20' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="thruDate" fullattrs="true"/> class='inputBox' style='<%if (hasExpired) {%>color: red;<%}%>'>
+            <input type=text size='5' <ofbiz:inputvalue entityAttr="webSiteCatalog" field="sequenceNum" fullattrs="true"/> class='inputBox'>
             <INPUT type=submit value='Update' style='font-size: x-small;'>
         </FORM>
     </td>
@@ -112,12 +112,12 @@
 
   <div class='head2'>Add Catalog WebSite (select WebSite, enter optional From Date):</div>
   <br>
-  <select name="webSiteId">
+  <select name="webSiteId" class='selectBox'>
   <ofbiz:iterator name="webSite" property="webSites">
     <option value='<ofbiz:entityfield attribute="webSite" field="webSiteId"/>'><ofbiz:entityfield attribute="webSite" field="siteName"/> [<ofbiz:entityfield attribute="webSite" field="webSiteId"/>]</option>
   </ofbiz:iterator>
   </select>
-  <input type=text size='20' name='fromDate'>
+  <input type=text size='20' name='fromDate' class='selectBox'>
   <input type="submit" value="Add">
 </form>
 <br>
@@ -126,8 +126,8 @@
   <input type="hidden" name="tryEntity" value="true">
   <div class='head2'>Add New WebSite:</div>
   <br>
-  ID: <input type=text size='20' name='webSiteId'>
-  Name: <input type=text size='30' name='siteName'>
+  ID: <input type=text size='20' name='webSiteId' class='inputBox'>
+  Name: <input type=text size='30' name='siteName' class='inputBox'>
   <input type="submit" value="Add">
 </form>
 <%}%>
