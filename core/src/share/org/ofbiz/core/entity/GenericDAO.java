@@ -1019,7 +1019,7 @@ public class GenericDAO {
         
         String viewClause = makeViewWhereClause(modelEntity);
         if(viewClause.length() > 0) {
-            whereString.append(" AND ");
+            if (whereString.length() > 0) whereString.append(" AND ");
             whereString.append(viewClause);
         }
         
