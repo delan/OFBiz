@@ -55,9 +55,9 @@ public class PriceServices {
      * </ul>
      */
     public static Map calculateProductPrice(DispatchContext dctx, Map context) {
-        UtilTimer utilTimer = new UtilTimer();
-        utilTimer.timerString("Starting price calc", module);
-        utilTimer.setLog(true);
+        //UtilTimer utilTimer = new UtilTimer();
+        //utilTimer.timerString("Starting price calc", module);
+        //utilTimer.setLog(false);
         
         GenericDelegator delegator = dctx.getDelegator();
         Map result = new HashMap();
@@ -462,7 +462,7 @@ public class PriceServices {
                     price = minSellPrice.doubleValue();
                 }
 
-                Debug.logInfo("Final Calculated price: " + price + ", rules: " + totalRules + ", conds: " + totalConds + ", actions: " + totalActions, module);
+                if (Debug.verboseOn()) Debug.logVerbose("Final Calculated price: " + price + ", rules: " + totalRules + ", conds: " + totalConds + ", actions: " + totalActions, module);
                 
                 result.put("price", new Double(price));
                 result.put("listPrice", new Double(listPrice));
@@ -476,13 +476,13 @@ public class PriceServices {
         
         result.put("orderItemPriceInfos", orderItemPriceInfos);
         result.put("isSale", new Boolean(isSale));
-        utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
+        //utilTimer.timerString("Finished price calc [productId=" + productId + "]", module);
         return result;
     }
 
     public static boolean checkPriceCondition(GenericValue productPriceCond, String productId, String prodCatalogId, 
             String partyId, double quantity, double listPrice, String currencyUomId, GenericDelegator delegator) throws GenericEntityException {
-        Debug.logVerbose("Checking price condition: " + productPriceCond, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Checking price condition: " + productPriceCond, module);
         int compare = 0;
         
         if ("PRIP_PRODUCT_ID".equals(productPriceCond.getString("inputParamEnumId"))) {
@@ -538,7 +538,7 @@ public class PriceServices {
             return false;
         }
         
-        Debug.logVerbose("Price Condition compare done, compare=" + compare, module);
+        if (Debug.verboseOn()) Debug.logVerbose("Price Condition compare done, compare=" + compare, module);
 
         if ("PRC_EQ".equals(productPriceCond.getString("operatorEnumId"))) {
             if (compare == 0) return true;
