@@ -156,8 +156,9 @@ public class ServiceDispatcher {
             context = checkAuth(localName, context, service);
             Object userLogin = context.get("userLogin");
 
-            if (service.auth && userLogin == null)
-                throw new ServiceAuthException("User authorization is required for this service");
+            if (service.auth && userLogin == null) {
+                throw new ServiceAuthException("User authorization is required for the " + service.name + " service");
+            }
 
             // setup the engine
             GenericEngine engine = getGenericEngine(service.engineName);
