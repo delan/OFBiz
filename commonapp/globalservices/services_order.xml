@@ -98,6 +98,13 @@
     	<attribute name="fromStatusId" type="String" mode="IN" optional="true"/>
     	<attribute name="statusId" type="String" mode="IN" optional="false"/>
     </service>
+    
+    <service name="checkOrderForBackOrders" engine="java"
+    		location="org.ofbiz.commonapp.order.order.OrderServices" invoke="checkBackOrderItems">
+    	<description>Check the order for items backordered</description>
+    	<attribute name="orderId" type="String" mode="IN" optional="false"/>
+    	<attribute name="backOrderedItems" type="List" mode="OUT" optional="false"/>
+    </service>
 
     <service name="addOrderRole" engine="java"
             location="org.ofbiz.commonapp.order.order.OrderServices" invoke="addRoleType">

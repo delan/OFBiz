@@ -639,6 +639,39 @@ public class OrderServices {
         return result;
     }
     
+    /** Service to check and make sure no items are in BACKORDER status */
+    public static Map checkBackOrderItems(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        GenericDelegator delegator = ctx.getDelegator();
+        String orderId = (String) context.get("orderId");
+        
+        List backOrderedItems = new ArrayList();
+        List orderItems = null;
+        try {
+            orderItems = delegator.findByAnd("OrderItem", UtilMisc.toMap("orderId", orderId));
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Cannot get OrderItem entities", module);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not get OrderItems (" + e.getMessage() + ").");
+        }
+               
+        if (orderItems != null) {
+            Iterator i = orderItems.iterator();
+            while (i.hasNext()) {
+                GenericValue item = (GenericValue) i.next();
+                if (item != null && item.get("statusId") != null) {
+                    String status = item.getString("statusId");
+                    if (status.equals("ITEM_BACKORDERED"))
+                        backOrderedItems.add(item);
+                }
+            }
+        }
+        
+        result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        result.put("backOrderedItems", backOrderedItems);
+        return result;                        
+    }
+    
     /** Service to add a role type to an order */
     public static Map addRoleType(DispatchContext ctx, Map context) {
         Map result = new HashMap();
