@@ -82,7 +82,7 @@ function addToList() {
             <div class="boxhead">&nbsp;Order Entry</div>
           </td>
           <td valign="middle" align="right"> 
-            <a href="/partymgr/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">Find Party</a><a href="javascript:document.entryform.submit();" class="submenutextright">Continue</a>
+            <a href="/partymgr/control/findparty?externalLoginKey=${requestAttributes.externalLoginKey}" class="submenutext">Find Party</a><a href="javascript:document.entryform.submit();" class="submenutextright">Continue</a>
           </td>
         </tr>
       </table>
@@ -91,6 +91,7 @@ function addToList() {
   <tr>
     <td width='100%'>
       <form method="post" name="entryform" action="<@ofbizUrl>/orderentry</@ofbizUrl>">
+      <input type='hidden' name='finalizeMode' value='type'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td width='14%'>&nbsp;</td>
@@ -99,6 +100,7 @@ function addToList() {
           <td width='74%' valign='middle'>
             <div class='tabletext' valign='top'>
               <input type='radio' name='orderMode' value='SALES_ORDER'<#if sessionAttributes.orderMode?default("") == "SALES_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Sales Order&nbsp;<input type='radio' name='orderMode' value='PURCHASE_ORDER'<#if sessionAttributes.orderMode?default("") == "PURCHASE_ORDER"> checked</#if><#if sessionAttributes.orderMode?exists> disabled</#if>>&nbsp;Purchase Order&nbsp;
+              <#if !sessionAttributes.orderMode?exists>*<font color='red'>required</font><#else>(cannot be changed without clearing order.)</#if>
             </div>
           </td>
         </tr>
@@ -138,7 +140,7 @@ function addToList() {
             <div class="boxhead">&nbsp;<#if modeStr?exists>${modeStr?cap_first}&nbsp;</#if>Order Entry</div>
           </td>
           <td valign="middle" align="right">                     
-            <#if (shoppingCartSize > 0)><a href="javascript:document.cartform.submit()" class="submenutext">Recalculate Order</a><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">Clear Order</a><#if shoppingCart.getOrderType() == "PURCHASE_ORDER"><a href="<@ofbizUrl>/finalizeOrder?finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">Finalize Order</a><#else><a href="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" class="submenutextright">Finalize Order</a></#if>
+            <#if (shoppingCartSize > 0)><a href="javascript:document.cartform.submit()" class="submenutext">Recalculate Order</a><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">Clear Order</a><#if shoppingCart.getOrderType() == "PURCHASE_ORDER"><a href="<@ofbizUrl>/finalizeOrder?finalizeReqCustInfo=false&finalizeReqShipInfo=false&finalizeReqOptions=false&finalizeReqPayInfo=false</@ofbizUrl>" class="submenutextright">Finalize Order</a><#else><a href="<@ofbizUrl>/finalizeOrder</@ofbizUrl>" class="submenutextright">Finalize Order</a></#if>
             <#else><span class="submenutextdisabled">Recalculate Order</span><a href="<@ofbizUrl>/emptycart</@ofbizUrl>" class="submenutext">Clear Order</a><span class="submenutextrightdisabled">Finalize Order</span>
             </#if>
           </td>
