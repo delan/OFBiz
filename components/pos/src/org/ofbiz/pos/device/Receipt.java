@@ -162,7 +162,7 @@ public class Receipt extends GenericDevice implements DialogCallback {
                     templateString[currentPart++] = "[ORDER_BARCODE]";
                     buf = new StringBuffer();
                 } else {
-                    buf.append(line);
+                    buf.append(line + "\n");
                 }
             }
             in.close();
@@ -181,10 +181,13 @@ public class Receipt extends GenericDevice implements DialogCallback {
         expandMap.put("BOLD", TEXT_BOLD);
         expandMap.put("LF", LF);
         String toPrint = FlexibleStringExpander.expandString(template, expandMap);
-        try {
-            ((POSPrinter) control).printNormal(POSPrinterConst.PTR_S_RECEIPT, toPrint);
-        } catch (jpos.JposException e) {
-            Debug.logError(e, module);
+        String[] lines = toPrint.split("\\n");
+        for (int i = 0; i < lines.length; i++) {
+            try {
+                ((POSPrinter) control).printNormal(POSPrinterConst.PTR_S_RECEIPT, lines[i]);
+            } catch (jpos.JposException e) {
+                Debug.logError(e, module);
+            }
         }
     }
 
