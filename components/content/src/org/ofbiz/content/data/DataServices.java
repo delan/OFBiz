@@ -1,5 +1,5 @@
 /*
- * $Id: DataServices.java,v 1.11 2004/01/17 03:57:46 byersa Exp $
+ * $Id: DataServices.java,v 1.12 2004/03/16 17:27:14 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.ofbiz.service.ServiceUtil;
  * DataServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @since 3.0
  * 
  *  
@@ -71,7 +71,7 @@ public class DataServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
+        targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
@@ -102,7 +102,7 @@ public class DataServices {
     public static Map createDataResource(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
+        targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = createDataResourceMethod(dctx, context);
@@ -121,6 +121,11 @@ public class DataServices {
             String lastModifiedByUserLogin = userLoginId;
             Timestamp createdDate = UtilDateTime.nowTimestamp();
             Timestamp lastModifiedDate = UtilDateTime.nowTimestamp();
+            String dataTemplateTypeId = (String) context.get("dataTemplateTypeId");
+            if (UtilValidate.isEmpty(dataTemplateTypeId)) {
+                dataTemplateTypeId = "NONE";
+                context.put("dataTemplateTypeId", dataTemplateTypeId );
+            }
 
             // If textData exists, then create DataResource and return dataResourceId
             String dataResourceId = (String) context.get("dataResourceId");
@@ -151,7 +156,7 @@ public class DataServices {
     public static Map createElectronicText(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
+        targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = createElectronicTextMethod(dctx, context);
@@ -187,7 +192,7 @@ public class DataServices {
     public static Map createFile(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
+        targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = null;
@@ -262,7 +267,7 @@ public class DataServices {
         LocalDispatcher dispatcher = dctx.getDispatcher();
         context.put("entityOperation", "_UPDATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("UPDATE_CONTENT");
+        targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         String permissionStatus = DataResourceWorker.callDataResourcePermissionCheck(delegator, dispatcher, context);
@@ -292,7 +297,7 @@ public class DataServices {
     public static Map updateDataResource(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
+        targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = updateDataResourceMethod(dctx, context);
@@ -340,7 +345,7 @@ public class DataServices {
     public static Map updateElectronicText(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_UPDATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("UPDATE_CONTENT");
+        targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = updateElectronicTextMethod(dctx, context);
@@ -378,7 +383,7 @@ public class DataServices {
     public static Map updateFile(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_UPDATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("UPDATE_CONTENT");
+        targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = null;
@@ -478,7 +483,7 @@ public class DataServices {
     public static Map updateImage(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_UPDATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("UPDATE_CONTENT");
+        targetOperations.add("CONTENT_UPDATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = updateImageMethod(dctx, context);
@@ -516,7 +521,7 @@ public class DataServices {
     public static Map createImage(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
+        targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = createImageMethod(dctx, context);

@@ -25,6 +25,8 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.transaction.TransactionUtil;
+import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 
@@ -46,7 +48,7 @@ import javax.servlet.http.HttpSession;
  * UploadContentAndImage Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  *
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -104,13 +106,14 @@ public class UploadContentAndImage {
                 }
             }
 
+            TransactionUtil.begin();
             // Create or update FTL template
             Map ftlContext = new HashMap();
             ftlContext.put("userLogin", userLogin);
             ftlContext.put("contentId", passedParams.get("ftlContentId"));
             ftlContext.put("ownerContentId", passedParams.get("ownerContentId"));
             ftlContext.put("contentTypeId", "DOCUMENT");
-            ftlContext.put("statusId", "BLOG_PUBLISHED");
+            ftlContext.put("statusId", passedParams.get("statusId"));
             ftlContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
             ftlContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
             ftlContext.put("contentName", passedParams.get("contentName"));
@@ -124,7 +127,7 @@ public class UploadContentAndImage {
             if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext(1):" + ftlContext, module);
             ftlContext.put("dataResourceTypeId", null); // inhibits persistence of DataResource, because it already exists
             ftlContext.put("contentIdTo", passedParams.get("contentIdTo"));
-            ftlContext.put("contentAssocTypeId", "SUB_CONTENT");
+            ftlContext.put("contentAssocTypeId", passedParams.get("contentAssocTypeId"));
             if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext " + ftlContext, module);
             if (Debug.verboseOn()) Debug.logVerbose("[UploadContentAndImage]ftlContext(2):" + ftlContext, module);
             Map ftlResults = dispatcher.runSync("persistContentAndAssoc", ftlContext);
@@ -132,6 +135,7 @@ public class UploadContentAndImage {
             boolean isError = ModelService.RESPOND_ERROR.equals(ftlResults.get(ModelService.RESPONSE_MESSAGE));
             if (isError) {
                 request.setAttribute("_ERROR_MESSAGE_", ftlResults.get(ModelService.ERROR_MESSAGE));
+                    TransactionUtil.rollback();
                 return "error";
             }
 
@@ -147,7 +151,7 @@ public class UploadContentAndImage {
                 sumContext.put("contentId", passedParams.get("sumContentId"));
                 sumContext.put("ownerContentId", ftlContentId);
                 sumContext.put("contentTypeId", "DOCUMENT");
-                sumContext.put("statusId", "BLOG_PUBLISHED");
+                sumContext.put("statusId", null);
                 sumContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
                 sumContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
                 sumContext.put("contentName", passedParams.get("contentName"));
@@ -165,6 +169,7 @@ public class UploadContentAndImage {
                 isError = ModelService.RESPOND_ERROR.equals(sumResults.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) {
                     request.setAttribute("_ERROR_MESSAGE_", sumResults.get(ModelService.ERROR_MESSAGE));
+                    TransactionUtil.rollback();
                     return "error";
                 }
             }
@@ -175,7 +180,7 @@ public class UploadContentAndImage {
             txtContext.put("contentId", passedParams.get("txtContentId"));
             txtContext.put("ownerContentId", ftlContentId);
             txtContext.put("contentTypeId", "DOCUMENT");
-            txtContext.put("statusId", "BLOG_PUBLISHED");
+            txtContext.put("statusId", null);
             txtContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
             txtContext.put("targetOperationList", StringUtil.split((String)passedParams.get("targetOperation"),"|"));
             txtContext.put("contentName", passedParams.get("contentName"));
@@ -193,6 +198,7 @@ public class UploadContentAndImage {
             isError = ModelService.RESPOND_ERROR.equals(txtResults.get(ModelService.RESPONSE_MESSAGE));
             if (isError) {
                 request.setAttribute("_ERROR_MESSAGE_", txtResults.get(ModelService.ERROR_MESSAGE));
+                    TransactionUtil.rollback();
                 return "error";
             }
 
@@ -203,7 +209,7 @@ public class UploadContentAndImage {
                 imgContext.put("contentId", passedParams.get("imgContentId"));
                 imgContext.put("ownerContentId", ftlContentId);
                 imgContext.put("contentTypeId", "DOCUMENT");
-                imgContext.put("statusId", "BLOG_PUBLISHED");
+                imgContext.put("statusId", null);
                 imgContext.put("contentName", passedParams.get("contentName"));
                 imgContext.put("description", passedParams.get("description"));
                 imgContext.put("contentPurposeList", UtilMisc.toList(passedParams.get("contentPurposeTypeId")));
@@ -221,36 +227,44 @@ public class UploadContentAndImage {
                 isError = ModelService.RESPOND_ERROR.equals(imgResults.get(ModelService.RESPONSE_MESSAGE));
                 if (isError) {
                     request.setAttribute("_ERROR_MESSAGE_", imgResults.get(ModelService.ERROR_MESSAGE));
+                    TransactionUtil.rollback();
                     return "error";
                 }
             }
     
-            Map assocContext = new HashMap();
-            assocContext.put("userLogin", userLogin);
-            assocContext.put("contentId", ftlContentId);
-            assocContext.put("fromDate", UtilDateTime.nowTimestamp());
-            assocContext.put("contentAssocTypeId", "ATTRIBUTE");
-
-            String topic = (String)passedParams.get("topic");
-            if (UtilValidate.isNotEmpty(topic)) {
-                assocContext.put("contentIdTo", topic);
-                assocContext.put("contentAssocPredicateId", "topifies");
-                Map assocResults = dispatcher.runSync("persistContentAndAssoc", assocContext);
-            }
-
-            String section = (String)passedParams.get("section");
-            if (UtilValidate.isNotEmpty(section)) {
-                assocContext.put("contentIdTo", section);
-                assocContext.put("contentAssocPredicateId", "categorizes");
-                Map assocResults = dispatcher.runSync("persistContentAndAssoc", assocContext);
+            // Check for existing AUTHOR link
+            String userLoginId = userLogin.getString("userLoginId");
+            List authorAssocList = delegator.findByAnd("ContentAssoc", UtilMisc.toMap("contentId", ftlContentId, "contentIdTo", userLoginId, "contentAssocTypeId", "AUTHOR"));
+            List currentAuthorAssocList = EntityUtil.filterByDate(authorAssocList);
+            if (Debug.infoOn()) Debug.logInfo("[UploadContentAndImage]currentAuthorAssocList " + currentAuthorAssocList, module);
+            if (currentAuthorAssocList.size() == 0) {
+                // Don't want to bother with permission checking on this association
+                GenericValue authorAssoc = delegator.makeValue("ContentAssoc", null);
+                authorAssoc.set("contentId", ftlContentId);
+                authorAssoc.set("contentIdTo", userLoginId);
+                authorAssoc.set("contentAssocTypeId", "AUTHOR");
+                authorAssoc.set("fromDate", UtilDateTime.nowTimestamp());
+                authorAssoc.set("createdByUserLogin", userLoginId);
+                authorAssoc.set("lastModifiedByUserLogin", userLoginId);
+                authorAssoc.set("createdDate", UtilDateTime.nowTimestamp());
+                authorAssoc.set("lastModifiedDate", UtilDateTime.nowTimestamp());
+                authorAssoc.create();
             }
 
             request.setAttribute("dataResourceId", ftlDataResourceId);
             request.setAttribute("drDataResourceId", ftlDataResourceId);
             request.setAttribute("contentId", ftlContentId);
             request.setAttribute("nodeTrailCsv", passedParams.get("nodeTrailCsv"));
+            TransactionUtil.commit();
         } catch( Exception e) {
+            Debug.logError(e, "[UploadContentAndImage] " , module);
             request.setAttribute("_ERROR_MESSAGE_", e.getMessage());
+            try {
+                    TransactionUtil.rollback();
+            } catch(GenericTransactionException e2) {
+            request.setAttribute("_ERROR_MESSAGE_", e2.getMessage());
+            return "error";
+            }
             return "error";
         }
         return "success";

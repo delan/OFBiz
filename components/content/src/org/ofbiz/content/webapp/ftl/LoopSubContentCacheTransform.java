@@ -1,5 +1,5 @@
 /*
- * $Id: LoopSubContentCacheTransform.java,v 1.3 2004/01/13 06:16:30 byersa Exp $
+ * $Id: LoopSubContentCacheTransform.java,v 1.4 2004/03/16 17:27:16 byersa Exp $
  * 
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  * 
@@ -22,7 +22,9 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 import java.util.ArrayList;
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,6 +39,9 @@ import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.minilang.MiniLangException;
+import org.ofbiz.minilang.SimpleMapProcessor;
+
 
 import freemarker.template.Environment;
 import freemarker.template.SimpleHash;
@@ -45,19 +50,22 @@ import freemarker.template.TemplateTransformModel;
 import freemarker.template.TransformControl;
 import freemarker.template.TemplateModelException;
 
+//import com.clarkware.profiler.Profiler;
+import java.io.*;
+
 /**
  * LoopSubContentCacheTransform - Freemarker Transform for URLs (links)
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.0
  */
 public class LoopSubContentCacheTransform implements TemplateTransformModel {
 
     public static final String module = LoopSubContentCacheTransform.class.getName();
 
-    public static final String [] saveKeyNames = {"contentId", "subContentId", "mimeTypeId", "subContentDataResourceView", "wrapTemplateId", "contentTemplateId", "globalNodeTrail", "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "nodeTrail", "passedGlobalNodeTrail"};
-    public static final String [] removeKeyNames = {"wrapTemplateId", "entityList", "entityIndex", "textData", "dataResourceId","drDataResourceId", "subContentIdSub", "parentContent", "wrappedFTL", "trailCsv", "indent"};
+    public static final String [] upSaveKeyNames = {"globalNodeTrail"};
+    public static final String [] saveKeyNames = {"contentId", "subContentId", "entityList", "entityIndex", "subDataResourceTypeId", "mimeTypeId", "whenMap", "locale",  "entityList", "viewSize", "viewIndex", "highIndex", "lowIndex", "listSize", "wrapTemplateId", "encloseWrapText", "nullThruDatesOnly"};
 
     /**
      * A wrapper for the FreeMarkerWorker version.
@@ -74,34 +82,31 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
         return FreeMarkerWorker.getArg(args, key, ctx);
     }
 
-    public static boolean prepCtx(GenericDelegator delegator, Map ctx) {
+    public static boolean prepCtx(GenericDelegator delegator, Map ctx) throws GeneralException {
 
         //String contentId = (String)ctx.get("contentId");
         //String mimeTypeId = (String)ctx.get("mimeTypeId");
         List lst = (List) ctx.get("entityList");
-        //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, prepCtx, lst :" + lst, module);
-        Integer idx = (Integer) ctx.get("entityIndex");
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, prepCtx, idx :" + idx, module);
-        if (idx == null)
-            idx = new Integer(0);
-        int i = idx.intValue();
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, prepCtx, i :" + i, module);
-        if (i >= lst.size()) {
+        int entityIndex = ((Integer)ctx.get("entityIndex")).intValue();
+        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, prepCtx, entityIndex :" + entityIndex, module);
+        if (entityIndex >= lst.size()) {
             return false;
         }
-        GenericValue view = (GenericValue) lst.get(i);
+        GenericValue view = (GenericValue) lst.get(entityIndex);
         GenericValue electronicText = null;
         try {
             electronicText = view.getRelatedOne("ElectronicText");
         } catch (GenericEntityException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new GeneralException(e.getMessage());
         }
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, subContentDataResourceView contentId/drDataResourceId:" + view.get("contentId")  + " / " + view.get("drDataResourceId"), module);
 
         String dataResourceId = (String) view.get("drDataResourceId");
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(0), dataResourceId ." + dataResourceId, module);
         String subContentIdSub = (String) view.get("contentId");
-        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
+        //String contentAssocTypeId = (String) view.get("caContentAssocTypeId");
+        //String mapKey = (String) view.get("caMapKey");
+        //if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), subContentIdSub ." + subContentIdSub, module);
         // This order is taken so that the dataResourceType can be overridden in the transform arguments.
         String subDataResourceTypeId = (String)ctx.get("subDataResourceTypeId");
         if (UtilValidate.isEmpty(subDataResourceTypeId)) {
@@ -110,53 +115,92 @@ public class LoopSubContentCacheTransform implements TemplateTransformModel {
             // the parent context. But it will already have one and it is the same context that is
             // being passed.
         }
-        // This order is taken so that the mimeType can be overridden in the transform arguments.
-        String mimeTypeId = (String)ctx.get("mimeTypeId");
-        if (UtilValidate.isEmpty(mimeTypeId)) {
-            mimeTypeId = (String) view.get("mimeTypeId");
-            String parentContentId = (String)ctx.get("contentId");
-            if (UtilValidate.isEmpty(mimeTypeId) && UtilValidate.isNotEmpty(parentContentId)) { // will need these below
-                try {
-                    GenericValue parentContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", parentContentId));
-                    if (parentContent != null) {
-                        mimeTypeId = (String) parentContent.get("mimeTypeId");
-                        ctx.put("parentContent", parentContent);
-                        if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, parentContentId: " + parentContent.get("contentId"), module);
-                    }
-                } catch (GenericEntityException e) {
-                    throw new RuntimeException(e.getMessage());
-                }
-            }
 
-        }
+        String mimeTypeId = FreeMarkerWorker.getMimeTypeId(delegator, view, ctx);
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache(2), mimeTypeId." + mimeTypeId, module);
         if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, subContentId/Sub." + subContentIdSub, module);
 
         // This is what the FM template will see.
         List passedGlobalNodeTrail = (List)ctx.get("passedGlobalNodeTrail");
-Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
-        List trail = new ArrayList(passedGlobalNodeTrail);
-        trail.add(FreeMarkerWorker.makeNode(view));
-        int indentSz = trail.size();
-        ctx.put("indent", new Integer(indentSz));
-        ctx.put("globalNodeTrail", trail);
-    Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
-        if (electronicText != null)
-            ctx.put("textData", electronicText.get("textData"));
+        if (Debug.infoOn()) Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
+        List trail = null;
+        if (passedGlobalNodeTrail != null) 
+            trail = new ArrayList(passedGlobalNodeTrail);
         else
-            ctx.put("textData", null);
-        ctx.put("entityIndex", new Integer(i + 1));
-        ctx.put("subContentId", subContentIdSub);
-        ctx.put("drDataResourceId", dataResourceId);
-        ctx.put("mimeTypeId", mimeTypeId);
-        ctx.put("dataResourceId", dataResourceId);
-        ctx.put("subContentIdSub", subContentIdSub);
-        ctx.put("subDataResourceTypeId", subDataResourceTypeId);
-        if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)end of prepCtx", ctx, 0),module);
-        return true;
+            trail = new ArrayList();
+                //if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(1):" + trail, "");
+        Map trailNode = FreeMarkerWorker.makeNode(view);
+        Map whenMap = (Map)ctx.get("whenMap");
+        Locale locale = (Locale) ctx.get("locale");
+        if (locale == null)
+            locale = Locale.getDefault();
+        GenericValue assocContent = null;
+        ContentWorker.checkConditions(delegator, trailNode, assocContent, whenMap);
+        Boolean isReturnBeforeObj = (Boolean)trailNode.get("isReturnBefore");
+        Boolean isReturnAfterObj = (Boolean)trailNode.get("isReturnAfter");
+        Boolean isPickObj = (Boolean)trailNode.get("isPick");
+        Boolean isFollowObj = (Boolean)trailNode.get("isFollow");
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache, isReturnBeforeObj" + isReturnBeforeObj + " isPickObj:" + isPickObj + " isFollowObj:" + isFollowObj + " isReturnAfterObj:" + isReturnAfterObj, module);
+        if ( (isReturnBeforeObj == null || !isReturnBeforeObj.booleanValue())
+           && ( (isPickObj != null && isPickObj.booleanValue())
+              ||  (isFollowObj != null && isFollowObj.booleanValue()))
+        ) {
+     
+            trail.add(trailNode);
+            int indentSz = trail.size();
+            ctx.put("indent", new Integer(indentSz));
+                String csvTrail = FreeMarkerWorker.nodeTrailToCsv(trail);
+                if (Debug.infoOn()) Debug.logInfo("in Loop, csvTrail:"+csvTrail,module);
+            ctx.put("globalNodeTrail", trail);
+                if (Debug.infoOn()) Debug.logInfo("prepCtx, trail(2):" + trail, "");
+                if (Debug.infoOn()) Debug.logInfo("prepCtx, globalNodeTrail csv:" + FreeMarkerWorker.nodeTrailToCsv((List)trail), "");
+            if (electronicText != null)
+                ctx.put("textData", electronicText.get("textData"));
+            else
+                ctx.put("textData", null);
+            ctx.put("subDataResourceTypeId", subDataResourceTypeId);
+            ctx.put("mimeTypeId", mimeTypeId);
+            ctx.put("subContentId", subContentIdSub);
+//            ctx.put("drDataResourceId", dataResourceId);
+//            ctx.put("dataResourceId", dataResourceId);
+//            ctx.put("subContentIdSub", subContentIdSub);
+            if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)end of prepCtx", ctx, 0),module);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean getNextMatchingEntity(Map templateCtx, GenericDelegator delegator) throws IOException {
+
+                int lowIndex = ((Integer)templateCtx.get("lowIndex")).intValue(); 
+                int entityIndex = ((Integer)templateCtx.get("entityIndex")).intValue(); 
+                int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
+                int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
+                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, getNext...", module);
+                boolean inProgress = false;
+ 
+                while (!inProgress && entityIndex < listSize) {
+                    try {
+                        inProgress = prepCtx(delegator, templateCtx);
+                    } catch(GeneralException e) {
+                        throw new IOException(e.getMessage());
+                    }
+                    entityIndex++;
+                    templateCtx.put("entityIndex", new Integer(entityIndex));
+                    if (inProgress) {
+                        outputIndex++;
+                        if (outputIndex >= lowIndex) {
+                            break;
+                        }
+                    }
+                }
+                templateCtx.put("outputIndex", new Integer(outputIndex));
+                return inProgress;
     }
 
     public Writer getWriter(final Writer out, Map args) {
+        //Profiler.begin("Loop");
         final StringBuffer buf = new StringBuffer();
         final Environment env = Environment.getCurrentEnvironment();
         final Map templateCtx = (Map) FreeMarkerWorker.getWrappedObject("context", env);
@@ -166,8 +210,10 @@ Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
         FreeMarkerWorker.getSiteParameters(request, templateCtx);
         //templateCtx.put("buf", buf);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before save", templateCtx, 0),module);
-        final Map savedValues = FreeMarkerWorker.saveValues(templateCtx, saveKeyNames);
-        if (Debug.verboseOn()) Debug.logVerbose("(L-0)savedValues: " + savedValues,module);
+        final Map savedValuesUp = new HashMap();
+        FreeMarkerWorker.saveContextValues(templateCtx, upSaveKeyNames, savedValuesUp);
+        final Map savedValues = new HashMap();
+        // if (Debug.verboseOn()) Debug.logVerbose("(L-0)savedValues: " + savedValues,module);
         FreeMarkerWorker.overrideWithArgs(templateCtx, args);
         if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after overrride", templateCtx, 0),module);
         String contentAssocTypeId = (String)templateCtx.get("contentAssocTypeId");
@@ -183,6 +229,13 @@ Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
             templateCtx.put("locale", locale);
         }
 
+        Map whenMap = new HashMap();
+        whenMap.put("followWhen", (String)templateCtx.get( "followWhen"));
+        whenMap.put("pickWhen", (String)templateCtx.get( "pickWhen"));
+        whenMap.put("returnBeforePickWhen", (String)templateCtx.get( "returnBeforePickWhen"));
+        whenMap.put("returnAfterPickWhen", (String)templateCtx.get( "returnAfterPickWhen"));
+        templateCtx.put("whenMap", whenMap);
+
         String fromDateStr = (String)templateCtx.get("fromDateStr");
         Timestamp fromDate = null;
         if (UtilValidate.isNotEmpty(fromDateStr)) {
@@ -190,83 +243,79 @@ Debug.logInfo("passedGlobalNodeTrail(prepCtx):" + passedGlobalNodeTrail, "");
         }
         if (fromDate == null)
             fromDate = UtilDateTime.nowTimestamp();
-        GenericValue view = null;
        
-        String contentId = (String)templateCtx.get("contentId");
-        final String contentIdTo = contentId;
-        String subContentId = (String)templateCtx.get("subContentId");
-        String thisContentId = (String)templateCtx.get("contentId");
-        if (UtilValidate.isEmpty(thisContentId)) {
-            thisContentId = (String)templateCtx.get("subContentId");
-        }
+        final GenericValue userLogin = (GenericValue) FreeMarkerWorker.getWrappedObject("userLogin", env);
         List trail = (List)templateCtx.get("globalNodeTrail");
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), trail ." + trail, module);
+        String strNullThruDatesOnly = (String)templateCtx.get("nullThruDatesOnly");
+        Boolean nullThruDatesOnly = (strNullThruDatesOnly != null && strNullThruDatesOnly.equalsIgnoreCase("true")) ? new Boolean(true) :new Boolean(false);
+        GenericValue val = null;
+        try {
+            val = FreeMarkerWorker.getCurrentContent(delegator, trail, userLogin, templateCtx, nullThruDatesOnly, null);
+        } catch(GeneralException e) {
+            throw new RuntimeException("Error getting current content. " + e.toString());
+        }
+        final GenericValue view = val;
+
+        if (view == null) {
+            throw new RuntimeException("No content found.");
+        }
+        templateCtx.put("contentId", null);
+        templateCtx.put("subContentId", null);
+
+        trail = (List)templateCtx.get("globalNodeTrail");
         List passedGlobalNodeTrail = null;
         if (trail != null && trail.size() > 0) 
             passedGlobalNodeTrail = new ArrayList(trail);
         else
             passedGlobalNodeTrail = new ArrayList();
-        if (UtilValidate.isNotEmpty(subContentId) || UtilValidate.isNotEmpty(contentId) ) {
-
-            // Don't want to duplicate a node value
-            String passedContentId = null;
-            if (passedGlobalNodeTrail.size() > 0) {
-                Map nd = (Map)passedGlobalNodeTrail.get(passedGlobalNodeTrail.size() - 1);
-                passedContentId = (String)nd.get("contentId");
-            }
-            if (UtilValidate.isNotEmpty(thisContentId)
-                && ( UtilValidate.isEmpty(passedContentId) || !thisContentId.equals(passedContentId))) {
-            
-                try {
-                    view = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", thisContentId));
-                } catch (GenericEntityException e) {
-                    Debug.logError(e, "Error getting sub-content", module);
-                    throw new RuntimeException(e.getMessage());
-                }
-                passedGlobalNodeTrail.add(FreeMarkerWorker.makeNode(view));
-            }
-        }
-Debug.logInfo("passedGlobalNodeTrail(write):" + passedGlobalNodeTrail, "");
         templateCtx.put("passedGlobalNodeTrail", passedGlobalNodeTrail);
-        templateCtx.put("contentId", null);
-        templateCtx.put("subContentId", null);
+        String contentId = (String)view.get("contentId");
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), passedGlobalNodeTrail ." + passedGlobalNodeTrail, module);
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), contentId ." + contentId, module);
+        final String contentIdTo = contentId;
 
         String thisMapKey = (String)templateCtx.get("mapKey");
         Map results = null;
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), assocTypes ." + assocTypes, module);
+        String contentAssocPredicateId = (String)templateCtx.get("contentAssocPredicateId");
         try {
-            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, thisContentId, thisMapKey, "From", fromDate, null, assocTypes, null);
+            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, thisMapKey, "From", fromDate, null, assocTypes, null, new Boolean(true), contentAssocPredicateId);
         } catch(MiniLangException e2) {
             throw new RuntimeException(e2.getMessage());
         } catch(GenericEntityException e) {
             throw new RuntimeException(e.getMessage());
         }
         List longList = (List) results.get("entityList");
+        if (Debug.infoOn()) Debug.logInfo("in LoopSubContentCache(0), longList ." + longList.size(), module);
         String viewSizeStr = (String)templateCtx.get("viewSize");
         if (UtilValidate.isEmpty(viewSizeStr))
             viewSizeStr = "10";
         int viewSize = Integer.parseInt(viewSizeStr); 
-Debug.logInfo("viewSize:" + viewSize, "");
+        if (Debug.verboseOn()) Debug.logVerbose("viewSize:" + viewSize, "");
         String viewIndexStr = (String)templateCtx.get("viewIndex");
-Debug.logInfo("viewIndexStr:" + viewIndexStr, "");
+        if (Debug.verboseOn()) Debug.logVerbose("viewIndexStr:" + viewIndexStr, "");
         if (UtilValidate.isEmpty(viewIndexStr))
             viewIndexStr = "0";
         int viewIndex = Integer.parseInt(viewIndexStr); 
-Debug.logInfo("viewIndex:" + viewIndex, "");
+        if (Debug.verboseOn()) Debug.logVerbose("viewIndex:" + viewIndex, "");
         int lowIndex = viewIndex * viewSize;
-Debug.logInfo("lowIndex:" + lowIndex, "");
+        if (Debug.verboseOn()) Debug.logVerbose("lowIndex:" + lowIndex, "");
         int listSize = longList.size();
-Debug.logInfo("listSize:" + listSize, "");
+        if (Debug.verboseOn()) Debug.logVerbose("listSize:" + listSize, "");
         int highIndex = (viewIndex + 1) * viewSize;
         if (highIndex > listSize)
             highIndex = listSize;
-Debug.logInfo("highIndex:" + highIndex, "");
+        if (Debug.verboseOn()) Debug.logVerbose("highIndex:" + highIndex, "");
         Iterator it = longList.iterator();
-        List entityList = longList.subList(lowIndex, highIndex);
+        //List entityList = longList.subList(lowIndex, highIndex);
+        List entityList = longList;
         templateCtx.put("entityList", entityList);
-        templateCtx.put("viewIndex", Integer.toString(viewIndex));
-        templateCtx.put("viewSize", Integer.toString(viewSize));
-        templateCtx.put("lowIndex", Integer.toString(lowIndex));
-        templateCtx.put("highIndex", Integer.toString(highIndex));
-        templateCtx.put("listSize", Integer.toString(listSize));
+        templateCtx.put("viewIndex", new Integer(viewIndex));
+        templateCtx.put("viewSize", new Integer(viewSize));
+        templateCtx.put("lowIndex", new Integer(lowIndex));
+        templateCtx.put("highIndex", new Integer(highIndex));
+        templateCtx.put("listSize", new Integer(listSize));
 
         return new LoopWriter(out) {
 
@@ -282,11 +331,28 @@ Debug.logInfo("highIndex:" + highIndex, "");
             }
 
             public int onStart() throws TemplateModelException, IOException {
+                int viewIndex = ((Integer)templateCtx.get("viewIndex")).intValue(); 
+                int viewSize = ((Integer)templateCtx.get("viewSize")).intValue(); 
+                int listSize = ((Integer)templateCtx.get("listSize")).intValue(); 
+                if (Debug.verboseOn()) Debug.logVerbose("listSize:" + listSize, "");
+                int lowIndex = viewIndex * viewSize;
+                if (Debug.verboseOn()) Debug.logVerbose("lowIndex:" + lowIndex, "");
+                int highIndex = (viewIndex + 1) * viewSize;
+                if (highIndex > listSize)
+                    highIndex = listSize;
+                if (Debug.verboseOn()) Debug.logVerbose("highIndex:" + highIndex, "");
+                int outputIndex = lowIndex;
+                templateCtx.put("lowIndex", new Integer(lowIndex));
+                templateCtx.put("highIndex", new Integer(highIndex));
+                templateCtx.put("outputIndex", new Integer(outputIndex));
                 templateCtx.put("entityIndex", new Integer(0));
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, onStart", module);
-                boolean inProgress = prepCtx(delegator, templateCtx);
+                boolean inProgress = false;
+                if (outputIndex < highIndex) {
+                    inProgress = getNextMatchingEntity(templateCtx, delegator);
+                }
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, onStart, inProgress:" + inProgress, module);
                 if (inProgress) {
+                    FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
                     return TransformControl.EVALUATE_BODY;
                 } else {
                     return TransformControl.SKIP_BODY;
@@ -294,18 +360,17 @@ Debug.logInfo("highIndex:" + highIndex, "");
             }
 
             public int afterBody() throws TemplateModelException, IOException {
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, afterBody, start", module);
-                if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after body", templateCtx, 0),module);
-                Integer idx = (Integer) templateCtx.get("entityIndex");
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, prepCtx, idx :" + idx, module);
-                int i = idx.intValue();
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, afterBody, i:" + i, module);
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, afterBody, templateCtx.entityIndex:" + templateCtx.get("entityIndex"), module);
-                if (Debug.verboseOn()) Debug.logVerbose("buf:" + buf.toString(),module);
-                boolean inProgress = prepCtx(delegator, templateCtx);
+
+                FreeMarkerWorker.reloadValues(templateCtx, savedValues);
+                int outputIndex = ((Integer)templateCtx.get("outputIndex")).intValue(); 
+                int highIndex = ((Integer)templateCtx.get("highIndex")).intValue(); 
+                boolean inProgress = false;
+                if (outputIndex < highIndex) {
+                    inProgress = getNextMatchingEntity(templateCtx, delegator);
+                }
+
                 if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, afterBody, inProgress:" + inProgress + " inProgress:" + inProgress, module);
-                //out.write(buf.toString());
-                //buf.setLength(0);
+                FreeMarkerWorker.saveContextValues(templateCtx, saveKeyNames, savedValues);
                 if (inProgress)
                     return TransformControl.REPEAT_EVALUATION;
                 else
@@ -314,26 +379,44 @@ Debug.logInfo("highIndex:" + highIndex, "");
 
             public void close() throws IOException {
 
-                String wrappedFTL = buf.toString();
-                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrappedFTL:"+wrappedFTL,module);
-                String encloseWrappedText = (String)templateCtx.get("encloseWrappedText");
-                if (UtilValidate.isEmpty(encloseWrappedText) || encloseWrappedText.equalsIgnoreCase("false")) {
-                    out.write(wrappedFTL);
-                    wrappedFTL = ""; // So it won't get written again below.
-                }
+                FreeMarkerWorker.reloadValues(templateCtx, savedValuesUp);
+                String wrappedContent = buf.toString();
+                out.write(wrappedContent);
+                if (Debug.infoOn()) Debug.logInfo("in LoopSubContent, wrappedContent:" + wrappedContent, module);
+/*
+                if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrappedContent:"+wrappedContent,module);
                 String wrapTemplateId = (String)templateCtx.get("wrapTemplateId");
                     if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, wrapTemplateId:" + wrapTemplateId, module);
-                if (UtilValidate.isNotEmpty(wrapTemplateId)) {
-                    templateCtx.put("wrappedFTL", wrappedFTL);
+                String editTemplate = (String)templateCtx.get("editTemplate");
+                if (editTemplate != null && editTemplate.equalsIgnoreCase("true")
+                    && UtilValidate.isNotEmpty(wrapTemplateId)) {
+                    templateCtx.put("wrappedContent", wrappedContent);
                     templateCtx.put("contentIdTo", contentIdTo);
                     //if (Debug.verboseOn()) Debug.logVerbose("in LoopSubContentCache, rootDir:" + rootDir, module);
                     
-                    Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+                    //Map templateRoot = FreeMarkerWorker.createEnvironmentMap(env);
+                    Map templateRoot = null;
+                    Map templateRootTemplate = (Map)templateCtx.get("templateRootTemplate");
+                    if (templateRootTemplate == null) {
+                        Map templateRootTmp = FreeMarkerWorker.createEnvironmentMap(env);
+                        templateRoot = new HashMap(templateRootTmp);
+                        templateCtx.put("templateRootTemplate", templateRootTmp);
+                    } else {
+                        templateRoot = new HashMap(templateRootTemplate);
+                    }
                     
-                    templateRoot.put("wrapDataResourceTypeId", templateCtx.get("subDataResourceTypeId"));
-                    templateRoot.put("wrapContentIdTo", templateCtx.get("contentId"));
-                    templateRoot.put("wrapMimeTypeId", templateCtx.get("mimeTypeId"));
                     templateRoot.put("context", templateCtx);
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("in LoopSubContent, templateCtx.keySet()" + templateCtx.keySet(), "");
+            Set kySet = templateCtx.keySet();
+            Iterator it = kySet.iterator();
+            while (it.hasNext()) {
+                Object ky = it.next();
+            Debug.logVerbose("in LoopContentAsText, ky:" + ky, "");
+                Object val = templateCtx.get(ky);
+                    Debug.logVerbose("in LoopContentAsText, val:" + val, "");
+            }
+        }
                     
                     Locale locale = (Locale) templateCtx.get("locale");
                     if (locale == null)
@@ -348,15 +431,18 @@ Debug.logInfo("highIndex:" + highIndex, "");
                     }
                 if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)close middle(2)", templateCtx, 0),module);
                 } else {
-                    if (UtilValidate.isNotEmpty(wrappedFTL))
-                        out.write(wrappedFTL);
+                    if (UtilValidate.isNotEmpty(wrappedContent))
+                        out.write(wrappedContent);
                 }
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)before remove", templateCtx, 0),module);
-                    FreeMarkerWorker.removeValues(templateCtx, removeKeyNames);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after remove", templateCtx, 0),module);
-        if (Debug.verboseOn()) Debug.logVerbose("(L-1)savedValues: " + savedValues,module);
-                    FreeMarkerWorker.reloadValues(templateCtx, savedValues);
-                    if (Debug.verboseOn()) Debug.logVerbose(FreeMarkerWorker.logMap("(L)after reload", templateCtx, 0),module);
+*/
+        //try {
+        //Profiler.end("Loop");
+        //FileOutputStream fw = new FileOutputStream(new File("/usr/local/agi/ofbiz/hot-deploy/sfmp/misc/profile.data"));
+        //Profiler.print(fw);
+        //fw.close();
+        //} catch (IOException e) {
+           //Debug.logError("[PROFILER] " + e.getMessage(),"");
+        //}
             }
         };
     }

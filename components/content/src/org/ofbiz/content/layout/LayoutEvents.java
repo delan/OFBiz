@@ -44,7 +44,7 @@ import javax.servlet.http.HttpSession;
  * LayoutEvents Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  *
  * 
@@ -72,7 +72,13 @@ public class LayoutEvents {
         //Debug.logVerbose("in createLayoutImage, byteWrap(0):" + byteWrap, module);
             String imageFileName = (String)uploadResults.get("imageFileName");
             //Debug.logVerbose("in createLayoutImage(java), context:" + context, "");
-
+            String imageFileNameExt = null;
+            if (UtilValidate.isNotEmpty(imageFileName)) {
+                int pos = imageFileName.lastIndexOf(".");
+                if (pos >= 0) 
+                    imageFileNameExt = imageFileName.substring(pos + 1);
+            }
+            String mimeTypeId = "image/" + imageFileNameExt;
             List errorMessages = new ArrayList();
             Locale loc = (Locale)request.getSession().getServletContext().getAttribute("locale");
             if (loc == null)
@@ -136,6 +142,7 @@ public class LayoutEvents {
             // place in ImageDataResource for it.
             if (dataResource != null) {
                 dataResource.set("objectInfo", imageFileName);
+                dataResource.set("mimeTypeId", mimeTypeId);
                 dataResource.store();
             }
 

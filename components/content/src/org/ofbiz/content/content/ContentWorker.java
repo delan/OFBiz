@@ -1,5 +1,5 @@
 /*
- * $Id: ContentWorker.java,v 1.16 2004/01/11 06:27:04 byersa Exp $
+ * $Id: ContentWorker.java,v 1.17 2004/03/16 17:27:13 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,6 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import org.ofbiz.base.util.BshUtil;
 import org.ofbiz.base.util.Debug;
@@ -40,6 +41,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.content.data.DataResourceWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
@@ -55,12 +57,13 @@ import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
 
 import bsh.EvalError;
+import com.clarkware.profiler.Profiler;
 
 /**
  * ContentWorker Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * @since 2.2
  * 
  *  
@@ -131,10 +134,10 @@ public class ContentWorker {
     }
 
     public static void traverse(GenericDelegator delegator, GenericValue content, Timestamp fromDate, Timestamp thruDate, Map whenMap, int depthIdx, Map masterNode, String contentAssocTypeId, List pickList, String direction) {
-        //if (Debug.verboseOn()) Debug.logVerbose("contentId(traverse - 0):" + content.get("contentId") + " depth:" + depthIdx,null);
-        //if (Debug.verboseOn()) Debug.logVerbose("masterNode(traverse -0):" + masterNode,null);
-        //if (Debug.verboseOn()) Debug.logVerbose("traverse, fromDate:" + fromDate,null);
-        //if (Debug.verboseOn()) Debug.logVerbose("traverse, thruDate:" + thruDate,null);
+        if (Debug.verboseOn()) Debug.logVerbose("contentId(traverse - 0):" + content.get("contentId") + " depth:" + depthIdx,null);
+        if (Debug.verboseOn()) Debug.logVerbose("masterNode(traverse -0):" + masterNode,null);
+        if (Debug.verboseOn()) Debug.logVerbose("traverse, fromDate:" + fromDate,null);
+        if (Debug.verboseOn()) Debug.logVerbose("traverse, thruDate:" + thruDate,null);
         
         //String startContentAssocTypeId = null;
         String contentTypeId = null;
@@ -145,74 +148,74 @@ public class ContentWorker {
             }
             contentId = (String) content.get("contentId");
             contentTypeId = (String) content.get("contentTypeId");
-            //if (Debug.verboseOn()) Debug.logVerbose("contentTypeId(traverse):" + contentTypeId,null);
+            if (Debug.verboseOn()) Debug.logVerbose("contentTypeId(traverse):" + contentTypeId,null);
             List topicList = content.getRelatedByAnd("ToContentAssoc", UtilMisc.toMap("contentAssocTypeId", "TOPIC"));
             List topics = new ArrayList();
             for (int i = 0; i < topicList.size(); i++) {
                 GenericValue assoc = (GenericValue) topicList.get(i);
                 topics.add(assoc.get("contentId"));
             }
-            //if (Debug.verboseOn()) Debug.logVerbose("topics(traverse):" + topics,null);
+            if (Debug.verboseOn()) Debug.logVerbose("topics(traverse):" + topics,null);
             List keywordList = content.getRelatedByAnd("ToContentAssoc", UtilMisc.toMap("contentAssocTypeId", "KEYWORD"));
             List keywords = new ArrayList();
             for (int i = 0; i < keywordList.size(); i++) {
                 GenericValue assoc = (GenericValue) keywordList.get(i);
                 keywords.add(assoc.get("contentId"));
             }
-            //if (Debug.verboseOn()) Debug.logVerbose("keywords(traverse):" + keywords,null);
+            if (Debug.verboseOn()) Debug.logVerbose("keywords(traverse):" + keywords,null);
             List purposeValueList = content.getRelatedCache("ContentPurpose");
             List purposes = new ArrayList();
             for (int i = 0; i < purposeValueList.size(); i++) {
                 GenericValue purposeValue = (GenericValue) purposeValueList.get(i);
                 purposes.add(purposeValue.get("contentPurposeTypeId"));
             }
-            //if (Debug.verboseOn()) Debug.logVerbose("purposes(traverse):" + purposes,null);
+            if (Debug.verboseOn()) Debug.logVerbose("purposes(traverse):" + purposes,null);
             List contentTypeAncestry = new ArrayList();
             getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
 
             Map context = new HashMap();
             context.put("content", content);
             context.put("contentAssocTypeId", contentAssocTypeId);
-            //if (Debug.verboseOn()) Debug.logVerbose("contentAssocTypeId(traverse):" + contentAssocTypeId,null);
+            if (Debug.verboseOn()) Debug.logVerbose("contentAssocTypeId(traverse):" + contentAssocTypeId,null);
             //context.put("related", related);
             context.put("purposes", purposes);
             context.put("topics", topics);
             context.put("keywords", keywords);
             context.put("typeAncestry", contentTypeAncestry);
-            //if (Debug.verboseOn()) Debug.logVerbose("context(traverse):" + context,null);
+            if (Debug.verboseOn()) Debug.logVerbose("context(traverse):" + context,null);
             boolean isPick = checkWhen(context, (String) whenMap.get("pickWhen"));
-            //if (Debug.verboseOn()) Debug.logVerbose("isPick(traverse):" + isPick,null);
+            if (Debug.verboseOn()) Debug.logVerbose("isPick(traverse):" + isPick,null);
             boolean isReturnBefore = checkReturnWhen(context, (String) whenMap.get("returnBeforePickWhen"));
-            //if (Debug.verboseOn()) Debug.logVerbose("isReturnBefore:" + isReturnBefore,null);
+            if (Debug.verboseOn()) Debug.logVerbose("isReturnBefore:" + isReturnBefore,null);
             Map thisNode = null;
             if (isPick || !isReturnBefore) {
-                //if (Debug.verboseOn()) Debug.logVerbose("masterNode(traverse -1):" + masterNode,null);
+                if (Debug.verboseOn()) Debug.logVerbose("masterNode(traverse -1):" + masterNode,null);
                 thisNode = new HashMap();
                 thisNode.put("contentId", contentId);
                 thisNode.put("contentTypeId", contentTypeId);
                 thisNode.put("contentAssocTypeId", contentAssocTypeId);
-                //if (Debug.verboseOn()) Debug.logVerbose("thisNode(traverse):" + thisNode,null);
+                if (Debug.verboseOn()) Debug.logVerbose("thisNode(traverse):" + thisNode,null);
                 List kids = (List) masterNode.get("kids");
                 if (kids == null) {
                     kids = new ArrayList();
                     masterNode.put("kids", kids);
                 }
                 kids.add(thisNode);
-                //if (Debug.verboseOn()) Debug.logVerbose("masterNode(traverse -2):" + masterNode,null);
+                if (Debug.verboseOn()) Debug.logVerbose("masterNode(traverse -2):" + masterNode,null);
             }
             if (isPick) {
                 pickList.add(content);
                 thisNode.put("value", content);
-                //if (Debug.verboseOn()) Debug.logVerbose("thisNode2(traverse):" + thisNode,null);
-                //if (Debug.verboseOn()) Debug.logVerbose("masterNode(traverse -3):" + masterNode,null);
+                if (Debug.verboseOn()) Debug.logVerbose("thisNode2(traverse):" + thisNode,null);
+                if (Debug.verboseOn()) Debug.logVerbose("masterNode(traverse -3):" + masterNode,null);
             }
             boolean isReturnAfter = checkReturnWhen(context, (String) whenMap.get("returnAfterPickWhen"));
-            //if (Debug.verboseOn()) Debug.logVerbose("isReturnAfter:" + isReturnAfter,null);
+            if (Debug.verboseOn()) Debug.logVerbose("isReturnAfter:" + isReturnAfter,null);
             if (!isReturnAfter) {
 
-                //if (Debug.verboseOn()) Debug.logVerbose("traverse, getContentAssocs, contentId:" + contentId,null);
+                if (Debug.verboseOn()) Debug.logVerbose("traverse, getContentAssocs, contentId:" + contentId,null);
                 List relatedAssocs = getContentAssocsWithId(delegator, contentId, fromDate, thruDate, direction, new ArrayList());
-                //if (Debug.verboseOn()) Debug.logVerbose("traverse, relatedAssocs:" + relatedAssocs,null);
+                if (Debug.verboseOn()) Debug.logVerbose("traverse, relatedAssocs:" + relatedAssocs,null);
                 Iterator it = relatedAssocs.iterator();
                 Map assocContext = new HashMap();
                 assocContext.put("related", relatedAssocs);
@@ -236,14 +239,14 @@ public class ContentWorker {
                         relatedDirection = "To";
                     }
 
-                    //if (Debug.verboseOn()) Debug.logVerbose("assocContext(traverse - 2):" + assocContext,null);
+                    if (Debug.verboseOn()) Debug.logVerbose("assocContext(traverse - 2):" + assocContext,null);
                     boolean isFollow = checkWhen(assocContext, (String) whenMap.get("followWhen"));
-                    //if (Debug.verboseOn()) Debug.logVerbose("isFollow:" + isFollow,null);
-                    //if (Debug.verboseOn()) Debug.logVerbose("assocRelation:" + assocRelation,null);
-                    //if (Debug.verboseOn()) Debug.logVerbose("relatedDirection:" + relatedDirection,null);
+                    if (Debug.verboseOn()) Debug.logVerbose("isFollow:" + isFollow,null);
+                    if (Debug.verboseOn()) Debug.logVerbose("assocRelation:" + assocRelation,null);
+                    if (Debug.verboseOn()) Debug.logVerbose("relatedDirection:" + relatedDirection,null);
                     if (isFollow) {
                         GenericValue thisContent = assocValue.getRelatedOne(assocRelation);
-                        //if (Debug.verboseOn()) Debug.logVerbose("thisContent, id:" + thisContent.get("contentId"),null);
+                        if (Debug.verboseOn()) Debug.logVerbose("thisContent, id:" + thisContent.get("contentId"),null);
                         traverse(delegator, thisContent, fromDate, thruDate, whenMap, depthIdx + 1, thisNode, contentAssocTypeId, pickList, relatedDirection);
                     }
                 }
@@ -265,24 +268,37 @@ public class ContentWorker {
             return false;
 
         Map currentNode = (Map)nodeTrail.get(sz - 1);
+        Boolean isReturnAfter = (Boolean)currentNode.get("isReturnAfter");
+        if (isReturnAfter != null && isReturnAfter.booleanValue())
+            return false;
+
         List kids = (List)currentNode.get("kids");
-        //if (Debug.verboseOn()) Debug.logVerbose("currentNode(traverseSubContent):" + currentNode,null);
+        if (Debug.verboseOn()) Debug.logVerbose("currentNode(traverseSubContent):" + currentNode,null);
         if (kids != null && kids.size() > 0) {
             int idx = 0;
             while (idx < kids.size()) {
                 currentNode = (Map)kids.get(idx);
-                Boolean isFollow = (Boolean)currentNode.get("isFollow");
-                if (isFollow == null || !isFollow.booleanValue()) {
-                    idx++;
-                    continue;
-                }
-                nodeTrail.add(currentNode);
                 FreeMarkerWorker.traceNodeTrail("12",nodeTrail);
                 Boolean isPick = (Boolean)currentNode.get("isPick");
-                inProgress = true;
-                selectKids(currentNode, ctx);
-                FreeMarkerWorker.traceNodeTrail("14",nodeTrail);
-                break;
+               
+                if (isPick != null && isPick.booleanValue()) {
+                    nodeTrail.add(currentNode);
+                    inProgress = true;
+                    selectKids(currentNode, ctx);
+                    FreeMarkerWorker.traceNodeTrail("14",nodeTrail);
+                    break;
+                } else {
+                    Boolean isFollow = (Boolean)currentNode.get("isFollow");
+                    if (isFollow != null || isFollow.booleanValue()) {
+                        nodeTrail.add(currentNode);
+                        boolean foundPick = traverseSubContent(ctx);
+                        if (foundPick) {
+                            inProgress = true;
+                            break;
+                        }
+                    }
+                }
+                idx++;
             }
         } 
 
@@ -342,122 +358,119 @@ public class ContentWorker {
         return purposes;
     }
 
-    public static void selectKids(Map currentNode, Map ctx) {
-        
-        GenericValue parentContent = (GenericValue)currentNode.get("value");
-        String parentContentAssocTypeId = (String)currentNode.get("assocContentTypeId");
-        String parentContentTypeId = (String)currentNode.get("contentTypeId");
-        String parentContentId = (String) parentContent.get("contentId");
-        if (Debug.verboseOn()) Debug.logVerbose("traverse, parentContentId:" + parentContentId,null);
-        if (Debug.verboseOn()) Debug.logVerbose("traverse, parentContentAssocTypeId:" + parentContentAssocTypeId,null);
-        Map whenMap = (Map)ctx.get("whenMap");
-        Map context = new HashMap();
-        context.put("content", parentContent);
-        context.put("contentAssocTypeId", parentContentAssocTypeId);
-        List purposes = getPurposes(parentContent);
-        context.put("purposes", purposes);
-        List contentTypeAncestry = new ArrayList();
-        GenericDelegator delegator = (GenericDelegator)ctx.get("delegator");
+    public static List getSections(GenericValue content) {
+        List sections = new ArrayList();
         try {
-            getContentTypeAncestry(delegator, parentContentTypeId, contentTypeAncestry);
-        } catch(GenericEntityException e) {
-            if (Debug.verboseOn()) Debug.logVerbose("Error in getting contentTypeAncestry:" + e.getMessage(), "");
-        }
-        context.put("typeAncestry", contentTypeAncestry);
-        boolean isReturnAfter = checkReturnWhen(context, (String)whenMap.get("returnAfterPickWhen"));
-        if (isReturnAfter) 
-            return;
-
-        List kids = new ArrayList();
-        currentNode.put("kids", kids);
-        try {
-            String direction = (String)ctx.get("direction");
-            if (UtilValidate.isEmpty(direction))
-                direction = "From";
-            Timestamp fromDate = (Timestamp)ctx.get("fromDate");
-            Timestamp thruDate = (Timestamp)ctx.get("thruDate");
-            
-            List relatedAssocs = getContentAssocsWithId(delegator, parentContentId, fromDate, thruDate, direction, new ArrayList());
-            if (Debug.verboseOn()) Debug.logVerbose("traverse, relatedAssocs:" + relatedAssocs,null);
-            Iterator it = relatedAssocs.iterator();
-            while (it.hasNext()) {
-                GenericValue assocValue = (GenericValue) it.next();
-                if (Debug.verboseOn()) Debug.logVerbose("assocValue, Id:" + assocValue.get("contentId") + " To:" + assocValue.get("contentIdTo") + " AssocTypeId:" + assocValue.get("contentAssocTypeId"), null);
-                String contentAssocTypeId = (String) assocValue.get("contentAssocTypeId");
-                String assocContentId = null;
-              
-                if (direction != null && direction.equalsIgnoreCase("From")) {
-                    assocContentId = (String) assocValue.get("contentId");
-                } else {
-                    assocContentId = (String) assocValue.get("contentIdTo");
-                }
-                Map assocContext = buildPickContext(delegator, contentAssocTypeId, assocContentId, direction, null);
-                assocContext.put("related", relatedAssocs);
-                boolean isReturnBefore = checkReturnWhen(assocContext, (String)whenMap.get("returnBeforePickWhen"));
-                if (Debug.verboseOn()) Debug.logVerbose("isReturnBefore(traverse):" + isReturnBefore,null);
-                if (!isReturnBefore) {
-                    Map thisNode = new HashMap();
-                    GenericValue thisContent = (GenericValue)assocContext.get("content");
-                    thisNode.put("value", thisContent);
-                    thisNode.put("contentId", thisContent.get("contentId"));
-                    thisNode.put("contentTypeId", thisContent.get("contentTypeId"));
-                    thisNode.put("contentAssocTypeId", contentAssocTypeId);
-                    thisNode.put("direction", direction);
-                    if (Debug.verboseOn()) Debug.logVerbose("thisNode(traverse):" + thisNode,null);
-                    kids = (List) currentNode.get("kids");
-                    if (kids == null) {
-                        kids = new ArrayList();
-                        currentNode.put("kids", kids);
-                    }
-                    kids.add(thisNode);
-                    String pickWhen = (String)whenMap.get("pickWhen");
-                    if (Debug.verboseOn()) Debug.logVerbose("pickWhen(traverse):" + pickWhen,null);
-                    if (Debug.verboseOn()) Debug.logVerbose("assocContext(traverse):" + assocContext,null);
-                    boolean isPick = checkWhen(assocContext, (String)whenMap.get("pickWhen"));
-                    if (Debug.verboseOn()) Debug.logVerbose("isPick(selectKids):" + isPick,null);
-                    if (isPick) {
-                        thisNode.put("isPick", new Boolean(true));
-                        Integer count = (Integer) currentNode.get("count");
-                        if (count == null) {
-                            count = new Integer(1);
-                        } else {
-                            count = new Integer(count.intValue() + 1);
-                        }
-                        currentNode.put("count", count);
-                    }
-                    String followWhen = (String)whenMap.get("followWhen");
-                    if (Debug.verboseOn()) Debug.logVerbose("followWhen(traverse):" + followWhen,null);
-                    boolean isFollow = checkWhen(assocContext, (String)whenMap.get("followWhen"));
-                    if (Debug.verboseOn()) Debug.logVerbose("isFollow(traverse):" + isFollow,null);
-                    if (isFollow) {
-                        thisNode.put("isFollow", new Boolean(true));
-                    }
+            List sectionValueList = content.getRelatedCache("FromContentAssoc");
+            for (int i = 0; i < sectionValueList.size(); i++) {
+                GenericValue sectionValue = (GenericValue) sectionValueList.get(i);
+                String contentAssocPredicateId = (String)sectionValue.get("contentAssocPredicateId");
+                if (contentAssocPredicateId != null && contentAssocPredicateId.equals("categorizes")) {
+                    sections.add(sectionValue.get("contentIdTo"));
                 }
             }
         } catch (GenericEntityException e) {
             Debug.logError("Entity Error:" + e.getMessage(), null);
         }
+        return sections;
+    }
+
+    public static List getTopics(GenericValue content) {
+        List topics = new ArrayList();
+        try {
+            List topicValueList = content.getRelatedCache("FromContentAssoc");
+            for (int i = 0; i < topicValueList.size(); i++) {
+                GenericValue topicValue = (GenericValue) topicValueList.get(i);
+                String contentAssocPredicateId = (String)topicValue.get("contentAssocPredicateId");
+                if (contentAssocPredicateId != null && contentAssocPredicateId.equals("topifies"))
+                    topics.add(topicValue.get("contentIdTo"));
+            }
+        } catch (GenericEntityException e) {
+            Debug.logError("Entity Error:" + e.getMessage(), null);
+        }
+        return topics;
+    }
+
+    public static void selectKids(Map currentNode, Map ctx) {
+        
+        GenericDelegator delegator = (GenericDelegator)ctx.get("delegator");
+        GenericValue parentContent = (GenericValue)currentNode.get("value");
+        String parentContentAssocTypeId = (String)currentNode.get("assocContentTypeId");
+        String parentContentTypeId = (String)currentNode.get("contentTypeId");
+        String parentMapKey = (String)currentNode.get("mapKey");
+        String parentContentId = (String) parentContent.get("contentId");
+        if (Debug.verboseOn()) Debug.logVerbose("traverse, parentContentId:" + parentContentId,null);
+        if (Debug.verboseOn()) Debug.logVerbose("traverse, parentContentAssocTypeId:" + parentContentAssocTypeId,null);
+        Map whenMap = (Map)ctx.get("whenMap");
+        Map context = new HashMap();
+        List kids = new ArrayList();
+        currentNode.put("kids", kids);
+        String direction = (String)ctx.get("direction");
+        if (UtilValidate.isEmpty(direction))
+            direction = "From";
+        Timestamp fromDate = (Timestamp)ctx.get("fromDate");
+        Timestamp thruDate = (Timestamp)ctx.get("thruDate");
+        
+        List assocTypeList = StringUtil.split("SUB_CONTENT", " ");
+        List contentTypeList = null;
+        String contentAssocPredicateId = null;
+        Boolean nullThruDatesOnly = new Boolean(true);
+        Map results = null;
+        try {
+            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, parentContentId, null, "From", null, null, assocTypeList, contentTypeList, nullThruDatesOnly, contentAssocPredicateId);
+        } catch (GenericEntityException e) {
+            throw new RuntimeException(e.getMessage());
+        } catch (MiniLangException e2) {
+            throw new RuntimeException(e2.getMessage());
+        }
+        List relatedViews = (List)results.get("entityList");
+        //if (Debug.infoOn()) Debug.logInfo("traverse, relatedViews:" + relatedViews,null);
+        Iterator it = relatedViews.iterator();
+        while (it.hasNext()) {
+            GenericValue assocValue = (GenericValue) it.next();
+            Map thisNode = FreeMarkerWorker.makeNode(assocValue);
+            checkConditions(delegator, thisNode, null, whenMap);
+            boolean isReturnBeforePick = booleanDataType(thisNode.get("isReturnBeforePick"));
+            boolean isReturnAfterPick = booleanDataType(thisNode.get("isReturnAfterPick"));
+            boolean isPick = booleanDataType(thisNode.get("isPick"));
+            boolean isFollow = booleanDataType(thisNode.get("isFollow"));
+            kids.add(thisNode);
+            if (isPick) {
+                    Integer count = (Integer) currentNode.get("count");
+                    if (count == null) {
+                        count = new Integer(1);
+                    } else {
+                        count = new Integer(count.intValue() + 1);
+                    }
+                    currentNode.put("count", count);
+            }
+        }
         return;
     }
 
     public static boolean checkWhen(Map context, String whenStr) {
-        //if (Debug.verboseOn()) Debug.logVerbose("whenStr:" + whenStr,null);
+   
         boolean isWhen = true; //opposite default from checkReturnWhen
         if (whenStr != null && whenStr.length() > 0) {
             FlexibleStringExpander fse = new FlexibleStringExpander(whenStr);
             String newWhen = fse.expandString(context);
+        if (Debug.infoOn()) Debug.logInfo("newWhen:" + newWhen,null);
+        if (Debug.infoOn()) Debug.logInfo("context:" + context,null);
             try {
                 Boolean isWhenObj = (Boolean) BshUtil.eval(newWhen, context);
                 isWhen = isWhenObj.booleanValue();
             } catch (EvalError e) {
                 Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), null);
+                throw new RuntimeException(e.getMessage());
+
             }
         }
+        //if (Debug.infoOn()) Debug.logInfo("sections:" + context.get("sections") + " isWhen:" + isWhen,null);
         return isWhen;
     }
 
     public static boolean checkReturnWhen(Map context, String whenStr) {
-        //if (Debug.verboseOn()) Debug.logVerbose("checkReturnWhen:" + whenStr,null);
+        if (Debug.verboseOn()) Debug.logVerbose("checkReturnWhen:" + whenStr,null);
         boolean isWhen = false; //opposite default from checkWhen
         if (whenStr != null && whenStr.length() > 0) {
             FlexibleStringExpander fse = new FlexibleStringExpander(whenStr);
@@ -467,6 +480,7 @@ public class ContentWorker {
                 isWhen = isWhenObj.booleanValue();
             } catch (EvalError e) {
                 Debug.logError("Error in evaluating :" + whenStr + " : " + e.getMessage(), null);
+                throw new RuntimeException(e.getMessage());
             }
         }
         return isWhen;
@@ -490,7 +504,7 @@ public class ContentWorker {
         while (assocIt.hasNext()) {
             assoc = (GenericValue) assocIt.next();
             String contentId = (String) assoc.get(contentIdName);
-            content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+            content = delegator.findByPrimaryKeyCache("Content", UtilMisc.toMap("contentId", contentId));
             if (contentTypes != null && contentTypes.size() > 0) {
                 contentTypeId = (String) content.get("contentTypeId");
                 if (contentTypes.contains(contentTypeId)) {
@@ -575,7 +589,7 @@ public class ContentWorker {
     }
 
     public static List getContentAssocsWithId(GenericDelegator delegator, String contentId, Timestamp fromDate, Timestamp thruDate, String direction, List assocTypes) throws GenericEntityException {
-        //if (Debug.verboseOn()) Debug.logVerbose("getContentAssocs, direction:" + direction,null);
+        if (Debug.verboseOn()) Debug.logVerbose("getContentAssocs, direction:" + direction,null);
         List exprList = new ArrayList();
         EntityExpr joinExpr = null;
         EntityExpr expr = null;
@@ -621,8 +635,8 @@ public class ContentWorker {
             exprList.add(thruExprList);
         }
         EntityConditionList assocExprList = new EntityConditionList(exprList, EntityOperator.AND);
-        List relatedAssocs = delegator.findByCondition("ContentAssoc", assocExprList, new ArrayList(), new ArrayList());
-        //if (Debug.verboseOn()) Debug.logVerbose("relatedAssocs:", null);
+        List relatedAssocs = delegator.findByCondition("ContentAssoc", assocExprList, new ArrayList(), UtilMisc.toList("-fromDate"));
+        if (Debug.verboseOn()) Debug.logVerbose("relatedAssocs:", null);
         for (int i = 0; i < relatedAssocs.size(); i++) {
             GenericValue a = (GenericValue) relatedAssocs.get(i);
             if (Debug.verboseOn()) Debug.logVerbose(" contentId:" + a.get("contentId") + " To:" + a.get("contentIdTo") + " AssocTypeId:" + a.get("contentAssocTypeId"), null);
@@ -666,6 +680,7 @@ public class ContentWorker {
             serviceInMap.put("targetOperationList", context.get("targetOperationList"));
             serviceInMap.put("contentPurposeList", context.get("contentPurposeList"));
             serviceInMap.put("entityOperation", context.get("entityOperation"));
+            serviceInMap.put("currentContent", context.get("currentContent"));
 
             try {
                 Map permResults = dispatcher.runSync("checkContentPermission", serviceInMap);
@@ -706,7 +721,7 @@ public class ContentWorker {
         return view;
     }
 
-    public static GenericValue getSubContentCache(GenericDelegator delegator, String contentId, String mapKey, String subContentId, GenericValue userLogin, List assocTypes, Timestamp fromDate) throws GenericEntityException, MiniLangException, GeneralException {
+    public static GenericValue getSubContentCache(GenericDelegator delegator, String contentId, String mapKey, String subContentId, GenericValue userLogin, List assocTypes, Timestamp fromDate, Boolean nullThruDatesOnly, String contentAssocPredicateId) throws GenericEntityException, MiniLangException, GeneralException {
         //GenericValue content = null;
         GenericValue view = null;
         if (subContentId == null) {
@@ -715,7 +730,7 @@ public class ContentWorker {
             }
             Map results = null;
             List contentTypes = null;
-            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, mapKey, "From", fromDate, null, assocTypes, contentTypes);
+            results = ContentServicesComplex.getAssocAndContentAndDataResourceCacheMethod(delegator, contentId, mapKey, "From", fromDate, null, assocTypes, contentTypes, nullThruDatesOnly, contentAssocPredicateId);
             List entityList = (List) results.get("entityList");
             if (entityList == null || entityList.size() == 0) {
                 //throw new IOException("No subcontent found.");
@@ -723,7 +738,7 @@ public class ContentWorker {
                 view = (GenericValue) entityList.get(0);
             }
         } else {
-            List lst = delegator.findByAnd("ContentDataResourceView", UtilMisc.toMap("contentId", subContentId));
+            List lst = delegator.findByAndCache("ContentDataResourceView", UtilMisc.toMap("contentId", subContentId));
             if (lst == null || lst.size() == 0) {
                 throw new GeneralException("No subContent found for subContentId=." + subContentId);
             }
@@ -769,27 +784,42 @@ public class ContentWorker {
         }
 
         //String dataResourceId = (String) subContentDataResourceView.get("drDataResourceId");
-        subContentId = (String) subContentDataResourceView.get("contentId");
+        contentId = (String) subContentDataResourceView.get("contentId");
         //GenericValue dataResourceContentView = null;
 
         if (templateContext == null) {
             templateContext = new HashMap();
         }
 
-        renderContentAsText(delegator, subContentId, out, templateContext, subContentDataResourceView, locale, mimeTypeId);
+        renderContentAsText(delegator, contentId, out, templateContext, subContentDataResourceView, locale, mimeTypeId);
 
         return results;
     }
 
     public static Map renderSubContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, String mapKey, String subContentId, GenericValue subContentDataResourceView, 
-            Map templateContext, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
+            Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate) throws GeneralException, IOException {
+        Boolean nullThruDatesOnly = new Boolean(false);
+        return renderSubContentAsTextCache(delegator, contentId, out, mapKey, subContentId, subContentDataResourceView, 
+            templateRoot, locale, mimeTypeId, userLogin, fromDate, nullThruDatesOnly);
+    }
 
-        //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
-        //if (Debug.verboseOn()) Debug.logVerbose(" in renderSubContentAsText, mimeTypeId:" + mimeTypeId, module);
+    public static Map renderSubContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, String mapKey, String subContentId, GenericValue subContentDataResourceView, 
+            Map templateRoot, Locale locale, String mimeTypeId, GenericValue userLogin, Timestamp fromDate, Boolean nullThruDatesOnly) throws GeneralException, IOException {
+
+        if (Debug.verboseOn()) Debug.logVerbose(" in renderSubContentAsText, contentId:" + contentId, module);
+        if (Debug.verboseOn()) Debug.logVerbose(" in renderSubContentAsText, subContentId:" + subContentId, module);
+/*
+        if (subContentId != null && contentId != null && contentId.equals(subContentId)) {
+            Debug.logError("subContentId cannot equal contentId. Setting subContentId to null.", module);
+            subContentId = null;
+        }
+*/
         Map results = new HashMap();
         //GenericValue content = null;
-        if (subContentDataResourceView == null) 
-                subContentDataResourceView = ContentWorker.getSubContent(delegator, contentId, mapKey, subContentId, userLogin, null, fromDate);
+        if (subContentDataResourceView == null) {
+                String contentAssocPredicateId = null;
+                subContentDataResourceView = ContentWorker.getSubContentCache(delegator, contentId, mapKey, subContentId, userLogin, null, fromDate, nullThruDatesOnly, contentAssocPredicateId );
+        }
         results.put("view", subContentDataResourceView);
         if (subContentDataResourceView == null) {
             //throw new IOException("SubContentDataResourceView is null.");
@@ -798,14 +828,23 @@ public class ContentWorker {
         }
 
         //String dataResourceId = (String) subContentDataResourceView.get("drDataResourceId");
-        subContentId = (String) subContentDataResourceView.get("contentId");
+        //String subContentIdSub = (String) subContentDataResourceView.get("contentId");
+        String contentIdSub = (String) subContentDataResourceView.get("contentId");
         //GenericValue dataResourceContentView = null;
 
-        if (templateContext == null) {
-            templateContext = new HashMap();
+        if (templateRoot == null) {
+            templateRoot = new HashMap();
         }
+        Map context = (Map) templateRoot.get( "context");
+        if (Debug.verboseOn()) Debug.logVerbose(" in renderSubContentAsText, context:" + context, module);
+        if (context == null) {
+            context = new HashMap();
+        }
+        context.put("contentId", contentIdSub);
+        context.put("subContentId", null);
+        templateRoot.put("context", context);
 
-        renderContentAsTextCache(delegator, subContentId, out, templateContext, subContentDataResourceView, locale, mimeTypeId);
+        renderContentAsTextCache(delegator, contentIdSub, out, templateRoot, subContentDataResourceView, locale, mimeTypeId);
 
         return results;
     }
@@ -880,9 +919,13 @@ public class ContentWorker {
     }
 
     public static Map renderContentAsTextCache(GenericDelegator delegator, String contentId, Writer out, Map templateContext, GenericValue view, Locale locale, String mimeTypeId) throws GeneralException, IOException {
+
+        Map results = new HashMap();
         //Map context = (Map) FreeMarkerWorker.get(templateContext, "context");
         //if (Debug.verboseOn()) Debug.logVerbose(" in renderContentAsText, mimeTypeId:" + mimeTypeId, module);
-        Map results = new HashMap();
+ 
+        if (Debug.verboseOn()) Debug.logVerbose(" in renderContentAsText, contentId:" + contentId, module);
+        Map ctx = (Map)templateContext.get("context");
         GenericValue content = null;
 
         if (view == null) {
@@ -918,7 +961,7 @@ public class ContentWorker {
             String targetLocaleString = locale.toString();
             String thisLocaleString = (String) view.get("localeString");
             thisLocaleString = (thisLocaleString != null) ? thisLocaleString : "";
-            //if (Debug.verboseOn()) Debug.logVerbose("thisLocaleString" + thisLocaleString, "");
+            //if (Debug.infoOn()) Debug.logInfo("thisLocaleString" + thisLocaleString, "");
             if (targetLocaleString != null && !targetLocaleString.equalsIgnoreCase(thisLocaleString)) {
                 view = findAlternateLocaleContent(delegator, view, locale);
             }
@@ -944,6 +987,8 @@ public class ContentWorker {
         //try {
         if (Debug.verboseOn()) Debug.logVerbose("in renderContentAsText, view" + view, "");
         if (Debug.verboseOn()) Debug.logVerbose("in renderContentAsText, dataResourceId" + dataResourceId, "");
+        //if (Debug.verboseOn()) Debug.logVerbose("in renderContentAsText, templateContext" + templateContext, "");
+        if (Debug.verboseOn()) Debug.logVerbose("in renderContentAsText, after templateContext", "");
         if (UtilValidate.isNotEmpty(dataResourceId) || view != null)
             DataResourceWorker.renderDataResourceAsTextCache(delegator, dataResourceId, out, templateContext, view, locale, mimeTypeId);
         //} catch (IOException e) {
@@ -977,6 +1022,67 @@ public class ContentWorker {
         String contentTypeId = (String)thisContent.get("contentTypeId");
         getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
         ctx.put("typeAncestry", contentTypeAncestry);
+        List sections = getSections(thisContent);
+        ctx.put("sections", sections);
+        List topics = getTopics(thisContent);
+        ctx.put("topics", topics);
+        //Debug.logInfo("buildPickContext, ctx:" + ctx, "");
         return ctx;
     }
+
+    public static void checkConditions(GenericDelegator delegator, Map trailNode, Map contentAssoc, Map whenMap) {
+
+        GenericValue content = (GenericValue)trailNode.get("value");
+        String contentId = (String)trailNode.get("contentId");
+        if (contentAssoc == null) {
+            contentAssoc = delegator.makeValue("ContentAssoc", null);
+            try {
+                // TODO: locale needs to be gotten correctly
+                SimpleMapProcessor.runSimpleMapProcessor("org/ofbiz/content/ContentManagementMapProcessors.xml", "contentAssocIn", content, contentAssoc, new ArrayList(), Locale.getDefault());
+            } catch (MiniLangException e) {
+                Debug.logError(e.getMessage(), module);
+                //throw new GeneralException(e.getMessage());
+            }
+        }
+        Map context = new HashMap();
+        context.put("content", content);
+        context.put("contentAssocTypeId", contentAssoc.get("contentAssocTypeId"));
+        context.put("contentAssocPredicateId", contentAssoc.get("contentAssocPredicateId"));
+        context.put("mapKey", contentAssoc.get("mapKey"));
+        List purposes = getPurposes(content);
+        context.put("purposes", purposes);
+        List sections = getSections(content);
+        context.put("sections", sections);
+        List topics = getTopics(content);
+        context.put("topics", topics);
+        String contentTypeId = (String)content.get("contentTypeId");
+        List contentTypeAncestry = new ArrayList();
+        try {
+            getContentTypeAncestry(delegator, contentTypeId, contentTypeAncestry);
+        } catch(GenericEntityException e) {
+            if (Debug.verboseOn()) Debug.logVerbose("Error in getting contentTypeAncestry:" + e.getMessage(), "");
+        }
+        context.put("typeAncestry", contentTypeAncestry);
+        boolean isReturnBefore = checkReturnWhen(context, (String)whenMap.get("returnBeforePickWhen"));
+        trailNode.put("isReturnBefore", new Boolean(isReturnBefore));
+        boolean isPick = checkWhen(context, (String)whenMap.get("pickWhen"));
+        trailNode.put("isPick", new Boolean(isPick));
+        boolean isFollow = checkWhen(context, (String)whenMap.get("followWhen"));
+        trailNode.put("isFollow", new Boolean(isFollow));
+        boolean isReturnAfter = checkReturnWhen(context, (String)whenMap.get("returnAfterPickWhen"));
+        trailNode.put("isReturnAfter", new Boolean(isReturnAfter));
+        trailNode.put("checked", new Boolean(true));
+
+        return;
+    }
+
+    public static boolean booleanDataType( Object boolObj ) {
+    
+        boolean bool = false;
+        if (boolObj != null && ((Boolean)boolObj).booleanValue()) {
+            bool = true;
+        }
+        return bool;
+    }
+        
 }

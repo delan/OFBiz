@@ -1,5 +1,5 @@
 /*
- * $Id: ContentServices.java,v 1.16 2004/01/17 03:57:46 byersa Exp $
+ * $Id: ContentServices.java,v 1.17 2004/03/16 17:27:12 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,12 +49,13 @@ import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
 import org.ofbiz.service.ServiceUtil;
+import org.ofbiz.content.content.PermissionRecorder;
 
 /**
  * ContentServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * @since 2.2
  * 
  *  
@@ -184,7 +185,7 @@ public class ContentServices {
     public static Map createContent(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
+        targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = createContentMethod(dctx, context);
@@ -207,6 +208,7 @@ public class ContentServices {
         GenericValue content = delegator.makeValue("Content", UtilMisc.toMap("contentId", contentId));
         content.setNonPKFields(context);
         context.put("currentContent", content);
+        if (Debug.verboseOn()) Debug.logVerbose("in createContentMethod, currentContent:" + content, "");
         String permissionStatus = ContentWorker.callContentPermissionCheck(delegator, dispatcher, context);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
             GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -220,7 +222,6 @@ public class ContentServices {
             content.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
             content.put("createdDate", createdDate);
             content.put("lastModifiedDate", lastModifiedDate);
-            if (Debug.infoOn()) Debug.logInfo("in createContent, content:" + content, "");
             try {
                 content.create();
             } catch (GenericEntityException e) {
@@ -229,6 +230,8 @@ public class ContentServices {
                 return ServiceUtil.returnError(e2.getMessage());
             }
             result.put("contentId", contentId);
+        } else {
+                return ServiceUtil.returnError("Permission to create content:" + content + " is denied."); 
         }
         context.remove("currentContent");
         return result;
@@ -240,9 +243,20 @@ public class ContentServices {
      */
     public static Map createContentAssoc(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
-        List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
-        context.put("targetOperationList", targetOperations);
+        List targetOperationList = (List)context.get("targetOperationList");
+        if (targetOperationList == null || targetOperationList.size() == 0) {
+            targetOperationList = new ArrayList();
+            targetOperationList.add("CONTENT_CREATE");
+        }
+        context.put("targetOperationList", targetOperationList);
+
+        List contentPurposeList = (List)context.get("contentPurposeList");
+        if (contentPurposeList == null || contentPurposeList.size() == 0) {
+            contentPurposeList = new ArrayList();
+            contentPurposeList.add("CONTENT_CREATE");
+        }
+        context.put("contentPurposeList", contentPurposeList);
+
         context.put("skipPermissionCheck", null);
         Map result = null;
         try {
@@ -305,27 +319,27 @@ public class ContentServices {
         if (fromDate == null) {
             contentAssoc.put("fromDate", UtilDateTime.nowTimestamp());
         } else {
-            contentAssoc.set("fromDate", fromDate);
+            contentAssoc.put("fromDate", fromDate);
         }
         Timestamp thruDate = (Timestamp) context.get("thruDate");
         if (thruDate == null) {
             contentAssoc.put("thruDate", null);
         } else {
-            contentAssoc.set("thruDate", thruDate);
+            contentAssoc.put("thruDate", thruDate);
         }
-        contentAssoc.set("sequenceNum", context.get("sequenceNum"));
+        contentAssoc.put("sequenceNum", context.get("sequenceNum"));
         contentAssoc.put("mapKey", context.get("mapKey"));
         String upperCoordinateStr = (String) context.get("upperCoordinate");
         if (UtilValidate.isEmpty(upperCoordinateStr)) {
             contentAssoc.put("upperCoordinate", null);
         } else {
-            contentAssoc.setString("upperCoordinate", upperCoordinateStr);
+            contentAssoc.put("upperCoordinate", upperCoordinateStr);
         }
         String leftCoordinateStr = (String) context.get("leftCoordinate");
         if (UtilValidate.isEmpty(leftCoordinateStr)) {
             contentAssoc.put("leftCoordinate", null);
         } else {
-            contentAssoc.setString("leftCoordinate", leftCoordinateStr);
+            contentAssoc.put("leftCoordinate", leftCoordinateStr);
         }
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
@@ -342,20 +356,42 @@ public class ContentServices {
         String permissionStatus = null;
         Map serviceInMap = new HashMap();
         serviceInMap.put("userLogin", context.get("userLogin"));
-        List targetOperations = new ArrayList();
-        targetOperations.add("ASSOC_CONTENT");
-        serviceInMap.put("targetOperationList", targetOperations);
-        serviceInMap.put("contentPurposeList", context.get("contentPurposeList"));
+        serviceInMap.put("targetOperationList", context.get("targetOperationList"));
+        List contentPurposeList = (List)context.get("contentPurposeList");
+        serviceInMap.put("contentPurposeList", contentPurposeList); 
+if (Debug.infoOn()) Debug.logInfo("in createContentAssocMethod, contentPurposeList:" + contentPurposeList, "");
         serviceInMap.put("entityOperation", context.get("entityOperation"));
+        serviceInMap.put("contentAssocPredicateId", context.get("contentAssocPredicateId"));
         serviceInMap.put("contentIdTo", contentIdTo);
         serviceInMap.put("contentIdFrom", contentIdFrom);
+        serviceInMap.put("statusId", context.get("statusId"));
+        serviceInMap.put("privilegeEnumId", context.get("privilegeEnumId"));
+        serviceInMap.put("roleTypeList", context.get("roleTypeList"));
         Map permResults = null;
+                Debug.logInfo("createContentAssocMethod, before checkAssocPermission" , "");
         permResults = dispatcher.runSync("checkAssocPermission", serviceInMap);
+                Debug.logInfo("permResults(0):" + permResults, "");
         permissionStatus = (String) permResults.get("permissionStatus");
 
-        //Debug.logVerbose("CREATING CONTENTASSOC:" + contentAssoc, null);
+        if (Debug.verboseOn()) Debug.logVerbose("CREATING CONTENTASSOC permissionStatus :" + permissionStatus, null);
         if (permissionStatus != null && permissionStatus.equals("granted")) {
             contentAssoc.create();
+        } else {
+            if (Debug.infoOn()) Debug.logInfo("CREATING CONTENTASSOC permission denied:" + contentAssoc, null);
+            String errorMessage = "Permission to create contentAssoc:" + contentAssoc + " is denied."; 
+            PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
+                Debug.logInfo("recorder(0):" + recorder, "");
+            if (recorder != null) {
+                String permissionMessage = recorder.toHtml();
+                Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
+                errorMessage += " \n " + permissionMessage;
+                PermissionRecorder recorderTo = (PermissionRecorder)permResults.get("permissionRecorderTo");
+                if (recorderTo != null) {
+                    permissionMessage = recorderTo.toHtml();
+                    errorMessage += " \n " + permissionMessage;
+                }
+            }
+            return ServiceUtil.returnError(errorMessage); 
         }
         result.put("contentIdTo", contentIdTo);
         result.put("contentIdFrom", contentIdFrom);
@@ -370,7 +406,7 @@ public class ContentServices {
     public static Map updateContent(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_CREATE");
         List targetOperations = new ArrayList();
-        targetOperations.add("CREATE_CONTENT");
+        targetOperations.add("CONTENT_CREATE");
         context.put("targetOperationList", targetOperations);
         context.put("skipPermissionCheck", null);
         Map result = updateContentMethod(dctx, context);
@@ -385,7 +421,7 @@ public class ContentServices {
         Map result = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
-        GenericValue dataResource = null;
+        GenericValue content = null;
         //Locale locale = (Locale) context.get("locale");
         String permissionStatus = ContentWorker.callContentPermissionCheck(delegator, dispatcher, context);
         if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
@@ -397,20 +433,32 @@ public class ContentServices {
             // If textData exists, then create Content and return contentId
             String contentId = (String) context.get("contentId");
             try {
-                dataResource = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
+                content = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e, module);
-                return ServiceUtil.returnError("dataResource.update.read_failure" + e.getMessage());
+                return ServiceUtil.returnError("content.update.read_failure" + e.getMessage());
             }
 
-            dataResource.setNonPKFields(context);
-            dataResource.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
-            dataResource.put("lastModifiedDate", lastModifiedDate);
+            content.setNonPKFields(context);
+            content.put("lastModifiedByUserLogin", lastModifiedByUserLogin);
+            content.put("lastModifiedDate", lastModifiedDate);
             try {
-                dataResource.store();
+                content.store();
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
+        } else {
+            String errorMessage = "Permission to update content:" + content + " is denied."; 
+/*
+            PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
+                Debug.logInfo("recorder(0):" + recorder, "");
+            if (recorder != null) {
+                String permissionMessage = recorder.toHtml();
+                Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
+                errorMessage += " \n " + permissionMessage;
+            }
+*/
+            return ServiceUtil.returnError(errorMessage);
         }
         return result;
     }
@@ -421,9 +469,18 @@ public class ContentServices {
      */
     public static Map updateContentAssoc(DispatchContext dctx, Map context) {
         context.put("entityOperation", "_UPDATE");
-        List targetOperations = new ArrayList();
-        targetOperations.add("UPDATE_CONTENT");
-        context.put("targetOperationList", targetOperations);
+        List targetOperationList = (List)context.get("targetOperationList");
+        if (targetOperationList == null || targetOperationList.size() == 0) {
+            targetOperationList = new ArrayList();
+            targetOperationList.add("CONTENT_UPDATE");
+        }
+        context.put("targetOperationList", targetOperationList);
+        List contentPurposeList = (List)context.get("contentPurposeList");
+        if (contentPurposeList == null || contentPurposeList.size() == 0) {
+            contentPurposeList = new ArrayList();
+            contentPurposeList.add("CONTENT_CREATE");
+        }
+        context.put("contentPurposeList", contentPurposeList);
         context.put("skipPermissionCheck", null);
         Map result = updateContentAssocMethod(dctx, context);
         return result;
@@ -452,12 +509,9 @@ public class ContentServices {
             System.out.println("Entity Error:" + e.getMessage());
             return ServiceUtil.returnError("Error in retrieving Content. " + e.getMessage());
         }
-        contentAssoc.put("contentAssocPredicateId", context.get("contentAssocPredicateIdFrom"));
+        contentAssoc.put("contentAssocPredicateId", context.get("contentAssocPredicateId"));
         contentAssoc.put("dataSourceId", context.get("dataSourceId"));
-        String thruDateStr = (String) context.get("thruDate");
-        if (!UtilValidate.isEmpty(thruDateStr)) {
-            contentAssoc.setString("thruDate", (String) context.get("thruDate"));
-        }
+        contentAssoc.set("thruDate", context.get("thruDate"));
         contentAssoc.set("sequenceNum", context.get("sequenceNum"));
         contentAssoc.put("mapKey", context.get("mapKey"));
         String upperCoordinateStr = (String) context.get("upperCoordinate");
@@ -509,6 +563,16 @@ public class ContentServices {
             } catch (GenericEntityException e) {
                 return ServiceUtil.returnError(e.getMessage());
             }
+        } else {
+            String errorMessage = "Permission to update contentAssoc:" + contentAssoc + " is denied."; 
+            PermissionRecorder recorder = (PermissionRecorder)permResults.get("permissionRecorder");
+                Debug.logInfo("recorder(0):" + recorder, "");
+            if (recorder != null) {
+                String permissionMessage = recorder.toHtml();
+                Debug.logInfo("permissionMessage(0):" + permissionMessage, "");
+                errorMessage += " \n " + permissionMessage;
+            }
+            return ServiceUtil.returnError(errorMessage); 
         }
         return result;
     }

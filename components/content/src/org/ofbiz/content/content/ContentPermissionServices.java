@@ -1,5 +1,5 @@
 /*
- * $Id: ContentPermissionServices.java,v 1.9 2004/01/17 03:57:46 byersa Exp $
+ * $Id: ContentPermissionServices.java,v 1.10 2004/03/16 17:27:12 byersa Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -34,6 +34,8 @@ import java.util.Map;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.util.StringUtil;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
@@ -41,6 +43,7 @@ import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
+import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.security.Security;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.service.ServiceUtil;
@@ -49,7 +52,7 @@ import org.ofbiz.service.ServiceUtil;
  * ContentPermissionServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.2
  * 
  * Services for granting operation permissions on Content entities in a data-driven manner.
@@ -104,32 +107,38 @@ public class ContentPermissionServices {
         Security security = dctx.getSecurity();
         GenericDelegator delegator = dctx.getDelegator();
         String statusId = (String) context.get("statusId");
+        String privilegeEnumId = (String) context.get("privilegeEnumId");
         GenericValue content = (GenericValue) context.get("currentContent"); 
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
         List passedPurposes = (List) context.get("contentPurposeList"); 
         List targetOperations = (List) context.get("targetOperationList"); 
+        if (Debug.verboseOn()) Debug.logVerbose("targetOperations(0):" + targetOperations, null);
+        if (Debug.verboseOn()) Debug.logVerbose("content:" + content, null);
         List passedRoles = (List) context.get("roleTypeList"); 
         if (passedRoles == null) passedRoles = new ArrayList();
         // If the current user created the content, then add "_OWNER_" as one of
         //   the contentRoles that is in effect.
-        if (content != null && content.get("createdByUserLogin") != null 
-            && userLogin != null) {
-            String userLoginId = (String)userLogin.get("userLoginId");
-            String userLoginIdCB = (String)content.get("createdByUserLogin");
-            if (userLoginIdCB.equals(userLoginId)) {
-                passedRoles.add("_OWNER_");
+        if (content != null ) {
+            // TODO: Need to use ContentManagementWorker.getAuthorContent first
+            if ( content.get("createdByUserLogin") != null && userLogin != null) {
+                String userLoginId = (String)userLogin.get("userLoginId");
+                String userLoginIdCB = (String)content.get("createdByUserLogin");
+                if (userLoginIdCB.equals(userLoginId)) {
+                    passedRoles.add("_OWNER_");
+                }
             }
         }
         String entityAction = (String) context.get("entityOperation");
         if (entityAction == null) entityAction = "_ADMIN";
 
-        if (Debug.verboseOn()) Debug.logVerbose("targetOperations(0):" + targetOperations, null);
-        if (Debug.verboseOn()) Debug.logVerbose("content:" + content, null);
 
         Map results = checkPermission( content, statusId,
                                       userLogin, passedPurposes,
                                       targetOperations, passedRoles,
-                                      delegator, security, entityAction);
+                                      delegator, security, entityAction, privilegeEnumId);
+                Debug.logInfo("results(b):" + results, "");
+                PermissionRecorder r = (PermissionRecorder)results.get("permissionRecorder");
+                Debug.logInfo("recorder(b):" + r, "");
         return results;
     }
 
@@ -139,9 +148,64 @@ public class ContentPermissionServices {
                                       GenericDelegator delegator ,
                                       Security security, String entityAction
         ) {
+        if (Debug.verboseOn()) Debug.logVerbose("in checkPermission, targetOperations(1):" + targetOperations, null);
+             String privilegeEnumId = null;
+             return checkPermission( content, statusId,
+                                      userLogin, passedPurposes,
+                                      targetOperations, passedRoles,
+                                      delegator, security, entityAction, privilegeEnumId);
+        }
 
-	List roleIds = null;
+    public static Map checkPermission(GenericValue content, String statusId,
+                                      GenericValue userLogin, List passedPurposes,
+                                      List targetOperations, List passedRoles,
+                                      GenericDelegator delegator ,
+                                      Security security, String entityAction,
+                                      String privilegeEnumId
+        ) {
+             List statusList = null;
+             if (statusId != null) {
+                 statusList = StringUtil.split(statusId, "|");
+             }
+             return checkPermission( content, statusList,
+                                      userLogin, passedPurposes,
+                                      targetOperations, passedRoles,
+                                      delegator, security, entityAction, privilegeEnumId);
+        }
+
+    public static Map checkPermission(GenericValue content, List statusList,
+                                      GenericValue userLogin, List passedPurposes,
+                                      List targetOperations, List passedRoles,
+                                      GenericDelegator delegator ,
+                                      Security security, String entityAction,
+                                      String privilegeEnumId
+        ) {
+
         Map result = new HashMap();
+        PermissionRecorder recorder = new PermissionRecorder();
+                Debug.logInfo("recorder(a):" + recorder, "");
+        result.put("permissionRecorder", recorder);
+
+        if (content != null) {
+            String statusId = (String)content.get("statusId");
+            if (UtilValidate.isNotEmpty(statusId)) {
+                if (statusList == null)
+                    statusList = new ArrayList();
+                statusList.add(statusId);
+            }
+            if (UtilValidate.isEmpty(privilegeEnumId))
+                privilegeEnumId = (String)content.get("privilegeEnumId");
+        }
+        if (UtilValidate.isEmpty(privilegeEnumId))
+            privilegeEnumId = "_00_"; // minimum privilege. any request passes
+
+        if (recorder.isOn()) recorder.setUserLogin(userLogin);
+        if (Debug.verboseOn()) Debug.logVerbose("in checkPermission, content(1):" + content, null);
+        if (Debug.verboseOn()) Debug.logVerbose("in checkPermission, targetOperations(2):" + targetOperations, null);
+        if (targetOperations == null || targetOperations.size() == 0) {
+            Debug.logWarning("No targetOperations.", module);
+        }
+	List roleIds = null;
         String permissionStatus = null;
         result.put("roleTypeList", passedRoles);
 
@@ -155,22 +219,41 @@ public class ContentPermissionServices {
         if (Debug.verboseOn()) Debug.logVerbose("purposeOperations:" + purposeOperations, null);
         if (Debug.verboseOn()) Debug.logVerbose("targetOperations:" + targetOperations, null);
 
-
-        // Combine any passed purposes with those linked to the Content entity
-        // Note that purposeIds is a list of contentPurposeTypeIds, not GenericValues
-        List purposeIds = getRelatedPurposes(content, passedPurposes );
-        if (Debug.verboseOn()) Debug.logVerbose("purposeIds:" + purposeIds, null);
-
-        // Do check of non-RoleType conditions
-        boolean isMatch = publicMatches(purposeOperations, targetOperations, purposeIds, passedRoles, statusId);
+        List purposeIds = null;
+        // Do check before bothering to get related purposes.
+        String contentId = null;
+        if (content != null)
+            contentId = content.getString("contentId");
+        if (content != null && Debug.verboseOn()) Debug.logVerbose("in checkPermission, contentId(1):" + content.get("contentId"), null);
+        boolean isMatch = publicMatches(purposeOperations, targetOperations, purposeIds, passedRoles, statusList, privilegeEnumId, recorder, contentId);
         
         if( isMatch ) {
             result.put("permissionStatus", "granted");
             return result;
         }
 
+
+        // Combine any passed purposes with those linked to the Content entity
+        // Note that purposeIds is a list of contentPurposeTypeIds, not GenericValues
+        purposeIds = getRelatedPurposes(content, passedPurposes );
+        if (Debug.infoOn()) Debug.logInfo("purposeIds:" + purposeIds, null);
+        if (purposeIds == null || purposeIds.size() == 0) {
+            Debug.logWarning("No purposeIds.", module);
+        }
+
+        // Do check of non-RoleType conditions
+        if (content != null && Debug.verboseOn()) Debug.logVerbose("in checkPermission, contentId(2):" + content.get("contentId"), null);
+        isMatch = publicMatches(purposeOperations, targetOperations, purposeIds, passedRoles, statusList, privilegeEnumId, recorder, contentId);
+        
+        if( isMatch ) {
+            result.put("permissionStatus", "granted");
+            return result;
+        }
+
+        // Do entity permission check. This will pass users with administrative permissions.
         if (userLogin != null ) {
             isMatch = security.hasEntityPermission("CONTENTMGR", entityAction, userLogin);
+            recorder.setEntityPermCheckResult(isMatch);
         }
 
         if( isMatch ) {
@@ -180,6 +263,7 @@ public class ContentPermissionServices {
 
 
         if (content == null || content.isEmpty() ) {
+            if (Debug.infoOn()) Debug.logInfo("content is null:" + content, null);
             return result;
         }
 
@@ -201,17 +285,19 @@ public class ContentPermissionServices {
             // This is a recursive query that looks for any "owner" content in the 
             // ancestoral path that might have ContentRole associations that
             // make a ContentPurposeOperation condition match.
-            Map thisResult = checkPermissionWithRoles(content, purposeIds, passedRoles, 
-                             targetOperations, purposeOperations, userLogin, delegator, statusId );
+            Map thisResult = checkPermissionWithRoles(content, purposeIds, passedRoles, targetOperations, purposeOperations, userLogin, delegator, statusList, privilegeEnumId, recorder );
             result.put("roleTypeList", thisResult.get("roleTypeList"));
             result.put("permissionStatus", thisResult.get("permissionStatus"));
         }
+                Debug.logInfo("result(a):" + result, "");
+                PermissionRecorder r = (PermissionRecorder)result.get("permissionRecorder");
+                Debug.logInfo("recorder(a):" + r, "");
         return result;
 
     }
 
     /**
-     * checkContentPermission
+     * checkContentPermissionWithRoles
      *
      *@param content The content GenericValue to be checked
      *@param passedPurposes The list of contentPurposeTypeIds to be used in the test 
@@ -228,15 +314,18 @@ public class ContentPermissionServices {
                                            List passedRoles, 
                                            List targetOperations, List purposeOperations,
                                            GenericValue userLogin, GenericDelegator delegator, 
-                                           String statusId){ 
+                                           List statusList, String privilegeEnumId, PermissionRecorder recorder){ 
 
         String permissionStatus = null;
         Map result = new HashMap();
         result.put("permissionStatus", permissionStatus);
         result.put("roleTypeList", passedRoles);
         List roleIds = null;
-        boolean isMatch = publicMatches(purposeOperations, targetOperations, 
-                                        passedPurposes, passedRoles, statusId);
+        if (Debug.verboseOn()) Debug.logVerbose("in checkPermission, contentId(3):" + content.get("contentId"), null);
+        String contentId = null;
+        if (content != null)
+            contentId = content.getString("contentId");
+        boolean isMatch = publicMatches(purposeOperations, targetOperations, passedPurposes, passedRoles, statusList, privilegeEnumId, recorder, contentId);
         if (isMatch) {
             result.put("permissionStatus", "granted");
             return result;
@@ -244,18 +333,18 @@ public class ContentPermissionServices {
 
         // recursively try if the "owner" Content has ContentRoles that allow a match
         String ownerContentId = (String)content.get("ownerContentId");
-        if (Debug.verboseOn()) Debug.logVerbose("ownerContentId:" + ownerContentId, null);
-        if (ownerContentId != null && ownerContentId.length() > 0 ) {
+        if (Debug.infoOn()) Debug.logInfo("ownerContentId:" + ownerContentId, null);
+        if (UtilValidate.isNotEmpty(ownerContentId)) {
             GenericValue ownerContent = null;
             try {
-                ownerContent = delegator.findByPrimaryKey("Content", 
-                                                 UtilMisc.toMap("contentId", ownerContentId) );
+                ownerContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", ownerContentId) );
         if (Debug.verboseOn()) Debug.logVerbose("ownerContent:" + ownerContent, null);
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Owner content not found. ", module);
             }
             if (ownerContent != null) {
         if (Debug.verboseOn()) Debug.logVerbose("before getUserRoles, ownerContent(2):" + ownerContent, null);
+                // Already been checked with old roles, so send only new roles to checkPermission.
                 roleIds = getUserRoles(ownerContent, userLogin, null, delegator);
 		if (passedRoles == null) {
                     passedRoles = roleIds;
@@ -264,7 +353,7 @@ public class ContentPermissionServices {
                 }
         if (Debug.verboseOn()) Debug.logVerbose("after getUserRoles, passedRoles(2):" + passedRoles, null);
                 Map result2 = checkPermissionWithRoles(ownerContent, passedPurposes, roleIds, 
-                             targetOperations, purposeOperations, userLogin,  delegator, statusId );
+                             targetOperations, purposeOperations, userLogin,  delegator, statusList, privilegeEnumId, recorder );
                 result.put("roleTypeList", result2.get("roleTypeList"));
                 result.put("permissionStatus", result2.get("permissionStatus"));
             }
@@ -295,7 +384,8 @@ public class ContentPermissionServices {
         String partyId = (String)userLogin.get("partyId");
 	List relatedRoles = null;
         try {
-            relatedRoles = content.getRelatedCache("ContentRole");
+            List tmpRelatedRoles = content.getRelatedCache("ContentRole");
+            relatedRoles = EntityUtil.filterByDate(tmpRelatedRoles);
         } catch (GenericEntityException e) {
             Debug.logError(e, "No related roles found. ", module);
         }
@@ -306,8 +396,9 @@ public class ContentPermissionServices {
                 String roleTypeId = (String)contentRole.get("roleTypeId");
                 String targPartyId = (String)contentRole.get("partyId");
                 if (targPartyId.equals(partyId)) {
-                    roles.add(roleTypeId);
-                } else {
+                    if (!roles.contains(roleTypeId))
+                        roles.add(roleTypeId);
+                } else { // Party may be of "PARTY_GROUP" type, in which case the userLogin may still possess this role
                     GenericValue party = null;
                     String partyTypeId = null;
                     try {
@@ -320,7 +411,8 @@ public class ContentPermissionServices {
                            map.put("partyIdFrom", partyId);
                            map.put("partyIdTo", targPartyId);
                            if ( isGroupMember( map, delegator ) ) {
-                               roles.add(roleTypeId);
+                               if (!roles.contains(roleTypeId))
+                                   roles.add(roleTypeId);
                            }
                         }
                     } catch (GenericEntityException e) {
@@ -338,34 +430,54 @@ public class ContentPermissionServices {
      * publicMatches
      * Takes all the criteria and performs a check to see if there is a match.
      */
-    public static boolean publicMatches(List purposeOperations, List targetOperations, 
-                   List purposes, List roles, String targStatusId) {
+    public static boolean publicMatches(List purposeOperations, List targetOperations, List purposes, List roles, List targStatusList, String targPrivilegeEnumId, PermissionRecorder recorder, String contentId) {
         boolean isMatch = false;
+        if (recorder.isOn()) recorder.startMatchGroup(targetOperations, purposes, roles, targStatusList, targPrivilegeEnumId, contentId);
+        int targPrivilegeSeq = 0;
+//        if (UtilValidate.isNotEmpty(targPrivilegeEnumId) && !targPrivilegeEnumId.equals("_NA_") && !targPrivilegeEnumId.equals("_00_") ) {
+            // need to do a lookup here to find the seq value of targPrivilegeEnumId.
+            // The lookup could be a static store or it could be done on Enumeration entity.
+//        }
+        boolean permissionDebug = false;
         Iterator purposeOpsIter = purposeOperations.iterator();
         while (purposeOpsIter.hasNext() ) {
             GenericValue purposeOp = (GenericValue)purposeOpsIter.next();
-            String roleTypeId = (String)purposeOp.get("roleTypeId");
-            String contentPurposeTypeId = (String)purposeOp.get("contentPurposeTypeId");
-            String contentOperationId = (String)purposeOp.get("contentOperationId");
+            String testRoleTypeId = (String)purposeOp.get("roleTypeId");
+            String testContentPurposeTypeId = (String)purposeOp.get("contentPurposeTypeId");
+            String testContentOperationId = (String)purposeOp.get("contentOperationId");
             String testStatusId = (String)purposeOp.get("statusId");
-        if (Debug.verboseOn()) Debug.logVerbose("purposeOp:" + purposeOp, null);
-        if (Debug.verboseOn()) Debug.logVerbose("purposes:" + purposes, null);
-        if (Debug.verboseOn()) Debug.logVerbose("roles:" + roles, null);
-        if (Debug.verboseOn()) Debug.logVerbose("targetOperations:" + targetOperations, null);
+            String testPrivilegeEnumId = (String)purposeOp.get("privilegeEnumId");
+            int testPrivilegeSeq = 0;
+
+            boolean targetOpCond = ((targetOperations != null && targetOperations.contains(testContentOperationId)) || (testContentOperationId != null && testContentOperationId.equals("_NA_")));
+            boolean purposesCond = ( (purposes != null && purposes.contains(testContentPurposeTypeId) ) || testContentPurposeTypeId.equals("_NA_") ); 
+            boolean statusCond = ( testStatusId.equals("_NA_") || (targStatusList != null && targStatusList.contains(testStatusId) ) ); 
+            boolean privilegeCond = ( testPrivilegeEnumId.equals("_NA_") || testPrivilegeSeq <= targPrivilegeSeq || testPrivilegeEnumId.equals(targPrivilegeEnumId) ); 
+            boolean roleCond = ( testRoleTypeId.equals("_NA_") || (roles != null && roles.contains(testRoleTypeId) ) );
+
+            if (recorder.isOn()) {
+                recorder.record(purposeOp, targetOpCond, purposesCond, statusCond, privilegeCond, roleCond);
+            }
+            if (permissionDebug) {
+                if (Debug.infoOn()) Debug.logInfo("testContentOperationId:" + testContentOperationId + " targetOperations:" + targetOperations + " targetOpCond:" + targetOpCond, null);
+                if (Debug.infoOn()) Debug.logInfo("testContentPurposeTypeId:" + testContentPurposeTypeId + " purposes:" + purposes + " purposesCond:" + purposesCond, null);
+                if (Debug.infoOn()) Debug.logInfo("testPrivilegeEnumId:" + testPrivilegeEnumId + " targPrivilegeEnumId:" + targPrivilegeEnumId + " privilegeCond:" + privilegeCond, null);
+                if (Debug.infoOn()) Debug.logInfo("testStatusId:" + testStatusId + " targStatusList:" + targStatusList + " statusCond:" + statusCond, null);
+                if (Debug.infoOn()) Debug.logInfo("testRoleTypeId:" + testRoleTypeId + " roles:" + roles + " roleCond:" + roleCond, null);
+            }
  
-            if ( targetOperations != null && targetOperations.contains(contentOperationId)           
-                 && ( (purposes != null && purposes.contains(contentPurposeTypeId) )
-                     || contentPurposeTypeId.equals("_NA_") ) 
-                 && (testStatusId == null || testStatusId.equals("_NA_")
-                     || testStatusId.equals(targStatusId) ) 
-               ) {
-                if ( roleTypeId == null 
-                    || roleTypeId.equals("_NA_") 
-                    || (roles != null && roles.contains(roleTypeId) ) ){
+            if (targetOpCond && purposesCond && statusCond && privilegeCond && roleCond) {
                 
+                    if (permissionDebug) {
+                        if (Debug.infoOn()) Debug.logInfo("MATCH", null);
+                        if (Debug.infoOn()) Debug.logInfo(" ", null);
+                    }
                     isMatch = true;
                     break;
-                }
+            }
+            if (permissionDebug) {
+                    if (Debug.infoOn()) Debug.logInfo("NO_MATCH", null);
+                    if (Debug.infoOn()) Debug.logInfo(" ", null);
             }
         }
         return isMatch;
@@ -374,7 +486,6 @@ public class ContentPermissionServices {
 
 
     /**
-     * isGroupMember
      * Tests to see if the user belongs to a group
      */
     public static boolean isGroupMember( Map partyRelationshipValues, GenericDelegator delegator ) {
@@ -481,9 +592,11 @@ public class ContentPermissionServices {
         String contentIdFrom = (String) context.get("contentIdFrom");
         String contentIdTo = (String) context.get("contentIdTo");
         String statusId = (String) context.get("statusId");
+        String privilegeEnumId = (String) context.get("privilegeEnumId");
         GenericValue content = (GenericValue) context.get("currentContent"); 
         GenericValue userLogin = (GenericValue) context.get("userLogin"); 
         List purposeList = (List) context.get("contentPurposeList"); 
+if (Debug.infoOn()) Debug.logInfo("in checkAssocPerm, purposeList:" + purposeList, "");
         List targetOperations = (List) context.get("targetOperationList"); 
         List roleList = (List) context.get("roleTypeList"); 
         if (roleList == null) roleList = new ArrayList();
@@ -515,36 +628,37 @@ if (Debug.verboseOn()) Debug.logVerbose("in checkAssocPerm, contentFrom:" + cont
             roleList.add("_OWNER_");
         }
     
-        Map resultsMap = checkPermission( null, statusId,
-                                      userLogin, purposeList,
-                                      targetOperations, roleList,
-                                      delegator, security, entityAction);
+        Map resultsMap = checkPermission( null, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId);
         boolean isMatch = false;
-        if(resultsMap.get("permissionStatus").equals("granted") ) isMatch = true;
+        String permissionStatus = (String)resultsMap.get("permissionStatus");
+        if(permissionStatus != null && permissionStatus.equals("granted") ) isMatch = true;
 
         boolean isMatchTo = false;
         boolean isMatchFrom = false;
         if(!isMatch){
             roleList = (List)resultsMap.get("roleTypeList");
-            resultsMap = checkPermission( contentTo, statusId,
-                                      userLogin, purposeList,
-                                      targetOperations, roleList,
-                                      delegator, security, entityAction);
-            if(resultsMap.get("permissionStatus").equals("granted") ) isMatchTo = true;
+            resultsMap = checkPermission( contentTo, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId);
+            permissionStatus = (String)resultsMap.get("permissionStatus");
+            if(permissionStatus != null && permissionStatus.equals("granted") ) isMatchTo = true;
+            results.putAll(resultsMap);
 
-            resultsMap = checkPermission( contentFrom, statusId,
-                                      userLogin, purposeList,
-                                      targetOperations, roleList,
-                                      delegator, security, entityAction);
-            if(resultsMap.get("permissionStatus").equals("granted") ) isMatchFrom = true;
+            resultsMap = checkPermission( contentFrom, statusId, userLogin, purposeList, targetOperations, roleList, delegator, security, entityAction, privilegeEnumId);
+            permissionStatus = (String)resultsMap.get("permissionStatus");
+            if(permissionStatus != null && permissionStatus.equals("granted") ) isMatchFrom = true;
             results.put("roleTypeList", resultsMap.get("roleTypeList"));
+            results.put("permissionRecorderTo", results.get("permissionRecorder"));
+            results.putAll(resultsMap);
 
             if(isMatchTo && isMatchFrom) isMatch = true;
+        } else {
+            results.putAll(resultsMap);
         }
 
-        String permissionStatus = null;
-        if( isMatch ) permissionStatus = "granted";
-        results.put("permissionStatus", permissionStatus);
+        String permStatus = null;
+        if( isMatch ) permStatus = "granted";
+        results.put("permissionStatus", permStatus);
+        if (Debug.verboseOn()) Debug.logVerbose("CHECKING CONTENTASSOC permission :" + permStatus, null);
         return results;
     }
+
 }
