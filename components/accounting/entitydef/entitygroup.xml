@@ -99,6 +99,7 @@
     <entity-group group="org.ofbiz" entity="GlAccountOrganization" />
     <entity-group group="org.ofbiz" entity="GlAccountRole" />
     <entity-group group="org.ofbiz" entity="GlAccountType" />
+    <entity-group group="org.ofbiz" entity="GlAccountTypeDefault" />
     <entity-group group="org.ofbiz" entity="GlBudgetXref" />
     <entity-group group="org.ofbiz" entity="GlFiscalType" />
     <entity-group group="org.ofbiz" entity="GlJournal" />
