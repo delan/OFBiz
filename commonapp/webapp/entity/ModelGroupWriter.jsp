@@ -37,7 +37,8 @@
   }
   else
   {
-%><?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+%><?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE entitygroup PUBLIC "-//OFBiz//DTD Entity Group//EN" "http://www.ofbiz.org/dtds/entitygroup.dtd">
 <!--
 /**
  *  Title: Entity Generator Group Definitions for the General Data Model
@@ -66,18 +67,6 @@
  *@version    1.0
  */
 -->
-
-<!DOCTYPE entitygroup [
-<!-- ====================== Root Element ======================= -->
-<!ELEMENT entitygroup (entity-group*)>
-
-<!-- ================= Children of entitygroup =================== -->
-<!ELEMENT entity-group EMPTY>
-
-<!-- ================= Children of entity-group =================== -->
-<!ATTLIST entity-group group CDATA #REQUIRED>
-<!ATTLIST entity-group entity CDATA #REQUIRED>
-]>
 <% 
   ModelReader reader = delegator.getModelReader();
   ModelGroupReader groupReader = delegator.getModelGroupReader();
@@ -100,7 +89,6 @@
     }
     entities.add(eName);
   }%>
-
 <entitygroup><%
   Iterator piter = packageNames.iterator();
   while(piter.hasNext()) {
