@@ -94,15 +94,15 @@ public class GenericDAO {
     }
     
     private void addFieldIfMissing(List fieldsToSave, String fieldName, ModelEntity modelEntity) {
-    	Iterator fieldsToSaveIter = fieldsToSave.iterator();
-    	while (fieldsToSaveIter.hasNext()) {
-    		ModelField fieldToSave = (ModelField) fieldsToSaveIter.next();
-    		if (fieldName.equals(fieldToSave.getName())) {
-    			return;
-    		}
-    	}
-    	// at this point we didn't find it
-    	fieldsToSave.add(modelEntity.getField(fieldName));
+        Iterator fieldsToSaveIter = fieldsToSave.iterator();
+        while (fieldsToSaveIter.hasNext()) {
+            ModelField fieldToSave = (ModelField) fieldsToSaveIter.next();
+            if (fieldName.equals(fieldToSave.getName())) {
+                return;
+            }
+        }
+        // at this point we didn't find it
+        fieldsToSave.add(modelEntity.getField(fieldName));
     }
 
     public int insert(GenericEntity entity) throws GenericEntityException {
@@ -130,15 +130,18 @@ public class GenericDAO {
         }
 
         // if we have a STAMP_TX_FIELD or CREATE_STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
+        // NOTE: these fairly complicated if statements have a few objectives: 
+        //   1. don't run the TransationUtil.getTransaction*Stamp() methods when we don't need to
+        //   2. don't set the stamp values if it is from an EntitySync (ie maintain original values), unless the stamps are null then set it anyway, ie even if it was from an EntitySync (also used for imports and such)
         boolean stampTxIsField = modelEntity.isField(ModelEntity.STAMP_TX_FIELD);
         boolean createStampTxIsField = modelEntity.isField(ModelEntity.CREATE_STAMP_TX_FIELD);
-        if ((stampTxIsField || createStampTxIsField) && !entity.getIsFromEntitySync()) {
+        if ((stampTxIsField || createStampTxIsField) && (!entity.getIsFromEntitySync() || (stampTxIsField && entity.get(ModelEntity.STAMP_TX_FIELD) == null) || (createStampTxIsField && entity.get(ModelEntity.CREATE_STAMP_TX_FIELD) == null))) {
             Timestamp txStartStamp = TransactionUtil.getTransactionStartStamp();
-            if (stampTxIsField) {
+            if (stampTxIsField && (!entity.getIsFromEntitySync() || entity.get(ModelEntity.STAMP_TX_FIELD) == null)) {
                 entity.set(ModelEntity.STAMP_TX_FIELD, txStartStamp);
                 addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_TX_FIELD, modelEntity);
             }
-            if (createStampTxIsField) {
+            if (createStampTxIsField && (!entity.getIsFromEntitySync() || entity.get(ModelEntity.CREATE_STAMP_TX_FIELD) == null)) {
                 entity.set(ModelEntity.CREATE_STAMP_TX_FIELD, txStartStamp);
                 addFieldIfMissing(fieldsToSave, ModelEntity.CREATE_STAMP_TX_FIELD, modelEntity);
             }
@@ -147,13 +150,13 @@ public class GenericDAO {
         // if we have a STAMP_FIELD or CREATE_STAMP_FIELD then set it with NOW
         boolean stampIsField = modelEntity.isField(ModelEntity.STAMP_FIELD);
         boolean createStampIsField = modelEntity.isField(ModelEntity.CREATE_STAMP_FIELD);
-        if ((stampIsField || createStampIsField)  && !entity.getIsFromEntitySync()) {
+        if ((stampIsField || createStampIsField)  && (!entity.getIsFromEntitySync() || (stampIsField && entity.get(ModelEntity.STAMP_FIELD) == null) || (createStampIsField && entity.get(ModelEntity.CREATE_STAMP_FIELD) == null))) {
             Timestamp startStamp = TransactionUtil.getTransactionUniqueNowStamp();
-            if (stampIsField) {
+            if (stampIsField && (!entity.getIsFromEntitySync() || entity.get(ModelEntity.STAMP_FIELD) == null)) {
                 entity.set(ModelEntity.STAMP_FIELD, startStamp);
                 addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_FIELD, modelEntity);
             }
-            if (createStampIsField) {
+            if (createStampIsField && (!entity.getIsFromEntitySync() || entity.get(ModelEntity.CREATE_STAMP_FIELD) == null)) {
                 entity.set(ModelEntity.CREATE_STAMP_FIELD, startStamp);
                 addFieldIfMissing(fieldsToSave, ModelEntity.CREATE_STAMP_FIELD, modelEntity);
             }
@@ -245,13 +248,16 @@ public class GenericDAO {
         }
 
         // if we have a STAMP_TX_FIELD then set it with NOW, always do this before the STAMP_FIELD
-        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD) && !entity.getIsFromEntitySync()) {
+        // NOTE: these fairly complicated if statements have a few objectives: 
+        //   1. don't run the TransationUtil.getTransaction*Stamp() methods when we don't need to
+        //   2. don't set the stamp values if it is from an EntitySync (ie maintain original values), unless the stamps are null then set it anyway, ie even if it was from an EntitySync (also used for imports and such)
+        if (modelEntity.isField(ModelEntity.STAMP_TX_FIELD) && (!entity.getIsFromEntitySync() || entity.get(ModelEntity.STAMP_TX_FIELD) == null)) {
             entity.set(ModelEntity.STAMP_TX_FIELD, TransactionUtil.getTransactionStartStamp());
             addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_TX_FIELD, modelEntity);
         }
 
         // if we have a STAMP_FIELD then update it with NOW.
-        if (modelEntity.isField(ModelEntity.STAMP_FIELD) && !entity.getIsFromEntitySync()) {
+        if (modelEntity.isField(ModelEntity.STAMP_FIELD) && (!entity.getIsFromEntitySync() || entity.get(ModelEntity.STAMP_FIELD) == null)) {
             entity.set(ModelEntity.STAMP_FIELD, TransactionUtil.getTransactionUniqueNowStamp());
             addFieldIfMissing(fieldsToSave, ModelEntity.STAMP_FIELD, modelEntity);
         }
