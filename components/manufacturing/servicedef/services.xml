@@ -275,8 +275,15 @@
         <description>Returns the max product's depth in the bill of materials</description>
         <attribute mode="IN" name="productId" optional="false" type="String"/>
         <attribute mode="IN" name="fromDate" optional="true" type="String"/>
-        <attribute mode="IN" name="bomType" optional="false" type="String"/>
+        <attribute mode="IN" name="bomType" optional="true" type="String"/>
         <attribute mode="OUT" name="depth" optional="false" type="Integer"/>
+    </service>
+
+    <service name="updateLowLevelCode" engine="java"
+            location="org.ofbiz.manufacturing.bom.BOMServices" invoke="updateLowLevelCode">
+        <description>Updates the low level code of the product in the Product entity</description>
+        <attribute mode="IN" name="productId" optional="false" type="String"/>
+        <attribute mode="OUT" name="lowLevelCode" optional="false" type="Integer"/>
     </service>
 
     <service name="searchDuplicatedAncestor" default-entity-name="ProductAssoc" engine="java"
