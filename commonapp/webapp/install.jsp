@@ -1,6 +1,5 @@
 
-<%@ page import="java.io.*"%>
-<%@ page import="java.sql.*"%>
+<%@ page import="java.io.*, java.net.*, java.sql.*"%>
 <%@ page import="org.ofbiz.core.entity.model.*"%>
 
 <% pageContext.setAttribute("PageName", "Install"); %> 
@@ -8,6 +7,8 @@
 <%@ include file="/includes/onecolumn.jsp" %> 
 
 <%
+  errorMessages = new LinkedList();
+  String groupfile = request.getParameter("groupfile");
   String loadFile = request.getParameter("loadFile");
   String paths = null;
   String groupName = request.getParameter("groupName");
@@ -27,7 +28,7 @@
       if(loadDir.exists() && loadDir.isDirectory()) {
         File[] files = loadDir.listFiles();
         for(int i=0; i<files.length; i++) {
-          if(files[i].getName().endsWith(".sql") || files[i].getName().endsWith(".SQL")) {
+          if(files[i].getName().toLowerCase().endsWith(".sql") || files[i].getName().toLowerCase().endsWith(".xml")) {
             fileList.add(files[i]);
           }
         }
@@ -37,59 +38,76 @@
 %>
 <br>
 Specify the group name for the entity group whose data you want to load:<br>
-<form method=post action='<%=response.encodeURL(controlPath + "/install")%>'>
+<form method=post action='<%=response.encodeURL(controlPath + "/install?groupfile=group")%>'>
   Group Name: <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
   <INPUT type=submit value='Load Data'>
 </form>
-<%--
 <br>
-OR Specify the filename of an SQL file to load:<br>
-<form method=post action='<%=response.encodeURL(controlPath + "/install")%>'>
+OR Specify the filename of a ".sql" or ".xml" file to load:<br>
+<form method=post action='<%=response.encodeURL(controlPath + "/install?groupfile=file")%>'>
   Server File Path/Name: <INPUT type=text name='loadFile' value='<%=loadFile!=null?loadFile:""%>' size='60'>
-  <INPUT type=submit value='Load SQL File'>
+  <br>
+  Group Name (required if .sql file): <INPUT type=text name='groupName' value='<%=groupName!=null?groupName:"org.ofbiz.commonapp"%>' size='60'>
+  <INPUT type=submit value='Load Data File'>
 </form>
---%>
 <hr>
-<%if(groupName != null && groupName.length() > 0) {%>
-  <%if(request.getParameter("loadfiles") == null) {%>
-    <br>
-    <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>
-    <DIV class='head2'>Do you want to load the following SQL files and generated entity specific data?</DIV>
-    <DIV class='tabletext'>(From the path list: "<%=UtilFormatOut.checkNull(paths)%>")</DIV>
-    <UL>
-      <%if(fileList.size() > 0) {%>
-        <%for(int i=0; i<fileList.size(); i++) {%>
-          <%File sqlFile = (File)fileList.get(i);%>
-          <LI><DIV class='tabletext'><%=sqlFile.getAbsolutePath()%></DIV>
+<%if("group".equals(groupfile)) {%>
+  <%if(groupName != null && groupName.length() > 0) {%>
+    <%if(request.getParameter("loadfiles") == null) {%>
+      <br>
+      <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>
+      <DIV class='head2'>Do you want to load the following SQL files and generated entity specific data?</DIV>
+      <DIV class='tabletext'>(From the path list: "<%=UtilFormatOut.checkNull(paths)%>")</DIV>
+      <UL>
+        <%if(fileList.size() > 0) {%>
+          <%for(int i=0; i<fileList.size(); i++) {%>
+            <%File dataFile = (File)fileList.get(i);%>
+            <LI><DIV class='tabletext'><%=dataFile.getAbsolutePath()%></DIV>
+          <%}%>
+        <%}else{%>
+          <LI><DIV class='tabletext'>No SQL Files found.</DIV>
         <%}%>
-      <%}else{%>
-        <LI><DIV class='tabletext'>No SQL Files found.</DIV>
-      <%}%>
-      <LI><DIV class='tabletext'>Entity granularity security settings (auto generated, not in a file)</DIV>
-    </UL>
-    <A href='<%=response.encodeURL(controlPath + "/install?loadfiles=true&groupName=" + groupName)%>' class='buttontext'>[Yes, Load Now]</A>
-  <%}else{%>
-    <br>
-    <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>
-    <DIV class='head2'>Loading the SQL files and generated entity specific data...</DIV>
-    <DIV class='tabletext'>(From the path list: "<%=UtilFormatOut.checkNull(paths)%>")</DIV>
-    <UL>
-      <%int totalRowsChanged = 0;%>
-      <%if(fileList.size() > 0) {%>
-        <%for(int i=0; i<fileList.size(); i++) {%>
-          <%File sqlFile = (File)fileList.get(i);%>
-          <%int rowsChanged = loadData(sqlFile, helperName);%>
-          <%totalRowsChanged += rowsChanged;%>
-          <LI><DIV class='tabletext'>Loaded <%=rowsChanged%> rows from <%=sqlFile.getAbsolutePath()%> (<%=totalRowsChanged%> total rows so far)</DIV>
+        <LI><DIV class='tabletext'>Entity granularity security settings (auto generated, not in a file)</DIV>
+      </UL>
+      <A href='<%=response.encodeURL(controlPath + "/install?loadfiles=true&groupfile=group&groupName=" + groupName)%>' class='buttontext'>[Yes, Load Now]</A>
+    <%}else{%>
+      <br>
+      <DIV class='head1'>Open For Business Installation (Data Load) Page</DIV>
+      <DIV class='head2'>Loading the SQL files and generated entity specific data...</DIV>
+      <DIV class='tabletext'>(From the path list: "<%=UtilFormatOut.checkNull(paths)%>")</DIV>
+      <UL>
+        <%int totalRowsChanged = 0;%>
+        <%if(fileList.size() > 0) {%>
+          <%for(int i=0; i<fileList.size(); i++) {%>
+            <%File dataFile = (File)fileList.get(i);%>
+            <%int rowsChanged = loadData(dataFile, helperName, delegator);%>
+            <%totalRowsChanged += rowsChanged;%>
+            <LI><DIV class='tabletext'>Loaded <%=rowsChanged%> rows from <%=dataFile.getAbsolutePath()%> (<%=totalRowsChanged%> total rows so far)</DIV>
+          <%}%>
+        <%}else{%>
+          <LI><DIV class='tabletext'>No SQL Files found.</DIV>
         <%}%>
-      <%}else{%>
-        <LI><DIV class='tabletext'>No SQL Files found.</DIV>
-      <%}%>
-      <%int genRowsChanged = generateData(delegator);%>
-       <%totalRowsChanged += genRowsChanged;%>
-      <LI><DIV class='tabletext'>Loaded <%=genRowsChanged%> rows for generated entity granularity security settings (<%=totalRowsChanged%> total rows so far)</DIV>
-    </UL>
-    <DIV class='head2'>Finished loading all data; <%=totalRowsChanged%> total rows updated.</DIV>
+        <%int genRowsChanged = generateData(delegator);%>
+         <%totalRowsChanged += genRowsChanged;%>
+        <LI><DIV class='tabletext'>Loaded <%=genRowsChanged%> rows for generated entity granularity security settings (<%=totalRowsChanged%> total rows so far)</DIV>
+      </UL>
+      <DIV class='head2'>Finished loading all data; <%=totalRowsChanged%> total rows updated.</DIV>
+
+      <DIV class='head2'>Error Messages:</DIV>
+      <UL>
+        <%Iterator errIter = errorMessages.iterator();%>
+        <%while(errIter.hasNext()){%>
+          <LI><%=(String)errIter.next()%>
+        <%}%>
+      </UL>
+
+    <%}%>
+  <%}%>
+<%}else if("file".equals(groupfile)) {%>
+  <%if(loadFile != null && loadFile.length() > 0) {%>
+    <%File dataFile = new File(loadFile);%>
+    <%int rowsChanged = loadData(dataFile, helperName, delegator);%>
+    <DIV class='head2'>Finished loading file data; <%=rowsChanged%> total rows updated.</DIV>
 
     <DIV class='head2'>Error Messages:</DIV>
     <UL>
@@ -98,21 +116,7 @@ OR Specify the filename of an SQL file to load:<br>
         <LI><%=(String)errIter.next()%>
       <%}%>
     </UL>
-
   <%}%>
-<%--
-<%}else if(loadFile != null && loadFile.length > 0) {%>
-  <%int rowsChanged = loadData(sqlFile, helperName);%>
-  <DIV class='head2'>Finished loading file data; <%=totalRowsChanged%> total rows updated.</DIV>
-
-  <DIV class='head2'>Error Messages:</DIV>
-  <UL>
-    <%Iterator errIter = errorMessages.iterator();%>
-    <%while(errIter.hasNext()){%>
-      <LI><%=(String)errIter.next()%>
-    <%}%>
-  </UL>
---%>
 <%}%>
 
 <%@ include file="/includes/onecolumnclose.jsp" %>
@@ -121,68 +125,92 @@ OR Specify the filename of an SQL file to load:<br>
 <%!
   Collection errorMessages = new LinkedList();
 
-  int loadData(File sqlFile, String helperName)
+  int loadData(File dataFile, String helperName, GenericDelegator delegator)
   {
-    if(!sqlFile.exists()) return 0;
-    Debug.logInfo("[install.loadData] Loading SQL File: \"" + sqlFile.getAbsolutePath() + "\"");
-
-    Connection connection = null; 
-    Statement stmt = null;
+    if(!dataFile.exists()) {
+      errorMessages.add("[install.loadData] Could not find file: \"" + dataFile.getAbsolutePath() + "\"");
+      return 0;
+    }
     int rowsChanged = 0;
-    try {
-      connection = ConnectionFactory.getConnection(helperName);
-      connection.setAutoCommit(true);
-      stmt = connection.createStatement();
 
-      String sql = "";
-      BufferedReader in = new BufferedReader(new FileReader(sqlFile));
-      String line;
-      while((line = in.readLine()) != null) {
-        line = line.trim();
-        if(line.startsWith("--")) continue;
-        int scind = line.indexOf(';');
-        int linePos = 0;
-        if(scind >= 0) {
-          while(scind >= 0) {
-            sql += " ";
-            sql += line.substring(linePos, scind);
+    if(dataFile.getName().toLowerCase().endsWith(".xml")) {
+      Debug.logInfo("[install.loadData] Loading XML File: \"" + dataFile.getAbsolutePath() + "\"");
+      URL url = null;
+      try { url = dataFile.toURL(); }
+      catch(java.net.MalformedURLException e) {
+        String xmlError = "[install.loadData]: Error loading XML file \"" + dataFile.getAbsolutePath() + "\"; Error was: " + e.getMessage();
+        errorMessages.add(xmlError); Debug.logWarning(xmlError);
+      }
 
-            //run the sql...
-            //rowsChanged += runSql(sql);
-            sql = sql.trim();
-            if(sql.startsWith("INSERT") || sql.startsWith("insert"))
-            {
-              Debug.logInfo("[install.loadData] Running found insert sql: \"" + sql + "\"");
-              try {
-                rowsChanged += stmt.executeUpdate(sql);
+      Collection values = null;
+      try {
+        values = delegator.readXmlDocument(url);
+        delegator.storeAll(values);
+        rowsChanged += values.size();
+      }
+      catch(Exception e) {
+        String xmlError = "[install.loadData]: Error loading XML file \"" + dataFile.getAbsolutePath() + "\"; Error was: " + e.getMessage();
+        errorMessages.add(xmlError); Debug.logWarning(xmlError);
+      }
+    }
+    else if(dataFile.getName().toLowerCase().endsWith(".sql")) {
+      Debug.logInfo("[install.loadData] Loading SQL File: \"" + dataFile.getAbsolutePath() + "\"");
+      Connection connection = null; 
+      Statement stmt = null;
+      try {
+        connection = ConnectionFactory.getConnection(helperName);
+        connection.setAutoCommit(true);
+        stmt = connection.createStatement();
+
+        String sql = "";
+        BufferedReader in = new BufferedReader(new FileReader(dataFile));
+        String line;
+        while((line = in.readLine()) != null) {
+          line = line.trim();
+          if(line.startsWith("--")) continue;
+          int scind = line.indexOf(';');
+          int linePos = 0;
+          if(scind >= 0) {
+            while(scind >= 0) {
+              sql += " ";
+              sql += line.substring(linePos, scind);
+
+              //run the sql...
+              //rowsChanged += runSql(sql);
+              sql = sql.trim();
+              if(sql.startsWith("INSERT") || sql.startsWith("insert"))
+              {
+                //Debug.logInfo("[install.loadData] Running found insert sql: \"" + sql + "\"");
+                try {
+                  rowsChanged += stmt.executeUpdate(sql);
+                }
+                catch (SQLException sqle) {
+                  String sqlError = "[install.loadData]: Error running sql:\"" + sql + "\"; Error was: " + sqle.getMessage();
+                  errorMessages.add(sqlError);
+                  Debug.logWarning(sqlError);
+                }
               }
-              catch (SQLException sqle) {
-                String sqlError = "[install.loadData]: Error running sql:\"" + sql + "\"; Error was: " + sqle.getMessage();
-                errorMessages.add(sqlError);
-                Debug.logWarning(sqlError);
-              }
+
+              linePos = scind + 1;
+              scind = line.indexOf(';', linePos);
+              sql = "";
             }
-
-            linePos = scind + 1;
-            scind = line.indexOf(';', linePos);
-            sql = "";
+          }
+          else {
+            sql += " ";
+            sql += line;
           }
         }
-        else {
-          sql += " ";
-          sql += line;
-        }
+      } 
+      catch (Exception e) { 
+        String errorMsg = "[install.loadData]: Load error:" +  e.getMessage();
+        errorMessages.add(errorMsg);
+        Debug.logWarning(errorMsg);
+      } 
+      finally {
+        try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
+        try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
       }
-    } 
-    catch (Exception e) { 
-      String errorMsg = "[install.loadData]: Load error:" +  e.getMessage();
-      errorMessages.add(errorMsg);
-      Debug.logWarning(errorMsg);
-    } 
-    finally 
-    {
-      try { if (stmt != null) stmt.close(); } catch (SQLException sqle) { }
-      try { if (connection != null) connection.close(); } catch (SQLException sqle) { }
     }
 
     return rowsChanged;
