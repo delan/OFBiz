@@ -1,5 +1,5 @@
 /*
- * $Id: EntitySaxReader.java,v 1.13 2004/06/24 02:16:31 jonesde Exp $
+ * $Id: EntitySaxReader.java,v 1.14 2004/06/26 23:16:22 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -67,12 +67,14 @@ import freemarker.template.TemplateHashModel;
  * SAX XML Parser Content Handler for Entity Engine XML files
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.13 $
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
+ * @version    $Revision: 1.14 $
  * @since      2.0
  */
 public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler {
 
     public static final String module = EntitySaxReader.class.getName();
+    public static final int DEFAULT_TX_TIMEOUT = 7200;
 
     protected org.xml.sax.Locator locator;
     protected GenericDelegator delegator;
@@ -96,8 +98,13 @@ public class EntitySaxReader implements org.xml.sax.ContentHandler, ErrorHandler
 
     protected EntitySaxReader() {}
 
-    public EntitySaxReader(GenericDelegator delegator) {
+    public EntitySaxReader(GenericDelegator delegator, int transactionTimeout) {
         this.delegator = delegator;
+        this.transactionTimeout = transactionTimeout;
+    }
+
+    public EntitySaxReader(GenericDelegator delegator) {
+        this(delegator, DEFAULT_TX_TIMEOUT);
     }
 
     public int getValuesPerWrite() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.19 2004/06/25 17:05:41 ajzeneski Exp $
+ * $Id: Start.java,v 1.20 2004/06/26 23:16:23 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.19 $
+  *@version    $Revision: 1.20 $
  * @since      2.1
  */
 public class Start implements Runnable {
@@ -301,6 +301,7 @@ public class Start implements Runnable {
             System.out.println("");
             System.out.println("Usage: java -jar ofbiz.jar [command] [arguments]");
             System.out.println("-help, -? ----> This screen");
+            System.out.println("-install -----> Run install (create tables/load data)");
             System.out.println("-setup -------> Run external application server setup");
             System.out.println("-start -------> Start the server");
             System.out.println("-status ------> Status of the server");

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataLoadContainer.java,v 1.1 2004/06/25 21:52:43 ajzeneski Exp $
+ * $Id: EntityDataLoadContainer.java,v 1.2 2004/06/26 23:16:23 ajzeneski Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -45,13 +45,14 @@ import org.ofbiz.service.ServiceDispatcher;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.1
  */
 public class EntityDataLoadContainer implements Container {
 
     public static final String module = EntityDataLoadContainer.class.getName();
-    
+    protected int txTimeout = -1;
+
     public EntityDataLoadContainer() {
         super();
     }
@@ -64,6 +65,12 @@ public class EntityDataLoadContainer implements Container {
         ServiceDispatcher.enableJM(false);
         ServiceDispatcher.enableJMS(false);
         ServiceDispatcher.enableSvcs(false);
+        if (args != null && args.length > 0) {
+            try {
+                txTimeout = Integer.parseInt(args[0]);
+            } catch (Exception e) {
+            }
+        }
     }
 
     /**
@@ -115,7 +122,7 @@ public class EntityDataLoadContainer implements Container {
             while (urlIter.hasNext()) {
                 URL dataUrl = (URL) urlIter.next();
                 try {
-                    int rowsChanged = EntityDataLoader.loadData(dataUrl, helperName, delegator, errorMessages);
+                    int rowsChanged = EntityDataLoader.loadData(dataUrl, helperName, delegator, errorMessages, txTimeout);
                     totalRowsChanged += rowsChanged;
                     infoMessages.add(changedFormat.format(rowsChanged) + " of " + changedFormat.format(totalRowsChanged) + " from " + dataUrl.toExternalForm());
                 } catch (GenericEntityException e) {
