@@ -1,5 +1,5 @@
 /*
- * $Id: SearchServices.java,v 1.3 2004/08/09 23:52:20 jonesde Exp $
+ * $Id: SearchServices.java,v 1.4 2004/08/11 17:16:39 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -24,6 +24,9 @@
 package org.ofbiz.content.search;
 
 import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.entity.GenericDelegator;
@@ -36,7 +39,7 @@ import org.ofbiz.service.ServiceUtil;
  * SearchServices Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a> Hacked from Lucene demo file
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @since 3.1
  * 
  *  
@@ -49,9 +52,12 @@ public class SearchServices {
 
         String siteId = (String)context.get("contentId");
         String path = (String)context.get("path");
-        Map envContext = (Map)context.get("context");
+        Map envContext = new HashMap();
         GenericDelegator delegator = dctx.getDelegator();
-	  	if (Debug.infoOn()) Debug.logInfo("in indexTree, siteId:" + siteId, module);
+  	if (Debug.infoOn()) Debug.logInfo("in indexTree, siteId:" + siteId, module);
+            List badIndexList = new ArrayList();
+            envContext.put("badIndexList", badIndexList);
+            envContext.put("goodIndexCount", new Integer(0));
 
         Map results = null;
         try {
@@ -59,6 +65,7 @@ public class SearchServices {
         } catch (Exception e) {
             return ServiceUtil.returnError("Error indexing tree: " + e.toString());
         }
+	  	if (Debug.infoOn()) Debug.logInfo("in indexTree, results:" + results, module);
         return results;
     }
 }

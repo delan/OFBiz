@@ -1,5 +1,5 @@
 /*
- * $Id: ContentDocument.java,v 1.5 2004/07/02 20:18:22 byersa Exp $
+ * $Id: ContentDocument.java,v 1.6 2004/08/11 17:16:39 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -51,7 +51,7 @@ import java.util.Iterator;
  * ContentDocument Class
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version $Revision: 1.5 $
+ * @version $Revision: 1.6 $
  * @since 3.1
  * 
  *  
@@ -118,21 +118,29 @@ public class ContentDocument {
 	  	    doc.add(field);
                 }
 
-                indexDataResource(content, doc, context);
-
+                boolean retVal = indexDataResource(content, doc, context);
+	        Debug.logInfo("in DataResourceDocument, context.badIndexList:" + context.get("badIndexList"), module);
+                if (!retVal)
+                    doc = null;
 	  	return doc;
 	}
 
-	public static void indexDataResource(GenericValue content, Document doc, Map context) {
+	public static boolean indexDataResource(GenericValue content, Document doc, Map context) {
 	  	
             GenericDelegator delegator = content.getDelegator();
+            String contentId = content.getString("contentId");
+	  	    Debug.logInfo("in ContentDocument, contentId:" + contentId, module);
             String dataResourceId = content.getString("dataResourceId");
+	  	    Debug.logInfo("in ContentDocument, dataResourceId:" + dataResourceId, module);
             GenericValue dataResource = null;
 	    try {
 	  	dataResource = delegator.findByPrimaryKeyCache("DataResource", UtilMisc.toMap("dataResourceId", dataResourceId));
 	    } catch(GenericEntityException e) {
 	  	Debug.logError(e, module);
-	  	return ;
+                List badIndexList = (List)context.get("badIndexList");
+                badIndexList.add(contentId + " - " + e.getMessage());
+	        Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
+	  	return false;
 	    }
 	  	
 	  	
@@ -147,21 +155,26 @@ public class ContentDocument {
                 locale = UtilMisc.parseLocale(currentLocaleString);
             }
         
-            StringWriter outWriter = new StringWriter();
+            String text = null;     
 	    try {
-	  	    DataResourceWorker.writeDataResourceTextCache(dataResource, mimeTypeId, locale, context, delegator, outWriter);
+                text = ContentWorker.renderContentAsTextCache(delegator, contentId, context, content, locale, mimeTypeId);
 	    } catch(GeneralException e) {
 	  	Debug.logError(e, module);
-                return;
-	    } catch(IOException e) {
-	  	Debug.logError(e, module);
-                return;
+                List badIndexList = (List)context.get("badIndexList");
+                badIndexList.add(contentId + " - " + e.getMessage());
+	        Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
+	  	return false;
+	    } catch(IOException e2) {
+	  	Debug.logError(e2, module);
+                List badIndexList = (List)context.get("badIndexList");
+                badIndexList.add(contentId + " - " + e2.getMessage());
+	        Debug.logInfo("in DataResourceDocument, badIndexList:" + badIndexList, module);
+	  	return false;
 	    }
-	    String text = outWriter.toString();
 	    //Debug.logInfo("in DataResourceDocument, text:" + text, module);
             if (UtilValidate.isNotEmpty(text)) {
               Field field = Field.UnStored("content", text);
-	      //Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
+	      Debug.logInfo("in ContentDocument, field:" + field.stringValue(), module);
 	      doc.add(field);
             }
 
@@ -170,7 +183,9 @@ public class ContentDocument {
                 featureDataResourceList = content.getRelatedCache("ProductFeatureDataResource");
 	    } catch(GenericEntityException e) {
 	  	Debug.logError(e, module);
-                return;
+                List badIndexList = (List)context.get("badIndexList");
+                badIndexList.add(contentId + " - " + e.getMessage());
+                return false;
 	    }
             List featureList = new ArrayList();
             Iterator iter = featureDataResourceList.iterator(); 
@@ -186,6 +201,6 @@ public class ContentDocument {
 	  	doc.add(field);
             }
 	    
-	    return;
+	    return true;
 	}
 }
