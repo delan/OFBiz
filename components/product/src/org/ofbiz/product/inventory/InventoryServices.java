@@ -1,5 +1,5 @@
 /*
- * $Id: InventoryServices.java,v 1.2 2004/02/22 09:21:02 jonesde Exp $
+ * $Id: InventoryServices.java,v 1.3 2004/02/23 15:30:24 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -50,7 +50,7 @@ import org.ofbiz.service.ServiceUtil;
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.0
  */
 public class InventoryServices {
@@ -101,14 +101,13 @@ public class InventoryServices {
             // NOTE: atp should always be <= qoh, so if xfer < atp, then xfer < qoh, so no need to check/handle that
             // however, if atp < qoh && atp == xferQty, then we still need to split; oh, but no need to check atp == xferQty in the second part because if it isn't greater and isn't less, then it is equal
             if (xferQty.doubleValue() < atp.doubleValue() || atp.doubleValue() < qoh.doubleValue()) {
-                double diff = atp.doubleValue() - xferQty.doubleValue();
 
                 newItem = new GenericValue(inventoryItem);
                 newItem.set("availableToPromise", xferQty);
                 newItem.set("quantityOnHand", xferQty);
                 
-                inventoryItem.set("availableToPromise", new Double(atp.doubleValue() - diff));
-                inventoryItem.set("quantityOnHand", new Double(qoh.doubleValue() - diff));
+                inventoryItem.set("availableToPromise", new Double(atp.doubleValue() - xferQty.doubleValue()));
+                inventoryItem.set("quantityOnHand", new Double(qoh.doubleValue() - xferQty.doubleValue()));
             }
         } else if (inventoryType.equals("SERIALIZED_INV_ITEM")) {
             if (!inventoryItem.getString("statusId").equals("INV_AVAILABLE")) {
