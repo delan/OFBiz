@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2002-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -110,37 +110,57 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     /** This is an internal field used to specify that a value has come from a sync process and that the auto-stamps should not be over-written */
     protected boolean isFromEntitySync = false;
     
-    /** Creates new GenericEntity */
+    /** Creates new GenericEntity - Should never be used, prefer the other options. */
     public GenericEntity() {
-        this.entityName = null;
-        this.modelEntity = null;
         this.fields = new HashMap();
     }
 
     /** Creates new GenericEntity */
     public GenericEntity(ModelEntity modelEntity) {
-        if (modelEntity == null) throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
+        }
         this.modelEntity = modelEntity;
         this.entityName = modelEntity.getEntityName();
         this.fields = new HashMap();
+        
+        // check some things
+        if (this.entityName == null) {
+            throw new IllegalArgumentException("Cannont create a GenericEntity with a null entityName in the modelEntity parameter");
+        }
     }
 
     /** Creates new GenericEntity from existing Map */
     public GenericEntity(ModelEntity modelEntity, Map fields) {
-        if (modelEntity == null) throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
+        if (modelEntity == null) {
+            throw new IllegalArgumentException("Cannont create a GenericEntity with a null modelEntity parameter");
+        }
         this.modelEntity = modelEntity;
         this.entityName = modelEntity.getEntityName();
         this.fields = new HashMap();
         setFields(fields);
+        
+        // check some things
+        if (this.entityName == null) {
+            throw new IllegalArgumentException("Cannont create a GenericEntity with a null entityName in the modelEntity parameter");
+        }
     }
 
     /** Copy Constructor: Creates new GenericEntity from existing GenericEntity */
     public GenericEntity(GenericEntity value) {
+        if (value.modelEntity == null) {
+            throw new IllegalArgumentException("Cannont create a GenericEntity from another GenericEntity with a null modelEntity in the value parameter");
+        }
         this.entityName = value.modelEntity.getEntityName();
         this.modelEntity = value.modelEntity;
         this.fields = (value.fields == null ? new HashMap() : new HashMap(value.fields));
         this.delegatorName = value.delegatorName;
         this.internalDelegator = value.internalDelegator;
+        
+        // check some things
+        if (this.entityName == null) {
+            throw new IllegalArgumentException("Cannont create a GenericEntity with a null entityName in the modelEntity parameter");
+        }
     }
 
     public void refreshFromValue(GenericEntity newValue) throws GenericEntityException {
@@ -972,7 +992,11 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     public int hashCode() {
         // divide both by two (shift to right one bit) to maintain scale and add together
         if (generateHashCode) {
-            cachedHashCode = getEntityName().hashCode() >> 1 + fields.hashCode() >> 1;
+            cachedHashCode = 0;
+            if (getEntityName() != null) {
+                cachedHashCode += getEntityName().hashCode() >> 1;
+            }
+            cachedHashCode += fields.hashCode() >> 1;
             generateHashCode = false;
         }
         return cachedHashCode;
@@ -1151,5 +1175,5 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
     public static interface NULL { };
 
     protected static class NullGenericEntity extends GenericEntity implements NULL { };
-    protected static class NullField extends GenericEntity implements NULL { };
+    protected static class NullField implements NULL { };
 }
