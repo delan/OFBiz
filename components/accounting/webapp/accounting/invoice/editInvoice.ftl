@@ -26,7 +26,38 @@
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 
-
+<#macro displayPersonOrGroup label party>
+    <tr>
+      <td align="right" valign="top" width="15%">
+         <div class="tabletext">&nbsp;<b>${label}</b></div>
+      </td>   
+      <td width="5">&nbsp;</td>
+  <#if party.getRelatedOne("Person")?has_content>
+     <#assign person = party.getRelatedOne("Person")>
+      <td align="left" valign="top" width="80%">
+         <div class="tabletext">
+            <#if person.partyId != "_NA_">
+               ${person.firstName?if_exists}&nbsp;
+            <#if person.middleName?exists>${person.middleName}&nbsp;</#if>
+               ${person.lastName?if_exists}
+            <#else>
+               [Anonymous]
+            </#if>
+         </div>
+      </td>
+   </#if>
+   <#if party.getRelatedOne("PartyGroup")?has_content>
+      <#assign group = party.getRelatedOne("PartyGroup")>
+      <td align="left" valign="top" width="80%">
+         <div class="tabletext">
+            ${group.groupName?if_exists}
+         </div>
+      </td>
+   </#if>
+   </tr>
+   <tr><td colspan="7"><hr class='sepbar'></td></tr>
+</#macro>                        
+                        
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <#-- left side -->
@@ -50,35 +81,13 @@
               <tr>
                 <td>
                   <table width="100%" border="0" cellpadding="1">
+                    <#-- sending party information -->
+                    <#if sendingParty?has_content>
+                        <@displayPersonOrGroup label=uiLabelMap.CommonFrom party=sendingParty/>
+                    </#if>
                     <#-- billing party information -->
                     <#if billingParty?has_content>
-                      <tr>
-                        <td align="right" valign="top" width="15%">
-                          <div class="tabletext">&nbsp;<b>${uiLabelMap.AccountingName}</b></div>
-                        </td>   
-                        <td width="5">&nbsp;</td>
-                        <#if billingPerson?has_content>
-                        <td align="left" valign="top" width="80%">
-                          <div class="tabletext">
-                            <#if billingPerson.partyId != "_NA_">
-                              ${billingPerson.firstName?if_exists}&nbsp;
-                              <#if billingPerson.middleName?exists>${billingPerson.middleName}&nbsp;</#if>
-                              ${billingPerson.lastName?if_exists}
-                            <#else>
-                              [Anonymous Shopper]
-                            </#if>
-                          </div>
-                        </td>
-                        </#if>
-                        <#if billingGroup?has_content>
-                        <td align="left" valign="top" width="80%">
-                          <div class="tabletext">
-                            ${billingGroup.groupName?if_exists}
-                          </div>
-                        </td>
-                        </#if>
-                      </tr>
-                      <tr><td colspan="7"><hr class='sepbar'></td></tr>
+                        <@displayPersonOrGroup label=uiLabelMap.CommonTo party=billingParty/>
                     </#if>
                     <#-- invoice status information -->
                     <tr>

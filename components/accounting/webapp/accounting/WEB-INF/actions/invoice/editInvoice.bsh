@@ -43,12 +43,22 @@
     invoiceTotal = InvoiceWorker.getInvoiceTotal(invoice);
     context.put("invoiceTotal", new Double(invoiceTotal));    
     
-    billingAddress = InvoiceWorker.getBillToAddress(invoice);    
+    // each invoice of course has two billing addresses, but the one that is relevant for purchase invoices is the PAYMENT_LOCATION of the invoice
+    // (ie Accounts Payable address for the supplier), while the right one for sales invoices is the BILLING_LOCATION (ie Accounts Receivable or
+    // home of the customer.)
+    if ((invoice.getString("invoiceTypeId") != null) && (invoice.getString("invoiceTypeId").equals("PURCHASE_INVOICE"))) {
+        billingAddress = InvoiceWorker.getSendFromAddress(invoice);
+    } else {
+        billingAddress = InvoiceWorker.getBillToAddress(invoice);
+    }
     context.put("billingAddress", billingAddress);
     
     billingParty = InvoiceWorker.getBillToParty(invoice);
     context.put("billingParty", billingParty);
 
+    sendingParty = InvoiceWorker.getSendFromParty(invoice);
+    context.put("sendingParty", sendingParty);
+    
     terms = invoice.getRelated("InvoiceTerm");
     context.put("terms", terms);
     
@@ -63,12 +73,7 @@
         orders.add(orderIb.getString("orderId"));
     }
     context.put("orders", orders);
-        
-    if (billingParty != null && billingParty.get("partyTypeId").equals("PERSON"))
-        context.put("billingPerson", billingParty.getRelatedOne("Person"));
-    else if (billingParty != null)
-        context.put("billingGroup", billingParty.getRelatedOne("PartyGroup"));    
-        
+    
     invoiceStatus = invoice.getRelatedOne("StatusItem");            
     context.put("invoiceStatus", invoiceStatus);
     

@@ -1,7 +1,7 @@
 /*
  * $Id$
  *
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -164,6 +164,18 @@ public class InvoiceServices {
         invoice.set("statusId", "INVOICE_READY");
         invoice.set("currencyUomId", orderHeader.getString("currencyUom"));
 
+        // order terms to invoice terms.  Implemented for purchase orders, although it may be useful
+        // for sales orders as well.  Later it might be nice to filter OrderTerms to only copy over financial terms.
+        List orderTerms = new LinkedList();
+        try {
+            orderTerms = orderHeader.getRelated("OrderTerm");
+        } catch (GenericEntityException e) {
+            Debug.logError(e, "Trouble getting OrderTerm entity from OrderHeader", module);
+            return ServiceUtil.returnError("Trouble getting OrderTerm entity from OrderHeader");
+        }
+        toStore.addAll(createInvoiceTerms(delegator, invoiceId, orderTerms));
+
+        // billing accounts
         GenericValue billingAccount = null;
         List billingAccountTerms = null;
         try {
@@ -187,20 +199,7 @@ public class InvoiceServices {
             }
 
             // set the invoice terms as defined for the billing account
-            if (billingAccountTerms != null) {
-                Iterator billingAcctTermsIter = billingAccountTerms.iterator();
-                while (billingAcctTermsIter.hasNext()) {
-                    GenericValue term = (GenericValue) billingAcctTermsIter.next();
-                    GenericValue invoiceTerm = delegator.makeValue("InvoiceTerm",
-                        UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", "_NA_"));
-                    String invoiceTermId = delegator.getNextSeqId("InvoiceTerm").toString();
-                    invoiceTerm.set("invoiceTermId", invoiceTermId);
-                    invoiceTerm.set("termTypeId", term.get("termTypeId"));
-                    invoiceTerm.set("termValue", term.get("termValue"));
-                    invoiceTerm.set("uomId", term.get("uomId"));
-                    toStore.add(invoiceTerm);
-                }
-            }
+            toStore.addAll(createInvoiceTerms(delegator, invoiceId, billingAccountTerms));
 
             // set the invoice bill_to_customer from the billing account
             List billToRoles = null;
@@ -227,12 +226,17 @@ public class InvoiceServices {
                 toStore.add(billToContactMech);
             }
         } else {
-            // no billing account use the info off the order header
-            GenericValue billToPerson = orh.getBillToPerson();
+            // no billing account use the info off the order header.  Look for BILL_TO_CUSTOMER unless it's a purchase invoice, in which case,
+            // look for and create BILL_FROM_VENDOR
+            String roleTypeId = "BILL_TO_CUSTOMER";
+            if ("PURCHASE_INVOICE".equals(invoiceType)) {
+                roleTypeId = "BILL_FROM_VENDOR";
+            }
+            GenericValue billToPerson = orh.getPartyFromRole(roleTypeId);
             if (billToPerson != null) {
                 GenericValue invoiceRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
                 invoiceRole.set("partyId", billToPerson.getString("partyId"));
-                invoiceRole.set("roleTypeId", "BILL_TO_CUSTOMER");
+                invoiceRole.set("roleTypeId", roleTypeId);
                 toStore.add(invoiceRole);
             }
 
@@ -265,14 +269,36 @@ public class InvoiceServices {
             Debug.logError(e, "Trouble getting OrderPaymentPreference entity list", module);
         }
 
-        // create the bill-from role BILL_FROM_VENDOR as the partyId for the store
+        // payToPartyId of the store is the Vendor on Sales Invoices and Customer on Purchase Invoices
         GenericValue payToRole = delegator.makeValue("InvoiceRole", UtilMisc.toMap("invoiceId", invoiceId));
         payToRole.set("partyId", payToPartyId);
-        payToRole.set("roleTypeId", "BILL_FROM_VENDOR");
+        if (invoiceType.equals("PURCHASE_INVOICE")) {
+            payToRole.set("roleTypeId", "BILL_TO_CUSTOMER");
+        } else {
+            payToRole.set("roleTypeId", "BILL_FROM_VENDOR");
+        }
         toStore.add(payToRole);
 
         // create the bill-from (or pay-to) contact mech as the primary PAYMENT_LOCATION of the party from the store
-        GenericValue payToAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId);
+        GenericValue payToAddress = null;
+        if (invoiceType.equals("PURCHASE_INVOICE")) {
+            // for purchase orders, the pay to address is the BILLING_LOCATION of the vendor
+            GenericValue billFromVendor = orh.getPartyFromRole("BILL_FROM_VENDOR");
+            if (billFromVendor != null) {
+                try {
+                    List billingContactMechs = billFromVendor.getRelatedOne("Party").getRelatedByAnd("PartyContactMechPurpose",
+                            UtilMisc.toMap("contactMechPurposeTypeId", "BILLING_LOCATION"));
+                    if ((billingContactMechs != null) && (billingContactMechs.size() > 0)) {
+                        payToAddress = (GenericValue) billingContactMechs.get(0);
+                    }
+                } catch (GenericEntityException e) {
+                    Debug.logError(e, "Trouble getting contact mech purpose for bill from vendor entity", module);
+                }
+            }
+        } else {
+            // for sales orders, it is the payment address on file for the store
+            payToAddress = PaymentWorker.getPaymentAddress(delegator, payToPartyId);
+        }
         if (payToAddress != null) {
             GenericValue payToCm = delegator.makeValue("InvoiceContactMech", UtilMisc.toMap("invoiceId", invoiceId));
             payToCm.set("contactMechId", payToAddress.getString("contactMechId"));
@@ -289,11 +315,16 @@ public class InvoiceServices {
             while (itemIter.hasNext()) {
                 GenericValue itemIssuance = null;
                 GenericValue orderItem = null;
+                GenericValue shipmentReceipt = null;
                 GenericValue currentValue = (GenericValue) itemIter.next();
                 if ("ItemIssuance".equals(currentValue.getEntityName())) {
                     itemIssuance = currentValue;
                 } else if ("OrderItem".equals(currentValue.getEntityName())) {
                     orderItem = currentValue;
+                } else if ("ShipmentReceipt".equals(currentValue.getEntityName())) {
+                    shipmentReceipt = currentValue;
+                } else {
+                    Debug.logError("Unexpected entity " + currentValue + " of type " + currentValue.getEntityName(), module);
                 }
 
                 if (orderItem == null && itemIssuance != null) {
@@ -303,8 +334,15 @@ public class InvoiceServices {
                         Debug.logError(e, "Trouble getting related OrderItem from ItemIssuance", module);
                         return ServiceUtil.returnError("Trouble getting OrderItem from ItemIssuance");
                     }
-                } else if (orderItem == null && itemIssuance == null) {
-                    Debug.logError("Cannot create invoice when both orderItem and itemIssuance is null", module);
+                } else if ((orderItem == null) && (shipmentReceipt != null)) {
+                    try {
+                        orderItem = shipmentReceipt.getRelatedOne("OrderItem");
+                    } catch (GenericEntityException e) {                   
+                        Debug.logError(e, "Trouble getting related OrderItem from ShipmentReceipt", module);
+                        return ServiceUtil.returnError("Trouble getting OrderItem from ShipmentReceipt");
+                    }
+                } else if ((orderItem == null) && (itemIssuance == null) && (shipmentReceipt == null)) {
+                    Debug.logError("Cannot create invoice when orderItem, itemIssuance, and shipmentReceipt are all null", module);
                     return ServiceUtil.returnError("Illegal values passed to create invoice service");
                 }
                 GenericValue product = null;
@@ -322,6 +360,8 @@ public class InvoiceServices {
                 Double billingQuantity = null;
                 if (itemIssuance != null) {
                     billingQuantity = itemIssuance.getDouble("quantity");
+                } if (shipmentReceipt != null) {
+                    billingQuantity = shipmentReceipt.getDouble("quantityAccepted");
                 } else {
                     billingQuantity = orderedQuantity;
                 }
@@ -335,9 +375,9 @@ public class InvoiceServices {
                     lookupType = orderItem.getString("orderItemTypeId");
                 }
 
-                // check if shipping applies to this item
+                // check if shipping applies to this item.  Shipping is calculated for sales invoices, not purchase invoices.
                 boolean shippingApplies = false;
-                if (product != null && ProductWorker.shippingApplies(product)) {
+                if ((product != null) && (ProductWorker.shippingApplies(product)) && (invoiceType.equals("SALES_INVOICE"))) {
                     shippingApplies = true;
                 }
 
@@ -355,7 +395,8 @@ public class InvoiceServices {
                     itemIssuanceId = itemIssuance.getString("itemIssuanceId");
                     invoiceItem.set("inventoryItemId", itemIssuance.get("inventoryItemId"));
                 }
-                if (product != null) {
+                // similarly, tax only for purchase invoices
+                if ((product != null) && (invoiceType.equals("SALES_INVOICE"))) {
                     invoiceItem.set("taxableFlag", product.get("taxable"));
                 }
                 toStore.add(invoiceItem);
@@ -379,6 +420,9 @@ public class InvoiceServices {
                 orderItemBill.set("orderId", orderItem.get("orderId"));
                 orderItemBill.set("orderItemSeqId", orderItem.get("orderItemSeqId"));
                 orderItemBill.set("itemIssuanceId", itemIssuanceId);
+                if ((shipmentReceipt != null) && (shipmentReceipt.getString("receiptId") != null)) {
+                    orderItemBill.set("shipmentReceiptId", shipmentReceipt.getString("receiptId"));
+                }
                 orderItemBill.set("quantity", invoiceItem.get("quantity"));
                 orderItemBill.set("amount", invoiceItem.get("amount"));
                 toStore.add(orderItemBill);
@@ -612,7 +656,7 @@ public class InvoiceServices {
         GenericDelegator delegator = dctx.getDelegator();
         LocalDispatcher dispatcher = dctx.getDispatcher();
         String shipmentId = (String) context.get("shipmentId");
-
+        
         List invoicesCreated = new ArrayList();
 
         GenericValue shipment = null;
@@ -625,34 +669,43 @@ public class InvoiceServices {
 
         // check the status of the shipment
 
-        // get the issued items
-        List itemsIssued = null;
+        // get the items of the shipment.  They can come from ItemIssuance if the shipment were from a sales order or ShipmentReceipt 
+        // if it were a purchase order
+        List items = null;
         try {
-            itemsIssued = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("shipmentId", shipmentId));
+            if ((shipment.getString("shipmentTypeId") != null) && (shipment.getString("shipmentTypeId").equals("PURCHASE_SHIPMENT"))) {
+                items = delegator.findByAnd("ShipmentReceipt", UtilMisc.toMap("shipmentId", shipmentId));
+            } else {
+                items = delegator.findByAnd("ItemIssuance", UtilMisc.toMap("shipmentId", shipmentId));
+            }
         } catch (GenericEntityException e) {
             Debug.logError(e, "Problem getting issued items from Shipment", module);
             return ServiceUtil.returnError("Problem getting issued items from Shipment");
         }
-        if (itemsIssued == null) {
+        if (items == null) {
             Debug.logInfo("No items issued for shipment", module);
             return ServiceUtil.returnSuccess();
         }
 
         // group items by order
         Map shippedOrderItems = new HashMap();
-        Iterator itemsIter = itemsIssued.iterator();
+        Iterator itemsIter = items.iterator();
         while (itemsIter.hasNext()) {
-            GenericValue itemIssuance = (GenericValue) itemsIter.next();
-            String itemIssuanceId = itemIssuance.getString("itemIssuanceId");
-            String orderId = itemIssuance.getString("orderId");
-            String orderItemSeqId = itemIssuance.getString("orderItemSeqId");
+            GenericValue item = (GenericValue) itemsIter.next();
+            String orderId = item.getString("orderId");
+            String orderItemSeqId = item.getString("orderItemSeqId");
             List itemsByOrder = (List) shippedOrderItems.get(orderId);
             if (itemsByOrder == null) {
                 itemsByOrder = new ArrayList();
             }
 
-            // check and make sure we haven't already billed for this issuance
-            Map billFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId, "itemIssuanceId", itemIssuanceId);
+            // check and make sure we haven't already billed for this issuance or shipment receipt
+            Map billFields = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", orderItemSeqId);
+            if (item.getEntityName().equals("ItemIssuance")) {
+                billFields.put("itemIssuanceId", item.get("itemIssuanceId"));
+            } else if (item.getEntityName().equals("ShipmentReceipt")) {
+                billFields.put("shipmentReceiptId", item.getString("receiptId"));
+            }
             List itemBillings = null;
             try {
                 itemBillings = delegator.findByAnd("OrderItemBilling", billFields);
@@ -663,13 +716,13 @@ public class InvoiceServices {
 
             // if none found, then okay to bill
             if (itemBillings == null || itemBillings.size() == 0) {
-                itemsByOrder.add(itemIssuance);
+                itemsByOrder.add(item);
             }
 
             // update the map with modified list
             shippedOrderItems.put(orderId, itemsByOrder);
         }
-
+        
         // make sure we aren't billing items already invoiced i.e. items billed as digital (FINDIG)
         Set orders = shippedOrderItems.keySet();
         Iterator ordersIter = orders.iterator();
@@ -689,7 +742,12 @@ public class InvoiceServices {
             Iterator billIt = billItems.iterator();
             while (billIt.hasNext()) {
                 GenericValue issue = (GenericValue) billIt.next();
-                Double issueQty = issue.getDouble("quantity");
+                Double issueQty = new Double(0.0);
+                if (issue.getEntityName().equals("ShipmentReceipt")) {
+                    issueQty = issue.getDouble("quantityAccepted");
+                } else {
+                    issueQty = issue.getDouble("quantity");
+                }
                 Double billAvail = (Double) itemQtyAvail.get(issue.getString("orderItemSeqId"));
                 if (billAvail == null) {
                     Map lookup = UtilMisc.toMap("orderId", orderId, "orderItemSeqId", issue.get("orderItemSeqId"));
@@ -870,5 +928,24 @@ public class InvoiceServices {
         }
 
         return adjAmount;
+    }
+    
+    /* Creates InvoiceTerm entries for a list of terms, which can be BillingAccountTerms, OrderTerms, etc. */
+    private static List createInvoiceTerms(GenericDelegator delegator, String invoiceId, List terms) {
+        List invoiceTerms = new LinkedList();
+        if ((terms != null) && (terms.size() > 0)) {
+            for (Iterator termsIter = terms.iterator(); termsIter.hasNext(); ) {
+        	    GenericValue term = (GenericValue) termsIter.next();
+                GenericValue invoiceTerm = delegator.makeValue("InvoiceTerm", 
+                    UtilMisc.toMap("invoiceId", invoiceId, "invoiceItemSeqId", "_NA_"));
+                String invoiceTermId = delegator.getNextSeqId("InvoiceTerm").toString();	               
+                invoiceTerm.set("invoiceTermId", invoiceTermId);			
+                invoiceTerm.set("termTypeId", term.get("termTypeId"));	
+                invoiceTerm.set("termValue", term.get("termValue"));
+                invoiceTerm.set("uomId", term.get("uomId"));
+                invoiceTerms.add(invoiceTerm);
+            }
+        }
+        return invoiceTerms;
     }
 }
