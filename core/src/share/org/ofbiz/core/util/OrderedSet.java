@@ -37,6 +37,13 @@ public class OrderedSet extends AbstractSet {
     // This set's back LinkedList
     private List backedList = new LinkedList();
 
+    /**
+     * Constructs a set containing the elements of the specified
+     * collection, in the order they are returned by the collection's
+     * iterator.
+     */
+    public OrderedSet() {
+    }
 
     /**
      * Constructs a set containing the elements of the specified
