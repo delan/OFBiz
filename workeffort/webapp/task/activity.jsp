@@ -28,10 +28,6 @@
  */
 %>
 
-<%@ include file="/includes/onecolumnclose.jsp" %>
-<%@ include file="/includes/footer.jsp" %>
-
-
 <%@ page import="org.ofbiz.commonapp.workeffort.workeffort.*" %>
 <%@ page import="org.ofbiz.commonapp.common.status.*" %>
 <%WorkEffortWorker.getWorkEffort(pageContext, "workEffortId", "workEffort", "partyAssigns", "canView", "tryEntity", "currentStatusItem");%>
