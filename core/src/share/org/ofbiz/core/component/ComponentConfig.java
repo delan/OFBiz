@@ -39,7 +39,8 @@ import org.ofbiz.core.util.*;
 /**
  * Misc. utility method for dealing with the ofbiz-component.xml file
  *
- * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
+ * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
+ * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @version    $Revision$
  * @since      2.2
  */
