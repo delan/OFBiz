@@ -1,5 +1,5 @@
 /*
- * $Id: ProductStoreWorker.java,v 1.20 2004/02/14 16:13:33 ajzeneski Exp $
+ * $Id: ProductStoreWorker.java,v 1.21 2004/02/24 02:24:26 jonesde Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,7 +23,12 @@
  */
 package org.ofbiz.product.store;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
@@ -32,22 +37,22 @@ import javax.servlet.http.HttpSession;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.common.geo.GeoWorker;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntityException;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.party.contact.ContactMechWorker;
 import org.ofbiz.product.catalog.CatalogWorker;
+import org.ofbiz.product.product.ProductWorker;
 import org.ofbiz.service.GenericServiceException;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.service.ModelService;
-import org.ofbiz.common.geo.GeoWorker;
-import org.ofbiz.party.contact.ContactMechWorker;
 
 /**
  * ProductStoreWorker - Worker class for store related functionality
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.20 $
+ * @version    $Revision: 1.21 $
  * @since      2.0
  */
 public class ProductStoreWorker {
@@ -479,6 +484,7 @@ public class ProductStoreWorker {
             if (Debug.verboseOn()) Debug.logVerbose("ProductStore with id " + productStoreId + ", is set to NOT check inventory, returning true for inventory available check", module);
             return true;
         }
+        boolean isInventoryAvailable = false;
 
         if ("Y".equals(productStore.getString("oneInventoryFacility"))) {
             String inventoryFacilityId = productStore.getString("inventoryFacilityId");
@@ -488,39 +494,51 @@ public class ProductStoreWorker {
                 return false;
             }
 
-            Double availableToPromise = null;
+            try {
+                isInventoryAvailable = ProductWorker.isProductInventoryAvailableByFacility(productId, inventoryFacilityId, quantity, dispatcher);
+            } catch (GenericServiceException e) {
+                Debug.logWarning(e, "Error invoking isProductInventoryAvailableByFacility in isCatalogInventoryAvailable", module);
+                return false;
+            }
+            return isInventoryAvailable;
+            
+        } else {
+            GenericValue product = null;
+            List productFacilities = null;
 
             try {
-                Map result = dispatcher.runSync("getInventoryAvailableByFacility",
-                        UtilMisc.toMap("productId", productId, "facilityId", inventoryFacilityId));
+                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Error invoking findByPrimaryKeyCache in isCatalogInventoryAvailable", module);
+                return false;
+            }
+            try {
+                productFacilities = delegator.getRelatedCache("ProductFacility", product);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Error invoking getRelatedCache in isCatalogInventoryAvailable", module);
+                return false;
+            }
 
-                availableToPromise = (Double) result.get("availableToPromise");
+            if (productFacilities != null && productFacilities.size() > 0) {
+                Iterator pfIter = productFacilities.iterator();
 
-                if (availableToPromise == null) {
-                    Debug.logWarning("The getInventoryAvailableByFacility service returned a null availableToPromise, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE), module);
-                    return false;
+                while (pfIter.hasNext()) {
+                    try {
+                        GenericValue pfValue = (GenericValue) pfIter.next();
+
+                        isInventoryAvailable = ProductWorker.isProductInventoryAvailableByFacility(productId, pfValue.getString("facilityId"), quantity, dispatcher);
+                        if (isInventoryAvailable == true) {
+                            return isInventoryAvailable;
+                        }
+                    } catch (GenericServiceException e) {
+                        Debug.logWarning(e, "Error invoking isProductInventoryAvailableByFacility in isCatalogInventoryAvailable", module);
+                        return false;
+                    }
                 }
-            } catch (GenericServiceException e) {
-                Debug.logWarning(e, "Error invoking getInventoryAvailableByFacility service in isCatalogInventoryAvailable", module);
-                return false;
             }
-
-            // whew, finally here: now check to see if we got enough back...
-            if (availableToPromise.doubleValue() >= quantity) {
-                if (Debug.verboseOn()) Debug.logVerbose("Inventory IS available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
-                return true;
-            } else {
-                if (Debug.verboseOn()) Debug.logVerbose("Returning false because there is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", available quantity is " + availableToPromise, module);
-                return false;
-            }
-
-        } else {
-            Debug.logWarning("ProductStore with id " + productStoreId + " uses multiple inventory facilities, which is not yet implemented, return false for inventory check", module);
             return false;
 
-            // TODO: check multiple inventory locations
-
-            // must entire quantity be available in one location?
+            // TODO: must entire quantity be available in one location?
 
             // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
         }
@@ -557,6 +575,9 @@ public class ProductStoreWorker {
             if (Debug.verboseOn()) Debug.logVerbose("ProductStore with id " + productStoreId + ", is set to NOT reserve inventory, not reserving inventory", module);
             return null;
         }
+        String reserveOrderEnumId = productStore.getString("reserveOrderEnumId");
+        boolean requireInventory = isStoreInventoryRequired(productStoreId, productId, delegator);
+        Double quantityNotReserved = null;
 
         if ("Y".equals(productStore.getString("oneInventoryFacility"))) {
             String inventoryFacilityId = productStore.getString("inventoryFacilityId");
@@ -566,65 +587,52 @@ public class ProductStoreWorker {
                 return new Double(0.0);
             }
 
-            boolean requireInventory = isStoreInventoryRequired(productStoreId, productId, delegator);
-            Double quantityNotReserved = null;
-
             try {
-                Map serviceContext = new HashMap();
-
-                serviceContext.put("productId", productId);
-                serviceContext.put("facilityId", inventoryFacilityId);
-                serviceContext.put("orderId", orderId);
-                serviceContext.put("orderItemSeqId", orderItemSeqId);
-                serviceContext.put("quantity", quantity);
-
-                if (requireInventory) {
-                    serviceContext.put("requireInventory", "Y");
-                } else {
-                    serviceContext.put("requireInventory", "N");
-                }
-                serviceContext.put("reserveOrderEnumId", productStore.get("reserveOrderEnumId"));
-                serviceContext.put("userLogin", userLogin);
-
-                Map result = dispatcher.runSync("reserveProductInventoryByFacility", serviceContext);
-
-                quantityNotReserved = (Double) result.get("quantityNotReserved");
-
-                if (quantityNotReserved == null) {
-                    Debug.logWarning("The reserveProductInventoryByFacility service returned a null quantityNotReserved, the error message was:\n" + result.get(ModelService.ERROR_MESSAGE), module);
-                    if (!requireInventory) {
-                        return null;
-                    } else {
-                        return new Double(0.0);
-                    }
-                }
+                quantityNotReserved = ProductWorker.reserveProductInventoryByFacility(productId, quantity, inventoryFacilityId, orderId, reserveOrderEnumId, orderItemSeqId, requireInventory, userLogin, dispatcher);
             } catch (GenericServiceException e) {
                 Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility service", module);
-                if (!requireInventory) {
-                    return null;
-                } else {
-                    return new Double(0.0);
-                }
+                return !requireInventory? null: new Double(0.0);
             }
-
-            // whew, finally here: now check to see if we were able to reserve...
-            if (quantityNotReserved.doubleValue() == 0) {
-                if (Debug.verboseOn()) Debug.logVerbose("Inventory IS reserved in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity was " + quantity, module);
-                return null;
-            } else {
-                if (Debug.verboseOn()) Debug.logVerbose("There is insufficient inventory available in facility with id " + inventoryFacilityId + " for product id " + productId + "; desired quantity is " + quantity + ", amount could not reserve is " + quantityNotReserved, module);
-                return quantityNotReserved;
-            }
-
+            return quantityNotReserved;
+            
         } else {
-            Debug.logError("ProductStore with id " + productStoreId + " uses multiple inventory facilities, which is not yet implemented, not reserving inventory", module);
-            return new Double(0.0);
+            GenericValue product = null;
+            List productFacilities = null;
 
-            // TODO: check multiple inventory locations
+            try {
+                product = delegator.findByPrimaryKeyCache("Product", UtilMisc.toMap("productId", productId));
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Error invoking findByPrimaryKeyCache in reserveCatalogInventory", module);
+                return new Double(0.0);
+            }
+            try {
+                productFacilities = delegator.getRelatedCache("ProductFacility", product);
+            } catch (GenericEntityException e) {
+                Debug.logWarning(e, "Error invoking getRelatedCache in reserveCatalogInventory", module);
+                return new Double(0.0);
+            }
 
-            // must entire quantity be available in one location?
+            if (productFacilities != null && productFacilities.size() > 0) {
+                Iterator pfIter = productFacilities.iterator();
 
-            // loop through all facilities attached to this catalog and check for individual or cumulative sufficient inventory
+                while (pfIter.hasNext()) {
+                    GenericValue pfValue = (GenericValue) pfIter.next();
+                    String inventoryFacilityId = pfValue.getString("facilityId");
+
+                    try {
+                        quantityNotReserved = ProductWorker.reserveProductInventoryByFacility(productId, quantity, inventoryFacilityId, orderId, reserveOrderEnumId, orderItemSeqId, requireInventory, userLogin, dispatcher);
+                    } catch (GenericServiceException e) {
+                        Debug.logWarning(e, "Error invoking reserveProductInventoryByFacility in reserveCatalogInventory", module);
+                        return !requireInventory? null: new Double(0.0);
+                    }
+                    if (quantityNotReserved == null) {
+                        return null;
+                    }
+                }
+                return quantityNotReserved;
+
+            }
+            return !requireInventory? null: new Double(0.0);
         }
     }
 }
