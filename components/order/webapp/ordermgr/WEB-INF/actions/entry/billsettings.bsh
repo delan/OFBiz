@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.4 $
+ *@version    $Revision: 1.5 $
  *@since      2.2
 */
 
@@ -48,6 +48,7 @@ if (partyId != null && !partyId.equals("_NA_")) {
     if (party != null) { 
         context.put("paymentMethodList", EntityUtil.filterByDate(party.getRelated("PaymentMethod"), true));
         billingAccountRoleList = delegator.findByAnd("BillingAccountRole", UtilMisc.toMap("partyId", partyId, "roleTypeId", "BILL_TO_CUSTOMER"));
+        billingAccountRoleList = EntityUtil.filterByDate(billingAccountRoleList);
         if (billingAccountRoleList != null && billingAccountRoleList.size() > 0) {
             billingAcctIter = billingAccountRoleList.iterator();
             billingAccountList = new ArrayList();
