@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.19 2003/10/27 11:24:39 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.20 2003/11/06 15:40:17 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -53,33 +53,33 @@ import org.ofbiz.entity.util.EntityListIterator;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      3.0
  */
 public class ProductSearch {
-    
+
     public static final String module = ProductSearch.class.getName();
-    
+
     public static ArrayList parametricKeywordSearch(Map featureIdByType, String keywordsString, GenericDelegator delegator, String productCategoryId, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         Set featureIdSet = new HashSet();
         if (featureIdByType != null) {
             featureIdSet.addAll(featureIdByType.values());
         }
-        
+
         return parametricKeywordSearch(featureIdSet, keywordsString, delegator, productCategoryId, true, visitId, anyPrefix, anySuffix, isAnd);
     }
-    
+
     public static ArrayList parametricKeywordSearch(Set featureIdSet, String keywordsString, GenericDelegator delegator, String productCategoryId, boolean includeSubCategories, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         List productSearchConstraintList = new LinkedList();
-        
+
         if (UtilValidate.isNotEmpty(productCategoryId)) {
             productSearchConstraintList.add(new CategoryConstraint(productCategoryId, includeSubCategories));
         }
-        
+
         if (UtilValidate.isNotEmpty(keywordsString)) {
             productSearchConstraintList.add(new KeywordConstraint(keywordsString, anyPrefix, anySuffix, null, isAnd));
         }
-        
+
         if (featureIdSet != null && featureIdSet.size() > 0) {
             Iterator featureIdIter = featureIdSet.iterator();
             while (featureIdIter.hasNext()) {
@@ -87,25 +87,25 @@ public class ProductSearch {
                 productSearchConstraintList.add(new FeatureConstraint(productFeatureId));
             }
         }
-        
+
         return searchProducts(productSearchConstraintList, new SortKeywordRelevancy(), delegator, visitId);
     }
 
     public static ArrayList searchProducts(List productSearchConstraintList, ResultSortOrder resultSortOrder, GenericDelegator delegator, String visitId) {
         ProductSearchContext productSearchContext = new ProductSearchContext(delegator, visitId);
-        
+
         productSearchContext.addProductSearchConstraints(productSearchConstraintList);
         productSearchContext.setResultSortOrder(resultSortOrder);
-        
+
         ArrayList productIds = productSearchContext.doSearch();
         return productIds;
     }
-    
+
     public static void getAllSubCategoryIds(String productCategoryId, Set productCategoryIdSet, GenericDelegator delegator, Timestamp nowTimestamp) {
         if (nowTimestamp == null) {
             nowTimestamp = UtilDateTime.nowTimestamp();
         }
-        
+
         // this will use the GenericDelegator cache as much as possible, but not a dedicated cache because it would get stale to easily and is too much of a pain to maintain in development and production
 
         // first make sure the current category id is in the Set
@@ -117,13 +117,13 @@ public class ProductSearch {
             Iterator productCategoryRollupIter = productCategoryRollupList.iterator();
             while (productCategoryRollupIter.hasNext()) {
                 GenericValue productCategoryRollup = (GenericValue) productCategoryRollupIter.next();
-                
+
                 String subProductCategoryId = productCategoryRollup.getString("productCategoryId");
                 if (productCategoryIdSet.contains(subProductCategoryId)) {
                     // if this category has already been traversed, no use doing it again; this will also avoid infinite loops
                     continue;
                 }
-                
+
                 // do the date filtering in the loop to avoid looping through the list twice
                 if (EntityUtil.isValueActive(productCategoryRollup, nowTimestamp)) {
                     getAllSubCategoryIds(subProductCategoryId, productCategoryIdSet, delegator, nowTimestamp);
@@ -133,7 +133,7 @@ public class ProductSearch {
             Debug.logError(e, "Error finding sub-categories for product search", module);
         }
     }
-    
+
     public static class ProductSearchContext {
         public int index = 1;
         public List entityConditionList = new LinkedList();
@@ -152,17 +152,17 @@ public class ProductSearch {
         protected GenericDelegator delegator = null;
         protected String visitId = null;
         protected Integer totalResults = null;
-        
+
         public ProductSearchContext(GenericDelegator delegator, String visitId) {
             this.delegator = delegator;
             this.visitId = visitId;
             dynamicViewEntity.addMemberEntity("PROD", "Product");
         }
-        
+
         public GenericDelegator getDelegator() {
             return this.delegator;
         }
-        
+
         public void addProductSearchConstraints(List productSearchConstraintList) {
             // Go through the constraints and add them in
             Iterator productSearchConstraintIter = productSearchConstraintList.iterator();
@@ -171,23 +171,23 @@ public class ProductSearch {
                 constraint.addConstraint(this);
             }
         }
-        
+
         public void setResultSortOrder(ResultSortOrder resultSortOrder) {
             this.resultSortOrder = resultSortOrder;
         }
-        
+
         public void setResultOffset(Integer resultOffset) {
             this.resultOffset = resultOffset;
         }
-        
+
         public void setMaxResults(Integer maxResults) {
             this.maxResults = maxResults;
         }
-        
+
         public Integer getTotalResults() {
             return this.totalResults;
         }
-        
+
         public ArrayList doSearch() {
             long startMillis = System.currentTimeMillis();
 
@@ -200,26 +200,26 @@ public class ProductSearch {
 
             // store info about results in the database, attached to the user's visitId, if specified
             this.saveSearchResultInfo(new Long(productIds.size()), new Double(totalMillis));
-            
+
             return productIds;
         }
-        
+
         public void finishKeywordConstraints() {
             if (orKeywordFixedList.size() == 0 && andKeywordFixedList.size() == 0) {
                 return;
             }
-            
+
             // we know we have a keyword search to do, so keep track of that now...
             this.includedKeywordSearch = true;
-            
+
             if (orKeywordFixedList.size() == 1) {
                 // treat it as just another and
                 andKeywordFixedList.add(orKeywordFixedList.get(0));
                 orKeywordFixedList.clear();
             }
-            
+
             boolean doingBothAndOr = orKeywordFixedList.size() > 0 && andKeywordFixedList.size() > 0;
-            
+
             ComplexAlias relevancyComplexAlias = new ComplexAlias("+");
             if (andKeywordFixedList.size() > 0) {
                 // add up the relevancyWeight fields from all keyword member entities for a total to sort by
@@ -241,7 +241,7 @@ public class ProductSearch {
                     //don't add an alias for this, will be part of a complex alias: dynamicViewEntity.addAlias(entityAlias, prefix + "RelevancyWeight", "relevancyWeight", null, null, null, null);
                     relevancyComplexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight"));
                 }
-                
+
                 if (!doingBothAndOr) {
                     dynamicViewEntity.addAlias(null, "totalRelevancy", null, null, null, null, null, relevancyComplexAlias);
                 }
@@ -264,27 +264,27 @@ public class ProductSearch {
                 entityConditionList.add(new EntityConditionList(keywordOrList, EntityOperator.OR));
 
                 productIdGroupBy = true;
-                
+
                 if (doingBothAndOr) {
                     relevancyComplexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight", "sum"));
                 } else {
                     dynamicViewEntity.addAlias(entityAlias, "totalRelevancy", "relevancyWeight", null, null, null, "sum");
                 }
             }
-            
+
             if (doingBothAndOr) {
                 dynamicViewEntity.addAlias(null, "totalRelevancy", null, null, null, null, null, relevancyComplexAlias);
             }
         }
-        
+
         public EntityListIterator doQuery(GenericDelegator delegator) {
             // handle the now assembled or and and keyword fixed lists
             this.finishKeywordConstraints();
-        
+
             if (resultSortOrder != null) {
                 resultSortOrder.setSortOrder(this);
             }
-            
+
             dynamicViewEntity.addAlias("PROD", "productId", null, null, null, new Boolean(productIdGroupBy), null);
             EntityCondition whereCondition = new EntityConditionList(entityConditionList, EntityOperator.AND);
             EntityFindOptions efo = new EntityFindOptions();
@@ -298,23 +298,36 @@ public class ProductSearch {
                 Debug.logError(e, "Error in product search", module);
                 return null;
             }
-            
+
             return eli;
         }
-        
+
         public ArrayList makeProductIdList(EntityListIterator eli) {
             ArrayList productIds = new ArrayList(maxResults == null ? 100 : maxResults.intValue());
-            
+
             try {
+                boolean hasResults = false;
+                Object initialResult = null;
                 if (resultOffset != null) {
                     Debug.logInfo("Before relative, current index=" + eli.currentIndex(), module);
-                    eli.relative(resultOffset.intValue());
+                    hasResults = eli.relative(resultOffset.intValue());
                 } else {
-                    eli.next();
+                    initialResult = eli.next();
+                    if (initialResult != null) {
+                        hasResults = true;
+                    }
                 }
 
                 // get the first as the current one
-                GenericValue searchResult = eli.currentGenericValue();
+                GenericValue searchResult = null;
+                if (hasResults) {
+                    if (initialResult != null) {
+                        searchResult = (GenericValue) initialResult;
+                    } else {
+                        searchResult = eli.currentGenericValue();
+                    }
+                }
+
                 if (searchResult == null) {
                     // nothing to get...
                     int failTotal = 0;
@@ -352,18 +365,18 @@ public class ProductSearch {
                     }
                     this.totalResults = new Integer(total);
                 }
-                
+
                 //Debug.logInfo("Got values, numRetreived=" + numRetreived + ", totalResults=" + totalResults + ", maxResults=" + maxResults + ", resultOffset=" + resultOffset, module);
-                
+
             } catch (GenericEntityException e) {
                 Debug.logError(e, "Error getting results from the product search query", module);
             }
             return productIds;
         }
-        
+
         public void saveSearchResultInfo(Long numResults, Double secondsTotal) {
             // uses entities: ProductSearchResult and ProductSearchConstraint
-            
+
             try {
                 // make sure this is in a transaction
                 boolean beganTransaction = TransactionUtil.begin();
@@ -382,7 +395,7 @@ public class ProductSearch {
                     productSearchResult.set("secondsTotal", secondsTotal);
                     productSearchResult.set("searchDate", nowTimestamp);
                     productSearchResult.create();
-                    
+
                     Iterator productSearchConstraintIter = productSearchConstraintList.iterator();
                     int seqId = 1;
                     while (productSearchConstraintIter.hasNext()) {
@@ -392,7 +405,7 @@ public class ProductSearch {
                         productSearchConstraint.create();
                         seqId++;
                     }
-                    
+
                     TransactionUtil.commit(beganTransaction);
                 } catch (GenericEntityException e1) {
                     TransactionUtil.rollback(beganTransaction);
@@ -403,29 +416,29 @@ public class ProductSearch {
             }
         }
     }
-    
+
     // ======================================================================
     // Search Constraint Classes
     // ======================================================================
-    
+
     public static abstract class ProductSearchConstraint {
         public ProductSearchConstraint() { }
-        
+
         public abstract void addConstraint(ProductSearchContext productSearchContext);
         /** pretty print for log messages and even UI stuff */
         public abstract String prettyPrintConstraint(GenericDelegator delegator, boolean detailed);
     }
-    
+
     public static class CategoryConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Category";
         protected String productCategoryId;
         protected boolean includeSubCategories;
-        
+
         public CategoryConstraint(String productCategoryId, boolean includeSubCategories) {
             this.productCategoryId = productCategoryId;
             this.includeSubCategories = includeSubCategories;
         }
-        
+
         public void addConstraint(ProductSearchContext productSearchContext) {
             List productCategoryIdList = null;
             if (includeSubCategories) {
@@ -436,12 +449,12 @@ public class ProductSearch {
             } else {
                 productCategoryIdList = UtilMisc.toList(productCategoryId);
             }
-            
+
             // make index based values and increment
             String entityAlias = "PCM" + productSearchContext.index;
             String prefix = "pcm" + productSearchContext.index;
             productSearchContext.index++;
-            
+
             productSearchContext.dynamicViewEntity.addMemberEntity(entityAlias, "ProductCategoryMember");
             productSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "ProductCategoryId", "productCategoryId", null, null, null, null);
             productSearchContext.dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
@@ -450,7 +463,7 @@ public class ProductSearch {
             productSearchContext.entityConditionList.add(new EntityExpr(prefix + "ProductCategoryId", EntityOperator.IN, productCategoryIdList));
             productSearchContext.entityConditionList.add(new EntityExpr(new EntityExpr(prefix + "ThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr(prefix + "ThruDate", EntityOperator.GREATER_THAN, productSearchContext.nowTimestamp)));
             productSearchContext.entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, productSearchContext.nowTimestamp));
-            
+
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
             productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productCategoryId, "includeSubCategories", this.includeSubCategories ? "Y" : "N")));
         }
@@ -478,7 +491,7 @@ public class ProductSearch {
             }
             return ppBuf.toString();
         }
-        
+
         public boolean equals(Object obj) {
             ProductSearchConstraint psc = (ProductSearchConstraint) obj;
             if (psc instanceof CategoryConstraint) {
@@ -501,15 +514,15 @@ public class ProductSearch {
             }
         }
     }
-    
+
     public static class FeatureConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Feature";
         protected String productFeatureId;
-        
+
         public FeatureConstraint(String productFeatureId) {
             this.productFeatureId = productFeatureId;
         }
-        
+
         public void addConstraint(ProductSearchContext productSearchContext) {
             // make index based values and increment
             String entityAlias = "PFA" + productSearchContext.index;
@@ -524,7 +537,7 @@ public class ProductSearch {
             productSearchContext.entityConditionList.add(new EntityExpr(prefix + "ProductFeatureId", EntityOperator.EQUALS, productFeatureId));
             productSearchContext.entityConditionList.add(new EntityExpr(new EntityExpr(prefix + "ThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr(prefix + "ThruDate", EntityOperator.GREATER_THAN, productSearchContext.nowTimestamp)));
             productSearchContext.entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, productSearchContext.nowTimestamp));
-            
+
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
             productSearchContext.productSearchConstraintList.add(productSearchContext.getDelegator().makeValue("ProductSearchConstraint", UtilMisc.toMap("constraintName", constraintName, "infoString", this.productFeatureId)));
         }
@@ -540,7 +553,7 @@ public class ProductSearch {
             }
             return (productFeatureType == null ? "Feature: " : productFeatureType.getString("description") + ": ") + (productFeature == null ? "[" + this.productFeatureId + "]" : productFeature.getString("description"));
         }
-        
+
         public boolean equals(Object obj) {
             ProductSearchConstraint psc = (ProductSearchConstraint) obj;
             if (psc instanceof FeatureConstraint) {
@@ -560,7 +573,7 @@ public class ProductSearch {
             }
         }
     }
-    
+
     public static class KeywordConstraint extends ProductSearchConstraint {
         public static final String constraintName = "Keyword";
         protected String keywordsString;
@@ -568,7 +581,7 @@ public class ProductSearch {
         protected boolean anySuffix;
         protected boolean isAnd;
         protected boolean removeStems;
-        
+
         public KeywordConstraint(String keywordsString, boolean anyPrefix, boolean anySuffix, Boolean removeStems, boolean isAnd) {
             this.keywordsString = keywordsString;
             this.anyPrefix = anyPrefix;
@@ -580,7 +593,7 @@ public class ProductSearch {
                 this.removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
             }
         }
-        
+
         public void addConstraint(ProductSearchContext productSearchContext) {
             // just make the fixed keyword lists and put them in the context
             List keywordFirstPass = KeywordSearch.makeKeywordList(keywordsString);
@@ -590,7 +603,7 @@ public class ProductSearch {
             } else {
                 productSearchContext.orKeywordFixedList.addAll(keywordList);
             }
-            
+
             // add in productSearchConstraint, don't worry about the productSearchResultId or constraintSeqId, those will be fill in later
             Map valueMap = UtilMisc.toMap("constraintName", constraintName, "infoString", this.keywordsString);
             valueMap.put("anyPrefix", this.anyPrefix ? "Y" : "N");
@@ -604,7 +617,7 @@ public class ProductSearch {
         public String prettyPrintConstraint(GenericDelegator delegator, boolean detailed) {
             return "Keyword(s): \"" + this.keywordsString + "\", where " + (isAnd ? "all words match" : "any word matches");
         }
-        
+
         public boolean equals(Object obj) {
             ProductSearchConstraint psc = (ProductSearchConstraint) obj;
             if (psc instanceof KeywordConstraint) {
@@ -636,17 +649,17 @@ public class ProductSearch {
             }
         }
     }
-    
+
     public static class LastUpdatedRangeConstraint extends ProductSearchConstraint {
         public static final String constraintName = "LastUpdatedRange";
         protected Timestamp fromDate;
         protected Timestamp thruDate;
-        
+
         public LastUpdatedRangeConstraint(Timestamp fromDate, Timestamp thruDate) {
             this.fromDate = fromDate;
             this.thruDate = thruDate;
         }
-        
+
         public void addConstraint(ProductSearchContext productSearchContext) {
             // TODO: implement LastUpdatedRangeConstraint makeEntityCondition
         }
@@ -656,7 +669,7 @@ public class ProductSearch {
             // TODO: implement the pretty print for log messages and even UI stuff
             return null;
         }
-        
+
         public boolean equals(Object obj) {
             ProductSearchConstraint psc = (ProductSearchConstraint) obj;
             if (psc instanceof LastUpdatedRangeConstraint) {
@@ -690,12 +703,12 @@ public class ProductSearch {
         public static final String constraintName = "ListPriceRange";
         protected Double lowPrice;
         protected Double highPrice;
-        
+
         public ListPriceRangeConstraint(Double lowPrice, Double highPrice) {
             this.lowPrice = lowPrice;
             this.highPrice = highPrice;
         }
-        
+
         public void addConstraint(ProductSearchContext productSearchContext) {
             // TODO: implement ListPriceRangeConstraint makeEntityCondition
         }
@@ -705,7 +718,7 @@ public class ProductSearch {
             // TODO: implement the pretty print for log messages and even UI stuff
             return null;
         }
-        
+
         public boolean equals(Object obj) {
             ProductSearchConstraint psc = (ProductSearchConstraint) obj;
             if (psc instanceof ListPriceRangeConstraint) {
@@ -738,7 +751,7 @@ public class ProductSearch {
     // ======================================================================
     // Result Sort Classes
     // ======================================================================
-    
+
     public static abstract class ResultSortOrder {
         public ResultSortOrder() {
         }
@@ -748,7 +761,7 @@ public class ProductSearch {
         public abstract String prettyPrintSortOrder(boolean detailed);
         public abstract boolean isAscending();
     }
-    
+
     public static class SortKeywordRelevancy extends ResultSortOrder {
         public SortKeywordRelevancy() {
         }
@@ -760,29 +773,29 @@ public class ProductSearch {
                 productSearchContext.fieldsToSelect.add("totalRelevancy");
             }
         }
-        
+
         public String getOrderName() {
             return "KeywordRelevancy";
         }
-        
+
         public String prettyPrintSortOrder(boolean detailed) {
             return "Keyword Relevancy";
         }
-        
+
         public boolean isAscending() {
             return false;
         }
     }
-    
+
     public static class SortProductField extends ResultSortOrder {
         protected String fieldName;
         protected boolean ascending;
-        
+
         /** Some good field names to try might include:
          * [productName]
          * [totalQuantityOrdered] for most popular or most purchased
          * [lastModifiedDate]
-         * 
+         *
          *  You can also include any other field on the Product entity.
          */
         public SortProductField(String fieldName, boolean ascending) {
@@ -799,20 +812,20 @@ public class ProductSearch {
             }
             productSearchContext.fieldsToSelect.add(fieldName);
         }
-        
+
         public String getOrderName() {
             return "ProductField:" + this.fieldName;
         }
-        
+
         public String prettyPrintSortOrder(boolean detailed) {
             return this.fieldName;
         }
-        
+
         public boolean isAscending() {
             return this.ascending;
         }
     }
-    
+
     public static class SortListPrice extends ResultSortOrder {
         protected boolean ascending;
         public SortListPrice(boolean ascending) {
@@ -822,15 +835,15 @@ public class ProductSearch {
         public void setSortOrder(ProductSearchContext productSearchContext) {
             // TODO: implement SortListPrice, this will be a bit more complex, need to add a ProductPrice member entity
         }
-        
+
         public String getOrderName() {
             return "ListPrice";
         }
-        
+
         public String prettyPrintSortOrder(boolean detailed) {
             return "List Price (" + (this.ascending ? "Low to High)" : "High to Low)");
         }
-        
+
         public boolean isAscending() {
             return this.ascending;
         }
@@ -841,9 +854,9 @@ public class ProductSearch {
     public static ArrayList parametricKeywordSearchStandAlone(Set featureIdSet, String keywordsString, GenericDelegator delegator, String productCategoryId, boolean includeSubCategories, String visitId, boolean anyPrefix, boolean anySuffix, boolean isAnd) {
         // TODO: implement this for the new features
         boolean removeStems = UtilProperties.propertyValueEquals("prodsearch", "remove.stems", "true");
-        
+
         Timestamp nowTimestamp = UtilDateTime.nowTimestamp();
-        
+
         // make view-entity & EntityCondition
         int index = 1;
         List entityConditionList = new LinkedList();
@@ -853,7 +866,7 @@ public class ProductSearch {
         dynamicViewEntity.addMemberEntity("PROD", "Product");
         dynamicViewEntity.addAlias("PROD", "productName");
         boolean productIdGroupBy = false;
-        
+
         // Category
         if (productCategoryId != null && productCategoryId.length() > 0) {
             List productCategoryIdList = null;
@@ -865,12 +878,12 @@ public class ProductSearch {
             } else {
                 productCategoryIdList = UtilMisc.toList(productCategoryId);
             }
-            
+
             // make index based values and increment
             String entityAlias = "PCM" + index;
             String prefix = "pcm" + index;
             index++;
-            
+
             dynamicViewEntity.addMemberEntity(entityAlias, "ProductCategoryMember");
             dynamicViewEntity.addAlias(entityAlias, prefix + "ProductCategoryId", "productCategoryId", null, null, null, null);
             dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
@@ -880,30 +893,30 @@ public class ProductSearch {
             entityConditionList.add(new EntityExpr(new EntityExpr(prefix + "ThruDate", EntityOperator.EQUALS, null), EntityOperator.OR, new EntityExpr(prefix + "ThruDate", EntityOperator.GREATER_THAN, nowTimestamp)));
             entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, nowTimestamp));
         }
-        
+
         // Keyword
         List keywordFirstPass = KeywordSearch.makeKeywordList(keywordsString);
         List keywordList = KeywordSearch.fixKeywords(keywordFirstPass, anyPrefix, anySuffix, removeStems, isAnd);
-        
+
         if (keywordList.size() > 0) {
             if (isAnd) {
                 // add up the relevancyWeight fields from all keyword member entities for a total to sort by
                 ComplexAlias complexAlias = new ComplexAlias("+");
-                
+
                 Iterator keywordIter = keywordList.iterator();
                 while (keywordIter.hasNext()) {
                     String keyword = (String) keywordIter.next();
-                    
+
                     // make index based values and increment
                     String entityAlias = "PK" + index;
                     String prefix = "pk" + index;
                     index++;
-                    
+
                     dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
                     dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
                     dynamicViewEntity.addViewLink("PROD", entityAlias, Boolean.FALSE, ModelKeyMap.makeKeyMapList("productId"));
                     entityConditionList.add(new EntityExpr(prefix + "Keyword", EntityOperator.LIKE, keyword));
-                    
+
                     //don't add an alias for this, will be part of a complex alias: dynamicViewEntity.addAlias(entityAlias, prefix + "RelevancyWeight", "relevancyWeight", null, null, null, null);
                     complexAlias.addComplexAliasMember(new ComplexAliasField(entityAlias, "relevancyWeight"));
                 }
@@ -915,7 +928,7 @@ public class ProductSearch {
                 String entityAlias = "PK" + index;
                 String prefix = "pk" + index;
                 index++;
-                    
+
                 dynamicViewEntity.addMemberEntity(entityAlias, "ProductKeyword");
                 dynamicViewEntity.addAlias(entityAlias, "totalRelevancy", "relevancyWeight", null, null, null, "sum");
                 dynamicViewEntity.addAlias(entityAlias, prefix + "Keyword", "keyword", null, null, null, null);
@@ -929,22 +942,22 @@ public class ProductSearch {
                     keywordOrList.add(new EntityExpr(prefix + "Keyword", EntityOperator.LIKE, keyword));
                 }
                 entityConditionList.add(new EntityConditionList(keywordOrList, EntityOperator.OR));
-                
+
                 productIdGroupBy = true;
             }
         }
-        
+
         // Features
         if (featureIdSet != null && featureIdSet.size() > 0) {
             Iterator featureIdIter = featureIdSet.iterator();
             while (featureIdIter.hasNext()) {
                 String productFeatureId = (String) featureIdIter.next();
-                
+
                 // make index based values and increment
                 String entityAlias = "PFA" + index;
                 String prefix = "pfa" + index;
                 index++;
-                    
+
                 dynamicViewEntity.addMemberEntity(entityAlias, "ProductFeatureAppl");
                 dynamicViewEntity.addAlias(entityAlias, prefix + "ProductFeatureId", "productFeatureId", null, null, null, null);
                 dynamicViewEntity.addAlias(entityAlias, prefix + "FromDate", "fromDate", null, null, null, null);
@@ -955,12 +968,12 @@ public class ProductSearch {
                 entityConditionList.add(new EntityExpr(prefix + "FromDate", EntityOperator.LESS_THAN, nowTimestamp));
             }
         }
-        
+
         dynamicViewEntity.addAlias("PROD", "productId", null, null, null, new Boolean(productIdGroupBy), null);
         EntityCondition whereCondition = new EntityConditionList(entityConditionList, EntityOperator.AND);
         EntityFindOptions efo = new EntityFindOptions();
         efo.setDistinct(true);
-        
+
         EntityListIterator eli = null;
         try {
             eli = delegator.findListIteratorByCondition(dynamicViewEntity, whereCondition, null, fieldsToSelect, orderByList, efo);
@@ -979,7 +992,7 @@ public class ProductSearch {
                 productIdSet.add(productId);
             }
         }
-        
+
         return productIds;
     }
      */
