@@ -278,7 +278,7 @@ public class CSPaymentServices {
         GenericValue avsOverride = null;
 
         try {
-            avsOverride = person.getDelegator().findByPrimaryKey("PartyICSAVSOverride",
+            avsOverride = person.getDelegator().findByPrimaryKey("PartyIcsAvsOverride",
                         UtilMisc.toMap("partyId", person.getString("partyId")));
         } catch (GenericEntityException e) {
             Debug.logError(e, module);

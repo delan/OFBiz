@@ -18,7 +18,7 @@
     if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
     pageContext.setAttribute("tryEntity", new Boolean(tryEntity));
 
-    GenericValue avsOverride = delegator.findByPrimaryKey("PartyICSAVSOverride", UtilMisc.toMap("partyId", partyId));
+    GenericValue avsOverride = delegator.findByPrimaryKey("PartyIcsAvsOverride", UtilMisc.toMap("partyId", partyId));
     if (avsOverride != null) pageContext.setAttribute("avsOverride", avsOverride);
 
     String donePage = request.getParameter("DONE_PAGE");

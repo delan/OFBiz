@@ -29,9 +29,9 @@
 
 <simple-methods>
     <simple-method method-name="updateAVSOverride" short-description="Create/Update The AVS Override String">
-        <make-value value-name="lookupPKMap" entity-name="PartyICSAVSOverride"/>
+        <make-value value-name="lookupPKMap" entity-name="PartyIcsAvsOverride"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="PartyICSAVSOverride" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key entity-name="PartyIcsAvsOverride" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-not-empty map-name="lookedUpValue" field-name="partyId">
           <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
           <store-value value-name="lookedUpValue"/>
@@ -43,9 +43,9 @@
     </simple-method>
 
     <simple-method method-name="deleteAVSOverride" short-description="Delete The AVS Override String">
-        <make-value value-name="lookupPKMap" entity-name="PartyICSAVSOverride"/>
+        <make-value value-name="lookupPKMap" entity-name="PartyIcsAvsOverride"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
-        <find-by-primary-key entity-name="PartyICSAVSOverride" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        <find-by-primary-key entity-name="PartyIcsAvsOverride" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <if-not-empty map-name="lookedUpValue" field-name="partyId">
           <remove-value value-name="lookedUpValue"/>
         </if-not-empty>
