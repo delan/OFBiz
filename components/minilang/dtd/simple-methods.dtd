@@ -817,6 +817,7 @@ simple-map-processor process operations that validate incoming data
     map-name CDATA #IMPLIED
     field-name CDATA #REQUIRED
     type ( String | Double | Float | Long | Integer ) "Double"
+    decimal-format CDATA #IMPLIED
 >
     <!ELEMENT calcop ( ( calcop | number )* )>
     <!ATTLIST calcop
