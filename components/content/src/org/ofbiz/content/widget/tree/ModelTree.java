@@ -382,16 +382,11 @@ public class ModelTree {
 					passed = false;
 				}
 			}
-			Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
+			//Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
 			if (passed) {
 				List subNodeValues = new ArrayList();
 				//context.put("subNodeValues", new ArrayList());
-				if (Debug.infoOn())
-					Debug
-							.logInfo(" renderNodeString, "
-									+ modelTree.getPkName() + " :"
-									+ context.get(modelTree.getPkName()),
-									module);
+				//if (Debug.infoOn()) Debug .logInfo(" renderNodeString, " + modelTree.getPkName() + " :" + context.get(modelTree.getPkName()), module);
 				context.put("processChildren", new Boolean(true));
 				// this action will usually obtain the "current" entity
 				ModelTreeAction.runSubActions(this.actions, context);
@@ -416,8 +411,7 @@ public class ModelTree {
 						link.renderLinkString(writer, context, treeStringRenderer);
 					}
 					Boolean processChildren = (Boolean) context .get("processChildren");
-					if (Debug.infoOn())
-						Debug.logInfo(" processChildren:" + processChildren, module);
+					//if (Debug.infoOn()) Debug.logInfo(" processChildren:" + processChildren, module);
 					if (processChildren.booleanValue()) {
 						getChildren(context, subNodeValues);
 						Iterator nodeIter = subNodeValues.iterator();
@@ -519,7 +513,7 @@ public class ModelTree {
                  String nodeName = subNode.getNodeName(context);
                  ModelNode node = (ModelNode)modelTree.nodeMap.get(nodeName);
                  List subNodeActions = subNode.getActions();
-                 if (Debug.infoOn()) Debug.logInfo(" context.currentValue:" + context.get("currentValue"), module);
+                 //if (Debug.infoOn()) Debug.logInfo(" context.currentValue:" + context.get("currentValue"), module);
                  ModelTreeAction.runSubActions(subNodeActions, context);
                  List dataFound = (List)context.get("dataFound");
                  ListIterator dataIter =  subNode.getListIterator();

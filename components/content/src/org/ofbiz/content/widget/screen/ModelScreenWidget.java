@@ -307,7 +307,7 @@ public abstract class ModelScreenWidget {
             String location = this.getLocation(context);
             
             if (UtilValidate.isEmpty(name)) {
-                Debug.logInfo("In the include-screen tag the screen name was empty, ignoring include; in screen [" + this.modelScreen.getName() + "]", module);
+                Debug.logError("In the include-screen tag the screen name was empty, ignoring include; in screen [" + this.modelScreen.getName() + "]", module);
                 return;
             }
             

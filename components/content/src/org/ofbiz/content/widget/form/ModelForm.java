@@ -88,6 +88,7 @@ public class ModelForm {
     protected String listIteratorName;
     protected boolean paginate = true;
     protected boolean useRowSubmit = false;
+    protected FlexibleStringExpander targetWindowExdr;
 
     protected List altTargets = new LinkedList();
     protected List autoFieldsServices = new LinkedList();
@@ -198,6 +199,8 @@ public class ModelForm {
             this.type = formElement.getAttribute("type");
         if (this.target == null || formElement.hasAttribute("target"))
             setTarget( formElement.getAttribute("target") );
+        if (this.targetWindowExdr == null || formElement.hasAttribute("target-window"))
+            setTargetWindow(formElement.getAttribute("target-window"));
         if (this.title == null || formElement.hasAttribute("title"))
             this.title = formElement.getAttribute("title");
         if (this.tooltip == null || formElement.hasAttribute("tooltip"))
@@ -1308,6 +1311,14 @@ public class ModelForm {
      */
     public String getPaginateTarget() {
         return this.paginateTarget;
+    }
+    
+    public String getTargetWindow(Map context) {
+        return this.targetWindowExdr.expandString(context);
+    }
+            
+    public void setTargetWindow( String val ) {
+        this.targetWindowExdr = new FlexibleStringExpander(val);
     }
 
     /**

@@ -154,7 +154,7 @@ public class ModelMenuItem {
             }
         }
         Element linkElement = UtilXml.firstChildElement(fieldElement, "link");
-        if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, linkElement:" + linkElement, module);
+        //if (Debug.infoOn()) Debug.logInfo("in ModelMenuItem, linkElement:" + linkElement, module);
         if (linkElement != null) {
             link = new Link(linkElement, this);
         }
@@ -248,7 +248,7 @@ public class ModelMenuItem {
                 passed = false;
             }
         }
-           Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
+           //Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
         if (passed) {
             menuStringRenderer.renderMenuItem(buffer, context, this);
         }

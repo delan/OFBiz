@@ -294,7 +294,7 @@ public class ModelMenu {
     	
     	boolean passed = true;
 
-            Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
+            //Debug.logInfo("in ModelMenu, name:" + this.getName(), module);
         if (passed) {
 	        if ("simple".equals(this.type)) {
 	            this.renderSimpleMenuString(buffer, context, menuStringRenderer);

@@ -127,7 +127,7 @@
         <attribute mode="INOUT" name="roleTypeList" optional="true" type="List"/>
     </service>
     <service name="removeContent" default-entity-name="Content" engine="simple"
-        location="org/ofbiz/content/content/ContentServices.xml" invoke="removeContent" auth="true">
+        location="org/ofbiz/content/content/ContentServices.xml" invoke="deleteContent" auth="true">
         <description>Remove Content</description>
         <auto-attributes include="pk" mode="IN" optional="false"/>
         <attribute mode="IN" name="targetOperationList" optional="true" type="List"/>
