@@ -199,4 +199,53 @@ public class ModelService {
         
         return true;
     }
+    
+    /**
+     * Gets the parameter names of the specified mode (IN/OUT/INOUT)
+     * Note: IN and OUT will also contains INOUT parameters     
+     * @param mode The mode (IN/OUT/INOUT)
+     * @return List of parameter names
+     */
+    public List getParameterNames(String mode) {
+        List names = new ArrayList();
+        if ( !mode.equals("IN") && !mode.equals("OUT") && !mode.equals("INOUT") )
+            return names;
+        if ( contextInfo == null || contextInfo.size() == 0 )
+            return names;
+        Set keySet = contextInfo.keySet();
+        Iterator i = keySet.iterator();
+        while ( i.hasNext() ) {
+            Object key = i.next();
+            String name = (String) key;
+            ModelParam param = (ModelParam) contextInfo.get(key);
+            if ( param.mode.equals("INOUT") || param.mode.equals(mode) )
+                names.add(name);
+        }
+        return names;
+    }
+        
+    /**
+     * Creates a new Map based from an existing map with just valid parameters
+     * @param source The source map
+     * @param mode The mode which to build the new map
+     * @returns Map a new Map of only valid parameters
+     */
+    public Map makeValid(Map source, String mode) {
+        Map target = new HashMap();
+        if ( source == null )
+            return target;
+        if ( !mode.equals("IN") && !mode.equals("OUT") && !mode.equals("INOUT") )
+            return target;
+        if ( contextInfo == null || contextInfo.size() == 0 )
+            return target;
+        List names = getParameterNames(mode);
+        Iterator i = names.iterator();
+        while ( i.hasNext() ) {
+            Object key = i.next();
+            if ( source.containsKey(key) )
+                target.put(key, source.get(key));
+        }
+        return target;        
+    }
+    
 }
