@@ -1,5 +1,5 @@
 /*
- * $Id: EntityDataServices.java,v 1.7 2004/01/20 17:05:10 ajzeneski Exp $
+ * $Id: EntityDataServices.java,v 1.8 2004/01/20 17:10:49 ajzeneski Exp $
  *
  * Copyright (c) 2001-2003 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import java.net.URISyntaxException;
  * Entity Data Import/Export Services
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.1
  */
 public class EntityDataServices {
@@ -148,7 +148,7 @@ public class EntityDataServices {
         long endTime = System.currentTimeMillis();
         long runTime = endTime - startTime;
 
-        Debug.logInfo("Imported/Updated [" + records + "] from : " + file.getAbsolutePath() + "[" + (runTime/1000) + " seconds.]", module);
+        Debug.logInfo("Imported/Updated [" + records + "] from : " + file.getAbsolutePath() + " [" + runTime + "ms]", module);
         Map result = ServiceUtil.returnSuccess();
         result.put("records", new Integer(records));
         return result;
