@@ -35,37 +35,6 @@
     <target name="install" depends="install-catalina">
     </target>
 
-    <target name="install-jboss">
-        <property environment="env" />
-        <property name="jboss.dir"      value="${env.JBOSS_HOME}" />
-        
-        <copy file="setup/jboss/bin/ofbiz.bat" toDir="${jboss.dir}/bin" />
-        <copy file="setup/jboss/bin/ofbiz.sh" toDir="${jboss.dir}/bin" />
-        
-        <copy toDir="${jboss.dir}/conf/ofbiz">
-          <fileset dir="${jboss.dir}/conf/tomcat"/>
-        </copy>
-        <move file="${jboss.dir}/conf/ofbiz/jboss.jcml"
-            toFile="${jboss.dir}/conf/ofbiz/jboss.orig.jcml" />
-        <move file="${jboss.dir}/conf/ofbiz/jboss.conf"
-            toFile="${jboss.dir}/conf/ofbiz/jboss.orig.conf" />
-        
-        <copy file="setup/jboss/conf/ofbiz/jboss.jcml"
-            toDir="${jboss.dir}/conf/ofbiz" />
-        <copy file="setup/jboss/conf/ofbiz/jboss.conf"
-            toDir="${jboss.dir}/conf/ofbiz" />
-    </target>
-
-    <target name="install-tomcat">
-        <property environment="env" />
-        <property name="tomcat.dir"      value="${env.TOMCAT_HOME}" />
-    
-        <move file="${tomcat.dir}/conf/server.xml"
-            toFile="${tomcat.dir}/conf/server.orig.xml" />
-        <copy file="setup/tomcat/conf/server.xml"
-             toDir="${tomcat.dir}/conf" />
-    </target>
-
     <target name="install-catalina">
         <property environment="env" />
         <property name="catalina.dir"      value="${env.CATALINA_HOME}" />
@@ -92,7 +61,6 @@
         <copy file="lib/share/jakarta-oro-2.0.4.jar" toDir="${catalina.dir}/lib"/>
 
         <delete file="${catalina.dir}/common/lib/tyrex-0.9.7.0.jar"/> 
-        
     </target>
 
     <!-- ================================================================== -->
@@ -354,6 +322,7 @@
         <copy file="commonapp/lib/commonapp.war" toFile="${eartemp.dir}/commonapp.war" />
             
         <copy file="ecommerce/lib/ecommerce.war" toFile="${eartemp.dir}/ecommerce.war" />
+        <copy file="ecommerce/lib/images.war" toFile="${eartemp.dir}/images.war" />
     
         <copy file="catalog/lib/catalog.war" toFile="${eartemp.dir}/catalog.war" />
         <copy file="partymgr/lib/partymgr.war" toFile="${eartemp.dir}/partymgr.war" />
