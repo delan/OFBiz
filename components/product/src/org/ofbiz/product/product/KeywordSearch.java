@@ -1,5 +1,5 @@
 /*
- * $Id: KeywordSearch.java,v 1.11 2004/01/22 12:53:28 jonesde Exp $
+ * $Id: KeywordSearch.java,v 1.12 2004/01/27 01:00:59 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -42,7 +42,7 @@ import org.ofbiz.entity.GenericValue;
  *  <br>Special thanks to Glen Thorne and the Weblogic Commerce Server for ideas.
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.11 $
+ * @version    $Revision: 1.12 $
  * @since      2.1
  */
 public class KeywordSearch {
@@ -436,6 +436,11 @@ public class KeywordSearch {
 
     public static void induceKeywords(GenericValue product) throws GenericEntityException {
         if (product == null) return;
-        KeywordIndex.indexKeywords(product);
+        KeywordIndex.indexKeywords(product, false);
+    }
+    
+    public static void induceKeywords(GenericValue product, boolean doAll) throws GenericEntityException {
+        if (product == null) return;
+        KeywordIndex.indexKeywords(product, doAll);
     }
 }

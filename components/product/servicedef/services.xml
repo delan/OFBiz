@@ -1057,24 +1057,24 @@
 
     <!-- Some Product Maintenance Utility Services -->
     <service name="discVirtualsWithDiscVariants" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="discVirtualsWithDiscVariants" auth="true">
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="discVirtualsWithDiscVariants" auth="true" transaction-timout="3600000" require-new-transaction="true">
         <description>Discontinue Virtuals With Discontinued Variants</description>
     </service>
     <service name="removeCategoryMembersOfDiscProducts" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeCategoryMembersOfDiscProducts" auth="true">
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="removeCategoryMembersOfDiscProducts" auth="true" transaction-timout="3600000" require-new-transaction="true">
         <description>Remove Category Members Of Discontinued Products</description>
     </service>
     <service name="makeStandAloneFromSingleVariantVirtuals" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="makeStandAloneFromSingleVariantVirtuals" auth="true">
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="makeStandAloneFromSingleVariantVirtuals" auth="true" transaction-timout="3600000" require-new-transaction="true">
         <description>Make Stand Alone From Single Variant Virtuals</description>
     </service>
     <service name="setAllProductImageNames" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="setAllProductImageNames" auth="true">
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="setAllProductImageNames" auth="true" transaction-timout="3600000" require-new-transaction="true">
         <description>Set All Product Image Names</description>
         <attribute name="pattern" type="String" mode="IN" optional="false"/>
     </service>
     <service name="attachProductFeaturesToCategory" engine="java"
-                location="org.ofbiz.product.product.ProductUtilServices" invoke="attachProductFeaturesToCategory" auth="true">
+                location="org.ofbiz.product.product.ProductUtilServices" invoke="attachProductFeaturesToCategory" auth="true" transaction-timout="3600000" require-new-transaction="true">
         <description>Attach Product Features To Category Through Groups</description>
         <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
         <attribute name="doSubCategories" type="String" mode="IN" optional="true"/>
