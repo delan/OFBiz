@@ -1,5 +1,5 @@
 /*
- * $Id: JettyContainer.java,v 1.9 2003/08/20 02:33:13 ajzeneski Exp $
+ * $Id: JettyContainer.java,v 1.10 2003/08/20 18:42:30 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,6 +38,7 @@ import org.mortbay.http.SocketListener;
 import org.mortbay.http.SunJsseListener;
 import org.mortbay.http.ajp.AJP13Listener;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.servlet.WebApplicationContext;
 import org.mortbay.util.Frame;
 import org.mortbay.util.Log;
 import org.mortbay.util.LogSink;
@@ -52,7 +53,7 @@ import org.ofbiz.base.util.UtilURL;
  * This container depends on the ComponentContainer as well.
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.9 $
+  *@version    $Revision: 1.10 $
  * @since      3.0
  */
 public class JettyContainer implements Container {
@@ -102,7 +103,8 @@ public class JettyContainer implements Container {
                             if (!location.endsWith("/")) {
                                 location = location + "/";
                             }
-                            server.addWebApplication(appInfo.mountPoint, location);
+                            WebApplicationContext ctx = server.addWebApplication(appInfo.mountPoint, location);
+                            ctx.setAttribute("_serverId", appInfo.server);
                         } catch (IOException e) {
                             Debug.logError(e, "Problem mounting application [" + appInfo.name + " / " + appInfo.location + "]", module);                        
                         }
