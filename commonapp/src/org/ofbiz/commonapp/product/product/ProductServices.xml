@@ -88,29 +88,9 @@
         </if-has-permission>
     </simple-method>
     <simple-method method-name="updateProduct" short-description="Update an Product">
-    	<!-- find all role-categories that this product is a member of -->
-    	<field-to-field field-name="productId" map-name="parameters" to-map-name="lookupRoleCategoriesMap"/>
-    	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
-    	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
-    	<find-by-and entity-name="ProductCategoryMemberAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
-    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
-    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
-    	<if>
-    		<condition>
-    			<not>
-    				<or>
-    					<if-has-permission permission="CATALOG" action="_UPDATE"/>
-    					<and>
-    						<if-has-permission permission="CATALOG_ROLE" action="_UPDATE"/>
-    						<not><if-empty field-name="roleCategories"/></not>
-    					</and>
-    				</or>
-    			</not>
-    		</condition>
-    		<then>
-    			<add-error><fail-message message="Security Error: to run updateProduct you must have the CATALOG_UPDATE or CATALOG_ADMIN permission or have the CATALOG_ROLE_UPDATE permission and be associated with a category containing this product."/></add-error>
-    		</then>
-        </if>
+		<string-to-field string="updateProduct" field-name="callingMethodName"/>
+		<string-to-field string="UPDATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <field-to-field field-name="productId" map-name="parameters" to-map-name="lookupPKMap"/>
@@ -142,19 +122,22 @@
         <if>
             <condition>
             	<or>
-			        <if-empty field-name="autoCreateKeywords" map-name="newEntity"/>
-		            <if-compare field-name="autoCreateKeywords" map-name="newEntity" operator="equals" value="Y"/>
+			        <if-empty field-name="autoCreateKeywords" map-name="lookedUpValue"/>
+		            <if-compare field-name="autoCreateKeywords" map-name="lookedUpValue" operator="equals" value="Y"/>
             	</or>
             </condition>
             <then>
-                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(newEntity);]]></call-bsh>
+                <call-bsh><![CDATA[org.ofbiz.commonapp.product.product.KeywordSearch.induceKeywords(lookedUpValue);]]></call-bsh>
             </then>
         </if>
     </simple-method>
     
     <simple-method method-name="duplicateProduct" short-description="Duplicate a Product">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run duplicateProduct you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run duplicateProduct you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="duplicateProduct" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
+		<string-to-field string="DELETE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <!-- look up the old product and clone it -->
@@ -281,7 +264,9 @@
 
     <!-- GoodIdentification methods -->
     <simple-method method-name="createGoodIdentification" short-description="Create an GoodIdentification">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createGoodIdentification you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="createGoodIdentification" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="GoodIdentification"/>
@@ -290,7 +275,9 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateGoodIdentification" short-description="Update an GoodIdentification">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateGoodIdentification you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="updateGoodIdentification" field-name="callingMethodName"/>
+		<string-to-field string="UPDATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value entity-name="GoodIdentification" value-name="lookupPKMap"/>
@@ -300,7 +287,9 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteGoodIdentification" short-description="Delete an GoodIdentification">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteGoodIdentification you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="deleteGoodIdentification" field-name="callingMethodName"/>
+		<string-to-field string="DELETE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value entity-name="GoodIdentification" value-name="lookupPKMap"/>
@@ -311,7 +300,9 @@
 
     <!-- ProductGlAccount methods -->
     <simple-method method-name="createProductGlAccount" short-description="Create an ProductGlAccount">
-        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProductGlAccount you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="createProductGlAccount" field-name="callingMethodName"/>
+		<string-to-field string="CREATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProductGlAccount"/>
@@ -320,7 +311,9 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductGlAccount" short-description="Update an ProductGlAccount">
-        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductGlAccount you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="updateProductGlAccount" field-name="callingMethodName"/>
+		<string-to-field string="UPDATE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value entity-name="ProductGlAccount" value-name="lookupPKMap"/>
@@ -330,12 +323,56 @@
         <store-value value-name="lookedUpValue"/>
     </simple-method>
     <simple-method method-name="deleteProductGlAccount" short-description="Delete an ProductGlAccount">
-        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProductGlAccount you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+		<string-to-field string="deleteProductGlAccount" field-name="callingMethodName"/>
+		<string-to-field string="DELETE" field-name="checkAction"/>
+    	<call-simple-method method-name="checkProductRelatedPermission"/>
         <check-errors/>
 
         <make-value entity-name="ProductGlAccount" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductGlAccount" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+
+	<!-- a methods to centralize product security code, meant to be called in-line with 
+		call-simple-method, and the checkAction and callingMethodName attributes should be in the method context -->
+    <simple-method method-name="checkProductRelatedPermission" short-description="Check Product Related Permission">
+    	<if-empty field-name="callingMethodName">
+    		<string-to-field string="this operation" field-name="callingMethodName"/>
+    	</if-empty>
+    	<if-empty field-name="checkAction">
+    		<string-to-field string="UPDATE" field-name="checkAction"/>
+    	</if-empty>
+    
+    	<!-- find all role-categories that this product is a member of -->
+    	<if>
+    		<condition>
+    			<not><if-has-permission permission="CATALOG" action="_${checkAction}"/></not>
+    		</condition>
+    		<then>
+		    	<field-to-field field-name="productId" map-name="parameters" to-map-name="lookupRoleCategoriesMap"/>
+		    	<field-to-field field-name="partyId" map-name="userLogin" to-map-name="lookupRoleCategoriesMap"/>
+		    	<string-to-field string="LTD_ADMIN" field-name="roleTypeId" map-name="lookupRoleCategoriesMap"/>
+		    	<find-by-and entity-name="ProductCategoryMemberAndRole" map-name="lookupRoleCategoriesMap" list-name="roleCategories"/>
+		    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp"/>
+		    	<filter-list-by-date list-name="roleCategories" valid-date-name="nowTimestamp" from-field-name="roleFromDate" thru-field-name="roleThruDate"/>
+    		</then>
+        </if>
+    	<if>
+    		<condition>
+    			<not>
+    				<or>
+    					<if-has-permission permission="CATALOG" action="_${checkAction}"/>
+    					<and>
+    						<if-has-permission permission="CATALOG_ROLE" action="_${checkAction}"/>
+    						<not><if-empty field-name="roleCategories"/></not>
+    					</and>
+    				</or>
+    			</not>
+    		</condition>
+    		<then>
+    			<add-error><fail-message message="Security Error: to run ${callingMethodName} you must have the CATALOG_${checkAction} or CATALOG_ADMIN permission or have the CATALOG_ROLE_${checkAction} permission and be associated with a category containing this product."/></add-error>
+    		</then>
+        </if>
     </simple-method>
 </simple-methods>
