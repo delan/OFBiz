@@ -58,8 +58,7 @@ public class WorkflowClientServices {
         WfProcessMgr mgr = getProcessManager(delegator,packageId,processId);
         WfProcess process = getProcess(mgr,processWorkEffortId);
         WfActivity activity = getActivity(process,workEffortId);
-        
-        String newState = (String) context.get("newStatus");
+                
         try {
             activity.complete();
         }
@@ -69,6 +68,35 @@ public class WorkflowClientServices {
         
         return result;
     }
+    
+    public static Map changeState(Map context) {
+        Map result = new HashMap();
+        result.put("response","");
+        DispatchContext ctx = (DispatchContext) context.get("DISPATCHCONTEXT");
+        GenericDelegator delegator = ctx.getDelegator();
+        
+        String workEffortId = (String) context.get("workEffortId");
+        GenericValue workEffort = getWorkEffort(delegator,workEffortId);
+        
+        String processWorkEffortId = workEffort.getString("workEffortParentId");
+        String packageId = workEffort.getString("workflowPackageId");
+        String processId = workEffort.getString("workflowProcessId");
+        
+        WfProcessMgr mgr = getProcessManager(delegator,packageId,processId);
+        WfProcess process = getProcess(mgr,processWorkEffortId);
+        WfActivity activity = getActivity(process,workEffortId);
+        
+        String newState = (String) context.get("newStatus");
+        try {
+            activity.changeState(newState);
+        }
+        catch ( WfException e ) {
+            result.put("response",e.getMessage());
+        }
+        
+        return result;
+    }
+        
     
     // -------------------------------------------------------------------
     // Helper methods for geting objects

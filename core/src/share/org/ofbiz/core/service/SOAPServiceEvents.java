@@ -121,7 +121,7 @@ public class SOAPServiceEvents {
                 try {
                     // verify the service is exported for remote execution and invoke it
                     ModelService model = dispatcher.getDispatchContext().getModelService(serviceName);
-                    if ( model.export ) {                                                    
+                    if ( model != null && model.export ) {                                                    
                         Map result = dispatcher.runSync(serviceName,serviceContext); 
                         RPCElement resBody = new RPCElement(serviceName + "Response");
                         resBody.setPrefix(body.getPrefix());
