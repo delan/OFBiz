@@ -433,6 +433,15 @@ public class ModelEntity extends ModelInfo implements Comparable {
         return new ArrayList(this.pks);
     }
 
+    public String getFirstPkFieldName() {
+        List pkFieldNames = this.getPkFieldNames();
+        String idFieldName = null;
+        if (pkFieldNames != null && pkFieldNames.size() > 0) {
+            idFieldName = (String) pkFieldNames.get(0);
+        }
+        return idFieldName;
+    }
+    
     public int getNopksSize() {
         return this.nopks.size();
     }

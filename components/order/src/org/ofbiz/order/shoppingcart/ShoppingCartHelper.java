@@ -391,7 +391,7 @@ public class ShoppingCartHelper {
             String productId = null;
             String quantStr = null;
             String requirementId = null;
-            String thisSuffix = org.ofbiz.content.webapp.event.ServiceMultiEventHandler.DELIMITER + i;
+            String thisSuffix = org.ofbiz.webapp.event.ServiceMultiEventHandler.DELIMITER + i;
             boolean rowSelected = (!context.containsKey("_rowSubmit" + thisSuffix))? false :
                     "Y".equalsIgnoreCase((String)context.get("_rowSubmit" + thisSuffix));
             

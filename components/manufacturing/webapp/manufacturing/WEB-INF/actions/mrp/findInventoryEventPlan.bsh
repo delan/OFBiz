@@ -31,7 +31,7 @@ import java.sql.Timestamp;
 import org.ofbiz.base.util.*;
 import org.ofbiz.service.*;
 import org.ofbiz.service.LocalDispatcher;
-import org.ofbiz.content.widget.html.*;
+import org.ofbiz.widget.html.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.service.DispatchContext;
 import org.ofbiz.entity.condition.*;

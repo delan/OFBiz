@@ -28,7 +28,7 @@ import net.xoetrope.swing.XEdit;
 
 import org.ofbiz.pos.screen.PosScreen;
 import org.ofbiz.pos.PosTransaction;
-import org.ofbiz.content.xui.XuiSession;
+import org.ofbiz.guiapp.xui.XuiSession;
 
 /**
  * 

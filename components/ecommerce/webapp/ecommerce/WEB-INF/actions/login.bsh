@@ -25,7 +25,7 @@
 
 ;
 import org.ofbiz.common.CommonWorkers;
-import org.ofbiz.content.webapp.control.*;
+import org.ofbiz.webapp.control.*;
 
 if (session.getAttribute("autoUserLogin") != null)
     context.put("autoUserLogin", session.getAttribute("autoUserLogin"));

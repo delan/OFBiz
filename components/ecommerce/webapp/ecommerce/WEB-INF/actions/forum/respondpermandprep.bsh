@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 
  * Does either a "simple" (does entity perm check) or complex
@@ -44,8 +44,8 @@ import org.ofbiz.entity.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.content.widget.html.*;
-import org.ofbiz.content.widget.form.*;
+import org.ofbiz.widget.html.*;
+import org.ofbiz.widget.form.*;
 import org.ofbiz.content.content.PermissionRecorder;
 
 import javax.servlet.*;

@@ -40,7 +40,7 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilProperties;
 import org.ofbiz.base.util.UtilValidate;
-import org.ofbiz.content.webapp.control.RequestHandler;
+import org.ofbiz.webapp.control.RequestHandler;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericPK;
 import org.ofbiz.entity.GenericValue;

@@ -25,11 +25,11 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 
  */
-import org.ofbiz.content.widget.html.*;
+import org.ofbiz.widget.html.*;
 import org.ofbiz.base.util.*;
 
 listWrapper = (HtmlFormWrapper)context.get("listWrapper");

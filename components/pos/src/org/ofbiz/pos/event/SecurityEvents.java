@@ -30,7 +30,7 @@ import org.ofbiz.pos.component.Output;
 import org.ofbiz.pos.PosTransaction;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.Debug;
-import org.ofbiz.content.xui.XuiSession;
+import org.ofbiz.guiapp.xui.XuiSession;
 import org.ofbiz.entity.GenericValue;
 
 /**

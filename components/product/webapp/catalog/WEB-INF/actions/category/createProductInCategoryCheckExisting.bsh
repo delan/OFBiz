@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.1
  */
 
@@ -28,7 +28,7 @@ import org.ofbiz.base.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.product.feature.*;
 import org.ofbiz.product.product.ProductSearch;
-import org.ofbiz.content.stats.VisitHandler;
+import org.ofbiz.webapp.stats.VisitHandler;
 
 security = request.getAttribute("security");
 delegator = request.getAttribute("delegator");

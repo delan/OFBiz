@@ -28,7 +28,7 @@ import java.awt.Dimension;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
 import org.ofbiz.entity.util.*;
-import org.ofbiz.content.widget.html.*;
+import org.ofbiz.widget.html.*;
 import org.ofbiz.manufacturing.jobshopmgt.ProductionRun;
 
 boolean hasTask(String taskName, GenericValue productionRun) {

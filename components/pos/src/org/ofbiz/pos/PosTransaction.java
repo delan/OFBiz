@@ -43,7 +43,7 @@ import org.ofbiz.base.util.GeneralException;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilDateTime;
 import org.ofbiz.base.util.collections.LifoSet;
-import org.ofbiz.content.xui.XuiSession;
+import org.ofbiz.guiapp.xui.XuiSession;
 import org.ofbiz.order.shoppingcart.CartItemModifyException;
 import org.ofbiz.order.shoppingcart.ShoppingCart;
 import org.ofbiz.order.shoppingcart.ShoppingCartItem;

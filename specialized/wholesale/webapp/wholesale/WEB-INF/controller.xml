@@ -6,20 +6,20 @@
     <owner>The Open For Business Project Copyright (c) 2001-2005</owner>
     <errorpage>/error/error.jsp</errorpage>
 
-    <handler name="java" type="request" class="org.ofbiz.content.webapp.event.JavaEventHandler"/>
-    <handler name="bsf" type="request" class="org.ofbiz.content.webapp.event.BsfEventHandler"/>
-    <handler name="soap" type="request" class="org.ofbiz.content.webapp.event.SOAPEventHandler"/>
-    <handler name="service" type="request" class="org.ofbiz.content.webapp.event.ServiceEventHandler"/>
-    <handler name="service-multi" type="request" class="org.ofbiz.content.webapp.event.ServiceMultiEventHandler"/>
-    <handler name="simple" type="request" class="org.ofbiz.content.webapp.event.SimpleEventHandler"/>
+    <handler name="java" type="request" class="org.ofbiz.webapp.event.JavaEventHandler"/>
+    <handler name="bsf" type="request" class="org.ofbiz.webapp.event.BsfEventHandler"/>
+    <handler name="soap" type="request" class="org.ofbiz.webapp.event.SOAPEventHandler"/>
+    <handler name="service" type="request" class="org.ofbiz.webapp.event.ServiceEventHandler"/>
+    <handler name="service-multi" type="request" class="org.ofbiz.webapp.event.ServiceMultiEventHandler"/>
+    <handler name="simple" type="request" class="org.ofbiz.webapp.event.SimpleEventHandler"/>
 
-    <handler name="fop" type="view" class="org.ofbiz.content.webapp.view.FopPdfViewHandler"/>
-    <handler name="jsp" type="view" class="org.ofbiz.content.webapp.view.JspViewHandler"/>
-    <handler name="region" type="view" class="org.ofbiz.content.webapp.view.RegionViewHandler"/>
-    <handler name="ftl" type="view" class="org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler"/>
-    <handler name="velocity" type="view" class="org.ofbiz.content.webapp.view.VelocityViewHandler"/>
-    <handler name="http" type="view" class="org.ofbiz.content.webapp.view.HttpViewHandler"/>
-    <handler name="jpublish" type="view" class="org.ofbiz.content.webapp.view.JPublishViewHandler"/>
+    <handler name="fop" type="view" class="org.ofbiz.webapp.view.FopPdfViewHandler"/>
+    <handler name="jsp" type="view" class="org.ofbiz.webapp.view.JspViewHandler"/>
+    <handler name="region" type="view" class="org.ofbiz.webapp.view.RegionViewHandler"/>
+    <handler name="ftl" type="view" class="org.ofbiz.webapp.ftl.FreeMarkerViewHandler"/>
+    <handler name="velocity" type="view" class="org.ofbiz.webapp.view.VelocityViewHandler"/>
+    <handler name="http" type="view" class="org.ofbiz.webapp.view.HttpViewHandler"/>
+    <handler name="jpublish" type="view" class="org.ofbiz.webapp.view.JPublishViewHandler"/>
 
     <!-- Events run from here for the first hit in a visit -->
     <firstvisit>
@@ -40,7 +40,7 @@
     <!-- Events to run on every request after all other processing (chains exempt) -->
     <!--
     <postprocessor>
-        <event type="java" path="org.ofbiz.content.webapp.event.TestEvent" invoke="test"/>
+        <event type="java" path="org.ofbiz.webapp.event.TestEvent" invoke="test"/>
     </postprocessor>
     -->
 
@@ -791,7 +791,7 @@
     </request-map>
 
     <request-map uri="changeDelegator">
-        <event type="java" path="org.ofbiz.content.webapp.event.CoreEvents" invoke="changeDelegator"/>
+        <event type="java" path="org.ofbiz.webapp.event.CoreEvents" invoke="changeDelegator"/>
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="error"/>
     </request-map>

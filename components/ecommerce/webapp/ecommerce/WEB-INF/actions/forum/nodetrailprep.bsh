@@ -41,12 +41,12 @@ import org.ofbiz.entity.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.content.widget.html.*;
-import org.ofbiz.content.widget.form.*;
+import org.ofbiz.widget.html.*;
+import org.ofbiz.widget.form.*;
 import org.ofbiz.securityext.login.*;
 import org.ofbiz.common.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
+import org.ofbiz.content.content.ContentWorker;
 import org.ofbiz.content.ContentManagementWorker;
 
 import javax.servlet.*;
@@ -67,7 +67,7 @@ if (UtilValidate.isEmpty(nodeTrailCsv)) {
 }
     
 if (UtilValidate.isNotEmpty(nodeTrailCsv)) {
-    nodeTrail = FreeMarkerWorker.csvToTrail(nodeTrailCsv, delegator);
+    nodeTrail = ContentWorker.csvToTrail(nodeTrailCsv, delegator);
     context.put("globalNodeTrail", nodeTrail);
     singleWrapper = context.get("singleWrapper");
     if (singleWrapper != null) {
@@ -87,7 +87,7 @@ if (UtilValidate.isNotEmpty(nodeTrailCsv)) {
     context.put("nodeTrailCsv",nodeTrailCsv);
     
     //Debug.logInfo("in nodetrailprep, nodeTrailCsv:" + nodeTrailCsv,"");
-    trailContentList = FreeMarkerWorker.csvToContentList(nodeTrailCsv, delegator);
+    trailContentList = ContentWorker.csvToContentList(nodeTrailCsv, delegator);
     //Debug.logInfo("in nodetrailprep, trailContentList:" + trailContentList,"");
     context.put("ancestorList", trailContentList);
     //Debug.logInfo("in vewprep, siteAncestorList:" + siteAncestorList,"");

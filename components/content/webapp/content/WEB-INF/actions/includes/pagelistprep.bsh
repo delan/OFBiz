@@ -25,7 +25,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 
  * This script breaks out the generic list pagination code so that it can be
@@ -51,8 +51,8 @@ import org.ofbiz.entity.util.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.content.widget.html.*;
-import org.ofbiz.content.widget.form.*;
+import org.ofbiz.widget.html.*;
+import org.ofbiz.widget.form.*;
 
 
 import java.util.ListIterator;

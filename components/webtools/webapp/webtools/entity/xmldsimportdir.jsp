@@ -26,7 +26,7 @@
 
 <%@ page import="java.util.*, java.net.*, java.io.*" %>
 <%@ page import="org.w3c.dom.*" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 <%@ page import="org.ofbiz.entity.model.*, org.ofbiz.entity.util.*, org.ofbiz.entity.condition.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>

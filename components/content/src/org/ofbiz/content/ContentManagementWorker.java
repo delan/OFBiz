@@ -1,3 +1,26 @@
+/*
+ * $Id$
+ *
+ *  Copyright (c) 2004-2005 The Open For Business Project - www.ofbiz.org
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a
+ *  copy of this software and associated documentation files (the "Software"),
+ *  to deal in the Software without restriction, including without limitation
+ *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ *  and/or sell copies of the Software, and to permit persons to whom the
+ *  Software is furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included
+ *  in all copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+ *  OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+ *  IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+ *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT
+ *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR
+ *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
 package org.ofbiz.content;
 
 import java.sql.Timestamp;
@@ -9,7 +32,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -20,7 +43,6 @@ import org.ofbiz.base.util.UtilHttp;
 import org.ofbiz.base.util.UtilMisc;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.base.util.collections.LifoSet;
-import org.ofbiz.content.content.ContentPermissionServices;
 import org.ofbiz.content.content.ContentServicesComplex;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericEntity;
@@ -32,6 +54,7 @@ import org.ofbiz.entity.condition.EntityConditionList;
 import org.ofbiz.entity.condition.EntityExpr;
 import org.ofbiz.entity.condition.EntityOperator;
 import org.ofbiz.entity.util.EntityUtil;
+import org.ofbiz.entityext.permission.EntityPermissionChecker;
 import org.ofbiz.minilang.MiniLangException;
 import org.ofbiz.security.Security;
 
@@ -42,8 +65,6 @@ import org.ofbiz.security.Security;
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @version    $Rev$
  * @since      3.0
- *
- * 
  */
 public class ContentManagementWorker {
 
@@ -328,7 +349,7 @@ public class ContentManagementWorker {
             }
             Map results = null;
             //if (Debug.infoOn()) Debug.logInfo("in getPermittedPublishPoints, content:" + content, module);
-            results = ContentPermissionServices.checkPermission(content, statusId, userLogin, passedPurposes, targetOperationList, roles, delegator, security, entityAction);
+            results = EntityPermissionChecker.checkPermission(content, statusId, userLogin, passedPurposes, targetOperationList, roles, delegator, security, entityAction);
             String permissionStatus = (String)results.get("permissionStatus");
             if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
                 String [] arr = {contentId,templateTitle};
@@ -674,7 +695,7 @@ public class ContentManagementWorker {
             }
             Map results = null;
             //if (Debug.infoOn()) Debug.logInfo("in getPermittedDepartmentPoints, content:" + content, module);
-            results = ContentPermissionServices.checkPermission(content, statusId, userLogin, passedPurposes, targetOperationList, roles, delegator, security, entityAction);
+            results = EntityPermissionChecker.checkPermission(content, statusId, userLogin, passedPurposes, targetOperationList, roles, delegator, security, entityAction);
             String permissionStatus = (String)results.get("permissionStatus");
             if (permissionStatus != null && permissionStatus.equalsIgnoreCase("granted")) {
                 String [] arr = {contentId,contentName};
@@ -725,26 +746,6 @@ public class ContentManagementWorker {
         return userName;
     }
 
-    public static String stripViewParamsFromQueryString(String queryString) {
-        String retStr = null;
-        if (UtilValidate.isNotEmpty(queryString)) {
-            StringTokenizer queryTokens = new StringTokenizer(queryString, "&");
-            StringBuffer cleanQuery = new StringBuffer();
-            while (queryTokens.hasMoreTokens()) {
-                String token =  queryTokens.nextToken();
-                if ((token.indexOf("VIEW_INDEX") == -1) && (token.indexOf("VIEW_SIZE")==-1)
-                    && (token.indexOf("viewIndex") == -1) && (token.indexOf("viewSize")==-1)) {
-                    cleanQuery.append(token);
-                    if(queryTokens.hasMoreTokens()){
-                        cleanQuery.append("&");
-                    }
-                }
-            }
-            retStr = cleanQuery.toString();
-        }
-        return retStr;
-    }
-    
     public static int updateStatsTopDown(GenericDelegator delegator, String contentId, List typeList) throws GenericEntityException {
         int subLeafCount = 0;
         GenericValue thisContent = delegator.findByPrimaryKey("Content", UtilMisc.toMap("contentId", contentId));

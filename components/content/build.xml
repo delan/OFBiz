@@ -52,7 +52,11 @@
             <fileset dir="../security/build/lib" includes="*.jar"/>
             <fileset dir="../service/lib" includes="*.jar"/>
             <fileset dir="../service/build/lib" includes="*.jar"/>
+            <fileset dir="../entityext/build/lib" includes="*.jar"/>
             <fileset dir="../minilang/build/lib" includes="*.jar"/>
+            <fileset dir="../webapp/lib" includes="*.jar"/>
+            <fileset dir="../webapp/build/lib" includes="*.jar"/>
+            <fileset dir="../widget/build/lib" includes="*.jar"/>
         </path>
     </target>
     

@@ -23,7 +23,7 @@
  *@version    1.0
  */
 
-import org.ofbiz.content.webapp.control.LoginWorker;
+import org.ofbiz.webapp.control.LoginWorker;
 
 if (session.getAttribute("autoUserLogin") != null)
     context.put("autoUserLogin", session.getAttribute("autoUserLogin"));

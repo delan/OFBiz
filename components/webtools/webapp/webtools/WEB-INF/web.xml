@@ -51,7 +51,7 @@
     <filter>
         <filter-name>ContextFilter</filter-name>
         <display-name>ContextFilter</display-name>
-        <filter-class>org.ofbiz.content.webapp.control.ContextFilter</filter-class>
+        <filter-class>org.ofbiz.webapp.control.ContextFilter</filter-class>
         <init-param>
             <param-name>disableContextSecurity</param-name>
             <param-value>N</param-value>
@@ -78,16 +78,16 @@
             <url-pattern>/*</url-pattern>
     </filter-mapping>  
 
-  <listener><listener-class>org.ofbiz.content.webapp.control.ControlEventListener</listener-class></listener>
+  <listener><listener-class>org.ofbiz.webapp.control.ControlEventListener</listener-class></listener>
   <listener><listener-class>org.ofbiz.securityext.login.LoginEventListener</listener-class></listener>
   <!-- NOTE: not all app servers support mounting implementations of the HttpSessionActivationListener interface -->
-  <!-- <listener><listener-class>org.ofbiz.content.webapp.control.ControlActivationEventListener</listener-class></listener> -->
+  <!-- <listener><listener-class>org.ofbiz.webapp.control.ControlActivationEventListener</listener-class></listener> -->
   
   <servlet>
     <servlet-name>ControlServlet</servlet-name>
     <display-name>ControlServlet</display-name>
     <description>Main Control Servlet</description>
-    <servlet-class>org.ofbiz.content.webapp.control.ControlServlet</servlet-class>
+    <servlet-class>org.ofbiz.webapp.control.ControlServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>

@@ -31,7 +31,7 @@
 <%@ page import="java.util.*, java.net.*,
                  org.ofbiz.base.util.cache.UtilCache,
                  org.ofbiz.base.util.cache.CacheLine" %>
-<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.content.webapp.pseudotag.*" %>
+<%@ page import="org.ofbiz.security.*, org.ofbiz.entity.*, org.ofbiz.base.util.*, org.ofbiz.webapp.pseudotag.*" %>
 
 <%@ taglib uri="ofbizTags" prefix="ofbiz" %>
 

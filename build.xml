@@ -34,11 +34,15 @@
                datafile/build.xml,rules/build.xml,minilang/build.xml,
                tests/build.xml,
                common/build.xml,workflow/build.xml,shark/build.xml,
-               content/build.xml,appservers/build.xml,party/build.xml,
+               webapp/build.xml,guiapp/build.xml,widget/build.xml,
+               appservers/build.xml,webtools/build.xml,
+                   
+               content/build.xml,party/build.xml,
                workeffort/build.xml,product/build.xml,marketing/build.xml,
                order/build.xml,manufacturing/build.xml,
                accounting/build.xml,ecommerce/build.xml,
-               securityext/build.xml,pos/build.xml,webtools/build.xml
+               securityext/build.xml,
+               pos/build.xml,
                example/build.xml"/>
 
     <filelist id="tests-subdirs" dir="."

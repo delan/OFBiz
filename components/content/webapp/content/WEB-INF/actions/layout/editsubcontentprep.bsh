@@ -26,7 +26,7 @@
 /**
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Rev:$
+ * @version    $Rev$
  * @since      3.0
 
  */
@@ -36,10 +36,10 @@ import org.ofbiz.entity.*;
 import org.ofbiz.security.*;
 import org.ofbiz.service.*;
 import org.ofbiz.entity.model.*;
-import org.ofbiz.content.widget.html.*;
-import org.ofbiz.content.widget.form.*;
+import org.ofbiz.widget.html.*;
+import org.ofbiz.widget.form.*;
 import org.ofbiz.content.data.DataResourceWorker;
-import org.ofbiz.content.webapp.ftl.FreeMarkerViewHandler;
+import org.ofbiz.webapp.ftl.FreeMarkerViewHandler;
 
 import java.io.StringWriter;
 import freemarker.ext.beans.BeansWrapper;

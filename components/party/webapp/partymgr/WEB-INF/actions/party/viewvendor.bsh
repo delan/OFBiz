@@ -21,14 +21,14 @@
  *
  *@author     Andy Zeneski
  *@author     David E. Jones
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
  */
 
 import java.util.*;
 import org.ofbiz.entity.*;
 import org.ofbiz.base.util.*;
-import org.ofbiz.content.widget.html.*;
+import org.ofbiz.widget.html.*;
 
 externalLoginKey = request.getAttribute("externalLoginKey");
 externalKeyParam = (externalLoginKey == null) ? "" : ("&externalLoginKey=" + externalLoginKey);

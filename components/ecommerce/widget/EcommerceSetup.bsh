@@ -31,7 +31,7 @@ import org.ofbiz.product.catalog.CatalogWorker;
 import org.ofbiz.product.store.ProductStoreWorker;
 import org.ofbiz.common.CommonWorkers;
 import org.ofbiz.order.shoppingcart.*;
-import org.ofbiz.content.webapp.control.*;
+import org.ofbiz.webapp.control.*;
 
 productStore = ProductStoreWorker.getProductStore(request);
 
