@@ -329,7 +329,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
                  ((WfAssignment) i.next()).changeStatus("CAL_ACCEPTED"); // accept all assignments (AUTO)
             Debug.logVerbose("All assignments accepted, starting activity: " + this.runtimeKey(), module);
             startActivity();
-        } else if (howManyAssignment() > 0 && checkAssignStatus(1)) {
+        } else if (howManyAssignment() > 0 && checkAssignStatus(CHECK_ASSIGN)) {
             Debug.logVerbose("Starting activity: " + this.runtimeKey(), module);
             startActivity();
         } else {
@@ -342,7 +342,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
      */
     public void complete() throws WfException, CannotComplete {
         // check to make sure all assignements are complete
-        if (howManyAssignment() > 0 && !checkAssignStatus(2))
+        if (howManyAssignment() > 0 && !checkAssignStatus(CHECK_COMPLETE))
             throw new CannotComplete("All assignments have not been completed");
         try {
             container().receiveResults(this, result());
@@ -515,16 +515,20 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             WfAssignment a = WfFactory.getWfAssignment(getDelegator(), runtimeKey(), party, role, from);                                   
 
             if (validStatus.contains(a.status())) {
+                // if we find one set this to true
                 foundOne = true;
             } else {
+                // if we must completeAll / assignAll and this one fails return false
                 if ((type == CHECK_COMPLETE && completeAll) || (type == CHECK_ASSIGN && acceptAll))
                     return false;
             }
         }
-
+        
+        // we are here only if all are done, or complete/assign is false; so if not false we are done
         if ((type == CHECK_COMPLETE && completeAll) || (type == CHECK_ASSIGN && acceptAll)) {
             return true;
         } else {
+            // if not all done, we don't require all, so use that foundOne stored above
             Debug.logVerbose("[checkAssignStatus] : need only one assignment to pass", module);
             if (foundOne)
                 return true;
