@@ -183,8 +183,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             Iterator i = partyRoles.iterator();
             while (i.hasNext()) {
                 GenericValue value = (GenericValue) i.next();
-                assign(WfFactory.getWfResource(value.getDelegator(), null, null,
-                                               value.getString("partyId"), null), true);
+                assign(WfFactory.getWfResource(value.getDelegator(), null, null, value.getString("partyId"), null), true);
             }
         }
     }
@@ -193,8 +192,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         List assignments = new ArrayList();
         Collection c = null;
         try {
-            c = getDelegator().findByAnd("WorkEffortPartyAssignment",
-                                         UtilMisc.toMap("workEffortId", runtimeKey()));
+            c = getDelegator().findByAnd("WorkEffortPartyAssignment", UtilMisc.toMap("workEffortId", runtimeKey()));
         } catch (GenericEntityException e) {
             throw new WfException(e.getMessage(), e);
         }
@@ -210,9 +208,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             java.sql.Timestamp from = value.getTimestamp("fromDate");
             if (status.equals("CAL_SENT") || status.equals("CAL_ACCEPTED") ||
                     status.equals("CAL_TENTATIVE"))
-                assignments.add(
-                        WfFactory.getWfAssignment(getDelegator(), runtimeKey(),
-                                                  party, role, from));
+                assignments.add(WfFactory.getWfAssignment(getDelegator(), runtimeKey(), party, role, from));
         }
         return assignments;
     }
@@ -245,13 +241,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
     }
 
-    /**
-     * Assign this activity to a resource
-     * @param WfResource to assign this activity to
-     * @param append Append to end if existing list (true) or replace existing (false)
-     * @throws WfException
-     */
-    public void assign(WfResource resource, boolean append) throws WfException {
+    // create a new assignment
+    private WfAssignment assign(WfResource resource, boolean append) throws WfException {
         if (!append) {
             Iterator ai = getIteratorAssignment();
             while (ai.hasNext()) {
@@ -260,7 +251,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
             }
         }
 
-        WfAssignment assign = WfFactory.getWfAssignment(this, resource, null);
+        WfAssignment assign = WfFactory.getWfAssignment(this, resource, null, true);
+        return assign;
     }
 
     /**
@@ -459,6 +451,16 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         Map context = processContext();
         context.put("previousActivity", workEffortId);
         this.setProcessContext(context);
+
+        // set the estimatedStartDate
+         try {
+            GenericValue v = getRuntimeObject();
+            v.set("estimatedStartDate", UtilDateTime.nowTimestamp());
+            v.store();
+        } catch (GenericEntityException e) {
+            Debug.logWarning("Could not set 'estimatedStartDate'.", module);
+            e.printStackTrace();
+        }
 
         // get the type of this activity
         String type = getDefinitionObject().getString("activityTypeEnumId");

@@ -81,6 +81,8 @@ public abstract class WfExecutionObjectImpl implements WfExecutionObject {
         this.processId = getRuntimeObject().getString("workflowProcessId");
         this.activityId = getRuntimeObject().getString("workflowActivityId");
         this.history = null;
+        Debug.logVerbose("Process ID: " + processId, module);
+        Debug.logVerbose("Activity ID: " + activityId, module);
     }
 
     // creates the stored runtime workeffort data.

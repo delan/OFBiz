@@ -66,7 +66,7 @@ public class WfProcessImpl extends WfExecutionObjectImpl implements WfProcess {
      */
     public WfProcessImpl(GenericDelegator delegator, String workEffortId) throws WfException {
         super(delegator, workEffortId);
-        if (activityId != null || activityId.length() > 0)
+        if (activityId != null && activityId.length() > 0)
             throw new WfException("Execution object is not of type WfProcess");
         this.manager = WfFactory.getWfProcessMgr(delegator, packageId, processId);
         this.requester = null;

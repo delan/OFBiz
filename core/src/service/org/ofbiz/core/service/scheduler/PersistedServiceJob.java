@@ -173,4 +173,12 @@ public class PersistedServiceJob extends GenericServiceJob {
             return job.getLong("runCount").longValue();
     }
 
+    private void setStartInfo() {
+        GenericValue job = getJob();
+    }
+
+    private void setFinishInfo() {
+        GenericValue job = getJob();
+    }
+
 }

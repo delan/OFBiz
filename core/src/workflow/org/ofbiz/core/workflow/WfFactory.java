@@ -49,7 +49,8 @@ public class WfFactory {
     private static Map resource = new HashMap();
     private static Map client = new HashMap();
 
-    /** Creates a new {@link WfActivity} instance.
+    /**
+     * Creates a new {@link WfActivity} instance.
      * @param value GenericValue object defining this activity.
      * @param process The WorkEffort key of the parent process
      * @return An instance of the WfActivify Interface
@@ -77,12 +78,13 @@ public class WfFactory {
         return (WfActivity) activity.get(mapKey);
     }
 
-    /** Creates a new {@link WfAssignment} instance.
+    /**
+     * Creates a new {@link WfAssignment} instance.
      * @return An instance of the WfAssignment Interface
      * @throws WfException
      */
     public static WfAssignment getWfAssignment(WfActivity activity, WfResource resource,
-                                               Timestamp fromDate) throws WfException {
+                                               Timestamp fromDate, boolean create) throws WfException {
         if (activity == null) throw new WfException("WfActivity cannot be null");
         if (resource == null) throw new WfException("WfResource cannot be null");
         if (fromDate == null) fromDate = new Timestamp(new Date().getTime());
@@ -91,7 +93,7 @@ public class WfFactory {
         if (!assign.containsKey(mapKey)) {
             synchronized (WfFactory.class) {
                 if (!assign.containsKey(mapKey))
-                    assign.put(mapKey, new WfAssignmentImpl(activity, resource, fromDate));
+                    assign.put(mapKey, new WfAssignmentImpl(activity, resource, fromDate, create));
             }
         }
         return (WfAssignment) assign.get(mapKey);
@@ -101,7 +103,7 @@ public class WfFactory {
                                                Timestamp from) throws WfException {
         WfActivity act = getWfActivity(delegator, work);
         WfResource res = getWfResource(delegator, null, null, party, role);
-        return getWfAssignment(act, res, from);
+        return getWfAssignment(act, res, from, false);
     }
 
     /** Creates a new {@link WfProcess} instance.

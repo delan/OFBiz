@@ -27,6 +27,7 @@ package org.ofbiz.core.service.scheduler;
 
 import java.util.*;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.*;
 import org.ofbiz.core.util.*;
 
@@ -43,10 +44,15 @@ public class GenericServiceJob extends AbstractJob {
 
     protected transient GenericRequester requester;
     protected transient DispatchContext dctx;
+    private boolean trans;
     private String service;
     private Map context;
 
     public GenericServiceJob(DispatchContext dctx, String jobName, String service, Map context, GenericRequester req) {
+        this(dctx, jobName, service, context, req, true);
+    }
+
+    public GenericServiceJob(DispatchContext dctx, String jobName, String service, Map context, GenericRequester req, boolean trans) {
         super(jobName);
         this.dctx = dctx;
         this.service = service;
@@ -64,14 +70,38 @@ public class GenericServiceJob extends AbstractJob {
     }
 
     public void exec() {
+        boolean begunTransaction = false;
+        if (trans) {
+            try {
+                begunTransaction = TransactionUtil.begin();
+            } catch (GenericTransactionException te) {
+                Debug.logError(te, module);
+            }
+        }
+
         try {
             LocalDispatcher dispatcher = dctx.getDispatcher();
             Map result = dispatcher.runSync(getServiceName(), getContext());
             if (requester != null)
                 requester.receiveResult(result);
-        } catch (GenericServiceException ge) {
-            ge.printStackTrace();
-            Debug.logError(ge, "Service invocation error: " + ge.getMessage(), module);
+        } catch (Exception e) {
+            Debug.logError(e, "Service invocation error: " + e.getMessage(), module);
+            e.printStackTrace();
+            if (trans && begunTransaction) {
+                try {
+                    TransactionUtil.rollback();
+                } catch (GenericTransactionException te) {
+                    Debug.logError(te, module);
+                }
+            }
+        }
+
+        if (trans && begunTransaction) {
+            try {
+                TransactionUtil.commit();
+            } catch (GenericTransactionException te) {
+                Debug.logError(te, module);
+            }
         }
         finish();
     }

@@ -45,6 +45,8 @@ import org.ofbiz.core.workflow.client.*;
  */
 public class WorkflowClient {
 
+    public static final String module = WorkflowClient.class.getName();
+
     protected DispatchContext context;
 
     /**
@@ -64,12 +66,37 @@ public class WorkflowClient {
      * @param partyId The assigned / to be assigned users party ID.
      * @param roleTypeId The assigned / to be assigned role type ID.
      * @param append Append this assignment to the list, if others exist.
+     * @return The new assignment object.
      * @throws WfException
      */
-    public void assign(String workEffortId, String partyId, String roleTypeId, boolean append) throws WfException {
+    public WfAssignment assign(String workEffortId, String partyId, String roleTypeId,
+                               Timestamp fromDate, boolean append) throws WfException {
+
         WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
         WfResource resource = WfFactory.getWfResource(context.getDelegator(), null, null, partyId, roleTypeId);
-        activity.assign(resource, append);
+        if (!append) {
+            Iterator i = activity.getIteratorAssignment();
+            while (i.hasNext()) {
+                WfAssignment a = (WfAssignment) i.next();
+                a.remove();
+            }
+        }
+        return WfFactory.getWfAssignment(activity, resource, fromDate, true);
+    }
+
+    /**
+     * Accept an activity assignment.
+     * @param workEffortId The WorkEffort entity ID for the activitiy.
+     * @param partyId The assigned / to be assigned users party ID.
+     * @param roleTypeId The assigned / to be assigned role type ID.
+     * @param fromDate The assignment's from date.
+     * @throws WfException
+     */
+    public void accept(String workEffortId, String partyId, String roleTypeId, Timestamp fromDate) throws WfException {
+
+        WfAssignment assign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, partyId,
+                roleTypeId, fromDate);
+        assign.accept();
     }
 
     /**
@@ -80,9 +107,92 @@ public class WorkflowClient {
      * @param fromDate The assignment's from date.
      * @throws WfException
      */
-    public void accept(String workEffortId, String partyId, String roleTypeId, Timestamp fromDate) throws WfException {
-        WfAssignment assign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, partyId, roleTypeId, fromDate);
-        Job job = new AssignmentAcceptJob(assign);
+    public void acceptAndStart(String workEffortId, String partyId, String roleTypeId,
+                               Timestamp fromDate) throws WfException {
+
+        accept(workEffortId, partyId, roleTypeId, fromDate);
+        start(workEffortId);
+    }
+
+    /**
+     * Delegate an activity assignment.
+     * @param workEffortId The WorkEffort entity ID for the activitiy.
+     * @param fromPartyId The current assignment partyId.
+     * @param fromRoleTypeId The current assignment roleTypeId.
+     * @param fromFromDate The current assignment fromDate.
+     * @param toPartyId The new delegated assignment partyId.
+     * @param toRoleTypeId The new delegated assignment roleTypeId.
+     * @param toFromDate The new delegated assignment fromDate.
+     * @return The new assignment object.
+     * @throws WfException
+     */
+    public WfAssignment delegate(String workEffortId, String fromPartyId, String fromRoleTypeId, Timestamp fromFromDate,
+                                 String toPartyId, String toRoleTypeId, Timestamp toFromDate) throws WfException {
+
+        WfAssignment fromAssign = null;
+
+        if (fromPartyId == null && fromRoleTypeId == null && fromFromDate == null) {
+            WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
+            Iterator i = activity.getIteratorAssignment();
+            fromAssign = (WfAssignment) i.next();
+            if (i.hasNext())
+                throw new WfException("Cannot locate the assignment to delegate from, there is more then one " +
+                                      "assignment for this activity.");
+        }
+
+        fromAssign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, fromPartyId,
+                                               fromRoleTypeId, fromFromDate);
+
+        if (fromAssign.status().equals("CAL_DELEGATED"))
+            throw new WfException("Assignment has already been delegated");
+
+        fromAssign.changeStatus("CAL_DELEGATED");
+
+        return assign(workEffortId, toPartyId, toRoleTypeId, toFromDate, true);
+    }
+
+    /**
+     * Delegate and accept an activity assignment.
+     * @param workEffortId The WorkEffort entity ID for the activitiy.
+     * @param partyId The assigned / to be assigned users party ID.
+     * @param roleTypeId The assigned / to be assigned role type ID.
+     * @param fromDate The assignment's from date.
+     * @param start True to attempt to start the activity.
+     * @throws WfException
+     */
+    public void delegateAndAccept(String workEffortId, String fromPartyId, String fromRoleTypeId,
+                                  Timestamp fromFromDate, String toPartyId, String toRoleTypeId,
+                                  Timestamp toFromDate, boolean start) throws WfException {
+
+        WfAssignment assign = delegate(workEffortId, fromPartyId, fromRoleTypeId, fromFromDate, toPartyId,
+                                       toRoleTypeId, toFromDate);
+
+        assign.accept();
+        Debug.logVerbose("Delegated assignment.", module);
+        if (start) {
+            Debug.logVerbose("Starting activity.", module);
+            if (!activityRunning(assign.activity()))
+                start(workEffortId);
+            else
+                Debug.logWarning("Activity already running; not starting.", module);
+        }
+        else {
+            Debug.logVerbose("Not starting assignment.", module);
+        }
+    }
+
+    /**
+     * Start the activity.
+     * @param workEffortId The WorkEffort entity ID for the activitiy.
+     * @throws WfException
+     */
+    public void start(String workEffortId) throws WfException {
+        WfActivity activity = WfFactory.getWfActivity(context.getDelegator(), workEffortId);
+        Debug.logVerbose("Starting activity: " + activity.name(), module);
+        if (activityRunning(activity))
+            throw new WfException("Activity is already running.");
+        Job job = new StartActivityJob(activity);
+        Debug.logVerbose("Job: " + job, module);
         try {
             context.getDispatcher().getJobManager().runJob(job);
         } catch (JobSchedulerException e) {
@@ -98,9 +208,12 @@ public class WorkflowClient {
      * @param fromDate The assignment's from date.
      * @throws WfException
      */
-    public void complete(String workEffortId, String partyId, String roleTypeId, Timestamp fromDate, Map result) throws WfException {
-        WfAssignment assign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, partyId, roleTypeId, fromDate);
-        Job job = new AssignmentCompleteJob(assign, result);
+    public void complete(String workEffortId, String partyId, String roleTypeId,
+                         Timestamp fromDate, Map result) throws WfException {
+
+        WfAssignment assign = WfFactory.getWfAssignment(context.getDelegator(), workEffortId, partyId,
+                roleTypeId, fromDate);
+        Job job = new CompleteAssignmentJob(assign, result);
         try {
             context.getDispatcher().getJobManager().runJob(job);
         } catch (JobSchedulerException e) {
@@ -193,4 +306,17 @@ public class WorkflowClient {
         }
         return obj;
     }
+
+    // Test an activity for running state.
+    private boolean activityRunning(String workEffortId) throws WfException {
+        return activityRunning(WfFactory.getWfActivity(context.getDelegator(), workEffortId));
+    }
+
+    // Test an activity for running state.
+    private boolean activityRunning(WfActivity activity) throws WfException {
+        if (activity.state().equals("open.running"))
+            return true;
+        return false;
+    }
+
 }

@@ -27,38 +27,39 @@ package org.ofbiz.core.workflow.client;
 
 import java.util.*;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.scheduler.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
 
 /**
- * Workflow Client API - Accept Assignment Async-Job
+ * Workflow Client API - Start Activity Async-Job
  *
  *@author     <a href="mailto:jaz@zsolv.com">Andy Zeneski</a>
  *@created    March 5, 2001
  *@version    1.0
  */
-public class AssignmentAcceptJob extends AbstractJob {
+public class StartActivityJob extends AbstractJob {
 
-    protected WfAssignment assign;
+    protected WfActivity activity;
 
-    public AssignmentAcceptJob(WfAssignment assign) {
-        super(assign.toString());
-        this.assign = assign;
+    public StartActivityJob(WfActivity activity) {
+        super(activity.toString());
+        this.activity = activity;
         runtime = new Date().getTime();
-    }
-
-    public void exec() {
-        try {
-            assign.accept();
-        } catch (WfException e) {
-            Debug.logError(e);
-        }
-        finish();
     }
 
     protected void finish() {
         runtime = -1;
     }
 
+    public void exec() {
+        try {
+            activity.activate();
+        } catch (Exception e) {
+            Debug.logError("Start Activity Failed.");
+            e.printStackTrace();
+        }
+        finish();
+    }
 }

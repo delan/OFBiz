@@ -27,6 +27,7 @@ package org.ofbiz.core.workflow.client;
 
 import java.util.*;
 
+import org.ofbiz.core.entity.*;
 import org.ofbiz.core.service.scheduler.*;
 import org.ofbiz.core.util.*;
 import org.ofbiz.core.workflow.*;
@@ -38,12 +39,12 @@ import org.ofbiz.core.workflow.*;
  *@created    March 5, 2001
  *@version    1.0
  */
-public class AssignmentCompleteJob extends AbstractJob {
+public class CompleteAssignmentJob extends AbstractJob {
 
     protected WfAssignment assign;
     protected Map result;
 
-    public AssignmentCompleteJob(WfAssignment assign, Map result) {
+    public CompleteAssignmentJob(WfAssignment assign, Map result) {
         super(assign.toString());
         this.assign = assign;
         this.result = result;
@@ -54,8 +55,9 @@ public class AssignmentCompleteJob extends AbstractJob {
         try {
             assign.setResult(result);
             assign.complete();
-        } catch (WfException e) {
-            Debug.logError(e);
+        } catch (Exception e) {
+            Debug.logError("Complete Assignment Failed.");
+            e.printStackTrace();
         }
         finish();
     }
@@ -65,3 +67,4 @@ public class AssignmentCompleteJob extends AbstractJob {
     }
 
 }
+

@@ -62,37 +62,10 @@ public class WorkflowServices {
         try {
             WfProcess process = WfFactory.getWfProcess(delegator, workEffortId);
             process.abort();
-        } catch (WfException e) {
+        } catch (WfException we) {
+            we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
-        }
-        return result;
-    }
-
-    /** Marks an activity as complete */
-    public static Map completeActivity(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        Security security = ctx.getSecurity();
-        String workEffortId = (String) context.get("workEffortId");
-        Map actResults = (Map) context.get("result");
-
-        GenericValue userLogin = (GenericValue) context.get("userLogin");
-        if (!hasPermission(security, workEffortId, userLogin)) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "You do not have permission to access this activity");
-            return result;
-        }
-        try {
-            WfActivity activity = WfFactory.getWfActivity(delegator, workEffortId);
-            if (actResults != null && actResults.size() > 0) {
-                activity.setResult(actResults);
-            }
-            activity.complete();
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (WfException e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
     }
@@ -115,9 +88,10 @@ public class WorkflowServices {
             WorkflowClient client = WfFactory.getClient(ctx);
             client.setState(workEffortId, newState);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (WfException e) {
+        } catch (WfException we) {
+            we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
     }
@@ -139,9 +113,10 @@ public class WorkflowServices {
             WorkflowClient client = WfFactory.getClient(ctx);
             result.put("activityState", client.getState(workEffortId));
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (WfException e) {
+        } catch (WfException we) {
+            we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
     }
@@ -163,9 +138,10 @@ public class WorkflowServices {
             WorkflowClient client = WfFactory.getClient(ctx);
             result.put("activityContext", client.getContext(workEffortId));
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (WfException e) {
+        } catch (WfException we) {
+            we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
     }
@@ -193,9 +169,10 @@ public class WorkflowServices {
             WorkflowClient client = WfFactory.getClient(ctx);
             client.appendContext(workEffortId, appendContext);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (WfException e) {
+        } catch (WfException we) {
+            we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
     }
@@ -221,11 +198,12 @@ public class WorkflowServices {
         }
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-            client.assign(workEffortId, partyId, roleType, removeOldAssign ? false : true);
+            client.assign(workEffortId, partyId, roleType, null, removeOldAssign ? false : true);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
-        } catch (WfException e) {
+        } catch (WfException we) {
+            we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, e.getMessage());
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
     }
@@ -233,8 +211,6 @@ public class WorkflowServices {
     /** Accept an assignment and attempt to start the activity */
     public static Map acceptAssignment(DispatchContext ctx, Map context) {
         Map result = new HashMap();
-        GenericDelegator delegator = ctx.getDelegator();
-        LocalDispatcher dispatcher = ctx.getDispatcher();
         String workEffortId = (String) context.get("workEffortId");
         String partyId = (String) context.get("partyId");
         String roleType = (String) context.get("roleTypeId");
@@ -242,14 +218,35 @@ public class WorkflowServices {
 
         try {
             WorkflowClient client = WfFactory.getClient(ctx);
-            client.accept(workEffortId, partyId, roleType, fromDate);
+            client.acceptAndStart(workEffortId, partyId, roleType, fromDate);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
+            we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }
         return result;
 
+    }
+
+    /** Accept a role assignment and attempt to start the activity */
+    public static Map acceptRoleAssignment(DispatchContext ctx, Map context) {
+        Map result = new HashMap();
+        String workEffortId = (String) context.get("workEffortId");
+        String partyId = (String) context.get("partyId");
+        String roleType = (String) context.get("roleTypeId");
+        Timestamp fromDate = (Timestamp) context.get("fromDate");
+
+        try {
+            WorkflowClient client = new WorkflowClient(ctx);
+            client.delegateAndAccept(workEffortId, "_NA_", roleType, fromDate, partyId, roleType, fromDate, true);
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+        } catch (WfException we) {
+            we.printStackTrace();
+            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
+            result.put(ModelService.ERROR_MESSAGE, we.getMessage());
+        }
+        return result;
     }
 
     /** Complete an assignment */
@@ -275,6 +272,7 @@ public class WorkflowServices {
             client.complete(workEffortId, partyId, roleType, fromDate, actResults);
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
         } catch (WfException we) {
+            we.printStackTrace();
             result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
             result.put(ModelService.ERROR_MESSAGE, we.getMessage());
         }

@@ -46,16 +46,19 @@ public class WfAssignmentImpl implements WfAssignment {
     protected WfActivity activity;
     protected WfResource resource;
     protected Timestamp fromDate;
+    protected boolean create;
 
-    /** Creates new WfAssignment
-     *@param activity Sets the activity object for this assignment
-     *@param resource The WfResource object this is assigned to
-     *@throws WfException
+    /**
+     * Creates new WfAssignment.
+     * @param activity Sets the activity object for this assignment.
+     * @param resource The WfResource object this is assigned to.
+     * @throws WfException
      */
-    public WfAssignmentImpl(WfActivity activity, WfResource resource, Timestamp fromDate) throws WfException {
+    public WfAssignmentImpl(WfActivity activity, WfResource resource, Timestamp fromDate, boolean create) throws WfException {
         this.activity = activity;
         this.resource = resource;
         this.fromDate = fromDate;
+        this.create = create;
         checkAssignment();
     }
 
@@ -90,64 +93,69 @@ public class WfAssignmentImpl implements WfAssignment {
             Debug.logVerbose("[WfAssignment.checkAssignment] : no existing assignment.", module);
         }
 
-        // check the state of the activity
-        if (!activity.state().equals("open.not_running.not_started"))
-            throw new WfException("Activity already running");
-
-        // none exist; create a new one
-        try {
-            GenericValue v = activity.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
-            value = activity.getDelegator().create(v);
-            Debug.logVerbose("[WfAssignment.checkAssignment] : created new party assignment.", module);
-        } catch (GenericEntityException e) {
-            throw new WfException(e.getMessage(), e);
+        if (create) {
+            // none exist; create a new one
+            try {
+                GenericValue v = activity.getDelegator().makeValue("WorkEffortPartyAssignment", fields);
+                value = activity.getDelegator().create(v);
+                Debug.logVerbose("[WfAssignment.checkAssignment] : created new party assignment.", module);
+            } catch (GenericEntityException e) {
+                throw new WfException(e.getMessage(), e);
+            }
+            if (value == null)
+                throw new WfException("Could not create the assignement!");
         }
         if (value == null)
-            throw new WfException("Could not create the assignement!");
+            throw new WfException("Not a valid assignment");
     }
 
-    /** Mark this assignment as accepted
-     *@throws WfException
+    /**
+     * Mark this assignment as accepted.
+     * @throws WfException
      */
     public void accept() throws WfException {
-        // remove other assignments
+        boolean allDelegated = true;
         boolean acceptAll = activity.getDefinitionObject().get("acceptAllAssignments") != null ?
                 activity.getDefinitionObject().getBoolean("acceptAllAssignments").booleanValue() : false;
+
         if (!acceptAll) {
-            Debug.logInfo("[WfAssignment.accept] : setting other assignments to delegated status.", module);
-            Iterator ai = activity.getIteratorAssignment();
-            while (ai.hasNext()) {
-                WfAssignment a = (WfAssignment) ai.next();
-                if (!a.equals(this)) a.changeStatus("CAL_DELEGATED");
+            // check for existing accepted assignment
+            if (!activity.state().equals("open.not_running.not_started")) {
+                // activity already running all assignments must be delegated in order to accept
+                Iterator ai = activity.getIteratorAssignment();
+                while (ai.hasNext() && allDelegated) {
+                    WfAssignment a = (WfAssignment) ai.next();
+                    if (!a.status().equals("CAL_DELEGATED"))
+                        allDelegated = false;
+                }
+                // we cannot accept if the activity is running, with active assignments
+                if (!allDelegated)
+                    throw new WfException("Cannot accept. Activity already running with active assignments.");
+            } else {
+                // activity not running, auto change all assignments to delegated status
+                Debug.logInfo("[WfAssignment.accept] : setting other assignments to delegated status.", module);
+                Iterator ai = activity.getIteratorAssignment();
+                while (ai.hasNext()) {
+                    WfAssignment a = (WfAssignment) ai.next();
+                    if (!a.equals(this)) a.changeStatus("CAL_DELEGATED");
+                }
             }
         }
+        // set this assignment as accepted
         changeStatus("CAL_ACCEPTED");
-        try {
-            activity.activate();
-        } catch (CannotStart cs) {
-            throw new WfException("Assignment was accepted, but activity cannot start yet.", cs);
-        } catch (AlreadyRunning ar) {
-            throw new WfException("Cannot accept assignment; activity has already started.", ar);
-        }
-        try {
-            GenericValue v = activity.getRuntimeObject();
-            v.set("estimatedStartDate", UtilDateTime.nowTimestamp());
-            v.store();
-        } catch (GenericEntityException e) {
-            e.printStackTrace();
-            Debug.logWarning("[WfAssignment.accept] : could not set startdate", module);
-        }
     }
 
-    /** Set the results of this assignment
-     * @param Map The results of the assignement
+    /**
+     * Set the results of this assignment.
+     * @param Map The results of the assignement.
      * @throws WfException
      */
     public void setResult(Map results) throws WfException {
         activity.setResult(results);
     }
 
-    /** Mark this assignment as complete
+    /**
+     * Mark this assignment as complete.
      * @throws WfException
      */
     public void complete() throws WfException {
@@ -159,7 +167,16 @@ public class WfAssignmentImpl implements WfAssignment {
         }
     }
 
-    /** Change the status of this assignment
+    /**
+     * Mark this assignment as delegated.
+     * @throws WfException
+     */
+    public void delegated() throws WfException {
+        changeStatus("CAL_DELEGATED");
+    }
+
+    /**
+     * Change the status of this assignment.
      * @param status The new status
      * @throws WfException
      */
@@ -175,23 +192,26 @@ public class WfAssignmentImpl implements WfAssignment {
         }
     }
 
-    /** Gets the activity object of this assignment.
-     * @return WfActivity The activity object of this assignment
+    /**
+     * Gets the activity object of this assignment.
+     * @return WfActivity The activity object of this assignment.
      * @throws WfException
      */
     public WfActivity activity() throws WfException {
         return activity;
     }
 
-    /** Gets the assignee (resource) of this assignment
-     * @return WfResource The assignee of this assignment
+    /**
+     * Gets the assignee (resource) of this assignment.
+     * @return WfResource The assignee of this assignment.
      * @throws WfException
      */
     public WfResource assignee() throws WfException {
         return resource;
     }
 
-    /** Sets the assignee of this assignment
+    /**
+     * Sets the assignee of this assignment.
      * @param newValue
      * @throws WfException
      * @throws InvalidResource
@@ -203,7 +223,8 @@ public class WfAssignmentImpl implements WfAssignment {
         checkAssignment();
     }
 
-    /** Removes the stored data for this object
+    /**
+     * Removes the stored data for this object.
      * @throws WfException
      */
     public void remove() throws WfException {
@@ -214,12 +235,22 @@ public class WfAssignmentImpl implements WfAssignment {
         }
     }
 
-    /** Gets the status of this assignment
-     * @return String status code for this assignment
+    /**
+     * Gets the status of this assignment.
+     * @return String status code for this assignment.
      * @throws WfException
      */
     public String status() throws WfException {
         return valueObject().getString("statusId");
+    }
+
+    /**
+     * Gets the from date of this assignment.
+     * @return Timestamp when this assignment first began.
+     * @throws WfException
+     */
+    public Timestamp fromDate() throws WfException {
+        return fromDate;
     }
 
     private GenericValue valueObject() throws WfException {
