@@ -28,9 +28,11 @@
  * @version   1.0
  * Created    February 23, 2002
  -->
- 
+
 <simple-methods>
     <simple-method method-name="createCustomer" short-description="Create Customer" login-required="false">
+        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="require.email" default="true" field-name="require_email"/>
+        <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="require.phone" default="false" field-name="require_phone"/>
         <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="create.allow.password" default="true" field-name="create_allow_password"/>
         <webapp-property-to-field resource="/WEB-INF/ecommerce.properties" property="default.customer.password" default="ungssblepsswd" field-name="default_customer_password"/>
 
@@ -42,7 +44,7 @@
             <env-to-field env-name="default_customer_password" field-name="CONFIRM_PASSWORD" map-name="parameters"/>
             <string-to-field string="No hint set, accout not yet enabled" field-name="PASSWORD_HINT" map-name="parameters"/>
         </if-compare>
-            
+
         <!-- Create the UserLogin Record -->
         <call-map-processor in-map-name="parameters" out-map-name="userLoginContext">
             <simple-map-processor name="newUserLogin">
@@ -65,7 +67,7 @@
                 <field-to-list field-name="tempErrorMessage" list-name="error_list"/>
             </if-not-empty>
         </if-not-empty>
-        
+
         <!-- make a map for use in creating a UserLogin value object -->
         <field-to-field field-name="userLoginId" map-name="userLoginContext" to-map-name="newUserLoginMap"/>
         <field-to-field field-name="currentPassword" map-name="userLoginContext" to-map-name="newUserLoginMap"/>
@@ -100,7 +102,7 @@
                 <process field="roleTypeId"><copy/></process>
             </simple-map-processor>
         </call-map-processor>
-        
+
         <!-- Create the Postal Address -->
         <call-map-processor in-map-name="parameters" out-map-name="addressContext">
             <simple-map-processor name="newPerson">
@@ -194,12 +196,29 @@
             </call-map-processor>
         </if-not-empty>
 
+        <!-- Check for required Phone -->
+        <if-compare field-name="require_phone" operator="equals" value="true">
+            <if-empty field-name="CUSTOMER_HOME_CONTACT" map-name="parameters">
+                <if-empty field-name="CUSTOMER_WORK_CONTACT" map-name="parameters">
+                    <if-empty field-name="CUSTOMER_MOBILE_CONTACT" map-name="parameters">
+                        <call-map-processor in-map-name="parameters" out-map-name="dummymap">
+                            <simple-map-processor name="checkRequiredPhone">
+                                <process field="REQUIRED_PHONE">
+                                    <not-empty><fail-message message="Contact telephone is missing"/></not-empty>
+                                </process>
+                            </simple-map-processor>
+                        </call-map-processor>
+                    </if-empty>
+                </if-empty>
+            </if-empty>
+        </if-compare>
+
         <!-- Create the email address -->
         <call-map-processor in-map-name="parameters" out-map-name="emailContext">
             <simple-map-processor name="newEmail">
                 <process field="USERNAME"><copy to-field="partyId"/></process>
                 <process field="roleTypeId"><copy/></process>
-                <process field="CUSTOMER_EMAIL">
+                <process field="CUSTOMER_EMAIL"><copy to-field="emailAddress"/></process>
                     <not-empty><fail-message message="Email is missing"/></not-empty>
                     <validate-method method="isEmail"><fail-message message="Email address not formatted correctly, must be like: name@domain"/></validate-method>
                     <copy to-field="emailAddress"/>
@@ -207,6 +226,29 @@
                 <process field="CUSTOMER_EMAIL_ALLOW_SOL"><copy to-field="allowSolicitation"/></process>
             </simple-map-processor>
         </call-map-processor>
+
+        <!-- Check for required E-Mail -->
+        <if-compare field-name="require_email" operator="equals" value="true">
+            <if-empty field-name="emailAddress" map-name="emailContext">
+                <call-map-processor in-map-name="parameters" out-map-name="dummymap">
+                    <simple-map-processor name="checkRequiredEmail">
+                        <process field="CUSTOMER_EMAIL">
+                            <not-empty><fail-message message="E-mail address is missing"/></not-empty>
+                        </process>
+                    </simple-map-processor>
+               </call-map-processor>
+           </if-empty>
+           <else>
+                <call-map-processor in-map-name="parameters" out-map-name="dummymap">
+                    <simple-map-processor name="checkRequiredEmailFormat">
+                        <process field="CUSTOMER_EMAIL">
+                            <not-empty><fail-message message="E-mail address is missing"/></not-empty>
+                            <validate-method method="isEmail"><fail-message message="Email address not formatted correctly, must be like: name@domain"/></validate-method>
+                        </process>
+                    </simple-map-processor>
+               </call-map-processor>
+           </else>
+       </if-compare>
 
         <!-- now that everything is validated & setup, check to see if there are errors, then call the services -->
         <check-errors/>
@@ -227,7 +269,7 @@
         <if-not-empty field-name="CUSTOMER_HOME_CONTACT" map-name="parameters">
             <call-service service-name="createTelecomNumber" in-map-name="homePhoneContext">
                 <result-to-field result-name="contactMechId" map-name="homePhonePurposeContext"/>
-            </call-service> 
+            </call-service>
             <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="homePhonePurposeContext"/>
             <string-to-field string="PHONE_HOME" field-name="contactMechPurposeTypeId" map-name="homePhonePurposeContext"/>
             <call-service service-name="createPartyContactMechPurpose" in-map-name="homePhonePurposeContext"/>
@@ -237,7 +279,7 @@
         <if-not-empty field-name="CUSTOMER_WORK_CONTACT" map-name="parameters">
             <call-service service-name="createTelecomNumber" in-map-name="workPhoneContext">
                 <result-to-field result-name="contactMechId" map-name="workPhonePurposeContext"/>
-            </call-service> 
+            </call-service>
             <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="workPhonePurposeContext"/>
             <string-to-field string="PHONE_WORK" field-name="contactMechPurposeTypeId" map-name="workPhonePurposeContext"/>
             <call-service service-name="createPartyContactMechPurpose" in-map-name="workPhonePurposeContext"/>
@@ -247,7 +289,7 @@
         <if-not-empty field-name="CUSTOMER_FAX_CONTACT" map-name="parameters">
             <call-service service-name="createTelecomNumber" in-map-name="faxPhoneContext">
                 <result-to-field result-name="contactMechId" map-name="faxPhonePurposeContext"/>
-            </call-service> 
+            </call-service>
             <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="faxPhonePurposeContext"/>
             <string-to-field string="FAX_NUMBER" field-name="contactMechPurposeTypeId" map-name="faxPhonePurposeContext"/>
             <call-service service-name="createPartyContactMechPurpose" in-map-name="faxPhonePurposeContext"/>
@@ -257,7 +299,7 @@
         <if-not-empty field-name="CUSTOMER_MOBILE_CONTACT" map-name="parameters">
             <call-service service-name="createTelecomNumber" in-map-name="mobilePhoneContext">
                 <result-to-field result-name="contactMechId" map-name="mobilePhonePurposeContext"/>
-            </call-service> 
+            </call-service>
             <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="mobilePhonePurposeContext"/>
             <string-to-field string="PHONE_MOBILE" field-name="contactMechPurposeTypeId" map-name="mobilePhonePurposeContext"/>
             <call-service service-name="createPartyContactMechPurpose" in-map-name="mobilePhonePurposeContext"/>
@@ -266,7 +308,7 @@
         <!-- email address -->
         <call-service service-name="createEmailAddress" in-map-name="emailContext">
             <result-to-field result-name="contactMechId" map-name="emailPurposeContext"/>
-        </call-service> 
+        </call-service>
         <field-to-field field-name="USERNAME" map-name="parameters" to-field-name="partyId" to-map-name="emailPurposeContext"/>
         <string-to-field string="PRIMARY_EMAIL" field-name="contactMechPurposeTypeId" map-name="emailPurposeContext"/>
         <call-service service-name="createPartyContactMechPurpose" in-map-name="emailPurposeContext"/>
@@ -275,5 +317,5 @@
         <if-compare field-name="create_allow_password" operator="equals" value="true">
             <field-to-session field-name="newUserLogin" session-name="_USER_LOGIN_"/>
         </if-compare>
-    </simple-method>   
+    </simple-method>
 </simple-methods>
