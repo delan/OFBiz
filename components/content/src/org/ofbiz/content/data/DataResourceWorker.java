@@ -1,5 +1,5 @@
 /*
- * $Id: DataResourceWorker.java,v 1.23 2004/03/31 16:58:40 byersa Exp $
+ * $Id: DataResourceWorker.java,v 1.24 2004/04/01 17:53:48 byersa Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -64,7 +64,7 @@ import freemarker.template.Template;
  * 
  * @author <a href="mailto:byersa@automationgroups.com">Al Byers</a>
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version $Revision: 1.23 $
+ * @version $Revision: 1.24 $
  * @since 3.0
  */
 public class DataResourceWorker {
@@ -784,6 +784,9 @@ public class DataResourceWorker {
             FileReader in = null;
             try {
                 in = new FileReader(file);
+                String enc = in.getEncoding();
+                if (Debug.infoOn()) Debug.logInfo("in serveImage, encoding:" + enc, module);
+
             } catch (FileNotFoundException e) {
                 Debug.logError(e, " in renderDataResourceAsHtml(CONTEXT_FILE), in FNFexception:", module);
                 throw new GeneralException("Could not find context file to render", e);
@@ -791,10 +794,14 @@ public class DataResourceWorker {
                 Debug.logError(" in renderDataResourceAsHtml(CONTEXT_FILE), got exception:" + e.getMessage(), module);
             }
             if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(CONTEXT_FILE), after FileReader:", module);
+            int count=0;
             while ((c = in.read()) != -1) {
                 out.write(c);
+                count++;
             }
-            out.flush();
+            //out.flush();
+                if (Debug.infoOn()) Debug.logInfo("in serveImage, count:" + count, module);
+
         }
         return;
     }
@@ -819,4 +826,34 @@ public class DataResourceWorker {
 
         return prefix;
     }
+
+    public static File getContentFile(String dataResourceTypeId, String objectInfo, String rootDir)  throws GeneralException, FileNotFoundException{
+
+        File file = null;
+        if (dataResourceTypeId.equals("LOCAL_FILE")) {
+            file = new File(objectInfo);
+            if (!file.isAbsolute()) {
+                throw new GeneralException("File (" + objectInfo + ") is not absolute");
+            }
+            int c;
+            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(LOCAL), file:" + file, module);
+        } else if (dataResourceTypeId.equals("OFBIZ_FILE")) {
+            String prefix = System.getProperty("ofbiz.home");
+            String sep = "";
+            if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
+                sep = "/";
+            }
+            file = new File(prefix + sep + objectInfo);
+            if (Debug.verboseOn()) Debug.logVerbose(" in renderDataResourceAsHtml(OFBIZ_FILE), file:" + file, module);
+        } else if (dataResourceTypeId.equals("CONTEXT_FILE")) {
+            String prefix = rootDir;
+            String sep = "";
+            if (objectInfo.indexOf("/") != 0 && prefix.lastIndexOf("/") != (prefix.length() - 1)) {
+                sep = "/";
+            }
+            file = new File(prefix + sep + objectInfo);
+        }
+        return file;
+    }
+
 }
