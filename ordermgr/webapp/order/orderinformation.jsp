@@ -203,8 +203,11 @@
                     <%GenericValue paymentMethodType = orderPaymentPreference.getRelatedOneCache("PaymentMethodType");%>
                     <%if (paymentMethodType != null) pageContext.setAttribute("paymentMethodType", paymentMethodType);%>
                     <tr>
-                      <td colspan="2" valign="top">
-                        <div class="tabletext">&nbsp;<b><%EntityField.run("paymentMethodType", "description", pageContext);%></b><%-- [<%EntityField.run("orderPaymentPreference", "paymentMethodTypeId", pageContext);%>]--%></div>
+                      <td valign="top">
+                        <div class="tabletext">&nbsp;<b><%=UtilFormatOut.checkNull(paymentMethodType.getString("description"))%></b></div>
+                      </td>
+                      <td valign="top">
+                        <div class="tabletext">&nbsp;<%=UtilFormatOut.formatPrice(orderPaymentPreference.getDouble("maxAmount"))%></div>
                       </td>
                     </tr>
                   </ofbiz:unless>

@@ -233,10 +233,17 @@
     <request-map uri="processpayment">
         <security direct-request="false"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.CheckOutEvents" invoke="processPayment"/>
-        <response name="success" type="request" value="clearcart"/>
+        <response name="success" type="request" value="processOfflinePayment"/>
         <response name="fail" type="view" value="confirm"/>
         <response name="error" type="view" value="confirm"/>
     </request-map>
+    <request-map uri="processOfflinePayment">
+        <security direct-request="false"/>
+        <event type="java" path="org.ofbiz.ordermgr.OrderManagerEvents" invoke="processOfflinePayments"/>
+        <response name="success" type="request" value="clearcart"/>
+        <response name="fail" type="view" value="confirm"/>
+        <response name="error" type="view" value="confirm"/>
+    </request-map>    
     <request-map uri="clearcart">
         <security https="true" auth="true"/>
         <event type="java" path="org.ofbiz.commonapp.order.shoppingcart.ShoppingCartEvents" invoke="destroyCart"/>
