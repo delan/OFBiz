@@ -34,10 +34,15 @@
 <%@ page import="org.ofbiz.core.util.*, org.ofbiz.core.pseudotag.*" %>
 <%@ page import="org.ofbiz.core.entity.*" %>
 
+<jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
+
 <%
         String userLoginId = request.getParameter("userlogin_id");
         if (userLoginId == null) userLoginId = (String) request.getSession().getAttribute("userLoginId");
         else request.getSession().setAttribute("userLoginId", userLoginId);
+
+        GenericValue userUserLogin = delegator.findByPrimaryKey("UserLogin", UtilMisc.toMap("userLoginId", userLoginId));
+        if (userUserLogin != null) pageContext.setAttribute("userUserLogin", userUserLogin);
 
         boolean tryEntity = true;
         if(request.getAttribute(SiteDefs.ERROR_MESSAGE) != null) tryEntity = false;
@@ -69,15 +74,19 @@
     <tr>
       <td width="26%" align=right><div class="tabletext">Password Hint</div></td>
       <td width="74%">
-        <input type="text" size="40" maxlength="100" <ofbiz:inputvalue field="passwordHint" entityAttr="userLogin" tryEntityAttr="tryEntity" fullattrs="true"/>>
+        <input type="text" size="40" maxlength="100" name="passwordHint" value="<ofbiz:entityfield attribute="userUserLogin" field="passwordHint"/>">
       </td>
     </tr>
     <tr>
       <td width="26%" align=right><div class="tabletext">Account Enabled</div></td>
       <td width="74%">
+        <%
+           Boolean enabledFlag = userUserLogin.getBoolean("enabled");
+           if (enabledFlag == null) enabledFlag = new Boolean(true);
+        %>
         <select name="enabled">
-            <option value="true">Yes</option>
-            <option value="false">No</option>
+            <option value="true" <%=enabledFlag.booleanValue() ? "SELECTED" : ""%>>Yes</option>
+            <option value="false" <%=!enabledFlag.booleanValue() ? "SELECTED" : ""%>>No</option>
         </select>
       </td>
     </tr>
