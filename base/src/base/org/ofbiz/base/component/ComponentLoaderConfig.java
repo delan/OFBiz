@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentLoaderConfig.java,v 1.4 2003/08/20 05:55:59 ajzeneski Exp $
+ * $Id: ComponentLoaderConfig.java,v 1.5 2003/08/27 18:12:56 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -26,17 +26,13 @@ package org.ofbiz.base.component;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.FlexibleStringExpander;
 import org.ofbiz.base.util.UtilURL;
 import org.ofbiz.base.util.UtilXml;
@@ -48,7 +44,7 @@ import org.xml.sax.SAXException;
  * ComponentLoaderConfig - Component Loader configuration
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class ComponentLoaderConfig {
@@ -61,41 +57,36 @@ public class ComponentLoaderConfig {
     
     protected static List componentsToLoad = null;
     
-    protected ComponentLoaderConfig(String configFile) throws ComponentException {
-        ComponentLoaderConfig.componentsToLoad = new LinkedList();           
-        if (configFile == null) {
-            configFile = COMPONENT_LOAD_XML_FILENAME;
-        }
-        
-        URL xmlUrl = UtilURL.fromResource(configFile);        
-        Document document = null;
-        try {
-            document = UtilXml.readXmlDocument(xmlUrl, true);
-        } catch (SAXException e) {
-            throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
-        } catch (ParserConfigurationException e) {
-            throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
-        } catch (IOException e) {
-            throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
-        }
-        
-        Element root = document.getDocumentElement();
-        List toLoad = UtilXml.childElementList(root, null);
-        if (toLoad != null && toLoad.size() > 0) {
-            Iterator i = toLoad.iterator();
-            while (i.hasNext()) {
-                Element element = (Element) i.next();
-                componentsToLoad.add(new ComponentDef(element));                
-            }
-        }        
-        
-    }
-    
     public static List getComponentsToLoad(String configFile) throws ComponentException {
         if (componentsToLoad == null) {
             synchronized (ComponentLoaderConfig.class) {
                 if (componentsToLoad ==  null) {
-                    new ComponentLoaderConfig(configFile);
+                    ComponentLoaderConfig.componentsToLoad = new LinkedList();           
+                    if (configFile == null) {
+                        configFile = COMPONENT_LOAD_XML_FILENAME;
+                    }
+        
+                    URL xmlUrl = UtilURL.fromResource(configFile);        
+                    Document document = null;
+                    try {
+                        document = UtilXml.readXmlDocument(xmlUrl, true);
+                    } catch (SAXException e) {
+                        throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
+                    } catch (ParserConfigurationException e) {
+                        throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
+                    } catch (IOException e) {
+                        throw new ComponentException("Error reading the component config file: " + xmlUrl, e);
+                    }
+        
+                    Element root = document.getDocumentElement();
+                    List toLoad = UtilXml.childElementList(root, null);
+                    if (toLoad != null && toLoad.size() > 0) {
+                        Iterator i = toLoad.iterator();
+                        while (i.hasNext()) {
+                            Element element = (Element) i.next();
+                            componentsToLoad.add(new ComponentDef(element));                
+                        }
+                    }        
                 }                
             }
         }
@@ -109,7 +100,7 @@ public class ComponentLoaderConfig {
         
         public ComponentDef(Element element) {            
             Properties systemProps = System.getProperties();
-            if ("load-component".equals(element.getLocalName())) {
+            if ("load-component".equals(element.getNodeName())) {
                 name = element.getAttribute("component-name");
                 location = FlexibleStringExpander.expandString(element.getAttribute("component-location"), systemProps);
                 type = SINGLE_COMPONENT;

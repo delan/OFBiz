@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentConfig.java,v 1.10 2003/08/20 23:01:41 jonesde Exp $
+ * $Id: ComponentConfig.java,v 1.11 2003/08/27 18:12:56 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.xml.sax.SAXException;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.10 $
+ * @version    $Revision: 1.11 $
  * @since      3.0
  */
 public class ComponentConfig {
@@ -70,14 +70,22 @@ public class ComponentConfig {
     }
     
     public static ComponentConfig getComponentConfig(String globalName, String rootLocation) throws ComponentException {
-        ComponentConfig componentConfig = (ComponentConfig) componentConfigs.get(globalName);
+        ComponentConfig componentConfig = null;
+        if (UtilValidate.isNotEmpty(globalName)) {
+            componentConfig = (ComponentConfig) componentConfigs.get(globalName);
+        }
         if (componentConfig == null) {
             if (rootLocation != null) {
                 synchronized (ComponentConfig.class) {
-                    componentConfig = (ComponentConfig) componentConfigs.get(globalName);
+                    if (UtilValidate.isNotEmpty(globalName)) {
+                        componentConfig = (ComponentConfig) componentConfigs.get(globalName);
+                    }
                     if (componentConfig == null) {
                         componentConfig = new ComponentConfig(globalName, rootLocation);
-                        componentConfigs.put(globalName, componentConfig);                        
+                        if (componentConfigs.containsKey(componentConfig.getGlobalName())) {
+                            Debug.logWarning("WARNING: Loading ofbiz-component using a global name that already exists, will over-write: " + componentConfig.getGlobalName(), module);
+                        }
+                        componentConfigs.put(componentConfig.getGlobalName(), componentConfig);                        
                     }
                 }
             } else {
@@ -259,7 +267,10 @@ public class ComponentConfig {
         }
         
         Element ofbizComponentElement = ofbizComponentDocument.getDocumentElement();
-        this.componentName = ofbizComponentElement.getAttribute("name");        
+        this.componentName = ofbizComponentElement.getAttribute("name");
+        if (UtilValidate.isEmpty(this.globalName)) {
+            this.globalName = this.componentName;        
+        }
         Iterator elementIter = null;
         
         // resource-loader - resourceLoaderInfos

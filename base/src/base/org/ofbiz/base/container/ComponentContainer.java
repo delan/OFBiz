@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.12 2003/08/25 17:50:38 jonesde Exp $
+ * $Id: ComponentContainer.java,v 1.13 2003/08/27 18:12:56 jonesde Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,6 +35,7 @@ import org.ofbiz.base.component.ComponentException;
 import org.ofbiz.base.component.ComponentLoaderConfig;
 import org.ofbiz.base.start.Classpath;
 import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilValidate;
 
 /**
  * ComponentContainer - StartupContainer implementation for Components
@@ -45,7 +46,7 @@ import org.ofbiz.base.util.Debug;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.12 $
+  *@version    $Revision: 1.13 $
  * @since      3.0
  */
 public class ComponentContainer implements Container {
@@ -95,6 +96,9 @@ public class ComponentContainer implements Container {
                     ComponentConfig config = null;
                     try {
                         config = ComponentConfig.getComponentConfig(def.name, def.location);
+                        if (UtilValidate.isEmpty(def.name)) {
+                            def.name = config.getGlobalName();
+                        }
                     } catch (ComponentException e) {
                         Debug.logError("Cannot load component : " + def.name + " @ " + def.location + " : " + e.getMessage(), module);    
                     }
@@ -134,7 +138,8 @@ public class ComponentContainer implements Container {
                         if (configFile.exists()) {
                             ComponentConfig config = null;
                             try {
-                                config = ComponentConfig.getComponentConfig(componentPath.getName(), componentLocation);
+                                // pass null for the name, will default to the internal component name
+                                config = ComponentConfig.getComponentConfig(null, componentLocation);
                             } catch (ComponentException e) {
                                 Debug.logError(e, "Cannot load component : " + componentPath.getName() + " @ " + componentLocation + " : " + e.getMessage(), module);    
                             }

@@ -24,13 +24,13 @@
  *  CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT 
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *  $Id: component-loader.dtd,v 1.2 2003/08/17 03:11:28 ajzeneski Exp $
+ *  $Id: component-loader.dtd,v 1.3 2003/08/27 18:12:56 jonesde Exp $
 -->
 
 <!ELEMENT component-loader ( load-component | load-components )*>
 <!ELEMENT load-component EMPTY>
 <!ATTLIST load-component
-    component-name CDATA #REQUIRED
+    component-name CDATA #IMPLIED
     component-location CDATA #REQUIRED
 >
 <!ELEMENT load-components EMPTY>
