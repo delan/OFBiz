@@ -23,12 +23,16 @@
  */
 package org.ofbiz.core.service.group;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.Iterator;
+import java.util.List;
 
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.config.*;
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.ResourceHandler;
+import org.ofbiz.core.service.config.ServiceConfigUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Element;
 
 /**
  * ServiceGroupReader.java

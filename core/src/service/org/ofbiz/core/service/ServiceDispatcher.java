@@ -24,17 +24,32 @@
  */
 package org.ofbiz.core.service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.service.eca.*;
-import org.ofbiz.core.service.group.*;
-import org.ofbiz.core.service.job.*;
-import org.ofbiz.core.service.jms.*;
-import org.ofbiz.core.service.config.*;
-import org.ofbiz.core.service.engine.*;
-import org.ofbiz.core.security.*;
+import javax.transaction.InvalidTransactionException;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
+
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericTransactionException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.entity.TransactionFactory;
+import org.ofbiz.core.entity.TransactionUtil;
+import org.ofbiz.core.security.Security;
+import org.ofbiz.core.security.SecurityConfigurationException;
+import org.ofbiz.core.security.SecurityFactory;
+import org.ofbiz.core.service.config.ServiceConfigUtil;
+import org.ofbiz.core.service.eca.ServiceEcaUtil;
+import org.ofbiz.core.service.engine.GenericEngine;
+import org.ofbiz.core.service.engine.GenericEngineFactory;
+import org.ofbiz.core.service.group.ServiceGroupReader;
+import org.ofbiz.core.service.jms.JmsListenerFactory;
+import org.ofbiz.core.service.job.JobManager;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * Global Service Dispatcher
@@ -157,8 +172,12 @@ public class ServiceDispatcher {
 
         // check the locale
         this.checkLocale(context);
+
+        // for isolated transactions        
+        TransactionManager tm = TransactionFactory.getTransactionManager();
+        Transaction parentTransaction = null;
         
-        // start the transaction
+        // start the transaction        
         boolean beganTrans = false;
         if (service.useTransaction) {
             try {
@@ -166,8 +185,26 @@ public class ServiceDispatcher {
             } catch (GenericTransactionException te) {
                 throw new GenericServiceException("Cannot start the transaction.", te.getNested());
             }
+            
+            // isolate the transaction if defined
+            if (service.isolateTransaction && !beganTrans) {
+                try {
+                    parentTransaction = tm.suspend();
+                } catch (SystemException se) {
+                    Debug.logError(se, "Problems suspending current transaction", module);
+                    throw new GenericServiceException("Problems suspending transaction, see logs");
+                }
+                
+                // now start a new transaction
+                try {
+                    beganTrans = TransactionUtil.begin();
+                } catch (GenericTransactionException gte) {
+                    throw new GenericServiceException("Cannot start the transaction.", gte.getNested());                   
+                }
+            }
         }
 
+        // needed for events
         DispatchContext ctx = (DispatchContext) localContext.get(localName);
 
         try {
@@ -226,9 +263,8 @@ public class ServiceDispatcher {
 
             // pre-commit ECA
             if (eventMap != null) ServiceEcaUtil.evalRules(service.name, eventMap, "commit", ctx, ecaContext, result, isError);
-
             
-            //if there was an error, rollback transaction, otherwise commit
+            // if there was an error, rollback transaction, otherwise commit
             if (isError) {
                 // rollback the transaction
                 try {
@@ -242,7 +278,23 @@ public class ServiceDispatcher {
                     TransactionUtil.commit(beganTrans);
                 } catch (GenericTransactionException e) {
                     Debug.logError(e, "Could not commit transaction", module);
+                    // TODO: check on this; we need to throw something here so the rest doesnt run
                     //NOTE DEJ 25 Oct 2002 NEVER throw this exception, it masks the REAL problem which should already be in an error message, just log it:throw new GenericServiceException("Could not commit the transaction:", e);
+                }                               
+            }
+            
+            // resume the parent transaction
+            if (parentTransaction != null) {            
+                try {
+                    tm.resume(parentTransaction);
+                } catch (InvalidTransactionException ite) {
+                    Debug.logWarning(ite, "Invalid transaction, not resumed", module);                
+                } catch (IllegalStateException ise) {
+                    Debug.logError(ise, "Trouble resuming parent transaction", module);
+                    throw new GenericServiceException("Resume transaction exception, see logs");               
+                } catch (SystemException se) {
+                    Debug.logError(se, "Trouble resuming parent transaction", module);
+                    throw new GenericServiceException("Resume transaction exception, see logs");                
                 }
             }
 
@@ -520,7 +572,7 @@ public class ServiceDispatcher {
         // shutdown the job scheduler
         jm.finalize();
     }
-
+    
     // checks if parameters were passed for authentication
     private Map checkAuth(String localName, Map context, ModelService origService) throws GenericServiceException {
         String service = ServiceConfigUtil.getElementAttr("authorization", "service-name");

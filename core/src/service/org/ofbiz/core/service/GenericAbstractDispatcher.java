@@ -24,14 +24,16 @@
  */
 package org.ofbiz.core.service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.Map;
 
-import org.ofbiz.core.calendar.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.service.jms.*;
-import org.ofbiz.core.service.job.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.calendar.RecurrenceRule;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.security.Security;
+import org.ofbiz.core.service.jms.JmsListenerFactory;
+import org.ofbiz.core.service.job.JobManager;
+import org.ofbiz.core.service.job.JobManagerException;
+import org.ofbiz.core.util.Debug;
 
 /**
  * Generic Services Local Dispatcher

@@ -24,11 +24,16 @@
  */
 package org.ofbiz.core.service.eca;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.ObjectType;
+import org.w3c.dom.Element;
 
 /**
  * ServiceEcaCondition

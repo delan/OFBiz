@@ -23,9 +23,9 @@
  */
 package org.ofbiz.core.service.jms;
 
-import javax.jms.*;
+import javax.jms.MessageListener;
 
-import org.ofbiz.core.service.*;
+import org.ofbiz.core.service.GenericServiceException;
 
 /**
  * GenericMessageListener - Estension to MessageListener

@@ -24,15 +24,27 @@
  */
 package org.ofbiz.core.service;
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
-import javax.xml.parsers.*;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.xml.sax.*;
-import org.w3c.dom.*;
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.ResourceHandler;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilTimer;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Generic Service - Service Definition Reader

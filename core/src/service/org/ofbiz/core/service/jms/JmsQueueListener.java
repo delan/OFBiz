@@ -23,11 +23,21 @@
  */
 package org.ofbiz.core.service.jms;
 
-import javax.naming.*;
-import javax.jms.*;
+import javax.jms.JMSException;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueReceiver;
+import javax.jms.QueueSession;
+import javax.jms.Session;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.ServiceDispatcher;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.GeneralException;
+import org.ofbiz.core.util.JNDIContextFactory;
 
 /**
  * JmsQueueListener - Queue (P2P) Message Listener.

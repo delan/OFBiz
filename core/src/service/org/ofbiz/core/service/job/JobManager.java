@@ -24,14 +24,28 @@
  */
 package org.ofbiz.core.service.job;
 
-import java.io.*;
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.calendar.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.serialize.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.calendar.RecurrenceInfo;
+import org.ofbiz.core.calendar.RecurrenceInfoException;
+import org.ofbiz.core.entity.EntityExpr;
+import org.ofbiz.core.entity.EntityOperator;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.entity.GenericEntityException;
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.serialize.SerializeException;
+import org.ofbiz.core.serialize.XmlSerializer;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.ServiceDispatcher;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilDateTime;
+import org.ofbiz.core.util.UtilMisc;
 
 /**
  * JobManager

@@ -24,7 +24,7 @@
  */
 package org.ofbiz.core.service;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * Generic Requester Interface

@@ -24,12 +24,17 @@
  */
 package org.ofbiz.core.service;
 
-import java.util.*;
-import javax.servlet.http.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.security.*;
+import javax.servlet.http.HttpServletRequest;
+
+import org.ofbiz.core.entity.GenericValue;
+import org.ofbiz.core.security.Security;
+import org.ofbiz.core.util.SiteDefs;
+import org.ofbiz.core.util.UtilValidate;
 
 /**
  * Generic Service Utility Class

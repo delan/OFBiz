@@ -24,10 +24,11 @@
  */
 package org.ofbiz.core.service.job;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.LinkedList;
 
-import org.ofbiz.core.service.config.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.config.ServiceConfigUtil;
+import org.ofbiz.core.util.Debug;
 
 /**
  * JobPoller - Polls for persisted jobs to run.

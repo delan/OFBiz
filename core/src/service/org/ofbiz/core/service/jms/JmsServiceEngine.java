@@ -23,20 +23,49 @@
  */
 package org.ofbiz.core.service.jms;
 
-import java.util.*;
-import javax.jms.*;
-import javax.naming.*;
-import javax.transaction.xa.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.serialize.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.service.config.*;
-import org.ofbiz.core.service.engine.*;
-import org.ofbiz.core.util.*;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSender;
+import javax.jms.QueueSession;
+import javax.jms.Session;
+import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicPublisher;
+import javax.jms.TopicSession;
+import javax.jms.XAQueueConnection;
+import javax.jms.XAQueueConnectionFactory;
+import javax.jms.XAQueueSession;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.transaction.xa.XAResource;
 
-import org.w3c.dom.*;
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.entity.GenericTransactionException;
+import org.ofbiz.core.entity.TransactionUtil;
+import org.ofbiz.core.serialize.XmlSerializer;
+import org.ofbiz.core.service.GenericRequester;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.ServiceDispatcher;
+import org.ofbiz.core.service.ServiceUtil;
+import org.ofbiz.core.service.config.ServiceConfigUtil;
+import org.ofbiz.core.service.engine.GenericEngine;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.GeneralException;
+import org.ofbiz.core.util.JNDIContextFactory;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Element;
 
 /**
  * AbstractJMSEngine

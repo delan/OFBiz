@@ -24,11 +24,23 @@
  */
 package org.ofbiz.core.service;
 
-import java.lang.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
-import org.ofbiz.core.service.group.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.service.group.GroupModel;
+import org.ofbiz.core.service.group.GroupServiceModel;
+import org.ofbiz.core.service.group.ServiceGroupReader;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.GeneralException;
+import org.ofbiz.core.util.ObjectType;
+import org.ofbiz.core.util.OrderedSet;
 
 /**
  * Generic Service Model Class

@@ -24,9 +24,9 @@
  */
 package org.ofbiz.core.service;
 
-import java.util.*;
+import java.util.Collection;
 
-import org.ofbiz.core.entity.*;
+import org.ofbiz.core.entity.GenericDelegator;
 
 /**
  * Generic Services Local WebDispatcher

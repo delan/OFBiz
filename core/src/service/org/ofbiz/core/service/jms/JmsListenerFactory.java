@@ -23,14 +23,20 @@
  */
 package org.ofbiz.core.service.jms;
 
-import java.util.*;
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.config.*;
-import org.ofbiz.core.service.*;
-
-import org.w3c.dom.*;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.ServiceDispatcher;
+import org.ofbiz.core.service.config.ServiceConfigUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * JmsListenerFactory

@@ -24,13 +24,20 @@
  */
 package org.ofbiz.core.service.engine;
 
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.util.Map;
 
-import bsh.*;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.ModelService;
+import org.ofbiz.core.service.ServiceDispatcher;
+import org.ofbiz.core.util.HttpClient;
+import org.ofbiz.core.util.HttpClientException;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilURL;
 
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.service.*;
+import bsh.EvalError;
+import bsh.Interpreter;
 
 /**
  * BeanShell Script Service Engine

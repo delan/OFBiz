@@ -23,12 +23,21 @@
  */
 package org.ofbiz.core.service.jms;
 
-import java.util.*;
-import javax.jms.*;
+import java.util.Map;
 
-import org.ofbiz.core.serialize.*;
-import org.ofbiz.core.service.*;
-import org.ofbiz.core.util.*;
+import javax.jms.ExceptionListener;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+
+import org.ofbiz.core.serialize.XmlSerializer;
+import org.ofbiz.core.service.DispatchContext;
+import org.ofbiz.core.service.GenericDispatcher;
+import org.ofbiz.core.service.GenericServiceException;
+import org.ofbiz.core.service.LocalDispatcher;
+import org.ofbiz.core.service.ServiceDispatcher;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.ObjectType;
 
 /**
  * AbstractJmsListener

@@ -24,9 +24,9 @@
  */
 package org.ofbiz.core.service;
 
-import java.util.*;
+import java.util.Map;
 
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.util.Debug;
 
 /**
  * Generic Result Waiter Class

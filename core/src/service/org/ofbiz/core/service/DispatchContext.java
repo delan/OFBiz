@@ -24,16 +24,23 @@
  */
 package org.ofbiz.core.service;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
-import org.w3c.dom.Element;
+import java.io.Serializable;
+import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.security.*;
-import org.ofbiz.core.service.config.*;
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.ResourceHandler;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.security.Security;
+import org.ofbiz.core.service.config.ServiceConfigUtil;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Element;
 
 /**
  * Dispatcher Context

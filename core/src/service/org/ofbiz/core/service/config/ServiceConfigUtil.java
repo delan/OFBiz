@@ -24,10 +24,12 @@
  */
 package org.ofbiz.core.service.config;
 
-import org.w3c.dom.*;
-
-import org.ofbiz.core.config.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.config.GenericConfigException;
+import org.ofbiz.core.config.ResourceLoader;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilXml;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Misc. utility method for dealing with the serviceengine.xml file

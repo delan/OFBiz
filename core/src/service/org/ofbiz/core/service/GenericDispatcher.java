@@ -24,10 +24,10 @@
  */
 package org.ofbiz.core.service;
 
-import java.util.*;
+import java.util.Map;
 
-import org.ofbiz.core.entity.*;
-import org.ofbiz.core.util.*;
+import org.ofbiz.core.entity.GenericDelegator;
+import org.ofbiz.core.util.Debug;
 
 /**
  * Generic Services Local Dispatcher
