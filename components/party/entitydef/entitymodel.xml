@@ -1206,7 +1206,7 @@
             title="Party Group Entity">
       <field name="partyId" type="id-ne"></field>
       <field name="groupName" type="name"></field>
-      <field name="federalTaxId" type="short-varchar"></field>
+      <field name="federalTaxId" type="long-varchar" encrypt="true"></field>
       <field name="comments" type="comment"></field>
       <prim-key field="partyId"/>
       <relation type="one" fk-name="PARTY_GRP_PARTY" rel-entity-name="Party">
@@ -1459,10 +1459,10 @@
       <field name="birthDate" type="date"></field>
       <field name="height" type="floating-point"></field>
       <field name="weight" type="floating-point"></field>
-      <field name="mothersMaidenName" type="name"></field>
+      <field name="mothersMaidenName" type="long-varchar" encrypt="true"></field>
       <field name="maritalStatus" type="indicator"></field>
-      <field name="socialSecurityNumber" type="short-varchar"></field>
-      <field name="passportNumber" type="short-varchar"></field>
+      <field name="socialSecurityNumber" type="long-varchar" encrypt="true"></field>
+      <field name="passportNumber" type="long-varchar" encrypt="true"></field>
       <field name="passportExpireDate" type="date"></field>
       <field name="totalYearsWorkExperience" type="floating-point"></field>
       <field name="comments" type="comment"></field>
