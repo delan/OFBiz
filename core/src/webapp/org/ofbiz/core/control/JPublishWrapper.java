@@ -116,12 +116,14 @@ public class JPublishWrapper {
         }
 
         // add WEB-INF/lib files to the classpath
-        File[] files = webLibPath.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].getName().toLowerCase().endsWith(".jar")
-                || files[i].getName().toLowerCase().endsWith(".zip")) {
-                classPath.append(System.getProperty("path.separator"));
-                classPath.append(files[i]);
+        if (webLibPath.exists()) {
+            File[] files = webLibPath.listFiles();
+            for (int i = 0; i < files.length; i++) {
+                if (files[i].getName().toLowerCase().endsWith(".jar")
+                    || files[i].getName().toLowerCase().endsWith(".zip")) {
+                    classPath.append(System.getProperty("path.separator"));
+                    classPath.append(files[i]);
+                }
             }
         }
 
