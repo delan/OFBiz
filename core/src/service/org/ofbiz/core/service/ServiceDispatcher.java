@@ -133,6 +133,11 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public Map runSync(String localName, ModelService service, Map context) throws GenericServiceException {
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service " + service.name + " [" + service.location +
+                "/" + service.invoke + "] (" + service.engineName + ")", module);
+        }
+
         // check the locale
         this.checkLocale(context);
         
@@ -177,11 +182,6 @@ public class ServiceDispatcher {
 
             // pre-invoke ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context, null, false);
-
-            if (Debug.verboseOn()) {
-                Debug.logVerbose("[ServiceDispatcher.runSync] : invoking service [" + service.location +
-                    "/" + service.invoke + "] (" + service.engineName + ")", module);
-            }
 
             // ===== invoke the service =====
             Map result = engine.runSync(localName, service, context);
@@ -250,6 +250,11 @@ public class ServiceDispatcher {
      * @throws GenericServiceException
      */
     public void runSyncIgnore(String localName, ModelService service, Map context) throws GenericServiceException {
+        if (Debug.verboseOn()) {
+            Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service " + service.name + " [" + service.location + "/" + service.invoke +
+                "] (" + service.engineName + ")", module);
+        }
+
         // check the locale
         this.checkLocale(context);
         
@@ -293,11 +298,6 @@ public class ServiceDispatcher {
 
             // pre-invoke ECA
             if (eventMap != null) ECAUtil.evalConditions(service.name, eventMap, "invoke", (DispatchContext) localContext.get(localName), context, null, false);
-
-            if (Debug.verboseOn()) {
-                Debug.logVerbose("[ServiceDispatcher.runSyncIgnore] : invoking service [" + service.location + "/" + service.invoke +
-                    "] (" + service.engineName + ")", module);
-            }
 
             engine.runSyncIgnore(localName, service, context);
 
