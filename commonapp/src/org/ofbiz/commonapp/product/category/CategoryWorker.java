@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.5  2002/01/30 06:11:25  jonesde
+ * Formatting changes only, in preparation for other changes
+ *
  * Revision 1.4  2001/10/23 22:12:33  jonesde
  * Made view limit optional
  *
@@ -121,7 +124,7 @@ public class CategoryWorker {
             if (category != null) {
                 Collection prodCatMemberCol = null;
                 try {
-                    prodCatMemberCol = category.getRelatedCache("ProductCategoryMember");
+                    prodCatMemberCol = category.getRelatedCache("ProductCategoryMember", null, UtilMisc.toList("sequenceNum"));
                 } catch (GenericEntityException e) {
                     Debug.logWarning(e.getMessage());
                     prodCatMemberCol = null;
