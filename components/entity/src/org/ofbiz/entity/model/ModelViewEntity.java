@@ -1,5 +1,5 @@
 /*
- * $Id: ModelViewEntity.java,v 1.5 2003/10/14 22:34:46 jonesde Exp $
+ * $Id: ModelViewEntity.java,v 1.6 2003/10/18 06:24:51 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import org.ofbiz.entity.jdbc.*;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>    
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  * @since      2.0
  */
 public class ModelViewEntity extends ModelEntity {
@@ -285,6 +285,7 @@ public class ModelViewEntity extends ModelEntity {
 
             if (modelMemberEntity == null) {
                 Debug.logError("No member entity with alias " + alias.entityAlias + " found in view-entity " + this.getEntityName() + "; this view-entity will NOT be usable...", module);
+                continue;
             }
             String aliasedEntityName = modelMemberEntity.getEntityName();
             ModelEntity aliasedEntity = modelReader.getModelEntityNoCheck(aliasedEntityName);
@@ -527,6 +528,8 @@ public class ModelViewEntity extends ModelEntity {
             this.name = name;
             this.field = field;
             this.colAlias = colAlias;
+            this.field = UtilXml.checkEmpty(field, this.name);
+            this.colAlias = UtilXml.checkEmpty(colAlias, ModelUtil.javaNameToDbName(UtilXml.checkEmpty(this.name)));
             this.isPk = isPk;
             if (groupBy != null) {
                 this.groupBy = groupBy.booleanValue();
@@ -585,7 +588,6 @@ public class ModelViewEntity extends ModelEntity {
             this.relOptional = "true".equals(viewLinkElement.getAttribute("rel-optional"));
 
             NodeList keyMapList = viewLinkElement.getElementsByTagName("key-map");
-
             for (int j = 0; j < keyMapList.getLength(); j++) {
                 Element keyMapElement = (Element) keyMapList.item(j);
                 ModelKeyMap keyMap = new ModelKeyMap(keyMapElement);
