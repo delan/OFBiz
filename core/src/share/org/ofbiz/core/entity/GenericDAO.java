@@ -226,7 +226,8 @@ public class GenericDAO {
   private void singleStore(GenericEntity entity, Connection connection) throws SQLException, GenericEntityException {
     GenericPK tempPK = entity.getPrimaryKey();
     try {
-      select(tempPK);
+      //must use same connection for select or it won't be in the same transaction...
+      select(tempPK, connection);
     }
     catch(GenericEntityNotFoundException e) {
       //Debug.logInfo(e);
@@ -284,6 +285,22 @@ public class GenericDAO {
 /* ====================================================================== */
   
   public void select(GenericEntity entity) throws GenericEntityException {
+    Connection connection = null;
+    try { 
+      connection = getConnection(); 
+    } catch (SQLException sqle) {
+      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
+    }
+    
+    try {
+      select(entity, connection);
+    } finally {
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+    }
+    
+  }
+  
+  public void select(GenericEntity entity, Connection connection) throws GenericEntityException {
     ModelEntity modelEntity = entity.getModelEntity();
     if(modelEntity == null) {
       throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
@@ -294,7 +311,6 @@ public class GenericDAO {
       modelViewEntity = (ModelViewEntity)modelEntity;
     }
 
-
 /*
     if(entity == null || entity.<%=modelEntity.pkNameString(" == null || entity."," == null")%>) {
       Debug.logWarning("[GenericDAO.select]: Cannot select GenericEntity: required primary key field(s) missing.");
@@ -303,13 +319,8 @@ public class GenericDAO {
  */
     if(modelEntity.pks.size() <= 0) throw new GenericEntityException("Entity has no primary keys, cannot select by primary key");
 
-    Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    try { connection = getConnection(); }
-    catch (SQLException sqle) {
-      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-    }
     
     String sql = "SELECT ";
     if(modelEntity.nopks.size() > 0) sql += modelEntity.colNameString(modelEntity.nopks, ", ", "");
@@ -353,7 +364,6 @@ public class GenericDAO {
     finally {
       try { if (rs != null) rs.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
-      try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
   }
   
@@ -830,6 +840,20 @@ public class GenericDAO {
 /* ====================================================================== */
   
   public void delete(GenericEntity entity) throws GenericEntityException {
+    Connection connection = null;
+    try { connection = getConnection(); }
+    catch (SQLException sqle) {
+      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
+    }
+    
+    try {
+      delete(entity, connection);  
+    } finally {
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+    }
+  }
+  
+  public void delete(GenericEntity entity, Connection connection) throws GenericEntityException {
     ModelEntity modelEntity = entity.getModelEntity();
     if(modelEntity == null) {
       throw new GenericModelException("Could not find ModelEntity record for entityName: " + entity.getEntityName());
@@ -845,12 +869,7 @@ public class GenericDAO {
       return false;
     }
  */
-    Connection connection = null;
     PreparedStatement ps = null;
-    try { connection = getConnection(); }
-    catch (SQLException sqle) {
-      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-    }
     
     String sql = "DELETE FROM " + modelEntity.tableName + " WHERE " + makeWhereStringAnd(modelEntity.pks, entity);
     try {
@@ -867,30 +886,36 @@ public class GenericDAO {
       
       ps.executeUpdate();
       entity.modified = true;
-    }
-    catch (SQLException sqle) {
+    } catch (SQLException sqle) {
       //Debug.logWarning("[GenericDAO.delete]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       //Debug.logWarning(sqle.getMessage());
       throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-    }
-    finally {
+    } finally {
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
-      try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
   }
   
   public void deleteByAnd(ModelEntity modelEntity, Map fields) throws GenericEntityException {
+    Connection connection = null;
+    try { connection = getConnection(); }
+    catch (SQLException sqle) {
+      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
+    }
+    
+    try {
+      deleteByAnd(modelEntity, fields, connection);
+    } finally {
+      try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+    }
+  }
+  
+  public void deleteByAnd(ModelEntity modelEntity, Map fields, Connection connection) throws GenericEntityException {
     if(modelEntity == null || fields == null) return;
     if(modelEntity instanceof ModelViewEntity) {
       throw new org.ofbiz.core.entity.GenericNotImplementedException("Operation deleteByAnd not supported yet for view entities");
     }
     
-    Connection connection = null;
     PreparedStatement ps = null;
-    try { connection = getConnection(); }
-    catch (SQLException sqle) {
-      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
-    }
     
     //make two Vectors of fields, one for fields to select and the other for where clause fields (to find by)
     Vector whereFields = new Vector();
@@ -920,17 +945,44 @@ public class GenericDAO {
         }
       }
       ps.executeUpdate();
-    }
-    catch (SQLException sqle) {
+    } catch (SQLException sqle) {
       //Debug.logWarning("[GenericDAO.selectByAnd]: SQL Exception while executing the following:\n" + sql + "\nError was:");
       //sqle.printStackTrace();
       throw new GenericDataSourceException("SQL Exception while executing the following:" + sql, sqle);
-    }
-    finally {
+    } finally {
       try { if (ps != null) ps.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
+    }
+  }
+
+  /** Called dummyPKs because they can be invalid PKs, doing a deleteByAnd instead of a normal delete */
+  public void deleteAll(Collection dummyPKs) throws GenericEntityException {
+    if (dummyPKs == null || dummyPKs.size() == 0) {
+        return;
+    }
+    
+    Connection connection = null;
+    try { connection = getConnection(); }
+    catch (SQLException sqle) {
+      throw new GenericDataSourceException("Unable to esablish a connection with the database.", sqle);
+    }
+    
+    try {
+      Iterator iter = dummyPKs.iterator();
+      while (iter.hasNext()) {
+        GenericEntity entity = (GenericEntity) iter.next();
+        
+        //if it contains a complete primary key, delete the one, otherwise deleteByAnd
+        if (entity.containsPrimaryKey()) {
+          delete(entity, connection);
+        } else {
+          deleteByAnd(entity.getModelEntity(), entity.getAllFields(), connection);
+        }
+      }
+    } finally {
       try { if (connection != null) connection.close(); } catch (SQLException sqle) { Debug.logWarning(sqle.getMessage()); }
     }
   }
+  
   
 /* ====================================================================== */
 /* ====================================================================== */
