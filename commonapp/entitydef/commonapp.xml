@@ -66,6 +66,195 @@
     <field-type-def><field-type>tel-number</field-type><sql-type>VARCHAR(60)</sql-type><java-type>String</java-type><validate>isInternationalPhoneNumber</validate></field-type-def>
   
   <!-- ========================================================= -->
+  <!-- ========================== Party ======================== -->
+  <!-- ========================================================= -->
+  
+  <!-- ========================================================= -->    
+  <!-- ========================================================= -->    
+    <entity>
+      <title>Party Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY</table-name>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <prim-key-column>PARTY_ID</prim-key-column>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_CLASSIFICATION</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_ATTRIBUTE</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>USER_LOGIN</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Classification Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_CLASSIFICATION</table-name>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>FROM_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <cmp-field><column-name>THRU_DATE</column-name><field-type>date-time</field-type></cmp-field>
+      <prim-key-column>PARTY_ID</prim-key-column>
+      <prim-key-column>PARTY_TYPE_ID</prim-key-column>
+      <finder><column-name>PARTY_ID</column-name><order-by>PARTY_TYPE_ID</order-by></finder>
+      <finder><column-name>PARTY_TYPE_ID</column-name><order-by>PARTY_ID</order-by></finder>
+      <finder><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name><order-by>PARTY_ID</order-by></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY_TYPE</related-table-name>
+        <key-map><column-name>PARTY_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY_CLASSIFICATION_TYPE</related-table-name>
+        <key-map><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_TYPE_ATTR</related-table-name>
+        <key-map><column-name>PARTY_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_ATTRIBUTE</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Classification Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_CLASSIFICATION_TYPE</table-name>
+      <cmp-field><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>PARTY_CLASSIFICATION_TYPE_ID</prim-key-column>
+      <finder><column-name>PARENT_TYPE_ID</column-name><order-by>PARTY_CLASSIFICATION_TYPE_ID</order-by></finder>
+      <finder><column-name>HAS_TABLE</column-name></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY_CLASSIFICATION_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_CLASSIFICATION_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_CLASSIFICATION_TYPE</related-table-name>
+        <key-map><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_CLASSIFICATION</related-table-name>
+        <key-map><column-name>PARTY_CLASSIFICATION_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Type Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_TYPE</table-name>
+      <cmp-field><column-name>PARTY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>PARENT_TYPE_ID</column-name><field-type>id</field-type></cmp-field>
+      <cmp-field><column-name>HAS_TABLE</column-name><field-type>indicator</field-type></cmp-field>
+      <cmp-field><column-name>DESCRIPTION</column-name><field-type>description</field-type></cmp-field>
+      <prim-key-column>PARTY_TYPE_ID</prim-key-column>
+      <finder><column-name>PARENT_TYPE_ID</column-name><order-by>PARTY_TYPE_ID</order-by></finder>
+      <finder><column-name>HAS_TABLE</column-name></finder>
+      <relation>
+        <relation-title>Parent</relation-title>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name><related-column-name>PARTY_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Children</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_TYPE</related-table-name>
+        <key-map><column-name>PARTY_TYPE_ID</column-name><related-column-name>PARENT_TYPE_ID</related-column-name></key-map>
+      </relation>
+      <relation>
+        <relation-title>Sibling</relation-title>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_TYPE</related-table-name>
+        <key-map><column-name>PARENT_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_TYPE_ATTR</related-table-name>
+        <key-map><column-name>PARTY_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_CLASSIFICATION</related-table-name>
+        <key-map><column-name>PARTY_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_ATTRIBUTE</table-name>
+      <cmp-field><column-name>PARTY_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <cmp-field><column-name>VALUE</column-name><field-type>value</field-type></cmp-field>
+      <prim-key-column>PARTY_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>PARTY_ID</column-name><order-by>NAME</order-by></finder>
+      <finder><column-name>NAME</column-name><order-by>PARTY_ID</order-by></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY</related-table-name>
+        <key-map><column-name>PARTY_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_TYPE_ATTR</related-table-name>
+        <key-map><column-name>NAME</column-name></key-map>
+      </relation>
+    </entity>
+    <!-- ========================================================= -->    
+    <entity>
+      <title>Party Type Attribute Entity</title>
+      <package-name>org.ofbiz.commonapp.party.party</package-name>
+      <table-name>PARTY_TYPE_ATTR</table-name>
+      <cmp-field><column-name>PARTY_TYPE_ID</column-name><field-type>id-ne</field-type></cmp-field>
+      <cmp-field><column-name>NAME</column-name><field-type>id-long-ne</field-type></cmp-field>
+      <prim-key-column>PARTY_TYPE_ID</prim-key-column>
+      <prim-key-column>NAME</prim-key-column>
+      <finder><column-name>PARTY_TYPE_ID</column-name><order-by>NAME</order-by></finder>
+      <finder><column-name>NAME</column-name><order-by>PARTY_TYPE_ID</order-by></finder>
+      <relation>
+        <relation-type>one</relation-type>
+        <related-table-name>PARTY_TYPE</related-table-name>
+        <key-map><column-name>PARTY_TYPE_ID</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_ATTRIBUTE</related-table-name>
+        <key-map><column-name>NAME</column-name></key-map>
+      </relation>
+      <relation>
+        <relation-type>many</relation-type>
+        <related-table-name>PARTY_CLASSIFICATION</related-table-name>
+        <key-map><column-name>PARTY_TYPE_ID</column-name></key-map>
+      </relation>
+    </entity>
+  
+  <!-- ========================================================= -->
   <!-- ========================= Security ====================== -->
   <!-- ========================================================= -->
   
@@ -84,11 +273,11 @@
       <finder><column-name>PARTY_ID</column-name></finder>
       <finder><column-name>CONTACT_MECHANISM_ID</column-name></finder>
       <finder><column-name>CURRENT_USER_ID</column-name></finder>
-      <!-- <relation>
+      <relation>
         <relation-type>one</relation-type>
         <related-table-name>PARTY</related-table-name>
         <key-map><column-name>PARTY_ID</column-name></key-map>
-      </relation> -->
+      </relation>
       <relation>
         <relation-type>many</relation-type>
         <related-table-name>USER_LOGIN_SECURITY_GROUP</related-table-name>
@@ -137,11 +326,11 @@
         <related-table-name>USER_LOGIN</related-table-name>
         <key-map><column-name>USER_LOGIN_ID</column-name></key-map>
       </relation>
-      <!-- <relation>
+      <relation>
         <relation-type>one</relation-type>
         <related-table-name>PARTY</related-table-name>
         <key-map><column-name>PARTY_ID</column-name></key-map>
-      </relation> -->
+      </relation>
     </entity>
   <!-- ========================================================= -->    
   <!-- ========================================================= -->    
