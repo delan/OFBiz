@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page>
+    <template>main</template>
+    <property name="title">Profile Survey</property>
+    <page-action name="/customer/customersurvey.bsh"/>
+</page>
