@@ -1,5 +1,5 @@
 /*
- * $Id: GenericEntity.java,v 1.17 2004/01/24 21:51:12 jonesde Exp $
+ * $Id: GenericEntity.java,v 1.18 2004/01/24 22:07:52 jonesde Exp $
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.w3c.dom.Element;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.17 $
+ *@version    $Revision: 1.18 $
  *@since      2.0
  */
 public class GenericEntity extends Observable implements Map, LocalizedMap, Serializable, Comparable, Cloneable {
@@ -821,7 +821,7 @@ public class GenericEntity extends Observable implements Map, LocalizedMap, Seri
                     default:
                         if (curChar < 0x20) {
                             // if it is less that 0x20 at this point it is invalid because the only valid values < 0x20 are 0x9, 0xA, 0xD as caught above
-                            Debug.logInfo("Removing invalid character [" + curChar + "] hex value [" + Character.digit(curChar, 16) + "] for field " + name + " of entity with PK: " + this.getPrimaryKey().toString(), module);
+                            Debug.logInfo("Removing invalid character [" + curChar + "] numeric value [" + (int) curChar + "] for field " + name + " of entity with PK: " + this.getPrimaryKey().toString(), module);
                             value.deleteCharAt(i);
                         }
                     }
