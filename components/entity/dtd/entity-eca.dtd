@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Service Framework - Service ECA Definition DTD
- *  $Id: entity-eca.dtd,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ *  $Id$
 -->
 
 <!ELEMENT entity-eca ( eca+ )>
@@ -64,6 +64,7 @@
     abort-on-error ( true | false ) "false"
     rollback-on-error ( true | false ) "false"
     persist ( true | false ) "false"
+    run-as-user CDATA "admin"
     value-attr CDATA #IMPLIED
 >
 <!-- if value-attr is specified the generic value object corresponding to the entity in question will be passed
