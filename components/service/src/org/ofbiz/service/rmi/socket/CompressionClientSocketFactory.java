@@ -1,5 +1,5 @@
 /*
- * $Id: CompressionClientSocketFactory.java,v 1.1 2003/12/02 06:39:32 ajzeneski Exp $
+ * $Id: CompressionClientSocketFactory.java,v 1.2 2004/01/23 15:16:50 ajzeneski Exp $
  *
  * Copyright (c) 1998, 1999 Sun Microsystems, Inc. All Rights Reserved.
  *
@@ -30,6 +30,8 @@
 
 package org.ofbiz.service.rmi.socket;
 
+import org.ofbiz.base.util.Debug;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.Socket;
@@ -37,8 +39,11 @@ import java.rmi.server.RMIClientSocketFactory;
 
 public class CompressionClientSocketFactory implements RMIClientSocketFactory, Serializable {
 
+    public static final String module = CompressionClientSocketFactory.class.getName();
+
     public Socket createSocket(String host, int port) throws IOException {
         CompressionSocket socket = new CompressionSocket(host, port);
+        //Debug.log("Client Socket Timeout : " + socket.getSoTimeout(), module);
         return socket;
     }
 
