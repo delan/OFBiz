@@ -21,7 +21,7 @@
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
  *@author     Catherine.Heintz@nereide.biz (migration to UiLabel)
- *@version    $Rev:$
+ *@version    $Rev$
  *@since      2.2
 -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
@@ -45,9 +45,10 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
 <#-- Receiving Results -->
 <#if receivedItems?has_content>
   <table width="100%" border='0' cellpadding='2' cellspacing='0'>
-    <tr><td colspan="7"><div class="head3">${uiLabelMap.ProductReceiptPurchaseOrder} #${purchaseOrder.orderId}</div></td></tr>
-    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+    <tr><td colspan="8"><div class="head3">${uiLabelMap.ProductReceiptPurchaseOrder} #${purchaseOrder.orderId}</div></td></tr>
+    <tr><td colspan="8"><hr class="sepbar"></td></tr>
     <tr>
+      <td><div class="tableheadtext">${uiLabelMap.ProductShipmentId}#</div></td>
       <td><div class="tableheadtext">${uiLabelMap.ProductReceipt}#</div></td>
       <td><div class="tableheadtext">${uiLabelMap.CommonDate}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.ProductPo} #</div></td>
@@ -56,9 +57,10 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
       <td><div class="tableheadtext">${uiLabelMap.CommonRejected}</div></td>
       <td><div class="tableheadtext">${uiLabelMap.CommonAccepted}</div></td>
     </tr>
-    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+    <tr><td colspan="8"><hr class="sepbar"></td></tr>
     <#list receivedItems as item>
       <tr>
+        <td><div class="tabletext"><a href="<@ofbizUrl>/EditShipment?shipmentId=${item.shipmentId?if_exists}</@ofbizUrl>">${item.shipmentId?if_exists}</a></div></td>
         <td><div class="tabletext">${item.receiptId}</div></td>
         <td><div class="tabletext">${item.getString("datetimeReceived").toString()}</div></td>
         <td><div class="tabletext">${item.orderId}</div></td>
@@ -68,7 +70,7 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
         <td><div class="tabletext">${item.quantityAccepted?string.number}</div></td>
       </tr>
     </#list>
-    <tr><td colspan="7"><hr class="sepbar"></td></tr>
+    <tr><td colspan="8"><hr class="sepbar"></td></tr>
   </table>
   <br>
 </#if>
@@ -321,6 +323,9 @@ ${pages.get("/facility/FacilityTabBar.ftl")}
           <input type="hidden" name="orderItemSeqId_o_${rowCount}" value="${orderItem.orderItemSeqId}"> 
           <input type="hidden" name="facilityId_o_${rowCount}" value="${requestParameters.facilityId?if_exists}">       
           <input type="hidden" name="datetimeReceived_o_${rowCount}" value="${now}">        
+          <#if shipment?exists && shipment.shipmentId?has_content>
+            <input type="hidden" name="shipmentId_o_${rowCount}" value="${shipment.shipmentId}">        
+          </#if>
           <tr>
             <td colspan="2"><hr class="sepbar"></td>
           </tr>                 

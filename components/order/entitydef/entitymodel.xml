@@ -439,6 +439,7 @@
       <field name="invoiceId" type="id-ne"></field>
       <field name="invoiceItemSeqId" type="id-ne"></field>
       <field name="itemIssuanceId" type="id"></field>
+      <field name="shipmentReceiptId" type="id"></field>
       <field name="quantity" type="floating-point"></field>
       <field name="amount" type="currency-amount"></field>
       <prim-key field="orderId"/>
@@ -458,6 +459,9 @@
       <relation type="one" fk-name="ORDER_ITBLNG_IITM" rel-entity-name="InvoiceItem">
         <key-map field-name="invoiceId"/>
         <key-map field-name="invoiceItemSeqId"/>
+      </relation>
+      <relation type="one" rel-entity-name="ShipmentReceipt">
+        <key-map field-name="shipmentReceiptId" rel-field-name="receiptId"/>
       </relation>
     </entity>
     <entity entity-name="OrderItemContactMech"
@@ -844,9 +848,13 @@
       <field name="orderId" type="id-ne"></field>
       <field name="orderItemSeqId" type="id-ne"></field>
       <field name="termValue" type="numeric"></field>
+      <field name="uomId" type="id"></field>
       <prim-key field="termTypeId"/>
       <prim-key field="orderId"/>
       <prim-key field="orderItemSeqId"/>
+      <relation type="one" fk-name="BILLACCT_TRM_UOM" rel-entity-name="Uom">
+        <key-map field-name="uomId"/>
+      </relation>
       <relation type="one" fk-name="ORDER_TERM_OHDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>

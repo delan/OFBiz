@@ -3,6 +3,7 @@
     <Party partyId="Company" partyTypeId="PARTY_GROUP"/>
     <PartyGroup partyId="Company" groupName="Your Company Name Here"/>
     <PartyRole partyId="Company" roleTypeId="BILL_FROM_VENDOR"/>
+    <PartyRole partyId="Company" roleTypeId="BILL_TO_CUSTOMER"/>
     <ContactMech contactMechId="9000" contactMechTypeId="POSTAL_ADDRESS"/>
     <PartyContactMech partyId="Company" contactMechId="9000" fromDate="2000-01-01 00:00:00.000" allowSolicitation="Y"/>
     <PostalAddress contactMechId="9000" toName="Company XYZ" address1="2003 Open Blvd" city="Open City" postalCode="999999" countryGeoId="USA" stateProvinceGeoId="CA"/>
