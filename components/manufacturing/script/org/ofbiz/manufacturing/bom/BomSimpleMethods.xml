@@ -24,14 +24,30 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  * @author     Jacopo Cappellato (tiz@sastau.it)
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
 -->
 
 <simple-methods>
 
     <!-- ProductAssoc -->
-    <simple-method method-name="createProductAssoc" short-description="Create Product to Product Association">
+    <simple-method method-name="createBOMAssoc" short-description="Create Product to Product Association">
+        <field-to-field field-name="productId" map-name="parameters" to-field-name="productId" to-map-name="searchDuplicatedAncestorContext" />
+        <field-to-field field-name="productIdTo" map-name="parameters" to-field-name="productIdKey" to-map-name="searchDuplicatedAncestorContext" />
+        <if-not-empty field-name="fromDate" map-name="newEntity">
+            <field-to-field field-name="fromDate" map-name="parameters" to-field-name="fromDate" to-map-name="searchDuplicatedAncestorContext" />
+        </if-not-empty>
+        <field-to-field field-name="productAssocTypeId" map-name="parameters" to-field-name="bomType" to-map-name="searchDuplicatedAncestorContext" />
+        <call-service service-name="searchDuplicatedAncestor" in-map-name="searchDuplicatedAncestorContext">
+            <result-to-field result-name="duplicatedProductAssoc" field-name="duplicatedProductAssoc"/>
+        </call-service>
+        <if-not-empty field-name="duplicatedProductAssoc">
+            <field-to-list field-name="productId" map-name="duplicatedProductAssoc" list-name="productToProduct"/>
+            <field-to-list field-name="productIdTo" map-name="duplicatedProductAssoc" list-name="productToProduct"/>
+            <property-to-field property="ManufacturingDuplicatedComponentInBOM" resource="ManufacturingUiLabels" field-name="errorMessage" arg-list-name="productToProduct"/>
+            <field-to-result field-name="errorMessage" result-name="errorMessage"/>
+            <return/>
+        </if-not-empty>
         <make-value value-name="newEntity" entity-name="ProductAssoc"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
@@ -40,27 +56,87 @@
             <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
         </if-empty>
+        
         <create-value value-name="newEntity"/>
-        <!--
-        <set-service-fields service-name="updateContent" map-name="parameters" to-map-name="updateContent"/>
-        <call-service service-name="updateContent" in-map-name="updateContent"/>
-        -->
+        <!-- The low level code is updated for the child node's subtree -->
+        <field-to-field field-name="productIdTo" map-name="parameters" to-field-name="productId" to-map-name="updateLowLevelCodeContext" />
+        <call-service service-name="updateLowLevelCode" in-map-name="updateLowLevelCodeContext"/>
     </simple-method>
-    <simple-method method-name="updateProductAssoc" short-description="Update Product to Product Association">
+    
+    <simple-method method-name="updateBOMAssoc" short-description="Update Product to Product Association">
         <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         <store-value value-name="lookedUpValue"/>
     </simple-method>
-    <simple-method method-name="removeProductAssoc" short-description="Remove Product to Product Association">
+    
+    <simple-method method-name="removeBOMAssoc" short-description="Remove Product to Product Association">
         <make-value value-name="lookupPKMap" entity-name="ProductAssoc"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductAssoc" map-name="lookupPKMap" value-name="lookedUpValue"/>
         <remove-value value-name="lookedUpValue"/>
+        <!-- The low level code is updated for the child node's subtree -->
+        <field-to-field field-name="productIdTo" map-name="parameters" to-field-name="productId" to-map-name="updateLowLevelCodeContext" />
+        <call-service service-name="updateLowLevelCode" in-map-name="updateLowLevelCodeContext"/>
     </simple-method>
 
+    <simple-method method-name="copyBOMAssocs" short-description="Copy BOM associations from one product to another">
+        <make-value value-name="lookupMap" entity-name="ProductAssoc"/>
+        <set-pk-fields map-name="parameters" value-name="lookupMap"/>
+        <find-by-and entity-name="ProductAssoc" map-name="lookupMap" list-name="assocs"/>
+        <iterate entry-name="assoc" list-name="assocs">
+            <set-service-fields service-name="createBOMAssoc" map-name="assoc" to-map-name="context"/>
+            <field-to-field field-name="copyToProductId" map-name="parameters" to-field-name="productId" to-map-name="context"/>
+            <call-service service-name="createBOMAssoc" in-map-name="context" break-on-error="false"/>
+        </iterate>
+    </simple-method>
 
+    
+    <simple-method method-name="eventEditBOM" short-description="Add, update, delete components in BOM">
+        <if-compare value="UPDATE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
+            <set-service-fields service-name="updateBOMAssoc" map-name="parameters" to-map-name="context"/>
+            <call-map-processor xml-resource="org/ofbiz/manufacturing/bom/BomMapProcs.xml"
+                                processor-name="prepareUpdateBOMAssoc" 
+                                in-map-name="parameters" out-map-name="context"/>
+            <check-errors/>
+            <call-service service-name="updateBOMAssoc" in-map-name="context"/>
+            <check-errors/>
+        </if-compare>
+        <if-compare value="CREATE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
+            <set-service-fields service-name="createBOMAssoc" map-name="parameters" to-map-name="context"/>
+            <call-map-processor xml-resource="org/ofbiz/manufacturing/bom/BomMapProcs.xml"
+                                processor-name="prepareUpdateBOMAssoc" 
+                                in-map-name="parameters" out-map-name="context"/>
+            <check-errors/>
+            <call-service service-name="createBOMAssoc" in-map-name="context">
+                <result-to-field field-name="errorMessage" result-name="errorMessage"/>
+            </call-service>
+             <if-not-empty field-name="errorMessage">
+                <add-error>
+                    <fail-message message="${errorMessage}"/>
+                </add-error>
+            </if-not-empty>
+            <!--<check-errors/>-->
+        </if-compare>
+        <if-compare value="DELETE" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
+            <set-service-fields service-name="removeBOMAssoc" map-name="parameters" to-map-name="context"/>
+            <call-map-processor xml-resource="org/ofbiz/manufacturing/bom/BomMapProcs.xml"
+                                processor-name="prepareUpdateBOMAssoc" 
+                                in-map-name="parameters" out-map-name="context"/>
+            <check-errors/>
+            <call-service service-name="removeBOMAssoc" in-map-name="context"/>
+            <check-errors/>
+        </if-compare>
+        <if-compare value="COPY" field-name="UPDATE_MODE" map-name="parameters" operator="equals">
+            <set-service-fields service-name="copyBOMAssocs" map-name="parameters" to-map-name="context"/>
+            <call-service service-name="copyBOMAssocs" in-map-name="context"/>
+            <check-errors/>
+        </if-compare>
+
+    </simple-method>
+
+    
     <simple-method method-name="updateProductManufacturingRule" short-description="Update Manufacturing Rule">
         <check-permission permission="MANUFACTURING" action="_UPDATE">
             <fail-property resource="ManufacturingUiLabels" property="ManufacturingMachineGroupPermissionError"/>
