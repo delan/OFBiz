@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFinderUtil.java,v 1.4 2004/08/14 07:37:25 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2004 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.Element;
  * Uses the delegator to find entity values by a condition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      3.1
  */
 public class EntityFinderUtil {

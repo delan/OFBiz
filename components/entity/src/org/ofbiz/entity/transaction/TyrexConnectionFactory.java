@@ -1,5 +1,5 @@
 /*
- * $Id: TyrexConnectionFactory.java,v 1.4 2004/04/22 22:42:16 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ package org.ofbiz.entity.transaction;
  * Tyrex ConnectionFactory - central source for JDBC connections from Tyrex
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class TyrexConnectionFactory {

@@ -1,5 +1,5 @@
 /*
- * $Id: SequenceUtil.java,v 1.3 2004/02/06 22:13:25 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -49,7 +49,7 @@ import org.ofbiz.entity.transaction.TransactionUtil;
  * Uses a collision detection approach to safely get unique sequenced ids in banks from the database
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class SequenceUtil {

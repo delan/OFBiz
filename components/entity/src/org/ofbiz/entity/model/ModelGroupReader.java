@@ -1,5 +1,5 @@
 /*
- * $Id: ModelGroupReader.java,v 1.5 2004/07/17 07:05:08 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -53,7 +53,7 @@ import org.w3c.dom.Node;
  * Generic Entity - Entity Group Definition Reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelGroupReader {

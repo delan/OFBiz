@@ -1,5 +1,5 @@
 /*
- * $Id: XmlSerializable.java,v 1.2 2004/06/17 06:10:48 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -29,7 +29,7 @@ import org.w3c.dom.Element;
  * XmlSerializable
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public interface XmlSerializable {

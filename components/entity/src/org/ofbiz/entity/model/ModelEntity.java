@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.22 2004/08/19 18:41:41 doogie Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -52,7 +52,7 @@ import org.w3c.dom.NodeList;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.22 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelEntity extends ModelInfo implements Comparable {

@@ -1,5 +1,5 @@
 /*
- * $Id: TyrexFactory.java,v 1.3 2003/09/11 13:23:26 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ package org.ofbiz.entity.transaction;
  * TyrexTransactionFactory - central source for Tyrex JTA objects
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class TyrexFactory {

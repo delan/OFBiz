@@ -1,5 +1,5 @@
 /*
- * $Id: ModelKeyMap.java,v 1.5 2004/06/20 04:03:23 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.w3c.dom.Element;
  * Generic Entity - KeyMap model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelKeyMap {

@@ -1,5 +1,5 @@
 /*
- * $Id: GenericXaResource.java,v 1.3 2004/05/25 06:19:14 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -35,7 +35,7 @@ import javax.transaction.*;
  * GenericXaResource - Abstract XA Resource implementation supporting a single transaction
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public abstract class GenericXaResource implements XAResource {

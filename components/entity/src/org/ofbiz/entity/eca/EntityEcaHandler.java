@@ -1,5 +1,5 @@
 /*
- * $Id: EntityEcaHandler.java,v 1.1 2003/08/16 22:05:51 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -31,7 +31,7 @@ import org.ofbiz.entity.*;
  * EntityEcaHandler interface
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.1
  */
 public interface EntityEcaHandler {

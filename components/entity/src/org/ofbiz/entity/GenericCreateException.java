@@ -1,5 +1,5 @@
 /*
- * $Id: GenericCreateException.java,v 1.1 2003/08/16 22:05:50 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -28,7 +28,7 @@ package org.ofbiz.entity;
  * GenericCreateException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class GenericCreateException extends GenericEntityException {

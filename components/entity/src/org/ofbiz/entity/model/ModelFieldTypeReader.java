@@ -1,5 +1,5 @@
 /*
- * $Id: ModelFieldTypeReader.java,v 1.2 2004/07/17 07:05:08 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -45,7 +45,7 @@ import org.w3c.dom.Node;
  * Generic Entity - Field Type Definition Reader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.2 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelFieldTypeReader {

@@ -1,5 +1,5 @@
 /*
- * $Id: XmlSerializer.java,v 1.4 2004/06/17 06:10:49 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.xml.sax.SAXException;
  * <p><b>Description:</b> Simple XML serialization/deserialization routines with embedded type information
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a> 
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class XmlSerializer {

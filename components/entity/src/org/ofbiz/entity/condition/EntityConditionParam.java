@@ -1,5 +1,5 @@
 /*
- * $Id: EntityConditionParam.java,v 1.1 2003/08/17 04:56:25 jonesde Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.entity.model.ModelField;
  * Represents a single parameter to be used in the preparedStatement
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class EntityConditionParam implements Serializable {

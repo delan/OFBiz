@@ -1,5 +1,5 @@
 /*
- * $Id: GenericResultSetClosedException.java,v 1.1 2003/08/16 22:05:49 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,7 +27,7 @@ package org.ofbiz.entity;
  * GenericResultSetClosedException
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.1 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class GenericResultSetClosedException extends GenericEntityException {

@@ -1,5 +1,5 @@
 /*
- * $Id: EntityFindOptions.java,v 1.3 2004/06/11 16:40:26 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -30,7 +30,7 @@ import java.sql.ResultSet;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- *@version    $Revision: 1.3 $
+ *@version    $Rev:$
  *@since      2.0
  */
 public class EntityFindOptions implements java.io.Serializable {

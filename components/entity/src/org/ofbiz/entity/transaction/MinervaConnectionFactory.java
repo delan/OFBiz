@@ -1,5 +1,5 @@
 /*
- * $Id: MinervaConnectionFactory.java,v 1.3 2004/04/30 22:28:51 ajzeneski Exp $
+ * $Id$
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.w3c.dom.Element;
  * MinervaConnectionFactory - Central source for Minerva JDBC Objects
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.3 $
+ * @version    $Rev:$
  * @since      3.0
  */
 public class MinervaConnectionFactory {

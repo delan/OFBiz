@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.23 2004/07/17 07:05:03 doogie Exp $
+ * $Id$
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -84,7 +84,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.23 $
+ * @version    $Rev:$
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {

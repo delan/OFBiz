@@ -1,5 +1,5 @@
 /*
- * $Id: GenericHelperDAO.java,v 1.5 2004/07/07 07:37:06 doogie Exp $
+ * $Id$
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -46,7 +46,7 @@ import org.ofbiz.entity.util.EntityListIterator;
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href='mailto:chris_maurer@altavista.com'>Chris Maurer</a>
- * @version    $Revision: 1.5 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class GenericHelperDAO implements GenericHelper {

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelRelation.java,v 1.7 2004/07/09 19:40:18 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -32,7 +32,7 @@ import org.ofbiz.base.util.*;
  * Generic Entity - Relation model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.7 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class ModelRelation extends ModelChild {

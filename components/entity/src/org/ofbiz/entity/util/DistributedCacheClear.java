@@ -1,5 +1,5 @@
 /*
- * $Id: DistributedCacheClear.java,v 1.4 2004/07/07 09:31:03 jonesde Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import org.ofbiz.entity.condition.EntityCondition;
  * Distributed Cache Clear interface definition
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public interface DistributedCacheClear {

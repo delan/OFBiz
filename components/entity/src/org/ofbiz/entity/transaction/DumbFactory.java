@@ -1,5 +1,5 @@
 /*
- * $Id: DumbFactory.java,v 1.4 2004/07/17 07:05:09 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -48,7 +48,7 @@ import org.ofbiz.entity.jdbc.ConnectionFactory;
  * 
  * @author     <a href="mailto:plightbo@hotmail.com">Pat Lightbody</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class DumbFactory implements TransactionFactoryInterface {

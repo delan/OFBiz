@@ -1,5 +1,5 @@
 /*
- * $Id: GenericValue.java,v 1.7 2004/07/09 16:11:16 ajzeneski Exp $
+ * $Id$
  *
  *  Copyright (c) 2001 The Open For Business Project - www.ofbiz.org
  *
@@ -41,7 +41,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *
  *@author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  *@author     Eric Pabst
- *@version    $Revision: 1.7 $
+ *@version    $Rev:$
  *@since      1.0
  */
 public class GenericValue extends GenericEntity {

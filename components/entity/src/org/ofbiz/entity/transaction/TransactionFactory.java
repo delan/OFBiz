@@ -1,5 +1,5 @@
 /*
- * $Id: TransactionFactory.java,v 1.4 2004/07/17 07:05:10 doogie Exp $
+ * $Id$
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -39,7 +39,7 @@ import org.ofbiz.entity.jdbc.CursorConnection;
  * TransactionFactory - central source for JTA objects
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.4 $
+ * @version    $Rev:$
  * @since      2.0
  */
 public class TransactionFactory {
