@@ -381,11 +381,10 @@ public class GenericDelegator {
      */
     public GenericValue create(GenericValue value) throws GenericEntityException {
         GenericHelper helper = getEntityHelper(value.getEntityName());
+        if (value != null) value.setDelegator(this);
         value = helper.create(value);
-        if (value != null)
-            value.setDelegator(this);
-        if (value.lockEnabled())
-            refresh(value);
+        if (value != null) value.setDelegator(this);
+        if (value.lockEnabled()) refresh(value);
         return value;
     }
 
