@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.9 2004/01/20 14:41:24 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.10 2004/01/20 15:51:07 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.9 $
+ * @version    $Revision: 1.10 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -544,7 +544,7 @@ public class SqlJdbcUtil {
                 switch (typeValue) {
                 case 1:
                     String value = rs.getString(ind);
-                    if (value.length() == 0) {
+                    if (value == null || value.length() == 0) {
                         // if the String is empty, try to get a text input stream, this is required for some databases for larger fields, like CLOBs
                         Reader valueReader = rs.getCharacterStream(ind);
                         if (valueReader != null) {
@@ -555,6 +555,7 @@ public class SqlJdbcUtil {
                                 while ((charsRead = valueReader.read(inCharBuffer, 0, CHAR_BUFFER_SIZE)) > 0) {
                                     strBuf.append(inCharBuffer, 0, charsRead);
                                 }
+                                valueReader.close();
                             } catch (IOException e) {
                                 throw new GenericEntityException("Error reading long character stream for field " + curField.getName() + " of entity " + entity.getEntityName(), e);
                             }
