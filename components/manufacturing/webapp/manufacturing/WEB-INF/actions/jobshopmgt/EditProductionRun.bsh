@@ -124,7 +124,7 @@ if (!UtilValidate.isEmpty(productionRunId)) {
             editPrRoutingTaskWrapper.putInContext("routingTaskData", routingTaskData);
             editPrRoutingTaskWrapper.putInContext("actionForm", "addRoutingTask");
             editPrRoutingTaskWrapper.putInContext("actionIsAdd", "Y");
-            editPrRoutingTaskWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
+            //editPrRoutingTaskWrapper.putInContext("uiLabelButton",request.getAttribute("uiLabelMap").get("CommonUpdate"));
             context.put("editPrRoutingTaskWrapper",editPrRoutingTaskWrapper);
         }
         // routingTask update sub-screen
