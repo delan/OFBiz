@@ -20,9 +20,12 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
  *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap> 
 
 <#assign delegator = requestAttributes.delegator>
 <table border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -31,11 +34,11 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign="middle" align="left">
-            <div class="boxhead">&nbsp;Notes</div>
+            <div class="boxhead">&nbsp;${uiLabelMap.OrderNotes}</div>
           </td>
           <td valign="middle" align="right">
             <#if security.hasEntityPermission("ORDERMGR", "_NOTE", session)>  
-              <a href="<@ofbizUrl>/createnewnote?${paramString}</@ofbizUrl>" class="submenutextright">Create New</a>
+              <a href="<@ofbizUrl>/createnewnote?${paramString}</@ofbizUrl>" class="submenutextright">${uiLabelMap.OrderNotesCreateNew}</a>
             </#if>
           </td>
         </tr>
@@ -52,8 +55,8 @@
               <#list orderNotes as note>
                 <tr>
                   <td align="left" valign="top" width="35%">
-                    <div class="tabletext">&nbsp;<b>By: </b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</div>
-                    <div class="tabletext">&nbsp;<b>At: </b>${note.noteDateTime?string?if_exists}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonBy}: </b>${Static["org.ofbiz.party.party.PartyHelper"].getPartyName(delegator, note.noteParty, true)}</div>
+                    <div class="tabletext">&nbsp;<b>${uiLabelMap.CommonAt}: </b>${note.noteDateTime?string?if_exists}</div>
                   </td>
                   <td align="left" valign="top" width="65%">
                     <div class="tabletext">${note.noteInfo?if_exists}</div>
@@ -65,7 +68,7 @@
               </#list>
             </table>
             <#else>            
-              <div class="tabletext">&nbsp;No notes for this order.</div>
+              <div class="tabletext">&nbsp;${uiLabelMap.OrderNoNotes}.</div>
             </#if>
           </td>
         </tr>

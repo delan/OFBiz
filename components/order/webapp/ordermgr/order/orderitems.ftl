@@ -117,9 +117,9 @@
                       </td>
                       <td align="right" valign="top" nowrap>
                         <#assign remainingQuantity = (orderItem.quantity?default(0) - orderItem.cancelQuantity?default(0))>
-                        <div class="tabletext">Ordered:&nbsp;${orderItem.quantity?default(0)?string.number}&nbsp;&nbsp;</div>
-                        <div class="tabletext">Cancelled:&nbsp;${orderItem.cancelQuantity?default(0)?string.number}&nbsp;&nbsp;</div>
-                        <div class="tabletext">Remaining:&nbsp;${remainingQuantity?string.number}&nbsp;&nbsp;</div>
+                        <div class="tabletext">${uiLabelMap.OrderOrdered}:&nbsp;${orderItem.quantity?default(0)?string.number}&nbsp;&nbsp;</div>
+                        <div class="tabletext">${uiLabelMap.OrderCancelled}:&nbsp;${orderItem.cancelQuantity?default(0)?string.number}&nbsp;&nbsp;</div>
+                        <div class="tabletext">${uiLabelMap.OrderRemaining}:&nbsp;
                       </td>
                       <td align="right" valign="top" nowrap>
                         <div class="tabletext" nowrap><@ofbizCurrency amount=orderItem.unitPrice isoCode=currencyUomId/> / <@ofbizCurrency amount=orderItem.unitListPrice isoCode=currencyUomId/></div>
@@ -137,7 +137,7 @@
                       <td>&nbsp;</td>
                       <td align="right" valign="top" nowrap>
                         <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED") || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && orderHeader.statusId != "ORDER_SENT")>
-                          <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[Cancel All]</a></div>
+                          <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancelAll}]</a></div>
                         <#else>
                           &nbsp;
                         </#if>
@@ -215,7 +215,7 @@
                       <#assign shipGroupAddress = shipGroup.getRelatedOne("PostalAddress")?if_exists>
                       <tr>
                         <td align="right" colspan="2">
-                          <div class="tabletext" style="font-size: xx-small;"><b><i>Ship Group</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("Not Shipped")}</div>
+                          <div class="tabletext" style="font-size: xx-small;"><b><i>${uiLabelMap.OrderShipGroup}</i>:</b> [${shipGroup.shipGroupSeqId}] ${shipGroupAddress.address1?default("${uiLabelMap.OrderNotShipped}")}</div>
                         </td>
                         <td align="center">
                           <div class="tabletext" style="font-size: xx-small;">${shipGroupAssoc.quantity?string.number}&nbsp;</div>
@@ -227,7 +227,7 @@
                         <td align="right" valign="top" nowrap>
                           <#assign itemStatusOkay = (orderItem.statusId != "ITEM_CANCELLED" && orderItem.statusId != "ITEM_COMPLETED" && (shipGroupAssoc.cancelQuantity?default(0) < shipGroupAssoc.quantity?default(0)))>
                           <#if (security.hasEntityPermission("ORDERMGR", "_ADMIN", session) && itemStatusOkay) || (security.hasEntityPermission("ORDERMGR", "_UPDATE", session) && itemStatusOkay && orderHeader.statusId != "ORDER_SENT")>
-                            <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[Cancel]</a></div>
+                            <div class="tabletext"><a href="<@ofbizUrl>/cancelOrderItem?order_id=${orderItem.orderId}&item_seq=${orderItem.orderItemSeqId}&group_seq=${shipGroup.shipGroupSeqId}&${paramString}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonCancel}]</a></div>
                           <#else>
                             &nbsp;
                           </#if>
@@ -245,7 +245,7 @@
                           <div class="tabletext" style="font-size: xx-small;">
                             <b><i>${uiLabelMap.FacilityInventory}</i>:</b>
                               <a href="/facility/control/EditInventoryItem?inventoryItemId=${orderItemShipGrpInvRes.inventoryItemId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${orderItemShipGrpInvRes.inventoryItemId}</a>
-                            <b><i>Ship Group</i>:</b> ${orderItemShipGrpInvRes.shipGroupSeqId}
+                            <b><i>${uiLabelMap.OrderShipGroup}</i>:</b> ${orderItemShipGrpInvRes.shipGroupSeqId}
                           </div>
                         </td>
                         <td align="center">
@@ -356,7 +356,7 @@
                       <input type="text" name="amount" size="6" value="0.00" class="inputBox">
                     </td>
                     <td align="right" colspan="2">
-                      <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">[Add]</a>
+                      <a href="javascript:document.addAdjustmentForm.submit();" class="buttontext">[${uiLabelMap.CommonAdd}]</a>
                     </td>
                   </form>
                 </tr>

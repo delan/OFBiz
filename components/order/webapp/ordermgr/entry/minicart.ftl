@@ -21,9 +21,12 @@
  *
  *@author     David E. Jones (jonesde@ofbiz.org)
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Rev:$
- *@since      2.1
+ *@author     Jean-Luc.Malet@nereide.biz (migration to uiLabelMap)
+ *@version    $Rev: 3227 $
+ *@since      2.2
 -->
+
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#assign shoppingCart = sessionAttributes.shoppingCart?if_exists>
 <#assign currencyUomId = shoppingCart.getCurrency()>
@@ -39,7 +42,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <td valign=middle align=center>
-      <div class='boxhead'><b>Order&nbsp;Summary</b></div>
+      <div class='boxhead'><b>${uiLabelMap.OrderOrderSummary}</b></div>
           </td>
         </tr>
       </table>
@@ -54,8 +57,8 @@
               <#if (shoppingCartSize > 0)>             
                 <tr>
                   <td valign="bottom"><div class="tabletext"><b>#<b></div></td>
-                  <td valign="bottom"><div class="tabletext"><b>Item<b></div></td>
-                  <td valign="bottom"><div class="tabletext"><b>Subtotal<b></div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.ProductItem}<b></div></td>
+                  <td valign="bottom"><div class="tabletext"><b>${uiLabelMap.OrderSubTotal}<b></div></td>
                 </tr>
                 <#list shoppingCart.items() as cartLine>
                   <tr>
@@ -72,12 +75,12 @@
                 </#list>
                 <tr>
                   <td colspan="3" align="right">
-                    <div class="tabletext"><b>Total: <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></b></div>
+                    <div class="tabletext"><b>${uiLabelMap.CommonTotal}: <@ofbizCurrency amount=shoppingCart.getGrandTotal() isoCode=currencyUomId/></b></div>
                   </td>
                 </tr>                
               <#else>
                 <tr>
-                  <td nowrap colspan="3"><div class="tabletext">No order items selected.</div></td>
+                  <td nowrap colspan="3"><div class="tabletext">${uiLabelMap.OrderNoOrderItemsSelected}</div></td>
                 </tr>
               </#if>
             </table>

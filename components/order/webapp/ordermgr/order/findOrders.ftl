@@ -96,7 +96,7 @@ function lookupOrders(click) {
                     <option value="${currentRole.roleTypeId}">${currentRole.description}</option>
                     <option value="${currentRole.roleTypeId}">---</option>
                     </#if>
-                    <option value="ANY">Any Role Type</option>
+                    <option value="ANY">${uiLabelMap.CommonAnyRoleType}</option>
                     <#list roleTypes as roleType>
                       <option value="${roleType.roleTypeId}">${roleType.description}</option>
                     </#list>
@@ -122,7 +122,7 @@ function lookupOrders(click) {
                     <option value="${currentType.orderTypeId}">${currentType.description}</option>
                     <option value="${currentType.orderTypeId}">---</option>
                     </#if>
-                    <option value="ANY">Any Order Type</option>
+                    <option value="ANY">${uiLabelMap.CommonAnyOrderType}</option>
                     <#list orderTypes as orderType>
                       <option value="${orderType.orderTypeId}">${orderType.description}</option>
                     </#list>
@@ -148,7 +148,7 @@ function lookupOrders(click) {
                     <option value="${currentProductStore.productStoreId}">${currentProductStore.storeName}</option>
                     <option value="${currentProductStore.productStoreId}">---</option>
                     </#if>
-                    <option value="ANY">Any Store</option>
+                    <option value="ANY">${uiLabelMap.CommonAnyStore}</option>
                     <#list productStores as store>
                       <option value="${store.productStoreId}">${store.storeName}</option>
                     </#list>
@@ -164,7 +164,7 @@ function lookupOrders(click) {
                     <option value="${currentWebSite.webSiteId}">${currentWebSite.siteName}</option>
                     <option value="${currentWebSite.webSiteId}">---</option>
                     </#if>
-                    <option value="ANY">Any Web Site</option>
+                    <option value="ANY">${uiLabelMap.CommonAnyWebSite}</option>
                     <#list webSites as webSite>
                       <option value="${webSite.webSiteId}">${webSite.siteName}</option>
                     </#list>
@@ -180,7 +180,7 @@ function lookupOrders(click) {
                     <option value="${currentStatus.statusId}">${currentStatus.description}</option>
                     <option value="${currentStatus.statusId}">---</option>
                     </#if>
-                    <option value="ANY">Any Order Status</option>
+                    <option value="ANY">${uiLabelMap.CommonAnyOrderStatus}</option>
                     <#list orderStatuses as orderStatus>
                       <option value="${orderStatus.statusId}">${orderStatus.description}</option>
                     </#list>
@@ -274,7 +274,7 @@ document.lookuporder.order_id.focus();
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderType}</div></td>
           <td width="5%" align="left"><div class="tableheadtext">${uiLabelMap.OrderOrderId}</div></td>
           <td width="20%" align="left"><div class="tableheadtext">${uiLabelMap.PartyUserLoginId}</div></td>
-          <td width="5%" align="right"><div class="tableheadtext">Survey</div></td>
+          <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderSurvey}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsOrdered}</div></td>
           <td width="5%" align="right"><div class="tableheadtext">${uiLabelMap.OrderItemsReturned}</div></td>
           <td width="10%" align="right"><div class="tableheadtext">${uiLabelMap.OrderRemainingSubTotal}</div></td>
