@@ -177,9 +177,11 @@ public class WorkflowEngine implements GenericEngine {
         // Register the process and set the workflow owner
         try {
             req.registerProcess(process, context, requester);
-            Map pContext = process.processContext();
-            pContext.put("workflowOwnerId", userLogin.getString("userLoginId"));
-            process.setProcessContext(pContext);
+            if (userLogin != null) {
+                Map pContext = process.processContext();
+                pContext.put("workflowOwnerId", userLogin.getString("userLoginId"));
+                process.setProcessContext(pContext);
+            }
         } catch (WfException wfe) {
             throw new GenericServiceException(wfe.getMessage(), wfe);
         }
