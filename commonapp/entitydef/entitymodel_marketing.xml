@@ -210,6 +210,8 @@
       <field name="trackingCodeTypeId" type="id-ne"></field>
       <field name="marketingCampaignId" type="id"></field>
       <field name="redirectUrl" type="url"></field>
+      <field name="overrideLogo" type="url"></field>
+      <field name="overrideCss" type="url"></field>
       <field name="comments" type="comment"></field>
       <field name="description" type="description"></field>
       <field name="trackableLifetime" type="numeric"></field>
