@@ -1,5 +1,5 @@
 /*
- * $Id: SqlJdbcUtil.java,v 1.16 2004/02/05 09:49:33 jonesde Exp $
+ * $Id: SqlJdbcUtil.java,v 1.17 2004/02/16 17:37:58 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -66,7 +66,7 @@ import org.ofbiz.entity.model.ModelViewEntity;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:jdonnerstag@eds.de">Juergen Donnerstag</a>
  * @author     <a href="mailto:peterm@miraculum.com">Peter Moon</a>
- * @version    $Revision: 1.16 $
+ * @version    $Revision: 1.17 $
  * @since      2.0
  */
 public class SqlJdbcUtil {
@@ -783,7 +783,7 @@ public class SqlJdbcUtil {
                 break;
             }
         } catch (SQLException sqle) {
-            throw new GenericDataSourceException("SQL Exception while setting value: ", sqle);
+            throw new GenericDataSourceException("SQL Exception while setting value (" + modelField.getName() + "): ", sqle);
         }
     }
 
