@@ -72,6 +72,7 @@
 
     <entity-group group="org.ofbiz.commonapp" entity="Invoice" />
     <entity-group group="org.ofbiz.commonapp" entity="InvoiceAttribute" />
+    <entity-group group="org.ofbiz.commonapp" entity="InvoiceContactMech" />
     <entity-group group="org.ofbiz.commonapp" entity="InvoiceItem" />
     <entity-group group="org.ofbiz.commonapp" entity="InvoiceItemAttribute" />
     <entity-group group="org.ofbiz.commonapp" entity="InvoiceItemType" />

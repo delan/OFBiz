@@ -680,6 +680,26 @@
         <key-map field-name="attrName"/>
       </relation>
     </entity>
+    <entity entity-name="InvoiceContactMech"
+            package-name="org.ofbiz.commonapp.accounting.invoice"
+            never-cache="true"
+            title="Invoice Contact Mechanism Entity">
+      <field name="invoiceId" type="id-ne"></field>
+      <field name="contactMechPurposeTypeId" type="id-ne"></field>
+      <field name="contactMechId" type="id-ne"></field>
+      <prim-key field="invoiceId"/>
+      <prim-key field="contactMechPurposeTypeId"/>
+      <prim-key field="contactMechId"/>
+      <relation type="one" fk-name="INVOICE_CMECH_HDR" rel-entity-name="Invoice">
+        <key-map field-name="invoiceId"/>
+      </relation>
+      <relation type="one" fk-name="INVOICE_CMECH_CM" rel-entity-name="ContactMech">
+        <key-map field-name="contactMechId"/>
+      </relation>
+      <relation type="one" fk-name="INVOICE_CMECH_CMPT" rel-entity-name="ContactMechPurposeType">
+        <key-map field-name="contactMechPurposeTypeId"/>
+      </relation>
+    </entity>    
     <entity entity-name="InvoiceItem"
             package-name="org.ofbiz.commonapp.accounting.invoice"
             title="Invoice Item Entity">
