@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
     <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-    <classpathentry kind="lib" path="lib/log4j.jar"/>
-    <classpathentry kind="lib" path="lib/xerces.jar"/>
-    <classpathentry kind="lib" path="lib/javax.servlet.jar"/>
-    <classpathentry kind="lib" path="lib/org.mortbay.jetty.jar"/>
     <classpathentry kind="src" path="base/src/base"/>
     <classpathentry kind="src" path="base/src/start"/>
+    <classpathentry kind="src" path="components/entity/src"/>
+    <classpathentry kind="lib" path="components/entity/lib/jotm/carol.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/jotm/commons-cli.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/jotm/jonas_timer.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/jotm/jotm_iiop_stubs.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/jotm/jotm_jrmp_stubs.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/jotm/jotm.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/jotm/objectweb-datasource.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/jotm/xapool.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/jta_1.0.1.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/ots-jts_1.0.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/commons-dbcp.jar"/>
+    <classpathentry kind="lib" path="components/entity/lib/commons-pool.jar"/>
     <classpathentry kind="output" path="bin"/>
 </classpath>
