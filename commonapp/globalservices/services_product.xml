@@ -14,6 +14,144 @@
         <attribute name="newProductId" type="String" mode="IN" optional="false"/>
     </service>
     
+    <!-- Product Catalog Services -->
+    <service name="createProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="createProdCatalog" auth="true">
+        <description>Create an ProdCatalog</description>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="catalogName" type="String" mode="IN" optional="false"/>
+        <attribute name="title" type="String" mode="IN" optional="false"/>
+        <attribute name="subtitle" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryFacilityId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalog" auth="true">
+        <description>Update an ProdCatalog</description>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="catalogName" type="String" mode="IN" optional="false"/>
+        <attribute name="title" type="String" mode="IN" optional="false"/>
+        <attribute name="subtitle" type="String" mode="IN" optional="true"/>
+        <attribute name="inventoryFacilityId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="deleteProdCatalog" auth="true">
+        <description>Delete an ProdCatalog</description>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="addProductCategoryToProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="addProductCategoryToProdCatalog" auth="true">
+        <description>Add ProductCategory To ProdCatalog</description>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="updateProductCategoryToProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProductCategoryToProdCatalog" auth="true">
+        <description>Add ProductCategory To ProdCatalog</description>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="removeProductCategoryFromProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="removeProductCategoryFromProdCatalog" auth="true">
+        <description>Remove ProductCategory From ProdCatalog</description>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="productCategoryId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+
+    <service name="addProdCatalogToWebSite" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="addProdCatalogToWebSite" auth="true">
+        <description>Add ProdCatalog To WebSite</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="updateProdCatalogToWebSite" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="updateProdCatalogToWebSite" auth="true">
+        <description>Add ProdCatalog To WebSite</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+        <attribute name="prodCatalogCategoryTypeId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="removeProdCatalogFromWebSite" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/CatalogServices.xml" invoke="removeProdCatalogFromWebSite" auth="true">
+        <description>Remove ProdCatalog From WebSite</description>
+        <attribute name="webSiteId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+
+    <!-- Product Catalog Promotion Services -->
+    <service name="createProdCatalogPromo" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="createProdCatalogPromo" auth="true">
+        <description>Create an ProdCatalogPromo</description>
+        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogPromoTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="promoName" type="String" mode="IN" optional="false"/>
+        <attribute name="promoText" type="String" mode="IN" optional="true"/>
+        <attribute name="promoDetailUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="orderTotalBoundary" type="Double" mode="IN" optional="true"/>
+        <attribute name="discountQuantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProdCatalogPromo" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="updateProdCatalogPromo" auth="true">
+        <description>Update an ProdCatalogPromo</description>
+        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogPromoTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="promoName" type="String" mode="IN" optional="false"/>
+        <attribute name="promoText" type="String" mode="IN" optional="true"/>
+        <attribute name="promoDetailUrl" type="String" mode="IN" optional="true"/>
+        <attribute name="orderTotalBoundary" type="Double" mode="IN" optional="true"/>
+        <attribute name="discountQuantity" type="Double" mode="IN" optional="true"/>
+        <attribute name="productId" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteProdCatalogPromo" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="deleteProdCatalogPromo" auth="true">
+        <description>Delete an ProdCatalogPromo</description>
+        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="addProdCatalogPromoToProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="addProdCatalogPromoToProdCatalog" auth="true">
+        <description>Add ProdCatalogPromo To ProdCatalog</description>
+        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="updateProdCatalogPromoToProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="addProdCatalogPromoToProdCatalog" auth="true">
+        <description>Add ProdCatalogPromo To ProdCatalog</description>
+        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="sequenceNum" type="Long" mode="IN" optional="true"/>
+    </service>
+    <service name="removeProdCatalogPromoFromProdCatalog" engine="simple"
+                location="org/ofbiz/commonapp/product/catalog/PromoServices.xml" invoke="removeProdCatalogPromoFromProdCatalog" auth="true">
+        <description>Remove ProdCatalogPromo From ProdCatalog</description>
+        <attribute name="prodCatalogPromoId" type="String" mode="IN" optional="false"/>
+        <attribute name="prodCatalogId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+    </service>
+
     <!-- Product Inventory Services -->
     <service name="createInventoryItem" engine="simple"
                 location="org/ofbiz/commonapp/product/inventory/InventoryServices.xml" invoke="createInventoryItem" auth="true">
@@ -121,6 +259,44 @@
         <attribute name="productFeatureId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="java.sql.Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="java.sql.Timestamp" mode="IN" optional="true"/>
+    </service>
+
+    <!-- Product Storage Services -->
+    <service name="createFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="createFacility" auth="true">
+        <description>Create an Facility</description>
+        <attribute name="facilityTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityName" type="String" mode="IN" optional="false"/>
+        <attribute name="squareFootage" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+        <attribute name="facilityId" type="String" mode="OUT" optional="false"/>
+    </service>
+    <service name="updateFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="updateFacility" auth="true">
+        <description>Update an Facility</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityName" type="String" mode="IN" optional="false"/>
+        <attribute name="squareFootage" type="String" mode="IN" optional="true"/>
+        <attribute name="description" type="String" mode="IN" optional="true"/>
+    </service>
+    <service name="deleteFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="deleteFacility" auth="true">
+        <description>Delete an Facility</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+    </service>
+
+    <service name="addContactMechToFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="addContactMechToFacility" auth="true">
+        <description>Add ContactMech To Facility</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
+    </service>
+    <service name="removeContactMechFromFacility" engine="simple"
+                location="org/ofbiz/commonapp/product/storage/StorageServices.xml" invoke="removeContactMechFromFacility" auth="true">
+        <description>Remove ContactMech From Facility</description>
+        <attribute name="facilityId" type="String" mode="IN" optional="false"/>
+        <attribute name="contactMechId" type="String" mode="IN" optional="false"/>
     </service>
 
     <!-- Product View Services -->

@@ -109,6 +109,7 @@
             title="Catalog Promotion Entity">
       <field name="prodCatalogPromoId" type="id-ne"></field>
       <field name="prodCatalogPromoTypeId" type="id-ne"></field>
+      <field name="promoName" type="name"></field>
       <field name="promoText" type="description"></field>
       <field name="orderTotalBoundary" type="currency-amount"></field>
       <field name="discountQuantity" type="floating-point"></field>

@@ -178,12 +178,13 @@
   <Enumeration description="List - Complex Type" enumCode="LIST" enumId="WDT_LIST" sequenceId="13" enumTypeId="WORKFLOW_DATA_TYPE"/>
   <Enumeration description="Declared Type" enumCode="DECLARED" enumId="WDT_DECLARED" sequenceId="14" enumTypeId="WORKFLOW_DATA_TYPE"/>
 
-  <FacilityType description="" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
-  <FacilityType description="" facilityTypeId="ROOM" hasTable="N" parentTypeId=""/>
-  <FacilityType description="" facilityTypeId="PLANT" hasTable="N" parentTypeId=""/>
-  <FacilityType description="" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
-  <FacilityType description="" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
-  <FacilityType description="" facilityTypeId="WAREHOUSE" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Building" facilityTypeId="BUILDING" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Floor" facilityTypeId="FLOOR" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Office" facilityTypeId="OFFICE" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Plant" facilityTypeId="PLANT" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Retail Store" facilityTypeId="RETAIL_STORE" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Room" facilityTypeId="ROOM" hasTable="N" parentTypeId=""/>
+  <FacilityType description="Warehouse" facilityTypeId="WAREHOUSE" hasTable="N" parentTypeId=""/>
 
   <FinAccountTransType description="" finAccountTransTypeId="DEPOSIT" hasTable="N" parentTypeId=""/>
   <FinAccountTransType description="" finAccountTransTypeId="WITHDRAWAL" hasTable="Y" parentTypeId=""/>
