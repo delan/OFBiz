@@ -230,12 +230,22 @@
 
     <target name="copy-tld" depends="">
         <echo message="[tld] ===== Copy TLD ====="/>
-        <copy file="core/etc/ofbiz.tld" toDir="commonapp/webapp/WEB-INF"/>
-        <copy file="core/etc/ofbiz.tld" toDir="catalog/webapp/WEB-INF"/>
-        <copy file="core/etc/ofbiz.tld" toDir="ecommerce/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="webtools/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="commonapp/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="ecommerce/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="catalog/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="ordermgr/webapp/WEB-INF"/>
         <copy file="core/etc/ofbiz.tld" toDir="partymgr/webapp/WEB-INF"/>
+        <copy file="core/etc/ofbiz.tld" toDir="workeffort/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="webtools/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="commonapp/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="commonapp/empty_webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="ecommerce/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="catalog/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="ordermgr/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="partymgr/webapp/WEB-INF"/>
+        <copy file="core/etc/regions.tld" toDir="workeffort/webapp/WEB-INF"/>
         <echo message="[tld] ===== Done Copying ====="/>
     </target>
     <target name="update-apps" depends="copy-tld"/>
