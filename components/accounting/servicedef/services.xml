@@ -530,6 +530,7 @@
         <attribute name="captureAmount" type="Double" mode="INOUT" optional="false"/>
         <attribute name="currency" type="String" mode="IN" optional="true"/>
         <attribute name="paymentConfig" type="String" mode="IN" optional="true"/>
+        <attribute name="authTrans" type="GenericValue" mode="IN" optional="true"/>
         <attribute name="captureResult" type="Boolean" mode="OUT" optional="true"/>
         <attribute name="captureRefNum" type="String" mode="OUT" optional="false"/>
         <attribute name="captureCode" type="String" mode="OUT" optional="true"/>
