@@ -44,7 +44,7 @@ public class KeywordSearch {
      *@return Collection of productId Strings
      */
     public static Collection productsByKeywords(String keywordsString, GenericDelegator delegator, String categoryId) {
-        return productsByKeywords(keywordsString, delegator, categoryId, false, false, "AND");
+        return productsByKeywords(keywordsString, delegator, categoryId, false, false, "OR");
     }
     
     /** Does a product search by keyword using the PRODUCT_KEYWORD table.
@@ -67,13 +67,13 @@ public class KeywordSearch {
         Collection pbkCollection = new LinkedList();
 
         String keywords[] = makeKeywordList(keywordsString);
-        List keywordList = fixKeywords(keywords, false, false);
+        List keywordList = fixKeywords(keywords, anyPrefix, anySuffix);
         if (keywordList.size() == 0) {
             return null;
         }
         
         List params = new LinkedList();
-        String sql = getSearchSQL(keywordList, params, useCategory, "AND");
+        String sql = getSearchSQL(keywordList, params, useCategory, intraKeywordOperator);
         if (sql == null) {
             return null;
         }
@@ -174,6 +174,11 @@ public class KeywordSearch {
         StringBuffer sql = new StringBuffer();
         Iterator keywordIter = keywords.iterator();
 
+        if (intraKeywordOperator == null || (!"AND".equalsIgnoreCase(intraKeywordOperator) && !"OR".equalsIgnoreCase(intraKeywordOperator))) {
+            Debug.logWarning("intraKeywordOperator [" + intraKeywordOperator + "] was not valid, defaulting to OR");
+            intraKeywordOperator = "OR";
+        }
+        
         //EXAMPLE:
         //  SELECT DISTINCT P1.PRODUCT_ID FROM PRODUCT_KEYWORD P1, PRODUCT_KEYWORD P2, PRODUCT_KEYWORD P3
         //  WHERE P1.PRODUCT_ID=P2.PRODUCT_ID AND P1.PRODUCT_ID=P3.PRODUCT_ID AND P1.KEYWORD LIKE 'TI%' AND P2.KEYWORD LIKE 'HOUS%' AND P3.KEYWORD LIKE '1003027%'
