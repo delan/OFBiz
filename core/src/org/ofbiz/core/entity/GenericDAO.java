@@ -60,7 +60,13 @@ public class GenericDAO
   { 
     this.serverName = serverName;
     modelReader = ModelReader.getModelReader(serverName);
-    checkDb(null, false);
+    
+    if(UtilProperties.propertyValueEqualsIgnoreCase("servers", serverName + ".database.check.on.start", "true"))
+    {
+      boolean addMissing = UtilProperties.propertyValueEqualsIgnoreCase("servers", serverName + ".database.add.missing.on.start", "true");
+      Debug.logInfo("[GenericDAO.constructor] Doing database check as requested in servers.properties with addMissing=" + addMissing);
+      checkDb(null, addMissing);
+    }
   }
     
   public Connection getConnection() throws SQLException { return ConnectionFactory.getConnection(serverName); }
@@ -717,6 +723,9 @@ public class GenericDAO
 
   public void checkDb(Collection messages, boolean addMissing)
   {
+    UtilTimer timer = new UtilTimer();
+    timer.timerString("[GenericDAO.checkDb] Start - Before Get Table List");
+    
     Connection connection = null;
     try { connection = getConnection(); } 
     catch(SQLException sqle) 
@@ -758,7 +767,7 @@ public class GenericDAO
           String tableName = tableSet.getString("TABLE_NAME");
           String tableType = tableSet.getString("TABLE_TYPE");
           String remarks = tableSet.getString("REMARKS");
-          tableNames.add(tableName);
+          tableNames.add(tableName.toUpperCase());
           //Debug.logInfo("[GenericDAO.checkDb] Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
         }
         catch(SQLException sqle) 
@@ -777,101 +786,136 @@ public class GenericDAO
       if(messages != null) messages.add(message);
       return;
     }
+
+    try{ tableSet.close(); }
+    catch(SQLException sqle) 
+    { 
+      String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+    }
     
+    //get ALL column info, put into hashmap by table name
+    timer.timerString("[GenericDAO.checkDb] Before Get All Column Info");
+    Map colInfo = new HashMap();
+    try
+    {
+      ResultSet rsCols = dbData.getColumns(null, null, null, null);
+      while(rsCols.next())
+      {
+        try 
+        { 
+          String tableName = rsCols.getString("TABLE_NAME");
+          String colName = rsCols.getString("COLUMN_NAME");
+          List tableCols = (List)colInfo.get(tableName.toUpperCase());
+          if(tableCols == null)
+          {
+            tableCols = new Vector();
+            colInfo.put(tableName.toUpperCase(), tableCols);
+          }
+          tableCols.add(colName.toUpperCase());
+        }
+        catch(SQLException sqle) 
+        { 
+          String message = "Error getting column info for column. Error was:" + sqle.toString();
+          Debug.logError("[GenericDAO.checkDb] " + message);
+          if(messages != null) messages.add(message);
+          continue;
+        }            
+      }
+
+      try{ rsCols.close(); }
+      catch(SQLException sqle) 
+      { 
+        String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
+        Debug.logError("[GenericDAO.checkDb] " + message);
+        if(messages != null) messages.add(message);
+      }
+    }
+    catch(SQLException sqle) 
+    { 
+      String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+      colInfo = null;
+    }
+    timer.timerString("[GenericDAO.checkDb] After Get All Column Info");
+
     //-make sure all entities have a corresponding table
     //-list all tables that do not have a corresponding entity
     //-display message if number of table columns does not match number of entity fields
-    //-make sure each entity field has a corresponding column in the table
-    //make sure each corresponding column is of the correct type
     //-list all columns that do not have a corresponding field
+    //make sure each corresponding column is of the correct type
+    //-list all fields that do not have a corresponding column
     
-    boolean supportsRSMD = true;
-    
+    timer.timerString("[GenericDAO.checkDb] Before Individual Table/Column Check");
+
     TreeSet namesSet = new TreeSet(modelReader.getEntityNames());
     Iterator namesIter = namesSet.iterator();
+    int curEnt = 0;
+    int totalEnt = namesSet.size();
     while(namesIter != null && namesIter.hasNext())
     {
+      curEnt++;
       String entityName = (String)namesIter.next();
       ModelEntity entity = modelReader.getModelEntity(entityName);
 
-      //-make sure all entities have a corresponding table
-      if(tableNames.contains(entity.tableName) || tableNames.contains(entity.tableName.toLowerCase()))
-      {
-        tableNames.remove(entity.tableName);
-        tableNames.remove(entity.tableName.toLowerCase());
+      String entMessage = "(" + timer.timeSinceLast() + "ms) Checking #" + curEnt + "/" + totalEnt + " Entity " + entity.entityName + " with table " + entity.tableName;
+      Debug.logInfo("[GenericDAO.checkDb] " + entMessage);
+      if(messages != null) messages.add(entMessage);
 
-        if(supportsRSMD)
+      //-make sure all entities have a corresponding table
+      if(tableNames.contains(entity.tableName.toUpperCase()))
+      {
+        tableNames.remove(entity.tableName.toUpperCase());
+
+        if(colInfo != null)
         {
-          String sql = "SELECT * FROM " + entity.tableName;        
-          PreparedStatement ps = null;
-          try { ps = connection.prepareStatement(sql); }
-          catch(SQLException sqle) 
-          { 
-            String message = "Error preparing statement for entity \"" + entityName + "\" with table \"" + entity.tableName + "\". Error was:" + sqle.toString();
-            Debug.logError("[GenericDAO.checkDb] " + message);
-            if(messages != null) messages.add(message);
-            continue;
+          Map fieldColNames = new HashMap();
+          for(int fnum=0; fnum<entity.fields.size(); fnum++)
+          {
+            ModelField field = (ModelField)entity.fields.get(fnum);
+            fieldColNames.put(field.colName.toUpperCase(), field);
           }
 
-          try
+          List colList = (List)colInfo.get(entity.tableName.toUpperCase());
+          int numCols=0;
+          for(; numCols<colList.size(); numCols++)
           {
-            ResultSetMetaData rsData = ps.getMetaData();        
-            int numCols = rsData.getColumnCount();
-            //-display message if number of table columns does not match number of entity fields
-            if(numCols != entity.fields.size())
-            {
-              String message = "Entity \"" + entity.entityName + "\" has " + entity.fields.size() + " field but table \"" + entity.tableName + "\" has " + numCols + " columns.";
-              Debug.logWarning("[GenericDAO.checkDb] " + message);
-              if(messages != null) messages.add(message);          
-            }
-
-            List colNames = new Vector();
-            for(int cnum=0; cnum<numCols; cnum++)
-            {
-              try { colNames.add(rsData.getColumnName(cnum)); }
-              catch(SQLException sqle) 
-              { 
-                String message = "Error column name for column number " + cnum + " of entity \"" + entityName + "\" with table \"" + entity.tableName + "\". Error was:" + sqle.toString();
-                Debug.logError("[GenericDAO.checkDb] " + message);
-                if(messages != null) messages.add(message);
-                continue;
-              }            
-            }
-
-            for(int fnum=0; fnum<entity.fields.size(); fnum++)
-            {
-              ModelField field = (ModelField)entity.fields.get(fnum);
-              if(colNames.contains(field.colName) || colNames.contains(field.colName.toLowerCase()))
-              {
-                colNames.remove(field.colName);
-                colNames.remove(field.colName.toLowerCase());
-                //int colNum = colNames.indexOf(field.colName);
-              }
-              else
-              {
-                String message = "Field \"" + field.name + "\" of entity \"" + entity.entityName + "\" is missing its corresponding column \"" + field.colName + "\"";
-                Debug.logError("[GenericDAO.checkDb] " + message);
-                if(messages != null) messages.add(message);
-              }
-            }
-
+            String colName = (String)colList.get(numCols);
             //-list all columns that do not have a corresponding field
-            for(int cnum=0; cnum<colNames.size(); cnum++)
+            if(fieldColNames.containsKey(colName))
             {
-              String colName = (String)colNames.get(cnum);
+              ModelField field = null;
+              field = (ModelField)fieldColNames.remove(colName);
+
+              //make sure each corresponding column is of the correct type
+            }
+            else
+            {
               String message = "Column \"" + colName + "\" of table \"" + entity.tableName + "\" of entity \"" + entity.entityName + "\" exists in the database but has no corresponding field";
               Debug.logError("[GenericDAO.checkDb] " + message);
               if(messages != null) messages.add(message);
             }
           }
-          catch(SQLException sqle) 
-          { 
-            String message = "Error getting table meta data for entity \"" + entityName + "\" with table \"" + entity.tableName + "\". Error was:" + sqle.toString() + ". No more attempts to get result set meta data will be attempted.";
+
+          //-display message if number of table columns does not match number of entity fields
+          if(numCols != entity.fields.size())
+          {
+            String message = "Entity \"" + entity.entityName + "\" has " + entity.fields.size() + " fields but table \"" + entity.tableName + "\" has " + numCols + " columns.";
+            Debug.logWarning("[GenericDAO.checkDb] " + message);
+            if(messages != null) messages.add(message);          
+          }
+
+          //-list all fields that do not have a corresponding column
+          Iterator fcnIter = fieldColNames.keySet().iterator();
+          while(fcnIter.hasNext())
+          {
+            String colName = (String)fcnIter.next();
+            ModelField field = (ModelField)fieldColNames.get(colName);
+            String message = "Field \"" + field.name + "\" of entity \"" + entity.entityName + "\" is missing its corresponding column \"" + field.colName + "\"";
             Debug.logError("[GenericDAO.checkDb] " + message);
             if(messages != null) messages.add(message);
-            
-            supportsRSMD = false;
-            continue;
           }
         }
       }
@@ -882,6 +926,8 @@ public class GenericDAO
         if(messages != null) messages.add(message);
       }
     }
+
+    timer.timerString("[GenericDAO.checkDb] After Individual Table/Column Check");
     
     //-list all tables that do not have a corresponding entity
     Iterator tableNamesIter = tableNames.iterator();
@@ -892,5 +938,14 @@ public class GenericDAO
       Debug.logWarning("[GenericDAO.checkDb] " + message);
       if(messages != null) messages.add(message);
     }
+    
+    try{ connection.close(); }
+    catch(SQLException sqle) 
+    { 
+      String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
+      Debug.logError("[GenericDAO.checkDb] " + message);
+      if(messages != null) messages.add(message);
+    }
+    timer.timerString("[GenericDAO.checkDb] Finished Checking Entity Database");
   }
 }
