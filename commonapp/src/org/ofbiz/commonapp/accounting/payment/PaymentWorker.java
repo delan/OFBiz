@@ -198,7 +198,7 @@ public class PaymentWorker {
             while (ohi.hasNext()) {
                 GenericValue orderHeader = (GenericValue) ohi.next();
                 OrderReadHelper orh = new OrderReadHelper(orderHeader);
-                balance += orh.getOrderGrandTotal();
+                balance += orh.getOrderGrandTotal();            
             }
         }
         
@@ -206,7 +206,8 @@ public class PaymentWorker {
         List invoices = null;
         List exprs2 = new LinkedList();
         exprs2.add(new EntityExpr("billingAccountId", EntityOperator.EQUALS, billingAccountId));
-        exprs2.add(new EntityExpr("statusId", EntityOperator.EQUALS, "INVOICE_SENT"));
+        exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_PAID"));
+        exprs2.add(new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "INVOICE_CANCELLED"));
         try {
             invoices = delegator.findByAnd("Invoice", exprs2);
         } catch (GenericEntityException e) {
@@ -217,7 +218,7 @@ public class PaymentWorker {
             Iterator ii = invoices.iterator();
             while (ii.hasNext()) {
                 GenericValue invoice = (GenericValue) ii.next();
-                balance += InvoiceWorker.getInvoiceTotal(invoice);
+                balance += InvoiceWorker.getInvoiceTotal(invoice);              
             }
         }
         
