@@ -1,5 +1,5 @@
 /*
- * $Id: GenerateContainer.java,v 1.4 2004/03/31 03:53:43 ajzeneski Exp $
+ * $Id: GenerateContainer.java,v 1.5 2004/06/22 19:00:44 ajzeneski Exp $
  *
  */
 package org.ofbiz.appservers;
@@ -30,7 +30,7 @@ import org.ofbiz.content.webapp.ftl.FreeMarkerWorker;
  * ** This container requires the ComponentContainer to be loaded first.
  * 
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.1
  */
 public class GenerateContainer implements Container {
@@ -39,8 +39,17 @@ public class GenerateContainer implements Container {
     public static final String source = "/components/appservers/templates/";
     public static final String target = "/setup/";
 
-    protected Start.Config config = null;
+    protected String ofbizHome = null;
     protected String args[] = null;
+
+
+    /**
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     */
+    public void init(String[] args) {
+        this.ofbizHome = System.getProperty("ofbiz.home");
+        this.args = args;
+    }
 
     /**
      * Start the container
@@ -51,8 +60,6 @@ public class GenerateContainer implements Container {
      *
      */
     public boolean start(String configFileLocation) throws ContainerException {
-        this.config = StartInfoLoader.getConfig();
-        this.args = StartInfoLoader.getArgs();
         this.generateFiles();
         System.exit(1);
         return true;
@@ -89,7 +96,7 @@ public class GenerateContainer implements Container {
             throw new ContainerException("Unable to locate Application Server template directory");
         }
 
-        File parentDir = new File(config.ofbizHome + source + templateLocation);
+        File parentDir = new File(ofbizHome + source + templateLocation);
         if (!parentDir.exists() || !parentDir.isDirectory()) {
             throw new ContainerException("Template location - " + templateLocation + " does not exist!");
         }
@@ -143,7 +150,7 @@ public class GenerateContainer implements Container {
         if (targetDirectoryName == null) {
             targetDirectoryName = target;
         }
-        String targetDirectory = config.ofbizHome + targetDirectoryName + args[0];
+        String targetDirectory = ofbizHome + targetDirectoryName + args[0];
         File targetDir = new File(targetDirectory);
         if (!targetDir.exists()) {
             boolean created = targetDir.mkdirs();

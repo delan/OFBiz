@@ -1,5 +1,5 @@
 /*
- * $Id: RmiServiceContainer.java,v 1.4 2004/04/11 08:28:24 jonesde Exp $
+ * $Id: RmiServiceContainer.java,v 1.5 2004/06/22 19:00:48 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -43,7 +43,7 @@ import org.ofbiz.service.LocalDispatcher;
  * RMI Service Engine Container / Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.4 $
+ * @version    $Revision: 1.5 $
  * @since      3.0
  */
 public class RmiServiceContainer implements Container {
@@ -55,6 +55,12 @@ public class RmiServiceContainer implements Container {
 
     // Container methods
 
+    /**
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     */
+    public void init(String[] args) {
+    }
+    
     public boolean start(String configFile) throws ContainerException {
         // get the container config
         ContainerConfig.Container cfg = ContainerConfig.getContainer("rmi-dispatcher", configFile);

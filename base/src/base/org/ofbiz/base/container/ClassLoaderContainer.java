@@ -1,5 +1,5 @@
 /*
- * $Id: ClassLoaderContainer.java,v 1.2 2004/05/22 20:59:38 ajzeneski Exp $
+ * $Id: ClassLoaderContainer.java,v 1.3 2004/06/22 19:00:41 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,13 +33,19 @@ import java.net.URL;
  * ClassLoader Container; Created a CachedClassLoader for use by all following containers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      3.0
  */
 public class ClassLoaderContainer implements Container {
 
     protected static CachedClassLoader cl = null;
 
+    /**
+     * @see org.ofbiz.base.container.Container#init(java.lang.String[])
+     */
+    public void init(String[] args) {
+    }
+    
     /**
      * @see org.ofbiz.base.container.Container#start(java.lang.String)
      */

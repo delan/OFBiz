@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerLoader.java,v 1.9 2004/04/01 18:16:54 ajzeneski Exp $
+ * $Id: ContainerLoader.java,v 1.10 2004/06/22 19:00:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -38,7 +38,7 @@ import org.ofbiz.base.util.Debug;
  * ContainerLoader - StartupLoader for the container
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.9 $
+  *@version    $Revision: 1.10 $
  * @since      3.0
  */
 public class ContainerLoader implements StartupLoader {
@@ -70,7 +70,7 @@ public class ContainerLoader implements StartupLoader {
             Iterator i = containers.iterator();
             while (i.hasNext()) {
                 ContainerConfig.Container containerCfg = (ContainerConfig.Container) i.next();                
-                loadedContainers.add(loadContainer(containerCfg.className, configFileLocation));
+                loadedContainers.add(loadContainer(containerCfg, configFileLocation, args));
             }
         }
     }
@@ -91,53 +91,63 @@ public class ContainerLoader implements StartupLoader {
         }
     }
 
-    private Container loadContainer(String classname, String configFileLocation) throws StartupException {
-        // load the component container class
+    private Container loadContainer(ContainerConfig.Container containerCfg, String configFileLocation, String[] args) throws StartupException {
+        // load the container class
         ClassLoader loader = Thread.currentThread().getContextClassLoader();
         if (loader == null) {
             Debug.logWarning("Unable to get context classloader; using system", module);
             loader = ClassLoader.getSystemClassLoader();
         }
-        Class componentClass = null;
+        Class containerClass = null;
         try {
-            componentClass = loader.loadClass(classname);
+            containerClass = loader.loadClass(containerCfg.className);
         } catch (ClassNotFoundException e) {
             throw new StartupException("Cannot locate container class", e);            
         }
-        if (componentClass == null) {
+        if (containerClass == null) {
             throw new StartupException("Component container class not loaded");
         }
         
-        Container componentObj = null;
+        Container containerObj = null;
         try {
-            componentObj = (Container) componentClass.newInstance();
+            containerObj = (Container) containerClass.newInstance();
         } catch (InstantiationException e) {
-            throw new StartupException(e);            
+            throw new StartupException("Cannot create " + containerCfg.name, e);
         } catch (IllegalAccessException e) {
-            throw new StartupException(e);            
+            throw new StartupException("Cannot create " + containerCfg.name, e);
         } catch (ClassCastException e) {
-            throw new StartupException(e);
+            throw new StartupException("Cannot create " + containerCfg.name, e);
         }
         
-        if (componentObj == null) {
+        if (containerObj == null) {
             throw new StartupException("Unable to create instance of component container");
         }
-        
+
         try {
-            componentObj.start(configFileLocation);
+            containerObj.init(args);
         } catch (ContainerException e) {
-            throw new StartupException(e);
-        }  
+            throw new StartupException("Cannot init() " + containerCfg.name, e);
+        } catch (java.lang.AbstractMethodError e) {
+            throw new StartupException("Cannot init() " + containerCfg.name, e);
+        }
+
+        try {
+            containerObj.start(configFileLocation);
+        } catch (ContainerException e) {
+            throw new StartupException("Cannot start() " + containerCfg.name, e);
+        } catch (java.lang.AbstractMethodError e) {
+            throw new StartupException("Cannot start() " + containerCfg.name, e);
+        }
         
-        return componentObj;
+        return containerObj;
     }
 
-    public static synchronized boolean loadContainers(String config) throws StartupException {
+    public static synchronized boolean loadContainers(String config, String[] args) throws StartupException {
         if (!loaded) {
             ContainerLoader loader = new ContainerLoader();
             Start.Config cfg = new Start.Config();
             cfg.containerConfig = config == null ? "limited-containers.xml" : config;
-            loader.load(cfg, null);
+            loader.load(cfg, args);
             return true;
         }
         return false;

@@ -1,5 +1,5 @@
 /*
- * $Id: Container.java,v 1.2 2003/08/20 02:33:13 ajzeneski Exp $
+ * $Id: Container.java,v 1.3 2004/06/22 19:00:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -28,10 +28,17 @@ package org.ofbiz.base.container;
  * Container - Interface for containers
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.2 $
+  *@version    $Revision: 1.3 $
  * @since      3.0
  */
 public interface Container {
+
+    /** Initialize the container
+     *
+     * @param args Arguements from calling class
+     * @throws ContainerException
+     */
+    public void init(String[] args) throws ContainerException;
     
     /**
      * Start the container

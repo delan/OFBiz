@@ -1,5 +1,5 @@
 /*
- * $Id: Start.java,v 1.17 2004/06/15 18:20:19 ajzeneski Exp $
+ * $Id: Start.java,v 1.18 2004/06/22 19:00:42 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -46,15 +46,11 @@ import java.util.Properties;
  * Start - OFBiz Container(s) Startup Class
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.17 $
+  *@version    $Revision: 1.18 $
  * @since      2.1
  */
 public class Start implements Runnable {
 
-    public static final String CONFIG_FILE = "org/ofbiz/base/start/start.properties";
-    public static final String SHUTDOWN_COMMAND = "SHUTDOWN";
-    public static final String STATUS_COMMAND = "STATUS";    
-                        
     private Classpath classPath = new Classpath(System.getProperty("java.class.path"));     
     private ServerSocket serverSocket = null;
     private Thread serverThread = null;
@@ -63,32 +59,25 @@ public class Start implements Runnable {
     private Config config = null;
     private String loaderArgs[] = null;
 
-    public Start(String args[]) throws IOException {
+    private static final String SHUTDOWN_COMMAND = "SHUTDOWN";
+    private static final String STATUS_COMMAND = "STATUS";
+
+    public Start(String args[], String configFile) throws IOException {
         this.loaders = new ArrayList();
         this.config = new Config();
 
         // always read the default properties first
-        config.readConfig(CONFIG_FILE);
+        config.readConfig(configFile);
 
-        // parse the args for config file
-        String configFile = null;
+        // parse the startup args
         if (args.length > 1) {
-            configFile = args[1];
-            if (args.length > 2) {
-                this.loaderArgs = new String[args.length - 2];
-                for (int i = 2; i < args.length; i++) {
-                    this.loaderArgs[i-2] = args[i];
-                }
+            this.loaderArgs = new String[args.length - 1];
+            for (int i = 1; i < args.length; i++) {
+                this.loaderArgs[i-1] = args[i];
             }
         }
-
-        // if we specified a config file; replace the values
-        if (configFile != null) {
-            System.out.println("External startup configuration file - " + configFile);
-            config.readConfig(configFile);
-        }
     }
-    
+
     public void startListenerThread() throws IOException {
         if (config.adminPort > 0) {
             this.serverSocket = new ServerSocket(config.adminPort, 1, config.adminAddress);
@@ -100,44 +89,44 @@ public class Start implements Runnable {
             System.out.println("Admin socket not configured; set to port 0");
         }
     }
-         
-    public void run() {       
+
+    public void run() {
         while (serverRunning) {
-            try {            
-            Socket clientSocket = serverSocket.accept(); 
-            System.out.println("Received connection from - " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());          
+            try {
+            Socket clientSocket = serverSocket.accept();
+            System.out.println("Received connection from - " + clientSocket.getInetAddress() + " : " + clientSocket.getPort());
             processClientRequest(clientSocket);
-            clientSocket.close();                      
+            clientSocket.close();
             } catch (IOException e) {
-                e.printStackTrace();                              
+                e.printStackTrace();
             }
         }
         shutdownServer();
-        System.exit(0);                                      
+        System.exit(0);
     }
-    
-    private void processClientRequest(Socket client) throws IOException {         
-        BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));      
-        String request = reader.readLine();        
-        
+
+    private void processClientRequest(Socket client) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+        String request = reader.readLine();
+
         PrintWriter writer = new PrintWriter(client.getOutputStream(), true);
         writer.println(processRequest(request, client));
         writer.flush();
-        
+
         writer.close();
-        reader.close();        
+        reader.close();
     }
-    
+
     private String processRequest(String request, Socket client) {
-        if (request != null) {        
+        if (request != null) {
             String key = request.substring(0, request.indexOf(':'));
-            String command = request.substring(request.indexOf(':')+1);       
-            if (!key.equals(config.adminKey)) {        
+            String command = request.substring(request.indexOf(':')+1);
+            if (!key.equals(config.adminKey)) {
                 return "FAIL";
             } else {
-                if (command.equals(Start.SHUTDOWN_COMMAND)) {                                                 
+                if (command.equals(Start.SHUTDOWN_COMMAND)) {
                     System.out.println("Shutdown initiated from: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());
-                    serverRunning = false;        
+                    serverRunning = false;
                 } else if (command.equals(Start.STATUS_COMMAND)) {
                     return serverRunning ? "Running" : "Stopped";
                 }
@@ -147,7 +136,7 @@ public class Start implements Runnable {
             return "FAIL";
         }
     }
-   
+
     private void loadLibs(String path) throws Exception {
         File libDir = new File(path);
         if (libDir.exists()) {
@@ -157,27 +146,27 @@ public class Start implements Runnable {
                 if (files[i].isDirectory() && !"CVS".equals(fileName)) {
                     loadLibs(files[i].getCanonicalPath());
                 } else if (fileName.endsWith(".jar") || fileName.endsWith(".zip")) {
-                    classPath.addComponent(files[i]);   
+                    classPath.addComponent(files[i]);
                 }
-            }            
+            }
         }
     }
-    
+
     private void startServer() throws Exception {
         // load the lib directory
-        loadLibs(config.baseLib);        
-        
-        // load the ofbiz-base.jar        
+        loadLibs(config.baseLib);
+
+        // load the ofbiz-base.jar
         classPath.addComponent(config.baseJar);
-        
+
         // load the config directory
         classPath.addComponent(config.baseConfig);
-                
+
         // set the classpath/classloader
-        System.setProperty("java.class.path", classPath.toString());        
+        System.setProperty("java.class.path", classPath.toString());
         ClassLoader classloader = classPath.getClassLoader();
         Thread.currentThread().setContextClassLoader(classloader);
-        
+
         // set the shutdown hook
         if (config.useShutdownHook) {
             setShutdownHook();
@@ -187,15 +176,19 @@ public class Start implements Runnable {
 
         // start the listener thread
         startListenerThread();
-        
+
         // stat the log directory
         boolean createdDir = false;
         File logDir = new File(config.logDir);
         if (!logDir.exists()) {
             logDir.mkdir();
             createdDir = true;
-        }        
-        
+        }
+
+        if (createdDir) {
+            System.out.println("Created OFBiz log dir [" + logDir.getAbsolutePath() + "]");
+        }
+
         // start the loaders
         Iterator li = config.loaders.iterator();
         while (li.hasNext()) {
@@ -209,16 +202,16 @@ public class Start implements Runnable {
                 e.printStackTrace();
                 System.exit(99);
             }
-        }                                   
-    } 
-    
+        }
+    }
+
     private void setShutdownHook() {
         try {
             Method shutdownHook = java.lang.Runtime.class.getMethod("addShutdownHook", new Class[] { java.lang.Thread.class });
             Thread hook = new Thread() {
-                public void run() {                
+                public void run() {
                     setName("OFBiz_Shutdown_Hook");
-                    shutdownServer();                    
+                    shutdownServer();
                     // Try to avoid JVM crash
                     try {
                         Thread.sleep(1000);
@@ -227,14 +220,14 @@ public class Start implements Runnable {
                     }
                 }
             };
-            
+
             shutdownHook.invoke(Runtime.getRuntime(), new Object[] { hook });
-        } catch (Exception e) {                                    
+        } catch (Exception e) {
             // VM Does not support shutdown hook
             e.printStackTrace();
-        }        
+        }
     }
-    
+
     private void shutdownServer() {
         if (loaders != null && loaders.size() > 0) {
             Iterator i = loaders.iterator();
@@ -247,18 +240,15 @@ public class Start implements Runnable {
                 }
             }
         }
-        serverRunning = false;             
+        serverRunning = false;
     }
 
     public void start() throws Exception {
         startServer();
-    }
-
-    public void startTestMode() throws Exception {
-        config.setTestMode();
-        startServer();
-        shutdownServer();
-        System.exit(0);
+        if (config.shutdownAfterLoad) {
+            shutdownServer();
+            System.exit(0);
+        }
     }
 
     public String shutdown() throws Exception {
@@ -268,64 +258,88 @@ public class Start implements Runnable {
     public String status() throws Exception {
         String status = null;
         try {
-            status = sendSocketCommand(Start.STATUS_COMMAND);            
+            status = sendSocketCommand(Start.STATUS_COMMAND);
         } catch (ConnectException e) {
             return "Not Running";
         } catch (IOException e) {
             throw e;
         }
-        return status;                
+        return status;
     }
 
     private String sendSocketCommand(String command) throws IOException, ConnectException {
-        Socket socket = new Socket(config.adminAddress, config.adminPort);        
-                                                
+        Socket socket = new Socket(config.adminAddress, config.adminPort);
+
         // send the command
-        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);                    
+        PrintWriter writer = new PrintWriter(socket.getOutputStream(), true);
         writer.println(config.adminKey + ":" + command);
-        writer.flush();        
-            
+        writer.flush();
+
         // read the reply
         BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         String response = null;
         if (reader.ready()) {
-            response = reader.readLine();               
+            response = reader.readLine();
         }
-        
+
         reader.close();
-        
+
         // close the socket
-        writer.close();                        
-        socket.close();        
-        
+        writer.close();
+        socket.close();
+
         return response;
     }
-    
+
     public static void main(String[] args) throws Exception {
-        Start start = new Start(args);
-        String firstArg = args.length > 0 ? args[0] : "";        
+        String firstArg = args.length > 0 ? args[0] : "";
+
         if (firstArg.equals("-help") || firstArg.equals("-?")) {
             System.out.println("");
-            System.out.println("Usage: java -jar ofbiz.jar [command] [config] [config arguments]");
+            System.out.println("Usage: java -jar ofbiz.jar [command] [arguments]");
             System.out.println("-help, -? ----> This screen");
+            System.out.println("-setup -------> Run external application server setup");
             System.out.println("-start -------> Start the server");
             System.out.println("-status ------> Status of the server");
             System.out.println("-shutdown ----> Shutdown the server");
             System.out.println("-test --------> Run the JUnit test script");
             System.out.println("[no config] --> Use default config");
-            System.out.println("[no command] -> Start the server w/ default config");       
-        } else if (firstArg.equals("-status")) {
-            System.out.println("Current Status : " + start.status());                               
-        } else if (firstArg.equals("-shutdown")) {
-            System.out.println("Shutting down server : " + start.shutdown());
-        } else if (firstArg.equals("-test")) {
-            System.out.println("Starting server in test mode...");
-            start.startTestMode();
+            System.out.println("[no command] -> Start the server w/ default config");
         } else {
-            start.start();
-        }                
+            Start start = new Start(args, getConfigFileName(firstArg));
+            // hack for the status and shutdown commands
+            if (firstArg.equals("-status")) {
+                System.out.println("Current Status : " + start.status());
+            } else if (firstArg.equals("-shutdown")) {
+                System.out.println("Shutting down server : " + start.shutdown());
+            } else {
+                // general start
+                start.start();
+            }
+        }
     }
-    
+
+    private static String getConfigFileName(String command) {
+        // default command is "start"
+        if (command == null || command.trim().length() == 0) {
+            command = "start";
+        }
+
+        // strip off the leading dash
+        if (command.startsWith("-")) {
+            command = command.substring(1);
+        }
+
+        // shutdown & status hack
+        if (command.equalsIgnoreCase("shutdown")) {
+            command = "start";
+        } else if (command.equalsIgnoreCase("status")) {
+            command = "start";
+        }
+
+        return "org/ofbiz/base/start/" + command + ".properties";
+    }
+
     public static class Config {
         public String containerConfig;
         public String testConfig;
@@ -339,6 +353,7 @@ public class Start implements Runnable {
         public String logDir;
         public List loaders;
         public String awtHeadless;
+        public boolean shutdownAfterLoad = false;
         public boolean useShutdownHook = true;
         private boolean configLoaded = false;
 
@@ -388,63 +403,57 @@ public class Start implements Runnable {
 
         public void readConfig(String config) throws IOException {
             Properties props = this.getPropertiesFile(config);
-            
-            // set the ofbiz.home            
-            if (ofbizHome == null) {        
+
+            // set the ofbiz.home
+            if (ofbizHome == null) {
                 ofbizHome = props.getProperty("ofbiz.home", ".");
                 // get a full path
-                if (ofbizHome.equals(".")) {        
+                if (ofbizHome.equals(".")) {
                     ofbizHome = System.getProperty("user.dir");
                     ofbizHome = ofbizHome.replace('\\', '/');
-                }            
+                }
             }
             System.setProperty("ofbiz.home", ofbizHome);
-            
+
             // base config directory
             baseConfig = System.getProperty("ofbiz.base.config");
             if (baseConfig == null) {
                 baseConfig = ofbizHome + "/" + props.getProperty("ofbiz.base.config", "config");
             }
-                        
+
             // base lib directory
-            baseLib = System.getProperty("ofbiz.base.lib");            
+            baseLib = System.getProperty("ofbiz.base.lib");
             if (baseLib == null) {
-                baseLib = ofbizHome + "/" + props.getProperty("ofbiz.base.lib", "lib");                
-            } 
-            
-            // base jar file
-            baseJar = System.getProperty("ofbiz.base.jar");            
-            if (baseJar == null) {
-                baseJar = ofbizHome + "/" + props.getProperty("ofbiz.base.jar", "base/build/lib/ofbiz-base.jar");                
+                baseLib = ofbizHome + "/" + props.getProperty("ofbiz.base.lib", "lib");
             }
-            
+
+            // base jar file
+            baseJar = System.getProperty("ofbiz.base.jar");
+            if (baseJar == null) {
+                baseJar = ofbizHome + "/" + props.getProperty("ofbiz.base.jar", "base/build/lib/ofbiz-base.jar");
+            }
+
             // log directory
             logDir = System.getProperty("ofbiz.log.dir");
             if (logDir == null) {
                 logDir = ofbizHome + "/" + props.getProperty("ofbiz.log.dir", "logs");
             }
-            
-            // container (normal) configuration
+
+            // container configuration
             containerConfig = System.getProperty("ofbiz.container.config");
             if (containerConfig == null) {
                 containerConfig = ofbizHome + "/" + props.getProperty("ofbiz.container.config", "base/config/ofbiz-containers.xml");
             }
 
-            // container (test) configuration
-            testConfig = System.getProperty("ofbiz.container.test-config");
-            if (testConfig == null) {
-                testConfig = ofbizHome + "/" + props.getProperty("ofbiz.container.test-config", "base/config/test-containers.xml");
-            }
-
             // get the admin server info
             String serverHost = System.getProperty("ofbiz.admin.host");
-            if (serverHost == null) {      
+            if (serverHost == null) {
                 serverHost = props.getProperty("ofbiz.admin.host", "127.0.0.1");
             }
-                        
+
             String adminPortStr = System.getProperty("ofbiz.admin.port");
             if (adminPortStr == null) {
-                adminPortStr = props.getProperty("ofbiz.admin.port", "10523");
+                adminPortStr = props.getProperty("ofbiz.admin.port", "0");
             }
 
             // set the admin key
@@ -452,31 +461,46 @@ public class Start implements Runnable {
             if (adminKey == null) {
                 adminKey = props.getProperty("ofbiz.admin.key", "NA");
             }
-                     
-            // create the host InetAddress   
+
+            // create the host InetAddress
             adminAddress = InetAddress.getByName(serverHost);
-        
+
             // parse the port number
-            try {        
+            try {
                 adminPort = Integer.parseInt(adminPortStr);
             } catch (Exception e) {
-                adminPort = 10523;
+                adminPort = 0;
             }
-            
+
             // set the property to tell Log4J to use debug.properties
             String log4jConfig = System.getProperty("log4j.configuration");
-            if (log4jConfig == null) {        
+            if (log4jConfig == null) {
                 log4jConfig = props.getProperty("log4j.configuration");
             }
-        
+
             // build a default log4j configuration based on ofbizHome
             if (log4jConfig == null) {
                 log4jConfig = ofbizHome + "/base/config/debug.properties";
             }
-        
+
             // set the log4j configuration property so we don't pick up one inside jars by mistake
             System.setProperty("log4j.configuration", log4jConfig);
-        
+
+            // check for shutdown hook
+            if (System.getProperty("ofbiz.enable.hook") != null && System.getProperty("ofbiz.enable.hook").length() > 0) {
+                useShutdownHook = "true".equalsIgnoreCase(System.getProperty("ofbiz.enable.hook"));
+            } else if (props.getProperty("ofbiz.enable.hook") != null && props.getProperty("ofbiz.enable.hook").length() > 0) {
+                useShutdownHook = "true".equalsIgnoreCase(props.getProperty("ofbiz.enable.hook"));
+            }
+
+            // check for auto-shutdown
+            if (System.getProperty("ofbiz.auto.shutdown") != null && System.getProperty("ofbiz.auto.shutdown").length() > 0) {
+                shutdownAfterLoad = "true".equalsIgnoreCase(System.getProperty("ofbiz.auto.shutdown"));
+            } else if (props.getProperty("ofbiz.auto.shutdown") != null && props.getProperty("ofbiz.auto.shutdown").length() > 0) {
+                shutdownAfterLoad = "true".equalsIgnoreCase(props.getProperty("ofbiz.auto.shutdown"));
+            }
+
+            // set AWT headless mode
             awtHeadless = System.getProperty("java.awt.headless");
             if (awtHeadless == null) {
                 awtHeadless = props.getProperty("java.awt.headless");
@@ -484,10 +508,10 @@ public class Start implements Runnable {
             if (awtHeadless != null) {
                 System.setProperty("java.awt.headless", awtHeadless);
             }
-            
+
             // set the property to tell Jetty to use 2.4 SessionListeners
             System.setProperty("org.mortbay.jetty.servlet.AbstractSessionManager.24SessionDestroyed", "true");
-            
+
             // loader classes
             loaders = new ArrayList();
             int currentPosition = 1;
@@ -517,16 +541,6 @@ public class Start implements Runnable {
             System.setProperty("java.home", javaHome);
 
             configLoaded = true;
-        }
-
-        public void setTestMode() throws Exception {
-            if (!configLoaded) {
-                throw new Exception("Startup configuration not loaded; cannot adjust test mode settings!");
-            }
-
-            containerConfig = testConfig;
-            useShutdownHook = false;
-            adminPort = 0;
         }
     }
 }
