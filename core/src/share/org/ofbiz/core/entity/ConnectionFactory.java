@@ -46,36 +46,49 @@ public class ConnectionFactory {
         
         String jndiName = UtilProperties.getPropertyValue("entityengine", helperName + ".jdbc.jndi.name");
         if (jndiName != null && jndiName.length() > 0) {
-            //Debug.logVerbose("[ConnectionFactory.getConnection] Trying JNDI name " + jndiName, module);
-            DataSource ds;
-            ds = (DataSource) dsCache.get(jndiName);
-            if (ds != null)
-                return ds.getConnection();
+            //Debug.logVerbose("Trying JNDI name " + jndiName, module);
+            Object ds;
+            ds = dsCache.get(jndiName);
+            if (ds != null) {
+                if (ds instanceof XADataSource) {
+                    XADataSource xads = (XADataSource) ds;
+                    return TransactionUtil.enlistConnection(xads.getXAConnection());
+                } else {
+                    DataSource nds = (DataSource) ds;
+                    return nds.getConnection();
+                }
+            }
 
             synchronized (ConnectionFactory.class) {
                 //try again inside the synch just in case someone when through while we were waiting
-                ds = (DataSource) dsCache.get(jndiName);
+                ds = dsCache.get(jndiName);
                 if (ds != null) {
                     if (ds instanceof XADataSource) {
                         XADataSource xads = (XADataSource) ds;
                         return TransactionUtil.enlistConnection(xads.getXAConnection());
                     } else {
-                        return ds.getConnection();
+                        DataSource nds = (DataSource) ds;
+                        return nds.getConnection();
                     }
                 }
 
                 try {
+                    Debug.logInfo("Doing JNDI lookup for name " + jndiName, module);
                     InitialContext ic = JNDIContextFactory.getInitialContext(helperName);
                     if (ic != null)
-                        ds = (DataSource) ic.lookup(jndiName);
+                        ds = ic.lookup(jndiName);
                     if (ds != null) {
                         dsCache.put(jndiName, ds);
                         Connection con = null;
                         if (ds instanceof XADataSource) {
+                            Debug.logInfo("Got XADataSource for name " + jndiName, module);
                             XADataSource xads = (XADataSource) ds;
-                            con = TransactionUtil.enlistConnection(xads.getXAConnection());
+                            XAConnection xac = xads.getXAConnection();
+                            con = TransactionUtil.enlistConnection(xac);
                         } else {
-                            con = ds.getConnection();
+                            Debug.logInfo("Got DataSource for name " + jndiName, module);
+                            DataSource nds = (DataSource) ds;
+                            con = nds.getConnection();
                         }
                         //if (con != null) Debug.logInfo("[ConnectionFactory.getConnection] Got JNDI connection with catalog: " + con.getCatalog());
                         return con;
