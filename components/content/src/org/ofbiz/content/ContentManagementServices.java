@@ -41,7 +41,7 @@ import org.ofbiz.content.content.ContentWorker;
  * ContentManagementServices Class
  *
  * @author     <a href="mailto:byersa@automationgroups.com">Al Byers</a>
- * @version    $Revision: 1.1 $
+ * @version    $Revision: 1.2 $
  * @since      3.0
  *
  * 
@@ -74,7 +74,7 @@ public class ContentManagementServices {
         //Debug.logInfo("in getSubContent(svc), subContentId:" + subContentId, "");
         //Debug.logInfo("in getSubContent(svc), mapKey:" + mapKey, "");
         try {
-            view = ContentWorker.getSubContent(dispatcher, delegator, 
+            view = ContentWorker.getSubContent( delegator, 
                           contentId, mapKey, subContentId, userLogin, assocTypes, fromDate);
             content = ContentWorker.getContentFromView(view);
         } catch(IOException e) {
@@ -137,6 +137,7 @@ public class ContentManagementServices {
         String contentTypeId = (String)content.get("contentTypeId");
         String origDataResourceId = (String)content.get("dataResourceId");
 
+
         GenericValue dataResource = delegator.makeValue("DataResource", null);
         dataResource.setPKFields(context);
         dataResource.setNonPKFields(context);
@@ -186,33 +187,41 @@ public class ContentManagementServices {
 
         boolean dataResourceExists = true;
         if (UtilValidate.isNotEmpty(dataResourceTypeId) ) {
-            //Debug.logInfo("dataResourceId(before):" + dataResourceId, null);
-            if (UtilValidate.isEmpty(dataResourceId)) {
-                dataResourceExists = false;
-                Map thisResult = DataServices.createDataResourceMethod(dctx, context);
-                dataResourceId = (String)thisResult.get("dataResourceId");
-            //Debug.logInfo("dataResourceId(create):" + dataResourceId, null);
-            } else {
-                Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
-            //Debug.logInfo("dataResourceId(update-dr0):" + dataResourceId, null);
+            if (UtilValidate.isNotEmpty(textData)) {
+                if (UtilValidate.isEmpty(dataResourceId)) {
+                    dataResourceExists = false;
+                    Map thisResult = DataServices.createDataResourceMethod(dctx, context);
+                    dataResourceId = (String)thisResult.get("dataResourceId");
+                    if (dataResourceTypeId.indexOf("_FILE") >=0) {
+                        dataResource = (GenericValue)thisResult.get("dataResource");
+                        context.put("dataResource", dataResource);
+                        try {
+                            thisResult = DataServices.createFileMethod(dctx, context);
+                        } catch(GenericServiceException e) {
+                            Debug.logInfo("in persistContentAndAssoc. " + e.getMessage(),"");
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+                    } else {
+                        thisResult = DataServices.createElectronicTextMethod(dctx, context);
+                    }
+                //Debug.logInfo("dataResourceId(create):" + dataResourceId, null);
+                } else {
+                    Map thisResult = DataServices.updateDataResourceMethod(dctx, context);
+                    if (dataResourceTypeId.indexOf("_FILE") >=0) {
+                        dataResource = (GenericValue)thisResult.get("dataResource");
+                        context.put("dataResource", dataResource);
+                        try {
+                            thisResult = DataServices.updateFileMethod(dctx, context);
+                        } catch(GenericServiceException e) {
+                            return ServiceUtil.returnError(e.getMessage());
+                        }
+                    } else {
+                        thisResult = DataServices.updateElectronicTextMethod(dctx, context);
+                    }
+                }
+                result.put("dataResourceId", dataResourceId);
+                context.put("dataResourceId", dataResourceId);
             }
-            result.put("dataResourceId", dataResourceId);
-            context.put("dataResourceId", dataResourceId);
-
-        }
-        if (UtilValidate.isNotEmpty(textData)) {
-            //Debug.logInfo("dataResourceId(update-td0):" + dataResourceId, null);
-            if (!dataResourceExists) {
-                Map thisResult = DataServices.createElectronicTextMethod(dctx, context);
-                dataResourceId = (String)thisResult.get("dataResourceId");
-            //Debug.logInfo("dataResourceId(create):" + dataResourceId, null);
-            } else {
-            //Debug.logInfo("dataResourceId(update-td1):" + dataResourceId, null);
-                Map thisResult = DataServices.updateElectronicTextMethod(dctx, context);
-            //Debug.logInfo("dataResourceId(update-td2):" + dataResourceId, null);
-            }
-            result.put("dataResourceId", dataResourceId);
-            context.put("dataResourceId", dataResourceId);
         }
 
         // Do update and create permission checks on Content if warranted.
