@@ -67,6 +67,12 @@ content and knowledge management, data analysis, and so forth.</DIV>
 <BR>
 <DIV class='tabletext'>This application is primarily intended for developers and system administrators.</DIV>
 <ul>
+  <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
+    <li><div class='tabletext'>Cache Utilities</div>
+    <ul>
+      <li><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class='buttontext'>Cache Maintenance</A>
+    </ul>
+  <%}%>
   <%if(security.hasPermission("ENTITY_MAINT", session)){%>
     <li><div class='tabletext'>Entity Engine Utilities</div>
     <ul>
@@ -89,12 +95,6 @@ content and knowledge management, data analysis, and so forth.</DIV>
 --%>
     </ul>
   <%}%>
-  <%if(security.hasPermission("UTIL_CACHE_VIEW", session)){%>
-    <li><div class='tabletext'>Cache Utilities</div>
-    <ul>
-      <li><a href="<ofbiz:url>/FindUtilCache</ofbiz:url>" class='buttontext'>Cache Maintenance</A>
-    </ul>
-  <%}%>
   <%if(security.hasPermission("DATAFILE_MAINT", session)){%>
     <li><div class='tabletext'>Data File Utilities</div>
     <ul>
@@ -111,6 +111,12 @@ content and knowledge management, data analysis, and so forth.</DIV>
     <li><div class='tabletext'>Workflow Utilities</div>
     <ul>
       <li><a href="<ofbiz:url>/readxpdl</ofbiz:url>" class='buttontext'>Read XPDL File</A>
+    </ul>
+  <%}%>
+  <%if(security.hasPermission("SERVER_STATS_VIEW", session)){%>
+    <li><div class='tabletext'>Server Hit Statistics</div>
+    <ul>
+      <li><a href="<ofbiz:url>/StatsSinceStart</ofbiz:url>" class='buttontext'>Stats Since Server Start</A>
     </ul>
   <%}%>
 </ul>

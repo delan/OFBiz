@@ -77,7 +77,13 @@ public class ControlServlet extends HttpServlet {
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String rname = request.getPathInfo();
+        long requestStartTime = System.currentTimeMillis();
+        String cname = request.getContextPath().substring(1);
+        String rname = request.getPathInfo().substring(1);
+        if (rname.indexOf('/') > 0) {
+            rname = rname.substring(0, rname.indexOf('/'));
+        }
+        
         UtilTimer timer = null;
         if (Debug.timingOn()) {
             timer = new UtilTimer();
@@ -85,10 +91,13 @@ public class ControlServlet extends HttpServlet {
             timer.timerString("[" + rname + "] Servlet Starting, doing setup", module);
         }
 
-        HttpSession session = request.getSession(true);
+        GenericValue userLogin = (GenericValue) request.getSession().getAttribute(SiteDefs.USER_LOGIN);
+        String userLoginId = userLogin == null ? "_ANONYMOUS_USER_" : userLogin.getString("userLoginId");
+
+        HttpSession session = request.getSession();
         if (request.getCharacterEncoding() == null)
             request.setCharacterEncoding("UTF-8");
-
+        
         String nextPage = null;
 
         // Setup the CONTROL_PATH for JSP dispatching.
@@ -154,9 +163,10 @@ public class ControlServlet extends HttpServlet {
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Setup done, doing Event(s)", module);
 
         try {
-            nextPage = getRequestHandler().doRequest(request, response, null);
+            //the ServerHitBin call for the event is done inside the doRequest method
+            nextPage = getRequestHandler().doRequest(request, response, null, userLoginId);
         } catch (Exception e) {
-            e.printStackTrace();
+            Debug.logError(e);
             request.setAttribute(SiteDefs.ERROR_MESSAGE, e.getMessage());
             nextPage = getRequestHandler().getDefaultErrorPage(request);
         }
@@ -165,6 +175,7 @@ public class ControlServlet extends HttpServlet {
         Debug.logInfo("[" + rname + "] Event done, rendering page: " + nextPage, module);
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Event done, rendering page: " + nextPage, module);
 
+        long viewStartTime = System.currentTimeMillis();
         if (nextPage != null) {
             //some containers call filters on EVERY request, even forwarded ones, so let it know that it came from the control servlet
             request.setAttribute(SiteDefs.FORWARDED_FROM_CONTROL_SERVLET, new Boolean(true));
@@ -172,7 +183,14 @@ public class ControlServlet extends HttpServlet {
             if (rd != null) rd.forward(request, response);
         }
 
+        String vname = (String) request.getAttribute(SiteDefs.CURRENT_VIEW);
+        if (vname != null) {
+            ServerHitBin.countView(cname + "." + vname, viewStartTime, System.currentTimeMillis() - viewStartTime, userLoginId);
+        }
+        
         if (Debug.timingOn()) timer.timerString("[" + rname + "] Done rendering page, Servlet Finished", module);
+
+        ServerHitBin.countRequest(cname + "." + rname, requestStartTime, System.currentTimeMillis() - requestStartTime, userLoginId);
     }
 
     private RequestHandler getRequestHandler() {

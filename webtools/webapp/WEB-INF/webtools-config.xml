@@ -182,7 +182,10 @@
     	<response name="success" type="view" value="readxpdl"/>
     </request-map>
     
-
+    <request-map uri="StatsSinceStart">
+    	<security https="true" auth="true"/>
+        <response name="success" type="view" value="StatsSinceStart"/>
+    </request-map>
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -218,6 +221,8 @@
     <view-map name="viewdatafile" page="/datafile/viewdatafile.jsp"/>
     <view-map name="logikus" page="/rules/logikus.jsp"/>
     <view-map name="readxpdl" page="/workflow/readxpdl.jsp"/>
+
+    <view-map name="StatsSinceStart" page="/stats/StatsSinceStart.jsp"/>
     <!-- end of view mappings -->
     
 </site-conf>
