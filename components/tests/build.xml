@@ -21,10 +21,10 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *  This is the Open for Business eCommerce Build Script.
- *  $Id: build.xml,v 1.1 2004/06/04 02:35:41 jonesde Exp $
+ *  $Id: build.xml,v 1.2 2004/08/01 02:58:55 ajzeneski Exp $
 -->
 
-<project name="OFBiz - Ecommerce Component" default="jar" basedir=".">
+<project name="OFBiz - JXTest Component" default="jar" basedir=".">
 
     <!-- ================================================================== -->
     <!-- Initialization of all property settings                            -->
@@ -32,8 +32,8 @@
 
     <target name="init">                
         <property environment="env"/>
-        <property name="desc" value="OFBiz Test Components"/>
-        <property name="name" value="ofbiz-tests"/>
+        <property name="desc" value="OFBiz JXTest Component"/>
+        <property name="name" value="ofbiz-jxtest"/>
         <property name="src.dir" value="src"/>
         <property name="dtd.dir" value="dtd"/>
         <property name="lib.dir" value="lib"/>        
@@ -107,7 +107,7 @@
     <!-- ================================================================== -->
 
     <target name="docs" depends="prepare-docs,classpath">
-        <javadoc packagenames="org.ofbiz.ecommerce.*" 
+        <javadoc packagenames="org.ofbiz.jxtest.*"
                  classpathref="local.class.path"
                  destdir="${build.dir}/javadocs" 
                  Windowtitle="Open for Business - ${desc}">
