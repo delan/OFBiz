@@ -6,7 +6,7 @@
     <shortname>Regions Tags - Composite View Implementation</shortname>
     <tag>
         <name>render</name>
-        <tagclass>org.ofbiz.content.webapp.region.RenderTag</tagclass>
+        <tagclass>org.ofbiz.webapp.region.RenderTag</tagclass>
         <bodycontent>JSP</bodycontent>
         <attribute>
             <name>section</name>
