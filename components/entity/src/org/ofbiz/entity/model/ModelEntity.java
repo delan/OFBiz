@@ -1,5 +1,5 @@
 /*
- * $Id: ModelEntity.java,v 1.8 2003/12/17 19:29:08 jonesde Exp $
+ * $Id: ModelEntity.java,v 1.9 2003/12/24 01:57:36 jonesde Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -23,19 +23,28 @@
  */
 package org.ofbiz.entity.model;
 
-import java.util.*;
-import org.w3c.dom.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.UtilTimer;
+import org.ofbiz.base.util.UtilXml;
 import org.ofbiz.entity.config.EntityConfigUtil;
-import org.ofbiz.entity.jdbc.*;
-import org.ofbiz.base.util.*;
+import org.ofbiz.entity.jdbc.DatabaseUtil;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Generic Entity - Entity model class
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.8 $
+ * @version    $Revision: 1.9 $
  * @since      2.0
  */
 public class ModelEntity implements Comparable {
@@ -45,6 +54,8 @@ public class ModelEntity implements Comparable {
     /** The name of the time stamp field for locking/syncronization */
     public static final String STAMP_FIELD = "lastUpdatedStamp";
     public static final String STAMP_TX_FIELD = "lastUpdatedTxStamp";
+    public static final String CREATE_STAMP_FIELD = "lastCreatedStamp";
+    public static final String CREATE_STAMP_TX_FIELD = "lastCreatedTxStamp";
     
     /** The ModelReader that created this Entity */
     protected ModelReader modelReader = null;
@@ -141,6 +152,24 @@ public class ModelEntity implements Comparable {
             String indexName = ModelUtil.shortenDbName(this.tableName + "_TXSTMP", 18);
             ModelIndex txIndex = new ModelIndex(this, indexName, false);
             txIndex.addIndexField(ModelEntity.STAMP_TX_FIELD);
+            indexes.add(txIndex);
+        }
+
+        // if applicable automatically add the CREATE_STAMP_FIELD and CREATE_STAMP_TX_FIELD fields
+        if ((this.doLock || !this.noAutoStamp) && !this.isField(CREATE_STAMP_FIELD)) {
+            ModelField newField = reader.createModelField(CREATE_STAMP_FIELD, "date-time", null, false);
+            newField.setIsAutoCreatedInternal(true);
+            this.fields.add(newField);
+        }
+        if (!this.noAutoStamp && !this.isField(CREATE_STAMP_TX_FIELD)) {
+            ModelField newField = reader.createModelField(CREATE_STAMP_TX_FIELD, "date-time", null, false);
+            newField.setIsAutoCreatedInternal(true);
+            this.fields.add(newField);
+            
+            // also add an index for this field
+            String indexName = ModelUtil.shortenDbName(this.tableName + "_TXCRTS", 18);
+            ModelIndex txIndex = new ModelIndex(this, indexName, false);
+            txIndex.addIndexField(ModelEntity.CREATE_STAMP_TX_FIELD);
             indexes.add(txIndex);
         }
 
