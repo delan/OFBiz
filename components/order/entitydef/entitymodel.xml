@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  */
 -->
 
@@ -523,7 +523,7 @@
       <member-entity entity-alias="OT" entity-name="OrderRole"/>
       <member-entity entity-alias="OH" entity-name="OrderHeader"/>
       <member-entity entity-alias="OI" entity-name="OrderItem"/>
-      <alias entity-alias="OH" name="orderId" group-by="true"/>
+      <alias entity-alias="OH" name="orderId"/>
       <alias entity-alias="OT" name="partyId"/>
       <alias entity-alias="OT" name="roleTypeId"/>
       <alias entity-alias="OH" name="orderTypeId"/>
