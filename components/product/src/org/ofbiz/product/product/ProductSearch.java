@@ -1,5 +1,5 @@
 /*
- * $Id: ProductSearch.java,v 1.28 2004/02/26 09:10:50 jonesde Exp $
+ * $Id: ProductSearch.java,v 1.29 2004/04/25 07:15:44 jonesde Exp $
  *
  *  Copyright (c) 2001 The Open For Business Project (www.ofbiz.org)
  *  Permission is hereby granted, free of charge, to any person obtaining a
@@ -59,7 +59,7 @@ import org.ofbiz.entity.util.EntityUtil;
  *  Utilities for product search based on various constraints including categories, features and keywords.
  *
  * @author <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.28 $
+ * @version    $Revision: 1.29 $
  * @since      3.0
  */
 public class ProductSearch {
@@ -202,7 +202,14 @@ public class ProductSearch {
             // do the query
             EntityListIterator eli = this.doQuery(delegator);
             ArrayList productIds = this.makeProductIdList(eli);
-
+            if (eli != null) {
+                try {
+					eli.close();
+				} catch (GenericEntityException e) {
+					Debug.logError(e, "Error closing ProductSearch EntityListIterator");
+				}
+            }
+            
             long endMillis = System.currentTimeMillis();
             double totalMillis = ((double)endMillis - (double)startMillis)/1000.0;
 
