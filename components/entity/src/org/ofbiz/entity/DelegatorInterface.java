@@ -1,5 +1,5 @@
 /*
- * $Id: DelegatorInterface.java,v 1.7 2004/07/07 07:37:05 doogie Exp $
+ * $Id: DelegatorInterface.java,v 1.8 2004/07/07 09:10:56 doogie Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ofbiz.base.util.UtilCache;
+import org.ofbiz.entity.cache.Cache;
 import org.ofbiz.entity.condition.EntityCondition;
 import org.ofbiz.entity.datasource.GenericHelper;
 import org.ofbiz.entity.model.ModelEntity;
@@ -44,7 +45,7 @@ import org.ofbiz.entity.util.SequenceUtil;
  * Delegator Interface
  *
  * @author     <a href="mailto:plightbo@cisco.com">Patrick Lightbody</a>
- * @version    $Revision: 1.7 $
+ * @version    $Revision: 1.8 $
  * @since      2.0
  */
 public interface DelegatorInterface {
@@ -228,8 +229,6 @@ public interface DelegatorInterface {
 
     void clearCacheLine(GenericValue value, boolean distribute);
 
-    Set getFieldNameSetsCopy(String entityName);
-
     void clearCacheLineByCondition(String entityName, EntityCondition condition);
 
     void clearAllCacheLinesByDummyPK(Collection dummyPKs);
@@ -237,24 +236,6 @@ public interface DelegatorInterface {
     void clearAllCacheLinesByValue(Collection values);
 
     GenericValue getFromPrimaryKeyCache(GenericPK primaryKey);
-
-    List getFromAllCache(String entityName);
-
-    List getFromAndCache(String entityName, Map fields);
-
-    List getFromAndCache(ModelEntity entity, Map fields);
-
-    void putInPrimaryKeyCache(GenericPK primaryKey, GenericValue value);
-
-    void putAllInPrimaryKeyCache(List values);
-
-    void putInAllCache(String entityName, List values);
-
-    void putInAllCache(ModelEntity entity, List values);
-
-    void putInAndCache(String entityName, Map fields, List values);
-
-    void putInAndCache(ModelEntity entity, Map fields, List values);
 
     String getNextSeqId(String seqName);
     String getNextSeqId(String seqName, long staggerMax);
@@ -265,9 +246,5 @@ public interface DelegatorInterface {
 
     void refreshSequencer();
 
-    UtilCache getPrimaryKeyCache();
-
-    UtilCache getAndCache();
-
-    UtilCache getAllCache();
+    Cache getCache();
 }

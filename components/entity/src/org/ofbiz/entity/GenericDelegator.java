@@ -1,5 +1,5 @@
 /*
- * $Id: GenericDelegator.java,v 1.19 2004/07/07 07:37:06 doogie Exp $
+ * $Id: GenericDelegator.java,v 1.20 2004/07/07 09:10:56 doogie Exp $
  *
  * Copyright (c) 2001-2004 The Open For Business Project - www.ofbiz.org
  *
@@ -71,8 +71,8 @@ import org.ofbiz.entity.transaction.TransactionUtil;
 import org.ofbiz.entity.util.DistributedCacheClear;
 import org.ofbiz.entity.util.EntityFindOptions;
 import org.ofbiz.entity.util.EntityListIterator;
-import org.ofbiz.entity.util.EntityUtil;
 import org.ofbiz.entity.util.SequenceUtil;
+import org.ofbiz.entity.cache.Cache;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -84,7 +84,7 @@ import org.xml.sax.SAXException;
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
  * @author     <a href="mailto:chris_maurer@altavista.com">Chris Maurer</a>
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a
- * @version    $Revision: 1.19 $
+ * @version    $Revision: 1.20 $
  * @since      1.0
  */
 public class GenericDelegator implements DelegatorInterface {
@@ -97,14 +97,12 @@ public class GenericDelegator implements DelegatorInterface {
     protected String delegatorName;
     protected EntityConfigUtil.DelegatorInfo delegatorInfo = null;
 
+    protected Cache cache;
+
     /** set this to true for better performance; set to false to be able to reload definitions at runtime throught the cache manager */
     public static final boolean keepLocalReaders = true;
     protected ModelReader modelReader = null;
     protected ModelGroupReader modelGroupReader = null;
-
-    protected UtilCache primaryKeyCache = null;
-    protected UtilCache allCache = null;
-    protected UtilCache andCache = null;
 
     // keeps a list of field key sets used in the by and cache, a Set (of Sets of fieldNames) for each entityName
     protected Map andCacheFieldSets = new HashMap();
@@ -152,9 +150,7 @@ public class GenericDelegator implements DelegatorInterface {
             modelGroupReader = ModelGroupReader.getModelGroupReader(delegatorName);
         }
 
-        primaryKeyCache = new UtilCache("entity.FindByPrimaryKey." + delegatorName, 0, 0, true);
-        allCache = new UtilCache("entity.FindAll." + delegatorName, 0, 0, true);
-        andCache = new UtilCache("entity.FindByAnd." + delegatorName, 0, 0, true);
+        cache = new Cache( delegatorName );
 
         // do the entity model check
         List warningList = new LinkedList();
@@ -625,11 +621,14 @@ public class GenericDelegator implements DelegatorInterface {
         this.evalEcaRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
 
         GenericValue value = this.getFromPrimaryKeyCache(primaryKey);
+        if (value instanceof GenericEntity.NULL) return null;
         if (value == null) {
             value = findByPrimaryKey(primaryKey);
             if (value != null) {
                 this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, primaryKey, ecaEventMap, (ecaEventMap == null), false);
                 this.putInPrimaryKeyCache(primaryKey, value);
+            } else {
+                this.putInPrimaryKeyCache(primaryKey, GenericValue.NULL_VALUE);
             }
         }
         return value;
@@ -808,18 +807,16 @@ public class GenericDelegator implements DelegatorInterface {
         Map ecaEventMap = this.getEcaEntityEventMap(entityName);
         this.evalEcaRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
 
-        List lst = this.getFromAllCache(entityName);
+        List lst = cache.get(entityName, null, orderBy);
 
         if (lst == null) {
             lst = findAll(entityName, orderBy);
             if (lst != null) {
                 this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-                this.putInAllCache(entityName, lst);
+                cache.put(entityName, null, orderBy, lst);
             }
-            return lst;
-        } else {
-            return EntityUtil.orderBy(lst, orderBy);
         }
+        return lst;
     }
 
     /** Finds Generic Entity records by all of the specified fields (ie: combined using AND)
@@ -917,24 +914,7 @@ public class GenericDelegator implements DelegatorInterface {
      *@return List of GenericValue instances that match the query
      */
     public List findByAndCache(String entityName, Map fields, List orderBy) throws GenericEntityException {
-        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
-        GenericValue dummyValue = new GenericValue(modelEntity);
-        Map ecaEventMap = this.getEcaEntityEventMap(modelEntity.getEntityName());
-
-        this.evalEcaRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-        List lst = this.getFromAndCache(modelEntity, fields);
-
-        if (lst == null) {
-            lst = findByAnd(modelEntity, fields, orderBy);
-            if (lst != null) {
-                this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
-                this.putInAndCache(modelEntity, fields, lst);
-            }
-            return lst;
-        } else {
-            // automatically re-order the elements if this didn't come from the datasource directly
-            return EntityUtil.orderBy(lst, orderBy);
-        }
+        return findByConditionCache(entityName, new EntityFieldMap(fields, EntityOperator.AND), null, orderBy);
     }
 
     /** Finds Generic Entity records by all of the specified expressions (ie: combined using AND)
@@ -1020,6 +1000,31 @@ public class GenericDelegator implements DelegatorInterface {
         absorbList(list);
 
         return list;
+    }
+
+    /** Finds GenericValues by the conditions specified in the EntityCondition object, looking first in the cache, see the EntityCondition javadoc for more details.
+     *@param entityName The Name of the Entity as defined in the entity model XML file
+     *@param entityCondition The EntityCondition object that specifies how to constrain this query
+     *@param fieldsToSelect The fields of the named entity to get from the database; if empty or null all fields will be retreived
+     *@param orderBy The fields of the named entity to order the query by; optionally add a " ASC" for ascending or " DESC" for descending
+     *@return List of GenericValue objects representing the result
+     */
+    public List findByConditionCache(String entityName, EntityCondition entityCondition, Collection fieldsToSelect, List orderBy) throws GenericEntityException {
+        ModelEntity modelEntity = getModelReader().getModelEntity(entityName);
+        GenericValue dummyValue = new GenericValue(modelEntity);
+        Map ecaEventMap = this.getEcaEntityEventMap(entityName);
+        this.evalEcaRules(EntityEcaHandler.EV_CACHE_CHECK, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+  
+        List lst = cache.get(entityName, entityCondition, orderBy);
+
+        if (lst == null) {
+            lst = findByCondition(entityName, entityCondition, fieldsToSelect, orderBy);
+            if (lst != null) {
+                this.evalEcaRules(EntityEcaHandler.EV_CACHE_PUT, EntityEcaHandler.OP_FIND, dummyValue, ecaEventMap, (ecaEventMap == null), false);
+                cache.put(entityName, entityCondition, orderBy, lst);
+            }
+        }
+        return lst;
     }
 
     /** Finds GenericValues by the conditions specified in the EntityCondition object, the the EntityCondition javadoc for more details.
@@ -1775,10 +1780,7 @@ public class GenericDelegator implements DelegatorInterface {
     }
 
     public void clearAllCaches(boolean distribute) {
-        if (this.allCache != null) this.allCache.clear();
-        if (this.andCache != null) this.andCache.clear();
-        if (this.andCacheFieldSets != null) this.andCacheFieldSets.clear();
-        if (this.primaryKeyCache != null) this.primaryKeyCache.clear();
+        cache.clear();
 
         if (distribute && this.distributedCacheClear != null) {
             this.distributedCacheClear.clearAllCaches();
@@ -1791,8 +1793,8 @@ public class GenericDelegator implements DelegatorInterface {
      */
     public void clearCacheLine(String entityName, Map fields) {
         // if no fields passed, do the all cache quickly and return
-        if (fields == null && allCache != null) {
-            allCache.remove(entityName);
+        if (fields == null) {
+            cache.remove(entityName);
             return;
         }
 
@@ -1803,8 +1805,9 @@ public class GenericDelegator implements DelegatorInterface {
         //if never cached, then don't bother clearing
         if (entity.getNeverCache()) return;
 
-        GenericPK dummyPK = new GenericPK(entity, fields);
-        this.clearCacheLineFlexible(dummyPK);
+        GenericValue dummyValue = new GenericValue(entity, fields);
+        dummyValue.setDelegator(this);
+        this.clearCacheLineFlexible(dummyValue);
     }
 
     /** Remove a CACHED Generic Entity from the cache by its primary key.
@@ -1823,25 +1826,7 @@ public class GenericDelegator implements DelegatorInterface {
             //if never cached, then don't bother clearing
             if (dummyPK.getModelEntity().getNeverCache()) return;
 
-            // always auto clear the all cache too, since we know it's messed up in any case
-            if (allCache != null) {
-                allCache.remove(dummyPK.getEntityName());
-            }
-
-            // check to see if passed fields names exactly make the primary key...
-            if (dummyPK.isPrimaryKey()) {
-                // findByPrimaryKey
-                if (primaryKeyCache != null) {
-                    primaryKeyCache.remove(dummyPK);
-                }
-            } else {
-                if (dummyPK.size() > 0) {
-                    // findByAnd
-                    if (andCache != null) {
-                        andCache.remove(dummyPK);
-                    }
-                }
-            }
+            cache.remove(dummyPK);
 
             if (distribute && this.distributedCacheClear != null) {
                 this.distributedCacheClear.distributedClearCacheLineFlexible(dummyPK);
@@ -1849,6 +1834,17 @@ public class GenericDelegator implements DelegatorInterface {
         }
     }
 
+    protected void clearCacheValues(UtilCache cache, String entityName, EntityCondition condition) {
+        Iterator iterator = cache.cacheLineTable.values().iterator();
+        while (iterator.hasNext()) {
+            UtilCache.CacheLine line = (UtilCache.CacheLine) iterator.next();
+            GenericValue value = (GenericValue) line.getValue();
+            if (value != null && value.getEntityName().equals(entityName) && condition.entityMatches(value)) {
+                iterator.remove();
+            }
+        }
+    }
+		
     public void clearCacheLineByCondition(String entityName, EntityCondition condition) {
         clearCacheLineByCondition(entityName, condition, true);
     }
@@ -1858,7 +1854,7 @@ public class GenericDelegator implements DelegatorInterface {
             //if never cached, then don't bother clearing
             if (getModelEntity(entityName).getNeverCache()) return;
 
-            //FIXME: once findByConditionCache is implement, install cache clear hook here
+            cache.remove(entityName, condition);
 
             if (distribute && this.distributedCacheClear != null) {
                 this.distributedCacheClear.distributedClearCacheLineByCondition(entityName, condition);
@@ -1881,14 +1877,7 @@ public class GenericDelegator implements DelegatorInterface {
         //if never cached, then don't bother clearing
         if (primaryKey.getModelEntity().getNeverCache()) return;
 
-        // always auto clear the all cache too, since we know it's messed up in any case
-        if (allCache != null) {
-            allCache.remove(primaryKey.getEntityName());
-        }
-
-        if (primaryKeyCache != null) {
-            primaryKeyCache.remove(primaryKey);
-        }
+        cache.remove(primaryKey);
 
         if (distribute && this.distributedCacheClear != null) {
             this.distributedCacheClear.distributedClearCacheLine(primaryKey);
@@ -1917,99 +1906,11 @@ public class GenericDelegator implements DelegatorInterface {
         //if never cached, then don't bother clearing
         if (value.getModelEntity().getNeverCache()) return;
 
-        // always auto clear the all cache too, since we know it's messed up in any case
-        if (allCache != null) {
-            allCache.remove(value.getEntityName());
-        }
-
-        if (primaryKeyCache != null) {
-            primaryKeyCache.remove(value.getPrimaryKey());
-        }
-
-        // now for the tricky part, automatically clearing from the by and cache
-
-        // get a set of all field combination sets used in the by and cache for this entity
-        Set fieldNameSets = (Set) andCacheFieldSets.get(value.getEntityName());
-
-        if (fieldNameSets != null) {
-            // note that if fieldNameSets is null then no by and caches have been
-            // stored for this entity, so do nothing; ie only run this if not null
-
-            // iterate through the list of field combination sets and do a cache clear
-            // for each one using field values from this entity value object
-            Iterator fieldNameSetIter = fieldNameSets.iterator();
-
-            while (fieldNameSetIter.hasNext()) {
-                Set fieldNameSet = (Set) fieldNameSetIter.next();
-
-                // In this loop get the original values in addition to the
-                // current values and clear the cache line with those values
-                // too... This is necessary so that by and lists that currently
-                // have the entity will be cleared in addition to the by and
-                // lists that will have the entity
-                // For this we will need to have the GenericValue object keep a
-                // map of original values in addition to the "current" values.
-                // That may have to be done when an entity is read from the
-                // database and not when a put/set is done because a null value
-                // is a perfectly valid original value. NOTE: the original value
-                // map should be clear by default to denote that there was no
-                // original value. When a GenericValue is created from a read
-                // from the database only THEN should the original value map
-                // be created and set to the same values that are put in the
-                // normal field value map.
-
-
-                Map originalFieldValues = null;
-
-                if (value.isModified() && value.originalDbValuesAvailable()) {
-                    originalFieldValues = new HashMap();
-                }
-                Map fieldValues = new HashMap();
-                Iterator fieldNameIter = fieldNameSet.iterator();
-
-                while (fieldNameIter.hasNext()) {
-                    String fieldName = (String) fieldNameIter.next();
-
-                    fieldValues.put(fieldName, value.get(fieldName));
-                    if (originalFieldValues != null) {
-                        originalFieldValues.put(fieldName, value.getOriginalDbValue(fieldName));
-                    }
-                }
-
-                // now we have a map of values for this field set for this entity, so clear the by and line...
-                GenericPK dummyPK = new GenericPK(value.getModelEntity(), fieldValues);
-
-                andCache.remove(dummyPK);
-
-                if (originalFieldValues != null && !originalFieldValues.equals(fieldValues)) {
-                    GenericPK dummyPKOriginal = new GenericPK(value.getModelEntity(), originalFieldValues);
-
-                    andCache.remove(dummyPKOriginal);
-                }
-            }
-        }
+        cache.remove(value);
 
         if (distribute && this.distributedCacheClear != null) {
             this.distributedCacheClear.distributedClearCacheLine(value);
         }
-    }
-
-    /** Gets a Set of Sets of fieldNames used in the by and cache for the given entityName */
-    public Set getFieldNameSetsCopy(String entityName) {
-        Set fieldNameSets = (Set) andCacheFieldSets.get(entityName);
-
-        if (fieldNameSets == null) return null;
-
-        // create a new container set and a copy of each entry set
-        Set setsCopy = new TreeSet();
-        Iterator fieldNameSetIter = fieldNameSets.iterator();
-
-        while (fieldNameSetIter.hasNext()) {
-            Set fieldNameSet = (Set) fieldNameSetIter.next();
-
-            setsCopy.add(new TreeSet(fieldNameSet));
-        }
-        return setsCopy;
     }
 
     public void clearAllCacheLinesByDummyPK(Collection dummyPKs) {
@@ -2036,40 +1937,20 @@ public class GenericDelegator implements DelegatorInterface {
 
     public GenericValue getFromPrimaryKeyCache(GenericPK primaryKey) {
         if (primaryKey == null) return null;
-        return (GenericValue) primaryKeyCache.get(primaryKey);
-    }
-
-    public List getFromAllCache(String entityName) {
-        if (entityName == null) return null;
-        return (List) allCache.get(entityName);
-    }
-
-    public List getFromAndCache(String entityName, Map fields) {
-        if (entityName == null || fields == null) return null;
-        ModelEntity entity = this.getModelEntity(entityName);
-
-        return getFromAndCache(entity, fields);
-    }
-
-    public List getFromAndCache(ModelEntity entity, Map fields) {
-        if (entity == null || fields == null) return null;
-        GenericPK tempPK = new GenericPK(entity, fields);
-
-        if (tempPK == null) return null;
-        return (List) andCache.get(tempPK);
+        return (GenericValue) cache.get(primaryKey);
     }
 
     public void putInPrimaryKeyCache(GenericPK primaryKey, GenericValue value) {
-        if (primaryKey == null || value == null) return;
+        if (primaryKey == null) return;
 
-        if (value.getModelEntity().getNeverCache()) {
+        if (primaryKey.getModelEntity().getNeverCache()) {
             Debug.logWarning("Tried to put a value of the " + value.getEntityName() + " entity in the BY PRIMARY KEY cache but this entity has never-cache set to true, not caching.", module);
             return;
         }
 
         // before going into the cache, make this value immutable
         value.setImmutable();
-        primaryKeyCache.put(primaryKey, value);
+        cache.put(primaryKey, value);
     }
 
     public void putAllInPrimaryKeyCache(List values) {
@@ -2079,76 +1960,6 @@ public class GenericDelegator implements DelegatorInterface {
             GenericValue value = (GenericValue) iter.next();
             this.putInPrimaryKeyCache(value.getPrimaryKey(), value);
         }
-    }
-
-    public void putInAllCache(String entityName, List values) {
-        if (entityName == null || values == null) return;
-        ModelEntity entity = this.getModelEntity(entityName);
-        this.putInAllCache(entity, values);
-    }
-
-    public void putInAllCache(ModelEntity entity, List values) {
-        if (entity == null || values == null) return;
-
-        if (entity.getNeverCache()) {
-            Debug.logWarning("Tried to put values of the " + entity.getEntityName() + " entity in the ALL cache but this entity has never-cache set to true, not caching.", module);
-            return;
-        }
-
-        // make the List and the values immutable so that the list can be returned directly from the cache without copying and still be safe
-        Iterator valueIter = values.iterator();
-        while (valueIter.hasNext()) {
-            GenericEntity genericEntity = (GenericEntity) valueIter.next();
-            genericEntity.setImmutable();
-        }
-        allCache.put(entity.getEntityName(), Collections.unmodifiableList(values));
-    }
-
-    public void putInAndCache(String entityName, Map fields, List values) {
-        if (entityName == null || fields == null || values == null) return;
-        ModelEntity entity = this.getModelEntity(entityName);
-        putInAndCache(entity, fields, values);
-    }
-
-    public void putInAndCache(ModelEntity entity, Map fields, List values) {
-        if (entity == null || fields == null || values == null) return;
-
-        if (entity.getNeverCache()) {
-            Debug.logWarning("Tried to put values of the " + entity.getEntityName() + " entity in the BY AND cache but this entity has never-cache set to true, not caching.", module);
-            return;
-        }
-
-        GenericPK tempPK = new GenericPK(entity, fields);
-
-        if (tempPK == null) return;
-
-        // make the List and the values immutable so that the list can be returned directly from the cache without copying and still be safe
-        Iterator valueIter = values.iterator();
-        while (valueIter.hasNext()) {
-            GenericEntity genericEntity = (GenericEntity) valueIter.next();
-            genericEntity.setImmutable();
-        }
-        andCache.put(tempPK, Collections.unmodifiableList(values));
-
-        // now make sure the fieldName set used for this entry is in the
-        // andCacheFieldSets Map which contains a Set of Sets of fieldNames for each entityName
-        Set fieldNameSets = (Set) andCacheFieldSets.get(entity.getEntityName());
-
-        if (fieldNameSets == null) {
-            synchronized (this) {
-                fieldNameSets = (Set) andCacheFieldSets.get(entity.getEntityName());
-                if (fieldNameSets == null) {
-                    // using a HashSet for both the individual fieldNameSets and
-                    // the set of fieldNameSets; this appears to be necessary
-                    // because TreeSet has bugs, or does not support, the compare
-                    // operation which is necessary when inserted a TreeSet
-                    // into a TreeSet.
-                    fieldNameSets = new HashSet();
-                    andCacheFieldSets.put(entity.getEntityName(), fieldNameSets);
-                }
-            }
-        }
-        fieldNameSets.add(new HashSet(fields.keySet()));
     }
 
     // ======= XML Related Methods ========
@@ -2331,15 +2142,7 @@ public class GenericDelegator implements DelegatorInterface {
         }
     }
 
-    public UtilCache getPrimaryKeyCache() {
-        return primaryKeyCache;
-    }
-
-    public UtilCache getAndCache() {
-        return andCache;
-    }
-
-    public UtilCache getAllCache() {
-        return allCache;
+    public Cache getCache() {
+        return cache;
     }
 }
