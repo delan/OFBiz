@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     David E. Jones
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@created    May 22 2001
  *@version    1.0
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <#macro quoteIfExists str>
 <#if str?has_content>'${str}'
@@ -34,9 +36,9 @@
     <td width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
-          <td align=left width='40%' class="boxhead">Calendar Event Details</td>
+          <td align=left width='40%' class="boxhead">${uiLabelMap.WorkEffortCalendarEventDetails}</td>
           <td align=right width='60%'>		  
-            <a href='<@ofbizUrl>/day</@ofbizUrl>' class='submenutext'>Day&nbsp;View</a><a href='<@ofbizUrl>/week</@ofbizUrl>' class='submenutext'>Week&nbsp;View</a><a href='<@ofbizUrl>/month</@ofbizUrl>' class='submenutext'>Month&nbsp;View</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>Upcoming&nbsp;Events</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextrightdisabled'>New&nbsp;Event</a>
+            <a href='<@ofbizUrl>/day</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortDayView}</a><a href='<@ofbizUrl>/week</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortWeekView}</a><a href='<@ofbizUrl>/month</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortMonthView}</a><a href='<@ofbizUrl>/upcoming</@ofbizUrl>' class='submenutext'>${uiLabelMap.WorkEffortUpcomingEvents}</a><a href='<@ofbizUrl>/event</@ofbizUrl>' class='submenutextrightdisabled'>${uiLabelMap.WorkEffortNewEvent}</a>
 		  </td>
         </tr>
       </table>
@@ -49,9 +51,9 @@
           <td>
             <#if workEffortId?exists>
               <div class='tabContainer'>
-                  <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">Event</a>
-                  <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Parties</a>
-                  <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Contact information</a>
+                  <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortEvent}</a>
+                  <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyParties}</a>
+                  <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">${uiLabelMap.PartyContactInformation}</a>
               </div>
             </#if>
             <#if canView = true>
@@ -65,19 +67,19 @@
                 <table border='0' cellpadding='2' cellspacing='0'>
                   <input type='hidden' name='workEffortTypeId' value='EVENT'>
                   <#if workEffortId?has_content>
-                    <div class='tabletext'>ERROR: Could not find Event with ID "${workEffortId}"</div>
+                    <div class='tabletext'>${uiLabelMap.WorkEffortErrorCouldNotFindEventId} "${workEffortId}"</div>
                   </#if>
               </#if>
               <#if requestParameters.communicationEventId?exists>
                 <input type="hidden" name="communicationEventId" value="${requestParameters.communicationEventId}">
               </#if> 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Event Name</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortEventName}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="workEffortName" value='${(workEffort.workEffortName)?if_exists}'></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Priority</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortPriority}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <select name='priority' class='selectBox'>
@@ -90,7 +92,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Event Status</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortEventStatus}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'>
                     <select name='currentStatusId' class='selectBox'>
@@ -107,23 +109,23 @@
                 </tr>
 
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Location</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortLocation}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='60' maxlength='255' name="locationDesc" value='${(workEffort.locationDesc)?if_exists}'></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Description</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonDescription}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><textarea class='textAreaBox' name='description' cols='50' rows='4'>${(workEffort.description)?if_exists}</textarea>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>Start Date/Time</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonStartDateTime}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="estimatedStartDate" value='${(workEffort.estimatedStartDate.toString())?if_exists}'>
                   <a href="javascript:call_cal(document.eventform.estimatedStartDate, <@quoteIfExists str=(workEffort.estimatedStartDate.toString())?if_exists/>);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a></td>
                 </tr>
                 <tr>
-                  <td width='26%' align=right><div class='tabletext'>End Date/Time</div></td>
+                  <td width='26%' align=right><div class='tabletext'>${uiLabelMap.CommonEndDateTime}</div></td>
                   <td>&nbsp;</td>
                   <td width='74%'><input type='text' class='inputBox' size='30' maxlength='30' name="estimatedCompletionDate" value='${(workEffort.estimatedCompletionDate.toString())?if_exists}'>
                   <a href="javascript:call_cal(document.eventform.estimatedCompletionDate, <@quoteIfExists str=(workEffort.estimatedCompletionDate.toString())?if_exists/>);"><img src='/images/cal.gif' width='16' height='16' border='0' alt='Click here For Calendar'></a></td>
@@ -131,12 +133,12 @@
 
                 <#if workEffort?has_content>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>Revision #</div></td>
+                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortRevision} #</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>${workEffort.revisionNumber}</div></td>
                   </tr>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>Created</div></td>
+                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortCreated}</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       ${workEffort.createdDate.toString()}
@@ -144,7 +146,7 @@
                     </div></td>
                   </tr>
                   <tr>
-                    <td width='26%' align=right><div class='tabletext'>Last Modified</div></td>
+                    <td width='26%' align=right><div class='tabletext'>${uiLabelMap.WorkEffortLastModified}</div></td>
                     <td>&nbsp;</td>
                     <td width='74%'><div class='tabletext'>
                       ${workEffort.lastModifiedDate.toString()}
@@ -164,7 +166,7 @@
               </table>
               </form>
             <#else>
-              <div class='tabletext'>ERROR: You do not have permission to view this Event. This event must belong to you, or you must be an administrator.</div>
+              <div class='tabletext'>${uiLabelMap.WorkEffortEventPermissionError}</div>
             </#if>
           </td>
         </tr>

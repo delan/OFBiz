@@ -20,15 +20,17 @@
  *  OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR 
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.2 $
+ *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski)
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)  
+ *@version    $Revision: 1.3 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <div class='tabContainer'>
-  <a href="<@ofbizUrl>/request?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request</a>
-  <a href="<@ofbizUrl>/requestroles?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButtonSelected">Request Roles</a>
-  <a href="<@ofbizUrl>/requestitems?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request Items</a>
+  <a href="<@ofbizUrl>/request?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequest}</a>
+  <a href="<@ofbizUrl>/requestroles?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortRequestRoles}</a>
+  <a href="<@ofbizUrl>/requestitems?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequestItems}</a>
 </div>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -36,7 +38,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Request Roles</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortRequestRoles}</div>
           </TD>
         </tr>
       </table>
@@ -53,9 +55,9 @@
                     <TD>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
-                        <td><div class="tableheadtext">PartyId</div></td>
-                        <td><div class="tableheadtext">Name</div></td>
-                        <td><div class="tableheadtext">RoleTypeId</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.PartyPartyId}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.PartyName}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
                         <td>&nbsp;</td>
                       </tr>
                       <tr>
@@ -75,7 +77,7 @@
                               <td><div class="tabletext">${partyGroup.groupName}</div></td>
                             </#if>
                             <td><div class="tabletext">${roleType.description}</div></td>
-                            <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/removerequestrole?custRequestId=${custRequestId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}</@ofbizUrl>" class="buttontext">[Remove]</a></td>
+                            <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/removerequestrole?custRequestId=${custRequestId}&partyId=${role.partyId}&roleTypeId=${role.roleTypeId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonRemove}]</a></td>
                           </tr>
                         </#list>
                       </table>
@@ -83,7 +85,7 @@
                   </TR>
                 <#else>
                   <TR>
-                    <TD><div class="tabletext">No roles associated with this customer request.</div></TD>
+                    <TD><div class="tabletext">${uiLabelMap.WorkEffortNoRolesAssociatedWithThisCustomerRequest}.</div></TD>
                   </TR>
                 </#if>
                 <#if custRequest?exists>
@@ -91,7 +93,7 @@
                   <TD><HR class="sepbar"></TD>
                 </TR>
                 <TR>
-                  <TD><div class="head3">Add New:</div</TD>
+                  <TD><div class="head3">${uiLabelMap.CommonAddNew}:</div</TD>
                 </TR>
                 <TR>
                   <TD>
@@ -100,14 +102,14 @@
                       <table width="100%" cellpadding="2" cellspacing="0" border="0">
                         <tr>
                           <td colspan="2">&nbsp;&nbsp;&nbsp;</td>
-                          <td align="right"><div class="tableheadtext">Party ID</div></td>
+                          <td align="right"><div class="tableheadtext">${uiLabelMap.PartyPartyId}</div></td>
                           <td><input type="text" name="partyId" class="inputBox" size="30"></td>
-                          <td align="right"><div class="tableheadtext">Role Type ID</div></td>
+                          <td align="right"><div class="tableheadtext">${uiLabelMap.PartyRoleTypeId}</div></td>
                           <td>
                             <select name="roleTypeId" class="selectBox">
-                              <option value="REQ_TAKER">Request Taker</option>
-                              <option value="REQ_REQUESTER">Requesting Party</option>
-                              <option value="REQ_MANAGER">Request Manager</option>
+                              <option value="REQ_TAKER">${uiLabelMap.WorkEffortRequestTaker}</option>
+                              <option value="REQ_REQUESTER">${uiLabelMap.WorkEffortRequestingParty}</option>
+                              <option value="REQ_MANAGER">${uiLabelMap.WorkEffortRequestManager}</option>
                             </select>
                           </td>
                           <td align="center"><input type="submit" style="font-size: small;" value="Add"></td>

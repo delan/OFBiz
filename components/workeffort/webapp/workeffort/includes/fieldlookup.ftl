@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson
- *@version    $Revision: 1.1 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
+ *@version    $Revision: 1.2 $
  *@since      2.2
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <script language="JavaScript">
 
@@ -45,7 +47,7 @@ function set_value(value) {
 ${lookupFieldWrapper.renderFormString()}
 </td></tr></table>
 <table width="100%" cellpadding="5" cellspacing="0" border="0">
-<tr bgcolor="#000000"><td colspan="2"><font color="#FFFFFF"><strong>Result of lookup</strong></font></td></tr>
+<tr bgcolor="#000000"><td colspan="2"><font color="#FFFFFF"><strong>${uiLabelMap.WorkEffortResultOfLookup}</strong></font></td></tr>
 <#if resultList?has_content>
 <#list resultList as result>
 <tr><td width="25%"><a href="javascript:set_value('${result.value}');">${result.value?if_exists}</a></td><td nowrap width="75%"><a href="javascript:set_value('${result.value}');">${result.label?if_exists}</a></td></tr>

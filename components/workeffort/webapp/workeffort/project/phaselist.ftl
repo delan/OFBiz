@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Dustin Caldwell (from code by David Jones))
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@created    May 13, 2003
  *@version    1.0
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside' width='45%'>
   <TR>
@@ -30,10 +32,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
-            <div class='boxhead'>&nbsp;<b>Project:</b>&nbsp;${projectWorkEffort.workEffortName}</div>
+            <div class='boxhead'>&nbsp;<b>${uiLabelMap.WorkEffortProject}:</b>&nbsp;${projectWorkEffort.workEffortName}</div>
           </TD>
           <TD align=right>
-            <A href='<@ofbizUrl>/projecttasklist?projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>' class='lightbuttontext'>[All&nbsp;Tasks]</A>
+            <A href='<@ofbizUrl>/projecttasklist?projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortAllTasks}]</A>
           </TD>
         </tr>
       </table>
@@ -43,24 +45,24 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
                 <tr>
-                  <td align=right valign=top><div class='tabletext'><nobr>Project Status:</nobr></div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.WorkEffortProjectStatus}:</nobr></div></td>
                   <td>&nbsp;</td>
                   <td valign=top>${projectWorkEffortStatus.description?if_exists}
                   </td>
                 </tr>
                 <tr>
-                  <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.CommonDescription}:</nobr></div></td>
                   <td>&nbsp;</td>
                   <td valign=top>${projectWorkEffort.description?if_exists}
                 </tr>
                 <tr>
-                  <td align=right valign=top><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.CommonStartDateTime}:</nobr></div></td>
                   <td>&nbsp;</td>
                   <td valign=top>${projectWorkEffort.estimatedStartDate?if_exists}
                   </td>
                 </tr>
                 <tr>
-                  <td align=right valign=top><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.CommonEndDateTime}:</nobr></div></td>
                   <td>&nbsp;</td>
                   <td valign=top>${projectWorkEffort.estimatedCompletionDate?if_exists}
                   </td>
@@ -76,10 +78,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;Project Phases</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortProjectPhases}</div>
           </TD>
           <TD align=right width='60%'>
-            <A href='<@ofbizUrl>/editphase?projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>' class='lightbuttontext'>[New&nbsp;Phase]</A>
+            <A href='<@ofbizUrl>/editphase?projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortNewPhase}]</A>
           </TD>
         </tr>
       </table>
@@ -93,12 +95,12 @@
 <!--              <div class='head3'>Assigned Tasks</div>-->
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
-                  <TD><DIV class='tabletext'><b>Name</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Description</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
-<#--                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>-->
-                  <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortName}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.CommonDescription}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></DIV></TD>
+<#--                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></DIV></TD>-->
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortStatus}</b></DIV></TD>
+                  <TD align=right><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='6'><HR class='sepbar'></TD></TR>
                 <#list phases as workEffort>
@@ -112,7 +114,7 @@
                     <#assign currentStatusItem = delegator.findByPrimaryKeyCache("StatusItem", Static["org.ofbiz.base.util.UtilMisc"].toMap("statusId", workEffort.currentStatusId))>                    
                     <TD><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</DIV></TD>
                     <TD align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editphase?workEffortId=${workEffort.workEffortId}&projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>'>
-                        [Edit]</a></DIV></TD>
+                        [${uiLabelMap.CommonEdit}]</a></DIV></TD>
                   </TR>
                 </#list>
               </TABLE>

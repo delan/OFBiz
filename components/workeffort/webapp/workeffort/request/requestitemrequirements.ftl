@@ -21,18 +21,19 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.1 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
-
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <div class='tabContainer'>
-  <a href="<@ofbizUrl>/request?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request</a>
-  <a href="<@ofbizUrl>/requestroles?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request Roles</a>
-  <a href="<@ofbizUrl>/requestitems?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request Items</a>
-  <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">Item</a>
-  <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">Notes</a>
-  <a href="<@ofbizUrl>/requestitemrequirements?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButtonSelected">Requirements</a>    
+  <a href="<@ofbizUrl>/request?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequest}</a>
+  <a href="<@ofbizUrl>/requestroles?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequestRoles}</a>
+  <a href="<@ofbizUrl>/requestitems?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequestItems}</a>
+  <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortItem}</a>
+  <a href="<@ofbizUrl>/requestitemnotes?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortNotes}</a>
+  <a href="<@ofbizUrl>/requestitemrequirements?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortRequirements}</a>    
   <a href="#" class="tabButton">Tasks</a>  
 </div>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
@@ -41,10 +42,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD>
-            <div class='boxhead'>&nbsp;Requirements For Request Item: ${custRequestItem.description?if_exists}</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortRequirementsForRequestItem}: ${custRequestItem.description?if_exists}</div>
           </TD>
           <td align="right" valign="middle">
-            <a href="<@ofbizUrl>/requirement?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&productId=${custRequestItem.productId?if_exists}&quantity=${custRequestItem.quantity?if_exists}&donePage=requestitemrequirements</@ofbizUrl>" class="lightbuttontext">[New&nbsp;Requirement]</a>
+            <a href="<@ofbizUrl>/requirement?custRequestId=${custRequestId}&custRequestItemSeqId=${custRequestItemSeqId}&productId=${custRequestItem.productId?if_exists}&quantity=${custRequestItem.quantity?if_exists}&donePage=requestitemrequirements</@ofbizUrl>" class="lightbuttontext">[${uiLabelMap.WorkEffortNewRequirement}]</a>
           </td>
         </tr>
       </table>
@@ -61,14 +62,14 @@
                   <TD>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
-                        <td><div class="tableheadtext">RequirementID</div></td>
-                        <td><div class="tableheadtext">Description</div></td>
-                        <td><div class="tableheadtext">ProductID</div></td>
-                        <td align='right'><div class="tableheadtext">Quantity</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortRequirementID}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortProductID}</div></td>
+                        <td align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortQuantity}</div></td>
                         <td>&nbsp;&nbsp;</td>
-                        <td align='right'><div class="tableheadtext">Est. Budget</div></td>
+                        <td align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortEstBudget}</div></td>
                         <td>&nbsp;&nbsp;</td>
-                        <td><div class="tableheadtext">Required&nbsp;By&nbsp;Date</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortRequiredByDate}</div></td>
                         <td>&nbsp;</td>
                       </tr>
                       <tr>
@@ -85,7 +86,7 @@
                             <td align='right'><div class="tabletext">${requirement.estimatedBudget?default(0)?string.currency}</div></td>
                             <td>&nbsp;&nbsp;</td>
                             <td><div class="tabletext">${requirement.requiredByDate?if_exists}</div></td>
-                            <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/requirement?requirementId=${requirement.requirementId}&custRequestId=${custRequestId}&custRequestItemSeqId=${requirement.custRequestItemSeqId}&donePage=request</@ofbizUrl>" class="buttontext">[Edit]</a></td>
+                            <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/requirement?requirementId=${requirement.requirementId}&custRequestId=${custRequestId}&custRequestItemSeqId=${requirement.custRequestItemSeqId}&donePage=request</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonEdit}]</a></td>
                           </tr>
                       </#list>
                     </table>
@@ -93,7 +94,7 @@
                 </TR>
                 <#else>
                 <TR>
-                    <TD><div class="tabletext">&nbsp;<b>No requirements created.</b></div></TD>
+                    <TD><div class="tabletext">&nbsp;<b>${uiLabelMap.WorkEffortNoRequirementsCreated}.</b></div></TD>
                   </TR>
                 </#if>                                 
               </TABLE>       

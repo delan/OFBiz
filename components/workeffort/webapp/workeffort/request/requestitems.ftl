@@ -21,14 +21,16 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Andy Zeneski) 
- *@version    $Revision: 1.1 $
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
+ *@version    $Revision: 1.2 $
  *@since      2.1
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <div class='tabContainer'>
-  <a href="<@ofbizUrl>/request?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request</a>
-  <a href="<@ofbizUrl>/requestroles?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">Request Roles</a>
-  <a href="<@ofbizUrl>/requestitems?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButtonSelected">Request Items</a>
+  <a href="<@ofbizUrl>/request?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequest}</a>
+  <a href="<@ofbizUrl>/requestroles?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButton">${uiLabelMap.WorkEffortRequestRoles}</a>
+  <a href="<@ofbizUrl>/requestitems?custRequestId=${custRequestId}</@ofbizUrl>" class="tabButtonSelected">${uiLabelMap.WorkEffortRequestItems}</a>
 </div>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
@@ -36,10 +38,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD>
-            <div class='boxhead'>&nbsp;Request Items</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortRequestItems}</div>
           </TD>
           <td align='right'>
-            <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}</@ofbizUrl>" class="submenutextright">Create New</a>
+            <a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}</@ofbizUrl>" class="submenutextright">${uiLabelMap.CommonCreateNew}</a>
           </td>
         </tr>
       </table>
@@ -59,15 +61,15 @@
                       <tr>
                         <td align="right"><div class="tableheadtext">#</div></td>
                         <td>&nbsp;</td>
-                        <td><div class="tableheadtext">Description</div></td>
-                        <td><div class="tableheadtext">Priority</div></td>
-                        <td><div class="tableheadtext">Status</div></td>
-                        <td><div class="tableheadtext">Product</div></td>
-                        <td align='right'><div class="tableheadtext">Quantity</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.CommonDescription}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortPriority}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortStatus}</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortProduct}</div></td>
+                        <td align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortQuantity}</div></td>
                         <td>&nbsp;&nbsp;</td>
-                        <td align='right'><div class="tableheadtext">Max Amount</div></td>
+                        <td align='right'><div class="tableheadtext">${uiLabelMap.WorkEffortMaxAmount}</div></td>
                         <td>&nbsp;&nbsp;</td>
-                        <td><div class="tableheadtext">Required&nbsp;Date</div></td>
+                        <td><div class="tableheadtext">${uiLabelMap.WorkEffortRequiredDate}</div></td>
                         <td>&nbsp;</td>                        
                       </tr>
                       <tr>
@@ -89,7 +91,7 @@
                             <td align='right'><div class="tabletext">${item.maximumAmount?default(0)?string.currency}</div></td>
                             <td>&nbsp;&nbsp;</td>
                             <td><div class="tabletext">${item.requiredByDate?if_exists}</div></td>
-                            <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}&custRequestItemSeqId=${item.custRequestItemSeqId}</@ofbizUrl>" class="buttontext">[View]</a></td>
+                            <td align="right"><div class="tabletext"><a href="<@ofbizUrl>/requestitem?custRequestId=${custRequestId}&custRequestItemSeqId=${item.custRequestItemSeqId}</@ofbizUrl>" class="buttontext">[${uiLabelMap.CommonView}]</a></td>
                           </tr>
                       </#list>
                     </table>
@@ -97,7 +99,7 @@
                 </TR>
                 <#else>
                   <TR>
-                    <TD><div class="tabletext">&nbsp;<b>No items created.</b></div></TD>
+                    <TD><div class="tabletext">&nbsp;<b>${uiLabelMap.WorkEffortNoItemsCreated}.</b></div></TD>
                   </TR>
                 </#if>            
               </TABLE>

@@ -20,19 +20,22 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by David E. Jones)
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap) 
  *@created    May 13 2003
  *@version    1.0
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
+
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left width='40%' >
-            <div class='boxhead'>&nbsp;My Request List</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortMyRequestList}</div>
           </TD>
           <TD align=right width='60%'>
-            <A href='<@ofbizUrl>/requestlist</@ofbizUrl>' class='submenutextdisabled'>Request List</A><A href='<@ofbizUrl>/request</@ofbizUrl>' class='submenutextright'>New Request</A>
+            <A href='<@ofbizUrl>/requestlist</@ofbizUrl>' class='submenutextdisabled'>${uiLabelMap.WorkEffortRequestList}</A><A href='<@ofbizUrl>/request</@ofbizUrl>' class='submenutextright'>${uiLabelMap.WorkEffortNewRequest}</A>
           </TD>
         </tr>
       </table>
@@ -43,14 +46,14 @@
       <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
         <#if custRequestAndRoles?has_content> 
         <TR>
-          <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
-          <TD><DIV class='tabletext'><b>Request</b></DIV></TD>
-          <TD><DIV class='tabletext'><b>Response Required By</b></DIV></TD>
-          <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
-          <#-- <TD><DIV class='tabletext'><b>Party&nbsp;ID</b></DIV></TD> -->
-          <TD><DIV class='tabletext'><b>Role&nbsp;ID</b></DIV></TD>
-          <TD><DIV class='tabletext'><b>Request&nbsp;Name</b></DIV></TD>
-          <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortRequest}</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortResponseRequiredBy}</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortStatus}</b></DIV></TD>
+          <#-- <TD><DIV class='tabletext'><b>${uiLabelMap.PartyPartyId}</b></DIV></TD> -->
+          <TD><DIV class='tabletext'><b>${uiLabelMap.PartyRoleId}</b></DIV></TD>
+          <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortRequestName}</b></DIV></TD>
+          <TD align=right><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
         </TR>
         <TR><TD colspan='8'><HR class='sepbar'></TD></TR>
         <#list custRequestAndRoles as custRequestAndRole>          
@@ -64,12 +67,12 @@
             <TD><A class='buttontext' href='<@ofbizUrl>/request?custRequestId=${custRequestAndRole.custRequestId?if_exists}</@ofbizUrl>'>
             ${custRequestAndRole.custRequestName}</a></DIV></TD>
             <TD align=right><A class='buttontext' href='<@ofbizUrl>/request?custRequestId=${custRequestAndRole.custRequestId?if_exists}</@ofbizUrl>'>
-              Edit&nbsp;[${custRequestAndRole.custRequestId?if_exists}]</a></DIV></TD>
+              ${uiLabelMap.CommonEdit};[${custRequestAndRole.custRequestId?if_exists}]</a></DIV></TD>
           </TR>
         </#list>        
         <#else>
         <TR>
-          <TD><div class="tabletext">&nbsp;<b>No requests found.</b></div></TD>
+          <TD><div class="tabletext">&nbsp;<b>${uiLabelMap.WorkEffortNoRequestFound}.</b></div></TD>
         </TR>
         </#if>
       </TABLE>

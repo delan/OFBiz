@@ -20,9 +20,11 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Johan Isacsson (conversion of jsp created by Dustin Caldwell (from code by David Jones))
+ *@author     Eric.Barbier@nereide.biz (migration to uiLabelMap)
  *@created    May 13, 2003
  *@version    1.0
 -->
+<#assign uiLabelMap = requestAttributes.uiLabelMap>
 
 <TABLE border=0 cellspacing='0' cellpadding='0' class='boxoutside' width='45%'>
   <TR>
@@ -30,10 +32,10 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
-            <div class='boxhead'>&nbsp;<b>Project:</b>&nbsp;${projectWorkEffort.workEffortName}</div>
+            <div class='boxhead'>&nbsp;<b>${uiLabelMap.WorkEffortProject}:</b>&nbsp;${projectWorkEffort.workEffortName}</div>
           </TD>
           <TD align=right>
-            <A href='<@ofbizUrl>/phaselist?projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>' class='lightbuttontext'>[All&nbsp;Phases]</A>
+            <A href='<@ofbizUrl>/phaselist?projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>' class='lightbuttontext'>[${uiLabelMap.WorkEffortAllPhases}]</A>
           </TD>
         </tr>
       </table>
@@ -43,22 +45,22 @@
     <TD width='100%'>
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
                 <tr>
-                  <td align=right valign=top><div class='tabletext'><nobr>Project Status:</nobr></div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.WorkEffortProjectStatus}:</nobr></div></td>
                   <td>&nbsp;</td>
                   <td valign=top>${projectWorkEffortStatus.description?if_exists}</td>
                 </tr>
                 <tr>
-                  <td align=right valign=top><div class='tabletext'><nobr>Description:</nobr></div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.CommonDescription}:</nobr></div></td>
                   <td>&nbsp;</td>
                   <td valign=top>${projectWorkEffort.description?if_exists}</td>
                 </tr>
                 <tr>
-                  <td align=right valign=top><div class='tabletext'><nobr>Start Date/Time:</nobr></div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.CommonStartDateTime}:</nobr></div></td>
                   <td>&nbsp;</td>
                   <td valign=top><#if projectWorkEffort.estimatedStartDate?exists>${projectWorkEffort.estimatedStartDate?datetime?string.short}</#if></td>
                 </tr>
                 <tr>
-                  <td align=right valign=top><div class='tabletext'><nobr>End Date/Time:</nobr></div></td>
+                  <td align=right valign=top><div class='tabletext'><nobr>${uiLabelMap.CommonEndDateTime}:</nobr></div></td>
                   <td>&nbsp;</td>
                   <td valign=top><#if projectWorkEffort.estimatedCompletionDate?exists>${projectWorkEffort.estimatedCompletionDate?datetime?string.short}</#if></td>
                 </tr>
@@ -73,7 +75,7 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxtop'>
         <tr>
           <TD align=left>
-            <div class='boxhead'>&nbsp;All Tasks</div>
+            <div class='boxhead'>${uiLabelMap.WorkEffortAllTasks}</div>
           </TD>
         </tr>
       </table>
@@ -88,17 +90,17 @@
               <TABLE width='100%' cellpadding='2' cellspacing='0' border='0'>
                 <TR>
                   <TD><DIV class='tabletext'>&nbsp;</DIV></TD>
-                  <TD><DIV class='tabletext'><b>Name</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Description</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Start Date/Time</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Priority</b></DIV></TD>
-                  <TD><DIV class='tabletext'><b>Status</b></DIV></TD>
-                  <TD align=right><DIV class='tabletext'><b>Edit</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortName}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.CommonDescription}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.CommonStartDateTime}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortPriority}</b></DIV></TD>
+                  <TD><DIV class='tabletext'><b>${uiLabelMap.WorkEffortStatus}</b></DIV></TD>
+                  <TD align=right><DIV class='tabletext'><b>${uiLabelMap.CommonEdit}</b></DIV></TD>
                 </TR>
                 <TR><TD colspan='7'><HR class='sepbar'></TD></TR>
                 <#list phases as phase>
                   <TR>
-                    <td valign=top class='tabletext'><b>Phase</b></td>
+                    <td valign=top class='tabletext'><b>${uiLabelMap.WorkEffortPhase}</b></td>
                     <TD valign=top><DIV class='tabletext'><b>${phase.workEffort.workEffortName}</b></div></TD>
                     <TD valign=top><DIV class='tabletext'><b>${phase.workEffort.description?if_exists}</b></div></TD>
                     <TD valign=top><DIV class='tabletext'><b>${phase.workEffort.estimatedStartDate?datetime?string.short}</b></DIV></TD>
@@ -106,11 +108,11 @@
                     <TD valign=top>&nbsp;</TD>
                     <TD valign=top><b><DIV class='tabletext'>${(currentStatusItem.description)?if_exists}</b></DIV></TD>
                     <TD  valign=top align=right width='1%'><A class='buttontext' href='<@ofbizUrl>/editphase?workEffortId=${phase.workEffort.workEffortId}&projectWorkEffortId=${projectWorkEffortId}</@ofbizUrl>'>
-                        [Edit]</a></DIV></TD>
+                        [${uiLabelMap.CommonEdit}]</a></DIV></TD>
                   </TR>
                     <#list phase.tasks as workEffortTask>
                       <TR>
-                        <td class='tabletext' valign=top>Task</td>
+                        <td class='tabletext' valign=top>${uiLabelMap.WorkEffortTask}</td>
                         <TD valign=top><DIV class='tabletext'>${workEffortTask.workEffortName}</DIV></TD>
                         <TD valign=top><DIV class='tabletext'>${workEffortTask.description}</DIV></TD>
                         <TD valign=top><DIV class='tabletext'>${workEffortTask.estimatedStartDate?datetime?string.short}</DIV></TD>
