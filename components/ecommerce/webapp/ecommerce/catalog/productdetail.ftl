@@ -20,12 +20,13 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.16 $
+ *@version    $Revision: 1.17 $
  *@since      2.1
 -->
 <#-- variable setup -->
 <#assign uiLabelMap = requestAttributes.uiLabelMap>
 <#assign product = requestAttributes.product?if_exists>
+<#assign productContentWrapper = requestAttributes.productContentWrapper?if_exists>
 <#assign price = requestAttributes.priceMap?if_exists>
 <#assign nowTimestamp = Static["org.ofbiz.base.util.UtilDateTime"].nowTimestamp()>
 <#-- end variable setup -->
@@ -66,13 +67,14 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <#-- Product image/name/price -->
   <tr>
     <td align="left" valign="top" width="0">
-      <#if product.largeImageUrl?exists>
-        <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${product.largeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align='left'>
+      <#assign productLargeImageUrl = productContentWrapper.get("LARGE_IMAGE_URL")>
+      <#if productLargeImageUrl?exists>
+        <img src='<@ofbizContentUrl>${requestAttributes.contentPathPrefix?if_exists}${productLargeImageUrl?if_exists}</@ofbizContentUrl>' name='mainImage' vspace='5' hspace='5' border='1' width='200' align='left'>
       </#if>
     </td>
     <td align="right" valign="top">
-      <div class="head2">${product.productName?if_exists}</div>
-      <div class="tabletext">${product.description?if_exists}</div>
+      <div class="head2">${productContentWrapper.get("PRODUCT_NAME")?if_exists}</div>
+      <div class="tabletext">${productContentWrapper.get("DESCRIPTION")?if_exists}</div>
       <div class="tabletext"><b>${product.productId?if_exists}</b></div>
       <#-- for prices:
               - if price < listPrice, show
@@ -241,7 +243,7 @@ ${requestAttributes.virtualJavaScript?if_exists}
   <#-- Long description of product -->
   <tr>
     <td colspan="2">
-      <div class="tabletext">${product.longDescription?if_exists}</div>
+      <div class="tabletext">${productContentWrapper.get("LONG_DESCRIPTION")?if_exists}</div>
     </td>
   </tr>
 
