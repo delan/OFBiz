@@ -34,6 +34,7 @@ import net.xoetrope.xui.XResourceManager;
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilFormatOut;
 import org.ofbiz.base.util.UtilProperties;
+import org.ofbiz.base.splash.SplashLoader;
 import org.ofbiz.content.xui.XuiContainer;
 import org.ofbiz.content.xui.XuiSession;
 import org.ofbiz.pos.component.Input;
@@ -64,6 +65,7 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     protected static long lastActivity = 0;
     protected static Thread activityMonitor = null;
 
+    protected ClassLoader classLoader = null;
     protected XuiSession session = null;
     protected Output output = null;
     protected Input input = null;
@@ -72,6 +74,11 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
     protected PosButton buttons = null;
     protected String scrLocation = null;
     protected boolean isLocked = false;
+
+    public PosScreen() {
+        super();
+        this.classLoader = Thread.currentThread().getContextClassLoader();        
+    }
 
     public void pageCreated() {
         super.pageCreated();
@@ -103,6 +110,9 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
                 activityMonitor.setDaemon(false);
                 activityMonitor.start();
             }
+
+            // close the splash screen
+            SplashLoader.close();            
         }
 
         // buttons are different per screen
@@ -226,7 +236,11 @@ public class PosScreen extends NavigationHelper implements Runnable, DialogCallb
         lastActivity = l;
     }
 
-    // generic button XUI event calls into PosButton to lookup the external reference    
+    public ClassLoader getClassLoader() {
+        return classLoader;
+    }
+
+    // generic button XUI event calls into PosButton to lookup the external reference
     public synchronized void buttonPressed() {
         this.setLastActivity(System.currentTimeMillis());
         buttons.buttonPressed(this, this.getCurrentEvent());
