@@ -25,7 +25,7 @@
  * @author     Johan Isacsson
  * @author     David E. Jones
  * @author     Olivier.Heintz@nereide.biz 
- * @version    $Revision: 1.3 $
+ * @version    $Revision: 1.4 $
  * @since      2.2
 -->
 
@@ -164,7 +164,7 @@
         </if-empty>
         <if-compare-field field-name="partyId" map-name="parameters" to-map-name="userLogin" operator="not-equals">
             <check-permission permission="PARTYMGR" action="_CREATE">
-				<fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
+                <fail-property resource="PartyUiLabels" property="PartyPermissionErrorForThisParty"/>
             </check-permission>
         </if-compare-field>
         <check-errors/>
@@ -175,15 +175,15 @@
                 processor-name="postalAddress" in-map-name="parameters" out-map-name="context"/>   		
         <call-service in-map-name="context" service-name="createPostalAddress">
             <default-message>Postal Address successfully created</default-message>
-            <result-to-field result-name="contactMechId" map-name="newPartyContactMech"/>             
+            <result-to-field result-name="contactMechId" map-name="newPartyContactMech"/>
         </call-service>
         <log level="info" message="ContactMech for postal address was ${newPartyContactMech.contactMechId}, now creating party contact mech"/>
         <call-map-processor xml-resource="org/ofbiz/party/contact/PartyContactMechMapProcs.xml"
-                processor-name="partyContactMech" in-map-name="parameters" out-map-name="context2"/>  
-        <field-to-field field-name="contactMechId" map-name="newPartyContactMech" to-map-name="context2"/> 
-        <log level="info" message="Copied id to context2: ${context2.contactMechId}"/> 		
+                processor-name="partyContactMech" in-map-name="parameters" out-map-name="context2"/>
+        <field-to-field field-name="contactMechId" map-name="newPartyContactMech" to-map-name="context2"/>
+        <log level="info" message="Copied id to context2: ${context2.contactMechId}"/>
         <call-service in-map-name="context2" break-on-error="true" service-name="createPartyContactMech">
-            <default-message>Party Contact Mechanism successfully created</default-message>       
+            <default-message>Party Contact Mechanism successfully created</default-message>
         </call-service>
         <field-to-request field-name="contactMechId" map-name="newPartyContactMech"/>
         <field-to-result field-name="contactMechId" map-name="newPartyContactMech"/>
