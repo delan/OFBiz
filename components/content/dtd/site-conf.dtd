@@ -26,7 +26,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
  *  Servlet Controller - Controller Request Definition DTD
- *  $Id: site-conf.dtd,v 1.2 2003/09/14 05:36:47 jonesde Exp $
+ *  $Id$
 -->
 
 <!ELEMENT site-conf (description?, owner?, errorpage, handler+, firstvisit?, preprocessor?, postprocessor?, request-map+, view-map+)>
@@ -63,7 +63,7 @@
 <!ELEMENT response EMPTY>
 <!ATTLIST response
     name CDATA #REQUIRED
-    type (none|view|request|url) #REQUIRED
+    type (none|view|request|request-redirect|url) #REQUIRED
     value CDATA #IMPLIED
 >
 <!ELEMENT view-map (description?)>
