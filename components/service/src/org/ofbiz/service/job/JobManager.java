@@ -1,5 +1,5 @@
 /*
- * $Id: JobManager.java,v 1.12 2004/01/24 19:37:53 ajzeneski Exp $
+ * $Id: JobManager.java,v 1.13 2004/06/16 20:48:43 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -60,7 +60,7 @@ import org.ofbiz.service.config.ServiceConfigUtil;
  * JobManager
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.12 $
+ * @version    $Revision: 1.13 $
  * @since      2.0
  */
 public class JobManager {
@@ -285,15 +285,8 @@ public class JobManager {
      *@param endTime The time in milliseconds the service should expire
      */
     public void schedule(String poolName, String serviceName, Map context, long startTime, int frequency, int interval, int count, long endTime) throws JobManagerException {
+        // persist the context
         String dataId = null;
-        String infoId = null;
-        String jobName = new String(new Long((new Date().getTime())).toString());
-
-        if (delegator == null) {
-            Debug.logWarning("No delegator referenced; cannot schedule job.", module);
-            return;
-        }
-
         try {
             dataId = delegator.getNextSeqId("RuntimeData").toString();
             GenericValue runtimeData = delegator.makeValue("RuntimeData", UtilMisc.toMap("runtimeDataId", dataId));
@@ -307,13 +300,53 @@ public class JobManager {
         } catch (IOException ioe) {
             throw new JobManagerException(ioe.getMessage(), ioe);
         }
-        try {
-            RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
 
-            infoId = info.primaryKey();
-        } catch (RecurrenceInfoException e) {
-            throw new JobManagerException(e.getMessage(), e);
+        // schedule the job
+        schedule(poolName, serviceName, dataId, startTime, frequency, interval, count, endTime);
+    }
+
+    /**
+     * Schedule a job to start at a specific time with specific recurrence info
+     *@param poolName The name of the pool to run the service from
+     *@param serviceName The name of the service to invoke
+     *@param dataId The persisted context (RuntimeData.runtimeDataId)
+     *@param startTime The time in milliseconds the service should run
+     */
+    public void schedule(String poolName, String serviceName, String dataId, long startTime) throws JobManagerException {
+        schedule(poolName, serviceName, dataId, startTime, -1, 0, 1, 0);
+    }
+
+    /**
+     * Schedule a job to start at a specific time with specific recurrence info
+     *@param poolName The name of the pool to run the service from
+     *@param serviceName The name of the service to invoke
+     *@param dataId The persisted context (RuntimeData.runtimeDataId)
+     *@param startTime The time in milliseconds the service should run
+     *@param frequency The frequency of the recurrence (HOURLY,DAILY,MONTHLY,etc)
+     *@param interval The interval of the frequency recurrence
+     *@param count The number of times to repeat
+     *@param endTime The time in milliseconds the service should expire
+     */
+    public void schedule(String poolName, String serviceName, String dataId, long startTime, int frequency, int interval, int count, long endTime) throws JobManagerException {
+        String infoId = null;
+        String jobName = new String(new Long((new Date().getTime())).toString());
+
+        if (delegator == null) {
+            Debug.logWarning("No delegator referenced; cannot schedule job.", module);
+            return;
         }
+
+        // create the recurrence
+        if (frequency > -1 && count > 1) {
+            try {
+                RecurrenceInfo info = RecurrenceInfo.makeInfo(delegator, startTime, frequency, interval, count);
+                infoId = info.primaryKey();
+            } catch (RecurrenceInfoException e) {
+                throw new JobManagerException(e.getMessage(), e);
+            }
+        }
+
+        // set the persisted fields
         Map jFields = UtilMisc.toMap("jobName", jobName, "runTime", new java.sql.Timestamp(startTime),
                 "serviceName", serviceName, "recurrenceInfoId", infoId, "runtimeDataId", dataId);
 
@@ -324,8 +357,8 @@ public class JobManager {
             jFields.put("poolId", ServiceConfigUtil.getSendPool());
         }
 
+        // create the value and store
         GenericValue jobV = null;
-
         try {
             jobV = delegator.makeValue("JobSandbox", jFields);
             delegator.create(jobV);

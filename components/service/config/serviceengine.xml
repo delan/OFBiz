@@ -33,8 +33,17 @@
     <engine name="rmi" class="org.ofbiz.service.rmi.RmiServiceEngine"/>
     <engine name="simple" class="org.ofbiz.minilang.SimpleServiceEngine"/>
     <engine name="soap" class="org.ofbiz.service.engine.SOAPClientEngine"/>
-    <engine name="workflow" class="org.ofbiz.workflow.WorkflowEngine"/>    
-           
+    <engine name="workflow" class="org.ofbiz.workflow.WorkflowEngine"/>
+
+    <!-- Start-Up Services -->
+    <!--
+       - runtime-data-id refers to the RuntimeData entity for in-parameters
+       - runtime-delay is the milliseconds after startup this service should run
+       - run-in-pool is the name of the pool to run the job in; defaults to the send-to-poll (above)
+
+    <startup-service name="testScv" runtime-data-id="9900" runtime-delay="0" run-in-pool="pool"/>
+    -->   
+
     <!-- JMS Service Queue/Topic Configuration -->
     <!--
     <jms-service name="serviceMessenger" send-mode="all">

@@ -1,5 +1,5 @@
 /*
- * $Id: ServiceDispatcher.java,v 1.17 2004/06/06 08:01:09 jonesde Exp $
+ * $Id: ServiceDispatcher.java,v 1.18 2004/06/16 20:48:41 ajzeneski Exp $
  *
  * Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -27,16 +27,26 @@ package org.ofbiz.service;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.List;
+import java.util.Iterator;
+import java.io.IOException;
 
 import javax.transaction.InvalidTransactionException;
 import javax.transaction.SystemException;
 import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.ofbiz.base.util.Debug;
 import org.ofbiz.base.util.UtilMisc;
+import org.ofbiz.base.util.UtilXml;
+import org.ofbiz.base.util.UtilValidate;
+import org.ofbiz.base.config.GenericConfigException;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
+import org.ofbiz.entity.GenericEntityException;
+import org.ofbiz.entity.serialize.XmlSerializer;
+import org.ofbiz.entity.serialize.SerializeException;
 import org.ofbiz.entity.transaction.GenericTransactionException;
 import org.ofbiz.entity.transaction.TransactionFactory;
 import org.ofbiz.entity.transaction.TransactionUtil;
@@ -51,12 +61,16 @@ import org.ofbiz.service.engine.GenericEngineFactory;
 import org.ofbiz.service.group.ServiceGroupReader;
 import org.ofbiz.service.jms.JmsListenerFactory;
 import org.ofbiz.service.job.JobManager;
+import org.ofbiz.service.job.JobManagerException;
+
+import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 /**
  * Global Service Dispatcher
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.17 $
+ * @version    $Revision: 1.18 $
  * @since      2.0
  */
 public class ServiceDispatcher {
@@ -88,6 +102,7 @@ public class ServiceDispatcher {
         }
         this.jm = new JobManager(this.delegator);
         this.jlf = new JmsListenerFactory(this);
+        this.runStartupServices();
     }
 
     /**
@@ -723,5 +738,52 @@ public class ServiceDispatcher {
                 Debug.logError("Invalid mode for checkDebug should be (0 or 1)", module);
         }
         return false;
+    }
+
+    // run startup services
+    private synchronized int runStartupServices() {
+        if (jm == null) return 0;
+
+        Element root = null;
+        try {
+            root = ServiceConfigUtil.getXmlRootElement();
+        } catch (GenericConfigException e) {
+            Debug.logError(e, module);
+            return 0;
+        }
+
+        int servicesScheduled = 0;
+        List startupServices = UtilXml.childElementList(root, "startup-service");
+        if (startupServices != null && startupServices.size() > 0) {
+            Iterator i = startupServices.iterator();
+            while (i.hasNext()) {
+                Element ss = (Element) i.next();
+                String serviceName = ss.getAttribute("name");
+                String runtimeDataId = ss.getAttribute("runtime-data-id");
+                String delayStr = ss.getAttribute("runtime-delay");
+                String sendToPool = ss.getAttribute("run-in-pool");
+                if (UtilValidate.isEmpty(sendToPool)) {
+                    sendToPool = ServiceConfigUtil.getSendPool();
+                }
+
+                long runtimeDelay = 0;
+                try {
+                    runtimeDelay = Long.parseLong(delayStr);
+                } catch (Exception e) {
+                    Debug.logError(e, "Unable to parse runtime-delay value; using 0", module);
+                    runtimeDelay = 0;
+                }
+
+                // current time + 1 sec delay + extended delay
+                long runtime = System.currentTimeMillis() + 1000 + runtimeDelay;
+                try {
+                    jm.schedule(sendToPool, serviceName, runtimeDataId, runtime);
+                } catch (JobManagerException e) {
+                    Debug.logError(e, "Unable to schedule service [" + serviceName + "]", module);
+                }
+            }
+        }
+
+        return servicesScheduled;
     }
 }
