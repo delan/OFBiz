@@ -1,5 +1,5 @@
 /*
- * $Id: CachedClassLoader.java,v 1.2 2003/08/18 01:00:23 ajzeneski Exp $
+ * $Id: CachedClassLoader.java,v 1.3 2003/08/18 01:04:01 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -33,7 +33,7 @@ import java.util.Map;
  * Caching Class Loader
  *
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.1
  */
 public class CachedClassLoader extends URLClassLoader {
@@ -102,7 +102,7 @@ public class CachedClassLoader extends URLClassLoader {
             // note: loadClass is necessary for these since this class doesn't know anything about the Entity Engine at compile time
             globalClassNameClassMap.put("GenericValue", loader.loadClass("org.ofbiz.entity.GenericValue"));
             globalClassNameClassMap.put("org.ofbiz.entity.GenericValue", loader.loadClass("org.ofbiz.entity.GenericValue"));
-            globalClassNameClassMap.put("GenericPK", loader.loadClass("org.ofbiz.core.entity.GenericPK"));
+            globalClassNameClassMap.put("GenericPK", loader.loadClass("org.ofbiz.entity.GenericPK"));
             globalClassNameClassMap.put("org.ofbiz.entity.GenericPK", loader.loadClass("org.ofbiz.entity.GenericPK"));
             globalClassNameClassMap.put("GenericEntity", loader.loadClass("org.ofbiz.entity.GenericEntity"));
             globalClassNameClassMap.put("org.ofbiz.entity.GenericEntity", loader.loadClass("org.ofbiz.entity.GenericEntity"));
