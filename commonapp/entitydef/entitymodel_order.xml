@@ -205,6 +205,7 @@
       <field name="contactMechId" type="id-ne"></field>
       <prim-key field="orderId"/>
       <prim-key field="contactMechPurposeTypeId"/>
+      <prim-key field="contactMechId"/>
       <relation type="one" fk-name="ORDER_CMECH_HDR" rel-entity-name="OrderHeader">
         <key-map field-name="orderId"/>
       </relation>
@@ -229,6 +230,7 @@
       <field name="syncStatusId" type="id"></field>
       <field name="billingAccountId" type="id"></field>
       <field name="originFacilityId" type="id"></field>
+      <field name="webSiteId" type="id"></field>
       <field name="grandTotal" type="currency-amount"></field>
       <prim-key field="orderId"/>
       <relation type="one" fk-name="ORDER_HDR_TYPE" rel-entity-name="OrderType">

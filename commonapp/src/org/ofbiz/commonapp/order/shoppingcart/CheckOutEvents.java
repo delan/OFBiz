@@ -185,6 +185,7 @@ public class CheckOutEvents {
         context.put("partyId", partyId);
         context.put("prodCatalogId", CatalogWorker.getCurrentCatalogId(request));
         context.put("visitId", VisitHandler.getVisitId(session));
+        context.put("webSiteId", CatalogWorker.getWebSiteId(request));
 
         // store the order - invoke the service
         Map result = null;
@@ -212,10 +213,62 @@ public class CheckOutEvents {
             return "error";
         }
 
-        // set the orderId for future use
+        // set the orderId for use by chained events
         request.setAttribute("order_id", orderId);
         request.setAttribute("orderAdditionalEmails", cart.getOrderAdditionalEmails());
-
+        
+        // save the emails to the order                              
+        List toBeStored = new LinkedList();
+        
+        GenericValue party = null;
+        try {
+            party = userLogin.getRelatedOne("Party");
+        } catch (GenericEntityException e) {
+            Debug.logWarning(e, "Problems getting Party record from UserLogin", module);
+            party = null;
+        }
+        
+        // create order contact mechs for the email address(s)
+        if (party != null) {
+            Iterator emailIter = UtilMisc.toIterator(ContactHelper.getContactMechByType(party, "EMAIL_ADDRESS", false));
+            while (emailIter != null && emailIter.hasNext()) {
+                GenericValue email = (GenericValue) emailIter.next();
+                GenericValue orderContactMech = delegator.makeValue("OrderContactMech",
+                        UtilMisc.toMap("orderId", orderId, "contactMechId", email.getString("contactMechId"), "contactMechPurposeTypeId", "ORDER_EMAIL"));
+                toBeStored.add(orderContactMech);                                   
+            }
+        }
+                                             
+        // create dummy contact mechs and order contact mechs for the additional emails    
+        String additionalEmails = cart.getOrderAdditionalEmails();  
+        List emailList = StringUtil.split(additionalEmails, ",");
+        if (emailList == null) emailList = new ArrayList();                                       
+        Iterator eli = emailList.iterator();       
+        while (eli.hasNext()) {
+            String email = (String) eli.next();
+            String contactMechId = delegator.getNextSeqId("ContactMech").toString();
+            GenericValue contactMech = delegator.makeValue("ContactMech", 
+                    UtilMisc.toMap("contactMechId", contactMechId, "contactMechTypeId", "EMAIL_ADDRESS", "infoString", email)); 
+                                                    
+            GenericValue orderContactMech = delegator.makeValue("OrderContactMech", 
+                    UtilMisc.toMap("orderId", orderId, "contactMechId", contactMechId, "contactMechPurposeTypeId", "ORDER_EMAIL"));
+            toBeStored.add(contactMech);
+            toBeStored.add(orderContactMech);                                                         
+        }
+        
+        if (toBeStored.size() > 0) {
+            try {
+                Debug.logInfo("To Be Stored: " + toBeStored, module);
+                delegator.storeAll(toBeStored);
+                try {
+                    Thread.sleep(2000);
+                } catch (Exception e) {}
+            } catch (GenericEntityException e) {
+                // not a fatal error; so just print a message
+                Debug.logWarning(e, "Problems storing order email contact information", module);
+            }
+        }
+        
         return "success";
     }
 

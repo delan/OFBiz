@@ -169,6 +169,9 @@ public class OrderServices {
             
         if (UtilValidate.isNotEmpty((String) context.get("visitId"))) 
         	order.set("visitId", context.get("visitId"));
+       
+        if (UtilValidate.isNotEmpty((String) context.get("webSiteId")))
+            order.set("webSiteId", context.get("webSiteId"));
         	
         if (userLogin != null && userLogin.get("userLoginId") != null)
             order.set("createdBy", userLogin.getString("userLoginId"));
