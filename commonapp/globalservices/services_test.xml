@@ -13,6 +13,17 @@
         <attribute name="resp" type="String" mode="OUT"/>
     </service>
     
+    <service name="testWorkflow" engine="workflow" location="TEST-PKG" invoke="TestWorkflow">
+        <attribute name="orderId" type="String" mode="IN"/>        
+        <attribute name="partyId" type="String" mode="IN"/>
+        <attribute name="orderStatusId" type="String" mode="OUT"/>
+    </service>
+    <service name="testWorkflowCondition" engine="java" 
+            location="org.ofbiz.commonapp.common.CommonServices" invoke="testWorkflowCondition">
+        <attribute name="serviceName" type="String" mode="IN" optional="true"/>
+        <attribute name="evaluationResult" type="Boolean" mode="OUT"/>
+    </service>
+    
     <service name="groupTest" engine="group" location="testGroup" invoke=""/>
 
     <service name="testHttp" engine="http" 

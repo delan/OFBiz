@@ -72,6 +72,12 @@ public class CommonServices {
         System.out.println("----- SVC: " + dctx.getName() + " -----");
         return response;
     }
+    
+    public static Map testWorkflowCondition(DispatchContext dctx, Map context) {
+        Map result = new HashMap();
+        result.put("evaluationResult", new Boolean(true));
+        return result;
+    }
 
     /**
      * JavaMail Service that gets body content from a URL
