@@ -1,5 +1,5 @@
 <#--
- *  Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
+ *  Copyright (c) 2003-2004 The Open For Business Project - www.ofbiz.org
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a
  *  copy of this software and associated documentation files (the "Software"),
@@ -228,8 +228,12 @@
                       <tr>
                         <td align="right" colspan="2">
                           <div class="tabletext" style="font-size: xx-small;">
-                            <b><i>Issued to Shipment Item</i>:</b>
-                              <a target="facility" href="/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId}
+                            <#if itemIssuance.shipmentId?has_content>
+                              <b><i>Issued to Shipment Item</i>:</b>
+                              <a target="facility" href="/facility/control/ViewShipment?shipmentId=${itemIssuance.shipmentId}&externalLoginKey=${requestAttributes.externalLoginKey}" class="buttontext" style="font-size: xx-small;">${itemIssuance.shipmentId}</a>:${itemIssuance.shipmentItemSeqId?if_exists}
+                            <#else>
+                              <b><i>Issued Without a Shipment (Immediate, Physical Store)</i></b>
+                            </#if>
                           </div>
                         </td>
                         <td align="center">
