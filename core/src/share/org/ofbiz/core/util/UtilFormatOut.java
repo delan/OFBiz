@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.2  2001/09/29 06:48:32  jonesde
+ * Added checkEmpty methods
+ *
  * Revision 1.1  2001/09/28 22:56:44  jonesde
  * Big update for fromDate PK use, organization stuff
  *
@@ -172,6 +175,16 @@ public class UtilFormatOut
   }
 
   //------------------- null string handlers -------------------
+  /** Checks to see if the passed Object is null, if it is returns an empty but non-null string, otherwise calls toString() on the object
+   * @param obj1 The passed Object
+   * @return The toString() of the passed Object if not null, otherwise an empty non-null String
+   */  
+  public static String makeString(Object obj1)
+  {
+    if(obj1 != null) return obj1.toString();
+    else return "";
+  }
+
   /** Checks to see if the passed string is null, if it is returns an empty but non-null string.
    * @param string1 The passed String
    * @return The passed String if not null, otherwise an empty non-null String
