@@ -223,7 +223,7 @@ public class GenericDelegator {
   /** Creates a Entity in the form of a GenericValue without persisting it */
   public GenericValue makeValue(String entityName, Map fields) {
     ModelEntity entity = modelReader.getModelEntity(entityName);
-    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.makeValue] could not find entity for entityName: " + entityName);
+    if(entity == null) throw new IllegalArgumentException("[GenericDelegator.makeValue] could not find entity for entityName: " + entityName);
     GenericValue value = new GenericValue(entity, fields);
     value.delegator = this;
     return value;
@@ -232,7 +232,7 @@ public class GenericDelegator {
   /** Creates a Primary Key in the form of a GenericPK without persisting it */
   public GenericPK makePK(String entityName, Map fields) {
     ModelEntity entity = modelReader.getModelEntity(entityName);
-    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.makePK] could not find entity for entityName: " + entityName);
+    if(entity == null) throw new IllegalArgumentException("[GenericDelegator.makePK] could not find entity for entityName: " + entityName);
     GenericPK pk = new GenericPK(entity, fields);
     return pk;
   }
@@ -274,6 +274,7 @@ public class GenericDelegator {
   public GenericValue findByPrimaryKey(GenericPK primaryKey) throws GenericEntityException {
     GenericHelper helper = getEntityHelper(primaryKey.getModelEntity());
     GenericValue value = null;
+    if(!primaryKey.isPrimaryKey()) throw new IllegalArgumentException("[GenericDelegator.findByPrimaryKey] Passed primary key is not a valid primary key: " + primaryKey);
     try { value = helper.findByPrimaryKey(primaryKey); }
     catch(GenericEntityNotFoundException e) { value = null; }
     if(value != null) value.delegator = this;
@@ -398,7 +399,7 @@ public class GenericDelegator {
   public Collection getRelated(String relationName, GenericValue value) throws GenericEntityException {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = modelEntity.getRelation(relationName);
-    if(relation == null) throw new IllegalArgumentException("[GenericDAO.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
+    if(relation == null) throw new IllegalArgumentException("[GenericDelegator.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
     ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
 
     Map fields = new HashMap();
@@ -421,7 +422,7 @@ public class GenericDelegator {
   public Collection getRelatedCache(String relationName, GenericValue value) throws GenericEntityException {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = modelEntity.getRelation(relationName);
-    if(relation == null) throw new GenericModelException("[GenericDAO.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
+    if(relation == null) throw new GenericModelException("[GenericDelegator.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
     ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
 
     Map fields = new HashMap();
@@ -440,7 +441,7 @@ public class GenericDelegator {
   public GenericValue getRelatedOne(String relationName, GenericValue value) throws GenericEntityException {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = value.getModelEntity().getRelation(relationName);
-    if(relation == null) throw new GenericModelException("[GenericHelperAbstract.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
+    if(relation == null) throw new GenericModelException("[GenericDelegator.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
     if(!"one".equals(relation.type)) throw new IllegalArgumentException("Relation is not a 'one' relation: " + relationName + " of entity " + value.getEntityName());
     ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
     
@@ -460,7 +461,7 @@ public class GenericDelegator {
   public GenericValue getRelatedOneCache(String relationName, GenericValue value) throws GenericEntityException {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = value.getModelEntity().getRelation(relationName);
-    if(relation == null) throw new GenericModelException("[GenericHelperAbstract.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
+    if(relation == null) throw new GenericModelException("[GenericDelegator.getRelatedOne] could not find relation for relationName: " + relationName + " for value " + value);
     if(!"one".equals(relation.type)) throw new IllegalArgumentException("Relation is not a 'one' relation: " + relationName + " of entity " + value.getEntityName());
     ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
     
@@ -484,7 +485,7 @@ public class GenericDelegator {
   public Collection getRelatedByAnd(String relationName, Map fields, GenericValue value) throws GenericEntityException {
     ModelEntity modelEntity = value.getModelEntity();
     ModelRelation relation = modelEntity.getRelation(relationName);
-    if(relation == null) throw new IllegalArgumentException("[GenericDAO.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
+    if(relation == null) throw new IllegalArgumentException("[GenericDelegator.selectRelated] could not find relation for relationName: " + relationName + " for value " + value);
     ModelEntity relatedEntity = modelReader.getModelEntity(relation.relEntityName);
 
     //put the fields into the hash map first, 
@@ -527,7 +528,7 @@ public class GenericDelegator {
     GenericPK pk = value.getPrimaryKey();
     clearCacheLine(pk);
     GenericValue newValue = findByPrimaryKey(pk);
-    if(newValue == null) throw new IllegalArgumentException("[GenericHelperAbstract.refresh] could not refresh value: " + value);
+    if(newValue == null) throw new IllegalArgumentException("[GenericDelegator.refresh] could not refresh value: " + value);
     value.fields = newValue.fields;
     value.delegator = this;
     value.modified = false;
@@ -549,7 +550,7 @@ public class GenericDelegator {
    */
   public void clearCacheLine(String entityName, Map fields) {
     ModelEntity entity = modelReader.getModelEntity(entityName);
-    if(entity == null) throw new IllegalArgumentException("[GenericHelperAbstract.clearCacheLine] could not find entity for entityName: " + entityName);
+    if(entity == null) throw new IllegalArgumentException("[GenericDelegator.clearCacheLine] could not find entity for entityName: " + entityName);
     
     if(fields == null || fields.size() <= 0) {
       //findAll

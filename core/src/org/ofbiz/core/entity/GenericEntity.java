@@ -66,14 +66,28 @@ public class GenericEntity implements Serializable {
   public boolean isModified() { return modified; }
   
   public String getEntityName() { return entityName; }
-  public ModelEntity getModelEntity() { return modelEntity; }
+  public ModelEntity getModelEntity() {
+    if(modelEntity == null) throw new IllegalStateException("[GenericEntity.getModelEntity] modelEntity not set");
+    return modelEntity; 
+  }
   
   public Object get(String name) {
-    if(modelEntity.getField(name) == null) {
+    if(getModelEntity().getField(name) == null) {
       throw new IllegalArgumentException("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName);
       //Debug.logWarning("[GenericEntity.get] \"" + name + "\" is not a field of " + entityName + ", but getting anyway...");
     }
     return fields.get(name);
+  }
+  
+  public boolean isPrimaryKey() {
+    Vector pks = getModelEntity().pks;
+    TreeSet fieldKeys = new TreeSet(fields.keySet());
+    for(int i=0; i<pks.size(); i++) {
+      if(!fieldKeys.contains(((ModelField)pks.elementAt(i)).name)) return false;
+      fieldKeys.remove(((ModelField)pks.elementAt(i)).name);
+    }
+    if(!fieldKeys.isEmpty()) return false;
+    return true;
   }
   
   /** Sets the named field to the passed value, even if the value is null
@@ -93,7 +107,7 @@ public class GenericEntity implements Serializable {
    * @param setIfNull Specifies whether or not to set the value if it is null
    */
   public synchronized void set(String name, Object value, boolean setIfNull) {
-    if(modelEntity.getField(name) == null) {
+    if(getModelEntity().getField(name) == null) {
       throw new IllegalArgumentException("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName);
       //Debug.logWarning("[GenericEntity.set] \"" + name + "\" is not a field of " + entityName + ", but setting anyway...");
     }
@@ -111,11 +125,11 @@ public class GenericEntity implements Serializable {
    * @param value The String value to convert and set
    */
   public void setString(String name, String value) {
-    ModelField field = modelEntity.getField(name);
+    ModelField field = getModelEntity().getField(name);
     if(field == null) set(name, value); //this will get an error...
     
     ModelFieldType type = null;
-    try { type = delegator.getEntityFieldType(modelEntity, field.type); }
+    try { type = delegator.getEntityFieldType(getModelEntity(), field.type); }
     catch(GenericEntityException e) { Debug.logWarning(e); throw new IllegalArgumentException("Type " + field.type + " not found: " + e.getMessage()); }
     String fieldType = type.javaType;
     if(fieldType.equals("java.lang.String") || fieldType.equals("String"))
