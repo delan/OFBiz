@@ -37,11 +37,14 @@
   <!ELEMENT record ( field+ )>
   <!ATTLIST record
     name CDATA #REQUIRED
-    type-code CDATA #REQUIRED
-    tc-position CDATA #REQUIRED
+    type-code CDATA #IMPLIED
+    tc-min CDATA #IMPLIED
+    tc-max CDATA #IMPLIED
+    tc-isnum ( false | true ) "true"
+    tc-position CDATA #IMPLIED
     tc-length CDATA #IMPLIED
     description CDATA #IMPLIED
-    parent-name CDATA #REQUIRED
+    parent-name CDATA #IMPLIED
     limit ( one | many ) "many" >
 
   <!ELEMENT field EMPTY>
