@@ -33,10 +33,12 @@
 
 <jsp:useBean id="security" type="org.ofbiz.security.Security" scope="request" />
 <jsp:useBean id="delegator" type="org.ofbiz.entity.GenericDelegator" scope="request" />
+<jsp:useBean id="dispatcher" type="org.ofbiz.service.LocalDispatcher" scope="request" />
 <%
   String outpath = request.getParameter("outpath");
   String filename = request.getParameter("filename");
   String maxRecStr = request.getParameter("maxrecords");
+  String entitySyncId = request.getParameter("entitySyncId");
   String[] entityName = request.getParameterValues("entityName");
 
   // get the max records per file setting and convert to a int
@@ -159,7 +161,10 @@
 
     //passedEntityNames.add("ProductKeyword");
   }
-  
+
+  if (UtilValidate.isNotEmpty(entitySyncId)) {
+      passedEntityNames = org.ofbiz.entityext.synchronization.EntitySyncContext.getEntitySyncModelNamesToUse(dispatcher, entitySyncId);
+  }
   boolean checkAll = "true".equals(request.getParameter("checkAll"));
   boolean tobrowser = request.getParameter("tobrowser")!=null?true:false;
 %>
@@ -340,6 +345,9 @@
         <A href='<ofbiz:url>/xmldsdump?checkAll=true</ofbiz:url>' class='buttontext'>Check All</A>
         <A href='<ofbiz:url>/xmldsdump</ofbiz:url>' class='buttontext'>Un-Check All</A>
         <br/>
+        Entity Sync Dump:
+        <input name="entitySyncId" class="inputBox" size="30" value="<%=UtilFormatOut.checkNull(entitySyncId)%>">
+        <br/>
         Pre-configured set:
         <select name="preConfiguredSetName">
             <option value="">None</option>
@@ -349,6 +357,8 @@
             <option value="Product3">Product Part 3</option>
             <option value="Product4">Product Part 4</option>
         </select>
+        <br/>
+
         <TABLE>
           <TR>
             <%Iterator iter = entityNames.iterator();%>
