@@ -53,18 +53,17 @@ public class ServiceDispatcher {
     protected GenericDelegator delegator;
     protected Security security;
     protected Map localContext;
-    protected Map jmsListeners;
     protected JobManager jm;
+    protected JMSListenerFactory jlf;
 
     public ServiceDispatcher(GenericDelegator delegator) {
         Debug.logInfo("[ServiceDispatcher] : Creating new instance.", module);
         this.delegator = delegator;
         this.localContext = new HashMap();
-        this.jmsListeners = new HashMap();
-        this.jm = new JobManager(this, this.delegator);
         if (delegator != null) {
             this.security = new Security(delegator);
-            loadListeners();
+            this.jm = new JobManager(this, this.delegator);
+            this.jlf = new JMSListenerFactory(this);
         }
     }
 
@@ -275,6 +274,14 @@ public class ServiceDispatcher {
     }
 
     /**
+     * Gets the JMSListenerFactory which holds the message listeners.
+     * @return JMSListenerFactory
+     */
+    public JMSListenerFactory getJMSListenerFactory() {
+        return this.jlf;
+    }
+
+    /**
      * Gets the GenericDelegator associated with this dispatcher
      * @return GenericDelegator associated with this dispatcher
      */
@@ -307,53 +314,6 @@ public class ServiceDispatcher {
      */
     public boolean containsContext(String name) {
         return localContext.containsKey(name);
-    }
-
-    /**
-     * Load a JMS message listener.
-     * @param jmsName Name of the jms-service
-     * @throws GenericServiceException
-     */
-    public void loadListener(String jmsName) throws GenericServiceException {
-        try {
-            Element rootElement = ServiceConfigUtil.getXmlRootElement();
-            Element jmsElement = UtilXml.firstChildElement(rootElement, "jms-service", "name", jmsName);
-            loadListener(jmsName, jmsElement);
-        } catch (org.ofbiz.core.config.GenericConfigException e) {
-            throw new GenericServiceException("Cannot read serviceengine.xml.", e.getNested());
-        }
-    }
-
-    /**
-     * Close a JMS message listener.
-     * @param jmsName Name of the jms-service
-     * @throws GenericServiceException
-     */
-    public void closeListener(String jmsName) throws GenericServiceException {
-        GenericMessageListener listener = (GenericMessageListener) jmsListeners.get(jmsName);
-        if (listener == null)
-            throw new GenericServiceException("No listener found with that name.");
-        listener.close();
-    }
-
-    /**
-     * Refresh a JMS message listener.
-     * @param jmsName Name of the jms-service
-     * @throws GenericServiceException
-     */
-    public void refreshListener(String jmsName) throws GenericServiceException {
-        GenericMessageListener listener = (GenericMessageListener) jmsListeners.get(jmsName);
-        if (listener == null)
-            throw new GenericServiceException("No listener found with that name.");
-        listener.refresh();
-    }
-
-    /**
-     * Gets a Map of JMS Listeners.
-     * @return Map of JMS Listeners
-     */
-    public Map getJMSListeners() {
-        return new HashMap(jmsListeners);
     }
 
     // checks if parameters were passed for authentication
@@ -410,33 +370,4 @@ public class ServiceDispatcher {
         return value;
     }
 
-    // Load the JMS listeners
-    private void loadListeners() {
-        try {
-            Element rootElement = ServiceConfigUtil.getXmlRootElement();
-            NodeList nodeList = rootElement.getElementsByTagName("jms-service");
-            if (Debug.infoOn()) Debug.logInfo("[ServiceDispatcher] : Loading JMS Listeners.", module);
-            for (int i = 0; i < nodeList.getLength(); i++) {
-                try {
-                    Element element = (Element) nodeList.item(i);
-                    loadListener(element.getAttribute("name"), element);
-                } catch (GenericServiceException gse) {
-                    Debug.logError("Cannot load message listener (" + gse.toString() + ").", module);
-                } catch (Exception e) {
-                    Debug.logError(e, "Uncaught exception.", module);
-                }
-            }
-        } catch (org.ofbiz.core.config.GenericConfigException gce) {
-            Debug.logError(gce, "Cannot get serviceengine.xml root element.", module);
-        } catch (Exception e) {
-            Debug.logError(e, "Uncaught exception.", module);
-        }
-    }
-
-    private void loadListener(String jmsName, Element jmsElement) throws GenericServiceException {
-        Debug.logWarning("Loading listener: " + jmsName, module);
-        Object o = JMSListenerFactory.getMessageListener(jmsElement, this);
-        if (o != null)
-            jmsListeners.put(jmsName, o);
-    }
 }

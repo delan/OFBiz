@@ -30,6 +30,7 @@ import java.util.*;
 import org.ofbiz.core.calendar.*;
 import org.ofbiz.core.entity.*;
 import org.ofbiz.core.security.*;
+import org.ofbiz.core.service.jms.*;
 import org.ofbiz.core.service.job.*;
 import org.ofbiz.core.util.*;
 
@@ -224,6 +225,14 @@ public class LocalDispatcher {
     }
 
     /**
+     * Gets the JMSListenerFactory which holds the message listeners.
+     * @return JMSListenerFactory
+     */
+    public JMSListenerFactory getJMSListeneFactory() {
+        return dispatcher.getJMSListenerFactory();
+    }
+
+    /**
      * Gets the GenericEntityDelegator associated with this dispatcher
      * @return GenericEntityDelegator associated with this dispatcher
      */
@@ -255,39 +264,5 @@ public class LocalDispatcher {
         return ctx;
     }
 
-    /**
-     * Returns a Map of JMS Listeners
-     * @return Map of JMS Listeners
-     */
-    public Map getJMSListeners() {
-        return dispatcher.getJMSListeners();
-    }
-
-    /**
-     * Load a JMS message listener.
-     * @param jmsName Name of the jms-service
-     * @throws GenericServiceException
-     */
-    public void loadListener(String jmsName) throws GenericServiceException {
-        dispatcher.loadListener(jmsName);
-    }
-
-    /**
-     * Close a JMS message listener.
-     * @param jmsName Name of the jms-service
-     * @throws GenericServiceException
-     */
-    public void closeListener(String jmsName) throws GenericServiceException {
-        dispatcher.closeListener(jmsName);
-    }
-
-    /**
-     * Refresh a JMS message listener.
-     * @param jmsName Name of the jms-service
-     * @throws GenericServiceException
-     */
-    public void refreshListener(String jmsName) throws GenericServiceException {
-        dispatcher.closeListener(jmsName);
-    }
 }
 
