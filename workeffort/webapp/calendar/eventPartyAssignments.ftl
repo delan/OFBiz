@@ -46,11 +46,13 @@
                 <#if roles?has_content>
                   <tr>
                     <td>
+                    <#if workEffortId?exists>
                       <div class='tabContainer'>
                           <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Event</a>
                           <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">Parties</a>
                           <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Contact information</a>
-                      </div>					
+                      </div>
+                    </#if>
                     <table width="100%" cellpadding="2" cellspacing="0" border="0">
                       <tr>
                         <td><div class="tableheadtext">PartyId</div></td>

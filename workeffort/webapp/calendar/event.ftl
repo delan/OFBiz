@@ -49,11 +49,13 @@
       <table width='100%' border='0' cellspacing='0' cellpadding='0' class='boxbottom'>
         <tr>
           <td>
+            <#if workEffortId?exists>
               <div class='tabContainer'>
                   <a href="<@ofbizUrl>/event?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButtonSelected">Event</a>
                   <a href="<@ofbizUrl>/eventPartyAssignments?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Parties</a>
                   <a href="<@ofbizUrl>/eventContactMechs?workEffortId=${workEffortId}</@ofbizUrl>" class="tabButton">Contact information</a>
-              </div>					
+              </div>
+            </#if>
             <#if canView = true>
               <#if workEffort?has_content>
                 <form action="<@ofbizUrl>/updateevent</@ofbizUrl>" name="eventform" method=POST style='margin: 0;'>
