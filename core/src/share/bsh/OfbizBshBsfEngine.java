@@ -32,13 +32,22 @@ package bsh;
  
  */
 
-import java.io.*;
-import java.util.*;
+import java.io.Reader;
+import java.io.StringReader;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Vector;
 
-import com.ibm.bsf.*;
-import com.ibm.bsf.util.*;
+import org.ofbiz.core.util.Debug;
+import org.ofbiz.core.util.UtilCache;
 
-import org.ofbiz.core.util.*;
+import com.ibm.bsf.BSFDeclaredBean;
+import com.ibm.bsf.BSFException;
+import com.ibm.bsf.BSFManager;
+import com.ibm.bsf.util.BSFEngineImpl;
 
 /**
  * This is the BeanShell adapter for IBM's Bean Scripting Famework.
@@ -58,7 +67,7 @@ public class OfbizBshBsfEngine extends BSFEngineImpl {
     protected Interpreter interpreter;
     protected boolean installedApplyMethod;
     
-    public static UtilCache parsedScripts = new UtilCache("webapp.BshBsfParsedCache", 0, 0, false);
+    public static UtilCache parsedScripts = new UtilCache("script.BshBsfParsedCache", 0, 0, false);
     
     public void initialize(BSFManager mgr, String lang, Vector declaredBeans) throws BSFException {
         super.initialize(mgr, lang, declaredBeans);
