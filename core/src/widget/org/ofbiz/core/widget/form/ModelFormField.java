@@ -40,6 +40,8 @@ public class ModelFormField {
     
     public static final String module = ModelFormField.class.getName();
 
+    protected ModelForm modelForm;
+
     protected String name;
     protected String mapName;
     protected String entityName;
@@ -60,10 +62,13 @@ public class ModelFormField {
 
     // ===== CONSTRUCTORS =====
     /** Default Constructor */
-    public ModelFormField() {}
+    public ModelFormField(ModelForm modelForm) {
+        this.modelForm = modelForm;
+    }
 
     /** XML Constructor */
-    public ModelFormField(Element fieldElement) {
+    public ModelFormField(Element fieldElement, ModelForm modelForm) {
+        this.modelForm = modelForm;
         this.name = fieldElement.getAttribute("name");
         this.mapName = fieldElement.getAttribute("map-name");
         this.entityName = fieldElement.getAttribute("entity-name");
@@ -130,6 +135,27 @@ public class ModelFormField {
 
     public void renderFieldString(StringBuffer buffer, Map context, FormStringRenderer formStringRenderer, GenericDelegator delegator, LocalDispatcher dispatcher) {
         this.fieldInfo.renderFieldString(buffer, context, formStringRenderer, delegator, dispatcher);
+    }
+
+    /**
+     * @return
+     */
+    public FieldInfo getFieldInfo() {
+        return fieldInfo;
+    }
+
+    /**
+     * @return
+     */
+    public ModelForm getModelForm() {
+        return modelForm;
+    }
+
+    /**
+     * @param info
+     */
+    public void setModelForm(FieldInfo fieldInfo) {
+        this.fieldInfo = fieldInfo;
     }
     
     /**
