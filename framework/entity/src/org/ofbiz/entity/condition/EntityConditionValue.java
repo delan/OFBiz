@@ -58,6 +58,9 @@ public abstract class EntityConditionValue extends EntityConditionBase {
     public abstract void validateSql(ModelEntity modelEntity) throws GenericModelException;
 
     public Object getValue(GenericEntity entity) {
+        if (entity == null) {
+            return null;
+        }
         return getValue(entity.getDelegator(), entity);
     }
 
