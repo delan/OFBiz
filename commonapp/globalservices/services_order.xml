@@ -164,21 +164,17 @@
     </service>
 
     <!-- Order Return Services -->
-    <service name="returnInterface" engine="interface" location="" invoke="">
-        <description>Return (header) Interface</description>
-        <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>        
-    </service>
     <service name="createReturnHeader" engine="simple"
             location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="createReturnHeader">
-        <description>Create a new ReturnHeader</description>
-        <implements service="returnInterface"/>
+        <description>Create a new ReturnHeader</description>      
+        <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>
         <auto-attributes entity-name="ReturnHeader" include="pk" mode="OUT" optional="false"/>
     </service>
     <service name="updateReturnHeader" engine="simple"
             location="org/ofbiz/commonapp/order/order/OrderReturnServices.xml" invoke="updateReturnHeader">
-        <description>Update a ReturnHeader</description>
-        <implements service="returnInterface"/>
+        <description>Update a ReturnHeader</description>      
         <auto-attributes entity-name="ReturnHeader" include="pk" mode="IN" optional="false"/>
+        <auto-attributes entity-name="ReturnHeader" include="nonpk" mode="IN" optional="true"/>
     </service>    
     
     <service name="returnItemInterface" engine="interface" location="" invoke="">
