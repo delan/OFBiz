@@ -1,5 +1,5 @@
 /*
- * $Id: ShoppingCart.java,v 1.37 2004/01/07 12:39:30 jonesde Exp $
+ * $Id: ShoppingCart.java,v 1.38 2004/02/19 16:42:29 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -44,7 +44,7 @@ import org.ofbiz.product.store.ProductStoreWorker;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.37 $
+ * @version    $Revision: 1.38 $
  * @since      2.0
  */
 public class ShoppingCart implements java.io.Serializable {
@@ -446,8 +446,9 @@ public class ShoppingCart implements java.io.Serializable {
         this.productPromoUseInfoList.clear();
         this.productPromoCodes.clear();
 
-        this.paymentMethodIds.clear();
-        this.paymentMethodTypeIds.clear();
+        this.clearPaymentMethodIds();
+        this.clearPaymentMethodTypeIds();
+        
         this.adjustments.clear();
         this.expireSingleUsePayments();
         this.cartLines.clear();
@@ -531,6 +532,7 @@ public class ShoppingCart implements java.io.Serializable {
     /** Clears the list of Payment Method Ids. */
     public void clearPaymentMethodIds() {
         this.paymentMethodIds.clear();
+        this.paymentMethodAmounts.clear();
     }
 
     /** Clears a specific Payment Method Id. */
@@ -601,6 +603,7 @@ public class ShoppingCart implements java.io.Serializable {
     /** Clears the list of Payment Method Type Ids. */
     public void clearPaymentMethodTypeIds() {
         this.paymentMethodTypeIds.clear();
+        this.paymentMethodTypeAmounts.clear();
     }
 
     /** Sets the billing account id string. */
