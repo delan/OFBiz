@@ -102,8 +102,8 @@ public class SequenceUtil {
 
         public static final long defaultBankSize = 10;
         public static final long startSeqId = 10000;
-        public static final int minWaitNanos = 5000000;   // 5 ms
-        public static final int maxWaitNanos = 10000000;  // 10 ms
+        public static final int minWaitMillis = 5;
+        public static final int maxWaitMillis = 50;
         public static final int maxTries = 5;
 
         long curSeqId;
@@ -276,12 +276,12 @@ public class SequenceUtil {
                         }
                         
                         // collision happened, wait a bounded random amount of time then continue
-                        int waitTime = (new Double(Math.random() * (maxWaitNanos - minWaitNanos))).intValue() + minWaitNanos;
+                        int waitTime = (new Double(Math.random() * (maxWaitMillis - minWaitMillis))).intValue() + minWaitMillis;
 
                         Debug.logWarning("[SequenceUtil.SequenceBank.fillBank] Collision found, val1=" + val1 + ", bankSize=" + bankSize + ", val2=" + val2 + ", waitTime=" + waitTime, module);
 
                         try {
-                            this.wait(0, waitTime);
+                            this.wait(waitTime);
                         } catch (Exception e) {
                             Debug.logWarning(e, "Error waiting in sequence util", module);
                         }
