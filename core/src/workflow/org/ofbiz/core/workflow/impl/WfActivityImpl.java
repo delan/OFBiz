@@ -258,8 +258,12 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         
         List waiters = new ArrayList();
         Iterator i = tools.iterator();
-        while ( i.hasNext() )
-            waiters.add(this.runService(((GenericValue)i.next()).getString("toolId")));
+        while ( i.hasNext() ) {
+            GenericValue thisTool = (GenericValue) i.next();
+            String toolId = thisTool.getString("toolId");
+            String params = thisTool.getString("actualParameters");
+            waiters.add(this.runService(toolId,params));
+        }
         
         while ( waiters.size() > 0 ) {
             i = waiters.iterator();
@@ -310,7 +314,8 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         service.contextInfo = null;  // TODO FIXME
         service.resultInfo = null;     // TODO FIXME
         
-        GenericResultWaiter waiter = this.runService(service);
+        String actualParameters = subFlow.getString("actualParameters");
+        GenericResultWaiter waiter = this.runService(service,actualParameters);
         if ( type.equals("WSE_SYNCHR") ) {
             Map subResult = waiter.waitForResult();            
             this.setResult(subResult);
@@ -335,7 +340,7 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
     }
     
     // Invoke the procedure (service) -- This will include sub-workflows
-    private GenericResultWaiter runService(String serviceName) throws WfException {
+    private GenericResultWaiter runService(String serviceName, String params) throws WfException {
         DispatchContext dctx = dispatcher.getLocalContext(serviceLoader);
         ModelService service = null;
         try {
@@ -346,18 +351,36 @@ public class WfActivityImpl extends WfExecutionObjectImpl implements WfActivity 
         }
         if ( service == null )
             throw new WfException("Cannot determine model service for service name");
-        return runService(service);
+        return runService(service,params);
     }
     
-    private GenericResultWaiter runService(ModelService service) throws WfException {
+    private GenericResultWaiter runService(ModelService service, String params) throws WfException {
+        Map ctx = this.actualContext(params);
         GenericResultWaiter waiter = new GenericResultWaiter();
         try {
-            dispatcher.runAsync(serviceLoader,service,context,waiter);
+            dispatcher.runAsync(serviceLoader,service,ctx,waiter);
         }
         catch ( GenericServiceException e ) {
             throw new WfException(e.getMessage(),e);
         }
         return waiter;
+    }
+    
+    // Gets the actual context parameters from the context based on the actual paramters field
+    private Map actualContext(String actualParameters) throws WfException {
+        Map actualContext = new HashMap();
+        if ( actualParameters != null ) {
+            List params = StringUtil.split(actualParameters,",");
+            Iterator i = params.iterator();
+            while ( i.hasNext() ) {
+                Object key = i.next();
+                if ( context.containsKey(key) )
+                    actualContext.put(key,context.get(key));
+                else
+                    throw new WfException("Context does not contain the key: '" + (String)key + "'");
+            }
+        }
+        return actualContext;
     }
     
 }
