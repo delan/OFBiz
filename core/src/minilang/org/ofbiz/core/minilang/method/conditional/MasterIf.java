@@ -50,7 +50,8 @@ public class MasterIf extends MethodOperation {
         super(element, simpleMethod);
         
         Element conditionElement = UtilXml.firstChildElement(element, "condition");
-        this.condition = ConditionalFactory.makeConditional(conditionElement, simpleMethod);
+        Element conditionChildElement = UtilXml.firstChildElement(conditionElement, null);
+        this.condition = ConditionalFactory.makeConditional(conditionChildElement, simpleMethod);
         
         Element thenElement = UtilXml.firstChildElement(element, "then");
         SimpleMethod.readOperations(thenElement, thenSubOps, simpleMethod);
