@@ -18,6 +18,8 @@
   
   <WebSitePaymentSetting webSiteId="WebStore" paymentMethodTypeId="CREDIT_CARD" paymentService="alwaysApproveCCProcessor"/> 
   <WebSitePaymentSetting webSiteId="WebStore" paymentMethodTypeId="EFT_ACCOUNT" paymentService="alwaysApproveEFTProcessor"/>
+  <WebSitePaymentSetting webSiteId="OrderEntry" paymentMethodTypeId="CREDIT_CARD" paymentService="alwaysApproveCCProcessor"/> 
+  <WebSitePaymentSetting webSiteId="OrderEntry" paymentMethodTypeId="EFT_ACCOUNT" paymentService="alwaysApproveEFTProcessor"/>
    
   <ProductCategory description="Demo Browse Root"
     longDescription="Demo Catalog Primary Browse Root Category" productCategoryId="CATALOG1" productCategoryTypeId="CATALOG_CATEGORY"/>
