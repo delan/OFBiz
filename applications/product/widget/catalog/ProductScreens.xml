@@ -262,6 +262,8 @@
     
                 <set field="productId" from-field="parameters.productId"/>
                 <set field="productAssocTypeId" value="MANUF_COMPONENT"/>
+                <set field="statusId" value="ROU_PROD_TEMPLATE"/>
+                
                 <entity-one entity-name="Product" value-name="product"/>
                 <entity-and entity-name="ProductAssoc" list-name="components">
                     <field-map env-name="productId"/>
@@ -273,7 +275,8 @@
                     <field-map env-name="productAssocTypeId"/>
                 </entity-and>
                 <entity-and entity-name="WorkEffortGoodStandard" list-name="routings">
-                    <field-map env-name="productId" field-name="productId"/>
+                    <field-map env-name="productId"/>
+                    <field-map env-name="statusId"/>
                 </entity-and>
                 
             </actions>
