@@ -106,7 +106,7 @@
         <attribute name="orderId" type="String" mode="INOUT"/>
         <attribute name="orderHeader" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
         <attribute name="shippingAddress" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
-        <attribute name="billingAddress" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
+        <attribute name="billingAddress" type="org.ofbiz.core.entity.GenericValue" mode="OUT" optional="true"/>
         <attribute name="billToPerson" type="org.ofbiz.core.entity.GenericValue" mode="OUT"/>
         <attribute name="orderItems" type="java.util.Collection" mode="OUT"/>
         <attribute name="totalItems" type="Double" mode="OUT"/>
