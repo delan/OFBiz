@@ -20,6 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
+ *@author     David E. Jones (jonesde@ofbiz.org)
  *@version    $Revision$
  *@since      2.1.1
 -->
@@ -252,7 +253,7 @@
                   <TR>
                     <TD NOWRAP><div class='tabletext'><b>Product</b></div></TD>
                     <TD NOWRAP align="center"><div class='tabletext'><b>Quantity</b></div></TD>
-                    <TD NOWRAP align="center"><div class='tabletext'><b>Purchased</b></div></TD>
+                    <#-- <TD NOWRAP align="center"><div class='tabletext'><b>Purchased</b></div></TD> -->
                     <TD NOWRAP align="right"><div class='tabletext'><b>Price</b></div></TD>
                     <TD NOWRAP align="right"><div class='tabletext'><b>Total</b></div></TD>
                     <td>&nbsp;</td>
@@ -282,9 +283,11 @@
                             </div>
 		                  </form>
                         </td>
+                        <#--
                         <td nowrap align="center">
                           <div class="tabletext">${shoppingListItem.quantityPurchased?default(0)?string.number}</div>
                         </td>
+                        -->
                         <td nowrap align="right">
                           <div class="tabletext">${unitPrice?string.currency}</div>
                         </td>
@@ -325,7 +328,7 @@
 				  <tr>
 					<td><div class="tabletext">&nbsp;</div></td>
 					<td><div class="tabletext">&nbsp;</div></td>
-					<td><div class="tabletext">&nbsp;</div></td>
+					<#--<td><div class="tabletext">&nbsp;</div></td>-->
 					<td><div class="tabletext">&nbsp;</div></td>
 					<td nowrap align="right">
 					  <div class="tableheadtext">${shoppingListItemTotal?string.currency}</div>
