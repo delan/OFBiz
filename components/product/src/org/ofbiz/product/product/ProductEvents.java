@@ -962,14 +962,16 @@ public class ProductEvents {
 
                         // update image urls
                         if ((useImagesProdId != null) && (useImagesProdId.equals(variantProductId))) {
-                            product.setString("smallImageUrl", variantProduct.getString("smallImageUrl"));
-                            product.setString("mediumImageUrl", variantProduct.getString("mediumImageUrl"));
+                            product.set("smallImageUrl", variantProduct.getString("smallImageUrl"));
+                            product.set("mediumImageUrl", variantProduct.getString("mediumImageUrl"));
+                            product.set("largeImageUrl", null);
+                            product.set("detailImageUrl", null);
                             product.store();
-                            }
+                        }
                         attribIdx++;
                         variantProductId = request.getParameter("productId" + attribIdx);
                     } while (variantProductId != null);
-                        }
+                }
     
                 TransactionUtil.commit(beganTransaction);
             } catch (GenericEntityException e) {
