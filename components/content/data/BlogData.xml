@@ -8,14 +8,17 @@
     <RoleType roleTypeId="BLOG_USER" parentTypeId="BLOG" hasTable="N" description="Blog User"/>
     <RoleType roleTypeId="BLOG_GUEST" parentTypeId="BLOG" hasTable="N" description="Blog Guest"/>
     <RoleType roleTypeId="PERMISSION_GROUP" hasTable="N" description="Permission Group"/>
-    <RoleType roleTypeId="PERMISSION_GROUP_MBR" hasTable="N" description="Permission Group Member"/>    
+    <RoleType roleTypeId="PERMISSION_GROUP_MBR" hasTable="N" description="Permission Group Member"/>
+
     <Party partyId="BLOG_USERS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_EDITORS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_ADMINS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_AUTHORS" partyTypeId="PARTY_GROUP"/>
     <Party partyId="BLOG_PUBLISHERS" partyTypeId="PARTY_GROUP"/>
+
     <PartyRelationshipType partyRelationshipTypeId="BLOG_PERMISSION" description="Aggregates all blog users so role permissions can be set one time." partyRelationshipName="Blog Users"/>
     <DataSource dataSourceId="BLOG_SITE" dataSourceTypeId="WEBSITE_ENTRY" description="Blog Site"/>
+
     <PartyRole partyId="BLOG_USERS" roleTypeId="PERMISSION_GROUP"/>
     <PartyRole partyId="BLOG_USERS" roleTypeId="BLOG_USER"/>
     <PartyRole partyId="BLOG_EDITORS" roleTypeId="PERMISSION_GROUP"/>
@@ -26,98 +29,53 @@
     <PartyRole partyId="BLOG_ADMINS" roleTypeId="BLOG_ADMIN"/>
     <PartyRole partyId="BLOG_PUBLISHERS" roleTypeId="PERMISSION_GROUP"/>
     <PartyRole partyId="BLOG_PUBLISHERS" roleTypeId="BLOG_ADMIN"/>
-    <ContentPurposeType contentPurposeTypeId="DESCRIPTION" description="Description"/>
-    <ContentPurposeType contentPurposeTypeId="OWNER" description="Owner"/>
-    <ContentPurposeType contentPurposeTypeId="ARTICLE" description="Article"/>
-    <ContentPurposeType contentPurposeTypeId="RESPONSE" description="Response"/>
-    <ContentPurposeType contentPurposeTypeId="_NA_" description="Not Applicable"/>
-    <ContentPurposeType contentPurposeTypeId="SECTION" description="Section"/>
-    <ContentPurposeType contentPurposeTypeId="TOPIC" description="Topic"/>
-    <ContentPurposeType contentPurposeTypeId="SUMMARY" description="Summary"/>
-    <ContentPurposeType contentPurposeTypeId="MAIN_ARTICLE" description="Main Content"/>
-    <ContentPurposeType contentPurposeTypeId="SUB_ARTICLE" description="Sub Content"/>
-    <ContentPurposeType contentPurposeTypeId="USER" description="User"/>
-    <ContentPurposeType contentPurposeTypeId="FAQ" description="FAQ"/>
-    <ContentType contentTypeId="PLACEHOLDER" description="Place Holder"/>
-    <ContentType contentTypeId="PEOPLE" description="People" parentTypeId="PLACEHOLDER"/>
-    <ContentType contentTypeId="PERSON" description="Person" parentTypeId="PLACEHOLDER"/>
-    <ContentType contentTypeId="WEB_SITE_PUB_PT" parentTypeId="PLACEHOLDER" hasTable="Y" description="Publish Point"/>
-    <ContentType contentTypeId="DEPARTMENT" description="Department" parentTypeId="PLACEHOLDER"/>
-    <ContentType contentTypeId="TOPIC" description="Topic" parentTypeId="PLACEHOLDER"/>
-    <ContentAssocType contentAssocTypeId="SUBSITE" description="SubSite"/>
-    <ContentAssocType contentAssocTypeId="DEPARTMENT" description="SubSite"/>
-    <ContentAssocType contentAssocTypeId="RELATED_CONTENT" description="Related content"/>
-    <ContentAssocType contentAssocTypeId="PUBLISH_LINK" description="Publish link"/>
-    <ContentAssocType contentAssocTypeId="ATTRIBUTE" description="Attribute"/>
-    <ContentAssocType contentAssocTypeId="AUTHOR" description="Author"/>
-    <ContentAssocPredicate contentAssocPredicateId="topifies" description="Topifies"/>
-    <ContentAssocPredicate contentAssocPredicateId="categorizes" description="Categorizes"/>
-    <ContentOperation contentOperationId="CONTENT_ADMIN" description="Content Admin"/>
-    <ContentOperation contentOperationId="CONTENT_CREATE" description="Content Create"/>
-    <ContentOperation contentOperationId="CONTENT_UPDATE" description="Content Update"/>
-    <ContentOperation contentOperationId="CONTENT_DELETE" description="Content Delete"/>
-    <ContentOperation contentOperationId="CONTENT_VIEW" description="Content View"/>
-    <ContentOperation contentOperationId="CONTENT_PUBLISH" description="Content Publish"/>
-    <ContentOperation contentOperationId="CONTENT_RESPOND" description="Content Respond"/>
-    <ContentOperation contentOperationId="CONTENT_PUBLISH_SELF" description="Content Publish"/>
-    <ContentOperation contentOperationId="_NA_" description="Not Applicable"/>
-    <ContentOperation contentOperationId="HAS_OWNER_ROLE" description="Has User Role"/>
-    <ContentOperation contentOperationId="HAS_USER_ROLE" description="Has User Role"/>
-    <ContentOperation contentOperationId="HAS_AUTHOR_ROLE" description="Has Author Role"/>
-    <ContentOperation contentOperationId="HAS_EDITOR_ROLE" description="Has Editor Role"/>
-    <ContentOperation contentOperationId="HAS_ADMIN_ROLE" description="Has Admin Role"/>
-    <ContentOperation contentOperationId="HAS_PUBLISHER_ROLE" description="Has Publisher Role"/>
-    <ContentOperation contentOperationId="CONTENT_CREATE_SUB" description="Create SubContent"/>
+
     <StatusType statusTypeId="PUBLISH_STATUS" description="Publish Status"/>
-    <StatusType statusTypeId="_NA_" description="Not Applicable"/>
-    <StatusItem statusId="BLOG_PUBLISHED" statusTypeId="PUBLISH_STATUS" statusCode="PUBLISHED" sequenceId="20" description="Published"/>
-    <StatusItem statusId="BLOG_DRAFT" statusTypeId="PUBLISH_STATUS" statusCode="DRAFT" sequenceId="10" description="Draft"/>
-    <StatusItem statusId="BLOG_SUBMITTED" statusTypeId="PUBLISH_STATUS" statusCode="SUBMITTED" sequenceId="15" description="Submitted"/>
-    <StatusItem statusId="BLOG_REJECTED" statusTypeId="PUBLISH_STATUS" statusCode="REJECTED" sequenceId="4" description="Rejected"/>
-    <StatusItem statusId="_NA_" statusTypeId="_NA_" statusCode="_NA_" sequenceId="00" description="Not Applicable"/>
-    <EnumerationType enumTypeId="SUBSCRIPTION_TYPE" description="Subscription Level"/>
-    <EnumerationType enumTypeId="_NA_" description="Not Applicable"/>
-    <Enumeration enumId="_NA_" enumTypeId="_NA_" enumCode="_NA_" sequenceId="0" description="Not Applicable"/>
-    <Enumeration enumId="_00_" enumTypeId="_NA_" enumCode="_00_" sequenceId="0" description="Not Applicable"/>
-    <Enumeration enumId="SUBSCRIBE_BRONZE" enumTypeId="SUBSCRIPTION_TYPE" enumCode="BRONZE" sequenceId="10" description="Bronze Level"/>
-    <Enumeration enumId="SUBSCRIBE_SILVER" enumTypeId="SUBSCRIPTION_TYPE" enumCode="SILVER" sequenceId="20" description="Silver Level"/>
-    <Enumeration enumId="SUBSCRIBE_GOLD" enumTypeId="SUBSCRIPTION_TYPE" enumCode="GOLD" sequenceId="30" description="Gold Level"/>
+    <StatusItem statusId="BLOG_SUBMITTED" statusTypeId="PUBLISH_STATUS" statusCode="SUBMITTED" sequenceId="01" description="Submitted"/>
+    <StatusItem statusId="BLOG_DRAFT" statusTypeId="PUBLISH_STATUS" statusCode="DRAFT" sequenceId="02" description="Draft"/>
+    <StatusItem statusId="BLOG_PUBLISHED" statusTypeId="PUBLISH_STATUS" statusCode="PUBLISHED" sequenceId="03" description="Published"/>
+    <StatusItem statusId="BLOG_REJECTED" statusTypeId="PUBLISH_STATUS" statusCode="REJECTED" sequenceId="99" description="Rejected"/>
+
+    <EnumerationType enumTypeId="CONTENT_PRIVILEGE" description="Content Privilege"/>
+    <Enumeration enumId="CNT_PRV_NA_" enumTypeId="CONTENT_PRIVILEGE" enumCode="_NA_" sequenceId="00" description="Not Applicable"/>
+    <Enumeration enumId="CNT_PRV_BRONZE" enumTypeId="CONTENT_PRIVILEGE" enumCode="BRONZE" sequenceId="10" description="Bronze Level"/>
+    <Enumeration enumId="CNT_PRV_SILVER" enumTypeId="CONTENT_PRIVILEGE" enumCode="SILVER" sequenceId="20" description="Silver Level"/>
+    <Enumeration enumId="CNT_PRV_GOLD" enumTypeId="CONTENT_PRIVILEGE" enumCode="GOLD" sequenceId="30" description="Gold Level"/>
 
     <Content contentId="TP_TECHNICAL" contentTypeId="PLACEHOLDER" contentName="Technical" description="Technical"/>
     <Content contentId="TP_LEGAL" contentTypeId="PLACEHOLDER" contentName="Legal" description="Legal"/>
     <Content contentId="TP_BUSINESS" contentTypeId="PLACEHOLDER" contentName="Business" description="Business"/>
 
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_AUTHOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH_SELF" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_RESPOND" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
 
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_AUTHOR" statusId="_NA_" privilegeEnumId="_00_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_PUBLISH_SELF" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_RESPOND" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="_00_"/>
-
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_UPDATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_UPDATE" roleTypeId="OWNER" statusId="BLOG_DRAFT" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_UPDATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_UPDATE" roleTypeId="OWNER" statusId="BLOG_DRAFT" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_AUTHOR" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
     <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="SUBSCRIBE_BRONZE"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="OWNER" statusId="BLOG_DRAFT" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="BLOG_PUBLISHED" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="_00_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_VIEW" roleTypeId="OWNER" statusId="BLOG_DRAFT" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_CREATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
 
-    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_RESPOND" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="_00_"/>
-    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_UPDATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_VIEW" roleTypeId="_NA_" statusId="BLOG_PUBLISHED" privilegeEnumId="_00_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="_NA_" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="USER" contentOperationId="CONTENT_UPDATE" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_OWNER_ROLE" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_USER_ROLE" roleTypeId="BLOG_USER" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_AUTHOR_ROLE" roleTypeId="BLOG_AUTHOR" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_EDITOR_ROLE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_ADMIN_ROLE" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_PUBLISHER_ROLE" roleTypeId="BLOG_PUBLISHER" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE_SUB" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="_NA_"/>
-    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="_NA_" privilegeEnumId="_00_"/>
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_RESPOND" roleTypeId="BLOG_USER" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="RESPONSE" contentOperationId="CONTENT_UPDATE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_VIEW" roleTypeId="_NA_" statusId="BLOG_PUBLISHED" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="_NA_" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="USER" contentOperationId="CONTENT_UPDATE" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_OWNER_ROLE" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_USER_ROLE" roleTypeId="BLOG_USER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_AUTHOR_ROLE" roleTypeId="BLOG_AUTHOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_EDITOR_ROLE" roleTypeId="BLOG_EDITOR" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_ADMIN_ROLE" roleTypeId="BLOG_ADMIN" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="HAS_PUBLISHER_ROLE" roleTypeId="BLOG_PUBLISHER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="ARTICLE" contentOperationId="CONTENT_CREATE_SUB" roleTypeId="OWNER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
+    <ContentPurposeOperation contentPurposeTypeId="_NA_" contentOperationId="CONTENT_PUBLISH" roleTypeId="BLOG_PUBLISHER" statusId="_NA_" privilegeEnumId="CNT_PRV_NA_"/>
 </entity-engine-xml>

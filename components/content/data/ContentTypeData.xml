@@ -12,17 +12,44 @@
     <ContentAssocType contentAssocTypeId="TOPIC" description="Topic"/>
     <ContentAssocType contentAssocTypeId="DESCRIPTION" description="Description"/>
 
+    <ContentAssocType contentAssocTypeId="SUBSITE" description="SubSite"/>
+    <ContentAssocType contentAssocTypeId="DEPARTMENT" description="Department"/>
+    <ContentAssocType contentAssocTypeId="RELATED_CONTENT" description="Related content"/>
+    <ContentAssocType contentAssocTypeId="PUBLISH_LINK" description="Publish link"/>
+    <ContentAssocType contentAssocTypeId="ATTRIBUTE" description="Attribute"/>
+    <ContentAssocType contentAssocTypeId="AUTHOR" description="Author"/>
+
     <ContentAssocPredicate contentAssocPredicateId="member-of" description="The object is a member of the subject."/>
     <ContentAssocPredicate contentAssocPredicateId="defines" description="The object defines the subject."/>
     <ContentAssocPredicate contentAssocPredicateId="extends" description="The object extends the subject."/>
     <ContentAssocPredicate contentAssocPredicateId="related-to" description="The object is related to the subject."/>
     <ContentAssocPredicate contentAssocPredicateId="references" description="The object references the subject."/>
 
+    <ContentAssocPredicate contentAssocPredicateId="topifies" description="Topifies"/>
+    <ContentAssocPredicate contentAssocPredicateId="categorizes" description="Categorizes"/>
+
     <MetaDataPredicate metaDataPredicateId="author-name" description="Name of the author or creator of the subject."/>
     <MetaDataPredicate metaDataPredicateId="author-email" description="eMail address of the author or creator of the subject."/>
     <MetaDataPredicate metaDataPredicateId="event-date" description="The date and time the subject event took place, preferably in the descending standard format: [yyyy-MM-dd hh:mm:ss]."/>
     <MetaDataPredicate metaDataPredicateId="event-location" description="The location where subject event took place."/>
     <MetaDataPredicate metaDataPredicateId="event-person-name" description="The name of a person involved in the subject event."/>
+
+    <ContentOperation contentOperationId="CONTENT_ADMIN" description="Content Admin"/>
+    <ContentOperation contentOperationId="CONTENT_CREATE" description="Content Create"/>
+    <ContentOperation contentOperationId="CONTENT_UPDATE" description="Content Update"/>
+    <ContentOperation contentOperationId="CONTENT_DELETE" description="Content Delete"/>
+    <ContentOperation contentOperationId="CONTENT_VIEW" description="Content View"/>
+    <ContentOperation contentOperationId="CONTENT_PUBLISH" description="Content Publish"/>
+    <ContentOperation contentOperationId="CONTENT_RESPOND" description="Content Respond"/>
+    <ContentOperation contentOperationId="CONTENT_PUBLISH_SELF" description="Content Publish"/>
+    <ContentOperation contentOperationId="_NA_" description="Not Applicable"/>
+    <ContentOperation contentOperationId="HAS_OWNER_ROLE" description="Has User Role"/>
+    <ContentOperation contentOperationId="HAS_USER_ROLE" description="Has User Role"/>
+    <ContentOperation contentOperationId="HAS_AUTHOR_ROLE" description="Has Author Role"/>
+    <ContentOperation contentOperationId="HAS_EDITOR_ROLE" description="Has Editor Role"/>
+    <ContentOperation contentOperationId="HAS_ADMIN_ROLE" description="Has Admin Role"/>
+    <ContentOperation contentOperationId="HAS_PUBLISHER_ROLE" description="Has Publisher Role"/>
+    <ContentOperation contentOperationId="CONTENT_CREATE_SUB" description="Create SubContent"/>
 
     <!-- These ContentTypes are primarily for structuring documents or content -->
     <ContentPurposeType contentPurposeTypeId="ARTICLE" description="Article"/>
@@ -33,6 +60,19 @@
     <ContentPurposeType contentPurposeTypeId="COMPANY_INFO" description="Company Info"/>
     <ContentPurposeType contentPurposeTypeId="ADVERTISEMENT" description="Advertisement"/>
     <ContentPurposeType contentPurposeTypeId="GENERAL_INFO" description="General Info"/>
+
+    <ContentPurposeType contentPurposeTypeId="DESCRIPTION" description="Description"/>
+    <ContentPurposeType contentPurposeTypeId="OWNER" description="Owner"/>
+    <ContentPurposeType contentPurposeTypeId="ARTICLE" description="Article"/>
+    <ContentPurposeType contentPurposeTypeId="RESPONSE" description="Response"/>
+    <ContentPurposeType contentPurposeTypeId="_NA_" description="Not Applicable"/>
+    <ContentPurposeType contentPurposeTypeId="SECTION" description="Section"/>
+    <ContentPurposeType contentPurposeTypeId="TOPIC" description="Topic"/>
+    <ContentPurposeType contentPurposeTypeId="SUMMARY" description="Summary"/>
+    <ContentPurposeType contentPurposeTypeId="MAIN_ARTICLE" description="Main Content"/>
+    <ContentPurposeType contentPurposeTypeId="SUB_ARTICLE" description="Sub Content"/>
+    <ContentPurposeType contentPurposeTypeId="USER" description="User"/>
+    <ContentPurposeType contentPurposeTypeId="FAQ" description="FAQ"/>
 
     <!-- These ContentTypes are primarily for structuring knowledge -->
     <ContentType contentTypeId="DOCUMENT" description="Document" hasTable="N" parentTypeId=""/>
@@ -48,7 +88,17 @@
     <ContentType contentTypeId="OUTLINE_NODE" description="Outline Node" hasTable="N" parentTypeId="DOCUMENT"/>
     <ContentType contentTypeId="PAGE_NODE" description="Page Node" hasTable="N" parentTypeId="DOCUMENT"/>
     <ContentType contentTypeId="SUBPAGE_NODE" description="Sub Page Node" hasTable="N" parentTypeId="DOCUMENT"/>
+
+    <ContentType contentTypeId="PLACEHOLDER" description="Place Holder"/>
+    <ContentType contentTypeId="PEOPLE" description="People" parentTypeId="PLACEHOLDER"/>
+    <ContentType contentTypeId="PERSON" description="Person" parentTypeId="PLACEHOLDER"/>
+    <ContentType contentTypeId="WEB_SITE_PUB_PT" parentTypeId="PLACEHOLDER" hasTable="Y" description="Publish Point"/>
+    <ContentType contentTypeId="DEPARTMENT" description="Department" parentTypeId="PLACEHOLDER"/>
+    <ContentType contentTypeId="TOPIC" description="Topic" parentTypeId="PLACEHOLDER"/>
+
+
     <Content contentId="TEMPLATE_MASTER" contentTypeId="TREE_ROOT" description="Template Master"/>
+
 
     <DataResourceType dataResourceTypeId="LOCAL_FILE" description="Local File" hasTable="N" parentTypeId=""/>
     <DataResourceType dataResourceTypeId="OFBIZ_FILE" description="File (rel to OFBIZ_HOME)" hasTable="N" parentTypeId=""/>
