@@ -40,9 +40,19 @@
     (see further down for the Simple Map Processor Section)
 -->
 
-<!ENTITY % SimpleMethodOperations "call-map-processor | check-errors | call-service | call-bsh |
-        field-to-request | field-to-session | request-to-field | session-to-field | field-to-result | field-to-field |
-        if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
+<!ENTITY % CallOperations "call-map-processor | call-service | call-bsh | check-errors">
+<!ENTITY % EventOperations "field-to-request | field-to-session | request-to-field | session-to-field">
+<!ENTITY % EventEnvOperations "env-to-request | env-to-session | request-to-env | session-to-env">
+<!ENTITY % ServiceOperations "field-to-result | env-to-result">
+<!ENTITY % EnvOperations "field-to-field | env-to-list | env-to-field | field-to-env">
+<!ENTITY % EntityMiscOperations "make-now-timestamp | get-sequenced-id">
+<!ENTITY % EntityValueOperations "make-value | clone-value | find-value | create-value | update-value | remove-value">
+<!ENTITY % EntityListOperations "store-list | remove-list">
+<!ENTITY % IfOperations "if-validate-method | if-compare | if-compare-field | if-regexp | if-empty | if-not-empty">
+
+<!ENTITY % SimpleMethodOperations "%CallOperations; | %EventOperations; | %EventEnvOperations; | 
+        %ServiceOperations; | %EnvOperations; | %EntityMiscOperations; | %EntityValueOperations; |
+        %EntityListOperations; | %IfOperations;">
 
 <!ELEMENT simple-methods ( simple-method+ )>
 
@@ -70,7 +80,7 @@
     default-error-code CDATA "error"
     default-success-code CDATA "success"
     parameter-map-name CDATA "parameters"
-    event-request-object-name CDATA "_request_"
+    event-request-object-name CDATA "request"
     event-response-code-name CDATA "_response_code_"
     event-error-message-name CDATA "_error_message_"
     event-event-message-name CDATA "_event_message_"
@@ -79,6 +89,9 @@
     service-error-message-list-name CDATA "errorMessageList"
     service-success-message-name CDATA "successMessage"
     service-success-message-list-name CDATA "successMessageList"
+    delegator-name CDATA "delegator"
+    security-name CDATA "security"
+    dispatcher-name CDATA "dispatcher"
 >
 
 <!-- 
@@ -91,12 +104,6 @@
     processor-name CDATA #IMPLIED
     in-map-name CDATA #REQUIRED
     out-map-name CDATA #REQUIRED
-    error-list-name CDATA "_error_list_"
->
-
-<!ELEMENT check-errors ( error-prefix?, error-suffix?, message-prefix?, message-suffix? )>
-<!ATTLIST check-errors
-    error-code CDATA "error"
     error-list-name CDATA "_error_list_"
 >
 
@@ -193,6 +200,12 @@ Error messages go on the error list and are handled with the check-errors tag.
     error-list-name CDATA "_error_list_"
 >
 
+<!ELEMENT check-errors ( error-prefix?, error-suffix?, message-prefix?, message-suffix? )>
+<!ATTLIST check-errors
+    error-code CDATA "error"
+    error-list-name CDATA "_error_list_"
+>
+
 <!-- Operations to copy map fields in the current env to context specific containers -->
     
 <!ELEMENT field-to-request EMPTY>
@@ -220,12 +233,41 @@ Error messages go on the error list and are handled with the check-errors tag.
     session-name CDATA #IMPLIED
 >
 
+<!-- TODO: implement event env ops -->
+<!ELEMENT env-to-request EMPTY>
+<!ATTLIST env-to-request
+    env-name CDATA #REQUIRED
+    request-name CDATA #IMPLIED
+>
+<!ELEMENT env-to-session EMPTY>
+<!ATTLIST env-to-session
+    env-name CDATA #REQUIRED
+    session-name CDATA #IMPLIED
+>
+<!ELEMENT request-to-env EMPTY>
+<!ATTLIST request-to-env
+    env-name CDATA #REQUIRED
+    request-name CDATA #IMPLIED
+>
+<!ELEMENT session-to-env EMPTY>
+<!ATTLIST session-to-env
+    env-name CDATA #REQUIRED
+    session-name CDATA #IMPLIED
+>
+
 <!ELEMENT field-to-result EMPTY>
 <!ATTLIST field-to-result
     map-name CDATA #REQUIRED
     field-name CDATA #REQUIRED
     result-name CDATA #IMPLIED
 >
+<!-- TODO: implement env-to-result -->
+<!ELEMENT env-to-result EMPTY>
+<!ATTLIST env-to-result
+    env-name CDATA #REQUIRED
+    result-name CDATA #IMPLIED
+>
+
 <!ELEMENT field-to-field EMPTY>
 <!ATTLIST field-to-field
     map-name CDATA #REQUIRED
@@ -233,6 +275,81 @@ Error messages go on the error list and are handled with the check-errors tag.
     to-map-name CDATA #IMPLIED
     to-field-name CDATA #IMPLIED
 >
+<!-- TODO: implement env related ops -->
+<!ELEMENT env-to-list EMPTY>
+<!ATTLIST env-to-list
+    env-name CDATA #REQUIRED
+    list-name CDATA #REQUIRED
+>
+<!ELEMENT env-to-field EMPTY>
+<!ATTLIST env-to-field
+    env-name CDATA #REQUIRED
+    list-name CDATA #REQUIRED
+>
+<!ELEMENT field-to-env EMPTY>
+<!ATTLIST field-to-env
+    env-name CDATA #REQUIRED
+    list-name CDATA #REQUIRED
+>
+
+<!--
+These operations are used to interact with a data source through the entity 
+engine and facilitate related operations.
+-->
+
+<!-- TODO: implement all entity engine related ops -->
+<!ELEMENT make-now-timestamp EMPTY>
+<!ATTLIST make-now-timestamp
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+>
+<!ELEMENT get-sequenced-id EMPTY>
+<!ATTLIST get-sequenced-id
+    sequence-name CDATA #REQUIRED
+    map-name CDATA #REQUIRED
+    field-name CDATA #REQUIRED
+>
+
+<!ELEMENT make-value EMPTY>
+<!ATTLIST make-value
+    value-name CDATA #REQUIRED
+    entity-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+>
+<!ELEMENT clone-value EMPTY>
+<!ATTLIST clone-value
+    value-name CDATA #REQUIRED
+    new-value-name CDATA #REQUIRED
+>
+
+<!ELEMENT find-value EMPTY>
+<!ATTLIST find-value
+    value-name CDATA #REQUIRED
+    entity-name CDATA #REQUIRED
+    map-name CDATA #IMPLIED
+>
+<!ELEMENT create-value EMPTY>
+<!ATTLIST create-value
+    value-name CDATA #REQUIRED
+>
+<!ELEMENT update-value EMPTY>
+<!ATTLIST update-value
+    value-name CDATA #REQUIRED
+>
+<!ELEMENT remove-value EMPTY>
+<!ATTLIST remove-value
+    value-name CDATA #REQUIRED
+>
+
+<!ELEMENT store-list EMPTY>
+<!ATTLIST store-list
+    list-name CDATA #REQUIRED
+>
+<!ELEMENT remove-list EMPTY>
+<!ATTLIST remove-list
+    list-name CDATA #REQUIRED
+>
+
 
 <!-- 
 Operations that conditionally execute blocks within them; they mimic the
