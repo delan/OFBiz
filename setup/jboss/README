@@ -1,0 +1,47 @@
+
+These config files and startup scripts are tested on JBoss 2.4.4, but will
+likely work on newer versions depending on how much changes in JBoss.
+
+JBoss must be placed in the same directory as the OFBiz and Catalina root
+directories. In other words a certain directory must have the jboss, catalina,
+and ofbiz directories under it.
+
+To get started, make a directory called 'ofbiz' under the jboss/conf
+directory and copy the complete contents of the jboss/conf/catalina
+to that new jboss/conf/ofbiz directory. 
+
+Next copy the files from the
+ofbiz/setup/jboss directories into their respective directories in the jboss
+directory.
+
+Make sure the entityengine.properties file in catalina/classes is configured
+as you want it, that is where this configuration will look for it. Make sure
+it is getting the JTA UserTransaction object and the JDBC connection from JNDI.
+
+In the OFBIZ_HOME directory run "ant ear" to create the ofbiz.ear file. Copy
+this file into the ofbiz/deploy directory.
+
+Go into jboss/bin and run the ofbiz.sh script. It uses the ofbiz config that
+you just created.
+
+This JBoss configuration uses Tomcat for the front end. It would not be too 
+hard to use JBoss-Jetty instead of JBoss-Tomcat. See the JBoss and Jetty
+docs for info on how to do this. The jar files and OFBiz conf files in the
+catalina/lib, catalina/classes, and catalina/common/lib dirs are used in place
+and they are referenced in the jboss.conf file in jboss/conf/ofbiz.
+
+Unfortunately the EmbeddedTomcat connector in JBoss ignores the 
+catalina/conf/server.xml file, which is why ofbiz.ear is used.
+
+JBoss is used by OFBiz instead of Tyrex for JTA and XA JDBC connection pooling.
+This enables OFBiz and the Entity Engine to be used in the same context as EJBs
+and other resources deployed inside JBoss. It also allows for future expansion
+with JMS and the many other services that JBoss provides. Actually you can use
+Tyrex as the transaction manager for JBoss, but in that case you will still be
+using it through JBoss to make sure you use the SAME transaction manager that
+JBoss is using. So, this config gets the JDBC connection and JTA UserTransaction
+objects from JBoss.
+
+-David Jones
+jonesde@ofbiz.org
+
