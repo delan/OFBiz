@@ -27,14 +27,8 @@
  -->
 <simple-methods>
     <simple-method method-name="createProdCatalog" short-description="Create an ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_CREATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run createProdCatalog" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run createProdCatalog you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProdCatalog"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
@@ -43,14 +37,8 @@
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProdCatalog" short-description="Update an ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_UPDATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_UPDATE or CATALOG_ADMIN permission to run updateProdCatalog" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProdCatalog you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProdCatalog" map-name="lookupPKMap" value-name="prodCatalog"/>
@@ -58,14 +46,8 @@
         <store-value value-name="prodCatalog"/>
     </simple-method>
     <simple-method method-name="deleteProdCatalog" short-description="Delete an ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_DELETE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_DELETE or CATALOG_ADMIN permission to run deleteProdCatalog" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run deleteProdCatalog you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <field-to-field field-name="prodCatalogId" map-name="parameters" to-map-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProdCatalog" map-name="lookupPKMap" value-name="prodCatalog"/>
@@ -73,35 +55,23 @@
     </simple-method>
 
     <simple-method method-name="addProductCategoryToProdCatalog" short-description="Add Category To ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_CREATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run addProductCategoryToProdCatalog" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProductCategoryToProdCatalog you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="newEntity" entity-name="ProdCatalogCategory"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
         <if-empty field-name="fromDate" map-name="newEntity">
-            <make-now-timestamp env-name="nowTimestamp"/>
+            <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
         </if-empty>
         
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProductCategoryToProdCatalog" short-description="Remove ContactMech From ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_UPDATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_UPDATE or CATALOG_ADMIN permission to run updateProductCategoryToProdCatalog" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProductCategoryToProdCatalog you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProdCatalogCategory"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
@@ -110,14 +80,8 @@
         <store-value value-name="prodCatalogCategory"/>
     </simple-method>
     <simple-method method-name="removeProductCategoryFromProdCatalog" short-description="Remove ContactMech From ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_DELETE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_DELETE or CATALOG_ADMIN permission to run removeProductCategoryFromProdCatalog" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProductCategoryFromProdCatalog you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="ProdCatalogCategory"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
@@ -127,35 +91,23 @@
 
     <!-- WebSite and Catalog services -->
     <simple-method method-name="addProdCatalogToWebSite" short-description="Add Category To ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_CREATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_CREATE or CATALOG_ADMIN permission to run addProdCatalogToWebSite" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_CREATE"><fail-message message="Security Error: to run addProdCatalogToWebSite you must have the CATALOG_CREATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="newEntity" entity-name="WebSiteCatalog"/>
         <set-pk-fields map-name="parameters" value-name="newEntity"/>
         <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
         
         <if-empty field-name="fromDate" map-name="newEntity">
-            <make-now-timestamp env-name="nowTimestamp"/>
+            <now-timestamp-to-env env-name="nowTimestamp"/>
             <env-to-field env-name="nowTimestamp" field-name="fromDate" map-name="newEntity"/>
         </if-empty>
         
         <create-value value-name="newEntity"/>
     </simple-method>
     <simple-method method-name="updateProdCatalogToWebSite" short-description="Remove ContactMech From ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_UPDATE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_UPDATE or CATALOG_ADMIN permission to run updateProdCatalogToWebSite" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run updateProdCatalogToWebSite you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="WebSiteCatalog"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
@@ -164,14 +116,8 @@
         <store-value value-name="webSiteCatalog"/>
     </simple-method>
     <simple-method method-name="removeProdCatalogFromWebSite" short-description="Remove ContactMech From ProdCatalog">
-        <if-has-permission permission="CATALOG" action="_DELETE">
-            <!-- if they have the permission, great, do nothing, just continue -->
-            <else>
-                <string-to-field string="Security Error: you must have the CATALOG_DELETE or CATALOG_ADMIN permission to run removeProdCatalogFromWebSite" field-name="securityError"/>
-                <field-to-list field-name="securityError" list-name="error_list"/>
-                <check-errors/>
-            </else>
-        </if-has-permission>
+        <check-permission permission="CATALOG" action="_DELETE"><fail-message message="Security Error: to run removeProdCatalogFromWebSite you must have the CATALOG_DELETE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
 
         <make-value value-name="lookupPKMap" entity-name="WebSiteCatalog"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
