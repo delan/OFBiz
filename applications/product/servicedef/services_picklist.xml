@@ -73,8 +73,8 @@
         <description>Get Pick And Pack Report Info</description>
         <attribute name="picklistId" type="String" mode="IN" optional="false"/>
         <attribute name="picklistInfo" type="Map" mode="OUT" optional="false"/>
-        <attribute name="facilityLocationInfoList" type="List" mode="OUT" optional="false"/>
-        <attribute name="noLocationProductInfoList" type="List" mode="OUT" optional="false"/>
+        <attribute name="facilityLocationInfoList" type="List" mode="OUT" optional="true"/>
+        <attribute name="noLocationProductInfoList" type="List" mode="OUT" optional="true"/>
     </service>
         
     <!-- Picklist -->

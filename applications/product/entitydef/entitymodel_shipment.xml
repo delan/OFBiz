@@ -136,6 +136,9 @@
       <relation type="one" fk-name="PICKLST_FLTY" rel-entity-name="Facility">
         <key-map field-name="facilityId"/>
       </relation>
+      <relation type="one" fk-name="PICKLST_SMTP" rel-entity-name="ShipmentMethodType">
+        <key-map field-name="shipmentMethodTypeId"/>
+      </relation>
       <relation type="one" fk-name="PICKLST_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>

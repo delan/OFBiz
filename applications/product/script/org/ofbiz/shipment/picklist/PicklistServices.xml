@@ -866,7 +866,7 @@
         <!-- make a facilityLocationList from the facilityLocationByLocationSeqIdMap, which was used to guarantee uniqueness of FacilityLocations -->
         <iterate-map map-name="facilityLocationByLocationSeqIdMap" key-name="locationSeqId" value-name="facilityLocationList[]"/>
 
-        <!-- order the facilityLocations -->
+        <!-- order/sort the facilityLocations -->
         <string-to-list string="+areaId" list-name="facilityLocsOrdLst"/>
         <string-to-list string="+aisleId" list-name="facilityLocsOrdLst"/>
         <string-to-list string="+sectionId" list-name="facilityLocsOrdLst"/>
@@ -874,7 +874,7 @@
         <string-to-list string="+positionId" list-name="facilityLocsOrdLst"/>
         <order-value-list list-name="facilityLocationList" order-by-list-name="facilityLocsOrdLst"/>
         
-        <!-- Now we have an ordered list of InventoryItems, create an inventoryItemAndLocationInfoList -->
+        <!-- Now we have an ordered list of FacilityLocations, create a facilityLocationInfoList -->
         <iterate entry-name="facilityLocation" list-name="facilityLocationList">
             <clear-field field-name="facilityLocationInfo"/>
             <env-to-env env-name="facilityLocation" to-env-name="facilityLocationInfo.facilityLocation"/>
@@ -883,19 +883,19 @@
         </iterate>
         
         <!-- === handle the ones by Product === -->
-        <!-- make a productList from the productByLocationSeqIdMap, which was used to guarantee uniqueness of FacilityLocations -->
-        <iterate-map map-name="productByLocationSeqIdMap" key-name="productId" value-name="productList[]"/>
+        <!-- make a productList from the productByProductIdMap, which was used to guarantee uniqueness of Products -->
+        <iterate-map map-name="productByProductIdMap" key-name="productId" value-name="productList[]"/>
 
-        <!-- order the products -->
+        <!-- order/sort the products -->
         <string-to-list string="+productId" list-name="productsOrdLst"/>
         <order-value-list list-name="productList" order-by-list-name="productsOrdLst"/>
         
-        <!-- Now we have an ordered list of InventoryItems, create an inventoryItemAndLocationInfoList -->
+        <!-- Now we have an ordered list of Products, create a noLocationProductInfoList -->
         <iterate entry-name="product" list-name="productList">
             <clear-field field-name="productInfo"/>
             <env-to-env env-name="product" to-env-name="productInfo.product"/>
             <env-to-env env-name="picklistItemInfoListByProductIdMap.${product.productId}" to-env-name="productInfo.picklistItemInfoList"/>
-            <env-to-env env-name="productInfo" to-env-name="productInfoList[]"/>
+            <env-to-env env-name="productInfo" to-env-name="noLocationProductInfoList[]"/>
         </iterate>
         
         <field-to-result field-name="facilityLocationInfoList"/>
@@ -906,6 +906,8 @@
         <!--
             Creates picklistInfo Map containing:
              - picklist
+             - facility
+             - shipmentMethodType
              - statusItem
              - statusValidChangeToDetailList
              - picklistRoleInfoList (picklistRole, partyNameView, roleType)
@@ -969,6 +971,8 @@
         <env-to-env env-name="picklistStatusHistoryInfoList" to-env-name="picklistInfo.picklistStatusHistoryInfoList"/>
         <env-to-env env-name="picklistBinInfoList" to-env-name="picklistInfo.picklistBinInfoList"/>
         <get-related-one value-name="picklist" relation-name="StatusItem" to-value-name="picklistInfo.statusItem" use-cache="true"/>
+        <get-related-one value-name="picklist" relation-name="Facility" to-value-name="picklistInfo.facility" use-cache="true"/>
+        <get-related-one value-name="picklist" relation-name="ShipmentMethodType" to-value-name="picklistInfo.shipmentMethodType" use-cache="true"/>
         <get-related value-name="picklist" relation-name="StatusValidChangeToDetail" list-name="picklistInfo.statusValidChangeToDetailList"/>
     </simple-method>
 </simple-methods>
