@@ -28,6 +28,8 @@ import java.io.Serializable;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Map;
+import java.util.List;
+import java.util.LinkedList;
 import javax.servlet.ServletContext;
 
 import org.ofbiz.base.util.Debug;
@@ -73,14 +75,34 @@ public class RequestManager implements Serializable {
         Map map = getHandlerMap();
         Map hMap = null;
 
-        if (type == 1)
+        if (type == 1) {
             hMap = (Map) map.get("view");
-        else
+        } else {
             hMap = (Map) map.get("event");
-        if (!hMap.containsKey(name))
+        }
+
+        if (!hMap.containsKey(name)) {
             return null;
-        else
+        } else {
             return (String) hMap.get(name);
+        }
+    }
+
+    public List getHandlerKeys(int type) {
+        Map map = getHandlerMap();
+        Map hMap = null;
+
+        if (type == 1) {
+            hMap = (Map) map.get("view");
+        } else {
+            hMap = (Map) map.get("event");
+        }
+
+        if (hMap != null) {
+            return new LinkedList(hMap.keySet());
+        } else {
+            return null;
+        }
     }
 
     public Map getRequestMapMap(String uriStr) {

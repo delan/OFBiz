@@ -25,11 +25,15 @@
 package org.ofbiz.content.webapp.event;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.ofbiz.base.util.Debug;
+import org.ofbiz.base.util.GeneralRuntimeException;
 import org.ofbiz.base.util.ObjectType;
 import org.ofbiz.content.webapp.control.RequestHandler;
 import org.ofbiz.content.webapp.control.RequestManager;
@@ -43,6 +47,8 @@ import org.ofbiz.content.webapp.control.RequestManager;
  */
 public class EventFactory {
 
+    public static final String module = EventFactory.class.getName();
+
     protected RequestHandler requestHandler = null;
     protected RequestManager requestManager = null;
     protected ServletContext context = null;
@@ -53,9 +59,33 @@ public class EventFactory {
         this.requestHandler = requestHandler;
         this.requestManager = requestHandler.getRequestManager();
         this.context = requestHandler.getServletContext();
+
+        // pre-load all event handlers
+        try {
+            this.preLoadAll();
+        } catch (EventHandlerException e) {
+            Debug.logError(e, module);
+            throw new GeneralRuntimeException(e);
+        }
     }
 
-    public EventHandler getEventHandler(String type) throws EventHandlerException {                    
+    private void preLoadAll() throws EventHandlerException {
+        List handlers = requestManager.getHandlerKeys(RequestManager.EVENT_HANDLER_KEY);
+        if (handlers != null) {
+            Iterator i = handlers.iterator();
+            while (i.hasNext()) {
+                String type = (String) i.next();
+                this.handlers.put(type, this.loadEventHandler(type));
+            }
+        }
+    }
+
+    public EventHandler getEventHandler(String type) throws EventHandlerException {
+        // check if we are new / empty and add the default handler in
+        if (handlers.size() == 0) {
+            this.preLoadAll();
+        }
+
         // attempt to get a pre-loaded handler
         EventHandler handler = (EventHandler) handlers.get(type);
 
@@ -63,24 +93,34 @@ public class EventFactory {
             synchronized (EventHandler.class) {
                 handler = (EventHandler) handlers.get(type);
                 if (handler == null) {
-                    String handlerClass = requestManager.getHandlerClass(type, RequestManager.EVENT_HANDLER_KEY);
-                    if (handlerClass == null)
-                        throw new EventHandlerException("Unknown handler");
-
-                    try {
-                        handler = (EventHandler) ObjectType.getInstance(handlerClass);
-                        handlers.put(type, handler);
-                    } catch (ClassNotFoundException cnf) {
-                        throw new EventHandlerException("Cannot load handler class", cnf);
-                    } catch (InstantiationException ie) {
-                        throw new EventHandlerException("Cannot get instance of the handler", ie);
-                    } catch (IllegalAccessException iae) {
-                        throw new EventHandlerException(iae.getMessage(), iae);
-                    }
+                    handler = this.loadEventHandler(type);
+                    handlers.put(type, handler);
                 }
             }
             if (handler == null)
-                throw new EventHandlerException("Invalid handler");           
+                throw new EventHandlerException("No handler found for type: " + type);
+        }
+        return handler;
+    }
+
+    public void clear() {
+        handlers.clear();
+    }
+
+    private EventHandler loadEventHandler(String type) throws EventHandlerException {
+        EventHandler handler = null;
+        String handlerClass = requestManager.getHandlerClass(type, RequestManager.EVENT_HANDLER_KEY);
+        if (handlerClass == null)
+            throw new EventHandlerException("Unknown handler type: " + type);
+
+        try {
+            handler = (EventHandler) ObjectType.getInstance(handlerClass);
+        } catch (ClassNotFoundException cnf) {
+            throw new EventHandlerException("Cannot load handler class", cnf);
+        } catch (InstantiationException ie) {
+            throw new EventHandlerException("Cannot get instance of the handler", ie);
+        } catch (IllegalAccessException iae) {
+            throw new EventHandlerException(iae.getMessage(), iae);
         }
         return handler;
     }

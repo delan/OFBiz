@@ -42,7 +42,6 @@ import org.ofbiz.base.util.UtilJ2eeCompat;
 import org.ofbiz.base.util.UtilTimer;
 import org.ofbiz.base.util.UtilValidate;
 import org.ofbiz.content.stats.ServerHitBin;
-import org.ofbiz.content.webapp.view.JPublishWrapper;
 import org.ofbiz.entity.GenericDelegator;
 import org.ofbiz.entity.GenericValue;
 import org.ofbiz.security.Security;
@@ -77,8 +76,6 @@ public class ControlServlet extends HttpServlet {
         configureBsf();
         // initialize the request handler
         getRequestHandler();
-        // initialize the JPublish wrapper
-        getJPublishWrapper();
     }
 
     /**
@@ -243,15 +240,6 @@ public class ControlServlet extends HttpServlet {
         return rh;
     }
 
-    protected JPublishWrapper getJPublishWrapper() {
-        JPublishWrapper jp = (JPublishWrapper) getServletContext().getAttribute("jpublishWrapper");
-        if ( jp == null) {
-            jp = new JPublishWrapper(getServletContext());
-            getServletContext().setAttribute("jpublishWrapper", jp);
-        }
-        return jp;
-    }    
-        
     protected void configureBsf() {
         String[] bshExtensions = {"bsh"};
         BSFManager.registerScriptingEngine("beanshell", "org.ofbiz.base.util.OfbizBshBsfEngine", bshExtensions);        
