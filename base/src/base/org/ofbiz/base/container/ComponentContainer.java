@@ -1,5 +1,5 @@
 /*
- * $Id: ComponentContainer.java,v 1.4 2003/08/16 23:13:57 ajzeneski Exp $
+ * $Id: ComponentContainer.java,v 1.5 2003/08/17 01:44:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -40,7 +40,7 @@ import org.ofbiz.base.util.*;
  * </pre>
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a> 
-  *@version    $Revision: 1.4 $
+  *@version    $Revision: 1.5 $
  * @since      2.2
  */
 public class ComponentContainer implements Container {
@@ -92,7 +92,7 @@ public class ComponentContainer implements Container {
         if (components != null) {
             Iterator ci = components.iterator();
             while (ci.hasNext()) {
-                ComponentLoaderConfig.ComponentDef def = (ComponentLoaderConfig.ComponentDef) ci.next();
+                ComponentLoaderConfig.ComponentDef def = (ComponentLoaderConfig.ComponentDef) ci.next();                
                 if (def.type == ComponentLoaderConfig.SINGLE_COMPONENT) {
                     ComponentConfig config = null;
                     try {
@@ -119,6 +119,7 @@ public class ComponentContainer implements Container {
     }
     
     private void loadComponentDirectory(String directoryName) throws ContainerException {
+        Debug.logInfo("Loading component directory [" + directoryName + "]", module);
         File parentPath = new File(directoryName);
         if (!parentPath.exists() || !parentPath.isDirectory()) {
             Debug.logError("Auto-Load Component directory not found : " + directoryName, module);
@@ -128,6 +129,7 @@ public class ComponentContainer implements Container {
                 try {
                     File componentPath = new File(parentPath.getCanonicalPath() + "/" + subs[i]);
                     if (componentPath.isDirectory() && !subs[i].equals("CVS")) {
+                        Debug.logInfo("Testing " + subs[i], module);
                         // make sure we have a component configuraton file
                         String componentLocation = componentPath.getCanonicalPath();
                         File configFile = new File(componentLocation + "/ofbiz-component.xml");
@@ -155,6 +157,7 @@ public class ComponentContainer implements Container {
     private void loadComponent(ComponentConfig config) throws ContainerException {
         List classpathInfos = config.getClasspathInfos();
         String configRoot = config.getRootLocation();
+        configRoot = configRoot.replace('\\', '/');
         // set the root to have a trailing slash
         if (!configRoot.endsWith("/")) {
             configRoot = configRoot + "/";
@@ -163,7 +166,7 @@ public class ComponentContainer implements Container {
             Iterator cpi = classpathInfos.iterator();
             while (cpi.hasNext()) {
                 ComponentConfig.ClasspathInfo cp = (ComponentConfig.ClasspathInfo) cpi.next();
-                String location = cp.location;
+                String location = cp.location.replace('\\', '/');
                 // set the location to not have a leading slash
                 if (location.startsWith("/")) {
                     location = location.substring(1);
@@ -174,9 +177,9 @@ public class ComponentContainer implements Container {
                     String dirLoc = location;
                     if (dirLoc.endsWith("/*")) {
                         // strip off the slash splat                        
-                        dirLoc = location.substring(0, location.length() - 1);
-                    }
-                    File path = new File(dirLoc);
+                        dirLoc = location.substring(0, location.length() - 2);
+                    }                    
+                    File path = new File(configRoot + dirLoc);
                     if (path.exists()) {
                         if (path.isDirectory()) {
                             // load all .jar and .zip files in this directory
@@ -200,7 +203,7 @@ public class ComponentContainer implements Container {
             }
         }                
     }
-
+    
     /**
      * @see org.ofbiz.core.start.StartupContainer#stop()
      */

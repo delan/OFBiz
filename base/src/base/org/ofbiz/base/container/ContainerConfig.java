@@ -1,5 +1,5 @@
 /*
- * $Id: ContainerConfig.java,v 1.2 2003/08/15 22:05:59 ajzeneski Exp $
+ * $Id: ContainerConfig.java,v 1.3 2003/08/17 01:44:14 ajzeneski Exp $
  *
  * Copyright (c) 2003 The Open For Business Project - www.ofbiz.org
  *
@@ -47,14 +47,14 @@ import org.xml.sax.SAXException;
  * ContainerConfig - Container configuration for ofbiz.xml
  *
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
- * @version    $Revision: 1.2 $
+ * @version    $Revision: 1.3 $
  * @since      2.2
  */
 public class ContainerConfig {
     
     public static final String module = ContainerConfig.class.getName();
     
-    protected static Map containers = new HashMap();    
+    protected static Map containers = new OrderedMap();    
     
     public static Container getContainer(String containerName, String configFile) throws ContainerException {
         Container container = (Container) containers.get(containerName);
