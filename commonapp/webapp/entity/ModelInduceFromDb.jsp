@@ -1,165 +1,12 @@
-<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%!
-  class ColumnCheckInfo {
-    public String tableName;
-    public String columnName;
-    public String typeName;
-    public int columnSize;
-    public int decimalDigits;
-    public String isNullable; //YES/NO or "" = ie nobody knows
-  }
-%><%
+<%@ page contentType="text/plain" %><%@ page import="java.util.*, java.io.*, java.net.*, java.sql.*, org.ofbiz.core.util.*, org.ofbiz.core.entity.*, org.ofbiz.core.entity.model.*" %><jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="application" /><jsp:useBean id="security" type="org.ofbiz.core.security.Security" scope="application" /><%
 
 if(security.hasPermission("ENTITY_MAINT", session)) {
-    String helperName = request.getParameter("helperName");
-    if(helperName == null || helperName.length() <= 0) helperName = "localmysql";
-    ModelFieldTypeReader fieldTypeReader = ModelFieldTypeReader.getModelFieldTypeReader(helperName);
-    Collection messages = new LinkedList();
+  String helperName = request.getParameter("helperName");
+  if(helperName == null || helperName.length() <= 0) helperName = "localmysql";
+  Collection messages = new LinkedList();
+  GenericDAO dao = GenericDAO.getGenericDAO(helperName);
+  List newEntList = dao.induceModelFromDb(messages);
 
-    Connection connection = null;
-    try { connection = ConnectionFactory.getConnection(helperName); }
-    catch(SQLException sqle) {
-      String message = "Unable to esablish a connection with the database... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      return;
-    }
-    
-    DatabaseMetaData dbData = null;
-    try { dbData = connection.getMetaData(); }
-    catch(SQLException sqle) {
-      String message = "Unable to get database meta data... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      return;
-    }
-    
-    //get ALL tables from this database
-    TreeSet tableNames = new TreeSet();
-    ResultSet tableSet = null;
-    try { tableSet = dbData.getTables(null, null, null, null); }
-    catch(SQLException sqle) {
-      String message = "Unable to get list of table information... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      return;
-    }
-    
-    try {
-      while(tableSet.next()) {
-        try {
-          String tableName = tableSet.getString("TABLE_NAME");
-          String tableType = tableSet.getString("TABLE_TYPE");
-          //String remarks = tableSet.getString("REMARKS");
-          tableNames.add(tableName.toUpperCase());
-          //Debug.logInfo("[GenericDAO.checkDb] Found table named \"" + tableName + "\" of type \"" + tableType + "\" with remarks: " + remarks);
-        }
-        catch(SQLException sqle) {
-          String message = "Error getting table information... Error was:" + sqle.toString();
-          Debug.logError("[GenericDAO.checkDb] " + message);
-          if(messages != null) messages.add(message);
-          continue;
-        }
-      }
-    }
-    catch(SQLException sqle) {
-      String message = "Error getting next table information... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      return;
-    }
-    
-    try{ tableSet.close(); }
-    catch(SQLException sqle) {
-      String message = "Unable to close ResultSet for table list, continuing anyway... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-    }
-    
-    //get ALL column info, put into hashmap by table name
-    Map colInfo = new HashMap();
-    try {
-      ResultSet rsCols = dbData.getColumns(null, null, null, null);
-      while(rsCols.next()) {
-        try {
-          ColumnCheckInfo ccInfo = new ColumnCheckInfo();
-          ccInfo.tableName = rsCols.getString("TABLE_NAME").toUpperCase();
-          ccInfo.columnName = rsCols.getString("COLUMN_NAME").toUpperCase();
-          ccInfo.typeName = rsCols.getString("TYPE_NAME").toUpperCase();
-          ccInfo.columnSize = rsCols.getInt("COLUMN_SIZE");
-          ccInfo.decimalDigits = rsCols.getInt("DECIMAL_DIGITS");
-          ccInfo.isNullable = rsCols.getString("IS_NULLABLE").toUpperCase();
-          
-          List tableColInfo = (List)colInfo.get(ccInfo.tableName);
-          if(tableColInfo == null) {
-            tableColInfo = new Vector();
-            colInfo.put(ccInfo.tableName, tableColInfo);
-          }
-          tableColInfo.add(ccInfo);
-        }
-        catch(SQLException sqle) {
-          String message = "Error getting column info for column. Error was:" + sqle.toString();
-          Debug.logError("[GenericDAO.checkDb] " + message);
-          if(messages != null) messages.add(message);
-          continue;
-        }
-      }
-      
-      try{ rsCols.close(); }
-      catch(SQLException sqle) {
-        String message = "Unable to close ResultSet for column list, continuing anyway... Error was:" + sqle.toString();
-        Debug.logError("[GenericDAO.checkDb] " + message);
-        if(messages != null) messages.add(message);
-      }
-    }
-    catch(SQLException sqle) {
-      String message = "Error getting column meta data for Error was:" + sqle.toString() + ". Not checking columns.";
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-      colInfo = null;
-    }
-
-    //go through each table and make a ModelEntity object, add to list
-    //for each entity make corresponding ModelField objects
-    //then print out XML for the entities/fields
-    List newEntList = new LinkedList();
-    
-    //iterate over the table names is alphabetical order
-    Iterator tableNamesIter = new TreeSet(colInfo.keySet()).iterator();
-    while(tableNamesIter.hasNext()) {
-      String tableName = (String)tableNamesIter.next();
-      Vector colList = (Vector)colInfo.get(tableName);
-
-      ModelEntity newEntity = new ModelEntity();
-      newEntity.tableName = tableName.toUpperCase();
-      newEntity.entityName = ModelUtil.dbNameToClassName(newEntity.tableName);
-      newEntList.add(newEntity);
-
-      Iterator columns = colList.iterator();
-      while(columns.hasNext()) {
-        ColumnCheckInfo ccInfo = (ColumnCheckInfo)columns.next();
-        ModelField newField = new ModelField();
-        newEntity.fields.add(newField);
-        newField.colName = ccInfo.columnName.toUpperCase();
-        newField.name =  ModelUtil.dbNameToVarName(newField.colName);
-        
-        //figure out the type according to the typeName, columnSize and decimalDigits
-        newField.type = ModelUtil.induceFieldType(ccInfo.typeName, ccInfo.columnSize, ccInfo.decimalDigits, fieldTypeReader);
-        
-        //how do we find out if it is a primary key? for now, if not nullable, assume it is a pk
-        //this is a bad assumption, but since this output must be edited by hand later anyway, oh well
-        if("NO".equals(ccInfo.isNullable)) newField.isPk = true;
-        else newField.isPk = false;
-      }
-      newEntity.updatePkLists();
-    }
-
-    try{ connection.close(); }
-    catch(SQLException sqle) {
-      String message = "Unable to close database connection, continuing anyway... Error was:" + sqle.toString();
-      Debug.logError("[GenericDAO.checkDb] " + message);
-      if(messages != null) messages.add(message);
-    }
-  
   if(messages.size() > 0) {
 %>
 ERRORS:
@@ -170,7 +17,7 @@ ERRORS:
 <%=(String)mIter.next()%><%
     }
   }
-  else {
+  if(newEntList != null) {
     String title = "Entity of an Open For Business Project Component";
     String description = "None";
     String copyright = "Copyright (c) 2001 The Open For Business Project - www.ofbiz.org";
