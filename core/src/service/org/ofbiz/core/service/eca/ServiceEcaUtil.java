@@ -106,6 +106,7 @@ public class ServiceEcaUtil {
                 eventMap = new HashMap();
                 rules = new LinkedList();
                 ecaCache.put(serviceName, eventMap);
+                eventMap.put(eventName, rules);
             } else {
                 rules = (List) eventMap.get(eventName);
                 if (rules == null) {
