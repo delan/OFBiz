@@ -243,7 +243,7 @@ public class RecurrenceRule {
         if (fromTime == 0)
             fromTime = startTime;
         // Test the end time of the recurrence.
-        if (getEndTime() >= RecurrenceUtil.now())
+        if (getEndTime() <= RecurrenceUtil.now())
             return 0;
         // Test the recurrence limit.
         if (currentCount >= getCount())
