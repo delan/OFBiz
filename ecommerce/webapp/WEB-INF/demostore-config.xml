@@ -98,7 +98,7 @@
       <event-path>org.ofbiz.ecommerce.checkout.CheckOutEvents</event-path>
       <event-invoke>setCheckOutOptions</event-invoke> 
       <success>view:checkout</success>
-      <error>view:checkout</error>
+      <error>view:checkoutoptions</error>
     </request-map>		
     <request-map>
       <uri>createorder</uri><secure>true</secure><auth>true</auth>
