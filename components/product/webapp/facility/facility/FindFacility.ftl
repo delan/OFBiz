@@ -25,8 +25,6 @@
  *@version    1.0
 -->
 
-<#assign uiLabelMap = requestAttributes.uiLabelMap>
-
 <#if security.hasEntityPermission("FACILITY", "_VIEW", session)>
 
 <div class="head1">${uiLabelMap.ProductFacilitiesList}</div>
