@@ -109,7 +109,7 @@ public class JmsListenerFactory implements Runnable {
                                 listeners.put(serverKey.toString(), listener);
                         }
                     } catch (GenericServiceException gse) {
-                        Debug.logImportant("Cannot load message listener (" + gse.toString() + ").", module);
+                        Debug.logVerbose("Cannot load message listener (" + gse.toString() + ").", module);
                     } catch (Exception e) {
                         Debug.logError(e, "Uncaught exception.", module);
                     }
