@@ -26,7 +26,7 @@
  *
  * @author     David E. Jones (jonesde@ofbiz.org)
  * @author     Andy Zeneski (jaz@ofbiz.org)
- * @version    $Revision: 1.5 $
+ * @version    $Revision: 1.6 $
  */
 -->
 
@@ -359,6 +359,9 @@
       </relation>
       <relation type="one" fk-name="WK_EFFRT_PARENT" title="Parent" rel-entity-name="WorkEffort">
         <key-map field-name="workEffortParentId" rel-field-name="workEffortId"/>
+      </relation>
+      <relation type="many"  title="Child" rel-entity-name="WorkEffort">
+        <key-map field-name="workEffortId" rel-field-name="workEffortParentId"/>
       </relation>
       <relation type="many" rel-entity-name="WorkEffortTypeAttr">
         <key-map field-name="workEffortTypeId"/>
