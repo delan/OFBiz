@@ -1,5 +1,5 @@
 /*
- * $Id: OrderServices.java,v 1.33 2004/03/05 19:45:53 ajzeneski Exp $
+ * $Id: OrderServices.java,v 1.34 2004/03/05 20:30:26 ajzeneski Exp $
  *
  *  Copyright (c) 2001, 2002 The Open For Business Project - www.ofbiz.org
  *
@@ -55,7 +55,7 @@ import org.ofbiz.workflow.WfUtil;
  * @author     <a href="mailto:jaz@ofbiz.org">Andy Zeneski</a>
  * @author     <a href="mailto:cnelson@einnovation.com">Chris Nelson</a>
  * @author     <a href="mailto:jonesde@ofbiz.org">David E. Jones</a>
- * @version    $Revision: 1.33 $
+ * @version    $Revision: 1.34 $
  * @since      2.0
  */
 
@@ -731,6 +731,9 @@ public class OrderServices {
                 Iterator oai = orderAdj.iterator();
                 while (oai.hasNext()) {
                     GenericValue oa = (GenericValue) oai.next();
+
+                    Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
+                    oa.set("orderAdjustmentId", adjSeqId.toString());
                     oa.set("orderId", orderId);
                     toStore.add(oa);
                 }
@@ -744,6 +747,9 @@ public class OrderServices {
                     Iterator ida = itemAdjustments.iterator();
                     while (ida.hasNext()) {
                         GenericValue ia = (GenericValue) ida.next();
+
+                        Long adjSeqId = delegator.getNextSeqId("OrderAdjustment");
+                        ia.set("orderAdjustmentId", adjSeqId.toString());
                         ia.set("orderId", orderId);
                         ia.set("orderItemSeqId", orderItem.getString("orderItemSeqId"));
                         toStore.add(ia);
