@@ -135,7 +135,10 @@ public class XuiSession {
         try {
             result = dispatcher.runSync("userLogin", UtilMisc.toMap("login.username", username, "login.password", password));
         } catch (GenericServiceException e) {
+            Debug.logError(e, module);
             throw new UserLoginFailure(e);
+        } catch (Throwable t) {
+            Debug.logError(t, "Thowable caught!", module);
         }
 
         // check for errors
