@@ -84,6 +84,9 @@ public class ModelService {
     /** The method or function to invoke for this service */
     public String invoke;
     
+    /** The default Entity to use for auto-attributes */
+    public String defaultEntityName;
+    
     /** Does this service require authorization */
     public boolean auth;
 

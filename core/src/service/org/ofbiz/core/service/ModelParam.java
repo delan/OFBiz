@@ -44,6 +44,12 @@ public class ModelParam {
     
     /** The form label */
     public String formLabel;
+    
+    /** The entity name */
+    public String entityName;
+    
+    /** The entity field name */
+    public String fieldName;
 
     /** Is this Parameter required or optional? Default to false, or required. */
     public boolean optional = false;

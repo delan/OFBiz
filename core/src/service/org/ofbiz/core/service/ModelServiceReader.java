@@ -313,6 +313,9 @@ public class ModelServiceReader {
                 service.implServices.add(serviceName);
         }
     }
+    
+    protected void createAutoAttrDefs(Element baseElement, ModelService service) {
+    }
             
     protected void createAttrDefs(Element baseElement, ModelService service) {
         // Add in the defined attributes (override the above defaults if specified)
