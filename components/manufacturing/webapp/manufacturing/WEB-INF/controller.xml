@@ -229,6 +229,29 @@
         <response name="error" type="view" value="EditCalendarExceptionWeek"/>
     </request-map>
 
+    <request-map uri="FindRoutingTask">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="FindRoutingTask"/>
+    </request-map>
+    <request-map uri="CreateRoutingTask">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="createWorkEffort"/>
+        <response name="success" type="view" value="FindRoutingTask"/>
+        <response name="error" type="view" value="FindRoutingTask"/>
+    </request-map>
+    <request-map uri="UpdateRoutingTask">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="updateWorkEffort"/>
+        <response name="success" type="view" value="FindRoutingTask"/>
+        <response name="error" type="view" value="FindRoutingTask"/>
+    </request-map>
+    <request-map uri="RemoveRoutingTask">
+        <security https="true" auth="true"/>
+        <event type="service" invoke="removeWorkEffort"/>
+        <response name="success" type="view" value="FindRoutingTask"/>
+        <response name="error" type="view" value="FindRoutingTask"/>
+    </request-map>
+
     <!-- BOM request mappings -->
     <request-map uri="findParts">
         <security https="true" auth="true"/>
@@ -266,6 +289,7 @@
     <view-map name="EditCalendarExceptionWeek" type="jpublish" page="/routing/EditCalendarExceptionWeek.ftl"/>
     <view-map name="EditMachine" type="jpublish" page="/routing/EditMachine.ftl"/>
     <view-map name="EditMachineGroup" type="jpublish" page="/routing/EditMachineGroup.ftl"/>
+    <view-map name="FindRoutingTask" type="jpublish" page="/routing/FindRoutingTask.ftl"/>
     <!-- BOM view mappings -->
     <view-map name="findParts" type="jpublish" page="/bom/findParts.ftl"/>
     <view-map name="findBom" type="jpublish" page="/bom/findBom.ftl"/>

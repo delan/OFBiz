@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Olivier.Heintz@nereide.biz
- *@version    $Revision: 1.2 $
+ *@version    $Revision: 1.3 $
  *@since      3.0
  */
 
@@ -40,7 +40,7 @@ if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
 }
 GenericValue techDataMachineGroup = null;
 
-List allMachineGroups = delegator.findAll("TechDataMachineGroup");
+List allMachineGroups = delegator.findByAnd("FixedAsset",UtilMisc.toMap("fixedAssetTypeId", "GROUP_EQUIPMENT"));
 
 HtmlFormWrapper listMachineGroupWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "ListMachineGroup", request, response);
 listMachineGroupWrapper.putInContext("machineGroups", allMachineGroups);
@@ -48,10 +48,10 @@ listMachineGroupWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabel
 context.put("listMachineGroupWrapper",listMachineGroupWrapper);
 context.put("allMachineGroups",allMachineGroups);
 
-String machineGroupId = request.getParameter("machineGroupId");
-if (machineGroupId == null)  machineGroupId = request.getAttribute("machineGroupId");
-if (machineGroupId != null) {
-	techDataMachineGroup = delegator.findByPrimaryKey("TechDataMachineGroup", UtilMisc.toMap("machineGroupId", machineGroupId));
+String fixedAssetId = request.getParameter("fixedAssetId");
+if (fixedAssetId == null)  fixedAssetId = request.getAttribute("fixedAssetId");
+if (fixedAssetId != null) {
+	techDataMachineGroup = delegator.findByPrimaryKey("FixedAsset", UtilMisc.toMap("fixedAssetId", fixedAssetId));
 	if (techDataMachineGroup != null) { 
 		HtmlFormWrapper updateMachineGroupWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "UpdateMachineGroup", request, response);
 		updateMachineGroupWrapper.putInContext("machineGroup", techDataMachineGroup);

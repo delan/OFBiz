@@ -40,12 +40,14 @@ if(security.hasEntityPermission("MANUFACTURING", "_VIEW", session)) {
 }
 GenericValue techDataMachine = null;
 
-List allMachines = delegator.findAll("TechDataMachine");
+/* List allMachines = delegator.findAll("TechDataMachine"); */
+List allMachines = delegator.findByAnd("FixedAsset",UtilMisc.toMap("fixedAssetTypeId", "PRODUCTION_EQUIPMENT"));
+List allMachineGroups = delegator.findByAnd("FixedAsset",UtilMisc.toMap("fixedAssetTypeId", "GROUP_EQUIPMENT"));
 List machinesDatas = new LinkedList();
 Iterator machinesIter = allMachines.iterator();
 while (machinesIter.hasNext()) {
     GenericValue machine = (GenericValue) machinesIter.next();
-    GenericValue machineGroup = machine.getRelatedOne("TechDataMachineGroup");
+    GenericValue machineGroup = machine.getRelatedOne("ParentFixedAsset");
     GenericValue calendar = machine.getRelatedOne("TechDataCalendar");
     machinesDatas.add(UtilMisc.toMap("machine", machine, "machineGroup", machineGroup,"calendar",calendar));
 }
@@ -56,14 +58,15 @@ listMachineWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap")
 context.put("listMachineWrapper",listMachineWrapper);
 context.put("allMachines",allMachines);
 
-String machineId = request.getParameter("machineId");
-if (machineId == null)  machineId = request.getAttribute("machineId");
-if (machineId != null) {
-	techDataMachine = delegator.findByPrimaryKey("TechDataMachine", UtilMisc.toMap("machineId", machineId));
+String fixedAssetId = request.getParameter("fixedAssetId");
+if (fixedAssetId == null)  fixedAssetId = request.getAttribute("fixedAssetId");
+if (fixedAssetId != null) {
+	techDataMachine = delegator.findByPrimaryKey("FixedAsset", UtilMisc.toMap("fixedAssetId", fixedAssetId));
 	if (techDataMachine != null) { 
-		machineGroup = techDataMachine.getRelatedOne("TechDataMachineGroup");
+		machineGroup = techDataMachine.getRelatedOne("ParentFixedAsset");
 		HtmlFormWrapper updateMachineWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "UpdateMachine", request, response);
 		updateMachineWrapper.putInContext("machine", techDataMachine);
+		updateMachineWrapper.putInContext("allMachineGroups", allMachineGroups);
 		updateMachineWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
 		context.put("machine", techDataMachine);
 		context.put("updateMachineWrapper", updateMachineWrapper);
@@ -72,6 +75,7 @@ if (machineId != null) {
 
 HtmlFormWrapper addMachineWrapper = new HtmlFormWrapper("/routing/MachineForms.xml", "AddMachine", request, response);
 addMachineWrapper.putInContext("uiLabelMap", request.getAttribute("uiLabelMap"));
+addMachineWrapper.putInContext("allMachineGroups", allMachineGroups);
 context.put("addMachineWrapper", addMachineWrapper);
 
 

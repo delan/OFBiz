@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-engine-xml>
+ 
+  <!-- workeffort & workflow status -->
+  <StatusType description="Manufacturing Task and Routing status" hasTable="N" parentTypeId="WORK_EFFORT_STATUS" statusTypeId="ROUTING_STATUS"/>
+
+  <StatusItem description="Well defined and usable"  sequenceId="01" statusCode="ACTIVE" statusId="ROU_ACTIVE" statusTypeId="ROUTING_STATUS"/>
+
+  <WorkEffortPurposeType description="Manufacturing" workEffortPurposeTypeId="ROU_MANUFACTURING"/>
+  <WorkEffortPurposeType description="Assembling" workEffortPurposeTypeId="ROU_ASSEMBLING"/>
+  <WorkEffortPurposeType description="Sub-contracting" workEffortPurposeTypeId="ROU_SUBCONTRACTING"/>
+
+  <WorkEffortType description="For Routing and workeffort template" hasTable="N" parentTypeId="" workEffortTypeId="TEMPLATE"/>
+  <WorkEffortType description="Manufacturing Routing" hasTable="N" parentTypeId="TEMPLATE" workEffortTypeId="ROUTING"/>
+  <WorkEffortType description="Task for Manufacturing routing" hasTable="N" parentTypeId="TEMPLATE" workEffortTypeId="ROU_TASK"/>
+
+</entity-engine-xml>
