@@ -727,6 +727,11 @@
         <security auth="true" https="true"/>
         <response name="success" type="view" value="LookupProductFeature"/>
     </request-map>
+    <request-map uri="LookupVariantProduct">
+        <security https="true" auth="true"/>
+        <response name="success" type="view" value="LookupVariantProduct"/>
+    </request-map>
+
     <!-- end of request mappings -->
 
     <!-- View Mappings -->
@@ -793,5 +798,6 @@
     <view-map name="LookupPartyName" page="component://party/widget/partymgr/LookupScreens.xml#LookupPartyName" type="screen"/>
     <view-map name="LookupProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupProduct" type="screen"/>
     <view-map name="LookupProductFeature" page="component://product/widget/catalog/LookupScreens.xml#LookupProductFeature" type="screen"/>
+    <view-map name="LookupVariantProduct" page="component://product/widget/catalog/LookupScreens.xml#LookupVariantProduct" type="screen"/>
     <!-- end of view mappings -->
 </site-conf>
