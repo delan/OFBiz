@@ -380,6 +380,7 @@
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNote" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestItemNoteView" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestRole" />
+    <entity-group group="org.ofbiz.commonapp" entity="CustRequestStatus" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestType" />
     <entity-group group="org.ofbiz.commonapp" entity="CustRequestTypeAttr" />
     <entity-group group="org.ofbiz.commonapp" entity="DesiredFeature" />
@@ -435,8 +436,6 @@
     <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventPurpose" />
     <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventRole" />
     <entity-group group="org.ofbiz.commonapp" entity="CommunicationEventType" />
-    <entity-group group="org.ofbiz.commonapp" entity="IssueCase" />
-    <entity-group group="org.ofbiz.commonapp" entity="IssueCaseRole" />
 
   <!-- ========================================================= -->
   <!-- org.ofbiz.commonapp.party.contact -->

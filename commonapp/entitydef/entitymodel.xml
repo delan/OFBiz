@@ -318,7 +318,7 @@
       <relation type="many" rel-entity-name="InvoiceStatus">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="many" rel-entity-name="IssueCase">
+      <relation type="many" rel-entity-name="CustRequestStatus">
         <key-map field-name="statusId"/>
       </relation>
       <relation type="many" rel-entity-name="RequirementStatus">

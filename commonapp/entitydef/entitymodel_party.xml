@@ -491,7 +491,7 @@
       <field name="communicationEventId" type="id-ne"></field>
       <field name="communicationEventTypeId" type="id"></field>
       <field name="statusId" type="id"></field>
-      <field name="issueCaseId" type="id"></field>
+      <field name="custRequestId" type="id"></field>
       <field name="contactMechTypeId" type="id"></field>
       <field name="roleTypeIdFrom" type="id"></field>
       <field name="roleTypeIdTo" type="id"></field>
@@ -531,8 +531,8 @@
       <relation type="one" fk-name="COM_EVNT_STTS" rel-entity-name="StatusItem">
         <key-map field-name="statusId"/>
       </relation>
-      <relation type="one" fk-name="COM_EVNT_ISCS" rel-entity-name="IssueCase">
-        <key-map field-name="issueCaseId"/>
+      <relation type="one" fk-name="COM_EVNT_ISCS" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestId"/>
       </relation>
       <relation type="one" fk-name="COM_EVNT_CMTP" rel-entity-name="ContactMechType">
         <key-map field-name="contactMechTypeId"/>
@@ -619,47 +619,6 @@
       </relation>
       <relation type="many" rel-entity-name="CommunicationEvent">
         <key-map field-name="communicationEventTypeId"/>
-      </relation>
-    </entity>
-    <entity entity-name="IssueCase"
-            package-name="org.ofbiz.commonapp.party.communication"
-            title="Issue Case Entity">
-      <field name="issueCaseId" type="id-ne"></field>
-      <field name="statusId" type="id"></field>
-      <field name="description" type="description"></field>
-      <field name="startDatetime" type="date-time"></field>
-      <prim-key field="issueCaseId"/>
-      <relation type="one" fk-name="ISSUE_CAS_STTS" rel-entity-name="StatusItem">
-        <key-map field-name="statusId"/>
-      </relation>
-      <relation type="many" rel-entity-name="CommunicationEvent">
-        <key-map field-name="issueCaseId"/>
-      </relation>
-      <relation type="many" rel-entity-name="IssueCaseRole">
-        <key-map field-name="issueCaseId"/>
-      </relation>
-    </entity>
-    <entity entity-name="IssueCaseRole"
-            package-name="org.ofbiz.commonapp.party.communication"
-            title="Issue Case Role Entity">
-      <field name="issueCaseId" type="id-ne"></field>
-      <field name="partyId" type="id-ne"></field>
-      <field name="roleTypeId" type="id-ne"></field>
-      <prim-key field="issueCaseId"/>
-      <prim-key field="partyId"/>
-      <prim-key field="roleTypeId"/>
-      <relation type="one" fk-name="ISSUE_CSRL_ISCS" rel-entity-name="IssueCase">
-        <key-map field-name="issueCaseId"/>
-      </relation>
-      <relation type="one" fk-name="ISSUE_CSRL_PTY" rel-entity-name="Party">
-        <key-map field-name="partyId"/>
-      </relation>
-      <relation type="one-nofk" rel-entity-name="RoleType">
-        <key-map field-name="roleTypeId"/>
-      </relation>
-      <relation type="one" fk-name="ISSUE_CSRL_PRLE" rel-entity-name="PartyRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
       </relation>
     </entity>
 
@@ -1176,9 +1135,6 @@
       </relation>
       <relation type="many" title="From" rel-entity-name="CommunicationEvent">
         <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
-      </relation>
-      <relation type="many" rel-entity-name="IssueCaseRole">
-        <key-map field-name="partyId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyNeed">
         <key-map field-name="partyId"/>
@@ -1701,10 +1657,6 @@
       <relation type="many" title="From" rel-entity-name="CommunicationEvent">
         <key-map field-name="partyId" rel-field-name="partyIdFrom"/>
         <key-map field-name="roleTypeId" rel-field-name="roleTypeIdFrom"/>
-      </relation>
-      <relation type="many" rel-entity-name="IssueCaseRole">
-        <key-map field-name="partyId"/>
-        <key-map field-name="roleTypeId"/>
       </relation>
       <relation type="many" rel-entity-name="PartyNeed">
         <key-map field-name="partyId"/>

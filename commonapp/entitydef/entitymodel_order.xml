@@ -6,8 +6,8 @@
  *  Description: None
  *  Copyright (c) 2002 The Open For Business Project - www.ofbiz.org
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a
- *  copy of this software and associated documentation files (the "Software"),
+ *  Permission is hereby granted, free of charge, to any person obtaining a 
+ *  copy of this software and associated documentation files (the "Software"), 
  *  to deal in the Software without restriction, including without limitation
  *  the rights to use, copy, modify, merge, publish, distribute, sublicense,
  *  and/or sell copies of the Software, and to permit persons to whom the
@@ -1262,7 +1262,7 @@
       <prim-key field="custRequestId"/>
       <prim-key field="custRequestItemSeqId"/>
       <prim-key field="noteId"/>
-      <relation type="one" fk-name="CUST_REQ_ITNT" rel-entity-name="OrderHeader">
+      <relation type="one" fk-name="CUST_REQ_ITNT" rel-entity-name="CustRequestItem">
         <key-map field-name="custRequestId"/>
         <key-map field-name="custRequestItemSeqId"/>
       </relation>
@@ -1313,6 +1313,26 @@
       <relation type="one" fk-name="CUSTREQ_RL_PROLE" rel-entity-name="PartyRole">
         <key-map field-name="partyId"/>
         <key-map field-name="roleTypeId"/>
+      </relation>
+    </entity>
+    <entity entity-name="CustRequestStatus"
+            package-name="org.ofbiz.commonapp.order.request"
+            title="Customer Request Status Entity">
+      <field name="custRequestStatusId" type="id-ne"></field>
+      <field name="statusId" type="id"></field>
+      <field name="custRequestId" type="id"></field>
+      <field name="custRequestItemSeqId" type="id"></field>
+      <field name="statusDatetime" type="date-time"></field>
+      <prim-key field="custRequestStatusId"/>
+      <relation type="one" fk-name="CUST_REQ_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
+      </relation>
+      <relation type="one" fk-name="CUST_REQ_STRQ" rel-entity-name="CustRequest">
+        <key-map field-name="custRequestId"/>
+      </relation>
+      <relation type="one-nofk" rel-entity-name="CustRequestItem">
+        <key-map field-name="custRequestId"/>
+        <key-map field-name="custRequestItemSeqId"/>
       </relation>
     </entity>
     <entity entity-name="CustRequestType"
