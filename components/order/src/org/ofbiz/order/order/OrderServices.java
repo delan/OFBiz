@@ -89,53 +89,59 @@ public class OrderServices {
 
     /** Service for creating a new order */
     public static Map createOrder(DispatchContext ctx, Map context) {
-        Map result = new HashMap();
         GenericDelegator delegator = ctx.getDelegator();
         LocalDispatcher dispatcher = ctx.getDispatcher();
         Security security = ctx.getSecurity();
         List toBeStored = new LinkedList();
         Locale locale = (Locale) context.get("locale");
+        Map successResult = ServiceUtil.returnSuccess();
 
         GenericValue userLogin = (GenericValue) context.get("userLogin");
         // check security
-        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, result, "ORDERMGR", "_CREATE");
-
-        if (result.size() > 0) {
-            return result;
+        Map resultSecurity = new HashMap();
+        String partyId = ServiceUtil.getPartyIdCheckSecurity(userLogin, security, context, resultSecurity, "ORDERMGR", "_CREATE");
+        if (resultSecurity.size() > 0) {
+            return resultSecurity;
         }
 
+        boolean isImmediatelyFulfilled = false;
+        String productStoreId = (String) context.get("productStoreId");
+        GenericValue productStore = null;
+        if (UtilValidate.isNotEmpty(productStoreId)) {
+            try {
+                productStore = delegator.findByPrimaryKeyCache("ProductStore", UtilMisc.toMap("productStoreId", productStoreId));
+            } catch (GenericEntityException e) {
+                return ServiceUtil.returnError("ERROR: Could not find ProductStore with ID [" + productStoreId + "]: " + e.toString());
+            }
+        }
+        if (productStore != null) {
+            isImmediatelyFulfilled = "Y".equals(productStore.getString("isImmediatelyFulfilled"));
+        }
+        
         // get the order type
         String orderTypeId = (String) context.get("orderTypeId");
-        result.put("orderTypeId", orderTypeId);
+        successResult.put("orderTypeId", orderTypeId);
 
         // lookup the order type entity
         GenericValue orderType = null;
         try {
             orderType = delegator.findByPrimaryKeyCache("OrderType", UtilMisc.toMap("orderTypeId", orderTypeId));
         } catch (GenericEntityException e) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: OrderType lookup failed: " + e.toString());
-            return result;
+            return ServiceUtil.returnError("ERROR: OrderType lookup failed: " + e.toString());
         }
 
         // make sure we have a valid order type
         if (orderType == null) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Invalid OrderType");
-            return result;
+            return ServiceUtil.returnError("ERROR: Invalid OrderType with ID: " + orderTypeId);
         }
 
         // check to make sure we have something to order
         List orderItems = (List) context.get("orderItems");
-
         if (orderItems.size() < 1) {
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, UtilProperties.getMessage(resource, "items.none", locale));
-            return result;
+            return ServiceUtil.returnError(UtilProperties.getMessage(resource, "items.none", locale));
         }
 
         // check inventory and other things for each item
-        String productStoreId = (String) context.get("productStoreId");
         List errorMessages = new LinkedList();
         Map normalizedItemQuantities = new HashMap();
         Map normalizedItemNames = new HashMap();
@@ -247,15 +253,20 @@ public class OrderServices {
 
         // the inital status for ALL order types
         String initialStatus = "ORDER_CREATED";
-        result.put("statusId", initialStatus);
+        successResult.put("statusId", initialStatus);
 
         // create the order object
         String orderId = ProductStoreWorker.makeProductStoreOrderId(delegator, productStoreId);
         String billingAccountId = (String) context.get("billingAccountId");
-        GenericValue order = delegator.makeValue("OrderHeader",
-                UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
-                    "orderDate", nowTimestamp, "entryDate", nowTimestamp,
-                    "statusId", initialStatus, "billingAccountId", billingAccountId));
+        
+        Map orderHeaderMap = UtilMisc.toMap("orderId", orderId, "orderTypeId", orderTypeId,
+                "orderDate", nowTimestamp, "entryDate", nowTimestamp,
+                "statusId", initialStatus, "billingAccountId", billingAccountId);
+        if (isImmediatelyFulfilled) {
+            // also flag this order as needing inventory issuance so that when it is set to complete it will be issued immediately (needsInventoryIssuance = Y)
+            orderHeaderMap.put("needsInventoryIssuance", "Y");
+        }
+        GenericValue order = delegator.makeValue("OrderHeader", orderHeaderMap);
 
         if (context.get("currencyUom") != null) {
             order.set("currencyUom", context.get("currencyUom"));
@@ -290,9 +301,7 @@ public class OrderServices {
             delegator.create(order);
         } catch (GenericEntityException e) {
             Debug.logError(e, "Cannot create OrderHeader entity; problems with insert", module);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "Order creation failed; please notify customer service.");
-            return result;
+            return ServiceUtil.returnError("Order creation failed; please notify customer service.");
         }
 
         // create the order status record
@@ -542,15 +551,19 @@ public class OrderServices {
             // store line items, etc so that they will be there for the foreign key checks
             delegator.storeAll(toBeStored);
 
-            if ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId)) {
+            boolean reserveInventory = ("SALES_ORDER".equals(orderTypeId) || "WORK_ORDER".equals(orderTypeId));
+            if (reserveInventory && isImmediatelyFulfilled) {
+                // don't reserve inventory if the product store has isImmediatelyFulfilled set, ie don't if in this store things are immediately fulfilled
+                reserveInventory = false;
+            }
+            if (reserveInventory) {
                 // START inventory reservation
                 // decrement inventory available for each item, within the same transaction
                 List resErrorMessages = new LinkedList();
                 Iterator invDecItemIter = orderItems.iterator();
-
                 while (invDecItemIter.hasNext()) {
                     GenericValue orderItem = (GenericValue) invDecItemIter.next();
-                    if (orderItem.get("productId") != null) {
+                    if (UtilValidate.isNotEmpty(orderItem.getString("productId"))) {
                         // only reserve product items; ignore non-product items
                         try {
                             Map reserveResult = dispatcher.runSync("reserveStoreInventory", UtilMisc.toMap(
@@ -587,15 +600,13 @@ public class OrderServices {
                 // END inventory reservation
             }
 
-            result.put("orderId", orderId);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_SUCCESS);
+            successResult.put("orderId", orderId);
         } catch (GenericEntityException e) {
-            Debug.logError(e, "Problem with reservations", module);
-            result.put(ModelService.RESPONSE_MESSAGE, ModelService.RESPOND_ERROR);
-            result.put(ModelService.ERROR_MESSAGE, "ERROR: Could not create order (write error: " + e.getMessage() + ").");
+            Debug.logError(e, "Problem with order storage or reservations", module);
+            return ServiceUtil.returnError("ERROR: Could not create order (write error: " + e.getMessage() + ").");
         }
 
-        return result;
+        return successResult;
     }
 
     public static String getProductName(GenericValue product, GenericValue orderItem) {
