@@ -45,7 +45,7 @@
           <td align=left width='90%' >
             <div class='boxhead'>&nbsp;Shipping Rate Editor</div>
           </td>
-          <td align=right width='10%'>&nbsp;</td>
+          <td align=right width='10%'></td>
         </tr>
       </table>
     </td>

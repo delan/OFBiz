@@ -42,10 +42,9 @@
     <td width='100%'>
       <table width='100%' border='0' cellpadding='0' cellspacing='0' class='boxtop'>
         <tr>
-          <td align=left width='90%' >
+          <td>
             <div class='boxhead'>&nbsp;Payment Processor Setup</div>
-          </td>
-          <td align=right width='10%'>&nbsp;</td>
+          </td>          
         </tr>
       </table>
     </td>
@@ -123,7 +122,7 @@
           <#if webSitePayment?has_content>
             <td align='right' width='10%'><a href="<@ofbizUrl>/paysetup</@ofbizUrl>" class="lightbuttontext">[Add New]</a></td>          
           <#else>
-            <td align='right' width='10%'>&nbsp;</td>
+            <td align='right' width='10%'></td>
           </#if>
         </tr>
       </table>
