@@ -1179,6 +1179,7 @@
       <field name="generalFeedback" type="very-long"></field>
       <field name="orderId" type="id"></field>
       <field name="orderItemSeqId" type="id"></field>
+      <field name="statusId" type="id"></field>
       <prim-key field="surveyResponseId"/>
       <relation type="one-nofk" rel-entity-name="Party">
         <key-map field-name="partyId"/>
@@ -1192,6 +1193,9 @@
       </relation>
       <relation type="one" fk-name="SRVYRSP_SRVY" rel-entity-name="Survey">
         <key-map field-name="surveyId"/>
+      </relation>
+      <relation type="one" fk-name="SRVYRSP_STTS" rel-entity-name="StatusItem">
+        <key-map field-name="statusId"/>
       </relation>
     </entity>
     <view-entity entity-name="SurveyResponseAndAnswer"
