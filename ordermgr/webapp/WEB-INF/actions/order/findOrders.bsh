@@ -144,6 +144,11 @@ if (lookupFlag != null) {
         minDate = request.getParameter("minDate");
         maxDate = request.getParameter("maxDate");
         
+        if (webSiteId == null) webSiteId = "ANY";
+        if (roleType == null) roleType = "ANY";
+        if (orderType == null) orderType = "ANY";
+        if (orderStatus == null) orderStatus = "ANY";
+        
         paramList = paramList + "&webSiteId=" + webSiteId;
         if (!"ANY".equals(webSiteId)) {           
             andExprs.add(new EntityExpr("webSiteId", EntityOperator.EQUALS, webSiteId));

@@ -140,7 +140,7 @@
                   <div class="tabletext"><nobr>
                     <a href='<@ofbizUrl>/viewprofile?party_id=${partyMap.party.partyId}</@ofbizUrl>' class="buttontext">[View&nbsp;Profile]</a>&nbsp;
                     <#if security.hasRolePermission("ORDERMGR", "_VIEW", "", "", session)>
-                      <a href='/ordermgr/control/orderlist?partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[Orders]</a>&nbsp;
+                      <a href='/ordermgr/control/findorders?lookupFlag=Y&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[Orders]</a>&nbsp;
                     </#if>
                     <#if security.hasEntityPermission("ORDERMGR", "_CREATE", session)>
                       <a href='/ordermgr/control/orderentry?mode=SALES_ORDER&partyId=${partyMap.party.partyId + externalKeyParam}' class="buttontext">[New Order]</a>&nbsp;
