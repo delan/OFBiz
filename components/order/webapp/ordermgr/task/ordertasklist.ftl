@@ -20,7 +20,7 @@
  *  THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
  *@author     Andy Zeneski (jaz@ofbiz.org)
- *@version    $Revision: 1.3 $
+ *@version    $Revision: 1.4 $
  *@since      2.2
 -->
 
@@ -217,7 +217,7 @@
                           <input type="hidden" name="order_id" value="${task.orderId}">
                           <input type="hidden" name="workEffortId" value="${task.workEffortId}">
                           <input type="hidden" name="taskStatus" value="${task.currentStatusId}">                    
-                          <#if task.statusId == "CAL_SENT">
+                          <#if task.statusId?exists && task.statusId == "CAL_SENT">
                             <input type="hidden" name="partyId" value="${userLogin.partyId}">
                             <input type="hidden" name="roleTypeId" value="${task.roleTypeId}">
                             <input type="hidden" name="fromDate" value="${task.get("fromDate").toString()}">
@@ -275,7 +275,7 @@
                                 ${Static["org.ofbiz.order.task.TaskWorker"].getPrettyStatus(task)}
                               </a>
                             </td>
-                            <#if task.statusId == "CAL_SENT">
+                            <#if task.statusId?exists && task.statusId == "CAL_SENT">
                               <td align="right"><input type="checkbox" name="delegate" value="true" checked></td>
                             <#else>
                               <td align="right"><input type="checkbox" name="delegate" value="true"></td>
