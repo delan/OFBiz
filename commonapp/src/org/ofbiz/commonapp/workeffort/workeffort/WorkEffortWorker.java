@@ -1,6 +1,9 @@
 /*
  * $Id$
  * $Log$
+ * Revision 1.13  2001/12/22 03:55:14  jonesde
+ * Refactored status stuff to be more general
+ *
  * Revision 1.12  2001/12/21 16:28:52  jonesde
  * Added exclusion of new cancelled state to activity and task stuff
  *
@@ -304,7 +307,7 @@ public class WorkEffortWorker {
                         new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DECLINED"),
                         new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_DELEGATED"),
                         new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_COMPLETED"),
-                        new EntityExpr("statusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED")),
+                        new EntityExpr("currentStatusId", EntityOperator.NOT_EQUAL, "CAL_CANCELLED")),
                         UtilMisc.toList("priority"));
             } catch (GenericEntityException e) {
                 Debug.logWarning(e);
