@@ -36,13 +36,6 @@
 
 <jsp:useBean id="delegator" type="org.ofbiz.core.entity.GenericDelegator" scope="request" />
 
-<ofbiz:service name="testScv">
-  <ofbiz:param name="message" value="hello all!"/>
-  <ofbiz:param name="resp" mode="OUT" alias="respMgs"/>
-</ofbiz:service>
-
-<% if (Debug.verboseOn()) Debug.logVerbose("Response Message: " + pageContext.findAttribute("respMgs")); %>
-
 <BR>
 <TABLE border=0 width='100%' cellspacing='0' cellpadding='0' class='boxoutside'>
   <TR>
