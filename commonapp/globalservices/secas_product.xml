@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE service-eca PUBLIC "-//OFBiz//DTD Service ECA Config//EN" "http://www.ofbiz.org/dtds/service-eca.dtd">
 
-<service-eca>    
+<service-eca>
+
+	<!-- Inventory Transfer ECAs -->
     <eca service="createInventoryTransfer" event="invoke">  
     	<condition field-name="statusId" operator="not-equals" value="IXF_CANCELLED"/>  	
         <action service="prepareInventoryTransfer" mode="sync"/>
@@ -19,4 +21,17 @@
     	<condition field-name="statusId" operator="equals" value="IXF_COMPLETE"/>
         <action service="completeInventoryTransfer" mode="sync"/>
     </eca>
+
+	<!-- Product Price Change ECAs -->
+    <eca service="createProductPrice" event="commit">
+        <action service="saveProductPriceChange" mode="sync"/>
+    </eca>
+    <eca service="updateProductPrice" event="commit">
+    	<condition-field field-name="price" operator="not-equals" to-field-name="oldPrice" type="Double"/>
+        <action service="saveProductPriceChange" mode="sync"/>
+    </eca>
+    <eca service="deleteProductPrice" event="commit">
+        <action service="saveProductPriceChange" mode="sync"/>
+    </eca>
+	
 </service-eca>

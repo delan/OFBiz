@@ -51,6 +51,10 @@
         <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        
+        <!-- grab the old price value before setting nonpk parameter fields -->
+        <field-to-result map-name="lookedUpValue" field-name="price" result-name="oldPrice"/>
+        
         <set-nonpk-fields map-name="parameters" value-name="lookedUpValue"/>
         
         <now-timestamp-to-env env-name="nowTimestamp"/>
@@ -66,7 +70,31 @@
         <make-value entity-name="ProductPrice" value-name="lookupPKMap"/>
         <set-pk-fields map-name="parameters" value-name="lookupPKMap"/>
         <find-by-primary-key entity-name="ProductPrice" map-name="lookupPKMap" value-name="lookedUpValue"/>
+        
+        <!-- grab the old price value before setting nonpk parameter fields -->
+        <field-to-result map-name="lookedUpValue" field-name="price" result-name="oldPrice"/>
+        
         <remove-value value-name="lookedUpValue"/>
+    </simple-method>
+    
+    <simple-method method-name="saveProductPriceChange" short-description="Save History of ProductPrice Change">
+    	<!-- TODO: allow for multiple actions: _CREATE, _UPDATE, _DELETE; for now using _UPDATE because it is likely the most commonly held -->
+        <check-permission permission="CATALOG" action="_UPDATE"><fail-message message="Security Error: to run saveProductPriceChange you must have the CATALOG_UPDATE or CATALOG_ADMIN permission"/></check-permission>
+        <check-errors/>
+
+		<!-- Note that this is kept pretty simple: if a price is specific but no oldPrice, then it is generally a create, if both are specified it is generally an update, if only the oldPrice is specified it is generally a delete -->
+        <make-value value-name="newEntity" entity-name="ProductPriceChange"/>
+        <set-nonpk-fields map-name="parameters" value-name="newEntity"/>
+
+        <sequenced-id-to-env sequence-name="ProductPriceChange" env-name="productPriceChangeId"/>
+        <to-string field-name="productPriceChangeId"/>
+        <env-to-field env-name="productPriceChangeId" map-name="newEntity"/>
+
+        <now-timestamp-to-env env-name="nowTimestamp"/>
+        <env-to-field env-name="nowTimestamp" field-name="changedDate" map-name="newEntity"/>
+        <field-to-field field-name="userLoginId" map-name="userLogin" to-field-name="changedByUserLogin" to-map-name="newEntity"/>
+        
+        <create-value value-name="newEntity"/>
     </simple-method>
 
     <!-- ProductPriceRule methods -->

@@ -93,6 +93,7 @@
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
         <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
         <attribute name="price" type="Double" mode="IN" optional="false"/>
+        <attribute name="oldPrice" type="Double" mode="OUT" optional="false"/>
     </service>
     <service name="deleteProductPrice" engine="simple"
                 location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="deleteProductPrice" auth="true">
@@ -102,7 +103,23 @@
         <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
         <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
         <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="oldPrice" type="Double" mode="OUT" optional="false"/>
     </service>
+
+	<!-- called by ECAs on ProductPrice service call events -->
+    <service name="saveProductPriceChange" engine="simple"
+                location="org/ofbiz/commonapp/product/price/PriceServices.xml" invoke="saveProductPriceChange" auth="true">
+        <description>Save History of a ProductPrice Change</description>
+        <attribute name="productId" type="String" mode="IN" optional="false"/>
+        <attribute name="productPriceTypeId" type="String" mode="IN" optional="false"/>
+        <attribute name="currencyUomId" type="String" mode="IN" optional="false"/>
+        <attribute name="facilityGroupId" type="String" mode="IN" optional="false"/>
+        <attribute name="fromDate" type="Timestamp" mode="IN" optional="false"/>
+        <attribute name="thruDate" type="Timestamp" mode="IN" optional="true"/>
+        <attribute name="price" type="Double" mode="IN" optional="true"/>
+        <attribute name="oldPrice" type="Double" mode="IN" optional="true"/>
+    </service>
+
 
     <!-- GoodIdentification Services -->
     <service name="createGoodIdentification" engine="simple"

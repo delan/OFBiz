@@ -1098,7 +1098,7 @@
       <field name="changedDate" type="date-time"></field>
       <field name="changedByUserLogin" type="id-vlong"></field>
       <prim-key field="productPriceChangeId"/>
-      <relation type="one" fk-name="PROD_PRCHNG_RULE" rel-entity-name="ProductPrice">
+      <relation type="one-nofk" rel-entity-name="ProductPrice">
         <key-map field-name="productId"/>
         <key-map field-name="productPriceTypeId"/>
         <key-map field-name="currencyUomId"/>
